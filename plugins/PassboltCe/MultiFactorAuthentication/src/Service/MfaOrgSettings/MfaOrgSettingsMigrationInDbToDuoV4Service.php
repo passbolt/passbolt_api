@@ -116,15 +116,4 @@ final class MfaOrgSettingsMigrationInDbToDuoV4Service
             return new UserAccessControl(Role::ADMIN, $admin->get('id'));
         }
     }
-
-    /**
-     * Since the DUO provider is deactivated by default, we need to detect if it had previously
-     * been deactivated on purpose.
-     *
-     * @return bool
-     */
-    protected function isDuoProviderDeactivatedWithEnvVariable(): bool
-    {
-        return $this->isFeaturePluginEnabled('multiFactorAuthentication.providers.duo', true);
-    }
 }

@@ -24,13 +24,26 @@ class SanitizeUrlComponent extends Component
      * Sanitize redirect URL
      *
      * @param string $redirectLoopStop Prevent redirecting if this string is found in the redirect parameter
+     * @param bool $allowEmpty Whether or not to allow an empty URL
+     * @param bool $ensureStartsWithSlash Whether or not to force the URL to start with a '/' character
+     * @param bool $escapeSpecialChars Whether or not to escape special characters
      * @return string
      */
-    public function sanitizeRedirect(string $redirectLoopStop = ''): string
-    {
+    public function sanitizeRedirect(
+        string $redirectLoopStop = '',
+        bool $allowEmpty = false,
+        bool $ensureStartsWithSlash = true,
+        bool $escapeSpecialChars = true
+    ): string {
         $redirectUrl = $this->_extractFirstParameter('redirect');
         $loopStop = empty($redirectLoopStop) ? $this->getController()->getRequest()->getPath() : $redirectLoopStop;
-        $sanitizedRedirectUrl = $this->sanitize($redirectUrl, [$loopStop]);
+        $sanitizedRedirectUrl = $this->sanitize(
+            $redirectUrl,
+            [$loopStop],
+            $allowEmpty,
+            $ensureStartsWithSlash,
+            $escapeSpecialChars
+        );
 
         return $sanitizedRedirectUrl;
     }
@@ -40,6 +53,7 @@ class SanitizeUrlComponent extends Component
      *
      * @param string $url URL to sanitize
      * @param array $blacklist Array of URL parts that are not allowed to be in the sanitized URL
+     * @param bool $allowEmpty Whether or not to allow an empty URL
      * @param bool $ensureStartsWithSlash Whether or not to force the URL to start with a '/' character
      * @param bool $escapeSpecialChars Whether or not to escape special characters
      * @return string
@@ -47,11 +61,12 @@ class SanitizeUrlComponent extends Component
     public function sanitize(
         string $url,
         array $blacklist = [],
+        bool $allowEmpty = false,
         bool $ensureStartsWithSlash = true,
         bool $escapeSpecialChars = true
     ): string {
         if (empty($url)) {
-            return '/';
+            return $allowEmpty ? '' : '/';
         }
         if ($ensureStartsWithSlash && substr($url, 0, 1) !== '/') {
             return '/';
