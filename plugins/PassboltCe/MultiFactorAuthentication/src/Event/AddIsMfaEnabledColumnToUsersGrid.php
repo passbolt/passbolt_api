@@ -47,6 +47,9 @@ class AddIsMfaEnabledColumnToUsersGrid implements EventListenerInterface
         if (!$controller instanceof UsersIndexController) {
             return;
         }
+        if (!$controller->User->getAccessControl()->isAdmin()) {
+            return;
+        }
 
         $options = $event->getOptions();
 

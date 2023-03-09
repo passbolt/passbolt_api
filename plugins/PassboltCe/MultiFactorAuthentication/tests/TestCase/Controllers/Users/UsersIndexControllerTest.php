@@ -79,6 +79,23 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
     /**
      * @return void
      */
+    public function testMfaUsersIndex_ThatColumnIsMfaEnabledIsInvisibleToUsersIfMfaIsEnabledForOrg()
+    {
+        RoleFactory::make()->guest()->persist();
+        $userWithMfa = UserFactory::make()->user()->persist();
+        UserFactory::make()->admin()->persist();
+        $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $userWithMfa);
+        $this->getJson('/users.json?contain[is_mfa_enabled]=1');
+        $this->assertSuccess();
+        foreach ($this->_responseJsonBody as $userInResponse) {
+            $this->assertObjectNotHasAttribute('is_mfa_enabled', $userInResponse);
+        }
+    }
+
+    /**
+     * @return void
+     */
     public function testMfaUsersIndex_ThatUsersIndexResultsAreFilteredWhenFilterParameterHaveIsMfaEnabled()
     {
         RoleFactory::make()->guest()->persist();
@@ -112,16 +129,5 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
         $this->logInAsAdmin();
         $this->getJson('/users.json?filter[is-mfa-enabled]=1');
         $this->assertBadRequestError('The property is_mfa_enabled should be contained in order to filter by is-mfa-enabled.');
-    }
-
-    /**
-     * @return void
-     */
-    public function testMfaUsersIndex_Is_Mfa_Enabled_Request_From_Users_Should_Throw_A_BadRequest_Exception()
-    {
-        RoleFactory::make()->guest()->persist();
-        $this->logInAsUser();
-        $this->getJson('/users.json?contain[is_mfa_enabled]=1');
-        $this->assertBadRequestError('The property is_mfa_enabled is visible by administrators only.');
     }
 }
