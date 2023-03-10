@@ -22,12 +22,14 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
@@ -179,6 +181,27 @@ class UsersDeleteController extends AppController
                     $body['errors']['resources']['sole_owner'] = $resources;
                     $msg .= ' ' . $errors['id']['soleOwnerOfSharedContent'];
                 }
+
+                if (Configure::read('passbolt.plugins.folders.enabled')) {
+                    $foldersIds = $this->Permissions
+                        ->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $user->id, [
+                            'checkGroupsUsers' => true,
+                        ])
+                        ->all()
+                        ->extract('aco_foreign_key')
+                        ->toArray();
+                    if ($foldersIds) {
+                        $findFoldersOptions = [];
+                        $findFoldersOptions['contain']['permissions.user.profile'] = true;
+                        $findFoldersOptions['contain']['permissions.group'] = true;
+                        $findFoldersOptions['filter']['has-id'] = $foldersIds;
+                        /** @var \Passbolt\Folders\Model\Table\FoldersTable $foldersTable */
+                        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+                        $folders = $foldersTable->findIndex($user->id, $findFoldersOptions);
+                        $body['errors']['folders']['sole_owner'] = $folders;
+                        $msg .= ' ' . $errors['id']['soleOwnerOfSharedContent'];
+                    }
+                }
             }
 
             $groupsToDeleteIds = $this->GroupsUsers
@@ -270,6 +293,15 @@ class UsersDeleteController extends AppController
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $foldersIdsBlockingDelete = $this->Permissions
+                ->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $user->id, ['checkGroupsUsers' => true])
+                ->all()
+                ->extract('aco_foreign_key')
+                ->toArray();
+            $contentIdBlockingDelete = array_merge($contentIdBlockingDelete, $foldersIdsBlockingDelete);
+        }
         sort($contentIdBlockingDelete);
 
         // If all the resources that are requiring a change are not satisfied, throw an exception.

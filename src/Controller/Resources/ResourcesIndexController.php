@@ -72,6 +72,9 @@ class ResourcesIndexController extends AppController
             $whitelist['contain'][] = 'tag'; // @deprecate should be tags
             $whitelist['filter'][] = 'has-tag';
         }
+        if (Configure::read('passbolt.plugins.folders')) {
+            $whitelist['filter'][] = 'has-parent';
+        }
         $options = $this->QueryString->get($whitelist);
 
         // Retrieve the resources.
