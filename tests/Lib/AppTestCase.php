@@ -35,6 +35,7 @@ use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AppTestCase extends TestCase
@@ -64,9 +65,12 @@ abstract class AppTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
+        Configure::write('passbolt.plugins.folders.enabled', false);
         $this->loadRoutes();
         DigestsPool::clearInstance();
+        DigestFactory::clearInstance();
         EmailNotificationSettings::flushCache();
     }
 

@@ -59,7 +59,7 @@ class DuoVerifyPromptPostController extends MfaVerifyController
             return $redirect;
         }
 
-        $redirectParam = $this->SanitizeUrl->sanitizeRedirect();
+        $redirectParam = $this->SanitizeUrl->sanitizeRedirect('/mfa/verify', true);
         $startAuthService = new MfaDuoStartDuoAuthenticationService(
             AuthenticationToken::TYPE_MFA_VERIFY,
             $duoSdkClient

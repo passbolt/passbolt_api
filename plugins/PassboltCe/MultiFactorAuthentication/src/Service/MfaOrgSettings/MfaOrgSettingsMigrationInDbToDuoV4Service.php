@@ -45,8 +45,9 @@ final class MfaOrgSettingsMigrationInDbToDuoV4Service
             return;
         }
 
-        // Skip if Duo v4 settings already exist in DB
-        if ($this->isMfaOrgSettingsInDbInDuoV4Format()) {
+        $duoSettings = $this->getDuoOrgSettingsInDb();
+        // Skip if there are no Duo org settings in DB
+        if (is_null($duoSettings)) {
             return;
         }
 
@@ -85,21 +86,20 @@ final class MfaOrgSettingsMigrationInDbToDuoV4Service
     }
 
     /**
-     * @return bool
+     * @return array|null
      */
-    protected function isMfaOrgSettingsInDbInDuoV4Format(): bool
+    protected function getDuoOrgSettingsInDb(): ?array
     {
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettingsTable */
         $OrganizationSettingsTable = TableRegistry::getTableLocator()->get('OrganizationSettings');
 
         $mfaOrgSettings = $OrganizationSettingsTable->getByProperty(MfaSettings::MFA);
         if (is_null($mfaOrgSettings)) {
-            return false;
+            return null;
         }
         $mfaSettings = json_decode($mfaOrgSettings->get('value'), true);
-        $duoSettings = $mfaSettings[MfaSettings::PROVIDER_DUO];
 
-        return !isset($duoSettings['salt']);
+        return $mfaSettings[MfaSettings::PROVIDER_DUO] ?? null;
     }
 
     /**
@@ -115,16 +115,5 @@ final class MfaOrgSettingsMigrationInDbToDuoV4Service
         } else {
             return new UserAccessControl(Role::ADMIN, $admin->get('id'));
         }
-    }
-
-    /**
-     * Since the DUO provider is deactivated by default, we need to detect if it had previously
-     * been deactivated on purpose.
-     *
-     * @return bool
-     */
-    protected function isDuoProviderDeactivatedWithEnvVariable(): bool
-    {
-        return $this->isFeaturePluginEnabled('multiFactorAuthentication.providers.duo', true);
     }
 }

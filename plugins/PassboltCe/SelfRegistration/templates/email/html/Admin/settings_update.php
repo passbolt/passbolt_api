@@ -36,7 +36,7 @@ if ($recipient['id'] === $modifier['id']) {
     $modifierFullName = Purifier::clean($modifier['profile']['first_name']) . ' ' . Purifier::clean($modifier['profile']['last_name']);
     $text = __('{0} updated the self registration settings', $modifierFullName);
 }
-$text = '<h3>' . $text . '</h3>';
+$text = '<h3>' . $text . '</h3><br/>';
 $text .= __('Status: {0}', $status) . '<br/>';
 if (isset($info)) {
     $text .= $info;

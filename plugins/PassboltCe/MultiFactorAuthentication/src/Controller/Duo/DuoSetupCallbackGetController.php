@@ -20,10 +20,13 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\FormValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
+use App\Utility\ExceptionLogger;
 use App\Utility\UserAccessControl;
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Http\Response;
+use Cake\Log\Log;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Controller\MfaSetupController;
@@ -65,7 +68,9 @@ class DuoSetupCallbackGetController extends MfaSetupController
         $cookieToken = $this->consumeAndAssertCookieToken();
 
         try {
+            // Assert that the callback from Duo is valid and doesn't contain any error
             $mfaDuoCallbackDto = $this->getAndAssertMfaDuoCallbackData();
+            // Consume the authentication token, verify its integrity and enable Duo as MFA provider
             $authenticationToken = (new MfaDuoEnableService($duoSdkClient))->enable(
                 $uac,
                 $mfaDuoCallbackDto,
@@ -73,24 +78,57 @@ class DuoSetupCallbackGetController extends MfaSetupController
             );
             $this->addMfaVerifiedCookieToResponse($uac, $sessionIdentificationService);
         } catch (BadRequestException | FormValidationException $e) {
-            if (!isset($authenticationToken)) {
-                $authenticationToken = (new AuthenticationTokenGetService())
-                    ->get($cookieToken, $uac->getId(), AuthenticationToken::TYPE_MFA_SETUP);
+            $redirect = $this->handleErrorFeedback($e, $cookieToken, $uac);
+            if (!is_null($redirect)) {
+                return $redirect;
             }
-            if (isset($authenticationToken)) {
-                $redirect = $authenticationToken->getDataValue('redirect');
-                if (!empty($redirect)) {
-                    $this->Flash->error($e->getMessage());
-
-                    return $this->redirect($redirect);
-                }
-            }
-
+            // If there was no redirection, re-throw the exception (needed for mobile)
             throw $e;
         }
 
         $this->disableAutoRender();
         $this->redirectIfDefinedInToken($authenticationToken);
+    }
+
+    /**
+     * Handles the case when an exception is thrown by logging the error, setting a flash message with the
+     * error descrition and redirecting to the internal redirect path if given.
+     *
+     * @param \Throwable $e The throwable/exception thrown
+     * @param string $token The authentication token's token (id)
+     * @param \App\Utility\UserAccessControl $uac User Access Control
+     * @return \Cake\Http\Response|null
+     */
+    private function handleErrorFeedback(
+        \Throwable $e,
+        string $token,
+        UserAccessControl $uac
+    ): ?Response {
+        // Log the exception and all its backtrace of exception
+        ExceptionLogger::error($e);
+
+        // Retrieve the authentication token
+        $authenticationToken = (new AuthenticationTokenGetService())
+            ->get($token, $uac->getId(), AuthenticationToken::TYPE_MFA_SETUP);
+        // Check that it was not consumed
+        if (!isset($authenticationToken)) {
+            return null;
+        }
+
+        // If no redirect parameter was given (redirect is not passed for mobile), no redirection is needed
+        $redirect = $authenticationToken->getDataValue('redirect');
+        if (empty($redirect)) {
+            return null;
+        }
+        if ($redirect !== DuoSetupGetController::DUO_SETUP_REDIRECT_PATH) {
+            Log::error('Cannot redirect to an unsupported path');
+
+            return null;
+        }
+
+        $this->Flash->error($e->getMessage());
+
+        return $this->redirect($redirect);
     }
 
     /**
@@ -181,8 +219,15 @@ class DuoSetupCallbackGetController extends MfaSetupController
     private function redirectIfDefinedInToken(AuthenticationToken $authenticationToken): void
     {
         $redirect = $authenticationToken->getDataValue('redirect');
-        if (!empty($redirect)) {
-            $this->redirect($redirect);
+        if (empty($redirect)) {
+            return;
         }
+        if ($redirect !== DuoSetupGetController::DUO_SETUP_REDIRECT_PATH) {
+            Log::error('Cannot redirect to an unsupported path');
+
+            return;
+        }
+
+        $this->redirect($redirect);
     }
 }

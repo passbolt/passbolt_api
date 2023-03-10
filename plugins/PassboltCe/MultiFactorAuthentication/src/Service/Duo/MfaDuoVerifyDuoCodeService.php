@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Service\Duo;
 
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\Utility\Hash;
@@ -31,6 +32,8 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
  */
 class MfaDuoVerifyDuoCodeService
 {
+    public const PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER = 'passbolt.security.mfa.duoVerifySubscriber';
+
     /**
      * @var \Duo\DuoUniversal\Client
      */
@@ -61,6 +64,10 @@ class MfaDuoVerifyDuoCodeService
      * @param \App\Utility\UserAccessControl $uac The user access control
      * @param string $duoCode The duo code
      * @return bool
+     * @throws \Cake\Http\Exception\UnauthorizedException If an error occurred while retrieving the Duo authentication details
+     * @throws \Cake\Http\Exception\UnauthorizedException If the duo authentication origin endpoint (iss) does not match the duo hostname
+     * @throws \Cake\Http\Exception\UnauthorizedException if the duo authentication subscriber does not match the operator username
+     * @throws \Cake\Http\Exception\InternalErrorException If Duo doesn't return the authentication details as an array.
      */
     public function verify(UserAccessControl $uac, string $duoCode): bool
     {
@@ -133,7 +140,8 @@ class MfaDuoVerifyDuoCodeService
      */
     private function assertDuoAuthenticationSubscriber(string $duoSubscriber, string $operatorUsername): void
     {
-        if ($duoSubscriber !== $operatorUsername) {
+        $verifySubscriber = Configure::read(self::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER);
+        if ($verifySubscriber === true && mb_strtolower($duoSubscriber) !== mb_strtolower($operatorUsername)) {
             $msg = __('The duo authentication subscriber does not match the operator username.');
             throw new UnauthorizedException($msg);
         }
