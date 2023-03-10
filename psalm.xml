@@ -23,6 +23,7 @@
             <directory name="plugins/PassboltCe/EmailDigest/tests/Fixture/templates/" />
             <directory name="plugins/PassboltCe/MultiFactorAuthentication/templates/" />
             <directory name="plugins/PassboltCe/SelfRegistration/templates/" />
+            <directory name="plugins/PassboltCe/Folders/templates/" />
         </ignoreFiles>
     </projectFiles>
 </psalm>

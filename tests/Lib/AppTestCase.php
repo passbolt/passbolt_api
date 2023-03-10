@@ -65,7 +65,9 @@ abstract class AppTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
+        Configure::write('passbolt.plugins.folders.enabled', false);
         $this->loadRoutes();
         DigestsPool::clearInstance();
         DigestFactory::clearInstance();
