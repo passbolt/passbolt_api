@@ -16,39 +16,27 @@ declare(strict_types=1);
 namespace Passbolt\Log\Events;
 
 use Cake\Event\EventListenerInterface;
-use Passbolt\Log\Events\Traits\ControllerActionTrait;
 use Passbolt\Log\Events\Traits\EntitiesHistoryTrait;
 
-class ActionsListener implements EventListenerInterface
+class ActionLogsModelListener implements EventListenerInterface
 {
-    use ControllerActionTrait;
     use EntitiesHistoryTrait;
-
-    /**
-     * Return a list if implemented Events, with their callback.
-     * The callback is based on the camelized name of the event slug.
-     * Example: event "user.add" will have callback "logUserAdd"
-     *
-     * @return array
-     */
-    public static function getImplementedEvents()
-    {
-        $implementedEvents = [
-            'Controller.beforeRender' => 'logControllerAction',
-            'Model.afterSave' => 'logEntityHistory',
-            'Model.afterDelete' => 'logEntityHistory',
-            'Model.afterRead' => 'logEntityHistory',
-            'Model.initialize' => 'entityAssociationsInitialize',
-        ];
-
-        return $implementedEvents;
-    }
 
     /**
      * @inheritDoc
      */
     public function implementedEvents(): array
     {
-        return self::getImplementedEvents();
+        /**
+         * Return a list if implemented Events, with their callback.
+         * The callback is based on the camelized name of the event slug.
+         * Example: event "user.add" will have callback "logUserAdd"
+         */
+        return [
+            'Model.afterSave' => 'logEntityHistory',
+            'Model.afterDelete' => 'logEntityHistory',
+            'Model.afterRead' => 'logEntityHistory',
+            'Model.initialize' => 'entityAssociationsInitialize',
+        ];
     }
 }
