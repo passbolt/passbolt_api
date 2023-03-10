@@ -22,7 +22,6 @@ use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Permissions\PermissionsFindersTrait;
-use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -111,12 +110,6 @@ class PermissionsTable extends Table
         $this->belongsTo('Resources', [
             'foreignKey' => 'aco_foreign_key',
         ]);
-
-        if (Configure::read('passbolt.plugins.folders.enabled')) {
-            $this->belongsTo('Passbolt/Folders.Folders', [
-                'foreignKey' => 'aco_foreign_key',
-            ]);
-        }
 
         $this->belongsTo('Users', [
             'foreignKey' => 'aro_foreign_key',

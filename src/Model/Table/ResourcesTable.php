@@ -114,17 +114,6 @@ class ResourcesTable extends Table
         ]);
 
         $this->belongsTo('ResourceTypes');
-
-        if ($this->isFeaturePluginEnabled('Folders')) {
-            $this->hasMany('Passbolt/Folders.FoldersRelations', [
-                'className' => 'Passbolt/Folders.FoldersRelations',
-                'foreignKey' => 'foreign_id',
-                'conditions' => [
-                    'FoldersRelations.foreign_model' => 'Resource',
-                ],
-                'dependent' => true,
-            ]);
-        }
     }
 
     /**

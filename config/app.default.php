@@ -367,6 +367,7 @@ return [
             'file' => 'debug',
             'levels' => ['notice', 'info', 'debug'],
             'url' => env('LOG_DEBUG_URL', null),
+            'formatter' => env('LOG_DEBUG_FORMATTER', 'Cake\Log\Formatter\DefaultFormatter'),
         ],
         'error' => [
             'className' => FileLog::class,
@@ -374,6 +375,7 @@ return [
             'file' => 'error',
             'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
             'url' => env('LOG_ERROR_URL', null),
+            'formatter' => env('LOG_ERROR_FORMATTER', 'Cake\Log\Formatter\DefaultFormatter'),
         ],
         // To enable this dedicated query log, you need set your datasource's log flag to true
         // See DATASOURCES_DEFAULT_LOG
@@ -382,6 +384,7 @@ return [
             'path' => LOGS,
             'file' => 'queries',
             'url' => env('LOG_QUERIES_URL', null),
+            'formatter' => env('LOG_QUERIES_FORMATTER', 'Cake\Log\Formatter\DefaultFormatter'),
             'scopes' => ['queriesLog'],
         ],
     ],
