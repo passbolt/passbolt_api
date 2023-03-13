@@ -17,7 +17,22 @@ declare(strict_types=1);
 namespace Passbolt\Log;
 
 use Cake\Core\BasePlugin;
+use Cake\Core\PluginApplicationInterface;
+use Passbolt\Log\Events\ActionLogsAfterCreateListener;
+use Passbolt\Log\Events\ActionLogsBeforeRenderListener;
+use Passbolt\Log\Events\ActionLogsModelListener;
 
 class Plugin extends BasePlugin
 {
+    /**
+     * @inheritDoc
+     */
+    public function bootstrap(PluginApplicationInterface $app): void
+    {
+        parent::bootstrap($app);
+        $app->getEventManager()
+            ->on(new ActionLogsAfterCreateListener())
+            ->on(new ActionLogsBeforeRenderListener())
+            ->on(new ActionLogsModelListener());
+    }
 }

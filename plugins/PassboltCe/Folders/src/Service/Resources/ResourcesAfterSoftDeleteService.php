@@ -12,28 +12,25 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.13.0
  */
-namespace Passbolt\Log\Events\Traits;
 
-use App\Utility\UserAction;
-use Cake\Event\Event;
+namespace Passbolt\Folders\Service\Resources;
+
+use App\Model\Entity\Resource;
 use Cake\ORM\TableRegistry;
 
-trait ControllerActionTrait
+class ResourcesAfterSoftDeleteService
 {
     /**
-     * Log controller action.
-     *
-     * @param \Cake\Event\Event $event the event
+     * @param \App\Model\Entity\Resource $resource The soft deleted resource.
      * @return void
+     * @throws \Exception
      */
-    public function logControllerAction(Event $event)
+    public function afterSoftDelete(Resource $resource)
     {
-        $statusCode = $event->getSubject()->getResponse()->getStatusCode();
-        $status = (int)($statusCode === 200);
-        $userAction = UserAction::getInstance();
-        /** @var \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs */
-        $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
-        $ActionLogs->create($userAction, $status);
+        TableRegistry::getTableLocator()
+            ->get('Passbolt/Folders.FoldersRelations')
+            ->deleteAll(['FoldersRelations.foreign_id' => $resource->id]);
     }
 }

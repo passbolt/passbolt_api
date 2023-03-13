@@ -22,6 +22,7 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Groups\GroupsFindersTrait;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
@@ -318,6 +319,23 @@ class GroupsTable extends Table
             /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
             $Resources->softDeleteAll($resourceIds);
+        }
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            // Find all the folders that only belongs to the deleted group and delete them.
+            // Note: all folders that cannot be deleted should have been transferred to other people already.
+            $foldersIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::FOLDER_ACO, $group->id)
+                ->all()
+                ->extract('aco_foreign_key')->toArray();
+            if (!empty($foldersIds)) {
+                $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+                $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+                $foldersTable->deleteAll(['id IN' => $foldersIds]);
+                $foldersRelationsTable
+                    ->deleteAll(['foreign_id IN' => $foldersIds]);
+                $foldersRelationsTable
+                    ->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
+            }
         }
 
         // Delete all group memberships

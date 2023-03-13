@@ -43,6 +43,15 @@ class BaseSolutionBootstrapper
             $app->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
         }
 
+        $this->addFeaturePluginIfEnabled($app, 'JwtAuthentication');
+
+        // Add tags plugin if not configured.
+        if (!WebInstallerMiddleware::isConfigured()) {
+            $app->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
+
+            return;
+        }
+
         // Add Common plugins.
         $app->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
@@ -55,7 +64,6 @@ class BaseSolutionBootstrapper
         $app->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
         $this->addFeaturePluginIfEnabled($app, 'Mobile');
-        $this->addFeaturePluginIfEnabled($app, 'JwtAuthentication');
         $this->addFeaturePluginIfEnabled($app, 'SelfRegistration');
         $app->addPlugin('Passbolt/PasswordGenerator', ['routes' => true]);
         $this->addFeaturePluginIfEnabled($app, 'SmtpSettings');
@@ -67,13 +75,14 @@ class BaseSolutionBootstrapper
             true
         );
 
-        if (!WebInstallerMiddleware::isConfigured()) {
-            $app->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
-        } else {
-            $logEnabled = Configure::read('passbolt.plugins.log.enabled');
-            if (!isset($logEnabled) || $logEnabled) {
-                $app->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
-            }
+        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
+        if (!isset($logEnabled) || $logEnabled) {
+            $app->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
+        }
+
+        $folderEnabled = Configure::read('passbolt.plugins.folders.enabled');
+        if (!isset($folderEnabled) || $folderEnabled) {
+            $app->addPlugin('Passbolt/Folders', ['bootstrap' => true, 'routes' => true]);
         }
     }
 

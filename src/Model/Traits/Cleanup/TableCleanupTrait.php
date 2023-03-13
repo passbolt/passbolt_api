@@ -16,7 +16,9 @@ declare(strict_types=1);
  */
 namespace App\Model\Traits\Cleanup;
 
-use Cake\Database\Expression\TupleComparison;
+use Cake\Database\Expression\ComparisonExpression;
+use Cake\Database\Expression\IdentifierExpression;
+use Cake\Database\Expression\UnaryExpression;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 
@@ -95,19 +97,89 @@ trait TableCleanupTrait
             throw new \Exception('Cannot run cleanup duplicates operation on a table not having an "id" column.');
         }
 
-        // Find the duplicated tuples.
+        /*
+         * The SQL that retrieves the duplicate rows for the given combined keys combined_field_1, combined_field_2.
+         *
+         * SELECT
+         *   `target_table`.`id`,
+         *   `target_table`.`combined_field_1`,
+         *   `target_table`.`combined_field_2`
+         * FROM `target_table`
+         * INNER JOIN (
+         *   SELECT
+         *     `sub_query_duplicated_table`.`combined_field_1`,
+         *     `sub_query_duplicated_table`.`combined_field_2`
+         *   FROM `target_table` `sub_query_duplicated_table`
+         *   GROUP BY
+         *     `sub_query_duplicated_table`.`combined_field_1`,
+         *     `sub_query_duplicated_table`.`combined_field_2`
+         *   HAVING count(*) > 1
+         * ) `duplicated_table` ON (
+         *   (
+         *     `target_table`.`combined_field_1` = `duplicated_table`.`combined_field_1`
+         *     OR (
+         *       `target_table`.`combined_field_1` IS NULL
+         *        AND `duplicated_table`.`combined_field_1` IS NULL
+         *     )
+         *   ) AND (
+         *     `target_table`.`combined_field_2` = `duplicated_table`.`combined_field_2`
+         *     OR (
+         *       `target_table`.`combined_field_2` IS NULL
+         *        AND `duplicated_table`.`combined_field_2` IS NULL
+         *     )
+         *   )
+         * )
+         * ORDER BY
+         *   `target_table`.`combined_field_1`,
+         *   `target_table`.`combined_field_2`,
+         *   `modified` ASC
+         */
+
+        // Sub query that finds the duplicated tuples.
         $duplicatedTuplesQuery = $this->query()
             ->select($combinedKey)
             ->group($combinedKey)
             ->having('count(*) > 1');
 
+        // The inner join conditions to match the duplicated tuples sub query result fields with the main query fields.
+        $innerJoinConditions = [];
+        $targetTableName = $this->getAlias();
+        $duplicateTableName = 'DuplicatedTableName';
+        foreach ($combinedKey as $key) {
+            $innerJoinConditions[]['OR'] = [
+                new ComparisonExpression(
+                    new IdentifierExpression($key),
+                    new IdentifierExpression("$duplicateTableName.{$targetTableName}__$key")
+                ),
+                [
+                    /**
+                     * @see \Cake\Database\Expression\QueryExpression::isNull
+                     */
+                    new UnaryExpression(
+                        'IS NULL',
+                        new IdentifierExpression("$duplicateTableName.{$targetTableName}__$key"),
+                        UnaryExpression::POSTFIX
+                    ),
+                    new UnaryExpression('IS NULL', new IdentifierExpression($key), UnaryExpression::POSTFIX),
+                ],
+            ];
+        }
+
         // Find all the rows corresponding to the identified duplicated tuples.
         $duplicatedRowsQuery = $this->query()
             ->select(array_merge(['id'], $combinedKey))
-            ->where(new TupleComparison($combinedKey, $duplicatedTuplesQuery, [], 'IN'))
+            ->join([
+                'table' => $duplicatedTuplesQuery,
+                'alias' => $duplicateTableName,
+                'type' => 'INNER',
+                'conditions' => $innerJoinConditions,
+            ])
             ->order($combinedKey);
 
-        // If possible try to delete depending on the records age.
+        /*
+         * If modified or created field is available on the table, sort the duplicates with it. It will be useful to
+         * define a delete strategy: newest or oldest first.
+         */
         if (array_search('modified', $tableColumns) !== false) {
             $duplicatedRowsQuery->order(['modified' => $deleteNewest ? 'ASC' : 'DESC']);
         } elseif (array_search('created', $tableColumns) !== false) {
@@ -116,6 +188,7 @@ trait TableCleanupTrait
 
         $duplicatedRows = $duplicatedRowsQuery->disableHydration()->toArray();
 
+        // Extract the rows id to delete.
         $idsToRemove = [];
         foreach ($duplicatedRows as $index => $row) {
             foreach ($combinedKey as $key) {

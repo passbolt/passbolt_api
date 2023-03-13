@@ -13,11 +13,5 @@
  */
 
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
-use Passbolt\Log\Events\ActionsListener;
 
 Configure::load('Passbolt/Log.config', 'default', true);
-
-// Listen on controller actions.
-$actions = new ActionsListener();
-EventManager::instance()->on($actions);

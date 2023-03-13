@@ -24,7 +24,6 @@ use App\Model\Table\PermissionsTable;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
-use Passbolt\Folders\Model\Entity\Folder;
 
 /**
  * PermissionFactory
@@ -106,19 +105,6 @@ class PermissionFactory extends CakephpBaseFactory
     }
 
     /**
-     * Define the associated folder aco
-     *
-     * @param ResourceFactory|null $factory
-     * @return PermissionFactory
-     */
-    public function withAcoFolder(?ResourceFactory $factory = null): self
-    {
-        $this->patchData(['aco' => PermissionsTable::FOLDER_ACO]);
-
-        return $this->with('Folders', $factory);
-    }
-
-    /**
      * Define the permission type as read
      *
      * @return PermissionFactory
@@ -194,23 +180,6 @@ class PermissionFactory extends CakephpBaseFactory
 
         if (!is_null($resource)) {
             $this->patchData(['aco_foreign_key' => $resource->id]);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Define the aro as group
-     *
-     * @param Folder|null $folder (optional) Folder to use as aco_foregin_key
-     * @return PermissionFactory
-     */
-    public function acoFolder(?Folder $folder = null): self
-    {
-        $this->patchData(['aco' => PermissionsTable::FOLDER_ACO]);
-
-        if (!is_null($folder)) {
-            $this->patchData(['aco_foreign_key' => $folder->id]);
         }
 
         return $this;
