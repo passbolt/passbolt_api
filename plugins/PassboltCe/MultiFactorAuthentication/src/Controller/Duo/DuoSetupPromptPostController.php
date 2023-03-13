@@ -52,7 +52,7 @@ class DuoSetupPromptPostController extends MfaSetupController
         $this->_orgAllowProviderOrFail(MfaSettings::PROVIDER_DUO);
         $this->_notAlreadySetupOrFail(MfaSettings::PROVIDER_DUO);
 
-        $redirect = $this->SanitizeUrl->sanitizeRedirect();
+        $redirect = $this->SanitizeUrl->sanitizeRedirect('/mfa/setup', true);
         $startAuthService = new MfaDuoStartDuoAuthenticationService(
             AuthenticationToken::TYPE_MFA_SETUP,
             $duoSdkClient

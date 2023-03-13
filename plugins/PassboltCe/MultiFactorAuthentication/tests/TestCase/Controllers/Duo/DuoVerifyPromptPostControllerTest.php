@@ -70,13 +70,38 @@ class DuoVerifyPromptPostControllerTest extends MfaIntegrationTestCase
         $this->mockService(Client::class, function () use ($user) {
             return DuoSdkClientMock::createDefault($this, $user)->getClient();
         });
+        $redirect = '/app/users';
+
+        $this->post('/mfa/verify/duo/prompt?redirect=' . $redirect);
+
+        $this->assertResponseCode(302);
+        $this->assertRedirectContains('https://api-45e9f2ca.duosecurity.com/oauth/v1/authorize?sate=duo-not-so-random-state');
+
+        $authToken = AuthenticationTokenFactory::find()->firstOrFail();
+        $storedRedirect = json_decode($authToken->get('data'), true)['redirect'] ?? null;
+        $this->assertEquals($redirect, $storedRedirect);
+        $token = $authToken->get('token');
+        $this->assertCookie($token, MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
+        $this->assertCookieNotExpired(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
+    }
+
+    public function testDuoVerifyPromptPostController_Success_Without_Redirect()
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user, true, 'Bar');
+        $this->mockService(Client::class, function () use ($user) {
+            return DuoSdkClientMock::createDefault($this, $user)->getClient();
+        });
 
         $this->post('/mfa/verify/duo/prompt');
 
         $this->assertResponseCode(302);
         $this->assertRedirectContains('https://api-45e9f2ca.duosecurity.com/oauth/v1/authorize?sate=duo-not-so-random-state');
 
-        $token = AuthenticationTokenFactory::find()->firstOrFail()->get('token');
+        $authToken = AuthenticationTokenFactory::find()->firstOrFail();
+        $storedRedirect = json_decode($authToken->get('data'), true)['redirect'] ?? null;
+        $this->assertEquals('', $storedRedirect);
+        $token = $authToken->get('token');
         $this->assertCookie($token, MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
         $this->assertCookieNotExpired(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
     }

@@ -31,10 +31,10 @@ use Passbolt\MultiFactorAuthentication\Event\AddMfaCookieOnSuccessfulRefreshToke
 use Passbolt\MultiFactorAuthentication\Event\ClearMfaCookieOnSetupAndRecover;
 use Passbolt\MultiFactorAuthentication\Middleware\InjectMfaFormMiddleware;
 use Passbolt\MultiFactorAuthentication\Middleware\MfaRequiredCheckMiddleware;
-use Passbolt\MultiFactorAuthentication\Model\Behavior\IsMfaEnabledBehavior;
 use Passbolt\MultiFactorAuthentication\Notification\Email\MfaRedactorPool;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\DefaultRememberAMonthSettingService;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class Plugin extends BasePlugin
 {
@@ -47,7 +47,7 @@ class Plugin extends BasePlugin
     {
         parent::bootstrap($app);
 
-        $this->addIsMfaEnabledBehaviorToUsersTable();
+        $this->addAccountSettingsAssociation();
         $this->registerListeners($app);
     }
 
@@ -64,9 +64,14 @@ class Plugin extends BasePlugin
     /**
      * @return void
      */
-    public function addIsMfaEnabledBehaviorToUsersTable(): void
+    public function addAccountSettingsAssociation(): void
     {
-        TableRegistry::getTableLocator()->get('Users')->addBehavior(IsMfaEnabledBehavior::class);
+        TableRegistry::getTableLocator()->get('Users')
+            ->hasOne('MfaSettings')
+            ->setClassName('Passbolt/AccountSettings.AccountSettings')
+            ->setForeignKey('user_id')
+            ->setProperty(Service\Query\IsMfaEnabledQueryService::MFA_SETTINGS_PROPERTY)
+            ->setConditions(['MfaSettings.property' => MfaSettings::MFA]);
     }
 
     /**

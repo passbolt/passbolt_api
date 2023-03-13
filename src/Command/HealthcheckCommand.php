@@ -61,6 +61,7 @@ class HealthcheckCommand extends PassboltCommand
         'hide-warning' => false,
         'hide-help' => false,
         'hide-title' => false,
+        'hide-notice' => false,
     ];
 
     /**
@@ -95,6 +96,10 @@ class HealthcheckCommand extends PassboltCommand
             ])
             ->addOption('hide-title', [
                 'help' => __d('cake_console', 'Hide section titles.'),
+                'boolean' => true,
+            ])
+            ->addOption('hide-notice', [
+                'help' => __d('cake_console', 'Hide info messages.'),
                 'boolean' => true,
             ]);
 
@@ -158,7 +163,7 @@ class HealthcheckCommand extends PassboltCommand
         $results = [];
 
         // display options
-        $displayOptions = ['hide-pass', 'hide-warning', 'hide-help', 'hide-title'];
+        $displayOptions = array_keys($this->_displayOptions);
         foreach ($displayOptions as $option) {
             $this->_displayOptions[$option] = $args->getOption($option);
         }
@@ -512,13 +517,13 @@ class HealthcheckCommand extends PassboltCommand
         );
         $selfRegistrationPluginName = 'Self Registration';
         $selfRegistrationChecks = $checks['application']['registrationClosed'];
-        $this->warning(
+        $this->notice(
             $selfRegistrationChecks['isSelfRegistrationPluginEnabled'],
             __('The {0} plugin is enabled.', $selfRegistrationPluginName),
-            __('The {0} plugin is disabled.', $selfRegistrationPluginName) . ' ' .
+            __('The {0} plugin is disabled.', $selfRegistrationPluginName),
             __('Enable the plugin in order to define self registration settings.')
         );
-        $this->warning(
+        $this->notice(
             is_null($selfRegistrationChecks['selfRegistrationProvider']),
             __('Registration is closed, only administrators can add users.'),
             __('The self registration provider is: {0}.', $selfRegistrationChecks['selfRegistrationProvider'])
@@ -918,6 +923,28 @@ class HealthcheckCommand extends PassboltCommand
     }
 
     /**
+     * Display a notice message, and a help message if condition is false
+     *
+     * @param bool $condition to check
+     * @param string|string[] $success info message to display when success
+     * @param string|string[] $fail info message to display if fails
+     * @param string|string[]|null $help optional help message
+     * @return void
+     */
+    protected function notice(bool $condition, $success, $fail, $help = null): void
+    {
+        if ($this->_displayOptions['hide-notice']) {
+            return;
+        }
+        if ($condition) {
+            $this->display($success, 'notice');
+        } else {
+            $this->display($fail, 'notice');
+            $this->help($help);
+        }
+    }
+
+    /**
      * Display a message for given case
      *
      * @param string|string[] $msg message
@@ -944,6 +971,9 @@ class HealthcheckCommand extends PassboltCommand
                     return;
                 }
                 $msg = ' <info>[' . __('HELP') . ']</info> ' . $msg;
+                break;
+            case 'notice':
+                $msg = ' <info>[' . __('INFO') . ']</info> ' . $msg;
                 break;
             default:
                 throw new \Exception('Task output case not defined: ' . $case . ' ' . $msg);

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
+use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -45,13 +46,25 @@ class DuoVerifyGetController extends MfaVerifyController
         }
 
         /** @var \Passbolt\MultiFactorAuthentication\Form\Duo\DuoVerifyForm $verifyForm */
-        $this->set('hostName', $this->mfaSettings->getOrganizationSettings()->getDuoOrgSettings()->getDuoApiHostname());
         $this->set('verifyForm', $verifyForm);
+        $this->set('formUrl', $this->getFormUrl());
         $this->set('providers', $this->mfaSettings->getEnabledProviders());
         $this->set('theme', $this->User->theme());
         $this->viewBuilder()
             ->setLayout('mfa_verify')
             ->setTemplatePath(ucfirst(MfaSettings::PROVIDER_DUO))
             ->setTemplate('verifyForm');
+    }
+
+    /**
+     * Get the full Duo verify redirect URL, based on given redirect query parameter.
+     *
+     * @return string
+     */
+    protected function getFormUrl(): string
+    {
+        $redirect = $this->SanitizeUrl->sanitizeRedirect('/mfa/verify');
+
+        return Router::url('/mfa/verify/duo/prompt?redirect=' . $redirect, true);
     }
 }

@@ -59,6 +59,7 @@ try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
     Configure::load('default', 'default', false); // passbolt default config
+    Configure::load('audit_logs', 'default', true); // audit logs config
     if (\file_exists(CONFIG . DS . 'passbolt.php')) {
         Configure::load('passbolt', 'default', true); // merge with default config
 

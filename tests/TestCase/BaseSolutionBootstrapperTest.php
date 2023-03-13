@@ -30,6 +30,7 @@ use Cake\Core\PluginCollection;
 class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 {
     public const EXPECTED_CE_PLUGINS = [
+        'Passbolt/JwtAuthentication',
         'Passbolt/AccountSettings',
         'Passbolt/Import',
         'Passbolt/InFormIntegration',
@@ -41,11 +42,12 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/EmailDigest',
         'Passbolt/Reports',
         'Passbolt/Mobile',
-        'Passbolt/JwtAuthentication',
         'Passbolt/SelfRegistration',
         'Passbolt/PasswordGenerator',
         'Passbolt/SmtpSettings',
         'Passbolt/MultiFactorAuthentication',
+        'Passbolt/Log',
+        'Passbolt/Folders',
     ];
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void
@@ -57,14 +59,25 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
     public function testBaseSolutionBootstrapper_Application_Bootstrap_WebInstaller_Required(): void
     {
         Configure::write('passbolt.webInstaller.configured', false);
+        $expectedPluginList = [
+            'Migrations',
+            'Authentication',
+            'EmailQueue',
+            'BryanCrowe/ApiPagination',
+            'PassboltSeleniumApi',
+            'PassboltTestData',
+            'Passbolt/JwtAuthentication',
+            'Passbolt/WebInstaller',
+            'Bake',
+            'CakephpFixtureFactories',
+            'Cake/TwigView',
+        ];
         $plugins = $this->arrangeAndGetPlugins();
-        $this->assertPluginList($plugins, $this->getExpectedPlugins(true));
+        $this->assertPluginList($plugins, $expectedPluginList);
     }
 
     protected function getExpectedPlugins(bool $withWebInstaller = false): array
     {
-        $extraPlugin = $withWebInstaller ? 'Passbolt/WebInstaller' : 'Passbolt/Log';
-
         return array_merge(
             [
             'Migrations',
@@ -75,7 +88,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
             'PassboltTestData',
             ],
             self::EXPECTED_CE_PLUGINS,
-            [$extraPlugin],
             [
             'Bake',
             'CakephpFixtureFactories',

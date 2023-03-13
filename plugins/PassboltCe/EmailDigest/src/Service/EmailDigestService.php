@@ -54,7 +54,7 @@ class EmailDigestService
      * Handle the emails data for each recipient and transform them to emails digests
      *
      * @param array $emails An array of emails entities from email queue.
-     * @return array of EmailDigestInterface
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
     public function createDigests(array $emails): array
