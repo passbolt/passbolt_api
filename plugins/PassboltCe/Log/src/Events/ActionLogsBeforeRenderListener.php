@@ -12,15 +12,27 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.12.0
  */
-namespace Passbolt\Log\Events\Traits;
+namespace Passbolt\Log\Events;
 
 use App\Utility\UserAction;
 use Cake\Event\Event;
-use Cake\ORM\TableRegistry;
+use Cake\Event\EventListenerInterface;
+use Passbolt\Log\Service\ActionLogs\ActionLogsCreateService;
 
-trait ControllerActionTrait
+class ActionLogsBeforeRenderListener implements EventListenerInterface
 {
+    /**
+     * @inheritDoc
+     */
+    public function implementedEvents(): array
+    {
+        return [
+            'Controller.beforeRender' => 'logControllerAction',
+        ];
+    }
+
     /**
      * Log controller action.
      *
@@ -29,11 +41,9 @@ trait ControllerActionTrait
      */
     public function logControllerAction(Event $event)
     {
-        $statusCode = $event->getSubject()->getResponse()->getStatusCode();
-        $status = (int)($statusCode === 200);
+        /** @var \App\Controller\AppController $controller */
+        $controller = $event->getSubject();
         $userAction = UserAction::getInstance();
-        /** @var \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs */
-        $ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
-        $ActionLogs->create($userAction, $status);
+        (new ActionLogsCreateService())->create($userAction, $controller);
     }
 }

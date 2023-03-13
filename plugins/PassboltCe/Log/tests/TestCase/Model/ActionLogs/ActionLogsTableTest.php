@@ -21,7 +21,6 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\Datasource\ModelAwareTrait;
 
 /**
@@ -30,7 +29,7 @@ use Cake\Datasource\ModelAwareTrait;
  * @property \Passbolt\Log\Model\Table\ActionsTable $Actions
  * @property \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs
  */
-class ActionLogsTest extends AppTestCase
+class ActionLogsTableTest extends AppTestCase
 {
     use ModelAwareTrait;
 
@@ -44,7 +43,7 @@ class ActionLogsTest extends AppTestCase
     /**
      * Test create function.
      */
-    public function testCreate()
+    public function testActionLogsTable_Create()
     {
         // Delete cache
         $this->Actions->clearCache();
@@ -60,28 +59,5 @@ class ActionLogsTest extends AppTestCase
 
         $this->assertNotEmpty($actionLog);
         $this->assertEquals($actionLog->action_id, UserAction::actionId('Resources.Index'));
-    }
-
-    /**
-     * Test that create does not process blacklisted entry points, as defined in the config.
-     */
-    public function testCreateWithBlackList()
-    {
-        // Delete cache
-        $this->Actions->clearCache();
-
-        // First, add action to blacklist.
-        $actionName = 'Test.BlackList';
-        Configure::write('passbolt.plugins.log.config.blackList', [ $actionName ]);
-
-        $accessControl = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
-        $userAction = UserAction::getInstance($accessControl, $actionName, 'GET Resources.json');
-
-        /** @psalm-suppress UndefinedMagicMethod magic method exists */
-        $action = $this->Actions->findByName($actionName)->first();
-        $this->assertEmpty($action);
-
-        $actionLog = $this->ActionLogs->create($userAction, 1);
-        $this->assertEmpty($actionLog);
     }
 }
