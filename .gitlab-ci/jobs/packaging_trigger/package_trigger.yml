@@ -1,0 +1,11 @@
+packaging-trigger:
+  stage: packaging-trigger
+  variables:
+    PACKAGING_TRIGGER_BRANCH: "main"
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/debian-bullseye-11-slim:latest
+  script:
+    - apt update && apt install -y curl
+    - bash .gitlab-ci/scripts/packaging-trigger.sh "$CI_COMMIT_TAG" "$PACKAGING_TRIGGER_BRANCH"
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: on_success
