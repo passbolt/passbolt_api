@@ -60,13 +60,6 @@ class ErrorController extends AppController
             $this->set(compact('header', 'body'));
 
             $this->viewBuilder()->setOption('serialize', ['header', 'body',]);
-            $this->setViewBuilderOptions();
-
-            // render a legacy JSON view by default
-            $apiVersion = $this->request->getQuery('api-version');
-            if ($apiVersion === 'v1') {
-                throw new InternalErrorException('API v1 support is deprecated in this version.');
-            }
         }
         $this->viewBuilder()->setTemplatePath('Error');
     }
