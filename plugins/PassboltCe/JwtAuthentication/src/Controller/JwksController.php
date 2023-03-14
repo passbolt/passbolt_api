@@ -69,7 +69,6 @@ class JwksController extends AppController
         // Do not use regular envelope as this is a normalized endpoint
         $this->set(compact('keys'));
         $this->viewBuilder()->setOption('serialize', 'keys');
-        $this->setViewBuilderOptions();
     }
 
     /**

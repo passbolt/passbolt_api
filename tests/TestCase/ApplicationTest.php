@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase;
 
 use App\Application;
+use App\Middleware\ApiVersionMiddleware;
 use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
@@ -53,6 +54,7 @@ class ApplicationTest extends TestCase
             ErrorHandlerMiddleware::class,
             AssetMiddleware::class,
             RoutingMiddleware::class,
+            ApiVersionMiddleware::class,
             SessionPreventExtensionMiddleware::class,
             BodyParserMiddleware::class,
             SessionAuthPreventDeletedUsersMiddleware::class,
