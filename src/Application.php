@@ -19,6 +19,7 @@ namespace App;
 use App\Authenticator\SessionAuthenticationService;
 use App\Authenticator\SessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Middleware\ApiVersionMiddleware;
 use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
@@ -93,6 +94,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
             ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
             ->add(new RoutingMiddleware($this))
+            ->insertAfter(RoutingMiddleware::class, ApiVersionMiddleware::class)
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new BodyParserMiddleware())
             ->add(SessionAuthPreventDeletedUsersMiddleware::class)
