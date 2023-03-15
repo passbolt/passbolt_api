@@ -44,4 +44,4 @@ curl -X POST \
      -F "variables[PASSBOLT_FLAVOUR]=$PASSBOLT_FLAVOUR" \
      -F "variables[PASSBOLT_VERSION]=$passbolt_version" \
      -F "variables[PASSBOLT_BRANCH]=$tag" \
-     "https://gitlab.com/api/v4/projects/$CI_PROJECT_ID/trigger/pipeline"
+     "https://gitlab.com/api/v4/projects/$DOWNSTREAM_PROJECT_ID/trigger/pipeline"
