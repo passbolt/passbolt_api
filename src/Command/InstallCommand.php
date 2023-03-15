@@ -397,9 +397,10 @@ class InstallCommand extends PassboltCommand
 
         // JWT checks
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
-            $checks = Healthchecks::jwt();
+            $jwtKeyPairService = new JwtKeyPairService();
+            $checks = Healthchecks::jwt($jwtKeyPairService);
             if ($checks['jwt']['keyPairValid'] !== true) {
-                $fixCmd = (new JwtKeyPairService())->getCreateJwtKeysCommand();
+                $fixCmd = $jwtKeyPairService->getCreateJwtKeysCommand();
 
                 $this->error('The JWT key pair is not valid, or cannot be found.', $io);
                 $this->error('Please run ' . $fixCmd . ' to create a valid pair.', $io);

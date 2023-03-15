@@ -22,7 +22,6 @@ use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 /**
  * @uses \Passbolt\JwtAuthentication\Command\CreateAccessTokenCommand
@@ -41,7 +40,6 @@ class CreateAccessTokenCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        (new JwtKeyPairService())->createKeyPair();
         $this->useCommandRunner();
         $this->enableFeaturePlugin('JwtAuthentication');
     }

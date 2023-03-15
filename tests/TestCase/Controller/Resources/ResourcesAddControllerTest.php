@@ -29,7 +29,6 @@ use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
@@ -61,7 +60,6 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources->getEventManager()->setEventList(new EventList());
         ResourceTypeFactory::make()->default()->persist();
-        (new JwtKeyPairService())->createKeyPair();
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->setEmailNotificationsSetting('password.create', true);
     }
