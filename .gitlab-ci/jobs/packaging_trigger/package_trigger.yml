@@ -2,6 +2,7 @@ packaging-trigger:
   stage: packaging-trigger
   variables:
     PACKAGING_TRIGGER_BRANCH: "main"
+    DOWNSTREAM_PROJECT_ID: "$PACKAGING_PROJECT_ID"
   image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/debian-bullseye-11-slim:latest
   script:
     - apt update && apt install -y curl
