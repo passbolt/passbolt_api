@@ -17,12 +17,14 @@ variables:
 stages:
   - unit-test
   - unit-test-parallel
+  - packaging-trigger
 
 include:
   - template: Code-Quality.gitlab-ci.yml
-#  - local: "/.gitlab-ci/jobs/php_unit_tests/runner.yml"
+  #  - local: "/.gitlab-ci/jobs/php_unit_tests/runner.yml"
   - local: "/.gitlab-ci/jobs/php_unit_tests/sequential/php_unit_tests.yml"
   - local: "/.gitlab-ci/jobs/style_check.yml"
+  - local: ".gitlab-ci/jobs/packaging_trigger/package_trigger.yml"
 
 code_quality:
   stage: unit-test
@@ -33,3 +35,4 @@ workflow:
     - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
       when: never
     - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG
