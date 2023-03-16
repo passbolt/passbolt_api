@@ -71,6 +71,16 @@ class DigestFactory
     }
 
     /**
+     * Clear the singleton of the DigestFactory
+     *
+     * @return void
+     */
+    public static function clearInstance(): void
+    {
+        static::$instance = null;
+    }
+
+    /**
      * Factory method for DigestsCollection
      *
      * @return \Passbolt\EmailDigest\Utility\Digest\SingleDigest

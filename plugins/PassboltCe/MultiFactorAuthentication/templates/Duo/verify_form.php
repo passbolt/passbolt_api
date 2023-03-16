@@ -1,9 +1,9 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var string $hostName
  * @var mixed $providers
  * @var mixed $verifyForm
+ * @var string $formUrl
  */
     use Cake\Routing\Router;
     use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -12,7 +12,7 @@
     $this->assign('title', $title);
     $this->assign('pageClass', 'login');
     $formContext = [
-        'url' => Router::url('/mfa/verify/duo/prompt?redirect=' . $redirect, true),
+        'url' => $formUrl,
         'target' => '_top',
         'id' => 'duo_form',
     ];

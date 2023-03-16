@@ -2,10 +2,10 @@
 /**
  * @var \App\View\AppView $this
  * @var mixed $setupForm
+ * @var string $formUrl
  * @var array $body
  */
     use Cake\Core\Configure;
-use Cake\Routing\Router;
 
     $version = Configure::read('passbolt.version');
     $title = __('Duo Multi Factor Authentication');
@@ -16,7 +16,7 @@ use Cake\Routing\Router;
         ['block' => 'js', 'fullBase' => true]
     );
     $formContext = [
-        'url' => Router::url('/mfa/setup/duo/prompt?redirect=' . $redirect, true),
+        'url' => $formUrl,
         'target' => '_top',
         'id' => 'duo_form',
     ];

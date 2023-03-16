@@ -2,6 +2,31 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.12.0] - 2023-03-15
+### Added
+PB-20535 As a community user I want to use folders
+PB-22749 As an administrator I can customise passbolt to output the action logs in syslog
+PB-22749 As an administrator I can customise passbolt to output the action logs in a file
+PB-22749 As an administrator I can implement my own action logs handler
+
+### Fixed
+PB-23717 As a user using the json API I should get a bad request error instead of an internal error if using api-version=v1
+PB-21826 Fix emails entries should not be locked when threshold limit is exceeded
+PB-23519 As an administrator running the DUO v4 migration I should not see a warning message if DUO was not configured
+PB-23721 As an administrator I want to be sure the server key is in the keyring before decrypting users directory settings
+
+### Security
+PB-23311 As an administrator I should be the only one to know which users have enabled MFA
+
+### Improved
+PB-23333 As an administrator I should see a notice instead of a warning if I enabled the self registration plugin
+PB-23722 As a developer running the unit tests I want to be sure the version from the config matches the one from the changelog
+PB-22892 As a user recovering my account I want to see the success and error pages feedback
+
+### Maintenance
+PB-23287 Duo multi-factor authentication redirection refactoring
+PB-23702 Update phpseclib/phpseclib dependency
+
 ## [3.11.1] - 2023-03-03
 ### Fixed
 - PB-23283 As an administrator I can disable username validation in Duo Callback endpoints

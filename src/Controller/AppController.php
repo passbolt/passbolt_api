@@ -22,7 +22,6 @@ use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 
@@ -100,7 +99,6 @@ class AppController extends Controller
         $this->set(compact('header', 'body'));
 
         $this->viewBuilder()->setOption('serialize', ['header', 'body']);
-        $this->setViewBuilderOptions();
     }
 
     /**
@@ -129,7 +127,6 @@ class AppController extends Controller
         $this->set(compact('header', 'body'));
 
         $this->viewBuilder()->setOption('serialize', ['header', 'body',]);
-        $this->setViewBuilderOptions();
     }
 
     /**
@@ -137,14 +134,13 @@ class AppController extends Controller
      *
      * @return void
      */
-    protected function setViewBuilderOptions()
+    protected function setViewBuilderOptions(): void
     {
         // render a legacy JSON view by default
         if ($this->request->is('json')) {
-            if ($this->getApiVersion() === 'v1') {
-                throw new InternalErrorException('API v1 support is deprecated in this version.');
-            }
-        } elseif (!Configure::read('debug')) {
+            return;
+        }
+        if (!Configure::read('debug')) {
             // Render a page not found if there is not template for the endpoint
             // and the request is specifically not json format
             // examples:
@@ -157,31 +153,6 @@ class AppController extends Controller
                 throw new NotFoundException(__('Page not found.'));
             }
         }
-    }
-
-    /**
-     * Get the request api version.
-     *
-     * @return string
-     */
-    public function getApiVersion()
-    {
-        $apiVersion = $this->request->getQuery('api-version');
-        // Default to v2 in v3
-        if (!isset($apiVersion) || !is_string($apiVersion)) {
-            return 'v2';
-        }
-
-        // Reformat api-version
-        if ($apiVersion === '1') {
-            return 'v1';
-        }
-        if ($apiVersion === '2') {
-            return 'v2';
-        }
-
-        // Return what is given
-        return $apiVersion;
     }
 
     /**

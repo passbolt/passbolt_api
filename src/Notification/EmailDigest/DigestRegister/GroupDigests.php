@@ -22,7 +22,6 @@ use App\Notification\Email\Redactor\Group\GroupUserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserUpdateEmailRedactor;
 use Cake\Core\Configure;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Utility\Digest\Digest;
 use Passbolt\EmailDigest\Utility\Digest\DigestRegisterTrait;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
@@ -58,7 +57,12 @@ class GroupDigests implements EventListenerInterface
                 GroupUserDeleteEmailRedactor::TEMPLATE,
             ],
             'admin',
-            function (Entity $emailData, int $emailCount) {
+            /**
+             * @param \Cake\ORM\Entity[] $emailQueueEntities
+             */
+            function (array $emailQueueEntities, int $emailCount) {
+                $emailData = $emailQueueEntities[0];
+
                 $digest = (new EmailDigest())
                     ->setSubject(__('Your membership in several groups changed in passbolt'))
                     ->setTemplate(static::GROUP_USERS_CHANGES_TEMPLATE)
@@ -83,7 +87,12 @@ class GroupDigests implements EventListenerInterface
                 GroupUserDeleteEmailRedactor::TEMPLATE,
             ],
             'admin',
-            function (Entity $emailData, int $emailCount) {
+            /**
+             * @param \Cake\ORM\Entity[] $emailQueueEntities
+             */
+            function (array $emailQueueEntities, int $emailCount) {
+                $emailData = $emailQueueEntities[0];
+
                 $digest = (new EmailDigest())
                     ->setSubject(__('Several groups were deleted in passbolt'))
                     ->setTemplate(static::GROUPS_DELETE_TEMPLATE)

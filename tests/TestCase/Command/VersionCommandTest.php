@@ -16,11 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\TestSuite\TestCase;
 
-class VersionCommandTest extends AppTestCase
+class VersionCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
 
@@ -54,5 +54,25 @@ class VersionCommandTest extends AppTestCase
         $this->exec('passbolt version');
         $this->assertExitSuccess();
         $this->assertOutputContains(Configure::read('passbolt.version') . "\n" . 'Cakephp ' . Configure::version());
+    }
+
+    public function testVersionCommand_Compare_With_ChangeLogs()
+    {
+        $version = Configure::read('passbolt.version');
+        $lines = file(ROOT . DS . 'CHANGELOG.md');
+
+        // The change log is empty on non-productive branches
+        if (!isset($lines[4])) {
+            $this->assertTrue(true);
+        } else {
+            $lastVersionLine = $lines[4];
+            preg_match('#(?<=\[)(.*?)(?=\])#', $lastVersionLine, $lastVersionInChangeLogs);
+            $lastVersionInChangeLogs = $lastVersionInChangeLogs[0];
+            $this->assertSame(
+                $version,
+                $lastVersionInChangeLogs,
+                'The passbolt version in the CHANGELOG.md file and in config/version.php do not match'
+            );
+        }
     }
 }

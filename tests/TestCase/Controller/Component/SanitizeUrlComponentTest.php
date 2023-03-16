@@ -27,12 +27,12 @@ class SanitizeUrlComponentTest extends TestCase
     /**
      * @dataProvider dataForTestSanitizeUrlComponent_Sanitize
      */
-    public function testSanitizeUrlComponent_Sanitize(string $url, array $blacklist, bool $ensureStartsWithSlash, bool $escapeSpecialChars, string $expectedResult): void
+    public function testSanitizeUrlComponent_Sanitize(string $url, array $blacklist, bool $allowEmpty, bool $ensureStartsWithSlash, bool $escapeSpecialChars, string $expectedResult): void
     {
         $registry = new ComponentRegistry();
         $component = new SanitizeUrlComponent($registry);
 
-        $result = $component->sanitize($url, $blacklist, $ensureStartsWithSlash, $escapeSpecialChars);
+        $result = $component->sanitize($url, $blacklist, $allowEmpty, $ensureStartsWithSlash, $escapeSpecialChars);
 
         $this->assertSame($expectedResult, $result);
     }
@@ -40,13 +40,15 @@ class SanitizeUrlComponentTest extends TestCase
     public function dataForTestSanitizeUrlComponent_Sanitize(): array
     {
         return [
-            ['', [], false, true, '/'],
-            ['app/users', [], true, true, '/'],
-            ['/app/users', [], true, true, '/app/users'],
-            ['/app/users', ['/user'], true, true, '/'],
-            ['/mfa/verify/provider', ['/mfa/verify'], true, true, '/'],
-            ['/app/users<script>', [], true, false, '/app/users<script>'],
-            ['/app/users<script>', [], true, true, '/app/users&lt;script&gt;'],
+            ['', [], false, false, true, '/'],
+            ['', [], true, false, true, ''],
+            ['app/users', [], false, true, true, '/'],
+            ['/app/users', [], false, true, true, '/app/users'],
+            ['/subdir/app/users', [], false, true, true, '/subdir/app/users'],
+            ['/app/users', ['/user'], false, true, true, '/'],
+            ['/mfa/verify/provider', ['/mfa/verify'], false, true, true, '/'],
+            ['/app/users<script>', [], false, true, false, '/app/users<script>'],
+            ['/app/users<script>', [], false, true, true, '/app/users&lt;script&gt;'],
         ];
     }
 

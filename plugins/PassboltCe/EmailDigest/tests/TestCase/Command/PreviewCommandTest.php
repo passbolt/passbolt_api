@@ -27,6 +27,7 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Command\PreviewCommand;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
+use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
@@ -39,6 +40,7 @@ class PreviewCommandTest extends TestCase
     use DummyTranslationTestTrait;
     use TruncateDirtyTables;
     use EmailTestTrait;
+    use EmailDigestMockTestTrait;
 
     /**
      * setUp method
@@ -49,6 +51,7 @@ class PreviewCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        $this->loadRoutes();
         $this->setDummyFrenchTranslator();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
         EmailNotificationSettings::flushCache();
@@ -133,5 +136,23 @@ class PreviewCommandTest extends TestCase
         $this->assertMailBodyStringCount(2, '</head>', 0, $emailHtml);
         // assert email separator
         $this->assertMailBodyStringCount(2, PreviewCommand::EMAIL_SEPARATOR, 0, $emailHtml);
+    }
+
+    public function testPreviewCommand_ThresholdExceeded(): void
+    {
+        $this->persistEmailQueueEntities([
+            'email' => 'john@test.test',
+            'template' => 'LU/resource_share',
+            'from_name' => 'No reply',
+            'from_email' => 'no-reply@test.test',
+        ]);
+
+        $this->exec('passbolt email_digest preview');
+
+        $this->assertExitSuccess();
+        $this->assertMailCount(0); // Make sure preview doesn't send emails
+        $this->assertOutputContains('From: No reply <no-reply@test.test>');
+        $this->assertOutputContains('To: john@test.test');
+        $this->assertOutputContains('Subject: Multiple passwords have been shared with you in passbolt');
     }
 }
