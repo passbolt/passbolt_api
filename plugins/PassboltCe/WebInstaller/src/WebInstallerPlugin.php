@@ -22,7 +22,7 @@ use Cake\Http\MiddlewareQueue;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 
-class Plugin extends BasePlugin
+class WebInstallerPlugin extends BasePlugin
 {
     /**
      * @inheritDoc

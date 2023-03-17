@@ -21,9 +21,6 @@ use App\Controller\AppController;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Utility\Hash;
 
-/**
- * @property \App\Model\Table\GroupsTable $Groups
- */
 class GroupsAddController extends AppController
 {
     /**
@@ -42,9 +39,9 @@ class GroupsAddController extends AppController
         }
 
         $data = $this->_formatRequestData();
-
-        $this->loadModel('Groups');
-        $group = $this->Groups->create($data, $this->User->getAccessControl());
+        /** @var \App\Model\Table\GroupsTable $GroupsTable */
+        $GroupsTable = $this->fetchTable('Groups');
+        $group = $GroupsTable->create($data, $this->User->getAccessControl());
 
         $msg = __('The group has been added successfully.');
         $this->success($msg, $group);

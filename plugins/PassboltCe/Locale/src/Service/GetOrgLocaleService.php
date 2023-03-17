@@ -29,11 +29,6 @@ class GetOrgLocaleService extends LocaleService
     public static $organisationLocale;
 
     /**
-     * @var \App\Model\Table\OrganizationSettingsTable
-     */
-    public $OrganizationSettings;
-
-    /**
      * Unset the organization locale stored in run time memory.
      *
      * @return  void
@@ -67,10 +62,11 @@ class GetOrgLocaleService extends LocaleService
      */
     protected function getOrganizationLocale(): string
     {
-        $this->loadModel('OrganizationSettings');
+        /** @var \App\Model\Table\OrganizationSettingsTable $organizationSettingsTable */
+        $organizationSettingsTable = $this->fetchTable('OrganizationSettings');
 
         try {
-            $setting = $this->OrganizationSettings->getByProperty(static::SETTING_PROPERTY);
+            $setting = $organizationSettingsTable->getByProperty(static::SETTING_PROPERTY);
         } catch (\Exception $e) {
             // Do nothing if the table is not found.
             // Since this service is required by the middleware

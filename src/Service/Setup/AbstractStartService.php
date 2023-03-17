@@ -17,22 +17,35 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\ServerRequest;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
- * @property \App\Model\Table\UserAgentsTable $UserAgents
- * @property \App\Model\Table\UsersTable $Users
+ * AbstractStartService class
  */
 abstract class AbstractStartService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @var \Cake\Http\ServerRequest
      */
     protected $request;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
+
+    /**
+     * @var \App\Model\Table\UserAgentsTable
+     */
+    protected $UserAgents;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * AbstractStartService constructor
@@ -41,9 +54,12 @@ abstract class AbstractStartService
      */
     public function __construct(?ServerRequest $request = null)
     {
-        $this->loadModel('AuthenticationTokens');
-        $this->loadModel('UserAgents');
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
+        /** @phpstan-ignore-next-line */
+        $this->UserAgents = $this->fetchTable('UserAgents');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
         $this->request = $request ?? new ServerRequest();
     }
 

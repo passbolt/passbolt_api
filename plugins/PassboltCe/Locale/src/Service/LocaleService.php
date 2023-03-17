@@ -19,14 +19,14 @@ namespace Passbolt\Locale\Service;
 
 use App\Error\Exception\ValidationException;
 use Cake\Core\Configure;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\I18n\I18n;
 use Cake\Log\Log;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 
 class LocaleService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     public const SETTING_PROPERTY = 'locale';
     public const REQUEST_DATA_KEY = 'value';

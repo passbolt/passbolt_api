@@ -37,9 +37,10 @@ class ThemesSelectController extends AppController
             throw new BadRequestException(__('A value for the theme should be provided.'));
         }
 
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettingsTable */
+        $accountSettingsTable = $this->fetchTable('Passbolt/AccountSettings.AccountSettings');
         try {
-            $setting = $this->AccountSettings->createOrUpdateSetting($this->User->id(), 'theme', $theme);
+            $setting = $accountSettingsTable->createOrUpdateSetting($this->User->id(), 'theme', $theme);
         } catch (ValidationException $e) {
             throw new BadRequestException(__('This is not a valid theme.'));
         }

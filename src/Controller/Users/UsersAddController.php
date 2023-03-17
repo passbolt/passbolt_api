@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Controller\Users;
 
-use App\Controller\AppController;
 use App\Model\Entity\Role;
 use Cake\Http\Exception\ForbiddenException;
 
@@ -28,11 +27,11 @@ class UsersAddController extends UsersRegisterController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function initialize(): void
     {
-        $this->loadModel('Users');
-
-        return AppController::beforeFilter($event);
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**

@@ -47,8 +47,9 @@ class ResourceTypesViewController extends AppController
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
         try {
-            $this->loadModel('ResourceTypes');
-            $resourceType = $this->ResourceTypes->get($id);
+            /** @var \App\Model\Table\ResourceTypesTable $resourceTypesTable */
+            $resourceTypesTable = $this->fetchTable('ResourceTypes');
+            $resourceType = $resourceTypesTable->get($id);
         } catch (CakeException $exception) {
             throw new NotFoundException(__('The resource type does not exist.'));
         }

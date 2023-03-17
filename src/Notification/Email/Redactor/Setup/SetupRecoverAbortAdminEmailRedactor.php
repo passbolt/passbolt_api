@@ -23,18 +23,18 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Setup\RecoverAbortService;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * SetupRecoverAbortAdminEmailRedactor class
  */
 class SetupRecoverAbortAdminEmailRedactor implements SubscribedEmailRedactorInterface
 {
+    use LocatorAwareTrait;
     use SubscribedEmailRedactorTrait;
-    use ModelAwareTrait;
 
     public const TEMPLATE = 'AD/setup_recover_abort';
 
@@ -64,11 +64,12 @@ class SetupRecoverAbortAdminEmailRedactor implements SubscribedEmailRedactorInte
             return $emailCollection;
         }
 
-        $this->loadModel('Users');
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
 
         // Create an email for every admin
         /** @var \App\Model\Entity\User[] $admins */
-        $admins = $this->Users->findAdmins()->find('locale');
+        $admins = $usersTable->findAdmins()->find('locale');
         foreach ($admins as $admin) {
             $email = $this->createAbortEmail($admin, $user);
             $emailCollection->addEmail($email);

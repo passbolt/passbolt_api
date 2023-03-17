@@ -32,6 +32,16 @@ use Exception;
 class SecretsViewController extends AppController
 {
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Secrets = $this->fetchTable('Secrets');
+    }
+
+    /**
      * Secret View action
      *
      * @param string $resourceId uuid Identifier of the resource
@@ -45,7 +55,6 @@ class SecretsViewController extends AppController
         if (!Validation::uuid($resourceId)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
-        $this->loadModel('Secrets');
 
         // Retrieve the secret.
         $uac = $this->User->getAccessControl();

@@ -21,23 +21,30 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
  * Class ActionLogsTest
- *
- * @property \Passbolt\Log\Model\Table\ActionsTable $Actions
- * @property \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs
  */
 class ActionLogsTableTest extends AppTestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \Passbolt\Log\Model\Table\ActionsTable
+     */
+    protected $Actions;
+
+    /**
+     * @var \Passbolt\Log\Model\Table\ActionLogsTable
+     */
+    protected $ActionLogs;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('Passbolt/Log.Actions');
-        $this->loadModel('Passbolt/Log.ActionLogs');
+        $this->Actions = $this->fetchTable('Passbolt/Log.Actions');
+        $this->ActionLogs = $this->fetchTable('Passbolt/Log.ActionLogs');
     }
 
     /**

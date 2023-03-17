@@ -79,6 +79,9 @@ class DatabaseController extends WebInstallerController
             $this->stepInfo['defaultConfig'] = array_merge($this->configFileDefault, $this->configFile);
             $this->defaultPassword = UuidFactory::uuid('__default_password__');
         }
+
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**
@@ -164,7 +167,6 @@ class DatabaseController extends WebInstallerController
 
         DatabaseConfiguration::validateSchema();
 
-        $this->loadModel('Users');
         $nbAdmins = $this->Users->find()
             ->where(['role_id' => $this->Users->Roles->getIdByName(Role::ADMIN)])
             ->count();

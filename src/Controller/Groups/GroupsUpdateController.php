@@ -38,14 +38,17 @@ class GroupsUpdateController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function initialize(): void
     {
-        $this->loadModel('Groups');
-        $this->loadModel('GroupsUsers');
-        $this->loadModel('Resources');
-        $this->loadModel('Secrets');
-
-        return parent::beforeFilter($event);
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Groups = $this->fetchTable('Groups');
+        /** @phpstan-ignore-next-line */
+        $this->GroupsUsers = $this->fetchTable('GroupsUsers');
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Secrets = $this->fetchTable('Secrets');
     }
 
     /**

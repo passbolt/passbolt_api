@@ -19,18 +19,22 @@ namespace Passbolt\Folders\Test\TestCase\Model\Table\FoldersHistory;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FolderHistory;
 
 /**
  * @covers \Passbolt\Folders\Model\Table\FoldersHistoryTable
- * @property \Passbolt\Folders\Model\Table\FoldersHistoryTable $FoldersHistory
  */
 class FoldersHistoryTableTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \Passbolt\Folders\Model\Table\FoldersHistoryTable
+     */
+    protected $FoldersHistory;
 
     /**
      * setUp method
@@ -40,7 +44,7 @@ class FoldersHistoryTableTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('Passbolt/Folders.FoldersHistory');
+        $this->FoldersHistory = $this->fetchTable('Passbolt/Folders.FoldersHistory');
     }
 
     /**

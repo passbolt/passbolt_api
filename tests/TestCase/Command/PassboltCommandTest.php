@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Test\Lib\AppTestCase;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**

@@ -54,7 +54,6 @@ use Cake\Routing\Router;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
@@ -125,18 +124,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         }
 
         return $middlewareQueue;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function handle(
-        ServerRequestInterface $request
-    ): ResponseInterface {
-        // TODO: remove this line when migrating to CakePHP 4.4 (https://github.com/cakephp/cakephp/pull/16180)
-        $this->getContainer()->add(ServerRequest::class, $request);
-
-        return parent::handle($request);
     }
 
     /**

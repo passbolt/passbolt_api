@@ -38,7 +38,8 @@ class ResourcesAddController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadModel('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
 
         $this->resourcesAddService = new ResourcesAddService();
 

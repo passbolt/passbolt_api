@@ -12,12 +12,12 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.8.0
+ * @since         3.3.0
  */
-namespace Passbolt\AccountSettings;
+namespace Passbolt\EmailNotificationSettings;
 
 use Cake\Core\BasePlugin;
 
-class Plugin extends BasePlugin
+class EmailNotificationSettingsPlugin extends BasePlugin
 {
 }

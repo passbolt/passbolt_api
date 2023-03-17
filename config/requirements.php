@@ -15,8 +15,8 @@
 /*
  *  Passbolt requirements
  */
-if (version_compare(PHP_VERSION, '7.3.0') < 0) {
-    trigger_error('Your PHP version must be equal or higher than 7.3.0 to use Passbolt.', E_USER_ERROR);
+if (version_compare(PHP_VERSION, '7.4.0') < 0) {
+    trigger_error('Your PHP version must be equal or higher than 7.4.0 to use Passbolt.', E_USER_ERROR);
 }
 
 if (!extension_loaded('intl')) {

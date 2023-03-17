@@ -29,7 +29,7 @@ use Passbolt\Folders\EventListener\ResourcesEventListener;
 use Passbolt\Folders\Notification\Email\FoldersEmailRedactorPool;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
 
-class Plugin extends BasePlugin
+class FoldersPlugin extends BasePlugin
 {
     /**
      * @inheritDoc

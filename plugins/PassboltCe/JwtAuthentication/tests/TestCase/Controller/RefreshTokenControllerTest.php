@@ -22,27 +22,34 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 
 /**
  * Class AuthRefreshTokenControllerTest
- *
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
- * @property \App\Model\Table\UsersTable $Users
  */
 class RefreshTokenControllerTest extends JwtAuthenticationIntegrationTestCase
 {
     use EmailQueueTrait;
     use GpgAdaSetupTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('AuthenticationTokens');
-        $this->loadModel('Users');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
+        $this->Users = $this->fetchTable('Users');
     }
 
     public function testAuthRefreshTokenController_No_Data()

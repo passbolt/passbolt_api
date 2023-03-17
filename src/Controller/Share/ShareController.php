@@ -39,6 +39,18 @@ class ShareController extends AppController
     public const SHARE_SUCCESS_EVENT_NAME = 'ShareController.share.success';
 
     /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+    }
+
+    /**
      * Share Dry Run action
      *
      * @param string $resourceId The identifier of the resource to dry run a share on
@@ -52,9 +64,6 @@ class ShareController extends AppController
      */
     public function dryRun(string $resourceId): void
     {
-        $this->loadModel('Resources');
-        $this->loadModel('Users');
-
         $uac = $this->User->getAccessControl();
         $this->_assertRequestParameters($resourceId);
         $data = $this->request->getData();
@@ -81,9 +90,6 @@ class ShareController extends AppController
      */
     public function share(string $resourceId): void
     {
-        $this->loadModel('Resources');
-        $this->loadModel('Users');
-
         $uac = $this->User->getAccessControl();
         $this->_assertRequestParameters($resourceId);
         $data = $this->request->getData();
