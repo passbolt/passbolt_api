@@ -24,11 +24,20 @@ use Cake\Collection\CollectionInterface;
 use Cake\ORM\Query;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
- * @property \App\Model\Table\GroupsTable $Groups
+ * ShareSearchController Class
  */
 class ShareSearchController extends AppController
 {
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    protected $Groups;
+
     /**
      * Share search potential user or group to share with
      *

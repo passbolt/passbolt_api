@@ -31,12 +31,21 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\ResourcesTable $Resources
- * @property \App\Model\Table\UsersTable $Users
+ * ShareController Class
  */
 class ShareController extends AppController
 {
     public const SHARE_SUCCESS_EVENT_NAME = 'ShareController.share.success';
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * @inheritDoc

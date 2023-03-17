@@ -21,6 +21,9 @@ use App\Controller\AppController;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Utility\Hash;
 
+/**
+ * GroupsAddController Class
+ */
 class GroupsAddController extends AppController
 {
     /**

@@ -32,12 +32,21 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\ResourcesTable $Resources
- * @property \App\Model\Table\UsersTable $Users
+ * ResourcesDeleteController Class
  */
 class ResourcesDeleteController extends AppController
 {
     public const DELETE_SUCCESS_EVENT_NAME = 'ResourcesDeleteController.delete.success';
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * @inheritDoc

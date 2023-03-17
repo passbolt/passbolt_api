@@ -26,10 +26,15 @@ use Cake\Validation\Validation;
 use Exception;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * UsersEditController Class
  */
 class UsersEditController extends AppController
 {
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
     /**
      * User edit action
      * Allow editing firstname / lastname and role only for admin

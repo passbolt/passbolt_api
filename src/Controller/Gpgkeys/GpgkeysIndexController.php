@@ -19,10 +19,15 @@ namespace App\Controller\Gpgkeys;
 use App\Controller\AppController;
 
 /**
- * @property \App\Model\Table\GpgkeysTable $Gpgkeys
+ * GpgkeysIndexController Class
  */
 class GpgkeysIndexController extends AppController
 {
+    /**
+     * @var \App\Model\Table\GpgkeysTable
+     */
+    protected $Gpgkeys;
+
     /**
      * @inheritDoc
      */

@@ -26,7 +26,7 @@ use Passbolt\Reports\Service\ReportViewService;
 use Passbolt\Reports\Utility\ReportInterface;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * ReportsViewController Class
  */
 class ReportsViewController extends AppController
 {
@@ -36,6 +36,11 @@ class ReportsViewController extends AppController
      * @var \Passbolt\Reports\Service\ReportViewService
      */
     private $reportViewService;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * @return void

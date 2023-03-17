@@ -26,7 +26,6 @@ use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
  * Class DatabaseController
  *
  * @package Passbolt\WebInstaller\Controller
- * @property \App\Model\Table\UsersTable $Users
  */
 class DatabaseController extends WebInstallerController
 {
@@ -53,6 +52,11 @@ class DatabaseController extends WebInstallerController
         'type' => 'mysql',
         'host' => '127.0.0.1',
     ];
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * Initialize.

@@ -27,11 +27,16 @@ use Passbolt\MultiFactorAuthentication\Controller\MfaController;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * MfaUserSettingsDeleteController Class
  */
 class MfaUserSettingsDeleteController extends MfaController
 {
     public const MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT = 'mfa.user_account.settings.delete';
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * @return void

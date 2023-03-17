@@ -25,7 +25,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\ResourceTypesTable $ResourceTypes
+ * ResourceTypesViewController Class
  */
 class ResourceTypesViewController extends AppController
 {

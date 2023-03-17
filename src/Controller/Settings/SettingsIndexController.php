@@ -26,10 +26,15 @@ use Cake\Utility\Hash;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * SettingsIndexController Class
  */
 class SettingsIndexController extends AppController
 {
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
     /**
      * Settings visibility key.
      *

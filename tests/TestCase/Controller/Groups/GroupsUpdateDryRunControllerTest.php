@@ -29,6 +29,16 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Secrets',
     ];
 
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    protected $Groups;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
     public function setUp(): void
     {
         parent::setUp();

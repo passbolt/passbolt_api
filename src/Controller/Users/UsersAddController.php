@@ -20,10 +20,15 @@ use App\Model\Entity\Role;
 use Cake\Http\Exception\ForbiddenException;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * UsersAddController Class
  */
 class UsersAddController extends UsersRegisterController
 {
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
     /**
      * @inheritDoc
      */

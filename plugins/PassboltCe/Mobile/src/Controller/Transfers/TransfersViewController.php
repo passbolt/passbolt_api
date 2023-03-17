@@ -26,10 +26,14 @@ use Cake\Validation\Validation;
  * Class TransfersViewController
  *
  * @package Passbolt\Mobile\Controller\Transfers
- * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
  */
 class TransfersViewController extends AppController
 {
+    /**
+     * @var \Passbolt\Mobile\Model\Table\TransfersTable
+     */
+    protected $Transfers;
+
     /**
      * @inheritDoc
      */
