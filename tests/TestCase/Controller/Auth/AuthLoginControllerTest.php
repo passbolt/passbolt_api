@@ -22,7 +22,6 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 class AuthLoginControllerTest extends AppIntegrationTestCase
@@ -45,8 +44,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $jwtKeyPairService = new JwtKeyPairService();
-        $jwtKeyPairService->createKeyPair();
         $this->enableFeaturePlugin('JwtAuthentication');
     }
 

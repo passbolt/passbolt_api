@@ -35,7 +35,6 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 class GpgJwtAuthenticatorTest extends TestCase
 {
@@ -53,7 +52,6 @@ class GpgJwtAuthenticatorTest extends TestCase
         parent::setUp();
         OpenPGPBackendFactory::reset();
         $this->sut = new GpgJwtAuthenticator(new TokenIdentifier());
-        (new JwtKeyPairService())->createKeyPair();
         EventManager::instance()->setEventList(new EventList());
     }
 
