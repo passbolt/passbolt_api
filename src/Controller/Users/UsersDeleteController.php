@@ -47,8 +47,9 @@ class UsersDeleteController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function initialize(): void
     {
+        parent::initialize();
         /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
         /** @phpstan-ignore-next-line */
@@ -59,8 +60,6 @@ class UsersDeleteController extends AppController
         $this->Permissions = $this->fetchTable('Permissions');
         /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
-
-        return parent::beforeFilter($event);
     }
 
     /**

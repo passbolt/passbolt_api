@@ -38,8 +38,9 @@ class GroupsUpdateController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function initialize(): void
     {
+        parent::initialize();
         /** @phpstan-ignore-next-line */
         $this->Groups = $this->fetchTable('Groups');
         /** @phpstan-ignore-next-line */
@@ -48,8 +49,6 @@ class GroupsUpdateController extends AppController
         $this->Resources = $this->fetchTable('Resources');
         /** @phpstan-ignore-next-line */
         $this->Secrets = $this->fetchTable('Secrets');
-
-        return parent::beforeFilter($event);
     }
 
     /**
