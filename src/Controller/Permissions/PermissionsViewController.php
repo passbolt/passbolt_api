@@ -23,11 +23,20 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\PermissionsTable $Permissions
- * @property \App\Model\Table\ResourcesTable $Resources
+ * PermissionsViewController Class
  */
 class PermissionsViewController extends AppController
 {
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    protected $Permissions;
+
     /**
      * @inheritDoc
      */

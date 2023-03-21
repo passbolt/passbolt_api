@@ -24,11 +24,16 @@ use Cake\I18n\FrozenDate;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * IsExpiredTest Class
  */
 class IsExpiredTest extends AppTestCase
 {
     use LocatorAwareTrait;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     public function setUp(): void
     {

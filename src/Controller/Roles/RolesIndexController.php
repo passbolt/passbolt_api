@@ -19,10 +19,15 @@ namespace App\Controller\Roles;
 use App\Controller\AppController;
 
 /**
- * @property \App\Model\Table\RolesTable $Roles
+ * RolesIndexController Class
  */
 class RolesIndexController extends AppController
 {
+    /**
+     * @var \App\Model\Table\RolesTable
+     */
+    protected $Roles;
+
     /**
      * Roles Index action
      *

@@ -28,13 +28,30 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\GroupsTable $Groups
- * @property \App\Model\Table\GroupsUsersTable $GroupsUsers
- * @property \App\Model\Table\ResourcesTable $Resources
- * @property \App\Model\Table\SecretsTable $Secrets
+ * GroupsUpdateController Class
  */
 class GroupsUpdateController extends AppController
 {
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    protected $Groups;
+
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    protected $GroupsUsers;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\SecretsTable
+     */
+    protected $Secrets;
+
     /**
      * @inheritDoc
      */

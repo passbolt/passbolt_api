@@ -29,7 +29,6 @@ use Passbolt\Mobile\Service\Transfers\TransfersUpdateService;
  * Class TransfersUpdateController
  *
  * @package Passbolt\Mobile\Controller\Transfers
- * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
  */
 class TransfersUpdateController extends AppController
 {
@@ -37,6 +36,11 @@ class TransfersUpdateController extends AppController
      * @var \Passbolt\Mobile\Model\Entity\Transfer $transfer
      */
     protected $transfer;
+
+    /**
+     * @var \Passbolt\Mobile\Model\Table\TransfersTable
+     */
+    protected $Transfers;
 
     /**
      * @inheritDoc

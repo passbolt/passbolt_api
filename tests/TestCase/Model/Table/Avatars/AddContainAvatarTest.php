@@ -24,7 +24,7 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * AddContainAvatarTest Class
  */
 class AddContainAvatarTest extends TestCase
 {

@@ -34,15 +34,36 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
- * @property \App\Model\Table\GroupsTable $Groups
- * @property \App\Model\Table\GroupsUsersTable $GroupsUsers
- * @property \App\Model\Table\PermissionsTable $Permissions
- * @property \App\Model\Table\ResourcesTable $Resources
+ * UsersDeleteController Class
  */
 class UsersDeleteController extends AppController
 {
     public const DELETE_SUCCESS_EVENT_NAME = 'UsersDeleteController.delete.success';
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    protected $Groups;
+
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    protected $GroupsUsers;
+
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    protected $Permissions;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
 
     /**
      * @inheritDoc
