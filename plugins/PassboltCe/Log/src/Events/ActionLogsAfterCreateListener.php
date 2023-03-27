@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\Log\Events;
 
-use App\Controller\AppController;
 use App\Utility\UserAction;
+use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Http\Exception\InternalErrorException;
@@ -49,7 +49,7 @@ class ActionLogsAfterCreateListener implements EventListenerInterface
      */
     public function saveEntityOnLogEngines(EventInterface $event): void
     {
-        /** @var \App\Controller\AppController $controller */
+        /** @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
         /** @var \Passbolt\Log\Model\Entity\ActionLog $actionLog */
         $actionLog = $event->getData('actionLog');
@@ -63,12 +63,12 @@ class ActionLogsAfterCreateListener implements EventListenerInterface
     }
 
     /**
-     * @param \App\Controller\AppController $controller App Controller
+     * @param \Cake\Controller\Controller $controller App Controller
      * @param \Cake\Log\Engine\BaseLog $engine Log Engine
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog Action Log
      * @return void
      */
-    protected function log(AppController $controller, BaseLog $engine, ActionLog $actionLog): void
+    protected function log(Controller $controller, BaseLog $engine, ActionLog $actionLog): void
     {
         $msg = $this->getStrategy($engine, $controller)->query(
             $actionLog,
@@ -102,11 +102,11 @@ class ActionLogsAfterCreateListener implements EventListenerInterface
 
     /**
      * @param \Cake\Log\Engine\BaseLog $engine Log Engine
-     * @param \App\Controller\AppController $controller Controller
+     * @param \Cake\Controller\Controller $controller Controller
      * @return \Passbolt\Log\Strategy\ActionLogsAbstractQueryStrategy
      * @throws \Cake\Core\Exception\CakeException if the User Action was not initialized yet
      */
-    protected function getStrategy(BaseLog $engine, AppController $controller): ActionLogsAbstractQueryStrategy
+    protected function getStrategy(BaseLog $engine, Controller $controller): ActionLogsAbstractQueryStrategy
     {
         $strategy = $engine->getConfig('strategy', ActionLogsDefaultQueryStrategy::class);
         try {
