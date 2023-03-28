@@ -125,6 +125,12 @@ ini_set('intl.default_locale', Configure::read('App.defaultLocale', 'en_UK'));
 
 if (!Configure::read('debug')) {
     Configure::write('Error.errorLevel', E_ALL ^ E_DEPRECATED ^ E_USER_DEPRECATED);
+} else {
+    /**
+     * Enable traces in logs when debug mode is enabled.
+     */
+    Configure::write('Error.log', true);
+    Configure::write('Error.trace', true);
 }
 /*
  * Register application error and exception handlers.
