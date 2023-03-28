@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\Log\Service\ActionLogs;
 
-use App\Controller\AppController;
 use App\Utility\UserAction;
+use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
@@ -32,12 +32,12 @@ class ActionLogsCreateService
      * Will not process blacklisted actions (see config).
      *
      * @param \App\Utility\UserAction $userAction user action
-     * @param \App\Controller\AppController $controller controller
+     * @param \Cake\Controller\Controller $controller controller
      * @return void
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException if the action log could not be saved
      */
-    public function create(UserAction $userAction, AppController $controller): void
+    public function create(UserAction $userAction, Controller $controller): void
     {
         if ($this->isActionBlackListed($userAction)) {
             return;

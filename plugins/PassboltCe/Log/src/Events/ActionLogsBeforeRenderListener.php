@@ -41,7 +41,7 @@ class ActionLogsBeforeRenderListener implements EventListenerInterface
      */
     public function logControllerAction(Event $event)
     {
-        /** @var \App\Controller\AppController $controller */
+        /** @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
         $userAction = UserAction::getInstance();
         (new ActionLogsCreateService())->create($userAction, $controller);
