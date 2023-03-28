@@ -127,7 +127,13 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_JsonSuccess_For_User_With_Avatar()
     {
-        $user = UserFactory::make()->withAvatar()->user()->persist();
+        $user = UserFactory::make()->withAvatar()
+            ->user()
+            ->with('Profiles', [
+                'first_name' => 'Jane',
+                'last_name' => 'Doe',
+            ])
+            ->persist();
 
         $this->postJson('/users/recover.json', ['username' => $user->username]);
         $this->assertSuccess();
@@ -137,8 +143,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
             'subject' => "Your account recovery, {$user->profile->first_name}!",
             'template' => 'AN/user_recover',
         ]);
-        $avatarTitle = htmlentities($user['profile']['first_name'] . ' ' . $user['profile']['last_name']);
-        $this->assertEmailInBatchContains($avatarTitle);
+        $this->assertEmailInBatchContains('Jane Doe');
     }
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseLostPassphrase()
