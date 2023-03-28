@@ -80,7 +80,7 @@
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "^4.4.1",
         "cakephp/bake": "^2.3.0",
-        "phpunit/phpunit": "^9.5.2",
+        "phpunit/phpunit": "~9.5.2",
         "passbolt/cakephp-codesniffer": "dev-master",
         "passbolt/passbolt-selenium-api": "dev-master#ade46d4c3095b18316cbb0553f875c50a4dd67b9",
         "passbolt/passbolt-test-data": "^3.2.0",
