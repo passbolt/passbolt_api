@@ -127,6 +127,12 @@ ini_set('intl.default_locale', 'en_UK');
  */
 if (!Configure::read('debug')) {
     Configure::write('Error.errorLevel', E_ALL ^ E_DEPRECATED);
+} else {
+    /**
+     * Enable traces in logs when debug mode is enabled.
+     */
+    Configure::write('Error.log', true);
+    Configure::write('Error.trace', true);
 }
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
