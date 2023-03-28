@@ -19,7 +19,7 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 use App\Command\HealthcheckCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 class SmtpSettingsHealthcheckCommandTest extends AppTestCase

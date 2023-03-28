@@ -34,8 +34,9 @@ use Passbolt\JwtAuthentication\Middleware\JwtCsrfDetectionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtDestroySessionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtRouteFilterMiddleware;
 use Passbolt\JwtAuthentication\Notification\Email\Redactor\JwtAuthenticationEmailRedactorPool;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 
-class Plugin extends BasePlugin
+class JwtAuthenticationPlugin extends BasePlugin
 {
     /**
      * @inheritDoc
@@ -83,5 +84,6 @@ class Plugin extends BasePlugin
     public function services(ContainerInterface $container): void
     {
         $container->add(JwtArmoredChallengeInterface::class, JwtArmoredChallengeService::class);
+        $container->add(JwksGetService::class);
     }
 }

@@ -18,10 +18,10 @@ declare(strict_types=1);
 namespace App\Error;
 
 use App\Error\Exception\ExceptionWithErrorsDetailInterface;
-use Cake\Error\ExceptionRenderer;
+use Cake\Error\Renderer\WebExceptionRenderer;
 use Psr\Http\Message\ResponseInterface;
 
-class AppExceptionRenderer extends ExceptionRenderer
+class AppExceptionRenderer extends WebExceptionRenderer
 {
     /**
      * Renders the response for the exception.

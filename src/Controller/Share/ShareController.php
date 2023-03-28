@@ -31,12 +31,33 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\ResourcesTable $Resources
- * @property \App\Model\Table\UsersTable $Users
+ * ShareController Class
  */
 class ShareController extends AppController
 {
     public const SHARE_SUCCESS_EVENT_NAME = 'ShareController.share.success';
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+    }
 
     /**
      * Share Dry Run action
@@ -52,9 +73,6 @@ class ShareController extends AppController
      */
     public function dryRun(string $resourceId): void
     {
-        $this->loadModel('Resources');
-        $this->loadModel('Users');
-
         $uac = $this->User->getAccessControl();
         $this->_assertRequestParameters($resourceId);
         $data = $this->request->getData();
@@ -81,9 +99,6 @@ class ShareController extends AppController
      */
     public function share(string $resourceId): void
     {
-        $this->loadModel('Resources');
-        $this->loadModel('Users');
-
         $uac = $this->User->getAccessControl();
         $this->_assertRequestParameters($resourceId);
         $data = $this->request->getData();

@@ -18,9 +18,9 @@ namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
 use Cake\Core\Configure;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Cookie\Cookie;
 use Cake\I18n\FrozenTime;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
@@ -30,11 +30,11 @@ use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\UserDeactivatedExcep
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\UserDeletedException;
 
 /**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * Class RefreshTokenAbstractService
  */
 abstract class RefreshTokenAbstractService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     public const REFRESH_TOKEN_COOKIE = 'refresh_token';
     public const REFRESH_TOKEN_DATA_KEY = 'refresh_token';
@@ -42,11 +42,17 @@ abstract class RefreshTokenAbstractService
     public const ACCESS_TOKEN_DATA_KEY = 'access_token';
 
     /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
+
+    /**
      * RefreshTokenCreateService constructor.
      */
     public function __construct()
     {
-        $this->loadModel('AuthenticationTokens');
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     /**

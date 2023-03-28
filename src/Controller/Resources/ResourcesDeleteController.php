@@ -32,12 +32,33 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\ResourcesTable $Resources
- * @property \App\Model\Table\UsersTable $Users
+ * ResourcesDeleteController Class
  */
 class ResourcesDeleteController extends AppController
 {
     public const DELETE_SUCCESS_EVENT_NAME = 'ResourcesDeleteController.delete.success';
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+    }
 
     /**
      * Resource Delete action
@@ -57,9 +78,6 @@ class ResourcesDeleteController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
-
-        $this->loadModel('Resources');
-        $this->loadModel('Users');
 
         // Retrieve the resource to delete.
         try {

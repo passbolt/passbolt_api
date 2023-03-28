@@ -24,7 +24,7 @@ use Passbolt\SelfRegistration\Notification\Email\Redactor\SelfRegistrationNotifi
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationEmailDomainsDryRunService;
 
-class Plugin extends BasePlugin
+class SelfRegistrationPlugin extends BasePlugin
 {
     /**
      * @inheritDoc

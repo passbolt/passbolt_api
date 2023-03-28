@@ -18,11 +18,11 @@ declare(strict_types=1);
 namespace App\Service\Permissions;
 
 use App\Model\Table\PermissionsTable;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 class PermissionsGetUsersIdsHavingAccessToService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
@@ -39,8 +39,10 @@ class PermissionsGetUsersIdsHavingAccessToService
      */
     public function __construct()
     {
-        $this->loadModel('GroupsUsers');
-        $this->loadModel('Permissions');
+        /** @phpstan-ignore-next-line */
+        $this->GroupsUsers = $this->fetchTable('GroupsUsers');
+        /** @phpstan-ignore-next-line */
+        $this->Permissions = $this->fetchTable('Permissions');
     }
 
     /**

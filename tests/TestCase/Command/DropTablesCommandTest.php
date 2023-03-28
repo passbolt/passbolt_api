@@ -17,9 +17,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Test\Lib\AppTestCase;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\MissingDatasourceConfigException;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 class DropTablesCommandTest extends AppTestCase

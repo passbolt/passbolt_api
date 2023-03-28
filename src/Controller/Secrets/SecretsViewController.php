@@ -27,10 +27,25 @@ use Cake\Validation\Validation;
 use Exception;
 
 /**
- * @property \App\Model\Table\SecretsTable $Secrets
+ * SecretsViewController Class
  */
 class SecretsViewController extends AppController
 {
+    /**
+     * @var \App\Model\Table\SecretsTable
+     */
+    protected $Secrets;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Secrets = $this->fetchTable('Secrets');
+    }
+
     /**
      * Secret View action
      *
@@ -45,7 +60,6 @@ class SecretsViewController extends AppController
         if (!Validation::uuid($resourceId)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
-        $this->loadModel('Secrets');
 
         // Retrieve the secret.
         $uac = $this->User->getAccessControl();

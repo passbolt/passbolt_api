@@ -23,11 +23,32 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\PermissionsTable $Permissions
- * @property \App\Model\Table\ResourcesTable $Resources
+ * PermissionsViewController Class
  */
 class PermissionsViewController extends AppController
 {
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    protected $Permissions;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Permissions = $this->fetchTable('Permissions');
+    }
+
     /**
      * View permissions defined for an aco instance.
      * Only support the entity Resource for now.
@@ -49,9 +70,6 @@ class PermissionsViewController extends AppController
         // Retrieve and sanity the query options.
         $whitelist = ['contain' => ['group', 'user', 'user.profile']];
         $options = $this->QueryString->get($whitelist);
-
-        $this->loadModel('Permissions');
-        $this->loadModel('Resources');
 
         // Check that the user has access to the resource.
         $resource = $this->Resources->findView($this->User->id(), $acoForeignKey)->first();

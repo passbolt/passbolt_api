@@ -27,7 +27,7 @@ use Passbolt\Locale\Event\SaveUserLocaleListener;
 use Passbolt\Locale\Event\ValidateLocaleOnBeforeSaveListener;
 use Passbolt\Locale\Middleware\LocaleMiddleware;
 
-class Plugin extends BasePlugin
+class LocalePlugin extends BasePlugin
 {
     /**
      * @inheritDoc

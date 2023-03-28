@@ -14,22 +14,10 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.8.0
  */
-namespace Passbolt\SmtpSettings;
+namespace Passbolt\Mobile;
 
 use Cake\Core\BasePlugin;
-use Cake\Core\PluginApplicationInterface;
-use Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener;
 
-class Plugin extends BasePlugin
+class MobilePlugin extends BasePlugin
 {
-    /**
-     * @inheritDoc
-     */
-    public function bootstrap(PluginApplicationInterface $app): void
-    {
-        parent::bootstrap($app);
-
-        // Before sending an email, apply the SMTP settings found in DB (or fallback on file).
-        $app->getEventManager()->on(new SmtpTransportBeforeSendEventListener());
-    }
 }

@@ -25,7 +25,7 @@ use Exception;
 use Passbolt\MultiFactorAuthentication\Service\Query\IsMfaEnabledQueryService;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * UsersViewController Class
  */
 class UsersViewController extends AppController
 {
@@ -51,8 +51,9 @@ class UsersViewController extends AppController
         }
 
         // Retrieve the user
-        $this->loadModel('Users');
-        $query = $this->Users->findView($id, $this->User->role());
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
+        $query = $usersTable->findView($id, $this->User->role());
         if ($this->isFeaturePluginEnabled('MultiFactorAuthentication')) {
             (new IsMfaEnabledQueryService())->decorateForView($query, $this->User->getAccessControl(), $id);
         }

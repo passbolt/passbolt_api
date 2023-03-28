@@ -22,8 +22,8 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException;
 use Passbolt\JwtAuthentication\Error\Exception\Challenge\InvalidDomainException;
 use Passbolt\JwtAuthentication\Error\Exception\Challenge\InvalidUserSignatureException;
@@ -38,8 +38,22 @@ use Passbolt\Locale\Service\LocaleService;
  */
 class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInterface
 {
+    use LocatorAwareTrait;
     use SubscribedEmailRedactorTrait;
-    use ModelAwareTrait;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * JwtAuthenticationAttackEmailRedactor constructor.
+     */
+    public function __construct()
+    {
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+    }
 
     /**
      * Return the list of events to which the redactor is subscribed
@@ -65,7 +79,6 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
      */
     public function onSubscribedEvent(Event $event): EmailCollection
     {
-        $this->loadModel('Users');
         /** @var \Passbolt\JwtAuthentication\Error\Exception\AbstractJwtAttackException $exception */
         $exception = $event->getSubject();
 

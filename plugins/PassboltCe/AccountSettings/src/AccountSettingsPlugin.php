@@ -14,10 +14,10 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.8.0
  */
-namespace Passbolt\ResourceTypes;
+namespace Passbolt\AccountSettings;
 
 use Cake\Core\BasePlugin;
 
-class Plugin extends BasePlugin
+class AccountSettingsPlugin extends BasePlugin
 {
 }

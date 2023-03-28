@@ -22,11 +22,6 @@ use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 class SetUserLocaleService extends LocaleService
 {
     /**
-     * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
-     */
-    public $AccountSettings;
-
-    /**
      * Validate and save the locale for a user in her account settings.
      *
      * @param string $userId Logged in user id.
@@ -38,9 +33,10 @@ class SetUserLocaleService extends LocaleService
     {
         $this->assertIsValidLocale($locale);
 
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettingsTable */
+        $accountSettingsTable = $this->fetchTable('Passbolt/AccountSettings.AccountSettings');
 
-        return $this->AccountSettings->createOrUpdateSetting(
+        return $accountSettingsTable->createOrUpdateSetting(
             $userId,
             static::SETTING_PROPERTY,
             $locale

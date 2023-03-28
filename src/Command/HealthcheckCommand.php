@@ -748,8 +748,9 @@ class HealthcheckCommand extends PassboltCommand
      */
     public function assertJWT($checks = null)
     {
+        $jwtKeyPairService = new JwtKeyPairService();
         if (!isset($checks)) {
-            $checks = Healthchecks::jwt();
+            $checks = Healthchecks::jwt($jwtKeyPairService);
         }
 
         $this->title(__('JWT Authentication'));
@@ -779,7 +780,7 @@ class HealthcheckCommand extends PassboltCommand
             ]
         );
 
-        $fixCmd = (new JwtKeyPairService())->getCreateJwtKeysCommand();
+        $fixCmd = $jwtKeyPairService->getCreateJwtKeysCommand();
         $this->assert(
             $checks['jwt']['keyPairValid'],
             __('A valid JWT key pair was found'),

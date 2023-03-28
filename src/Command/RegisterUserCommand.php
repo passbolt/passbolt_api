@@ -28,9 +28,7 @@ use Cake\Routing\Router;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
- * @property \App\Model\Table\RolesTable $Roles
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * RegisterUserCommand class
  */
 class RegisterUserCommand extends PassboltCommand
 {
@@ -38,6 +36,21 @@ class RegisterUserCommand extends PassboltCommand
      * Number of interaction with the console.
      */
     public const DEFAULT_INTERACTIVE_LOOP = 3;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @var \App\Model\Table\RolesTable
+     */
+    protected $Roles;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     /**
      * Initializes the Shell
@@ -50,9 +63,12 @@ class RegisterUserCommand extends PassboltCommand
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadModel('Users');
-        $this->loadModel('Roles');
-        $this->loadModel('AuthenticationTokens');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Roles = $this->fetchTable('Roles');
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     /**

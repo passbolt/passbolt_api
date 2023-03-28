@@ -29,7 +29,6 @@ use Passbolt\Mobile\Service\Transfers\TransfersUpdateService;
  * Class TransfersUpdateController
  *
  * @package Passbolt\Mobile\Controller\Transfers
- * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
  */
 class TransfersUpdateController extends AppController
 {
@@ -39,12 +38,18 @@ class TransfersUpdateController extends AppController
     protected $transfer;
 
     /**
+     * @var \Passbolt\Mobile\Model\Table\TransfersTable
+     */
+    protected $Transfers;
+
+    /**
      * @inheritDoc
      */
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated(['updateNoSession']);
-        $this->loadModel('Passbolt/Mobile.Transfers');
+        /** @phpstan-ignore-next-line */
+        $this->Transfers = $this->fetchTable('Passbolt/Mobile.Transfers');
 
         return parent::beforeFilter($event);
     }
