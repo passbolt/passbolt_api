@@ -12,7 +12,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltTestData\Command\Pro;
+namespace PassboltTestData\Command\Base;
 
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;

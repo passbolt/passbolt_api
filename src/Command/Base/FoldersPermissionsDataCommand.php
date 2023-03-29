@@ -12,12 +12,12 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace PassboltTestData\Command\Pro;
+namespace PassboltTestData\Command\Base;
 
 use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataCommand;
 
-class PermissionsDataCommand extends DataCommand
+class FoldersPermissionsDataCommand extends DataCommand
 {
     protected $_truncate = false;
     public $entityName = 'Permissions';

@@ -52,9 +52,9 @@ return [
                         \PassboltTestData\Command\Pro\AccountSettingsDataCommand::class,
                         \PassboltTestData\Command\Pro\TagsDataCommand::class,
                         \PassboltTestData\Command\Pro\ResourcesTagsDataCommand::class,
-                        \PassboltTestData\Command\Pro\PermissionsDataCommand::class,
-                        \PassboltTestData\Command\Pro\FoldersDataCommand::class,
-                        \PassboltTestData\Command\Pro\FoldersRelationsDataCommand::class,
+                        \PassboltTestData\Command\Base\FoldersPermissionsDataCommand::class,
+                        \PassboltTestData\Command\Base\FoldersDataCommand::class,
+                        \PassboltTestData\Command\Base\FoldersRelationsDataCommand::class,
                     ]
                 ],
                 'fixturize' => [
