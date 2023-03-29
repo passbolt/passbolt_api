@@ -139,19 +139,11 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
         $this->service->delete($uac, $folderA->id);
 
-        $this->assertEmailIsInQueue([
-            'email' => 'ada@passbolt.com',
-            'subject' => 'Ada deleted the folder A',
-            'template' => 'Passbolt/Folders.LU/folder_delete',
-        ]);
-        $this->assertEmailIsInQueue([
-            'email' => 'betty@passbolt.com',
-            'subject' => 'Ada deleted the folder A',
-            'template' => 'Passbolt/Folders.LU/folder_delete',
-        ]);
         $this->assertEmailQueueCount(2);
-        $this->assertEmailInBatchContains('deleted the folder');
-        $this->assertEmailInBatchContains('deleted the folder', 1);
+        $this->assetEmailSubject('ada@passbolt.com', 'You deleted the folder A');
+        $this->assertEmailInBatchContains('You deleted a folder', 'ada@passbolt.com');
+        $this->assetEmailSubject('betty@passbolt.com', 'Ada deleted the folder A');
+        $this->assertEmailInBatchContains('Ada deleted a folder', 'betty@passbolt.com');
     }
 
     /* PERSONAL FOLDER */
