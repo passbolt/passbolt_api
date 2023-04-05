@@ -96,6 +96,18 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
             ->setMethods(['GET']);
     }
 
+    /**
+     * Endpoints related to CTIE.
+     */
+
+    $routes
+        ->connect('/ctie/login/dry-run', [
+            'prefix' => 'Ctie',
+            'controller' => 'SsoCtieStage1DryRun',
+            'action' => 'stage1DryRun',
+        ])
+        ->setMethods(['POST']);
+
     // Generic success pages
 
     $routes->connect('/login/success', [
