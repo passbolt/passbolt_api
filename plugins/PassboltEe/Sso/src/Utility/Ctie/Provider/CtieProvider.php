@@ -25,8 +25,8 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
-use Passbolt\Sso\Error\Exception\GoogleException;
-use Passbolt\Sso\Utility\Google\ResourceOwner\GoogleResourceOwner;
+use Passbolt\Sso\Error\Exception\CtieException;
+use Passbolt\Sso\Utility\Ctie\ResourceOwner\CtieResourceOwner;
 use Passbolt\Sso\Utility\Grant\JwtBearer;
 use Passbolt\Sso\Utility\OpenId\BaseIdToken;
 use Passbolt\Sso\Utility\Provider\BaseOauth2Provider;
@@ -69,7 +69,7 @@ class CtieProvider extends BaseOauth2Provider
         }
 
         if (is_string($data['error']) && isset($data['error_description']) && is_string($data['error_description'])) {
-            throw new GoogleException($data['error'], $data['error_description']);
+            throw new CtieException($data['error'], $data['error_description']);
         } else {
             throw new IdentityProviderException(
                 $response->getReasonPhrase(),
@@ -106,7 +106,7 @@ class CtieProvider extends BaseOauth2Provider
     }
 
     /**
-     * Get JWT verification keys from Google.
+     * Get JWT verification keys from CTIE.
      *
      * @return array
      */
@@ -116,11 +116,6 @@ class CtieProvider extends BaseOauth2Provider
         $keysUri = $openIdConfiguration['jwks_uri'];
 
         $factory = $this->getRequestFactory();
-        /**
-         * The response should be cached in production application.
-         *
-         * @link https://developers.google.com/identity/openid-connect/openid-connect#validatinganidtoken
-         */
         $request = $factory->getRequestWithOptions('get', $keysUri, []);
 
         try {
@@ -171,7 +166,7 @@ class CtieProvider extends BaseOauth2Provider
      */
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
-        return new GoogleResourceOwner($response);
+        return new CtieResourceOwner($response);
     }
 
     /**

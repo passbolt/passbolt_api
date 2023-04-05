@@ -21,13 +21,12 @@ use App\Utility\ExtendedUserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
 use League\OAuth2\Client\Provider\AbstractProvider;
+use Passbolt\Sso\Model\Dto\SsoSettingsCtieDataDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
-use Passbolt\Sso\Model\Dto\SsoSettingsGoogleDataDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 use Passbolt\Sso\Utility\Ctie\Provider\CtieProvider;
-use Passbolt\Sso\Utility\Google\Provider\GoogleProvider;
 
 class SsoCtieService extends AbstractSsoService
 {
@@ -81,11 +80,11 @@ class SsoCtieService extends AbstractSsoService
     {
         try {
             $ssoSettings = (new SsoSettingsGetService())->getActiveOrFail(true);
-            if ($ssoSettings->provider !== SsoSetting::PROVIDER_GOOGLE) {
-                throw new BadRequestException('Invalid provider. Expected Google as provider.');
+            if ($ssoSettings->provider !== SsoSetting::PROVIDER_CTIE) {
+                throw new BadRequestException('Invalid provider. Expected CTIE.');
             }
-            if (!($ssoSettings->data instanceof SsoSettingsGoogleDataDto)) {
-                throw new BadRequestException('Invalid provider data. Expected Google settings.');
+            if (!($ssoSettings->data instanceof SsoSettingsCtieDataDto)) {
+                throw new BadRequestException('Invalid provider data. Expected CTIE settings.');
             }
         } catch (\Exception $exception) {
             throw new BadRequestException(__('No valid SSO settings found.'), 400, $exception);

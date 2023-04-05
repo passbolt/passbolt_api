@@ -18,44 +18,38 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Controller\Ctie;
 
 use App\Service\Cookie\AbstractSecureCookieService;
-use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Http\Exception\NotFoundException;
+use Cake\Event\EventInterface;
 use Passbolt\Sso\Controller\AbstractSsoController;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\Ctie\SsoCtieService;
-use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 
-class SsoCtieStage1DryRunController extends AbstractSsoController
+class SsoCtieStage1Controller extends AbstractSsoController
 {
     /**
-     * Perform a SSO Login dry run for a given settings_id
+     * @inheritDoc
+     */
+    public function beforeFilter(EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        $this->Authentication->allowUnauthenticated(['stage1']);
+    }
+
+    /**
+     * Return a URL to redirect the user to perform SSO
      *
      * @param \App\Service\Cookie\AbstractSecureCookieService $cookieService Cookie service
      * @return void
      */
-    public function stage1DryRun(AbstractSecureCookieService $cookieService): void
+    public function stage1(AbstractSecureCookieService $cookieService): void
     {
         $this->assertJson();
 
-        // User must be an admin
-        $this->User->assertIsAdmin();
-        $uac = $this->User->getExtendAccessControl();
-
-        // There must be a draft setting to build the provider with
-        $settingsId = $this->getSettingsIdFromData();
-        try {
-            $settingsDto = (new SsoSettingsGetService())->getDraftByIdOrFail($settingsId, true);
-        } catch (RecordNotFoundException $exception) {
-            throw new NotFoundException(__('The SSO setting does not exist.'), 404, $exception);
-        }
+        // User must not be logged in and be active/not deleted
+        $this->User->assertNotLoggedIn();
+        $uac = $this->getUacFromData();
 
         // Redirect to provider
-        $url = $this->getSsoUrlWithCookie(
-            new SsoCtieService($cookieService, $settingsDto),
-            $uac,
-            SsoState::TYPE_SSO_SET_SETTINGS
-        );
-        // TODO: Currently it's GET, but do we have to do POST request.
+        $url = $this->getSsoUrlWithCookie(new SsoCtieService($cookieService), $uac, SsoState::TYPE_SSO_GET_KEY);
         $this->success(__('The operation was successful.'), ['url' => $url]);
     }
 }

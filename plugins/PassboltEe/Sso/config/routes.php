@@ -108,6 +108,22 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
         ])
         ->setMethods(['POST']);
 
+    $routes
+        ->connect('/ctie/login', [
+            'prefix' => 'Ctie',
+            'controller' => 'SsoCtieStage1',
+            'action' => 'stage1',
+        ])
+        ->setMethods(['POST']);
+
+    $routes
+        ->connect('/ctie/redirect', [
+            'prefix' => 'Ctie',
+            'controller' => 'SsoCtieStage2',
+            'action' => 'triage',
+        ])
+        ->setMethods(['GET']);
+
     // Generic success pages
 
     $routes->connect('/login/success', [
