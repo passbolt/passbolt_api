@@ -56,14 +56,13 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
             ])
             ->setMethods(['POST']);
 
-        $routes
-            ->connect('/azure/redirect', [
-                'prefix' => 'Azure',
-                'controller' => 'SsoAzureStage2',
-                'action' => 'triage',
-            ])
-            ->setMethods(['GET']);
-    }
+    $routes
+        ->connect('/azure/redirect', [
+            'prefix' => 'Azure',
+            'controller' => 'SsoAzureStage2',
+            'action' => 'triage',
+        ])
+        ->setMethods(['GET', 'POST']);
 
     /**
      * Endpoints related to Google provider.

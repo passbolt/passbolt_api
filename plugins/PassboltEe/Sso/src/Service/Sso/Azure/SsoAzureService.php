@@ -50,6 +50,7 @@ class SsoAzureService extends AbstractSsoService
         $options = [
             'response_type' => 'code',
             'nonce' => $this->generateNonce(),
+            'response_mode' => 'form_post',
         ];
 
         /**

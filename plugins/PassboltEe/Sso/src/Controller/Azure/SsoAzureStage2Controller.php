@@ -21,6 +21,7 @@ use App\Service\Cookie\AbstractSecureCookieService;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Log\Log;
 use Cake\Routing\Router;
 use Passbolt\Sso\Controller\AbstractSsoController;
 use Passbolt\Sso\Error\Exception\AzureException;
@@ -52,14 +53,26 @@ class SsoAzureStage2Controller extends AbstractSsoController
      */
     public function triage(AbstractSecureCookieService $cookieService): void
     {
-        // Get state from cookie and URL to prevent CSRF
-        $state = $this->getStateFromUrlAndCookie();
+        if ($this->getRequest()->is('get')) {
+            // Get state from cookie and URL to prevent CSRF
+            $state = $this->getStateFromUrlAndCookie();
 
-        // Handle any error code
-        $this->assertErrorFromUrlQuery();
+            // Handle any error code
+            $this->assertErrorFromUrlQuery();
 
-        // Check that there is a code in the URL query
-        $code = $this->getCodeFromUrlQuery();
+            // Check that there is a code in the URL query
+            $code = $this->getCodeFromUrlQuery();
+        } else {
+            /**
+             * Handle POST
+             */
+            // Get state from request data and assert against cookie value to prevent CSRF
+            $state = $this->getStateAndAssertAgainstCookie();
+            // Handle any error code
+            $this->assertErrorFromRequestData();
+            // Check that there is a code in the request data
+            $code = $this->getCodeFromRequestData();
+        }
 
         try {
             $ssoState = (new SsoStatesGetService())->getOrFail($state);
