@@ -24,6 +24,7 @@ use App\Utility\ExtendedUserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Sso\Model\Dto\SsoUrlDto;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Utility\Validation\OAuthTokenValidation;
@@ -226,19 +227,19 @@ abstract class AbstractSsoController extends AppController
      * @param \Passbolt\Sso\Service\Sso\AbstractSsoService $ssoService service
      * @param \App\Utility\ExtendedUserAccessControl $uac user access control
      * @param string $type Type of state
-     * @return string url
+     * @return \Passbolt\Sso\Model\Dto\SsoUrlDto SSO URL DTO object.
      */
     protected function getSsoUrlWithCookie(
         AbstractSsoService $ssoService,
         ExtendedUserAccessControl $uac,
         string $type
-    ): string {
+    ): SsoUrlDto {
         $url = $ssoService->getAuthorizationUrl($uac); // generates state
         $cookie = $ssoService->createStateCookie($uac, $type);
 
         // Redirect user to the provider with the cookie set
         $this->response = $this->getResponse()->withCookie($cookie);
 
-        return $url;
+        return new SsoUrlDto($url);
     }
 }

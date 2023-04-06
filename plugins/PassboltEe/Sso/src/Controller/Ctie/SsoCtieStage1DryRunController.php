@@ -55,7 +55,9 @@ class SsoCtieStage1DryRunController extends AbstractSsoController
             $uac,
             SsoState::TYPE_SSO_SET_SETTINGS
         );
-        // TODO: Currently it's GET, but do we have to do POST request.
-        $this->success(__('The operation was successful.'), ['url' => $url]);
+
+        $url->setPostMethod();
+
+        $this->success(__('The operation was successful.'), $url);
     }
 }

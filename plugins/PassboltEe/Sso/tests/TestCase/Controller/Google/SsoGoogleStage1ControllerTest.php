@@ -42,19 +42,17 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $this->postJson('/sso/google/login.json', ['user_id' => $user->id]);
 
         $this->assertSuccess();
-        $url = $this->_responseJsonBody->url;
-        $this->assertStringContainsString('oauth2/v2/auth', $url);
-        $this->assertStringContainsString('nonce', $url);
-        $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
-        $this->assertStringContainsString("client_id={$ssoSetting->data->toArray()['client_id']}", $url);
-        $this->assertStringContainsString(
-            'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
-            $url
+        $response = $this->_responseJsonBody;
+        $this->assertStringContainsString('oauth2/v2/auth', $response->url);
+        $this->assertObjectHasAttributes(
+            ['login_hint', 'response_type', 'nonce', 'state', 'scope', 'redirect_uri', 'client_id'],
+            $response->data
         );
-        $this->assertStringContainsString(
-            'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
-            $url
-        );
+        $this->assertSame('GET', $response->method);
+        $this->assertSame($user->username, $response->data->login_hint);
+        $this->assertSame($ssoSetting->data->toArray()['client_id'], $response->data->client_id);
+        $this->assertSame(implode(' ', ['openid', 'profile', 'email']), $response->data->scope);
+        $this->assertSame(Router::url('/sso/google/redirect', true), $response->data->redirect_uri);
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
@@ -70,19 +68,17 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
         $this->postJson('/sso/google/login.json', ['user_id' => $user->id]);
 
         $this->assertSuccess();
-        $url = $this->_responseJsonBody->url;
-        $this->assertStringContainsString('oauth2/v2/auth', $url);
-        $this->assertStringContainsString('nonce', $url);
-        $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
-        $this->assertStringContainsString("client_id={$ssoSetting->data->toArray()['client_id']}", $url);
-        $this->assertStringContainsString(
-            'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
-            $url
+        $response = $this->_responseJsonBody;
+        $this->assertStringContainsString('oauth2/v2/auth', $response->url);
+        $this->assertObjectHasAttributes(
+            ['login_hint', 'response_type', 'nonce', 'state', 'scope', 'redirect_uri', 'client_id'],
+            $response->data
         );
-        $this->assertStringContainsString(
-            'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
-            $url
-        );
+        $this->assertSame('GET', $response->method);
+        $this->assertSame($user->username, $response->data->login_hint);
+        $this->assertSame($ssoSetting->data->toArray()['client_id'], $response->data->client_id);
+        $this->assertSame(implode(' ', ['openid', 'profile', 'email']), $response->data->scope);
+        $this->assertSame(Router::url('/sso/google/redirect', true), $response->data->redirect_uri);
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
