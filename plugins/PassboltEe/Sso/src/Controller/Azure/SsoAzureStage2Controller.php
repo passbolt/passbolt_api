@@ -21,7 +21,6 @@ use App\Service\Cookie\AbstractSecureCookieService;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Log\Log;
 use Cake\Routing\Router;
 use Passbolt\Sso\Controller\AbstractSsoController;
 use Passbolt\Sso\Error\Exception\AzureException;

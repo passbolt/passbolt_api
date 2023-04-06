@@ -23,7 +23,6 @@ use App\Service\Users\UserGetService;
 use App\Utility\ExtendedUserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Log\Log;
 use Cake\Validation\Validation;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;

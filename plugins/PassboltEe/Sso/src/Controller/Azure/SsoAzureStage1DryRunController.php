@@ -20,7 +20,6 @@ namespace Passbolt\Sso\Controller\Azure;
 use App\Service\Cookie\AbstractSecureCookieService;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\Log\Log;
 use Passbolt\Sso\Controller\AbstractSsoController;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\Azure\SsoAzureService;
