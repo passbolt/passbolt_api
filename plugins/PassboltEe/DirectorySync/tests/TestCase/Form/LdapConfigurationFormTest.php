@@ -61,6 +61,27 @@ class LdapConfigurationFormTest extends AppTestCase
             'sync_groups_create' => true,
             'sync_groups_delete' => false,
             'sync_groups_update' => true,
+            'fields_mapping' => [
+                'ad' => [
+                    'user' => [
+                        'id' => 'custom1',
+                        'firstname' => 'custom2',
+                        'lastname' => 'custom3',
+                        'username' => 'custom4',
+                        'created' => 'custom5',
+                        'modified' => 'custom6',
+                        'groups' => 'custom7',
+                        'enabled' => 'custom8',
+                    ],
+                    'group' => [
+                        'id' => 'custom9',
+                        'name' => 'custom10',
+                        'created' => 'custom11',
+                        'modified' => 'custom12',
+                        'users' => 'custom13',
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -377,6 +398,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
         $this->assertEquals($data['group_custom_filters'], Hash::get($config, 'groupCustomFilters'));
         $this->assertEquals($data['user_custom_filters'], Hash::get($config, 'userCustomFilters'));
+        $this->assertEquals($data['fields_mapping'], Hash::get($config, 'fieldsMapping'));
     }
 
     /**

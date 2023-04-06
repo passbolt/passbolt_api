@@ -82,6 +82,7 @@ class LdapConfigurationForm extends Form
         'sync_groups_create' => 'jobs.groups.create',
         'sync_groups_delete' => 'jobs.groups.delete',
         'sync_groups_update' => 'jobs.groups.update',
+        'fields_mapping' => 'fieldsMapping',
     ];
 
     /**
@@ -283,7 +284,48 @@ class LdapConfigurationForm extends Form
             ->allowEmptyString('sync_groups_update')
             ->boolean('sync_groups_update', __('The sync of updated groups setting should be a boolean.'));
 
+        $defaultSettings = DirectoryOrgSettings::getDefaultSettings();
+        $fieldsMappingValidator = new Validator();
+        foreach (Hash::get($defaultSettings, 'fieldsMapping', []) as $directoryType => $mappings) {
+            $typeValidator = new Validator();
+            $this->addFieldsMapValidator($typeValidator, 'user', array_keys($mappings['user']));
+            $this->addFieldsMapValidator($typeValidator, 'group', array_keys($mappings['group']));
+
+            $fieldsMappingValidator->addNested($directoryType, $typeValidator);
+        }
+
+        $validator
+            ->requirePresence('fields_mapping', 'create', __('The fields mapping configuration is required.'))
+            ->isArray('fields_mapping', __('The fields mapping should be a valid array.'))
+            ->addNested('fields_mapping', $fieldsMappingValidator);
+
         return $validator;
+    }
+
+    /**
+     * Add the nested validator for a section of a directory type
+     *
+     * @param \Cake\Validation\Validator $typeValidator parent type validator
+     * @param string $section section name (user, group)
+     * @param array $fields fields list for the section
+     * @return \Cake\Validation\Validator
+     */
+    private function addFieldsMapValidator(Validator $typeValidator, string $section, array $fields): Validator
+    {
+        $sectionValidator = new Validator();
+        foreach ($fields as $fieldName) {
+            $sectionValidator
+                ->requirePresence($fieldName, true, __('The map for this field is required.'))
+                ->notEmptyString($fieldName, __('The map value should not be empty.'))
+                ->scalar($fieldName)
+                ->utf8($fieldName, __('The field name should be a valid BMP-UTF8 string.'));
+        }
+        $typeValidator
+            ->requirePresence($section, true, __('The map configuration for `{0}` fields is required.', [$section]))
+            ->isArray($section)
+            ->addNested($section, $sectionValidator);
+
+        return $typeValidator;
     }
 
     /**
@@ -372,6 +414,7 @@ class LdapConfigurationForm extends Form
     public static function formatOrgSettingsToFormData(?array $settings = [])
     {
         $data = [];
+        $fieldsMapping = Hash::get($settings, 'fieldsMapping', []);
         $hosts = Hash::get($settings, 'ldap.domains.org_domain.hosts', []);
         $settings = Hash::flatten($settings);
         if (empty($settings)) {
@@ -409,6 +452,7 @@ class LdapConfigurationForm extends Form
         }
 
         $settings['ldap.domains.org_domain.hosts'] = $hosts;
+        $settings['fieldsMapping'] = $fieldsMapping;
         foreach (self::$configurationMapping as $prop => $propVal) {
             if (isset($settings[$propVal])) {
                 $data[$prop] = $settings[$propVal];

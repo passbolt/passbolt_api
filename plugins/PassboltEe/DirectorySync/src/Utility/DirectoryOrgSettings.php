@@ -49,7 +49,7 @@ class DirectoryOrgSettings
     public const BIND_FORMATS = [
         DirectoryInterface::TYPE_AD => '%username%@%domainname%',
         DirectoryInterface::TYPE_OPENLDAP => '%username%',
-        DirectoryInterface::TYPE_NAME_FREEIPA => '%username%',
+        DirectoryInterface::TYPE_FREEIPA => '%username%',
     ];
     /**
      * @var array
@@ -78,6 +78,7 @@ class DirectoryOrgSettings
             $pluginDefaultSettings = self::getDefaultSettings();
             $settings = Hash::merge($pluginDefaultSettings, $settings);
         }
+
         $this->settings = $settings;
     }
 
@@ -143,7 +144,7 @@ class DirectoryOrgSettings
      *
      * @return array
      */
-    private static function getDefaultSettings()
+    public static function getDefaultSettings()
     {
         $path = DirectorySyncPlugin::PLUGIN_CONFIG_PATH . 'config.php';
         if (!\file_exists($path)) {
