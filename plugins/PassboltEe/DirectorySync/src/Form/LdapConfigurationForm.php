@@ -35,6 +35,7 @@ class LdapConfigurationForm extends Form
     public const CONNECTION_TYPE_TLS = 'tls';
     public const AUTHENTICATION_TYPE_BASIC = 'basic';
     public const AUTHENTICATION_TYPE_SASL = 'sasl';
+
     public const SUPPORTED_DIRECTORY_TYPE = [DirectoryInterface::TYPE_AD, DirectoryInterface::TYPE_OPENLDAP];
 
     /**
@@ -47,6 +48,14 @@ class LdapConfigurationForm extends Form
     ];
 
     /**
+     * @var string[]
+     */
+    public static $authenticationTypes = [
+        self::AUTHENTICATION_TYPE_BASIC,
+        self::AUTHENTICATION_TYPE_SASL,
+    ];
+
+    /**
      * Mapping of the object properties with the configuration paths.
      * Note that the connection_type property is mapped manually.
      *
@@ -55,13 +64,13 @@ class LdapConfigurationForm extends Form
     private static $configurationMapping = [
         'enabled' => 'enabled',
         'source' => 'source',
-        'directory_type' => 'ldap.domains.org_domain.ldap_type',
-        'domain_name' => 'ldap.domains.org_domain.domain_name',
-        'username' => 'ldap.domains.org_domain.username',
-        'password' => 'ldap.domains.org_domain.password',
-        'base_dn' => 'ldap.domains.org_domain.base_dn',
-        'hosts' => 'ldap.domains.org_domain.hosts',
-        'port' => 'ldap.domains.org_domain.port',
+        'directory_type' => 'ldap.domains.{DOMAIN}.ldap_type',
+        'domain_name' => 'ldap.domains.{DOMAIN}.domain_name',
+        'username' => 'ldap.domains.{DOMAIN}.username',
+        'password' => 'ldap.domains.{DOMAIN}.password',
+        'base_dn' => 'ldap.domains.{DOMAIN}.base_dn',
+        'hosts' => 'ldap.domains.{DOMAIN}.hosts',
+        'port' => 'ldap.domains.{DOMAIN}.port',
         'group_object_class' => 'groupObjectClass',
         'user_object_class' => 'userObjectClass',
         'group_path' => 'groupPath',
@@ -95,13 +104,6 @@ class LdapConfigurationForm extends Form
     {
         return $schema
             ->addField('enabled', 'boolean')
-            ->addField('directory_type', ['type' => 'string'])
-            ->addField('domain_name', 'string')
-            ->addField('username', ['type' => 'string'])
-            ->addField('password', ['type' => 'string'])
-            ->addField('base_dn', ['type' => 'string'])
-            ->addField('port', ['type' => 'string'])
-            ->addField('connection_type', ['type' => 'string'])
             ->addField('group_object_class', 'string')
             ->addField('user_object_class', 'string')
             ->addField('group_path', 'string')
@@ -133,56 +135,22 @@ class LdapConfigurationForm extends Form
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->requirePresence('directory_type', 'create', __('A directory type is required.'))
-            ->notEmptyString('directory_type', __('The directory type should not be empty.'))
-            ->inList(
-                'directory_type',
-                self::SUPPORTED_DIRECTORY_TYPE,
-                __(
-                    'The directory type should be one of the following: {0}.',
-                    implode(', ', self::SUPPORTED_DIRECTORY_TYPE)
-                )
-            );
+            ->isArray('domains')
+            ->hasAtLeast('domains', 1, __('Need at least one domain configuration.'))
+            ->addNestedMany('domains', $this->getDomainValidator())
+            ->add('domains', 'connection_names', [
+                'rule' => function ($value, $context) {
+                    $domains = Hash::get($context, 'data.domains', []);
+                    foreach ($domains as $name => $data) {
+                        if (str_contains($name, '.')) {
+                            return __('The connection name `{0}` should not contain dots', [$name]);
+                        }
+                    }
 
-        $validator
-            ->requirePresence('domain_name', 'create', __('A domain name is required.'))
-            ->notEmptyString('domain_name', __('The domain name should not be empty.'))
-            ->utf8('domain_name', __('The domain name should be a valid BMP-UTF8 string.'));
-
-        $validator
-            ->allowEmptyString('username')
-            ->utf8('username', __('The username should be a valid BMP-UTF8 string.'));
-
-        $validator
-            ->allowEmptyString('password')
-            ->utf8('password', __('The password should be a valid BMP-UTF8 string.'));
-
-        $validator
-            ->allowEmptyString('base_dn')
-            ->utf8('base_dn', __('The base DN should be a valid BMP-UTF8 string.'));
-
-        $validator
-            ->requirePresence('hosts', 'create', __('At least one host is required.'))
-            ->hasAtLeast('hosts', 1, __('At least one host is required.'))
-            ->isArray('hosts', __('The hosts should be a valid array.'));
-
-        $validator
-            ->requirePresence('port', 'create', __('A port number is required.'))
-            ->notEmptyString('port', __('The port number should not be empty.'))
-            ->numeric('port', __('The port number should be numeric.'))
-            ->range('port', [0, 65535], __('The port number should be between 0 and 65535'));
-
-        $validator
-            ->requirePresence('connection_type', 'create', __('A connection type is required.'))
-            ->notEmptyString('connection_type', __('The connection type should not be empty.'))
-            ->inList(
-                'connection_type',
-                self::$connectionTypes,
-                __(
-                    'The connection type should be one of the following: {0}.',
-                    implode(', ', self::$connectionTypes)
-                )
-            );
+                    return true;
+                },
+                'message' => __('Invalid connection name'),
+            ]);
 
         $validator
             ->requirePresence('default_user', 'create', __('The identifier of the default admin user is required.'))
@@ -303,6 +271,80 @@ class LdapConfigurationForm extends Form
     }
 
     /**
+     * Return the validator for the domain data
+     *
+     * @return \Cake\Validation\Validator
+     */
+    private function getDomainValidator(): Validator
+    {
+        $validator = new Validator();
+        $validator
+            ->requirePresence('directory_type', 'create', __('A directory type is required.'))
+            ->notEmptyString('directory_type', __('The directory type should not be empty.'))
+            ->inList(
+                'directory_type',
+                self::SUPPORTED_DIRECTORY_TYPE,
+                __(
+                    'The directory type should be one of the following: {0}.',
+                    implode(', ', self::SUPPORTED_DIRECTORY_TYPE)
+                )
+            );
+
+        $validator
+            ->requirePresence('domain_name', 'create', __('A domain name is required.'))
+            ->notEmptyString('domain_name', __('The domain name should not be empty.'))
+            ->utf8('domain_name', __('The domain name should be a valid BMP-UTF8 string.'));
+
+        $validator
+            ->allowEmptyString('username')
+            ->utf8('username', __('The username should be a valid BMP-UTF8 string.'));
+
+        $validator
+            ->allowEmptyString('password')
+            ->utf8('password', __('The password should be a valid BMP-UTF8 string.'));
+
+        $validator
+            ->allowEmptyString('base_dn')
+            ->utf8('base_dn', __('The base DN should be a valid BMP-UTF8 string.'));
+
+        $validator
+            ->requirePresence('hosts', 'create', __('At least one host is required.'))
+            ->hasAtLeast('hosts', 1, __('At least one host is required.'))
+            ->isArray('hosts', __('The hosts should be a valid array.'));
+
+        $validator
+            ->requirePresence('port', 'create', __('A port number is required.'))
+            ->notEmptyString('port', __('The port number should not be empty.'))
+            ->numeric('port', __('The port number should be numeric.'))
+            ->range('port', [0, 65535], __('The port number should be between 0 and 65535'));
+
+        $validator
+            ->requirePresence('connection_type', 'create', __('A connection type is required.'))
+            ->notEmptyString('connection_type', __('The connection type should not be empty.'))
+            ->inList(
+                'connection_type',
+                self::$connectionTypes,
+                __(
+                    'The connection type should be one of the following: {0}.',
+                    implode(', ', self::$connectionTypes)
+                )
+            );
+        $validator
+            ->requirePresence('authentication_type', 'create', __('An authentication type is required.'))
+            ->notEmptyString('authentication_type', __('The authentication type should not be empty.'))
+            ->inList(
+                'authentication_type',
+                self::$authenticationTypes,
+                __(
+                    'The authentication type should be one of the following: {0}.',
+                    implode(', ', self::$authenticationTypes)
+                )
+            );
+
+        return $validator;
+    }
+
+    /**
      * Add the nested validator for a section of a directory type
      *
      * @param \Cake\Validation\Validator $typeValidator parent type validator
@@ -369,14 +411,14 @@ class LdapConfigurationForm extends Form
     /**
      * Transform form data into the expected org settings format
      *
-     * @param array $data The form data
+     * @param array|null $data The form data
      * @return array $settings The org settings data
      */
     public static function formatFormDataToOrgSettings(?array $data = [])
     {
         $settings = [];
-        if (count($data) === 0) {
-            return $data;
+        if ($data === null || count($data) === 0) {
+            return $settings;
         }
 
         $User = TableRegistry::getTableLocator()->get('Users');
@@ -391,13 +433,25 @@ class LdapConfigurationForm extends Form
                 $settings[self::$configurationMapping[$prop]] = $propVal;
             }
         }
-        $settings['ldap.domains.org_domain.use_ssl'] = $data['connection_type'] === 'ssl' ? 1 : 0;
-        $settings['ldap.domains.org_domain.use_tls'] = $data['connection_type'] === 'tls' ? 1 : 0;
-        $settings['ldap.domains.org_domain.use_sasl'] =
-            Hash::get($data, 'authentication_type') === self::AUTHENTICATION_TYPE_SASL ? 1 : 0;
+        $domains = Hash::get($data, 'domains', []);
+        foreach ($domains as $domain => $properties) {
+            foreach ($properties as $prop => $propVal) {
+                if (
+                    (!empty($propVal) || $propVal === false) && isset(self::$configurationMapping[$prop]) &&
+                    strpos(self::$configurationMapping[$prop], '{DOMAIN}') !== false
+                ) {
+                    $key = str_replace('{DOMAIN}', (string)$domain, self::$configurationMapping[$prop]);
+                    $settings[$key] = $propVal;
+                }
+            }
+            $settings["ldap.domains.$domain.use_ssl"] = $properties['connection_type'] === 'ssl' ? 1 : 0;
+            $settings["ldap.domains.$domain.use_tls"] = $properties['connection_type'] === 'tls' ? 1 : 0;
+            $settings["ldap.domains.$domain.use_sasl"] =
+                Hash::get($properties, 'authentication_type') === self::AUTHENTICATION_TYPE_SASL ? 1 : 0;
 
-        if (!isset($settings['ldap.domains.org_domain.password']) && !$settings['ldap.domains.org_domain.use_sasl']) {
-            $settings['ldap.domains.org_domain.password'] = DirectoryOrgSettings::get()->getPassword();
+            if (!isset($settings["ldap.domains.$domain.password"]) && !$settings["ldap.domains.$domain.use_sasl"]) {
+                $settings["ldap.domains.$domain.password"] = DirectoryOrgSettings::get()->getPassword($domain);
+            }
         }
 
         $settings = Hash::expand($settings);
@@ -415,7 +469,7 @@ class LdapConfigurationForm extends Form
     {
         $data = [];
         $fieldsMapping = Hash::get($settings, 'fieldsMapping', []);
-        $hosts = Hash::get($settings, 'ldap.domains.org_domain.hosts', []);
+        $domains = Hash::get($settings, 'ldap.domains', []);
         $settings = Hash::flatten($settings);
         if (empty($settings)) {
             return $data;
@@ -451,26 +505,38 @@ class LdapConfigurationForm extends Form
             }
         }
 
-        $settings['ldap.domains.org_domain.hosts'] = $hosts;
         $settings['fieldsMapping'] = $fieldsMapping;
+
         foreach (self::$configurationMapping as $prop => $propVal) {
             if (isset($settings[$propVal])) {
                 $data[$prop] = $settings[$propVal];
             }
         }
 
-        $data['connection_type'] = self::CONNECTION_TYPE_PLAIN;
-        $isSsl = !empty($settings['ldap.domains.org_domain.use_ssl']);
-        $isTls = !empty($settings['ldap.domains.org_domain.use_tls']);
-        if ($isSsl) {
-            $data['connection_type'] = self::CONNECTION_TYPE_SSL;
-        } elseif ($isTls) {
-            $data['connection_type'] = self::CONNECTION_TYPE_TLS;
-        }
-        $data['authentication_type'] = self::AUTHENTICATION_TYPE_BASIC;
-        $isSasl = !empty($settings['ldap.domains.org_domain.use_sasl']);
-        if ($isSasl) {
-            $data['authentication_type'] = self::AUTHENTICATION_TYPE_SASL;
+        foreach ($domains as $domain => $properties) {
+            $settings["ldap.domains.$domain.hosts"] = $properties['hosts'];
+            foreach (self::$configurationMapping as $prop => $propVal) {
+                if (strpos($propVal, '{DOMAIN}') === false) {
+                    continue;
+                }
+                $key = str_replace('{DOMAIN}', $domain, $propVal);
+                if (isset($settings[$key])) {
+                    $data['domains'][$domain][$prop] = $settings[$key];
+                }
+            }
+            $data['domains'][$domain]['connection_type'] = self::CONNECTION_TYPE_PLAIN;
+            $isSsl = !empty($properties['use_ssl']);
+            $isTls = !empty($properties['use_tls']);
+            if ($isSsl) {
+                $data['domains'][$domain]['connection_type'] = self::CONNECTION_TYPE_SSL;
+            } elseif ($isTls) {
+                $data['domains'][$domain]['connection_type'] = self::CONNECTION_TYPE_TLS;
+            }
+            $data['domains'][$domain]['authentication_type'] = self::AUTHENTICATION_TYPE_BASIC;
+            $isSasl = !empty($properties['use_sasl']);
+            if ($isSasl) {
+                $data['domains'][$domain]['authentication_type'] = self::AUTHENTICATION_TYPE_SASL;
+            }
         }
 
         return $data;
@@ -486,11 +552,18 @@ class LdapConfigurationForm extends Form
     protected function testConnection(array $data)
     {
         $settings = self::formatFormDataToOrgSettings($data);
-        foreach ($settings['ldap']['domains']['org_domain']['hosts'] as $host) {
-            $tmpSettings = $settings;
-            $tmpSettings['hosts'] = [$host];
-            $directorySettings = new DirectoryOrgSettings($tmpSettings);
-            $ldapDirectory = DirectoryFactory::get($directorySettings);
+        $domains = Hash::get($settings, 'ldap.domains', []);
+        foreach ($domains as $domain => $properties) {
+            foreach ($properties['hosts'] as $host) {
+                $tmpSettings = $settings;
+                $tmpProperties = $properties;
+                $tmpProperties['hosts'] = [$host];
+                $tmpSettings['domains'] = [
+                    $domain => $tmpProperties,
+                ];
+                $directorySettings = new DirectoryOrgSettings($tmpSettings);
+                $ldapDirectory = DirectoryFactory::get($directorySettings);
+            }
         }
 
         return true;

@@ -109,10 +109,14 @@ class DirectoryOrgSettings
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $data = $OrganizationSettings->getFirstSettingOrFail(self::ORG_SETTINGS_PROPERTY);
         $settings = json_decode($data->value, true);
-        $password = Hash::get($settings, 'ldap.domains.org_domain.password', '');
-        if (!empty($password)) {
-            $settings = Hash::insert($settings, 'ldap.domains.org_domain.password', self::decrypt($password));
+        $domains = Hash::get($settings, 'ldap.domains', []);
+        foreach ($domains as $domain => $properties) {
+            $password = Hash::get($settings, "ldap.domains.$domain.password", '');
+            if (!empty($password)) {
+                $settings = Hash::insert($settings, "ldap.domains.$domain.password", self::decrypt($password));
+            }
         }
+
         if (!empty($settings)) {
             $settings['source'] = 'db';
         }
@@ -394,9 +398,12 @@ class DirectoryOrgSettings
     {
         $settings = new \ArrayObject($this->settings);
         $settings = $settings->getArrayCopy();
-        $password = Hash::get($settings, 'ldap.domains.org_domain.password', '');
-        if (!empty($password)) {
-            $settings = Hash::insert($settings, 'ldap.domains.org_domain.password', self::encrypt($password));
+        $domains = Hash::get($settings, 'ldap.domains', []);
+        foreach ($domains as $domain => $properties) {
+            $password = Hash::get($settings, "ldap.domains.$domain.password", '');
+            if (!empty($password)) {
+                $settings = Hash::insert($settings, "ldap.domains.$domain.password", self::encrypt($password));
+            }
         }
         $data = json_encode($settings);
         $this->OrganizationSettings->createOrUpdateSetting(self::ORG_SETTINGS_PROPERTY, $data, $uac);
