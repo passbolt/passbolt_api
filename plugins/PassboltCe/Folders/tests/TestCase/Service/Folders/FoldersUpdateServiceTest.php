@@ -125,19 +125,14 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->update($uac, $folderA->id, ['name' => 'new name']);
+        $name = 'new name';
+        $this->service->update($uac, $folderA->id, compact('name'));
 
-        $this->assertEmailIsInQueue([
-            'email' => 'ada@passbolt.com',
-            'subject' => 'Ada edited the folder new name',
-            'template' => 'Passbolt/Folders.LU/folder_update',
-        ]);
-        $this->assertEmailIsInQueue([
-            'email' => 'betty@passbolt.com',
-        ]);
         $this->assertEmailQueueCount(2);
-        $this->assertEmailInBatchContains('updated the folder');
-        $this->assertEmailInBatchContains('updated the folder', 1);
+        $this->assetEmailSubject('ada@passbolt.com', "You edited the folder $name");
+        $this->assertEmailInBatchContains('You edited a folder', 'ada@passbolt.com');
+        $this->assetEmailSubject('betty@passbolt.com', "Ada edited the folder $name");
+        $this->assertEmailInBatchContains('Ada edited a folder', 'betty@passbolt.com');
     }
 
     public function testUpdateFolderError_ValidationError()
