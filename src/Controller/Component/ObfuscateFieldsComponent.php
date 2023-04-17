@@ -120,7 +120,7 @@ class ObfuscateFieldsComponent extends Component
             }
             if (is_array($value)) {
                 $body[$field] = $this->obfuscateFields($value);
-            } elseif (in_array($field, $fields)) {
+            } elseif (in_array($field, $fields, true)) {
                 $body[$field] = $placeholder;
             }
         }
