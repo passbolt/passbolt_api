@@ -348,6 +348,37 @@ class ObfuscateFieldsComponentTest extends TestCase
     }
 
     /**
+     * Before Render: Test for sequential arrays keys strict type comparison issue in php 7.4
+     *
+     * @return void
+     */
+    public function testBeforeRender_SequentialArraysKeys(): void
+    {
+        $this->setupController();
+        $body = [
+            'username' => 'test',
+            'password' => 'TOP_SECRET',
+            'hosts' => [
+                0 => 'example.com',
+                1 => 'example1.com',
+            ],
+        ];
+        $expected = [
+            'username' => 'test',
+            'password' => ObfuscateFieldsComponent::FIELD_PLACEHOLDER,
+            'hosts' => [
+                0 => 'example.com',
+                1 => 'example1.com',
+            ],
+        ];
+        $this->controller->set('body', $body);
+        $event = new Event('Controller.beforeRender', $this->controller);
+        $this->component->beforeRender($event);
+
+        $this->assertSame($expected, $this->controller->viewBuilder()->getVar('body'));
+    }
+
+    /**
      * Before Render: Field is not obfuscated if it is
      * not monitored via config
      *
