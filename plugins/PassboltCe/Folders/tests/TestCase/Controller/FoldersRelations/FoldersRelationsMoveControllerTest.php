@@ -144,7 +144,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $this->authenticateAs('ada');
         $this->putJson("/move/folder/$folderA->id.json?api-version=2");
         $this->assertError(400, 'Could not validate move data.');
-        $arr = json_decode(json_encode($this->_responseJsonBody), true);
+        $arr = $this->getResponseBodyAsArray();
         $error = Hash::get($arr, 'folder_parent_id');
         $this->assertEquals('A folder parent identifier is required.', $error['_required']);
     }
@@ -155,7 +155,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
         $this->authenticateAs('ada');
         $this->putJson("/move/folder/$folderA->id.json?api-version=2", ['folder_parent_id' => 'invalid-id']);
         $this->assertError(400, 'Could not validate move data.');
-        $arr = json_decode(json_encode($this->_responseJsonBody), true);
+        $arr = $this->getResponseBodyAsArray();
         $error = Hash::get($arr, 'folder_parent_id');
         $this->assertEquals('The folder parent identifier should be a valid UUID.', $error['uuid']);
     }

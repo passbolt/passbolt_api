@@ -173,7 +173,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $url = "/setup/recover/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
-        $arr = json_decode(json_encode($this->_responseJsonBody), true);
+        $arr = $this->getResponseBodyAsArray();
         $error = Hash::get($arr, 'token');
         $this->assertNotNull($error, 'The test should return an error for the given field.');
         $this->assertEquals('The token is expired.', $error['expired']);

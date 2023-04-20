@@ -191,7 +191,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
             $this->authenticateAs('admin');
             $this->postJson('/groups.json', $case['data']);
             $this->assertError($responseCode, $responseMessage);
-            $arr = json_decode(json_encode($this->_responseJsonBody), true);
+            $arr = $this->getResponseBodyAsArray();
             $this->assertEquals($case['errorMessage'], Hash::get($arr, $case['errorField']));
         }
     }
