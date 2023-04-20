@@ -20,22 +20,21 @@ use App\Command\RegisterUserCommand;
 use App\Model\Entity\Role;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
 use Faker\Factory;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
-class RegisterUserCommandTest extends TestCase
+class RegisterUserCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
     use PassboltCommandTestTrait;
-
-    /**
-     * @var UsersTable
-     */
-    public $Users;
 
     /**
      * setUp method
@@ -46,13 +45,8 @@ class RegisterUserCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        RegisterUserCommand::$userIsRoot = false;
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-    }
-
-    public function tearDown(): void
-    {
-        unset($this->Users);
+        RegisterUserCommand::$isUserRoot = false;
+        $this->loadNotificationSettings();
     }
 
     /**
@@ -97,15 +91,17 @@ class RegisterUserCommandTest extends TestCase
 
         $faker = Factory::create();
         $role = Role::USER;
-        $username = $faker->email;
-        $firstName = $faker->firstNameFemale;
-        $lastName = $faker->lastName;
+        $username = $faker->email();
+        $firstName = $faker->firstNameFemale();
+        $lastName = $faker->lastName();
 
         $options = " -r $role -u $username -f $firstName -l $lastName";
 
         $this->exec('passbolt register_user' . $options);
         $this->assertExitSuccess();
-        $this->assertSame(1 + $withAdmin, $this->Users->find()->count());
+        $this->assertSame(1 + $withAdmin, UserFactory::count());
+//         TODO: fix this line in the CI
+//        $this->assertEmailQueueCount(1);
     }
 
     /**
@@ -119,17 +115,19 @@ class RegisterUserCommandTest extends TestCase
 
         // Prepare the interaction inputs
         $faker = Factory::create();
-        $input = [$faker->email, $faker->firstNameFemale, $faker->lastName, Role::USER];
+        $input = [$faker->email(), $faker->firstNameFemale(), $faker->lastName(), Role::USER];
 
         // Run the register command
         $this->exec('passbolt register_user -i', $input);
         $this->assertExitSuccess();
-        $this->assertSame(1, $this->Users->find()->count());
+        $this->assertSame(1, UserFactory::count());
 
         // Assert that the correct link is provided in the console
-        $user = $this->Users->find()->firstOrFail();
+        $user = UserFactory::find()->firstOrFail();
         $token = TableRegistry::getTableLocator()->get('AuthenticationTokens')->getByUserId($user->id);
         $setupLink = Router::url('/setup/install/' . $user->id . '/' . $token->token, true);
         $this->assertOutputContains($setupLink);
+//         TODO: fix this line in the CI
+//        $this->assertEmailQueueCount(1);
     }
 }

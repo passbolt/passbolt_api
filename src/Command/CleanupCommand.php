@@ -25,9 +25,9 @@ use Cake\ORM\TableRegistry;
 class CleanupCommand extends PassboltCommand
 {
     /**
-     * @var array The list of cleanup jobs to perform.
+     * @var array|null The list of cleanup jobs to perform.
      */
-    private static $cleanups;
+    private static $cleanups = null;
 
     /**
      * @var array The list of default cleanup jobs to perform.
@@ -38,12 +38,14 @@ class CleanupCommand extends PassboltCommand
             'Hard Deleted Users',
             'Soft Deleted Groups',
             'Hard Deleted Groups',
+            'Duplicated Groups Users',
         ],
         'Favorites' => [
             'Soft Deleted Users',
             'Hard Deleted Users',
             'Soft Deleted Resources',
             'Hard Deleted Resources',
+            'Duplicated Favorites',
         ],
         'Comments' => [
             'Soft Deleted Users',
@@ -58,6 +60,7 @@ class CleanupCommand extends PassboltCommand
             'Hard Deleted Groups',
             'Soft Deleted Resources',
             'Hard Deleted Resources',
+            'Duplicated Permissions',
         ],
         'Secrets' => [
             'Soft Deleted Users',
@@ -68,6 +71,11 @@ class CleanupCommand extends PassboltCommand
         ],
         'Resources' => [
             'Missing ResourceType Id',
+        ],
+        'Avatars' => [
+            'Soft Deleted Users',
+            'Hard Deleted Users',
+            'Hard Deleted Profiles',
         ],
     ];
 
@@ -125,7 +133,9 @@ class CleanupCommand extends PassboltCommand
         $this->loadModel('Permissions');
         $this->loadModel('AuthenticationTokens');
 
-        self::resetCleanups();
+        if (!isset(self::$cleanups)) {
+            self::resetCleanups();
+        }
     }
 
     /**
@@ -164,7 +174,10 @@ class CleanupCommand extends PassboltCommand
         foreach (self::$cleanups as $tableName => $tableCleanup) {
             $table = TableRegistry::getTableLocator()->get($tableName);
             foreach ($tableCleanup as $i => $cleanupName) {
+                $timeStart = microtime(true);
                 $cleanupMethod = 'cleanup' . str_replace(' ', '', $cleanupName);
+
+                $io->verbose("Clean up start: $tableName:$cleanupMethod");
                 $recordCount = $table->{$cleanupMethod}($dryRun);
                 $totalErrorCount += $recordCount;
                 if ($recordCount) {
@@ -175,6 +188,10 @@ class CleanupCommand extends PassboltCommand
                         $io->out(__('{0} issues fixed in table {1} ({2})', $recordCount, $tableName, $cleanupName));
                     }
                 }
+
+                $timeEnd = microtime(true);
+                $timeExecuted = round($timeEnd - $timeStart, 2);
+                $io->verbose("Cleanup up end ({$timeExecuted}s): $tableName:$cleanupMethod");
             }
         }
 

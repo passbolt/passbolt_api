@@ -39,6 +39,11 @@ class MigrateCommand extends PassboltCommand
                 'help' => 'Make a database backup to be used in case something goes wrong.',
                 'boolean' => true,
                 'default' => false,
+            ])
+            ->addOption('no-clear-cache', [
+                'help' => 'Don\'t clear the cache once the migration is completed.',
+                'boolean' => true,
+                'default' => false,
             ]);
 
         $this->addDatasourceOption($parser);
@@ -55,9 +60,7 @@ class MigrateCommand extends PassboltCommand
 
         // Root user is not allowed to execute this command.
         // This command needs to be executed with the same user as the webserver.
-        if (!$this->assertNotRoot($io)) {
-            return $this->errorCode();
-        }
+        $this->assertCurrentProcessUser($io);
 
         // Backup
         if ($this->backup($args, $io)) {
@@ -76,11 +79,13 @@ class MigrateCommand extends PassboltCommand
         }
 
         // Clean cache
-        $result = $this->executeCommand(
-            CacheClearallCommand::class,
-            $this->formatOptions($args),
-            $io
-        );
+        if (!$args->getOption('no-clear-cache')) {
+            $result = $this->executeCommand(
+                CacheClearallCommand::class,
+                $this->formatOptions($args),
+                $io
+            );
+        }
 
         return $result;
     }

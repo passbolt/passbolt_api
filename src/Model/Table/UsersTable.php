@@ -24,9 +24,9 @@ use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
+use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -60,12 +60,15 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\User[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Cake\ORM\Query findById(string $id)
+ * @method \Cake\ORM\Query findByUsername(string $username)
  */
 class UsersTable extends Table
 {
     use UsersFindersTrait;
 
     public const AFTER_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterRegister.success';
+    public const AFTER_SELF_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterSelfRegister.success';
 
     /**
      * Initialize method
@@ -81,6 +84,7 @@ class UsersTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
+        $this->addBehavior('Passbolt/Locale.Locale');
         $this->addBehavior('Timestamp');
 
         $this->belongsTo('Roles', [
@@ -134,11 +138,9 @@ class UsersTable extends Table
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
-            ->email(
-                'username',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The username should be a valid email address.')
-            );
+            ->add('username', 'email', new EmailValidationRule([
+                'message' => __('The username should be a valid email address.'),
+            ]));
 
         $validator
             ->boolean('active', __('The active status should be a valid boolean.'));
@@ -164,7 +166,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRegister(Validator $validator)
+    public function validationRegister(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }
@@ -175,7 +177,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationUpdate(Validator $validator)
+    public function validationUpdate(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }
@@ -186,17 +188,15 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRecover(Validator $validator)
+    public function validationRecover(Validator $validator): Validator
     {
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmptyString('username', __('The username should not be empty.'))
             ->maxLength('username', 255, __('The username length should be maximum 255 characters.'))
-            ->email(
-                'username',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The username should be a valid email address.')
-            );
+            ->add('username', 'email', new EmailValidationRule([
+                'message' => __('The username should be a valid email address.'),
+            ]));
 
         return $validator;
     }
@@ -356,6 +356,7 @@ class UsersTable extends Table
         // transferred to other people already (ref. checkRules)
         $resourceIds = $this->Permissions
             ->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
+            ->all()
             ->extract('aco_foreign_key')
             ->toArray();
         if (!empty($resourceIds)) {
@@ -364,11 +365,35 @@ class UsersTable extends Table
             $Resources->softDeleteAll($resourceIds);
         }
 
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            // Find all the folders that only belongs to the deleted user and delete them.
+            // Note: all folders that cannot be deleted should have been transferred to other people already.
+            $foldersIds = $this->Permissions
+                ->findAcosOnlyAroCanAccess(PermissionsTable::FOLDER_ACO, $user->id, ['checkGroupsUsers' => true])
+                ->all()
+                ->extract('aco_foreign_key')
+                ->toArray();
+            if (!empty($foldersIds)) {
+                $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+                $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+                $foldersTable->deleteAll(['id IN' => $foldersIds]);
+                $foldersRelationsTable->deleteAll(['foreign_id IN' => $foldersIds]);
+                $foldersRelationsTable
+                    ->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
+            }
+            // Remove all the folders relations of the users.
+            $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+            $foldersRelationsTable->deleteAll(['user_id' => $user->id]);
+        }
+
         // We do not want empty groups
         // Soft delete all the groups where the user is alone
         // Note that all associated resources are already deleted in previous step
         // ref. findAcosOnlyAroCanAccess checkGroupsUsers = true
-        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)->extract('group_id')->toArray();
+        $groupsId = $this->GroupsUsers->findGroupsWhereUserOnlyMember($user->id)
+            ->all()
+            ->extract('group_id')
+            ->toArray();
         if (!empty($groupsId)) {
             $this->Groups->updateAll(['deleted' => true], ['id IN' => $groupsId]);
             $this->Permissions->deleteAll(['aro_foreign_key IN' => $groupsId]);
@@ -409,7 +434,7 @@ class UsersTable extends Table
      * @throws \App\Error\Exception\ValidationException if the user data do not validate
      * @return \App\Model\Entity\User entity
      */
-    public function register(array $data, ?UserAccessControl $control = null)
+    public function register(array $data, ?UserAccessControl $control = null): User
     {
         // if role id is empty make it a user
         // Only admins are allowed to set the role
@@ -448,9 +473,10 @@ class UsersTable extends Table
         $eventData = ['user' => $user, 'token' => $token];
         if (isset($control) && !empty($control->getId())) {
             $eventData['adminId'] = $control->getId();
+            $this->dispatchEvent(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $eventData, $this);
+        } else {
+            $this->dispatchEvent(self::AFTER_SELF_REGISTER_SUCCESS_EVENT_NAME, $eventData, $this);
         }
-        $event = new Event(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $this, $eventData);
-        $this->getEventManager()->dispatch($event);
 
         return $user;
     }

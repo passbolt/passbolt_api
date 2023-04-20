@@ -35,7 +35,7 @@ trait JsonRequestTrait
     /**
      * The response body for the most recent json request.
      *
-     * @var Object
+     * @var array|object
      */
     protected $_responseJsonBody;
 
@@ -128,8 +128,9 @@ trait JsonRequestTrait
     {
         $this->_responseJson = json_decode($this->_getBodyAsString());
         if (empty($this->_responseJson)) {
-            pr($this->_getBodyAsString());
-            Assert::fail('The result of the request is not a valid json.');
+            $message = "The result of the request is not a valid json.\r\n";
+            $message .= $this->_getBodyAsString();
+            Assert::fail($message);
         }
         $this->_responseJsonHeader = $this->_responseJson->header;
         $this->_responseJsonBody = $this->_responseJson->body;

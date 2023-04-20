@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ResourcesAddNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles',
@@ -92,9 +94,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('ada@passbolt.com');
     }
 
     public function testResourcesAddNotificationSuccess()
@@ -108,14 +108,6 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('You have saved a new password');
-    }
-
-    public function testResourcesAddNotificationSettings()
-    {
-        // Test the configuration flags like passbolt.show.resource.url
-        $this->markTestIncomplete();
+        $this->assertEmailInBatchContains('You have saved a new password', 'ada@passbolt.com');
     }
 }

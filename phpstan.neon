@@ -1,7 +1,8 @@
 parameters:
-    level: 4
+    level: 6
     checkMissingIterableValueType: false
     treatPhpDocTypesAsCertain: false
+    checkGenericClassInNonGenericObjectType: false
     paths:
         - src
         - plugins
@@ -10,3 +11,6 @@ parameters:
     excludes_analyse:
         - **/templates/**
         - **/tests/**
+
+rules:
+    - App\Test\PhpstanRule\Deprecation\DeprecatedEmailValidationStaticRule

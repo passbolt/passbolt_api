@@ -23,8 +23,6 @@ use Migrations\Migrations;
 
 class Migration
 {
-    protected $_remoteTagName;
-
     /**
      * Check if the app or plugins need a database migration
      *

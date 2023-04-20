@@ -221,13 +221,9 @@ return [
      *  Smtp   - Send using SMTP
      *  Debug  - Do not send the email, just return the result
      *
-     * You can add custom transports (or override existing transports) by adding the
-     * appropriate file to src/Mailer/Transport. Transports should be named
-     * 'YourTransport.php', where 'Your' is the name of the transport.
      */
     'EmailTransport' => [
         'default' => [
-            'className' => env('EMAIL_TRANSPORT_DEFAULT_CLASS_NAME', 'Smtp'),
             /*
              * The keys host, port, timeout, username, password, client and tls
              * are used in SMTP transports
@@ -263,7 +259,7 @@ return [
         'default' => [
             'transport' => env('EMAIL_DEFAULT_TRANSPORT', 'default'),
             'from' => [
-                env('EMAIL_DEFAULT_FROM', 'you@localhost') => env('EMAIL_DEFAULT_FROM_NAME', 'Passbolt')
+                env('EMAIL_DEFAULT_FROM', 'you@localhost.test') => env('EMAIL_DEFAULT_FROM_NAME', 'Passbolt')
             ],
             //'charset' => 'utf-8',
             //'headerCharset' => 'utf-8',
@@ -281,19 +277,12 @@ return [
     'Datasources' => [
         'default' => [
             'className' => Connection::class,
-            'driver' => Mysql::class,
+            'driver' => env('DATASOURCES_DEFAULT_DRIVER', Mysql::class),
             'persistent' => false,
             'timezone' => 'UTC',
 
             /*
              * For MariaDB/MySQL the internal default changed from utf8 to utf8mb4, aka full utf-8 support
-             */
-            'encoding' => 'utf8mb4',
-
-            /*
-             * If your MySQL server is configured with `skip-character-set-client-handshake`
-             * then you MUST use the `flags` config to set your charset encoding.
-             * For e.g. `'flags' => [\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8mb4']`
              */
             'flags' => [],
             'cacheMetadata' => true,
@@ -332,6 +321,7 @@ return [
             'ssl_key' => env('DATASOURCES_DEFAULT_SSL_KEY', ''),
             'ssl_cert' => env('DATASOURCES_DEFAULT_SSL_CERT', ''),
             'ssl_ca' => env('DATASOURCES_DEFAULT_SSL_CA', ''),
+            'encoding' => env('DATASOURCES_DEFAULT_ENCODING','utf8mb4'),
 
         ],
 
@@ -343,7 +333,7 @@ return [
             'driver' => env('DATASOURCES_TEST_DRIVER', Mysql::class),
             'persistent' => false,
             'timezone' => 'UTC',
-            'encoding' => 'utf8mb4',
+            'encoding' => env('DATASOURCES_TEST_ENCODING','utf8mb4'),
             'flags' => [],
             'cacheMetadata' => true,
             'quoteIdentifiers' => env('DATASOURCES_QUOTE_IDENTIFIER', true),
@@ -377,6 +367,7 @@ return [
             'file' => 'debug',
             'levels' => ['notice', 'info', 'debug'],
             'url' => env('LOG_DEBUG_URL', null),
+            'formatter' => env('LOG_DEBUG_FORMATTER', 'Cake\Log\Formatter\DefaultFormatter'),
         ],
         'error' => [
             'className' => FileLog::class,
@@ -384,6 +375,7 @@ return [
             'file' => 'error',
             'levels' => ['warning', 'error', 'critical', 'alert', 'emergency'],
             'url' => env('LOG_ERROR_URL', null),
+            'formatter' => env('LOG_ERROR_FORMATTER', 'Cake\Log\Formatter\DefaultFormatter'),
         ],
         // To enable this dedicated query log, you need set your datasource's log flag to true
         // See DATASOURCES_DEFAULT_LOG
@@ -392,6 +384,7 @@ return [
             'path' => LOGS,
             'file' => 'queries',
             'url' => env('LOG_QUERIES_URL', null),
+            'formatter' => env('LOG_QUERIES_FORMATTER', 'Cake\Log\Formatter\DefaultFormatter'),
             'scopes' => ['queriesLog'],
         ],
     ],

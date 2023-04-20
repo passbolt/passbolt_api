@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Lib\Model;
 
 use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 
 trait UsersModelTrait
 {
@@ -87,22 +88,29 @@ trait UsersModelTrait
      */
     protected function assertUserIsSoftDeleted($id)
     {
-        $user = $this->Users->get($id);
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
+        $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
+        $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        $favoritesTable = TableRegistry::getTableLocator()->get('Favorites');
+        $gpgKeysTable = TableRegistry::getTableLocator()->get('Gpgkeys');
+
+        $user = $usersTable->get($id);
         $this->assertTrue($user->deleted);
 
-        $groupsUsers = $this->GroupsUsers->find()->where(['user_id' => $id])->count();
+        $groupsUsers = $groupsUsersTable->find()->where(['user_id' => $id])->count();
         $this->assertEquals(0, $groupsUsers);
 
-        $permissions = $this->Permissions->find()->where(['aro_foreign_key' => $id])->count();
+        $permissions = $permissionsTable->find()->where(['aro_foreign_key' => $id])->count();
         $this->assertEquals(0, $permissions);
 
-        $secrets = $this->Secrets->find()->where(['user_id' => $id])->count();
+        $secrets = $secretsTable->find()->where(['user_id' => $id])->count();
         $this->assertEquals(0, $secrets);
 
-        $favorites = $this->Favorites->find()->where(['user_id' => $id])->count();
+        $favorites = $favoritesTable->find()->where(['user_id' => $id])->count();
         $this->assertEquals(0, $favorites);
 
-        $gpgKeys = $this->Gpgkeys->find()->where(['user_id' => $id, 'deleted' => 0])->count();
+        $gpgKeys = $gpgKeysTable->find()->where(['user_id' => $id, 'deleted' => 0])->count();
         $this->assertEquals(0, $gpgKeys);
     }
 
@@ -113,7 +121,8 @@ trait UsersModelTrait
      */
     protected function assertUserIsNotSoftDeleted($id)
     {
-        $user = $this->Users->get($id);
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        $user = $usersTable->get($id);
         $this->assertFalse($user->deleted);
     }
 
@@ -123,13 +132,14 @@ trait UsersModelTrait
      */
     protected function createTestUser()
     {
-        $testUser = $this->Users->newEntity(self::getDummyUser(), static::getEntityDefaultOptions());
+        $usersTable = TableRegistry::getTableLocator()->get('Users');
+        $testUser = $usersTable->newEntity(self::getDummyUser(), static::getEntityDefaultOptions());
 
         $errors = $testUser->getErrors();
         $this->assertEmpty($errors);
         $this->assertNotEmpty($testUser);
 
-        return $this->Users->save($testUser);
+        return $usersTable->save($testUser);
     }
 
     protected function getNonExistingRoleId()

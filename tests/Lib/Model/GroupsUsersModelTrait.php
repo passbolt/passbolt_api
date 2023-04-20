@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Lib\Model;
 
 use App\Model\Entity\GroupsUser;
+use App\Test\Factory\GroupsUserFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
@@ -27,9 +28,9 @@ trait GroupsUsersModelTrait
      *
      * @param array|null $data The group user data
      * @param array|null $options The entity options
-     * @return Group
+     * @return GroupsUser
      */
-    public function addGroupUser(?array $data = [], ?array $options = []): Group
+    public function addGroupUser(?array $data = [], ?array $options = []): GroupsUser
     {
         $groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $groupUser = self::getDummyGroupUserEntity($data, $options);
@@ -139,7 +140,7 @@ trait GroupsUsersModelTrait
      */
     protected function assertUserIsAdmin($groupId, $userId)
     {
-        $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
+        $groupUser = GroupsUserFactory::find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
         $this->assertTrue($groupUser->is_admin);
     }
 
@@ -151,7 +152,7 @@ trait GroupsUsersModelTrait
      */
     protected function assertUserIsNotAdmin($groupId, $userId)
     {
-        $groupUser = $this->GroupsUsers->find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
+        $groupUser = GroupsUserFactory::find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
         if (!empty($groupUser)) {
             $this->assertFalse($groupUser->is_admin);
         } else {

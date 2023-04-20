@@ -17,11 +17,14 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Model\Entity\Avatar;
+use App\Model\Traits\Cleanup\AvatarsCleanupTrait;
 use App\Service\Avatars\AvatarsCacheService;
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Utility\AvatarProcessing;
 use App\View\Helper\AvatarHelper;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Event\Event;
 use Cake\Log\Log;
 use Cake\ORM\Query;
@@ -30,6 +33,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
+use League\Flysystem\Local\LocalFilesystemAdapter;
 use Psr\Http\Message\UploadedFileInterface;
 
 /**
@@ -52,11 +56,11 @@ use Psr\Http\Message\UploadedFileInterface;
  */
 class AvatarsTable extends Table
 {
-    public const FORMAT_SMALL = 'small';
-    public const FORMAT_MEDIUM = 'medium';
+    use AvatarsCleanupTrait;
+
     public const MAX_SIZE = '5MB';
-    public const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/png', 'image/gif'];
-    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'gif'];
+    public const ALLOWED_MIME_TYPES = ['image/jpg', 'image/jpeg', 'image/png', 'image/gif'];
+    public const ALLOWED_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif'];
 
     /**
      * Initialize method
@@ -68,6 +72,7 @@ class AvatarsTable extends Table
     {
         parent::initialize($config);
 
+        $this->initializeConfiguration();
         $this->addBehavior('Timestamp');
         $this->belongsTo('Profiles');
     }
@@ -159,11 +164,11 @@ class AvatarsTable extends Table
         (new AvatarsCacheService($this))->storeInCache($avatar);
 
         $this->deleteMany($this->find()->where([
-            $this->aliasField('profile_id') => $avatar->get('profile_id'),
-            $this->aliasField('id') . ' <>' => $avatar->get('id'),
+            (new IdentifierExpression('profile_id'))->getIdentifier() => $avatar->get('profile_id'),
+            (new IdentifierExpression('id'))->getIdentifier() . ' <>' => $avatar->get('id'),
         ]));
 
-        $this->deleteMany($this->find()->where($this->aliasField('data') . ' IS NULL'));
+        $this->deleteMany($this->find()->where((new IdentifierExpression('data'))->getIdentifier() . ' IS NULL'));
     }
 
     /**
@@ -205,18 +210,21 @@ class AvatarsTable extends Table
     }
 
     /**
-     * Generate an Avatar contain clause to be inserted in a contain table.
+     * addContainAvatar
+     * Helper to add avatar contains options in a query
      *
-     * @return array
+     * @return array contain clause
      */
     public static function addContainAvatar(): array
     {
         return [
             'Avatars' => function (Query $q) {
-            // Formatter for empty avatars.
-                return $q->formatResults(function (CollectionInterface $avatars) {
-                    return AvatarsTable::formatResults($avatars);
-                });
+                // Formatter for empty avatars.
+                return $q
+                    ->select(['Avatars.id', 'Avatars.profile_id', 'Avatars.created', 'Avatars.modified'])
+                    ->formatResults(function (CollectionInterface $avatars) {
+                        return AvatarsTable::formatResults($avatars);
+                    });
             },
         ];
     }
@@ -257,7 +265,9 @@ class AvatarsTable extends Table
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height')
             );
             $avatar->set('data', $img);
-        } catch (\Exception $exception) {
+        } catch (\Throwable $e) {
+            Log::error($e->getMessage());
+
             return false;
         }
 
@@ -281,5 +291,24 @@ class AvatarsTable extends Table
     public function setFilesystem(FilesystemAdapter $adapter): void
     {
         Configure::write('AvatarFilesystem', new Filesystem($adapter));
+    }
+
+    /**
+     * Set the default file system adapter and configurations on initialize.
+     *
+     * @return void
+     */
+    protected function initializeConfiguration(): void
+    {
+        // Per default, use the local file system adapter. This may be overwritten on the fly if needed
+        // e.g. if storing the avatar on a cloud bucket.
+        $this->setFilesystem(new LocalFilesystemAdapter(TMP . 'avatars'));
+
+        //  These configurations should be set in the Application::bootstrap() method.
+        // However, has a backup, we ensure that on AvatarTable's initialization these
+        // configurations are well set.
+        if (!Configure::check('FileStorage')) {
+            (new AvatarsConfigurationService())->loadConfiguration();
+        }
     }
 }

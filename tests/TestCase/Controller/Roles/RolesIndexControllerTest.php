@@ -25,7 +25,7 @@ class RolesIndexControllerTest extends AppIntegrationTestCase
 
     public function testRolesIndexGetSuccess()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/roles.json?api-version=2');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));

@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '3.2.1',
-        'name' => 'La Clé Des Champs'
+        'version' => '3.12.0',
+        'name' => 'Introspective',
     ]
 ];

@@ -32,7 +32,6 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
  * @property string $modified_by
- *
  * @property \App\Model\Entity\User|null $creator
  * @property \App\Model\Entity\User|null $modifier
  * @property \App\Model\Entity\Permission|null $permission
@@ -45,6 +44,16 @@ use Cake\ORM\Entity;
  */
 class Resource extends Entity
 {
+    /**
+     * List of property names that should **not** be included in JSON or Array
+     * representations of this Entity.
+     *
+     * @var string[]
+     */
+    protected $_hidden = [
+        '_joinData',
+    ];
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *

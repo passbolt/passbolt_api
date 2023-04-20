@@ -46,7 +46,7 @@ class ResourcesShareServiceTest extends AppTestCase
     public $Favorites;
 
     /**
-     * @var PermissionsTable $Permissions
+     * @var \Passbolt\AccountSettings\Model\Table\PermissionsTable $Permissions
      */
     public $Permissions;
 
@@ -255,7 +255,7 @@ hcciUFw5
                         'id' => UuidFactory::uuid("permission.id.$resourceApacheId-$userAId"), 'type' => 42]]],
             ],
             'cannot add a secret with invalid data' => [
-                'errorField' => 'secrets.0.data.isValidGpgMessage',
+                'errorField' => 'secrets.0.data.isValidOpenPGPMessage',
                 'data' => [
                     'permissions' => [[
                         'aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::READ]],

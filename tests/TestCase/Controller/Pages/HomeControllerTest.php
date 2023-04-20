@@ -34,7 +34,7 @@ class HomeControllerTest extends AppIntegrationTestCase
 
     public function testHomeSuccess()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->get('/app/passwords');
         $this->assertResponseOk();
         $this->assertResponseContains('skeleton');

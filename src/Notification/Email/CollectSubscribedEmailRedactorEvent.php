@@ -31,8 +31,8 @@ class CollectSubscribedEmailRedactorEvent extends Event
 
     /**
      * @param string $name Name of the event
-     * @param null $subject Subject of the dispatched event
-     * @param null $data Data for the event
+     * @param \App\Notification\Email\EmailSubscriptionManager|null $subject Subject of the dispatched event
+     * @param array|null $data Data for the event
      */
     final public function __construct($name, $subject = null, $data = null)
     {

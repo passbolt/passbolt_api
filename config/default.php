@@ -15,6 +15,7 @@
 
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\AuthToken\AuthTokenExpiryConfigValidator;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 
 $authTokenExpiryConfigValidator = new AuthTokenExpiryConfigValidator();
 
@@ -27,7 +28,6 @@ return [
      * - Javascript application config
      * - Meta HTML tags
      * - Gpg
-     * - Registration settings
      * - Selenium mode
      * - Security settings
      * - SSL
@@ -39,6 +39,7 @@ return [
     'passbolt' => [
         // Edition.
         'edition' => 'ce',
+        'featurePluginAdder' => \App\BaseSolutionBootstrapper::class,
 
         // Authentication & Authorisation.
         'auth' => [
@@ -48,10 +49,22 @@ return [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_REGISTER_TOKEN_EXPIRY', '10 days'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
                 AuthenticationToken::TYPE_RECOVER => [
-                    'expiry' => filter_var(env('PASSBOLT_AUTH_RECOVER_TOKEN_EXPIRY', '1 day'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_RECOVER_TOKEN_EXPIRY', '10 days'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
                 AuthenticationToken::TYPE_LOGIN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_LOGIN_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                AuthenticationToken::TYPE_MOBILE_TRANSFER => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_MOBILE_TRANSFER_TOKEN_EXPIRY', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                AuthenticationToken::TYPE_REFRESH_TOKEN => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_REFRESH_TOKEN', '1 month'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                JwtAbstractService::USER_ACCESS_TOKEN_KEY => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_ACCESS_TOKEN', '5 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                AuthenticationToken::TYPE_VERIFY_TOKEN => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_VERIFY_TOKEN', '1 hour'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
             ]
         ],
@@ -61,6 +74,7 @@ return [
             // Additional email validation settings
             'validate' => [
                 'mx' => filter_var(env('PASSBOLT_EMAIL_VALIDATE_MX', false), FILTER_VALIDATE_BOOLEAN),
+                'regex' => env('PASSBOLT_EMAIL_VALIDATE_REGEX'),
             ],
             'purify' => [
                 'subject' => filter_var(env('PASSBOLT_EMAIL_PURIFY_SUBJECT', false), FILTER_VALIDATE_BOOLEAN),
@@ -71,11 +85,11 @@ return [
             // WARNING: make sure you have backups in place if you disable these.
             // See. https://www.passbolt.com/help/tech/backup
             'show' => [
-                'comment' => filter_var(env('PASSBOLT_EMAIL_SHOW_COMMENT', true), FILTER_VALIDATE_BOOLEAN),
-                'description' => filter_var(env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', true), FILTER_VALIDATE_BOOLEAN),
-                'secret' => filter_var(env('PASSBOLT_EMAIL_SHOW_SECRET', true), FILTER_VALIDATE_BOOLEAN),
-                'uri' => filter_var(env('PASSBOLT_EMAIL_SHOW_URI', true), FILTER_VALIDATE_BOOLEAN),
-                'username' => filter_var(env('PASSBOLT_EMAIL_SHOW_USERNAME', true), FILTER_VALIDATE_BOOLEAN),
+                'comment' => filter_var(env('PASSBOLT_EMAIL_SHOW_COMMENT', false), FILTER_VALIDATE_BOOLEAN),
+                'description' => filter_var(env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', false), FILTER_VALIDATE_BOOLEAN),
+                'secret' => filter_var(env('PASSBOLT_EMAIL_SHOW_SECRET', false), FILTER_VALIDATE_BOOLEAN),
+                'uri' => filter_var(env('PASSBOLT_EMAIL_SHOW_URI', false), FILTER_VALIDATE_BOOLEAN),
+                'username' => filter_var(env('PASSBOLT_EMAIL_SHOW_USERNAME', false), FILTER_VALIDATE_BOOLEAN),
             ],
             // Choose which emails are sent system wide.
             'send' => [
@@ -83,21 +97,29 @@ return [
                     'add' => filter_var(env('PASSBOLT_EMAIL_SEND_COMMENT_ADD', true), FILTER_VALIDATE_BOOLEAN)
                 ],
                 'password' => [
-                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', false), FILTER_VALIDATE_BOOLEAN),
                     'share' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_SHARE', true), FILTER_VALIDATE_BOOLEAN),
                     'update' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'user' => [
-                    // WARNING: disabling these will prevent user from signing up.
+                    // WARNING: disabling PASSBOLT_EMAIL_SEND_USER_CREATE and PASSBOLT_EMAIL_SEND_USER_RECOVER will prevent user from signing up.
                     'create' => filter_var(env('PASSBOLT_EMAIL_SEND_USER_CREATE', true), FILTER_VALIDATE_BOOLEAN),
                     'recover' => filter_var(env('PASSBOLT_EMAIL_SEND_USER_RECOVER', true), FILTER_VALIDATE_BOOLEAN),
+                    'recoverComplete' => filter_var(env('PASSBOLT_EMAIL_SEND_USER_RECOVER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'admin' => [
                     'user' => [
                         'setup' => [
                             'completed' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_SETUP_COMPLETED', true), FILTER_VALIDATE_BOOLEAN),
-                        ]
+                        ],
+                        'recover' => [
+                            'abort' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_ABORT', true), FILTER_VALIDATE_BOOLEAN),
+                            'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                        'register' => [
+                            'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_REGISTER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
                     ]
                 ],
                 'group' => [
@@ -112,7 +134,13 @@ return [
                         // Notify managers when group membership changes.
                         'update' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     ]
-                ]
+                ],
+                'folder' => [
+                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_CREATE', false), FILTER_VALIDATE_BOOLEAN),
+                    'update' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_DELETE', true), FILTER_VALIDATE_BOOLEAN),
+                    'share' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE', true), FILTER_VALIDATE_BOOLEAN),
+                ],
             ]
         ],
 
@@ -159,7 +187,15 @@ return [
 
                 // PHP Gnupg module currently does not support passphrase, please leave blank.
                 'passphrase' => ''
+            ],
+            'experimental' => [
+                'encryptValidate' => filter_var(env('PASSBOLT_GPG_EXTRA_ENCRYPT_VALIDATE', true), FILTER_VALIDATE_BOOLEAN)
             ]
+        ],
+
+        // Healthcheck
+        'healthcheck' => [
+            'error' => filter_var(env('PASSBOLT_HEALTHCHECK_ERROR', false), FILTER_VALIDATE_BOOLEAN)
         ],
 
         // Legal
@@ -186,11 +222,30 @@ return [
             'resourceTypes' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
-        ],
-
-        // Is public registration allowed.
-        'registration' => [
-            'public' => filter_var(env('PASSBOLT_REGISTRATION_PUBLIC', false), FILTER_VALIDATE_BOOLEAN)
+            'mobile' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'jwtAuthentication' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'accountRecoveryRequestHelp' => [
+                // Feature flag to allow client to tune behavior for backward compatibility
+                // e.g. updated recovery process allows for admin email notification with "lost-passphrase" option
+                // @deprecated when v3.5 is dropped - Ref. PB-15046
+                'enabled' => true,
+                'settingsVisibility' => [
+                    'whiteListPublic' => [
+                        'enabled',
+                    ],
+                ],
+            ],
+            'smtpSettings' => [
+                // A typo is here covered for backward compatibility
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'selfRegistration' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Activate specific entry points for selenium testing.
@@ -201,6 +256,10 @@ return [
 
         // Security.
         'security' => [
+            'cookies' => [
+                // force cookie secure flag even if request is not https
+                'secure' => filter_var(env('PASSBOLT_SECURITY_COOKIE_SECURE', true), FILTER_VALIDATE_BOOLEAN)
+            ],
             'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN),
             'csrfProtection' => [
                 'active' => true,
@@ -208,9 +267,27 @@ return [
                     'AuthLogin' => ['loginPost'],
                     'RecoverComplete' => ['complete'],
                     'SetupComplete' => ['complete'],
+                    'TransfersUpdate' => ['updateNoSession'],
                 ]
             ],
-            'csp' => env('PASSBOLT_SECURITY_CSP', true)
+            'csp' => env('PASSBOLT_SECURITY_CSP', true),
+            // enables the storage and display of the user agent (user's browser and hardware related information)
+            'userAgent' => filter_var(env('PASSBOLT_SECURITY_USER_AGENT', true), FILTER_VALIDATE_BOOLEAN),
+            // enables the storage and display if the user IP address
+            'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
+            'smtpSettings' => [
+                'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
+            ],
+            // Enables trusting of HTTP_X headers set by most load balancers.
+            // Only set to true if your instance runs behind load balancers/proxies that you control.
+            'proxies' => [
+                'active' => filter_var(env('PASSBOLT_SECURITY_PROXIES_ACTIVE', false), FILTER_VALIDATE_BOOLEAN),
+                // If your instance is behind multiple proxies, redefine the list of IP addresses of proxies in your control in passbolt.php
+                'trustedProxies' => [],
+            ],
+            'mfa' => [
+                'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

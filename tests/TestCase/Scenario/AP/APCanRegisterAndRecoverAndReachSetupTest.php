@@ -18,11 +18,16 @@ namespace App\Test\TestCase\Scenario\AP;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 {
+    use EmailQueueTrait;
+    use SelfRegistrationTestTrait;
+
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
         'app.Base/Gpgkeys',
@@ -61,6 +66,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
      */
     public function testAPCanRegisterAndRecoverAndReachSetup()
     {
+        $this->setSelfRegistrationSettingsData();
         // Register using signup form
         $email = 'integration@passbolt.com';
         $data = ['username' => $email, 'profile' => ['first_name' => 'integration', 'last_name' => 'test']];
@@ -80,9 +86,8 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $this->assertEquals($tokens[0]['type'], AuthenticationToken::TYPE_REGISTER);
 
         // Link to install should be present in email
-        $this->get('/seleniumtests/showLastEmail/integration@passbolt.com');
         $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[0]['token']);
-        $this->assertResponseContains($url);
+        $this->assertEmailInBatchContains($url, 'integration@passbolt.com');
 
         // Recover to get another token
         $this->post('/users/recover.json', ['username' => $email]);

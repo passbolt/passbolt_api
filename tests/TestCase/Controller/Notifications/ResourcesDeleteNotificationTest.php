@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets',
@@ -52,9 +54,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('betty@passbolt.com');
     }
 
     public function testResourcesDeleteNotificationSuccess()
@@ -66,8 +66,6 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('deleted the password april');
+        $this->assertEmailInBatchContains('deleted the password april', 'betty@passbolt.com');
     }
 }

@@ -130,7 +130,7 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
     </style>
     <![endif]-->
 </head>
-<body style="margin: 0;padding: 0;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #F5F5F5;height: 100% !important;width: 100% !important;">
+<body spellcheck="false" style="margin: 0;padding: 0;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;background-color: #F5F5F5;height: 100% !important;width: 100% !important;">
 <center>
     <!-- HEADER // -->
     <table border="0" cellpadding="0" cellspacing="0" height="37" width="100%" id="headerTable" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;margin: 0;padding: 0;background-color: #F5F5F5;width: 100% !important;height: 37px !important;">
@@ -249,8 +249,8 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
                                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                         <tr>
                                                             <td valign="top" class="textContentLast" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 12px;line-height: 125%;text-align: center;padding-bottom: 20px;">
-                                                                This email is an automatic notification sent by <a href="<?php echo Router::url('/',true) ?>" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #888888;text-decoration: underline;"><?php echo Router::url('/',true) ?></a>.
-                                                                You can disable these notifications by requesting an administrator to delete your account.
+                                                                <?= __('This email is an automatic notification sent by'); ?> <a href="<?php echo Router::url('/',true) ?>" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #888888;text-decoration: underline;"><?php echo Router::url('/',true) ?></a>.
+                                                                <?= __('You can disable these notifications by requesting an administrator to delete your account.'); ?>
                                                             </td>
                                                         </tr>
                                                     </table>

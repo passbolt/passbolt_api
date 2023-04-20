@@ -17,15 +17,17 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\KeyringInitCommand;
+use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
-class KeyringInitCommandTest extends TestCase
+class KeyringInitCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use PassboltCommandTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * @var string
@@ -41,7 +43,7 @@ class KeyringInitCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        KeyringInitCommand::$userIsRoot = false;
+        KeyringInitCommand::$isUserRoot = false;
         $this->key = Configure::read('passbolt.gpg.serverKey.private');
     }
 

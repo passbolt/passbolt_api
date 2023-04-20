@@ -28,26 +28,24 @@ $showDescription = $body['showDescription'];
 $showSecret = $body['showSecret'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($owner->profile->avatar),
+    'url' => AvatarHelper::getAvatarUrl($owner['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'username' => Purifier::clean($owner->username),
-        'first_name' => Purifier::clean($owner->profile->first_name),
-        'last_name' => Purifier::clean($owner->profile->last_name),
+        'user' => $owner,
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} shared a password with you', Purifier::clean($owner->profile->first_name))
+        'text' => __('{0} shared a password with you', Purifier::clean($owner['profile']['first_name']))
     ])
 ]);
 
-$text = __('Name: {0}', Purifier::clean($resource->name)) . '<br/>';
+$text = __('Name: {0}', Purifier::clean($resource['name'])) . '<br/>';
 
 if ($showUsername) {
-    $text .= __('Username: {0}', Purifier::clean($resource->username)) . '<br/>';
+    $text .= __('Username: {0}', Purifier::clean($resource['username'])) . '<br/>';
 }
 if ($showUri) {
-    $text .= __('URL: {0}', Purifier::clean($resource->uri)) . '<br/>';
+    $text .= __('URL: {0}', Purifier::clean($resource['uri'])) . '<br/>';
 }
-if ($showDescription) {
-    $text .= __('Description: {0}', Purifier::clean($resource->description)) . '<br/>';
+if ($showDescription && isset($resource['description'])) {
+    $text .= __('Description: {0}', Purifier::clean($resource['description'])) . '<br/>';
 }
 echo $this->element('Email/module/text', [
     'text' => $text
@@ -58,6 +56,6 @@ if ($showSecret) {
     ]);
 }
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/app/passwords/view/{$resource->id}", true),
+    'url' => Router::url("/app/passwords/view/{$resource['id']}", true),
     'text' => __('view it in passbolt')
 ]);

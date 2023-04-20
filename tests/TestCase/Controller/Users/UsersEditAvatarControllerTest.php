@@ -16,17 +16,17 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Test\Factory\AvatarFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTestTrait;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use League\Flysystem\Local\LocalFilesystemAdapter;
 
 class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 {
-    use AvatarsModelTestTrait;
+    use AvatarsModelTrait;
 
     public $localFileStorageListener = null;
     public $imageProcessingListener = null;
@@ -40,8 +40,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->Avatars->setFilesystem(new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars'));
-
+        $this->setTestLocalFilesystemAdapter();
         RoleFactory::make()->guest()->persist();
     }
 
@@ -134,18 +133,14 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAvatarCantOverrideData()
     {
-        $this->markTestSkipped('Not possible to fake file upload, issue with validation');
-        $adaAvatar = FIXTURES . 'Avatar' . DS . 'ada.png';
+        $irene = UserFactory::make()->user()->persist();
 
-        $this->authenticateAs('irene');
+        $this->logInAs($irene);
         $data = [
-            'id' => UuidFactory::uuid('user.id.irene'),
+            'id' => $irene->id,
             'profile' => [
                 'avatar' => [
-                    'file' => [
-                        'tmp_name' => $adaAvatar,
-                        'name' => 'irene.png',
-                    ],
+                    'file' => $this->createUploadFile(),
                     'user_id' => UuidFactory::uuid('user.id.whatever'),
                     'foreign_key' => UuidFactory::uuid('profile.id.whatever'),
                     'model' => 'Test',
@@ -159,25 +154,27 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
                 ],
             ],
         ];
-        $this->postJson('/users/' . UuidFactory::uuid('user.id.irene') . '.json', $data);
+        $this->postJson('/users/' . $irene->id . '.json', $data);
         $this->assertSuccess();
 
-        $ireneAvatar = $this->Avatars
-            ->find()
-            ->orderDesc('created')
-            ->first();
+        /** @var \App\Model\Entity\Avatar $ireneAvatar */
+        $ireneAvatar = AvatarFactory::find()
+            ->contain('Profiles')
+            ->orderDesc('Avatars.created')
+            ->firstOrFail();
 
         $data = $data['profile']['avatar'];
-        $this->assertNotEquals($data['user_id'], $ireneAvatar->user_id);
+
+        $this->assertNotEquals($data['user_id'], $ireneAvatar->profile->user_id);
         $this->assertNotEquals($data['foreign_key'], $ireneAvatar->foreign_key);
         $this->assertNotEquals($data['model'], $ireneAvatar->model);
         $this->assertNotEquals($data['filename'], $ireneAvatar->filename);
-        $this->assertEquals('irene.png', $ireneAvatar->filename);
         $this->assertNotEquals($data['filesize'], $ireneAvatar->filesize);
         $this->assertNotEquals($data['mime_type'], $ireneAvatar->mime_type);
         $this->assertNotEquals($data['extension'], $ireneAvatar->extension);
         $this->assertNotEquals($data['hash'], $ireneAvatar->hash);
         $this->assertNotEquals($data['path'], $ireneAvatar->path);
         $this->assertNotEquals($data['adapter'], $ireneAvatar->adapter);
+        $this->assertSame(1, AvatarFactory::count());
     }
 }

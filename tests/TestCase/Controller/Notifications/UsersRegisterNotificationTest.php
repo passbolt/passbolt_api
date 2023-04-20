@@ -17,16 +17,21 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class UsersRegisterNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
+    use SelfRegistrationTestTrait;
 
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
     public function testUserRegisterNotificationDisabled()
     {
+        $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.create', false);
 
         $this->postJson('/users/register.json', [
@@ -39,13 +44,12 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/aurore@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('aurore@passbolt.com');
     }
 
     public function testUserRegisterNotificationSuccess()
     {
+        $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.create', true);
 
         $this->postJson('/users/register.json', [
@@ -58,8 +62,6 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/aurore@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('You just opened an account');
+        $this->assertEmailInBatchContains('You just opened an account', 'aurore@passbolt.com');
     }
 }

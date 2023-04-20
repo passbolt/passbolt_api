@@ -34,7 +34,7 @@ class EmailSenderTest extends TestCase
     private $sut;
 
     /**
-     * @var MockObject|EmailQueueTable
+     * @var \PHPUnit\Framework\MockObject\MockObject|EmailQueueTable
      */
     private $emailQueueMock;
 

@@ -48,20 +48,30 @@ class DatabaseHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function canConnect(string $datasource, ?array $checks = []): array
+    private static function canConnect(string $datasource, ?array $checks = []): array
     {
-        $checks['database']['connect'] = false;
+        $checks = array_replace_recursive(
+            [
+                'database' => [
+                    'connect' => false,
+                    'info' => [],
+                ],
+            ],
+            $checks
+        );
         try {
             /** @var \Cake\Database\Connection $connection */
             $connection = ConnectionManager::get($datasource);
             $connection->connect();
             $checks['database']['connect'] = true;
         } catch (MissingConnectionException $connectionError) {
-            $errorMsg = $connectionError->getMessage();
+            $checks['database']['info']['connection'] = __('Database connection failed');
+
             if (method_exists($connectionError, 'getAttributes')) {
                 $attributes = $connectionError->getAttributes();
-                if (!empty($errorMsg)) {
-                    $checks['database']['info'] .= ' ' . $attributes['message'];
+
+                if (isset($attributes['reason'])) {
+                    $checks['database']['info']['connection'] = $attributes['reason'];
                 }
             }
         }
@@ -76,12 +86,12 @@ class DatabaseHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function supportedBackend(string $datasource, ?array $checks = []): array
+    private static function supportedBackend(string $datasource, ?array $checks = []): array
     {
         $checks['database']['supportedBackend'] = false;
         $connection = ConnectionManager::get($datasource);
         $config = $connection->config();
-        if ($config['driver'] === 'Cake\Database\Driver\Mysql') {
+        if (in_array($config['driver'], ['Cake\Database\Driver\Mysql', 'Cake\Database\Driver\Postgres'])) {
             $checks['database']['supportedBackend'] = true;
         }
 
@@ -95,19 +105,28 @@ class DatabaseHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function tableCount(string $datasource, ?array $checks = []): array
+    private static function tableCount(string $datasource, ?array $checks = []): array
     {
-        $checks['database']['info']['tablesCount'] = 0;
-        $checks['database']['tablesCount'] = false;
+        $checks = array_replace_recursive(
+            [
+                'database' => [
+                    'tablesCount' => false,
+                    'info' => [
+                        'tablesCount' => 0,
+                    ],
+                ],
+            ],
+            $checks
+        );
         try {
-            $connection = ConnectionManager::get($datasource);
-            $tables = $connection->execute('show tables')->fetchAll('assoc');
+            $connection = ConnectionManager::get('default');
+            $tables = $connection->getSchemaCollection()->listTables();
 
-            if ($tables !== false && count($tables)) {
+            if (count($tables) > 0) {
                 $checks['database']['tablesCount'] = true;
                 $checks['database']['info']['tablesCount'] = count($tables);
             }
-        } catch (DatabaseException $connectionError) {
+        } catch (DatabaseException | MissingConnectionException $connectionError) {
         }
 
         return $checks;
@@ -120,16 +139,14 @@ class DatabaseHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function defaultContent(?array $checks = []): array
+    private static function defaultContent(?array $checks = []): array
     {
         $checks['database']['defaultContent'] = false;
         try {
-            $Roles = TableRegistry::getTableLocator()->get('Roles');
-            if (!empty($Roles)) {
-                $i = $Roles->find('all')->count();
-                $checks['database']['defaultContent'] = ($i > 3);
-            }
-        } catch (DatabaseException $e) {
+            $roles = TableRegistry::getTableLocator()->get('Roles');
+            $i = $roles->find('all')->count();
+            $checks['database']['defaultContent'] = ($i > 3);
+        } catch (DatabaseException | MissingConnectionException | \PDOException $e) {
         }
 
         return $checks;

@@ -22,8 +22,9 @@ use Cake\Core\Configure;
     <title><?= Configure::read('passbolt.meta.title'); ?> | <?= $this->fetch('title') ?></title>
     <?= $this->element('Header/meta') ?>
     <?= $this->fetch('css') ?>
+    <?= $this->fetch('scriptTop') ?>
 </head>
-<body>
+<body spellcheck="false">
 <!-- main -->
 <div id="container" class="page <?php echo $this->fetch('page_classes') ?>">
 <?php echo $this->fetch('content'); ?>

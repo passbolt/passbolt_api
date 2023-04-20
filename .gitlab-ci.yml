@@ -1,3 +1,12 @@
+default:
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+      - api_failure
+      - stale_schedule
+
 image: alpine:latest
 
 variables:
@@ -7,18 +16,23 @@ variables:
 
 stages:
   - unit-test
-  - package-deps
-  - package-build
-  - package-test
-  - publish
-  - publish-artifacts
+  - unit-test-parallel
+  - packaging-trigger
 
 include:
   - template: Code-Quality.gitlab-ci.yml
-  - local: '/.gitlab-ci/Jobs/php_unit_tests.yml'
-  - local: '/.gitlab-ci/Jobs/artifact_build.yml'
-  - local: '/.gitlab-ci/Jobs/debian_package_build.yml'
-  - local: '/.gitlab-ci/Jobs/style_check.yml'
+  #  - local: "/.gitlab-ci/jobs/php_unit_tests/runner.yml"
+  - local: "/.gitlab-ci/jobs/php_unit_tests/sequential/php_unit_tests.yml"
+  - local: "/.gitlab-ci/jobs/style_check.yml"
+  - local: ".gitlab-ci/jobs/packaging_trigger/package_trigger.yml"
 
 code_quality:
   stage: unit-test
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never
+    - if: $CI_COMMIT_BRANCH
+    - if: $CI_COMMIT_TAG

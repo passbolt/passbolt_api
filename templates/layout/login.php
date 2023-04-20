@@ -24,7 +24,7 @@ use Cake\Core\Configure;
 
     <?= $this->fetch('css') ?>
 </head>
-<body>
+<body spellcheck="false">
 <div id="container" class="page <?= $this->fetch('pageClass') ?>">
 <?= $this->element('Navigation/default'); ?>
 <div id="content">

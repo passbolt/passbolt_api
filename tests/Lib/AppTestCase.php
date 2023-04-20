@@ -27,15 +27,25 @@ use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
 use App\Test\Lib\Utility\EntityTrait;
+use App\Test\Lib\Utility\ErrorTestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
+use App\Test\Lib\Utility\UserAccessControlTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AppTestCase extends TestCase
 {
     use ArrayTrait;
     use CommentsModelTrait;
     use EntityTrait;
+    use ErrorTestTrait;
     use FavoritesModelTrait;
+    use FeaturePluginAwareTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
     use ObjectTrait;
@@ -43,6 +53,8 @@ abstract class AppTestCase extends TestCase
     use ProfilesModelTrait;
     use ResourcesModelTrait;
     use SecretsModelTrait;
+    use TruncateDirtyTables;
+    use UserAccessControlTrait;
     use UsersModelTrait;
 
     public static $stringMasks = [];
@@ -53,6 +65,22 @@ abstract class AppTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
+        Configure::write('passbolt.plugins.log.enabled', false);
+        Configure::write('passbolt.plugins.folders.enabled', false);
+        $this->loadRoutes();
+        DigestsPool::clearInstance();
+        DigestFactory::clearInstance();
+        EmailNotificationSettings::flushCache();
+    }
+
+    /**
+     * Tear dow
+     */
+    public function tearDown(): void
+    {
+        $this->clearPlugins();
+        parent::tearDown();
     }
 
     /**

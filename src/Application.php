@@ -16,33 +16,54 @@ declare(strict_types=1);
  */
 namespace App;
 
+use App\Authenticator\SessionAuthenticationService;
+use App\Authenticator\SessionIdentificationService;
+use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Middleware\ApiVersionMiddleware;
+use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
+use App\Middleware\HttpProxyMiddleware;
+use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
-use Authentication\AuthenticationService;
+use App\Service\Avatars\AvatarsConfigurationService;
+use App\ServiceProvider\SetupServiceProvider;
+use App\ServiceProvider\TestEmailServiceProvider;
+use App\ServiceProvider\UserServiceProvider;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\Configure;
+use Cake\Core\ContainerInterface;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
+use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use Cake\Routing\Router;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
 {
+    /**
+     * @var \App\BaseSolutionBootstrapper|null
+     */
+    private $solutionBootstrapper;
+
     /**
      * Setup the PSR-7 middleware passbolt application will use.
      *
@@ -53,7 +74,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         $csrf = new CsrfProtectionMiddleware();
         // Token check will be skipped when callback returns `true`.
-        $csrf->skipCheckCallback(function ($request) use ($csrf) {
+        $csrf->skipCheckCallback(function (ServerRequest $request) use ($csrf) {
             return $csrf->skipCsrfProtection($request);
         });
 
@@ -68,17 +89,19 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
          * - Apply CSRF protection
          */
         $middlewareQueue
-            ->add(ContentSecurityPolicyMiddleware::class)
+            ->prepend(new ContainerInjectorMiddleware($this->getContainer()))
+            ->add(new ContentSecurityPolicyMiddleware())
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
-            ->add(new AssetMiddleware([
-                'cacheTime' => Configure::read('Asset.cacheTime'),
-            ]))
+            ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
             ->add(new RoutingMiddleware($this))
+            ->insertAfter(RoutingMiddleware::class, ApiVersionMiddleware::class)
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new BodyParserMiddleware())
-            ->add(new AuthenticationMiddleware($this))
-            ->add(GpgAuthHeadersMiddleware::class)
-            ->add($csrf);
+            ->add(SessionAuthPreventDeletedUsersMiddleware::class)
+            ->insertAfter(SessionAuthPreventDeletedUsersMiddleware::class, new AuthenticationMiddleware($this))
+            ->add(new GpgAuthHeadersMiddleware())
+            ->add($csrf)
+            ->add(new HttpProxyMiddleware());
 
         /*
          * Additional security headers
@@ -105,6 +128,18 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
+     * @inheritDoc
+     */
+    public function handle(
+        ServerRequestInterface $request
+    ): ResponseInterface {
+        // TODO: remove this line when migrating to CakePHP 4.4 (https://github.com/cakephp/cakephp/pull/16180)
+        $this->getContainer()->add(ServerRequest::class, $request);
+
+        return parent::handle($request);
+    }
+
+    /**
      * Load all the application configuration and bootstrap logic.
      *
      * Override this method to add additional bootstrap logic for your application.
@@ -116,14 +151,42 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         parent::bootstrap();
 
         $this->addCorePlugins()
-            ->addVendorPlugins()
-            ->addPassboltPlugins();
+            ->addVendorPlugins();
+
+        // Load feature plugins
+        $this->getSolutionBootstrapper()->addFeaturePlugins($this);
 
         if (PHP_SAPI === 'cli') {
             $this->addCliPlugins();
         }
 
         $this->initEmails();
+        (new AvatarsConfigurationService())->loadConfiguration();
+    }
+
+    /**
+     * This enables to inject a different main plugin name as the default one
+     * defined in config/default.php
+     *
+     * @param \App\BaseSolutionBootstrapper $solutionBootstrapper Class loading all the plugins
+     * @return void
+     */
+    public function setSolutionBootstrapper(BaseSolutionBootstrapper $solutionBootstrapper): void
+    {
+        $this->solutionBootstrapper = $solutionBootstrapper;
+    }
+
+    /**
+     * @return \App\BaseSolutionBootstrapper
+     */
+    public function getSolutionBootstrapper(): BaseSolutionBootstrapper
+    {
+        if (is_null($this->solutionBootstrapper)) {
+            $className = Configure::readOrFail('passbolt.featurePluginAdder');
+            $this->solutionBootstrapper = new $className();
+        }
+
+        return $this->solutionBootstrapper;
     }
 
     /**
@@ -199,41 +262,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
-     * Add passbolt plugins
-     *
-     * @return $this
-     */
-    protected function addPassboltPlugins()
-    {
-        if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
-            $this->addPlugin('PassboltSeleniumApi', ['bootstrap' => true, 'routes' => true]);
-            $this->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
-        }
-
-        // Add Common plugins.
-        $this->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Locale', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/ResourceTypes', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
-        $this->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
-        $this->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
-
-        if (!WebInstallerMiddleware::isConfigured()) {
-            $this->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
-        } else {
-            $logEnabled = Configure::read('passbolt.plugins.log.enabled');
-            if (!isset($logEnabled) || $logEnabled) {
-                $this->addPlugin('Passbolt/Log', ['bootstrap' => true, 'routes' => false]);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
      * Add plugins relevant in CLI mode
      * - Bake
      * - Migrations
@@ -255,6 +283,19 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
+        $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
+        $container->add(SelfRegistrationDryRunServiceInterface::class, SelfRegistrationDefaultDryRunService::class);
+        $container->addServiceProvider(new TestEmailServiceProvider());
+        $container->addServiceProvider(new SetupServiceProvider());
+        $container->addServiceProvider(new UserServiceProvider());
+    }
+
+    /**
      * Returns a service provider instance.
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request Request
@@ -262,24 +303,26 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function getAuthenticationService(ServerRequestInterface $request): AuthenticationServiceInterface
     {
-        $service = new AuthenticationService();
-
-        // Define where users should be redirected to when they are not authenticated
-        // The login url is provided in string format because the routes are not loaded yet
         /** @var \Cake\Http\ServerRequest $request */
+        $loginUrl = Router::url([
+            'prefix' => 'Auth',
+            'plugin' => null,
+            'controller' => 'AuthLogin',
+            'action' => 'loginGet',
+            '_method' => 'GET',
+            '_ext' => $request->is('json') ? 'json' : null,
+        ]);
+
+        /** @var \Authentication\AuthenticationService $auth */
+        $auth = $this->getContainer()->get(AuthenticationServiceInterface::class);
         if (!$request->is('json')) {
-            $loginUrl = '/auth/login';
-            $service->setConfig([
+            $auth->setConfig([
                 'unauthenticatedRedirect' => $loginUrl,
                 'logoutRedirect' => $loginUrl,
                 'queryParam' => 'redirect',
             ]);
         }
 
-        // Load the authenticators. Session should be first.
-        $service->loadAuthenticator('Authentication.Session');
-        $service->loadAuthenticator('Gpg');
-
-        return $service;
+        return $auth;
     }
 }

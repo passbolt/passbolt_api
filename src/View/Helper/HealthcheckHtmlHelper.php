@@ -69,6 +69,14 @@ class HealthcheckHtmlHelper extends HealthcheckCommand
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function notice(bool $condition, $success, $fail, $help = null): void
+    {
+        // Notices, just like help messages, are not displayed
+    }
+
+    /**
      * Display healthcheck section title
      *
      * @param string $title section title
@@ -76,6 +84,6 @@ class HealthcheckHtmlHelper extends HealthcheckCommand
      */
     protected function title(string $title)
     {
-        echo '<h3>' . $title . '</h3>' . PHP_EOL;
+        echo '<h2>' . $title . '</h2>' . PHP_EOL;
     }
 }

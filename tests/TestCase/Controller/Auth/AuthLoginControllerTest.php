@@ -22,6 +22,8 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 class AuthLoginControllerTest extends AppIntegrationTestCase
 {
@@ -32,13 +34,27 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     public $keyid;
 
     /**
-     * @var OpenPGPBackend $gpg
+     * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg
      */
     public $gpg;
 
     // Keys ids used in this test. Set in _gpgSetup.
     protected $adaKeyId;
     protected $serverKeyId;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $jwtKeyPairService = new JwtKeyPairService();
+        $jwtKeyPairService->createKeyPair();
+        $this->enableFeaturePlugin('JwtAuthentication');
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->disableFeaturePlugin('JwtAuthentication');
+    }
 
     /**
      * Test getting login started with deleted account
@@ -62,6 +78,9 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginControllerLoginServerKeyFingerprintMissing()
     {
+        // Disable this plugin in this test as long as the cookie pepper is the fingerprint.
+        $this->disableFeaturePlugin('JwtAuthentication');
+
         Configure::delete('passbolt.gpg.serverKey.fingerprint');
         $this->postJson('/auth/login.json');
         $this->assertResponseCode(500);
@@ -83,15 +102,35 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
 
     /**
      * Check that GPGAuth headers are set everywhere
+     * Check that the action is not persisted in the action logs
      */
     public function testAuthLoginControllerGetHeaders()
     {
+        $isLogEnabled = $this->isFeaturePluginEnabled('Log');
+        $this->enableFeaturePlugin('Log');
+
         $this->get('/auth/login');
+        $this->assertResponseOk();
         $this->assertHeader('X-GPGAuth-Version', '1.3.0');
         $this->assertHeader('X-GPGAuth-Verify-URL', '/auth/verify');
         $this->assertHeader('X-GPGAuth-Pubkey-URL', '/auth/verify.json');
         $this->assertHeader('X-GPGAuth-Login-URL', '/auth/login');
         $this->assertHeader('X-GPGAuth-Logout-URL', '/auth/logout');
+
+        $this->assertSame(0, ActionLogFactory::count());
+        if (!$isLogEnabled) {
+            $this->disableFeaturePlugin('Log');
+        }
+    }
+
+    /**
+     * Check that GET /auth/login.json triggers a not found error.
+     */
+    public function testAuthLoginControllerGetJson()
+    {
+        $this->getJson('/auth/login.json');
+        $this->assertResponseError('Page not found.');
+        $this->assertResponseCode(404);
     }
 
     /**
@@ -176,10 +215,10 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             'gpgauthv1.3.0|36|' . $uuid . '|gpgauthv1.3.0' => true, // right
         ];
 
-        $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
-        $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
         foreach ($fix as $token => $expectSuccess) {
-            $msg = $this->gpg->encrypt($token);
+            $this->gpg->setEncryptKeyFromFingerprint($this->serverKeyId);
+            $this->gpg->setSignKeyFromFingerprint($this->adaKeyId, '');
+            $msg = $this->gpg->encryptSign($token);
             $this->postJson('/auth/verify.json', [
                 'data' => [
                     'gpg_auth' => [
@@ -294,7 +333,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertTrue($isValid, 'There should a valid auth token');
 
         // Send it back!
-        $this->post('/auth/login.json', [
+        $this->postJson('/auth/login.json', [
             'data' => [
                 'gpg_auth' => [
                     'keyid' => $this->adaKeyId, // Ada's key

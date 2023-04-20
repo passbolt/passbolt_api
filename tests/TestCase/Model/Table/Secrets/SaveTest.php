@@ -29,17 +29,20 @@ class SaveTest extends AppTestCase
     use FormatValidationTrait;
     use PermissionsModelTrait;
 
-    public $Secrets;
-
     public $fixtures = [
         'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
     ];
 
+    /**
+     * @var \App\Model\Table\SecretsTable
+     */
+    public $Secrets;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
+
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
     }
 
@@ -89,7 +92,7 @@ class SaveTest extends AppTestCase
     public function testSecretsSaveValidationData()
     {
         $testCases = [
-            'isValidGpgMessage' => self::getGpgMessageTestCases(),
+            'isValidOpenPGPMessage' => self::getGpgMessageTestCases(),
             'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
         ];

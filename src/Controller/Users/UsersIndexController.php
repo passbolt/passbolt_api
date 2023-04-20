@@ -18,15 +18,22 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
-use App\Model\Entity\Role;
 use App\Model\Table\Dto\FindIndexOptions;
+use App\Model\Table\PermissionsTable;
+use App\Service\Permissions\UserHasPermissionService;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\ForbiddenException;
+use Cake\ORM\TableRegistry;
+use Passbolt\MultiFactorAuthentication\Service\Query\IsMfaEnabledQueryService;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
  * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class UsersIndexController extends AppController
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * @inheritDoc
      */
@@ -59,8 +66,6 @@ class UsersIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Users');
-
         $findIndexOptions = (new FindIndexOptions())
             ->allowContains([
                 'last_logged_in', 'groups_users', 'gpgkey', 'profile', 'role',
@@ -69,7 +74,7 @@ class UsersIndexController extends AppController
             ])
             ->allowFilters(['search', 'has-groups', 'has-access', 'is-admin']);
 
-        if ($this->User->role() === Role::ADMIN) {
+        if ($this->User->isAdmin()) {
             $findIndexOptions->allowFilter('is-active');
         }
 
@@ -81,8 +86,41 @@ class UsersIndexController extends AppController
             $event->getOptions()->getFilterValidators()
         );
 
-        $users = $this->Users->findIndex($this->User->role(), $computedFindIndexOptions);
+        $this->assertHasAccess($computedFindIndexOptions);
+
+        /** @var \App\Model\Table\UsersTable $Users */
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $users = $Users->findIndex($this->User->role(), $computedFindIndexOptions);
+
+        if ($this->isFeaturePluginEnabled('MultiFactorAuthentication')) {
+            (new IsMfaEnabledQueryService())->decorateAndFilterForIndex(
+                $users,
+                $this->User->getAccessControl(),
+                $computedFindIndexOptions
+            );
+        }
+
         $this->paginate($users);
         $this->success(__('The operation was successful.'), $users);
+    }
+
+    /**
+     * @throws \Cake\Http\Exception\ForbiddenException if user doesn't have access to the resource requested by the filter
+     * @throws \Cake\Http\Exception\BadRequestException if multiple has-access filters are requested
+     * @param array $options from
+     * @return void
+     */
+    public function assertHasAccess(array $options): void
+    {
+        if (isset($options['filter']['has-access']) && count($options['filter']['has-access'])) {
+            if (count($options['filter']['has-access']) > 1) {
+                throw new BadRequestException(__('Multiple has-access filters are not supported.'));
+            }
+            $resourceId = $options['filter']['has-access'][0];
+            $service = new UserHasPermissionService();
+            if (!$service->check(PermissionsTable::RESOURCE_ACO, $resourceId, $this->User->id())) {
+                throw new ForbiddenException(__('This operation is not allowed for this user.'));
+            }
+        }
     }
 }

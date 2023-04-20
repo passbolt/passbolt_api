@@ -9,11 +9,14 @@
 	Copyright (c) 2021 Passbolt SA
 	https://www.passbolt.com
 
+[![PHPStan Enabled](./webroot/img/third_party/phpstan.svg)](https://github.com/phpstan/phpstan)
+[![Psalm level](./webroot/img/third_party/psalm.svg)](https://psalm.dev/)
+
 ## License
 
 Passbolt - Open source password manager for teams
 
-(c) 2021 Passbolt SA
+(c) 2022 Passbolt SA
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General
 Public License (AGPL) as published by the Free Software Foundation version 3.

@@ -18,7 +18,7 @@ namespace App\Authenticator;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use App\Model\Table\GpgkeysTable;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
@@ -35,9 +35,20 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class GpgAuthenticator extends SessionAuthenticator
 {
-    public const HTTP_HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
-        'X-GPGAuth-Authenticated, X-GPGAuth-Refer, X-GPGAuth-Debug, X-GPGAuth-Error, X-GPGAuth-Pubkey, ' .
-        'X-GPGAuth-Logout-Url, X-GPGAuth-Version';
+    use GpgAuthenticatorTrait;
+
+    public const HTTP_HEADERS_WHITELIST = [
+        'X-GPGAuth-Verify-Response',
+        'X-GPGAuth-Progress',
+        'X-GPGAuth-User-Auth-Token',
+        'X-GPGAuth-Authenticated',
+        'X-GPGAuth-Refer',
+        'X-GPGAuth-Debug',
+        'X-GPGAuth-Error',
+        'X-GPGAuth-Pubkey',
+        'X-GPGAuth-Logout-Url',
+        'X-GPGAuth-Version',
+    ];
 
     public const AUTHENTICATION_REQUIRED_MESSAGE = 'You need to login to access this location.';
 
@@ -87,7 +98,7 @@ class GpgAuthenticator extends SessionAuthenticator
         if ($request->is('json')) {
             throw new ForbiddenException(__('You need to login to access this location.'));
         }
-        // Otherwise we let the controller handle it
+        // Otherwise we let the controller handle the redirections
     }
 
     /**
@@ -114,19 +125,20 @@ class GpgAuthenticator extends SessionAuthenticator
      */
     private function authenticationSuccessResult(): ResultInterface
     {
-        return new Result($this->_user->toArray(), Result::SUCCESS, $this->headers);
+        return new Result(['user' => $this->_user->toArray()], Result::SUCCESS, $this->headers);
     }
 
     /**
      * Authenticate
      * See. https://www.passbolt.com/help/tech/auth
      *
-     * @param \Cake\Http\ServerRequest $request interface for accessing request parameters
+     * @param \Psr\Http\Message\ServerRequestInterface $request interface for accessing request parameters
      * @return \Authentication\Authenticator\ResultInterface User|false the user or false if authentication failed
      */
     public function authenticate(ServerRequestInterface $request): ResultInterface
     {
         try {
+            /** @var \Cake\Http\ServerRequest $request */
             // Init keyring and try to pre-identify the user using fingerprint
             if (!$this->_initForAllSteps($request)) {
                 return $this->authenticationFailedResult(Result::FAILURE_IDENTITY_NOT_FOUND);
@@ -171,8 +183,17 @@ class GpgAuthenticator extends SessionAuthenticator
      */
     private function _stage0()
     {
+        // Sanity check
+        $serverVerifyToken = $this->_data['server_verify_token'] ?? '';
+        $this->assertGpgMessageIsValid(
+            $this->_gpg,
+            $serverVerifyToken,
+            __('The server verify token is missing or invalid.')
+        );
+
+        // Decrypt and verify nonce
         try {
-            $nonce = $this->_gpg->decrypt($this->_data['server_verify_token']);
+            $nonce = $this->_gpg->decrypt($serverVerifyToken);
             // check if the nonce is in valid format to avoid returning something sensitive decrypted
             if ($this->_checkNonce($nonce)) {
                 $this->addHeader('X-GPGAuth-Verify-Response', $nonce);
@@ -300,7 +321,7 @@ class GpgAuthenticator extends SessionAuthenticator
         $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
 
         // Check if config contains fingerprint
-        if (!is_string($fingerprint) || !GpgkeysTable::isValidFingerprint($fingerprint)) {
+        if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
             throw new InternalErrorException('The GnuPG config for the server is not available or incomplete.');
         }
 
@@ -314,7 +335,7 @@ class GpgAuthenticator extends SessionAuthenticator
             } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg);
+                throw new InternalErrorException($msg, 500, $exception);
             }
         }
     }
@@ -337,7 +358,7 @@ class GpgAuthenticator extends SessionAuthenticator
                 $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (Exception $exception) {
                 $msg = __('Could not import the user OpenPGP key.');
-                throw new InternalErrorException($msg);
+                throw new InternalErrorException($msg, 500, $exception);
             }
         }
     }
@@ -350,17 +371,15 @@ class GpgAuthenticator extends SessionAuthenticator
     private function _identifyUserWithFingerprint(): ?User
     {
         // First we check if we can get the user with the key fingerprint
-        if (!isset($this->_data['keyid'])) {
+        if (!isset($this->_data['keyid']) || !is_string($this->_data['keyid'])) {
             $this->_debug('No key id set.');
 
             return null;
         }
-        $fingerprint = strtoupper($this->_data['keyid']);
 
         // validate the fingerprint format
-        /** @var \App\Model\Table\GpgkeysTable $Gpgkeys */
-        $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
-        if (!is_string($fingerprint) || !$Gpgkeys->isValidFingerprintRule($fingerprint)) {
+        $fingerprint = strtoupper($this->_data['keyid']);
+        if (!PublicKeyValidationService::isValidFingerprint($fingerprint)) {
             $this->_debug('Invalid fingerprint.');
 
             return null;

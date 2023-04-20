@@ -1,6 +1,19 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.0.0
+ */
 namespace App\Test\Factory;
 
 use Cake\Chronos\Chronos;
@@ -9,6 +22,11 @@ use Faker\Generator;
 
 /**
  * ProfileFactory
+ *
+ * @method \App\Model\Entity\Profile|\App\Model\Entity\Profile[] persist()
+ * @method \App\Model\Entity\Profile getEntity()
+ * @method \App\Model\Entity\Profile[] getEntities()
+ * @method static \App\Model\Entity\Profile get($primaryKey, array $options = [])
  */
 class ProfileFactory extends CakephpBaseFactory
 {
@@ -32,9 +50,9 @@ class ProfileFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'first_name' => $faker->firstNameFemale,
-                'last_name' => $faker->lastName,
-                'user_id' => $faker->uuid,
+                'first_name' => $faker->firstNameFemale(),
+                'last_name' => $faker->lastName(),
+                'user_id' => $faker->uuid(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];

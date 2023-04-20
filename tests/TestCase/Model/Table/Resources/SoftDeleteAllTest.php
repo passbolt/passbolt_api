@@ -21,7 +21,6 @@ use App\Model\Table\ResourcesTable;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\ORM\TableRegistry;
-use Migrations\Migrations;
 
 class SoftDeleteAllTest extends AppTestCase
 {
@@ -138,53 +137,5 @@ class SoftDeleteAllTest extends AppTestCase
             $expect = $cascade ? 0 : $count[$association];
             $this->assertSame($expect, $count[$association]);
         }
-    }
-
-    /**
-     * @see \V300DeleteMetadataOfSoftDeletedResources::up()
-     */
-    public function testSoftDeleteCleanupWithMigration()
-    {
-        $this->markTestSkipped('Migrations cannot be run in the test environment for the moment');
-
-        // Fetch the non deleted resources with populated fields
-        $resourcesId = $this->Resources
-            ->find('list', ['valueField' => 'id'])
-            ->where([
-                'username IS NOT NULL',
-                'uri IS NOT NULL',
-                'description IS NOT NULL',
-                'deleted IS FALSE',
-            ]);
-
-        $associations = ['Favorites', 'Secrets', 'Permissions'];
-
-        // Count associated entities
-        $count = [];
-        foreach ($associations as $association) {
-            $count[$association] = $this->Resources->{$association}->find()->count();
-            $this->assertTrue($count[$association] > 0, "No $association were found");
-        }
-
-        // Soft delete the resources found
-        $this->Resources->updateAll(['deleted' => true], ['id IN' => $resourcesId]);
-
-        // Mark as non migrated
-        $this->Resources->getConnection()->execute('DELETE FROM phinxlog WHERE version = 20201221093528');
-
-        (new Migrations())->migrate();
-
-        // Fetch soft deleted resources
-        $deletedResources = $this->Resources
-            ->find()
-            ->where([
-                'username IS NULL',
-                'uri IS NULL',
-                'description IS NULL',
-                'deleted IS TRUE',
-            ]);
-
-        $resources = $this->Resources->find();
-        $this->assertSame($resources->count(), $deletedResources->count());
     }
 }

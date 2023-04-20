@@ -19,6 +19,7 @@ namespace App\Controller\Settings;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -99,11 +100,15 @@ class SettingsIndexController extends AppController
             'passbolt' => [
                 'legal' => Configure::read('passbolt.legal'),
                 'edition' => Configure::read('passbolt.edition'),
-                'registration' => [
-                    'public' => Configure::read('passbolt.registration.public'),
-                ],
             ],
         ];
+        if (is_string(Configure::read(EmailValidationRule::REGEX_CHECK_KEY))) {
+            $baseSettings = Hash::insert(
+                $baseSettings,
+                'passbolt.email.validate.regex',
+                Configure::read(EmailValidationRule::REGEX_CHECK_KEY)
+            );
+        }
         if ($role !== Role::GUEST) {
             // Build settings array.
             $settings = [
@@ -115,7 +120,10 @@ class SettingsIndexController extends AppController
                     'debug' => Configure::read('debug') ? 1 : 0,
                     'server_timezone' => date_default_timezone_get(),
                     // session timeout info in minutes
-                    'session_timeout' => Configure::read('Session.timeout', ini_get('session.gc_maxlifetime') / 60),
+                    'session_timeout' => Configure::read(
+                        'Session.timeout',
+                        (int)ini_get('session.gc_maxlifetime') / 60
+                    ),
                     'image_storage' => [
                         'public_path' => Configure::read('ImageStorage.publicPath'),
                     ],
@@ -177,7 +185,7 @@ class SettingsIndexController extends AppController
         $pluginsConfig = [];
         // Add white listed plugin options.
         foreach ($whiteList as $path) {
-            if (!empty(Configure::read('passbolt.plugins.' . $path))) {
+            if (Configure::check('passbolt.plugins.' . $path)) {
                 $pluginsConfig = Hash::insert(
                     $pluginsConfig,
                     $path,

@@ -47,7 +47,7 @@ class AvatarsCacheService
 
     /**
      * @param string|null $id Avatar id
-     * @param string $format Avaar format
+     * @param string $format Avatar format
      * @return \Laminas\Diactoros\Stream
      */
     public function readSteamFromId(?string $id, string $format): Stream
@@ -73,7 +73,7 @@ class AvatarsCacheService
     {
         if (empty($avatar->data)) {
             return $this->getFallBackFileName($format);
-        } elseif ($format === AvatarsTable::FORMAT_SMALL) {
+        } elseif ($format === AvatarsConfigurationService::FORMAT_SMALL) {
             return $this->getSmallAvatarFileName($avatar);
         } else {
             return $this->getMediumAvatarFileName($avatar);
@@ -88,11 +88,11 @@ class AvatarsCacheService
      */
     public function storeInCache(Avatar $avatar): void
     {
-        if (empty($avatar->data)) {
+        $data = $avatar->getDataInStringFormat();
+
+        if (empty($data)) {
             return;
         }
-
-        $data = $avatar->data;
 
         try {
             $smallImage = AvatarProcessing::resizeAndCrop(
@@ -107,9 +107,22 @@ class AvatarsCacheService
             return;
         }
 
+        $this->writeAvatarDataInFilesystem($this->getMediumAvatarFileName($avatar), $data, $avatar);
+        $this->writeAvatarDataInFilesystem($this->getSmallAvatarFileName($avatar), $smallImage, $avatar);
+    }
+
+    /**
+     * Write avatar on file system as non-executable.
+     *
+     * @param string $filename Name of the target file
+     * @param string $data Image data
+     * @param \App\Model\Entity\Avatar $avatar Avatar
+     * @return void
+     */
+    protected function writeAvatarDataInFilesystem(string $filename, string $data, Avatar $avatar): void
+    {
         try {
-            $this->Avatars->getFilesystem()->write($this->getMediumAvatarFileName($avatar), $data);
-            $this->Avatars->getFilesystem()->write($this->getSmallAvatarFileName($avatar), $smallImage);
+            $this->Avatars->getFilesystem()->write($filename, $data);
         } catch (\Throwable $e) {
             Log::error('Error while saving cache avatar with ID ' . $avatar->id . '.');
             Log::error($e->getMessage());
@@ -126,23 +139,23 @@ class AvatarsCacheService
      * @param string $format The format to recover.
      * @return \Laminas\Diactoros\Stream The full path to the filename.
      */
-    protected function readStreamInCache(Avatar $avatar, string $format = AvatarsTable::FORMAT_SMALL): Stream
-    {
+    protected function readStreamInCache(
+        Avatar $avatar,
+        string $format = AvatarsConfigurationService::FORMAT_SMALL
+    ): Stream {
         $fileName = $this->getAvatarFileName($avatar, $format);
+        try {
+            $stream = $this->Avatars->getFilesystem()->readStream($fileName);
+        } catch (\Throwable $e) {
+            $stream = null;
+        }
 
-        if (!$this->Avatars->getFilesystem()->fileExists($fileName)) {
+        if (empty($stream)) {
             try {
                 $this->storeInCache($avatar);
                 $stream = $this->Avatars->getFilesystem()->readStream($fileName);
             } catch (\Throwable $exception) {
-                Log::warning(__('Could not save the avatar in cache.'));
-                $stream = $this->getFallBackFileName($format);
-            }
-        } else {
-            try {
-                $stream = $this->Avatars->getFilesystem()->readStream($fileName);
-            } catch (\Throwable $exception) {
-                Log::warning(__('Could not read the avatar in cache.'));
+                Log::warning(__('Could not save the avatar in the {0} file.', $fileName));
                 $stream = $this->getFallBackFileName($format);
             }
         }
@@ -177,7 +190,9 @@ class AvatarsCacheService
      */
     protected function getSmallAvatarFileName(Avatar $avatar): string
     {
-        return $this->getOrCreateAvatarDirectory($avatar) . AvatarsTable::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION;
+        return $this->getOrCreateAvatarDirectory($avatar)
+            . AvatarsConfigurationService::FORMAT_SMALL
+            . AvatarHelper::IMAGE_EXTENSION;
     }
 
     /**
@@ -186,7 +201,9 @@ class AvatarsCacheService
      */
     protected function getMediumAvatarFileName(Avatar $avatar): string
     {
-        return $this->getOrCreateAvatarDirectory($avatar) . AvatarsTable::FORMAT_MEDIUM . AvatarHelper::IMAGE_EXTENSION;
+        return $this->getOrCreateAvatarDirectory($avatar)
+            . AvatarsConfigurationService::FORMAT_MEDIUM
+            . AvatarHelper::IMAGE_EXTENSION;
     }
 
     /**
@@ -216,6 +233,6 @@ class AvatarsCacheService
      */
     protected function getDefaultFormat(): string
     {
-        return AvatarsTable::FORMAT_MEDIUM;
+        return AvatarsConfigurationService::FORMAT_MEDIUM;
     }
 }

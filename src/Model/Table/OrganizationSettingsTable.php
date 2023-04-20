@@ -85,7 +85,7 @@ class OrganizationSettingsTable extends Table
             ->regex(
                 'property',
                 '/^[a-zA-Z][a-zA-Z.]+[a-z]$/',
-                __('The property should be an alphabetical string and only point is accepted as special characters.')
+                __('The property should be an alphabetical string and only dot is accepted as special characters.')
             );
 
         $validator
@@ -123,25 +123,27 @@ class OrganizationSettingsTable extends Table
      * Find all the settings for a given property
      *
      * @param string $property The name of the property to get
-     * @return \Cake\Datasource\EntityInterface|array The first result from the ResultSet.
+     * @return \App\Model\Entity\OrganizationSetting The first result from the ResultSet.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getFirstSettingOrFail(string $property)
+    public function getFirstSettingOrFail(string $property): OrganizationSetting
     {
         $settingNamespace = OrganizationSetting::UUID_NAMESPACE . $property;
-
-        return $this->find()
+        /** @var \App\Model\Entity\OrganizationSetting $setting */
+        $setting = $this->find()
             ->where(['property_id' => UuidFactory::uuid($settingNamespace)])
             ->firstOrFail();
+
+        return $setting;
     }
 
     /**
      * Get an entry for a given user and property
      *
      * @param string $property user property
-     * @return \Cake\Datasource\EntityInterface|array|null The first result from the ResultSet.
+     * @return \App\Model\Entity\OrganizationSetting|null The first result from the ResultSet.
      */
-    public function getByProperty(string $property)
+    public function getByProperty(string $property): ?OrganizationSetting
     {
         try {
             return $this->getFirstSettingOrFail($property);
@@ -219,8 +221,9 @@ class OrganizationSettingsTable extends Table
      *
      * @param string $property property name
      * @return string (uuid) property id
+     * @throws \Exception if cannot generate a random UUID
      */
-    protected function _getSettingPropertyId(string $property)
+    protected function _getSettingPropertyId(string $property): string
     {
         $settingNamespace = OrganizationSetting::UUID_NAMESPACE . $property;
 

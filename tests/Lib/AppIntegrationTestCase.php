@@ -16,10 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib;
 
-use App\Model\Entity\Role;
-use App\Model\Entity\User;
+use App\Authenticator\AbstractSessionIdentificationService;
+use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Middleware\CsrfProtectionMiddleware;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Model\AvatarsModelTestTrait;
+use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
@@ -28,21 +29,33 @@ use App\Test\Lib\Model\RolesModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Test\Lib\Utility\ArrayTrait;
+use App\Test\Lib\Utility\CookieTestTrait;
 use App\Test\Lib\Utility\EntityTrait;
-use App\Test\Lib\Utility\ErrorTrait;
+use App\Test\Lib\Utility\ErrorIntegrationTestTrait;
 use App\Test\Lib\Utility\JsonRequestTrait;
+use App\Test\Lib\Utility\LoginTestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
+use App\Test\Lib\Utility\UserAgentTestTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
+use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
     use ArrayTrait;
-    use AvatarsModelTestTrait;
+    use AvatarsModelTrait;
     use EntityTrait;
-    use ErrorTrait;
+    use ErrorIntegrationTestTrait;
+    use FeaturePluginAwareTrait;
     use GpgkeysModelTrait;
     use IntegrationTestTrait;
     use JsonRequestTrait;
@@ -51,8 +64,13 @@ abstract class AppIntegrationTestCase extends TestCase
     use ProfilesModelTrait;
     use ResourcesModelTrait;
     use RolesModelTrait;
+    use ScenarioAwareTrait;
     use SecretsModelTrait;
+    use TruncateDirtyTables;
     use UsersModelTrait;
+    use LoginTestTrait;
+    use UserAgentTestTrait;
+    use CookieTestTrait;
 
     /**
      * Setup.
@@ -60,9 +78,21 @@ abstract class AppIntegrationTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->cleanup();
         $this->enableCsrfToken();
         $this->loadRoutes();
-        Configure::write('passbolt.plugins.log.enabled', false);
+
+        // Disable feature plugins listed in default.php
+        $this->disableFeaturePlugin('Tags');
+        $this->disableFeaturePlugin('MultiFactorAuthentication');
+        $this->disableFeaturePlugin('Log');
+        $this->disableFeaturePlugin('Folders');
+
+        Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
+        OpenPGPBackendFactory::reset();
+        UserAction::destroy();
+        DigestsPool::clearInstance();
+        EmailNotificationSettings::flushCache();
     }
 
     /**
@@ -79,56 +109,36 @@ abstract class AppIntegrationTestCase extends TestCase
      *
      * @param string $userFirstName The user first name.
      * @return void
+     * @deprecated use logInAs.
      */
     public function authenticateAs($userFirstName)
     {
-        $data = [
-            'id' => UuidFactory::uuid('user.id.' . $userFirstName),
-            'username' => $userFirstName . '@passbolt.com',
-            'profile' => [
-                'first_name' => $userFirstName,
-                'last_name' => 'testing',
-            ],
-            'role' => [
-                'name' => Role::USER,
-            ],
-        ];
-        if ($userFirstName === 'admin') {
-            $data['role']['name'] = Role::ADMIN;
+        $userId = UuidFactory::uuid('user.id.' . $userFirstName);
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $user = $Users->find()
+            ->where(['Users.id' => $userId])
+            ->contain(['Profiles', 'Roles'])
+            ->first();
+
+        if ($user === null) {
+            $user = UserFactory::make([
+                'id' => $userId,
+                'username' => $userFirstName . '@passbolt.com',
+                'profile' => [
+                    'first_name' => $userFirstName,
+                    'last_name' => 'testing',
+                ],
+            ]);
+            if ($userFirstName === 'admin') {
+                $user->admin();
+            } else {
+                $user->user();
+            }
+
+            $user = $user->persist();
         }
-        $this->session(['Auth' => $data]);
-    }
 
-    /**
-     * @param User $user
-     */
-    public function logInAs(User $user)
-    {
-        $this->session(['Auth' => $user->toArray()]);
-    }
-
-    /**
-     * @return User
-     * @throws \Exception
-     */
-    public function logInAsUser()
-    {
-        $user = UserFactory::make()->user()->persist();
         $this->logInAs($user);
-
-        return $user;
-    }
-
-    /**
-     * @return User
-     * @throws \Exception
-     */
-    public function logInAsAdmin()
-    {
-        $user = UserFactory::make()->admin()->persist();
-        $this->logInAs($user);
-
-        return $user;
     }
 
     /**
@@ -139,5 +149,60 @@ abstract class AppIntegrationTestCase extends TestCase
     public function disableCsrfToken()
     {
         $this->_csrfToken = false;
+    }
+
+    /**
+     * Injects in the DIC a session identification Interface with the provided ID.
+     * In Session, will return the session ID
+     * In JWT, will return the access token
+     * In JWT refresh token, will return the hashed access token associated to the refresh token
+     *
+     * @param string $sessionId Session Id to mock
+     * @return void
+     */
+    public function mockSessionId(string $sessionId)
+    {
+        $this->mockService(SessionIdentificationServiceInterface::class, function () use ($sessionId) {
+            $stubSessionIdentifier = $this->getMockForAbstractClass(AbstractSessionIdentificationService::class);
+            $stubSessionIdentifier->method('getSessionIdentifier')->willReturn($sessionId);
+
+            return $stubSessionIdentifier;
+        });
+    }
+
+    /**
+     * @param mixed $expected Expected value
+     * @param string $name Cookie name
+     */
+    public function assertCookieIsSecure($expected, string $name): void
+    {
+        $this->assertCookie($expected, $name);
+        /** @var Response $response */
+        $response = $this->_response;
+        $cookie = $response->getCookieCollection()->get($name);
+        $this->assertTrue($cookie->isSecure());
+        $this->assertTrue($cookie->isHttpOnly());
+    }
+
+    /**
+     * @param string $agent User agent
+     * @return void
+     */
+    public function mockUserAgent(string $agent = 'foo')
+    {
+        $this->_request['headers']['USER_AGENT'] = $agent;
+    }
+
+    /**
+     * Sets given IP address to server request object.
+     *
+     * @param string $ip IP address to mock.
+     * @return void
+     */
+    public function mockUserIp(string $ip = '127.0.0.1')
+    {
+        $this->configRequest([
+            'environment' => ['REMOTE_ADDR' => $ip],
+        ]);
     }
 }

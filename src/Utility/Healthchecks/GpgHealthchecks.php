@@ -16,11 +16,13 @@ declare(strict_types=1);
  */
 namespace App\Utility\Healthchecks;
 
+use App\Model\Entity\Gpgkey;
+use App\Model\Rule\Gpgkeys\GopengpgFormatRule;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\TableRegistry;
 
 class GpgHealthchecks
 {
@@ -44,6 +46,7 @@ class GpgHealthchecks
         $checks = self::gpgCanDecrypt($checks);
         $checks = self::gpgCanDecryptVerify($checks);
         $checks = self::gpgCanVerify($checks);
+        $checks = self::gpgIsFormatGopengpgValid($checks);
 
         return $checks;
     }
@@ -153,9 +156,19 @@ class GpgHealthchecks
      */
     public static function gpgFingerprint(?array $checks = []): array
     {
-        $checks['gpg']['gpgKeyPrivateFingerprint'] = false;
-        $checks['gpg']['gpgKeyPublicFingerprint'] = false;
-        $checks['gpg']['gpgKeyPublicEmail'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'gpgKeyPrivateFingerprint' => false,
+                    'gpgKeyPublicFingerprint' => false,
+                    'gpgKeyPublicEmail' => false,
+                    'gpgKeyPublicReadable' => false,
+                    'gpgKeyPrivateReadable' => false,
+                    'gpgKey' => false,
+                ],
+            ],
+            $checks
+        );
         $areKeysReadable = $checks['gpg']['gpgKeyPublicReadable'] && $checks['gpg']['gpgKeyPrivateReadable'];
         if ($areKeysReadable && $checks['gpg']['gpgKey']) {
             $gpg = OpenPGPBackendFactory::get();
@@ -169,10 +182,9 @@ class GpgHealthchecks
             if ($publicKeyInfo['fingerprint'] === Configure::read('passbolt.gpg.serverKey.fingerprint')) {
                 $checks['gpg']['gpgKeyPublicFingerprint'] = true;
             }
-            /** @var \App\Model\Table\GpgkeysTable $Gpgkeys */
-            $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
+
             $checks['gpg']['gpgKeyPublicEmail'] = is_string($publicKeyInfo['uid']) &&
-                $Gpgkeys->uidContainValidEmailRule($publicKeyInfo['uid']);
+                PublicKeyValidationService::uidContainValidEmail($publicKeyInfo['uid']);
         }
 
         return $checks;
@@ -186,7 +198,15 @@ class GpgHealthchecks
      */
     public static function gpgKeyInKeyring(?array $checks = []): array
     {
-        $checks['gpg']['gpgKeyPublicInKeyring'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'gpgHome' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
         if (!$checks['gpg']['gpgHome'] || $fingerprint === null) {
             return $checks;
@@ -208,17 +228,24 @@ class GpgHealthchecks
      */
     public static function gpgCanEncrypt(?array $checks = []): array
     {
-        $checks['gpg']['canEncrypt'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canEncrypt' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
             try {
                 $_gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-                $encryptedMessage = $_gpg->encrypt($messageToEncrypt);
-                if ($encryptedMessage !== false) {
-                    $checks['gpg']['canEncrypt'] = true;
-                }
-            } catch (Exception $e) {
+                $_gpg->encrypt($messageToEncrypt);
+                $checks['gpg']['canEncrypt'] = true;
+            } catch (CakeException $e) {
+                $checks['gpg']['canEncrypt'] = false;
             }
         }
 
@@ -233,7 +260,15 @@ class GpgHealthchecks
      */
     public static function gpgCanEncryptSign(?array $checks = []): array
     {
-        $checks['gpg']['canEncryptSign'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canEncryptSign' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
@@ -242,11 +277,10 @@ class GpgHealthchecks
                 $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
                 $_gpg->setEncryptKeyFromFingerprint($fingerprint);
                 $_gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-                $encryptedMessage2 = $_gpg->encrypt($messageToEncrypt, true);
-                if ($encryptedMessage2 !== false) {
-                    $checks['gpg']['canEncryptSign'] = true;
-                }
-            } catch (Exception $e) {
+                $_gpg->encrypt($messageToEncrypt, true);
+                $checks['gpg']['canEncryptSign'] = true;
+            } catch (CakeException $e) {
+                $checks['gpg']['canEncryptSign'] = false;
             }
         }
 
@@ -261,7 +295,16 @@ class GpgHealthchecks
      */
     public static function gpgCanDecrypt(?array $checks = []): array
     {
-        $checks['gpg']['canDecrypt'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canEncrypt' => false,
+                    'canDecrypt' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             if ($checks['gpg']['canEncrypt']) {
                 $_gpg = OpenPGPBackendFactory::get();
@@ -276,7 +319,7 @@ class GpgHealthchecks
                     if ($decryptedMessage === $messageToEncrypt) {
                         $checks['gpg']['canDecrypt'] = true;
                     }
-                } catch (Exception $e) {
+                } catch (CakeException $e) {
                 }
             }
         }
@@ -292,7 +335,15 @@ class GpgHealthchecks
      */
     public static function gpgCanDecryptVerify(?array $checks = []): array
     {
-        $checks['gpg']['canDecryptVerify'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canDecryptVerify' => false,
+                    'gpgKeyPublicInKeyring' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
@@ -308,7 +359,7 @@ class GpgHealthchecks
                 if ($decryptedMessage2 === $messageToEncrypt) {
                     $checks['gpg']['canDecryptVerify'] = true;
                 }
-            } catch (Exception $e) {
+            } catch (CakeException $e) {
             }
         }
 
@@ -323,7 +374,15 @@ class GpgHealthchecks
      */
     public static function gpgCanSign(?array $checks = []): array
     {
-        $checks['gpg']['canSign'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'gpgKeyPublicInKeyring' => false,
+                    'canSign' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['gpgKeyPublicInKeyring']) {
             $_gpg = OpenPGPBackendFactory::get();
             $_gpg->setSignKeyFromFingerprint(
@@ -332,11 +391,10 @@ class GpgHealthchecks
             );
             $messageToEncrypt = 'test message';
             try {
-                $signature = $_gpg->sign($messageToEncrypt);
-                if ($signature !== false) {
-                    $checks['gpg']['canSign'] = true;
-                }
-            } catch (Exception $e) {
+                $_gpg->sign($messageToEncrypt);
+                $checks['gpg']['canSign'] = true;
+            } catch (CakeException $e) {
+                $checks['gpg']['canSign'] = false;
             }
         }
 
@@ -351,7 +409,15 @@ class GpgHealthchecks
      */
     public static function gpgCanVerify(?array $checks = []): array
     {
-        $checks['gpg']['canVerify'] = false;
+        $checks = array_replace_recursive(
+            [
+                'gpg' => [
+                    'canDecryptVerify' => false,
+                    'canVerify' => false,
+                ],
+            ],
+            $checks
+        );
         if ($checks['gpg']['canDecryptVerify']) {
             $_gpg = OpenPGPBackendFactory::get();
             $messageToEncrypt = 'test message';
@@ -364,13 +430,35 @@ class GpgHealthchecks
 
                 try {
                     $_gpg->setVerifyKeyFromFingerprint($fingerprint);
-                    $_gpg->verify($signedMessage, Configure::read('passbolt.gpg.serverKey.fingerprint'));
+                    $_gpg->verify($signedMessage);
                     $checks['gpg']['canVerify'] = true;
-                } catch (Exception $e) {
+                } catch (CakeException $e) {
                 }
-            } catch (Exception $e) {
+            } catch (CakeException $e) {
             }
         }
+
+        return $checks;
+    }
+
+    /**
+     * Check if both server keys are Gopengpg readable.
+     * There should for example be no empty line before the end of
+     * the block.
+     *
+     * @param array|null $checks List of checks
+     * @return array
+     */
+    public static function gpgIsFormatGopengpgValid(?array $checks = []): array
+    {
+        // Gpg keys should have only one return line
+        $publicKey = new Gpgkey();
+        $publicKey->armored_key = file_get_contents(Configure::read('passbolt.gpg.serverKey.public'));
+        $privateKey = new Gpgkey();
+        $privateKey->armored_key = file_get_contents(Configure::read('passbolt.gpg.serverKey.private'));
+        $rule = new GopengpgFormatRule();
+        $checks['gpg']['isPublicServerKeyGopengpgCompatible'] = $rule($publicKey);
+        $checks['gpg']['isPrivateServerKeyGopengpgCompatible'] = $rule($privateKey);
 
         return $checks;
     }

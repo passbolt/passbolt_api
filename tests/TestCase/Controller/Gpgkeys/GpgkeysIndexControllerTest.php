@@ -18,12 +18,14 @@ namespace App\Test\TestCase\Controller\Gpgkeys;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\I18n\Time;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys'];
+    public $fixtures = [
+        'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys',
+    ];
 
     public function testGpgkeysIndexNotAllowedError()
     {
@@ -33,7 +35,7 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 
     public function testGpgkeysIndexSuccess()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/gpgkeys.json');
         $this->assertSuccess();
         $this->assertGreaterThan(20, count($this->_responseJsonBody));
@@ -44,14 +46,14 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
         $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
 
         // Find a key at a given time and modify it
-        $t = Time::parse('now');
+        $t = FrozenTime::now();
         sleep(1);
         $gpgkey = $Gpgkeys->find('all')->first();
-        $gpgkey->modified = Time::parse('now');
+        $gpgkey->modified = FrozenTime::now();
         $Gpgkeys->save($gpgkey);
 
         // Find the keys modified since then
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/gpgkeys.json?filter[modified-after]=' . $t->toUnixString());
         $this->assertSuccess();
         $this->assertCount(1, $this->_responseJsonBody);
@@ -67,7 +69,7 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
         $Gpgkeys->save($gpgkey);
 
         // Find the keys deleted then
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/gpgkeys.json?filter[is-deleted]=1');
         $this->assertSuccess();
         $this->assertCount(1, $this->_responseJsonBody);

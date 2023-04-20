@@ -17,14 +17,15 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Settings;
 
+use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
-    public function testSettingsIndexGetSuccess()
+    public function testSettingsIndexController_SuccessAsLU()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/settings.json?api-version=2');
         $this->assertSuccess();
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
@@ -35,9 +36,13 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
             json_decode(json_encode(Configure::read('passbolt.plugins.locale.options'))),
             $this->_responseJsonBody->passbolt->plugins->locale->options
         );
+
+        // Assert some default plugin visibility
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->export->enabled));
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->accountRecoveryRequestHelp->enabled));
     }
 
-    public function testSettingsIndexErrorNotAuthenticated()
+    public function testSettingsIndexController_SuccessAsAN()
     {
         $this->getJson('/settings.json?api-version=2');
         $this->assertSuccess();
@@ -49,5 +54,22 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
             json_decode(json_encode(Configure::read('passbolt.plugins.locale.options'))),
             $this->_responseJsonBody->passbolt->plugins->locale->options
         );
+
+        // Assert LU only plugin is not visible
+        $this->assertTrue(!isset($this->_responseJsonBody->passbolt->plugins->export->enabled));
+
+        // Assert AN plugin is visible
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->accountRecoveryRequestHelp->enabled));
+        $this->assertFalse(isset($this->_responseJsonBody->passbolt->email));
+    }
+
+    public function testSettingsIndexController_SuccessAsAN_With_Email_Regex_Defined()
+    {
+        $regex = 'Foo';
+        Configure::write(EmailValidationRule::REGEX_CHECK_KEY, $regex);
+        $this->getJson('/settings.json?api-version=2');
+        $this->assertSuccess();
+
+        $this->assertSame($regex, $this->_responseJsonBody->passbolt->email->validate->regex);
     }
 }

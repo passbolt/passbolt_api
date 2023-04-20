@@ -31,11 +31,14 @@ require __DIR__ . '/paths.php';
  */
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
+use App\Mailer\Transport\DebugTransport;
+use App\Mailer\Transport\SmtpTransport;
 use Cake\Cache\Cache;
+use Cake\Database\Type\JsonType;
+use Cake\Database\TypeFactory;
 use Cake\Error\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
-use Cake\Database\Type;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorHandler;
 use Cake\Log\Log;
@@ -56,6 +59,7 @@ try {
     Configure::config('default', new PhpConfig());
     Configure::load('app', 'default', false);
     Configure::load('default', 'default', false); // passbolt default config
+    Configure::load('audit_logs', 'default', true); // audit logs config
     if (\file_exists(CONFIG . DS . 'passbolt.php')) {
         Configure::load('passbolt', 'default', true); // merge with default config
 
@@ -121,6 +125,9 @@ ini_set('intl.default_locale', 'en_UK');
 /*
  * Register application error and exception handlers.
  */
+if (!Configure::read('debug')) {
+    Configure::write('Error.errorLevel', E_ALL ^ E_DEPRECATED);
+}
 if ($isCli) {
     (new ConsoleErrorHandler(Configure::read('Error')))->register();
 } else {
@@ -158,6 +165,8 @@ unset($fullBaseUrl);
 
 Cache::setConfig(Configure::consume('Cache'));
 ConnectionManager::setConfig(Configure::consume('Datasources'));
+Configure::write('EmailTransport.default.className', SmtpTransport::class);
+Configure::write('EmailTransport.Debug.className', DebugTransport::class);
 TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Mailer::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));
@@ -175,18 +184,16 @@ Security::setSalt(Configure::consume('Security.salt'));
 //    return $detector->isTablet();
 //});
 
-/*
- * Enable immutable time objects in the ORM.
+/**
+ * Add custom Json type to be used for any database field.
  *
- * You can enable default locale format parsing by adding calls
- * to `useLocaleParser()`. This enables the automatic conversion of
- * locale specific date formats. For details see
- * @link http://book.cakephp.org/3.0/en/core-libraries/internationalization-and-localization.html#parsing-localized-datetime-data
+ * This is helpful because we are storing json value inside database column. This class handles converting array to json
+ * and vice versa, so we can directly set array value to particular field, and it will handle converting the value to
+ * valid type for us.
+ *
+ * @see https://book.cakephp.org/4/en/orm/database-basics.html#adding-custom-types
  */
-Type::build('time')->useImmutable();
-Type::build('date')->useImmutable();
-Type::build('datetime')->useImmutable();
-Type::build('timestamp')->useImmutable();
+TypeFactory::map('json', JsonType::class);
 
 /*
  * Set process user constant
@@ -197,5 +204,3 @@ define('PROCESS_USER', $user['name']);
 
 // Are we running passbolt pro?
 define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');
-
-require __DIR__ . '/file_storage.php';

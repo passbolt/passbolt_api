@@ -16,14 +16,23 @@ declare(strict_types=1);
  */
 namespace App\Controller\Setup;
 
-use App\Model\Entity\AuthenticationToken;
-use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
-use Cake\Validation\Validation;
+use App\Controller\AppController;
+use App\Model\Entity\Role;
+use App\Service\Setup\RecoverCompleteServiceInterface;
+use Cake\Event\EventInterface;
+use Cake\Http\Exception\ForbiddenException;
 
-class RecoverCompleteController extends SetupCompleteController
+class RecoverCompleteController extends AppController
 {
-    public const COMPLETE_SUCCESS_EVENT_NAME = 'RecoverCompleteController.complete.success';
+    /**
+     * @inheritDoc
+     */
+    public function beforeFilter(EventInterface $event)
+    {
+        $this->Authentication->allowUnauthenticated(['complete']);
+
+        return parent::beforeFilter($event);
+    }
 
     /**
      * Recovery completion
@@ -38,55 +47,19 @@ class RecoverCompleteController extends SetupCompleteController
      * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key is not provided or not a valid OpenPGP key
      * @throws \Cake\Http\Exception\BadRequestException if the OpenPGP key does not belong to the user
      * @throws \Cake\Http\Exception\InternalErrorException if something went wrong when updating the data
+     * @param \App\Service\Setup\RecoverCompleteServiceInterface $recoverCompleteService Setup complete service
      * @param string $userId uuid of the user
      * @return void
      */
-    public function complete(string $userId)
+    public function complete(RecoverCompleteServiceInterface $recoverCompleteService, string $userId)
     {
-        // Check request sanity
-        $user = $this->_getAndAssertUser($userId);
-        $token = $this->_getAndAssertToken($userId, AuthenticationToken::TYPE_RECOVER);
-        $gpgkey = $this->_getAndAssertGpgkey($userId);
-
-        // Check that the "new" gpg key match the old one
-        $userKey = $this->Gpgkeys->getByFingerprintAndUserId($gpgkey->fingerprint, $userId);
-        if (empty($userKey)) {
-            throw new BadRequestException(__('The key provided does not belong to given user.'));
+        // Do not allow logged in user to complete setup
+        if ($this->User->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('Only guests are allowed to complete setup.'));
         }
 
-        // Deactivate the authentication token
-        $token->active = false;
-        if (!$this->AuthenticationTokens->save($token, ['checkRules' => false])) {
-            throw new InternalErrorException('Could not update the authentication token data.');
-        }
-
-        $this->dispatchEvent(static::COMPLETE_SUCCESS_EVENT_NAME, [
-            'user' => $user,
-            'data' => $this->getRequest()->getData(),
-        ]);
+        $recoverCompleteService->complete($userId);
 
         $this->success(__('The recovery was completed successfully.'));
-    }
-
-    /**
-     * Return the user for matching the requesting id
-     *
-     * @param string $userId the user uuid
-     * @throws \Cake\Http\Exception\BadRequestException if the user id is not a valid uuid
-     * @throws \Cake\Http\Exception\BadRequestException if the user was deleted or has not completed the setup
-     * @return \App\Model\Entity\User
-     */
-    protected function _getAndAssertUser(string $userId)
-    {
-        if (!Validation::uuid($userId)) {
-            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
-        }
-        $user = $this->Users->findSetupRecover($userId);
-        if (empty($user)) {
-            $msg = __('The user does not exist, has not completed the setup or was deleted.');
-            throw new BadRequestException($msg);
-        }
-
-        return $user;
     }
 }

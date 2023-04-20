@@ -14,6 +14,10 @@
 /config/gpg/*.key
 /config/license
 /config/subscription_key.txt
+/config/ldap.php
+/config/DirectorySync/schema/*
+/config/jwt/jwt.key
+/config/jwt/jwt.pem
 
 # JS Dependencies #
 ################
@@ -37,12 +41,20 @@ debian/passbolt-api-pro/
 debian/*debhelper*
 debian/*substvars*
 
+# RPM Package #
+###############
+/_passbolt-configure
+/cron.d
+/logrotate.d
+/*.rpm
+
 # CakePHP specific files #
 ##########################
 /config/app_local.php
 /config/.env
 /logs/*
 /tmp/*
+!/tmp/avatars/empty
 /vendor/*
 
 # IDE and editor specific files #
@@ -112,6 +124,11 @@ atlassian-ide-plugin.xml
 .buildpath
 *.iml
 
+# Tilt
+tilt_modules*
 ## File-based project format:
 *.ipr
 *.iws
+
+# PHPUNIT generated file
+.phpunit.result.cache

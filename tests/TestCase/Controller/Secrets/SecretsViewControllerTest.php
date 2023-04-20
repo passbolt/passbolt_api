@@ -23,10 +23,10 @@ use App\Utility\UuidFactory;
 class SecretsViewControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Secrets',
+        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Secrets',
     ];
 
-    public function testSuccess()
+    public function testSecretsViewControllerSuccess()
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -36,14 +36,14 @@ class SecretsViewControllerTest extends AppIntegrationTestCase
         $this->assertSecretAttributes($this->_responseJsonBody);
     }
 
-    public function testErrorNotAuthenticated()
+    public function testSecretsViewControllerErrorNotAuthenticated()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/secrets/resource/$resourceId.json?api-version=2");
         $this->assertAuthenticationError();
     }
 
-    public function testErrorNotValidId()
+    public function testSecretsViewControllerErrorNotValidId()
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
@@ -51,7 +51,7 @@ class SecretsViewControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
-    public function testErrorNotFound()
+    public function testSecretsViewControllerErrorNotFound()
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.april');

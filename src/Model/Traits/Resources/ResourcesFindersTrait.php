@@ -24,8 +24,10 @@ use App\Model\Table\PermissionsTable;
 use App\Model\Table\ResourceTypesTable;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use Passbolt\Folders\Model\Entity\Folder;
 
 /**
  * @method \Cake\Event\EventManager getEventManager()
@@ -93,22 +95,31 @@ trait ResourcesFindersTrait
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
         }
 
-        // Filter on resources I have permission.
-        $query = $this->_filterQueryByPermissions($query, $userId);
+        if (Configure::read('passbolt.plugins.folders')) {
+            // Filter on resources with the given parent ids.
+            if (isset($options['filter']['has-parent'])) {
+                $query = $this->filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
+            }
+        }
 
-        // If contains the user permission.
+        // If contains the user permission, retrieve the highest permission the user has for each resource.
+        // In the meantime filter only the resources the user has access, the permissions table will be joined
+        // to the resources table with an INNER join, see the hasOne definition.
         if (isset($options['contain']['permission'])) {
             $query->contain('Permission', function (Query $q) use ($userId) {
                 $subQueryOptions = ['checkGroupsUsers' => true];
                 $permissionIdSubQuery = $this->Permissions
                     ->findAllByAro(PermissionsTable::RESOURCE_ACO, $userId, $subQueryOptions)
-                    ->where(['Permissions.aco_foreign_key = Resources.id'])
-                    ->order(['Permissions.type DESC'])
+                    ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Resources.id')])
+                    ->orderDesc('Permissions.type')
                     ->limit(1)
                     ->select(['Permissions.id']);
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
             });
+        } else {
+            // If not already filtered by the contains on Permission, then filter only the resources the user has access.
+            $query = $this->_filterQueryByPermissions($query, $userId);
         }
 
         // If contains Secrets.
@@ -215,7 +226,7 @@ trait ResourcesFindersTrait
      * @param string $groupId uuid The group to fetch the resources for
      * @return \Cake\ORM\Query
      */
-    public function findAllByGroupAccess(string $groupId)
+    public function findAllByGroupAccess(string $groupId): Query
     {
         if (!Validation::uuid($groupId)) {
             throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
@@ -346,5 +357,42 @@ trait ResourcesFindersTrait
         $query->where(['Resources.id IN' => $resourcesSharedWithGroupSubQuery]);
 
         return $query;
+    }
+
+    /**
+     * Filter a query by parents ids.
+     *
+     * @param \Cake\ORM\Query $query Query to filter on
+     * @param array $parentIds Array of parent ids
+     * @return \Cake\ORM\Query
+     */
+    public function filterQueryByFolderParentIds(Query $query, array $parentIds): Query
+    {
+        if (empty($parentIds)) {
+            return $query;
+        }
+
+        $includeRoot = false;
+        $parentIds = array_filter($parentIds, function ($value) use (&$includeRoot) {
+            if ($value == Folder::ROOT_ID) {
+                $includeRoot = true;
+
+                return false;
+            }
+
+            return true;
+        });
+
+        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot) {
+            $conditions = [];
+            if (!empty($parentIds)) {
+                $conditions[] = ['folder_parent_id IN' => $parentIds];
+            }
+            if ($includeRoot === true) {
+                $conditions[] = ['folder_parent_id IS NULL'];
+            }
+
+            return $q->where(['OR' => $conditions]);
+        });
     }
 }

@@ -1,6 +1,19 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         3.0.0
+ */
 namespace App\Test\Factory;
 
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
@@ -31,9 +44,45 @@ class AvatarFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                // For performance sake, we do not create an image here
+                // For performance's sake, we do not create an image here
                 'data' => $faker->text(),
             ];
         });
+    }
+
+    public function withProfile(?ProfileFactory $profileFactory = null): self
+    {
+        if (!isset($profileFactory)) {
+            $profileFactory = ProfileFactory::make()->without('Avatars');
+        }
+
+        return $this->with('Profiles', $profileFactory);
+    }
+
+    /**
+     * @param UserFactory|null $userFactory Associated user
+     * @return $this
+     */
+    public function withUser(?UserFactory $userFactory = null)
+    {
+        if (!isset($userFactory)) {
+            $userFactory = UserFactory::make()->with(
+                'Profiles',
+                ProfileFactory::make()->without('Avatars')
+            );
+        }
+
+        return $this->with('Profiles.Users', $userFactory);
+    }
+
+    /**
+     * @param string|null $fileName Name of the file where the avatar is stored. This should be a small image.
+     * @return AvatarFactory
+     */
+    public function setDataWithFileContent(?string $fileName = null)
+    {
+        $fileName = $fileName ?? FIXTURES . 'Avatar' . DS . '50_60.png';
+
+        return $this->setField('data', file_get_contents($fileName));
     }
 }

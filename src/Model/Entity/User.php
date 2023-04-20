@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Model\Entity;
 
+use Authentication\IdentityInterface;
 use Cake\ORM\Entity;
 
 /**
@@ -41,9 +42,9 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Group[] $groups
  * @property \App\Model\Entity\Permission[] $permissions
  * @property \Passbolt\Log\Model\Entity\ActionLog[] $action_logs
- * @property \Passbolt\AccountSettings\Model\Entity\AccountSetting|null $locale
+ * @property \Passbolt\AccountSettings\Model\Entity\AccountSetting|string|null $locale
  */
-class User extends Entity
+class User extends Entity implements IdentityInterface
 {
     /**
      * last_logged_in virtual field.
@@ -71,4 +72,24 @@ class User extends Entity
         // associated data
         'profile' => false,
     ];
+
+    /**
+     * Authentication\IdentityInterface method
+     *
+     * @return string|null
+     */
+    public function getIdentifier(): ?string
+    {
+        return $this->id;
+    }
+
+    /**
+     * Authentication\IdentityInterface method
+     *
+     * @return self
+     */
+    public function getOriginalData(): self
+    {
+        return $this;
+    }
 }

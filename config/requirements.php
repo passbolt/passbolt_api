@@ -34,3 +34,11 @@ if (!extension_loaded('gnupg')) {
 if (!(extension_loaded('gd') || extension_loaded('imagick'))) {
     trigger_error('You must enable the gd or imagick extensions to use Passbolt.', E_USER_ERROR);
 }
+
+if (!extension_loaded('curl')) {
+    trigger_error('You must enable the curl extensions to use Passbolt.', E_USER_ERROR);
+}
+
+if (!extension_loaded('openssl')) {
+    trigger_error('You must enable the openssl extensions to use Passbolt.', E_USER_ERROR);
+}

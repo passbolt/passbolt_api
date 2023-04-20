@@ -17,31 +17,34 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class UsersRecoverNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
+    use SelfRegistrationTestTrait;
 
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
     public function testUsersRecoverNotificationSuccess()
     {
+        $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.recover', true);
 
         // setup
-        $this->postJson('/users/recover.json', ['username' => 'ruth@passbolt.com']);
+        $username = 'ruth@passbolt.com';
+        $this->postJson('/users/recover.json', compact('username'));
         $this->assertSuccess();
-        $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('You just opened an account');
+        $this->assertEmailInBatchContains('You just opened an account', $username);
 
         // recovery
-        $this->postJson('/users/recover.json', ['username' => 'ada@passbolt.com']);
+        $username = 'ada@passbolt.com';
+        $this->postJson('/users/recover.json', compact('username'));
         $this->assertSuccess();
-        $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
-        $this->assertResponseOk();
-        $this->assertResponseContains('You have initiated an account recovery!');
+        $this->assertEmailInBatchContains('You have initiated an account recovery!', $username);
     }
 
     public function testUsersCreateNotificationDisabled()
@@ -51,9 +54,7 @@ class UsersRecoverNotificationTest extends AppIntegrationTestCase
 
         $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ruth@passbolt.com']);
         $this->assertSuccess();
-        $this->get('/seleniumtests/showLastEmail/ruth@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('ruth@passbolt.com');
     }
 
     public function testUsersRecoverNotificationDisabled()
@@ -63,8 +64,6 @@ class UsersRecoverNotificationTest extends AppIntegrationTestCase
 
         $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ada@passbolt.com']);
         $this->assertSuccess();
-        $this->get('/seleniumtests/showlastemail/ada@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailWithRecipientIsInNotQueue('ada@passbolt.com');
     }
 }

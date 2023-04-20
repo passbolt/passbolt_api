@@ -72,6 +72,9 @@ class ResourcesIndexController extends AppController
             $whitelist['contain'][] = 'tag'; // @deprecate should be tags
             $whitelist['filter'][] = 'has-tag';
         }
+        if (Configure::read('passbolt.plugins.folders')) {
+            $whitelist['filter'][] = 'has-parent';
+        }
         $options = $this->QueryString->get($whitelist);
 
         // Retrieve the resources.
@@ -102,7 +105,7 @@ class ResourcesIndexController extends AppController
                 try {
                     $this->Resources->Secrets->SecretAccesses->create($secret, $this->User->getAccessControl());
                 } catch (\Exception $e) {
-                    throw new InternalErrorException('Could not log secret access entry.');
+                    throw new InternalErrorException('Could not log secret access entry.', 500, $e);
                 }
             }
         }

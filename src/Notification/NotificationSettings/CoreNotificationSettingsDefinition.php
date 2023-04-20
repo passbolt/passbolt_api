@@ -35,25 +35,28 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
         return $schema
             ->addField('purify_subject', ['type' => 'boolean', 'default' => false])
             // show controls
-            ->addField('show_comment', ['type' => 'boolean', 'default' => true])
-            ->addField('show_description', ['type' => 'boolean', 'default' => true])
-            ->addField('show_secret', ['type' => 'boolean', 'default' => true])
-            ->addField('show_uri', ['type' => 'boolean', 'default' => true])
-            ->addField('show_username', ['type' => 'boolean', 'default' => true])
+            ->addField('show_comment', ['type' => 'boolean', 'default' => false])
+            ->addField('show_description', ['type' => 'boolean', 'default' => false])
+            ->addField('show_secret', ['type' => 'boolean', 'default' => false])
+            ->addField('show_uri', ['type' => 'boolean', 'default' => false])
+            ->addField('show_username', ['type' => 'boolean', 'default' => false])
             // send controls
             ->addField('send_admin_user_setup_completed', ['type' => 'boolean', 'default' => true])
+            ->addField('send_admin_user_recover_abort', ['type' => 'boolean', 'default' => true])
+            ->addField('send_admin_user_recover_complete', ['type' => 'boolean', 'default' => true])
             ->addField('send_comment_add', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_delete', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_user_add', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_user_delete', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_user_update', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_manager_update', ['type' => 'boolean', 'default' => true])
-            ->addField('send_password_create', ['type' => 'boolean', 'default' => true])
+            ->addField('send_password_create', ['type' => 'boolean', 'default' => false])
             ->addField('send_password_share', ['type' => 'boolean', 'default' => true])
             ->addField('send_password_update', ['type' => 'boolean', 'default' => true])
             ->addField('send_password_delete', ['type' => 'boolean', 'default' => true])
             ->addField('send_user_create', ['type' => 'boolean', 'default' => true])
-            ->addField('send_user_recover', ['type' => 'boolean', 'default' => true]);
+            ->addField('send_user_recover', ['type' => 'boolean', 'default' => true])
+            ->addField('send_user_recoverComplete', ['type' => 'boolean', 'default' => true]);
     }
 
     /**
@@ -74,6 +77,10 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
             ->boolean(
                 'send_admin_user_setup_completed',
                 __('The send on user setup completed setting should be a boolean.')
+            )
+            ->boolean(
+                'send_admin_user_recover_abort',
+                __('The send on user recover abort setting should be a boolean.')
             )
             ->boolean('send_comment_add', __('The send on comment added setting should be a boolean.'))
             ->boolean('send_group_delete', __('The send on group deleted setting should be a boolean.'))

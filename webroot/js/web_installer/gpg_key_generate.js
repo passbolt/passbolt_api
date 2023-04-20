@@ -51,11 +51,14 @@ ready(function () {
     submitButton.setAttribute('disabled', 'disabled');
     submitButton.classList.add('processing');
 
-    try{
+    try {
       const keyPair = await generateKey(nameInput.value, emailInput.value, commentInput.value);
-      privateKeyArmoredInput.setAttribute("value", keyPair.privateKeyArmored.trim());
-      publicKeyArmoredInput.setAttribute("value", keyPair.publicKeyArmored.trim());
-      fingerprintInput.setAttribute("value", keyPair.key.primaryKey.getFingerprint().toUpperCase());
+      const privateKey = keyPair.privateKey.trim();
+      const publicKey = keyPair.publicKey.trim();
+      privateKeyArmoredInput.setAttribute("value", privateKey);
+      publicKeyArmoredInput.setAttribute("value", publicKey);
+      const fingerprint = (await openpgp.readKey({armoredKey: privateKey})).getFingerprint().toUpperCase();
+      fingerprintInput.setAttribute("value", fingerprint);
       setTimeout(() => {
         form.submit(); // wait some seconds to prevent key from being "in the future"
       }, 3000);
@@ -146,18 +149,39 @@ ready(function () {
    * @param {string} name The user id name
    * @param {string} email The user id email
    * @param {string} comment The user id comment
-   * @return {openpgp.Key}
+   * @return {Promise<object>} Object containing the generated key pair
+   * @throw Error If the key cannot be generated
    */
   const generateKey = async function(name, email, comment) {
-    comment = comment != undefined && comment != '' ? ` (${comment})` : '';
-    const userId = `${name}${comment} <${email}>`;
-    const length = '2048';
+    const keyComment = comment ? ` (${comment})` : '';
+    const keyName = `${name}${keyComment}`;
 
-    return await openpgp.generateKey({
-      numBits: length,
-      userIds: userId,
-    });
+    return delegateGenerateKey(keyName, email);
   };
+
+  /**
+   * Delegate the key generation to a service worker.
+   * @param {string} name The key name
+   * @param {string} email The key email
+   * @return {Promise<object>} Object containing the generated key pair
+   * @throw Error If the key cannot be generated
+   */
+  const delegateGenerateKey = async (name, email) => {
+    const worker = new Worker('/js/web_installer/generate_key_worker.js');
+
+    return new Promise((resolve, reject) => {
+      const channel = new MessageChannel();
+      channel.port1.onmessage = (result) => {
+        if (result.data instanceof Error) {
+          reject(result.data);
+        } else {
+          resolve(result.data);
+        }
+        worker.terminate();
+      };
+      worker.postMessage({ name, email }, [channel.port2]);
+    });
+  }
 
   init();
 });

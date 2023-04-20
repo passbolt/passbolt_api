@@ -48,14 +48,14 @@ class FindResourcesUserIsOwnerTest extends AppTestCase
     public function testFindResourcesUserIsOwner_OwnsNothing_DelUserCase0()
     {
         $userId = UuidFactory::uuid('user.id.irene');
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindResourcesUserIsOwner_SoleOwnerNotSharedResource_DelUserCase1()
     {
         $userId = UuidFactory::uuid('user.id.jean');
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.mailvelope'));
     }
@@ -63,7 +63,7 @@ class FindResourcesUserIsOwnerTest extends AppTestCase
     public function testFindResourcesUserIsOwner_SoleOwnerSharedResourceWithUser_DelUserCase2()
     {
         $userId = UuidFactory::uuid('user.id.kathleen');
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.mocha'));
     }
@@ -71,19 +71,19 @@ class FindResourcesUserIsOwnerTest extends AppTestCase
     public function testFindResourcesUserIsOwner_SharedResourceWithMe_DelUserCase3()
     {
         $userId = UuidFactory::uuid('user.id.lynne');
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
     }
 
     public function testFindResourcesUserIsOwner_SoleOwnerSharedResourceWithGroup_DelUserCase4()
     {
         $userId = UuidFactory::uuid('user.id.marlyn');
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.nodejs'));
 
         // Check groups users
-        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findSharedAcosByAroIsSoleOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.nodejs'));
     }
@@ -92,12 +92,12 @@ class FindResourcesUserIsOwnerTest extends AppTestCase
     {
         $userId = UuidFactory::uuid('user.id.nancy');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
         $this->assertEquals($resources[0], UuidFactory::uuid('resource.id.openpgpjs'));
 
         // Check groups users
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
         $this->assertEquals($resources[0], $resourceOId);
     }
@@ -117,11 +117,11 @@ class FindResourcesUserIsOwnerTest extends AppTestCase
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
 
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId)->all()->extract('aco_foreign_key')->toArray();
         $this->assertEmpty($resources);
 
         // Check groups users
-        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->extract('aco_foreign_key')->toArray();
+        $resources = $this->Permissions->findAcosByAroIsOwner(PermissionsTable::RESOURCE_ACO, $userId, ['checkGroupsUsers' => true])->all()->extract('aco_foreign_key')->toArray();
         $this->assertEquals(count($resources), 1);
         $this->assertEquals($resources[0], $resourceOId);
     }

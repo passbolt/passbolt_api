@@ -19,10 +19,11 @@ namespace App\Model\Entity;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
 use Cake\ORM\Entity;
+use Psr\Http\Message\StreamInterface;
 
 /**
  * @property string $id
- * @property string|resource|null $data
+ * @property mixed $data
  * @property string $profile_id
  * @property \Cake\I18n\FrozenTime $created_at
  * @property \Cake\I18n\FrozenTime|null $updated_at
@@ -32,6 +33,15 @@ use Cake\ORM\Entity;
 class Avatar extends Entity
 {
     protected $_virtual = ['url'];
+
+    /**
+     * The avatar data never needs to be served. it is stored in cache.
+     *
+     * @var string[]
+     */
+    protected $_hidden = [
+        'data',
+    ];
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -58,10 +68,31 @@ class Avatar extends Entity
         $avatarsPath = [];
         // Add path for each available size.
         foreach ($sizes as $size => $filters) {
-            $avatarsPath[$size] = AvatarHelper::getAvatarUrl($this, $size);
+            $avatarsPath[$size] = AvatarHelper::getAvatarUrl([
+                'id' => $this->id,
+                'data' => $this->data,
+            ], $size);
         }
 
         // Transform original model to add paths.
         return $avatarsPath;
+    }
+
+    /**
+     * Get data in string format.
+     *
+     * @return string
+     */
+    public function getDataInStringFormat(): string
+    {
+        $data = $this->data ?? '';
+
+        if (is_resource($data)) {
+            $data = stream_get_contents($data);
+        } elseif ($data instanceof StreamInterface) {
+            $data = $data->getContents();
+        }
+
+        return $data;
     }
 }

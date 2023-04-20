@@ -33,7 +33,7 @@ class ValidationException extends HttpException implements
     protected $_defaultCode = 400;
 
     /**
-     * @inheritDoc
+     * @var int
      */
     protected $code = 400;
 
@@ -47,7 +47,7 @@ class ValidationException extends HttpException implements
     /**
      * The table that throw the validation exception.
      *
-     * @var \Cake\ORM\Table
+     * @var \Cake\ORM\Table|null
      */
     protected $_table = null;
 
@@ -85,7 +85,7 @@ class ValidationException extends HttpException implements
     /**
      * Get the validation errors
      *
-     * @return array
+     * @return array|null
      */
     public function getErrors(): ?array
     {

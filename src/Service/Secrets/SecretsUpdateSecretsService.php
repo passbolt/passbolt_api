@@ -73,6 +73,7 @@ class SecretsUpdateSecretsService
     {
         foreach ($data as $rowIndex => $row) {
             $userId = Hash::get($row, 'user_id', null);
+            /** @var \App\Model\Entity\Secret|null $secret */
             $secret = $this->secretsTable->findByResourceIdAndUserId($resourceId, $userId)->first();
             if ($secret) {
                 $this->updateSecret($secret, $rowIndex, $row);
@@ -135,7 +136,7 @@ class SecretsUpdateSecretsService
      * @param int $rowIndexRef The row index in the request data
      * @param string $resourceId The target resource
      * @param array $data The secrets data
-     * @return \App\Model\Entity\Secret
+     * @return \App\Model\Entity\Secret|null
      * @throws \Exception
      */
     private function addSecret(UserAccessControl $uac, int $rowIndexRef, string $resourceId, array $data)
@@ -183,7 +184,10 @@ class SecretsUpdateSecretsService
     {
         $usersIdsHavingAccess = $this->accessService->getUsersIdsHavingAccessTo($resourceId);
         sort($usersIdsHavingAccess);
-        $usersIdsHavingASecret = $this->secretsTable->findByResourceId($resourceId)->extract('user_id')->toArray();
+        $usersIdsHavingASecret = $this->secretsTable->findByResourceId($resourceId)
+            ->all()
+            ->extract('user_id')
+            ->toArray();
         sort($usersIdsHavingASecret);
 
         if ($usersIdsHavingAccess !== $usersIdsHavingASecret) {

@@ -1,8 +1,0 @@
-name: break-benchmarks
-title: Passbolt break and recover benchmarks
-maintainer: Passbolt SA
-copyright: Passbolt SA
-copyright_email: support@passbolt.com
-license: Apache-2.0
-summary: An InSpec Compliance Profile
-version: 0.1.0

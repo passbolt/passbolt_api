@@ -37,5 +37,34 @@ class Gpgkey extends Entity
      */
     protected $_accessible = [
         'id' => false,
+        'user_id' => false,
+        'armored_key' => false,
+        'bits' => false,
+        'uid' => false,
+        'key_id' => false,
+        'fingerprint' => false,
+        'type' => false,
+        'expires' => false,
+        'key_created' => false,
+        'deleted' => false,
+        'created' => false,
+        'modified' => false,
+
+        // associations
+        'user' => false,
     ];
+
+    /**
+     * Returns true if expired is set and in the past.
+     *
+     * @return bool
+     */
+    public function isExpired(): bool
+    {
+        if (!isset($this->expires)) {
+            return false;
+        }
+
+        return $this->expires->isPast();
+    }
 }

@@ -18,10 +18,13 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Service\Users\UserRegisterServiceInterface;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -33,16 +36,9 @@ class UsersRegisterController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
-        if (Configure::read('passbolt.registration.public') === true) {
-            $this->Authentication->allowUnauthenticated(['registerGet', 'registerPost']);
-        } else {
-            $msg = __('Registration is not opened to public. Please contact your administrator.');
-            throw new NotFoundException($msg);
-        }
-
-        $this->loadModel('Users');
+        $this->Authentication->allowUnauthenticated(['registerGet', 'registerPost']);
 
         return parent::beforeFilter($event);
     }
@@ -52,47 +48,65 @@ class UsersRegisterController extends AppController
      * Display a registration form
      *
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
+     * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Registration service
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to assess to availability of self registration
      * @return void
+     * @throws \Cake\Http\Exception\NotFoundException if self registration is not open
      */
-    public function registerGet()
-    {
+    public function registerGet(
+        UserRegisterServiceInterface $userRegisterService,
+        SelfRegistrationDryRunServiceInterface $dryRunService
+    ): void {
+        $this->assertIsSelfRegistrationOpen($dryRunService);
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
-            throw new ForbiddenException(__('Only guest are allowed to register.'));
+            throw new ForbiddenException(__('Only guests are allowed to register.'));
         }
 
         $this->set('title', Configure::read('passbolt.meta.description'));
-        $this->viewBuilder()
-            ->setTemplatePath('Auth')
-            ->setLayout('default')
-            ->setTemplate('triage');
+        $userRegisterService->setTemplate($this->viewBuilder());
     }
 
     /**
      * Register user action POST
      *
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
+     * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Service
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to assess to availability of self registration
      * @return void
      */
-    public function registerPost()
-    {
+    public function registerPost(
+        UserRegisterServiceInterface $userRegisterService,
+        SelfRegistrationDryRunServiceInterface $dryRunService
+    ): void {
+        $this->assertIsSelfRegistrationOpen($dryRunService);
         if (!$this->request->is('json')) {
             throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
         }
 
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
-            throw new ForbiddenException(__('Only guest are allowed to register.'));
+            throw new ForbiddenException(__('Only guests are allowed to register.'));
         }
 
-        $data = $this->request->getData();
-        $user = $this->Users->register($data);
+        // Assert that the user can self register, based on the payload and the self registration settings
+        $dryRunService->canGuestSelfRegister(['email' => $this->getRequest()->getData('username')]);
 
-        $this->dispatchEvent(static::USERS_REGISTER_EVENT_NAME, [
-            'user' => $user,
-            'data' => $this->getRequest()->getData(),
-        ]);
+        $user = $userRegisterService->register();
 
         $this->success(__('The operation was successful.'), $user);
+    }
+
+    /**
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService dry run service
+     * @return void
+     * @throws \Cake\Http\Exception\NotFoundException if the user cannot register
+     */
+    protected function assertIsSelfRegistrationOpen(SelfRegistrationDryRunServiceInterface $dryRunService): void
+    {
+        if (!$dryRunService->isSelfRegistrationOpen()) {
+            $msg = __('Registration is not opened to public. Please contact your administrator.');
+            throw new NotFoundException($msg);
+        }
     }
 }

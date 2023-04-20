@@ -22,6 +22,7 @@ use App\Service\Avatars\AvatarsCacheService;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Laminas\Diactoros\Stream;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
@@ -30,6 +31,8 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
  */
 class AvatarsCacheServiceTest extends TestCase
 {
+    use TruncateDirtyTables;
+
     /**
      * @var \App\Model\Table\AvatarsTable
      */
@@ -43,12 +46,13 @@ class AvatarsCacheServiceTest extends TestCase
     /**
      * @var string
      */
-    public $cachedFileLocation = TMP . 'tests' . DS . 'avatars' . DS;
+    public $cachedFileLocation;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
+        $this->cachedFileLocation = TMP . 'tests' . DS . 'avatars' . rand(0, 999) . DS;
         $this->Avatars->setFilesystem(new LocalFilesystemAdapter($this->cachedFileLocation));
         $this->avatarsCacheService = new AvatarsCacheService($this->Avatars);
     }
@@ -58,6 +62,7 @@ class AvatarsCacheServiceTest extends TestCase
         $this->Avatars->getFilesystem()->deleteDirectory('.');
         unset($this->Avatars);
         unset($this->avatarsCacheService);
+        unset($this->cachedFileLocation);
         parent::tearDown();
     }
 
@@ -66,36 +71,48 @@ class AvatarsCacheServiceTest extends TestCase
         return [
             [file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png')],
             [(new Stream(FIXTURES . 'Avatar' . DS . 'ada.png'))->getContents()],
+            [(new Stream(FIXTURES . 'Avatar' . DS . 'ada.png'))],
         ];
     }
 
     public function dataForTestAvatarsCacheServiceStoreFail(): array
     {
         return [
+            [null],
             ['1234'],
             [FIXTURES . 'Avatar' . DS . 'ada.png'],
-            [(new Stream(FIXTURES . 'Avatar' . DS . 'ada.png'))],
         ];
     }
 
     /**
      * @dataProvider dataForTestAvatarsCacheServiceStore
      */
-    public function testAvatarsCacheServiceStore($data)
+    public function testAvatarsCacheServiceStore12($data)
     {
-        $id = UuidFactory::uuid('foo');
+        $id = UuidFactory::uuid();
         $avatar = new Avatar(compact('id', 'data'));
+        $mediumFileName = $this->cachedFileLocation . $id . DS . 'medium.jpg';
+        $smallFileName = $this->cachedFileLocation . $id . DS . 'small.jpg';
 
         $this->avatarsCacheService->storeInCache($avatar);
 
-        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'medium.jpg');
-        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'small.jpg');
+        $this->assertFileExists($mediumFileName);
+        $this->assertFileExists($smallFileName);
 
         // Perform the action twice to ensure that no overwriting issues occur
         $this->avatarsCacheService->storeInCache($avatar);
 
-        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'medium.jpg');
-        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'small.jpg');
+        $this->assertFileExists($mediumFileName);
+        $this->assertFileExists($smallFileName);
+
+        // Ensure that both files are not executable
+        $getRights = function (string $filepath) {
+            return substr(decoct(fileperms($filepath)), -4);
+        };
+
+        // Cater for Ubuntu / Debian default umask variations
+        $this->assertTrue($getRights($mediumFileName) === '0644' || $getRights($mediumFileName) === '0664');
+        $this->assertTrue($getRights($smallFileName) === '0644' || $getRights($smallFileName) === '0664');
 
         $this->assertSame(
             file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png'),
@@ -108,12 +125,32 @@ class AvatarsCacheServiceTest extends TestCase
      */
     public function testAvatarsCacheServiceStoreFail($data)
     {
-        $id = UuidFactory::uuid('foo');
+        $id = UuidFactory::uuid();
         $avatar = new Avatar(compact('id', 'data'));
 
         $this->avatarsCacheService->storeInCache($avatar);
 
         $this->assertFileDoesNotExist($this->cachedFileLocation . $id . DS . 'medium.jpg');
         $this->assertFileDoesNotExist($this->cachedFileLocation . $id . DS . 'small.jpg');
+    }
+
+    public function testAvatarsCacheServiceStore_Fail_After_File_Deleted()
+    {
+        $data = file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png');
+        $id = UuidFactory::uuid();
+        $avatar = new Avatar(compact('id', 'data'));
+
+        $this->avatarsCacheService->storeInCache($avatar);
+
+        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'medium.jpg');
+        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'small.jpg');
+
+        unlink($this->cachedFileLocation . $id . DS . 'medium.jpg');
+        unlink($this->cachedFileLocation . $id . DS . 'small.jpg');
+
+        $this->avatarsCacheService->storeInCache($avatar);
+
+        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'medium.jpg');
+        $this->assertFileExists($this->cachedFileLocation . $id . DS . 'small.jpg');
     }
 }

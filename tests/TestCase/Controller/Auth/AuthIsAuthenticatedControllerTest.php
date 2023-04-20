@@ -16,25 +16,52 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Model\Entity\User;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
 {
     public function testIsAuthenticatedNotLoggedIn()
     {
-        $this->get('/auth/is-authenticated.json');
+        $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseError();
-        $response = json_decode($this->_getBodyAsString());
-        $this->assertTextContains('error', $response->header->status);
-        $this->assertTextContains('Authentication is required to continue', $response->header->message);
+        $this->assertTextContains('error', $this->_responseJsonHeader->status);
+        $this->assertTextContains('Authentication is required to continue', $this->_responseJsonHeader->message);
     }
 
+    /**
+     * Happy path
+     * Check that the action is not logged
+     */
     public function testIsAuthenticatedLoggedIn()
     {
-        $this->authenticateAs('ada');
-        $this->get('/auth/is-authenticated.json');
+        $isLogEnabled = $this->isFeaturePluginEnabled('Log');
+        $this->enableFeaturePlugin('Log');
+
+        $this->logInAsUser();
+        $this->getJson('/auth/is-authenticated.json');
         $this->assertResponseOk();
-        $response = json_decode($this->_getBodyAsString());
-        $this->assertTextContains('success', $response->header->status);
+        $this->assertInstanceOf(User::class, $this->getSession()->read('Auth.user'));
+        $this->assertTextContains('success', $this->_responseJsonHeader->status);
+
+        $this->assertSame(0, ActionLogFactory::count());
+        if (!$isLogEnabled) {
+            $this->disableFeaturePlugin('Log');
+        }
+    }
+
+    /**
+     * @covers \App\Middleware\SessionAuthPreventDeletedUsersMiddleware::process
+     */
+    public function testIsAuthenticatedSoftDeletedLoggedUserShouldBeForbiddenToRequestTheApi()
+    {
+        $user = UserFactory::make()->user()->deleted()->persist();
+
+        $this->loginAs($user);
+        $this->getJson('/auth/is-authenticated.json');
+        $this->assertEmpty($this->getSession()->read());
+        $this->assertAuthenticationError();
     }
 }

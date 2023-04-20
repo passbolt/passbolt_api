@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use App\Model\Validation\EmailValidationRule;
+use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 
@@ -30,8 +32,19 @@ use Cake\Validation\Validation;
  */
 class UserAccessControl
 {
+    /**
+     * @var string|null
+     */
     private $userId;
+
+    /**
+     * @var string
+     */
     private $roleName;
+
+    /**
+     * @var string|null
+     */
     private $username;
 
     /**
@@ -43,13 +56,10 @@ class UserAccessControl
      */
     public function __construct(string $roleName, ?string $userId = null, ?string $username = null)
     {
-        if (!is_string($roleName)) {
-            throw new InternalErrorException('Invalid UserControl role name.');
-        }
         if (isset($userId) && !Validation::uuid($userId)) {
             throw new InternalErrorException('Invalid UserControl user id.');
         }
-        if (isset($username) && !Validation::email($username)) {
+        if (isset($username) && !EmailValidationRule::check($username)) {
             throw new InternalErrorException('Invalid UserControl username.');
         }
         $this->userId = $userId;
@@ -60,9 +70,9 @@ class UserAccessControl
     /**
      * Get the user id
      *
-     * @return string
+     * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->userId;
     }
@@ -72,7 +82,7 @@ class UserAccessControl
      *
      * @return string
      */
-    public function roleName()
+    public function roleName(): string
     {
         return $this->roleName;
     }
@@ -80,7 +90,7 @@ class UserAccessControl
     /**
      * @return null|string
      */
-    public function getUsername()
+    public function getUsername(): ?string
     {
         return $this->username;
     }
@@ -90,9 +100,19 @@ class UserAccessControl
      *
      * @return bool
      */
-    public function isAdmin()
+    public function isAdmin(): bool
     {
         return $this->roleName() === Role::ADMIN;
+    }
+
+    /**
+     * Check if the user is a guest
+     *
+     * @return bool
+     */
+    public function isGuest(): bool
+    {
+        return $this->roleName() === Role::GUEST;
     }
 
     /**
@@ -101,7 +121,7 @@ class UserAccessControl
      * @param string $userId the user uuid
      * @return bool
      */
-    public function is(string $userId)
+    public function is(string $userId): bool
     {
         return $this->getId() === $userId;
     }
@@ -111,11 +131,24 @@ class UserAccessControl
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'userId' => $this->userId,
             'rolename' => $this->roleName,
         ];
+    }
+
+    /**
+     * Allow admins only.
+     *
+     * @throws \Cake\Http\Exception\ForbiddenException
+     * @return void
+     */
+    public function assertIsAdmin(): void
+    {
+        if (!$this->isAdmin()) {
+            throw new ForbiddenException(__('Access restricted to administrators.'));
+        }
     }
 }

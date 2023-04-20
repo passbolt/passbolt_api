@@ -16,15 +16,16 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Test\Lib\AppTestCase;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\MissingDatasourceConfigException;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
-class DropTablesCommandTest extends TestCase
+class DropTablesCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method
@@ -57,13 +58,11 @@ class DropTablesCommandTest extends TestCase
         $this->assertExitSuccess();
 
         // Assert that all tables were dropped.
-        $tables = ConnectionManager::get('test')->execute('show tables')->fetchAll();
+        $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
         $this->assertEmpty($tables);
 
         // Run migrations to recreate the lost tables.
         $this->exec('migrations migrate -c test -q --no-lock');
-        SnifferRegistry::get('test')->restart();
-        SnifferRegistry::get('test')->markAllTablesAsDirty();
     }
 
     /**

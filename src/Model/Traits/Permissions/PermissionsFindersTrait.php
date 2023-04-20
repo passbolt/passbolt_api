@@ -98,25 +98,23 @@ trait PermissionsFindersTrait
     public function findAllByAro(string $acoType, string $aroForeignKey, ?array $options = []): Query
     {
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
+        $aroForeignKeys = [$aroForeignKey];
 
-        $query = $this->find()
-            ->where(['aco' => $acoType]);
-
-        if (!$checkGroupsUsers) {
-            $query->where(['Permissions.aro_foreign_key' => $aroForeignKey]);
-        } else {
-            // Subquery retrieving the groups ids the given aro is member of.
-            $groupsIdsSubQuery = $this->Groups->GroupsUsers->findByUserId($aroForeignKey)->select('group_id');
-            // All the permissions defined for the given aro or the groups the aro is member of.
-            $query->where([
-                'OR' => [
-                    ['Permissions.aro_foreign_key' => $aroForeignKey],
-                    ['Permissions.aro_foreign_key IN' => $groupsIdsSubQuery],
-                ],
-            ]);
+        // Retrieve also the permissions for the groups a user is member of.
+        if ($checkGroupsUsers) {
+            // For performance reasons, the groups a user is member of are retrieved in a seprate query.
+            $groupsIds = $this->Groups->GroupsUsers->findByUserId($aroForeignKey)
+                ->disableHydration()
+                ->all()
+                ->extract('group_id')->toArray();
+            $aroForeignKeys = array_merge($aroForeignKeys, $groupsIds);
         }
 
-        return $query;
+        return $this->find()
+            ->where([
+                'aco' => $acoType,
+                'Permissions.aro_foreign_key IN' => $aroForeignKeys,
+            ]);
     }
 
     /**
@@ -160,6 +158,7 @@ trait PermissionsFindersTrait
 
             // (USER_AND_SOLE_MANAGER_GROUPS)
             $groupsSoleManager = $this->Groups->GroupsUsers->findGroupsWhereUserIsSoleManager($aro)
+                ->all()
                 ->extract('group_id')->toArray();
             // (R = ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_GROUPS)
             $aros = [$aro];
@@ -168,7 +167,9 @@ trait PermissionsFindersTrait
 
             // (USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
             $nonEmptyGroupsSoleManager = $this->Groups->GroupsUsers->findNonEmptyGroupsWhereUserIsSoleManager($aro)
-                ->extract('group_id')->toArray();
+                ->all()
+                ->extract('group_id')
+                ->toArray();
             if (!empty($nonEmptyGroupsSoleManager)) {
                 // (ACOS_ONLY_OWNED_BY_USER_AND_SOLE_MANAGER_NON_EMPTY_GROUPS)
                 $acosOnlyOwnedByUsersAndSoleManagerOfNonEmptyGroups = $this->find()
@@ -299,6 +300,7 @@ trait PermissionsFindersTrait
         $aros = [$aro];
         if ($checkGroupsUsers) {
             $groups = $this->Groups->GroupsUsers->findGroupsWhereUserOnlyMember($aro)
+                ->all()
                 ->extract('group_id')->toArray();
             $aros = array_merge($aros, $groups);
         }
@@ -327,6 +329,37 @@ trait PermissionsFindersTrait
             ])
             // ACOS_ACCESSIBLE_BY_USERS_AND_GROUPS - ACOS_ACCESSIBLE_BY_OTHER_USERS_AND_GROUPS
             ->where(['aco_foreign_key NOT IN' => $acosAccessibleByOtherUsersAndGroups]);
+    }
+
+    /**
+     * Find access differences between a group and user.
+     * Return only the accesses that are found in the group accesses but not in the user accesses, such as array_diff
+     * will do.
+     *
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $groupId The group identifier.
+     * @param string $userId The user identifier.
+     * @return \Cake\ORM\Query
+     */
+    public function findAcosAccessesDiffBetweenGroupAndUser(string $acoType, string $groupId, string $userId): Query
+    {
+        // R = All the resources or folders that are only accessible by a group and not accessible by a user
+
+        // Details:
+        // ACOS_GROUP_ACCESS, is the set of ACOS that a group can access
+        // ACOS_USER_ACCESS, is the set of ACOS that a user can access
+        // R = ACOS_GROUP_ACCESS - ACOS_USER_ACCESS
+
+        // ACOS_USER_ACCESS
+        $remainAccessAcoForeignKeysQuery = $this->findAllByAro($acoType, $userId, ['checkGroupsUsers' => true])
+            ->select('aco_foreign_key');
+
+        // R = ACOS_GROUP_ACCESS - ACOS_USER_ACCESS
+        return $this->findAllByAro($acoType, $groupId)
+            ->select('aco_foreign_key')
+            ->where([
+                'aco_foreign_key NOT IN' => $remainAccessAcoForeignKeysQuery,
+            ]);
     }
 
     /**

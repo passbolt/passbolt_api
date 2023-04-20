@@ -34,6 +34,7 @@ class AvatarProcessingTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         DirectoryUtility::removeRecursively($this->testDirectory);
         mkdir($this->testDirectory);
     }
@@ -42,6 +43,8 @@ class AvatarProcessingTest extends TestCase
     {
         return [
             ['ada.png'],
+            ['ada.jpg'],
+            ['ada.gif'],
             ['50_80.png'],
             ['50_60.png'],
             ['100_50.gif'],

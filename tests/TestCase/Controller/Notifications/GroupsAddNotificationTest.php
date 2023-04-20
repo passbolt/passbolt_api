@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Notifications;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupsAddNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
+    use EmailQueueTrait;
 
     public $Groups;
 
@@ -47,12 +49,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
-        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailQueueIsEmpty();
     }
 
     public function testGroupsUsersAddNotificationSuccess()
@@ -71,17 +68,10 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->get('/seleniumtests/showLastEmail/ada@passbolt.com');
-        $this->assertResponseCode(200);
-        $this->assertResponseContains('added you to the group Temp Group');
-        $this->assertResponseContains('And as group manager you');
-        $this->get('/seleniumtests/showLastEmail/betty@passbolt.com');
-        $this->assertResponseNotContains('And as group manager you');
-        $this->assertResponseCode(200);
-
-        // emails are not send if you add yourself to a group
-        $this->get('/seleniumtests/showLastEmail/admin@passbolt.com');
-        $this->assertResponseCode(500);
-        $this->assertResponseContains('No email was sent to this user.');
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains('Admin added you to the group Temp Group', 'ada@passbolt.com');
+        $this->assertEmailInBatchContains('And as group manager you', 'ada@passbolt.com');
+        $this->assertEmailInBatchContains('Admin added you to the group Temp Group', 'betty@passbolt.com');
+        $this->assertEmailInBatchNotContains('And as group manager you', 'betty@passbolt.com');
     }
 }

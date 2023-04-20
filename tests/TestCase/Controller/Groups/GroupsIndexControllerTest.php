@@ -28,8 +28,14 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Groups',
-        'app.Base/GroupsUsers', 'app.Base/Permissions'];
+    public $fixtures = [
+        'app.Base/Users',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/Permissions',
+    ];
 
     public function testGroupsIndexSuccess()
     {

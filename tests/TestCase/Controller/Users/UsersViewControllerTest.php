@@ -36,7 +36,11 @@ class UsersViewControllerTest extends AppIntegrationTestCase
 
     public function testUsersViewGetSuccess()
     {
-        $user = UserFactory::make()->user()->with('Profiles.Avatars')->persist();
+        $user = UserFactory::make()->user()
+            ->with('Profiles.Avatars')
+            ->with('Gpgkeys')
+            ->with('GroupsUsers')
+            ->persist();
         $this->logInAs($user);
 
         $this->getJson('/users/' . $user->id . '.json?api-version=2');

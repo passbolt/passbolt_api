@@ -22,7 +22,6 @@ use App\Model\Rule\IsActiveRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Permissions\PermissionsFindersTrait;
-use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -50,9 +49,10 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, string $type)
+ * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, int $type)
  * @method \Cake\ORM\Query findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
  * @method \Cake\ORM\Query findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
+ * @method \Cake\ORM\Query findByAcoForeignKeyAndAroForeignKey(string $acoForeignKey, string $aroForeignKey)
  */
 class PermissionsTable extends Table
 {
@@ -110,12 +110,6 @@ class PermissionsTable extends Table
         $this->belongsTo('Resources', [
             'foreignKey' => 'aco_foreign_key',
         ]);
-
-        if (Configure::read('passbolt.plugins.folders.enabled')) {
-            $this->belongsTo('Folders', [
-                'foreignKey' => 'aco_foreign_key',
-            ]);
-        }
 
         $this->belongsTo('Users', [
             'foreignKey' => 'aro_foreign_key',
@@ -205,7 +199,7 @@ class PermissionsTable extends Table
      */
     public function isValidPermissionType(int $value)
     {
-        return is_int($value) && in_array($value, self::ALLOWED_TYPES);
+        return in_array($value, self::ALLOWED_TYPES);
     }
 
     /**
@@ -458,5 +452,18 @@ class PermissionsTable extends Table
     public function cleanupSoftDeletedResources(bool $dryRun = false): int
     {
         return $this->cleanupSoftDeletedAco('Resources', $dryRun);
+    }
+
+    /**
+     * Delete duplicated permissions
+     *
+     * @param bool $dryRun false
+     * @return int of affected records
+     */
+    public function cleanupDuplicatedPermissions(?bool $dryRun = false): int
+    {
+        $keys = ['aco', 'aco_foreign_key', 'aro', 'aro_foreign_key', 'type'];
+
+        return $this->cleanupDuplicates($keys, $dryRun);
     }
 }

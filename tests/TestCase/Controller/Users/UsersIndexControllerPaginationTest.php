@@ -17,9 +17,11 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Test\Factory\ProfileFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PaginationTestTrait;
+use Cake\Utility\Hash;
 
 class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
 {
@@ -83,12 +85,20 @@ class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
         $page = 2;
         $expectedCurrent = 9;
 
-        $admin = UserFactory::make()->admin()->withLogIn(3)->persist();
-        UserFactory::make($numberOfUsers - 1)
-            ->user()
+        $admin = UserFactory::make()
+            ->admin()
             ->with('Profiles')
             ->withLogIn(3)
             ->persist();
+
+        $data = Hash::merge(
+            $this->getArrayOfDistinctRandomStrings($numberOfUsers - 1, 'first_name'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfUsers - 1, 'created')
+        );
+        ProfileFactory::make($data)
+            ->with('Users', UserFactory::make()->user()->without('Profiles')->withLogIn(3))
+            ->persist();
+
         UserFactory::make(2)->guest()->persist();
 
         $this->logInAs($admin);

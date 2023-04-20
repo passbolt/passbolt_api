@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller\Component;
 
 use App\Model\Entity\Role;
+use App\Utility\ExtendedUserAccessControl;
 use App\Utility\UserAccessControl;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
@@ -36,7 +37,7 @@ class UserComponent extends Component
     /**
      * User agent cache to avoid parsing multiple times per request
      *
-     * @var null
+     * @var array|null
      */
     protected $_userAgent = null;
 
@@ -61,11 +62,27 @@ class UserComponent extends Component
     }
 
     /**
+     * @return string client ip
+     */
+    public function ip(): string
+    {
+        return $this->getController()->getRequest()->clientIp();
+    }
+
+    /**
+     * @return string user agent
+     */
+    public function userAgent(): string
+    {
+        return $this->getController()->getRequest()->getEnv('HTTP_USER_AGENT') ?? 'undefined';
+    }
+
+    /**
      * Return the current user role or GUEST if the user is not identified
      *
-     * @return string
+     * @return string|null
      */
-    public function role(): string
+    public function role(): ?string
     {
         return $this->getAuthenticatedUserProperty('role.name', Role::GUEST);
     }
@@ -81,11 +98,35 @@ class UserComponent extends Component
     }
 
     /**
+     * Return true if the current user is a guest
+     *
+     * @return bool
+     */
+    public function isGuest(): bool
+    {
+        return $this->role() == Role::GUEST;
+    }
+
+    /**
      * @return \App\Utility\UserAccessControl
      */
-    public function getAccessControl()
+    public function getAccessControl(): UserAccessControl
     {
         return new UserAccessControl($this->role(), $this->id(), $this->username());
+    }
+
+    /**
+     * @return \App\Utility\ExtendedUserAccessControl
+     */
+    public function getExtendAccessControl(): ExtendedUserAccessControl
+    {
+        return new ExtendedUserAccessControl(
+            $this->role(),
+            $this->id(),
+            $this->username(),
+            $this->ip(),
+            $this->userAgent()
+        );
     }
 
     /**
@@ -99,7 +140,14 @@ class UserComponent extends Component
     {
         try {
             // Get the user delivered by the authentication result.
-            $user = $this->Authentication->getResult()->getData() ?? [];
+            $data = $this->Authentication->getResult()->getData() ?? null;
+            if (!isset($data)) {
+                $user = [];
+            } elseif (!isset($data['user'])) {
+                $user = $data;
+            } else {
+                $user = $data['user'];
+            }
         } catch (Exception $e) {
             $user = [];
         } finally {
@@ -118,6 +166,7 @@ class UserComponent extends Component
         if (!isset($this->_userAgent)) {
             // Parse the user agent string.
             try {
+                /** @var string|null $agent */
                 $agent = env('HTTP_USER_AGENT');
                 if ($agent === null) {
                     throw new Exception(__('undefined user agent'));
@@ -139,23 +188,20 @@ class UserComponent extends Component
     /**
      * Get the user theme
      *
-     * @return string
+     * @return string|null
      */
     public function theme()
     {
-        $defaultTheme = 'default';
         if (Configure::read('passbolt.plugins.accountSettings')) {
             /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
             $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
             $theme = $AccountSettings->getTheme($this->id());
-            if (!$theme) {
-                $theme = $defaultTheme;
+            if ($theme) {
+                return $theme;
             }
-
-            return $theme;
         }
 
-        return $defaultTheme;
+        return null;
     }
 
     /**
@@ -168,6 +214,30 @@ class UserComponent extends Component
     {
         if (!$this->isAdmin()) {
             throw new ForbiddenException(__('Access restricted to administrators.'));
+        }
+    }
+
+    /**
+     * Allow guests only.
+     *
+     * @throws \Cake\Http\Exception\ForbiddenException
+     * @return void
+     */
+    public function assertIsGuest(): void
+    {
+        if (!$this->isGuest()) {
+            throw new ForbiddenException(__('Access restricted to unauthenticated users.'));
+        }
+    }
+
+    /**
+     * @throws \Cake\Http\Exception\BadRequestException if user is not guest
+     * @return void
+     */
+    public function assertNotLoggedIn(): void
+    {
+        if ($this->role() !== Role::GUEST) {
+            throw new ForbiddenException(__('The user should not be logged in.'));
         }
     }
 }

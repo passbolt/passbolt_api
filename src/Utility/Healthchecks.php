@@ -17,23 +17,32 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use App\Model\Validation\EmailValidationRule;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks\DatabaseHealthchecks;
 use App\Utility\Healthchecks\GpgHealthchecks;
 use App\Utility\Healthchecks\SslHealthchecks;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
+use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsHealthcheckService;
 
 class Healthchecks
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * Run all healthchecks
      *
      * @return array
      */
-    public static function all()
+    public static function all(): array
     {
         $checks = [];
         $checks = Healthchecks::environment($checks);
@@ -43,6 +52,7 @@ class Healthchecks
         $checks = Healthchecks::database('default', $checks);
         $checks = Healthchecks::gpg($checks);
         $checks = Healthchecks::application($checks);
+        $checks = Healthchecks::smtpSettings($checks);
 
         return $checks;
     }
@@ -54,7 +64,7 @@ class Healthchecks
      * - info.remoteVersion
      * - sslForce: enforcing the use of SSL
      * - seleniumDisabled: true if selenium API is disabled
-     * - registrationClosed: true if registration is not open
+     * - registrationClosed: info on the self registration
      * - jsProd: true if using minified/concatenated javascript
      *
      * @param array|null $checks List of checks
@@ -74,7 +84,7 @@ class Healthchecks
             $checks['application']['schema'] = !Migration::needMigration();
         } catch (\Exception $e) {
             // Cannot connect to the database
-            $checks['application']['schema'] = null;
+            $checks['application']['schema'] = false;
         }
         $robots = strpos(Configure::read('passbolt.meta.robots'), 'noindex');
         $checks['application']['robotsIndexDisabled'] = ($robots !== false);
@@ -82,7 +92,8 @@ class Healthchecks
         $https = strpos(Configure::read('App.fullBaseUrl'), 'https') === 0;
         $checks['application']['sslFullBaseUrl'] = ($https !== false);
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
-        $checks['application']['registrationClosed'] = !Configure::read('passbolt.registration.public');
+        $checks['application']['registrationClosed'] = (new SelfRegistrationHealthcheckService())->getHealthcheck();
+        $checks['application']['hostAvailabilityCheckEnabled'] = Configure::read(EmailValidationRule::MX_CHECK_KEY);
         $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
         $sendEmailJson = json_encode(Configure::read('passbolt.email.send'));
         $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', $sendEmailJson) === 1);
@@ -117,7 +128,7 @@ class Healthchecks
                 ->count();
 
             $checks['application']['adminCount'] = ($i > 0);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
         }
 
         return $checks;
@@ -180,7 +191,7 @@ class Healthchecks
                     $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');
                 }
             }
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
         }
 
         return $checks;
@@ -214,15 +225,39 @@ class Healthchecks
      */
     public static function environment(?array $checks = []): array
     {
-        $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.0', '>=');
+        $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.4', '>=');
         $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
         $checks['environment']['gnupg'] = extension_loaded('gnupg');
         $checks['environment']['intl'] = extension_loaded('intl');
         $checks['environment']['image'] = (extension_loaded('gd') || extension_loaded('imagick'));
         $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);
-        $checks['environment']['imgPublicWritable'] = self::_checkRecursiveDirectoryWritable(IMAGES . 'public/');
         $checks['environment']['logWritable'] = is_writable(LOGS);
+        //$checks['environment']['allow_url_fopen'] = ini_get('allow_url_fopen') === '1';
+
+        return $checks;
+    }
+
+    /**
+     * Returns JWT related checks:
+     *  - is the JWT Authentication enabled
+     *  - if true, are the JWT key files correctly set and valid.
+     *
+     * @param array|null $checks List of checks
+     * @return array
+     */
+    public static function jwt(?array $checks = []): array
+    {
+        try {
+            (new JwtKeyPairService())->validateKeyPair();
+            $keyPairIsValid = true;
+        } catch (\Throwable $e) {
+            $keyPairIsValid = false;
+        }
+
+        $checks['jwt']['isEnabled'] = (Configure::read('passbolt.plugins.jwtAuthentication.enabled') === true);
+        $checks['jwt']['keyPairValid'] = $keyPairIsValid;
+        $checks['jwt']['jwtWritable'] = is_writable(JwtAbstractService::JWT_CONFIG_DIR);
 
         return $checks;
     }
@@ -253,6 +288,28 @@ class Healthchecks
     }
 
     /**
+     * SmtpSettings check
+     * - PASS: SMTP settings are set in the DB and decryptable
+     * - WARN: SMTP settings are not set in the DB
+     * - FAIL: SMTP settings are set in the DB and not decryptable
+     *
+     * @param array|null $checks List of checks
+     * @return array
+     */
+    public static function smtpSettings(?array $checks = []): array
+    {
+        // Since the plugin might be removed from various passbolt solutions, we check
+        // the availability of the plugin before calling classes of the plugin
+        if (!(new self())->isFeaturePluginEnabled('SmtpSettings')) {
+            $checks['smtpSettings']['isEnabled'] = false;
+
+            return $checks;
+        }
+
+        return (new SmtpSettingsHealthcheckService())->check($checks);
+    }
+
+    /**
      * Check that a directory and its content are writable
      *
      * @param string $path the directory path
@@ -260,6 +317,9 @@ class Healthchecks
      */
     private static function _checkRecursiveDirectoryWritable(string $path): bool
     {
+        clearstatcache();
+
+        /** @var \SplFileInfo[] $iterator */
         $iterator = new \RecursiveIteratorIterator(
             new \RecursiveDirectoryIterator($path),
             \RecursiveIteratorIterator::SELF_FIRST
@@ -268,7 +328,11 @@ class Healthchecks
             if (in_array($fileInfo->getFilename(), ['.', '..', 'empty'])) {
                 continue;
             }
-            if (!is_writable($name)) {
+            // No file should be executable in tmp
+            if ($fileInfo->isFile() && DirectoryUtility::isExecutable($name)) {
+                return false;
+            }
+            if (!$fileInfo->isWritable()) {
                 return false;
             }
         }

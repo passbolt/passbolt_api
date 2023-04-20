@@ -16,17 +16,19 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
+use App\Test\Lib\AppTestCase;
 use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\TestCase;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**
  * App\Command\PassboltCommand Test Case
  *
  * @uses \App\Command\PassboltCommand
  */
-class PassboltCommandTest extends TestCase
+class PassboltCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use TruncateDirtyTables;
 
     /**
      * setUp method

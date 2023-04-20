@@ -37,7 +37,6 @@ class FindIndexTest extends AppTestCase
      * @var ResourcesTable
      */
     public $Resources;
-    public $autoFixtures = false;
     public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions'];
 
     public function setUp(): void
@@ -49,7 +48,6 @@ class FindIndexTest extends AppTestCase
 
     public function testSuccess()
     {
-        $this->loadFixtures();
         $userId = UuidFactory::uuid('user.id.ada');
         $resources = $this->Resources->findIndex($userId)->all();
         $this->assertGreaterThan(1, count($resources));
@@ -66,12 +64,20 @@ class FindIndexTest extends AppTestCase
 
     public function testExcludeSoftDeletedResources()
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $user = UserFactory::make()->persist();
+        $factory = ResourceFactory::make()->withCreatorAndPermission($user);
+
+        $notDeletedResource = $factory->persist();
+        $factory->setField('deleted', true)->persist();
+
+        $resources = $this->Resources->findIndex($user->id);
+
+        $this->assertSame(1, $resources->count());
+        $this->assertSame($notDeletedResource->id, $resources->firstOrFail()->id);
     }
 
     public function testContainSecrets()
     {
-        $this->loadFixtures();
         $userId = UuidFactory::uuid('user.id.ada');
         $options['contain']['secret'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
@@ -86,7 +92,6 @@ class FindIndexTest extends AppTestCase
 
     public function testContainCreator()
     {
-        $this->loadFixtures();
         $userId = UuidFactory::uuid('user.id.ada');
         $options['contain']['creator'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
@@ -100,7 +105,6 @@ class FindIndexTest extends AppTestCase
 
     public function testContainModifier()
     {
-        $this->loadFixtures();
         $userId = UuidFactory::uuid('user.id.ada');
         $options['contain']['modifier'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
@@ -133,7 +137,6 @@ class FindIndexTest extends AppTestCase
 
     public function testContainPermission()
     {
-        $this->loadFixtures();
         $findIndexOptions['contain']['permission'] = true;
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
@@ -158,7 +161,6 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterIsFavorite()
     {
-        $this->loadFixtures();
         $userId = UuidFactory::uuid('user.id.dame');
         $options['filter']['is-favorite'] = true;
         $resources = $this->Resources->findIndex($userId, $options)->all();
@@ -175,7 +177,6 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterIsNotFavorite()
     {
-        $this->loadFixtures();
         $userId = UuidFactory::uuid('user.id.dame');
         $options['filter']['is-favorite'] = false;
         $resources = $this->Resources->findIndex($userId, $options)->all();
@@ -192,7 +193,6 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterIsSharedWithGroup()
     {
-        $this->loadFixtures();
         $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions('group');
         $userId = UuidFactory::uuid('user.id.jean');
         $groupFId = UuidFactory::uuid('group.id.freelancer');
@@ -200,6 +200,7 @@ class FindIndexTest extends AppTestCase
         // Filter resources which are shared with the target group;
         $options['filter']['is-shared-with-group'] = $groupFId;
         $resourcesIds = $this->Resources->findIndex($userId, $options)
+            ->all()
             ->extract('id')
             ->toArray();
         sort($resourcesIds);
@@ -219,13 +220,13 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterIsOwnedByMe()
     {
-        $this->loadFixtures();
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         $userId = UuidFactory::uuid('user.id.ada');
 
         // Filter resources which are shared with the target group;
         $options['filter']['is-owned-by-me'] = 1;
         $resourcesIds = $this->Resources->findIndex($userId, $options)
+            ->all()
             ->extract('id')
             ->toArray();
         sort($resourcesIds);
@@ -244,13 +245,13 @@ class FindIndexTest extends AppTestCase
 
     public function testFilterIsSharedWithMe()
     {
-        $this->loadFixtures();
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         $userId = UuidFactory::uuid('user.id.ada');
 
         // Filter resources which are shared with the target group;
         $options['filter']['is-shared-with-me'] = 1;
         $resourcesIds = $this->Resources->findIndex($userId, $options)
+            ->all()
             ->extract('id')
             ->toArray();
         sort($resourcesIds);
@@ -269,7 +270,6 @@ class FindIndexTest extends AppTestCase
 
     public function testPermissions()
     {
-        $this->loadFixtures();
         $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
         foreach ($permissionsMatrix as $userAlias => $usersExpectedPermissions) {
             $expectedResourcesIds = array_reduce(array_keys($usersExpectedPermissions), function ($result, $key) use ($usersExpectedPermissions) {
@@ -297,7 +297,6 @@ class FindIndexTest extends AppTestCase
 
     public function testErrorInvalidUserIdParameter()
     {
-        $this->loadFixtures();
         try {
             $this->Resources->findIndex('not-valid');
         } catch (\InvalidArgumentException $e) {

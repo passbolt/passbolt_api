@@ -105,6 +105,7 @@ module.exports = function(grunt) {
             'controls/check_white.svg',
             'controls/chevron-down_black.svg',
             'controls/chevron-down_white.svg',
+            'controls/chevron-down_blue.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',
@@ -112,32 +113,73 @@ module.exports = function(grunt) {
             'controls/loading_light.svg',
             'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
+            'controls/success.svg',
+            'controls/fail.svg',
+            'controls/warning.svg',
+            'controls/attention.svg',
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/FirefoxAMO_black.svg',
             'third_party/FirefoxAMO_white.svg',
-            'third_party/ChromeWebStore_black.png',
-            'third_party/ChromeWebStore_white.png',
+            'third_party/ChromeWebStore_black.svg',
+            'third_party/ChromeWebStore_white.svg',
+            'third_party/edge-addon-black.svg',
+            'third_party/edge-addon-white.svg',
             'third_party/chosen-sprite.png',
             'third_party/chosen-sprite@2x.png',
+            'third_party/firefox.svg',
+            'third_party/chrome.svg',
+            'third_party/edge.svg',
+            'third_party/brave.svg',
+            'third_party/vivaldi.svg',
+
+            // Smtp provider 3rd party logo
+            'third_party/aws-ses.svg',
+            'third_party/azure.svg',
+            'third_party/elastic-email.svg',
+            'third_party/gmail.svg',
+            'third_party/mailgun.svg',
+            'third_party/mailjet.svg',
+            'third_party/mandrill.svg',
+            'third_party/sendgrid.svg',
+            'third_party/sendinblue.svg',
+            'third_party/zoho.svg',
+
             // Setup
             'illustrations/email.png',
             // Themes preview
             'themes/*.png',
+            // Totp images
+            'diagrams/totp.svg',
+            'third_party/duo.svg',
+            'third_party/google-authenticator.svg',
+            'third_party/yubikey.svg',
           ],
           dest: paths.webroot + 'img',
           expand: true
         }, {
           // CSS
           cwd: paths.node_modules_styleguide + 'build/css/themes/default',
-          src: ['api_main.min.css', 'api_webinstaller.min.css', 'api_authentication.min.css'],
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
           dest: paths.webroot + 'css/themes/default',
           expand: true
         }, {
           // Midgar css theme
           cwd: paths.node_modules_styleguide + 'build/css/themes/midgar',
-          src: ['api_main.min.css'],
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
           dest: paths.webroot + 'css/themes/midgar',
+          expand: true
+        }, {
+          // Solarized light css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/solarized_light',
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
+          dest: paths.webroot + 'css/themes/solarized_light',
+          expand: true
+        }, {
+          // Solarized dark css theme
+          cwd: paths.node_modules_styleguide + 'build/css/themes/solarized_dark',
+          src: ['api_main.min.css', 'api_authentication.min.css', 'ext_authentication.min.css'],
+          dest: paths.webroot + 'css/themes/solarized_dark',
           expand: true
         },{
           // Translation files
@@ -148,7 +190,7 @@ module.exports = function(grunt) {
         }, {
           // Javascript applications
           cwd: paths.node_modules_styleguide + 'build/js/dist',
-          src: ['api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js'],
+          src: ['api-account-recovery.js', 'api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js', 'api-feedback.js'],
           dest: paths.js + 'app',
           expand: true
         },]
@@ -170,5 +212,5 @@ module.exports = function(grunt) {
         tasks: ['styleguide-update']
       }
     }
-   });
+  });
 };

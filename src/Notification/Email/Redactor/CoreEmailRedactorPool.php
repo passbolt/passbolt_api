@@ -25,29 +25,21 @@ use App\Notification\Email\Redactor\Group\GroupUserAddEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserAddRequestEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserUpdateEmailRedactor;
+use App\Notification\Email\Redactor\Recovery\AccountRecoveryCompleteAdminEmailRedactor;
+use App\Notification\Email\Redactor\Recovery\AccountRecoveryCompleteUserEmailRedactor;
 use App\Notification\Email\Redactor\Recovery\AccountRecoveryEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceUpdateEmailRedactor;
+use App\Notification\Email\Redactor\Setup\SetupRecoverAbortAdminEmailRedactor;
 use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\User\UserRegisterEmailRedactor;
 use Cake\Core\Configure;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Passbolt\SelfRegistration\Notification\Email\Redactor\User\SelfRegistrationUserEmailRedactor;
 
 class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
-    /**
-     * Return true if the redactor is enabled
-     *
-     * @param string $notificationSettingPath Notification Settings path with dot notation
-     * @return mixed
-     */
-    private function isRedactorEnabled(string $notificationSettingPath)
-    {
-        return EmailNotificationSettings::get($notificationSettingPath);
-    }
-
     /**
      * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
@@ -57,6 +49,7 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 
         if ($this->isRedactorEnabled('send.user.create')) {
             $redactors[] = new UserRegisterEmailRedactor();
+            $redactors[] = new SelfRegistrationUserEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.group.user.delete')) {
             $redactors[] = new UserDeleteEmailRedactor();
@@ -66,6 +59,15 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         }
         if ($this->isRedactorEnabled('send.user.recover')) {
             $redactors[] = new AccountRecoveryEmailRedactor();
+        }
+        if ($this->isRedactorEnabled('send.user.recoverComplete')) {
+            $redactors[] = new AccountRecoveryCompleteUserEmailRedactor();
+        }
+        if ($this->isRedactorEnabled('send.admin.user.recover.abort')) {
+            $redactors[] = new SetupRecoverAbortAdminEmailRedactor();
+        }
+        if ($this->isRedactorEnabled('send.admin.user.recover.complete')) {
+            $redactors[] = new AccountRecoveryCompleteAdminEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.password.share')) {
             $redactors[] = new ShareEmailRedactor();

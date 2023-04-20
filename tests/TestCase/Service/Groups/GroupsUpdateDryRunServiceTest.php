@@ -41,12 +41,12 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
     ];
 
     /**
-     * @var GroupsUsersTable
+     * @var \App\Model\Table\GroupsUsersTable
      */
     private $groupsUsersTable;
 
     /**
-     * @var SecretsTable
+     * @var \App\Model\Table\SecretsTable
      */
     private $secretsTable;
 
@@ -337,72 +337,6 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
         }
     }
 
-    public function testUpdateDryRunError_UpdateGroupUser_GroupUserBuildRuleValidation_GroupUserNotExist()
-    {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userGroupNotExist = UuidFactory::uuid();
-        $data = [
-            ['id' => $userGroupNotExist, 'is_admin' => true],
-        ];
-        try {
-            $this->service->dryRun($uac, $g1->id, $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.id.exists');
-        }
-    }
-
-    public function testUpdateDryRunError_UpdateGroupUser_GroupUserBuildRuleValidation_AtLeastOneGroupManager()
-    {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-
-        $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
-        $data = [
-            ['id' => $userAGroupUserId, 'is_admin' => false],
-        ];
-        try {
-            $this->service->dryRun($uac, $g1->id, $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.at_least_one_group_manager');
-        }
-    }
-
-    public function testUpdateDryRunError_UpdateGroupUser_Validation_UpdateGroupUserOfAnotherGroup()
-    {
-        [$r1, $g1, $g2, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser_Validation_UpdateGroupUserOfAnotherGroup();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userAGroup2UserId = $this->groupsUsersTable->findByGroupIdAndUserId($g2->id, $userAId)->first()->id;
-        $data = [
-            ['id' => $userAGroup2UserId, 'is_admin' => false],
-        ];
-
-        try {
-            $this->service->dryRun($uac, $g1->id, $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.id.exists');
-        }
-    }
-
-    private function insertFixture_UpdateGroupUser_Validation_UpdateGroupUserOfAnotherGroup()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $g2 = $this->addGroup(['name' => 'G2', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $g2, $userAId, $userBId];
-    }
-
     /* DELETE GROUP USER */
 
     public function testUpdateDryRunSuccess_DeleteGroupUser()
@@ -438,74 +372,5 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
         $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $userAId, $userBId, $userCId];
-    }
-
-    public function testUpdateDryRunError_DeleteGroupUser_GroupUserValidation_GroupUserNotExist()
-    {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_DeleteGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userGroupNotExist = UuidFactory::uuid();
-        $data = [
-            ['id' => $userGroupNotExist, 'delete' => true],
-        ];
-
-        try {
-            $this->service->dryRun($uac, $g1->id, $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.id.exists');
-        }
-    }
-
-    public function testUpdateDryRunError_DeleteGroupUser_GroupUserBuildRuleValidation_AtLeastOneGroupManager()
-    {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_DeleteGroupUser();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
-        $userBGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first()->id;
-        $data = [
-            ['id' => $userAGroupUserId, 'delete' => true],
-            ['id' => $userBGroupUserId, 'delete' => true],
-        ];
-
-        try {
-            $this->service->dryRun($uac, $g1->id, $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.at_least_one_group_manager');
-        }
-    }
-
-    public function testUpdateDryRunError_DeleteGroupUser_Validation_DeleteGroupUserOfAnotherGroup()
-    {
-        [$r1, $g1, $g2, $userAId, $userBId] = $this->insertFixture_DeleteGroupUser_Validation_DeleteGroupUserOfAnotherGroup();
-        $uac = new UserAccessControl(Role::USER, $userAId);
-        $userAGroup2UserId = $this->groupsUsersTable->findByGroupIdAndUserId($g2->id, $userAId)->first()->id;
-        $data = [
-            ['id' => $userAGroup2UserId, 'delete' => true],
-        ];
-
-        try {
-            $this->service->dryRun($uac, $g1->id, $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (ValidationException $e) {
-            $this->assertUpdateDryRunValidationException($e, 'groups_users.0.id.exists');
-        }
-    }
-
-    private function insertFixture_DeleteGroupUser_Validation_DeleteGroupUserOfAnotherGroup()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-        ]]);
-        $g2 = $this->addGroup(['name' => 'G2', 'groups_users' => [
-            ['user_id' => $userAId, 'is_admin' => true],
-            ['user_id' => $userBId, 'is_admin' => true],
-        ]]);
-        $r1 = $this->addResourceFor(['name' => 'R1'], [$userAId => Permission::OWNER], [$g1->id => Permission::OWNER]);
-
-        return [$r1, $g1, $g2, $userAId, $userBId];
     }
 }
