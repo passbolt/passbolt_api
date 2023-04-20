@@ -109,7 +109,8 @@
             "Passbolt\\ResourceTypes\\": "./plugins/PassboltCe/ResourceTypes/src",
             "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/PassboltCe/MultiFactorAuthentication/src",
-            "Passbolt\\SelfRegistration\\": "./plugins/PassboltCe/SelfRegistration/src"
+            "Passbolt\\SelfRegistration\\": "./plugins/PassboltCe/SelfRegistration/src",
+            "Passbolt\\TotpResourceType\\": "./plugins/PassboltCe/TotpResourceType/src"
         }
     },
     "autoload-dev": {

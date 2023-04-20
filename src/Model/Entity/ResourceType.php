@@ -32,6 +32,9 @@ use Cake\ORM\Entity;
  */
 class ResourceType extends Entity
 {
+    public const SLUG_STANDALONE_TOTP = 'totp';
+    public const SLUG_PASSWORD_DESCRIPTION_TOTP = 'password-description-totp';
+
     protected $_accessible = [
         'name' => false,
         'slug' => false,

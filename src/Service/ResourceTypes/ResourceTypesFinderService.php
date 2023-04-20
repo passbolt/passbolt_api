@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Service\ResourceTypes;
 
+use App\Model\Entity\ResourceType;
 use App\Model\Table\ResourceTypesTable;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -60,5 +61,21 @@ class ResourceTypesFinderService
         return $this->find()
             ->where(['id' => $id])
             ->firstOrFail();
+    }
+
+    /**
+     * Applies filter to exclude TOTP types.
+     *
+     * @param \Cake\ORM\Query $resourceTypes Resource types query builder object.
+     * @return \Cake\ORM\Query
+     */
+    public function withoutTotp(Query $resourceTypes): Query
+    {
+        return $resourceTypes->where([
+            'slug NOT IN' => [
+                ResourceType::SLUG_STANDALONE_TOTP,
+                ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP,
+            ],
+        ]);
     }
 }

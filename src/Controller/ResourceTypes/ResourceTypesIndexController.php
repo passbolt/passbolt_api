@@ -19,11 +19,15 @@ namespace App\Controller\ResourceTypes;
 
 use App\Controller\AppController;
 use App\Service\ResourceTypes\ResourceTypesFinderService;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\Http\Exception\NotFoundException;
+use Passbolt\TotpResourceType\TotpResourceTypePlugin;
 
 class ResourceTypesIndexController extends AppController
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * Resource Types Index action
      *
@@ -36,7 +40,12 @@ class ResourceTypesIndexController extends AppController
             throw new NotFoundException();
         }
         $resourceTypeFinderService = new ResourceTypesFinderService();
-        $resourceTypes = $resourceTypeFinderService->find()->all();
-        $this->success(__('The operation was successful.'), $resourceTypes);
+        $resourceTypes = $resourceTypeFinderService->find();
+
+        if (!$this->isFeaturePluginEnabled(TotpResourceTypePlugin::class)) {
+            $resourceTypes = $resourceTypeFinderService->withoutTotp($resourceTypes);
+        }
+
+        $this->success(__('The operation was successful.'), $resourceTypes->all());
     }
 }

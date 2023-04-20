@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Controller\Settings;
 use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
+use Passbolt\TotpResourceType\TotpResourceTypePlugin;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
@@ -40,6 +41,8 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         // Assert some default plugin visibility
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->export->enabled));
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->accountRecoveryRequestHelp->enabled));
+        // Assert TOTP resource type disabled by default
+        $this->assertFalse($this->_responseJsonBody->passbolt->plugins->totpResourceType->enabled);
     }
 
     public function testSettingsIndexController_SuccessAsAN()
@@ -61,6 +64,9 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         // Assert AN plugin is visible
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->accountRecoveryRequestHelp->enabled));
         $this->assertFalse(isset($this->_responseJsonBody->passbolt->email));
+
+        // Assert TOTP resource type plugin is not visible for anonymous users
+        $this->assertObjectNotHasAttribute('totpResourceType', $this->_responseJsonBody->passbolt->plugins);
     }
 
     public function testSettingsIndexController_SuccessAsAN_With_Email_Regex_Defined()
@@ -71,5 +77,17 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         $this->assertSame($regex, $this->_responseJsonBody->passbolt->email->validate->regex);
+    }
+
+    public function testSettingsIndexController_Success_TotpResourceTypeEnabled()
+    {
+        $this->logInAsUser();
+        // Enable TotpResourceType plugin
+        $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
+
+        $this->getJson('/settings.json?api-version=2');
+
+        $this->assertSuccess();
+        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->totpResourceType->enabled);
     }
 }

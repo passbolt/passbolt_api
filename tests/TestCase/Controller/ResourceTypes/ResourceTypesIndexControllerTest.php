@@ -17,27 +17,49 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\ResourceTypes;
 
+use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\ResourceTypesModelTrait;
+use Passbolt\TotpResourceType\TotpResourceTypePlugin;
 
+/**
+ * @covers \App\Controller\ResourceTypes\ResourceTypesIndexController
+ */
 class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 {
     use ResourceTypesModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/ResourceTypes'];
-
     public function testResourceTypesIndex_Success()
     {
+        ResourceTypeFactory::make(2)->persist();
+        ResourceTypeFactory::makeTotp()->persist();
         $this->logInAsUser();
+
         $this->getJson('/resource-types.json?api-version=2');
+
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertResourceTypeAttributes($this->_responseJsonBody[0]);
+        $this->assertCount(2, $this->_responseJsonBody);
     }
 
     public function testResourceTypesIndex_ErrorNotAuthenticated()
     {
         $this->getJson('/resource-types.json');
         $this->assertAuthenticationError();
+    }
+
+    public function testResourceTypesIndex_Success_TotpResourceTypeEnabled()
+    {
+        ResourceTypeFactory::make(2)->persist();
+        ResourceTypeFactory::makeTotp()->persist();
+        $this->logInAsUser();
+        $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
+
+        $this->getJson('/resource-types.json?api-version=2');
+
+        $this->assertSuccess();
+        $this->assertGreaterThan(1, count($this->_responseJsonBody));
+        $this->assertCount(4, $this->_responseJsonBody);
     }
 }
