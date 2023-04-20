@@ -54,7 +54,7 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
             'If you receive this email, it means that your passbolt smtp configuration is working fine.'
         );
         $debug = $trace;
-        $response = json_decode(json_encode($this->_responseJsonBody), true);
+        $response = $this->getResponseBodyAsArray();
         $this->assertSame(compact('debug'), $response);
     }
 

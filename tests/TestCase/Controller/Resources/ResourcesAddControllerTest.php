@@ -226,7 +226,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->logInAsUser();
         $this->postJson('/resources.json?api-version=v2', $case['data']);
         $this->assertError(400, 'Could not validate resource data');
-        $arr = json_decode(json_encode($this->_responseJsonBody), true);
+        $arr = $this->getResponseBodyAsArray();
         $error = Hash::get($arr, $case['errorField']);
         $this->assertNotNull($error, "The case \"$caseLabel\" should fail");
         $this->assertSame(0, $this->Resources->find()->count());
