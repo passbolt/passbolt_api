@@ -9,17 +9,17 @@ composer install --dev
 - Configure your test database in app.php datasources section.
 - Run phpunit:
 ```
-composer run-script test
+composer test
 ```
 
 ## How do I check the code standards
 - To display the error and warning
 ```
-composer run-script cs-check
+composer cs-check
 ```
 - To autofix what is fixable
 ```
-composer run-script cs-fix
+composer cs-fix
 ```
 
 ## How to regenerate the fixtures
@@ -62,3 +62,8 @@ Listen to the appjs change and refresh the browser
 ```
 grunt appjs-watch-browser-sync
 ```
+
+## How do I contribute to the translation
+
+For contributing to the translations of this repository, you will need to create an account and propose changes at https://passbolt.crowdin.com/.
+
