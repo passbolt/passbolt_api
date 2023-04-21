@@ -17,7 +17,7 @@ declare(strict_types=1);
 use Cake\I18n\FrozenTime;
 use Migrations\AbstractMigration;
 
-class V400AddTotpResourceType extends AbstractMigration
+class V400AddTotpResourceTypes extends AbstractMigration
 {
     /**
      * Up
@@ -32,7 +32,7 @@ class V400AddTotpResourceType extends AbstractMigration
                 /**
                  * Standalone TOTP
                  */
-                'id' => \App\Utility\UuidFactory::uuid(),
+                'id' => \App\Utility\UuidFactory::uuid('resource-types.id.totp'),
                 'slug' => \Passbolt\ResourceTypes\Model\Entity\ResourceType::SLUG_STANDALONE_TOTP,
                 'name' => 'Standalone TOTP',
                 'description' => 'A resource with standalone TOTP fields.',
@@ -44,7 +44,7 @@ class V400AddTotpResourceType extends AbstractMigration
                 /**
                  * TOTP with password & description
                  */
-                'id' => \App\Utility\UuidFactory::uuid(),
+                'id' => \App\Utility\UuidFactory::uuid('resource-types.id.password-description-totp'),
                 'slug' => \Passbolt\ResourceTypes\Model\Entity\ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP,
                 'name' => 'Password, Description and TOTP',
                 'description' => 'A resource with encrypted password, description and TOTP fields.',
