@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Test\Factory;
 
-use App\Model\Entity\ResourceType;
 use App\Model\Table\ResourceTypesTable;
 use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
@@ -95,13 +94,5 @@ class ResourceTypeFactory extends CakephpBaseFactory
     public function default(): self
     {
         return $this->patchData(['id' => ResourceTypesTable::getDefaultTypeId()]);
-    }
-
-    public static function makeTotp(): self
-    {
-        return self::make([
-            ['slug' => ResourceType::SLUG_STANDALONE_TOTP],
-            ['slug' => ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP],
-        ]);
     }
 }

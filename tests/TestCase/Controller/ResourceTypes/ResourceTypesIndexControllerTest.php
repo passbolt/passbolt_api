@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Controller\ResourceTypes;
 use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\ResourceTypesModelTrait;
+use App\Test\TestCase\Scenario\ResourceTypes\TotpResourceTypesScenario;
 use Passbolt\TotpResourceType\TotpResourceTypePlugin;
 
 /**
@@ -32,7 +33,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
     public function testResourceTypesIndex_Success()
     {
         ResourceTypeFactory::make(2)->persist();
-        ResourceTypeFactory::makeTotp()->persist();
+        $this->loadFixtureScenario(TotpResourceTypesScenario::class);
         $this->logInAsUser();
 
         $this->getJson('/resource-types.json?api-version=2');
@@ -52,7 +53,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
     public function testResourceTypesIndex_Success_TotpResourceTypeEnabled()
     {
         ResourceTypeFactory::make(2)->persist();
-        ResourceTypeFactory::makeTotp()->persist();
+        $this->loadFixtureScenario(TotpResourceTypesScenario::class);
         $this->logInAsUser();
         $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
 
