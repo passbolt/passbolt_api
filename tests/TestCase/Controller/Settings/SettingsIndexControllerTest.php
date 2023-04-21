@@ -20,7 +20,7 @@ namespace App\Test\TestCase\Controller\Settings;
 use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
-use Passbolt\TotpResourceType\TotpResourceTypePlugin;
+use Passbolt\TotpResourceTypes\TotpResourceTypesPlugin;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
@@ -83,7 +83,7 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
     {
         $this->logInAsUser();
         // Enable TotpResourceType plugin
-        $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
+        $this->enableFeaturePlugin(TotpResourceTypesPlugin::class);
 
         $this->getJson('/settings.json?api-version=2');
 

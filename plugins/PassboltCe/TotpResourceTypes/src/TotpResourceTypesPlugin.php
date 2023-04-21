@@ -14,22 +14,22 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.0.0
  */
-namespace Passbolt\TotpResourceType\Test\Scenario;
+namespace Passbolt\TotpResourceTypes;
 
-use CakephpFixtureFactories\Scenario\FixtureScenarioInterface;
-use Passbolt\ResourceTypes\Model\Entity\ResourceType;
-use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
+use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
+use Passbolt\TotpResourceTypes\Service\TotpResourceTypesFinderService;
 
-class TotpResourceTypesScenario implements FixtureScenarioInterface
+class TotpResourceTypesPlugin extends BasePlugin
 {
     /**
      * @inheritDoc
      */
-    public function load(...$args)
+    public function services(ContainerInterface $container): void
     {
-        return ResourceTypeFactory::make([
-            ['slug' => ResourceType::SLUG_STANDALONE_TOTP],
-            ['slug' => ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP],
-        ])->persist();
+        $container
+            ->extend(ResourceTypesFinderInterface::class)
+            ->setConcrete(TotpResourceTypesFinderService::class);
     }
 }

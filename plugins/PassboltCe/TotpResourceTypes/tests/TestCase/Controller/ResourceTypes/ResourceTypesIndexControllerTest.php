@@ -15,13 +15,13 @@ declare(strict_types=1);
  * @since         4.0.0
  */
 
-namespace Passbolt\TotpResourceType\Test\TestCase\Controller\ResourceTypes;
+namespace Passbolt\TotpResourceTypes\Test\TestCase\Controller\ResourceTypes;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
-use Passbolt\TotpResourceType\Test\Scenario\TotpResourceTypesScenario;
-use Passbolt\TotpResourceType\TotpResourceTypePlugin;
+use Passbolt\TotpResourceTypes\Test\Scenario\TotpResourceTypesScenario;
+use Passbolt\TotpResourceTypes\TotpResourceTypesPlugin;
 
 /**
  * @see \Passbolt\ResourceTypes\Controller\ResourceTypesIndexController
@@ -37,10 +37,10 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
 
-        $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
+        $this->enableFeaturePlugin(TotpResourceTypesPlugin::class);
     }
 
-    public function testResourceTypesIndex_Success_WitTotpResourceTypes()
+    public function testResourceTypesIndex_Success_WithTotpResourceTypes()
     {
         ResourceTypeFactory::make(2)->persist();
         $this->loadFixtureScenario(TotpResourceTypesScenario::class);
@@ -59,7 +59,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
         $this->loadFixtureScenario(TotpResourceTypesScenario::class);
         $this->logInAsUser();
         // Disable plugin
-        $this->disableFeaturePlugin(TotpResourceTypePlugin::class);
+        $this->disableFeaturePlugin(TotpResourceTypesPlugin::class);
 
         $this->getJson('/resource-types.json?api-version=2');
 

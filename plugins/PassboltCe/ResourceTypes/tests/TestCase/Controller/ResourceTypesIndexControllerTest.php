@@ -31,7 +31,6 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
     public function testResourceTypesIndex_Success()
     {
         ResourceTypeFactory::make(2)->persist();
-//        $this->loadFixtureScenario(TotpResourceTypesScenario::class);
         $this->logInAsUser();
 
         $this->getJson('/resource-types.json?api-version=2');
@@ -47,21 +46,4 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/resource-types.json');
         $this->assertAuthenticationError();
     }
-
-    /*
-     * TODO: Move to TotpResourceType plugin
-    public function testResourceTypesIndex_Success_TotpResourceTypeEnabled()
-    {
-        ResourceTypeFactory::make(2)->persist();
-        $this->loadFixtureScenario(TotpResourceTypesScenario::class);
-        $this->logInAsUser();
-        $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
-
-        $this->getJson('/resource-types.json?api-version=2');
-
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $this->assertCount(4, $this->_responseJsonBody);
-    }
-    */
 }

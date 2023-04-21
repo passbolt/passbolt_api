@@ -14,23 +14,22 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.0.0
  */
-namespace Passbolt\TotpResourceType\Service;
+namespace Passbolt\TotpResourceTypes\Test\Scenario;
 
-use Cake\ORM\Query;
-use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
-use Passbolt\ResourceTypes\Service\ResourceTypesFinderService;
+use CakephpFixtureFactories\Scenario\FixtureScenarioInterface;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
-class TotpResourceTypesFinderService extends ResourceTypesFinderService
+class TotpResourceTypesScenario implements FixtureScenarioInterface
 {
     /**
-     * Returns all the available resource types (mainly including TOTP related).
-     *
-     * @return \Cake\ORM\Query
+     * @inheritDoc
      */
-    public function find(): Query
+    public function load(...$args)
     {
-        return $this->resourceTypesTable
-            ->find()
-            ->formatResults(ResourceTypesTable::resultFormatter());
+        return ResourceTypeFactory::make([
+            ['slug' => ResourceType::SLUG_STANDALONE_TOTP],
+            ['slug' => ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP],
+        ])->persist();
     }
 }

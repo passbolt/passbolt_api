@@ -2,7 +2,7 @@
 return [
     'passbolt' => [
         'plugins' => [
-            'totpResourceType' => [
+            'totpResourceTypes' => [
                 'version' => '1.0.0',
             ],
         ],

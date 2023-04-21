@@ -23,7 +23,7 @@ use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
-use Passbolt\TotpResourceType\TotpResourceTypePlugin;
+use Passbolt\TotpResourceTypes\TotpResourceTypesPlugin;
 
 abstract class SolutionBootstrapperTestCase extends TestCase
 {
@@ -42,14 +42,14 @@ abstract class SolutionBootstrapperTestCase extends TestCase
         $this->clearPlugins();
         DigestsPool::clearInstance();
         EmailNotificationSettings::flushCache();
-        $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
+        $this->enableFeaturePlugin(TotpResourceTypesPlugin::class);
     }
 
     public function tearDown(): void
     {
         $this->clearPlugins();
         unset($this->app);
-        $this->disableFeaturePlugin(TotpResourceTypePlugin::class);
+        $this->disableFeaturePlugin(TotpResourceTypesPlugin::class);
 
         parent::tearDown();
     }

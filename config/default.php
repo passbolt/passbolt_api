@@ -246,8 +246,8 @@ return [
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
-            'totpResourceType' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_TOTP_RESOURCE_TYPE_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'totpResourceTypes' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_TOTP_RESOURCE_TYPES_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 

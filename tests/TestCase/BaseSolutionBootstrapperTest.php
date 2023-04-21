@@ -53,7 +53,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/MultiFactorAuthentication',
         'Passbolt/Log',
         'Passbolt/Folders',
-        'Passbolt/TotpResourceType',
+        'Passbolt/TotpResourceTypes',
     ];
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void

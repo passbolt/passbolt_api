@@ -15,13 +15,13 @@ declare(strict_types=1);
  * @since         4.0.0
  */
 
-namespace Passbolt\TotpResourceType\Test\TestCase\Service;
+namespace Passbolt\TotpResourceTypes\Test\TestCase\Service;
 
 use App\Test\Lib\AppTestCase;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
-use Passbolt\TotpResourceType\Service\TotpResourceTypesFinderService;
-use Passbolt\TotpResourceType\Test\Scenario\TotpResourceTypesScenario;
+use Passbolt\TotpResourceTypes\Service\TotpResourceTypesFinderService;
+use Passbolt\TotpResourceTypes\Test\Scenario\TotpResourceTypesScenario;
 
 /**
  * @covers \Passbolt\ResourceTypes\Service\ResourceTypesFinderService

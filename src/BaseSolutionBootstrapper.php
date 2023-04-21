@@ -85,7 +85,7 @@ class BaseSolutionBootstrapper
             $app->addPlugin('Passbolt/Folders', ['bootstrap' => true, 'routes' => true]);
         }
 
-        $this->addFeaturePluginIfEnabled($app, 'TotpResourceType', ['bootstrap' => true, 'routes' => false]);
+        $this->addFeaturePluginIfEnabled($app, 'TotpResourceTypes', ['bootstrap' => true, 'routes' => false]);
     }
 
     /**
