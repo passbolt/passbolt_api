@@ -38,6 +38,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\Scim\Model\Entity\ScimEntry;
 
 /**
  * Users Model
@@ -46,6 +47,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\GpgkeysTable&\Cake\ORM\Association\HasOne $Gpgkeys
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
  * @property \App\Model\Table\ProfilesTable&\Cake\ORM\Association\HasOne $Profiles
+ * @property \Passbolt\Scim\Model\Table\ScimEntriesTable&\Cake\ORM\Association\HasOne $ScimEntries
  * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsToMany $Groups
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasMany $EntitiesHistory
@@ -106,6 +108,13 @@ class UsersTable extends Table
         ]);
         $this->hasOne('Profiles', [
             'foreignKey' => 'user_id',
+        ]);
+        $this->hasOne('ScimEntries', [
+            'className' => 'Passbolt/Scim.ScimEntries',
+            'foreignKey' => 'foreign_key',
+            'conditions' => [
+                'ScimEntries.foreign_model' => ScimEntry::FOREIGN_MODEL_USERS,
+            ],
         ]);
         $this->hasMany('GroupsUsers', [
             'foreignKey' => 'user_id',
@@ -370,6 +379,7 @@ class UsersTable extends Table
             'profile' => true,
             'gpgkey' => false,
         ];
+        debug($roleName);
         // only admins can set roles
         if ($uac->isAdmin()) {
             $accessibleUserFields['role_id'] = true;

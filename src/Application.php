@@ -118,7 +118,17 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->insertAfter(RoutingMiddleware::class, ApiVersionMiddleware::class)
             ->insertAfter(RoutingMiddleware::class, UuidParserMiddleware::class)
             ->add(new SessionPreventExtensionMiddleware())
-            ->add(new BodyParserMiddleware())
+            ->add((new BodyParserMiddleware())->addParser(['application/scim+json'], function ($body, $request = null) {
+                if ($body === '') {
+                    return [];
+                }
+                $decoded = json_decode($body, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    return (array)$decoded;
+                }
+
+                return null;
+            }))
             ->add(SessionAuthPreventDeletedOrDisabledUsersMiddleware::class)
             ->insertAfter(
                 SessionAuthPreventDeletedOrDisabledUsersMiddleware::class,

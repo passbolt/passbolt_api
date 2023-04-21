@@ -419,6 +419,9 @@ return [
             'userKeyPolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_KEY_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
+            'scim' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SCIM_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
         ],
 
         // Activate specific entry points for selenium testing.

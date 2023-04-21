@@ -103,5 +103,6 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
             $this->addFeaturePluginIfEnabled($app, 'PasswordExpiryPolicies');
         }
         $this->addFeaturePluginIfEnabled($app, 'UserKeyPolicies');
+        $this->addFeaturePluginIfEnabled($app, 'Scim');
     }
 }
