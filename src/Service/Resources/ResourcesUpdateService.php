@@ -22,7 +22,6 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourceTypesTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
@@ -34,6 +33,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 class ResourcesUpdateService
 {

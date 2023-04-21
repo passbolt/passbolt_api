@@ -12,24 +12,20 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.8.0
+ * @since         2.0.0
  */
-namespace Passbolt\ResourceTypes;
+namespace Passbolt\ResourceTypes\Test\Lib\Model;
 
-use Cake\Core\BasePlugin;
-use Cake\Core\ContainerInterface;
-use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
-use Passbolt\ResourceTypes\Service\ResourceTypesFinderService;
-
-class ResourceTypesPlugin extends BasePlugin
+trait ResourceTypesModelTrait
 {
     /**
-     * @inheritDoc
+     * Asserts that an object has all the attributes a role should have.
+     *
+     * @param object $roles
      */
-    public function services(ContainerInterface $container): void
+    protected function assertResourceTypeAttributes($roles)
     {
-        $container
-            ->add(ResourceTypesFinderInterface::class)
-            ->setConcrete(ResourceTypesFinderService::class);
+        $attributes = ['id', 'name', 'slug', 'description', 'definition'];
+        $this->assertObjectHasAttributes($attributes, $roles);
     }
 }

@@ -20,13 +20,13 @@ namespace App\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
-use App\Model\Table\ResourceTypesTable;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
  * Class ResourcesAddService.

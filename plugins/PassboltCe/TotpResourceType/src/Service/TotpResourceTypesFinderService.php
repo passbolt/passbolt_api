@@ -12,20 +12,25 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         4.0.0
  */
-namespace App\Test\Lib\Model;
+namespace Passbolt\TotpResourceType\Service;
 
-trait ResourceTypesModelTrait
+use Cake\ORM\Query;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
+use Passbolt\ResourceTypes\Service\ResourceTypesFinderService;
+
+class TotpResourceTypesFinderService extends ResourceTypesFinderService
 {
     /**
-     * Asserts that an object has all the attributes a role should have.
+     * Returns all the available resource types (mainly including TOTP related).
      *
-     * @param object $roles
+     * @return \Cake\ORM\Query
      */
-    protected function assertResourceTypeAttributes($roles)
+    public function find(): Query
     {
-        $attributes = ['id', 'name', 'slug', 'description', 'definition'];
-        $this->assertObjectHasAttributes($attributes, $roles);
+        return $this->resourceTypesTable
+            ->find()
+            ->formatResults(ResourceTypesTable::resultFormatter());
     }
 }

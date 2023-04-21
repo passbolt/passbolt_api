@@ -14,19 +14,19 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.0.0
  */
-namespace App\Service\ResourceTypes;
+namespace Passbolt\ResourceTypes\Service;
 
-use App\Model\Entity\ResourceType;
-use App\Model\Table\ResourceTypesTable;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
-class ResourceTypesFinderService
+class ResourceTypesFinderService implements ResourceTypesFinderInterface
 {
     /**
-     * @var \App\Model\Table\ResourceTypesTable
+     * @var \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable
      */
-    private $resourceTypesTable;
+    protected $resourceTypesTable;
 
     /**
      * Instantiate the service.
@@ -38,7 +38,7 @@ class ResourceTypesFinderService
     }
 
     /**
-     * Get resource types query
+     * Returns resource types without TOTP resource types.
      *
      * @return \Cake\ORM\Query
      */
@@ -46,6 +46,12 @@ class ResourceTypesFinderService
     {
         return $this->resourceTypesTable
             ->find()
+            ->where([
+                'slug NOT IN' => [
+                    ResourceType::SLUG_STANDALONE_TOTP,
+                    ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP,
+                ],
+            ])
             ->formatResults(ResourceTypesTable::resultFormatter());
     }
 
@@ -61,21 +67,5 @@ class ResourceTypesFinderService
         return $this->find()
             ->where(['id' => $id])
             ->firstOrFail();
-    }
-
-    /**
-     * Applies filter to exclude TOTP types.
-     *
-     * @param \Cake\ORM\Query $resourceTypes Resource types query builder object.
-     * @return \Cake\ORM\Query
-     */
-    public function withoutTotp(Query $resourceTypes): Query
-    {
-        return $resourceTypes->where([
-            'slug NOT IN' => [
-                ResourceType::SLUG_STANDALONE_TOTP,
-                ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP,
-            ],
-        ]);
     }
 }

@@ -14,11 +14,11 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.0.0
  */
-namespace App\Test\TestCase\Scenario\ResourceTypes;
+namespace Passbolt\TotpResourceType\Test\Scenario;
 
-use App\Model\Entity\ResourceType;
-use App\Test\Factory\ResourceTypeFactory;
 use CakephpFixtureFactories\Scenario\FixtureScenarioInterface;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class TotpResourceTypesScenario implements FixtureScenarioInterface
 {

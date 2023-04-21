@@ -21,13 +21,13 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
 use App\Service\Resources\ResourcesAddService;
-use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * Part of the logic of this test is handled in the ResourcesAddControllerTest.

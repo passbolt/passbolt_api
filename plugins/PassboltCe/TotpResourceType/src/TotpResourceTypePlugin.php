@@ -17,7 +17,19 @@ declare(strict_types=1);
 namespace Passbolt\TotpResourceType;
 
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
+use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
+use Passbolt\TotpResourceType\Service\TotpResourceTypesFinderService;
 
 class TotpResourceTypePlugin extends BasePlugin
 {
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container
+            ->extend(ResourceTypesFinderInterface::class)
+            ->setConcrete(TotpResourceTypesFinderService::class);
+    }
 }

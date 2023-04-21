@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Log\Test\TestCase\Controller\Resources;
 
 use App\Test\Factory\ResourceFactory;
-use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
@@ -26,6 +25,7 @@ use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesControllerLogTest extends LogIntegrationTestCase
 {

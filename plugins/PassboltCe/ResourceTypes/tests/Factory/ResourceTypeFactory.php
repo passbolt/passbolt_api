@@ -1,20 +1,34 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Test\Factory;
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         4.0.0
+ */
 
-use App\Model\Table\ResourceTypesTable;
+namespace Passbolt\ResourceTypes\Test\Factory;
+
 use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
  * ResourceFactory
  *
- * @method \App\Model\Entity\ResourceType|\App\Model\Entity\ResourceType[] persist()
- * @method \App\Model\Entity\ResourceType getEntity()
- * @method \App\Model\Entity\ResourceType[] getEntities()
- * @method static \App\Model\Entity\ResourceType get($primaryKey, array $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType|\Passbolt\ResourceTypes\Model\Entity\ResourceType[] persist()
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType getEntity()
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[] getEntities()
+ * @method static \Passbolt\ResourceTypes\Model\Entity\ResourceType get($primaryKey, array $options = [])
  */
 class ResourceTypeFactory extends CakephpBaseFactory
 {

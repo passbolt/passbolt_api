@@ -12,29 +12,54 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         4.0.0
  */
 
-namespace App\Test\TestCase\Controller\ResourceTypes;
+namespace Passbolt\TotpResourceType\Test\TestCase\Controller\ResourceTypes;
 
-use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\ResourceTypesModelTrait;
-use App\Test\TestCase\Scenario\ResourceTypes\TotpResourceTypesScenario;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
+use Passbolt\TotpResourceType\Test\Scenario\TotpResourceTypesScenario;
 use Passbolt\TotpResourceType\TotpResourceTypePlugin;
 
 /**
- * @covers \App\Controller\ResourceTypes\ResourceTypesIndexController
+ * @see \Passbolt\ResourceTypes\Controller\ResourceTypesIndexController
  */
 class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 {
     use ResourceTypesModelTrait;
 
-    public function testResourceTypesIndex_Success()
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
+    }
+
+    public function testResourceTypesIndex_Success_WitTotpResourceTypes()
     {
         ResourceTypeFactory::make(2)->persist();
         $this->loadFixtureScenario(TotpResourceTypesScenario::class);
         $this->logInAsUser();
+
+        $this->getJson('/resource-types.json?api-version=2');
+
+        $this->assertSuccess();
+        $this->assertGreaterThan(1, count($this->_responseJsonBody));
+        $this->assertCount(4, $this->_responseJsonBody);
+    }
+
+    public function testResourceTypesIndex_Success_WithoutTotpResourceTypes()
+    {
+        ResourceTypeFactory::make(2)->persist();
+        $this->loadFixtureScenario(TotpResourceTypesScenario::class);
+        $this->logInAsUser();
+        // Disable plugin
+        $this->disableFeaturePlugin(TotpResourceTypePlugin::class);
 
         $this->getJson('/resource-types.json?api-version=2');
 
@@ -42,25 +67,5 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertResourceTypeAttributes($this->_responseJsonBody[0]);
         $this->assertCount(2, $this->_responseJsonBody);
-    }
-
-    public function testResourceTypesIndex_ErrorNotAuthenticated()
-    {
-        $this->getJson('/resource-types.json');
-        $this->assertAuthenticationError();
-    }
-
-    public function testResourceTypesIndex_Success_TotpResourceTypeEnabled()
-    {
-        ResourceTypeFactory::make(2)->persist();
-        $this->loadFixtureScenario(TotpResourceTypesScenario::class);
-        $this->logInAsUser();
-        $this->enableFeaturePlugin(TotpResourceTypePlugin::class);
-
-        $this->getJson('/resource-types.json?api-version=2');
-
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
-        $this->assertCount(4, $this->_responseJsonBody);
     }
 }

@@ -33,7 +33,7 @@ class V400AddTotpResourceType extends AbstractMigration
                  * Standalone TOTP
                  */
                 'id' => \App\Utility\UuidFactory::uuid(),
-                'slug' => \App\Model\Entity\ResourceType::SLUG_STANDALONE_TOTP,
+                'slug' => \Passbolt\ResourceTypes\Model\Entity\ResourceType::SLUG_STANDALONE_TOTP,
                 'name' => 'Standalone TOTP',
                 'description' => 'A resource with standalone TOTP fields.',
                 'definition' => self::getTotpStandaloneDefinition(),
@@ -45,7 +45,7 @@ class V400AddTotpResourceType extends AbstractMigration
                  * TOTP with password & description
                  */
                 'id' => \App\Utility\UuidFactory::uuid(),
-                'slug' => \App\Model\Entity\ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP,
+                'slug' => \Passbolt\ResourceTypes\Model\Entity\ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP,
                 'name' => 'Password, Description and TOTP',
                 'description' => 'A resource with encrypted password, description and TOTP fields.',
                 'definition' => self::getTotpWithPasswordDescriptionDefinition(),

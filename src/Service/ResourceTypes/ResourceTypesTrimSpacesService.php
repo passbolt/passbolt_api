@@ -21,7 +21,7 @@ use Cake\ORM\TableRegistry;
 class ResourceTypesTrimSpacesService
 {
     /**
-     * @var \App\Model\Table\ResourceTypesTable
+     * @var \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable
      */
     private $resourceTypesTable;
 
@@ -43,7 +43,7 @@ class ResourceTypesTrimSpacesService
     public function trim(): void
     {
         $resourceTypes = $this->resourceTypesTable->find();
-        /** @var \App\Model\Entity\ResourceType $resourceType */
+        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         foreach ($resourceTypes as $resourceType) {
             $slug = $resourceType->slug;
             $name = $resourceType->name;

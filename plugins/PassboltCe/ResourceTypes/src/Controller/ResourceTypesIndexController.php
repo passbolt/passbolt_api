@@ -15,14 +15,11 @@ declare(strict_types=1);
  * @since         3.0.0
  */
 
-namespace App\Controller\ResourceTypes;
+namespace Passbolt\ResourceTypes\Controller;
 
 use App\Controller\AppController;
-use App\Service\ResourceTypes\ResourceTypesFinderService;
 use App\Utility\Application\FeaturePluginAwareTrait;
-use Cake\Core\Configure;
-use Cake\Http\Exception\NotFoundException;
-use Passbolt\TotpResourceType\TotpResourceTypePlugin;
+use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
 
 class ResourceTypesIndexController extends AppController
 {
@@ -31,20 +28,13 @@ class ResourceTypesIndexController extends AppController
     /**
      * Resource Types Index action
      *
+     * @param \Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface $resourceTypesFinder Resource types finder service.
      * @throws \Cake\Http\Exception\NotFoundException if plugin is disabled by admin
      * @return void
      */
-    public function index()
+    public function index(ResourceTypesFinderInterface $resourceTypesFinder)
     {
-        if (!Configure::read('passbolt.plugins.resourceTypes.enabled')) {
-            throw new NotFoundException();
-        }
-        $resourceTypeFinderService = new ResourceTypesFinderService();
-        $resourceTypes = $resourceTypeFinderService->find();
-
-        if (!$this->isFeaturePluginEnabled(TotpResourceTypePlugin::class)) {
-            $resourceTypes = $resourceTypeFinderService->withoutTotp($resourceTypes);
-        }
+        $resourceTypes = $resourceTypesFinder->find();
 
         $this->success(__('The operation was successful.'), $resourceTypes->all());
     }

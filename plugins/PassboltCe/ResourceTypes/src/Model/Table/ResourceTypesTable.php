@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.0.0
  */
 
-namespace App\Model\Table;
+namespace Passbolt\ResourceTypes\Model\Table;
 
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
@@ -27,20 +27,20 @@ use Cake\Validation\Validator;
  * ResourceTypes Model
  *
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\HasMany $Resources
- * @method \App\Model\Entity\ResourceType get($primaryKey, $options = [])
- * @method \App\Model\Entity\ResourceType newEntity(array $data, array $options = [])
- * @method \App\Model\Entity\ResourceType[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ResourceType|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ResourceType patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \App\Model\Entity\ResourceType[] patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\ResourceType findOrCreate($search, ?callable $callback = null, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType get($primaryKey, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType newEntity(array $data, array $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[] newEntities(array $data, array $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[] patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType findOrCreate($search, ?callable $callback = null, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
- * @method \App\Model\Entity\ResourceType newEmptyEntity()
- * @method \App\Model\Entity\ResourceType saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \App\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType newEmptyEntity()
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  */
 class ResourceTypesTable extends Table
 {
