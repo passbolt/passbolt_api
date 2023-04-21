@@ -18,8 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
+use Passbolt\ResourceTypes\Test\Scenario\ResourceTypesScenario;
 
 /**
  * @covers \Passbolt\ResourceTypes\Controller\ResourceTypesIndexController
@@ -30,7 +30,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 
     public function testResourceTypesIndex_Success()
     {
-        ResourceTypeFactory::make(2)->persist();
+        $this->loadFixtureScenario(ResourceTypesScenario::class);
         $this->logInAsUser();
 
         $this->getJson('/resource-types.json?api-version=2');

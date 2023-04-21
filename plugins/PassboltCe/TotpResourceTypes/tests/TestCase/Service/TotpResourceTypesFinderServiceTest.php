@@ -19,7 +19,7 @@ namespace Passbolt\TotpResourceTypes\Test\TestCase\Service;
 
 use App\Test\Lib\AppTestCase;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
-use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\ResourceTypes\Test\Scenario\ResourceTypesScenario;
 use Passbolt\TotpResourceTypes\Service\TotpResourceTypesFinderService;
 use Passbolt\TotpResourceTypes\Test\Scenario\TotpResourceTypesScenario;
 
@@ -47,7 +47,7 @@ class TotpResourceTypesFinderServiceTest extends AppTestCase
 
     public function testFindReturnsAllResourceTypesIncludeTotp()
     {
-        ResourceTypeFactory::make(2)->persist();
+        $this->loadFixtureScenario(ResourceTypesScenario::class);
         $this->loadFixtureScenario(TotpResourceTypesScenario::class);
 
         $result = $this->service->find();

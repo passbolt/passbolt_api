@@ -55,50 +55,6 @@ class ResourceTypeFactory extends CakephpBaseFactory
                 'slug' => $faker->slug(3),
                 'name' => $faker->words(3, true),
                 'description' => $faker->text(64),
-                'definition' => json_encode([
-                    'resource' => [
-                        'type' => 'object',
-                        'required' => ['name'],
-                        'properties' => [
-                            'name' => [
-                                'type' => 'string',
-                                'maxLength' => 255,
-                            ],
-                            'username' => [
-                                'anyOf' => [
-                                    [
-                                        'type' => 'string',
-                                        'maxLength' => 255,
-                                    ],
-                                    [
-                                        'type' => null,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                    'secret' => [
-                        'type' => 'object',
-                        'required' => ['password'],
-                        'properties' => [
-                            'password' => [
-                                'type' => 'string',
-                                'maxLength' => 4096,
-                            ],
-                            'description' => [
-                                'anyOf' => [
-                                    [
-                                        'type' => 'string',
-                                        'maxLength' => 10000,
-                                    ],
-                                    [
-                                        'type' => null,
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
-                ]),
                 'created' => FrozenDate::now()->subDay($faker->randomNumber(4)),
                 'modified' => FrozenDate::now()->subDay($faker->randomNumber(4)),
             ];

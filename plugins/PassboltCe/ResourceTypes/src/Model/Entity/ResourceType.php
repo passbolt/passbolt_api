@@ -32,6 +32,11 @@ use Cake\ORM\Entity;
  */
 class ResourceType extends Entity
 {
+    /**
+     * Slugs.
+     */
+    public const SLUG_PASSWORD_STRING = 'password-string';
+    public const SLUG_PASSWORD_AND_DESCRIPTION = 'password-and-description';
     // TODO: Move this to TotpResourceType entity
     public const SLUG_STANDALONE_TOTP = 'totp';
     public const SLUG_PASSWORD_DESCRIPTION_TOTP = 'password-description-totp';

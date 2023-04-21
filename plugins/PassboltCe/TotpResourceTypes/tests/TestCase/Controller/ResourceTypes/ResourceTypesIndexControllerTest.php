@@ -18,8 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\TotpResourceTypes\Test\TestCase\Controller\ResourceTypes;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
+use Passbolt\ResourceTypes\Test\Scenario\ResourceTypesScenario;
 use Passbolt\TotpResourceTypes\Test\Scenario\TotpResourceTypesScenario;
 use Passbolt\TotpResourceTypes\TotpResourceTypesPlugin;
 
@@ -42,7 +42,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 
     public function testResourceTypesIndex_Success_WithTotpResourceTypes()
     {
-        ResourceTypeFactory::make(2)->persist();
+        $this->loadFixtureScenario(ResourceTypesScenario::class);
         $this->loadFixtureScenario(TotpResourceTypesScenario::class);
         $this->logInAsUser();
 
@@ -55,7 +55,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 
     public function testResourceTypesIndex_Success_WithoutTotpResourceTypes()
     {
-        ResourceTypeFactory::make(2)->persist();
+        $this->loadFixtureScenario(ResourceTypesScenario::class);
         $this->loadFixtureScenario(TotpResourceTypesScenario::class);
         $this->logInAsUser();
         // Disable plugin
