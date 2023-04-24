@@ -12,24 +12,26 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.8.0
+ * @since         4.0.0
  */
-namespace Passbolt\ResourceTypes;
+namespace Passbolt\TotpResourceTypes;
 
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
-use Passbolt\ResourceTypes\Service\ResourceTypesFinderService;
+use Passbolt\TotpResourceTypes\Service\TotpResourceTypesFinderService;
 
-class ResourceTypesPlugin extends BasePlugin
+class TotpResourceTypesPlugin extends BasePlugin
 {
     /**
      * @inheritDoc
      */
     public function services(ContainerInterface $container): void
     {
-        $container
-            ->add(ResourceTypesFinderInterface::class)
-            ->setConcrete(ResourceTypesFinderService::class);
+        if ($container->has(ResourceTypesFinderInterface::class)) {
+            $container
+                ->extend(ResourceTypesFinderInterface::class)
+                ->setConcrete(TotpResourceTypesFinderService::class);
+        }
     }
 }

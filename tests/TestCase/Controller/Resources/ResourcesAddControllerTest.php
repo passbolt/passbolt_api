@@ -20,7 +20,6 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Service\Resources\ResourcesAddService;
-use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -30,6 +29,7 @@ use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
 {

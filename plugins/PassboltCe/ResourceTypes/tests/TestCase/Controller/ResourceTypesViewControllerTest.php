@@ -15,22 +15,26 @@ declare(strict_types=1);
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Controller\ResourceTypes;
+namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\ResourceTypesModelTrait;
 use App\Utility\UuidFactory;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
 
+/**
+ * @covers \Passbolt\ResourceTypes\Controller\ResourceTypesViewController
+ */
 class ResourceTypesViewControllerTest extends AppIntegrationTestCase
 {
     use ResourceTypesModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/ResourceTypes'];
-
     public function testResourceTypesView_Success()
     {
         $this->logInAsUser();
-        $resourceType = UuidFactory::uuid('resource-types.id.password-string');
+        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType[] $resourceTypes */
+        $resourceTypes = ResourceTypeFactory::make(2)->persist();
+        $resourceType = $resourceTypes[0]->id;
         $this->getJson("/resource-types/$resourceType.json?api-version=2");
         $this->assertSuccess();
         $this->assertResourceTypeAttributes($this->_responseJsonBody);

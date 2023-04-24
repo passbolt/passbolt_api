@@ -12,24 +12,25 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.8.0
+ * @since         4.0.0
  */
-namespace Passbolt\ResourceTypes;
+namespace Passbolt\TotpResourceTypes\Service;
 
-use Cake\Core\BasePlugin;
-use Cake\Core\ContainerInterface;
-use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
+use Cake\ORM\Query;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 use Passbolt\ResourceTypes\Service\ResourceTypesFinderService;
 
-class ResourceTypesPlugin extends BasePlugin
+class TotpResourceTypesFinderService extends ResourceTypesFinderService
 {
     /**
-     * @inheritDoc
+     * Returns all the available resource types (mainly including TOTP related).
+     *
+     * @return \Cake\ORM\Query
      */
-    public function services(ContainerInterface $container): void
+    public function find(): Query
     {
-        $container
-            ->add(ResourceTypesFinderInterface::class)
-            ->setConcrete(ResourceTypesFinderService::class);
+        return $this->resourceTypesTable
+            ->find()
+            ->formatResults(ResourceTypesTable::resultFormatter());
     }
 }

@@ -12,24 +12,18 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.8.0
+ * @since         4.0.0
  */
-namespace Passbolt\ResourceTypes;
+namespace Passbolt\ResourceTypes\Service;
 
-use Cake\Core\BasePlugin;
-use Cake\Core\ContainerInterface;
-use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
-use Passbolt\ResourceTypes\Service\ResourceTypesFinderService;
+use Cake\ORM\Query;
 
-class ResourceTypesPlugin extends BasePlugin
+interface ResourceTypesFinderInterface
 {
     /**
-     * @inheritDoc
+     * Get resource types query.
+     *
+     * @return \Cake\ORM\Query
      */
-    public function services(ContainerInterface $container): void
-    {
-        $container
-            ->add(ResourceTypesFinderInterface::class)
-            ->setConcrete(ResourceTypesFinderService::class);
-    }
+    public function find(): Query;
 }

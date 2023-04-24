@@ -30,6 +30,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
  * Resources Model
@@ -47,7 +48,7 @@ use Cake\Validation\Validator;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \App\Model\Table\FavoritesTable&\Cake\ORM\Association\HasOne $Favorites
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission
- * @property \App\Model\Table\ResourceTypesTable&\Cake\ORM\Association\BelongsTo $ResourceTypes
+ * @property \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable&\Cake\ORM\Association\BelongsTo $ResourceTypes
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\BelongsTo $EntitiesHistory
  * @method \App\Model\Entity\Resource newEmptyEntity()
  * @method \App\Model\Entity\Resource newEntity(array $data, array $options = [])

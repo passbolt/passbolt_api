@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.0.0
  */
-namespace App\Model\Entity;
+namespace Passbolt\ResourceTypes\Model\Entity;
 
 use Cake\ORM\Entity;
 
@@ -32,6 +32,15 @@ use Cake\ORM\Entity;
  */
 class ResourceType extends Entity
 {
+    /**
+     * Slugs.
+     */
+    public const SLUG_PASSWORD_STRING = 'password-string';
+    public const SLUG_PASSWORD_AND_DESCRIPTION = 'password-and-description';
+    // TODO: Move this to TotpResourceType entity
+    public const SLUG_STANDALONE_TOTP = 'totp';
+    public const SLUG_PASSWORD_DESCRIPTION_TOTP = 'password-description-totp';
+
     protected $_accessible = [
         'name' => false,
         'slug' => false,

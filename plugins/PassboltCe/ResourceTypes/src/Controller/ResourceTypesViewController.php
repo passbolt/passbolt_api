@@ -15,10 +15,9 @@ declare(strict_types=1);
  * @since         3.0.0
  */
 
-namespace App\Controller\ResourceTypes;
+namespace Passbolt\ResourceTypes\Controller;
 
 use App\Controller\AppController;
-use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -40,14 +39,11 @@ class ResourceTypesViewController extends AppController
      */
     public function view(string $id)
     {
-        if (!Configure::read('passbolt.plugins.resourceTypes.enabled')) {
-            throw new NotFoundException();
-        }
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
         try {
-            /** @var \App\Model\Table\ResourceTypesTable $resourceTypesTable */
+            /** @var \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable $resourceTypesTable */
             $resourceTypesTable = $this->fetchTable('ResourceTypes');
             $resourceType = $resourceTypesTable->get($id);
         } catch (CakeException $exception) {

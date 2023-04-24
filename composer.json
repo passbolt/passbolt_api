@@ -109,7 +109,8 @@
             "Passbolt\\ResourceTypes\\": "./plugins/PassboltCe/ResourceTypes/src",
             "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/PassboltCe/MultiFactorAuthentication/src",
-            "Passbolt\\SelfRegistration\\": "./plugins/PassboltCe/SelfRegistration/src"
+            "Passbolt\\SelfRegistration\\": "./plugins/PassboltCe/SelfRegistration/src",
+            "Passbolt\\TotpResourceTypes\\": "./plugins/PassboltCe/TotpResourceTypes/src"
         }
     },
     "autoload-dev": {
@@ -129,7 +130,9 @@
             "Passbolt\\JwtAuthentication\\Test\\": "./plugins/PassboltCe/JwtAuthentication/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/PassboltCe/MultiFactorAuthentication/tests",
             "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests",
-            "Passbolt\\SelfRegistration\\Test\\": "./plugins/PassboltCe/SelfRegistration/tests"
+            "Passbolt\\SelfRegistration\\Test\\": "./plugins/PassboltCe/SelfRegistration/tests",
+            "Passbolt\\ResourceTypes\\Test\\": "./plugins/PassboltCe/ResourceTypes/tests",
+            "Passbolt\\TotpResourceTypes\\Test\\": "./plugins/PassboltCe/TotpResourceTypes/tests"
         }
     },
     "scripts": {

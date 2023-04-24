@@ -15,24 +15,30 @@ declare(strict_types=1);
  * @since         2.0.0
  */
 
-namespace App\Test\TestCase\Controller\ResourceTypes;
+namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\ResourceTypesModelTrait;
+use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
+use Passbolt\ResourceTypes\Test\Scenario\ResourceTypesScenario;
 
+/**
+ * @covers \Passbolt\ResourceTypes\Controller\ResourceTypesIndexController
+ */
 class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 {
     use ResourceTypesModelTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/ResourceTypes'];
-
     public function testResourceTypesIndex_Success()
     {
+        $this->loadFixtureScenario(ResourceTypesScenario::class);
         $this->logInAsUser();
+
         $this->getJson('/resource-types.json?api-version=2');
+
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertResourceTypeAttributes($this->_responseJsonBody[0]);
+        $this->assertCount(2, $this->_responseJsonBody);
     }
 
     public function testResourceTypesIndex_ErrorNotAuthenticated()

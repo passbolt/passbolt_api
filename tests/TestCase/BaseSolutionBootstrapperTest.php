@@ -42,6 +42,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/Locale',
         'Passbolt/Export',
         'Passbolt/ResourceTypes',
+        'Passbolt/TotpResourceTypes',
         'Passbolt/RememberMe',
         'Passbolt/EmailNotificationSettings',
         'Passbolt/EmailDigest',

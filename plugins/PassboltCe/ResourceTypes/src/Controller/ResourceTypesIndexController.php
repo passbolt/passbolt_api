@@ -15,28 +15,27 @@ declare(strict_types=1);
  * @since         3.0.0
  */
 
-namespace App\Controller\ResourceTypes;
+namespace Passbolt\ResourceTypes\Controller;
 
 use App\Controller\AppController;
-use App\Service\ResourceTypes\ResourceTypesFinderService;
-use Cake\Core\Configure;
-use Cake\Http\Exception\NotFoundException;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
 
 class ResourceTypesIndexController extends AppController
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * Resource Types Index action
      *
+     * @param \Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface $resourceTypesFinder Resource types finder service.
      * @throws \Cake\Http\Exception\NotFoundException if plugin is disabled by admin
      * @return void
      */
-    public function index()
+    public function index(ResourceTypesFinderInterface $resourceTypesFinder)
     {
-        if (!Configure::read('passbolt.plugins.resourceTypes.enabled')) {
-            throw new NotFoundException();
-        }
-        $resourceTypeFinderService = new ResourceTypesFinderService();
-        $resourceTypes = $resourceTypeFinderService->find()->all();
-        $this->success(__('The operation was successful.'), $resourceTypes);
+        $resourceTypes = $resourceTypesFinder->find();
+
+        $this->success(__('The operation was successful.'), $resourceTypes->all());
     }
 }
