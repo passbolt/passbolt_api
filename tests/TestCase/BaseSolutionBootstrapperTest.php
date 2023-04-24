@@ -42,6 +42,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/Locale',
         'Passbolt/Export',
         'Passbolt/ResourceTypes',
+        'Passbolt/TotpResourceTypes',
         'Passbolt/RememberMe',
         'Passbolt/EmailNotificationSettings',
         'Passbolt/EmailDigest',
@@ -53,7 +54,6 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/MultiFactorAuthentication',
         'Passbolt/Log',
         'Passbolt/Folders',
-        'Passbolt/TotpResourceTypes',
     ];
 
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void

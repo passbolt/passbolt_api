@@ -28,8 +28,10 @@ class TotpResourceTypesPlugin extends BasePlugin
      */
     public function services(ContainerInterface $container): void
     {
-        $container
-            ->extend(ResourceTypesFinderInterface::class)
-            ->setConcrete(TotpResourceTypesFinderService::class);
+        if ($container->has(ResourceTypesFinderInterface::class)) {
+            $container
+                ->extend(ResourceTypesFinderInterface::class)
+                ->setConcrete(TotpResourceTypesFinderService::class);
+        }
     }
 }

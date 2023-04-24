@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\TotpResourceTypes\Test\TestCase\Controller\ResourceTypes;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
 use Passbolt\ResourceTypes\Test\Scenario\ResourceTypesScenario;
 use Passbolt\TotpResourceTypes\Test\Scenario\TotpResourceTypesScenario;
@@ -38,6 +39,16 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
         parent::setUp();
 
         $this->enableFeaturePlugin(TotpResourceTypesPlugin::class);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        $this->disableFeaturePlugin(TotpResourceTypesPlugin::class);
     }
 
     public function testResourceTypesIndex_Success_WithTotpResourceTypes()
@@ -67,5 +78,13 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertResourceTypeAttributes($this->_responseJsonBody[0]);
         $this->assertCount(2, $this->_responseJsonBody);
+    }
+
+    public function testResourceTypesIndex_ResourceTypesPlugin_Disabled()
+    {
+        $this->disableFeaturePlugin(ResourceTypesPlugin::class);
+        $this->get('/resource-types.json');
+        $this->assertResponseCode(404);
+        $this->enableFeaturePlugin(ResourceTypesPlugin::class);
     }
 }

@@ -222,6 +222,9 @@ return [
             'resourceTypes' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'totpResourceTypes' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_TOTP_RESOURCE_TYPES_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            ],
             'mobile' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
@@ -245,9 +248,6 @@ return [
             ],
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
-            ],
-            'totpResourceTypes' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_TOTP_RESOURCE_TYPES_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 
