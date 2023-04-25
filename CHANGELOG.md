@@ -2,9 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.12.2-rc.1] - 2023-04-25
+## [3.12.2] - 2023-04-25
 ### Security
-- PB-24315 Description should be forced to empty for resources of type password and description
+- PB-24315 As signed-in user creating resources with encrypted description the API should not store unencrypted descriptions even if provided by the client
 
 ## [3.12.0] - 2023-03-15
 ### Added
