@@ -21,12 +21,15 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
 use App\Service\Resources\ResourcesAddService;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
@@ -102,8 +105,9 @@ class ResourcesAddServiceTest extends TestCase
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
 
-        $this->assertSame(1, $this->Resources->find()->count());
-        $this->assertSame(1, $this->Secrets->find()->count());
+        $this->assertSame(1, ResourceFactory::count());
+        $this->assertSame(1, SecretFactory::count());
+        $this->assertSame($data['description'], $resource->get('description'));
     }
 
     public function testResourceAddServiceNoIdUser()
@@ -165,5 +169,27 @@ class ResourcesAddServiceTest extends TestCase
 
         $this->assertSame(0, $this->Resources->find()->count());
         $this->assertSame(0, $this->Secrets->find()->count());
+    }
+
+    public function testResourceAddService_With_Password_And_Description_Type()
+    {
+        ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        $data = $this->getDummyResourcesPostData();
+        $data['description'] = 'Foo description';
+        $data['resource_type_id'] = ResourceTypesTable::getPasswordAndDescriptionTypeId();
+
+        $user = UserFactory::make()->user()->persist();
+        $service = new ResourcesAddService();
+
+        $resource = $service->add($user->id, $data);
+
+        $this->assertInstanceOf(Resource::class, $resource);
+        $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
+
+        $this->assertSame(1, $this->Resources->find()->count());
+        $this->assertSame(1, $this->Secrets->find()->count());
+
+        $this->assertSame(ResourceTypesTable::getPasswordAndDescriptionTypeId(), $resource->resource_type_id);
+        $this->assertNull($resource->description);
     }
 }

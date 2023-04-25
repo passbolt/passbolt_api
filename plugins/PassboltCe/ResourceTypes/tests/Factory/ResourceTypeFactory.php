@@ -65,4 +65,9 @@ class ResourceTypeFactory extends CakephpBaseFactory
     {
         return $this->patchData(['id' => ResourceTypesTable::getDefaultTypeId()]);
     }
+
+    public function passwordAndDescription(): self
+    {
+        return $this->patchData(['id' => ResourceTypesTable::getPasswordAndDescriptionTypeId()]);
+    }
 }
