@@ -164,9 +164,19 @@ class ResourceTypesTable extends Table
      *
      * @return string uuid
      */
-    public static function getDefaultTypeId()
+    public static function getDefaultTypeId(): string
     {
         return UuidFactory::uuid('resource-types.id.password-string');
+    }
+
+    /**
+     * Get the password and description type id
+     *
+     * @return string uuid
+     */
+    public static function getPasswordAndDescriptionTypeId(): string
+    {
+        return UuidFactory::uuid('resource-types.id.password-and-description');
     }
 
     /**
