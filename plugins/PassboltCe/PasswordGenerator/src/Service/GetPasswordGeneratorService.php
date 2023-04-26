@@ -19,7 +19,7 @@ namespace Passbolt\PasswordGenerator\Service;
 
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
-use Passbolt\PasswordGenerator\Plugin;
+use Passbolt\PasswordGenerator\PasswordGeneratorPlugin;
 
 class GetPasswordGeneratorService
 {
@@ -51,7 +51,7 @@ class GetPasswordGeneratorService
      */
     protected function readInConfig(): string
     {
-        $envGenerator = Configure::read(Plugin::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY);
+        $envGenerator = Configure::read(PasswordGeneratorPlugin::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY);
         if (empty($envGenerator)) {
             return $this->getDefaultGenerator();
         }

@@ -189,7 +189,7 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
     {
         $this->executeFixture($fixture);
 
-        TableRegistry::clear(); // We clean up the registry for clean initialization of the tables during tests.
+        TableRegistry::getTableLocator()->clear(); // We clean up the registry for clean initialization of the tables during tests.
 
         $queryParameters = http_build_query([
             'api-version' => 2,

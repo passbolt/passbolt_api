@@ -212,19 +212,11 @@ class FoldersShareServiceTest extends FoldersTestCase
         $data['permissions'][] = ['aro' => 'User', 'aro_foreign_key' => $userCId, 'type' => Permission::READ];
         $this->service->share($uac, $folderA->id, $data);
 
-        $this->assertEmailIsInQueue([
-            'email' => 'betty@passbolt.com',
-            'subject' => 'Ada shared the folder A',
-            'template' => 'Passbolt/Folders.LU/folder_share',
-        ]);
-        $this->assertEmailIsInQueue([
-            'email' => 'carol@passbolt.com',
-            'subject' => 'Ada shared the folder A',
-            'template' => 'Passbolt/Folders.LU/folder_share',
-        ]);
         $this->assertEmailQueueCount(2);
-        $this->assertEmailInBatchContains('shared the folder');
-        $this->assertEmailInBatchContains('shared the folder', 1);
+        $this->assetEmailSubject('betty@passbolt.com', 'Ada shared the folder A');
+        $this->assertEmailInBatchContains('Ada shared a folder with you', 'carol@passbolt.com');
+        $this->assetEmailSubject('carol@passbolt.com', 'Ada shared the folder A');
+        $this->assertEmailInBatchContains('Ada shared a folder with you', 'betty@passbolt.com');
     }
 
     public function testShareFolderSuccess_AddGroup()

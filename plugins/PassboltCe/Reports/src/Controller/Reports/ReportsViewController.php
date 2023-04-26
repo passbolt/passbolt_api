@@ -26,7 +26,7 @@ use Passbolt\Reports\Service\ReportViewService;
 use Passbolt\Reports\Utility\ReportInterface;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * ReportsViewController Class
  */
 class ReportsViewController extends AppController
 {
@@ -38,6 +38,11 @@ class ReportsViewController extends AppController
     private $reportViewService;
 
     /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
      * @return void
      * @throws \Exception
      */
@@ -45,7 +50,8 @@ class ReportsViewController extends AppController
     {
         parent::initialize();
         $this->reportViewService = new ReportViewService();
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**

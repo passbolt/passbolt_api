@@ -20,20 +20,25 @@ namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\I18n\FrozenDate;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * IsExpiredTest Class
  */
 class IsExpiredTest extends AppTestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('AuthenticationTokens');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     public function expiryData(): array

@@ -33,6 +33,8 @@ use App\Notification\EmailDigest\DigestRegister\GroupDigests;
 use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Service\Avatars\AvatarsConfigurationService;
+use App\Service\Cookie\AbstractSecureCookieService;
+use App\Service\Cookie\DefaultSecureCookieService;
 use App\ServiceProvider\SetupServiceProvider;
 use App\ServiceProvider\TestEmailServiceProvider;
 use App\ServiceProvider\UserServiceProvider;
@@ -54,7 +56,6 @@ use Cake\Routing\Router;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
@@ -125,18 +126,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         }
 
         return $middlewareQueue;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function handle(
-        ServerRequestInterface $request
-    ): ResponseInterface {
-        // TODO: remove this line when migrating to CakePHP 4.4 (https://github.com/cakephp/cakephp/pull/16180)
-        $this->getContainer()->add(ServerRequest::class, $request);
-
-        return parent::handle($request);
     }
 
     /**
@@ -290,6 +279,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->add(AuthenticationServiceInterface::class, SessionAuthenticationService::class);
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
         $container->add(SelfRegistrationDryRunServiceInterface::class, SelfRegistrationDefaultDryRunService::class);
+        $container->add(AbstractSecureCookieService::class, DefaultSecureCookieService::class);
         $container->addServiceProvider(new TestEmailServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());

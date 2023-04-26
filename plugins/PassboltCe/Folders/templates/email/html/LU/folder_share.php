@@ -30,7 +30,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => FrozenTime::now(),
-        'text' => __('shared a folder with you'),
+        'text' => __('{0} shared a folder with you', Purifier::clean($user['profile']['first_name'])),
     ]),
 ]);
 

@@ -20,26 +20,23 @@ namespace App\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
-use App\Model\Table\ResourceTypesTable;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Log\Log;
+use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
  * Class ResourcesAddService.
  *
  * A particularity of this class is to persist resources and the associated secret outside
  * of a transaction in order to avoid table locks when performing imports.
- *
- * @property \App\Model\Table\ResourcesTable $Resources
- * @property \App\Model\Table\UsersTable $Users
  */
 class ResourcesAddService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     public const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
 
@@ -48,12 +45,24 @@ class ResourcesAddService
     public const ATTEMPTS_ALLOWED = 5;
 
     /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
      * ResourcesAddService constructor.
      */
     public function __construct()
     {
-        $this->loadModel('Resources');
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**

@@ -30,8 +30,9 @@ class AccountSettingsIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
-        $response = $this->AccountSettings->findIndex($this->User->id(), ['theme', 'locale']);
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettingsTable */
+        $accountSettingsTable = $this->fetchTable('Passbolt/AccountSettings.AccountSettings');
+        $response = $accountSettingsTable->findIndex($this->User->id(), ['theme', 'locale']);
         $this->success(__('The operation was successful.'), $response);
     }
 }

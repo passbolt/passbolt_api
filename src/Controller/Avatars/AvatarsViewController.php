@@ -36,14 +36,15 @@ class AvatarsViewController extends AppController
      */
     public function view(string $id, string $format): Response
     {
-        $this->loadModel('Avatars');
+        /** @var \App\Model\Table\AvatarsTable $avatarsTable */
+        $avatarsTable = $this->fetchTable('Avatars');
 
         $formatIsValid = $this->validateImageFormat($format);
         if ($formatIsValid === false) {
             $id = null;
         }
 
-        $service = new AvatarsCacheService($this->Avatars);
+        $service = new AvatarsCacheService($avatarsTable);
 
         try {
             $stream = $service->readSteamFromId($id, $format);

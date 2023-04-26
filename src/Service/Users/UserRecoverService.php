@@ -24,24 +24,23 @@ use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\ServerRequest;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\View\ViewBuilder;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
 /**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
- * @property \App\Model\Table\UsersTable $Users
+ * UserRecoverService
  */
 class UserRecoverService implements UserRecoverServiceInterface
 {
     use EventDispatcherTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     public const AFTER_RECOVER_SUCCESS_EVENT_NAME = 'after_recover_success_event_name';
 
@@ -56,6 +55,16 @@ class UserRecoverService implements UserRecoverServiceInterface
     protected $selfRegistrationDryRunService;
 
     /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
      * @param \Cake\Http\ServerRequest $serverRequest Server request
      * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $selfRegistrationDryRunService Service to detect if a guest can self register
      */
@@ -65,8 +74,10 @@ class UserRecoverService implements UserRecoverServiceInterface
     ) {
         $this->request = $serverRequest;
         $this->selfRegistrationDryRunService = $selfRegistrationDryRunService;
-        $this->loadModel('AuthenticationTokens');
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**

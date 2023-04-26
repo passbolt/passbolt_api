@@ -21,7 +21,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\PasswordGenerator\Plugin;
+use Passbolt\PasswordGenerator\PasswordGeneratorPlugin;
 use Passbolt\PasswordGenerator\Service\GetPasswordGeneratorService;
 
 class GetPasswordGeneratorServiceTest extends TestCase
@@ -34,7 +34,7 @@ class GetPasswordGeneratorServiceTest extends TestCase
     public function testGetPasswordGeneratorHappyPath($env, string $generator)
     {
         $service = new GetPasswordGeneratorService();
-        Configure::write(Plugin::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY, $env);
+        Configure::write(PasswordGeneratorPlugin::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY, $env);
         $this->assertSame($generator, $service->getPasswordGenerator());
     }
 
@@ -43,7 +43,7 @@ class GetPasswordGeneratorServiceTest extends TestCase
      */
     public function testGetPasswordGeneratorError($env)
     {
-        Configure::write(Plugin::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY, $env);
+        Configure::write(PasswordGeneratorPlugin::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY, $env);
         $service = new GetPasswordGeneratorService();
 
         $this->expectException(InternalErrorException::class);

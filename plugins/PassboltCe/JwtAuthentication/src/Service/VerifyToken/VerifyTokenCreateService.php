@@ -18,22 +18,28 @@ namespace Passbolt\JwtAuthentication\Service\VerifyToken;
 
 use App\Model\Entity\AuthenticationToken;
 use Cake\Core\Configure;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\I18n\FrozenTime;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * Class VerifyTokenCreateService
  */
 class VerifyTokenCreateService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     /**
      * VerifyTokenCreateService constructor.
      */
     public function __construct()
     {
-        $this->loadModel('AuthenticationTokens');
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     /**
