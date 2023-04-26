@@ -26,7 +26,6 @@ use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
  * Class DatabaseController
  *
  * @package Passbolt\WebInstaller\Controller
- * @property \App\Model\Table\UsersTable $Users
  */
 class DatabaseController extends WebInstallerController
 {
@@ -55,6 +54,11 @@ class DatabaseController extends WebInstallerController
     ];
 
     /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
      * Initialize.
      *
      * @return void
@@ -79,6 +83,9 @@ class DatabaseController extends WebInstallerController
             $this->stepInfo['defaultConfig'] = array_merge($this->configFileDefault, $this->configFile);
             $this->defaultPassword = UuidFactory::uuid('__default_password__');
         }
+
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**
@@ -164,7 +171,6 @@ class DatabaseController extends WebInstallerController
 
         DatabaseConfiguration::validateSchema();
 
-        $this->loadModel('Users');
         $nbAdmins = $this->Users->find()
             ->where(['role_id' => $this->Users->Roles->getIdByName(Role::ADMIN)])
             ->count();

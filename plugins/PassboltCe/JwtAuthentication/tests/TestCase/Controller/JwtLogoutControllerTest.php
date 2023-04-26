@@ -19,7 +19,7 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Controller;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
@@ -27,17 +27,20 @@ use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase
 
 /**
  * Class AuthJwtLogoutControllerTest
- *
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
 class JwtLogoutControllerTest extends JwtAuthenticationIntegrationTestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('AuthenticationTokens');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     public function testAuthJwtLogoutControllerUnauthenticated()

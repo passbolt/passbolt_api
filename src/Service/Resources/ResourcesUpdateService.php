@@ -22,23 +22,23 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourceTypesTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\FrozenTime;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 class ResourcesUpdateService
 {
     use EventDispatcherTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     public const UPDATE_SUCCESS_EVENT_NAME = 'ResourcesUpdateController.update.success';
 
@@ -74,9 +74,12 @@ class ResourcesUpdateService
     {
         $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
-        $this->loadModel('Permissions');
-        $this->loadModel('Resources');
-        $this->loadModel('Secrets');
+        /** @phpstan-ignore-next-line */
+        $this->Permissions = $this->fetchTable('Permissions');
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Secrets = $this->fetchTable('Secrets');
     }
 
     /**

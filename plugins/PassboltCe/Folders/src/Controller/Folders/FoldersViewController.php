@@ -41,7 +41,8 @@ class FoldersViewController extends AppController
             throw new BadRequestException(__('The folder id is not valid.'));
         }
 
-        $this->loadModel('Passbolt/Folders.Folders');
+        /** @var \Passbolt\Folders\Model\Table\FoldersTable $foldersTable */
+        $foldersTable = $this->fetchTable('Passbolt/Folders.Folders');
 
         // Retrieve and sanity the query options.
         $whitelist = [
@@ -61,7 +62,7 @@ class FoldersViewController extends AppController
         ];
         $options = $this->QueryString->get($whitelist);
 
-        $folder = $this->Folders->findView($this->User->id(), $id, $options)->first();
+        $folder = $foldersTable->findView($this->User->id(), $id, $options)->first();
 
         if (empty($folder)) {
             throw new NotFoundException('The folder does not exist.');

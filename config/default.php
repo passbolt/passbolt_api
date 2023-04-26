@@ -222,6 +222,9 @@ return [
             'resourceTypes' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'totpResourceTypes' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_TOTP_RESOURCE_TYPES_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            ],
             'mobile' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
@@ -294,6 +297,10 @@ return [
         // false will render your installation insecure.
         'ssl' => [
             'force' => filter_var(env('PASSBOLT_SSL_FORCE', true), FILTER_VALIDATE_BOOLEAN)
+        ],
+        //ObfuscateFields placeholder
+        'obfuscateFields' => [
+            'placeholder' => env('PASSBOLT_OBFUSCATE_FIELDS_PLACEHOLDER', \App\Controller\Component\ObfuscateFieldsComponent::FIELD_PLACEHOLDER),
         ]
     ],
     // Override the Cake ExceptionRenderer.

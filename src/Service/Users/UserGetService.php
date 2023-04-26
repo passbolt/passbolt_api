@@ -20,27 +20,32 @@ namespace App\Service\Users;
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 
 /**
  * Class UserGetService
  *
  * @package App\Service\Users
- * @property \App\Model\Table\UsersTable $Users
  */
 class UserGetService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * UserGetService constructor
      */
     public function __construct()
     {
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**

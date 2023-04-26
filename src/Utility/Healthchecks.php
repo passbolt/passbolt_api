@@ -243,13 +243,17 @@ class Healthchecks
      *  - is the JWT Authentication enabled
      *  - if true, are the JWT key files correctly set and valid.
      *
-     * @param array|null $checks List of checks
+     * @param \Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService|null $jwtKeyPairService JWT Service
+     * @param array $checks List of checks
      * @return array
      */
-    public static function jwt(?array $checks = []): array
+    public static function jwt(?JwtKeyPairService $jwtKeyPairService = null, array $checks = []): array
     {
+        if (is_null($jwtKeyPairService)) {
+            $jwtKeyPairService = new JwtKeyPairService();
+        }
         try {
-            (new JwtKeyPairService())->validateKeyPair();
+            $jwtKeyPairService->validateKeyPair();
             $keyPairIsValid = true;
         } catch (\Throwable $e) {
             $keyPairIsValid = false;

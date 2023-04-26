@@ -26,10 +26,24 @@ use Cake\Validation\Validation;
  * Class TransfersViewController
  *
  * @package Passbolt\Mobile\Controller\Transfers
- * @property \Passbolt\Mobile\Model\Table\TransfersTable $Transfers
  */
 class TransfersViewController extends AppController
 {
+    /**
+     * @var \Passbolt\Mobile\Model\Table\TransfersTable
+     */
+    protected $Transfers;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Transfers = $this->fetchTable('Passbolt/Mobile.Transfers');
+    }
+
     /**
      * View a transfer status
      *
@@ -43,8 +57,6 @@ class TransfersViewController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The transfer id is not valid.'));
         }
-
-        $this->loadModel('Passbolt/Mobile.Transfers');
 
         // Contain options
         $whitelist = ['contain' => ['user', 'user.profile']];

@@ -20,7 +20,7 @@ namespace App\Controller\Groups;
 use App\Controller\AppController;
 
 /**
- * @property \App\Model\Table\GroupsTable $Groups
+ * GroupsIndexController Class
  */
 class GroupsIndexController extends AppController
 {
@@ -31,7 +31,8 @@ class GroupsIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Groups');
+        /** @var \App\Model\Table\GroupsTable $groupsTable */
+        $groupsTable = $this->fetchTable('Groups');
 
         // Retrieve and sanity the query options.
         $whitelist = [
@@ -51,7 +52,7 @@ class GroupsIndexController extends AppController
         }
 
         // Retrieve the groups.
-        $groups = $this->Groups->findIndex($options);
+        $groups = $groupsTable->findIndex($options);
         $this->success(__('The operation was successful.'), $groups);
     }
 }

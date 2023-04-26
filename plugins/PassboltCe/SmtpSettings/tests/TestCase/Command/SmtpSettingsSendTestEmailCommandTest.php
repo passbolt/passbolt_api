@@ -18,9 +18,9 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
 use App\Test\Lib\Utility\EmailTestTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;

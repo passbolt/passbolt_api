@@ -21,7 +21,6 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAction;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 use Passbolt\Log\Test\Lib\Traits\EntitiesHistoryTestTrait;
@@ -104,7 +103,6 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
             'foreignKey' => 'foreign_key',
         ]);
         $this->enableFeaturePlugin('JwtAuthentication');
-        (new JwtKeyPairService())->createKeyPair();
 
         $this->Actions->clearCache();
     }

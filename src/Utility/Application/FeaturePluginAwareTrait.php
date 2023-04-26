@@ -17,11 +17,13 @@ declare(strict_types=1);
 namespace App\Utility\Application;
 
 use Cake\Core\Configure;
+use Cake\Core\PluginInterface;
+use Cake\Http\Exception\InternalErrorException;
 
 trait FeaturePluginAwareTrait
 {
     /**
-     * @param string $name Plugin name, either upper case or lower case first (without the "Passbolt/" prefix)
+     * @param string $name Plugin class name or plugin name, either upper case or lower case first (without the "Passbolt/" prefix)
      * @param bool $isEnabledByDefault Should be loaded by default, if not priorly configured. False by default.
      * @return bool
      */
@@ -31,7 +33,7 @@ trait FeaturePluginAwareTrait
     }
 
     /**
-     * @param string $name Plugin name, either upper case or lower case first (without the "Passbolt/" prefix)
+     * @param string $name Plugin class name or plugin name, either upper case or lower case first (without the "Passbolt/" prefix)
      * @return void
      */
     public function enableFeaturePlugin(string $name): void
@@ -40,7 +42,7 @@ trait FeaturePluginAwareTrait
     }
 
     /**
-     * @param string $name Plugin name, either upper case or lower case first (without the "Passbolt/" prefix)
+     * @param string $name Plugin class name or plugin name, either upper case or lower case first (without the "Passbolt/" prefix)
      * @return void
      */
     public function disableFeaturePlugin(string $name): void
@@ -49,11 +51,25 @@ trait FeaturePluginAwareTrait
     }
 
     /**
-     * @param string $name Plugin name, either upper case or lower case first (without the "Passbolt/" prefix)
+     * @param string $name Plugin class name or plugin name, either upper case or lower case first (without the "Passbolt/" prefix)
      * @return string
+     * @throws \Cake\Http\Exception\InternalErrorException if the plugin name is a class and not a plugin interface
      */
     protected function getPluginEnabledConfigurationKey(string $name): string
     {
+        if (class_exists($name)) {
+            if (!is_subclass_of($name, PluginInterface::class)) {
+                throw new InternalErrorException("The class {$name} should implement PluginInterface::class.");
+            }
+
+            $extractedName = substr(substr(strrchr($name, '\\'), 1), 0, -6);
+            if (empty($extractedName)) {
+                throw new InternalErrorException("The class {$name} is not a valid plugin.");
+            }
+
+            $name = $extractedName;
+        }
+
         $name = lcfirst($name);
 
         return "passbolt.plugins.{$name}.enabled";

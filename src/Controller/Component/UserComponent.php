@@ -207,13 +207,14 @@ class UserComponent extends Component
     /**
      * Allow admins only.
      *
+     * @param ?string $msg Optional message
      * @throws \Cake\Http\Exception\ForbiddenException
      * @return void
      */
-    public function assertIsAdmin(): void
+    public function assertIsAdmin(?string $msg = null): void
     {
         if (!$this->isAdmin()) {
-            throw new ForbiddenException(__('Access restricted to administrators.'));
+            throw new ForbiddenException($msg ?? __('Access restricted to administrators.'));
         }
     }
 

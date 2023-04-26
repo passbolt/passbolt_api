@@ -22,11 +22,15 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 
 /**
- * @property \App\Model\Table\ResourcesTable $Resources
  * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class ResourcesIndexController extends AppController
 {
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
     /**
      * @inheritDoc
      */
@@ -36,6 +40,8 @@ class ResourcesIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Resources',
         ]);
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
     }
 
     public $paginate = [
@@ -57,8 +63,6 @@ class ResourcesIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Resources');
-
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => [

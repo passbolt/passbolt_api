@@ -102,6 +102,6 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->post('/install/database', $postData);
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertStringContainsString('Database driver invalid-driver could not be found.', $data);
+        $this->assertStringContainsString('Could not find driver `invalid-driver` for connection `test`', $data);
     }
 }

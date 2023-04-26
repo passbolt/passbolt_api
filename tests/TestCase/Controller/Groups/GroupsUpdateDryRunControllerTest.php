@@ -29,6 +29,16 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Secrets',
     ];
 
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    protected $Groups;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -114,7 +124,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId/dry-run.json", ['groups_users' => $changes]);
 
         $this->assertSuccess();
-        $result = json_decode(json_encode($this->_responseJsonBody), true);
+        $result = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($result);
 
         // Extract from the result the secrets to add and the secrets of the current users that will be used to encrypt
@@ -175,7 +185,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // No secrets should be requested nor source secrets given.
-        $result = json_decode(json_encode($this->_responseJsonBody), true);
+        $result = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($result['dry-run']);
         $this->assertEmpty($result['dry-run']['SecretsNeeded']);
         $this->assertEmpty($result['dry-run']['Secrets']);

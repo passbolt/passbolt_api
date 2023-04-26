@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\TestCase\Service\ActionLogs;
 
-use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use App\Utility\UuidFactory;
+use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use Passbolt\Log\Service\ActionLogs\ActionLogsCreateService;
@@ -40,7 +40,9 @@ class ActionLogsCreateServiceTest extends TestCase
         $accessControl = new UserAccessControl(Role::USER, UuidFactory::uuid('user.id.ada'));
         $userAction = UserAction::getInstance($accessControl, $actionName, 'Foo');
         $service = new ActionLogsCreateService();
-        $service->create($userAction, $this->getMockBuilder(AppController::class)->disableOriginalConstructor()->getMock());
+        // Here the stub should be of Cake Controller, as some controllers do not extend AppController
+        $controllerStub = $this->getMockBuilder(Controller::class)->disableOriginalConstructor()->getMock();
+        $service->create($userAction, $controllerStub);
         $this->assertSame(0, ActionLogFactory::count());
     }
 }

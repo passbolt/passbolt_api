@@ -17,9 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\Factory;
 
 use App\Test\Factory\ResourceFactory as ResourceCoreFactory;
+use Passbolt\Folders\FoldersPlugin;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
-use Passbolt\Folders\Plugin;
 
 /**
  * ResourceFactory
@@ -29,7 +29,7 @@ class ResourceFactory extends ResourceCoreFactory
     public function initialize(): void
     {
         parent::initialize();
-        Plugin::addAssociationsToResourcesTable($this->getTable());
+        FoldersPlugin::addAssociationsToResourcesTable($this->getTable());
     }
 
     /**
