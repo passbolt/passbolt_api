@@ -152,7 +152,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         foreach ($testCases as $caseLabel => $case) {
             $this->postJson("/share/simulate/resource/$resourceId.json?api-version=2", ['permissions' => $case['data']]);
             $this->assertError();
-            $errors = json_decode(json_encode($this->_responseJsonBody), true);
+            $errors = $this->getResponseBodyAsArray();
             $this->assertNotEmpty($errors);
             $error = Hash::get($errors, $case['errorField']);
             $this->assertNotNull($error, "Expected error not found : {$case['errorField']}. Errors: " . json_encode($errors));

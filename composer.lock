@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "40179b376030e3e058932a3afa22be5e",
+    "content-hash": "1829c4db609ddde2c490b0f19b950da7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -310,16 +310,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "4.3.11",
+            "version": "4.4.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "47177366fc9131a58a518e99f732e98a8a4854ac"
+                "reference": "7d9b6a639e5c1f52a813696f6b347726a74f9680"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/47177366fc9131a58a518e99f732e98a8a4854ac",
-                "reference": "47177366fc9131a58a518e99f732e98a8a4854ac",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/7d9b6a639e5c1f52a813696f6b347726a74f9680",
+                "reference": "7d9b6a639e5c1f52a813696f6b347726a74f9680",
                 "shasum": ""
             },
             "require": {
@@ -329,9 +329,9 @@
                 "ext-json": "*",
                 "ext-mbstring": "*",
                 "laminas/laminas-diactoros": "^2.2.2",
-                "laminas/laminas-httphandlerrunner": "^1.1",
+                "laminas/laminas-httphandlerrunner": "^1.1 || ^2.0",
                 "league/container": "^4.2.0",
-                "php": ">=7.2.0",
+                "php": ">=7.4.0",
                 "psr/container": "^1.1 || ^2.0",
                 "psr/http-client": "^1.0",
                 "psr/http-server-handler": "^1.0",
@@ -410,7 +410,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2023-01-06T03:05:28+00:00"
+            "time": "2023-02-11T01:01:55+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -8698,7 +8698,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "ext-json": "*",
         "ext-posix": "*",
         "ext-intl": "*",
@@ -8710,7 +8710,7 @@
     },
     "platform-dev": [],
     "platform-overrides": {
-        "php": "7.3"
+        "php": "7.4"
     },
     "plugin-api-version": "2.3.0"
 }

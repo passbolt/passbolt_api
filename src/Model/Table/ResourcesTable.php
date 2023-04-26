@@ -23,6 +23,7 @@ use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\UuidFactory;
 use Cake\Event\Event;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -30,6 +31,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
  * Resources Model
@@ -47,7 +49,7 @@ use Cake\Validation\Validator;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @property \App\Model\Table\FavoritesTable&\Cake\ORM\Association\HasOne $Favorites
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasOne $Permission
- * @property \App\Model\Table\ResourceTypesTable&\Cake\ORM\Association\BelongsTo $ResourceTypes
+ * @property \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable&\Cake\ORM\Association\BelongsTo $ResourceTypes
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\BelongsTo $EntitiesHistory
  * @method \App\Model\Entity\Resource newEmptyEntity()
  * @method \App\Model\Entity\Resource newEntity(array $data, array $options = [])
@@ -266,6 +268,20 @@ class ResourcesTable extends Table
     }
 
     /**
+     * @param \Cake\Event\Event $event event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     * @deprecated can be removed once isDescriptionEmptyOnPasswordAndDescriptionResourceType is a rule
+     */
+    public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options): void
+    {
+        if (!$this->isDescriptionEmptyOnPasswordAndDescriptionResourceType($data)) {
+            $data['description'] = null;
+        }
+    }
+
+    /**
      * Validate that the entity has at least one owner
      *
      * @param Resource $entity The entity that will be created or updated.
@@ -285,7 +301,29 @@ class ResourcesTable extends Table
     }
 
     /**
-     * Validate that the a resource can be created only if the secret of the owner is provided.
+     * Validate that the entity description is empty if the resource type is password and description
+     * This can be refactored as a rule after 4.0.0
+     *
+     * @param \ArrayObject $data data
+     * @return bool
+     * @todo refactor this as a rule after 4.0.0
+     */
+    public function isDescriptionEmptyOnPasswordAndDescriptionResourceType(\ArrayObject $data): bool
+    {
+        $resourceTypeId = $data['resource_type_id'] ?? null;
+        $description = $data['description'] ?? null;
+        $resourceTypePasswordAndDescriptionId = UuidFactory::uuid('resource-types.id.password-and-description');
+        $isResourceTypePasswordAndDescription = $resourceTypeId === $resourceTypePasswordAndDescriptionId;
+
+        if ($isResourceTypePasswordAndDescription && !empty($description)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Validate that a resource can be created only if the secret of the owner is provided.
      *
      * @param Resource $entity The entity that will be created.
      * @param array|null $options options

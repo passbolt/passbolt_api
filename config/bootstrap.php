@@ -1,24 +1,23 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         0.10.8
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 $isCli = PHP_SAPI === 'cli';
 
 /*
- * Configure paths required to find CakePHP + general filepath
- * constants
+ * Configure paths required to find CakePHP + general filepath constants
  */
-require __DIR__ . '/paths.php';
+require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
 
 /*
  * Bootstrap CakePHP.
@@ -39,8 +38,11 @@ use Cake\Database\TypeFactory;
 use Cake\Error\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
+use Cake\Database\Type\StringType;
 use Cake\Datasource\ConnectionManager;
-use Cake\Error\ErrorHandler;
+use Cake\Error\ErrorTrap;
+use Cake\Error\ExceptionTrap;
+use Cake\Http\ServerRequest;
 use Cake\Log\Log;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
@@ -89,9 +91,8 @@ Configure::write('App.paths', [
 ]);
 
 /*
- * Load an environment local configuration file.
- * You can use a file like app_local.php to provide local overrides to your
- * shared configuration.
+ * Load an environment local configuration file to provide overrides to your configuration.
+ * Notice: For security reasons app_local.php **should not** be included in your git repo.
  */
 //Configure::load('app_local', 'default');
 
@@ -106,10 +107,10 @@ if (Configure::read('debug')) {
 }
 
 /*
- * Set server timezone to UTC. You can change it to another timezone of your
- * choice but using UTC makes time calculations / conversions easier.
+ * Set the default server timezone. Using UTC makes time calculations / conversions easier.
+ * Check https://php.net/manual/en/timezones.php for list of valid timezone strings.
  */
-date_default_timezone_set('UTC');
+date_default_timezone_set(Configure::read('App.defaultTimezone', 'UTC'));
 
 /*
  * Configure the mbstring extension to use the correct encoding.
@@ -120,25 +121,28 @@ mb_internal_encoding(Configure::read('App.encoding'));
  * Set the default locale. This controls how dates, number and currency is
  * formatted and sets the default language to use for translations.
  */
-ini_set('intl.default_locale', 'en_UK');
+ini_set('intl.default_locale', Configure::read('App.defaultLocale', 'en_UK'));
 
+if (!Configure::read('debug')) {
+    Configure::write('Error.errorLevel', E_ALL ^ E_DEPRECATED ^ E_USER_DEPRECATED);
+} else {
+    /**
+     * Enable traces in logs when debug mode is enabled.
+     */
+    Configure::write('Error.log', true);
+    Configure::write('Error.trace', true);
+}
 /*
  * Register application error and exception handlers.
  */
-if (!Configure::read('debug')) {
-    Configure::write('Error.errorLevel', E_ALL ^ E_DEPRECATED);
-}
-if ($isCli) {
-    (new ConsoleErrorHandler(Configure::read('Error')))->register();
-} else {
-    (new ErrorHandler(Configure::read('Error')))->register();
-}
+(new ErrorTrap(Configure::read('Error')))->register();
+(new ExceptionTrap(Configure::read('Error')))->register();
 
 /*
  * Include the CLI bootstrap overrides.
  */
 if ($isCli) {
-    require __DIR__ . '/bootstrap_cli.php';
+    require CONFIG . 'bootstrap_cli.php';
 }
 
 /*
@@ -147,8 +151,18 @@ if ($isCli) {
  */
 $fullBaseUrl = Configure::read('App.fullBaseUrl');
 if (!$fullBaseUrl) {
+    /*
+     * When using proxies or load balancers, SSL/TLS connections might
+     * get terminated before reaching the server. If you trust the proxy,
+     * you can enable `$trustProxy` to rely on the `X-Forwarded-Proto`
+     * header to determine whether to generate URLs using `https`.
+     *
+     * See also https://book.cakephp.org/4/en/controllers/request-response.html#trusting-proxy-headers
+     */
+    $trustProxy = false;
+
     $s = null;
-    if (env('HTTPS')) {
+    if (env('HTTPS') || ($trustProxy && env('HTTP_X_FORWARDED_PROTO') === 'https')) {
         $s = 's';
     }
 
@@ -194,6 +208,8 @@ Security::setSalt(Configure::consume('Security.salt'));
  * @see https://book.cakephp.org/4/en/orm/database-basics.html#adding-custom-types
  */
 TypeFactory::map('json', JsonType::class);
+// There is no time-specific type in Cake
+TypeFactory::map('time', StringType::class);
 
 /*
  * Set process user constant

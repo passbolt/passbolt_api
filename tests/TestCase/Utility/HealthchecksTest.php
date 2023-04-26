@@ -17,13 +17,10 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Utility;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks;
-use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
 class HealthchecksTest extends AppIntegrationTestCase
 {
@@ -130,20 +127,22 @@ class HealthchecksTest extends AppIntegrationTestCase
         $this->assertArrayHasAttributes($attributes, $check['ssl']);
     }
 
-    public function testJwt()
+    public function testHealthchecksJwt()
     {
-        DirectoryUtility::removeRecursively(JwtTokenCreateService::JWT_SECRET_KEY_PATH);
-        DirectoryUtility::removeRecursively(JwksGetService::PUBLIC_KEY_PATH);
-        Configure::delete('passbolt.plugins.jwtAuthentication.enabled');
-        $check = Healthchecks::jwt();
-        $attributes = ['isEnabled',];
-        $this->assertArrayHasAttributes($attributes, $check['jwt']);
+        $service = new JwtKeyPairService(
+            null,
+            (new JwksGetService())->setKeyPath('foo')
+        );
+        $attributes = ['isEnabled', 'keyPairValid', 'jwtWritable'];
 
-        (new JwtKeyPairService())->createKeyPair();
+        $check = Healthchecks::jwt($service)['jwt'];
+        $this->assertArrayHasAttributes($attributes, $check);
+        $this->assertFalse($check['keyPairValid']);
+
         $this->enableFeaturePlugin('JwtAuthentication');
-        $check = Healthchecks::jwt();
-        $attributes = ['isEnabled', 'keyPairValid',];
-        $this->assertArrayHasAttributes($attributes, $check['jwt']);
+        $check = Healthchecks::jwt(new JwtKeyPairService())['jwt'];
+        $this->assertArrayHasAttributes($attributes, $check);
+        $this->assertTrue($check['keyPairValid']);
     }
 
     public function testDatabase_DummyConnectionFails()

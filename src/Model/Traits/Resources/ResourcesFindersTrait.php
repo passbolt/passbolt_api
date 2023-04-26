@@ -21,13 +21,13 @@ use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
-use App\Model\Table\ResourceTypesTable;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
  * @method \Cake\Event\EventManager getEventManager()

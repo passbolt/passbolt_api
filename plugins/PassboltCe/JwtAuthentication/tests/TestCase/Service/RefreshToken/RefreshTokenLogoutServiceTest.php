@@ -22,8 +22,8 @@ use App\Model\Entity\User;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\ServerRequest;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
@@ -31,19 +31,23 @@ use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenLogoutService;
 
 /**
  * @covers \Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenLogoutService
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
 class RefreshTokenLogoutServiceTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use TruncateDirtyTables;
 
     public $service;
 
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('AuthenticationTokens');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
         $this->service = new RefreshTokenLogoutService();
     }
 

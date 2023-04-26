@@ -41,7 +41,8 @@ class GroupsViewController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The group id is not valid.'));
         }
-        $this->loadModel('Groups');
+        /** @var \App\Model\Table\GroupsTable $groupsTable */
+        $groupsTable = $this->fetchTable('Groups');
 
         // Retrieve and sanity the query options.
         $whitelist = [
@@ -61,7 +62,7 @@ class GroupsViewController extends AppController
         }
 
         // Retrieve the group.
-        $group = $this->Groups->findView($id, $options)->first();
+        $group = $groupsTable->findView($id, $options)->first();
         if (empty($group)) {
             throw new NotFoundException(__('The group does not exist.'));
         }

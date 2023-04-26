@@ -23,9 +23,9 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
@@ -34,24 +34,35 @@ use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 
 /**
  * Class AuthJwtLogoutControllerTest
- *
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
- * @property \App\Model\Table\UsersTable $Users
- * @property \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs
  */
 class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
 {
     use ActionLogsTestTrait;
     use EmailQueueTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @var \Passbolt\Log\Model\Table\ActionLogsTable
+     */
+    protected $ActionLogs;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->loadModel('AuthenticationTokens');
-        $this->loadModel('Users');
-        $this->loadModel('Passbolt/Log.ActionLogs');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
+        $this->Users = $this->fetchTable('Users');
+        $this->ActionLogs = $this->fetchTable('Passbolt/Log.ActionLogs');
         $this->enableFeaturePlugin('Log');
         RoleFactory::make()->guest()->persist();
         EventManager::instance()->setEventList(new EventList());

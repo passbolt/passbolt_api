@@ -217,7 +217,7 @@ hcciUFw5
         $this->authenticateAs('ada');
         $this->putJson("/share/resource/$resourceId.json?api-version=2", $case['data']);
         $this->assertError();
-        $errors = json_decode(json_encode($this->_responseJsonBody), true);
+        $errors = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($errors);
         $error = Hash::get($errors, $case['errorField']);
         $this->assertNotNull($error, "Expected error not found ({$case['errorField']}) for the case {$caseLabel}. Errors: " . json_encode($errors));

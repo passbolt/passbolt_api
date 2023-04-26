@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\Log\Events;
 
 use App\Utility\UserAction;
+use Cake\Database\Exception\MissingConnectionException;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Log\Log;
 use Passbolt\Log\Service\ActionLogs\ActionLogsCreateService;
 
 class ActionLogsBeforeRenderListener implements EventListenerInterface
@@ -41,9 +43,15 @@ class ActionLogsBeforeRenderListener implements EventListenerInterface
      */
     public function logControllerAction(Event $event)
     {
-        /** @var \App\Controller\AppController $controller */
-        $controller = $event->getSubject();
-        $userAction = UserAction::getInstance();
-        (new ActionLogsCreateService())->create($userAction, $controller);
+        try {
+            /** @var \Cake\Controller\Controller $controller */
+            $controller = $event->getSubject();
+            $userAction = UserAction::getInstance();
+            (new ActionLogsCreateService())->create($userAction, $controller);
+        } catch (\PDOException | MissingConnectionException $exception) {
+            // Fail gracefully if database connection is not available.
+            // Useful if we are already rendering an error page related to PDOException
+            Log::error('Could not connect to Database.');
+        }
     }
 }

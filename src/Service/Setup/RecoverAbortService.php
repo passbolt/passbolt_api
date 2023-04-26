@@ -21,21 +21,20 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\Users\UserGetService;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
  * Class RecoverAbortService
  *
  * @package App\Service\Setup
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
 class RecoverAbortService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use EventDispatcherTrait;
 
     public const RECOVER_ABORT_EVENT_NAME = 'RecoverAbortService.abort';
@@ -79,9 +78,10 @@ class RecoverAbortService
             throw new BadRequestException(__('The authentication token is not valid.'));
         }
 
-        $this->loadModel('AuthenticationTokens');
+        /** @var \App\Model\Table\AuthenticationTokensTable $authenticationTokensTable */
+        $authenticationTokensTable = $this->fetchTable('AuthenticationTokens');
         $tokenEntity->active = false;
-        if (!$this->AuthenticationTokens->save($tokenEntity)) {
+        if (!$authenticationTokensTable->save($tokenEntity)) {
             throw new InternalErrorException(__('The authentication token could not be saved.'));
         }
     }

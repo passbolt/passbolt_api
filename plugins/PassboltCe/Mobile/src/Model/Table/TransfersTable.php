@@ -33,7 +33,7 @@ use Passbolt\Mobile\Model\Entity\Transfer;
  * @method \Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer newEntity($data = null, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer[] newEntities(array $data, ?array $options = [])
- * @method \Cake\Datasource\EntityInterface|false save(\Cake\Datasource\EntityInterface $entity, \ArrayAccess|\Cake\ORM\SaveOptionsBuilder|array $options = [])
+ * @method \Cake\Datasource\EntityInterface|false save(\Cake\Datasource\EntityInterface $entity, \ArrayAccess|array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer[] patchEntities($entities, array $data, ?array $options = [])
  * @method \Passbolt\Mobile\Model\Entity\Transfer findOrCreate($search, callable $callback = null, ?array $options = [])

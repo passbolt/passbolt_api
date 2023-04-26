@@ -22,6 +22,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -116,15 +117,23 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createEmail(User $recipient, User $operator, Folder $folder)
     {
+        $isOperator = $recipient->id === $operator->id;
+        $userFirstName = Purifier::clean($operator->profile->first_name);
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($operator, $folder) {
-                return __('{0} deleted the folder {1}', $operator->profile->first_name, $folder->name);
+            function () use ($userFirstName, $isOperator, $folder) {
+                if ($isOperator) {
+                    return __('You deleted the folder {0}', Purifier::clean($folder->name));
+                }
+
+                return __('{0} deleted the folder {1}', $userFirstName, Purifier::clean($folder->name));
             }
         );
 
         $data = [
             'body' => [
+                'isOperator' => $isOperator,
+                'userFirstName' => $userFirstName,
                 'user' => $operator,
                 'folder' => $folder,
             ],
