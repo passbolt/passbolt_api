@@ -33,6 +33,8 @@ class FoldersIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Folders',
         ]);
+        /** @phpstan-ignore-next-line */
+        $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
     }
 
     public $paginate = [
@@ -53,8 +55,6 @@ class FoldersIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Passbolt/Folders.Folders');
-
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => [

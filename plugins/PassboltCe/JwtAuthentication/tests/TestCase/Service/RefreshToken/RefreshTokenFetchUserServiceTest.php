@@ -19,7 +19,7 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
@@ -27,17 +27,21 @@ use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAuthenticationSe
 
 /**
  * @covers \Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
 class RefreshTokenFetchUserServiceTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use TruncateDirtyTables;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('AuthenticationTokens');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     public function testRefreshTokenFetchUserService_getUserIdFromToken_Success()

@@ -13,6 +13,8 @@
  * @since         2.13.0
  * @var \App\View\AppView $this
  * @var array $body
+ * @var bool $isOperator
+ * @var string $userFirstName
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
@@ -23,13 +25,16 @@ if (PHP_SAPI === 'cli') {
 }
 $user = $body['user'];
 $folder = $body['folder'];
+$isOperator = $body['isOperator'];
+$userFirstName = $body['userFirstName'];
+$avatarText = $isOperator ? __('You deleted a folder') : __('{0} deleted a folder', $userFirstName);
 
 echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $folder['modified'],
-        'text' => __('{0} deleted the folder {1}', null, Purifier::clean($folder['name'])),
+        'text' => $avatarText,
     ]),
 ]);
 

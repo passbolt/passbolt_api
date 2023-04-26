@@ -30,8 +30,9 @@ class ThemesIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Passbolt/AccountSettings.AccountSettings');
-        $themes = $this->AccountSettings->findAllThemes();
+        /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $accountSettingsTable */
+        $accountSettingsTable = $this->fetchTable('Passbolt/AccountSettings.AccountSettings');
+        $themes = $accountSettingsTable->findAllThemes();
         $this->success(__('The operation was successful.'), $themes);
     }
 }

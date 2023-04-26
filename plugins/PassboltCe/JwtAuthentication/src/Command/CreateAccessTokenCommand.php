@@ -26,11 +26,14 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
 /**
  * Class JwtCreateTokenCommand
- *
- * @property \App\Model\Table\UsersTable $Users
  */
 class CreateAccessTokenCommand extends PassboltCommand
 {
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
     /**
      * @inheritDoc
      */
@@ -38,7 +41,8 @@ class CreateAccessTokenCommand extends PassboltCommand
     {
         parent::initialize();
 
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
     }
 
     /**

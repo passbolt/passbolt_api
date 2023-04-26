@@ -44,7 +44,6 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
     {
         parent::setUp();
         $jwtKeyPairService = new JwtKeyPairService();
-        $jwtKeyPairService->createKeyPair();
         $this->enableFeaturePlugin('JwtAuthentication');
     }
 

@@ -19,13 +19,11 @@ namespace App\Test\TestCase\Model\Table\OrganizationSettings;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
-use App\Model\Table\OrganizationSettingsTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\UnauthorizedException;
-use Cake\ORM\TableRegistry;
 
 /**
  * Passbolt\OrganizationSettings\Model\Table\OrganizationSettingsTable Test Case
@@ -44,9 +42,9 @@ class OrganizationSettingsTableTest extends AppTestCase
      *
      * @return array sample settings.
      */
-    protected function _getTestSettings()
+    protected function _getTestSettings(): array
     {
-        $organizationSettings = [
+        return [
             'passbolt' => [
                 'ldap' => [
                     'testSettingOne' => 'value1',
@@ -57,8 +55,6 @@ class OrganizationSettingsTableTest extends AppTestCase
                 ],
             ],
         ];
-
-        return $organizationSettings;
     }
 
     /**
@@ -69,8 +65,8 @@ class OrganizationSettingsTableTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::exists('OrganizationSettings') ? [] : ['className' => OrganizationSettingsTable::class];
-        $this->OrganizationSettings = TableRegistry::get('OrganizationSettings', $config);
+        /** @phpstan-ignore-next-line */
+        $this->OrganizationSettings = $this->fetchTable('OrganizationSettings');
     }
 
     /**

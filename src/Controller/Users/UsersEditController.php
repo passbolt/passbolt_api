@@ -26,10 +26,15 @@ use Cake\Validation\Validation;
 use Exception;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * UsersEditController Class
  */
 class UsersEditController extends AppController
 {
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
     /**
      * User edit action
      * Allow editing firstname / lastname and role only for admin
@@ -42,7 +47,9 @@ class UsersEditController extends AppController
         $data = $this->_validateRequestData($id);
 
         // Try to find the user and validate changes it
-        $this->loadModel('Users');
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
+        $this->Users = $usersTable;
         try {
             /** @var \App\Model\Entity\User $user */
             $user = $this->Users->findView($id, $this->User->role())->first();

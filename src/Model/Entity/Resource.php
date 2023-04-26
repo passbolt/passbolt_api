@@ -39,7 +39,7 @@ use Cake\ORM\Entity;
  * @property \App\Model\Entity\Secret[] $secrets
  * @property string|null $resource_type_id
  * @property \App\Model\Entity\Favorite|null $favorite
- * @property \App\Model\Entity\ResourceType|null $resource_type
+ * @property \Passbolt\ResourceTypes\Model\Entity\ResourceType|null $resource_type
  * @property \Passbolt\Log\Model\Entity\EntityHistory $entities_history
  */
 class Resource extends Entity

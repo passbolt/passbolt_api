@@ -32,7 +32,7 @@ class SelfRegistrationGetSettingsControllerTest extends AppIntegrationTestCase
         $this->getJson('/self-registration/settings.json');
         $this->assertResponseOk();
 
-        $retrievedSettings = json_decode(json_encode($this->_responseJsonBody), true);
+        $retrievedSettings = $this->getResponseBodyAsArray();
         $this->assertSame($this->getExpectedKeys(), array_keys($retrievedSettings));
         $this->assertSame(json_decode($settingInDB->value, true), [
             'provider' => $retrievedSettings['provider'],

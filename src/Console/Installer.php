@@ -2,30 +2,48 @@
 declare(strict_types=1);
 
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link      http://cakephp.org CakePHP(tm) Project
+ * @copyright Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link      https://cakephp.org CakePHP(tm) Project
  * @since     3.0.0
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace App\Console;
+
+if (!defined('STDIN')) {
+    define('STDIN', fopen('php://stdin', 'r'));
+}
 
 use Cake\Utility\Security;
 use Composer\Script\Event;
 use Exception;
 
 /**
- * Provides installation hooks for when this application is installed via
+ * Provides installation hooks for when this application is installed through
  * composer. Customize this class to suit your needs.
  */
 class Installer
 {
+    /**
+     * An array of directories to be made writable
+     */
+    public const WRITABLE_DIRS = [
+        'logs',
+        'tmp',
+        'tmp/cache',
+        'tmp/cache/models',
+        'tmp/cache/persistent',
+        'tmp/cache/views',
+        'tmp/sessions',
+        'tmp/tests',
+    ];
+
     /**
      * Does some routine installation tasks so people don't have to.
      *
@@ -98,18 +116,7 @@ class Installer
      */
     public static function createWritableDirectories($dir, $io)
     {
-        $paths = [
-            'logs',
-            'tmp',
-            'tmp/cache',
-            'tmp/cache/models',
-            'tmp/cache/persistent',
-            'tmp/cache/views',
-            'tmp/sessions',
-            'tmp/tests',
-        ];
-
-        foreach ($paths as $path) {
+        foreach (static::WRITABLE_DIRS as $path) {
             $path = $dir . '/' . $path;
             if (!file_exists($path)) {
                 mkdir($path);

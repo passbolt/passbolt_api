@@ -48,7 +48,7 @@ class MfaVerifyAjaxErrorControllerTest extends MfaIntegrationTestCase
         $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, 'foo');
         $this->getJson('/mfa/verify/error.json?api-version=v2');
         $this->assertResponseCode(403);
-        $response = json_decode(json_encode($this->_responseJsonBody), true);
+        $response = $this->getResponseBodyAsArray();
         $expected = [
             'mfa_providers' => [$expectedProvider],
             'providers' => [

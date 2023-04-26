@@ -2,34 +2,61 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0-rc.2] - 2023-04-26
+### Added
+- PB-24245 Adds two TOTP resource types feature flag
+- PB-24086 As an admin, I can create a user recovery token from the command line
+- PB-24056 As an admin I can view log stack traces when debug mode is enabled
+
+### Improved
+- PB-24073 As a developer I should ensure that the CHANGELOG.md file is in the right format
+- PB-24071 As a developer I can enable feature plugins with the plugins class name
+- PB-24272 Adds contribution link in CONTRIBUTING.md
+
+### Maintenance
+- PB-23321 Upgrade CakePHP to 4.4
+- PB-24297 Update guzzlehttp/psr7 to fix composer audit security vulnerability
+- PB-24296 As a developer I can retrieve in integration tests the body of json requests in array
+- PB-24083 Removes the usage of the Paginator deprecated in CakePHP 4.4
+- PB-23926 Bump PHPUnit to ~9.5.2 to avoid warning messages of 9.6
+- PB-22758 Introduce JWT key injection to enable parallel tests
+- PB-22622 Add CS rule to disallow space after NOT operator
+- PB-23786 Remove PHP 7.3 from the testing pipes
+
+### Fixed
+- PB-24078 As a user I should receive the correct email avatar text after folder manipulation
+- PB-24039 Action log event listener should not throw error on missing connection
+- PB-23558 Remove PHP 8.2 deprecation warnings
+- PB-23557 Remove PHP 8.1 deprecation warnings
+
 ## [3.12.2] - 2023-04-25
 ### Security
 - PB-24315 As signed-in user creating resources with encrypted description the API should not store unencrypted descriptions even if provided by the client
 
 ## [3.12.0] - 2023-03-15
 ### Added
-PB-20535 As a community user I want to use folders
-PB-22749 As an administrator I can customise passbolt to output the action logs in syslog
-PB-22749 As an administrator I can customise passbolt to output the action logs in a file
-PB-22749 As an administrator I can implement my own action logs handler
+- PB-20535 As a community user I want to use folders
+- PB-22749 As an administrator I can customise passbolt to output the action logs in syslog
+- PB-22749 As an administrator I can customise passbolt to output the action logs in a file
+- PB-22749 As an administrator I can implement my own action logs handler
 
 ### Fixed
-PB-23717 As a user using the json API I should get a bad request error instead of an internal error if using api-version=v1
-PB-21826 Fix emails entries should not be locked when threshold limit is exceeded
-PB-23519 As an administrator running the DUO v4 migration I should not see a warning message if DUO was not configured
-PB-23721 As an administrator I want to be sure the server key is in the keyring before decrypting users directory settings
+- PB-23717 As a user using the json API I should get a bad request error instead of an internal error if using api-version=v1
+- PB-21826 Fix emails entries should not be locked when threshold limit is exceeded
+- PB-23519 As an administrator running the DUO v4 migration I should not see a warning message if DUO was not configured
+- PB-23721 As an administrator I want to be sure the server key is in the keyring before decrypting users directory settings
 
 ### Security
-PB-23311 As an administrator I should be the only one to know which users have enabled MFA
+- PB-23311 As an administrator I should be the only one to know which users have enabled MFA
 
 ### Improved
-PB-23333 As an administrator I should see a notice instead of a warning if I enabled the self registration plugin
-PB-23722 As a developer running the unit tests I want to be sure the version from the config matches the one from the changelog
-PB-22892 As a user recovering my account I want to see the success and error pages feedback
+- PB-23333 As an administrator I should see a notice instead of a warning if I enabled the self registration plugin
+- PB-23722 As a developer running the unit tests I want to be sure the version from the config matches the one from the changelog
+- PB-22892 As a user recovering my account I want to see the success and error pages feedback
 
 ### Maintenance
-PB-23287 Duo multi-factor authentication redirection refactoring
-PB-23702 Update phpseclib/phpseclib dependency
+- PB-23287 Duo multi-factor authentication redirection refactoring
+- PB-23702 Update phpseclib/phpseclib dependency
 
 ## [3.11.1] - 2023-03-03
 ### Fixed

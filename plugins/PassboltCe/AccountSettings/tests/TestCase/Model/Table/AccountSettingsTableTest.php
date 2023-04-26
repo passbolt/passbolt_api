@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountSettings\Test\TestCase\Model\Table;
 
 use BadMethodCallException;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
@@ -30,7 +30,12 @@ use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
  */
 class AccountSettingsTableTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
+     */
+    protected $AccountSettings;
 
     /**
      * setUp method
@@ -40,7 +45,7 @@ class AccountSettingsTableTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('AccountSettings');
+        $this->AccountSettings = $this->fetchTable('AccountSettings');
     }
 
     /**

@@ -20,7 +20,6 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Model\Entity\Permission;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Service\Resources\ResourcesAddService;
-use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -29,8 +28,8 @@ use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
 {
@@ -61,7 +60,6 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources->getEventManager()->setEventList(new EventList());
         ResourceTypeFactory::make()->default()->persist();
-        (new JwtKeyPairService())->createKeyPair();
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->setEmailNotificationsSetting('password.create', true);
     }
@@ -228,7 +226,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->logInAsUser();
         $this->postJson('/resources.json?api-version=v2', $case['data']);
         $this->assertError(400, 'Could not validate resource data');
-        $arr = json_decode(json_encode($this->_responseJsonBody), true);
+        $arr = $this->getResponseBodyAsArray();
         $error = Hash::get($arr, $case['errorField']);
         $this->assertNotNull($error, "The case \"$caseLabel\" should fail");
         $this->assertSame(0, $this->Resources->find()->count());
