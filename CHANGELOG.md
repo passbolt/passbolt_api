@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0-rc.3] - 2023-04-28
+### Fixed
+- PB-24051 Fixes field obfuscation not to obfuscate the first element in pure array
+- PB-24470 Fixes recover_user command not showing while running passbolt -h
+
 ## [4.0.0-rc.2] - 2023-04-26
 ### Added
 - PB-24245 Adds two TOTP resource types feature flag
