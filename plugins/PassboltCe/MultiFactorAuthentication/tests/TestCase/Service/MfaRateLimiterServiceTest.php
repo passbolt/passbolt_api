@@ -71,7 +71,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, true);
 
         $this->assertTrue($result);
     }
@@ -90,7 +90,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, true);
 
         $this->assertFalse($result);
     }
@@ -117,12 +117,12 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, true);
 
         $this->assertFalse($result);
     }
 
-    public function testMfaRateLimiterService_WithSpecifiedValueSuccess_FailedAttemptsExceeded()
+    public function testMfaRateLimiterService_WithSpecifiedValue_FailedAttemptsExceeded()
     {
         $user = UserFactory::make()->user()->persist();
         // Set max attempts to 1
@@ -138,12 +138,15 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, true);
 
         $this->assertTrue($result);
     }
 
-    public function testMfaRateLimiterService_WithSpecifiedValueSuccess_FailedAttemptsNotExceeded()
+    /**
+     * @dataProvider withSpecifiedValueFailedAttemptsNotExceededProvider
+     */
+    public function testMfaRateLimiterService_WithSpecifiedValue_FailedAttemptsNotExceeded($shouldIncrement, $expected)
     {
         $user = UserFactory::make()->user()->persist();
         // Set max attempts to 2
@@ -159,9 +162,9 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, $shouldIncrement);
 
-        $this->assertFalse($result);
+        $this->assertSame($expected, $result);
     }
 
     public function testMfaRateLimiterService_WithZeroInfiniteMaxAttempts()
@@ -180,8 +183,16 @@ class MfaRateLimiterServiceTest extends AppTestCase
             ->userId($user->id)
             ->persist();
 
-        $result = $this->service->isFailedAttemptsExceeded($user->id);
+        $result = $this->service->isFailedAttemptsExceeded($user->id, true);
 
         $this->assertFalse($result);
+    }
+
+    protected function withSpecifiedValueFailedAttemptsNotExceededProvider(): array
+    {
+        return [
+            [true, true], // With incremented. Same number of failed entries will be incremented.
+            [false, false],
+        ];
     }
 }

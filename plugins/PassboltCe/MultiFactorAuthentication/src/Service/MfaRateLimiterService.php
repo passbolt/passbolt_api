@@ -31,9 +31,10 @@ class MfaRateLimiterService
      * Checks if given user has exceeded the failed attempts.
      *
      * @param string $userId User identifier.
+     * @param bool $incrementFailedAttempts If set to `true` increment failed attempts received from DB to +1.
      * @return bool Returns `true` if failed attempts exceeded, `false` otherwise.
      */
-    public function isFailedAttemptsExceeded(string $userId): bool
+    public function isFailedAttemptsExceeded(string $userId, bool $incrementFailedAttempts = false): bool
     {
         $actionLogsTable = $this->fetchTable('Passbolt/Log.ActionLogs');
 
@@ -63,6 +64,10 @@ class MfaRateLimiterService
         // WARNING: Any value less than 1 means infinite number of attempts!
         if (Configure::read('passbolt.security.mfa.maxAttempts') < 1) {
             return false;
+        }
+
+        if ($incrementFailedAttempts) {
+            $failedAttemptsCount++;
         }
 
         return $failedAttemptsCount > Configure::read('passbolt.security.mfa.maxAttempts');

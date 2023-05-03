@@ -18,9 +18,14 @@ namespace Passbolt\MultiFactorAuthentication\Controller\Totp;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Error\Exception\CustomValidationException;
+use Cake\Http\Exception\BadRequestException;
+use Passbolt\JwtAuthentication\Service\Middleware\JwtAuthenticationService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
+use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenLogoutService;
 use Passbolt\MultiFactorAuthentication\Controller\MfaVerifyController;
 use Passbolt\MultiFactorAuthentication\Form\MfaFormInterface;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
+use Passbolt\MultiFactorAuthentication\Service\MfaRateLimiterService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class TotpVerifyPostController extends MfaVerifyController
@@ -47,6 +52,8 @@ class TotpVerifyPostController extends MfaVerifyController
         try {
             $verifyForm->execute($this->request->getData());
         } catch (CustomValidationException $exception) {
+            $this->_handleMaxFailedAttempts();
+
             if ($this->request->is('json')) {
                 throw $exception;
             }
@@ -69,5 +76,39 @@ class TotpVerifyPostController extends MfaVerifyController
             $rememberMeForAMonthSetting
         );
         $this->_handleVerifySuccess();
+    }
+
+    /**
+     * Logout if user exceeded max failed attempts.
+     *
+     * @return void
+     */
+    protected function _handleMaxFailedAttempts(): void
+    {
+        $isFailedAttemptExceeded = (new MfaRateLimiterService())->isFailedAttemptsExceeded(
+            $this->User->id(),
+            true // Consider this as a failed attempt too.
+        );
+
+        // Determines if current authentication is SESSION based or JWT based.
+        $isJwtAuth = ($this->getRequest()->getAttribute('authentication') instanceof JwtAuthenticationService);
+
+        if ($isFailedAttemptExceeded && !$this->request->is('json')) {
+            // Logout and redirect
+            $this->redirect($this->Authentication->logout());
+        } elseif ($isFailedAttemptExceeded && $this->request->is('json') && !$isJwtAuth) {
+            $this->Authentication->logout();
+
+            throw new BadRequestException(__('You have been logged out due to too many failed attempts.'));
+        } elseif ($isFailedAttemptExceeded && $this->request->is('json') && $isJwtAuth) {
+            (new RefreshTokenLogoutService())->logout($this->User->id(), $this->getRequest());
+            $cookiesCollection = $this->getResponse()->getCookieCollection()->remove(
+                RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE
+            );
+            $this->setResponse($this->getResponse()->withCookieCollection($cookiesCollection));
+            $this->Authentication->logout();
+
+            throw new BadRequestException(__('You have been logged out due to too many failed attempts.'));
+        }
     }
 }
