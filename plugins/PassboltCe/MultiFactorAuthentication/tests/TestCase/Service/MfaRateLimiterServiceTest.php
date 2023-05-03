@@ -188,7 +188,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
         $this->assertFalse($result);
     }
 
-    protected function withSpecifiedValueFailedAttemptsNotExceededProvider(): array
+    public function withSpecifiedValueFailedAttemptsNotExceededProvider(): array
     {
         return [
             [true, true], // With incremented. Same number of failed entries will be incremented.

@@ -28,6 +28,9 @@ use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
+/**
+ * @see \Passbolt\MultiFactorAuthentication\Controller\Totp\TotpVerifyPostController
+ */
 class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
 {
     /**
