@@ -85,13 +85,14 @@ class TotpVerifyPostController extends MfaVerifyController
      */
     protected function _handleMaxFailedAttempts(): void
     {
-        $isFailedAttemptExceeded = (new MfaRateLimiterService())->isFailedAttemptsExceeded(
-            $this->User->id(),
-            true // Consider this as a failed attempt too.
-        );
-
         // Determines if current authentication is SESSION based or JWT based.
         $isJwtAuth = ($this->getRequest()->getAttribute('authentication') instanceof JwtAuthenticationService);
+
+        $isFailedAttemptExceeded = (new MfaRateLimiterService())->isFailedAttemptsExceeded(
+            $this->User->id(),
+            $isJwtAuth,
+            true // Consider this as a failed attempt too.
+        );
 
         if ($isFailedAttemptExceeded && !$this->request->is('json')) {
             // Logout and redirect

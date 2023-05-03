@@ -31,12 +31,21 @@ class MfaRateLimiterService
      * Checks if given user has exceeded the failed attempts.
      *
      * @param string $userId User identifier.
+     * @param bool $isJwtAuth Is authentication is JWT or session.
      * @param bool $incrementFailedAttempts If set to `true` increment failed attempts received from DB to +1.
      * @return bool Returns `true` if failed attempts exceeded, `false` otherwise.
      */
-    public function isFailedAttemptsExceeded(string $userId, bool $incrementFailedAttempts = false): bool
-    {
+    public function isFailedAttemptsExceeded(
+        string $userId,
+        bool $isJwtAuth,
+        bool $incrementFailedAttempts = false
+    ): bool {
         $actionLogsTable = $this->fetchTable('Passbolt/Log.ActionLogs');
+
+        $actionId = UuidFactory::uuid('AuthLogin.loginPost');
+        if ($isJwtAuth) {
+            $actionId = UuidFactory::uuid('JwtLogin.loginPost');
+        }
 
         // Subquery: Get last login of given user
         $latestLoginDate = $actionLogsTable
@@ -45,17 +54,19 @@ class MfaRateLimiterService
             ->where([
                 'user_id' => $userId,
                 'status' => 1,
-                'action_id' => UuidFactory::uuid('AuthLogin.loginPost'),
+                'action_id' => $actionId,
             ])
             ->orderDesc('created')
             ->limit(1);
 
+        $status = $isJwtAuth ? 0 : 1;
+
         $failedAttemptsCount = $actionLogsTable
             ->find()
-            ->where(function (QueryExpression $exp, Query $q) use ($userId, $latestLoginDate) {
+            ->where(function (QueryExpression $exp, Query $q) use ($userId, $latestLoginDate, $status) {
                 return $exp
                     ->eq('user_id', $userId)
-                    ->eq('status', 1)
+                    ->eq('status', $status)
                     ->eq('action_id', UuidFactory::uuid('TotpVerifyPost.post'))
                     ->gt('created', $latestLoginDate);
             })

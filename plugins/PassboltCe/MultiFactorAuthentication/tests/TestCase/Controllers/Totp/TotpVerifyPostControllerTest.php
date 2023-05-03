@@ -206,9 +206,9 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         // action logs
         ActionLogFactory::make(['created' => $user->created])
             ->userId($user->id)
-            ->loginAction()
+            ->setActionId('JwtLogin.loginPost')
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()], 4)
+        ActionLogFactory::make(['created' => FrozenTime::now(), 'status' => 0], 4)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
