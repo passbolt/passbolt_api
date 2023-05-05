@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0-rc.4] - 2023-05-05
+### Fixed
+- PB-24561 - Styleguide version bump to v4.0.3
+
 ## [4.0.0-rc.3] - 2023-04-28
 ### Fixed
 - PB-24051 Fixes field obfuscation not to obfuscate the first element in pure array
