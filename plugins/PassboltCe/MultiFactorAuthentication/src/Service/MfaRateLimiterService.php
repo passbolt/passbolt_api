@@ -62,6 +62,16 @@ class MfaRateLimiterService
             ->orderDesc('created')
             ->limit(1);
 
+        /**
+         * This condition is required because for SESSION auth, we render HTML page with 200 status code with form errors,
+         * but for JWT we are using JSON API and return 400 with errors.
+         *
+         * Example:
+         * 1. SESSION auth(with Cookie), SUCCESS: No "TotpVerifyPost.post" action entry in action log.
+         * 2. SESSION auth(with Cookie), FAIL ATTEMPT: Entry in action log with "TotpVerifyPost.post" action with successful(1) status.
+         * 3. JWT auth(json request, without cookie), SUCCESS: Entry in action log with "TotpVerifyPost.post" action with success(1) status.
+         * 4. JWT auth(json request, without cookie), FAIL ATTEMPT: Entry in action log with "TotpVerifyPost.post" action with error(0) status.
+         */
         $status = $isJwtAuth ? 0 : 1;
 
         $failedAttemptsCount = $actionLogsTable
