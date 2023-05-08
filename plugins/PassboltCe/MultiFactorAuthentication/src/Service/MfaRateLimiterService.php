@@ -19,9 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Service;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
 
 class MfaRateLimiterService
 {
@@ -40,6 +38,11 @@ class MfaRateLimiterService
         bool $isJwtAuth,
         bool $incrementFailedAttempts = false
     ): bool {
+        // WARNING: Any value less than 1 means infinite number of attempts!
+        if (Configure::read('passbolt.security.mfa.maxAttempts') < 1) {
+            return false;
+        }
+
         $actionLogsTable = $this->fetchTable('Passbolt/Log.ActionLogs');
 
         $actionId = UuidFactory::uuid('AuthLogin.loginPost');
@@ -63,19 +66,13 @@ class MfaRateLimiterService
 
         $failedAttemptsCount = $actionLogsTable
             ->find()
-            ->where(function (QueryExpression $exp, Query $q) use ($userId, $latestLoginDate, $status) {
-                return $exp
-                    ->eq('user_id', $userId)
-                    ->eq('status', $status)
-                    ->eq('action_id', UuidFactory::uuid('TotpVerifyPost.post'))
-                    ->gt('created', $latestLoginDate);
-            })
+            ->where([
+                'user_id' => $userId,
+                'status' => $status,
+                'action_id' => UuidFactory::uuid('TotpVerifyPost.post'),
+                'created >' => $latestLoginDate,
+            ])
             ->count();
-
-        // WARNING: Any value less than 1 means infinite number of attempts!
-        if (Configure::read('passbolt.security.mfa.maxAttempts') < 1) {
-            return false;
-        }
 
         if ($incrementFailedAttempts) {
             $failedAttemptsCount++;

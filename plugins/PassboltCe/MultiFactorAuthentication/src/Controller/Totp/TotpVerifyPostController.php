@@ -81,9 +81,10 @@ class TotpVerifyPostController extends MfaVerifyController
     /**
      * Logout if user exceeded max failed attempts.
      *
-     * @return void
+     * @return \Cake\Http\Response|null
+     * @throws \Cake\Http\Exception\BadRequestException If failed attempts exceeded and request is JSON.
      */
-    protected function _handleMaxFailedAttempts(): void
+    protected function _handleMaxFailedAttempts()
     {
         // Determines if current authentication is SESSION based or JWT based.
         $isJwtAuth = ($this->getRequest()->getAttribute('authentication') instanceof JwtAuthenticationService);
@@ -94,22 +95,25 @@ class TotpVerifyPostController extends MfaVerifyController
             true // Consider this as a failed attempt too.
         );
 
-        if ($isFailedAttemptExceeded && !$this->request->is('json')) {
-            // Logout and redirect
-            $this->redirect($this->Authentication->logout());
-        } elseif ($isFailedAttemptExceeded && $this->request->is('json') && !$isJwtAuth) {
-            $this->Authentication->logout();
+        if (!$isFailedAttemptExceeded) {
+            return null;
+        }
 
-            throw new BadRequestException(__('You have been logged out due to too many failed attempts.'));
-        } elseif ($isFailedAttemptExceeded && $this->request->is('json') && $isJwtAuth) {
+        if (!$this->request->is('json')) {
+            // Logout and redirect
+            return $this->redirect($this->Authentication->logout());
+        }
+
+        if ($isJwtAuth) {
             (new RefreshTokenLogoutService())->logout($this->User->id(), $this->getRequest());
             $cookiesCollection = $this->getResponse()->getCookieCollection()->remove(
                 RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE
             );
             $this->setResponse($this->getResponse()->withCookieCollection($cookiesCollection));
-            $this->Authentication->logout();
-
-            throw new BadRequestException(__('You have been logged out due to too many failed attempts.'));
         }
+
+        $this->Authentication->logout();
+
+        throw new BadRequestException(__('You have been logged out due to too many failed attempts.'));
     }
 }
