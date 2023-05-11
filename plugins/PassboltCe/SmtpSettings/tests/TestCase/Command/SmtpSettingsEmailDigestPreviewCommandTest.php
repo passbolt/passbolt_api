@@ -70,7 +70,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
         $this->encryptAndPersistSmtpSettings($data);
 
         $nMails = 2;
-        EmailQueueFactory::make($nMails)->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->exec('passbolt email_digest preview');
@@ -100,7 +100,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
         $senderName = $sender[$senderEmail];
 
         $nMails = 2;
-        EmailQueueFactory::make($nMails)->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->exec('passbolt email_digest preview');
@@ -132,7 +132,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
         $data['sender_name'] = $senderName;
         $this->encryptAndPersistSmtpSettings($data);
 
-        $email = EmailQueueFactory::make(['from_email' => 'foo@test.test'])->disablePrimaryKeyOffset()->persist();
+        $email = EmailQueueFactory::make(['from_email' => 'foo@test.test'])->persist();
         $this->exec('passbolt email_digest preview --body');
         $this->assertExitSuccess();
         $this->assertOutputContains('Sending email to: ' . $email->get('email'));

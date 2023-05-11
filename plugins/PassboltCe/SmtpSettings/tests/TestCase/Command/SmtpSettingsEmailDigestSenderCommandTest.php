@@ -69,7 +69,7 @@ class SmtpSettingsEmailDigestSenderCommandTest extends TestCase
         $this->encryptAndPersistSmtpSettings($data);
 
         $nMails = 2;
-        EmailQueueFactory::make($nMails)->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->exec('passbolt email_digest send');
@@ -99,7 +99,7 @@ class SmtpSettingsEmailDigestSenderCommandTest extends TestCase
         $sender = Mailer::getConfig('default')['from'];
 
         $nMails = 2;
-        EmailQueueFactory::make($nMails)->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->disableFeaturePlugin('SmtpSettings');

@@ -66,7 +66,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $this->encryptAndPersistSmtpSettings($smtpSettingsInDB);
 
         $nMails = 2;
-        EmailQueueFactory::make($nMails)->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->exec('sender');
@@ -93,7 +93,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $fileConfig = TransportFactory::get('default')->getConfig();
 
         $nMails = 3;
-        EmailQueueFactory::make($nMails)->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->exec('sender');
@@ -127,7 +127,7 @@ class SmtpSettingsSenderCommandTest extends TestCase
         $fileConfig = TransportFactory::get('default')->getConfig();
 
         $nMails = 3;
-        EmailQueueFactory::make($nMails)->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make($nMails)->persist();
         $mails = EmailQueueFactory::find()->orderAsc('created');
 
         $this->exec('sender');
