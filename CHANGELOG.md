@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.0-rc.5] - 2023-05-11
+### Maintenance
+- PB-24561 Upgrades cakephp/migrations library
+
 ## [4.0.0-rc.4] - 2023-05-05
 ### Fixed
 - PB-24561 - Styleguide version bump to v4.0.3
