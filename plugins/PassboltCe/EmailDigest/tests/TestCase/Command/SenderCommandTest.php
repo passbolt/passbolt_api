@@ -73,7 +73,7 @@ class SenderCommandTest extends TestCase
     public function testSenderCommandSender()
     {
         $sender = Mailer::getConfig('default')['from'];
-        $email = EmailQueueFactory::make()->persist();
+        $email = EmailQueueFactory::make()->disablePrimaryKeyOffset()->persist();
 
         $this->exec('passbolt email_digest send');
 
@@ -97,14 +97,19 @@ class SenderCommandTest extends TestCase
         $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
 
-        $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->persist();
+        $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->disablePrimaryKeyOffset()->persist();
 
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(4)])->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])->setRecipient($frenchSpeakingUser->username)
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(4)])->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])
+            ->setRecipient($frenchSpeakingUser->username)
+            ->disablePrimaryKeyOffset()
             ->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])
+            ->disablePrimaryKeyOffset()
+            ->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
             ->setRecipient($frenchSpeakingUser->username)
+            ->disablePrimaryKeyOffset()
             ->persist();
 
         $this->exec('passbolt email_digest send');

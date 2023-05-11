@@ -60,7 +60,7 @@ class PreviewEmailBatchServiceTest extends AppTestCase
     {
         $numberOfEmails = 3;
         $limit = $numberOfEmails - 1;
-        EmailQueueFactory::make($numberOfEmails)->persist();
+        EmailQueueFactory::make($numberOfEmails)->disablePrimaryKeyOffset()->persist();
 
         $result = $this->previewEmailBatchService->previewNextEmailsBatch($limit);
 
@@ -79,11 +79,14 @@ class PreviewEmailBatchServiceTest extends AppTestCase
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])
+            ->disablePrimaryKeyOffset()
             ->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
             ->setRecipient($frenchSpeakingUser->username)
+            ->disablePrimaryKeyOffset()
             ->persist();
         EmailQueueFactory::make(['created' => Chronos::now()])
+            ->disablePrimaryKeyOffset()
             ->persist();
 
         $emailBatch = $this->previewEmailBatchService->previewNextEmailsBatch();
