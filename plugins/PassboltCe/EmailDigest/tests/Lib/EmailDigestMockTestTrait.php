@@ -179,6 +179,6 @@ W3AI8+rWjK8MGH2T88hCYI/6
             ]),
         ];
 
-        EmailQueueFactory::make(array_merge($default, $data), $times)->persist();
+        EmailQueueFactory::make(array_merge($default, $data), $times)->disablePrimaryKeyOffset()->persist();
     }
 }

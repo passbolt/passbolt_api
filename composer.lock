@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2663095d7c1dc689fbff60efe8085eda",
+    "content-hash": "af3b9d37b45ec4918b21c627bc344254",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -8354,20 +8354,20 @@
         },
         {
             "name": "vierge-noire/cakephp-fixture-factories",
-            "version": "v2.5.1",
+            "version": "v2.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
-                "reference": "4aaf499f6f06a42e3538d2d7c602f04a3a45cfe8"
+                "reference": "cba679d432945ae07d630ef85445fb7493c21984"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/4aaf499f6f06a42e3538d2d7c602f04a3a45cfe8",
-                "reference": "4aaf499f6f06a42e3538d2d7c602f04a3a45cfe8",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/cba679d432945ae07d630ef85445fb7493c21984",
+                "reference": "cba679d432945ae07d630ef85445fb7493c21984",
                 "shasum": ""
             },
             "require": {
-                "cakephp/orm": "^4.0",
+                "cakephp/orm": "^4.2",
                 "fakerphp/faker": "^1.15",
                 "php": ">=7.2",
                 "vierge-noire/cakephp-test-suite-light": "^2.1"
@@ -8375,10 +8375,10 @@
             "require-dev": {
                 "cakephp/bake": "^2.0",
                 "cakephp/cakephp-codesniffer": "^4.0",
-                "cakephp/migrations": "^3.0",
+                "cakephp/migrations": "^3.7",
                 "josegonzalez/dotenv": "dev-master",
-                "phpstan/phpstan": "^0.12.48@dev",
-                "phpunit/phpunit": "^8.0",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^8.5.31",
                 "vierge-noire/cakephp-test-migrator": "^2.1",
                 "vimeo/psalm": "^4.0"
             },
@@ -8411,9 +8411,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
-                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.5.1"
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.8"
             },
-            "time": "2021-11-07T00:48:31+00:00"
+            "time": "2023-05-11T08:20:55+00:00"
         },
         {
             "name": "vierge-noire/cakephp-test-suite-light",

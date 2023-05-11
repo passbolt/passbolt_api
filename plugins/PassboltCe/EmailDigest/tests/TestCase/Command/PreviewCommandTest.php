@@ -77,7 +77,7 @@ class PreviewCommandTest extends TestCase
         $senderEmail = array_keys($sender)[0];
         $senderName = $sender[$senderEmail];
 
-        $email = EmailQueueFactory::make()->persist();
+        $email = EmailQueueFactory::make()->disablePrimaryKeyOffset()->persist();
         $this->exec('passbolt email_digest preview');
         $this->assertExitSuccess();
         $this->assertOutputContains("From: {$senderName} <{$senderEmail}>");
@@ -96,7 +96,7 @@ class PreviewCommandTest extends TestCase
         // Ensure that avatar image configs are null and
         // will be correctly loaded by the command.
         Configure::delete('FileStorage');
-        $email = EmailQueueFactory::make()->persist();
+        $email = EmailQueueFactory::make()->disablePrimaryKeyOffset()->persist();
 
         $this->exec('passbolt email_digest preview --body');
 
@@ -121,8 +121,12 @@ class PreviewCommandTest extends TestCase
         $frenchLocale = 'fr-FR';
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
-        EmailQueueFactory::make()->listeningToBeforeSave()->persist();
-        EmailQueueFactory::make()->listeningToBeforeSave()->setRecipient($frenchSpeakingUser->username)->persist();
+        EmailQueueFactory::make()->listeningToBeforeSave()->disablePrimaryKeyOffset()->persist();
+        EmailQueueFactory::make()
+            ->listeningToBeforeSave()
+            ->disablePrimaryKeyOffset()
+            ->setRecipient($frenchSpeakingUser->username)
+            ->persist();
 
         $this->exec('passbolt email_digest preview --body');
         $emailHtml = $this->_out->output();

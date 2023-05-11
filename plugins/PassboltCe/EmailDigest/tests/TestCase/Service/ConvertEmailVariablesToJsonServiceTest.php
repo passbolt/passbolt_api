@@ -53,6 +53,7 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
 
         $originalUnsentEmail = EmailQueueFactory::make()
             ->setField('template_vars', compact('users', 'resource'))
+            ->disablePrimaryKeyOffset()
             ->persist();
 
 
@@ -119,8 +120,8 @@ class ConvertEmailVariablesToJsonServiceTest extends TestCase
         $service = new ConvertEmailVariablesToJsonService();
         $nSent = 3;
         $nNotSent = 2;
-        EmailQueueFactory::make($nSent)->sent()->persist();
-        $notSentEmails = EmailQueueFactory::make($nNotSent)->persist();
+        EmailQueueFactory::make($nSent)->sent()->disablePrimaryKeyOffset()->persist();
+        $notSentEmails = EmailQueueFactory::make($nNotSent)->disablePrimaryKeyOffset()->persist();
         $notSentEmailIds = Hash::extract($notSentEmails, '{n}.id');
 
         $retrievedEmails = $service->findUnsentEmails();
