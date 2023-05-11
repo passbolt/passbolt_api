@@ -122,7 +122,10 @@ class PreviewCommandTest extends TestCase
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make()->listeningToBeforeSave()->persist();
-        EmailQueueFactory::make()->listeningToBeforeSave()->setRecipient($frenchSpeakingUser->username)->persist();
+        EmailQueueFactory::make()
+            ->listeningToBeforeSave()
+            ->setRecipient($frenchSpeakingUser->username)
+            ->persist();
 
         $this->exec('passbolt email_digest preview --body');
         $emailHtml = $this->_out->output();

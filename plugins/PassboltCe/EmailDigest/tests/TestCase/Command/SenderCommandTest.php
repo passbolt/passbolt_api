@@ -100,9 +100,11 @@ class SenderCommandTest extends TestCase
         $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(4)])->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])->setRecipient($frenchSpeakingUser->username)
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])
+            ->setRecipient($frenchSpeakingUser->username)
             ->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])
+            ->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
             ->setRecipient($frenchSpeakingUser->username)
             ->persist();
