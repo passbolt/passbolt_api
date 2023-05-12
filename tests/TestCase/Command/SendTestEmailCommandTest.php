@@ -23,6 +23,9 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Mailer\TransportFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 
+/**
+ * @covers \App\Command\SendTestEmailCommand
+ */
 class SendTestEmailCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
@@ -79,36 +82,15 @@ class SendTestEmailCommandTest extends AppTestCase
      */
     public function testSendTestEmailCommandWithRecipient()
     {
-        $trace = [['cmd' => 'bar']];
+        $trace = [['cmd' => 'Password: *****']];
         $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
         $recipient = 'test@passbolt.test';
+
         $this->exec('passbolt send_test_email -r ' . $recipient);
+
         $this->assertExitSuccess();
         $this->assertOutputContains('<info>Trace</info>');
-        $this->assertOutputContains('<info> *****</info>');
-        $this->assertMailSentToAt(0, [$recipient => $recipient]);
-        $this->assertMailSubjectContainsAt(0, 'Passbolt test email');
-        $this->assertMailCount(1);
-    }
-
-    public function testSendTestEmailCommandWithRecipientMasksAuthPlainCredentials()
-    {
-        $cmd = sprintf(
-            'AUTH PLAIN %s',
-            base64_encode(chr(0) . 'ada' . chr(0) . 'my_secret_password')
-        );
-        $trace = [
-            ['cmd' => $cmd],
-            ['response' => [['code' => '235', 'message' => 'Authentication successful']]],
-        ];
-        $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
-        $recipient = 'test@passbolt.test';
-
-        $this->exec('passbolt send_test_email -r ' . $recipient);
-
-        $this->assertExitSuccess();
-        $this->assertOutputContains('AUTH PLAIN *****');
-        $this->assertOutputContains('[235] Authentication successful');
+        $this->assertOutputContains('<info> Password: *****</info>');
         $this->assertMailSentToAt(0, [$recipient => $recipient]);
         $this->assertMailSubjectContainsAt(0, 'Passbolt test email');
         $this->assertMailCount(1);

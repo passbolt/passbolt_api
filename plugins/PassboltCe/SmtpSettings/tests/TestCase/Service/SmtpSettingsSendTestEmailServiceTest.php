@@ -145,7 +145,7 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
     {
         $defaultTransport = TransportFactory::get('default');
         $smtpUsername = 'ada';
-        $smtpPassword = 'ada';
+        $smtpPassword = 'secret';
         $cmd = sprintf(
             'AUTH PLAIN %s',
             base64_encode(chr(0) . $smtpUsername . chr(0) . $smtpPassword)

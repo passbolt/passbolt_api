@@ -24,6 +24,9 @@ use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
+/**
+ * @covers \Passbolt\SmtpSettings\Controller\SmtpSettingsEmailController
+ */
 class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
 {
     use EmailTestTrait;
