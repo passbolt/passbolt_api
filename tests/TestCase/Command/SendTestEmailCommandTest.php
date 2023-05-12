@@ -91,6 +91,29 @@ class SendTestEmailCommandTest extends AppTestCase
         $this->assertMailCount(1);
     }
 
+    public function testSendTestEmailCommandWithRecipientMasksAuthPlainCredentials()
+    {
+        $cmd = sprintf(
+            'AUTH PLAIN %s',
+            base64_encode(chr(0) . 'ada' . chr(0) . 'my_secret_password')
+        );
+        $trace = [
+            ['cmd' => $cmd],
+            ['response' => [['code' => '235', 'message' => 'Authentication successful']]],
+        ];
+        $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
+        $recipient = 'test@passbolt.test';
+
+        $this->exec('passbolt send_test_email -r ' . $recipient);
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('AUTH PLAIN *****');
+        $this->assertOutputContains('[235] Authentication successful');
+        $this->assertMailSentToAt(0, [$recipient => $recipient]);
+        $this->assertMailSubjectContainsAt(0, 'Passbolt test email');
+        $this->assertMailCount(1);
+    }
+
     /**
      * Basic test with invalid recipient
      */

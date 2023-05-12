@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
+use App\Mailer\Transport\DebugTransport;
 use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
@@ -138,5 +139,48 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
     public function testSmtpSettingsSendTestEmailService_GetTrace_On_No_Email_Initiated()
     {
         $this->assertSame([], $this->service->getTrace());
+    }
+
+    public function testSmtpSettingsSendTestEmailService_GetTrace_MasksSensitiveDetails()
+    {
+        $defaultTransport = TransportFactory::get('default');
+        $smtpUsername = 'ada';
+        $smtpPassword = 'ada';
+        $cmd = sprintf(
+            'AUTH PLAIN %s',
+            base64_encode(chr(0) . $smtpUsername . chr(0) . $smtpPassword)
+        );
+        $trace = [
+            ['cmd' => $cmd],
+            ['response' => [['code' => '235', 'message' => 'Authentication successful']]],
+        ];
+        // Set mocked DebugTransport in transport config
+        $debugTransportMock = $this->getMockBuilder(DebugTransport::class)
+            ->onlyMethods(['send', 'getTrace'])
+            ->getMock();
+        $debugTransportMock->expects($this->any())->method('getTrace')->willReturn($trace);
+        TransportFactory::drop('default');
+        TransportFactory::setConfig('default', [
+            'className' => $debugTransportMock,
+            'username' => $smtpUsername,
+            'password' => $smtpPassword,
+        ]);
+
+        $this->service->sendTestEmail([
+            'sender_name' => 'Passbolt test',
+            'sender_email' => 'test@passbolt.test',
+            'host' => 'localhost',
+            'username' => $smtpUsername,
+            'password' => $smtpPassword,
+            'tls' => false,
+            'port' => 1,
+            'email_test_to' => 'test@passbolt.test',
+        ]);
+        $result = $this->service->getTrace();
+
+        $this->assertSame('AUTH PLAIN *****', $result[0]['cmd']);
+        // Reset transport config
+        TransportFactory::drop('default');
+        TransportFactory::setConfig('default', $defaultTransport);
     }
 }

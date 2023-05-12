@@ -198,49 +198,14 @@ class SendTestEmailCommand extends PassboltCommand
         $io->out('<info>Trace</info>');
         foreach ($trace as $entry) {
             if (isset($entry['cmd'])) {
-                $cmd = $this->removeCredentials($entry['cmd']);
-                $io->out("<info> {$cmd}</info>");
+                $io->out("<info> {$entry['cmd']}</info>");
             }
             if (!empty($entry['response'])) {
                 foreach ($entry['response'] as $response) {
-                    $msg = $this->removeCredentials($response['message']);
-                    $io->out("[{$response['code']}] {$msg}");
+                    $io->out("[{$response['code']}] {$response['message']}");
                 }
             }
         }
-    }
-
-    /**
-     * Remove credentials (username and password) from a string.
-     *
-     * @param string $str string where to remove the credentials
-     * @return mixed
-     */
-    protected function removeCredentials($str)
-    {
-        $toReplace = [];
-        $replaceMask = '*****';
-        $replaceWith = [];
-        $transportConfig = TransportFactory::getConfig('default');
-
-        if (isset($transportConfig['username'])) {
-            $usernameEncoded = base64_encode($transportConfig['username']);
-            $usernameClear = $transportConfig['username'];
-            $toReplace[] = $usernameClear;
-            $replaceWith[] = $replaceMask;
-            $toReplace[] = $usernameEncoded;
-            $replaceWith[] = $replaceMask;
-        }
-        if (isset($transportConfig['password'])) {
-            $passwordEncoded = base64_encode($transportConfig['password']);
-            $passwordClear = $transportConfig['password'];
-            $toReplace[] = $passwordEncoded;
-            $replaceWith[] = $replaceMask;
-            $toReplace[] = $passwordClear;
-            $replaceWith[] = $replaceMask;
-        }
-
-        return str_replace($toReplace, $replaceWith, $str);
     }
 
     /**

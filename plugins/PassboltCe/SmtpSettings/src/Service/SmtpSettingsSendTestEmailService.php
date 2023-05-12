@@ -41,19 +41,24 @@ class SmtpSettingsSendTestEmailService
     private $email;
 
     /**
+     * @var array
+     */
+    private $smtpSettings = [];
+
+    /**
      * @param array $smtpSettings SMTP Settings passed in the payload
      * @return \Cake\Mailer\Mailer
      * @throws \App\Error\Exception\FormValidationException if the settings passed do not validate the EmailConfigurationForm
      */
     public function sendTestEmail(array $smtpSettings): Mailer
     {
-        $smtpSettings = $this->validateAndGetSmtpSettings($smtpSettings);
+        $this->smtpSettings = $this->validateAndGetSmtpSettings($smtpSettings);
 
         // Do not assign the sender as found in the DB settings
         // as we use the one provided in the $smtpSettings
         EventManager::instance()->on(new SmtpTransportSendTestEmailEventListener());
-        $this->email = $this->getDebugEmail($smtpSettings);
-        $this->sendEmail($smtpSettings);
+        $this->email = $this->getDebugEmail($this->smtpSettings);
+        $this->sendEmail($this->smtpSettings);
 
         return $this->email;
     }
@@ -69,8 +74,68 @@ class SmtpSettingsSendTestEmailService
 
         /** @var \App\Mailer\Transport\DebugSmtpTransport $transport */
         $transport = $this->email->getTransport();
+        $trace = $transport->getTrace();
 
-        return $transport->getTrace();
+        return $this->sanitizeTrace($trace);
+    }
+
+    /**
+     * Remove sensitive details from the trace.
+     *
+     * @param array $trace SMTP trace.
+     * @return array
+     */
+    private function sanitizeTrace(array $trace): array
+    {
+        foreach ($trace as &$entry) {
+            if (isset($entry['cmd'])) {
+                $entry['cmd'] = $this->removeCredentials($entry['cmd']);
+            }
+            if (!empty($entry['response'])) {
+                foreach ($entry['response'] as &$response) {
+                    $response['message'] = $this->removeCredentials($response['message']);
+                }
+            }
+        }
+
+        return $trace;
+    }
+
+    /**
+     * @param string $str string where to remove the credentials
+     * @return array|string|string[]
+     */
+    protected function removeCredentials(string $str)
+    {
+        $toReplace = [];
+        $replaceMask = '*****';
+        $replaceWith = [];
+
+        if (isset($this->smtpSettings['username'])) {
+            $usernameEncoded = base64_encode($this->smtpSettings['username']);
+            $usernameClear = $this->smtpSettings['username'];
+            $toReplace[] = $usernameClear;
+            $replaceWith[] = $replaceMask;
+            $toReplace[] = $usernameEncoded;
+            $replaceWith[] = $replaceMask;
+        }
+        if (isset($this->smtpSettings['password'])) {
+            $passwordEncoded = base64_encode($this->smtpSettings['password']);
+            $passwordClear = $this->smtpSettings['password'];
+            $toReplace[] = $passwordEncoded;
+            $replaceWith[] = $replaceMask;
+            $toReplace[] = $passwordClear;
+            $replaceWith[] = $replaceMask;
+        }
+        if (isset($this->smtpSettings['username']) && isset($this->smtpSettings['password'])) {
+            $encodedCreds = base64_encode(
+                chr(0) . $this->smtpSettings['username'] . chr(0) . $this->smtpSettings['password']
+            );
+            $toReplace[] = $encodedCreds;
+            $replaceWith[] = $replaceMask;
+        }
+
+        return str_replace($toReplace, $replaceWith, $str);
     }
 
     /**
