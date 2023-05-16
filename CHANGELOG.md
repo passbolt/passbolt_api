@@ -4,18 +4,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.0.0] - 2023-05-16
 ### Added
-- PB-24245 Adds two TOTP resource types feature flag
-- PB-24086 As an admin, I can create a user recovery token from the command line
-- PB-24056 As an admin I can view log stack traces when debug mode is enabled
-
-### Improved
-- PB-24073 As a developer I should ensure that the CHANGELOG.md file is in the right format
-- PB-24071 As a developer I can enable feature plugins with the plugins class name
-- PB-24272 Adds contribution link in CONTRIBUTING.md
+- PB-24245 As LU using the API I can manage standalone TOTP and TOTP associated with passwords resources types
+- PB-24086 As an admin I can create a user recovery link from the command line
 
 ### Maintenance
 - PB-23321 Upgrade CakePHP to 4.4
-- PB-24297 Update guzzlehttp/psr7 to fix composer audit security vulnerability
 - PB-24296 As a developer I can retrieve in integration tests the body of json requests in array
 - PB-24083 Removes the usage of the Paginator deprecated in CakePHP 4.4
 - PB-23926 Bump PHPUnit to ~9.5.2 to avoid warning messages of 9.6
@@ -23,12 +16,19 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-22622 Add CS rule to disallow space after NOT operator
 - PB-23786 Remove PHP 7.3 from the testing pipes
 - PB-24561 Upgrades cakephp/migrations library
+- PB-24073 As a developer I should ensure that the CHANGELOG.md file is in the right format
+- PB-24071 As a developer I can enable feature plugins with the plugins class name
+- PB-24272 Adds contribution link in CONTRIBUTING.md
 
 ### Fixed
 - PB-24078 As a user I should receive the correct email avatar text after folder manipulation
 - PB-24039 Action log event listener should not throw error on missing connection
 - PB-23558 Remove PHP 8.2 deprecation warnings
 - PB-23557 Remove PHP 8.1 deprecation warnings
+
+### Security
+- PB-24056 As an admin I can view log stack traces when debug mode is enabled
+- PB-24297 Update guzzlehttp/psr7 to fix composer audit security vulnerability
 
 ## [4.0.0-rc.5] - 2023-05-11
 ### Maintenance
