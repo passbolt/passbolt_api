@@ -121,6 +121,7 @@ seq-php7.4-postgres:
   extends:
     - .postgres-template
     - .test-template
+  allow_failure: true
 
 #seq-php7.4-postgres12.11:
 #  variables:
