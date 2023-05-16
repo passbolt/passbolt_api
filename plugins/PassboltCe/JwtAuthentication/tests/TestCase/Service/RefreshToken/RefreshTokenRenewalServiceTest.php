@@ -20,10 +20,10 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Service\RefreshToken;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
@@ -32,18 +32,22 @@ use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 
 /**
  * @covers \Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
 class RefreshTokenRenewalServiceTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use TruncateDirtyTables;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->loadModel('AuthenticationTokens');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
         EventManager::instance()->setEventList(new EventList());
     }
 

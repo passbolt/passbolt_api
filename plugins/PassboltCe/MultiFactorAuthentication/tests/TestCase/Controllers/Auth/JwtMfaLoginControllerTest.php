@@ -20,9 +20,9 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Routing\Router;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Test\Utility\JwtTestTrait;
@@ -45,7 +45,7 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
 {
     use ActionLogsTestTrait;
     use JwtTestTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     public function setUp(): void
     {

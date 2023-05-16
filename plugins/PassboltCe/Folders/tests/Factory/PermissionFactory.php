@@ -17,8 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\Factory;
 
 use App\Model\Table\PermissionsTable;
+use Passbolt\Folders\FoldersPlugin;
 use Passbolt\Folders\Model\Entity\Folder;
-use Passbolt\Folders\Plugin;
 
 /**
  * PermissionFactory
@@ -32,7 +32,7 @@ class PermissionFactory extends \App\Test\Factory\PermissionFactory
     public function initialize(): void
     {
         parent::initialize();
-        Plugin::addAssociationsToPermissionsTable($this->getTable());
+        FoldersPlugin::addAssociationsToPermissionsTable($this->getTable());
     }
 
     /**

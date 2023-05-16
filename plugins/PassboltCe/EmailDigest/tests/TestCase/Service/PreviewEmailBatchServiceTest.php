@@ -78,13 +78,11 @@ class PreviewEmailBatchServiceTest extends AppTestCase
         $frenchLocale = 'fr-FR';
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])
-            ->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
             ->setRecipient($frenchSpeakingUser->username)
             ->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()])
-            ->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()])->persist();
 
         $emailBatch = $this->previewEmailBatchService->previewNextEmailsBatch();
         $emailInEnglish1 = $emailBatch[0];

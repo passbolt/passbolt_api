@@ -23,11 +23,6 @@ use App\Utility\UserAccessControl;
 class SetOrgLocaleService extends LocaleService
 {
     /**
-     * @var \App\Model\Table\OrganizationSettingsTable
-     */
-    public $OrganizationSettings;
-
-    /**
      * Validate and save the locale for a user in her account settings.
      *
      * @param \App\Utility\UserAccessControl $admin Logged in admin.
@@ -39,9 +34,10 @@ class SetOrgLocaleService extends LocaleService
     {
         $this->assertIsValidLocale($locale);
 
-        $this->loadModel('OrganizationSettings');
+        /** @var \App\Model\Table\OrganizationSettingsTable $organizationSettingsTable */
+        $organizationSettingsTable = $this->fetchTable('OrganizationSettings');
 
-        return $this->OrganizationSettings->createOrUpdateSetting(
+        return $organizationSettingsTable->createOrUpdateSetting(
             static::SETTING_PROPERTY,
             $locale,
             $admin

@@ -21,7 +21,7 @@ use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Log\Model\Entity\EntityHistory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
@@ -30,23 +30,34 @@ use Passbolt\Log\Test\Lib\Traits\SecretsHistoryTestTrait;
 
 /**
  * Class ShareControllerLogTest
- *
- * @property \Passbolt\Log\Model\Table\PermissionsHistoryTable $PermissionsHistory
- * @property \App\Model\Table\SecretsTable $Secrets
- * @property \Passbolt\Log\Model\Table\SecretsHistoryTable $SecretsHistory
  */
 class ShareControllerLogTest extends LogIntegrationTestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use PermissionsHistoryTestTrait;
     use SecretsHistoryTestTrait;
+
+    /**
+     * @var \Passbolt\Log\Model\Table\PermissionsHistoryTable
+     */
+    protected $PermissionsHistory;
+
+    /**
+     * @var \App\Model\Table\SecretsTable
+     */
+    protected $Secrets;
+
+    /**
+     * @var \Passbolt\Log\Model\Table\SecretsHistoryTable
+     */
+    protected $SecretsHistory;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('Passbolt/Log.PermissionsHistory');
-        $this->loadModel('Secrets');
-        $this->loadModel('Passbolt/Log.SecretsHistory');
+        $this->PermissionsHistory = $this->fetchTable('Passbolt/Log.PermissionsHistory');
+        $this->Secrets = $this->fetchTable('Secrets');
+        $this->SecretsHistory = $this->fetchTable('Passbolt/Log.SecretsHistory');
     }
 
     public function testLogShareAddSuccess()

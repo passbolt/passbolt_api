@@ -18,8 +18,8 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Service\ResourceTypes;
 
 use App\Service\ResourceTypes\ResourceTypesTrimSpacesService;
-use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Lib\AppTestCase;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesTypesTrimSpacesServiceTest extends AppTestCase
 {

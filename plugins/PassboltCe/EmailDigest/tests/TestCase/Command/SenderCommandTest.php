@@ -20,9 +20,9 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Chronos\Chronos;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\I18n;
 use Cake\Mailer\Mailer;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
@@ -100,9 +100,11 @@ class SenderCommandTest extends TestCase
         $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(4)])->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])->setRecipient($frenchSpeakingUser->username)
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])
+            ->setRecipient($frenchSpeakingUser->username)
             ->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])
+            ->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
             ->setRecipient($frenchSpeakingUser->username)
             ->persist();

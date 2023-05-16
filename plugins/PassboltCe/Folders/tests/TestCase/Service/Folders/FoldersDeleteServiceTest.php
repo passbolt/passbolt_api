@@ -36,9 +36,9 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
@@ -61,7 +61,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
     use IntegrationTestTrait;
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use PermissionsModelTrait;
     use ResourcesModelTrait;
 
@@ -84,6 +84,11 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     private $service;
 
     /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
      * setUp method
      *
      * @return void
@@ -96,7 +101,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
 
         $this->service = new FoldersDeleteService();
-        $this->loadModel('Resources');
+        $this->Resources = $this->fetchTable('Resources');
     }
 
     public function tearDown(): void
@@ -134,19 +139,11 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
         $this->service->delete($uac, $folderA->id);
 
-        $this->assertEmailIsInQueue([
-            'email' => 'ada@passbolt.com',
-            'subject' => 'Ada deleted the folder A',
-            'template' => 'Passbolt/Folders.LU/folder_delete',
-        ]);
-        $this->assertEmailIsInQueue([
-            'email' => 'betty@passbolt.com',
-            'subject' => 'Ada deleted the folder A',
-            'template' => 'Passbolt/Folders.LU/folder_delete',
-        ]);
         $this->assertEmailQueueCount(2);
-        $this->assertEmailInBatchContains('deleted the folder');
-        $this->assertEmailInBatchContains('deleted the folder', 1);
+        $this->assetEmailSubject('ada@passbolt.com', 'You deleted the folder A');
+        $this->assertEmailInBatchContains('You deleted a folder', 'ada@passbolt.com');
+        $this->assetEmailSubject('betty@passbolt.com', 'Ada deleted the folder A');
+        $this->assertEmailInBatchContains('Ada deleted a folder', 'betty@passbolt.com');
     }
 
     /* PERSONAL FOLDER */

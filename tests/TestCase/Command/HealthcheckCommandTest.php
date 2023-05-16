@@ -20,10 +20,10 @@ use App\Command\HealthcheckCommand;
 use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class HealthcheckCommandTest extends AppTestCase

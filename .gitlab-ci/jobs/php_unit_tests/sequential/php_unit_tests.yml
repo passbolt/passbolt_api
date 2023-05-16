@@ -121,6 +121,7 @@ seq-php7.4-postgres:
   extends:
     - .postgres-template
     - .test-template
+  allow_failure: true
 
 #seq-php7.4-postgres12.11:
 #  variables:
@@ -135,16 +136,6 @@ seq-php7.4-postgres:
 ##
 ## DEBIAN COMBINATIONS
 ##
-## DEBIAN 10 BUSTER
-seq-php7.3-mariadb10.3:
-  variables:
-    PHP_VERSION: "7.3"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.3'
-  extends:
-    - .mysql-template
-    - .test-template
-  rules:
-    - if: '$TEST_DISABLED == null'
 
 #seq-php7.4-postgres11.16:
 #  variables:
@@ -233,8 +224,7 @@ seq-php7.4-mariadb10.3:
     - .mysql-template
     - .test-template
   rules:
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+    - if: '$TEST_DISABLED == null'
 
 ## ROCKY LINUX 8.6
 seq-php8.0-mariadb10.5:

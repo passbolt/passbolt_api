@@ -19,9 +19,9 @@ namespace App\Test\TestCase\Command;
 use App\Command\MigratePostgresCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 /**

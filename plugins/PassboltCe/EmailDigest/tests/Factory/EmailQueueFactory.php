@@ -27,6 +27,14 @@ class EmailQueueFactory extends CakephpBaseFactory
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function initialize(): void
+    {
+        $this->disablePrimaryKeyOffset();
+    }
+
+    /**
      * Defines the factory's default values. This is useful for
      * not nullable fields. You may use methods of the present factory here too.
      *

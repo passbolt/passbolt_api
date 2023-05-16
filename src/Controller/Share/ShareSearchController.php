@@ -24,11 +24,20 @@ use Cake\Collection\CollectionInterface;
 use Cake\ORM\Query;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
- * @property \App\Model\Table\GroupsTable $Groups
+ * ShareSearchController Class
  */
 class ShareSearchController extends AppController
 {
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    protected $Groups;
+
     /**
      * Share search potential user or group to share with
      *
@@ -36,8 +45,10 @@ class ShareSearchController extends AppController
      */
     public function searchArosToShareWith()
     {
-        $this->loadModel('Users');
-        $this->loadModel('Groups');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Groups = $this->fetchTable('Groups');
 
         // Build the find options.
         $whitelist = [

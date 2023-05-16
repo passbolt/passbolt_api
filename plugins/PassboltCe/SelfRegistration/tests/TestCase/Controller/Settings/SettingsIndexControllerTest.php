@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.10.0
  */
 
-namespace Passbolt\SelRegistration\Test\TestCase\Controller\Settings;
+namespace Passbolt\SelfRegistration\Test\TestCase\Controller\Settings;
 
 use App\Test\Lib\AppIntegrationTestCase;
 

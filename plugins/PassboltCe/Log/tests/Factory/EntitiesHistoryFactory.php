@@ -20,6 +20,7 @@ namespace Passbolt\Log\Test\Factory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Log\Model\Entity\EntityHistory;
 
 /**
@@ -63,11 +64,52 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
+     * @param ActionLogFactory $actionLogFactory ActionLog factory
+     * @return $this
+     */
+    public function withActionLog(?ActionLogFactory $actionLogFactory = null)
+    {
+        return $this->with('ActionLogs', $actionLogFactory);
+    }
+
+    /**
+     * @return $this
+     */
+    public function withResource(?ResourceFactory $resourceFactory = null)
+    {
+        return $this->resources()->with('Resources', $resourceFactory);
+    }
+
+    /**
+     * @return $this
+     */
+    public function withSecretAccessOnResource(?ResourceFactory $resourceFactory = null)
+    {
+        return $this->secretAccesses()->with('SecretAccesses.Resources', $resourceFactory);
+    }
+
+    /**
      * @return $this
      */
     public function users()
     {
         return $this->setField('foreign_model', 'Users');
+    }
+
+    /**
+     * @return $this
+     */
+    public function resources()
+    {
+        return $this->setField('foreign_model', 'Resources');
+    }
+
+    /**
+     * @return $this
+     */
+    public function secretAccesses()
+    {
+        return $this->setField('foreign_model', 'SecretAccesses');
     }
 
     /**

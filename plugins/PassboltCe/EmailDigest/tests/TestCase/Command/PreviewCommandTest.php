@@ -19,10 +19,10 @@ namespace Passbolt\EmailDigest\Test\TestCase\Command;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\EmailTestTrait;
 use App\View\Helper\AvatarHelper;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\I18n\I18n;
 use Cake\Mailer\Mailer;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Command\PreviewCommand;
@@ -122,7 +122,10 @@ class PreviewCommandTest extends TestCase
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make()->listeningToBeforeSave()->persist();
-        EmailQueueFactory::make()->listeningToBeforeSave()->setRecipient($frenchSpeakingUser->username)->persist();
+        EmailQueueFactory::make()
+            ->listeningToBeforeSave()
+            ->setRecipient($frenchSpeakingUser->username)
+            ->persist();
 
         $this->exec('passbolt email_digest preview --body');
         $emailHtml = $this->_out->output();

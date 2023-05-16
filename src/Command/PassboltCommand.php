@@ -134,6 +134,10 @@ class PassboltCommand extends Command
             'help' => __d('cake_console', 'Utility to import mysql database backups.'),
         ]);
 
+        $parser->addArgument('recover_user', [
+            'help' => __d('cake_console', 'Get an existing account recovery token, or create a new one.'),
+        ]);
+
         $parser->addArgument('register_user', [
             'help' => __d('cake_console', 'Register a new user.'),
         ]);
@@ -235,12 +239,12 @@ class PassboltCommand extends Command
      */
     protected function assertCurrentProcessUser(ConsoleIo $io)
     {
-        if (! $this->assertNotRoot($io)) {
+        if (!$this->assertNotRoot($io)) {
             $this->error(__('aborting'), $io);
             $this->abort();
         }
 
-        if (! $this->isWebserverUser()) {
+        if (!$this->isWebserverUser()) {
             $io->out();
             $io->warning(__('Passbolt commands should only be executed as the web server user.'));
             $io->out();

@@ -23,20 +23,23 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Event\Event;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Passbolt\Locale\Service\LocaleService;
 
 /**
  * Class UserDeleteEmailRedactor
- *
- * @property \App\Model\Table\UsersTable $Users
  */
 class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use SubscribedEmailRedactorTrait;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
 
     /**
      * @param \Cake\Event\Event $event User delete event
@@ -44,7 +47,9 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function onSubscribedEvent(Event $event): EmailCollection
     {
-        $this->loadModel('Users');
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
+        $this->Users = $usersTable;
         $emailCollection = new EmailCollection();
 
         $user = $event->getData('user');
