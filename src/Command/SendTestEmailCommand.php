@@ -27,6 +27,7 @@ use Cake\Mailer\TransportFactory;
 use Cake\Utility\Hash;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 
 class SendTestEmailCommand extends PassboltCommand
 {
@@ -88,7 +89,7 @@ class SendTestEmailCommand extends PassboltCommand
             $this->abort();
         }
 
-        $transportConfig[SmtpSettingsSendTestEmailService::EMAIL_TEST_TO] = $recipient;
+        $transportConfig[SmtpSettingsSendTestMailerService::EMAIL_TEST_TO] = $recipient;
 
         $this->checkFromIsSet($transportConfig, $io);
 

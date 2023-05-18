@@ -19,7 +19,7 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
@@ -39,13 +39,14 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
         SmtpSettingFactory::make()->persist();
 
         $recipient = 'test@test.test';
-        $data = $this->getSmtpSettingsData() + [SmtpSettingsSendTestEmailService::EMAIL_TEST_TO => $recipient];
+        $data = $this->getSmtpSettingsData() + [SmtpSettingsSendTestMailerService::EMAIL_TEST_TO => $recipient];
         $this->logInAsAdmin();
 
         $trace = ['foo' => 'bar'];
         $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
 
         $this->postJson('/smtp/email.json', $data);
+
         $this->assertSuccess();
         $this->assertMailCount(1);
         $this->assertMailSentFromAt(0, ['johndoe@passbolt.test' => 'John Doe']);

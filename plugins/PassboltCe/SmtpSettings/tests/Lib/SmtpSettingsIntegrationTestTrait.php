@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\Lib;
 
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 
 /**
  * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsSetService
@@ -36,6 +37,7 @@ trait SmtpSettingsIntegrationTestTrait
     {
         $this->mockService(SmtpSettingsSendTestEmailService::class, function () use ($trace, $errorMessage) {
             $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)
+                ->disableOriginalConstructor()
                 ->onlyMethods(['getTrace', 'sendTestEmail'])
                 ->getMock();
             $service->method('sendTestEmail')->willThrowException(new \Exception($errorMessage));
@@ -54,6 +56,7 @@ trait SmtpSettingsIntegrationTestTrait
     {
         $this->mockService(SmtpSettingsSendTestEmailService::class, function () use ($trace) {
             $service = $this->getMockBuilder(SmtpSettingsSendTestEmailService::class)
+                ->setConstructorArgs([new SmtpSettingsSendTestMailerService()])
                 ->onlyMethods(['getTrace'])
                 ->getMock();
             $service->method('getTrace')->willReturn($trace);

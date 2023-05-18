@@ -21,12 +21,14 @@ use App\Command\SendTestEmailCommand;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 
 class TestEmailServiceProvider extends ServiceProvider
 {
     protected $provides = [
         SendTestEmailCommand::class,
         SmtpSettingsSendTestEmailService::class,
+        SmtpSettingsSendTestMailerService::class,
     ];
 
     /**
@@ -37,6 +39,11 @@ class TestEmailServiceProvider extends ServiceProvider
         $container
             ->add(SendTestEmailCommand::class)
             ->addArgument(SmtpSettingsSendTestEmailService::class);
-        $container->add(SmtpSettingsSendTestEmailService::class);
+
+        $container
+            ->add(SmtpSettingsSendTestEmailService::class)
+            ->addArgument(SmtpSettingsSendTestMailerService::class);
+
+        $container->add(SmtpSettingsSendTestMailerService::class);
     }
 }
