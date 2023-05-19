@@ -39,10 +39,27 @@ class SmtpSettingsSendTestMailerService
     private $smtpSettings = [];
 
     /**
+     * Sends an email.
+     *
      * @param array $smtpSettings SMTP settings.
      * @return void
      */
-    public function setSmtpSettings(array $smtpSettings): void
+    public function sendEmail(array $smtpSettings): void
+    {
+        $this->setSmtpSettings($smtpSettings);
+
+        $this->email
+            ->setFrom([$this->smtpSettings['sender_email'] => $this->smtpSettings['sender_name']])
+            ->setTo($this->smtpSettings[self::EMAIL_TEST_TO])
+            ->setSubject(__('Passbolt test email'))
+            ->deliver($this->getDefaultMessage());
+    }
+
+    /**
+     * @param array $smtpSettings SMTP settings.
+     * @return void
+     */
+    private function setSmtpSettings(array $smtpSettings): void
     {
         $this->smtpSettings = $smtpSettings;
 
@@ -63,20 +80,6 @@ class SmtpSettingsSendTestMailerService
         }
 
         $this->email = new Mailer(['transport' => $debugTransport]);
-    }
-
-    /**
-     * Sends an email.
-     *
-     * @return void
-     */
-    public function sendEmail(): void
-    {
-        $this->email
-            ->setFrom([$this->smtpSettings['sender_email'] => $this->smtpSettings['sender_name']])
-            ->setTo($this->smtpSettings[self::EMAIL_TEST_TO])
-            ->setSubject(__('Passbolt test email'))
-            ->deliver($this->getDefaultMessage());
     }
 
     /**

@@ -26,22 +26,22 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Hash;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 
 class SendTestEmailCommand extends PassboltCommand
 {
     /**
-     * @var \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService
+     * @var \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService
      */
     public $sendTestEmailService;
 
     /**
      * Injects the service to facilitate the unit testing of the command
      *
-     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service to send test email.
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service to send test email.
      */
-    public function __construct(SmtpSettingsSendTestEmailService $sendTestEmailService)
+    public function __construct(SmtpSettingsTestEmailService $sendTestEmailService)
     {
         parent::__construct();
         $this->sendTestEmailService = $sendTestEmailService;

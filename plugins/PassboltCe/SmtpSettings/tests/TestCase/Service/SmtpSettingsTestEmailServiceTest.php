@@ -24,22 +24,22 @@ use Cake\Event\EventManager;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
- * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService
+ * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService
  */
-class SmtpSettingsSendTestEmailServiceTest extends TestCase
+class SmtpSettingsTestEmailServiceTest extends TestCase
 {
     use EmailTestTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
     /**
-     * @var SmtpSettingsSendTestEmailService
+     * @var \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService
      */
     protected $service;
 
@@ -49,7 +49,7 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
 
         EventManager::instance()->setEventList(new EventList());
         $this->clearPlugins();
-        $this->service = new SmtpSettingsSendTestEmailService(new SmtpSettingsSendTestMailerService());
+        $this->service = new SmtpSettingsTestEmailService(new SmtpSettingsSendTestMailerService());
     }
 
     public function tearDown(): void
@@ -160,8 +160,7 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         ];
         // Mock mailer service
         $mailerService = $this->createMock(SmtpSettingsSendTestMailerService::class);
-        $mailerService->expects($this->once())->method('setSmtpSettings')->with($smtpSettings);
-        $mailerService->expects($this->once())->method('sendEmail');
+        $mailerService->expects($this->once())->method('sendEmail')->with($smtpSettings);
         // Mock trace
         $cmd = sprintf(
             'AUTH PLAIN %s',
@@ -173,7 +172,7 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         ];
         $mailerService->expects($this->once())->method('getTrace')->willReturn($trace);
 
-        $sut = new SmtpSettingsSendTestEmailService($mailerService);
+        $sut = new SmtpSettingsTestEmailService($mailerService);
         $sut->sendTestEmail($smtpSettings);
         $result = $sut->getTrace();
 

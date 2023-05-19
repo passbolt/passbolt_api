@@ -22,7 +22,7 @@ use Cake\Event\EventManager;
 use Passbolt\SmtpSettings\Event\SmtpTransportSendTestEmailEventListener;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 
-class SmtpSettingsSendTestEmailService
+class SmtpSettingsTestEmailService
 {
     use EventDispatcherTrait;
 
@@ -57,8 +57,7 @@ class SmtpSettingsSendTestEmailService
         // as we use the one provided in the $smtpSettings
         EventManager::instance()->on(new SmtpTransportSendTestEmailEventListener());
 
-        $this->mailerService->setSmtpSettings($this->smtpSettings);
-        $this->mailerService->sendEmail();
+        $this->mailerService->sendEmail($this->smtpSettings);
     }
 
     /**
