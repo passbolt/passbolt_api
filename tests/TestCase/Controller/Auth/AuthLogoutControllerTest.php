@@ -18,7 +18,7 @@ namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Routing\Router;
-use Zend\Diactoros\Response\RedirectResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
 
 class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
