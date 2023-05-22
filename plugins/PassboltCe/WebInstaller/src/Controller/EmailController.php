@@ -18,7 +18,7 @@ namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\CakeException;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 
 class EmailController extends WebInstallerController
 {
@@ -46,10 +46,10 @@ class EmailController extends WebInstallerController
     /**
      * Index
      *
-     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service injected for unit test purposes
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @return void|mixed
      */
-    public function index(SmtpSettingsSendTestEmailService $sendTestEmailService)
+    public function index(SmtpSettingsTestEmailService $sendTestEmailService)
     {
         if ($this->request->is('post')) {
             return $this->indexPost($sendTestEmailService);
@@ -69,10 +69,10 @@ class EmailController extends WebInstallerController
     /**
      * Index post
      *
-     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service injected for unit test purposes
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @return void|mixed
      */
-    protected function indexPost(SmtpSettingsSendTestEmailService $sendTestEmailService)
+    protected function indexPost(SmtpSettingsTestEmailService $sendTestEmailService)
     {
         $data = $this->getRequest()->getData();
         try {
@@ -111,11 +111,11 @@ class EmailController extends WebInstallerController
     /**
      * Send test email.
      *
-     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service injected for unit test purposes
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @param array $data request data
      * @return void
      */
-    protected function sendTestEmail(SmtpSettingsSendTestEmailService $sendTestEmailService, array $data)
+    protected function sendTestEmail(SmtpSettingsTestEmailService $sendTestEmailService, array $data)
     {
         try {
             $sendTestEmailService->sendTestEmail($data);
