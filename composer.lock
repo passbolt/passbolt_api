@@ -484,12 +484,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/migrations.git",
-                "reference": "b8a776aaca49b07cdbd1daad31fc1d9fb5c6f273"
+                "reference": "46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/migrations/zipball/b8a776aaca49b07cdbd1daad31fc1d9fb5c6f273",
-                "reference": "b8a776aaca49b07cdbd1daad31fc1d9fb5c6f273",
+                "url": "https://api.github.com/repos/passbolt/migrations/zipball/46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2",
+                "reference": "46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2",
                 "shasum": ""
             },
             "require": {
@@ -569,7 +569,7 @@
                 "irc": "irc://irc.freenode.org/cakephp",
                 "source": "https://github.com/cakephp/migrations"
             },
-            "time": "2023-05-19T12:29:25+00:00"
+            "time": "2023-05-19T12:04:41+00:00"
         },
         {
             "name": "cakephp/plugin-installer",
@@ -2363,12 +2363,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/phinx.git",
-                "reference": "55fb10b8bdf95f855db36aa6cb279947eb680aa3"
+                "reference": "951b0f28507e41d1463b4e785e0ed4e0d9ce3b71"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/phinx/zipball/55fb10b8bdf95f855db36aa6cb279947eb680aa3",
-                "reference": "55fb10b8bdf95f855db36aa6cb279947eb680aa3",
+                "url": "https://api.github.com/repos/passbolt/phinx/zipball/951b0f28507e41d1463b4e785e0ed4e0d9ce3b71",
+                "reference": "951b0f28507e41d1463b4e785e0ed4e0d9ce3b71",
                 "shasum": ""
             },
             "require": {
