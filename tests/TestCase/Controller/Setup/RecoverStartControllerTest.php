@@ -33,7 +33,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($userId)
             ->persist();
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $url = "/setup/recover/start/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseOk();
         $this->assertNotNull($this->_responseJsonBody->user);
@@ -56,7 +56,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
             ->userId($userId)
             ->persist();
 
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $url = "/setup/recover/start/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(403);
     }
@@ -81,10 +81,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     {
         $fails = [
             'user not a uuid' => '/setup/recover/start/nope/nope.json',
-            'user not a uuid with legacy url' => '/setup/recover/nope/nope.json',
             'token not a uuid' => '/setup/recover/start/' . UuidFactory::uuid('user.id.ruth') . '/nope.json',
-            'token not a uuid with legacy url' => '/setup/recover/' . UuidFactory::uuid('user.id.ruth') . '/nope.json',
-            'both not a uuid' => '/setup/recover/nope/nope.json',
         ];
         foreach ($fails as $case => $url) {
             $this->getJson($url);
@@ -97,7 +94,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     {
         $userId = UserFactory::make()->inactive()->persist()->id;
         $token = UuidFactory::uuid();
-        $url = "/setup/recover/{$userId}/{$token}.json";
+        $url = "/setup/recover/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
         $this->assertResponseContains('The user does not exist or is not active.');
@@ -107,7 +104,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     {
         $userId = UuidFactory::uuid();
         $token = UuidFactory::uuid();
-        $url = "/setup/recover/{$userId}/{$token}.json";
+        $url = "/setup/recover/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
         $this->assertResponseContains('The user does not exist or is not active.');
@@ -117,7 +114,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     {
         $userId = UserFactory::make()->deleted()->persist()->id;
         $token = UuidFactory::uuid();
-        $url = "/setup/recover/{$userId}/{$token}.json";
+        $url = "/setup/recover/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
         $this->assertResponseContains('The user does not exist or is not active.');
@@ -127,7 +124,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     {
         $userId = UserFactory::make()->active()->persist()->id;
         $token = UuidFactory::uuid();
-        $url = "/setup/recover/{$userId}/{$token}.json";
+        $url = "/setup/recover/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
         $this->assertResponseContains('The authentication token is not valid.');
@@ -141,7 +138,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
             ->type('Foo')
             ->userId($userId)
             ->persist();
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $url = "/setup/recover/start/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
         $this->assertResponseContains('The authentication token is not valid.');
@@ -155,7 +152,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($userId)
             ->persist();
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $url = "/setup/recover/start/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
         $this->assertResponseContains('The authentication token is not valid.');
@@ -170,7 +167,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($userId)
             ->persist();
-        $url = "/setup/recover/{$userId}/{$t->token}.json";
+        $url = "/setup/recover/start/{$userId}/{$t->token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
         $arr = $this->getResponseBodyAsArray();
@@ -187,7 +184,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($userId)
             ->persist();
-        $url = "/setup/recover/{$userId}/{$t->token}";
+        $url = "/setup/recover/start/{$userId}/{$t->token}";
         $this->get($url);
         $this->assertResponseOk();
     }

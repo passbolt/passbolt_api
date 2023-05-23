@@ -17,11 +17,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Role;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 class UsersAddControllerTest extends AppIntegrationTestCase
 {
@@ -171,6 +173,10 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         $this->assertEmailInBatchContains('created an account for you', 'aurore@passbolt.com');
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = AuthenticationTokenFactory::find()->firstOrFail();
+        $user = Router::url('/setup/start/' . $token->user_id . '/' . $token->token, true);
+        $this->assertEmailInBatchContains($user, 'aurore@passbolt.com');
     }
 
     public function testUsersAddRequestDataApiUserExistError()
