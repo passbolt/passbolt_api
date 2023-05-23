@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.1] - 2023-05-23
+### Added
+- PB-24644 As an admin I should be able to run migrations on a 32 bit environment
+
+## [4.0.1-rc.1] - 2023-05-19
+### Added
+- PB-24644 As an admin I should be able to run migrations on a 32 bit environment
+
 ## [4.0.0] - 2023-05-16
 ### Added
 - PB-24245 As LU using the API I can manage standalone TOTP and TOTP associated with passwords resources types
