@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.0.2-rc.1] - 2023-05-24
+### Fixed
+- PB-24644 As an admin I should be able to run migrations on a 32 bit environment
+
 ## [4.0.1] - 2023-05-23
 ### Added
 - PB-24644 As an admin I should be able to run migrations on a 32 bit environment
