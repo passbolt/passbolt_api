@@ -348,6 +348,7 @@ $routes->scope('/setup', function ($routes) {
         ->setPass(['userId'])
         ->setMethods(['PUT', 'POST']);
 
+    // Legacy v1 backward compatibility routes
     $routes->connect('/install/{userId}/{tokenId}', ['prefix' => 'Setup', 'controller' => 'SetupStart', 'action' => 'start'])
         ->setPass(['userId', 'tokenId'])
         ->setMethods(['GET']);

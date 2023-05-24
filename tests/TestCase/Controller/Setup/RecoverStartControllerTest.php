@@ -81,7 +81,10 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
     {
         $fails = [
             'user not a uuid' => '/setup/recover/start/nope/nope.json',
+            'user not a uuid with legacy url' => '/setup/recover/nope/nope.json',
             'token not a uuid' => '/setup/recover/start/' . UuidFactory::uuid('user.id.ruth') . '/nope.json',
+            'token not a uuid with legacy url' => '/setup/recover/' . UuidFactory::uuid('user.id.ruth') . '/nope.json',
+            'both not a uuid' => '/setup/recover/nope/nope.json',
         ];
         foreach ($fails as $case => $url) {
             $this->getJson($url);
