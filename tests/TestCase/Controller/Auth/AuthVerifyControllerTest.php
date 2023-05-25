@@ -18,12 +18,9 @@ namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
-use Cake\TestSuite\IntegrationTestTrait;
 
 class AuthVerifyControllerTest extends AppIntegrationTestCase
 {
-    use IntegrationTestTrait;
-
     public function testAuthVerifyControllerUserGetSuccess()
     {
         $this->get('/auth/verify.json');

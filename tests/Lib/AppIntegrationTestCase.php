@@ -19,6 +19,7 @@ namespace App\Test\Lib;
 use App\Authenticator\AbstractSessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\CsrfProtectionMiddleware;
+use App\Middleware\SslForceMiddleware;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
@@ -73,6 +74,13 @@ abstract class AppIntegrationTestCase extends TestCase
     use CookieTestTrait;
 
     /**
+     * Stores the value of SSL force in setup to restore it in teardown
+     *
+     * @var bool
+     */
+    private bool $sslForce;
+
+    /**
      * Setup.
      */
     public function setUp(): void
@@ -89,6 +97,9 @@ abstract class AppIntegrationTestCase extends TestCase
         $this->disableFeaturePlugin('Folders');
 
         Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
+        $this->sslForce = Configure::read(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME);
+        // Disable SSL Force since all requests in tests are made on http
+        Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, false);
     }
 
     /**
@@ -101,6 +112,7 @@ abstract class AppIntegrationTestCase extends TestCase
         DigestsPool::clearInstance();
         EmailNotificationSettings::flushCache();
         $this->clearPlugins();
+        Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, $this->sslForce);
         parent::tearDown();
     }
 

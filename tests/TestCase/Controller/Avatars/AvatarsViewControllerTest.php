@@ -24,7 +24,6 @@ use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
 use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestTrait;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
 /**
@@ -35,7 +34,6 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
 class AvatarsViewControllerTest extends AppIntegrationTestCase
 {
     use AvatarsModelTrait;
-    use IntegrationTestTrait;
 
     /**
      * @var \App\Model\Table\AvatarsTable
