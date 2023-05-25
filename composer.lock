@@ -2363,12 +2363,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/phinx.git",
-                "reference": "951b0f28507e41d1463b4e785e0ed4e0d9ce3b71"
+                "reference": "a409b03e1e3e5f8f60d0d3179704abc9bc80e817"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/phinx/zipball/951b0f28507e41d1463b4e785e0ed4e0d9ce3b71",
-                "reference": "951b0f28507e41d1463b4e785e0ed4e0d9ce3b71",
+                "url": "https://api.github.com/repos/passbolt/phinx/zipball/a409b03e1e3e5f8f60d0d3179704abc9bc80e817",
+                "reference": "a409b03e1e3e5f8f60d0d3179704abc9bc80e817",
                 "shasum": ""
             },
             "require": {
@@ -2463,7 +2463,7 @@
                 "migrations",
                 "phinx"
             ],
-            "time": "2023-05-19T11:52:24+00:00"
+            "time": "2023-05-24T15:02:19+00:00"
         },
         {
             "name": "singpolyma/openpgp-php",
