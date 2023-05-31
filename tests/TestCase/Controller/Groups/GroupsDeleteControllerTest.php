@@ -16,15 +16,15 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Groups;
 
-use Cake\ORM\TableRegistry;
-use App\Utility\UuidFactory;
 use App\Model\Entity\Permission;
-use App\Test\Factory\UserFactory;
 use App\Test\Factory\GroupFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\PermissionFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
+use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
 
 class GroupsDeleteControllerTest extends AppIntegrationTestCase
 {
@@ -78,7 +78,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
         $groupId = $group->get('id');
 
-        $resource = ResourceFactory::make()->withPermissionsFor([$group], Permission::OWNER)->withPermissionsFor([$userCanRead],Permission::READ)->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$group], Permission::OWNER)->withPermissionsFor([$userCanRead], Permission::READ)->persist();
 
         $this->deleteJson('/groups/' . $groupId . '/dry-run.json');
         $this->assertError(400);
@@ -253,7 +253,6 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $resourceN = ResourceFactory::make()->withPermissionsFor([$user], Permission::OWNER)->withPermissionsFor([$group], Permission::READ)->persist();
         $resourceSId = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->persist()->get('id');
 
-
         $userId = $user->get('id');
         $resourceId = $resourceN->get('id');
         $groupId = $group->get('id');
@@ -290,6 +289,7 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
     }
 
     #WIP
+
     public function testGroupsDeleteSuccess_SoleOwnerSharedResource_DelGroupCase3(): void
     {
         // A group which is sole owner of a resource shared with another user
@@ -307,7 +307,6 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
 
         $permissionUserId = PermissionFactory::make()->aroUser($user)->acoResource($resource)->persist()->get('id');
 
-
         // CONTEXTUAL TEST CHANGES Make the group sole owner of the resource
         $permission = $this->Permissions->find()->select()->where([
             'aro_foreign_key' => $userId,
@@ -321,7 +320,6 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
-
 
         $transfer['owners'][] = ['id' => $permissionUserId, 'aco_foreign_key' => $resourceId];
         $this->deleteJson("/groups/$groupId.json", ['transfer' => $transfer]);

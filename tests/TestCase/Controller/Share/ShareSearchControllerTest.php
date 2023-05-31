@@ -17,16 +17,14 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Share;
 
-use Cake\Utility\Hash;
-use Cake\ORM\TableRegistry;
-use App\Utility\UuidFactory;
 use App\Model\Entity\Permission;
-use App\Test\Factory\UserFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
-use App\Test\Factory\PermissionFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
+use App\Utility\UuidFactory;
+use Cake\Utility\Hash;
 
 class ShareSearchControllerTest extends AppIntegrationTestCase
 {

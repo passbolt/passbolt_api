@@ -17,10 +17,9 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Secrets;
 
-use App\Utility\UuidFactory;
 use App\Model\Entity\Permission;
-use App\Test\Factory\UserFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 
 class SecretsViewControllerTest extends AppIntegrationTestCase
@@ -30,6 +29,7 @@ class SecretsViewControllerTest extends AppIntegrationTestCase
     ];
 
     # 404 instead of 200
+
     public function testSecretsViewController_Success(): void
     {
         $user = UserFactory::make()->user()->persist();
