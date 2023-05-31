@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.8.0
+ * @since         4.1.0
  */
 
 namespace Passbolt\EmailNotificationSettings\Test\Factory;
@@ -23,7 +23,6 @@ use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource;
-use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 
 class EmailNotificationSettingFactory extends OrganizationSettingFactory
 {
