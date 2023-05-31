@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Utility\UuidFactory;
+use Cake\I18n\FrozenTime;
 use Cake\Utility\Hash;
 use PassboltTestData\Lib\PermissionMatrix;
 
@@ -39,7 +40,11 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/resources.json?filter=[]');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
-
+        // Assert that the created date is in the right format
+        $format = "yyyy-MM-dd'T'HH':'mm':'ssxxx";
+        $created = $this->_responseJsonBody[0]->created;
+        $createdParsed = FrozenTime::parse($this->_responseJsonBody[0]->created)->i18nFormat($format);
+        $this->assertSame($createdParsed, $created, "The created date $created is not in $format format");
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody[0]);
         // Not expected fields.
