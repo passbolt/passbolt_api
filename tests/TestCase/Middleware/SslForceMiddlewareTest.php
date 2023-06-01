@@ -25,7 +25,7 @@ use Cake\TestSuite\TestCase;
 use Laminas\Diactoros\Uri;
 
 /**
- * Test for SslForceMiddleware
+ * @covers \App\Middleware\SslForceMiddleware
  */
 class SslForceMiddlewareTest extends TestCase
 {
@@ -33,7 +33,6 @@ class SslForceMiddlewareTest extends TestCase
 
     public function testSslForceMiddleware_HTTP_With_SSL_Force_should_redirect_to_https()
     {
-        $ssl = Configure::read(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME);
         Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, true);
         $request = new ServerRequest();
         $uri = new Uri('http://passbolt.test');
@@ -43,12 +42,11 @@ class SslForceMiddlewareTest extends TestCase
         $response = $middleware->process($request, $this->mockHandler());
 
         $this->assertSame(['https://passbolt.test'], $response->getHeader('Location'));
-        Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, $ssl);
+        $this->assertSame(302, $response->getStatusCode());
     }
 
     public function testSslForceMiddleware_HTTP_Without_SSL_Force_should_not_redirect_to_https()
     {
-        $ssl = Configure::read(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME);
         Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, false);
         $request = new ServerRequest();
         $uri = new Uri('http://passbolt.test');
@@ -58,12 +56,11 @@ class SslForceMiddlewareTest extends TestCase
         $response = $middleware->process($request, $this->mockHandler());
 
         $this->assertFalse($response->hasHeader('Location'));
-        Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, $ssl);
+        $this->assertSame(200, $response->getStatusCode());
     }
 
     public function testSslForceMiddleware_HTTPS_With_SSL_Force_should_add_strict_transport_security()
     {
-        $ssl = Configure::read(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME);
         Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, true);
         $request = new ServerRequest();
         $uri = new Uri('https://passbolt.test');
@@ -73,6 +70,5 @@ class SslForceMiddlewareTest extends TestCase
         $response = $middleware->process($request, $this->mockHandler());
 
         $this->assertSame(['max-age=31536000; includeSubDomains'], $response->getHeader('strict-transport-security'));
-        Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, $ssl);
     }
 }
