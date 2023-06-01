@@ -24,20 +24,14 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class SecretsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Secrets',
-    ];
-
-    # 404 instead of 200
-
     public function testSecretsViewController_Success(): void
     {
         $user = UserFactory::make()->user()->persist();
+        $owner = UserFactory::make()->admin()->persist();
+
         $this->loginAs($user);
 
-        $admin = UserFactory::make()->admin()->persist();
-        $resource = ResourceFactory::make()->withPermissionsFor([$admin], Permission::OWNER, [$user], Permission::READ)->persist();
-        $resourceId = $resource->get('id');
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$owner], Permission::OWNER)->withSecretsFor([$user])->withPermissionsFor([$user], Permission::READ)->persist()->get('id');
 
         $this->getJson("/secrets/resource/$resourceId.json");
         $this->assertSuccess();
@@ -73,7 +67,7 @@ class SecretsViewControllerTest extends AppIntegrationTestCase
         $this->loginAs($user);
 
         $resourceOwner = UserFactory::make()->user()->persist();
-        $resourceId = ResourceFactory::make()->withCreatorAndPermission($resourceOwner)->persist()->get('id');
+        $resourceId = ResourceFactory::make()->withCreatorAndPermission($resourceOwner)->withPermissionsFor([$user], Permission::READ)->persist()->get('id');
 
         $this->getJson("/secrets/resource/$resourceId.json");
         $this->assertError(404, 'The secret does not exist.');
