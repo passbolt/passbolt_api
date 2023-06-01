@@ -57,12 +57,6 @@ class AppController extends Controller
 
         // Init user action.
         UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
-
-        // Tell the browser to force HTTPS use
-        if (Configure::read('passbolt.ssl.force')) {
-            $this->response = $this->response
-                ->withHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
-        }
     }
 
     /**

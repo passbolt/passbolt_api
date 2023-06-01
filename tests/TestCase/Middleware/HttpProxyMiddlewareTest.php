@@ -17,11 +17,9 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Middleware;
 
-use App\Application;
 use App\Middleware\HttpProxyMiddleware;
+use App\Test\Lib\Utility\MiddlewareTestTrait;
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
-use Cake\Http\ControllerFactoryInterface;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
@@ -31,6 +29,8 @@ use Cake\TestSuite\TestCase;
  */
 class HttpProxyMiddlewareTest extends TestCase
 {
+    use MiddlewareTestTrait;
+
     /**
      * @var string
      */
@@ -122,13 +122,5 @@ class HttpProxyMiddlewareTest extends TestCase
         );
 
         $this->assertEquals($request->clientIp(), $proxyIP);
-    }
-
-    private function mockHandler(Response $response): Application
-    {
-        $controllerFactoryStub = $this->getMockBuilder(ControllerFactoryInterface::class)->getMock();
-        $controllerFactoryStub->method('invoke')->willReturn($response);
-
-        return new Application('', new EventManager(), $controllerFactoryStub);
     }
 }
