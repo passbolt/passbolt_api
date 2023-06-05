@@ -94,7 +94,7 @@
         "passbolt/cakephp-codesniffer": "dev-master",
         "passbolt/passbolt-selenium-api": "dev-master#ade46d4c3095b18316cbb0553f875c50a4dd67b9",
         "passbolt/passbolt-test-data": "^3.2.0",
-        "vierge-noire/cakephp-fixture-factories": "^v2.8.0",
+        "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
         "cakephp/localized": "4.0.0",
         "vimeo/psalm": "^4.23.0"
     },

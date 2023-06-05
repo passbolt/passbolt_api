@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e61446ff2a37ec7be6a841ca85a73dee",
+    "content-hash": "f99c1e5eb3ef7e9fe8d0ec6eb2ddc0ad",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -8348,16 +8348,16 @@
         },
         {
             "name": "vierge-noire/cakephp-fixture-factories",
-            "version": "v2.8",
+            "version": "v2.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
-                "reference": "cba679d432945ae07d630ef85445fb7493c21984"
+                "reference": "3cc6b9da77a3322e14e7b517d1ee664e2c27abba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/cba679d432945ae07d630ef85445fb7493c21984",
-                "reference": "cba679d432945ae07d630ef85445fb7493c21984",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/3cc6b9da77a3322e14e7b517d1ee664e2c27abba",
+                "reference": "3cc6b9da77a3322e14e7b517d1ee664e2c27abba",
                 "shasum": ""
             },
             "require": {
@@ -8405,9 +8405,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
-                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.8"
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.9.0-rc.1"
             },
-            "time": "2023-05-11T08:20:55+00:00"
+            "time": "2023-06-05T13:34:35+00:00"
         },
         {
             "name": "vierge-noire/cakephp-test-suite-light",
