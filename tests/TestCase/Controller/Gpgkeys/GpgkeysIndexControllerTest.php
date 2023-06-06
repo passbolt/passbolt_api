@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Gpgkeys;
 
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\I18n\FrozenTime;
@@ -35,12 +36,14 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
 
     public function testGpgKeysIndexController_SuccessModifiedAfter(): void
     {
-        UserFactory::make(21)->user()->with('Gpgkeys')->persist();
+        UserFactory::make(21)
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey()->modifiedYesterday())
+            ->persist();
         $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
 
         // Find a key at a given time and modify it
-        $t = FrozenTime::now();
-        sleep(1);
+        $t = FrozenTime::today();
         $gpgkey = $Gpgkeys->find('all')->first();
         $gpgkey->modified = FrozenTime::now();
         $Gpgkeys->save($gpgkey);
