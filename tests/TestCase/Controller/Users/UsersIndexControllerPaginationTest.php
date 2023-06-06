@@ -78,7 +78,7 @@ class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
      * @return void
      * @throws \Exception
      */
-    public function testUsersIndexPagination(?string $sortedField = null, string $direction = 'asc', string $path = 'username')
+    public function testUsersIndexController_Success_Pagination(?string $sortedField = null, string $direction = 'asc', string $path = 'username')
     {
         $numberOfUsers = 19;
         $limit = 10;

@@ -41,6 +41,8 @@ class UsersViewController extends AppController
      */
     public function view($id)
     {
+        $this->assertJson();
+
         // Check request sanity
         if (!Validation::uuid($id)) {
             if ($id === 'me') {

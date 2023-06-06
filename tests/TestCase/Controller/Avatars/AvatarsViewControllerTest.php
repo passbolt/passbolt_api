@@ -68,7 +68,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
         parent::tearDown();
     }
 
-    public function validFormatDataProvider()
+    public function validFormatDataProvider(): array
     {
         return [
             [AvatarsConfigurationService::FORMAT_SMALL],

@@ -31,6 +31,8 @@ class GroupsIndexController extends AppController
      */
     public function index()
     {
+        $this->assertJson();
+
         /** @var \App\Model\Table\GroupsTable $groupsTable */
         $groupsTable = $this->fetchTable('Groups');
 

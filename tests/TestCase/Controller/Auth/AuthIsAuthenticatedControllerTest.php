@@ -23,19 +23,11 @@ use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
 {
-    public function testIsAuthenticatedNotLoggedIn()
-    {
-        $this->getJson('/auth/is-authenticated.json');
-        $this->assertResponseError();
-        $this->assertTextContains('error', $this->_responseJsonHeader->status);
-        $this->assertTextContains('Authentication is required to continue', $this->_responseJsonHeader->message);
-    }
-
     /**
-     * Happy path
-     * Check that the action is not logged
+     * 200 if user is logged in
+     * Also check that the action is not logged
      */
-    public function testIsAuthenticatedLoggedIn()
+    public function testAuthIsAuthenticatedController_Success_LoggedIn(): void
     {
         $isLogEnabled = $this->isFeaturePluginEnabled('Log');
         $this->enableFeaturePlugin('Log');
@@ -52,10 +44,18 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
         }
     }
 
+    public function testAuthIsAuthenticatedController_Error_NotLoggedIn(): void
+    {
+        $this->getJson('/auth/is-authenticated.json');
+        $this->assertResponseError();
+        $this->assertTextContains('error', $this->_responseJsonHeader->status);
+        $this->assertTextContains('Authentication is required to continue', $this->_responseJsonHeader->message);
+    }
+
     /**
      * @covers \App\Middleware\SessionAuthPreventDeletedUsersMiddleware::process
      */
-    public function testIsAuthenticatedSoftDeletedLoggedUserShouldBeForbiddenToRequestTheApi()
+    public function testAuthIsAuthenticatedController_Error_SoftDeletedLoggedUserShouldBeForbiddenToRequestTheApi(): void
     {
         $user = UserFactory::make()->user()->deleted()->persist();
 
@@ -63,5 +63,15 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
         $this->getJson('/auth/is-authenticated.json');
         $this->assertEmpty($this->getSession()->read());
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testAuthIsAuthenticatedController_Error_NotJson(): void
+    {
+        $this->logInAsUser();
+        $this->get('/auth/is-authenticated');
+        $this->assertResponseCode(404);
     }
 }

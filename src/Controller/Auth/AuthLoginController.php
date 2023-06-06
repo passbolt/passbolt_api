@@ -22,7 +22,6 @@ use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use Authentication\Authenticator\Result;
 use Cake\Core\Configure;
-use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 
@@ -73,9 +72,7 @@ class AuthLoginController extends AppController
      */
     public function loginPost()
     {
-        if (!$this->request->is('json')) {
-            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
-        }
+        $this->assertJson();
 
         // Custom X-GpgAuth-* http headers are stored in $result->getErrors
         // They are translated into actual http headers as part of GpgAuthHeadersMiddleware::process

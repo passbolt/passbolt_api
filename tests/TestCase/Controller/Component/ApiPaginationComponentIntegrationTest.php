@@ -60,7 +60,7 @@ class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
      * @return void
      * @throws \Exception
      */
-    public function testDefaultPaginationSettings()
+    public function testDefaultPaginationSettings(): void
     {
         $numberOfResources = 19;
         $limit = 10;

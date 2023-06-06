@@ -66,6 +66,8 @@ class UsersIndexController extends AppController
      */
     public function index()
     {
+        $this->assertJson();
+
         $findIndexOptions = (new FindIndexOptions())
             ->allowContains([
                 'last_logged_in', 'groups_users', 'gpgkey', 'profile', 'role',
