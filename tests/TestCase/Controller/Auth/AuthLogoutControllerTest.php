@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Auth;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Laminas\Diactoros\Response\RedirectResponse;
 
@@ -70,5 +71,18 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
     {
         $this->get('/logout');
         $this->assertZendRedirect('/auth/logout');
+    }
+
+    public function testAuthLogoutJson_Disabled()
+    {
+        $this->getJson('/auth/logout.json');
+        $this->assertNotFoundError('The logout route should only be accessed with POST method.');
+    }
+
+    public function testAuthLogoutJson_Enabled()
+    {
+        Configure::write('passbolt.security.getLogoutEndpointEnabled', true);
+        $this->get('/auth/logout.json');
+        $this->assertRedirect('auth/login');
     }
 }
