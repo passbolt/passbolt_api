@@ -17,9 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Service\ActionLogs\MfaGetLastUsedProviderService;
 
 class MfaSettings
 {
@@ -263,8 +265,12 @@ class MfaSettings
     public function getDefaultVerifyUrl(?bool $json = true): string
     {
         $providers = $this->getEnabledProviders();
+        if (Configure::read(MfaGetLastUsedProviderService::SORT_BY_LAST_USAGE_CONFIG_NAME)) {
+            $lastProvider = (new MfaGetLastUsedProviderService())->getLastUsedOrDefaultProvider($this->uac, $providers);
+        }
+        $provider = $lastProvider ?? $providers[0];
 
-        return $this->getProviderVerifyUrl($providers[0], $json);
+        return $this->getProviderVerifyUrl($provider, $json);
     }
 
     /**
