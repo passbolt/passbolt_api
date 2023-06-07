@@ -17,9 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use App\Test\Factory\UserFactory;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Passbolt\MultiFactorAuthentication\Service\ActionLogs\MfaGetLastUsedProviderService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpUserOnlyScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
@@ -178,8 +180,27 @@ class MfaSettingsTest extends MfaIntegrationTestCase
      * @group mfa
      * @group mfaSettings
      */
-    public function testMfaSettingsGetDefaultUrl()
+    public function testMfaSettingsGetDefaultUrl_Unsorted()
     {
+        Configure::write(MfaGetLastUsedProviderService::SORT_BY_LAST_USAGE_CONFIG_NAME, false);
+        $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
+        $this->mockMfaOrgSettings($orgSettings, 'configure');
+        $accountSettings = $this->defaultAccountConfig;
+        $this->mockMfaAccountSettings('ada', $accountSettings);
+        $settings = MfaSettings::get($this->uac);
+
+        $defaultUrl = $settings->getDefaultVerifyUrl(false);
+        $this->assertEquals($defaultUrl, Router::url('/mfa/verify/totp', true));
+        Configure::write(MfaGetLastUsedProviderService::SORT_BY_LAST_USAGE_CONFIG_NAME, true);
+    }
+
+    /**
+     * @group mfa
+     * @group mfaSettings
+     */
+    public function testMfaSettingsGetDefaultUrl_Sorted()
+    {
+        Configure::write(MfaGetLastUsedProviderService::SORT_BY_LAST_USAGE_CONFIG_NAME, true);
         $orgSettings = ['providers' => [MfaSettings::PROVIDER_TOTP => true]];
         $this->mockMfaOrgSettings($orgSettings, 'configure');
         $accountSettings = $this->defaultAccountConfig;
