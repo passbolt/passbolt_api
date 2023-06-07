@@ -18,10 +18,13 @@ namespace App\Test\TestCase\Controller\Healthcheck;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Core\Configure;
+use Cake\TestSuite\IntegrationTestTrait;
 
 class HealthcheckErrorControllerTest extends AppIntegrationTestCase
 {
-    public function testHealthcheckErrorDisabled()
+    use IntegrationTestTrait;
+
+    public function testHealthcheckErrorController_Error_Disabled(): void
     {
         $og = Configure::read('passbolt.healthcheck.error');
         Configure::write('passbolt.healthcheck.error', false);
@@ -30,7 +33,7 @@ class HealthcheckErrorControllerTest extends AppIntegrationTestCase
         Configure::write('passbolt.healthcheck.error', $og);
     }
 
-    public function testHealthcheckErrorEnabled()
+    public function testHealthcheckErrorController_Error_Enabled(): void
     {
         $og = Configure::read('passbolt.healthcheck.error');
         Configure::write('passbolt.healthcheck.error', true);

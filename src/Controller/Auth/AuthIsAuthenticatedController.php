@@ -28,6 +28,7 @@ class AuthIsAuthenticatedController extends AppController
      */
     public function isAuthenticated()
     {
+        $this->assertJson();
         $this->success();
     }
 }

@@ -21,7 +21,6 @@ use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
-use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 
@@ -172,13 +171,21 @@ class AppController extends Controller
     }
 
     /**
-     * @throws \Cake\Http\Exception\BadRequestException if request is not JSON
+     * @throws \Cake\Http\Exception\NotFoundException if request url does not include .json extension
      * @return void
      */
     protected function assertJson(): void
     {
         if (!$this->request->is('json')) {
-            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
+            throw new NotFoundException(__('Please use .json extension in URL or accept application/json.'));
         }
+
+        //v5 - stricter mode where `accept application/json` header AND .json extension is required.
+        //if (!$this->request->is(['param' => '_ext', 'value' => 'json'])) {
+        //    throw new NotFoundException(__('Please use .json extension in URL.'));
+        //}
+        //if (!$this->request->is(['accept' => ['application/json']])) {
+        //    throw new BadRequestException(__('Add header accept application/json'));
+        //}
     }
 }

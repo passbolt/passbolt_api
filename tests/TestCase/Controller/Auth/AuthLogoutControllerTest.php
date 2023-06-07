@@ -26,7 +26,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
      * Check if a redirection is of type ZendRedirect
      * Usefull for high level routes redirections / route alias testing
      */
-    public function assertZendRedirect(string $url)
+    public function assertZendRedirect(string $url): void
     {
         $this->assertTrue($this->_response instanceof RedirectResponse);
         $url = Router::url($url, true);
@@ -35,7 +35,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
         $this->assertEquals($url, $location[0]);
     }
 
-    public function testAuthLogoutGetLoggedIn()
+    public function testAuthLogoutController_GetLoggedIn(): void
     {
         $this->logInAsUser();
 
@@ -43,7 +43,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
         $this->assertRedirect('/auth/login');
     }
 
-    public function testAuthLogoutPostLoggedIn()
+    public function testAuthLogoutController_PostLoggedIn(): void
     {
         $this->logInAsUser();
 
@@ -51,7 +51,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
         $this->assertRedirect('/auth/login');
     }
 
-    public function testAuthLogoutPostLoggedInWithouthCSRF()
+    public function testAuthLogoutController_PostLoggedInWithouthCSRF(): void
     {
         $this->logInAsUser();
         $this->disableCsrfToken();
@@ -60,13 +60,13 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
         $this->assertResponseError('Missing or incorrect CSRF cookie type.');
     }
 
-    public function testAuthLogoutNotLoggedIn()
+    public function testAuthLogoutController_NotLoggedIn(): void
     {
         $this->get('/auth/logout');
         $this->assertRedirect('/auth/login');
     }
 
-    public function testAuthLogoutRedirect()
+    public function testAuthLogoutController_Redirect(): void
     {
         $this->get('/logout');
         $this->assertZendRedirect('/auth/logout');

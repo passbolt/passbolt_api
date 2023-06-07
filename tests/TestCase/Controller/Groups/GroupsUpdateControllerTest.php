@@ -54,7 +54,7 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
-    protected function getValidSecret()
+    protected function getValidSecret(): string
     {
         return '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -77,7 +77,7 @@ hcciUFw5
      *   - Add the group manager role to a member
      */
 
-    public function testGroupsUpdateAsGMUpdateMembersRoleSuccess()
+    public function testGroupsUpdateAsGMUpdateMembersRoleSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -114,7 +114,7 @@ hcciUFw5
         $this->assertUserIsAdmin($groupId, $userNId);
     }
 
-    public function testGroupsUpdateAsGMUpdateMembersRoleSuccessWithFactories()
+    public function testGroupsUpdateAsGMUpdateMembersRoleSuccessWithFactories(): void
     {
         $group = GroupFactory::make()
             ->with('GroupsUsers', GroupsUserFactory::make(2)->admin()->with('Users'))
@@ -173,7 +173,7 @@ hcciUFw5
      *   - A member who has already an access to some resources shared with the group
      */
 
-    public function testGroupsUpdateAsGMAddMembersSuccess()
+    public function testGroupsUpdateAsGMAddMembersSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -241,7 +241,7 @@ hcciUFw5
      *   - A member who has access to some resources shared with the group because of other permissions
      */
 
-    public function testGroupsUpdateAsGMDeleteMembersSuccess()
+    public function testGroupsUpdateAsGMDeleteMembersSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -294,7 +294,7 @@ hcciUFw5
      *   - A member who has access to some resources shared with the group because of other permissions
      */
 
-    public function testGroupsUpdateAsGMUpdateGroupComplexScenarioSuccess()
+    public function testGroupsUpdateAsGMUpdateGroupComplexScenarioSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -383,7 +383,7 @@ hcciUFw5
      * Only an administrator is allowed to update the name of a group
      */
 
-    public function testGroupsUpdateAsGMCannotUpdateNameError()
+    public function testGroupsUpdateAsGMCannotUpdateNameError(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -409,7 +409,7 @@ hcciUFw5
      * Only an administrator is allowed to update the name of a group
      */
 
-    public function testGroupsUpdateAsADUpdateNameSuccess()
+    public function testGroupsUpdateAsADUpdateNameSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -434,7 +434,7 @@ hcciUFw5
      * @see testAsGMUpdateMembersRoleSuccess
      */
 
-    public function testGroupsUpdateAsADUpdateMembersRoleSuccess()
+    public function testGroupsUpdateAsADUpdateMembersRoleSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -476,7 +476,7 @@ hcciUFw5
      *   - A member who has access to some resources shared with the group because of other permissions
      */
 
-    public function testGroupsUpdateAsADDeleteMembersSuccess()
+    public function testGroupsUpdateAsADDeleteMembersSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -523,7 +523,7 @@ hcciUFw5
      *   - Add the group manager role to a member
      */
 
-    public function testGroupsUpdateAsADUpdateGroupComplexScenarioSuccess()
+    public function testGroupsUpdateAsADUpdateGroupComplexScenarioSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -571,7 +571,7 @@ hcciUFw5
 
     // As an administrator I shouldn't be able to add users to a group
 
-    public function testGroupsUpdateAsAdminCannotAddGroupUserError()
+    public function testGroupsUpdateAsAdminCannotAddGroupUserError(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -592,7 +592,7 @@ hcciUFw5
         $this->assertEmpty($groupUser);
     }
 
-    public function testGroupsUpdateLostAccessFavoritesDeleted()
+    public function testGroupsUpdateLostAccessFavoritesDeleted(): void
     {
         // Define actors of this tests
         $userLId = UuidFactory::uuid('user.id.lynne');
@@ -620,7 +620,7 @@ hcciUFw5
 
     // As an administrator I shouldn't be able to add users to a group
 
-    public function testGroupsUpdateAsAdminCannotDeleteGroupUserError()
+    public function testGroupsUpdateAsAdminCannotDeleteGroupUserError(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -640,7 +640,7 @@ hcciUFw5
         $this->assertnotEmpty($groupUser);
     }
 
-    public function testGroupsUpdateErrorNotValidId()
+    public function testGroupsUpdateErrorNotValidId(): void
     {
         $this->logInAsUser();
         $groupId = 'invalid-id';
@@ -648,7 +648,7 @@ hcciUFw5
         $this->assertError(400, 'The group id is not valid.');
     }
 
-    public function testGroupsUpdateErrorDoesNotExistGroup()
+    public function testGroupsUpdateErrorDoesNotExistGroup(): void
     {
         $this->logInAsUser();
         $groupId = UuidFactory::uuid();
@@ -656,7 +656,7 @@ hcciUFw5
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testGroupsUpdateErrorGroupIsSoftDeleted()
+    public function testGroupsUpdateErrorGroupIsSoftDeleted(): void
     {
         $this->logInAsAdmin();
         $groupId = GroupFactory::make()->deleted()->persist()->id;
@@ -665,7 +665,7 @@ hcciUFw5
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testGroupsUpdateErrorAccessDenied()
+    public function testGroupsUpdateErrorAccessDenied(): void
     {
         $groupId = GroupFactory::make()->persist()->id;
         $this->logInAsUser();
@@ -673,18 +673,35 @@ hcciUFw5
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
-    public function testGroupsUpdateErrorNotAuthenticated()
+    public function testGroupsUpdateErrorNotAuthenticated(): void
     {
         $postData = [];
         $this->putJson('/groups/foo.json', $postData);
         $this->assertAuthenticationError();
     }
 
-    public function testGroupsUpdateErrorCsrfToken()
+    public function testGroupsUpdateErrorCsrfToken(): void
     {
         $this->disableCsrfToken();
         $this->logInAsAdmin();
         $this->put('/groups/foo.json');
         $this->assertResponseCode(403);
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testGroupsUpdateController_Error_NotJson(): void
+    {
+        // Define actors of this tests
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $data = [
+            'name' => 'Updated group name',
+        ];
+
+        // Update the group name.
+        $this->authenticateAs('admin');
+        $this->put("/groups/$groupId", $data);
+        $this->assertResponseCode(404);
     }
 }

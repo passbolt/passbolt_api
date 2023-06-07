@@ -31,11 +31,11 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         'app.Base/Profiles', 'app.Base/Resources', 'app.Base/Users', 'app.Base/Roles',
     ];
 
-    public function testPermissionsViewSuccess()
+    public function testPermissionsViewSuccess(): void
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/permissions/resource/$resourceId.json?api-version=2");
+        $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -46,7 +46,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('group', $this->_responseJsonBody[0]);
     }
 
-    public function testPermissionsViewContainSuccess()
+    public function testPermissionsViewContainSuccess(): void
     {
         $this->authenticateAs('ada');
         $urlParameter = 'contain[group]=1&contain[user]=1&contain[user.profile]=1';
@@ -74,14 +74,14 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertGroupAttributes($permission->group);
     }
 
-    public function testPermissionsViewErrorNotAuthenticated()
+    public function testPermissionsViewErrorNotAuthenticated(): void
     {
         $resourceId = UuidFactory::uuid('resource.id.bower');
         $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertAuthenticationError();
     }
 
-    public function testPermissionsViewErrorNotValidId()
+    public function testPermissionsViewErrorNotValidId(): void
     {
         $this->authenticateAs('dame');
         $resourceId = 'invalid-id';
@@ -89,7 +89,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The identifier should be a valid UUID.');
     }
 
-    public function testPermissionsViewErrorSoftDeletedResource()
+    public function testPermissionsViewErrorSoftDeletedResource(): void
     {
         $this->authenticateAs('dame');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -97,7 +97,7 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testPermissionsViewErrorResourceAccessDenied()
+    public function testPermissionsViewErrorResourceAccessDenied(): void
     {
         $resourceId = UuidFactory::uuid('resource.id.canjs');
 
@@ -108,7 +108,18 @@ class PermissionsViewAcoPermissionsControllerTest extends AppIntegrationTestCase
 
         // Check that the user cannot access the resource
         $this->authenticateAs('dame');
-        $this->getJson("/permissions/resource/$resourceId.json?api-version=2");
+        $this->getJson("/permissions/resource/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testPermissionsViewController_Error_NotJson(): void
+    {
+        $this->authenticateAs('dame');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $this->get("/permissions/resource/$resourceId");
+        $this->assertResponseCode(404);
     }
 }

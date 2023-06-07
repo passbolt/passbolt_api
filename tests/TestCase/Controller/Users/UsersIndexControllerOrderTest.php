@@ -36,22 +36,22 @@ class UsersIndexControllerOrderTest extends AppIntegrationTestCase
         RoleFactory::make()->guest()->persist();
     }
 
-    public function testUsersIndexOrderByUsername()
+    public function testUsersIndexController_Success_OrderByUsername(): void
     {
         UserFactory::make(5)->user()->persist();
 
         $this->logInAsUser();
 
-        $this->getJson('/users.json?api-version=v2&order=User.username');
+        $this->getJson('/users.json?order=User.username');
         $this->assertSuccess();
         $this->assertBodyContentIsSorted('username');
 
-        $this->getJson('/users.json?api-version=v2&order[]=User.username DESC');
+        $this->getJson('/users.json?order[]=User.username DESC');
         $this->assertSuccess();
         $this->assertBodyContentIsSorted('username', 'desc');
     }
 
-    public function testUsersIndexOrderByFirstName()
+    public function testUsersIndexController_Success_OrderByFirstName(): void
     {
         ProfileFactory::make($this->getArrayOfDistinctRandomStrings(5, 'first_name'))
             ->with('Users', UserFactory::make()->user()->without('Profiles'))
@@ -59,16 +59,16 @@ class UsersIndexControllerOrderTest extends AppIntegrationTestCase
 
         $this->logInAsUser();
 
-        $this->getJson('/users.json?api-version=v2&order[]=Profile.first_name');
+        $this->getJson('/users.json?order[]=Profile.first_name');
         $this->assertSuccess();
         $this->assertBodyContentIsSorted('profile.first_name');
 
-        $this->getJson('/users.json?api-version=v2&order=Profile.first_name DESC');
+        $this->getJson('/users.json?order=Profile.first_name DESC');
         $this->assertSuccess();
         $this->assertBodyContentIsSorted('profile.first_name', 'desc');
     }
 
-    public function testUsersIndexOrderByLastName()
+    public function testUsersIndexController_Success_OrderByLastName(): void
     {
         ProfileFactory::make($this->getArrayOfDistinctRandomStrings(5, 'last_name'))
             ->with('Users', UserFactory::make()->user()->without('Profiles'))
@@ -76,16 +76,16 @@ class UsersIndexControllerOrderTest extends AppIntegrationTestCase
 
         $this->logInAsUser();
 
-        $this->getJson('/users.json?api-version=v2&order=Profile.last_name');
+        $this->getJson('/users.json?order=Profile.last_name');
         $this->assertSuccess();
         $this->assertBodyContentIsSorted('profile.last_name');
 
-        $this->getJson('/users.json?api-version=v2&order[]=Profile.last_name DESC');
+        $this->getJson('/users.json?order[]=Profile.last_name DESC');
         $this->assertSuccess();
         $this->assertBodyContentIsSorted('profile.last_name', 'desc');
     }
 
-    public function testUsersIndexOrderByCreated()
+    public function testUsersIndexController_Success_OrderByCreated(): void
     {
         $yesterday = Date::yesterday();
         $userOnYesterdayA = UserFactory::make(['username' => 'A@test.test', 'created' => $yesterday])->user()->persist();
@@ -94,14 +94,14 @@ class UsersIndexControllerOrderTest extends AppIntegrationTestCase
 
         $this->logInAsUser();
 
-        $this->getJson('/users.json?api-version=v2&order[]=User.created DESC&order[]=User.username ASC');
+        $this->getJson('/users.json?order[]=User.created DESC&order[]=User.username ASC');
         $this->assertSuccess();
         $this->assertEquals($this->_responseJsonBody[0]->id, $userTodayZ->id);
         $this->assertEquals($this->_responseJsonBody[1]->id, $userOnYesterdayA->id);
         $this->assertEquals($this->_responseJsonBody[2]->id, $userOnYesterdayB->id);
     }
 
-    public function testUsersIndexOrderByModifiedAndUsername()
+    public function testUsersIndexController_Success_OrderByModifiedAndUsername(): void
     {
         $userOnBeforeYesterday = UserFactory::make(['modified' => Date::now()->subDays(2)])->user()->persist();
         $userOnYesterdayB = UserFactory::make(['username' => 'B@test.test', 'modified' => Date::now()->subDays(1)])->user()->persist();
@@ -111,11 +111,11 @@ class UsersIndexControllerOrderTest extends AppIntegrationTestCase
 
         $this->logInAs($userOnBeforeYesterday);
 
-        $this->getJson('/users.json?api-version=v2&order[]=User.modified');
+        $this->getJson('/users.json?order[]=User.modified');
         $this->assertSuccess();
         $this->assertBodyContentIsSorted('modified');
 
-        $this->getJson('/users.json?api-version=v2&order[]=User.modified DESC&order[]=User.username ASC');
+        $this->getJson('/users.json?order[]=User.modified DESC&order[]=User.username ASC');
         $this->assertSuccess();
 
         $this->assertEquals($this->_responseJsonBody[0]->id, $userToday->id);
@@ -125,7 +125,7 @@ class UsersIndexControllerOrderTest extends AppIntegrationTestCase
         $this->assertEquals($this->_responseJsonBody[4]->id, $userOnBeforeYesterday->id);
     }
 
-    public function testUsersIndexOrderByError()
+    public function testUsersIndexController_Error_Order(): void
     {
         $this->logInAsUser();
 

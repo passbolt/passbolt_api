@@ -21,7 +21,6 @@ use App\Model\Entity\Role;
 use App\Service\Users\UserRecoverServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
-use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 
 /**
@@ -72,9 +71,7 @@ class UsersRecoverController extends AppController
      */
     public function recoverPost(UserRecoverServiceInterface $userRecoverService)
     {
-        if (!$this->request->is('json')) {
-            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
-        }
+        $this->assertJson();
 
         // Do not allow logged-in user to recover
         if (!in_array($this->User->role(), [Role::GUEST, Role::ADMIN])) {
