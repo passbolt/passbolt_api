@@ -103,7 +103,6 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
             );
 
         $dataValidator
-            ->requirePresence('email_claim', __('An email claim is required.'))
             ->notEmptyString('email_claim', __('The email claim should not be empty.'))
             ->inList(
                 'email_claim',

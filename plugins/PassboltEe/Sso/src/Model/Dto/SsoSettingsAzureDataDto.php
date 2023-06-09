@@ -77,9 +77,8 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
         $this->tenant_id = $data['tenant_id'] ?? '';
         $this->client_secret = $data['client_secret'] ?? '';
         $this->client_secret_expiry = $data['client_secret_expiry'] ?? '';
-        // Set "login" by default
+        // BExt BC: Set default value for email claim & prompt, otherwise it can break older installs
         $this->prompt = $data['prompt'] ?? SsoSettingsAzureDataForm::PROMPT_LOGIN;
-        // Set "email" by default for BC reason
         $this->email_claim = $data['email_claim'] ?? SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL;
     }
 
