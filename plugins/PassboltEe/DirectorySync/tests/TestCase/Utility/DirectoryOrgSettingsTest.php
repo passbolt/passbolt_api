@@ -33,9 +33,15 @@ class DirectoryOrgSettingsTest extends AppTestCase
         'app.Base/Roles',
     ];
 
-    public static function getDummySettings()
+    /**
+     * Get dummy test settings data
+     *
+     * @param bool $addSecondDomain
+     * @return array
+     */
+    public static function getDummySettings(bool $addSecondDomain = false)
     {
-        return [
+        $settings = [
             'enabled' => true,
             'userPath' => 'CN=Operations',
             'defaultUser' => 'admin@passbolt.com',
@@ -69,6 +75,22 @@ class DirectoryOrgSettingsTest extends AppTestCase
                 ],
             ],
         ];
+        if ($addSecondDomain) {
+            $settings['ldap']['org_domain2'] = [
+                'domain_name' => 'passbolt2.local',
+                'username' => 'root',
+                'password' => 'password',
+                'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
+                'hosts' => ['127.0.0.1'],
+                'port' => 636,
+                'use_ssl' => true,
+                'use_tls' => false,
+                'ldap_type' => 'ad',
+                'use_sasl' => true,
+            ];
+        }
+
+        return $settings;
     }
 
     /**
@@ -88,13 +110,16 @@ class DirectoryOrgSettingsTest extends AppTestCase
     public function testDirectoryOrgSettings_SaveSuccess()
     {
         $uac = $this->mockUserAccessControl('admin', Role::ADMIN);
-        $settings = self::getDummySettings();
+        $settings = self::getDummySettings(true);
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
-        $this->assertEquals(preg_match('/BEGIN PGP MESSAGE/', Hash::get($settings, 'ldap.domains.org_domain.password')), 1);
+        $domains = Hash::get($settings, 'ldap.domains', []);
+        foreach ($domains as $domain) {
+            $this->assertEquals(preg_match('/BEGIN PGP MESSAGE/', $domain['password']), 1);
+        }
     }
 
     /**
