@@ -118,7 +118,6 @@ class SsoSettingsAzureDataFormTest extends SsoTestCase
     public function testSsoSettingsAzureDataForm_ValidateEmailClaim(): void
     {
         $testCases = [
-            'requirePresence' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
             'inList' => self::getInListTestCases(SsoSettingsAzureDataForm::SUPPORTED_EMAIL_CLAIM_ALIASES),
         ];

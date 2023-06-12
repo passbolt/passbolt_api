@@ -102,8 +102,8 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $this->assertObjectHasAttribute('client_id', $body->data);
         $this->assertObjectHasAttribute('client_secret', $body->data);
         $this->assertObjectHasAttribute('client_secret_expiry', $body->data);
-        $this->assertObjectHasAttribute('email_claim', $body->data);
         // Make sure prompt is optional
+        $this->assertObjectNotHasAttribute('email_claim', $body->data);
         $this->assertObjectNotHasAttribute('prompt', $body->data);
     }
 

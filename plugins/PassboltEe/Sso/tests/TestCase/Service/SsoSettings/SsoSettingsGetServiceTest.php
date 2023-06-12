@@ -52,6 +52,7 @@ class SsoSettingsGetServiceTest extends SsoTestCase
         $this->assertNotEmpty($ssoSetting->modified);
         // Assert data
         $data = $ssoSettingsDto->data->toArray();
+        $this->assertSame(SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL, $data['email_claim']);
         $this->assertSame(SsoSettingsAzureDataForm::PROMPT_LOGIN, $data['prompt']);
     }
 
