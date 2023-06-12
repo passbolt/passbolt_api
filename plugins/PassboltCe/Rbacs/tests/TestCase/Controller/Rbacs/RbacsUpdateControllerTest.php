@@ -42,7 +42,7 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
         RoleFactory::make()->user()->persist();
         RoleFactory::make()->admin()->persist();
         (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
-        $rbacs = (array)(new RbacsInsertDefaultsService())->allowAllUiActionsForUsers();
+        $rbacs = (new RbacsInsertDefaultsService())->allowAllUiActionsForUsers();
 
         /** @var \Passbolt\Rbacs\Model\Entity\Rbac $rbac */
         $rbac = $rbacs[0];

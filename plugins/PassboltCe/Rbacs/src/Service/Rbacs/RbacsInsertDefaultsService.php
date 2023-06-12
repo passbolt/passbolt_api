@@ -26,9 +26,9 @@ class RbacsInsertDefaultsService
     /**
      * @throws \Cake\ORM\Exception\PersistenceFailedException if default rbacs insert fails because of valation errors
      * @throws \Exception If an entity couldn't be saved because of an internal error
-     * @return iterable array of Rbacs entities
+     * @return array<\Passbolt\Rbacs\Model\Entity\Rbac> array of Rbacs entities
      */
-    public function allowAllUiActionsForUsers(): iterable
+    public function allowAllUiActionsForUsers(): array
     {
         $Roles = TableRegistry::getTableLocator()->get('roles');
 
@@ -56,6 +56,7 @@ class RbacsInsertDefaultsService
         }
 
         // Get a PersistenceFailedException if any records fail to save.
+        /** @var array<\Passbolt\Rbacs\Model\Entity\Rbac> $savedEntities */
         $savedEntities = $Rbacs->saveManyOrFail($entities);
 
         return $savedEntities;

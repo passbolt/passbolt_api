@@ -25,15 +25,15 @@ class UiActionsCreateServiceTest extends RbacsTestCase
     public function testRbacsUiActionsCreateService_Success()
     {
         $collection = (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
-        $this->assertTrue(count($collection) === count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS));
+        $this->assertSame(count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS), count($collection));
     }
 
     public function testRbacsUiActionsCreateService_SuccessInsertOnceOnly()
     {
         $service = new UiActionsInsertDefaultsService();
         $collection = $service->insertDefaultsIfNotExist();
-        $this->assertFalse(!count($collection));
+        $this->assertNotEmpty($collection);
         $collection = $service->insertDefaultsIfNotExist();
-        $this->assertTrue(!count($collection));
+        $this->assertEmpty($collection);
     }
 }

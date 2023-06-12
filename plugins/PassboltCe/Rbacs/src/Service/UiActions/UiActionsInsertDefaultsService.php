@@ -61,20 +61,26 @@ class UiActionsInsertDefaultsService
     }
 
     /**
-     * @return array array of UiAction entities
+     * @return array array of UI Actions entities
+     * @throws \Cake\ORM\Exception\PersistenceFailedException If an entity couldn't be saved.
      */
     public function insertDefaultsIfNotExist(): array
     {
         $diff = $this->getDiffDefaultAndDB();
-        $created = [];
-        if (count($diff)) {
-            $createService = new UiActionsCreateService($this->uiActionsTable);
-            foreach ($diff as $action) {
-                $created[] = $createService->create($action);
-            }
+        if (count($diff) === 0) {
+            return [];
         }
 
-        return $created;
+        $entities = [];
+        foreach ($diff as $name) {
+            $entities[] = compact('name');
+        }
+
+        $newEntities = $this->uiActionsTable->newEntities($entities, ['accessibleFields' => ['name' => true]]);
+
+        $this->uiActionsTable->saveManyOrFail($newEntities);
+
+        return $diff;
     }
 
     /**
