@@ -31,6 +31,7 @@ use Cake\Http\Exception\NotFoundException;
 class UsersRecoverController extends AppController
 {
     public const RECOVER_SUCCESS_EVENT_NAME = 'UsersRecoverController.recoverPost.success';
+    public const PREVENT_EMAIL_ENUMERATION_CONFIG_KEY = 'passbolt.security.preventEmailEnumeration';
 
     /**
      * @inheritDoc
@@ -83,7 +84,7 @@ class UsersRecoverController extends AppController
             $userRecoverService->recover($this->User->getAccessControl());
         } catch (NotFoundException $exception) {
             // Pretend everything is fine to prevent user enumeration
-            if (!Configure::read('passbolt.security.preventUserEnumeration')) {
+            if (!Configure::read(self::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY)) {
                 throw $exception;
             }
         }

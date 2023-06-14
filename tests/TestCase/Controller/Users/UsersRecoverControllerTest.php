@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\User;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
@@ -94,7 +95,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_FalseSuccess_UserNotExist_PreventEnum(): void
     {
-        Configure::write('passbolt.security.preventUserEnumeration', true);
+        Configure::write(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY, true);
         $data = ['username' => 'notauser@passbolt.com'];
         $this->postJson('/users/recover.json', $data);
         $this->assertResponseCode(200);

@@ -103,13 +103,13 @@ class UsersRegisterController extends AppController
     protected function assertIsSelfRegistrationOpen(SelfRegistrationDryRunServiceInterface $dryRunService): void
     {
         if (!$dryRunService->isSelfRegistrationOpen()) {
-            $msg = __('Registration is not opened to public.');
+            $msg = __('Registration is not opened to public.') . ' ';
             $msg .= __('Please contact your administrator.');
             throw new NotFoundException($msg);
         }
-        if (Configure::read('passbolt.security.preventUserEnumeration')) {
-            $msg = __('Registration is not opened to public.');
-            $msg .= __('This is due to a security setting.');
+        if (Configure::read(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY)) {
+            $msg = __('Registration is not opened to public.') . ' ';
+            $msg .= __('This is due to a security setting.') . ' ';
             $msg .= __('Please contact your administrator.');
             throw new NotFoundException($msg);
         }

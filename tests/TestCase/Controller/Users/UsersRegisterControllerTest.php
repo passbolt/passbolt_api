@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -236,7 +237,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
      */
     public function testUsersRegisterController_Error_PreventUserEnumeration(): void
     {
-        Configure::write('passbolt.security.preventUserEnumeration', true);
+        Configure::write(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY, true);
         $data = [
             'username' => 'aurore@passbolt.com',
             'profile' => [
@@ -248,5 +249,8 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
 
         $this->postJson('/users/register.json', $data);
         $this->assertResponseCode(404);
+        $this->assertResponseContains('Registration is not opened to public. ');
+        $this->assertResponseContains('This is due to a security setting. ');
+        $this->assertResponseContains('Please contact your administrator.');
     }
 }
