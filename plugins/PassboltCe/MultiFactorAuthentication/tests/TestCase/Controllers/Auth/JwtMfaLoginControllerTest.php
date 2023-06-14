@@ -26,9 +26,11 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Routing\Router;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Test\Utility\JwtTestTrait;
+use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -62,17 +64,25 @@ class JwtMfaLoginControllerTest extends MfaIntegrationTestCase
             ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
             ->persist();
 
-        $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        $this->loadFixtureScenario(MfaTotpDuoScenario::class, $user);
         $this->cookie(MfaVerifiedCookie::MFA_COOKIE_ALIAS, 'foo');
+
+        // Add duo as user's latest (and favorite) login
+        ActionLogFactory::make()
+            ->userId($user->id)
+            ->setActionId('DuoVerifyGet.get')
+            ->persist();
 
         $this->postJson('/auth/jwt/login.json', [
             'user_id' => $user->id,
             'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
         ]);
 
+        // Duo is first as it was already used in the past
+        $expectedProviders = [MfaSettings::PROVIDER_DUO, MfaSettings::PROVIDER_TOTP];
         $this->assertResponseOk('The authentication was a success.');
         $challenge = json_decode($this->decryptChallenge($user, $this->_responseJsonBody->challenge), true);
-        $this->assertSame([MfaSettings::PROVIDER_TOTP], $challenge['providers']);
+        $this->assertSame($expectedProviders, $challenge['providers']);
         $this->assertCookieExpired(MfaVerifiedCookie::MFA_COOKIE_ALIAS);
     }
 

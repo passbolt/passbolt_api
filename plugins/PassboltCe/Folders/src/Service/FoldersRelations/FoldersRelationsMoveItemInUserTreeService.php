@@ -283,7 +283,7 @@ class FoldersRelationsMoveItemInUserTreeService
 
             if ($foreignModel === FoldersRelation::FOREIGN_MODEL_FOLDER) {
                 $this->assertCycleFree($uac);
-                $this->detectAndRepairStronglyConnectedComponents($uac, $uac->getId(), $users);
+                $this->detectAndRepairStronglyConnectedComponents($uac, $uac->getId());
             }
         }
     }
@@ -308,16 +308,13 @@ class FoldersRelationsMoveItemInUserTreeService
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $userId The target user id the item is added for
-     * @param array $usersIdsImpacted Users impacted by the change
      * @return void
      */
     private function detectAndRepairStronglyConnectedComponents(
         UserAccessControl $uac,
-        string $userId,
-        array $usersIdsImpacted
+        string $userId
     ): void {
-        $usersIdsToDetectSCCsFor = array_merge([$userId], $usersIdsImpacted);
-        $scc = $this->folderRelationsDetectStronglyConnectedComponents->bulkDetectForUsers($usersIdsToDetectSCCsFor);
+        $scc = $this->folderRelationsDetectStronglyConnectedComponents->detectFirstInSharedFolders();
         if (empty($scc)) {
             return;
         }
@@ -326,6 +323,6 @@ class FoldersRelationsMoveItemInUserTreeService
         $this->foldersRelationsRepairStronglyConnectedComponents->repair($uac, $userId, $scc);
 
         // Run the repair function again in order to find others SCCs.
-        $this->detectAndRepairStronglyConnectedComponents($uac, $userId, $usersIdsImpacted);
+        $this->detectAndRepairStronglyConnectedComponents($uac, $userId);
     }
 }

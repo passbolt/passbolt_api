@@ -71,6 +71,8 @@ class SettingsIndexController extends AppController
      */
     public function index()
     {
+        $this->assertJson();
+
         $role = $this->User->role();
         // Retrieve and sanity the query options.
         $whitelist = [

@@ -37,10 +37,10 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         'app.Base/Permissions',
     ];
 
-    public function testGroupsIndexSuccess()
+    public function testGroupsIndexSuccess(): void
     {
         $this->authenticateAs('ada');
-        $this->getJson('/groups.json?api-version=2');
+        $this->getJson('/groups.json');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
 
@@ -53,7 +53,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody[0]);
     }
 
-    public function testGroupsIndexContainSuccess()
+    public function testGroupsIndexContainSuccess(): void
     {
         $this->authenticateAs('hedy');
         $urlParameter = 'contain[modifier]=1';
@@ -100,7 +100,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertGroupUserAttributes($groupB->my_group_user);
     }
 
-    public function testGroupsIndexFilterHasUsersSuccess()
+    public function testGroupsIndexFilterHasUsersSuccess(): void
     {
         $this->authenticateAs('ada');
         $urlParameter = 'filter[has-users]=' . UuidFactory::uuid('user.id.irene');
@@ -112,7 +112,7 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
-    public function testGroupsIndexFilterHasManagersSuccess()
+    public function testGroupsIndexFilterHasManagersSuccess(): void
     {
         $this->authenticateAs('ada');
         $urlParameter = 'filter[has-managers]=' . UuidFactory::uuid('user.id.ping');
@@ -124,9 +124,19 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
-    public function testGroupsIndexErrorNotAuthenticated()
+    public function testGroupsIndexErrorNotAuthenticated(): void
     {
         $this->getJson('/groups.json');
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testGroupsIndexController_Error_NotJson(): void
+    {
+        $this->logInAsUser();
+        $this->delete('/groups');
+        $this->assertResponseCode(404);
     }
 }

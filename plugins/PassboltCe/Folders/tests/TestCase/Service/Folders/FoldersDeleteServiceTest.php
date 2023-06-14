@@ -39,7 +39,6 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\Folders\FoldersDeleteService;
@@ -60,7 +59,6 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
-    use IntegrationTestTrait;
     use LocatorAwareTrait;
     use PermissionsModelTrait;
     use ResourcesModelTrait;

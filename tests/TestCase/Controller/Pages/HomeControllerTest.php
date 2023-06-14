@@ -26,13 +26,13 @@ class HomeControllerTest extends AppIntegrationTestCase
         'plugin.Passbolt/AccountSettings.AccountSettings',
     ];
 
-    public function testHomeNotLoggedInError()
+    public function testHomeNotLoggedInError(): void
     {
         $this->get('/app/passwords');
         $this->assertRedirectContains('/auth/login?redirect=%2Fapp%2Fpasswords');
     }
 
-    public function testHomeSuccess()
+    public function testHomeSuccess(): void
     {
         $this->logInAsUser();
         $this->get('/app/passwords');

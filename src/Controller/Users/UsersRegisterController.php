@@ -21,7 +21,6 @@ use App\Model\Entity\Role;
 use App\Service\Users\UserRegisterServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
-use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
@@ -79,10 +78,9 @@ class UsersRegisterController extends AppController
         UserRegisterServiceInterface $userRegisterService,
         SelfRegistrationDryRunServiceInterface $dryRunService
     ): void {
+        $this->assertJson();
+
         $this->assertIsSelfRegistrationOpen($dryRunService);
-        if (!$this->request->is('json')) {
-            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
-        }
 
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {

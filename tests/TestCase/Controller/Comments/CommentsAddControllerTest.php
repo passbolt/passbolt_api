@@ -28,7 +28,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
 
-    public function testCommentsAddController_Success()
+    public function testCommentsAddController_Success(): void
     {
         RoleFactory::make()->guest()->persist();
         $user = UserFactory::make()->user()->persist();
@@ -40,7 +40,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
             'content' => $commentContent,
         ];
         $resourceId = $resource->get('id');
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
+        $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
@@ -53,7 +53,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEmailQueueIsEmpty();
     }
 
-    public function testCommentsAddController_SharedResourceSuccessEMail()
+    public function testCommentsAddController_SharedResourceSuccessEMail(): void
     {
         RoleFactory::make()->guest()->persist();
         [$user1, $user2] = UserFactory::make(2)->user()->persist();
@@ -65,7 +65,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
             'content' => $commentContent,
         ];
         $resourceId = $resource->get('id');
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
+        $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
@@ -79,7 +79,7 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains("{$user1->profile->first_name} commented on {$resource->name}", $user2->username);
     }
 
-    public function testCommentsAddController_ErrorCsrfToken()
+    public function testCommentsAddController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
         $user = UserFactory::make()->user()->persist();
@@ -87,20 +87,35 @@ class CommentsAddControllerTest extends AppIntegrationTestCase
         $this->logInAs($user);
         $resourceId = $resource->get('id');
 
-        $this->post("/comments/resource/$resourceId.json?api-version=v2");
+        $this->post("/comments/resource/$resourceId.json");
         $this->assertResponseCode(403);
     }
 
-    public function testCommentsAddController_ErrorNotAuthenticated()
+    public function testCommentsAddController_Error_NotAuthenticated(): void
     {
         $resource = ResourceFactory::make()->withCreator(UserFactory::make()->user())->persist();
         $resourceId = $resource->get('id');
         $postData = [];
 
-        $this->postJson("/comments/resource/$resourceId.json?api-version=v2", $postData);
+        $this->postJson("/comments/resource/$resourceId.json", $postData);
         $this->assertAuthenticationError();
 
         // Since the resource is not shared, no email are sent
         $this->assertEmailQueueIsEmpty();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testCommentsAddController_Error_NotJson(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $this->logInAs($user);
+        $resourceId = $resource->get('id');
+        $postData = [];
+        $this->post("/comments/resource/$resourceId", $postData);
+        $this->assertResponseCode(404);
     }
 }

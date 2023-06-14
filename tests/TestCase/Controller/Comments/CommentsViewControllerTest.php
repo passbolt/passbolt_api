@@ -28,7 +28,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
 {
     use CommentsModelTrait;
 
-    public function testCommentsViewController_Success()
+    public function testCommentsViewController_Success(): void
     {
         $user = UserFactory::make()->user()->persist();
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
@@ -37,7 +37,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $resourceId = $resource->get('id');
         $this->logInAs($user);
 
-        $this->getJson("/comments/resource/$resourceId.json?api-version=2");
+        $this->getJson("/comments/resource/$resourceId.json");
         $this->assertSuccess();
         $this->assertGreaterThan(0, count($this->_responseJsonBody));
 
@@ -52,7 +52,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
     }
 
-    public function testCommentsViewController_ContainSuccess()
+    public function testCommentsViewController_ContainSuccess(): void
     {
         $user = UserFactory::make()->user()->persist();
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
@@ -73,7 +73,7 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody[0]->creator);
     }
 
-    public function testCommentsViewController_ErrorNotFound()
+    public function testCommentsViewController_Error_NotFound(): void
     {
         $user = UserFactory::make()->user()->persist();
         // Resource is soft-deleted. Hence, not reachable.
@@ -84,33 +84,48 @@ class CommentsViewControllerTest extends AppIntegrationTestCase
             ->get('id');
         $this->logInAs($user);
 
-        $this->getJson("/comments/resource/$resourceId.json?api-version=v2");
+        $this->getJson("/comments/resource/$resourceId.json");
 
         $this->assertError(404, 'Could not find comments for the requested model');
     }
 
-    public function testCommentsViewController_ErrorWrongModelNameParameter()
+    public function testCommentsViewController_Error_WrongModelNameParameter(): void
     {
         $user = UserFactory::make()->user()->persist();
         $resourceId = ResourceFactory::make()->withCreatorAndPermission($user)->persist()->get('id');
         $this->logInAs($user);
 
-        $this->getJson("/comments/WrongModelName/$resourceId.json?api-version=v2");
+        $this->getJson("/comments/WrongModelName/$resourceId.json");
 
         $this->assertBadRequestError('Invalid model name');
     }
 
-    public function testCommentsViewController_ErrorWrongUuidParameter()
+    public function testCommentsViewController_Error_WrongUuidParameter(): void
     {
         $this->logInAsUser();
-        $this->getJson('/comments/resource/wrong-uuid.json?api-version=v2');
+        $this->getJson('/comments/resource/wrong-uuid.json');
         $this->assertBadRequestError('Invalid id');
     }
 
-    public function testCommentsViewController_ErrorNotAuthenticated()
+    public function testCommentsViewController_Erro_NotAuthenticated(): void
     {
         $resourceId = UuidFactory::uuid();
-        $this->getJson("/comments/resource/$resourceId.json?api-version=v2");
+        $this->getJson("/comments/resource/$resourceId.json");
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testCommentsViewController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $comment = CommentFactory::make()->withUser($user)->withResource($resource)->persist();
+        CommentFactory::make()->withUser($user)->withResource($resource)->withParent($comment)->persist();
+        $resourceId = $resource->get('id');
+        $this->logInAs($user);
+        $this->get("/comments/resource/$resourceId");
+        $this->assertResponseCode(404);
     }
 }
