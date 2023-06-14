@@ -21,6 +21,7 @@ use App\Utility\UserAction;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
 
@@ -171,7 +172,7 @@ class AppController extends Controller
     }
 
     /**
-     * @throws \Cake\Http\Exception\NotFoundException if request url does not include .json extension
+     * @throws \Cake\Http\Exception\NotFoundException if request is not JSON
      * @return void
      */
     protected function assertJson(): void
@@ -179,13 +180,17 @@ class AppController extends Controller
         if (!$this->request->is('json')) {
             throw new NotFoundException(__('Please use .json extension in URL or accept application/json.'));
         }
+    }
 
-        //v5 - stricter mode where `accept application/json` header AND .json extension is required.
-        //if (!$this->request->is(['param' => '_ext', 'value' => 'json'])) {
-        //    throw new NotFoundException(__('Please use .json extension in URL.'));
-        //}
-        //if (!$this->request->is(['accept' => ['application/json']])) {
-        //    throw new BadRequestException(__('Add header accept application/json'));
-        //}
+    /**
+     * @throws \Cake\Http\Exception\BadRequestException if request data is not an array or is empty
+     * @return void
+     */
+    protected function assertNotEmptyArrayData(): void
+    {
+        $data = $this->getRequest()->getData();
+        if (!is_array($data) || !count($data)) {
+            throw new BadRequestException(__('The request data can not be empty.'));
+        }
     }
 }

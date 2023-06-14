@@ -32,10 +32,10 @@ use Cake\ORM\Entity;
  */
 class Role extends Entity
 {
+    // Default roles
     public const GUEST = 'guest';
     public const USER = 'user';
     public const ADMIN = 'admin';
-    public const ROOT = 'root';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

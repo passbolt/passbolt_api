@@ -44,7 +44,7 @@ class MfaJwtArmoredChallengeService extends JwtArmoredChallengeService
             ->isMfaCheckRequired($request, $mfaSettings, $uac);
 
         if ($isMfaAuthenticationRequired) {
-            $challenge['providers'] = $mfaSettings->getEnabledProviders();
+            $challenge['providers'] = $mfaSettings->getEnabledProvidersWithLastUsedFirst();
         }
 
         return $challenge;
