@@ -16,11 +16,13 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\User;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenDate;
 use Cake\Routing\Router;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
@@ -89,6 +91,14 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(404);
         $result = $this->_getBodyAsString();
         $this->assertStringContainsString($error, $result);
+    }
+
+    public function testUsersRecoverController_Post_FalseSuccess_UserNotExist_PreventEnum(): void
+    {
+        Configure::write(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY, true);
+        $data = ['username' => 'notauser@passbolt.com'];
+        $this->postJson('/users/recover.json', $data);
+        $this->assertResponseCode(200);
     }
 
     public function testUsersRecoverController_Post_Success_Active_User(): void
