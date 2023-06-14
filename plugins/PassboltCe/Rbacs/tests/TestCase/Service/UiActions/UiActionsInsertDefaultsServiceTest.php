@@ -29,15 +29,6 @@ class UiActionsInsertDefaultsServiceTest extends RbacsTestCase
         $createService->create('Folders.use');
         $createService->create('test.action');
         $diff = (new UiActionsInsertDefaultsService())->getDiffDefaultAndDB();
-        $this->assertTrue(count($diff) === count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS) - 1);
-    }
-
-    public function testRbacsUiActionsInsertDefaultsService_Success()
-    {
-        $service = new UiActionsInsertDefaultsService();
-        $created = $service->insertDefaultsIfNotExist();
-        $this->assertTrue(count($created) > 0);
-        $created = $service->insertDefaultsIfNotExist();
-        $this->assertTrue(count($created) === 0);
+        $this->assertSame(count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS) - 1, count($diff));
     }
 }

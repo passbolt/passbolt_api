@@ -17,18 +17,19 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Rbacs\RbacsPlugin;
 
 abstract class RbacsIntegrationTestCase extends AppIntegrationTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
-        $this->enableFeaturePlugin('Rbacs');
+        $this->enableFeaturePlugin(RbacsPlugin::class);
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
-        $this->disableFeaturePlugin('Rbacs');
+        $this->disableFeaturePlugin(RbacsPlugin::class);
     }
 }

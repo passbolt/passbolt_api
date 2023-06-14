@@ -38,7 +38,7 @@ class RbacsInsertDefaultsServiceTest extends RbacsTestCase
         $entities = (new RbacsInsertDefaultsService())->allowAllUiActionsForUsers();
 
         // expect only ui actions for users
-        $this->assertEquals(count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS), count((array)$entities));
+        $this->assertEquals(count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS), count($entities));
     }
 
     public function testRbacsInsertDefaultsService_Error_Duplicates(): void
@@ -55,7 +55,7 @@ class RbacsInsertDefaultsServiceTest extends RbacsTestCase
             $this->fail();
         } catch (PersistenceFailedException $exception) {
             // No duplicates
-            $this->assertEquals(count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS), count((array)$entities));
+            $this->assertEquals(count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS), count($entities));
         }
     }
 }

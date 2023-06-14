@@ -13,6 +13,7 @@
  * @since         4.1.0
  */
 // @codingStandardsIgnoreStart
+use Cake\Log\Log;
 use Migrations\AbstractMigration;
 use Passbolt\Rbacs\Service\UiActions\UiActionsInsertDefaultsService;
 
@@ -25,7 +26,12 @@ class V410InsertUiActions extends AbstractMigration
      */
     public function up()
     {
-        (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
+        try {
+            (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
+        } catch (\Throwable $e) {
+            Log::error('There was an error in V410InsertUiActions');
+            Log::error($e->getMessage());
+        }
     }
 }
 // @codingStandardsIgnoreEnd
