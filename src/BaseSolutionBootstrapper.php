@@ -45,7 +45,7 @@ class BaseSolutionBootstrapper
 
         $this->addFeaturePluginIfEnabled($app, 'JwtAuthentication');
 
-        // Add tags plugin if not configured.
+        // Add webinstaller plugin if not configured.
         if (!WebInstallerMiddleware::isConfigured()) {
             $app->addPlugin('Passbolt/WebInstaller', ['bootstrap' => true, 'routes' => true]);
 
@@ -53,6 +53,7 @@ class BaseSolutionBootstrapper
         }
 
         // Add Common plugins.
+        $app->addPlugin('Passbolt/Rbacs', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/InFormIntegration', ['bootstrap' => true, 'routes' => false]);
