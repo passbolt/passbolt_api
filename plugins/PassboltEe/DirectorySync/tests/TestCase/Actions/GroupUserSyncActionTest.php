@@ -911,4 +911,52 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertReport($reports[1], $expectedUserGroupReport);
         $this->assertEmailQueueCount(0);
     }
+
+    /**
+     * [TODO: Add nice & consist description regarding this test case]
+     *
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_HandlesCaseInsensitiveDn()
+    {
+        $this->mockDirectoryUserData('frances', 'frances', 'frances@passbolt.com');
+        $this->mockDirectoryUserData(
+            'betty',
+            'betty',
+            'betty@passbolt.com',
+            null,
+            null,
+            false
+        );
+        // Ruth is an inactive user.
+        $ruthEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
+        $bettyEntry = $this->mockDirectoryEntryUser(['fname' => 'betty', 'lname' => 'betty', 'foreign_key' => UuidFactory::uuid('user.id.betty')]);
+        $this->mockDirectoryEntryGroup('marketing');
+        $this->mockDirectoryGroupData('marketing', [
+            'group_users' => [
+                $ruthEntry->directory_name,
+                strtolower($bettyEntry->directory_name),
+            ],
+        ]);
+
+        $reports = $this->action->execute();
+
+        $expectedUserGroupReport = [
+            'model' => Alias::MODEL_GROUPS_USERS,
+            'action' => Alias::ACTION_CREATE,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => Alias::MODEL_GROUPS,
+        ];
+        $this->assertReport($reports[0], $expectedUserGroupReport);
+
+        $expectedUserGroupReport = [
+            'model' => Alias::MODEL_GROUPS_USERS,
+            'action' => Alias::ACTION_CREATE,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => Alias::MODEL_GROUPS,
+        ];
+        $this->assertReport($reports[1], $expectedUserGroupReport);
+    }
 }
