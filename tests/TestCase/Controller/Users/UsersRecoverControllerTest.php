@@ -96,7 +96,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     {
         Configure::write('passbolt.security.preventUserEnumeration', true);
         $data = ['username' => 'notauser@passbolt.com'];
-        $error = 'This user does not exist or has been deleted.';
         $this->postJson('/users/recover.json', $data);
         $this->assertResponseCode(200);
     }
