@@ -62,4 +62,74 @@ trait EmailNotificationSettingsTestTrait
         $uac = new UserAccessControl(Role::ADMIN, UuidFactory::uuid('user.id.admin'));
         EmailNotificationSettings::save($settingsToSave, $uac, true);
     }
+
+    /**
+     * Returns default email notification values.
+     *
+     * @return array
+     */
+    public function getDefaultEmailNotificationConfig(): array
+    {
+        return [
+            'purify' => [
+                'subject' => false,
+            ],
+
+            'show' => [
+                'comment' => false,
+                'description' => false,
+                'secret' => false,
+                'uri' => false,
+                'username' => false,
+            ],
+
+            'send' => [
+                'comment' => [
+                    'add' => true,
+                ],
+                'password' => [
+                    'create' => false,
+                    'share' => true,
+                    'update' => true,
+                    'delete' => true,
+                ],
+                'user' => [
+                    'create' => true,
+                    'recover' => true,
+                    'recoverComplete' => true,
+                ],
+                'admin' => [
+                    'user' => [
+                        'setup' => [
+                            'completed' => true,
+                        ],
+                        'recover' => [
+                            'abort' => true,
+                            'complete' => true,
+                        ],
+                        'register' => [
+                            'complete' => true,
+                        ],
+                    ],
+                ],
+                'group' => [
+                    'delete' => true,
+                    'user' => [
+                        'add' => true,
+                        'delete' => true,
+                        'update' => true,
+                    ],
+                    'manager' => [
+                        'update' => true,
+                    ],
+                ],
+                'folder' => [
+                    'create' => false,
+                    'update' => true,
+                    'delete' => true,
+                    'share' => true,
+                ],
+            ],
+        ];
+    }
 }

@@ -47,7 +47,7 @@ class QueryStringComponentTest extends TestCase
         parent::setUp();
     }
 
-    public function testQueryStringComponent_ValidateFiltersError_NoValidationRuleDefined()
+    public function testQueryStringComponent_ValidateFiltersError_NoValidationRuleDefined(): void
     {
         $filterName = 'non-existing-filter';
         $this->expectException(Exception::class);
@@ -56,7 +56,7 @@ class QueryStringComponentTest extends TestCase
         $this->sut::validateFilters([$filterName => '']);
     }
 
-    public function testQueryStringComponent_ValidateFiltersError_ValidationCallbackFailed()
+    public function testQueryStringComponent_ValidateFiltersError_ValidationCallbackFailed(): void
     {
         $filterName = 'filter-with-validation-callback';
 
@@ -71,7 +71,7 @@ class QueryStringComponentTest extends TestCase
         );
     }
 
-    public function testQueryStringComponent_ValidateFiltersSuccess()
+    public function testQueryStringComponent_ValidateFiltersSuccess(): void
     {
         $filterName = 'filter-with-validation-callback';
 
@@ -85,7 +85,7 @@ class QueryStringComponentTest extends TestCase
         $this->assertTrue($isValid);
     }
 
-    public function testQueryStringComponent_validateFilterDateTime()
+    public function testQueryStringComponent_validateFilterDateTime(): void
     {
         $filterName = 'datetime-param';
         $successTestCases = [
@@ -113,7 +113,7 @@ class QueryStringComponentTest extends TestCase
         }
     }
 
-    public function testQueryStringComponent_validateFilterInteger()
+    public function testQueryStringComponent_validateFilterInteger(): void
     {
         $filterName = 'integer-param';
         $successTestCases = [
@@ -141,7 +141,7 @@ class QueryStringComponentTest extends TestCase
         }
     }
 
-    public function testQueryStringComponent_normalizeInteger()
+    public function testQueryStringComponent_normalizeInteger(): void
     {
         $successTestCases = [
             'Integer string' => '42',
@@ -165,7 +165,7 @@ class QueryStringComponentTest extends TestCase
         }
     }
 
-    public function testQueryStringComponent_extractQueryArrayItems()
+    public function testQueryStringComponent_extractQueryArrayItems(): void
     {
         $expected = [
             'filter' => [
@@ -189,7 +189,7 @@ class QueryStringComponentTest extends TestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testQueryStringComponent_rewriteLegacyItems()
+    public function testQueryStringComponent_rewriteLegacyItems(): void
     {
         $expected = [
             'filter' => [

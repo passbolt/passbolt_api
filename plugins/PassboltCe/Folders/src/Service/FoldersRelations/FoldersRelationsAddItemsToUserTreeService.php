@@ -58,6 +58,11 @@ class FoldersRelationsAddItemsToUserTreeService
     private $foldersRelationsRepairSCCsService;
 
     /**
+     * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsHaveAndAreChildrenService
+     */
+    private FoldersRelationsHaveAndAreChildrenService $foldersRelationsHaveOrAreChildrenService;
+
+    /**
      * Instantiate the service.
      */
     public function __construct()
@@ -70,16 +75,17 @@ class FoldersRelationsAddItemsToUserTreeService
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->folderRelationsDetectSCCsService = new FoldersRelationsDetectStronglyConnectedComponentsService();
         $this->foldersRelationsRepairSCCsService = new FoldersRelationsRepairStronglyConnectedComponentsService();
+        $this->foldersRelationsHaveOrAreChildrenService = new FoldersRelationsHaveAndAreChildrenService();
     }
 
     /**
      * Add items to a user tree.
      *
      * This function doesn't check:
-     * - The existence of target user
-     * - The existence of the items to add to the target user tree
-     * - The right for the target user to access the items
-     * - The presence of the items in the user tree
+     * - The existence of target users
+     * - The existence of the items to add to the target users trees
+     * - The right for the target users to access the items
+     * - The presence of the items in the users trees
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $userId The target user id the items are added for
@@ -92,13 +98,38 @@ class FoldersRelationsAddItemsToUserTreeService
         $collection = new FolderRelationDtoCollection($items);
         $this->insertItemsInUserRootTree($userId, $collection);
         $foldersRelationsChanges = $this->getFoldersRelationsChanges($uac, $userId, $collection);
-        if (!empty($foldersRelationsChanges)) {
-            $this->applyFoldersRelationsChanges($userId, $foldersRelationsChanges);
-            if ($collection->containsFolder()) {
-                $this->detectAndRepairSCCs($uac, $userId, $foldersRelationsChanges);
-                $this->detectAndRepairSCCsInUserTree($userId);
-            }
+
+        if (empty($foldersRelationsChanges)) {
+            return;
         }
+
+        $this->applyFoldersRelationsChanges($userId, $foldersRelationsChanges);
+
+        // If no folder were added to the user tree, there is no need to perform a cycle check.
+        if (!$collection->containsFolder()) {
+            return;
+        }
+
+        $foldersIds = $collection->getFoldersIds();
+
+        // If none of the folders is a parent and also a child, the newly added folder cannot introduce a cycle.
+        $shouldCheckScc = $this->foldersRelationsHaveOrAreChildrenService->haveAndAreChildren($foldersIds);
+        if (!$shouldCheckScc) {
+            return;
+        }
+
+        $this->detectAndRepairSCCs($uac, $userId);
+
+        // If none of the folders is a parent and also a child in the user tree, the newly added folder cannot introduce a cycle.
+        $shouldCheckSccInUserTree = $this->foldersRelationsHaveOrAreChildrenService->haveAndAreChildren(
+            $foldersIds,
+            $userId
+        );
+        if (!$shouldCheckSccInUserTree) {
+            return;
+        }
+
+        $this->detectAndRepairSCCsInUserTree($userId);
     }
 
     /**
@@ -199,9 +230,7 @@ class FoldersRelationsAddItemsToUserTreeService
         // R = POTENTIAL_CHILDREN ⋂ USERS_ITEMS
 
         // CHILDREN
-        $foreignIds = $items->filter([FolderRelationDtoCollection::class, 'filterByFolder'])
-            ->map([FolderRelationDtoCollection::class, 'mapForeignId'])
-            ->toArray();
+        $foreignIds = $items->getFoldersIds();
 
         if (empty($foreignIds)) {
             return [];
@@ -325,13 +354,12 @@ class FoldersRelationsAddItemsToUserTreeService
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the action
      * @param string $userId The target user id the items are added for
-     * @param array<\Passbolt\Folders\Model\Entity\FoldersRelation> $foldersRelationsChanges The folders relations changes
      * @return void
      * @throw InternalErrorException If a SCC is found but cannot be repaired.
      */
-    private function detectAndRepairSCCs(UserAccessControl $uac, string $userId, array $foldersRelationsChanges): void
+    private function detectAndRepairSCCs(UserAccessControl $uac, string $userId): void
     {
-        $foldersRelationsScc = $this->folderRelationsDetectSCCsService->bulkDetectForUsers([$userId]);
+        $foldersRelationsScc = $this->folderRelationsDetectSCCsService->detectFirstInSharedFolders();
 
         if (!empty($foldersRelationsScc)) {
             $brokenFolderRelation = $this->foldersRelationsRepairSCCsService->repair(
@@ -344,7 +372,7 @@ class FoldersRelationsAddItemsToUserTreeService
                 $msg = "Strongly connected components found, but cannot be repaired."; // phpcs:ignore
                 throw new InternalErrorException($msg);
             }
-            $this->detectAndRepairSCCs($uac, $userId, $foldersRelationsChanges);
+            $this->detectAndRepairSCCs($uac, $userId);
         }
     }
 

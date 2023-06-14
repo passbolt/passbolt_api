@@ -48,6 +48,8 @@ class UsersAddController extends UsersRegisterController
      */
     public function addPost()
     {
+        $this->assertJson();
+
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException(__('Only administrators can add new users.'));
         }

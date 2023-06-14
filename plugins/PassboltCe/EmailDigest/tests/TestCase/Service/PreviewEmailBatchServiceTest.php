@@ -21,7 +21,6 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Chronos\Chronos;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
@@ -31,7 +30,6 @@ class PreviewEmailBatchServiceTest extends AppTestCase
 {
     use DummyTranslationTestTrait;
     use EmailDigestMockTestTrait;
-    use TruncateDirtyTables;
 
     /**
      * @var PreviewEmailBatchService
@@ -78,13 +76,11 @@ class PreviewEmailBatchServiceTest extends AppTestCase
         $frenchLocale = 'fr-FR';
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])
-            ->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
             ->setRecipient($frenchSpeakingUser->username)
             ->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()])
-            ->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()])->persist();
 
         $emailBatch = $this->previewEmailBatchService->previewNextEmailsBatch();
         $emailInEnglish1 = $emailBatch[0];

@@ -289,8 +289,10 @@ return [
                 'trustedProxies' => [],
             ],
             'mfa' => [
-                'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN)
+                'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN),
+                'maxAttempts' => filter_var(env('PASSBOLT_SECURITY_MFA_MAX_ATTEMPTS', '4'), FILTER_VALIDATE_INT),
             ],
+            'getLogoutEndpointEnabled' => filter_var(env('PASSBOLT_SECURITY_GET_LOGOUT_ENDPOINT_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
         ],
 
         // Should the app be SSL / HTTPS only.

@@ -47,7 +47,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteSuccess()
+    public function testRecoverCompleteController_Success(): void
     {
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         Configure::write('passbolt.plugins.log.enabled', true);
@@ -129,7 +129,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInvalidUserIdError()
+    public function testRecoverCompleteController_Error_InvalidUserId(): void
     {
         $url = '/setup/recover/complete/nope.json';
         $data = [];
@@ -142,7 +142,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInvalidUserTokenError()
+    public function testRecoverCompleteController_Error_InvalidUserToken(): void
     {
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
         $data = [];
@@ -155,7 +155,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInvalidAuthenticationTokenError()
+    public function testRecoverCompleteController_Error_InvalidAuthenticationToken(): void
     {
         $user = UserFactory::make()
             ->user()
@@ -225,7 +225,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteAuthenticationTokenTypeError()
+    public function testRecoverCompleteController_Error_AuthenticationTokenType(): void
     {
         $user = UserFactory::make()
             ->user()
@@ -265,7 +265,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInvalidGpgkeyError()
+    public function testRecoverCompleteController_Error_InvalidGpgkey(): void
     {
         $user = UserFactory::make()
             ->user()
@@ -322,7 +322,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteDeletedUserError()
+    public function testRecoverCompleteController_Error_DeletedUser(): void
     {
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
         $this->postJson($url, []);
@@ -334,10 +334,37 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInactiveUserError()
+    public function testRecoverCompleteController_Error_InactiveUser(): void
     {
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testRecoverCompleteController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()
+            ->with('Profiles.Avatars', AvatarFactory::make()->setDataWithFileContent())
+            ->admin()
+            ->active()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
+            ->persist();
+
+        $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
+        $url = '/setup/recover/complete/' . $user->id;
+        $armoredKey = $user->gpgkey->armored_key;
+        $data = [
+            'authenticationtoken' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+        ];
+        $this->post($url, $data);
+        $this->assertResponseCode(404);
     }
 }

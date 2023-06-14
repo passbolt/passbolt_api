@@ -37,6 +37,8 @@ class GroupsViewController extends AppController
      */
     public function view(string $id)
     {
+        $this->assertJson();
+
         // Check request sanity
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The group id is not valid.'));

@@ -26,35 +26,49 @@ use Cake\ORM\TableRegistry;
 
 class CommentsDeleteControllerTest extends AppIntegrationTestCase
 {
-    public function testCommentsDeleteController_Success()
+    public function testCommentsDeleteController_Success(): void
     {
         RoleFactory::make()->guest()->persist();
         $user = UserFactory::make()->user()->persist();
         $comment = CommentFactory::make()->withUser($user)->persist();
         $commentId = $comment->get('id');
         $this->logInAs($user);
-        $this->deleteJson("/comments/$commentId.json?api-version=2");
+        $this->deleteJson("/comments/$commentId.json");
         $this->assertSuccess();
         $Comments = TableRegistry::getTableLocator()->get('Comments');
         $deletedComment = $Comments->find('all')->where(['Comments.id' => $commentId])->first();
         $this->assertempty($deletedComment);
     }
 
-    public function testCommentsDeleteController_ErrorCsrfToken()
+    public function testCommentsDeleteController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
         $user = UserFactory::make()->user()->persist();
         $comment = CommentFactory::make()->withUser($user)->persist();
         $commentId = $comment->get('id');
         $this->logInAs($user);
-        $this->delete("/comments/$commentId.json?api-version=2");
+        $this->delete("/comments/$commentId.json");
         $this->assertResponseCode(403);
     }
 
-    public function testCommentsDeleteController_ErrorNotAuthenticated()
+    public function testCommentsDeleteController_Error_NotAuthenticated(): void
     {
         $commentId = UuidFactory::uuid();
-        $this->deleteJson("/comments/$commentId.json?api-version=2");
+        $this->deleteJson("/comments/$commentId.json");
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testCommentsDeleteController_Error_NotJson(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $comment = CommentFactory::make()->withUser($user)->persist();
+        $commentId = $comment->get('id');
+        $this->logInAs($user);
+        $this->delete("/comments/$commentId");
+        $this->assertResponseCode(404);
     }
 }

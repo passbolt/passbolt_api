@@ -34,6 +34,8 @@ class GpgkeysViewController extends AppController
      */
     public function view(string $id)
     {
+        $this->assertJson();
+
         // Check request sanity
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The OpenPGP key identifier should be a valid UUID.'));
