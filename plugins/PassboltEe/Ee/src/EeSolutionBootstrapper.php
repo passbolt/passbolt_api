@@ -47,6 +47,7 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
         }
 
         // Add Common plugins.
+        $app->addPlugin('Passbolt/Rbacs', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/InFormIntegration', ['bootstrap' => true, 'routes' => false]);

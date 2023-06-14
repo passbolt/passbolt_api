@@ -17,11 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Utility\UserAccessControl;
-use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
-use Passbolt\MultiFactorAuthentication\Service\ActionLogs\MfaGetLastUsedProviderService;
+use Passbolt\MultiFactorAuthentication\Service\ActionLogs\MfaSortWithLastUsedProviderFirstService;
 
 class MfaSettings
 {
@@ -50,6 +49,11 @@ class MfaSettings
     protected $uac;
 
     /**
+     * @var \Passbolt\MultiFactorAuthentication\Service\ActionLogs\MfaSortWithLastUsedProviderFirstService
+     */
+    protected MfaSortWithLastUsedProviderFirstService $sortProvidersService;
+
+    /**
      * @var self|null
      */
     protected static $instance;
@@ -60,16 +64,19 @@ class MfaSettings
      * @param \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings $orgSettings organization settings
      * @param \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings|null $accountSettings account settings
      * @param \App\Utility\UserAccessControl $uac user access control
+     * @param \Passbolt\MultiFactorAuthentication\Service\ActionLogs\MfaSortWithLastUsedProviderFirstService $sortProvidersService service sorting the providers with the last used first
      * @return void
      */
     public function __construct(
         MfaOrgSettings $orgSettings,
         ?MfaAccountSettings $accountSettings,
-        UserAccessControl $uac
+        UserAccessControl $uac,
+        MfaSortWithLastUsedProviderFirstService $sortProvidersService
     ) {
         $this->accountSettings = $accountSettings;
         $this->orgSettings = $orgSettings;
         $this->uac = $uac;
+        $this->sortProvidersService = $sortProvidersService;
     }
 
     /**
@@ -101,7 +108,12 @@ class MfaSettings
             $accountSettings = null;
         }
 
-        self::$instance = new MfaSettings($orgSettings, $accountSettings, $uac);
+        self::$instance = new MfaSettings(
+            $orgSettings,
+            $accountSettings,
+            $uac,
+            new MfaSortWithLastUsedProviderFirstService()
+        );
 
         return self::$instance;
     }
@@ -187,6 +199,18 @@ class MfaSettings
     }
 
     /**
+     * Get a list of all enabled providers
+     *
+     * @return array
+     */
+    public function getEnabledProvidersWithLastUsedFirst(): array
+    {
+        $providers = $this->getEnabledProviders();
+
+        return $this->sortProvidersService->sortWithLastUsedProviderFirst($this->uac, $providers);
+    }
+
+    /**
      * Return true if the provider is enabled for both the organization and user
      *
      * @param string $provider provider name
@@ -264,13 +288,9 @@ class MfaSettings
      */
     public function getDefaultVerifyUrl(?bool $json = true): string
     {
-        $providers = $this->getEnabledProviders();
-        if (Configure::read(MfaGetLastUsedProviderService::SORT_BY_LAST_USAGE_CONFIG_NAME)) {
-            $lastProvider = (new MfaGetLastUsedProviderService())->getLastUsedOrDefaultProvider($this->uac, $providers);
-        }
-        $provider = $lastProvider ?? $providers[0];
+        $providers = $this->getEnabledProvidersWithLastUsedFirst();
 
-        return $this->getProviderVerifyUrl($provider, $json);
+        return $this->getProviderVerifyUrl($providers[0], $json);
     }
 
     /**

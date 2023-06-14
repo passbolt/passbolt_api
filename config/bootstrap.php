@@ -43,6 +43,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorTrap;
 use Cake\Error\ExceptionTrap;
 use Cake\Http\ServerRequest;
+use Cake\I18n\FrozenTime;
 use Cake\Log\Log;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
@@ -185,6 +186,9 @@ TransportFactory::setConfig(Configure::consume('EmailTransport'));
 Mailer::setConfig(Configure::consume('Email'));
 Log::setConfig(Configure::consume('Log'));
 Security::setSalt(Configure::consume('Security.salt'));
+
+// Enforce the json time format
+FrozenTime::setJsonEncodeFormat("yyyy-MM-dd'T'HH':'mm':'ssxxx");
 
 /*
  * Setup detectors for mobile and tablet.
