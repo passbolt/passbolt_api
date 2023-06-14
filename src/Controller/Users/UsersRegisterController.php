@@ -106,5 +106,9 @@ class UsersRegisterController extends AppController
             $msg = __('Registration is not opened to public. Please contact your administrator.');
             throw new NotFoundException($msg);
         }
+        if (Configure::read('passbolt.security.preventUserEnumeration')) {
+            $msg = __('Registration is not opened to public to prevent username enumeration. Please contact your administrator.');
+            throw new NotFoundException($msg);
+        }
     }
 }

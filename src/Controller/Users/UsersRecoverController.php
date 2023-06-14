@@ -22,6 +22,7 @@ use App\Service\Users\UserRecoverServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\Exception\NotFoundException;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -78,7 +79,14 @@ class UsersRecoverController extends AppController
             throw new ForbiddenException(__('Only guests are allowed to recover an account. Please logout first.'));
         }
 
-        $userRecoverService->recover($this->User->getAccessControl());
+        try {
+            $userRecoverService->recover($this->User->getAccessControl());
+        } catch (NotFoundException $exception) {
+            // Pretend everything is fine to prevent user enumeration
+            if (!Configure::read('passbolt.security.preventUserEnumeration')) {
+                throw $exception;
+            }
+        }
         $this->success(__('Recovery process started, check your email.'));
     }
 }
