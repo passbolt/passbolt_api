@@ -85,6 +85,16 @@ class GpgkeyFactory extends CakephpBaseFactory
     }
 
     /**
+     * Set the expires field to the past
+     *
+     * @return $this
+     */
+    public function modifiedYesterday()
+    {
+        return $this->setField('modified', FrozenTime::yesterday());
+    }
+
+    /**
      * Set the armored key and fingerprint to Sofia's one
      *
      * @return $this

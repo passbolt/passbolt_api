@@ -247,7 +247,7 @@ class LdapDirectoryMock
     {
         $mappingRules = $this->settings->getFieldsMapping(DirectoryInterface::TYPE_AD);
         $builder = $this->testCase->getMockBuilder(Builder::class)
-            ->onlyMethods(['select', 'setBaseDn', 'where', 'get', 'rawFilter'])
+            ->onlyMethods(['select', 'setBaseDn', 'where', 'paginate', 'rawFilter'])
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -315,13 +315,13 @@ class LdapDirectoryMock
             ->withConsecutive(['objectType', DirectoryInterface::ENTRY_TYPE_USER], ['directoryType', DirectoryInterface::TYPE_AD]);
 
         $builder->expects($this->testCase->exactly($getExpectationCount))
-            ->method('get')
+            ->method('paginate')
             ->willReturn([$ldapGroup], [$ldapUser]);
         $builder->expects($this->testCase->exactly($expectationCount))
             ->method('select')
             ->withConsecutive(
-                [['*', $mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP]['created'], $mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP]['modified']]],
-                [['*', $mappingRules[DirectoryInterface::ENTRY_TYPE_USER]['created'], $mappingRules[DirectoryInterface::ENTRY_TYPE_USER]['modified']]]
+                [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP])],
+                [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_USER])]
             )
             ->willReturnSelf();
         $builder->expects($this->testCase->exactly($expectationCount))

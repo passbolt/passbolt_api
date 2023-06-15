@@ -34,6 +34,8 @@ class CommentsAddController extends AppController
      */
     public function addPost(string $foreignKey)
     {
+        $this->assertJson();
+
         $comment = (new CommentsAddService())->add(
             $this->User->getAccessControl(),
             $foreignKey,

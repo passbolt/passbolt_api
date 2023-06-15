@@ -63,7 +63,7 @@ class RecoverUserCommandTest extends TestCase
         $this->exec('passbolt recover_user -u ' . $user->username);
         $this->assertExitSuccess();
         $this->assertOutputContains(
-            Router::url('/setup/recover/' . $user->id . '/' . $token['token'], true)
+            Router::url('/setup/recover/start/' . $user->id . '/' . $token['token'], true)
         );
         $this->assertSame(1, AuthenticationTokenFactory::count());
     }
@@ -83,7 +83,7 @@ class RecoverUserCommandTest extends TestCase
         $this->assertExitSuccess();
         $token = AuthenticationTokenFactory::find()->firstOrFail();
         $this->assertOutputContains(
-            Router::url('/setup/recover/' . $user->id . '/' . $token['token'], true)
+            Router::url('/setup/recover/start/' . $user->id . '/' . $token['token'], true)
         );
         $this->assertSame(1, AuthenticationTokenFactory::count());
     }

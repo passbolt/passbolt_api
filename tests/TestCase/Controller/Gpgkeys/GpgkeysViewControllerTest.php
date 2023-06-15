@@ -24,16 +24,7 @@ use App\Utility\UuidFactory;
 
 class GpgkeysViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles'];
-
-    public function testGpgkeysViewErrorNotAuthenticated()
-    {
-        $uuid = UuidFactory::uuid();
-        $this->getJson('/gpgkeys/' . $uuid . '.json');
-        $this->assertAuthenticationError();
-    }
-
-    public function testGpgkeysViewGetSuccess()
+    public function testGpgkeysViewController_Success(): void
     {
         $user = UserFactory::make()
             ->user()
@@ -43,7 +34,7 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
         $gpgkeyId = $gpgkey->id;
         $this->logInAs($user);
 
-        $this->getJson("/gpgkeys/{$gpgkeyId}.json?api-version=2");
+        $this->getJson("/gpgkeys/{$gpgkeyId}.json");
 
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -53,18 +44,42 @@ class GpgkeysViewControllerTest extends AppIntegrationTestCase
         $this->assertEquals($gpgkey->fingerprint, $this->_responseJsonBody->fingerprint);
     }
 
-    public function testGpgkeysViewInvalidIdError()
+    public function testGpgkeysViewController_Error_NotAuthenticated(): void
+    {
+        $uuid = UuidFactory::uuid();
+        $this->getJson('/gpgkeys/' . $uuid . '.json');
+        $this->assertAuthenticationError();
+    }
+
+    public function testGpgkeysViewController_Error_InvalidId(): void
     {
         $this->logInAsUser();
         $this->getJson('/gpgkeys/notuuid.json');
         $this->assertError(400, 'The OpenPGP key identifier should be a valid UUID.');
     }
 
-    public function testGpgkeysViewGpgkeyDoesNotExistError()
+    public function testGpgkeysViewController_Error_NotFound(): void
     {
         $this->logInAsUser();
         $uuid = UuidFactory::uuid('gpgkey.id.notagpgkey');
         $this->getJson('/gpgkeys/' . $uuid . '.json');
         $this->assertError(404, 'The OpenPGP key does not exist.');
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testGpgkeysViewController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
+            ->persist();
+        $gpgkey = $user->gpgkey;
+        $gpgkeyId = $gpgkey->id;
+        $this->logInAs($user);
+
+        $this->get("/gpgkeys/{$gpgkeyId}");
+        $this->assertResponseCode(404);
     }
 }

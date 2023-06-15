@@ -34,7 +34,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Gpgkeys', 'app.Base/Secrets',
     ];
 
-    public function testGroupsDeleteNotificationDisabled()
+    public function testGroupsDeleteNotificationDisabled(): void
     {
         $this->setEmailNotificationSetting('send.group.delete', false);
 
@@ -46,7 +46,7 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertEmailQueueIsEmpty();
     }
 
-    public function testGroupsDeleteNotificationSuccess()
+    public function testGroupsDeleteNotificationSuccess(): void
     {
         $this->setEmailNotificationSetting('send.group.delete', true);
 

@@ -58,6 +58,13 @@ class SsoSetting extends Entity
     ];
 
     /**
+     * Azure email claim alias fields.
+     */
+    public const AZURE_EMAIL_CLAIM_ALIAS_EMAIL = 'email';
+    public const AZURE_EMAIL_CLAIM_ALIAS_PREFERRED_USERNAME = 'preferred_username';
+    public const AZURE_EMAIL_CLAIM_ALIAS_UPN = 'upn';
+
+    /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
      * For security purposes, it is advised to set '*' to false

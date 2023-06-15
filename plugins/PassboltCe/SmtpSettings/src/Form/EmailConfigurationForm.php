@@ -21,7 +21,7 @@ use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 use Passbolt\SmtpSettings\Model\Validation\SmtpSettingsClientValidationRule;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 
 class EmailConfigurationForm extends Form
 {
@@ -139,7 +139,7 @@ class EmailConfigurationForm extends Form
         $this->validationUpdate($validator);
 
         $validator->requirePresence(
-            SmtpSettingsSendTestEmailService::EMAIL_TEST_TO,
+            SmtpSettingsSendTestMailerService::EMAIL_TEST_TO,
             'create',
             __('A test recipient is required.')
         );

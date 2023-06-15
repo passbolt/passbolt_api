@@ -23,18 +23,28 @@ class RolesIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/Users', 'app.Base/Roles'];
 
-    public function testRolesIndexGetSuccess()
+    public function testRolesIndexController_Success(): void
     {
         $this->logInAsUser();
-        $this->getJson('/roles.json?api-version=2');
+        $this->getJson('/roles.json');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertRoleAttributes($this->_responseJsonBody[0]);
     }
 
-    public function testRolesIndexErrorNotAuthenticated()
+    public function testRolesIndexController_Error_NotAuthenticated(): void
     {
         $this->getJson('/roles.json');
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testRolesIndexController_Error_NotJson(): void
+    {
+        $this->logInAsUser();
+        $this->get('/roles');
+        $this->assertResponseCode(404);
     }
 }

@@ -30,7 +30,6 @@ use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
@@ -46,7 +45,6 @@ class FoldersCreateControllerTest extends FoldersIntegrationTestCase
 {
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
-    use IntegrationTestTrait;
     use PermissionsModelTrait;
 
     public $fixtures = [

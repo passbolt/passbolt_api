@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Test\TestCase\Service\SsoSettings;
 
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
@@ -25,14 +26,43 @@ use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\Core\Configure;
 use Cake\Validation\Validation;
+use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Providers\SsoActiveProvidersGetService;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsSetService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Lib\SsoTestCase;
 
+/**
+ * @covers \Passbolt\Sso\Service\SsoSettings\SsoSettingsSetService
+ */
 class SsoSettingsSetServiceTest extends SsoTestCase
 {
+    /**
+     * @var \Passbolt\Sso\Service\SsoSettings\SsoSettingsSetService
+     */
+    private $service;
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->service = new SsoSettingsSetService();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tearDown(): void
+    {
+        unset($this->service);
+
+        parent::tearDown();
+    }
+
     /**
      * New entity success
      *
@@ -50,10 +80,12 @@ class SsoSettingsSetServiceTest extends SsoTestCase
                 'tenant_id' => UuidFactory::uuid(),
                 'client_secret' => UuidFactory::uuid(),
                 'client_secret_expiry' => Chronos::now()->addDays(365),
+                'prompt' => SsoSettingsAzureDataForm::PROMPT_NONE,
+                'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_UPN,
             ],
         ];
 
-        $dto = (new SsoSettingsSetService())->create($uac, $data);
+        $dto = $this->service->create($uac, $data);
 
         // Check returned object is correctly formatted
         $this->assertTrue(Validation::uuid($dto->id));
@@ -95,18 +127,29 @@ class SsoSettingsSetServiceTest extends SsoTestCase
                 'tenant_id' => UuidFactory::uuid(),
                 'client_secret' => UuidFactory::uuid(),
                 'client_secret_expiry' => Chronos::now()->addDays(365),
+                'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_UPN,
             ],
         ];
 
-        $dto = (new SsoSettingsSetService())->create($uac, $data);
+        $dto = $this->service->create($uac, $data);
+
         $this->assertNotEmpty($dto->getData());
         $dtoData = $dto->getData()->toArray();
         $this->assertNotEmpty($dtoData);
         $this->assertEquals('https://login.microsoftonline.com', $dtoData['url']);
     }
 
-    public function testSsoSettingsSetService_Error(): void
+    public function testSsoSettingsSetService_ErrorThrowsCustomValidationException(): void
     {
-        $this->markTestIncomplete();
+        $user = UserFactory::make()->admin()->persist();
+        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $data = [
+            'provider' => SsoSetting::PROVIDER_AZURE,
+            'data' => [], // Data is empty
+        ];
+
+        $this->expectException(CustomValidationException::class);
+
+        $this->service->create($uac, $data);
     }
 }

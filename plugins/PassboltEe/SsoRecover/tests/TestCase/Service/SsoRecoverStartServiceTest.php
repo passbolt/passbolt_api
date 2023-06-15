@@ -83,7 +83,7 @@ class SsoRecoverStartServiceTest extends AppTestCase
         /** @var \App\Model\Entity\AuthenticationToken $authToken */
         $authToken = AuthenticationTokenFactory::find()->firstOrFail();
         $this->assertSame(
-            Router::url("/setup/install/{$user->id}/{$authToken->token}", true),
+            Router::url("/setup/start/{$user->id}/{$authToken->token}", true),
             $result
         );
     }

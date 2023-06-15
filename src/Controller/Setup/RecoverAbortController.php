@@ -43,6 +43,8 @@ class RecoverAbortController extends AppController
      */
     public function abort(string $userId)
     {
+        $this->assertJson();
+
         // Do not allow logged in user to abort
         if ($this->User->role() !== Role::GUEST) {
             throw new ForbiddenException(__('Only guests are allowed to abort recovery process.'));

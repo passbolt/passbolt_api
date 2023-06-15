@@ -13,8 +13,9 @@
  * @since         2.0.0
  */
 
-use Migrations\AbstractMigration;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
+use Migrations\AbstractMigration;
 
 class V162InitialMigration extends AbstractMigration
 {
@@ -972,28 +973,28 @@ class V162InitialMigration extends AbstractMigration
 
         $rolesData = [
             [
-                'id' => UuidFactory::uuid(),
+                'id' => Configure::read('debug') ? UuidFactory::uuid('role.id.admin') : UuidFactory::uuid(),
                 'name' => 'admin',
                 'description' => 'Organization administrator',
                 'created' => '2012-07-04 13:39:25',
                 'modified' => '2012-07-04 13:39:25',
             ],
             [
-                'id' => UuidFactory::uuid(),
+                'id' => Configure::read('debug') ? UuidFactory::uuid('role.id.guest') : UuidFactory::uuid(),
                 'name' => 'guest',
                 'description' => 'Non logged in user',
                 'created' => '2012-07-04 13:39:25',
                 'modified' => '2012-07-04 13:39:25',
             ],
             [
-                'id' => UuidFactory::uuid(),
+                'id' => Configure::read('debug') ? UuidFactory::uuid('role.id.user') : UuidFactory::uuid(),
                 'name' => 'user',
                 'description' => 'Logged in user',
                 'created' => '2012-07-04 13:39:25',
                 'modified' => '2012-07-04 13:39:25',
             ],
             [
-                'id' => UuidFactory::uuid(),
+                'id' => Configure::read('debug') ? UuidFactory::uuid('role.id.root') : UuidFactory::uuid(),
                 'name' => 'root',
                 'description' => 'Super Administrator',
                 'created' => '2012-07-04 13:39:25',

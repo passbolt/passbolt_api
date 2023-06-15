@@ -1,5 +1,0 @@
-07edbbc66e PB-24173 Styleguide version bump to v4.0.2
-1d0ae71f5d PB-24051: Add unit test for fields obfuscation logic on sequential arrays
-2f85672b77 PB-24051: fix field obfuscation not to obfuscate the first element in pure array
-b94bbe63db PB-24470 - Fix recover_user command not showing while running passbolt -h
-529b1a0b39 PB-24474 Styleguide version bump to v4.0.1

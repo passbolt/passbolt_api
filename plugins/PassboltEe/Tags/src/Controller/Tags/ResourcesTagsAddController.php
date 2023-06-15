@@ -146,6 +146,7 @@ class ResourcesTagsAddController extends AppController
                 // @codingStandardsIgnoreStart
                 $notShared = @mb_substr($existingTag->slug, 0, 1, 'utf-8') !== '#';
                 // @codingStandardsIgnoreEnd
+
                 unset($data[array_search($existingTag->slug, $data)]);
                 if ($notShared) {
                     $existingTag->_joinData = new \stdClass();

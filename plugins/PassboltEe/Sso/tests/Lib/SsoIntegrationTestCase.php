@@ -26,6 +26,7 @@ use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\IntegrationTestTrait;
+use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
@@ -37,6 +38,7 @@ class SsoIntegrationTestCase extends SsoTestCase
     use JsonRequestTrait;
     use LoginTestTrait;
     use ErrorIntegrationTestTrait;
+    use MockAzureResourceOwnerTrait;
 
     public const IP_ADDRESS = '127.0.0.1';
     public const USER_AGENT = 'phpunit';
@@ -66,8 +68,11 @@ class SsoIntegrationTestCase extends SsoTestCase
      * @param string|null $status status
      * @return SsoSettingsDto
      */
-    public function createAzureSettingsFromConfig(User $admin, ?string $status = SsoSetting::STATUS_ACTIVE): SsoSettingsDto
-    {
+    public function createAzureSettingsFromConfig(
+        User $admin,
+        ?string $status = SsoSetting::STATUS_ACTIVE,
+        $options = []
+    ): SsoSettingsDto {
         $azureConfig = Configure::read('passbolt.selenium.sso.active');
         if (!isset($azureConfig)) {
             $this->markTestSkipped('Selenium SSO is set to inactive, skipping tests.');
@@ -82,6 +87,8 @@ class SsoIntegrationTestCase extends SsoTestCase
                 'tenant_id' => Configure::read('passbolt.selenium.sso.azure.tenantId'),
                 'client_secret' => Configure::read('passbolt.selenium.sso.azure.secretId'),
                 'client_secret_expiry' => new FrozenTime(Configure::read('passbolt.selenium.sso.azure.secretExpiry')),
+                'prompt' => $options['prompt'] ?? SsoSettingsAzureDataForm::PROMPT_LOGIN,
+                'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
             ],
         ];
 

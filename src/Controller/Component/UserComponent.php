@@ -35,11 +35,16 @@ class UserComponent extends Component
     public $components = ['Authentication.Authentication'];
 
     /**
+     * @var string|null cache for role uuid
+     */
+    protected ?string $_roleId = null;
+
+    /**
      * User agent cache to avoid parsing multiple times per request
      *
      * @var array|null
      */
-    protected $_userAgent = null;
+    protected ?array $_userAgent = null;
 
     /**
      * Return the current user id if the user is identified
@@ -85,6 +90,26 @@ class UserComponent extends Component
     public function role(): ?string
     {
         return $this->getAuthenticatedUserProperty('role.name', Role::GUEST);
+    }
+
+    /**
+     * Return the role id if set or the id of Guest role
+     * Return null if database role guest entry is not present (aka fresh)
+     *
+     * @return string|null
+     */
+    public function roleId(): ?string
+    {
+        $roleId = $this->getAuthenticatedUserProperty('role_id') ?? null;
+
+        if ($roleId === null) {
+            /** @var \App\Model\Table\RolesTable $Roles */
+            $Roles = TableRegistry::getTableLocator()->get('Roles');
+
+            return $Roles->getIdByName(Role::GUEST);
+        }
+
+        return $roleId;
     }
 
     /**

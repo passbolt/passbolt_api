@@ -37,6 +37,8 @@ class FavoritesDeleteController extends AppController
      */
     public function delete(string $id)
     {
+        $this->assertJson();
+
         // Check request sanity
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The favorite id is not valid.'));

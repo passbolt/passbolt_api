@@ -36,6 +36,8 @@ class FavoritesAddController extends AppController
      */
     public function add(string $foreignKey)
     {
+        $this->assertJson();
+
         // Check request sanity
         if (!Validation::uuid($foreignKey)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));

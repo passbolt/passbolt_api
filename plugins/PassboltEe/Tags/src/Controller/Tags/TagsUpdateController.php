@@ -23,7 +23,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
-use Passbolt\Tags\Model\Entity\Tag;
+use Passbolt\Tags\Service\Tags\UpdatePersonalTagService;
 
 /**
  * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
@@ -60,9 +60,7 @@ class TagsUpdateController extends AppController
 
         try {
             /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
-            $tag = $this->Tags->get($id, [
-                'contain' => ['ResourcesTags'],
-            ]);
+            $tag = $this->Tags->get($id, ['contain' => ['ResourcesTags']]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The tag does not exist.'));
         }
@@ -75,41 +73,12 @@ class TagsUpdateController extends AppController
             throw new NotFoundException(__('The tag does not exist.'));
         }
 
-        $updatedTag = $this->_updatePersonalTag($tag);
+        $updatedTag = (new UpdatePersonalTagService())->update(
+            $this->User->getAccessControl(),
+            $this->request->getData('slug'),
+            $tag
+        );
 
         $this->success(__('The tag has been updated successfully.'), $updatedTag);
-    }
-
-    /**
-     * Update personal tag
-     *
-     * @param \Passbolt\Tags\Model\Entity\Tag $tag The tag to update
-     * @return \Passbolt\Tags\Model\Entity\Tag|bool The updated tag
-     * @throws \Cake\Http\Exception\BadRequestException If a non admin tries to change a personal tag into a shared tag.
-     * @throws \Exception
-     */
-    private function _updatePersonalTag(Tag $tag)
-    {
-        $slug = $this->request->getData('slug');
-
-        if (mb_substr($slug, 0, 1) === '#') {
-            throw new BadRequestException('You do not have the permission to change a personal tag into shared tag.');
-        }
-
-        return $this->Tags->getConnection()->transactional(function () use ($tag, $slug) {
-            $newTag = $this->Tags->findOrCreateTag($slug, $this->User->getAccessControl());
-
-            // Update all the tag association to the new tag id
-            $this->ResourcesTags->updateUserTag(
-                $this->User->id(),
-                $tag->get('id'),
-                $newTag->get('id')
-            );
-
-            // Flush all unused tags
-            $this->Tags->deleteAllUnusedTags();
-
-            return $newTag;
-        });
     }
 }

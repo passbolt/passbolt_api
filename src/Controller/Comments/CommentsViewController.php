@@ -34,6 +34,8 @@ class CommentsViewController extends AppController
      */
     public function view(string $foreignModelName, string $foreignKey): void
     {
+        $this->assertJson();
+
         // Retrieve and sanity the query options.
         $whitelist = [
             'contain' => ['creator', 'modifier'],

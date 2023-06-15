@@ -25,6 +25,9 @@ use Passbolt\Sso\Test\Factory\SsoAuthenticationTokenFactory;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
 
+/**
+ * @covers \Passbolt\Sso\Controller\Settings\SsoSettingsActivateController
+ */
 class SsoSettingsActivateControllerTest extends SsoIntegrationTestCase
 {
     public function testSsoSettingsActivateController_SuccessAzure(): void
@@ -51,6 +54,7 @@ class SsoSettingsActivateControllerTest extends SsoIntegrationTestCase
         $this->assertSuccess();
         $settingDto = $this->_responseJsonBody;
         $this->assertEquals($settingDto->id, $settings->id);
+        $this->assertEquals(SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL, $settingDto->data->email_claim);
     }
 
     public function testSsoSettingsActivateController_SuccessGoogle(): void

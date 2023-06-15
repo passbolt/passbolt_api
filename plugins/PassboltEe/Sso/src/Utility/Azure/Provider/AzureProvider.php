@@ -36,6 +36,7 @@ use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Passbolt\Sso\Error\Exception\AzureException;
+use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Utility\Azure\OpenId\AzureIdToken;
 use Passbolt\Sso\Utility\Azure\ResourceOwner\AzureResourceOwner;
 use Passbolt\Sso\Utility\Grant\JwtBearer;
@@ -68,14 +69,23 @@ class AzureProvider extends BaseOauth2Provider
     public $tenant = '';
 
     /**
+     * Email claim alias field to check as username/email.
+     *
+     * @var string
+     */
+    public $emailClaim = SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL;
+
+    /**
      * @inheritDoc
      */
     public function __construct(array $options = [], array $collaborators = [])
     {
+        $options['tenant'] = $options['tenant'] ?? $this->tenant;
+        $options['urlLogin'] = $options['urlLogin'] ?? $this->urlLogin;
+        $options['emailClaim'] = $options['emailClaim'] ?? $this->emailClaim;
+
         parent::__construct($options, $collaborators);
 
-        $this->tenant = $options['tenant'] ?? $this->tenant;
-        $this->urlLogin = $options['urlLogin'] ?? $this->urlLogin;
         $this->grantFactory->setGrant('jwt_bearer', new JwtBearer());
     }
 
@@ -260,7 +270,7 @@ class AzureProvider extends BaseOauth2Provider
      */
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
-        return new AzureResourceOwner($response);
+        return new AzureResourceOwner($response, $this->emailClaim);
     }
 
     /**

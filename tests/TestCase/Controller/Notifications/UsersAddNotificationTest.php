@@ -32,7 +32,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
         'app.Base/Profiles',
     ];
 
-    public function testUserAddNotificationDisabled()
+    public function testUserAddNotificationDisabled(): void
     {
         $this->setEmailNotificationSetting('send.user.create', false);
         $username = 'new@passbolt.com';
@@ -53,7 +53,7 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue($username);
     }
 
-    public function testUserAddNotificationSuccess()
+    public function testUserAddNotificationSuccess(): void
     {
         $this->setEmailNotificationSetting('send.user.create', true);
 

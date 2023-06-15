@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Test\TestCase\Controller\Azure;
 
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
+use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
@@ -28,15 +29,37 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
     /**
      * 200 returns a URL
      */
-    public function testSsoAzureStage1DryRunController_Success(): void
+    public function testSsoAzureStage1DryRunController_Success_PromptLogin(): void
     {
         $user = UserFactory::make()->admin()->persist();
         $settings = $this->createAzureSettingsFromConfig($user, SsoSetting::STATUS_DRAFT);
 
         $this->logInAs($user);
         $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->id]);
+
         $this->assertSuccess();
         $this->assertStringContainsString('microsoft', $this->_responseJsonBody->url);
+        $this->assertStringContainsString('prompt=login', $this->_responseJsonBody->url);
+    }
+
+    /**
+     * 200 returns a URL
+     */
+    public function testSsoAzureStage1DryRunController_Success_PromptNoneIsNotPresent(): void
+    {
+        $user = UserFactory::make()->admin()->persist();
+        $settings = $this->createAzureSettingsFromConfig(
+            $user,
+            SsoSetting::STATUS_DRAFT,
+            ['prompt' => SsoSettingsAzureDataForm::PROMPT_NONE]
+        );
+
+        $this->logInAs($user);
+        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->id]);
+
+        $this->assertSuccess();
+        $this->assertStringContainsString('microsoft', $this->_responseJsonBody->url);
+        $this->assertStringNotContainsString('prompt', $this->_responseJsonBody->url);
     }
 
     /**

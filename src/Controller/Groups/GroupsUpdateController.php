@@ -79,6 +79,8 @@ class GroupsUpdateController extends AppController
      */
     public function update(string $id)
     {
+        $this->assertJson();
+
         $uac = $this->User->getAccessControl();
         $this->assertRequestParameter($uac, $id);
 
@@ -169,6 +171,8 @@ class GroupsUpdateController extends AppController
      */
     public function dryRun(string $id)
     {
+        $this->assertJson();
+
         $uac = $this->User->getAccessControl();
         $this->assertRequestParameter($uac, $id);
 

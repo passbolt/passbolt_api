@@ -91,6 +91,8 @@ class UsersDeleteController extends AppController
      */
     public function dryrun(string $id)
     {
+        $this->assertJson();
+
         $user = $this->_validateRequestData($id);
         $this->_validateDelete($user);
         $this->success(__('The user can be deleted.'));
@@ -105,6 +107,8 @@ class UsersDeleteController extends AppController
      */
     public function delete(string $id)
     {
+        $this->assertJson();
+
         $user = $this->_validateRequestData($id);
         // keep a list of group the user was a member of. Useful to notify the group managers after the delete
         $groupIdsNotOnlyMember = $this->GroupsUsers

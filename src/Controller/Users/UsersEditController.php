@@ -44,6 +44,8 @@ class UsersEditController extends AppController
      */
     public function editPost(string $id)
     {
+        $this->assertJson();
+
         $data = $this->_validateRequestData($id);
 
         // Try to find the user and validate changes it

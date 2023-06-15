@@ -19,6 +19,7 @@ namespace App\Test\Lib;
 use App\Authenticator\AbstractSessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\CsrfProtectionMiddleware;
+use App\Middleware\SslForceMiddleware;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
@@ -92,10 +93,8 @@ abstract class AppIntegrationTestCase extends TestCase
         $this->disableFeaturePlugin('SsoRecover');
 
         Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
-        OpenPGPBackendFactory::reset();
-        UserAction::destroy();
-        DigestsPool::clearInstance();
-        EmailNotificationSettings::flushCache();
+        // Disable SSL Force since all requests in tests are made on http
+        Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, false);
     }
 
     /**
@@ -103,6 +102,10 @@ abstract class AppIntegrationTestCase extends TestCase
      */
     public function tearDown(): void
     {
+        OpenPGPBackendFactory::reset();
+        UserAction::destroy();
+        DigestsPool::clearInstance();
+        EmailNotificationSettings::flushCache();
         $this->clearPlugins();
         parent::tearDown();
     }

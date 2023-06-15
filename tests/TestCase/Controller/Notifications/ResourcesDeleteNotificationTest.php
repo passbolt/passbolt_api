@@ -45,7 +45,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         parent::tearDown();
     }
 
-    public function testResourcesDeleteNotificationDisabled()
+    public function testResourcesDeleteNotificationDisabled(): void
     {
         $this->setEmailNotificationSetting('send.password.delete', false);
 
@@ -57,7 +57,7 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue('betty@passbolt.com');
     }
 
-    public function testResourcesDeleteNotificationSuccess()
+    public function testResourcesDeleteNotificationSuccess(): void
     {
         $this->setEmailNotificationSetting('send.password.delete', true);
 

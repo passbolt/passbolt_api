@@ -57,12 +57,6 @@ class AppController extends Controller
 
         // Init user action.
         UserAction::initFromRequest($this->User->getAccessControl(), $this->request);
-
-        // Tell the browser to force HTTPS use
-        if (Configure::read('passbolt.ssl.force')) {
-            $this->response = $this->response
-                ->withHeader('strict-transport-security', 'max-age=31536000; includeSubDomains');
-        }
     }
 
     /**
@@ -178,13 +172,25 @@ class AppController extends Controller
     }
 
     /**
-     * @throws \Cake\Http\Exception\BadRequestException if request is not JSON
+     * @throws \Cake\Http\Exception\NotFoundException if request is not JSON
      * @return void
      */
     protected function assertJson(): void
     {
         if (!$this->request->is('json')) {
-            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
+            throw new NotFoundException(__('Please use .json extension in URL or accept application/json.'));
+        }
+    }
+
+    /**
+     * @throws \Cake\Http\Exception\BadRequestException if request data is not an array or is empty
+     * @return void
+     */
+    protected function assertNotEmptyArrayData(): void
+    {
+        $data = $this->getRequest()->getData();
+        if (!is_array($data) || !count($data)) {
+            throw new BadRequestException(__('The request data can not be empty.'));
         }
     }
 }

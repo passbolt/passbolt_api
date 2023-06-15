@@ -17,15 +17,19 @@ declare(strict_types=1);
 namespace App\Controller\Auth;
 
 use App\Controller\AppController;
+use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Response;
+use Cake\Routing\Exception\MissingRouteException;
 
 class AuthLogoutController extends AppController
 {
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
+        $this->assertGetJsonEndPointIsEnabled();
         $this->Authentication->allowUnauthenticated(['logout']);
 
         return parent::beforeFilter($event);
@@ -39,5 +43,21 @@ class AuthLogoutController extends AppController
     public function logout(): ?Response
     {
         return $this->redirect($this->Authentication->logout());
+    }
+
+    /**
+     * If the request is GET and Json, the endpoint is deactivated by default
+     * and should be explicitly activated in configs
+     *
+     * @return void
+     * @throws \Cake\Routing\Exception\MissingRouteException if the end point is disabled
+     */
+    private function assertGetJsonEndPointIsEnabled(): void
+    {
+        $isGetJsonEndpoint = $this->getRequest()->is('json') && $this->getRequest()->is('GET');
+        $isGetJsonEndpointEnabled = Configure::read('passbolt.security.getLogoutEndpointEnabled');
+        if ($isGetJsonEndpoint && !$isGetJsonEndpointEnabled) {
+            throw new MissingRouteException(__('The logout route should only be accessed with POST method.'));
+        }
     }
 }

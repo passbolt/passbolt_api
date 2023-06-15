@@ -32,6 +32,7 @@ return [
                         env('PASSBOLT_PLUGINS_MFA_DUO_HOST', null)
                     ),
                 ],
+                'sortProvidersByLastUsage' => filter_var(env('PASSBOLT_PLUGINS_MFA_SORT_PROVIDERS_BY_LAST_USAGE', true), FILTER_VALIDATE_BOOLEAN), //phpcs:ignore
             ],
         ],
     ],

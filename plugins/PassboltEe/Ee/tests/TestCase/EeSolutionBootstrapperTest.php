@@ -38,6 +38,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
     public const EXPECTED_EE_PLUGINS = [
         'Passbolt/Ee',
         'Passbolt/JwtAuthentication',
+        'Passbolt/Rbacs',
         'Passbolt/AccountSettings',
         'Passbolt/Import',
         'Passbolt/InFormIntegration',
