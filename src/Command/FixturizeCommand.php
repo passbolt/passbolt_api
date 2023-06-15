@@ -44,7 +44,7 @@ class FixturizeCommand extends PassboltCommand
             foreach ($commands as $command) {
                 $command = new $command();
                 $this->insertTask($command);
-                $this->fixturizeTask($command);
+                $this->fixturizeTask($command, $io);
             }
         }
 
