@@ -246,10 +246,13 @@ trait GroupUsersSyncTrait
         if (empty($GroupsUsersDn)) {
             return [];
         }
+        foreach ($GroupsUsersDn as $k => $value) {
+            $GroupsUsersDn[$k] = strtolower($value);
+        }
 
         $directoryGroupUserEntries = $this->DirectoryEntries
             ->find()
-            ->where(['directory_name IN' => $GroupsUsersDn, 'foreign_model' => Alias::MODEL_USERS])
+            ->where(['LOWER(directory_name) IN' => $GroupsUsersDn, 'foreign_model' => Alias::MODEL_USERS])
             ->all()
             ->toArray();
 
