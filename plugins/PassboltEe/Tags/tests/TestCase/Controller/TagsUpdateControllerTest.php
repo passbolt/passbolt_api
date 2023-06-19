@@ -453,6 +453,40 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     }
 
     /**
+     * Make sure renaming slug with same slug doesn't remove tag for the user.
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagsUpdateController_SameSlugName()
+    {
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'foobar'])
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'slug' => 'foobar',
+        ]);
+
+        $this->assertSuccess();
+        $responseArray = $this->getResponseBodyAsArray();
+        // Make sure new tag is not created
+        $this->assertSame($tagId, $responseArray['id']);
+        $this->assertSame('foobar', $responseArray['slug']);
+        // Assert there is only single entry in the database
+        $this->assertSame(1, TagFactory::find()->where(['slug' => 'foobar'])->count());
+        $this->assertSame(
+            1,
+            ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->count()
+        );
+    }
+
+    /**
      * Add a test resource
      *
      * @param array $data resource data
