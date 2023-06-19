@@ -303,6 +303,9 @@ return [
             'ssoRecover' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SSO_RECOVER_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'directorySync' => [
+                'caseSensitiveFilters' => filter_var(env('PASSBOLT_PLUGINS_DIRECTORY_SYNC_CASE_SENSITIVE_FILTERS', false), FILTER_VALIDATE_BOOLEAN),
+            ],
         ],
 
         // Activate specific entry points for selenium testing.

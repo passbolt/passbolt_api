@@ -22,6 +22,7 @@ use App\Model\Entity\Role;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\ORM\TableRegistry;
@@ -238,25 +239,31 @@ trait GroupUsersSyncTrait
     /**
      * Find directory entries corresponding to a groupUser
      *
-     * @param array $GroupsUsersDn user directory name
-     * @return mixed
+     * @param array $groupsUsersDn user directory name
+     * @return array
      */
-    protected function findDirectoryEntriesForGroupUsers(array $GroupsUsersDn)
+    protected function findDirectoryEntriesForGroupUsers(array $groupsUsersDn)
     {
-        if (empty($GroupsUsersDn)) {
+        if (empty($groupsUsersDn)) {
             return [];
         }
-        foreach ($GroupsUsersDn as $k => $value) {
-            $GroupsUsersDn[$k] = strtolower($value);
+
+        if (!Configure::read('passbolt.plugins.directorySync.caseSensitiveFilters')) {
+            // Do work to make query check case-insensitive
+            foreach ($groupsUsersDn as $k => $value) {
+                $groupsUsersDn[$k] = strtolower($value);
+            }
+
+            $whereDirectoryNameColumn = 'LOWER(directory_name)';
+        } else {
+            $whereDirectoryNameColumn = 'directory_name';
         }
 
-        $directoryGroupUserEntries = $this->DirectoryEntries
+        return $this->DirectoryEntries
             ->find()
-            ->where(['LOWER(directory_name) IN' => $GroupsUsersDn, 'foreign_model' => Alias::MODEL_USERS])
+            ->where(["{$whereDirectoryNameColumn} IN" => $groupsUsersDn, 'foreign_model' => Alias::MODEL_USERS])
             ->all()
             ->toArray();
-
-        return $directoryGroupUserEntries;
     }
 
     /**

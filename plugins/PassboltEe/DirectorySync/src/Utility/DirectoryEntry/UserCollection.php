@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
+use Cake\Core\Configure;
 use Cake\Http\Exception\NotFoundException;
 
 class UserCollection
@@ -89,6 +90,6 @@ class UserCollection
      */
     public function transformOffset(string $offset): string
     {
-        return strtolower($offset);
+        return Configure::read('passbolt.plugins.directorySync.caseSensitiveFilters') ? $offset : strtolower($offset);
     }
 }
