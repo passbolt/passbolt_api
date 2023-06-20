@@ -1414,26 +1414,26 @@
         },
         {
             "name": "lorenzo/cakephp-email-queue",
-            "version": "v5.0.0",
+            "version": "5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/lorenzo/cakephp-email-queue.git",
-                "reference": "ea06e74107ee69c3eafe27054ae4d8232b5a420e"
+                "reference": "6eaf1f16f02d8b0f6c2bf48cbdf371e53f1a4993"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/lorenzo/cakephp-email-queue/zipball/ea06e74107ee69c3eafe27054ae4d8232b5a420e",
-                "reference": "ea06e74107ee69c3eafe27054ae4d8232b5a420e",
+                "url": "https://api.github.com/repos/lorenzo/cakephp-email-queue/zipball/6eaf1f16f02d8b0f6c2bf48cbdf371e53f1a4993",
+                "reference": "6eaf1f16f02d8b0f6c2bf48cbdf371e53f1a4993",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "^4.3"
+                "cakephp/cakephp": "^4.4"
             },
             "require-dev": {
                 "cakephp/cakephp-codesniffer": "^4.0",
-                "cakephp/migrations": "^3.3",
+                "cakephp/migrations": "^3.7",
                 "php-coveralls/php-coveralls": "^2.1",
-                "phpunit/phpunit": "^8.5"
+                "phpunit/phpunit": "^8.5.23"
             },
             "type": "cakephp-plugin",
             "autoload": {
@@ -1462,9 +1462,9 @@
             ],
             "support": {
                 "issues": "https://github.com/lorenzo/cakephp-email-queue/issues",
-                "source": "https://github.com/lorenzo/cakephp-email-queue/tree/v5.0.0"
+                "source": "https://github.com/lorenzo/cakephp-email-queue/tree/5.1.0"
             },
-            "time": "2022-04-14T10:21:22+00:00"
+            "time": "2022-12-16T11:48:16+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
