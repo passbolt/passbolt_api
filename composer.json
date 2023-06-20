@@ -49,6 +49,11 @@
             "type": "vcs",
             "url": "https://github.com/passbolt/phinx.git",
             "no-api": true
+        },
+        {
+            "type": "vcs",
+            "url": "https://github.com/passbolt/yubikey.git",
+            "no-api": true
         }
     ],
     "require": {
@@ -77,7 +82,7 @@
         "firebase/php-jwt": "^6.2.0",
         "spomky-labs/otphp": "^8.3.3",
         "bacon/bacon-qr-code": "^2.0.7",
-        "enygma/yubikey": "^3.3",
+        "enygma/yubikey": "dev-master#31802c4f5ef24df87c4710e5893bdf8ad73554be",
         "duosecurity/duo_universal_php": "^1.0"
     },
     "require-dev": {

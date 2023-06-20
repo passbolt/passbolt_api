@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "02c37d937746181524890a960c4f3356",
+    "content-hash": "02fcd79ae052184b7857f4f58b838295",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -853,32 +853,32 @@
         },
         {
             "name": "enygma/yubikey",
-            "version": "3.3",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/enygma/yubikey.git",
-                "reference": "2c2502dd85ed3d13c08fbb8a3eef516fdef58ec6"
+                "url": "https://github.com/passbolt/yubikey.git",
+                "reference": "31802c4f5ef24df87c4710e5893bdf8ad73554be"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/enygma/yubikey/zipball/2c2502dd85ed3d13c08fbb8a3eef516fdef58ec6",
-                "reference": "2c2502dd85ed3d13c08fbb8a3eef516fdef58ec6",
+                "url": "https://api.github.com/repos/passbolt/yubikey/zipball/31802c4f5ef24df87c4710e5893bdf8ad73554be",
+                "reference": "31802c4f5ef24df87c4710e5893bdf8ad73554be",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.1"
+                "php": ">=7.4"
             },
             "require-dev": {
                 "codeclimate/php-test-reporter": "dev-master",
                 "phpunit/phpunit": "4.3.2"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "Yubikey": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -898,11 +898,7 @@
                 "yubico",
                 "yubikey"
             ],
-            "support": {
-                "issues": "https://github.com/enygma/yubikey/issues",
-                "source": "https://github.com/enygma/yubikey/tree/master"
-            },
-            "time": "2018-03-08T20:38:39+00:00"
+            "time": "2023-01-09T16:41:59+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -5283,7 +5279,7 @@
             ],
             "support": {
                 "issues": "https://github.com/jdorn/sql-formatter/issues",
-                "source": "https://github.com/jdorn/sql-formatter/tree/master"
+                "source": "https://github.com/jdorn/sql-formatter/tree/v1.2.17"
             },
             "time": "2014-01-12T16:20:24+00:00"
         },
@@ -8610,6 +8606,7 @@
     "stability-flags": {
         "cakephp/migrations": 20,
         "robmorgan/phinx": 20,
+        "enygma/yubikey": 20,
         "psy/psysh": 0,
         "passbolt/passbolt-selenium-api": 20
     },
