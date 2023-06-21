@@ -263,7 +263,6 @@ class LdapConfigurationForm extends Form
         }
 
         $validator
-            ->requirePresence('fields_mapping', 'create', __('The fields mapping configuration is required.'))
             ->isArray('fields_mapping', __('The fields mapping should be a valid array.'))
             ->addNested('fields_mapping', $fieldsMappingValidator);
 

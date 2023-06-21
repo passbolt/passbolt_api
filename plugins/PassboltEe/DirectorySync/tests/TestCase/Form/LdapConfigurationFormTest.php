@@ -652,4 +652,12 @@ class LdapConfigurationFormTest extends AppTestCase
             'connection_names' => 'The connection name `org.domain` should not contain dots',
         ], $errors['domains']);
     }
+
+    public function testDirectoryLdapConfiguration_Fields_Mapping_Is_Not_Required()
+    {
+        $ldapSettings = self::getDummyFormData();
+        unset($ldapSettings['fields_mapping']);
+        $form = new LdapConfigurationForm();
+        $this->assertTrue($form->validate($ldapSettings));
+    }
 }
