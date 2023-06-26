@@ -102,10 +102,9 @@ class EmailNotificationSettings
     protected static function getSettings()
     {
         $settings = static::getSettingsFromConfig();
-        $settingsOverriddenByConfig = static::checkDefaultSettingsAreOverriddenByConfig();
         $settings['sources'] = [
             'database' => false,
-            'file' => $settingsOverriddenByConfig,
+            'file' => static::isDefaultSettingsAreOverridden(),
         ];
 
         if (static::getDbSettingsSource()->isAvailable()) {
@@ -209,11 +208,11 @@ class EmailNotificationSettings
     }
 
     /**
-     * Check that the settings coming from the file are the default.
+     * Checks that the settings coming from the file are the default or not.
      *
      * @return bool
      */
-    protected static function checkDefaultSettingsAreOverriddenByConfig()
+    protected static function isDefaultSettingsAreOverridden(): bool
     {
         $flatDefaultSettings = Hash::flatten(static::getSettingsFromDefault());
 

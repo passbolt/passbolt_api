@@ -16,12 +16,15 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
+use App\Test\Factory\ResourceFactory;
 use App\Utility\UuidFactory;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
@@ -226,6 +229,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
     }
 
     // Unused tags should be deleted
+
     public function testTagsResourcesTagsCleanupSuccess()
     {
         $this->authenticateAs('ada');
@@ -243,5 +247,30 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         // Fox-trot should have been deleted (not in used anymore)
         $this->expectException(RecordNotFoundException::class);
         $this->Tags->get(UuidFactory::uuid('tag.id.fox-trot'));
+    }
+
+    public function testResourcesTagsAddController_Success_SlugWithDifferentCase()
+    {
+        $user = $this->logInAsUser();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make(['resource_id' => $resource->id])
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'test'])
+            ->persist();
+        ResourcesTagFactory::make()
+            ->with('Users')
+            ->with('Tags', $resourceTag->tag)
+            ->persist();
+
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", [
+            'tags' => ['TEST'],
+        ]);
+
+        $this->assertSuccess();
+        $responseArray = $this->getResponseBodyAsArray();
+        $this->assertCount(1, $responseArray);
+        $this->assertNotSame($resourceTag->tag_id, $responseArray[0]['id']);
+        $this->assertCount(2, TagFactory::find()->where(['UPPER(slug)' => 'TEST']));
     }
 }

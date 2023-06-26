@@ -55,6 +55,8 @@ class SetupCompleteController extends AppController
      */
     public function complete(SetupCompleteServiceInterface $setupCompleteService, string $userId): void
     {
+        $this->assertJson();
+
         // Do not allow logged in user to complete setup
         if ($this->User->role() !== Role::GUEST) {
             throw new ForbiddenException(__('Only guests are allowed to complete setup.'));

@@ -33,7 +33,6 @@ use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Event\EventDispatcherTrait;
-use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
@@ -54,7 +53,6 @@ class FoldersCreateServiceTest extends FoldersTestCase
     use EventDispatcherTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
-    use IntegrationTestTrait;
     use PermissionsModelTrait;
 
     public $fixtures = [

@@ -172,12 +172,7 @@ class SlugDefinition
                 'properties' => [
                     'totp' => [
                         'type' => 'object',
-                        'required' => [
-                            'type',
-                            'secret_key',
-                            'digits',
-                            'algorithm',
-                        ],
+                        'required' => ['secret_key', 'digits', 'algorithm'],
                         'properties' => [
                             'algorithm' => [
                                 'type' => 'string',
@@ -247,7 +242,7 @@ class SlugDefinition
                     ],
                     'totp' => [
                         'type' => 'object',
-                        'required' => ['type', 'secret_key', 'digits', 'algorithm'],
+                        'required' => ['secret_key', 'digits', 'algorithm'],
                         'properties' => [
                             'algorithm' => [
                                 'type' => 'string',

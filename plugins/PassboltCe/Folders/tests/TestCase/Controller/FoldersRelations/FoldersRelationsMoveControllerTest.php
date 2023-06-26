@@ -29,7 +29,6 @@ use App\Test\Fixture\Base\SecretsFixture;
 use App\Test\Fixture\Base\UsersFixture;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
-use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
@@ -45,7 +44,6 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 {
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
-    use IntegrationTestTrait;
     use PermissionsModelTrait;
 
     public $fixtures = [

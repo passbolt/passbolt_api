@@ -73,6 +73,8 @@ class ShareController extends AppController
      */
     public function dryRun(string $resourceId): void
     {
+        $this->assertJson();
+
         $uac = $this->User->getAccessControl();
         $this->_assertRequestParameters($resourceId);
         $data = $this->request->getData();
@@ -99,6 +101,8 @@ class ShareController extends AppController
      */
     public function share(string $resourceId): void
     {
+        $this->assertJson();
+
         $uac = $this->User->getAccessControl();
         $this->_assertRequestParameters($resourceId);
         $data = $this->request->getData();

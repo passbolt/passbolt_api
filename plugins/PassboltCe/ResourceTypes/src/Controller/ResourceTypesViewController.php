@@ -39,6 +39,8 @@ class ResourceTypesViewController extends AppController
      */
     public function view(string $id)
     {
+        $this->assertJson();
+
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }

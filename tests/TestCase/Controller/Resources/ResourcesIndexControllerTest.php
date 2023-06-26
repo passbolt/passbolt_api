@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Utility\UuidFactory;
+use Cake\I18n\FrozenTime;
 use Cake\Utility\Hash;
 use PassboltTestData\Lib\PermissionMatrix;
 
@@ -33,13 +34,17 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions',
     ];
 
-    public function testSuccess()
+    public function testResourcesIndexController_Success(): void
     {
         $this->authenticateAs('ada');
-        $this->getJson('/resources.json?api-version=2&filter=[]');
+        $this->getJson('/resources.json?filter=[]');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
-
+        // Assert that the created date is in the right format
+        $format = "yyyy-MM-dd'T'HH':'mm':'ssxxx";
+        $created = $this->_responseJsonBody[0]->created;
+        $createdParsed = FrozenTime::parse($this->_responseJsonBody[0]->created)->i18nFormat($format);
+        $this->assertSame($createdParsed, $created, "The created date $created is not in $format format");
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody[0]);
         // Not expected fields.
@@ -49,11 +54,12 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
     }
 
-    public function testContainSuccess()
+    public function testResourcesIndexController_Success_WithContain(): void
     {
         $this->authenticateAs('ada');
-        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1&contain[permissions.user.profile]=1&contain[permissions.group]=1&contain[secret]=1';
-        $this->getJson("/resources.json?$urlParameter&api-version=2");
+        $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1';
+        $urlParameter .= '&contain[permissions.user.profile]=1&contain[permissions.group]=1&contain[secret]=1';
+        $this->getJson("/resources.json?$urlParameter");
         $this->assertSuccess();
 
         // Expected fields.
@@ -92,7 +98,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertFavoriteAttributes($favoriteResource->favorite);
     }
 
-    public function testFilterIsFavoriteSuccess()
+    public function testResourcesIndexController_Success_FilterIsFavorite(): void
     {
         $this->authenticateAs('dame');
         $urlParameter = 'filter[is-favorite]=1';
@@ -112,7 +118,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
     }
 
-    public function testFilterIsSharedWithGroupSuccess()
+    public function testResourcesIndexController_Success_FilterIsSharedWithGroup(): void
     {
         $this->authenticateAs('irene');
         $groupDId = UuidFactory::uuid('group.id.developer');
@@ -136,7 +142,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
     }
 
-    public function testFilterIsSharedWithMeSuccess()
+    public function testResourcesIndexController_Success_FilterIsSharedWithMe(): void
     {
         $this->authenticateAs('ada');
         $urlParameter = 'filter[is-shared-with-me]=1';
@@ -158,7 +164,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals($resourcesIds, $expectedResourcesIds);
     }
 
-    public function testFilterHasIdSuccess()
+    public function testResourcesIndexController_Success_FilterHasId(): void
     {
         $this->authenticateAs('ada');
         $resourceAId = UuidFactory::uuid('resource.id.apache');
@@ -173,9 +179,19 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertContains($resourceBId, $resourcesIds);
     }
 
-    public function testIndexErrorNotAuthenticated()
+    public function testResourcesIndexController_Error_NotAuthenticated(): void
     {
         $this->getJson('/resources.json');
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testResourcesIndexController_Error_NotJson(): void
+    {
+        $this->authenticateAs('ada');
+        $this->get('/resources');
+        $this->assertResponseCode(404);
     }
 }

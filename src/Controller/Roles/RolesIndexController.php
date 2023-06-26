@@ -35,6 +35,8 @@ class RolesIndexController extends AppController
      */
     public function index()
     {
+        $this->assertJson();
+
         /** @phpstan-ignore-next-line */
         $this->Roles = $this->fetchTable('Roles');
         $roles = $this->Roles->find('all');

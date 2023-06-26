@@ -39,6 +39,8 @@ class AuthVerifyController extends AppController
      */
     public function verifyGet()
     {
+        $this->assertJson();
+
         $configMissing = (Configure::read('passbolt.gpg.serverKey.public') === null);
         $configMissing = ($configMissing || Configure::read('passbolt.gpg.serverKey.public') === null);
         if ($configMissing) {

@@ -29,7 +29,7 @@ class UsersRecoverNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
-    public function testUsersRecoverNotificationSuccess()
+    public function testUsersRecoverNotificationSuccess(): void
     {
         $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.recover', true);
@@ -47,22 +47,22 @@ class UsersRecoverNotificationTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains('You have initiated an account recovery!', $username);
     }
 
-    public function testUsersCreateNotificationDisabled()
+    public function testUsersCreateNotificationDisabled(): void
     {
         // setup
         $this->setEmailNotificationSetting('send.user.create', false);
 
-        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ruth@passbolt.com']);
+        $this->postJson('/users/recover.json', ['username' => 'ruth@passbolt.com']);
         $this->assertSuccess();
         $this->assertEmailWithRecipientIsInNotQueue('ruth@passbolt.com');
     }
 
-    public function testUsersRecoverNotificationDisabled()
+    public function testUsersRecoverNotificationDisabled(): void
     {
         // recovery
         $this->setEmailNotificationSetting('send.user.recover', false);
 
-        $this->postJson('/users/recover.json?api-version=v2', ['username' => 'ada@passbolt.com']);
+        $this->postJson('/users/recover.json', ['username' => 'ada@passbolt.com']);
         $this->assertSuccess();
         $this->assertEmailWithRecipientIsInNotQueue('ada@passbolt.com');
     }

@@ -21,8 +21,12 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Mailer\TransportFactory;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 
+/**
+ * @covers \App\Command\SendTestEmailCommand
+ */
 class SendTestEmailCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
@@ -79,13 +83,26 @@ class SendTestEmailCommandTest extends AppTestCase
      */
     public function testSendTestEmailCommandWithRecipient()
     {
-        $trace = [['cmd' => 'bar']];
-        $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
+        $config = TransportFactory::getConfig('default');
+        $base64encodedString = base64_encode(
+            chr(0) . $config['username'] . chr(0) . $config['password']
+        );
+        $trace = [['cmd' => 'Password: ' . $base64encodedString]];
         $recipient = 'test@passbolt.test';
+        $this->mockService(SmtpSettingsSendTestMailerService::class, function () use ($trace) {
+            $service = $this->getMockBuilder(SmtpSettingsSendTestMailerService::class)
+                ->onlyMethods(['getTrace'])
+                ->getMock();
+            $service->method('getTrace')->willReturn($trace);
+
+            return $service;
+        });
+
         $this->exec('passbolt send_test_email -r ' . $recipient);
+
         $this->assertExitSuccess();
         $this->assertOutputContains('<info>Trace</info>');
-        $this->assertOutputContains('<info> *****</info>');
+        $this->assertOutputContains('<info> Password: *****</info>');
         $this->assertMailSentToAt(0, [$recipient => $recipient]);
         $this->assertMailSubjectContainsAt(0, 'Passbolt test email');
         $this->assertMailCount(1);

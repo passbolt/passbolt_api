@@ -61,6 +61,8 @@ class ResourcesAddController extends AppController
      */
     public function add()
     {
+        $this->assertJson();
+
         $resource = $this->resourcesAddService->add(
             $this->User->id(),
             $this->getRequest()->getData()

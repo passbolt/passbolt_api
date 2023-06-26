@@ -54,4 +54,16 @@ class FolderRelationDtoCollection extends Collection
     {
         return $this->some([self::class, 'filterByFolder']);
     }
+
+    /**
+     * Get the identifiers of the folders present in the list.
+     *
+     * @return array
+     */
+    public function getFoldersIds(): array
+    {
+        return $this->filter([FolderRelationDtoCollection::class, 'filterByFolder'])
+            ->map([FolderRelationDtoCollection::class, 'mapForeignId'])
+            ->toArray();
+    }
 }

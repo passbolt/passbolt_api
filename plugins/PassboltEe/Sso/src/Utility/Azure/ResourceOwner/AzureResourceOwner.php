@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Sso\Utility\Azure\ResourceOwner;
 
+use Cake\Http\Exception\BadRequestException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Passbolt\Sso\Utility\OpenId\SsoResourceOwnerInterface;
 
@@ -26,16 +27,23 @@ class AzureResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInte
      *
      * @var array
      */
-    protected $data;
+    private $data;
+
+    /**
+     * @var string
+     */
+    private $emailAliasField;
 
     /**
      * Creates new azure resource owner.
      *
      * @param array $data user data
+     * @param string $emailAliasField Field to use as an email.
      */
-    public function __construct($data = [])
+    public function __construct($data, $emailAliasField)
     {
         $this->data = $data;
+        $this->emailAliasField = $emailAliasField;
     }
 
     /**
@@ -51,11 +59,18 @@ class AzureResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInte
     /**
      * Retrieves email of the resource owner.
      *
-     * @return string|null
+     * @return string
+     * @throws \Cake\Http\Exception\BadRequestException When email alias field is not present in the data.
      */
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
-        return $this->data['email'] ?? null;
+        if (!isset($this->data[$this->emailAliasField]) || is_null($this->data[$this->emailAliasField])) {
+            $msg = __('Single sign-on failed.') . ' ';
+            $msg .= __('The {0} claim is not present, please contact your administrator.', $this->emailAliasField);
+            throw new BadRequestException($msg);
+        }
+
+        return $this->data[$this->emailAliasField];
     }
 
     /**
@@ -74,5 +89,15 @@ class AzureResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInte
     public function getNonce(): ?string
     {
         return $this->data['nonce'] ?? null;
+    }
+
+    /**
+     * Returns `auth_time` if present in data, `null` if not present.
+     *
+     * @return int|null
+     */
+    public function getAuthTime(): ?int
+    {
+        return $this->data['auth_time'] ?? null;
     }
 }

@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\GetOrgLocaleService;
@@ -45,13 +47,13 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->setSelfRegistrationSettingsData();
     }
 
-    public function testUsersRegisterGetSuccess()
+    public function testUsersRegisterController_Get_Success(): void
     {
         $this->get('/users/register');
         $this->assertResponseOk();
     }
 
-    public function dataProviderFortTestUsersRegisterPostSuccess(): array
+    public function dataProviderForTestUsersRegisterController_Success(): array
     {
         return [
             ['chinese_name' => [
@@ -80,9 +82,9 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     }
 
     /**
-     * @dataProvider dataProviderFortTestUsersRegisterPostSuccess
+     * @dataProvider dataProviderForTestUsersRegisterController_Success
      */
-    public function testUsersRegisterPostSuccess(array $data)
+    public function testUsersRegisterController_Success(array $data): void
     {
         $this->postJson('/users/register.json', $data);
         $this->assertResponseSuccess();
@@ -119,7 +121,43 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         ]);
     }
 
-    public function testUsersRegisterPostFailValidation()
+    public function testUsersRegisterController_Success_CannotModifyNotAccessibleFields(): void
+    {
+        // Not allowed to edit: id, active, deleted, created, modified, role_id
+        $roles = TableRegistry::getTableLocator()->get('Roles');
+        $adminRoleId = $roles->getIdByName(Role::ADMIN);
+        $userRoleId = $roles->getIdByName(Role::USER);
+        $date = '1983-04-01 23:34:45';
+        $userId = UuidFactory::uuid('user.id.aurore');
+
+        $data = [
+            'id' => $userId,
+            'active' => 1,
+            'deleted' => 1,
+            'created' => $date,
+            'modified' => $date,
+            'username' => 'aurore@passbolt.com',
+            'role_id' => $adminRoleId,
+            'profile' => [
+                'first_name' => 'Aurore',
+                'last_name' => 'Avarguès-Weber',
+            ],
+        ];
+
+        $this->postJson('/users/register.json', $data);
+        $this->assertResponseSuccess();
+
+        $users = TableRegistry::getTableLocator()->get('Users');
+        $user = $users->find()->where(['username' => $data['username']])->first();
+
+        $this->assertNotEquals($user->id, $userId);
+        $this->assertFalse($user->active);
+        $this->assertFalse($user->deleted);
+        $this->assertEquals($user->role_id, $userRoleId);
+        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+    }
+
+    public function testUsersRegisterController_Error_FailValidation(): void
     {
         $fails = [
             'username is missing' => [
@@ -167,7 +205,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testUsersRegisterPostError_MissingCsrfTokenError()
+    public function testUsersRegisterController_Error_MissingCsrfToken(): void
     {
         $this->disableCsrfToken();
         $this->post('/users/register');
@@ -176,39 +214,43 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
     }
 
-    public function testUsersRegisterCannotModifyNotAccessibleFields()
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testUsersRegisterController_Error_NotJson(): void
     {
-        // Not allowed to edit: id, active, deleted, created, modified, role_id
-        $roles = TableRegistry::getTableLocator()->get('Roles');
-        $adminRoleId = $roles->getIdByName(Role::ADMIN);
-        $userRoleId = $roles->getIdByName(Role::USER);
-        $date = '1983-04-01 23:34:45';
-        $userId = UuidFactory::uuid('user.id.aurore');
-
         $data = [
-            'id' => $userId,
-            'active' => 1,
-            'deleted' => 1,
-            'created' => $date,
-            'modified' => $date,
             'username' => 'aurore@passbolt.com',
-            'role_id' => $adminRoleId,
             'profile' => [
                 'first_name' => 'Aurore',
                 'last_name' => 'Avarguès-Weber',
             ],
+            'locale' => 'fr-FR',
+        ];
+        $this->post('/users/register', $data);
+        $this->assertResponseCode(404);
+    }
+
+    /**
+     * Check if security.preventUserEnumeration flag is set to true
+     * that API pretends that user is created to prevent knowing that a user is already present
+     */
+    public function testUsersRegisterController_Error_PreventUserEnumeration(): void
+    {
+        Configure::write(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY, true);
+        $data = [
+            'username' => 'aurore@passbolt.com',
+            'profile' => [
+                'first_name' => 'Aurore',
+                'last_name' => 'Avarguès-Weber',
+            ],
+            'locale' => 'fr-FR',
         ];
 
         $this->postJson('/users/register.json', $data);
-        $this->assertResponseSuccess();
-
-        $users = TableRegistry::getTableLocator()->get('Users');
-        $user = $users->find()->where(['username' => $data['username']])->first();
-
-        $this->assertNotEquals($user->id, $userId);
-        $this->assertFalse($user->active);
-        $this->assertFalse($user->deleted);
-        $this->assertEquals($user->role_id, $userRoleId);
-        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertResponseCode(404);
+        $this->assertResponseContains('Registration is not opened to public. ');
+        $this->assertResponseContains('This is due to a security setting. ');
+        $this->assertResponseContains('Please contact your administrator.');
     }
 }

@@ -19,12 +19,14 @@ namespace Passbolt\Sso\Form;
 use App\Model\Validation\DateTime\IsDateInFutureValidationRule;
 use Cake\I18n\FrozenTime;
 use Cake\Validation\Validator;
+use Passbolt\Sso\Model\Entity\SsoSetting;
 
 class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
 {
     /**
      * Supported URLs
-     * Ref. https://learn.microsoft.com/en-us/azure/active-directory/develop/authentication-national-cloud#azure-ad-authentication-endpoints
+     *
+     * @see https://learn.microsoft.com/en-us/azure/active-directory/develop/authentication-national-cloud#azure-ad-authentication-endpoints
      */
     public const SUPPORTED_AZURE_URLS = [
         // Azure AD global service
@@ -36,6 +38,28 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
     ];
 
     /**
+     * Prompt options.
+     */
+    public const PROMPT_LOGIN = 'login';
+    public const PROMPT_NONE = 'none';
+
+    /**
+     * Supported prompt values. Currently, we only accept "login" or "none".
+     *
+     * @link https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-protocols-oidc#send-the-sign-in-request
+     */
+    public const SUPPORTED_PROMPT_VALUES = [self::PROMPT_LOGIN, self::PROMPT_NONE];
+
+    /**
+     * Supported email claim aliases.
+     */
+    public const SUPPORTED_EMAIL_CLAIM_ALIASES = [
+        SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
+        SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_PREFERRED_USERNAME,
+        SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_UPN,
+    ];
+
+    /**
      * @inheritDoc
      */
     protected function getDataValidator(): Validator
@@ -44,7 +68,7 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
 
         $dataValidator
             ->requirePresence('url', __('A URL is required.'))
-            ->notEmptyString('url', __('The OTP should not be empty.'))
+            ->notEmptyString('url', __('The URL should not be empty.'))
             ->maxLength('url', 64)
             ->inList('url', self::SUPPORTED_AZURE_URLS, __('The URL is not supported.'));
 
@@ -69,6 +93,25 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
             ->dateTime('client_secret_expiry', ['ymd'], __('The expiry should be a valid date.'))
             ->notEmptyDateTime('client_secret_expiry', __('The expiry should not be empty.'))
             ->add('client_secret_expiry', 'custom', new IsDateInFutureValidationRule());
+
+        $dataValidator
+            ->notEmptyString('prompt', __('The prompt should not be empty.'))
+            ->inList(
+                'prompt',
+                self::SUPPORTED_PROMPT_VALUES,
+                __('The prompt should be one of the following: {0}.', implode(', ', self::SUPPORTED_PROMPT_VALUES))
+            );
+
+        $dataValidator
+            ->notEmptyString('email_claim', __('The email claim should not be empty.'))
+            ->inList(
+                'email_claim',
+                self::SUPPORTED_EMAIL_CLAIM_ALIASES,
+                __(
+                    'The email claim should be one of the following: {0}.',
+                    implode(', ', self::SUPPORTED_EMAIL_CLAIM_ALIASES)
+                )
+            );
 
         return $dataValidator;
     }

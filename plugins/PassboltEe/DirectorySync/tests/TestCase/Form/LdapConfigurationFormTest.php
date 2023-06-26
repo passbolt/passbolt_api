@@ -31,20 +31,30 @@ class LdapConfigurationFormTest extends AppTestCase
     use EventDispatcherTrait;
     use FormatValidationTrait;
 
-    public static function getDummyFormData()
+    /**
+     * Get dummy test settings data
+     *
+     * @param bool $addSecondDomain
+     * @return array
+     */
+    public static function getDummyFormData(bool $addSecondDomain = false)
     {
-        return [
+        $settings = [
             'enabled' => true,
-            'hosts' => ['127.0.0.1'],
-            'directory_type' => 'ad',
-            'domain_name' => 'ldap.passbolt.local',
-            'authentication_type' => 'basic',
-            'connection_type' => 'tls',
-            'host' => 'my host',
-            'port' => 999,
-            'username' => 'root',
-            'password' => 'password',
-            'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
+            'domains' => [
+                'org_domain' => [
+                    'directory_type' => 'ad',
+                    'hosts' => ['127.0.0.1'],
+                    'domain_name' => 'ldap.passbolt.local',
+                    'authentication_type' => 'basic',
+                    'connection_type' => 'tls',
+                    'host' => 'my host',
+                    'port' => 999,
+                    'username' => 'root',
+                    'password' => 'password',
+                    'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
+                ],
+            ],
             'user_path' => 'my user_path',
             'group_custom_filters' => 'group-custom-filters',
             'user_custom_filters' => 'user-custom-filters',
@@ -61,7 +71,44 @@ class LdapConfigurationFormTest extends AppTestCase
             'sync_groups_create' => true,
             'sync_groups_delete' => false,
             'sync_groups_update' => true,
+            'fields_mapping' => [
+                'ad' => [
+                    'user' => [
+                        'id' => 'custom1',
+                        'firstname' => 'custom2',
+                        'lastname' => 'custom3',
+                        'username' => 'custom4',
+                        'created' => 'custom5',
+                        'modified' => 'custom6',
+                        'groups' => 'custom7',
+                        'enabled' => 'custom8',
+                    ],
+                    'group' => [
+                        'id' => 'custom9',
+                        'name' => 'custom10',
+                        'created' => 'custom11',
+                        'modified' => 'custom12',
+                        'users' => 'custom13',
+                    ],
+                ],
+            ],
         ];
+        if ($addSecondDomain) {
+            $settings['domains']['org_domain_2'] = [
+                'directory_type' => 'ad',
+                'hosts' => ['127.0.0.1'],
+                'domain_name' => 'ldap2.passbolt.local',
+                'authentication_type' => 'basic',
+                'connection_type' => 'tls',
+                'host' => 'my host',
+                'port' => 999,
+                'username' => 'root',
+                'password' => 'password',
+                'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
+            ];
+        }
+
+        return $settings;
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_DirectoryType()
@@ -72,7 +119,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'inList' => self::getInListTestCases(['ad', 'openldap']),
         ];
-        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'directory_type', $ldapSettings, $testCases);
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain.directory_type', $ldapSettings, $testCases);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_DomainName()
@@ -83,7 +130,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
         ];
-        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domain_name', $ldapSettings, $testCases);
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain.domain_name', $ldapSettings, $testCases);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_Username()
@@ -93,7 +140,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'allowEmpty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
         ];
-        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'username', $ldapSettings, $testCases);
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain.username', $ldapSettings, $testCases);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_Password()
@@ -103,7 +150,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'allowEmpty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
         ];
-        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'password', $ldapSettings, $testCases);
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain.password', $ldapSettings, $testCases);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_BaseDn()
@@ -113,7 +160,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'allowEmpty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
         ];
-        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'base_dn', $ldapSettings, $testCases);
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain.base_dn', $ldapSettings, $testCases);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_Hosts()
@@ -123,7 +170,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'required' => self::getRequirePresenceTestCases(),
         ];
 
-        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'hosts', $ldapSettings, $testCases);
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain.hosts', $ldapSettings, $testCases);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_Port()
@@ -134,7 +181,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'range' => self::getRangeTestCases(0, 65535),
         ];
-        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'port', $ldapSettings, $testCases);
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain.port', $ldapSettings, $testCases);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_ConnectionType()
@@ -145,7 +192,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'notEmpty' => self::getNotEmptyTestCases(),
             'inList' => self::getInListTestCases(LdapConfigurationForm::$connectionTypes),
         ];
-        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'connection_type', $ldapSettings, $testCases);
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain.connection_type', $ldapSettings, $testCases);
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_DefaultUser()
@@ -202,6 +249,96 @@ class LdapConfigurationFormTest extends AppTestCase
             ],
         ];
         $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'default_group_admin_user', $ldapSettings, $testCases);
+    }
+
+    /**
+     * Test
+     * Note: using dataProvider because the value to modify is an array
+     *
+     * @param string $dataPath
+     * @param array $data
+     * @param array $expectedErrors
+     * @return void
+     * @dataProvider provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping
+     */
+    public function testDirectoryLdapConfigurationFormValidateError_FieldsMapping(
+        string $dataPath,
+        array $data,
+        array $expectedErrors
+    ) {
+        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = Hash::insert($ldapSettings, $dataPath, $data);
+        $form = new LdapConfigurationForm();
+        static::assertFalse($form->validate($ldapSettings));
+        $errors = $form->getErrors();
+        static::assertSame($expectedErrors, $errors['fields_mapping']);
+    }
+
+    /**
+     * Provider for testDirectoryLdapConfigurationFormValidateError_FieldsMapping
+     *
+     * @return array[]
+     */
+    public function provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping(): array
+    {
+        return [
+            [
+                'dataPath' => 'fields_mapping.ad',
+                'data' => [],
+                'expectedErrors' => [
+                    'ad' => [
+                        'user' => [
+                            '_required' => 'The map configuration for `user` fields is required.',
+                        ],
+                        'group' => [
+                            '_required' => 'The map configuration for `group` fields is required.',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'dataPath' => 'fields_mapping.openldap',
+                'data' => [],
+                'expectedErrors' => [
+                    'openldap' => [
+                        'user' => [
+                            '_required' => 'The map configuration for `user` fields is required.',
+                        ],
+                        'group' => [
+                            '_required' => 'The map configuration for `group` fields is required.',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'dataPath' => 'fields_mapping.ad.user',
+                'data' => [
+                    'id' => 1234,
+                    'firstname' => 'custom2',
+                    'lastname' => 'custom3',
+                    'username' => 'custom4',
+                    'created' => 'custom5',
+                ],
+                'expectedErrors' => [
+                    'ad' => [
+                        'user' => [
+                            'id' => [
+                                'utf8' => 'The field name should be a valid BMP-UTF8 string.',
+                            ],
+                            'modified' => [
+                                '_required' => 'The map for this field is required.',
+                            ],
+                            'groups' => [
+                                '_required' => 'The map for this field is required.',
+                            ],
+                            'enabled' => [
+                                '_required' => 'The map for this field is required.',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ];
     }
 
     public function testDirectoryLdapConfigurationFormValidateError_GroupObjectClass()
@@ -361,7 +498,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
         $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.ldap_type'), 'ad');
         $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.domain_name'), 'ldap.passbolt.local');
-        $this->assertEquals($data['hosts'], Hash::get($config, 'ldap.domains.org_domain.hosts'));
+        $this->assertEquals($data['domains']['org_domain']['hosts'], Hash::get($config, 'ldap.domains.org_domain.hosts'));
         $this->assertIsArray(Hash::get($config, 'ldap.domains.org_domain.hosts'));
         $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.username'), 'root');
         $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.password'), 'password');
@@ -377,6 +514,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
         $this->assertEquals($data['group_custom_filters'], Hash::get($config, 'groupCustomFilters'));
         $this->assertEquals($data['user_custom_filters'], Hash::get($config, 'userCustomFilters'));
+        $this->assertEquals($data['fields_mapping'], Hash::get($config, 'fieldsMapping'));
     }
 
     /**
@@ -394,7 +532,7 @@ class LdapConfigurationFormTest extends AppTestCase
         $directoryOrgSettings->save($uac);
 
         $data = self::getDummyFormData();
-        unset($data['password']);
+        unset($data['domains']['org_domain']['password']);
         $config = LdapConfigurationForm::formatFormDataToOrgSettings($data);
 
         $this->assertEquals('test-password', Hash::get($config, 'ldap.domains.org_domain.password'));
@@ -405,14 +543,15 @@ class LdapConfigurationFormTest extends AppTestCase
         $settings = DirectoryOrgSettingsTest::getDummySettings();
         $formData = LdapConfigurationForm::formatOrgSettingsToFormData($settings);
 
-        $this->assertEquals('ad', $formData['directory_type']);
-        $this->assertEquals('passbolt.local', $formData['domain_name']);
-        $this->assertEquals('root', $formData['username']);
-        $this->assertIsArray($formData['hosts']);
-        $this->assertEquals($settings['ldap']['domains']['org_domain']['hosts'], $formData['hosts']);
-        $this->assertEquals('password', $formData['password']);
-        $this->assertEquals('ssl', $formData['connection_type']);
-        $this->assertEquals('OU=PassboltUsers,DC=passbolt,DC=local', $formData['base_dn']);
+        $this->assertEquals('ad', $formData['domains']['org_domain']['directory_type']);
+        $this->assertEquals('passbolt.local', $formData['domains']['org_domain']['domain_name']);
+        $this->assertEquals('root', $formData['domains']['org_domain']['username']);
+        $this->assertIsArray($formData['domains']['org_domain']['hosts']);
+        $this->assertEquals($settings['ldap']['domains']['org_domain']['hosts'], $formData['domains']['org_domain']['hosts']);
+        $this->assertEquals('password', $formData['domains']['org_domain']['password']);
+        $this->assertEquals('ssl', $formData['domains']['org_domain']['connection_type']);
+        $this->assertEquals('OU=PassboltUsers,DC=passbolt,DC=local', $formData['domains']['org_domain']['base_dn']);
+        $this->assertSame(LdapConfigurationForm::AUTHENTICATION_TYPE_BASIC, $formData['domains']['org_domain']['authentication_type']);
         $this->assertFalse(isset($formData['group_path']));
         $this->assertTrue($formData['sync_users_create']);
         $this->assertFalse($formData['sync_users_delete']);
@@ -420,7 +559,6 @@ class LdapConfigurationFormTest extends AppTestCase
         $this->assertTrue($formData['sync_groups_create']);
         $this->assertFalse($formData['sync_groups_delete']);
         $this->assertTrue($formData['sync_groups_update']);
-        $this->assertSame(LdapConfigurationForm::AUTHENTICATION_TYPE_BASIC, $formData['authentication_type']);
     }
 
     /**
@@ -431,7 +569,7 @@ class LdapConfigurationFormTest extends AppTestCase
     public function testDirectoryFormatFormDataToOrgSettings_withSasl()
     {
         $data = self::getDummyFormData();
-        $data['authentication_type'] = LdapConfigurationForm::AUTHENTICATION_TYPE_SASL;
+        $data['domains']['org_domain']['authentication_type'] = LdapConfigurationForm::AUTHENTICATION_TYPE_SASL;
         $config = LdapConfigurationForm::formatFormDataToOrgSettings($data);
         $this->assertSame(1, Hash::get($config, 'ldap.domains.org_domain.use_sasl'));
     }
@@ -448,6 +586,78 @@ class LdapConfigurationFormTest extends AppTestCase
 
         $formData = LdapConfigurationForm::formatOrgSettingsToFormData($settings);
 
-        $this->assertSame(LdapConfigurationForm::AUTHENTICATION_TYPE_SASL, $formData['authentication_type']);
+        $this->assertSame(LdapConfigurationForm::AUTHENTICATION_TYPE_SASL, $formData['domains']['org_domain']['authentication_type']);
+    }
+
+    /**
+     * Test Multidomain validation success
+     *
+     * @return void
+     */
+    public function testDirectoryLdapConfigurationFormMultiDomain()
+    {
+        $ldapSettings = self::getDummyFormData(true);
+        $form = new LdapConfigurationForm();
+        static::assertTrue($form->validate($ldapSettings));
+    }
+
+    /**
+     * Test
+     *
+     * @return void
+     */
+    public function testDirectoryLdapConfigurationFormValidateError_MultiDomainRequired()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = Hash::insert($ldapSettings, 'domains', []);
+        $form = new LdapConfigurationForm();
+        static::assertFalse($form->validate($ldapSettings));
+        $errors = $form->getErrors();
+        static::assertSame([
+            'hasAtLeast' => 'Need at least one domain configuration.',
+        ], $errors['domains']);
+    }
+
+    /**
+     * Test
+     *
+     * @return void
+     */
+    public function testDirectoryLdapConfigurationFormValidateError_DomainName_MultiDomain()
+    {
+        $ldapSettings = self::getDummyFormData(true);
+        $testCases = [
+            'required' => self::getRequirePresenceTestCases(),
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'utf8' => self::getUtf8TestCases(),
+        ];
+        $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'domains.org_domain_2.domain_name', $ldapSettings, $testCases);
+    }
+
+    /**
+     * Test
+     *
+     * @return void
+     */
+    public function testDirectoryLdapConfigurationFormValidateError_MultiDomain_InvalidConnectionName()
+    {
+        $ldapSettings = self::getDummyFormData();
+        $domainData = Hash::get($ldapSettings, 'domains.org_domain');
+        unset($ldapSettings['domains']['org_domain']);
+        $ldapSettings['domains']['org.domain'] = $domainData;
+        $form = new LdapConfigurationForm();
+        static::assertFalse($form->validate($ldapSettings));
+        $errors = $form->getErrors();
+        static::assertSame([
+            'connection_names' => 'The connection name `org.domain` should not contain dots',
+        ], $errors['domains']);
+    }
+
+    public function testDirectoryLdapConfiguration_Fields_Mapping_Is_Not_Required()
+    {
+        $ldapSettings = self::getDummyFormData();
+        unset($ldapSettings['fields_mapping']);
+        $form = new LdapConfigurationForm();
+        $this->assertTrue($form->validate($ldapSettings));
     }
 }

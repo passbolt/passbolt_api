@@ -134,8 +134,8 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->assertFalse($directoryOrgSettings->isEnabled());
 
         $formData = LdapConfigurationFormTest::getDummyFormData();
-        $formData['username'] = '';
-        $formData['password'] = '';
+        $formData['domains']['org_domain']['username'] = '';
+        $formData['domains']['org_domain']['password'] = '';
         $this->authenticateAs('admin');
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
@@ -146,8 +146,11 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
 
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $ldapSettings = $directoryOrgSettings->getLdapSettings();
-        $this->assertFalse(isset($ldapSettings['domains']['org_domain']['username']));
-        $this->assertFalse(isset($ldapSettings['domains']['org_domain']['password']));
+        $domains = Hash::get($ldapSettings, 'domains', []);
+        foreach ($domains as $domain) {
+            $this->assertFalse(isset($ldapSettings['domains'][$domain]['username']));
+            $this->assertFalse(isset($ldapSettings['domains'][$domain]['password']));
+        }
     }
 
     /**
@@ -159,7 +162,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySync_DirectorySettingsController_Update_InvalidSettings()
     {
         $formData = LdapConfigurationFormTest::getDummyFormData();
-        $formData['domain_name'] = '';
+        $formData['domains']['org_domain']['domain_name'] = '';
         $this->authenticateAs('admin');
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertError(400);
@@ -230,7 +233,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySync_DirectorySettingsController_Test_InvalidSettings()
     {
         $formData = LdapConfigurationFormTest::getDummyFormData();
-        $formData['domain_name'] = '';
+        $formData['domains']['org_domain']['domain_name'] = '';
         $this->authenticateAs('admin');
         $this->postJson('/directorysync/settings/test.json?api-version=2', $formData);
         $this->assertError(400);

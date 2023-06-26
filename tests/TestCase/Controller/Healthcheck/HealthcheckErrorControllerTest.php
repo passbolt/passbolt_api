@@ -24,7 +24,7 @@ class HealthcheckErrorControllerTest extends AppIntegrationTestCase
 {
     use IntegrationTestTrait;
 
-    public function testHealthcheckErrorDisabled()
+    public function testHealthcheckErrorController_Error_Disabled(): void
     {
         $og = Configure::read('passbolt.healthcheck.error');
         Configure::write('passbolt.healthcheck.error', false);
@@ -33,7 +33,7 @@ class HealthcheckErrorControllerTest extends AppIntegrationTestCase
         Configure::write('passbolt.healthcheck.error', $og);
     }
 
-    public function testHealthcheckErrorEnabled()
+    public function testHealthcheckErrorController_Error_Enabled(): void
     {
         $og = Configure::read('passbolt.healthcheck.error');
         Configure::write('passbolt.healthcheck.error', true);

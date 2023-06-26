@@ -51,7 +51,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         UsersFixture::class,
     ];
 
-    public function testUpdateResourcesSuccess_UpdateResourceMeta()
+    public function testUpdateResourcesController_Success_UpdateResourceMeta(): void
     {
         [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourceMeta();
         $this->authenticateAs('betty');
@@ -62,7 +62,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
             'uri' => 'https://r1-updated.com',
             'description' => 'R1 description updated',
         ];
-        $this->putJson("/resources/$r1->id.json?api-version=2", $data);
+        $this->putJson("/resources/$r1->id.json", $data);
         $this->assertSuccess();
 
         // Check the server response.
@@ -94,7 +94,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertSecretAttributes($resource->secrets[0]);
     }
 
-    private function insertFixture_UpdateResourceMeta()
+    private function insertFixture_UpdateResourceMeta(): array
     {
         // Ada is OWNER of resource R1
         // Betty is OWNER of resource R1
@@ -107,7 +107,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         return [$r1, $userAId, $userBId];
     }
 
-    public function testUpdateResourcesSuccess_UpdateResourceSecrets()
+    public function testUpdateResourcesController_Success_UpdateResourceSecrets(): void
     {
         [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_UpdateResourceSecrets();
         $this->authenticateAs('betty');
@@ -122,7 +122,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
                 ['user_id' => $userCId, 'data' => $r1EncryptedSecretC],
             ],
         ];
-        $this->putJson("/resources/$r1->id.json?api-version=2", $data);
+        $this->putJson("/resources/$r1->id.json", $data);
         $this->assertSuccess();
 
         // Check the server response.
@@ -155,7 +155,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEquals($r1EncryptedSecretB, $resourceUpdated->secrets[0]->data);
     }
 
-    private function insertFixture_UpdateResourceSecrets()
+    private function insertFixture_UpdateResourceSecrets(): array
     {
         // Ada is OWNER of resource R1
         // Betty is OWNER of resource R1
@@ -174,15 +174,15 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         return [$r1, $g1, $userAId, $userBId, $userCId];
     }
 
-    public function testUpdateResourcesError_NotValidId()
+    public function testUpdateResourcesController_Error_NotValidId(): void
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
-        $this->putJson("/resources/$resourceId.json?api-version=v2");
+        $this->putJson("/resources/$resourceId.json");
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
-    public function testUpdateResourcesError_ValidationErrors()
+    public function testUpdateResourcesController_Error_ValidationErrors(): void
     {
         [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourceMeta();
         $this->authenticateAs('ada');
@@ -190,20 +190,20 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $data = [
             'name' => '',
         ];
-        $this->putJson("/resources/$r1->id.json?api-version=2", $data);
+        $this->putJson("/resources/$r1->id.json", $data);
         $this->assertError(400, 'Could not validate resource data.');
     }
 
-    public function testUpdateResourcesError_CsrfToken()
+    public function testUpdateResourcesController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
-        $this->put("/resources/$resourceId.json?api-version=2");
+        $this->put("/resources/$resourceId.json");
         $this->assertResponseCode(403);
     }
 
-    public function testResourcesUpdateError_InsufficientPermission()
+    public function testUpdateResourcesController_Error_InsufficientPermission(): void
     {
         [$r1, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $data = [
@@ -214,7 +214,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertError(403, 'You are not allowed to update this resource.');
     }
 
-    private function insertFixture_InsufficientPermission()
+    private function insertFixture_InsufficientPermission(): array
     {
         // Ada is OWNER of resource R1
         // Betty has READ on resource R1
@@ -227,14 +227,14 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         return [$r1, $userAId, $userBId];
     }
 
-    public function testUpdateResourcesError_NotAuthenticated()
+    public function testUpdateResourcesController_Error_NotAuthenticated(): void
     {
         [$r1, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $this->putJson("/resources/$r1->id.json", []);
         $this->assertAuthenticationError();
     }
 
-    public function testUpdateResourcesError_ResourceDoesNotExist()
+    public function testUpdateResourcesController_Error_ResourceDoesNotExist(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
@@ -242,7 +242,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testUpdateResourcesError_NoAccessToResource()
+    public function testUpdateResourcesController_Error_NoAccessToResource(): void
     {
         [$r1, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $this->authenticateAs('dame');
@@ -250,11 +250,29 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testUpdateResourcesError_ResourceIsSoftDeleted()
+    public function testUpdateResourcesController_Error_ResourceIsSoftDeleted(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
         $this->putJson("/resources/$resourceId.json", []);
         $this->assertError(404, 'The resource does not exist.');
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testUpdateResourcesController_Error_NotJson(): void
+    {
+        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourceMeta();
+        $this->authenticateAs('betty');
+
+        $data = [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+        ];
+        $this->put("/resources/$r1->id", $data);
+        $this->assertResponseCode(404);
     }
 }

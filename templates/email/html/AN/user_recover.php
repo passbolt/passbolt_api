@@ -40,6 +40,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url('/setup/recover/' . $user['id'] . '/' . $token['token'] . '?case=' . $case, true),
+    'url' => Router::url('/setup/recover/start/' . $user['id'] . '/' . $token['token'] . '?case=' . $case, true),
     'text' => __('start recovery')
 ]);

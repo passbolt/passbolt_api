@@ -243,12 +243,12 @@ class RegisterUserCommand extends PassboltCommand
         if (EmailNotificationSettings::get('send.user.create')) {
             $message = __(
                 "To start registration follow the link provided in your mailbox or here: \n{0}",
-                Router::url('/setup/install/' . $user->id . '/' . $token->get('token'), true)
+                Router::url('/setup/start/' . $user->id . '/' . $token->get('token'), true)
             );
         } else {
             $message = __(
                 "To start registration follow the link provided here: \n{0}",
-                Router::url('/setup/install/' . $user->id . '/' . $token->get('token'), true)
+                Router::url('/setup/start/' . $user->id . '/' . $token->get('token'), true)
             );
         }
 

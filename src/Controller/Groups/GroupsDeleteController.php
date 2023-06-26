@@ -84,6 +84,8 @@ class GroupsDeleteController extends AppController
      */
     public function dryRun(string $id): void
     {
+        $this->assertJson();
+
         $group = $this->_validateRequestData($id);
         $this->_validateDelete($group);
         $resources = $this->Resources->findAllByGroupAccess($id);
@@ -100,6 +102,8 @@ class GroupsDeleteController extends AppController
      */
     public function delete(string $id)
     {
+        $this->assertJson();
+
         $this->GroupsUsers->getConnection()->transactional(function () use ($id) {
             $group = $this->_validateRequestData($id);
             $this->_transferContentOwners($group);

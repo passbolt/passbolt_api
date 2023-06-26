@@ -190,4 +190,26 @@ class RecoverAbortControllerTest extends AppIntegrationTestCase
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
     }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testRecoverAbortController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()->user()->active()->persist();
+        $token = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($user->id)
+            ->active()
+            ->persist();
+
+        $url = '/setup/recover/abort/' . $user->id;
+        $data = [
+            'authentication_token' => [
+                'token' => $token->token,
+            ],
+        ];
+        $this->post($url, $data);
+        $this->assertResponseCode(404);
+    }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Traits\Query\CaseSensitiveCompareValueTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
@@ -49,6 +50,8 @@ use Cake\Validation\Validator;
  */
 class TagsTable extends Table
 {
+    use CaseSensitiveCompareValueTrait;
+
     /**
      * Initialize method
      *
@@ -129,11 +132,13 @@ class TagsTable extends Table
      *
      * @param array|null $slugs The slugs to search
      * @return \Cake\ORM\Query
+     * @throws \Cake\Database\Exception\DatabaseException if $slugs is empty
      */
     public function findAllBySlugs(?array $slugs = [])
     {
-        return $this->find()
-            ->where(['slug IN' => $slugs]);
+        $query = $this->find();
+
+        return $query->where(['slug IN' => $this->getCaseSensitiveValues($query, $slugs)]);
     }
 
     /**
@@ -281,7 +286,6 @@ class TagsTable extends Table
             ->where(function ($exp, $q) {
                 return $exp->isNull('ResourcesTags.tag_id');
             });
-
         $tags = Hash::extract($query->toArray(), '{n}.id');
         if (count($tags)) {
             return $this->deleteAll(['id IN' => $tags]);
@@ -299,7 +303,10 @@ class TagsTable extends Table
      */
     public function findOrCreateTag(string $slug, UserAccessControl $control)
     {
-        $tagExists = $this->findBySlug($slug)->first();
+        $query = $this->find();
+
+        /** @var \Passbolt\Tags\Model\Entity\Tag|null $tagExists */
+        $tagExists = $query->where(['slug' => $this->getCaseSensitiveValue($query, $slug)])->first();
 
         if (!$tagExists) {
             if (mb_substr($slug, 0, 1) === '#' && !$control->isAdmin()) {

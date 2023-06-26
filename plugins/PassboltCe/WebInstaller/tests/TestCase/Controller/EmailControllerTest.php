@@ -20,6 +20,9 @@ use App\Test\Lib\Utility\EmailTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
+/**
+ * @covers \Passbolt\WebInstaller\Controller\EmailController
+ */
 class EmailControllerTest extends WebInstallerIntegrationTestCase
 {
     use EmailTestTrait;
@@ -73,6 +76,7 @@ class EmailControllerTest extends WebInstallerIntegrationTestCase
         ];
 
         $this->post('/install/email', $postData);
+
         $this->assertResponseOk();
         $this->assertResponseContains('The test email has been sent successfully!');
         $this->assertMailSentFromAt(0, ['sender@passbolt.com' => 'Passbolt Test']);

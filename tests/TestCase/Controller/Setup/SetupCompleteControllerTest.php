@@ -37,7 +37,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_Success()
+    public function testSetupCompleteController_Success(): void
     {
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         Configure::write('passbolt.plugins.log.enabled', true);
@@ -99,7 +99,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_Success_BackwardCompat()
+    public function testSetupCompleteController_Success_BackwardCompat(): void
     {
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         Configure::write('passbolt.plugins.log.enabled', true);
@@ -161,7 +161,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_SuccessEcc()
+    public function testSetupCompleteController_Success_Ecc(): void
     {
         $t = AuthenticationTokenFactory::make()
             ->active()
@@ -199,7 +199,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_ErrorWithExpiredKey()
+    public function testSetupCompleteController_Error_ExpiredKey(): void
     {
         // Complete setup with sofia's key (deleted user)
         $t = AuthenticationTokenFactory::make()
@@ -228,7 +228,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_ErrorWithWeakKey()
+    public function testSetupCompleteController_Error_WeakKey(): void
     {
         // Complete setup with sofia's key (deleted user)
         $t = AuthenticationTokenFactory::make()
@@ -257,7 +257,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_ErrorWithKeyBelongingToDeletedUser()
+    public function testSetupCompleteController_Error_KeyBelongingToDeletedUser(): void
     {
         // Complete setup with sofia's key (deleted user)
         $t = AuthenticationTokenFactory::make()
@@ -293,7 +293,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_InvalidUserIdError()
+    public function testSetupCompleteController_Error_InvalidUserId(): void
     {
         $url = '/setup/complete/nope.json';
         $data = [];
@@ -306,7 +306,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_InvalidUserTokenError()
+    public function testSetupCompleteController_Error_InvalidUserToken(): void
     {
         $url = '/setup/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
         $data = [];
@@ -319,10 +319,10 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_InvalidAuthenticationTokenError()
+    public function testSetupCompleteController_Error_InvalidAuthenticationToken(): void
     {
         $user = UserFactory::make()->inactive()->persist();
-        $url = '/setup/complete/' . $user->id . '.json?api-version=v2';
+        $url = '/setup/complete/' . $user->id . '.json';
         $tokenInactive = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_REGISTER)
             ->inactive()
@@ -380,7 +380,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_InvalidGpgkeyError()
+    public function testSetupCompleteController_Error_InvalidGpgkey(): void
     {
         $t = AuthenticationTokenFactory::make()
             ->active()
@@ -388,7 +388,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             ->with('Users', UserFactory::make()->inactive())
             ->persist();
         $user = $t->user;
-        $url = '/users/validateAccount/' . $user->id . '.json?api-version=v2';
+        $url = '/users/validateAccount/' . $user->id . '.json';
 
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
         $cutKey = substr($armoredKey, 0, strlen($armoredKey) / 2);
@@ -435,7 +435,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_DeletedUserError()
+    public function testSetupCompleteController_Error_DeletedUser(): void
     {
         $user = UserFactory::make()->active()->deleted()->persist();
         $url = '/setup/complete/' . $user->id . '.json';
@@ -448,7 +448,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_AlreadyActiveUserError()
+    public function testSetupCompleteController_Error_AlreadyActiveUser(): void
     {
         $user = UserFactory::make()->active()->persist();
         $url = '/setup/complete/' . $user->id . '.json';
@@ -461,7 +461,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_Error_FuturamaKey()
+    public function testSetupCompleteController_Error_FuturamaKey(): void
     {
         [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
         $t = AuthenticationTokenFactory::make()
@@ -494,7 +494,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      * @group setup
      * @group setupComplete
      */
-    public function testSetupComplete_Error_BrokenKey()
+    public function testSetupCompleteController_Error_BrokenKey(): void
     {
         OpenPGPBackendFactory::get()->deleteKey('26FD986838F4F9AB318FF56AE5DFCEE142949B78');
         $armoredKeyOk = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public.key');
@@ -524,5 +524,33 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $this->postJson($url, $data);
         $this->assertError(400, 'The OpenPGP key can not be used to encrypt.');
         $this->assertFalse(OpenPGPBackendFactory::get()->isKeyInKeyring('AE77104424962CDF8C2BB6A53C557610555EC24C'));
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testSetupCompleteController_Error_NotJson(): void
+    {
+        $t = AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->with('Users', UserFactory::make()->inactive())
+            ->persist();
+        $user = $t->user;
+        $url = '/setup/complete/' . $user->id;
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ruth_public.key');
+        $data = [
+            'authentication_token' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+            'user' => [
+                'locale' => 'fr-FR',
+            ],
+        ];
+        $this->post($url, $data);
+        $this->assertResponseCode(404);
     }
 }
