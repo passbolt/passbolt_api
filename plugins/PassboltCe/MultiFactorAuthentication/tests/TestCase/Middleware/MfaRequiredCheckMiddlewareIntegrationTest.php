@@ -50,7 +50,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
      */
     public function testMfaRequiredCheckMiddlewareVerifyNotNeededOnLogout()
     {
-        $this->get('/auth/logout');
+        $this->post('/auth/logout');
         $this->assertRedirect('/auth/login');
     }
 
