@@ -295,7 +295,7 @@ return [
                 'maxAttempts' => filter_var(env('PASSBOLT_SECURITY_MFA_MAX_ATTEMPTS', '4'), FILTER_VALIDATE_INT),
             ],
             // Disable GET /logout endpoint, closing potential CSRF issue and prevent logout usage via browser URL
-            'getLogoutEndpointEnabled' => filter_var(env('PASSBOLT_SECURITY_GET_LOGOUT_ENDPOINT_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            'getLogoutEndpointEnabled' => filter_var(env('PASSBOLT_SECURITY_GET_LOGOUT_ENDPOINT_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             // Prevent endpoints such as user recover to leak information whether an email is in use or not
             // This is disabled by default as it prevents legitimate users to know whether their accounts was disabled
             // as well as prevent open registration to work
