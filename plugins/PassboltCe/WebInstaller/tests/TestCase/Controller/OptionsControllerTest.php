@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
+use Cake\Core\Configure;
+use Cake\Routing\Router;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class OptionsControllerTest extends WebInstallerIntegrationTestCase
@@ -30,9 +32,27 @@ class OptionsControllerTest extends WebInstallerIntegrationTestCase
     public function testWebInstallerOptionViewSuccess()
     {
         $this->get('/install/options');
-        $data = $this->_getBodyAsString();
+        $html = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $this->assertStringContainsString('Options', $data);
+        $this->assertStringContainsString('Options', $html);
+        $this->assertStringContainsString('<option value="0" selected="selected">', $html);
+    }
+
+    /**
+     * SSL force dropdown option should be set to true if webinstaller is launched over https.
+     *
+     * @return void
+     */
+    public function testWebInstallerOptionViewOverHttps_Success()
+    {
+        Configure::write('App.fullBaseUrl', 'https://passbolt.local');
+
+        $this->get(Router::url('/install/options', true));
+
+        $html = $this->_getBodyAsString();
+        $this->assertResponseOk();
+        $this->assertStringContainsString('Options', $html);
+        $this->assertStringContainsString('<option value="1" selected="selected">', $html);
     }
 
     public function testWebInstallerOptionPostSuccess()

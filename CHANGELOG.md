@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.0-rc.2] - 2023-06-28
+### Fixed
+- PB-24273 As an admin I can disable the GET auth/logout.json endpoint (enabled by default)
+- PB-25274 Set force SSL config to false by default
+- PB-25276 Webinstaller SSL force option should be set to true if the installation is launched over https
+
 ## [4.1.0-rc.1] - 2023-06-26
 ### Added
 - PB-24259 As an administrator I can define with role based access control users' rights
