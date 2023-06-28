@@ -51,7 +51,7 @@ class ShareControllerTest extends AppIntegrationTestCase
         $this->gpg = OpenPGPBackendFactory::get();
     }
 
-    protected function getValidSecret()
+    protected function getValidSecret(): string
     {
         return '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -68,7 +68,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    public function testSuccess()
+    public function testShareController_Success(): void
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -117,7 +117,7 @@ hcciUFw5
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json?api-version=v2", $data);
+        $this->putJson("/share/resource/$resourceId.json", $data);
         $this->assertSuccess();
 
         // Load the resource.
@@ -211,11 +211,11 @@ hcciUFw5
     /**
      * @dataProvider dataForTestErrorValidation
      */
-    public function testErrorValidation($caseLabel, $case)
+    public function testShareController_Error_Validation($caseLabel, $case)
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json?api-version=2", $case['data']);
+        $this->putJson("/share/resource/$resourceId.json", $case['data']);
         $this->assertError();
         $errors = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($errors);
@@ -223,7 +223,7 @@ hcciUFw5
         $this->assertNotNull($error, "Expected error not found ({$case['errorField']}) for the case {$caseLabel}. Errors: " . json_encode($errors));
     }
 
-    public function testErrorNotValidResourceId()
+    public function testShareController_Error_NotValidResourceId(): void
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -231,7 +231,7 @@ hcciUFw5
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
-    public function testErrorDoesNotExistResource()
+    public function testShareController_Error_DoesNotExistResource(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
@@ -239,7 +239,7 @@ hcciUFw5
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorResourceIsSoftDeleted()
+    public function testShareController_Error_ResourceIsSoftDeleted(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -247,7 +247,7 @@ hcciUFw5
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorAccessDenied()
+    public function testShareController_Error_AccessDenied(): void
     {
         $testCases = [
             'Cannot share a resource if no permission' => [
@@ -266,10 +266,25 @@ hcciUFw5
         }
     }
 
-    public function testErrorNotAuthenticated()
+    public function testShareController_Error_NotAuthenticated(): void
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->putJson("/share/resource/$resourceId.json");
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testShareController_Error_NotJson(): void
+    {
+        // Define actors of this tests
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        // Build the changes.
+        $data = ['permissions' => []];
+
+        $this->authenticateAs('ada');
+        $this->put("/share/resource/$resourceId", $data);
+        $this->assertResponseCode(404);
     }
 }

@@ -31,7 +31,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Favorites',
          ];
 
-    public function testUpdateNotificationAddMemberSuccess()
+    public function testUpdateNotificationAddMemberSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -52,7 +52,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertEmailInBatchNotContains('And as group manager', 'carol@passbolt.com');
     }
 
-    public function testUpdateNotificationAddGroupManagerSuccess()
+    public function testUpdateNotificationAddGroupManagerSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -73,7 +73,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains('And as group manager', 'carol@passbolt.com');
     }
 
-    public function testUpdateNotificationAddUserDisabled()
+    public function testUpdateNotificationAddUserDisabled(): void
     {
         $this->setEmailNotificationSetting('send.group.user.add', false);
 
@@ -94,7 +94,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue('carol@passbolt.com');
     }
 
-    public function testUpdateNotificationRemoveMemberSuccess()
+    public function testUpdateNotificationRemoveMemberSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -111,7 +111,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains('You are no longer a member', 'kathleen@passbolt.com');
     }
 
-    public function testUpdateNotificationRemoveMemberDisabled()
+    public function testUpdateNotificationRemoveMemberDisabled(): void
     {
         $this->setEmailNotificationSetting('send.group.user.delete', false);
 
@@ -129,7 +129,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue('kathleen@passbolt.com');
     }
 
-    public function testUpdateNotificationUpdateMembershipSuccess()
+    public function testUpdateNotificationUpdateMembershipSuccess(): void
     {
         $this->setEmailNotificationSetting('send.group.user.delete', false);
 
@@ -157,7 +157,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         );
     }
 
-    public function testUpdateNotificationUpdateMembershipDisabled()
+    public function testUpdateNotificationUpdateMembershipDisabled(): void
     {
         $this->setEmailNotificationSetting('send.group.user.update', false);
 
@@ -178,7 +178,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue('nancy@passbolt.com');
     }
 
-    public function testUpdateNotificationAdminSummarySuccess()
+    public function testUpdateNotificationAdminSummarySuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.human_resource');
@@ -207,7 +207,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains('Wang Xiaoyun', 'thelma@passbolt.com');
     }
 
-    public function testUpdateNotificationUpdateAdminSummaryDisabled()
+    public function testUpdateNotificationUpdateAdminSummaryDisabled(): void
     {
         $this->setEmailNotificationSetting('send.group.manager.update', false);
 

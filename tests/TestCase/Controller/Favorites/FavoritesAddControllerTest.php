@@ -40,21 +40,21 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites', $config);
     }
 
-    public function testFavoritesAddController_Success()
+    public function testFavoritesAddController_Success(): void
     {
         $user = UserFactory::make()->user()->persist();
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
         $this->logInAs($user);
 
         $resourceId = $resource->get('id');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
+        $this->postJson("/favorites/resource/$resourceId.json");
         $this->assertSuccess();
 
         // Expected fields.
         $this->assertFavoriteAttributes($this->_responseJsonBody);
     }
 
-    public function testFavoritesAddController_CannotModifyNotAccessibleFields()
+    public function testFavoritesAddController_CannotModifyNotAccessibleFields(): void
     {
         $user = UserFactory::make()->user()->persist();
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
@@ -86,7 +86,7 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($favoriteData['user_id'], $favorite->user_id);
     }
 
-    public function testFavoritesAddController_ErrorCsrfToken()
+    public function testFavoritesAddController_ErrorCsrfToken(): void
     {
         $this->disableCsrfToken();
 
@@ -95,12 +95,12 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $resourceId = $resource->get('id');
         $this->logInAs($user);
 
-        $this->post("/favorites/resource/$resourceId.json?api-version=2");
+        $this->post("/favorites/resource/$resourceId.json");
 
         $this->assertResponseCode(403);
     }
 
-    public function testFavoritesAddController_ErrorNotValidId()
+    public function testFavoritesAddController_ErrorNotValidId(): void
     {
         $user = UserFactory::make()->user()->persist();
         $this->logInAs($user);
@@ -111,14 +111,28 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
-    public function testFavoritesAddController_ErrorNotAuthenticated()
+    public function testFavoritesAddController_ErrorNotAuthenticated(): void
     {
         $user = UserFactory::make()->user()->persist();
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
         $resourceId = $resource->get('id');
 
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
+        $this->postJson("/favorites/resource/$resourceId.json");
 
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testFavoritesAddController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $this->logInAs($user);
+
+        $resourceId = $resource->get('id');
+        $this->post("/favorites/resource/$resourceId");
+        $this->assertResponseCode(404);
     }
 }

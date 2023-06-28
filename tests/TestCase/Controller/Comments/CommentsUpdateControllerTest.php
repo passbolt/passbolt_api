@@ -25,7 +25,7 @@ use App\Utility\UuidFactory;
 
 class CommentsUpdateControllerTest extends AppIntegrationTestCase
 {
-    public function testCommentsUpdateController_Success()
+    public function testCommentsUpdateController_Success(): void
     {
         RoleFactory::make()->user()->persist();
         $user = UserFactory::make()->user()->persist();
@@ -35,7 +35,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
 
         $commentContent = 'updated comment content';
         $putData = ['content' => $commentContent];
-        $this->putJson("/comments/$commentId.json?api-version=2", $putData);
+        $this->putJson("/comments/$commentId.json", $putData);
         $this->assertSuccess();
 
         $comment = CommentFactory::find()
@@ -49,7 +49,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertTrue($comment->modified->wasWithinLast('1 second'));
     }
 
-    public function testCommentsUpdateController_ErrorCsrfToken()
+    public function testCommentsUpdateController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
 
@@ -58,19 +58,19 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $commentId = $comment->get('id');
         $this->logInAs($user);
 
-        $this->put("/comments/$commentId.json?api-version=2");
+        $this->put("/comments/$commentId.json");
         $this->assertResponseCode(403);
     }
 
-    public function testCommentsUpdateController_ErrorNotAuthenticated()
+    public function testCommentsUpdateController_Error_NotAuthenticated(): void
     {
         $commentId = UuidFactory::uuid();
         $postData = [];
-        $this->putJson("/comments/$commentId.json?api-version=v2", $postData);
+        $this->putJson("/comments/$commentId.json", $postData);
         $this->assertAuthenticationError();
     }
 
-    public function testCommentsUpdateController_NotAccessibleFields()
+    public function testCommentsUpdateController_NotAccessibleFields(): void
     {
         $commentatorId = UserFactory::make()->user()->persist()->get('id');
         $user = UserFactory::make()->user()->persist();
@@ -88,7 +88,7 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
             'modified_by' => $commentatorId,
         ];
 
-        $this->putJson("/comments/$commentId.json?api-version=v2", $commentData);
+        $this->putJson("/comments/$commentId.json", $commentData);
         $this->assertSuccess();
 
         // Check that the groups and its sub-models are saved as expected.
@@ -102,5 +102,22 @@ class CommentsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($commentData['modified'], $commentUpdated->modified);
         $this->assertNotEquals($commentData['created_by'], $commentUpdated->created_by);
         $this->assertNotEquals($commentData['modified_by'], $commentUpdated->modified_by);
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testCommentsUpdateController_Error_NotJson(): void
+    {
+        RoleFactory::make()->user()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $comment = CommentFactory::make()->withUser($user)->persist();
+        $commentId = $comment->get('id');
+        $this->logInAs($user);
+
+        $commentContent = 'updated comment content';
+        $putData = ['content' => $commentContent];
+        $this->put("/comments/$commentId", $putData);
+        $this->assertResponseCode(404);
     }
 }

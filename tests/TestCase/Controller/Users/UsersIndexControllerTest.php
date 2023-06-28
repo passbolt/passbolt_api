@@ -31,10 +31,10 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers',
     ];
 
-    public function testUsersIndexGetSuccess()
+    public function testUsersIndexController_Success(): void
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=2');
+        $this->getJson('/users.json');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
         $this->assertUserAttributes($this->_responseJsonBody[0]);
@@ -62,10 +62,10 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
 
     // As admin the request should also contain not active users.
 
-    public function testUsersIndexGetAsAdminSuccess()
+    public function testUsersIndexController_Success_AsAdmin(): void
     {
         $this->authenticateAs('admin');
-        $this->getJson('/users.json?api-version=2');
+        $this->getJson('/users.json');
         $usersIds = Hash::extract($this->_responseJsonBody, '{n}.id');
 
         // Should not contain inactive users.
@@ -77,7 +77,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertContains($activeUserId, $usersIds);
     }
 
-    public function testUsersIndexFilterByGroupsSuccess()
+    public function testUsersIndexController_Succes_FilterByGroups(): void
     {
         $this->authenticateAs('ada');
         $freelancersId = UuidFactory::uuid('group.id.freelancer');
@@ -87,7 +87,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
     }
 
-    public function testUsersIndexFilterByMultipleGroupsSuccess()
+    public function testUsersIndexController_Success_FilterByMultipleGroups(): void
     {
         $this->authenticateAs('ada');
         $hr = UuidFactory::uuid('group.id.human_resource');
@@ -102,7 +102,7 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals(count($this->_responseJsonBody), count($freelancers));
     }
 
-    public function testUsersIndexFilterByInvalidGroupsError()
+    public function testUsersIndexController_Error_FilterByInvalidGroups(): void
     {
         $this->authenticateAs('ada');
         $hr = UuidFactory::uuid('group.id.human_resource');
@@ -124,57 +124,67 @@ class UsersIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals(count($this->_responseJsonBody), 0);
     }
 
-    public function testUsersIndexFilterBySearchSuccess()
+    public function testUsersIndexController_Success_FilterBySearch(): void
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v2&filter[search]=ovela');
+        $this->getJson('/users.json?filter[search]=ovela');
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 1);
         $this->assertEquals($this->_responseJsonBody[0]->profile->last_name, 'Lovelace');
 
-        $this->getJson('/users.json?api-version=v2&filter[search]=wang@passbolt');
+        $this->getJson('/users.json?filter[search]=wang@passbolt');
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 1);
         $this->assertEquals($this->_responseJsonBody[0]->profile->last_name, 'Xiaoyun');
 
         // Deleted user should not be shown
-        $this->getJson('/users.json?api-version=v2&filter[search]=sofia');
+        $this->getJson('/users.json?filter[search]=sofia');
         $this->assertSuccess();
         $this->assertEquals(count($this->_responseJsonBody), 0);
     }
 
-    public function testUsersIndexFilterByInvalidSearchError()
+    public function testUsersIndexController_Error_FilterByInvalidSearch(): void
     {
         $this->authenticateAs('ada');
         // too long
         $lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
-        $this->getJson('/users.json?api-version=v2&filter[search]=' . $lorem);
+        $this->getJson('/users.json?filter[search]=' . $lorem);
         $this->assertError(400);
         // not utf8
         $emo = '🔥🔥🔥';
-        $this->getJson('/users.json?api-version=v2&filter[search]=' . $emo);
+        $this->getJson('/users.json?filter[search]=' . $emo);
         $this->assertError(400);
     }
 
-    public function testUsersIndexFilterActiveAsAdminSuccess()
+    public function testUsersIndexController_Success_FilterActiveAsAdmin(): void
     {
         $this->authenticateAs('admin');
-        $this->getJson('/users.json?api-version=v2&filter[is-active]=0');
+        $this->getJson('/users.json?filter[is-active]=0');
         $this->assertEquals($this->_responseJsonBody[0]->profile->first_name, 'Ruth');
         $this->assertSuccess();
     }
 
-    public function testUsersIndexFilterActiveNonAdmin()
+    public function testUsersIndexController_Success_FilterActiveNonAdmin(): void
     {
         $this->authenticateAs('ada');
-        $this->getJson('/users.json?api-version=v2&filter[is-active]=0');
+        $this->getJson('/users.json?filter[is-active]=0');
         $this->assertNotEquals(count($this->_responseJsonBody), 1);
         $this->assertSuccess();
     }
 
-    public function testUsersIndexErrorNotAuthenticated()
+    public function testUsersIndexController_Error_NotAuthenticated(): void
     {
         $this->getJson('/users.json');
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testUsersIndexController_Error_NotJson(): void
+    {
+        $this->logInAsUser();
+        $this->get('/users');
+        $this->assertResponseCode(404);
     }
 }

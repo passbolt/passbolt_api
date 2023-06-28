@@ -67,4 +67,15 @@ class DebugTransport extends SmtpTransport
 
         return $n === 0 ? null : $this->messages[$n - 1];
     }
+
+    /**
+     * Returns trace.
+     * Ideally you would mock this method and then set it in TransportFactory to get the desired trace.
+     *
+     * @return array
+     */
+    public function getTrace(): array
+    {
+        return [];
+    }
 }

@@ -278,6 +278,8 @@ return [
             'userAgent' => filter_var(env('PASSBOLT_SECURITY_USER_AGENT', true), FILTER_VALIDATE_BOOLEAN),
             // enables the storage and display if the user IP address
             'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
+
+            // Disable SMTP setting endpoint to prevent/lock down SMTP configuration via the administration workspace
             'smtpSettings' => [
                 'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
             ],
@@ -289,8 +291,15 @@ return [
                 'trustedProxies' => [],
             ],
             'mfa' => [
-                'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN)
+                'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN),
+                'maxAttempts' => filter_var(env('PASSBOLT_SECURITY_MFA_MAX_ATTEMPTS', '4'), FILTER_VALIDATE_INT),
             ],
+            // Disable GET /logout endpoint, closing potential CSRF issue and prevent logout usage via browser URL
+            'getLogoutEndpointEnabled' => filter_var(env('PASSBOLT_SECURITY_GET_LOGOUT_ENDPOINT_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            // Prevent endpoints such as user recover to leak information whether an email is in use or not
+            // This is disabled by default as it prevents legitimate users to know whether their accounts was disabled
+            // as well as prevent open registration to work
+            'preventEmailEnumeration' => filter_var(env('PASSBOLT_SECURITY_PREVENT_EMAIL_ENUMERATION', false), FILTER_VALIDATE_BOOLEAN),
         ],
 
         // Should the app be SSL / HTTPS only.

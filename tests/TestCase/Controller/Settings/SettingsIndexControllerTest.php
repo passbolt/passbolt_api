@@ -23,10 +23,10 @@ use Cake\Core\Configure;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
-    public function testSettingsIndexController_SuccessAsLU()
+    public function testSettingsIndexController_SuccessAsLU(): void
     {
         $this->logInAsUser();
-        $this->getJson('/settings.json?api-version=2');
+        $this->getJson('/settings.json');
         $this->assertSuccess();
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
         $this->assertGreaterThan(1, count((array)$this->_responseJsonBody->app));
@@ -42,9 +42,9 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->accountRecoveryRequestHelp->enabled));
     }
 
-    public function testSettingsIndexController_SuccessAsAN()
+    public function testSettingsIndexController_SuccessAsAN(): void
     {
-        $this->getJson('/settings.json?api-version=2');
+        $this->getJson('/settings.json');
         $this->assertSuccess();
         $this->assertGreaterThan(0, count((array)$this->_responseJsonBody));
         $this->assertFalse(isset($this->_responseJsonBody->app->version));
@@ -63,13 +63,23 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertFalse(isset($this->_responseJsonBody->passbolt->email));
     }
 
-    public function testSettingsIndexController_SuccessAsAN_With_Email_Regex_Defined()
+    public function testSettingsIndexController_SuccessAsAN_With_Email_Regex_Defined(): void
     {
         $regex = 'Foo';
         Configure::write(EmailValidationRule::REGEX_CHECK_KEY, $regex);
-        $this->getJson('/settings.json?api-version=2');
+        $this->getJson('/settings.json');
         $this->assertSuccess();
 
         $this->assertSame($regex, $this->_responseJsonBody->passbolt->email->validate->regex);
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testSettingsIndexController_Error_NotJson(): void
+    {
+        $this->logInAsUser();
+        $this->get('/settings');
+        $this->assertResponseCode(404);
     }
 }

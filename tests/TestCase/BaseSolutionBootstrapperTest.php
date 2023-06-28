@@ -36,6 +36,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 {
     public const EXPECTED_CE_PLUGINS = [
         'Passbolt/JwtAuthentication',
+        'Passbolt/Rbacs',
         'Passbolt/AccountSettings',
         'Passbolt/Import',
         'Passbolt/InFormIntegration',

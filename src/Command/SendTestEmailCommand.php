@@ -26,21 +26,22 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Hash;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 
 class SendTestEmailCommand extends PassboltCommand
 {
     /**
-     * @var \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService
+     * @var \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService
      */
     public $sendTestEmailService;
 
     /**
      * Injects the service to facilitate the unit testing of the command
      *
-     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service to send test email.
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service to send test email.
      */
-    public function __construct(SmtpSettingsSendTestEmailService $sendTestEmailService)
+    public function __construct(SmtpSettingsTestEmailService $sendTestEmailService)
     {
         parent::__construct();
         $this->sendTestEmailService = $sendTestEmailService;
@@ -88,7 +89,7 @@ class SendTestEmailCommand extends PassboltCommand
             $this->abort();
         }
 
-        $transportConfig[SmtpSettingsSendTestEmailService::EMAIL_TEST_TO] = $recipient;
+        $transportConfig[SmtpSettingsSendTestMailerService::EMAIL_TEST_TO] = $recipient;
 
         $this->checkFromIsSet($transportConfig, $io);
 
@@ -198,49 +199,14 @@ class SendTestEmailCommand extends PassboltCommand
         $io->out('<info>Trace</info>');
         foreach ($trace as $entry) {
             if (isset($entry['cmd'])) {
-                $cmd = $this->removeCredentials($entry['cmd']);
-                $io->out("<info> {$cmd}</info>");
+                $io->out("<info> {$entry['cmd']}</info>");
             }
             if (!empty($entry['response'])) {
                 foreach ($entry['response'] as $response) {
-                    $msg = $this->removeCredentials($response['message']);
-                    $io->out("[{$response['code']}] {$msg}");
+                    $io->out("[{$response['code']}] {$response['message']}");
                 }
             }
         }
-    }
-
-    /**
-     * Remove credentials (username and password) from a string.
-     *
-     * @param string $str string where to remove the credentials
-     * @return mixed
-     */
-    protected function removeCredentials($str)
-    {
-        $toReplace = [];
-        $replaceMask = '*****';
-        $replaceWith = [];
-        $transportConfig = TransportFactory::getConfig('default');
-
-        if (isset($transportConfig['username'])) {
-            $usernameEncoded = base64_encode($transportConfig['username']);
-            $usernameClear = $transportConfig['username'];
-            $toReplace[] = $usernameClear;
-            $replaceWith[] = $replaceMask;
-            $toReplace[] = $usernameEncoded;
-            $replaceWith[] = $replaceMask;
-        }
-        if (isset($transportConfig['password'])) {
-            $passwordEncoded = base64_encode($transportConfig['password']);
-            $passwordClear = $transportConfig['password'];
-            $toReplace[] = $passwordEncoded;
-            $replaceWith[] = $replaceMask;
-            $toReplace[] = $passwordClear;
-            $replaceWith[] = $replaceMask;
-        }
-
-        return str_replace($toReplace, $replaceWith, $str);
     }
 
     /**

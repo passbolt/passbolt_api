@@ -78,7 +78,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
      * @return void
      * @throws \Exception
      */
-    public function testResourcesIndexPagination(?string $sortedField = null, string $direction = 'asc', ?string $path = null)
+    public function testResourcesIndexController_SuccessPagination(?string $sortedField = null, string $direction = 'asc', ?string $path = null)
     {
         $numberOfResources = 19;
         $limit = 10;
@@ -112,7 +112,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $this->assertBodyContentIsSorted($path ?? 'name', $direction);
     }
 
-    public function testResourcesIndexPaginationWithLegacyOrder()
+    public function testResourcesIndexController_SuccessPaginationWithLegacyOrder(): void
     {
         $numberOfResources = 11;
         $limit = 10;
@@ -138,7 +138,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $this->assertBodyContentIsSorted('modified', 'desc');
     }
 
-    public function testResourcesIndexPaginationWithLegacyOrderAndApiComponent()
+    public function testResourcesIndexController_SuccessPaginationWithLegacyOrderAndApiComponent(): void
     {
         $numberOfResources = 11;
         $limit = 10;

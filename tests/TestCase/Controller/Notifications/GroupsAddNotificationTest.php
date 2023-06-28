@@ -34,7 +34,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
           'app.Base/Gpgkeys',
     ];
 
-    public function testGroupsUsersAddNotificationDisabled()
+    public function testGroupsUsersAddNotificationDisabled(): void
     {
         $this->setEmailNotificationSetting('send.group.user.add', false);
 
@@ -52,7 +52,7 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
         $this->assertEmailQueueIsEmpty();
     }
 
-    public function testGroupsUsersAddNotificationSuccess()
+    public function testGroupsUsersAddNotificationSuccess(): void
     {
         $this->setEmailNotificationSetting('send.group.user.add', true);
 

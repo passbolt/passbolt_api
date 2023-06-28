@@ -67,8 +67,8 @@
         "ext-pdo": "*",
         "ext-curl": "*",
         "cakephp/cakephp": "^4.4.11",
-        "cakephp/migrations": "dev-master",
-        "robmorgan/phinx": "0.x-dev",
+        "cakephp/migrations": "dev-master#46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2",
+        "robmorgan/phinx": "0.x-dev#a409b03e1e3e5f8f60d0d3179704abc9bc80e817",
         "cakephp/plugin-installer": "^1.3.1",
         "mobiledetect/mobiledetectlib": "^2.8.39",
         "ramsey/uuid": "^4.2.3",
@@ -94,7 +94,7 @@
         "passbolt/cakephp-codesniffer": "dev-master",
         "passbolt/passbolt-selenium-api": "dev-master#ade46d4c3095b18316cbb0553f875c50a4dd67b9",
         "passbolt/passbolt-test-data": "^3.2.0",
-        "vierge-noire/cakephp-fixture-factories": "^v2.8.0",
+        "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
         "cakephp/localized": "4.0.0",
         "vimeo/psalm": "^4.23.0"
     },
@@ -120,7 +120,8 @@
             "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/PassboltCe/MultiFactorAuthentication/src",
             "Passbolt\\SelfRegistration\\": "./plugins/PassboltCe/SelfRegistration/src",
-            "Passbolt\\TotpResourceTypes\\": "./plugins/PassboltCe/TotpResourceTypes/src"
+            "Passbolt\\TotpResourceTypes\\": "./plugins/PassboltCe/TotpResourceTypes/src",
+            "Passbolt\\Rbacs\\": "./plugins/PassboltCe/Rbacs/src"
         }
     },
     "autoload-dev": {
@@ -142,7 +143,8 @@
             "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests",
             "Passbolt\\SelfRegistration\\Test\\": "./plugins/PassboltCe/SelfRegistration/tests",
             "Passbolt\\ResourceTypes\\Test\\": "./plugins/PassboltCe/ResourceTypes/tests",
-            "Passbolt\\TotpResourceTypes\\Test\\": "./plugins/PassboltCe/TotpResourceTypes/tests"
+            "Passbolt\\TotpResourceTypes\\Test\\": "./plugins/PassboltCe/TotpResourceTypes/tests",
+            "Passbolt\\Rbacs\\Test\\": "./plugins/PassboltCe/Rbacs/tests"
         }
     },
     "scripts": {
