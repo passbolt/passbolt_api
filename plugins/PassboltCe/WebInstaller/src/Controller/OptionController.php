@@ -57,6 +57,10 @@ class OptionController extends WebInstallerController
             }
         }
 
+        // Set SSL force dropdown option to true if webinstaller is launched over https
+        $forceSsl = $this->request->getUri()->getScheme() === 'https' ? '1' : '0';
+        $this->request = $this->request->withData('force_ssl', $forceSsl);
+
         $this->set('formExecuteResult', null);
         $this->render($this->stepInfo['template']);
     }

@@ -19,17 +19,18 @@ namespace App\Controller\Auth;
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
-use Cake\Http\Response;
 use Cake\Routing\Exception\MissingRouteException;
 
 class AuthLogoutController extends AppController
 {
+    public const GET_LOGOUT_ENDPOINT_ENABLED_CONFIG = 'passbolt.security.getLogoutEndpointEnabled';
+
     /**
      * @inheritDoc
      */
     public function beforeFilter(EventInterface $event)
     {
-        $this->assertGetJsonEndPointIsEnabled();
+        $this->assertGetEndPointIsEnabled();
         $this->Authentication->allowUnauthenticated(['logout']);
 
         return parent::beforeFilter($event);
@@ -38,25 +39,32 @@ class AuthLogoutController extends AppController
     /**
      * User logout action
      *
-     * @return \Cake\Http\Response|null
+     * @return void
      */
-    public function logout(): ?Response
+    public function logout(): void
     {
-        return $this->redirect($this->Authentication->logout());
+        $logoutRedirect = $this->Authentication->logout();
+
+        $isJson = $this->getRequest()->is('json');
+        if (!$isJson) {
+            $this->redirect($logoutRedirect);
+        }
+
+        $this->success(__('You are successfully logged out.'));
     }
 
     /**
-     * If the request is GET and Json, the endpoint is deactivated by default
+     * If the request is GET, the endpoint is deactivated by default
      * and should be explicitly activated in configs
      *
      * @return void
      * @throws \Cake\Routing\Exception\MissingRouteException if the end point is disabled
      */
-    private function assertGetJsonEndPointIsEnabled(): void
+    private function assertGetEndPointIsEnabled(): void
     {
-        $isGetJsonEndpoint = $this->getRequest()->is('json') && $this->getRequest()->is('GET');
-        $isGetJsonEndpointEnabled = Configure::read('passbolt.security.getLogoutEndpointEnabled');
-        if ($isGetJsonEndpoint && !$isGetJsonEndpointEnabled) {
+        $isGetRequest = $this->getRequest()->is('GET');
+        $isGetLogoutEndpointEnabled = Configure::read(self::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG);
+        if ($isGetRequest && !$isGetLogoutEndpointEnabled) {
             throw new MissingRouteException(__('The logout route should only be accessed with POST method.'));
         }
     }
