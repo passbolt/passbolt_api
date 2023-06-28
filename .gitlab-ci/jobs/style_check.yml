@@ -1,30 +1,18 @@
-.cs-check:
+.static-analysis:
   stage: unit-test
   variables:
     PHP_VERSION: "7.4"
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
-  allow_failure: true
+  allow_failure: false
   script:
     - composer config --global process-timeout 2000
     - composer install --dev --no-interaction
     - composer cs-check
     - composer stan
     - composer psalm
-    - composer audit
 
-check-style-strict:
-  extends: .cs-check
-  allow_failure: false
-  rules:
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "common"'
-      when: on_success
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
-      when: on_success
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
-      when: on_success
-
-check-style:
-  extends: .cs-check
+static-analysis:
+  extends: .static-analysis
   rules:
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "common"'
       when: on_success

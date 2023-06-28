@@ -29,7 +29,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
 
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
-    public function testUserRegisterNotificationDisabled()
+    public function testUserRegisterNotificationDisabled(): void
     {
         $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.create', false);
@@ -47,7 +47,7 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue('aurore@passbolt.com');
     }
 
-    public function testUserRegisterNotificationSuccess()
+    public function testUserRegisterNotificationSuccess(): void
     {
         $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.create', true);

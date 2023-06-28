@@ -45,6 +45,8 @@ class ShareSearchController extends AppController
      */
     public function searchArosToShareWith()
     {
+        $this->assertJson();
+
         /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
         /** @phpstan-ignore-next-line */

@@ -62,6 +62,8 @@ class PermissionsViewController extends AppController
      */
     public function viewAcoPermissions(string $acoForeignKey)
     {
+        $this->assertJson();
+
         // Check request sanity
         if (!Validation::uuid($acoForeignKey)) {
             throw new BadRequestException(__('The identifier should be a valid UUID.'));

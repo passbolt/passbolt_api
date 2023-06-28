@@ -33,7 +33,7 @@ class ResourcesAddNotificationTest extends AppIntegrationTestCase
         'app.Base/ResourceTypes',
     ];
 
-    protected function _getGpgMessage()
+    protected function _getGpgMessage(): string
     {
         return '-----BEGIN PGP MESSAGE-----
 
@@ -54,7 +54,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 -----END PGP MESSAGE-----';
     }
 
-    protected function _getDummyPostData($data = [])
+    protected function _getDummyPostData($data = []): array
     {
         $defaultData = [
             'name' => 'new resource name',
@@ -84,7 +84,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         parent::tearDown();
     }
 
-    public function testResourcesAddNotificationDisabled()
+    public function testResourcesAddNotificationDisabled(): void
     {
         $this->setEmailNotificationSetting('send.password.create', false);
 
@@ -97,7 +97,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertEmailWithRecipientIsInNotQueue('ada@passbolt.com');
     }
 
-    public function testResourcesAddNotificationSuccess()
+    public function testResourcesAddNotificationSuccess(): void
     {
         $this->setEmailNotificationSetting('send.password.create', true);
 

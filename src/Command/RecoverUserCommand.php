@@ -87,7 +87,7 @@ class RecoverUserCommand extends PassboltCommand
             $token = $this->fetchExistingActiveTokenOrAbort($user, $io);
         }
 
-        $recoverUrl = Router::url('/setup/recover/' . $user['id'] . '/' . $token['token'], true);
+        $recoverUrl = Router::url('/setup/recover/start/' . $user['id'] . '/' . $token['token'], true);
 
         $io->success("The user {$username} can recover its account here:");
         $io->success($recoverUrl);

@@ -30,7 +30,7 @@ class UsersDeleteNotificationTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers', 'app.Base/Permissions',
     ];
 
-    public function testUsersDeleteNotificationSuccess()
+    public function testUsersDeleteNotificationSuccess(): void
     {
         $this->authenticateAs('admin');
         $francesId = UuidFactory::uuid('user.id.ursula');

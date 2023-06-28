@@ -24,19 +24,47 @@ class AuthVerifyControllerTest extends AppIntegrationTestCase
 {
     use IntegrationTestTrait;
 
-    public function testAuthVerifyControllerUserGetSuccess()
+    /**
+     * Test 200 returns public key and fingerprint
+     */
+    public function testAuthVerifyController_Success_Get(): void
     {
         $this->get('/auth/verify.json');
+        $this->assertResponseOk();
+
+        // Check props
         $data = json_decode($this->_getBodyAsString());
+        $this->assertTrue(isset($data->body->fingerprint));
+        $this->assertTrue(isset($data->body->keydata));
         $this->assertEquals(Configure::read('passbolt.gpg.serverKey.fingerprint'), $data->body->fingerprint);
         $this->assertTextContains('-----BEGIN PGP PUBLIC KEY BLOCK-----', $data->body->keydata);
+    }
+
+    /**
+     * Test 200 using address provided in the headers
+     */
+    public function testAuthVerifyController_Success_FollowingAuthLoginHeaders(): void
+    {
+        // get the server public key
+        $this->get('/auth/login');
+        $verifyUrl = $this->_response->getHeader('X-GPGAuth-Pubkey-URL')[0];
+
+        // Follow the white rabbit
+        $this->get($verifyUrl);
         $this->assertResponseOk();
+
+        // Check props
+        $data = json_decode($this->_getBodyAsString());
+        $this->assertTrue(isset($data->body->fingerprint));
+        $this->assertTrue(isset($data->body->keydata));
+        $this->assertEquals(Configure::read('passbolt.gpg.serverKey.fingerprint'), $data->body->fingerprint);
+        $this->assertTextContains('-----BEGIN PGP PUBLIC KEY BLOCK-----', $data->body->keydata);
     }
 
     /**
      * Test error 500 if config is invalid
      */
-    public function testAuthVerifyControllerBadConfig()
+    public function testAuthVerifyController_Error_BadConfig(): void
     {
         Configure::write('passbolt.gpg.serverKey.public', 'wrong');
         $this->get('/auth/verify.json');
@@ -47,18 +75,11 @@ class AuthVerifyControllerTest extends AppIntegrationTestCase
     }
 
     /**
-     * Test that the passbolt instance public keys is available in the address provided in the headers
+     * Check that calling url without JSON extension throws a 404
      */
-    public function testAuthVerifyControllerGetServerPublicKey()
+    public function testAuthVerifyController_Error_NotJson(): void
     {
-        // get the server public key
-        $this->get('/auth/login');
-        $verifyUrl = $this->_response->getHeader('X-GPGAuth-Pubkey-URL')[0];
-        $this->get($verifyUrl);
-        $result = json_decode($this->_getBodyAsString());
-        $this->assertTrue(isset($result->body->fingerprint));
-        $this->assertTrue(isset($result->body->keydata));
-        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        $this->assertEquals($result->body->fingerprint, $fingerprint);
+        $this->get('/auth/verify');
+        $this->assertResponseCode(404);
     }
 }

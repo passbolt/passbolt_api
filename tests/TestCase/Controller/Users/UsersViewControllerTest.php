@@ -34,7 +34,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         RoleFactory::make()->guest()->persist();
     }
 
-    public function testUsersViewGetSuccess()
+    public function testUsersViewController_Success(): void
     {
         $user = UserFactory::make()->user()
             ->with('Profiles.Avatars')
@@ -43,7 +43,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
             ->persist();
         $this->logInAs($user);
 
-        $this->getJson('/users/' . $user->id . '.json?api-version=2');
+        $this->getJson('/users/' . $user->id . '.json');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -60,12 +60,12 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertGroupUserAttributes($this->_responseJsonBody->groups_users[0]);
     }
 
-    public function testUsersViewGetMeSuccess()
+    public function testUsersViewController_Success_Me(): void
     {
         $user = UserFactory::make()->user()->persist();
         $this->logInAs($user);
 
-        $this->getJson('/users/me.json?api-version=v2');
+        $this->getJson('/users/me.json');
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
 
@@ -73,24 +73,40 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertEquals($this->_responseJsonBody->id, $user->id);
     }
 
-    public function testUsersViewNotLoggedInError()
+    public function testUsersViewController_Error_NotLoggedIn(): void
     {
         $this->getJson('/users/me.json');
         $this->assertAuthenticationError();
     }
 
-    public function testUsersViewInvalidIdError()
+    public function testUsersViewController_Error_InvalidId(): void
     {
         $this->authenticateAs('ada');
         $this->getJson('/users/notuuid.json');
         $this->assertError(400, 'The user identifier should be a valid UUID or "me".');
     }
 
-    public function testUsersViewUserDoesNotExistError()
+    public function testUsersViewController_Error_NotFound(): void
     {
         $this->authenticateAs('ada');
         $uuid = UuidFactory::uuid('user.id.notauser');
         $this->getJson('/users/' . $uuid . '.json');
         $this->assertError(404, 'The user does not exist.');
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testUsersViewController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()->user()
+            ->with('Profiles.Avatars')
+            ->with('Gpgkeys')
+            ->with('GroupsUsers')
+            ->persist();
+        $this->logInAs($user);
+
+        $this->get('/users/' . $user->id);
+        $this->assertResponseCode(404);
     }
 }

@@ -21,11 +21,9 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PaginationTestTrait;
-use Cake\TestSuite\IntegrationTestTrait;
 
 class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
 {
-    use IntegrationTestTrait;
     use PaginationTestTrait;
 
     /**
@@ -62,7 +60,7 @@ class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
      * @return void
      * @throws \Exception
      */
-    public function testDefaultPaginationSettings()
+    public function testDefaultPaginationSettings(): void
     {
         $numberOfResources = 19;
         $limit = 10;

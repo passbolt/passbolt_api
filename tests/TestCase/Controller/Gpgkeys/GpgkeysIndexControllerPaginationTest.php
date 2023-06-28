@@ -48,7 +48,7 @@ class GpgkeysIndexControllerPaginationTest extends AppIntegrationTestCase
      * @return void
      * @throws \Exception
      */
-    public function testGpgkeysIndexPagination(?string $sortedField = null, string $direction = 'asc', ?string $path = null)
+    public function testGpgkeysIndexController_Pagination(?string $sortedField = null, string $direction = 'asc', ?string $path = null)
     {
         // There is already one in the db by default
         $numberOfGpgkeys = 19 - 1;
