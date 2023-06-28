@@ -54,11 +54,6 @@ class DatabaseController extends WebInstallerController
     ];
 
     /**
-     * @var \App\Model\Table\UsersTable
-     */
-    protected $Users;
-
-    /**
      * Initialize.
      *
      * @return void
@@ -83,9 +78,6 @@ class DatabaseController extends WebInstallerController
             $this->stepInfo['defaultConfig'] = array_merge($this->configFileDefault, $this->configFile);
             $this->defaultPassword = UuidFactory::uuid('__default_password__');
         }
-
-        /** @phpstan-ignore-next-line */
-        $this->Users = $this->fetchTable('Users');
     }
 
     /**
@@ -171,8 +163,12 @@ class DatabaseController extends WebInstallerController
 
         DatabaseConfiguration::validateSchema();
 
-        $nbAdmins = $this->Users->find()
-            ->where(['role_id' => $this->Users->Roles->getIdByName(Role::ADMIN)])
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
+
+        $nbAdmins = $usersTable
+            ->find()
+            ->where(['role_id' => $usersTable->Roles->getIdByName(Role::ADMIN)])
             ->count();
 
         return $nbAdmins > 0;

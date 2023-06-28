@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Users;
 
+use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\GetOrgLocaleService;
@@ -227,5 +229,28 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         ];
         $this->post('/users/register', $data);
         $this->assertResponseCode(404);
+    }
+
+    /**
+     * Check if security.preventUserEnumeration flag is set to true
+     * that API pretends that user is created to prevent knowing that a user is already present
+     */
+    public function testUsersRegisterController_Error_PreventUserEnumeration(): void
+    {
+        Configure::write(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY, true);
+        $data = [
+            'username' => 'aurore@passbolt.com',
+            'profile' => [
+                'first_name' => 'Aurore',
+                'last_name' => 'Avarguès-Weber',
+            ],
+            'locale' => 'fr-FR',
+        ];
+
+        $this->postJson('/users/register.json', $data);
+        $this->assertResponseCode(404);
+        $this->assertResponseContains('Registration is not opened to public. ');
+        $this->assertResponseContains('This is due to a security setting. ');
+        $this->assertResponseContains('Please contact your administrator.');
     }
 }
