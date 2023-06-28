@@ -305,7 +305,7 @@ return [
         // Should the app be SSL / HTTPS only.
         // false will render your installation insecure.
         'ssl' => [
-            'force' => filter_var(env('PASSBOLT_SSL_FORCE', true), FILTER_VALIDATE_BOOLEAN)
+            'force' => filter_var(env('PASSBOLT_SSL_FORCE', false), FILTER_VALIDATE_BOOLEAN)
         ],
         //ObfuscateFields placeholder
         'obfuscateFields' => [
