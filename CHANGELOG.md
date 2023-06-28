@@ -2,6 +2,39 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.0-rc.2] - 2023-06-28
+### Fixed
+- PB-24273 As an admin I can disable the GET auth/logout.json endpoint (enabled by default)
+- PB-25274 Set force SSL config to false by default
+- PB-25276 Webinstaller SSL force option should be set to true if the installation is launched over https
+
+## [4.1.0-rc.1] - 2023-06-26
+### Added
+- PB-24259 As an administrator I can define with role based access control users' rights
+
+### Improved
+- PB-24744 As a LU the date time format in the response always display the time zone
+- PB-24929 As a LU with multiple MFA providers setup, the latest provider used is proposed by default
+- PB-24488 Non-JSON request should return a 404 if JSON is required
+- PB-24617 As LU I want improved performance while sharing a folder with a user
+
+### Security
+- PB-25030 As an admin I can set a feature flag to prevent user email enumeration
+- PB-24273 As an admin I can enable the GET auth/logout.json endpoint (disabled by default)
+- PB-19510 As a user I should be redirected to HTTPS if SSL FORCE configuration is true
+- PB-24566 As an admin the email settings password should be masked in the test email command log output
+- PB-23591 As a user authenticating I can perform a limited amount of TOTP MFA attempts
+
+### Fixed
+- PB-24658 As an admin I should see no false warning in the email notification configuration section
+
+### Maintenance
+- PB-24925 Updates the fixture factories to its latest version
+- PB-24913 Removes "type" from required JSON schema definition for TOTP resource types
+- PB-24305 Recovery and register legacy routes are not used in emails and commands outputs
+- PB-21604 Extract composer audit task from checkstyle job and make it non-blocking
+- PB-21641 Rename check-style job to static-analysis and make it blocking
+
 ## [4.0.2] - 2023-05-25
 ### Fixed
 - PB-24644 As an admin I should be able to run migrations on a 32 bit environment
