@@ -20,65 +20,22 @@ use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
 use Passbolt\WebInstaller\Form\GpgKeyForm;
 
-class GpgKeyGenerateController extends WebInstallerController
+class GpgKeyGenerateController extends AbstractGpgKeyController
 {
     /**
-     * Initialize.
-     *
-     * @return void
+     * @inheritDoc
      */
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = '/install/database';
-        $this->stepInfo['next'] = '/install/email';
         $this->stepInfo['template'] = 'Pages/gpg_key_generate';
         $this->stepInfo['import_key_cta'] = '/install/gpg_key_import';
     }
 
     /**
-     * Index
-     *
-     * @return void|mixed
+     * @inheritDoc
      */
-    public function index()
-    {
-        if ($this->request->is('post')) {
-            return $this->indexPost();
-        }
-
-        $this->set('formExecuteResult', null);
-        $this->render($this->stepInfo['template']);
-    }
-
-    /**
-     * Index post
-     *
-     * @return void|mixed
-     */
-    protected function indexPost()
-    {
-        $data = $this->request->getData();
-        try {
-            $this->validateData($data);
-        } catch (CakeException $e) {
-            $this->_error($e->getMessage());
-
-            return;
-        }
-        $this->webInstaller->setSettingsAndSave('gpg', $data);
-
-        $this->goToNextStep();
-    }
-
-    /**
-     * Validate data.
-     *
-     * @param array $data request data
-     * @throws \Cake\Core\Exception\CakeException The data does not validate
-     * @return void
-     */
-    protected function validateData($data)
+    protected function validateData(array $data): void
     {
         $form = new GpgKeyForm();
         if (!$form->execute($data)) {
