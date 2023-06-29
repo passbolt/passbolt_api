@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.0-rc.3] - 2023-06-29
+### Fixed
+- PB-25275 As an admin I should see the option page during installation after creating the server GPG keys
+
 ## [4.1.0-rc.2] - 2023-06-28
 ### Fixed
 - PB-24273 As an admin I can disable the GET auth/logout.json endpoint (enabled by default)
