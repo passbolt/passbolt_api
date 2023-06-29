@@ -16,77 +16,26 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
-use Cake\Log\Log;
 use Cake\Utility\Hash;
-use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 use Passbolt\WebInstaller\Form\GpgKeyForm;
-use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
-class GpgKeyImportController extends WebInstallerController
+class GpgKeyImportController extends AbstractGpgKeyController
 {
     /**
-     * Initialize.
-     *
-     * @return void
+     * @inheritDoc
      */
     public function initialize(): void
     {
         parent::initialize();
-        $this->stepInfo['previous'] = '/install/database';
-        $this->stepInfo['next'] = '/install/options';
         $this->stepInfo['template'] = 'Pages/gpg_key_import';
         $this->stepInfo['generate_key_cta'] = '/install/gpg_key';
     }
 
     /**
-     * Index
-     *
-     * @return mixed
+     * @inheritDoc
      */
-    public function index()
-    {
-        if ($this->request->is('post')) {
-            return $this->indexPost();
-        }
-
-        $this->set('formExecuteResult', null);
-        $this->render($this->stepInfo['template']);
-    }
-
-    /**
-     * Index post
-     *
-     * @return mixed
-     */
-    protected function indexPost()
-    {
-        $data = $this->request->getData();
-        try {
-            $this->validateData($data);
-            $fingerprint = $data['fingerprint'];
-            $hasSmtpSettings = $this->hasValidSmtpSettingsInDB($fingerprint);
-        } catch (CakeException $e) {
-            $this->_error($e->getMessage());
-
-            return;
-        }
-
-        $this->webInstaller->setSettings('gpg', $data);
-        $this->webInstaller->setSettings('hasSmtpSettings', $hasSmtpSettings);
-        $this->webInstaller->saveSettings();
-        $this->goToNextStep();
-    }
-
-    /**
-     * Validate data.
-     *
-     * @param array $data request data
-     * @throws \Cake\Core\Exception\CakeException The key is not valid
-     * @return void
-     */
-    protected function validateData($data)
+    protected function validateData(array $data): void
     {
         $form = new GpgKeyForm();
         $confIsValid = $form->execute($data);
@@ -96,25 +45,5 @@ class GpgKeyImportController extends WebInstallerController
             $errorMessage = implode('; ', $errors);
             throw new CakeException(__('The data entered are not correct: {0}', $errorMessage));
         }
-    }
-
-    /**
-     * @param string $fingerprint Fingerprint of the server key
-     * @return bool
-     */
-    protected function hasValidSmtpSettingsInDB(string $fingerprint): bool
-    {
-        $dbSettings = $this->webInstaller->getSettings('database');
-        Configure::write('passbolt.gpg.serverKey.fingerprint', $fingerprint);
-        try {
-            DatabaseConfiguration::setDefaultConfig($dbSettings);
-            $smtpSettingsInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-        } catch (\Throwable $e) {
-            Log::error($e->getMessage());
-
-            return false;
-        }
-
-        return !is_null($smtpSettingsInDb);
     }
 }
