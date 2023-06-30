@@ -61,11 +61,11 @@ class Migration
      * @throws \Exception if the tag information cannot be retrieved
      * @return string tag name such as 'v1.0.1'
      */
-    public static function getLatestTagName()
+    public static function getLatestTagName(): string
     {
         $remoteTagName = Configure::read('passbolt.remote.version');
         if (is_null($remoteTagName)) {
-            $url = 'https://api.github.com/repos/passbolt/passbolt_api/tags';
+            $url = 'https://api.github.com/repos/passbolt/passbolt_api/releases/latest';
             try {
                 $HttpSocket = new Client();
                 $results = $HttpSocket->get($url);
@@ -73,10 +73,10 @@ class Migration
                 throw new \Exception(__('Could not connect to github repository'));
             }
             $tags = json_decode($results->getStringBody(), true);
-            if (!isset($tags[0]) || !isset($tags[0]['name'])) {
+            if (!isset($tags['tag_name'])) {
                 throw new \Exception(__('Could not read tag information on github repository'));
             }
-            $remoteTagName = $tags[0]['name'];
+            $remoteTagName = ltrim($tags['tag_name'], 'v');
             Configure::write('passbolt.remote.version', $remoteTagName);
         }
 
