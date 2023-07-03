@@ -80,7 +80,7 @@
         "cakephp/authentication": "^2.9.0",
         "bcrowe/cakephp-api-pagination": "^2.1.1",
         "firebase/php-jwt": "^6.2.0",
-        "spomky-labs/otphp": "^8.3.3",
+        "spomky-labs/otphp": "^10.0.0",
         "bacon/bacon-qr-code": "^2.0.7",
         "enygma/yubikey": "dev-master#31802c4f5ef24df87c4710e5893bdf8ad73554be",
         "duosecurity/duo_universal_php": "^1.0"
