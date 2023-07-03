@@ -8,7 +8,7 @@ parameters:
         - plugins
     bootstrapFiles:
         - config/bootstrap.php
-    excludes_analyse:
+    excludePaths:
         - **/templates/**
         - **/tests/**
 

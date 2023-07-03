@@ -358,13 +358,11 @@ class GroupsUpdateService
             $this->handleValidationErrors($group);
         }
 
-        /** @phpstan-ignore-next-line */
         if ($groupUser->group_id !== $group->id) {
             $group->setError('groups_users', [$rowIndexRef => ['id' => ['exists' => 'Cannot find the group user.']]]);
             $this->handleValidationErrors($group);
         }
 
-        /** @phpstan-ignore-next-line */
         return $groupUser;
     }
 

@@ -49,7 +49,6 @@ class MfaVerifiedCookie
             ->withSecure(self::isSslRequired($request));
 
         if ($expirationDate !== null) {
-            /** @phpstan-ignore-next-line Cake is a bit late on its typing here. */
             $mfaCookie = $mfaCookie ->withExpiry($expirationDate);
         }
 

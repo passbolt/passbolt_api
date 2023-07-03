@@ -86,7 +86,7 @@
         "duosecurity/duo_universal_php": "^1.0"
     },
     "require-dev": {
-        "phpstan/phpstan": "0.12.81",
+        "phpstan/phpstan": "~1.10.0",
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "^4.4.1",
         "cakephp/bake": "^2.3.0",
