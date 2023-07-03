@@ -35,6 +35,7 @@ return [
     // Database configuration.
     'Datasources' => [
         'default' => [
+            'driver' => '<?= $config['database']['driver'] ?>',
             'host' => '<?= $config['database']['host'] ?>',
             'port' => '<?= $config['database']['port'] ?>',
             'username' => '<?= $config['database']['username'] ?>',
