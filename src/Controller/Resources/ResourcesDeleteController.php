@@ -112,7 +112,7 @@ class ResourcesDeleteController extends AppController
     /**
      * Manage delete errors.
      *
-     * @param Resource $resource entity
+     * @param \App\Model\Entity\Resource $resource entity
      * @throws \Cake\Http\Exception\NotFoundException
      * @throws \App\Error\Exception\ValidationException
      * @return void
@@ -140,7 +140,7 @@ class ResourcesDeleteController extends AppController
     /**
      * Send email notification
      *
-     * @param Resource $resource Resource
+     * @param \App\Model\Entity\Resource $resource Resource
      * @param \Cake\Datasource\ResultSetInterface $users Users who had access to the resource, deleter excluded
      * @return void
      */

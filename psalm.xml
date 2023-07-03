@@ -8,6 +8,9 @@
     autoloader="config/bootstrap.php"
     usePhpDocMethodsWithoutMagicCall="true"
     usePhpDocPropertiesWithoutMagicCall="true"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="false"
+    errorBaseline="psalm-baseline-v5-upgrade.xml"
 >
     <projectFiles>
         <directory name="src" />

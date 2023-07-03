@@ -49,7 +49,7 @@ class User extends Entity implements IdentityInterface
     /**
      * last_logged_in virtual field.
      *
-     * @var array
+     * @var array<string>
      */
     protected $_virtual = ['last_logged_in'];
 
@@ -60,7 +60,7 @@ class User extends Entity implements IdentityInterface
      * be mass assigned. For security purposes, it is advised to set '*' to false
      * (or remove it), and explicitly make individual fields accessible as needed.
      *
-     * @var array
+     * @var array<string, bool>
      */
     protected $_accessible = [
         'id' => false,

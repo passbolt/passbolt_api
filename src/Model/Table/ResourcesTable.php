@@ -284,7 +284,7 @@ class ResourcesTable extends Table
     /**
      * Validate that the entity has at least one owner
      *
-     * @param Resource $entity The entity that will be created or updated.
+     * @param \App\Model\Entity\Resource $entity The entity that will be created or updated.
      * @param array|null $options options
      * @return bool
      */
@@ -325,7 +325,7 @@ class ResourcesTable extends Table
     /**
      * Validate that a resource can be created only if the secret of the owner is provided.
      *
-     * @param Resource $entity The entity that will be created.
+     * @param \App\Model\Entity\Resource $entity The entity that will be created.
      * @param array|null $options options
      * @return bool
      */
@@ -337,7 +337,7 @@ class ResourcesTable extends Table
     /**
      * Validate that the secrets of all the allowed users are provided if the secret changed.
      *
-     * @param Resource $entity The entity that will be created.
+     * @param \App\Model\Entity\Resource $entity The entity that will be created.
      * @param array|null $options options
      * @return bool
      */
@@ -377,7 +377,7 @@ class ResourcesTable extends Table
      * Soft delete a resource.
      *
      * @param string $userId The user who perform the delete.
-     * @param Resource $resource The resource to delete.
+     * @param \App\Model\Entity\Resource $resource The resource to delete.
      * @throws \InvalidArgumentException if the user id is not a uuid
      * @return bool true if success
      */

@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="5.12.0@f90118cdeacd0088e7215e64c0c99ceca819e176">
+  <file src="plugins/PassboltCe/AccountSettings/tests/TestCase/Controller/Themes/ThemesSelectControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/EmailDigest/src/Utility/Digest/DigestRegisterEvent.php">
+    <MissingTemplateParam>
+      <code>DigestRegisterEvent</code>
+    </MissingTemplateParam>
+  </file>
+  <file src="plugins/PassboltCe/EmailDigest/tests/TestCase/Command/PreviewCommandTest.php">
+    <InvalidArrayOffset>
+      <code>$sender[$senderEmail]</code>
+    </InvalidArrayOffset>
+    <InvalidCast>
+      <code>$senderEmail</code>
+      <code>$senderEmail</code>
+    </InvalidCast>
+    <InvalidPropertyFetch>
+      <code><![CDATA[$frenchSpeakingUser->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/EmailDigest/tests/TestCase/Command/SenderCommandTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$frenchSpeakingUser->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/EmailDigest/tests/TestCase/Service/PreviewEmailBatchServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$frenchSpeakingUser->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/EmailNotificationSettings/src/Utility/EmailNotificationSettingsDefinitionRegisterEvent.php">
+    <MissingTemplateParam>
+      <code>EmailNotificationSettingsDefinitionRegisterEvent</code>
+    </MissingTemplateParam>
+  </file>
+  <file src="plugins/PassboltCe/EmailNotificationSettings/tests/TestCase/Utility/EmailNotificationSettingsTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$dbEmailNotifSettings->value]]></code>
+      <code><![CDATA[$dbEmailNotifSettings->value]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerPaginationTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/tests/TestCase/Model/Table/FoldersRelations/FoldersRelationsCleanupTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$folderA->id]]></code>
+      <code><![CDATA[$folderA->id]]></code>
+      <code><![CDATA[$folderB->id]]></code>
+      <code><![CDATA[$folderRelationInvolvingFolderCleanedUp->id]]></code>
+      <code><![CDATA[$folderRelationInvolvingResourceCleanedUp->id]]></code>
+      <code><![CDATA[$folderRelationInvolvingUserCleanedUp->id]]></code>
+      <code><![CDATA[$folderRelationWithHardDeletedResource->id]]></code>
+      <code><![CDATA[$folderRelationWithHardDeletedUser->id]]></code>
+      <code><![CDATA[$folderRelationWithNonDeletedFolder->id]]></code>
+      <code><![CDATA[$folderRelationWithNonDeletedFolderParent->id]]></code>
+      <code><![CDATA[$folderRelationWithNonDeletedResource->id]]></code>
+      <code><![CDATA[$folderRelationWithNonDeletedResource->id]]></code>
+      <code><![CDATA[$folderRelationWithNonDeletedUser->id]]></code>
+      <code><![CDATA[$folderRelationWithNonDeletedUser->id]]></code>
+      <code><![CDATA[$folderRelationWithSoftDeletedFolder->id]]></code>
+      <code><![CDATA[$folderRelationWithSoftDeletedFolderParent->id]]></code>
+      <code><![CDATA[$folderRelationWithSoftDeletedResource->id]]></code>
+      <code><![CDATA[$folderRelationWithSoftDeletedUser->id]]></code>
+      <code><![CDATA[$originalFolderFolderRelationToKeep->folder]]></code>
+      <code><![CDATA[$originalFolderFolderRelationToKeep->id]]></code>
+      <code><![CDATA[$originalFolderFolderRelationToKeep->user]]></code>
+      <code><![CDATA[$originalResourceFolderRelationAtRootToKeep->id]]></code>
+      <code><![CDATA[$originalResourceFolderRelationToKeep->id]]></code>
+      <code><![CDATA[$originalResourceFolderRelationToKeep->resource]]></code>
+      <code><![CDATA[$rootFolderFolderRelation->id]]></code>
+      <code><![CDATA[$rootResourceFolderRelation->id]]></code>
+      <code><![CDATA[$subFolderFolderRelation->id]]></code>
+      <code><![CDATA[$subResourceFolderRelation->id]]></code>
+      <code><![CDATA[$userResourcePermissionWithNoFolderRelation->resource]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/tests/TestCase/Service/FoldersRelations/FoldersRelationsHaveAndAreChildrenServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$userA->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/tests/TestCase/Service/FoldersRelations/FoldersRelationsSortServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$folderRelationA->id]]></code>
+      <code><![CDATA[$folderRelationA->id]]></code>
+      <code><![CDATA[$folderRelationA->id]]></code>
+      <code><![CDATA[$folderRelationA->id]]></code>
+      <code><![CDATA[$folderRelationA->id]]></code>
+      <code><![CDATA[$folderRelationAForAda->id]]></code>
+      <code><![CDATA[$folderRelationAForAda->id]]></code>
+      <code><![CDATA[$folderRelationAForBetty->id]]></code>
+      <code><![CDATA[$folderRelationAForOther1->id]]></code>
+      <code><![CDATA[$folderRelationB->id]]></code>
+      <code><![CDATA[$folderRelationB->id]]></code>
+      <code><![CDATA[$folderRelationB->id]]></code>
+      <code><![CDATA[$folderRelationB->id]]></code>
+      <code><![CDATA[$folderRelationB->id]]></code>
+      <code><![CDATA[$folderRelationB->id]]></code>
+      <code><![CDATA[$folderRelationB->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$folderRelationC->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->id]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userA->role]]></code>
+      <code><![CDATA[$userB->id]]></code>
+      <code><![CDATA[$userB->id]]></code>
+      <code><![CDATA[$userB->id]]></code>
+      <code><![CDATA[$userB->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Authenticator/JwtAuthenticatorTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$attackedUser->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Authenticator/JwtRefreshTokenAuthenticatorTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Command/CreateAccessTokenCommandTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Controller/Auth/AuthIsAuthenticatedControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Controller/JwtLoginControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Controller/JwtLogoutControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[UserFactory::make()->user()->persist()->id]]></code>
+      <code><![CDATA[UserFactory::make()->user()->persist()->id]]></code>
+      <code><![CDATA[UserFactory::make()->user()->persist()->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Controller/RefreshTokenControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($user->id)
+            ->expired()
+            ->persist()
+            ->token]]></code>
+      <code><![CDATA[AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($user->id)
+            ->persist()
+            ->token]]></code>
+      <code><![CDATA[AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($user->id)
+            ->persist()
+            ->token]]></code>
+      <code><![CDATA[AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($user->id)
+            ->persist()
+            ->token]]></code>
+      <code><![CDATA[AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($userId)
+            ->expired()
+            ->persist()
+            ->token]]></code>
+      <code><![CDATA[AuthenticationTokenFactory::make()
+            ->inactive()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($user->id)
+            ->expired()
+            ->persist()
+            ->token]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Service/RefreshToken/RefreshTokenCreateServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[UserFactory::make()->persist()->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Service/RefreshToken/RefreshTokenFetchUserServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$refreshToken->token]]></code>
+      <code><![CDATA[$refreshToken->token]]></code>
+      <code><![CDATA[$refreshToken->user_id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Service/RefreshToken/RefreshTokenLogoutServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Service/RefreshToken/RefreshTokenRenewalServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$someUserTokenNotInvolvedInTheRenewal->id]]></code>
+      <code><![CDATA[UserFactory::make()->persist()->id]]></code>
+      <code><![CDATA[UserFactory::make()->persist()->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Service/VerifyToken/VerifyTokenCreateServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[UserFactory::make()->user()->persist()->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Service/VerifyToken/VerifyTokenValidationServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$existingToken->token]]></code>
+      <code><![CDATA[$existingToken->user_id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/Utility/JwtAuthTestTrait.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[UserFactory::make()->user()->persist()->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Locale/tests/TestCase/Controller/AccountLocalesSelectControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Locale/tests/TestCase/Event/ValidateLocaleOnBeforeSaveListenerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[UserFactory::make()->persist()->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Locale/tests/TestCase/Notification/ResourcesAddAndShareControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$defaultUser->id]]></code>
+      <code><![CDATA[$defaultUser->username]]></code>
+      <code><![CDATA[$englishUser->id]]></code>
+      <code><![CDATA[$englishUser->username]]></code>
+      <code><![CDATA[$frenchUser->username]]></code>
+      <code><![CDATA[$frenchUser2->id]]></code>
+      <code><![CDATA[$frenchUser2->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesControllerLogTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Share/ShareControllerLogTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$betty->id]]></code>
+      <code><![CDATA[$betty->id]]></code>
+      <code><![CDATA[$edith->id]]></code>
+      <code><![CDATA[$edith->id]]></code>
+      <code><![CDATA[$permission->id]]></code>
+      <code><![CDATA[$permission->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/TestCase/Model/ActionLogs/ActionLogsTableTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$actionLog->action_id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Mobile/tests/TestCase/Controller/Transfers/TransfersUpdateControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Mobile/tests/TestCase/Service/Transfers/TransfersUpdateServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$transfer->user_id]]></code>
+      <code><![CDATA[$transfer->user_id]]></code>
+      <code><![CDATA[$transfer->user_id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/src/Controller/Duo/DuoSetupPostController.php">
+    <InvalidReturnType>
+      <code>\Cake\Http\Response</code>
+    </InvalidReturnType>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/src/Controller/Duo/DuoVerifyPostController.php">
+    <InvalidReturnType>
+      <code>\Cake\Http\Response</code>
+    </InvalidReturnType>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Scenario/Totp/MfaTotpScenario.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Scenario/Totp/MfaTotpUserOnlyScenario.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Scenario/Yubikey/MfaYubikeyScenario.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Auth/JwtMfaLoginControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Auth/RefreshTokenAndMfaControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Duo/DuoSetupCallbackGetControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Duo/DuoVerifyCallbackGetControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Totp/TotpSetupPostControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Totp/TotpVerifyPostControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[AuthenticationTokenFactory::make()
+            ->active()
+            ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
+            ->userId($user->id)
+            ->persist()
+            ->token]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Users/UsersIndexControllerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Middleware/MfaRequiredCheckMiddlewareIntegrationTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Notification/Email/MfaUserSettingsResetEmailRedactorTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$adminUser->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Service/Duo/MfaDuoCallbackAuthenticationTokenServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$authToken->id]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Service/Duo/MfaDuoEnableServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$authToken->id]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$authToken->token]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Service/Duo/MfaDuoStartDuoAuthenticationServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Service/Duo/MfaDuoVerifyDuoCodeServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Service/MfaOrgSettings/MfaOrgSettingsMigrationInDbToDuoV4ServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[UserFactory::make()->admin()->persist()->id]]></code>
+      <code><![CDATA[UserFactory::make()->admin()->persist()->id]]></code>
+      <code><![CDATA[UserFactory::make()->admin()->persist()->id]]></code>
+      <code><![CDATA[UserFactory::make()->admin()->persist()->id]]></code>
+      <code><![CDATA[UserFactory::make()->admin()->persist()->id]]></code>
+      <code><![CDATA[UserFactory::make()->admin()->persist()->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Service/MfaOrgSettings/MfaOrgSettingsSetServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Service/MfaRateLimiterServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Utility/MfaVerifiedTokenTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+      <code><![CDATA[$user->authentication_tokens]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Rbacs/tests/TestCase/Service/Rbacs/RbacsUpdateServiceTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+      <code><![CDATA[$user->role]]></code>
+      <code><![CDATA[$user->username]]></code>
+    </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/SmtpSettings/tests/TestCase/Command/SmtpSettingsEmailDigestPreviewCommandTest.php">
+    <InvalidArrayOffset>
+      <code>$sender[$senderEmail]</code>
+    </InvalidArrayOffset>
+    <InvalidCast>
+      <code>$senderEmail</code>
+      <code>$senderEmail</code>
+    </InvalidCast>
+  </file>
+  <file src="src/Controller/Events/ControllerFindIndexOptionsBeforeMarshal.php">
+    <MissingTemplateParam>
+      <code>ControllerFindIndexOptionsBeforeMarshal</code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Controller/Settings/SettingsIndexController.php">
+    <InvalidConstantAssignmentValue>
+      <code><![CDATA[SETTINGS_VISIBILITY_KEY = 'settingsVisibility']]></code>
+    </InvalidConstantAssignmentValue>
+  </file>
+  <file src="src/Model/Event/TableFindIndexBefore.php">
+    <MissingTemplateParam>
+      <code>TableFindIndexBefore</code>
+    </MissingTemplateParam>
+  </file>
+  <file src="src/Notification/Email/CollectSubscribedEmailRedactorEvent.php">
+    <MissingTemplateParam>
+      <code>CollectSubscribedEmailRedactorEvent</code>
+    </MissingTemplateParam>
+  </file>
+</files>
