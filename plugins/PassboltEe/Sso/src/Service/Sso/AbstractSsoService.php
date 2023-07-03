@@ -122,7 +122,6 @@ abstract class AbstractSsoService
      */
     public function createStateCookie(ExtendedUserAccessControl $uac, string $type): Cookie
     {
-        /** @phpstan-ignore-next-line  */
         if ($this->provider->getState() === null) {
             // state is set in getAuthorizationUrl
             throw new InternalErrorException('Invalid use. State not set.');
