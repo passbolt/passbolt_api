@@ -85,7 +85,7 @@ class ResourcesViewController extends AppController
     /**
      * Log secrets accesses in secretAccesses table.
      *
-     * @param Resource $resource resource
+     * @param \App\Model\Entity\Resource $resource resource
      * @return void
      */
     protected function _logSecretAccesses(Resource $resource): void

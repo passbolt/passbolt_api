@@ -41,19 +41,14 @@
             "no-api": true
         },
         {
-          "type": "vcs",
-          "url": "https://github.com/passbolt/cakephp-codesniffer.git",
-          "no-api": true
+            "type": "vcs",
+            "url": "https://github.com/passbolt/migrations.git",
+            "no-api": true
         },
         {
-          "type": "vcs",
-          "url": "https://github.com/passbolt/migrations.git",
-          "no-api": true
-        },
-        {
-          "type": "vcs",
-          "url": "https://github.com/passbolt/phinx.git",
-          "no-api": true
+            "type": "vcs",
+            "url": "https://github.com/passbolt/phinx.git",
+            "no-api": true
         }
     ],
     "require": {
@@ -91,7 +86,7 @@
         "cakephp/debug_kit": "^4.4.1",
         "cakephp/bake": "^2.3.0",
         "phpunit/phpunit": "~9.5.2",
-        "passbolt/cakephp-codesniffer": "dev-master",
+        "cakephp/cakephp-codesniffer": "^4.5",
         "passbolt/passbolt-selenium-api": "dev-master#ade46d4c3095b18316cbb0553f875c50a4dd67b9",
         "passbolt/passbolt-test-data": "^3.2.0",
         "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
@@ -154,8 +149,8 @@
             "@test",
             "@cs-check"
         ],
-        "cs-check": "phpcs --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
-        "cs-fix": "phpcbf --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
+        "cs-check": "phpcs -d memory_limit=512M --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
+        "cs-fix": "phpcbf -d memory_limit=512M --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "install-dev": [
             "@composer install --dev",
             "npm install",
