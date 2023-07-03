@@ -196,7 +196,7 @@ class ResourcesUpdateService
      * Update the resource meta data.
      *
      * @param \App\Utility\UserAccessControl $uac The operator
-     * @param Resource $resource The resource to update
+     * @param \App\Model\Entity\Resource $resource The resource to update
      * @param array $data The request data
      * @return void
      */
@@ -212,7 +212,7 @@ class ResourcesUpdateService
      * Patch the folder entity.
      *
      * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
-     * @param Resource $resource The resource entity to update
+     * @param \App\Model\Entity\Resource $resource The resource entity to update
      * @param array $data The resource data.
      * @return Resource
      */
@@ -239,7 +239,7 @@ class ResourcesUpdateService
     /**
      * Handle resource validation errors.
      *
-     * @param Resource $resource entity
+     * @param \App\Model\Entity\Resource $resource entity
      * @return void
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\NotFoundException
@@ -256,7 +256,7 @@ class ResourcesUpdateService
      * Update the secrets.
      *
      * @param \App\Utility\UserAccessControl $uac The operator
-     * @param Resource $resource The target resource
+     * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $data The list of secrets to update
      * @return void
      * @throws \Exception If an unexpected error occurred
@@ -286,7 +286,7 @@ class ResourcesUpdateService
      * Trigger the after resource update event.
      *
      * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
-     * @param Resource $resource The updated resource
+     * @param \App\Model\Entity\Resource $resource The updated resource
      * @param array $data The request data
      * @return void
      */
