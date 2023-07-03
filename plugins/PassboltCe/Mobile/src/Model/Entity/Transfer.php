@@ -65,7 +65,7 @@ class Transfer extends Entity
      * For security purposes, we set all to false by default to explicitly make
      * individual fields accessible as needed.
      *
-     * @var array
+     * @var array<string, bool>
      */
     protected $_accessible = [
         'id' => false,

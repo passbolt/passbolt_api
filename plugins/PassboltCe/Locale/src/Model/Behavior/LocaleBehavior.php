@@ -49,7 +49,7 @@ class LocaleBehavior extends Behavior
      *
      * events - an event-name array.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     protected $_defaultConfig = [
         'implementedFinders' => [

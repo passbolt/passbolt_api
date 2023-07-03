@@ -103,8 +103,8 @@ class HealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Application_Happy_Path()
     {
-        Configure::write('passbolt.version', '9.9.9');
-        Configure::write('passbolt.remote.version', '9.9.9');
+        Configure::write('passbolt.version', '4.1.1');
+        Configure::write('passbolt.remote.version', 'v4.1.0');
         Configure::write('passbolt.ssl.force', true);
         Configure::write('App.fullBaseUrl', 'https://passbolt.local');
         Configure::write('passbolt.selenium.active', false);
@@ -146,7 +146,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->exec('passbolt healthcheck -d test --application');
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('This installation is not up to date');
+        $this->assertOutputContains('This installation is not up to date. Currently using 1.0.0 and it should be 9.9.9.');
         $this->assertOutputContains('Passbolt is not configured to force SSL use.');
         $this->assertOutputContains('App.fullBaseUrl is not set to HTTPS.');
         $this->assertOutputContains('Selenium API endpoints are active.');
