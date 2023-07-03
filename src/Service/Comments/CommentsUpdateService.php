@@ -105,7 +105,7 @@ class CommentsUpdateService
         }
 
         /**
-         * @var \App\Model\Entity\Comment
+         * @var \App\Model\Entity\Comment $comment
          */
         $comment = $this->Comments->patchEntity(
             $comment,
