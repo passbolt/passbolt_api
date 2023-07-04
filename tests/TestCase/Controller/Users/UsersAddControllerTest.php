@@ -17,11 +17,13 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Role;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 
 class UsersAddControllerTest extends AppIntegrationTestCase
 {
@@ -32,34 +34,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         'app.Base/Profiles',
     ];
 
-    public function testUsersAddNotLoggedInError()
-    {
-        $data = [
-            'username' => 'notallowed@passbolt.com',
-            'profile' => [
-                'first_name' => 'not',
-                'last_name' => 'allowed',
-            ],
-        ];
-        $this->postJson('/users.json', $data);
-        $this->assertAuthenticationError();
-    }
-
-    public function testUsersAddNotAdminError()
-    {
-        $this->authenticateAs('ada');
-        $data = [
-            'username' => 'notallowed@passbolt.com',
-            'profile' => [
-                'first_name' => 'not',
-                'last_name' => 'allowed',
-            ],
-        ];
-        $this->postJson('/users.json', $data);
-        $this->assertError(403, 'Only administrators can add new users.');
-    }
-
-    public function testUsersAddSuccess()
+    public function testUsersAddController_Success(): void
     {
         $this->authenticateAs('admin');
         $roles = TableRegistry::getTableLocator()->get('Roles');
@@ -118,15 +93,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testErrorCsrfToken()
-    {
-        $this->disableCsrfToken();
-        $this->authenticateAs('admin');
-        $this->post('/users.json?api-version=v2');
-        $this->assertResponseCode(403);
-    }
-
-    public function testUsersAddCannotModifyNotAccessibleFields()
+    public function testUsersAddController_Success_CannotModifyNotAccessibleFields(): void
     {
         $this->authenticateAs('admin');
         $date = '1983-04-01 23:34:45';
@@ -157,7 +124,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
-    public function testUsersAddSuccessEmail()
+    public function testUsersAddController_Success_EmailSent(): void
     {
         $this->authenticateAs('admin');
         $data = [
@@ -171,9 +138,48 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         $this->assertEmailInBatchContains('created an account for you', 'aurore@passbolt.com');
+        /** @var \App\Model\Entity\AuthenticationToken $token */
+        $token = AuthenticationTokenFactory::find()->firstOrFail();
+        $user = Router::url('/setup/start/' . $token->user_id . '/' . $token->token, true);
+        $this->assertEmailInBatchContains($user, 'aurore@passbolt.com');
     }
 
-    public function testUsersAddRequestDataApiUserExistError()
+    public function testUsersAddController_Error_NotLoggedIn(): void
+    {
+        $data = [
+            'username' => 'notallowed@passbolt.com',
+            'profile' => [
+                'first_name' => 'not',
+                'last_name' => 'allowed',
+            ],
+        ];
+        $this->postJson('/users.json', $data);
+        $this->assertAuthenticationError();
+    }
+
+    public function testUsersAddController_Error_NotAdmin(): void
+    {
+        $this->authenticateAs('ada');
+        $data = [
+            'username' => 'notallowed@passbolt.com',
+            'profile' => [
+                'first_name' => 'not',
+                'last_name' => 'allowed',
+            ],
+        ];
+        $this->postJson('/users.json', $data);
+        $this->assertError(403, 'Only administrators can add new users.');
+    }
+
+    public function testUsersAddController_Error_CsrfToken(): void
+    {
+        $this->disableCsrfToken();
+        $this->authenticateAs('admin');
+        $this->post('/users.json');
+        $this->assertResponseCode(403);
+    }
+
+    public function testUsersAddController_Errror_RequestDataApiUserExist(): void
     {
         $this->authenticateAs('admin');
         $data = [
@@ -183,7 +189,24 @@ class UsersAddControllerTest extends AppIntegrationTestCase
                 'last_name' => 'lovelace',
             ],
         ];
-        $this->postJson('/users.json?api-version=v2', $data);
+        $this->postJson('/users.json', $data);
         $this->assertError(400, 'Could not validate user data.');
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testUsersAddController_Error_NotJson(): void
+    {
+        $this->authenticateAs('admin');
+        $data = [
+            'username' => 'ada@passbolt.com',
+            'profile' => [
+                'first_name' => 'ada',
+                'last_name' => 'lovelace',
+            ],
+        ];
+        $this->post('/users', $data);
+        $this->assertResponseCode(404);
     }
 }

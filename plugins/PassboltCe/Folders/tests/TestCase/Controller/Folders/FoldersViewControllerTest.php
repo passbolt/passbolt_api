@@ -37,7 +37,6 @@ use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Model\Table\FoldersTable;
@@ -56,7 +55,6 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
     use FoldersRelationsModelTrait;
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
-    use IntegrationTestTrait;
     use ProfilesModelTrait;
 
     /**

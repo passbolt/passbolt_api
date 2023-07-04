@@ -35,6 +35,8 @@ class CommentsDeleteController extends AppController
      */
     public function delete(string $id)
     {
+        $this->assertJson();
+
         (new CommentsDeleteService())->delete($id, $this->User->id());
         $this->success(__('The comment was deleted.'));
     }

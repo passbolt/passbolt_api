@@ -21,7 +21,6 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Chronos\Chronos;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
@@ -31,7 +30,6 @@ class PreviewEmailBatchServiceTest extends AppTestCase
 {
     use DummyTranslationTestTrait;
     use EmailDigestMockTestTrait;
-    use TruncateDirtyTables;
 
     /**
      * @var PreviewEmailBatchService

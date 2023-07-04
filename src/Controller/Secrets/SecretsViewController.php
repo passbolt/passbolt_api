@@ -56,6 +56,8 @@ class SecretsViewController extends AppController
      */
     public function view(string $resourceId)
     {
+        $this->assertJson();
+
         // Check request sanity
         if (!Validation::uuid($resourceId)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));

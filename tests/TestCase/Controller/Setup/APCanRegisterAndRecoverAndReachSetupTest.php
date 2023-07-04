@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.5.0
  */
-namespace App\Test\TestCase\Scenario\AP;
+namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Lib\AppIntegrationTestCase;
@@ -32,16 +32,6 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
         'app.Base/Gpgkeys',
     ];
-
-    /**
-     * @var UsersTable
-     */
-    protected $Users;
-
-    /**
-     * @var AuthenticationTokensTable
-     */
-    protected $AuthenticationTokens;
 
     public function setUp(): void
     {
@@ -74,19 +64,21 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // Get and check user
-        $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $user = $this->Users->findByUsername($email)->first();
+        /** @var \App\Model\Table\UsersTable $Users */
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $user = $Users->findByUsername($email)->first();
         $this->assertFalse($user->active);
 
         // There should be one valid auth tokens
-        $this->AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
-        $tokens = $this->AuthenticationTokens
+        /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens */
+        $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
+        $tokens = $AuthenticationTokens
             ->findByUserId($user->id)->order(['created' => 'DESC'])
             ->all()->toArray();
         $this->assertEquals($tokens[0]['type'], AuthenticationToken::TYPE_REGISTER);
 
         // Link to install should be present in email
-        $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[0]['token']);
+        $url = Router::url('/setup/start/' . $user->id . '/' . $tokens[0]['token']);
         $this->assertEmailInBatchContains($url, 'integration@passbolt.com');
 
         // Recover to get another token
@@ -94,7 +86,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
         $this->assertResponseSuccess();
 
         // There should be two valid auth tokens
-        $tokens = $this->AuthenticationTokens
+        $tokens = $AuthenticationTokens
             ->findByUserId($user->id)->order(['created' => 'DESC'])
             ->all()->toArray();
         $this->assertEquals(count($tokens), 2);
@@ -115,7 +107,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 
         // Try to start setup with other token
         // Url should not work since user is already signed up
-        $url = Router::url('/setup/install/' . $user->id . '/' . $tokens[1]['token'] . '.json');
+        $url = Router::url('/setup/start/' . $user->id . '/' . $tokens[1]['token'] . '.json');
         $this->getJson($url);
         $this->assertResponseCode(400);
     }

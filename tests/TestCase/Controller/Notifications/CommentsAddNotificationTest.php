@@ -46,7 +46,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->unloadNotificationSettings();
     }
 
-    public function testCommentsAddNotificationGroupSuccess()
+    public function testCommentsAddNotificationGroupSuccess(): void
     {
         RoleFactory::make()->guest()->persist();
         [$u0, $u1, $u2, $u4] = UserFactory::make(4)->user()->active()->persist();
@@ -75,7 +75,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue($u4->username);
     }
 
-    public function testCommentsAddNotificationUserSuccess()
+    public function testCommentsAddNotificationUserSuccess(): void
     {
         RoleFactory::make()->guest()->persist();
         [$u0, $u1, $u2] = UserFactory::make(3)->user()->active()->persist();
@@ -102,7 +102,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue($u2->username);
     }
 
-    public function testCommentsAddNotificationDoNotShowContent()
+    public function testCommentsAddNotificationDoNotShowContent(): void
     {
         RoleFactory::make()->guest()->persist();
         [$u0, $u1] = UserFactory::make(2)->user()->active()->persist();
@@ -121,7 +121,7 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         $this->assertEmailInBatchNotContains('this is a test', $u1->username);
     }
 
-    public function testCommentsAddNotificationDisabled()
+    public function testCommentsAddNotificationDisabled(): void
     {
         RoleFactory::make()->guest()->persist();
         [$u0, $u1] = UserFactory::make(2)->user()->active()->persist();

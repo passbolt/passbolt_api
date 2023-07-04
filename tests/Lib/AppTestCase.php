@@ -69,9 +69,6 @@ abstract class AppTestCase extends TestCase
         Configure::write('passbolt.plugins.log.enabled', false);
         Configure::write('passbolt.plugins.folders.enabled', false);
         $this->loadRoutes();
-        DigestsPool::clearInstance();
-        DigestFactory::clearInstance();
-        EmailNotificationSettings::flushCache();
     }
 
     /**
@@ -79,6 +76,9 @@ abstract class AppTestCase extends TestCase
      */
     public function tearDown(): void
     {
+        DigestsPool::clearInstance();
+        DigestFactory::clearInstance();
+        EmailNotificationSettings::flushCache();
         $this->clearPlugins();
         parent::tearDown();
     }

@@ -33,7 +33,7 @@ class ResourcesUpdateNotificationTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers', 'app.Base/Permissions',
     ];
 
-    protected function _getGpgMessage()
+    protected function _getGpgMessage(): string
     {
         return '-----BEGIN PGP MESSAGE-----
 
@@ -54,7 +54,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 -----END PGP MESSAGE-----';
     }
 
-    protected function _getDummyPostData($data = [])
+    protected function _getDummyPostData($data = []): array
     {
         $defaultData = [
             'Resource' => [
@@ -86,7 +86,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         parent::tearDown();
     }
 
-    public function testResourcesUpdateNotificationDisabled()
+    public function testResourcesUpdateNotificationDisabled(): void
     {
         $this->setEmailNotificationSetting('send.password.update', false);
 
@@ -101,14 +101,14 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
         // Post udpated data
         $this->authenticateAs('betty');
-        $this->putJson("/resources/$resourceId.json?api-version=2", $data);
+        $this->putJson("/resources/$resourceId.json", $data);
         $this->assertSuccess();
 
         // check email notification
         $this->assertEmailWithRecipientIsInNotQueue('betty@passbolt.com');
     }
 
-    public function testResourcesUpdateNotificationSuccess()
+    public function testResourcesUpdateNotificationSuccess(): void
     {
         $this->setEmailNotificationSetting('send.password.update', true);
 
@@ -123,7 +123,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
         // Post udpated data
         $this->authenticateAs('betty');
-        $this->putJson("/resources/$resourceId.json?api-version=2", $data);
+        $this->putJson("/resources/$resourceId.json", $data);
         $this->assertSuccess();
 
         // check email notification

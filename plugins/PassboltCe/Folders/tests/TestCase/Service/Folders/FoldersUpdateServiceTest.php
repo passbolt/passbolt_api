@@ -35,7 +35,6 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
@@ -54,7 +53,6 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     use FixtureProviderTrait;
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
-    use IntegrationTestTrait;
     use PermissionsModelTrait;
 
     public $fixtures = [

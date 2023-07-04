@@ -46,7 +46,7 @@ class ShareNotificationTest extends ShareControllerTest
         $this->unloadNotificationSettings();
     }
 
-    public function testShareNotificationSuccess()
+    public function testShareNotificationSuccess(): void
     {
         $this->setEmailNotificationSettings([
             'show.description' => true,

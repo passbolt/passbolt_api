@@ -356,10 +356,6 @@ $routes->scope('/setup', function ($routes) {
     $routes->connect('/recover/{userId}/{tokenId}', ['prefix' => 'Setup', 'controller' => 'RecoverStart', 'action' => 'start'])
         ->setPass(['userId', 'tokenId'])
         ->setMethods(['GET']);
-
-    $routes->connect('/completeRecovery/{userId}', ['prefix' => 'Setup', 'controller' => 'RecoverComplete', 'action' => 'complete'])
-        ->setPass(['userId'])
-        ->setMethods(['PUT', 'POST']);
 });
 
 /**

@@ -39,7 +39,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $this->Groups = TableRegistry::getTableLocator()->get('Groups', $config);
     }
 
-    protected function _getDummyPostData($data = [])
+    protected function _getDummyPostData($data = []): array
     {
         $defaultData = [
             'name' => 'New group name',
@@ -53,7 +53,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         return $data;
     }
 
-    public function testGroupsAddSuccess()
+    public function testGroupsAddSuccess(): void
     {
         $success = [
             'chinese' => [
@@ -110,7 +110,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testGroupsAddSuccessLegacy()
+    public function testGroupsAddSuccessLegacy(): void
     {
         $data = [
             'Group' => ['name' => 'legacy'],
@@ -120,7 +120,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
             ],
         ];
         $this->authenticateAs('admin');
-        $this->postJson('/groups.json?api-version=v2', $data);
+        $this->postJson('/groups.json', $data);
         $this->assertResponseSuccess();
         $group = $this->Groups->find()
             ->contain('GroupsUsers')
@@ -132,7 +132,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $this->assertEquals(count($data['GroupUsers']), count($group->groups_users));
     }
 
-    public function testGroupsAddValidationErrors()
+    public function testGroupsAddValidationErrors(): void
     {
         $responseCode = 400;
         $responseMessage = 'Could not validate group data';
@@ -196,7 +196,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testGroupsAddErrorNotAdmin()
+    public function testGroupsAddErrorNotAdmin(): void
     {
         $this->authenticateAs('dame');
         $postData = [];
@@ -204,18 +204,36 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError();
     }
 
-    public function testGroupsAddErrorNotAuthenticated()
+    public function testGroupsAddErrorNotAuthenticated(): void
     {
         $postData = [];
         $this->postJson('/groups.json', $postData);
         $this->assertAuthenticationError();
     }
 
-    public function testErrorCsrfToken()
+    public function testErrorCsrfToken(): void
     {
         $this->disableCsrfToken();
         $this->authenticateAs('admin');
-        $this->post('/groups.json?api-version=2');
+        $this->post('/groups.json');
         $this->assertResponseCode(403);
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testGroupsAddController_Error_NotJson(): void
+    {
+        $data = [
+            'name' => 'Groupe privé',
+            'groups_users' => [
+                ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1],
+                ['user_id' => UuidFactory::uuid('user.id.betty')],
+            ],
+        ];
+
+        $this->authenticateAs('admin');
+        $this->post('/groups', $data);
+        $this->assertResponseCode(404);
     }
 }
