@@ -25,6 +25,7 @@ use LdapRecord\Query\Filter\ParserException;
 use LdapRecord\Query\Model\Builder;
 use Passbolt\DirectorySync\Test\TestCase\Utility\LdapDirectoryTest;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
+use Passbolt\DirectorySync\Utility\DirectoryEntry\UserCollection;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
@@ -148,6 +149,8 @@ class LdapDirectoryMock
             ->onlyMethods(['getUsersAsArray', 'getGroupsAsArray', 'getRecursivelyFromParentGroup', 'initializeWithLdapResults'])
             ->disableOriginalConstructor()
             ->getMock();
+
+        $directoryResults->userCollection = new UserCollection();
 
         return $directoryResults;
     }
