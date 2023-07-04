@@ -357,13 +357,12 @@ class LdapDirectory implements DirectoryInterface
      */
     protected function _fetchAndInitializeQuery(string $entryType): Builder
     {
-        $query = $this->getQuery($entryType)->select(
-            [
-                '*',
-                $this->mappingRules[$this->getDirectoryType()][$entryType]['created'],
-                $this->mappingRules[$this->getDirectoryType()][$entryType]['modified'],
-            ]
-        );
+        // Get fields that we are interested in from field mappings
+        // This is reduce the response payload from LDAP server to prevent exceeding memory,
+        // and improve query performance.
+        $fields = array_values($this->mappingRules[$this->getDirectoryType()][$entryType]);
+
+        $query = $this->getQuery($entryType)->select($fields);
 
         return $query->setBaseDn($this->getDNFullPath($entryType));
     }
@@ -398,14 +397,14 @@ class LdapDirectory implements DirectoryInterface
             foreach ($domains as $domain) {
                 Container::setDefaultConnection($domain);
                 $directoryType = $this->getDirectoryType($domain);
-                $tmpGroups = $this->_fetchAndInitializeGroupsQuery()->get();
+                $tmpGroups = $this->_fetchAndInitializeGroupsQuery()->paginate();
                 foreach ($tmpGroups as $tmpGroup) {
                     $tmpGroup->addAttributeValue('objectType', DirectoryInterface::ENTRY_TYPE_GROUP);
                     $tmpGroup->addAttributeValue('directoryType', $directoryType);
                     $ldapGroups->add($tmpGroup);
                 }
 
-                $tmpUsers = $this->_fetchAndInitializeUsersQuery()->get();
+                $tmpUsers = $this->_fetchAndInitializeUsersQuery()->paginate();
                 foreach ($tmpUsers as $tmpUser) {
                     $tmpUser->addAttributeValue('objectType', DirectoryInterface::ENTRY_TYPE_USER);
                     $tmpUser->addAttributeValue('directoryType', $directoryType);

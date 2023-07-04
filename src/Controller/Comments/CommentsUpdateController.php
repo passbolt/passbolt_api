@@ -39,6 +39,8 @@ class CommentsUpdateController extends AppController
      */
     public function update(string $commentId)
     {
+        $this->assertJson();
+
         if (!Validation::uuid($commentId)) {
             throw new BadRequestException(__('The comment id is not valid.'));
         }

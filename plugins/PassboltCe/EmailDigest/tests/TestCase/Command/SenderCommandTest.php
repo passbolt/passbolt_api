@@ -18,27 +18,24 @@ namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Chronos\Chronos;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\I18n;
 use Cake\Mailer\Mailer;
-use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
-use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
 /**
  * @uses \Passbolt\EmailDigest\Command\SenderCommand
  */
-class SenderCommandTest extends TestCase
+class SenderCommandTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
     use DummyTranslationTestTrait;
     use EmailTestTrait;
-    use TruncateDirtyTables;
     use EmailDigestMockTestTrait;
 
     /**
@@ -53,7 +50,6 @@ class SenderCommandTest extends TestCase
         $this->loadRoutes();
         $this->setDummyFrenchTranslator();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
-        EmailNotificationSettings::flushCache();
     }
 
     /**

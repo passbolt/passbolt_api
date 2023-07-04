@@ -24,35 +24,38 @@ use Cake\Event\EventManager;
 use Cake\Mailer\TransportFactory;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
- * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService
+ * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService
  */
-class SmtpSettingsSendTestEmailServiceTest extends TestCase
+class SmtpSettingsTestEmailServiceTest extends TestCase
 {
     use EmailTestTrait;
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
     /**
-     * @var SmtpSettingsSendTestEmailService
+     * @var \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService
      */
     protected $service;
 
     public function setUp(): void
     {
         parent::setUp();
+
         EventManager::instance()->setEventList(new EventList());
-        $this->service = new SmtpSettingsSendTestEmailService();
         $this->clearPlugins();
+        $this->service = new SmtpSettingsTestEmailService(new SmtpSettingsSendTestMailerService());
     }
 
     public function tearDown(): void
     {
         unset($this->service);
+
         parent::tearDown();
     }
 
@@ -67,7 +70,7 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         $senderNameInPayload = 'inPayload';
         $senderInPayload = [$senderEmailInPayload => $senderNameInPayload];
         $configPassedToService = $this->getSmtpSettingsData();
-        $configPassedToService[$this->service::EMAIL_TEST_TO] = $recipient;
+        $configPassedToService[SmtpSettingsSendTestMailerService::EMAIL_TEST_TO] = $recipient;
         $configPassedToService['sender_email'] = $senderEmailInPayload;
         $configPassedToService['sender_name'] = $senderNameInPayload;
 
@@ -87,7 +90,7 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
     public function testSmtpSettingsSendTestEmailService_TLS_String_True_Should_Map_To_Boolean_True()
     {
         $recipient = 'test@test.test';
-        $data = $this->getSmtpSettingsData('tls', 'true') + [$this->service::EMAIL_TEST_TO => $recipient];
+        $data = $this->getSmtpSettingsData('tls', 'true') + [SmtpSettingsSendTestMailerService::EMAIL_TEST_TO => $recipient];
         $settings = $this->service->validateAndGetSmtpSettings($data);
         $this->assertSame(true, $settings['tls']);
     }
@@ -121,7 +124,7 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
         TransportFactory::setConfig('default', $newConfig);
 
         $recipient = 'test@test.test';
-        $data = $this->getSmtpSettingsData() + [$this->service::EMAIL_TEST_TO => $recipient];
+        $data = $this->getSmtpSettingsData() + [SmtpSettingsSendTestMailerService::EMAIL_TEST_TO => $recipient];
 
         $passed = false;
         try {
@@ -138,5 +141,41 @@ class SmtpSettingsSendTestEmailServiceTest extends TestCase
     public function testSmtpSettingsSendTestEmailService_GetTrace_On_No_Email_Initiated()
     {
         $this->assertSame([], $this->service->getTrace());
+    }
+
+    public function testSmtpSettingsSendTestEmailService_GetTrace_MasksSensitiveDetails()
+    {
+        $smtpUsername = 'ada';
+        $smtpPassword = 'secret';
+        $smtpSettings = [
+            'sender_name' => 'Passbolt test',
+            'sender_email' => 'test@passbolt.test',
+            'host' => 'localhost',
+            'username' => $smtpUsername,
+            'password' => $smtpPassword,
+            'tls' => null,
+            'client' => null,
+            'port' => 1,
+            'email_test_to' => 'test@passbolt.test',
+        ];
+        // Mock mailer service
+        $mailerService = $this->createMock(SmtpSettingsSendTestMailerService::class);
+        $mailerService->expects($this->once())->method('sendEmail')->with($smtpSettings);
+        // Mock trace
+        $cmd = sprintf(
+            'AUTH PLAIN %s',
+            base64_encode(chr(0) . $smtpUsername . chr(0) . $smtpPassword)
+        );
+        $trace = [
+            ['cmd' => $cmd],
+            ['response' => [['code' => '235', 'message' => 'Authentication successful']]],
+        ];
+        $mailerService->expects($this->once())->method('getTrace')->willReturn($trace);
+
+        $sut = new SmtpSettingsTestEmailService($mailerService);
+        $sut->sendTestEmail($smtpSettings);
+        $result = $sut->getTrace();
+
+        $this->assertSame('AUTH PLAIN *****', $result[0]['cmd']);
     }
 }

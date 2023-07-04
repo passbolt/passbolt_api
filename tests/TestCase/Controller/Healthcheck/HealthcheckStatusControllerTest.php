@@ -22,14 +22,14 @@ class HealthcheckStatusControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
-    public function testHealthcheckStatusOk()
+    public function testHealthcheckStatusOk(): void
     {
         $this->get('/healthcheck/status');
         $this->assertResponseOk();
         $this->assertResponseContains('OK');
     }
 
-    public function testHealthcheckStatusJsonOk()
+    public function testHealthcheckStatusJsonOk(): void
     {
         $this->getJson('/healthcheck/status.json?api-version=v2');
         $this->assertResponseSuccess();

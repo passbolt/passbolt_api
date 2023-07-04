@@ -54,9 +54,18 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     }
 
     /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testAuthLoginController_Error_NotJson(): void
+    {
+        $this->post('/auth/login', []);
+        $this->assertResponseCode(404);
+    }
+
+    /**
      * Test getting login started with deleted account
      */
-    public function testAuthLoginControllerUserLoginAsDeletedUserError()
+    public function testAuthLoginController_Error_UserLoginAsDeletedUser(): void
     {
         $this->postJson('/auth/login.json', [
             'data' => [
@@ -73,7 +82,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      * Test error 500 if the GnuPG fingerprint config for the server is missing.
      * It can happen if a sysop overrides the GnuPG config for the server post installation.
      */
-    public function testAuthLoginControllerLoginServerKeyFingerprintMissing()
+    public function testAuthLoginController_Error_LoginServerKeyFingerprintMissing(): void
     {
         // Disable this plugin in this test as long as the cookie pepper is the fingerprint.
         $this->disableFeaturePlugin('JwtAuthentication');
@@ -88,7 +97,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      * Test error 500 if the GnuPG fingerprint config for the server is invalid.
      * It can happen if a sysop changed the server key fingerprint without loading this key in the OpenPGP keyring post installation.
      */
-    public function testAuthLoginControllerLoginBadServerKeyFingerprint()
+    public function testAuthLoginController_Error_BadServerKeyFingerprint(): void
     {
         $fingerprint = '0000000000000000000000000000000000000000';
         Configure::write('passbolt.gpg.serverKey.fingerprint', $fingerprint);
@@ -101,7 +110,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      * Check that GPGAuth headers are set everywhere
      * Check that the action is not persisted in the action logs
      */
-    public function testAuthLoginControllerGetHeaders()
+    public function testAuthLoginController_GetHeaders(): void
     {
         $isLogEnabled = $this->isFeaturePluginEnabled('Log');
         $this->enableFeaturePlugin('Log');
@@ -123,7 +132,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Check that GET /auth/login.json triggers a not found error.
      */
-    public function testAuthLoginControllerGetJson()
+    public function testAuthLoginController_Error_GetJson(): void
     {
         $this->getJson('/auth/login.json');
         $this->assertResponseError('Page not found.');
@@ -133,7 +142,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Check that GPGAuth headers are set everywhere
      */
-    public function testAuthLoginControllerGetHeadersPost()
+    public function testAuthLoginController_GetHeadersPost(): void
     {
         $this->postJson('/auth/login.json', [
             'data' => [
@@ -148,7 +157,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Test authentication with wrong user key fingerprint
      */
-    public function testAuthLoginControllerAllStagesFingerprint()
+    public function testAuthLoginController_AllStagesFingerprint(): void
     {
         $this->gpgSetup(); // add ada's keys
         $fix = [
@@ -193,7 +202,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Stage 0. Verify server key
      */
-    public function testAuthLoginControllerStage0MessageFormat()
+    public function testAuthLoginController_Stage0MessageFormat(): void
     {
         $this->gpgSetup();
         $uuid = UuidFactory::uuid();
@@ -253,7 +262,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Stage 0. Verify server key is incorrect or changed
      */
-    public function testAuthLoginControllerStage0WrongServerKey()
+    public function testAuthLoginController_Stage0WrongServerKey(): void
     {
         $this->gpgSetup();
         $uuid = UuidFactory::uuid();
@@ -285,7 +294,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     /**
      * Stage 1. Authenticate user
      */
-    public function testAuthLoginControllerStage1UserToken()
+    public function testAuthLoginController_Stage1UserToken(): void
     {
         $this->gpgSetup();
         $this->postJson('/auth/login.json', [
@@ -360,10 +369,8 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
 
     /**
      * Setup GPG and import the keys to be used in the tests
-     *
-     * @param string $name ada by default
      */
-    protected function gpgSetup()
+    protected function gpgSetup(): void
     {
         // Make sure the keys are in the keyring
         // if needed we add them for later use in the tests
@@ -382,7 +389,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->adaKeyId = $this->gpg->importKeyIntoKeyring(file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'));
     }
 
-    protected function getHeaders()
+    protected function getHeaders(): array
     {
         $headers = $this->_response->getHeaders();
         $final = [];

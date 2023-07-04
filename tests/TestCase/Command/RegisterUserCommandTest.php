@@ -125,7 +125,7 @@ class RegisterUserCommandTest extends AppTestCase
         // Assert that the correct link is provided in the console
         $user = UserFactory::find()->firstOrFail();
         $token = TableRegistry::getTableLocator()->get('AuthenticationTokens')->getByUserId($user->id);
-        $setupLink = Router::url('/setup/install/' . $user->id . '/' . $token->token, true);
+        $setupLink = Router::url('/setup/start/' . $user->id . '/' . $token->token, true);
         $this->assertOutputContains($setupLink);
 //         TODO: fix this line in the CI
 //        $this->assertEmailQueueCount(1);

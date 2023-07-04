@@ -25,29 +25,17 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
 {
     use EmailNotificationSettingsDefinitionTrait;
 
-    public const FOLDER_CREATE = 'send_folder_create';
-    public const FOLDER_DELETE = 'send_folder_delete';
-    public const FOLDER_UPDATE = 'send_folder_update';
-    public const FOLDER_SHARE = 'send_folder_share';
-
-    public const FIELDS = [
-        self::FOLDER_DELETE,
-        self::FOLDER_CREATE,
-        self::FOLDER_UPDATE,
-        self::FOLDER_SHARE,
-    ];
-
     /**
      * @param \Cake\Form\Schema $schema An instance of schema
      * @return \Cake\Form\Schema
      */
     public function buildSchema(Schema $schema)
     {
-        foreach (static::FIELDS as $fieldName) {
-            $schema->addField($fieldName, ['type' => 'boolean', 'default' => true]);
-        }
-
-        return $schema;
+        return $schema
+            ->addField('send_folder_create', ['type' => 'boolean', 'default' => false])
+            ->addField('send_folder_delete', ['type' => 'boolean', 'default' => true])
+            ->addField('send_folder_update', ['type' => 'boolean', 'default' => true])
+            ->addField('send_folder_share', ['type' => 'boolean', 'default' => true]);
     }
 
     /**
@@ -56,10 +44,10 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
      */
     public function buildValidator(Validator $validator)
     {
-        foreach (static::FIELDS as $fieldName) {
-            $validator->boolean($fieldName, __('An email notification setting should be a boolean.'));
-        }
-
-        return $validator;
+        return $validator
+            ->boolean('send_folder_create', __('An email notification setting should be a boolean.'))
+            ->boolean('send_folder_delete', __('An email notification setting should be a boolean.'))
+            ->boolean('send_folder_update', __('An email notification setting should be a boolean.'))
+            ->boolean('send_folder_share', __('An email notification setting should be a boolean.'));
     }
 }

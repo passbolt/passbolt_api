@@ -48,7 +48,7 @@ class SsoRecoverStartService
         if ($type === AuthenticationToken::TYPE_RECOVER) {
             $url = Router::url("/setup/recover/{$user->id}/{$authToken->token}", true);
         } else {
-            $url = Router::url("/setup/install/{$user->id}/{$authToken->token}", true);
+            $url = Router::url("/setup/start/{$user->id}/{$authToken->token}", true);
         }
 
         return $url;

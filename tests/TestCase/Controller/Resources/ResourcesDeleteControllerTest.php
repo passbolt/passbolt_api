@@ -39,7 +39,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         parent::setUp();
     }
 
-    public function testResourcesDeleteSuccess()
+    public function testResourcesDeleteController_Success(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
@@ -47,16 +47,16 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
     }
 
-    public function testErrorCsrfToken()
+    public function testResourcesDeleteController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->delete("/resources/$resourceId.json?api-version=v2");
+        $this->delete("/resources/$resourceId.json");
         $this->assertResponseCode(403);
     }
 
-    public function testResourcesDeleteErrorResourceIsSoftDeleted()
+    public function testResourcesDeleteController_Error_ResourceIsSoftDeleted(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -64,7 +64,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testResourcesDeleteErrorAccessDenied()
+    public function testResourcesDeleteController_Error_AccessDenied(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.april');
@@ -72,7 +72,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testResourcesDeleteErrorAccessDenied_ReadAccess()
+    public function testResourcesDeleteController_Error_AccessDenied_ReadAccess(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.bower');
@@ -80,10 +80,21 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(403, 'You do not have the permission to delete this resource.');
     }
 
-    public function testResourcesDeleteErrorNotAuthenticated()
+    public function testResourcesDeleteController_Error_NotAuthenticated(): void
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->deleteJson("/resources/$resourceId.json?api-version=v2");
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testResourcesDeleteController_Error_NotJson(): void
+    {
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $this->delete("/resources/$resourceId");
+        $this->assertResponseCode(404);
     }
 }

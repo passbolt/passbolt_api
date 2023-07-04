@@ -20,6 +20,7 @@ namespace Passbolt\Sso\Test\TestCase\Service\SsoSettings;
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
+use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Dto\AbstractSsoSettingsDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsDefaultDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
@@ -29,6 +30,9 @@ use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Lib\SsoTestCase;
 
+/**
+ * @covers \Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService
+ */
 class SsoSettingsGetServiceTest extends SsoTestCase
 {
     public function testSsoSettingsGetService_getByIdOrFail_Success(): void
@@ -46,6 +50,10 @@ class SsoSettingsGetServiceTest extends SsoTestCase
         $this->assertEquals($ssoSetting->modified_by, $ssoSettingsDto->modified_by);
         $this->assertNotEmpty($ssoSetting->created);
         $this->assertNotEmpty($ssoSetting->modified);
+        // Assert data
+        $data = $ssoSettingsDto->data->toArray();
+        $this->assertSame(SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL, $data['email_claim']);
+        $this->assertSame(SsoSettingsAzureDataForm::PROMPT_LOGIN, $data['prompt']);
     }
 
     public function testSsoSettingsGetService_getByIdOrFail_Error(): void
@@ -67,7 +75,7 @@ class SsoSettingsGetServiceTest extends SsoTestCase
     public function testSsoSettingsGetService_getActiveOrDefault_Success(): void
     {
         $ssoSettingActive = SsoSettingsFactory::make()->azure()->active()->persist();
-        $ssoSettingDraft = SsoSettingsFactory::make()->azure()->draft()->persist();
+        SsoSettingsFactory::make()->azure()->draft()->persist();
 
         $this->assertEquals(2, SsoSettingsFactory::count());
 
@@ -100,6 +108,8 @@ class SsoSettingsGetServiceTest extends SsoTestCase
         // Decrypted data
         $this->assertTrue($ssoSetting instanceof SsoSettingsDto);
         $this->assertEquals(true, isset($ssoSetting->data));
+        $data = $ssoSetting->data->toArray();
+        $this->assertSame(SsoSettingsAzureDataForm::PROMPT_LOGIN, $data['prompt']);
     }
 
     public function testSsoSettingsGetService_getActiveOrDefault_SuccessDefault(): void
@@ -131,7 +141,9 @@ class SsoSettingsGetServiceTest extends SsoTestCase
     {
         $armoredMessage = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg');
         SsoSettingsFactory::make()->data($armoredMessage)->active()->persist();
+
         $ssoSetting = (new SsoSettingsGetService())->getActiveOrDefault(true);
+
         $this->assertEquals(null, $ssoSetting->getProvider());
         $this->assertEquals((new SsoActiveProvidersGetService())->get(), $ssoSetting->getProviders());
         $this->assertEquals(true, !isset($ssoSetting->data));

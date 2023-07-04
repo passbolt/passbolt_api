@@ -38,6 +38,8 @@ class GetCsrfTokenController extends AppController
      */
     public function get(): void
     {
+        $this->assertJson();
+
         $csrfToken = $this->getRequest()->getAttribute('csrfToken');
         $this->success(__('The operation was successful.'), $csrfToken);
     }

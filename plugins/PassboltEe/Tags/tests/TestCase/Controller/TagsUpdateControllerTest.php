@@ -20,8 +20,13 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Tags\Model\Table\ResourcesTagsTable;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
+/**
+ * @covers \Passbolt\Tags\Controller\Tags\TagsUpdateController
+ */
 class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
 {
     public $ResourcesTags;
@@ -70,7 +75,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdateInvalidTagId()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->putJson('/tags/invalid-tag-id.json?api-version=v2');
         $this->assertBadRequestError('The tag id is not valid.');
     }
@@ -84,7 +89,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdateNonExistingTagId()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $tagId = UuidFactory::uuid('tag.id.nope');
         $this->putJson("/tags/$tagId.json?api-version=v2");
         $this->assertError(404, 'The tag does not exist.');
@@ -99,7 +104,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdateUserCanNotUpdateSharedTag()
     {
-        $this->authenticateAs('betty');
+        $this->logInAsUser();
         $tagId = UuidFactory::uuid('tag.id.#bravo');
         $this->putJson("/tags/$tagId.json?api-version=v2");
         $this->assertForbiddenError('You do not have the permission to update shared tags.');
@@ -114,11 +119,18 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagUpdatePersonalTagSlugTooLong()
     {
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.firefox');
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'firefox'])
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
         $this->putJson("/tags/$tagId.json?api-version=v2", [
             'slug' => str_repeat('a', 129),
         ]);
+
         $this->assertBadRequestError('Could not validate tag data.');
         $response = $this->getResponseBodyAsArray();
         $this->assertTrue(Hash::check($response, 'slug.maxLength'));
@@ -136,11 +148,18 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
     {
         $this->disableCsrfToken();
 
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.firefox');
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'firefox'])
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
         $this->put("/tags/$tagId.json?api-version=v2", [
             'slug' => 'brave',
         ]);
+
         $this->assertResponseCode(403);
         $result = $this->_getBodyAsString();
         $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
@@ -370,6 +389,67 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $response = $this->_responseJsonBody;
         $this->assertEquals('updated-admin-personal', $response->slug);
         $this->assertFalse($response->is_shared);
+    }
+
+    /**
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagsUpdateController_RenameSlugWithDifferentCase()
+    {
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'test'])
+            ->persist();
+        ResourcesTagFactory::make()
+            ->with('Users')
+            ->with('Tags', $resourceTag->tag)
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'TEST',
+        ]);
+
+        $this->assertSuccess();
+        $responseArray = $this->getResponseBodyAsArray();
+        $this->assertSame('TEST', $responseArray['slug']);
+        // Make sure new tag is created if case is different
+        $this->assertNotSame($tagId, $responseArray['id']);
+        // Make sure two entries are created if slug's case is different
+        $this->assertSame(2, TagFactory::find()->where(['UPPER(slug)' => 'TEST'])->count());
+    }
+
+    /**
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagsUpdateController_NotVulnerableToSqlInjection()
+    {
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'baz'])
+            ->persist();
+        ResourcesTagFactory::make()
+            ->with('Users')
+            ->with('Tags', $resourceTag->tag)
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'dm\'d', // send slug that can cause SQL injection
+        ]);
+
+        $this->assertSuccess();
+        $responseArray = $this->getResponseBodyAsArray();
+        $this->assertSame('dm\'d', $responseArray['slug']);
+        $this->assertSame(1, TagFactory::find()->where(['slug' => 'dm\'d'])->count());
     }
 
     /**

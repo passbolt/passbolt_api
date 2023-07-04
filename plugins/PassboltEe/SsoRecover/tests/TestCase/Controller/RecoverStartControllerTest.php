@@ -201,7 +201,7 @@ class RecoverStartControllerTest extends SsoRecoverIntegrationTestCase
         // Assert URL
         $this->assertObjectHasAttribute('url', $response);
         $this->assertStringContainsString(
-            "https://passbolt.local/setup/install/{$user->id}/{$registerAuthToken->token}",
+            "https://passbolt.local/setup/start/{$user->id}/{$registerAuthToken->token}",
             $response->url
         );
     }

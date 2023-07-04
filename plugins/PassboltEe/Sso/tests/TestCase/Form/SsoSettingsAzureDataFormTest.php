@@ -22,6 +22,7 @@ use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\Event\EventDispatcherTrait;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
+use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Test\Lib\SsoTestCase;
 
 class SsoSettingsAzureDataFormTest extends SsoTestCase
@@ -54,6 +55,7 @@ class SsoSettingsAzureDataFormTest extends SsoTestCase
             'tenant_id' => UuidFactory::uuid(),
             'client_secret' => UuidFactory::uuid(),
             'client_secret_expiry' => Chronos::now()->addDays(365),
+            'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
         ];
 
         return [
@@ -111,5 +113,14 @@ class SsoSettingsAzureDataFormTest extends SsoTestCase
         ];
         $this->assertFormFieldFormatValidation(SsoSettingsAzureDataForm::class, 'data.client_secret_expiry', $this->getDummy(), $testCases);
         $this->markTestIncomplete();
+    }
+
+    public function testSsoSettingsAzureDataForm_ValidateEmailClaim(): void
+    {
+        $testCases = [
+            'notEmpty' => self::getNotEmptyTestCases(),
+            'inList' => self::getInListTestCases(SsoSettingsAzureDataForm::SUPPORTED_EMAIL_CLAIM_ALIASES),
+        ];
+        $this->assertFormFieldFormatValidation(SsoSettingsAzureDataForm::class, 'data.email_claim', $this->getDummy(), $testCases);
     }
 }

@@ -22,14 +22,14 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
-    public function testHealthcheckIndexOk()
+    public function testHealthcheckIndexOk(): void
     {
         $this->get('/healthcheck');
         $this->assertResponseContains('Passbolt API Status');
         $this->assertResponseOk();
     }
 
-    public function testHealthcheckIndexJsonOk()
+    public function testHealthcheckIndexJsonOk(): void
     {
         $this->getJson('/healthcheck.json?api-version=v2');
         $this->assertResponseSuccess();

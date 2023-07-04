@@ -49,7 +49,7 @@ class ObfuscateFieldsComponentTest extends TestCase
      * @param ServerRequest|null $request Server Request
      * @return void
      */
-    protected function setupController(?ServerRequest $request = null)
+    protected function setupController(?ServerRequest $request = null): void
     {
         if (!$request) {
             $request = new ServerRequest();

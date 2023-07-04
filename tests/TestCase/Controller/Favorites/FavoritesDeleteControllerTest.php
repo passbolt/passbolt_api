@@ -24,7 +24,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class FavoritesDeleteControllerTest extends AppIntegrationTestCase
 {
-    public function testFavoritesDeleteController_Success()
+    public function testFavoritesDeleteController_Success(): void
     {
         $user = UserFactory::make()->user()->persist();
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
@@ -32,14 +32,14 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $favoriteId = $favorite->get('id');
         $this->logInAs($user);
 
-        $this->deleteJson("/favorites/$favoriteId.json?api-version=2");
+        $this->deleteJson("/favorites/$favoriteId.json");
 
         $this->assertSuccess();
         $deletedFavorite = FavoriteFactory::find()->where(['Favorites.id' => $favoriteId])->first();
         $this->assertempty($deletedFavorite);
     }
 
-    public function testFavoritesDeleteController_ErrorCsrfToken()
+    public function testFavoritesDeleteController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
         $user = UserFactory::make()->user()->persist();
@@ -53,7 +53,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(403);
     }
 
-    public function testFavoritesDeleteController_ErrorNotValidId()
+    public function testFavoritesDeleteController_Error_NotValidId(): void
     {
         $user = UserFactory::make()->user()->persist();
         $favoriteId = 'invalid-id';
@@ -64,7 +64,7 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The favorite id is not valid.');
     }
 
-    public function testFavoritesDeleteController_ErrorNotAuthenticated()
+    public function testFavoritesDeleteController_Error_NotAuthenticated(): void
     {
         $user = UserFactory::make()->user()->persist();
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
@@ -74,5 +74,20 @@ class FavoritesDeleteControllerTest extends AppIntegrationTestCase
         $this->deleteJson("/favorites/$favoriteId.json");
 
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testFavoritesDeleteController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $favorite = FavoriteFactory::make()->setUser($user)->setResource($resource)->persist();
+        $favoriteId = $favorite->get('id');
+        $this->logInAs($user);
+
+        $this->delete("/favorites/$favoriteId");
+        $this->assertResponseCode(404);
     }
 }

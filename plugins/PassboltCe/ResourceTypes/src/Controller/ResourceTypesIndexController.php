@@ -34,6 +34,7 @@ class ResourceTypesIndexController extends AppController
      */
     public function index(ResourceTypesFinderInterface $resourceTypesFinder)
     {
+        $this->assertJson();
         $resourceTypes = $resourceTypesFinder->find();
 
         $this->success(__('The operation was successful.'), $resourceTypes->all());

@@ -41,7 +41,7 @@ class SetupStartControllerTest extends AccountRecoveryIntegrationTestCase
             ->userId($user->id)
             ->persist();
 
-        $url = "/setup/install/{$user->id}/{$token->token}.json";
+        $url = "/setup/start/{$user->id}/{$token->token}.json";
         $this->getJson($url);
         $this->assertResponseOk();
         $this->assertObjectHasAttribute('user', $this->_responseJsonBody);

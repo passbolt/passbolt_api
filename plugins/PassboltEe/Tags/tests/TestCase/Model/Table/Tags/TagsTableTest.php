@@ -19,6 +19,7 @@ namespace Passbolt\Tags\Test\TestCase\Model\Table\Tags;
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
 /**
@@ -124,5 +125,16 @@ class TagsTableTest extends TagTestCase
         // there should not be any left
         $r = $this->Tags->deleteAllUnusedTags();
         $this->assertEquals($r, 0);
+    }
+
+    public function testTagsTable_findAllBySlugs()
+    {
+        [$tag1, $tag2] = TagFactory::make(5)->persist();
+        $tags1 = $this->Tags->findAllBySlugs([$tag1->slug]);
+        $tags2 = $this->Tags->findAllBySlugs([$tag2->slug]);
+
+        $tags = $tags1->union($tags2);
+
+        $this->assertSame(2, $tags->count());
     }
 }

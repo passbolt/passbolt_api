@@ -37,6 +37,8 @@ class GroupsAddController extends AppController
      */
     public function addPost()
     {
+        $this->assertJson();
+
         if (!$this->User->isAdmin()) {
             throw new ForbiddenException();
         }

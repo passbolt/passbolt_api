@@ -18,17 +18,17 @@ namespace Passbolt\SmtpSettings\Controller;
 
 use App\Controller\AppController;
 use App\Error\Exception\FormValidationException;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 
 class SmtpSettingsEmailController extends AppController
 {
     /**
      * SmtpSettings Send Test Email
      *
-     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service injected for unit test purposes
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @return void
      */
-    public function sendTestEmail(SmtpSettingsSendTestEmailService $sendTestEmailService)
+    public function sendTestEmail(SmtpSettingsTestEmailService $sendTestEmailService)
     {
         $this->User->assertIsAdmin();
 

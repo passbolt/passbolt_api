@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Service\FoldersRelations;
 
+use Cake\Database\Expression\TupleComparison;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Utility\Tarjan;
@@ -29,107 +30,136 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
     private $foldersRelationsTable;
 
     /**
-     * @var \App\Model\Table\UsersTable
-     */
-    private $usersTable;
-
-    /**
      * Instantiate the service.
      */
     public function __construct()
     {
         /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-        /** @phpstan-ignore-next-line */
-        $this->usersTable = TableRegistry::getTableLocator()->get('Users');
     }
 
     /**
-     * Bulk detect strongly connected components for a list of given users.
-     * Compare the tree of the given users with the trees of all the non deleted users.
+     * Detect the first strongly connected components for the whole shared folders relations graph.
      *
-     * The function stops and returns the first SCC found.
-     *
-     * @param array $usersIds The list of users ids to check for
      * @return array<\Passbolt\Folders\Model\Entity\FoldersRelation> The folders relations involved in the strongly connected components set.
+     * @throws \Exception
      */
-    public function bulkDetectForUsers(array $usersIds)
+    public function detectFirstInSharedFolders(): array
     {
-        $result = [];
-        $usersIdsToCompareWith = $this->usersTable->findActive()
-            ->disableHydration()
-            ->all()
-            ->extract('id')
-            ->toArray();
-        $usersFoldersRelationsDtos = $this->getUsersFoldersRelationsGroupedByUser($usersIdsToCompareWith);
+        $foldersRelationsDtos = $this->getAllNotPersonalFoldersRelationsDtos();
+        $sccSets = $this->detectInFoldersRelations($foldersRelationsDtos);
 
-        foreach ($usersIds as $firstUserId) {
-            foreach ($usersIdsToCompareWith as $secondUserId) {
-                $foldersRelationsDtos = array_merge(
-                    $usersFoldersRelationsDtos[$firstUserId],
-                    $usersFoldersRelationsDtos[$secondUserId]
-                );
-                $result = $this->detectInFoldersRelations($foldersRelationsDtos);
-                if (!empty($result)) {
-                    break 2;
-                }
-            }
-            // Avoid comparing users that have already been compared. As the user has already been compared with all non
-            // deleted users, then it has already been compared with all the users given in parameter, remove it from
-            // the list of users to compare with
-            $firstUserIndex = array_search($firstUserId, $usersIdsToCompareWith);
-            if ($firstUserIndex !== false) {
-                unset($usersIdsToCompareWith[$firstUserIndex]);
+        foreach ($sccSets as $sccSet) {
+            if ($this->isValidSharedFoldersScc($sccSet)) {
+                return $sccSet;
             }
         }
 
-        return $result;
+        return [];
     }
 
     /**
-     * Retrieve folders relations for a given list of users and group them by users.
+     * Check if a strongly component is valid as per passbolt requirements. It is considered valid if it involves 1 or
+     * 2 users.
      *
-     * @param array $usersIds The users to retrieve the folders relations for
-     * @param bool $includePersonal Include personal folders. Default false
-     * @return array<array<array>> Return an array of folders relations dtos grouped by users ids
+     * By instance for the following graph, there is a valid cycle as it involves 1 user to form A-B-A.
+     * - Ada: A-B-A
+     * - Betty: A
+     * - Carole: A
+     *
+     * By instance for the following graph, there is a valid cycle as it involves 2 users to form A-B-C-A.
+     * - Ada: A-B-C
+     * - Betty: B-C-A
+     *
+     * By instance for the following graph, there is no valid cycle as it involves 3 users to form A-B-C-A.
+     * - Ada: A-B
+     * - Betty: B-C
+     * - Carole: C-A
+     *
+     * @param array $sccFoldersRelations The folders relations involved in a strong connected components set.
+     * @return bool
+     */
+    private function isValidSharedFoldersScc(array $sccFoldersRelations): bool
+    {
+        $foldersRelationsDtos = $this->getFoldersRelationsInvolveInScc($sccFoldersRelations);
+        $countFoldersRelations = count($sccFoldersRelations);
+
+        /*
+         * Prepare an array representing how the folders relations involved in the cycle are seen by the users
+         * having access to these folders relations.
+         * [
+         *   Ada: [A-B:true, B-C: true]
+         *   Betty: [B-C:true, C-A: true]
+         * ]
+         */
+        $usersFoldersRelations = [];
+        foreach ($foldersRelationsDtos as $folderRelation) {
+            for ($i = 0; $i < $countFoldersRelations; $i++) {
+                $sccFoldersRelation = $sccFoldersRelations[$i];
+                if (
+                    $folderRelation['foreign_id'] === $sccFoldersRelation->foreign_id
+                    && $folderRelation['folder_parent_id'] === $sccFoldersRelation->folder_parent_id
+                ) {
+                    $usersFoldersRelations[$folderRelation['user_id']][$i] = true;
+                }
+            }
+        }
+
+        /*
+         * Try to find to users completing each other to see the whole cycle. With the example of arrays prepared above,
+         * and for a cycle [A-B, B-C, B-A], Ada and Betty are completing each other and there folders relations
+         * form a cycle. Note that it works also for a single user as the algorithm will also compare the users with
+         * themselves.
+         */
+        foreach ($usersFoldersRelations as $userAFoldersRelations) {
+            foreach ($usersFoldersRelations as $userBFoldersRelations) {
+                for ($i = 0; $i < $countFoldersRelations; $i++) {
+                    // None of the 2 current users see the folder relation at this position, they don't complete each other
+                    // and there trees don't form a cycle.
+                    if (!(isset($userAFoldersRelations[$i]) || isset($userBFoldersRelations[$i]))) {
+                        continue 2;
+                    }
+                }
+                // The 2 current users complete each other and there trees form a cycle.
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Retrieve all the folders relations tuple foreign_id and folder_parent_id.
+     * The function doesn't return an array of entities for performance reasons.
+     *
+     * @return array<array> Return an array of folders relations dtos represented as following.
      * [
-     *   USER_ID => [
-     *     [
-     *       foreign_id => <UUID>,
-     *       folder_parent_id => <UUID|null>,
-     *       user_id => <UUID>,
-     *     ],
-     *     ...
+     *   [
+     *     foreign_id => <UUID>,
+     *     folder_parent_id => <UUID|null>,
      *   ],
      *   ...
      * ]
      */
-    private function getUsersFoldersRelationsGroupedByUser(array $usersIds, ?bool $includePersonal = false): array
+    private function getAllNotPersonalFoldersRelationsDtos(): array
     {
-        $result = array_fill_keys($usersIds, []);
-
         $query = $this->foldersRelationsTable->find();
         $query = $this->foldersRelationsTable->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
-        $query = $this->foldersRelationsTable->filterByUsersIds($query, $usersIds);
-        if (!$includePersonal) {
-            $query = $this->foldersRelationsTable->filterQueryByIsNotPersonalFolder($query);
-        }
-        $foldersRelationsDtos = $query->select(['foreign_id', 'folder_parent_id', 'user_id'])
+        $query = $this->foldersRelationsTable->filterQueryByIsNotPersonalFolder($query);
+
+        return $query->select(['foreign_id', 'folder_parent_id'])
+            ->distinct()
             ->disableHydration()
             ->all()
             ->toArray();
-
-        foreach ($foldersRelationsDtos as $folderRelationDto) {
-            $result[$folderRelationDto['user_id']][] = $folderRelationDto;
-        }
-
-        return $result;
     }
 
     /**
-     * Return the first detected strongly components set represented as an array of folders relations.
+     * Return the folders relations involve in an SCC.
+     * The function doesn't return an array of entities for performance reasons.
      *
-     * @param array $foldersRelationsDtos An array folders relations dtos to test
+     * @param array<\Passbolt\Folders\Model\Entity\FoldersRelation> $foldersRelations The set of folders relations
+     * @return array Return an array of folders relations dtos represented as following.
      * [
      *   [
      *     foreign_id => <UUID>,
@@ -138,7 +168,56 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
      *   ],
      *   ...
      * ]
-     * @return array<\Passbolt\Folders\Model\Entity\FoldersRelation> Array of SCCs containing folders relations involved
+     */
+    private function getFoldersRelationsInvolveInScc(array $foldersRelations): array
+    {
+        return $this->foldersRelationsTable->find()
+            ->select(['foreign_id', 'folder_parent_id', 'user_id'])
+            ->where($this->buildFoldersRelationsTupleComparisonExpression($foldersRelations))
+            ->disableHydration()
+            ->all()->toArray();
+    }
+
+    /**
+     * Build a folders relations IN or NOT IN tuple comparison used in query where clause.
+     * Output SQL like:
+     * WHERE (foreign_id, folder_parent_id) IN ((FOLDER_RELATION_1_FOREIGN_ID, FOLDER_RELATION_1_FOLDER_PARENT_ID), ...)
+     *
+     * @param array<\Passbolt\Folders\Model\Entity\FoldersRelation> $foldersRelations The folders relations to build a tuple comparison expression for
+     * @param bool $isInOperator (Optional) By default true and the expression with use the IN operator. If false the
+     * expression will use the NOT IN operator.
+     * @return \Cake\Database\Expression\TupleComparison
+     */
+    private function buildFoldersRelationsTupleComparisonExpression(
+        array $foldersRelations,
+        ?bool $isInOperator = true
+    ): TupleComparison {
+        $operator = $isInOperator ? 'IN' : 'NOT IN';
+        $foldersRelationsTupleData = array_map(function (FoldersRelation $folderRelation) {
+            return $folderRelation->extract(['foreign_id', 'folder_parent_id']);
+        }, $foldersRelations);
+
+        return new TupleComparison(
+            ['FoldersRelations.foreign_id', 'FoldersRelations.folder_parent_id'],
+            $foldersRelationsTupleData,
+            [],
+            $operator
+        );
+    }
+
+    /**
+     * Detect all the strongly connected components in the given folders relations. Sort the result to return first
+     * the smallest ones.
+     *
+     * @param array $foldersRelationsDtos An array folders relations dtos to test
+     * [
+     *   [
+     *     foreign_id => <UUID>,
+     *     folder_parent_id => <UUID|null>,
+     *   ],
+     *   ...
+     * ]
+     * @return array<array<\Passbolt\Folders\Model\Entity\FoldersRelation>> Array of SCCs containing folders relations involved
      * @throws \Exception If it cannot format the result.
      */
     private function detectInFoldersRelations(array $foldersRelationsDtos): array
@@ -147,14 +226,18 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
 
         [$graph, $graphForeignIdsMap] = $this->formatFoldersRelationInAdjacencyGraph($foldersRelationsDtos);
         $stronglyConnectedComponentsSets = Tarjan::detect($graph);
-        if (!empty($stronglyConnectedComponentsSets)) {
-            $nodes = explode('|', $stronglyConnectedComponentsSets[0]);
-            $result = $this->formatDetectInGraphResultInFoldersRelations(
+        foreach ($stronglyConnectedComponentsSets as $stronglyConnectedComponentsSet) {
+            $nodes = explode('|', $stronglyConnectedComponentsSet);
+            $result[] = $this->formatDetectInGraphResultInFoldersRelations(
                 $nodes,
                 $graphForeignIdsMap,
                 $foldersRelationsDtos
             );
         }
+
+        usort($result, function ($sccA, $sccB) {
+            return count($sccA) - count($sccB);
+        });
 
         return $result;
     }
@@ -310,7 +393,12 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
         $query = $this->foldersRelationsTable->filterByForeignModel($query, FoldersRelation::FOREIGN_MODEL_FOLDER);
         $foldersRelationsDtos = $query->select(['foreign_id', 'folder_parent_id'])
             ->disableHydration()->all()->toArray();
+        $sccs = $this->detectInFoldersRelations($foldersRelationsDtos);
 
-        return $this->detectInFoldersRelations($foldersRelationsDtos);
+        if (!empty($sccs)) {
+            return $sccs[0];
+        }
+
+        return [];
     }
 }

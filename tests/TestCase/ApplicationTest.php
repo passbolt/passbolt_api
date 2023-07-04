@@ -25,6 +25,7 @@ use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
 use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
+use App\Middleware\SslForceMiddleware;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\Middleware\BodyParserMiddleware;
@@ -52,6 +53,7 @@ class ApplicationTest extends TestCase
             ContainerInjectorMiddleware::class,
             ContentSecurityPolicyMiddleware::class,
             ErrorHandlerMiddleware::class,
+            SslForceMiddleware::class,
             AssetMiddleware::class,
             RoutingMiddleware::class,
             ApiVersionMiddleware::class,

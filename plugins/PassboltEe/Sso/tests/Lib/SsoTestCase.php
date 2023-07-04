@@ -26,7 +26,7 @@ class SsoTestCase extends AppTestCase
     protected $pluginEnabled;
 
     /**
-     * Setup.
+     * @inheritDoc
      */
     public function setUp(): void
     {
@@ -37,6 +37,9 @@ class SsoTestCase extends AppTestCase
         }
     }
 
+    /**
+     * @inheritDoc
+     */
     public function tearDown(): void
     {
         parent::tearDown();
