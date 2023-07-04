@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ba98789c7b20c27e7de0ae3cc8d2d26d",
+    "content-hash": "02c37d937746181524890a960c4f3356",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5581,16 +5581,16 @@
         },
         {
             "name": "passbolt/passbolt-test-data",
-            "version": "3.2.0",
+            "version": "4.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-test-data",
-                "reference": "910e7c09632206048d78b460554f4a969814b85b"
+                "reference": "b2a23fc5ef344e81251577922ded03cb9311879f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/910e7c09632206048d78b460554f4a969814b85b",
-                "reference": "910e7c09632206048d78b460554f4a969814b85b",
+                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/b2a23fc5ef344e81251577922ded03cb9311879f",
+                "reference": "b2a23fc5ef344e81251577922ded03cb9311879f",
                 "shasum": ""
             },
             "require": {
@@ -5632,7 +5632,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2021-03-29T07:03:11+00:00"
+            "time": "2023-06-15T13:58:42+00:00"
         },
         {
             "name": "phar-io/manifest",
