@@ -180,7 +180,7 @@ abstract class AppIntegrationTestCase extends TestCase
     public function assertCookieIsSecure($expected, string $name): void
     {
         $this->assertCookie($expected, $name);
-        /** @var Response $response */
+        /** @var \Cake\Http\Response $response */
         $response = $this->_response;
         $cookie = $response->getCookieCollection()->get($name);
         $this->assertTrue($cookie->isSecure());
