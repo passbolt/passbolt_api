@@ -43,6 +43,8 @@ use Cake\Validation\Validator;
  */
 class RolesTable extends Table
 {
+    public const ALLOWED_ROLE_NAMES = [Role::GUEST, Role::USER, Role::ADMIN];
+
     /**
      * Initialize method
      *
@@ -114,9 +116,7 @@ class RolesTable extends Table
      */
     public function isValidRoleName(string $roleName): bool
     {
-        $allowedRoleNames = [Role::GUEST, Role::USER, Role::ADMIN];
-
-        return in_array($roleName, $allowedRoleNames);
+        return in_array($roleName, self::ALLOWED_ROLE_NAMES);
     }
 
     /**
