@@ -19,11 +19,11 @@ namespace App\Model\Table;
 
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
-use App\Model\Traits\Cleanup\PermissionsCleanupTrait;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
+use App\Service\Secrets\SecretsCleanupHardDeletedPermissionsService;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -54,7 +54,6 @@ use Cake\Validation\Validator;
  */
 class SecretsTable extends Table
 {
-    use PermissionsCleanupTrait;
     use ResourcesCleanupTrait;
     use TableCleanupTrait;
     use UsersCleanupTrait;
@@ -200,5 +199,16 @@ class SecretsTable extends Table
                 'resource_id IN' => $resourcesIds,
                 'user_id' => $userId,
             ]);
+    }
+
+    /**
+     * Delete all records where associated permissions are soft deleted
+     *
+     * @param bool|null $dryRun default false
+     * @return int number of affected records
+     */
+    public function cleanupHardDeletedPermissions(?bool $dryRun = false): int
+    {
+        return (new SecretsCleanupHardDeletedPermissionsService())->cleanupHardDeletedPermissions($dryRun);
     }
 }

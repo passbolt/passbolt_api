@@ -14,15 +14,29 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-namespace App\Model\Traits\Cleanup;
+namespace App\Service\Secrets;
 
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\SecretsTable;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
+use Cake\ORM\TableRegistry;
 
-trait PermissionsCleanupTrait
+class SecretsCleanupHardDeletedPermissionsService
 {
+    private SecretsTable $Secrets;
+
+    /**
+     * SecretsCleanupHardDeletedPermissionsService constructor.
+     */
+    public function __construct()
+    {
+        /** @var \App\Model\Table\SecretsTable $SecretsTable */
+        $SecretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        $this->Secrets = $SecretsTable;
+    }
+
     /**
      * Delete all records where associated permissions are soft deleted
      *
@@ -31,20 +45,13 @@ trait PermissionsCleanupTrait
      */
     public function cleanupHardDeletedPermissions(?bool $dryRun = false): int
     {
-        if (!$dryRun) {
-            $secretsIdsToDelete = $this->findSecretsToDelete()
-                ->select('id')
-                ->all()
-                ->extract('id')
-                ->toArray();
+        $secretsIdsToDelete = $this->findSecretsToDelete()->select('id');
 
-            if (!empty($secretsIdsToDelete)) {
-                return $this->deleteAll(['id IN' => $secretsIdsToDelete]);
-            }
+        if ($dryRun) {
+            return $secretsIdsToDelete->count();
         }
 
-        return $this->findSecretsToDelete()
-            ->count();
+        return $this->Secrets->deleteAll(['id IN' => $secretsIdsToDelete]);
     }
 
     /**
@@ -54,7 +61,7 @@ trait PermissionsCleanupTrait
      */
     private function findSecretsToDelete(): Query
     {
-        $directUsersSecretsQuery = $this->Resources->Permissions->find()
+        $directUsersSecretsQuery = $this->Secrets->Resources->Permissions->find()
             ->select([
                 'resource_id' => 'aco_foreign_key',
                 'user_id' => 'aro_foreign_key',
@@ -64,7 +71,7 @@ trait PermissionsCleanupTrait
                 'aro' => PermissionsTable::USER_ARO,
             ]);
 
-        $inheritedUsersSecretsQuery = $this->Resources->Permissions->find()
+        $inheritedUsersSecretsQuery = $this->Secrets->Resources->Permissions->find()
             ->select([
                 'resource_id' => 'aco_foreign_key',
                 'user_id' => 'groups_users.user_id',
@@ -76,22 +83,17 @@ trait PermissionsCleanupTrait
             ]);
 
         $userExpectedSecretsQuery = $directUsersSecretsQuery
-            ->union($inheritedUsersSecretsQuery)
+            ->union($inheritedUsersSecretsQuery->group(['resource_id', 'user_id']))
             ->group(['resource_id', 'user_id']);
 
         // Use a "LEFT JOIN" instead of a "NOT IN" for performance reason.
-        return $this->find()
-            ->join([
-                'table' => $userExpectedSecretsQuery,
-                'alias' => 'ExpectedSecrets',
-                'type' => 'LEFT',
-                'conditions' => [
-                    'ExpectedSecrets.resource_id' => new IdentifierExpression('Secrets.resource_id'),
-                    'ExpectedSecrets.user_id' => new IdentifierExpression('Secrets.user_id'),
-                ],
+        return $this->Secrets->find()
+            ->leftJoin(['ExpectedSecrets' => $userExpectedSecretsQuery], [
+                'ExpectedSecrets.resource_id' => new IdentifierExpression('Secrets.resource_id'),
+                'ExpectedSecrets.user_id' => new IdentifierExpression('Secrets.user_id'),
             ])
             ->where(function (QueryExpression $exp) {
-                 return $exp->isNull('ExpectedSecrets.resource_id');
+                return $exp->isNull('ExpectedSecrets.resource_id');
             });
     }
 }
