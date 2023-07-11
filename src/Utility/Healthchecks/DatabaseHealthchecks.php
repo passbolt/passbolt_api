@@ -143,9 +143,11 @@ class DatabaseHealthchecks
     {
         $checks['database']['defaultContent'] = false;
         try {
-            $roles = TableRegistry::getTableLocator()->get('Roles');
-            $i = $roles->find('all')->count();
-            $checks['database']['defaultContent'] = ($i > 3);
+            $nRoles = TableRegistry::getTableLocator()
+                ->get('Roles')
+                ->find()
+                ->count();
+            $checks['database']['defaultContent'] = ($nRoles >= 3);
         } catch (DatabaseException | MissingConnectionException | \PDOException $e) {
         }
 
