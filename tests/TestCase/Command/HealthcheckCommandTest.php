@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\HealthcheckCommand;
+use App\Model\Table\RolesTable;
 use App\Model\Validation\EmailValidationRule;
+use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -184,5 +186,18 @@ class HealthcheckCommandTest extends AppTestCase
          */
         ConnectionManager::alias('test', 'default');
         ConnectionManager::drop('invalid');
+    }
+
+    public function testHealthcheckCommand_Database_Happy_Path()
+    {
+        RoleFactory::make(RolesTable::ALLOWED_ROLE_NAMES)->persist();
+
+        $this->exec('passbolt healthcheck --database');
+        $this->assertExitSuccess();
+
+        $this->assertOutputContains('The application is able to connect to the database');
+        $this->assertOutputContains('tables found');
+        $this->assertOutputContains('Some default content is present');
+        $this->assertOutputContains('The database schema up to date.');
     }
 }
