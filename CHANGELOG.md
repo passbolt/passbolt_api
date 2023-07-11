@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.1-rc.1] - 2023-07-11
+### Fixed
+- PB-25325 As an administrator running the database healthcheck I should not see a false fail on the default database content
+
 ## [4.1.0] - 2023-06-29
 ### Added
 - PB-24259 As an administrator I can define with role based access control users' rights
