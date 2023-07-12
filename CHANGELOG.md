@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.1] - 2023-07-13
+### Fixed
+- PB-25304 As an administrator the application healthcheck should compare passbolt version with the latest stable release
+- PB-25325 As an administrator running the database healthcheck I should not see a false fail on the default database content
+
 ## [4.1.1-rc.2] - 2023-07-11
 ### Fixed
 - PB-25304 As an administrator the application healthcheck should compare passbolt version with the latest stable release
