@@ -149,7 +149,7 @@ class UsersDeleteController extends AppController
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
-        // An admin cannot delete themeselves
+        // An admin cannot delete themselves
         if ($id === $this->User->id()) {
             throw new BadRequestException(__('You are not allowed to delete yourself.'));
         }
