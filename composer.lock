@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2f859f0f88c224cefe54a2e509b186a7",
+    "content-hash": "9b0fb8c1b3cdeab6e18868c22d80e1fb",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -62,25 +62,25 @@
         },
         {
             "name": "bcrowe/cakephp-api-pagination",
-            "version": "2.1.1",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bcrowe/cakephp-api-pagination.git",
-                "reference": "f5c2cae9ee8ca0009d00d60fcad9c20e73d0e15b"
+                "reference": "c6fd911e0cabe6b50a0e78e9c657c0a17159a2f8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bcrowe/cakephp-api-pagination/zipball/f5c2cae9ee8ca0009d00d60fcad9c20e73d0e15b",
-                "reference": "f5c2cae9ee8ca0009d00d60fcad9c20e73d0e15b",
+                "url": "https://api.github.com/repos/bcrowe/cakephp-api-pagination/zipball/c6fd911e0cabe6b50a0e78e9c657c0a17159a2f8",
+                "reference": "c6fd911e0cabe6b50a0e78e9c657c0a17159a2f8",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "^4.0",
+                "cakephp/cakephp": "^4.2",
                 "php": ">=7.2"
             },
             "require-dev": {
-                "cakephp/cakephp-codesniffer": "~4.0.0",
-                "phpunit/phpunit": "^8.5",
+                "cakephp/cakephp-codesniffer": "^4.7",
+                "phpunit/phpunit": "^8.5.23",
                 "scrutinizer/ocular": "1.7"
             },
             "type": "cakephp-plugin",
@@ -94,7 +94,24 @@
                     "BryanCrowe\\ApiPagination\\": "src"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "BryanCrowe\\ApiPagination\\": "src",
+                    "BryanCrowe\\ApiPagination\\Test\\": "tests",
+                    "BryanCrowe\\ApiPagination\\TestApp\\": "tests/test_app/TestApp"
+                }
+            },
+            "scripts": {
+                "test": [
+                    "phpunit"
+                ],
+                "cs-check": [
+                    "phpcs src/ tests/"
+                ],
+                "cs-fix": [
+                    "phpcbf src/ tests/"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -115,11 +132,7 @@
                 "cakephp4",
                 "pagination"
             ],
-            "support": {
-                "issues": "https://github.com/bcrowe/cakephp-api-pagination/issues",
-                "source": "https://github.com/bcrowe/cakephp-api-pagination/tree/2.1.1"
-            },
-            "time": "2021-07-01T19:02:52+00:00"
+            "time": "2023-07-12T22:49:34+00:00"
         },
         {
             "name": "beberlei/assert",
@@ -318,16 +331,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "4.4.14",
+            "version": "4.4.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "bf3d59639b3cd7cf47e811be6d44c0dd6090a057"
+                "reference": "fb05c035275cefa7b748136c77002936a0006bc7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/bf3d59639b3cd7cf47e811be6d44c0dd6090a057",
-                "reference": "bf3d59639b3cd7cf47e811be6d44c0dd6090a057",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/fb05c035275cefa7b748136c77002936a0006bc7",
+                "reference": "fb05c035275cefa7b748136c77002936a0006bc7",
                 "shasum": ""
             },
             "require": {
@@ -381,7 +394,7 @@
             "suggest": {
                 "ext-curl": "To enable more efficient network calls in Http\\Client.",
                 "ext-openssl": "To use Security::encrypt() or have secure CSRF token generation.",
-                "lib-ICU": "The intl PHP library, to use Text::transliterate() or Text::slug()",
+                "lib-ICU": "To use locale-aware features in the I18n and Database packages",
                 "paragonie/csp-builder": "CSP builder, to use the CSP Middleware"
             },
             "type": "library",
@@ -426,7 +439,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2023-05-23T02:49:56+00:00"
+            "time": "2023-07-02T02:46:29+00:00"
         },
         {
             "name": "cakephp/chronos",
