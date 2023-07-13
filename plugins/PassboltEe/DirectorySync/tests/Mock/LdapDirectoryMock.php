@@ -320,7 +320,7 @@ class LdapDirectoryMock
         $builder->expects($this->testCase->exactly($expectationCount))
             ->method('select')
             ->withConsecutive(
-                [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP])],
+                [['*', $mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP]['created'], $mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP]['modified']]],
                 [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_USER])]
             )
             ->willReturnSelf();
