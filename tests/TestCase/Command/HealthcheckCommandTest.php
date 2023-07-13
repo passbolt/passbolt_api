@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\HealthcheckCommand;
+use App\Model\Table\RolesTable;
 use App\Model\Validation\EmailValidationRule;
+use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -103,8 +105,8 @@ class HealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Application_Happy_Path()
     {
-        Configure::write('passbolt.version', '9.9.9');
-        Configure::write('passbolt.remote.version', '9.9.9');
+        Configure::write('passbolt.version', '4.1.1');
+        Configure::write('passbolt.remote.version', 'v4.1.0');
         Configure::write('passbolt.ssl.force', true);
         Configure::write('App.fullBaseUrl', 'https://passbolt.local');
         Configure::write('passbolt.selenium.active', false);
@@ -146,7 +148,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->exec('passbolt healthcheck -d test --application');
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('This installation is not up to date');
+        $this->assertOutputContains('This installation is not up to date. Currently using 1.0.0 and it should be 9.9.9.');
         $this->assertOutputContains('Passbolt is not configured to force SSL use.');
         $this->assertOutputContains('App.fullBaseUrl is not set to HTTPS.');
         $this->assertOutputContains('Selenium API endpoints are active.');
@@ -184,5 +186,18 @@ class HealthcheckCommandTest extends AppTestCase
          */
         ConnectionManager::alias('test', 'default');
         ConnectionManager::drop('invalid');
+    }
+
+    public function testHealthcheckCommand_Database_Happy_Path()
+    {
+        RoleFactory::make(RolesTable::ALLOWED_ROLE_NAMES)->persist();
+
+        $this->exec('passbolt healthcheck --database');
+        $this->assertExitSuccess();
+
+        $this->assertOutputContains('The application is able to connect to the database');
+        $this->assertOutputContains('tables found');
+        $this->assertOutputContains('Some default content is present');
+        $this->assertOutputContains('The database schema up to date.');
     }
 }
