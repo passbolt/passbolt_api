@@ -23,6 +23,12 @@ use Faker\Generator;
 
 /**
  * RoleFactory
+ *
+ * @method \App\Model\Entity\Role|\App\Model\Entity\Role[] persist()
+ * @method \App\Model\Entity\Role getEntity()
+ * @method \App\Model\Entity\Role[] getEntities()
+ * @method static \App\Model\Entity\Role get($primaryKey, array $options = [])
+ * @method static \App\Model\Entity\Role firstOrFail($conditions = null)
  */
 class RoleFactory extends CakephpBaseFactory
 {

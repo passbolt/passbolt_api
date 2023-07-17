@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Form;
 
+use Cake\Database\Driver\Mysql;
+use Cake\Database\Driver\Postgres;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
@@ -29,14 +31,23 @@ class DatabaseConfigurationForm extends Form
     public const CONFIG_FILE_PATH = CONFIG . 'db_credentials.ini';
 
     /**
+     * Drivers supported by passbolt on installation
+     */
+    public const ALLOWED_DRIVERS = [
+        Mysql::class,
+        Postgres::class,
+    ];
+
+    /**
      * Database configuration schema.
      *
-     * @param \Cake\Form\Schema $schema shchema
+     * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
+            ->addField('driver', 'string')
             ->addField('host', 'string')
             ->addField('port', ['type' => 'string'])
             ->addField('username', ['type' => 'string'])
@@ -52,6 +63,14 @@ class DatabaseConfigurationForm extends Form
      */
     public function validationDefault(Validator $validator): Validator
     {
+        $validator
+            ->requirePresence('driver', 'create', __('A driver name is required.'))
+            ->notEmptyString('driver', __('The driver name should not be empty.'))
+            ->inList('driver', self::ALLOWED_DRIVERS, __(
+                'The database driver should be one of the following: {0}.',
+                implode(', ', self::ALLOWED_DRIVERS)
+            ));
+
         $validator
             ->requirePresence('host', 'create', __('A host name is required.'))
             ->notEmptyString('host', __('The host name should not be empty.'))
@@ -93,16 +112,5 @@ class DatabaseConfigurationForm extends Form
             ]);
 
         return $validator;
-    }
-
-    /**
-     * Execute implementation.
-     *
-     * @param array $data form data
-     * @return bool
-     */
-    protected function _execute(array $data): bool
-    {
-        return true;
     }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Controller\Duo;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Service\Cookie\AbstractSecureCookieService;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Http\Response;
 use Duo\DuoUniversal\Client;
@@ -69,7 +70,7 @@ class DuoSetupPromptPostController extends MfaSetupController
         }
         $cookie = (new MfaDuoStateCookieService())->createDuoStateCookie(
             $duoAuthenticationRequest->authenticationToken->token,
-            $this->_isSslRequired()
+            AbstractSecureCookieService::isSslOrCookiesSecure($this->getRequest())
         );
 
         $this->setResponse($this->getResponse()->withCookie($cookie));

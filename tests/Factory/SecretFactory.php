@@ -49,6 +49,8 @@ class SecretFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
+                'user_id' => $faker->uuid(),
+                'resource_id' => $faker->uuid(),
                 'data' => $this->getValidSecret(),
             ];
         });

@@ -175,9 +175,17 @@ class UsersDeleteControllerTest extends AppIntegrationTestCase
 
     public function testUsersDeleteController_Error_CannotDeleteSelf(): void
     {
-        $this->authenticateAs('admin');
-        $userAId = UuidFactory::uuid('user.id.admin');
-        $this->deleteJson("/users/$userAId.json");
+        $admin = $this->logInAsAdmin();
+        $userId = $admin->id;
+        $this->deleteJson("/users/{$userId}.json");
+        $this->assertError(400, 'You are not allowed to delete yourself.');
+    }
+
+    public function testUsersDeleteController_Error_CannotDeleteSelf_UpperCase(): void
+    {
+        $admin = $this->logInAsAdmin();
+        $userId = strtoupper($admin->id);
+        $this->deleteJson("/users/{$userId}.json");
         $this->assertError(400, 'You are not allowed to delete yourself.');
     }
 
