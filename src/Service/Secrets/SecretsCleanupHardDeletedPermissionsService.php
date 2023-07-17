@@ -18,8 +18,10 @@ namespace App\Service\Secrets;
 
 use App\Model\Table\PermissionsTable;
 use App\Model\Table\SecretsTable;
+use Cake\Database\Driver\Postgres;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\ConnectionManager;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 
@@ -51,7 +53,13 @@ class SecretsCleanupHardDeletedPermissionsService
             return $secretsIdsToDelete->count();
         }
 
-        return $this->Secrets->deleteAll(['id IN' => $secretsIdsToDelete]);
+        if ($secretsIdsToDelete->getConnection()->getDriver() instanceof Postgres) {
+            // Postgres does not accept the deletion combined with a join, and rather recommends injecting a sub-query
+            return $this->Secrets->deleteAll(['id IN' => $secretsIdsToDelete]);
+        } else {
+            // MySQL does not accept the deletion of a table with a sub-query on that same table (secrets)
+            return $this->deletedSecretsWithJoinInDelete();
+        }
     }
 
     /**
@@ -95,5 +103,39 @@ class SecretsCleanupHardDeletedPermissionsService
             ->where(function (QueryExpression $exp) {
                 return $exp->isNull('ExpectedSecrets.resource_id');
             });
+    }
+
+    /**
+     * Cleanup secrets with a join ins delete statement.
+     * This is not supported by Postgres
+     *
+     * @return int
+     */
+    private function deletedSecretsWithJoinInDelete(): int
+    {
+        return ConnectionManager::get('default')->execute("
+            DELETE secrets FROM secrets
+            LEFT JOIN (
+            (
+                SELECT aco_foreign_key AS resource_id, aro_foreign_key AS user_id
+                FROM permissions Permissions
+                WHERE (aco = '" . PermissionsTable::RESOURCE_ACO . "' AND aro = '" . PermissionsTable::USER_ARO . "')
+                GROUP BY resource_id, user_id
+            )
+            UNION
+            (
+                SELECT aco_foreign_key AS resource_id, groups_users.user_id AS user_id
+                FROM permissions Permissions
+                LEFT JOIN groups_users groups_users ON aro_foreign_key = group_id
+                WHERE (aco = '" . PermissionsTable::RESOURCE_ACO . "' AND aro = '" . PermissionsTable::GROUP_ARO . "')
+                GROUP BY resource_id, user_id
+            )
+            ) ExpectedSecrets ON (
+                ExpectedSecrets.resource_id = secrets.resource_id
+                AND ExpectedSecrets.user_id = secrets.user_id
+            )
+
+            WHERE ExpectedSecrets.resource_id IS NULL;
+        ")->count();
     }
 }
