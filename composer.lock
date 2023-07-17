@@ -8418,16 +8418,16 @@
         },
         {
             "name": "vierge-noire/cakephp-fixture-factories",
-            "version": "v2.9",
+            "version": "v2.9.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
-                "reference": "3cc6b9da77a3322e14e7b517d1ee664e2c27abba"
+                "reference": "f3d7fec2ba142ef8be6491affe1019abc7490c8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/3cc6b9da77a3322e14e7b517d1ee664e2c27abba",
-                "reference": "3cc6b9da77a3322e14e7b517d1ee664e2c27abba",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/f3d7fec2ba142ef8be6491affe1019abc7490c8b",
+                "reference": "f3d7fec2ba142ef8be6491affe1019abc7490c8b",
                 "shasum": ""
             },
             "require": {
@@ -8475,9 +8475,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
-                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.9.0-rc.1"
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.9.1"
             },
-            "time": "2023-06-05T13:34:35+00:00"
+            "time": "2023-07-14T14:41:57+00:00"
         },
         {
             "name": "vierge-noire/cakephp-test-suite-light",
