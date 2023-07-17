@@ -34,7 +34,7 @@ class UsersDeleteNotificationTest extends AppIntegrationTestCase
     {
         $this->authenticateAs('admin');
         $francesId = UuidFactory::uuid('user.id.ursula');
-        $this->deleteJson('/users/' . $francesId . '.json');
+        $this->deleteJson('/users/' . $francesId . '.json?api-version=v2');
         $this->assertSuccess();
 
         $this->assertEmailInBatchContains('deleted the user Ursula', 'ping@passbolt.com');

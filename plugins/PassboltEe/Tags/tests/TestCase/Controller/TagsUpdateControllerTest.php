@@ -1,0 +1,516 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.11.0
+ */
+namespace Passbolt\Tags\Test\TestCase\Controller;
+
+use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
+use Passbolt\Tags\Model\Table\ResourcesTagsTable;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
+use Passbolt\Tags\Test\Factory\TagFactory;
+use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
+
+/**
+ * @covers \Passbolt\Tags\Controller\Tags\TagsUpdateController
+ */
+class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
+{
+    public $ResourcesTags;
+    public $fixtures = [
+        'app.Alt0/GroupsUsers',
+        'app.Alt0/Permissions',
+        'app.Base/Groups',
+        'app.Base/Favorites',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/Resources',
+        'app.Base/ResourceTypes',
+        'app.Base/Secrets',
+        'app.Base/Users',
+        'plugin.Passbolt/Tags.Base/Tags',
+        'plugin.Passbolt/Tags.Alt0/ResourcesTags',
+    ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $config = TableRegistry::getTableLocator()->exists('Passbolt/Tags.ResourcesTags') ? [] : ['className' => ResourcesTagsTable::class];
+        $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags', $config);
+    }
+
+    /**
+     * A user not logged in should not be able to update tags
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateNotLoggedIn()
+    {
+        $this->putJson('/tags/0507cbbb-eb14-5121-9105-05380dbe64ff.json?api-version=v2');
+        $this->assertResponseError();
+        $this->assertAuthenticationError();
+    }
+
+    /**
+     * Request with and invalid uuid should fail and give error
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateInvalidTagId()
+    {
+        $this->logInAsUser();
+        $this->putJson('/tags/invalid-tag-id.json?api-version=v2');
+        $this->assertBadRequestError('The tag id is not valid.');
+    }
+
+    /**
+     * Request with and non existing tagId should fail and give error
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateNonExistingTagId()
+    {
+        $this->logInAsUser();
+        $tagId = UuidFactory::uuid('tag.id.nope');
+        $this->putJson("/tags/$tagId.json?api-version=v2");
+        $this->assertError(404, 'The tag does not exist.');
+    }
+
+    /**
+     * A user should not be able to update a shared tag
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateUserCanNotUpdateSharedTag()
+    {
+        $this->logInAsUser();
+        $tagId = UuidFactory::uuid('tag.id.#bravo');
+        $this->putJson("/tags/$tagId.json?api-version=v2");
+        $this->assertForbiddenError('You do not have the permission to update shared tags.');
+    }
+
+    /**
+     * A tag with too long slug should not be saved
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdatePersonalTagSlugTooLong()
+    {
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'firefox'])
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => str_repeat('a', 129),
+        ]);
+
+        $this->assertBadRequestError('Could not validate tag data.');
+        $response = $this->getResponseBodyAsArray();
+        $this->assertTrue(Hash::check($response, 'slug.maxLength'));
+        $this->assertEquals('The tag length should be maximum 128 characters.', Hash::get($response, 'slug.maxLength'));
+    }
+
+    /**
+     * A user should not be able to delete a tag without providing CSRF token
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateUserCanNotDeleteWithoutCsrfToken()
+    {
+        $this->disableCsrfToken();
+
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'firefox'])
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
+        $this->put("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'brave',
+        ]);
+
+        $this->assertResponseCode(403);
+        $result = $this->_getBodyAsString();
+        $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
+    }
+
+    /**
+     * A user should be able to use unicode text in a tag
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdatePersonalTagSupportsUnicode()
+    {
+        $success = [
+            'chinese' => [
+                'user' => 'ada',
+                'tag' => 'tag.id.alpha',
+                'data' => [
+                    'slug' => '新的專用資源名稱',
+                ],
+            ],
+            'slavic' => [
+                'user' => 'ada',
+                'tag' => 'tag.id.firefox',
+                'data' => [
+                    'slug' => 'Новое имя частного ресурса',
+                ],
+            ],
+            'french' => [
+                'user' => 'betty',
+                'tag' => 'tag.id.alpha',
+                'data' => [
+                    'slug' => 'Nouveau nom de resource privée',
+                ],
+            ],
+            'emoticon' => [
+                'user' => 'ada',
+                'tag' => 'tag.id.hindi',
+                'data' => [
+                    'slug' => "\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}\u{1F61C}",
+                ],
+            ],
+        ];
+
+        foreach ($success as $test => $case) {
+            $this->authenticateAs($case['user']);
+            $tagId = UuidFactory::uuid($case['tag']);
+            $this->putJson("/tags/$tagId.json?api-version=v2", $case['data']);
+            $this->assertEquals('success', $this->_responseJsonHeader->status, $test);
+        }
+    }
+
+    /**
+     * A tag update response should have the updated tag in it's body
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUserUpdateResponseContainsTag()
+    {
+        $this->authenticateAs('ada');
+        $tagId = UuidFactory::uuid('tag.id.alpha');
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'test slug',
+        ]);
+        $this->assertSuccess();
+        $response = $this->_responseJsonBody;
+        $this->assertEquals('test slug', $response->slug);
+        $this->assertFalse($response->is_shared);
+    }
+
+    /**
+     * A user should be able to update a personal tag
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateUserCanUpdatePersonalTag()
+    {
+        $this->authenticateAs('ada');
+        $tagId = UuidFactory::uuid('tag.id.firefox');
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'brave',
+        ]);
+        $this->assertSuccess();
+
+        // Make sure we do not see the old tag in index
+        $this->getJson('/tags.json?api-version=v2');
+        $response = json_decode($this->_getBodyAsString());
+        $results = Hash::extract($response->body, '{n}.slug');
+        $this->assertNotContains('firefox', $results);
+
+        // Make sure we see the updated tag in index
+        $this->assertContains('brave', $results);
+    }
+
+    /**
+     * A user should be able to update a personal tag
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateUserWithExistingTagHandleTagsAssociationDuplicate()
+    {
+        $this->authenticateAs('ada');
+        /** @psalm-suppress UndefinedClass trait exists */
+        $resourceData = self::getDummyResourceData();
+        /** @psalm-suppress UndefinedClass trait exists */
+        $resourceData['secrets'][0] = self::getDummySecretData();
+        $resource = $this->_addTestResource($resourceData);
+        $tags = $this->_addTestTag($resource->id, ['test-tag-1', 'test-tag-2']);
+        $this->assertCount(2, $tags);
+
+        $resourcesTagsCount = $this->ResourcesTags->find()->where([
+            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'resource_id' => $resource->id,
+        ])->count();
+        $this->assertEquals(2, $resourcesTagsCount);
+
+        $this->putJson("/tags/{$tags[0]->id}.json?api-version=v2", [
+            'slug' => $tags[1]->slug,
+        ]);
+        $this->assertSuccess();
+
+        $resourcesTags = $this->ResourcesTags->find()->where([
+            'user_id' => UuidFactory::uuid('user.id.ada'),
+            'resource_id' => $resource->id,
+        ])->all()->toArray();
+        $this->assertCount(1, $resourcesTags);
+        $this->assertEquals($tags[1]->id, $resourcesTags[0]->tag_id);
+    }
+
+    /**
+     * A user should not be able to update a personal tag to a shared tag
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdateUserCanNotUpdateToShareTag()
+    {
+        $this->authenticateAs('ada');
+        $tagId = UuidFactory::uuid('tag.id.firefox');
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => '#brave',
+        ]);
+        $this->assertBadRequestError('You do not have the permission to change a personal tag into shared tag.');
+    }
+
+    /**
+     * A personal tag update should not affect other users
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagUpdatePersonalUpdateDoesNotAffectOthers()
+    {
+        $this->authenticateAs('ada');
+        $tagId = UuidFactory::uuid('tag.id.alpha');
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'updated-slug',
+        ]);
+
+        // Make sure this doesn't affect other users
+        $this->authenticateAs('betty');
+        $this->getJson('/tags.json?api-version=v2');
+        $response = json_decode($this->_getBodyAsString());
+        $results = Hash::extract($response->body, '{n}.slug');
+        $this->assertContains('alpha', $results);
+        $this->assertNotContains('updated-slug', $results);
+    }
+
+    /**
+     * A personal tag update by an admin should not affect other users
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     * @group admin
+     */
+    public function testTagUpdatePersonalUpdateByAdminDoesNotAffectOthers()
+    {
+        $this->authenticateAs('admin');
+        $tagId = UuidFactory::uuid('tag.id.alpha');
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'updated-slug',
+        ]);
+
+        // Make sure this doesn't affect other users
+        $this->authenticateAs('betty');
+        $this->getJson('/tags.json?api-version=v2');
+        $response = json_decode($this->_getBodyAsString());
+        $results = Hash::extract($response->body, '{n}.slug');
+        $this->assertContains('alpha', $results);
+        $this->assertNotContains('updated-slug', $results);
+    }
+
+    /**
+     * After a personal tag update by Admin, the response should contain updated tag
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     * @group admin
+     */
+    public function testTagAdminPersonalUpdateResponseContainsTag()
+    {
+        $this->authenticateAs('admin');
+        /** @psalm-suppress UndefinedClass trait exists */
+        $resourceData = self::getDummyResourceData();
+        /** @psalm-suppress UndefinedClass trait exists */
+        $resourceData['secrets'][0] = self::getDummySecretData();
+        $resource = $this->_addTestResource($resourceData);
+        $tags = $this->_addTestTag($resource->id, ['admin-personal']);
+        $tag = $tags[0];
+
+        // Update Tag
+        $this->putJson("/tags/{$tag->id}.json?api-version=v2", [
+            'slug' => 'updated-admin-personal',
+        ]);
+        $this->assertSuccess();
+        $response = $this->_responseJsonBody;
+        $this->assertEquals('updated-admin-personal', $response->slug);
+        $this->assertFalse($response->is_shared);
+    }
+
+    /**
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagsUpdateController_RenameSlugWithDifferentCase()
+    {
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'test'])
+            ->persist();
+        ResourcesTagFactory::make()
+            ->with('Users')
+            ->with('Tags', $resourceTag->tag)
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'TEST',
+        ]);
+
+        $this->assertSuccess();
+        $responseArray = $this->getResponseBodyAsArray();
+        $this->assertSame('TEST', $responseArray['slug']);
+        // Make sure new tag is created if case is different
+        $this->assertNotSame($tagId, $responseArray['id']);
+        // Make sure two entries are created if slug's case is different
+        $this->assertSame(2, TagFactory::find()->where(['UPPER(slug)' => 'TEST'])->count());
+    }
+
+    /**
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagsUpdateController_NotVulnerableToSqlInjection()
+    {
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'baz'])
+            ->persist();
+        ResourcesTagFactory::make()
+            ->with('Users')
+            ->with('Tags', $resourceTag->tag)
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
+        $this->putJson("/tags/$tagId.json?api-version=v2", [
+            'slug' => 'dm\'d', // send slug that can cause SQL injection
+        ]);
+
+        $this->assertSuccess();
+        $responseArray = $this->getResponseBodyAsArray();
+        $this->assertSame('dm\'d', $responseArray['slug']);
+        $this->assertSame(1, TagFactory::find()->where(['slug' => 'dm\'d'])->count());
+    }
+
+    /**
+     * Make sure renaming slug with same slug doesn't remove tag for the user.
+     *
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testTagsUpdateController_SameSlugName()
+    {
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'foobar'])
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'slug' => 'foobar',
+        ]);
+
+        $this->assertSuccess();
+        $responseArray = $this->getResponseBodyAsArray();
+        // Make sure new tag is not created
+        $this->assertSame($tagId, $responseArray['id']);
+        $this->assertSame('foobar', $responseArray['slug']);
+        // Assert there is only single entry in the database
+        $this->assertSame(1, TagFactory::find()->where(['slug' => 'foobar'])->count());
+        $this->assertSame(
+            1,
+            ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->count()
+        );
+    }
+
+    /**
+     * Add a test resource
+     *
+     * @param array $data resource data
+     * @return mixed ID of the new resource
+     */
+    protected function _addTestResource(?array $data = [])
+    {
+        $this->postJson('/resources.json?api-version=v2', $data);
+
+        return $this->_responseJsonBody;
+    }
+
+    /**
+     * Add a test tag
+     *
+     * @param string $resourceId ID of the resource where tag is to be added
+     * @param array|null $tags List of tags to be added
+     * @return mixed List of tags
+     */
+    protected function _addTestTag(string $resourceId, ?array $tags = [])
+    {
+        $data = ['tags' => $tags];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=v2', $data);
+
+        return $this->_responseJsonBody;
+    }
+}

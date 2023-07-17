@@ -88,6 +88,9 @@ abstract class AppIntegrationTestCase extends TestCase
         $this->disableFeaturePlugin('MultiFactorAuthentication');
         $this->disableFeaturePlugin('Log');
         $this->disableFeaturePlugin('Folders');
+        $this->disableFeaturePlugin('AccountRecovery');
+        $this->disableFeaturePlugin('Sso');
+        $this->disableFeaturePlugin('SsoRecover');
 
         Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
         // Disable SSL Force since all requests in tests are made on http

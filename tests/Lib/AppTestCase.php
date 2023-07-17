@@ -65,9 +65,11 @@ abstract class AppTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->disableFeaturePlugin('Tags');
         Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
         Configure::write('passbolt.plugins.log.enabled', false);
         Configure::write('passbolt.plugins.folders.enabled', false);
+        $this->disableFeaturePlugin('AccountRecovery');
         $this->loadRoutes();
     }
 

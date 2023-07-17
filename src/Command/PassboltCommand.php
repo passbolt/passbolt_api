@@ -21,6 +21,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Passbolt\Ee\Command\SubscriptionCheckCommand;
 
 /**
  * Passbolt command.
@@ -116,9 +117,13 @@ class PassboltCommand extends Command
             'help' => __d('cake_console', 'Init the GnuPG keyring.'),
         ]);
 
-        if (Configure::read('passbolt.plugins.license')) {
-            $parser->addArgument('license_check', [
-                'help' => __d('cake_console', 'Check the license.'),
+        if (Configure::read('passbolt.plugins.ee')) {
+            $parser->addArgument('subscription_check', [
+                'help' => __d('cake_console', 'Check details of the current subscription key.'),
+            ]);
+
+            $parser->addArgument('subscription_import', [
+                'help' => __d('cake_console', 'Import a new subscription key.'),
             ]);
         }
 
@@ -363,5 +368,28 @@ class PassboltCommand extends Command
             $io->error('This command is available in debug mode only.');
             $this->abort();
         }
+    }
+
+    /**
+     * Check that license is valid.
+     * Dispatch to plugin Passbolt/license.subscription_check
+     *
+     * @param \Cake\Console\Arguments $args The command arguments.
+     * @param \Cake\Console\ConsoleIo $io Console IO.
+     * @return bool status
+     */
+    protected function subscriptionCheck(Arguments $args, ConsoleIo $io): bool
+    {
+        if (Configure::read('passbolt.plugins.ee')) {
+            $code = $this->executeCommand(
+                SubscriptionCheckCommand::class,
+                $this->formatOptions($args),
+                $io
+            );
+
+            return $code === self::CODE_SUCCESS;
+        }
+
+        return true;
     }
 }

@@ -42,3 +42,10 @@ if (!extension_loaded('curl')) {
 if (!extension_loaded('openssl')) {
     trigger_error('You must enable the openssl extensions to use Passbolt.', E_USER_ERROR);
 }
+
+/*
+ * Passbolt PRO requirements
+ */
+if (!extension_loaded('ldap')) {
+    trigger_error('You must enable the ldap extension to use Passbolt.', E_USER_ERROR);
+}

@@ -71,6 +71,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-curl": "*",
+        "ext-ldap": "*",
         "cakephp/cakephp": "^4.4.11",
         "cakephp/migrations": "dev-master#46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2",
         "robmorgan/phinx": "0.x-dev#a409b03e1e3e5f8f60d0d3179704abc9bc80e817",
@@ -88,7 +89,9 @@
         "spomky-labs/otphp": "^10.0.0",
         "bacon/bacon-qr-code": "^2.0.7",
         "enygma/yubikey": "dev-master#31802c4f5ef24df87c4710e5893bdf8ad73554be",
-        "duosecurity/duo_universal_php": "^1.0"
+        "duosecurity/duo_universal_php": "^1.0",
+        "league/oauth2-client": "^2.6",
+        "directorytree/ldaprecord": "^2.19"
     },
     "require-dev": {
         "phpstan/phpstan": "~1.10.0",
@@ -106,13 +109,19 @@
     "autoload": {
         "psr-4": {
             "App\\": "src",
+            "Passbolt\\AccountRecovery\\": "./plugins/PassboltEe/AccountRecovery/src",
             "Passbolt\\AccountSettings\\": "./plugins/PassboltCe/AccountSettings/src",
+            "Passbolt\\DirectorySync\\": "./plugins/PassboltEe/DirectorySync/src",
+            "Passbolt\\MfaPolicies\\": "./plugins/PassboltEe/MfaPolicies/src",
+            "Passbolt\\Ee\\": "plugins/PassboltEe/Ee/src",
             "Passbolt\\InFormIntegration\\": "./plugins/PassboltCe/InFormIntegration/src",
             "Passbolt\\Locale\\": "./plugins/PassboltCe/Locale/src",
             "Passbolt\\PasswordGenerator\\": "./plugins/PassboltCe/PasswordGenerator/src",
             "Passbolt\\RememberMe\\": "./plugins/PassboltCe/RememberMe/src",
+            "Passbolt\\Tags\\": "./plugins/PassboltEe/Tags/src",
             "Passbolt\\WebInstaller\\": "./plugins/PassboltCe/WebInstaller/src",
             "Passbolt\\Log\\": "./plugins/PassboltCe/Log/src",
+            "Passbolt\\AuditLog\\": "./plugins/PassboltEe/AuditLog/src",
             "Passbolt\\EmailNotificationSettings\\": "./plugins/PassboltCe/EmailNotificationSettings/src",
             "Passbolt\\EmailDigest\\": "./plugins/PassboltCe/EmailDigest/src",
             "Passbolt\\Reports\\": "./plugins/PassboltCe/Reports/src",
@@ -125,6 +134,8 @@
             "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/PassboltCe/MultiFactorAuthentication/src",
             "Passbolt\\SelfRegistration\\": "./plugins/PassboltCe/SelfRegistration/src",
+            "Passbolt\\Sso\\": "./plugins/PassboltEe/Sso/src",
+            "Passbolt\\SsoRecover\\": "./plugins/PassboltEe/SsoRecover/src",
             "Passbolt\\TotpResourceTypes\\": "./plugins/PassboltCe/TotpResourceTypes/src",
             "Passbolt\\Rbacs\\": "./plugins/PassboltCe/Rbacs/src"
         }
@@ -133,11 +144,18 @@
         "psr-4": {
             "App\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests",
+            "Passbolt\\AccountRecovery\\Test\\": "./plugins/PassboltEe/AccountRecovery/tests",
             "Passbolt\\AccountSettings\\Test\\": "./plugins/PassboltCe/AccountSettings/tests",
+            "Passbolt\\DirectorySync\\Test\\": "./plugins/PassboltEe/DirectorySync/tests",
+            "Passbolt\\MfaPolicies\\Test\\": "./plugins/PassboltEe/MfaPolicies/tests",
+            "Passbolt\\Ee\\Test\\": "plugins/PassboltEe/Ee/tests",
+            "Passbolt\\InFormIntegration\\Test\\": "./plugins/PassboltCe/InFormIntegration/tests",
             "Passbolt\\Locale\\Test\\": "./plugins/PassboltCe/Locale/tests",
+            "Passbolt\\Tags\\Test\\": "./plugins/PassboltEe/Tags/tests",
             "Passbolt\\PasswordGenerator\\Test\\": "./plugins/PassboltCe/PasswordGenerator/tests",
             "Passbolt\\WebInstaller\\Test\\": "./plugins/PassboltCe/WebInstaller/tests",
             "Passbolt\\Log\\Test\\": "./plugins/PassboltCe/Log/tests",
+            "Passbolt\\AuditLog\\Test\\": "./plugins/PassboltEe/AuditLog/tests",
             "Passbolt\\EmailNotificationSettings\\Test\\": "./plugins/PassboltCe/EmailNotificationSettings/tests",
             "Passbolt\\EmailDigest\\Test\\": "./plugins/PassboltCe/EmailDigest/tests",
             "Passbolt\\Reports\\Test\\": "./plugins/PassboltCe/Reports/tests",
@@ -147,6 +165,8 @@
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/PassboltCe/MultiFactorAuthentication/tests",
             "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests",
             "Passbolt\\SelfRegistration\\Test\\": "./plugins/PassboltCe/SelfRegistration/tests",
+            "Passbolt\\Sso\\Test\\": "./plugins/PassboltEe/Sso/tests",
+            "Passbolt\\SsoRecover\\Test\\": "./plugins/PassboltEe/SsoRecover/tests",
             "Passbolt\\ResourceTypes\\Test\\": "./plugins/PassboltCe/ResourceTypes/tests",
             "Passbolt\\TotpResourceTypes\\Test\\": "./plugins/PassboltCe/TotpResourceTypes/tests",
             "Passbolt\\Rbacs\\Test\\": "./plugins/PassboltCe/Rbacs/tests"

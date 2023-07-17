@@ -19,6 +19,7 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Service\Resources\ResourcesUpdateService;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 
@@ -57,6 +58,9 @@ class ResourcesUpdateController extends AppController
                 'creator' => true, 'favorite' => true, 'modifier' => true, 'secret' => true, 'permission' => true,
             ],
         ];
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            $options['contain']['tag'] = true;
+        }
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
         $output = $resourcesTable->findView($this->User->id(), $resource->id, $options)->first();

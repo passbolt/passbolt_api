@@ -18,10 +18,13 @@ namespace Passbolt\WebInstaller\Test\TestCase\Utility;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
+use Passbolt\Ee\Model\Entity\Subscription;
+use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
@@ -33,6 +36,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
     use ConfigurationTrait;
     use DatabaseTrait;
     use GpgkeysModelTrait;
+    use DummySubscriptionTrait;
 
     public function setUp(): void
     {
@@ -168,5 +172,30 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $this->assertEquals($userSettings['profile']['first_name'], $user->profile->first_name);
         $this->assertEquals($userSettings['profile']['last_name'], $user->profile->last_name);
         $this->assertEquals(AuthenticationToken::TYPE_REGISTER, $user->authentication_tokens[0]->type);
+    }
+
+    public function testWebInstallerImportSubscription()
+    {
+        $user = UserFactory::make()->admin()->persist();
+        $webInstaller = new WebInstaller(null);
+        $webInstaller->setSettings('user', ['user_id' => $user->id]);
+        $subscriptionSettings = [
+            'subscription_key' => file_get_contents(PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev'),
+        ];
+        $webInstaller->setSettings('subscription', $subscriptionSettings);
+
+        // With Public Subscription Key:
+        $this->setUpPathAndPublicSubscriptionKey();
+        $webInstaller->importSubscription();
+        $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
+
+        // With Public Subscription Key update
+        $this->setUpPathAndPublicSubscriptionKey();
+        $webInstaller->importSubscription();
+
+        // Without Public Subscription Key, no exception should be thrown, the former subscription is still valid
+        Configure::delete('passbolt.plugins.ee.subscriptionKey.public');
+        $webInstaller->importSubscription();
+        $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
     }
 }
