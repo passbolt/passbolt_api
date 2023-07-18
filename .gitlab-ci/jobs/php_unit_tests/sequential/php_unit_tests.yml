@@ -111,8 +111,7 @@ seq-php7.4-mysql5.7:
     - .mysql-template
     - .test-template
   rules:
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
-    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+    - if: '$TEST_DISABLED == null'
 
 seq-php7.4-postgres:
   variables:
