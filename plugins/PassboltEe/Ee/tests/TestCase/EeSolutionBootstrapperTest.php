@@ -113,6 +113,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 
     protected function arrangeAndGetPlugins(): PluginCollection
     {
+        $this->enableFeaturePlugin('Rbacs');
         $this->enableFeaturePlugin('Mobile');
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->enableFeaturePlugin('SmtpSettings');
