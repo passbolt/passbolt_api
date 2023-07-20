@@ -132,3 +132,5 @@ tilt_modules*
 
 # PHPUNIT generated file
 .phpunit.result.cache
+# Vim filems
+*.vim
