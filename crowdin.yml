@@ -12,7 +12,7 @@ export_languages:
   - lt
   - nl
   - pl
-  - pt
+  - pt-BR
   - ro
   - sv
 commit_message: '[skip-ci]'
