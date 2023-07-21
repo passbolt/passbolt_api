@@ -19,13 +19,10 @@ namespace App\Test\TestCase\Model\Rule\Gpgkeys;
 
 use App\Model\Entity\Gpgkey;
 use App\Model\Rule\Gpgkeys\GopengpgFormatRule;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\TestSuite\TestCase;
 
 class GopengpgFormatRuleTest extends TestCase
 {
-    use ModelAwareTrait;
-
     public function testGopengpgFormatRule_Success()
     {
         $gpgkey = new Gpgkey();

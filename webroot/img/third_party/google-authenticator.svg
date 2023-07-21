@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="97px" height="97px" viewBox="0 0 97 97" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <circle id="path-1" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-3" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-5" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-7" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-9" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-11" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-13" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-15" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-17" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-19" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-21" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-23" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-25" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-27" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-29" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-31" cx="48.5" cy="48.5" r="48.5"></circle>
+        <circle id="path-33" cx="48.5" cy="48.5" r="48.5"></circle>
+        <radialGradient cx="14.6639205%" cy="14.5530682%" fx="14.6639205%" fy="14.5530682%" r="99.826875%" id="radialGradient-35">
+            <stop stop-color="#FFFFFF" stop-opacity="0.1" offset="0%"></stop>
+            <stop stop-color="#FFFFFF" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="authenticator">
+            <g id="Clipped">
+                <g id="Oval-Clipped">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <g id="path-1"></g>
+                    <circle id="Oval" fill="#616161" fill-rule="nonzero" mask="url(#mask-2)" cx="48.5" cy="48.5" r="48.5"></circle>
+                </g>
+                <g id="Group-Clipped">
+                    <mask id="mask-4" fill="white">
+                        <use xlink:href="#path-3"></use>
+                    </mask>
+                    <g id="path-3"></g>
+                    <g id="Group" mask="url(#mask-4)">
+                        <g transform="translate(-1.000000, -1.000000)">
+                            <g transform="translate(0.590909, 0.590909)">
+                                <path d="M48.9090909,79.7727273 C31.8624432,79.7727273 18.0454545,65.9557386 18.0454545,48.9090909 C18.0454545,31.8624432 31.8624432,18.0454545 48.9090909,18.0454545 C57.4296591,18.0454545 65.1455682,21.5010795 70.7340909,27.0840909 L83.2063068,14.611875 C74.4267045,5.83778409 62.3017045,0.40909091 48.9090909,0.40909091 C22.1238636,0.40909091 0.40909091,22.1238636 0.40909091,48.9090909 C0.40909091,75.6943182 22.1238636,97.409091 48.9090909,97.409091 C62.3017045,97.409091 74.4267045,91.9803977 83.2063068,83.2063068 L70.7340909,70.7340909 C65.1455682,76.3171023 57.4296591,79.7727273 48.9090909,79.7727273 Z" id="Shape" fill="#9E9E9E" fill-rule="nonzero"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+                <g id="Shape-Clipped">
+                    <mask id="mask-6" fill="white">
+                        <use xlink:href="#path-5"></use>
+                    </mask>
+                    <g id="path-5"></g>
+                    <path d="M79.3636364,48.5 L63.9318182,48.5 C63.9318182,39.9794318 57.0205682,33.0681818 48.5,33.0681818 C39.9794318,33.0681818 33.0681818,39.9794318 33.0681818,48.5 C33.0681818,52.6500568 34.7105682,56.4143182 37.3780682,59.1920455 C37.3780682,59.1920455 37.3780682,59.1920455 37.3780682,59.1920455 L37.3670455,59.2030682 L56.4749432,78.3109659 L56.4804545,78.3164773 C69.658125,74.8002273 79.3636364,62.7854545 79.3636364,48.5 Z" id="Shape" fill="#424242" fill-rule="nonzero" mask="url(#mask-6)"></path>
+                </g>
+                <g id="Shape-Clipped">
+                    <mask id="mask-8" fill="white">
+                        <use xlink:href="#path-7"></use>
+                    </mask>
+                    <g id="path-7"></g>
+                    <path d="M97,48.5 L79.3636364,48.5 C79.3636364,62.7854545 69.6526136,74.8002273 56.4804545,78.3164773 L70.0990341,91.9350568 C86.0434091,83.9931818 97,67.5252273 97,48.5 Z" id="Shape" fill="#616161" fill-rule="nonzero" mask="url(#mask-8)"></path>
+                </g>
+                <g id="Shape-Clipped">
+                    <mask id="mask-10" fill="white">
+                        <use xlink:href="#path-9"></use>
+                    </mask>
+                    <g id="path-9"></g>
+                    <path d="M48.5,96.4488636 C21.8084659,96.4488636 0.154318182,74.8828977 0.00551136364,48.2244318 C0.00551136364,48.318125 0,48.4063068 0,48.5 C0,75.2852273 21.7147727,97 48.5,97 C75.2852273,97 97,75.2852273 97,48.5 C97,48.4063068 96.9944886,48.318125 96.9944886,48.2244318 C96.8456818,74.8828977 75.1915341,96.4488636 48.5,96.4488636 Z" id="Shape" fill-opacity="0.1" fill="#212121" fill-rule="nonzero" mask="url(#mask-10)"></path>
+                </g>
+                <g id="Shape-Clipped">
+                    <mask id="mask-12" fill="white">
+                        <use xlink:href="#path-11"></use>
+                    </mask>
+                    <g id="path-11"></g>
+                    <path d="M56.4804545,78.3164773 L56.9103409,78.7463636 C69.8620455,75.0868182 79.3636364,63.1822727 79.3636364,49.0511364 L79.3636364,48.5 C79.3636364,62.7854545 69.6526136,74.8002273 56.4804545,78.3164773 Z" id="Shape" fill-opacity="0.05" fill="#FFFFFF" fill-rule="nonzero" mask="url(#mask-12)"></path>
+                </g>
+                <g id="Group-Clipped">
+                    <mask id="mask-14" fill="white">
+                        <use xlink:href="#path-13"></use>
+                    </mask>
+                    <g id="path-13"></g>
+                    <g id="Group" mask="url(#mask-14)">
+                        <g transform="translate(39.000000, 39.000000)">
+                            <g transform="translate(0.681818, 0.681818)">
+                                <g>
+                                    <path d="M48.5,4.40909091 L8.81818182,4.40909091 C6.38215909,4.40909091 4.40909091,6.38215909 4.40909091,8.81818182 C4.40909091,11.2542045 6.38215909,13.2272727 8.81818182,13.2272727 L48.5,13.2272727 C50.9360227,13.2272727 52.9090909,11.2542045 52.9090909,8.81818182 C52.9090909,6.38215909 50.9360227,4.40909091 48.5,4.40909091 Z" id="Shape" fill="#9E9E9E" fill-rule="nonzero"></path>
+                                </g>
+                                <path d="M48.5,4.40909091 L8.81818182,4.40909091 C6.38215909,4.40909091 4.40909091,6.38215909 4.40909091,8.81818182 C4.40909091,11.2542045 6.38215909,13.2272727 8.81818182,13.2272727 L48.5,13.2272727 C50.9360227,13.2272727 52.9090909,11.2542045 52.9090909,8.81818182 C52.9090909,6.38215909 50.9360227,4.40909091 48.5,4.40909091 Z" id="Shape" fill="#BDBDBD" fill-rule="nonzero" opacity="0.5"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+                <g id="Oval-Clipped">
+                    <mask id="mask-16" fill="white">
+                        <use xlink:href="#path-15"></use>
+                    </mask>
+                    <g id="path-15"></g>
+                    <circle id="Oval" fill="#BDBDBD" fill-rule="nonzero" mask="url(#mask-16)" cx="8.81818182" cy="48.5" r="3.30681818"></circle>
+                </g>
+                <g id="Oval-Clipped">
+                    <mask id="mask-18" fill="white">
+                        <use xlink:href="#path-17"></use>
+                    </mask>
+                    <g id="path-17"></g>
+                    <circle id="Oval" fill="#BDBDBD" fill-rule="nonzero" mask="url(#mask-18)" cx="48.5" cy="8.81818182" r="3.30681818"></circle>
+                </g>
+                <g id="Oval-Clipped">
+                    <mask id="mask-20" fill="white">
+                        <use xlink:href="#path-19"></use>
+                    </mask>
+                    <g id="path-19"></g>
+                    <circle id="Oval" fill="#BDBDBD" fill-rule="nonzero" mask="url(#mask-20)" cx="48.5" cy="88.1818182" r="3.30681818"></circle>
+                </g>
+                <g id="Oval-Clipped">
+                    <mask id="mask-22" fill="white">
+                        <use xlink:href="#path-21"></use>
+                    </mask>
+                    <g id="path-21"></g>
+                    <circle id="Oval" fill="#BDBDBD" fill-rule="nonzero" mask="url(#mask-22)" cx="20.3920455" cy="20.4416477" r="3.30681818"></circle>
+                </g>
+                <g id="Oval-Clipped">
+                    <mask id="mask-24" fill="white">
+                        <use xlink:href="#path-23"></use>
+                    </mask>
+                    <g id="path-23"></g>
+                    <circle id="Oval" fill="#BDBDBD" fill-rule="nonzero" mask="url(#mask-24)" cx="20.3920455" cy="76.6079545" r="3.30681818"></circle>
+                </g>
+                <g id="Oval-Clipped">
+                    <mask id="mask-26" fill="white">
+                        <use xlink:href="#path-25"></use>
+                    </mask>
+                    <g id="path-25"></g>
+                    <circle id="Oval" fill="#757575" fill-rule="nonzero" mask="url(#mask-26)" cx="76.6079545" cy="76.6079545" r="3.30681818"></circle>
+                </g>
+                <g id="Shape-Clipped">
+                    <mask id="mask-28" fill="white">
+                        <use xlink:href="#path-27"></use>
+                    </mask>
+                    <g id="path-27"></g>
+                    <path d="M48.5,44.6420455 L88.1818182,44.6420455 C90.5241477,44.6420455 92.4365909,46.4718182 92.574375,48.7755682 C92.5798864,48.681875 92.5909091,48.5936932 92.5909091,48.5 C92.5909091,46.0639773 90.6178409,44.0909091 88.1818182,44.0909091 L48.5,44.0909091 C46.0639773,44.0909091 44.0909091,46.0639773 44.0909091,48.5 C44.0909091,48.5936932 44.0964205,48.681875 44.1074432,48.7755682 C44.2452273,46.4718182 46.1576705,44.6420455 48.5,44.6420455 Z" id="Shape" fill-opacity="0.2" fill="#FFFFFF" fill-rule="nonzero" mask="url(#mask-28)"></path>
+                </g>
+                <g id="Shape-Clipped">
+                    <mask id="mask-30" fill="white">
+                        <use xlink:href="#path-29"></use>
+                    </mask>
+                    <g id="path-29"></g>
+                    <path d="M92.574375,48.7755682 C92.4310795,51.0793182 90.5186364,52.9090909 88.1818182,52.9090909 L48.5,52.9090909 C46.1576705,52.9090909 44.2452273,51.0793182 44.1074432,48.7755682 C44.0964205,48.8692614 44.0909091,48.9574432 44.0909091,49.0511364 C44.0909091,51.4871591 46.0639773,53.4602273 48.5,53.4602273 L88.1818182,53.4602273 C90.6178409,53.4602273 92.5909091,51.4871591 92.5909091,49.0511364 C92.5909091,48.9574432 92.5853977,48.8692614 92.574375,48.7755682 Z" id="Shape" fill-opacity="0.2" fill="#212121" fill-rule="nonzero" mask="url(#mask-30)"></path>
+                </g>
+                <g id="Shape-Clipped">
+                    <mask id="mask-32" fill="white">
+                        <use xlink:href="#path-31"></use>
+                    </mask>
+                    <g id="path-31"></g>
+                    <path d="M48.5,18.1875 C57.0205682,18.1875 64.7364773,21.643125 70.325,27.2261364 L83.0672727,14.4783523 C82.9735795,14.3846591 82.8853977,14.2909659 82.7917045,14.2027841 L70.325,26.675 C64.7364773,21.0919886 57.0205682,17.6363636 48.5,17.6363636 C31.4533523,17.6363636 17.6363636,31.4533523 17.6363636,48.5 C17.6363636,48.5936932 17.641875,48.681875 17.641875,48.7755682 C17.7906818,31.8556818 31.5470455,18.1875 48.5,18.1875 Z" id="Shape" fill-opacity="0.1" fill="#212121" fill-rule="nonzero" mask="url(#mask-32)"></path>
+                </g>
+                <g id="Shape-Clipped">
+                    <mask id="mask-34" fill="white">
+                        <use xlink:href="#path-33"></use>
+                    </mask>
+                    <g id="path-33"></g>
+                    <path d="M48.5,79.3636364 C31.5470455,79.3636364 17.7906818,65.6954545 17.641875,48.7755682 C17.641875,48.8692614 17.6363636,48.9574432 17.6363636,49.0511364 C17.6363636,66.0977841 31.4533523,79.9147727 48.5,79.9147727 C51.4155114,79.9147727 54.2318182,79.5014205 56.9048295,78.7463636 L56.4749432,78.3164773 C53.9342045,78.994375 51.2611932,79.3636364 48.5,79.3636364 Z M48.5,0 C21.7147727,0 0,21.7147727 0,48.5 C0,48.5936932 0.00551136364,48.681875 0.00551136364,48.7755682 C0.154318182,22.1171023 21.8084659,0.551136364 48.5,0.551136364 C61.7548295,0.551136364 73.7640909,5.86960227 82.5161364,14.4838636 L82.7972159,14.2027841 C74.0176136,5.42869318 61.8926136,0 48.5,0 Z" id="Shape" fill-opacity="0.1" fill="#FFFFFF" fill-rule="nonzero" mask="url(#mask-34)"></path>
+                </g>
+            </g>
+            <circle id="Oval" fill="url(#radialGradient-35)" fill-rule="nonzero" cx="48.5" cy="48.5" r="48.5"></circle>
+        </g>
+    </g>
+</svg>

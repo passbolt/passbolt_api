@@ -16,30 +16,32 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Mailer\Transport\DebugTransport;
+use App\Mailer\Transport\SmtpTransport;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
-use Cake\TestSuite\TestEmailTransport;
 use Cake\Utility\Hash;
-use Passbolt\SmtpSettings\Mailer\Transport\SmtpTransport;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 
 class SendTestEmailCommand extends PassboltCommand
 {
     /**
-     * @var \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService
+     * @var \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService
      */
     public $sendTestEmailService;
 
     /**
      * Injects the service to facilitate the unit testing of the command
      *
-     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService $sendTestEmailService Service to send test email.
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service to send test email.
      */
-    public function __construct(SmtpSettingsSendTestEmailService $sendTestEmailService)
+    public function __construct(SmtpSettingsTestEmailService $sendTestEmailService)
     {
         parent::__construct();
         $this->sendTestEmailService = $sendTestEmailService;
@@ -55,6 +57,7 @@ class SendTestEmailCommand extends PassboltCommand
         $parser->addOption('recipient', [
             'short' => 'r',
             'help' => __('The recipient whom to send the test email to'),
+            'required' => true,
         ]);
 
         return $parser;
@@ -70,8 +73,15 @@ class SendTestEmailCommand extends PassboltCommand
         $io->out(' Debug email shell');
         $io->hr();
 
-        $this->checkSmtpIsSet($io);
+        $recipient = $args->getOption('recipient');
 
+        /** Validate recipient email. */
+        if (!EmailValidationRule::check($recipient)) {
+            $this->error(__('The recipient should be a valid email address.', $recipient), $io);
+            $this->abort();
+        }
+
+        $this->checkSmtpIsSet($io);
         try {
             $transportConfig = (new SmtpSettingsGetService())->getSettings();
         } catch (\Throwable $e) {
@@ -79,11 +89,11 @@ class SendTestEmailCommand extends PassboltCommand
             $this->abort();
         }
 
-        $transportConfig[SmtpSettingsSendTestEmailService::EMAIL_TEST_TO] = $this->getRecipient($args);
+        $transportConfig[SmtpSettingsSendTestMailerService::EMAIL_TEST_TO] = $recipient;
 
         $this->checkFromIsSet($transportConfig, $io);
 
-        $this->displayConfiguration($transportConfig, $args, $io);
+        $this->displayConfiguration($transportConfig, $recipient, $io);
         $this->sendEmail($transportConfig, $args, $io);
         $this->displayTrace($this->sendTestEmailService->getTrace(), $io);
 
@@ -119,11 +129,11 @@ class SendTestEmailCommand extends PassboltCommand
      * Display configuration options.
      *
      * @param array $transportConfig Transport configuration.
-     * @param \Cake\Console\Arguments $args Arguments.
+     * @param string $recipient Recipient email address.
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayConfiguration(array $transportConfig, Arguments $args, ConsoleIo $io): void
+    protected function displayConfiguration(array $transportConfig, string $recipient, ConsoleIo $io): void
     {
         $io->nl(0);
         $io->out('<info>Email configuration</info>');
@@ -135,7 +145,7 @@ class SendTestEmailCommand extends PassboltCommand
         $io->out(__('TLS: {0}', $transportConfig['tls'] == null ? 'false' : 'true'));
         $io->nl(0);
         $io->out(__('Sending email from: {0}', $this->getEmailFromAsString($transportConfig)));
-        $io->out(__('Sending email to: {0}', $this->getRecipient($args)));
+        $io->out(__('Sending email to: {0}', $recipient));
         $io->hr();
     }
 
@@ -189,49 +199,14 @@ class SendTestEmailCommand extends PassboltCommand
         $io->out('<info>Trace</info>');
         foreach ($trace as $entry) {
             if (isset($entry['cmd'])) {
-                $cmd = $this->removeCredentials($entry['cmd']);
-                $io->out("<info> {$cmd}</info>");
+                $io->out("<info> {$entry['cmd']}</info>");
             }
             if (!empty($entry['response'])) {
                 foreach ($entry['response'] as $response) {
-                    $msg = $this->removeCredentials($response['message']);
-                    $io->out("[{$response['code']}] {$msg}");
+                    $io->out("[{$response['code']}] {$response['message']}");
                 }
             }
         }
-    }
-
-    /**
-     * Remove credentials (username and password) from a string.
-     *
-     * @param string $str string where to remove the credentials
-     * @return mixed
-     */
-    protected function removeCredentials($str)
-    {
-        $toReplace = [];
-        $replaceMask = '*****';
-        $replaceWith = [];
-        $transportConfig = TransportFactory::getConfig('default');
-
-        if (isset($transportConfig['username'])) {
-            $usernameEncoded = base64_encode($transportConfig['username']);
-            $usernameClear = $transportConfig['username'];
-            $toReplace[] = $usernameClear;
-            $replaceWith[] = $replaceMask;
-            $toReplace[] = $usernameEncoded;
-            $replaceWith[] = $replaceMask;
-        }
-        if (isset($transportConfig['password'])) {
-            $passwordEncoded = base64_encode($transportConfig['password']);
-            $passwordClear = $transportConfig['password'];
-            $toReplace[] = $passwordEncoded;
-            $replaceWith[] = $replaceMask;
-            $toReplace[] = $passwordClear;
-            $replaceWith[] = $replaceMask;
-        }
-
-        return str_replace($toReplace, $replaceWith, $str);
     }
 
     /**
@@ -245,7 +220,7 @@ class SendTestEmailCommand extends PassboltCommand
     {
         $transportConfig = TransportFactory::getConfig('default');
         $className = Hash::get($transportConfig, 'className');
-        if ($className != 'Smtp' && $className != SmtpTransport::class && $className !== TestEmailTransport::class) {
+        if ($className != 'Smtp' && $className != SmtpTransport::class && $className !== DebugTransport::class) {
             $msg = __('Your email transport configuration is not set to use "Smtp". ({0} is set instead)', $className);
             $this->error($msg, $io);
             $this->error(__('This email debug task is only for SMTP configurations.'), $io);
@@ -270,7 +245,7 @@ class SendTestEmailCommand extends PassboltCommand
         if (empty($from)) {
             $this->error(__('Your email configuration doesn\'t define a default "from"'), $io);
             $msg = __('To fix this, edit Email.default.from property in /config/passbolt.php') . ' ';
-            $msg .= _('And add \'from\' => [\'passbolt@your_organization.com\' => \'Passbolt\']');
+            $msg .= __('And add \'from\' => [\'passbolt@your_organization.com\' => \'Passbolt\']');
             $this->error($msg, $io);
             $this->abort();
         }

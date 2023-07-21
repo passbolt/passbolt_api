@@ -18,9 +18,7 @@ namespace Passbolt\WebInstaller\Controller;
 
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
-use Cake\Core\Exception\Exception;
-use Cake\Log\Log;
-use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
+use Cake\Core\Exception\CakeException;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
 
@@ -28,7 +26,6 @@ use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
  * Class DatabaseController
  *
  * @package Passbolt\WebInstaller\Controller
- * @property \App\Model\Table\UsersTable $Users
  */
 class DatabaseController extends WebInstallerController
 {
@@ -138,8 +135,7 @@ class DatabaseController extends WebInstallerController
             $this->testConnection($data);
             DatabaseConfiguration::setDefaultConfig($data);
             $hasAdmin = $this->hasAdmin();
-            $hasSmtpSettings = $this->hasValidSmtpSettingsInDB();
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->_error($e->getMessage());
 
             return;
@@ -147,7 +143,6 @@ class DatabaseController extends WebInstallerController
 
         $this->webInstaller->setSettings('database', $data);
         $this->webInstaller->setSettings('hasAdmin', $hasAdmin);
-        $this->webInstaller->setSettings('hasSmtpSettings', $hasSmtpSettings);
         $this->webInstaller->saveSettings();
 
         $this->goToNextStep();
@@ -156,7 +151,7 @@ class DatabaseController extends WebInstallerController
     /**
      * Check if the database has already administrator.
      *
-     * @throws \Cake\Core\Exception\Exception If the database schema does not validate
+     * @throws \Cake\Core\Exception\CakeException If the database schema does not validate
      * @return bool
      */
     protected function hasAdmin(): bool
@@ -168,35 +163,22 @@ class DatabaseController extends WebInstallerController
 
         DatabaseConfiguration::validateSchema();
 
-        $this->loadModel('Users');
-        $nbAdmins = $this->Users->find()
-            ->where(['role_id' => $this->Users->Roles->getIdByName(Role::ADMIN)])
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
+
+        $nbAdmins = $usersTable
+            ->find()
+            ->where(['role_id' => $usersTable->Roles->getIdByName(Role::ADMIN)])
             ->count();
 
         return $nbAdmins > 0;
     }
 
     /**
-     * @return bool
-     */
-    protected function hasValidSmtpSettingsInDB(): bool
-    {
-        try {
-            $smtpSettingsInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-        } catch (\Throwable $e) {
-            Log::error($e->getMessage());
-
-            return false;
-        }
-
-        return !is_null($smtpSettingsInDb);
-    }
-
-    /**
      * Test the connection to the database
      *
      * @param array $data The database configuration to test
-     * @throws \Cake\Core\Exception\Exception A connection could not be established with the provided data
+     * @throws \Cake\Core\Exception\CakeException A connection could not be established with the provided data
      * @return void
      */
     protected function testConnection(array $data): void
@@ -207,7 +189,7 @@ class DatabaseController extends WebInstallerController
         if (!DatabaseConfiguration::testConnection()) {
             $msg = __('A connection could not be established with the credentials provided.') . ' ';
             $msg .= __('Please verify the settings.');
-            throw new Exception($msg);
+            throw new CakeException($msg);
         }
     }
 
@@ -215,7 +197,7 @@ class DatabaseController extends WebInstallerController
      * Validate data.
      *
      * @param array $data request data
-     * @throws \Cake\Core\Exception\Exception The data does not validate
+     * @throws \Cake\Core\Exception\CakeException The data does not validate
      * @return void
      */
     protected function validateData(array $data): void
@@ -223,7 +205,7 @@ class DatabaseController extends WebInstallerController
         $form = new DatabaseConfigurationForm();
         $this->set('formExecuteResult', $form);
         if (!$form->execute($data)) {
-            throw new Exception(__('The data entered are not correct'));
+            throw new CakeException(__('The data entered are not correct'));
         }
     }
 }

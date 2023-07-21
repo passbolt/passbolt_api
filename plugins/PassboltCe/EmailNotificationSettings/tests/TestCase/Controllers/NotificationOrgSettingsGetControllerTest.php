@@ -63,7 +63,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
      */
     public function testNotificationOrgSettingsGetControllerNotJson()
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->get('/settings/emails/notifications');
         $this->assertResponseError('This is not a valid Ajax/Json request.');
     }
@@ -75,7 +75,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
      */
     public function testNotificationOrgSettingsGetControllerNonAdminNotAllowed()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->getJson('/settings/emails/notifications.json?api-version=v2');
         $this->assertResponseError('You are not allowed to access this location.');
     }
@@ -87,7 +87,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
      */
     public function testNotificationOrgSettingsGetControllerDefaultSuccess()
     {
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/settings/emails/notifications.json?api-version=v2');
         $this->assertResponseSuccess();
         $this->assertNotNull($this->_responseJsonBody);
@@ -111,7 +111,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         // Mock DB settings
         $this->setEmailNotificationSettings($cases);
 
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/settings/emails/notifications.json?api-version=v2');
         $this->assertTrue($this->_responseJsonBody->sources_database);
         $this->assertFalse($this->_responseJsonBody->sources_file);
@@ -140,7 +140,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
             Configure::write('passbolt.email.' . $configKey, $value);
         }
 
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/settings/emails/notifications.json?api-version=v2');
         $this->assertFalse($this->_responseJsonBody->sources_database);
         $this->assertTrue($this->_responseJsonBody->sources_file);
@@ -172,7 +172,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
         // Override with DB settings
         $this->setEmailNotificationSettings($cases);
 
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->getJson('/settings/emails/notifications.json?api-version=v2');
         $this->assertTrue($this->_responseJsonBody->sources_database);
         $this->assertTrue($this->_responseJsonBody->sources_file);

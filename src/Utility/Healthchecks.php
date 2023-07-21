@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use App\Model\Entity\Role;
+use App\Model\Validation\EmailValidationRule;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks\DatabaseHealthchecks;
@@ -24,11 +25,12 @@ use App\Utility\Healthchecks\GpgHealthchecks;
 use App\Utility\Healthchecks\SslHealthchecks;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsHealthcheckService;
 
 class Healthchecks
@@ -62,7 +64,7 @@ class Healthchecks
      * - info.remoteVersion
      * - sslForce: enforcing the use of SSL
      * - seleniumDisabled: true if selenium API is disabled
-     * - registrationClosed: true if registration is not open
+     * - registrationClosed: info on the self registration
      * - jsProd: true if using minified/concatenated javascript
      *
      * @param array|null $checks List of checks
@@ -82,7 +84,7 @@ class Healthchecks
             $checks['application']['schema'] = !Migration::needMigration();
         } catch (\Exception $e) {
             // Cannot connect to the database
-            $checks['application']['schema'] = null;
+            $checks['application']['schema'] = false;
         }
         $robots = strpos(Configure::read('passbolt.meta.robots'), 'noindex');
         $checks['application']['robotsIndexDisabled'] = ($robots !== false);
@@ -90,7 +92,8 @@ class Healthchecks
         $https = strpos(Configure::read('App.fullBaseUrl'), 'https') === 0;
         $checks['application']['sslFullBaseUrl'] = ($https !== false);
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
-        $checks['application']['registrationClosed'] = !Configure::read('passbolt.registration.public');
+        $checks['application']['registrationClosed'] = (new SelfRegistrationHealthcheckService())->getHealthcheck();
+        $checks['application']['hostAvailabilityCheckEnabled'] = Configure::read(EmailValidationRule::MX_CHECK_KEY);
         $checks['application']['jsProd'] = (Configure::read('passbolt.js.build') === 'production');
         $sendEmailJson = json_encode(Configure::read('passbolt.email.send'));
         $checks['application']['emailNotificationEnabled'] = !(preg_match('/false/', $sendEmailJson) === 1);
@@ -125,7 +128,7 @@ class Healthchecks
                 ->count();
 
             $checks['application']['adminCount'] = ($i > 0);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
         }
 
         return $checks;
@@ -188,7 +191,7 @@ class Healthchecks
                     $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');
                 }
             }
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
         }
 
         return $checks;
@@ -222,7 +225,7 @@ class Healthchecks
      */
     public static function environment(?array $checks = []): array
     {
-        $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.0', '>=');
+        $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.4', '>=');
         $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
         $checks['environment']['gnupg'] = extension_loaded('gnupg');
@@ -240,13 +243,17 @@ class Healthchecks
      *  - is the JWT Authentication enabled
      *  - if true, are the JWT key files correctly set and valid.
      *
-     * @param array|null $checks List of checks
+     * @param \Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService|null $jwtKeyPairService JWT Service
+     * @param array $checks List of checks
      * @return array
      */
-    public static function jwt(?array $checks = []): array
+    public static function jwt(?JwtKeyPairService $jwtKeyPairService = null, array $checks = []): array
     {
+        if (is_null($jwtKeyPairService)) {
+            $jwtKeyPairService = new JwtKeyPairService();
+        }
         try {
-            (new JwtKeyPairService())->validateKeyPair();
+            $jwtKeyPairService->validateKeyPair();
             $keyPairIsValid = true;
         } catch (\Throwable $e) {
             $keyPairIsValid = false;

@@ -69,6 +69,14 @@ class HealthcheckHtmlHelper extends HealthcheckCommand
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function notice(bool $condition, $success, $fail, $help = null): void
+    {
+        // Notices, just like help messages, are not displayed
+    }
+
+    /**
      * Display healthcheck section title
      *
      * @param string $title section title

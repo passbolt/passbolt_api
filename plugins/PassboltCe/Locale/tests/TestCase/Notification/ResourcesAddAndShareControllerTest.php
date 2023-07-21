@@ -19,12 +19,12 @@ namespace Passbolt\Locale\Test\TestCase\Notification;
 
 use App\Model\Entity\Permission;
 use App\Test\Factory\ResourceFactory;
-use App\Test\Factory\ResourceTypeFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\Locale\Service\GetOrgLocaleService;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * Class ResourcesAddAndShareControllerTest

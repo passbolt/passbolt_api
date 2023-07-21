@@ -20,7 +20,6 @@ use App\Test\Lib\AppIntegrationTestCase;
 use Cake\Mailer\Message;
 use Cake\Mailer\TransportFactory;
 use Cake\Network\Exception\SocketException;
-use Cake\TestSuite\EmailTrait;
 use Cake\TestSuite\TestEmailTransport;
 use Passbolt\EmailDigest\Service\EmailDigestService;
 use Passbolt\EmailDigest\Service\SendEmailBatchService;
@@ -30,7 +29,6 @@ use Throwable;
 class SendEmailBatchServiceTest extends AppIntegrationTestCase
 {
     use EmailDigestMockTestTrait;
-    use EmailTrait;
 
     /**
      * @var \Passbolt\EmailDigest\Service\SendEmailBatchService
@@ -62,8 +60,6 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
             'fail',
             'releaseLocks',
         ])->setTable('email_queue'); // the CakePHP getMockForModel method use Inflector:tableize() method which make the table name plural
-
-        self::setupTransports();
 
         $this->sut = new SendEmailBatchService(
             $this->emailQueueTableMock,
@@ -205,9 +201,15 @@ class SendEmailBatchServiceTest extends AppIntegrationTestCase
             $config['className'] = self::class;
             $instance = new class ([], $exception) extends TestEmailTransport
             {
+                /**
+                 * @var mixed
+                 */
+                private $exception;
+
                 public function __construct($config, $exception)
                 {
                     $this->exception = $exception;
+
                     parent::__construct($config);
                 }
 

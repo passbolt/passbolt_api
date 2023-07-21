@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '3.8.0',
-        'name' => 'Syria'
+        'version' => '4.1.1',
+        'name' => 'Insane in the Brain',
     ]
 ];

@@ -213,7 +213,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
             } catch (\Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg);
+                throw new InternalErrorException($msg, 500, $exception);
             }
         }
     }
@@ -238,7 +238,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
                 $this->gpg->setEncryptKeyFromFingerprint($this->user->gpgkey->fingerprint);
             } catch (\Exception $exception) {
                 $msg = __('Could not import the user OpenPGP key.');
-                throw new InternalErrorException($msg);
+                throw new InternalErrorException($msg, 500, $exception);
             }
         }
     }

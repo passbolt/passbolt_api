@@ -37,9 +37,18 @@ class GpgAuthenticator extends SessionAuthenticator
 {
     use GpgAuthenticatorTrait;
 
-    public const HTTP_HEADERS_WHITELIST = 'X-GPGAuth-Verify-Response, X-GPGAuth-Progress, X-GPGAuth-User-Auth-Token, ' .
-        'X-GPGAuth-Authenticated, X-GPGAuth-Refer, X-GPGAuth-Debug, X-GPGAuth-Error, X-GPGAuth-Pubkey, ' .
-        'X-GPGAuth-Logout-Url, X-GPGAuth-Version';
+    public const HTTP_HEADERS_WHITELIST = [
+        'X-GPGAuth-Verify-Response',
+        'X-GPGAuth-Progress',
+        'X-GPGAuth-User-Auth-Token',
+        'X-GPGAuth-Authenticated',
+        'X-GPGAuth-Refer',
+        'X-GPGAuth-Debug',
+        'X-GPGAuth-Error',
+        'X-GPGAuth-Pubkey',
+        'X-GPGAuth-Logout-Url',
+        'X-GPGAuth-Version',
+    ];
 
     public const AUTHENTICATION_REQUIRED_MESSAGE = 'You need to login to access this location.';
 
@@ -326,7 +335,7 @@ class GpgAuthenticator extends SessionAuthenticator
             } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg);
+                throw new InternalErrorException($msg, 500, $exception);
             }
         }
     }
@@ -349,7 +358,7 @@ class GpgAuthenticator extends SessionAuthenticator
                 $this->_gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (Exception $exception) {
                 $msg = __('Could not import the user OpenPGP key.');
-                throw new InternalErrorException($msg);
+                throw new InternalErrorException($msg, 500, $exception);
             }
         }
     }

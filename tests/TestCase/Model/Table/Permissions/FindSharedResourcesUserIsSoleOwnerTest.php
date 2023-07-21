@@ -42,8 +42,8 @@ class FindSharedResourcesUserIsSoleOwnerTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function testFindShardResourceUserIsSoleOwner_OwnsNothing_DelUserCase0()

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Form;
 
 use Cake\TestSuite\TestCase;
+use Faker\Factory;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
@@ -80,16 +81,71 @@ class EmailConfigurationFormTest extends TestCase
         $this->assertArrayHasKey($failingField, $this->form->getErrors());
     }
 
+    /**
+     * @dataProvider data_Invalid
+     * @dataProvider data_Invalid_On_Update
+     */
+    public function testEmailConfigurationForm_InvalidFields_On_Update(string $failingField, $value)
+    {
+        $data = $this->getSmtpSettingsData($failingField, $value);
+        $result = $this->form->execute($data, ['validate' => 'update']);
+        $this->assertFalse($result);
+        $this->assertArrayHasKey($failingField, $this->form->getErrors());
+    }
+
+    /**
+     * @dataProvider dataForClientFieldValidUnchanged
+     */
+    public function testEmailConfigurationForm_Client_Success($value)
+    {
+        $data = $this->getSmtpSettingsData('client', $value);
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+        $this->assertSame($value, $this->form->getData('client'));
+    }
+
+    /**
+     * @dataProvider dataForClientFieldValidMappedToNull
+     */
+    public function testEmailConfigurationForm_Client_Success_Mapped_To_Null($value)
+    {
+        $data = $this->getSmtpSettingsData('client', $value);
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+        $this->assertSame(null, $this->form->getData('client'));
+    }
+
+    /**
+     * @dataProvider dataForClientFieldInvalid
+     */
+    public function testEmailConfigurationForm_Client_Invalid($value, string $errorMessage)
+    {
+        $data = $this->getSmtpSettingsData('client', $value);
+        $result = $this->form->execute($data);
+        $this->assertFalse($result);
+        $this->assertSame(['client' => ['isClientValid' => $errorMessage]], $this->form->getErrors());
+    }
+
+    public function testEmailConfigurationForm_Client_Is_Optional()
+    {
+        $data = $this->getSmtpSettingsData();
+        unset($data['client']);
+        $result = $this->form->execute($data);
+        $this->assertTrue($result);
+        $this->assertSame(null, $this->form->getData('client'));
+    }
+
     public function data_Valid_Field(): array
     {
         return [
             ['username', null],
+            ['sender_email', 'foo'],
             ['password', null],
             ['password', 'passwordwith"'],
             ['password', "passwordwith'"],
             ['port', '123'],
             ['port', 123],
-            ['tls', 1],
+            ['tls', true],
             ['tls', null],
         ];
     }
@@ -97,15 +153,18 @@ class EmailConfigurationFormTest extends TestCase
     public function data_For_Tls_Mapping(): array
     {
         return [
-            [null, null],
-            [1, 1],
-            ['1', '1'],
+            [1, true],
+            ['1', true],
             [true, true],
             [false, null],
+            ['true', true],
+            [null, null],
             [0, null],
             ['0', null],
-            ['true', 'true'],
-            ['foo', 'foo'],
+            ['false', null],
+            ['foo', null],
+            [2, null],
+            [new \stdClass(), null],
         ];
     }
 
@@ -113,16 +172,50 @@ class EmailConfigurationFormTest extends TestCase
     {
         return [
             ['sender_name', ''],
-            ['sender_email', 'foo'],
             ['sender_email', ''],
             ['host', ''],
             ['port', 'abc'],
             ['port', 0],
             ['port', 1.2],
-            ['tls', 2],
-            ['tls', 'true'],
-            ['tls', 'false'],
-            ['tls', 'foo'],
+        ];
+    }
+
+    public function data_Invalid_On_Update(): array
+    {
+        return [
+            ['sender_email', 'foo'],
+        ];
+    }
+
+    public function dataForClientFieldValidUnchanged(): array
+    {
+        $faker = Factory::create();
+
+        return [
+            ['passbolt.com'],
+            [null],
+            [$faker->ipv4()],
+            [$faker->localIpv4()],
+            [$faker->ipv6()],
+        ];
+    }
+
+    public function dataForClientFieldValidMappedToNull(): array
+    {
+        return [
+            [''],
+            [0],
+            [[]],
+            [false],
+        ];
+    }
+
+    public function dataForClientFieldInvalid(): array
+    {
+        return [
+            ['passbolt', 'The client should be a valid IP or a valid domain.'],
+            [1, 'The client should be a valid IP or a valid domain.'],
+            [$this, 'The client should be a valid IP or a valid domain.'],
         ];
     }
 }

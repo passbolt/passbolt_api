@@ -29,6 +29,16 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Secrets',
     ];
 
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    protected $Groups;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -63,7 +73,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
      *      requested for encryption
      */
 
-    public function testGroupsUpdateDryRunAsGroupManagerSuccess()
+    public function testGroupsUpdateDryRunAsGroupManagerSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -114,7 +124,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->putJson("/groups/$groupId/dry-run.json", ['groups_users' => $changes]);
 
         $this->assertSuccess();
-        $result = json_decode(json_encode($this->_responseJsonBody), true);
+        $result = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($result);
 
         // Extract from the result the secrets to add and the secrets of the current users that will be used to encrypt
@@ -157,7 +167,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertEmpty(array_diff($expectedSecretsToEncryptIds, $secretsToEncryptIds));
     }
 
-    public function testGroupsUpdateDryRunAsAdminSuccess()
+    public function testGroupsUpdateDryRunAsAdminSuccess(): void
     {
         // Define actors of this tests
         $groupId = UuidFactory::uuid('group.id.freelancer');
@@ -175,13 +185,13 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // No secrets should be requested nor source secrets given.
-        $result = json_decode(json_encode($this->_responseJsonBody), true);
+        $result = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($result['dry-run']);
         $this->assertEmpty($result['dry-run']['SecretsNeeded']);
         $this->assertEmpty($result['dry-run']['Secrets']);
     }
 
-    public function testGroupsUpdateDryRunErrorNotValidId()
+    public function testGroupsUpdateDryRunErrorNotValidId(): void
     {
         $this->authenticateAs('ada');
         $groupId = 'invalid-id';
@@ -189,7 +199,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The group id is not valid.');
     }
 
-    public function testGroupsUpdateDryRunErrorDoesNotExistGroup()
+    public function testGroupsUpdateDryRunErrorDoesNotExistGroup(): void
     {
         $this->authenticateAs('ada');
         $groupId = UuidFactory::uuid();
@@ -197,7 +207,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testGroupsUpdateDryRunErrorGroupIsSoftDeleted()
+    public function testGroupsUpdateDryRunErrorGroupIsSoftDeleted(): void
     {
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.deleted');
@@ -205,7 +215,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testGroupsUpdateDryRunErrorAccessDenied()
+    public function testGroupsUpdateDryRunErrorAccessDenied(): void
     {
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->authenticateAs('ada');
@@ -213,7 +223,7 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
-    public function testGroupsUpdateDryRunErrorNotAuthenticated()
+    public function testGroupsUpdateDryRunErrorNotAuthenticated(): void
     {
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $postData = [];
@@ -221,12 +231,29 @@ class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
         $this->assertAuthenticationError();
     }
 
-    public function testGroupsUpdateDryRunErrorCsrfToken()
+    public function testGroupsUpdateDryRunErrorCsrfToken(): void
     {
         $this->disableCsrfToken();
         $this->authenticateAs('admin');
         $groupId = UuidFactory::uuid('group.id.freelancer');
         $this->put("/groups/$groupId/dry-run.json");
         $this->assertResponseCode(403);
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testGroupsUpdateDryRunController_Error_NotJson(): void
+    {
+        // Define actors of this tests
+        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $data = [
+            'name' => 'Updated group name',
+        ];
+
+        // Update the group name.
+        $this->authenticateAs('admin');
+        $this->put("/groups/$groupId/dry-run", $data);
+        $this->assertResponseCode(404);
     }
 }

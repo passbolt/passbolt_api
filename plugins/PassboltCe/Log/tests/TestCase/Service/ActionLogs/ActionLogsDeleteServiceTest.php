@@ -20,24 +20,27 @@ namespace Passbolt\Log\Test\TestCase\Service\ActionLogs;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Date;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Log\Service\ActionLogs\ActionLogsDeleteService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 /**
  * Class ActionLogsDeleteServiceTest
- *
- * @property \Passbolt\Log\Model\Table\ActionLogsTable $ActionLogs
  */
 class ActionLogsDeleteServiceTest extends AppTestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \Passbolt\Log\Model\Table\ActionLogsTable
+     */
+    protected $ActionLogs;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('Passbolt/Log.ActionLogs');
+        $this->ActionLogs = $this->fetchTable('Passbolt/Log.ActionLogs');
     }
 
     /**

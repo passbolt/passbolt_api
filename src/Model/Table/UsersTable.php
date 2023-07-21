@@ -24,6 +24,7 @@ use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
+use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
@@ -67,6 +68,7 @@ class UsersTable extends Table
     use UsersFindersTrait;
 
     public const AFTER_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterRegister.success';
+    public const AFTER_SELF_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterSelfRegister.success';
 
     /**
      * Initialize method
@@ -136,11 +138,9 @@ class UsersTable extends Table
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->maxLength('username', 255, __('The username length should be maximum {0} characters.', 255))
-            ->email(
-                'username',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The username should be a valid email address.')
-            );
+            ->add('username', 'email', new EmailValidationRule([
+                'message' => __('The username should be a valid email address.'),
+            ]));
 
         $validator
             ->boolean('active', __('The active status should be a valid boolean.'));
@@ -166,7 +166,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRegister(Validator $validator)
+    public function validationRegister(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }
@@ -177,7 +177,7 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationUpdate(Validator $validator)
+    public function validationUpdate(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }
@@ -188,17 +188,15 @@ class UsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRecover(Validator $validator)
+    public function validationRecover(Validator $validator): Validator
     {
         $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->notEmptyString('username', __('The username should not be empty.'))
             ->maxLength('username', 255, __('The username length should be maximum 255 characters.'))
-            ->email(
-                'username',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The username should be a valid email address.')
-            );
+            ->add('username', 'email', new EmailValidationRule([
+                'message' => __('The username should be a valid email address.'),
+            ]));
 
         return $validator;
     }
@@ -367,6 +365,27 @@ class UsersTable extends Table
             $Resources->softDeleteAll($resourceIds);
         }
 
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            // Find all the folders that only belongs to the deleted user and delete them.
+            // Note: all folders that cannot be deleted should have been transferred to other people already.
+            $foldersIds = $this->Permissions
+                ->findAcosOnlyAroCanAccess(PermissionsTable::FOLDER_ACO, $user->id, ['checkGroupsUsers' => true])
+                ->all()
+                ->extract('aco_foreign_key')
+                ->toArray();
+            if (!empty($foldersIds)) {
+                $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+                $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+                $foldersTable->deleteAll(['id IN' => $foldersIds]);
+                $foldersRelationsTable->deleteAll(['foreign_id IN' => $foldersIds]);
+                $foldersRelationsTable
+                    ->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
+            }
+            // Remove all the folders relations of the users.
+            $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+            $foldersRelationsTable->deleteAll(['user_id' => $user->id]);
+        }
+
         // We do not want empty groups
         // Soft delete all the groups where the user is alone
         // Note that all associated resources are already deleted in previous step
@@ -454,8 +473,10 @@ class UsersTable extends Table
         $eventData = ['user' => $user, 'token' => $token];
         if (isset($control) && !empty($control->getId())) {
             $eventData['adminId'] = $control->getId();
+            $this->dispatchEvent(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $eventData, $this);
+        } else {
+            $this->dispatchEvent(self::AFTER_SELF_REGISTER_SUCCESS_EVENT_NAME, $eventData, $this);
         }
-        $this->dispatchEvent(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $eventData, $this);
 
         return $user;
     }

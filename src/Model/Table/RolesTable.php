@@ -43,6 +43,8 @@ use Cake\Validation\Validator;
  */
 class RolesTable extends Table
 {
+    public const ALLOWED_ROLE_NAMES = [Role::GUEST, Role::USER, Role::ADMIN];
+
     /**
      * Initialize method
      *
@@ -112,11 +114,9 @@ class RolesTable extends Table
      * @param string $roleName for example 'admin' or 'user'
      * @return bool true if whitelisted
      */
-    public function isValidRoleName(string $roleName)
+    public function isValidRoleName(string $roleName): bool
     {
-        $allowedRoleNames = [Role::GUEST, Role::USER, Role::ADMIN, Role::ROOT];
-
-        return in_array($roleName, $allowedRoleNames);
+        return in_array($roleName, self::ALLOWED_ROLE_NAMES);
     }
 
     /**
@@ -124,9 +124,9 @@ class RolesTable extends Table
      *
      * @param string $roleName such as "admin" or "user"
      * @throws \InvalidArgumentException if the role name is not whitelisted
-     * @return mixed|null
+     * @return string|null
      */
-    public function getIdByName(string $roleName)
+    public function getIdByName(string $roleName): ?string
     {
         if (!$this->isValidRoleName($roleName)) {
             $msg = __('The role name should be from the list of allowed role names.');
@@ -135,6 +135,7 @@ class RolesTable extends Table
         $role = $this->find('all')
             ->where(['name' => $roleName])
             ->first();
+
         if (empty($role)) {
             return null;
         }

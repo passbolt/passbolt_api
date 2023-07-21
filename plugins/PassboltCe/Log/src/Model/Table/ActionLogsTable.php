@@ -18,9 +18,12 @@ declare(strict_types=1);
 namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Table\AvatarsTable;
 use App\Utility\UserAction;
-use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Log\Model\Entity\ActionLog;
@@ -111,43 +114,24 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * Check whether a given action is blacklisted from being logged.
-     *
-     * @param \App\Utility\UserAction $userAction user action
-     * @return bool
-     */
-    private function isActionBlackListed(UserAction $userAction)
-    {
-        $blackList = Configure::read('passbolt.plugins.log.config.blackList', []);
-
-        return in_array($userAction->getActionName(), $blackList);
-    }
-
-    /**
      * Create a new action_log from a userAction.
      *
      * Will not process blacklisted actions (see config).
      *
      * @param \App\Utility\UserAction $userAction user action
-     * @param int $status status
+     * @param int $status status of the request
      * @return \Passbolt\Log\Model\Entity\ActionLog|bool
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
     public function create(UserAction $userAction, int $status)
     {
-        if ($this->isActionBlackListed($userAction)) {
-            return false;
-        }
-
-        $userId = $userAction->getUserAccessControl()->getId();
-
         // Create corresponding action.
         $action = $this->Actions->findOrCreateAction($userAction->getActionId(), $userAction->getActionName());
 
         $data = [
             'id' => $userAction->getUserActionId(),
-            'user_id' => $userId,
+            'user_id' => $userAction->getUserAccessControl()->getId(),
             'action_id' => $action->id,
             'context' => $userAction->getContext(),
             'status' => $status,
@@ -192,5 +176,93 @@ class ActionLogsTable extends Table
                 'created' => true,
             ],
         ]);
+    }
+
+    /**
+     * @param array $options options
+     * @return \Cake\ORM\Query
+     */
+    public function index(array $options): Query
+    {
+        $logs = $this->find();
+        $this->addContain($logs, $options);
+        $this->filterByUsers($logs, $options);
+        $this->filterByDate($logs, $options);
+        $this->filterBySuccess($logs, $options);
+
+        return $logs;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query Logs
+     * @param array $options options
+     * @return void
+     */
+    protected function addContain(Query $query, array $options): void
+    {
+        $contain = $options['contain'] ?? [];
+        if (isset($contain['user'])) {
+            $query->contain('Users');
+        } elseif (isset($contain['user.profile'])) {
+            $query->contain([
+                'Users.Profiles' => AvatarsTable::addContainAvatar(),
+            ]);
+        }
+    }
+
+    /**
+     * @param \Cake\ORM\Query $logs Logs
+     * @param array $options options
+     * @return void
+     */
+    protected function filterByUsers(Query $logs, array $options): void
+    {
+        $hasUsers = $options['filter']['has-users'] ?? [];
+        if (empty($hasUsers)) {
+            return;
+        }
+
+        $logs->where(function (QueryExpression $exp) use ($hasUsers) {
+            return $exp->in($this->aliasField('user_id'), $hasUsers);
+        });
+    }
+
+    /**
+     * @param \Cake\ORM\Query $logs Logs
+     * @param array $options options
+     * @return void
+     */
+    protected function filterByDate(Query $logs, array $options): void
+    {
+        $from = $options['filter']['created-after'] ?? null;
+        $to = $options['filter']['created-before'] ?? null;
+        if (!is_null($from)) {
+            $logs->where(function (QueryExpression $exp) use ($from) {
+                return $exp->gte($this->aliasField('created'), $from);
+            });
+        }
+        if (!is_null($to)) {
+            $logs->where(function (QueryExpression $exp) use ($to) {
+                return $exp->lte($this->aliasField('created'), $to);
+            });
+        }
+        if (!is_null($from) && !is_null($to) && (new \DateTime($from) > new \DateTime($to))) {
+            throw new BadRequestException(
+                __('The date {0} should be after the date {1}.', 'created-after', 'created-before')
+            );
+        }
+    }
+
+    /**
+     * @param \Cake\ORM\Query $logs Logs
+     * @param array $options options
+     * @return void
+     */
+    protected function filterBySuccess(Query $logs, array $options): void
+    {
+        $isSuccess = $options['filter']['is-success'] ?? null;
+        if (!is_null($isSuccess)) {
+            $logs->where([$this->aliasField('status') => (int)$isSuccess]);
+        }
     }
 }

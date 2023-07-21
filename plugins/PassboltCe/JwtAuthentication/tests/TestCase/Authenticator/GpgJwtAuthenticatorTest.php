@@ -18,6 +18,7 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Authenticator;
 
 use App\Middleware\ContainerInjectorMiddleware;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Authentication\Authenticator\Result;
 use Authentication\Identifier\TokenIdentifier;
@@ -34,7 +35,6 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 class GpgJwtAuthenticatorTest extends TestCase
 {
@@ -50,8 +50,8 @@ class GpgJwtAuthenticatorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
+        OpenPGPBackendFactory::reset();
         $this->sut = new GpgJwtAuthenticator(new TokenIdentifier());
-        (new JwtKeyPairService())->createKeyPair();
         EventManager::instance()->setEventList(new EventList());
     }
 

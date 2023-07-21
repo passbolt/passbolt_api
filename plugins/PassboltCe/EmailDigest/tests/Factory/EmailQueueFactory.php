@@ -27,6 +27,14 @@ class EmailQueueFactory extends CakephpBaseFactory
     }
 
     /**
+     * @inheritDoc
+     */
+    protected function initialize(): void
+    {
+        $this->disablePrimaryKeyOffset();
+    }
+
+    /**
      * Defines the factory's default values. This is useful for
      * not nullable fields. You may use methods of the present factory here too.
      *
@@ -39,21 +47,20 @@ class EmailQueueFactory extends CakephpBaseFactory
 
         $this->setDefaultData(function (Generator $faker) {
             $email = $faker->email();
-            $from_email = $faker->email();
+            $title = $faker->sentence();
 
             return [
                 'email' => $email,
-                'subject' => $faker->sentence(),
-                'from_name' => $faker->name(),
-                'from_email' => $from_email,
+                'subject' => $faker->word(),
                 'config' => 'default',
                 'template' => 'test_email',
                 'layout' => 'default',
-                'template_vars' => json_encode(compact('email', 'from_email')),
+                'template_vars' => json_encode(compact('email', 'title')),
                 'theme' => '',
                 'format' => 'html',
                 'sent' => 0,
                 'locked' => 0,
+                'send_tries' => 0,
                 'send_at' => Chronos::now()->subMinute(),
                 'created' => Chronos::now()->subDay($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDay($faker->randomNumber(4)),

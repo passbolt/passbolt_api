@@ -37,11 +37,11 @@ class JwksController extends AppController
     /**
      * Serve the JWT public key
      *
+     * @param \Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService $jwksGetService Service
      * @return void
      */
-    public function rsa(): void
+    public function rsa(JwksGetService $jwksGetService): void
     {
-        $jwksGetService = new JwksGetService();
         $keydata = [];
         try {
             $keydata['keydata'] = $jwksGetService->getRawPublicKey();
@@ -54,11 +54,11 @@ class JwksController extends AppController
     /**
      * Serve the JWT public key
      *
+     * @param \Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService $jwksGetService Service
      * @return void
      */
-    public function jwks(): void
+    public function jwks(JwksGetService $jwksGetService): void
     {
-        $jwksGetService = new JwksGetService();
         $keys = [];
         try {
             $keys['keys'][] = $jwksGetService->getPublicKey();
@@ -69,7 +69,6 @@ class JwksController extends AppController
         // Do not use regular envelope as this is a normalized endpoint
         $this->set(compact('keys'));
         $this->viewBuilder()->setOption('serialize', 'keys');
-        $this->setViewBuilderOptions();
     }
 
     /**

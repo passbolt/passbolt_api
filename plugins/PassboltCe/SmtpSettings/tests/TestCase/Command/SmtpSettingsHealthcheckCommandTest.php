@@ -16,9 +16,10 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
+use App\Command\HealthcheckCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 class SmtpSettingsHealthcheckCommandTest extends AppTestCase
@@ -36,6 +37,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        HealthcheckCommand::$isUserRoot = false;
     }
 
     public function testHealthcheckCommand_SmtpSettings_Valid()
@@ -55,14 +57,14 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
     public function testHealthcheckCommand_SmtpSettings_Invalid()
     {
         if ($this->isFeaturePluginEnabled('SmtpSettings')) {
-            $data = $this->getSmtpSettingsData('sender_email', 'not a valid email');
+            $data = $this->getSmtpSettingsData('host', '');
             $this->encryptAndPersistSmtpSettings($data);
         }
 
         $this->exec('passbolt healthcheck --smtpSettings');
         $this->assertExitSuccess();
         if ($this->isFeaturePluginEnabled('SmtpSettings')) {
-            $validationErrorMessage = '<error>[FAIL] SMTP Setting errors: {"sender_email":{"email":"The sender email should be a valid email address."}}</error>';
+            $validationErrorMessage = '<error>[FAIL] SMTP Setting errors: {"host":{"_empty":"The host name should not be empty."}}</error>';
             $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin is enabled.');
             $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings source is: database.');
             $this->assertOutputContains($validationErrorMessage);

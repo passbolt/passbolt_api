@@ -28,9 +28,9 @@ $username = Purifier::clean($user['username']);
 $userFirstName = Purifier::clean($user['profile']['first_name']);
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'user' => $admin,
+        'user' => $user,
         'datetime' => FrozenTime::now(),
         'text' => $title,
     ])

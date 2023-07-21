@@ -18,6 +18,7 @@ namespace Passbolt\EmailDigest\Test\TestCase\Service;
 
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
@@ -31,7 +32,7 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Service\ConvertEmailVariablesToJsonService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 
-class ConvertEmailVariablesToJsonServiceTest extends TestCase
+class ConvertEmailVariablesToJsonServiceTest extends AppTestCase
 {
     use TruncateDirtyTables;
 

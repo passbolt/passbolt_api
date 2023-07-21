@@ -26,10 +26,25 @@ use Cake\Validation\Validation;
 use Exception;
 
 /**
- * @property \App\Model\Table\ResourcesTable $Resources
+ * ResourcesViewController Class
  */
 class ResourcesViewController extends AppController
 {
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+    }
+
     /**
      * Resource View action
      *
@@ -40,11 +55,12 @@ class ResourcesViewController extends AppController
      */
     public function view(string $id): void
     {
+        $this->assertJson();
+
         // Check request sanity
         if (!Validation::uuid($id)) {
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
-        $this->loadModel('Resources');
 
         // Retrieve and sanity the query options.
         $whitelist = ['contain' => [
@@ -85,7 +101,7 @@ class ResourcesViewController extends AppController
                 $SecretAccesses = $Secrets->getAssociation('SecretAccesses');
                 $SecretAccesses->create($secret, $this->User->getAccessControl());
             } catch (Exception $e) {
-                throw new InternalErrorException('Could not log secret access entry.');
+                throw new InternalErrorException('Could not log secret access entry.', 500, $e);
             }
         }
     }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Setup;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\AvatarFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
@@ -46,7 +47,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteSuccess()
+    public function testRecoverCompleteController_Success(): void
     {
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         Configure::write('passbolt.plugins.log.enabled', true);
@@ -61,9 +62,10 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             ->inactive()
             ->persist();
 
+        // The user performing the recovery is an admin to make sure that he does not receive two emails.
         $user = UserFactory::make()
             ->with('Profiles.Avatars', AvatarFactory::make()->setDataWithFileContent())
-            ->user()
+            ->admin()
             ->active()
             ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
             ->persist();
@@ -127,7 +129,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInvalidUserIdError()
+    public function testRecoverCompleteController_Error_InvalidUserId(): void
     {
         $url = '/setup/recover/complete/nope.json';
         $data = [];
@@ -140,7 +142,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInvalidUserTokenError()
+    public function testRecoverCompleteController_Error_InvalidUserToken(): void
     {
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.nope') . '.json';
         $data = [];
@@ -153,7 +155,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInvalidAuthenticationTokenError()
+    public function testRecoverCompleteController_Error_InvalidAuthenticationToken(): void
     {
         $user = UserFactory::make()
             ->user()
@@ -163,8 +165,18 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $userId = $user->id;
         $armoredKey = $user->gpgkey->armored_key;
         $url = '/setup/recover/complete/' . $userId . '.json';
-        $tokenExpired = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'expired');
-        $tokenInactive = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_RECOVER, 'inactive');
+
+        $tokenExpired = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->expired()
+            ->userId($userId)
+            ->active()
+            ->persist();
+        $tokenInactive = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->inactive()
+            ->userId($userId)
+            ->persist();
 
         $fails = [
             'empty array' => [
@@ -188,11 +200,11 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
                 'message' => 'The authentication token should be a valid UUID.',
             ],
             'expired token' => [
-                'data' => ['token' => $tokenExpired],
+                'data' => ['token' => $tokenExpired->token],
                 'message' => 'The authentication token is not valid.',
             ],
             'inactive token' => [
-                'data' => ['token' => $tokenInactive],
+                'data' => ['token' => $tokenInactive->token],
                 'message' => 'The authentication token is not valid.',
             ],
         ];
@@ -213,7 +225,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteAuthenticationTokenTypeError()
+    public function testRecoverCompleteController_Error_AuthenticationTokenType(): void
     {
         $user = UserFactory::make()
             ->user()
@@ -223,12 +235,16 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $userId = $user->id;
         $armoredKey = $user->gpgkey->armored_key;
         $url = '/setup/recover/complete/' . $userId . '.json';
-        $tokenWrongType = $this->quickDummyAuthToken($userId, AuthenticationToken::TYPE_LOGIN);
+        $tokenWrongType = AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_LOGIN)
+            ->userId($userId)
+            ->active()
+            ->persist();
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
 
         $fails = [
             'wrong type token' => [
-                'data' => ['token' => $tokenWrongType],
+                'data' => ['token' => $tokenWrongType->token],
                 'message' => 'The authentication token is not valid.',
             ],
         ];
@@ -249,7 +265,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInvalidGpgkeyError()
+    public function testRecoverCompleteController_Error_InvalidGpgkey(): void
     {
         $user = UserFactory::make()
             ->user()
@@ -306,7 +322,7 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteDeletedUserError()
+    public function testRecoverCompleteController_Error_DeletedUser(): void
     {
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
         $this->postJson($url, []);
@@ -318,10 +334,37 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      * @group recover
      * @group recoverComplete
      */
-    public function testRecoverCompleteInactiveUserError()
+    public function testRecoverCompleteController_Error_InactiveUser(): void
     {
         $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testRecoverCompleteController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()
+            ->with('Profiles.Avatars', AvatarFactory::make()->setDataWithFileContent())
+            ->admin()
+            ->active()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey())
+            ->persist();
+
+        $t = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
+        $url = '/setup/recover/complete/' . $user->id;
+        $armoredKey = $user->gpgkey->armored_key;
+        $data = [
+            'authenticationtoken' => [
+                'token' => $t->token,
+            ],
+            'gpgkey' => [
+                'armored_key' => $armoredKey,
+            ],
+        ];
+        $this->post($url, $data);
+        $this->assertResponseCode(404);
     }
 }

@@ -16,9 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 
 class EmailController extends WebInstallerController
 {
@@ -46,12 +46,13 @@ class EmailController extends WebInstallerController
     /**
      * Index
      *
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @return void|mixed
      */
-    public function index()
+    public function index(SmtpSettingsTestEmailService $sendTestEmailService)
     {
         if ($this->request->is('post')) {
-            return $this->indexPost();
+            return $this->indexPost($sendTestEmailService);
         }
 
         $databaseSettings = $this->webInstaller->getSettings('email');
@@ -68,21 +69,22 @@ class EmailController extends WebInstallerController
     /**
      * Index post
      *
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @return void|mixed
      */
-    protected function indexPost()
+    protected function indexPost(SmtpSettingsTestEmailService $sendTestEmailService)
     {
         $data = $this->getRequest()->getData();
         try {
             $this->validateData($data);
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->_error($e->getMessage());
 
             return;
         }
 
         if (isset($data['send_test_email'])) {
-            $this->sendTestEmail($data);
+            $this->sendTestEmail($sendTestEmailService, $data);
             $this->render($this->stepInfo['template']);
         } else {
             $this->webInstaller->setSettingsAndSave('email', $data);
@@ -94,7 +96,7 @@ class EmailController extends WebInstallerController
      * Validate data.
      *
      * @param array $data request data
-     * @throws \Cake\Core\Exception\Exception The data does not validate
+     * @throws \Cake\Core\Exception\CakeException The data does not validate
      * @return void
      */
     protected function validateData($data)
@@ -102,27 +104,27 @@ class EmailController extends WebInstallerController
         $form = new EmailConfigurationForm();
         $this->set('formExecuteResult', $form);
         if (!$form->execute($data)) {
-            throw new Exception(__('The data entered are not correct'));
+            throw new CakeException(__('The data entered are not correct'));
         }
     }
 
     /**
      * Send test email.
      *
+     * @param \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService $sendTestEmailService Service injected for unit test purposes
      * @param array $data request data
      * @return void
      */
-    protected function sendTestEmail(array $data)
+    protected function sendTestEmail(SmtpSettingsTestEmailService $sendTestEmailService, array $data)
     {
-        $service = new SmtpSettingsSendTestEmailService();
         try {
-            $service->sendTestEmail($data);
+            $sendTestEmailService->sendTestEmail($data);
             $result = ['test_email_status' => true];
         } catch (\Throwable $e) {
             $result = [
                 'test_email_status' => false,
                 'test_email_error' => $e->getMessage(),
-                'test_email_trace' => $service->getTrace(),
+                'test_email_trace' => $sendTestEmailService->getTrace(),
             ];
         }
         $this->set($result);

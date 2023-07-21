@@ -22,8 +22,8 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\I18n\FrozenTime;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenCreateService;
@@ -31,17 +31,21 @@ use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenValidationService;
 
 /**
  * @covers \Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
  */
 class VerifyTokenCreateServiceTest extends TestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
     use TruncateDirtyTables;
 
     /**
      * @var \Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenCreateService
      */
     public $service;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     public static function setUpBeforeClass(): void
     {
@@ -52,7 +56,7 @@ class VerifyTokenCreateServiceTest extends TestCase
     {
         parent::setUp();
         $this->service = new VerifyTokenCreateService();
-        $this->loadModel('AuthenticationTokens');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     public function tearDown(): void

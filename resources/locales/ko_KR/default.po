@@ -1,0 +1,3228 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2023-02-27 10:56+0000\n"
+"PO-Revision-Date: 2023-02-27 12:11\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Korean\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: ko\n"
+"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 212\n"
+"Language: ko_KR\n"
+
+msgid "You need to login to access this location."
+msgstr "이 위치에 액세스하려면 로그인해야 합니다."
+
+msgid "The server verify token is missing or invalid."
+msgstr "서버 확인 토큰이 없거나 잘못되었습니다."
+
+msgid "Decryption failed."
+msgstr "복호화가 실패하였습니다."
+
+msgid "Failed to create token."
+msgstr "토큰 생성에 실패하였습니다."
+
+msgid "The user token result should be a valid UUID."
+msgstr "사용자 토큰 결과는 올바른 UUID여야 합니다."
+
+msgid "The user token result could not be found "
+msgstr "사용자 토큰 결과를 찾을 수 없습니다. "
+
+msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
+msgstr "구성에서 정의한 OpenPGP 서버 키를 사용하여 복호화할 수 없습니다."
+
+msgid "Could not import the user OpenPGP key."
+msgstr "사용자 OpenPGP 키를 가져올 수 없습니다."
+
+msgid "Invalid verify token format, "
+msgstr "토큰 형식이 확인이 잘못되었습니다, "
+
+msgid "sections are missing or using wrong delimiters."
+msgstr "섹션이 없거나 잘못된 구분기호를 사용중입니다."
+
+msgid "the version numbers do not match."
+msgstr "버전 번호가 맞지 않습니다."
+
+msgid "wrong version number."
+msgstr "잘못된 버전 번호."
+
+msgid "it is not a UUID."
+msgstr "UUID가 아닙니다."
+
+msgid "wrong token data length."
+msgstr "토큰 데이터 길이가 잘못되었습니다."
+
+msgid "There is no user associated with this key."
+msgstr "이 키와 연결된 사용자가 없습니다."
+
+msgid "Page not found."
+msgstr "페이지를 찾을 수 없습니다."
+
+msgid "This is not a valid Ajax/Json request."
+msgstr "올바른 Ajax/Json 요청이 아닙니다."
+
+msgid "You are successfully logged in."
+msgstr "성공적으로 로그인 되었습니다."
+
+msgid "The OpenPGP public key information was not found in config."
+msgstr "구성에서 OpenPGP 공개키 정보를 찾을 수 없습니다."
+
+msgid "The operation was successful."
+msgstr "작업이 성공하였습니다."
+
+msgid "The comment was successfully added."
+msgstr "주석이 정상적으로 추가되었습니다."
+
+msgid "The comment was deleted."
+msgstr "주석이 삭제되었습니다."
+
+msgid "The comment id is not valid."
+msgstr "주석 Id가 올바르지 않습니다."
+
+msgid "The comment was successfully updated."
+msgstr "주석이 정상적으로 수정되었습니다."
+
+msgid "Invalid order. \"{0}\" is not in the list of allowed order."
+msgstr "잘못된 순서입니다. \"{0}\"는 허용된 순서 목록에 없습니다."
+
+msgid "Invalid order. \"{0}\" is not a valid order."
+msgstr "잘못된 순서입니다. \"{0}\" 은(는) 올바른 순서가 아닙니다."
+
+msgid "Invalid order. \"{0}\" is not a valid field."
+msgstr "잘못된 순서입니다. \"{0}\"는 유효한 필드가 아닙니다."
+
+msgid "Invalid pagination."
+msgstr "잘못된 페이지 매김."
+
+msgid "Invalid query string. The filter parameter should be an array."
+msgstr "잘못된 쿼리 문자열입니다. 필터 매개변수는 배열이어야 합니다."
+
+msgid "Invalid query string. The contain parameter should be an array."
+msgstr "잘못된 쿼리 문자열입니다. 포함된 매개변수는 배열이어야 합니다."
+
+msgid "Invalid filter."
+msgstr "무효한 필터."
+
+msgid "Invalid order."
+msgstr "무효한 순서."
+
+msgid "Invalid contain."
+msgstr "무효한 포함."
+
+msgid "No validation rule for filter {0}. Please create one."
+msgstr "{0} 필터에 대한 유효성 검사 규칙이 없습니다. 생성하세요."
+
+msgid "Filter {0} is not valid."
+msgstr "{0} 필터가 유효하지 않습니다."
+
+msgid "\"{0}\" is not a valid value for filter {1}."
+msgstr "\"{0}\"은(는) {1} 필터에 올바른 값이 아닙니다."
+
+msgid "\"{0}\" is not a valid search filter."
+msgstr "\"{0}\" 은(는) 올바른 검색 필터가 아닙니다."
+
+msgid "\"{0}\" is not a valid search filter. It is not a UTF8 string."
+msgstr "\"{0}\" 은(는) 올바른 검색 필터가 아닙니다. UTF8 문자열이 아닙니다."
+
+msgid "It should be between 1 and 64 char in length."
+msgstr "길이는 1~64자 사이여야 합니다."
+
+msgid "\"{0}\" is not a valid user filter."
+msgstr "\"{0}\" 은(는) 올바른 사용자 필터가 아닙니다."
+
+msgid "\"{0}\" is not a valid user id for filter {1}."
+msgstr "\"{0}\" 은(는) {1} 필터의 올바른 사용자 Id가 아닙니다."
+
+msgid "\"{0}\" is not a valid group filter."
+msgstr "\"{0}\" 은(는) 올바른 그룹 필터가 아닙니다."
+
+msgid "\"{0}\" is not a valid parent filter."
+msgstr "\"{0}\" 은(는) 올바른 상위 필터가 아닙니다."
+
+msgid "\"{0}\" is not a valid resource id for filter {1}."
+msgstr "\"{0}\" 은(는) {1} 필터의 올바른 리소스 Id가 아닙니다."
+
+msgid "\"{0}\" is not a valid group id for filter {1}."
+msgstr "\"{0}\" 은(는) {1} 필터의 올바른 그룹 Id가 아닙니다."
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
+msgstr "\"{0}\" 은(는) 필터 {1}의 올바른 상위 id가 아닙니다."
+
+msgid "\"{0}\" is not a valid timestamp for filter {1}."
+msgstr "\"{0}\" 은(는) {1} 필터의 올바른 타임스탬프가 아닙니다."
+
+msgid "\"{0}\" is not a valid datetime for filter {1}."
+msgstr "\"{0}\" 은(는) {1} 필터의 올바른 날짜/시간이 아닙니다."
+
+msgid "\"{0}\" is not a valid order."
+msgstr "\"{0}\" 은(는) 올바른 순서가 아닙니다."
+
+msgid "\"{0}\" is not in the list of allowed order."
+msgstr "\"{0}\" 은(는) 허용된 순서 목록에 없습니다."
+
+msgid "\"{0}\" is not a valid contain value."
+msgstr "\"{0}\" 은(는) 올바른 포함 값이 아닙니다."
+
+msgid "undefined user agent"
+msgstr "정의되지 않은 사용자 에이전트"
+
+msgid "Access restricted to administrators."
+msgstr "액세스는 관리자로 제한됩니다."
+
+msgid "Access restricted to unauthenticated users."
+msgstr ""
+
+msgid "The user should not be logged in."
+msgstr ""
+
+msgid "This feature is not supported by your version of passbolt."
+msgstr "사용중인 패스볼트 버전에서는 이 기능을 지원하지 않습니다."
+
+msgid "The resource identifier should be a valid UUID."
+msgstr "리소스 식별자는 유효한 UUID여야 합니다."
+
+msgid "The resource was marked as favorite."
+msgstr "리소스가 즐겨찾기로 표시되었습니다."
+
+msgid "The favorite id is not valid."
+msgstr "즐겨찾기 Id가 올바르지 않습니다."
+
+msgid "The favorite was deleted."
+msgstr "즐겨찾기가 삭제되었습니다."
+
+msgid "The OpenPGP key identifier should be a valid UUID."
+msgstr "OpenPGP 키 식별자는 유효한 UUID여야 합니다."
+
+msgid "The OpenPGP key does not exist."
+msgstr "OpenPGP 키가 존재하지 않습니다."
+
+msgid "The group has been added successfully."
+msgstr "그룹이 성공적으로 추가되었습니다."
+
+msgid "The group can be deleted."
+msgstr "그룹을 삭제할 수 없습니다."
+
+msgid "The group was deleted successfully."
+msgstr "그룹이 성공적으로 삭제되었습니다."
+
+msgid "You are not authorized to access that location."
+msgstr "해당 위치에 액세스할 수 있는 권한이 없습니다."
+
+msgid "The group identifier should be a valid UUID."
+msgstr "그룹 식별자는 유효한 UUID여야 합니다."
+
+msgid "The group does not exist or has been already deleted."
+msgstr "그룹이 존재하지 않거나 이미 삭제되었습니다."
+
+msgid "The group cannot be deleted."
+msgstr "그룹이 삭제할 수 없습니다."
+
+msgid "The permissions identifiers must be valid UUID."
+msgstr "권한 식별자는 올바른 UUID여야 합니다."
+
+msgid "The group id is not valid."
+msgstr "그룹 Id가 올바르지 않습니다."
+
+msgid "The group does not exist."
+msgstr "그룹이 존재하지 않습니다."
+
+msgid "All checks ran successfully!"
+msgstr "모든 검사가 성공적으로 실행되었습니다."
+
+msgid "OK"
+msgstr "확인"
+
+msgid "The identifier should be a valid UUID."
+msgstr "식별자는 유효한 UUID여야 합니다."
+
+msgid "The resource does not exist."
+msgstr "리소스가 존재하지 않습니다."
+
+msgid "The resource type does not exist."
+msgstr "리소스 유형이 존재하지 않습니다."
+
+msgid "The resource has been added successfully."
+msgstr "리소스가 성공적으로 추가되었습니다."
+
+msgid "The resource has been deleted successfully."
+msgstr "리소스가 성공적으로 삭제되었습니다."
+
+msgid "You do not have the permission to delete this resource."
+msgstr "이 리소스를 삭제하는 데 권한이 없습니다."
+
+msgid "Could not delete the resource."
+msgstr "리소스를 삭제할 수 없습니다."
+
+msgid "The resource has been updated successfully."
+msgstr "리소스가 성공적으로 수정되었습니다."
+
+msgid "The secret does not exist."
+msgstr "비빌번호가 존재하지 않습니다."
+
+msgid "Only guests are allowed to abort recovery process."
+msgstr "게스트만 복구 프로세스를 중단할 수 있습니다."
+
+msgid "An authentication token must be provided."
+msgstr "인증토큰이 제공되어야 합니다."
+
+msgid "The recovery process was aborted."
+msgstr "복구 작업이 중단되었습니다."
+
+msgid "Only guests are allowed to complete setup."
+msgstr "게스트만 설정을 완료할 수 있습니다."
+
+msgid "The recovery was completed successfully."
+msgstr "복구가 성공적으로 완료되었습니다."
+
+msgid "Only guests are allowed to proceed with account recovery."
+msgstr "게스트만 계정 복구를 진행할 수 있습니다."
+
+msgid "The setup was completed successfully."
+msgstr "설치가 성공적으로 완료되었습니다."
+
+msgid "Only guests are allowed to start setup."
+msgstr "게스트만 설정를 시작할 수 있습니다."
+
+msgid "You are not authorized to share this resource."
+msgstr "이 리소스를 공유할 수 있는 권한이 없습니다."
+
+msgid "Only administrators can add new users."
+msgstr "관리자만이 새로운 사용자를 추가할 수 있습니다."
+
+msgid "The user was successfully added. This user now need to complete the setup."
+msgstr "사용자가 정상적으로 추가되었습니다. 이제 이 사용자가 설치를 완료해야 합니다."
+
+msgid "The user can be deleted."
+msgstr "사용자가 삭제되었습니다."
+
+msgid "The user has been deleted successfully."
+msgstr "사용자가 성공적으로 삭제되었습니다."
+
+msgid "The user identifier should be a valid UUID."
+msgstr "사용자 식별자는 유효한 UUID여야 합니다."
+
+msgid "You are not allowed to delete yourself."
+msgstr "자신을 삭제할 수 없습니다."
+
+msgid "The user does not exist or has been already deleted."
+msgstr "사용자가 존재하지 않거나 이미 삭제되었습니다."
+
+msgid "The user cannot be deleted."
+msgstr "사용자를 삭제할 수 없습니다."
+
+msgid "The groups users identifiers must be valid UUID."
+msgstr "그룹 사용자 식별자는 올바른 UUID여야 합니다."
+
+msgid "The user does not exist or has been deleted."
+msgstr "사용자가 존재하지 않거나 이미 삭제되었습니다."
+
+msgid "Could not validate user data."
+msgstr "사용자 데이터를 검사할 수 없습니다."
+
+msgid "Could not find the user data after save. Maybe it has been deleted in the meantime."
+msgstr "저장한 후 사용자 데이터를 찾을 수 없습니다. 아마 그 사이에 삭제되었을 것입니다."
+
+msgid "The user has been updated successfully."
+msgstr "사용자가 성공적으로 수정되었습니다."
+
+msgid "Some user data should be provided."
+msgstr "일부 사용자 데이터가 제공되어야 합니다."
+
+msgid "Updating the OpenPGP key is not allowed."
+msgstr "OpenPGP 키의 수정은 허용하지 않습니다."
+
+msgid "Updating the groups is not allowed."
+msgstr "그룹의 수정은 허용하지 않습니다."
+
+msgid "You are not authorized to edit the role."
+msgstr "역할을 수정할 수 있는 권한이 없습니다."
+
+msgid "Only guests are allowed to recover an account. Please logout first."
+msgstr "게스트만 계정을 복구할 수 있습니다. 먼저 로그아웃하세요."
+
+msgid "Recovery process started, check your email."
+msgstr "복구 과정이 시작되었으니, 메일을 확인하세요."
+
+msgid "Only guests are allowed to register."
+msgstr "게스트만 등록할 수 있습니다."
+
+msgid "Registration is not opened to public. Please contact your administrator."
+msgstr "등록이 공개되지 않았습니다. 관리자에게 문의하세요."
+
+msgid "The user identifier should be a valid UUID or \"me\"."
+msgstr "사용자 식별자는 유효한 UUID이거나 \"나\" 이어야 합니다\"."
+
+msgid "The user does not exist."
+msgstr "사용자가 존재하지 않습니다."
+
+msgid "No admin were found in the database."
+msgstr "데이터베이스에서 관리자를 찾을 수 없습니다."
+
+msgid "Invalid expiry time {0}."
+msgstr ""
+
+msgid "The identifier should not be empty."
+msgstr "식별자는 비워둘 수 없습니다."
+
+msgid "The token should be a valid UUID."
+msgstr "토큰은 유효한 UUID여야 합니다."
+
+msgid "A token is required."
+msgstr "토큰이 필요합니다."
+
+msgid "The token should not be empty."
+msgstr "토큰은 비워둘 수 없습니다."
+
+msgid "The type should be one of the following: {0}."
+msgstr "유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "A type is required."
+msgstr "유형이 필요합니다."
+
+msgid "The type should not be empty."
+msgstr "유형은 비워둘 수 없습니다."
+
+msgid "A user identifier is required."
+msgstr "사용자 식별자가 필요합니다."
+
+msgid "The user identifier should not be empty."
+msgstr "사용자 식별자는 비워둘 수 없습니다."
+
+msgid "The active status should be a valid boolean."
+msgstr "활성 상태는 유효한 부울이어야 합니다."
+
+msgid "An active status is required"
+msgstr "활성 상태가 필요합니다."
+
+msgid "It is not possible to create an authentication token for this user."
+msgstr "이 사용자에 대한 인증 토큰을 만들 수 없습니다."
+
+msgid "A file is required."
+msgstr "파일이 필요합니다."
+
+msgid "The file should not be empty"
+msgstr "파일은 비워둘 수 없습니다"
+
+msgid "The file mime type should be one of the following: {0}."
+msgstr "마임 유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "The file extension should be one of the following: {0}."
+msgstr "파일 확장자는 다음 중 하나여야 합니다: {0}."
+
+msgid "The file is not valid, or exceeds max size of {0} bytes."
+msgstr "파일이 올바르지 않거나 최대 크기인 {0} 바이트를 초과합니다."
+
+msgid "Could not save the data in {0} format."
+msgstr "데이터를 {0} 형식으로 저장할 수 없습니다."
+
+msgid "The parent comment identifier should be a valid UUID."
+msgstr "상위 주석 식별자는 유효한 UUID여야 합니다."
+
+msgid "The commented object type should be one of the following: {0}."
+msgstr "주석이 달린 개체 유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "The commented object type is required."
+msgstr "주석 객체 유형이 필요합니다."
+
+msgid "The commented object type should not be empty."
+msgstr "주석 객체 유형은 비워 둘 수 없습니다."
+
+msgid "The commented object identifier should be a valid UUID."
+msgstr "주석 객체 식별자는 유효한 UUID여야 합니다."
+
+msgid "The commented object identifier is required."
+msgstr "주석 객체 식별자가 필요합니다."
+
+msgid "The commented object identifier should not be empty."
+msgstr "주석 객체 식별자는 비워 둘 수 없습니다."
+
+msgid "The content should be a valid UTF8 string."
+msgstr "내용은 유효한 UTF8 문자열이어야합니다."
+
+msgid "A content is required"
+msgstr "내용이 필요합니다."
+
+msgid "The content should not be empty"
+msgstr "내용은 비워둘 수 없습니다"
+
+msgid "The content length should be between {0} and {1} characters."
+msgstr "내용의 길이는 {0}~{1} 자 사이여야 합니다."
+
+msgid "The identifier of the user who created the comment should be a valid UUID."
+msgstr "주석을 만든 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the user who created the comment is required."
+msgstr "의견을 만든 사용자의 식별자가 필요합니다."
+
+msgid "The identifier of the user who created the comment should not be empty."
+msgstr "주석을 만든 사용자의 식별자는 비워 둘 수 없습니다."
+
+msgid "The identifier of the user who modified the comment should be a valid UUID."
+msgstr "주석을 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the user who modified the comment required."
+msgstr "주석을 수정한 사용자의 식별자가 필요합니다."
+
+msgid "The identifier of the user who modified the comment should not be empty."
+msgstr "주석을 수정한 사용자의 식별자는 비워 둘 수 없습니다."
+
+msgid "Access denied."
+msgstr "접근 거부."
+
+msgid "The parent comment does not exist."
+msgstr "상위 주석이 존재하지 않습니다."
+
+msgid "The user cannot update this comment."
+msgstr "사용자는 이 주석을 수정할 수 없습니다."
+
+msgid "The user cannot delete this comment."
+msgstr "사용자는 이 주석을 삭제할 수 없습니다."
+
+msgid "The commented object type does not exist."
+msgstr "주석 객체 유형이 존재하지 않습니다."
+
+msgid "The favorite object type should be one of the following: {0}."
+msgstr "즐겨찾기 개체 유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "The favorite object type is required."
+msgstr "즐겨찾기 객체 유형이 필요합니다."
+
+msgid "The favorite object type should not be empty"
+msgstr "즐겨찾기 객체 유형은 비워 둘 수 없습니다"
+
+msgid "The favorite object identifier should be a valid UUID."
+msgstr "즐겨찾기 객체 식별자는 유효한 UUID여야 합니다."
+
+msgid "The favorite object identifier is required."
+msgstr "즐겨찾기 객체 식별자가 필요합니다."
+
+msgid "The favorite object identifier should not be empty."
+msgstr "즐겨찾기 객체 식별자는 비워 둘 수 없습니다."
+
+msgid "The resource is already marked as favorite."
+msgstr "리소스가 즐겨찾기로 표시되었습니다."
+
+msgid "The user cannot delete this favorite."
+msgstr "사용자는 이 즐겨찾기를 삭제할 수 없습니다."
+
+msgid "The armored key should be a valid ASCII string."
+msgstr "무장된 키는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "An armored key is required."
+msgstr "무장된 키가 필요합니다."
+
+msgid "The armored key should not be empty."
+msgstr "무장된 키는 비워둘 수 없습니다."
+
+msgid "The fingerprint should be a valid ASCII string."
+msgstr "지문은 유효한 ASCII 문자열이어야 합니다."
+
+msgid "A fingerprint is required"
+msgstr "지문이 필요합니다"
+
+msgid "The fingerprint should not be empty"
+msgstr "지문은 비워둘 수 없습니다"
+
+msgid "A length is required."
+msgstr "길이가 필요합니다."
+
+msgid "The identifier should be a valid BMP-UTF8 string."
+msgstr "식별자는 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The key identifier should be a valid ASCII string."
+msgstr "키 식별자는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "A key identifier is required."
+msgstr "키 식별자가 필요합니다."
+
+msgid "The key identifier should not be empty."
+msgstr "키 식별자는 비워둘 수 없습니다."
+
+msgid "The type should be a valid ASCII string."
+msgstr "유형은 유효한 ASCII 문자열이어야 합니다."
+
+msgid "A type is required"
+msgstr "유형이 필요합니다"
+
+msgid "The type should not be empty"
+msgstr "유형은 비워둘 수 없습니다"
+
+msgid "The expiry should be a valid date."
+msgstr "만료 날짜는 유효한 날짜여야 합니다."
+
+msgid "The creation date should be a valid date."
+msgstr "생성 날짜는 유효한 날짜여야 합니다."
+
+msgid "A creation date is required."
+msgstr "생성 날짜가 필요합니다."
+
+msgid "The creation date should not be empty."
+msgstr "생성 날짜는 비워둘 수 없습니다."
+
+msgid "The deleted status should be a valid boolean."
+msgstr "삭제된 상태는 유효한 부울이어야 합니다."
+
+msgid "A deleted status is required"
+msgstr "삭제된 상태가 필요합니다."
+
+msgid "A user identifier is required"
+msgstr "사용자 식별자가 필요합니다"
+
+msgid "The user identifier should not be empty"
+msgstr "사용자 식별자는 비워둘 수 없습니다"
+
+msgid "You cannot reuse the server keys."
+msgstr "서버 키는 재사용할 수 없습니다."
+
+msgid "A valid OpenPGP key must be provided."
+msgstr "유효한 OpenPGP 키가 제공되어야 합니다."
+
+msgid "The OpenPGP armored key could not be parsed."
+msgstr "OpenPGP 무장키는 구문 분석할수 없습니다."
+
+msgid "The OpenPGP armored key could not be validated."
+msgstr "OpenPGP 무장키는 검증할 수 없습니다."
+
+msgid "The name should be a valid UTF8 string."
+msgstr "이름은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The name length should be maximum {0} characters."
+msgstr "이름 길이는 최대 {0} 자여야 합니다."
+
+msgid "A name is required."
+msgstr "이름이 필요합니다."
+
+msgid "The name should not be empty."
+msgstr "이름은 비워둘 수 없습니다."
+
+msgid "The identifier of the user who created the group should be a valid UUID."
+msgstr "그룹을 만든 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the user who created the group is required."
+msgstr "그룹을 만든 사용자의 식별자가 필요합니다."
+
+msgid "The identifier of the user who created the group should not be empty."
+msgstr "그룹을 만든 사용자의 식별자는 비워 둘 수 없습니다."
+
+msgid "The identifier of the user who modified the group should be a valid UUID."
+msgstr "그룹을 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the user who modified the group is required."
+msgstr "그룹을 수정한 사용자의 식별자가 필요합니다."
+
+msgid "The identifier of the user who modified the group should not be empty."
+msgstr "그룹을 수정한 사용자의 식별자는 비워 둘 수 없습니다."
+
+msgid "The name is already used by another group."
+msgstr "이름이 이미 다른 그룹에서 사용되고 있습니다."
+
+msgid "A group manager should be provided."
+msgstr "그룹 관리자가 제공되어야 합니다."
+
+msgid "The group should not be soft deleted."
+msgstr "그룹을 임시로 삭제해서는 안 됩니다."
+
+msgid "The group should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "그룹이 공유 콘텐츠의 단독 소유자가 되어서는 안 되며, 소유권을 다른 사용자에게 이전하세요."
+
+msgid "Could not validate group data."
+msgstr "그룹 데이터를 검사할 수 없습니다."
+
+msgid "Could not delete the group {0}, please try again later."
+msgstr "{0} 그룹을 삭제할 수 없습니다, 나중에 재시도 하세요."
+
+msgid "A group identifier is required."
+msgstr "그룹 식별자가 필요합니다."
+
+msgid "The group identifier should not be empty."
+msgstr "그룹 식별자는 비워둘 수 없습니다."
+
+msgid "The group manager status should be a valid boolean."
+msgstr "그룹 관리자 상태는 유효한 부울이어야 합니다."
+
+msgid "A group manager status is required."
+msgstr "그룹 관리자 상태가 필요합니다."
+
+msgid "The group manager status should not be empty."
+msgstr "그룹 관리자 상태는 비워둘 수 없습니다."
+
+msgid "The user is already member of this group."
+msgstr "사용자가 이미 이 그룹의 구성원입니다."
+
+msgid "The property length should be maximum {0} characters."
+msgstr "속성 길이는 최대 {0} 자여야 합니다."
+
+msgid "A property is required."
+msgstr "속성이 필요합니다."
+
+msgid "The property should not be empty."
+msgstr "속성은 비워둘 수 없습니다."
+
+msgid "The property should be an alphabetical string and only dot is accepted as special characters."
+msgstr "속성은 알파벳 문자열이어야 하며 점만 특수 문자로 사용할 수 있습니다."
+
+msgid "The property identifier should be a valid UUID."
+msgstr "속성 식별자는 유효한 UUID여야 합니다."
+
+msgid "A property identifier is required."
+msgstr "속성 식별자가 필요합니다."
+
+msgid "The property identifier should not be empty."
+msgstr "속성 식별자는 비워둘 수 없습니다."
+
+msgid "The value should be a valid UTF8 string."
+msgstr "값은 유효한 UTF8 문자열이어야합니다."
+
+msgid "The value length should be maximum {0} characters."
+msgstr "값의 길이는 최대 {0} 자여야 합니다."
+
+msgid "A value is required."
+msgstr "값이 필요합니다."
+
+msgid "The value should not be empty."
+msgstr "값은 비워둘 수 없습니다."
+
+msgid "This property id is already in use."
+msgstr "속성 Id가 이미 사용 중입니다."
+
+msgid "Only admin can create or update organization settings."
+msgstr "관리자만 조직 설정을 생성하거나 수정할 수 있습니다."
+
+msgid "This is not a valid setting."
+msgstr "올바르지 않은 설정입니다."
+
+msgid "The type of the access control object should be one of the following: {0}."
+msgstr "액세스 제어 개체 유형은 다음 중 하나여야 합니다: {0}"
+
+msgid "The type of the access control object is required."
+msgstr "액세스 제어 개체의 유형이 필요합니다."
+
+msgid "The type of the access control object should not be empty."
+msgstr "액세스 제어 개체 유형은 비워둘 수 없습니다."
+
+msgid "The identifier of the access control object should be a valid UUID."
+msgstr "액세스 제어 개체 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the access control object is required."
+msgstr "액세스 제어 개체의 식별자가 필요합니다."
+
+msgid "The identifier of the access control object should not be empty."
+msgstr "액세스 제어 개체 식별자는 비워 둘 수 없습니다."
+
+msgid "The access request object type should be one of the following: {0}."
+msgstr "액세스 요청 개체 유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "The type of the access request object is required."
+msgstr "액세스 제어 개체의 유형이 필요합니다."
+
+msgid "The access request object type should not be empty."
+msgstr "액세스 요청 객체 유형은 비워 둘 수 없습니다."
+
+msgid "The identifier of the access request object should be a valid UUID."
+msgstr "액세스 요청 개체 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the access request object is required."
+msgstr "액세스 요청 개체의 식별자가 필요합니다."
+
+msgid "The identifier of the access request object should not be empty."
+msgstr "액세스 요청 개체 식별자는 비워 둘 수 없습니다."
+
+msgid "A permission already exists for the given access control object and access request object."
+msgstr "지정된 액세스 제어 개체 및 액세스 요청 개체에 대한 사용 권한이 이미 있습니다."
+
+msgid "The access control object does not exist."
+msgstr "액세스 제어 개체가 없습니다."
+
+msgid "The access request object does not exist."
+msgstr "액세스 요청 개체가 없습니다."
+
+msgid "A first name is required."
+msgstr "이름이 필요합니다."
+
+msgid "The first name should not be empty."
+msgstr "이름은 비워둘 수 없습니다."
+
+msgid "The first name should be a valid BMP-UTF8 string."
+msgstr "이름은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The first name length should be maximum {0} characters."
+msgstr "이름 길이는 최대 {0} 자여야 합니다."
+
+msgid "A last name is required."
+msgstr "성이 필요합니다."
+
+msgid "The last name should not be empty."
+msgstr "성은 비워둘 수 없습니다."
+
+msgid "The last name should be a valid BMP-UTF8 string."
+msgstr "성은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The last name length should be maximum {0} characters."
+msgstr "성 길이는 최대 {0} 자여야 합니다."
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "이름은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "슬러그는 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "A slug is required."
+msgstr "슬러그가 필요합니다."
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "슬러그의 길이는 최대 {0} 자여야 합니다."
+
+msgid "The slug should not be empty"
+msgstr "슬러그는 비워둘 수 없습니다"
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "설명은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "설명 길이는 최대 {0} 자여야 합니다."
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "설명은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "A definition is required."
+msgstr "정의가 필요합니다."
+
+msgid "The definition should not be empty."
+msgstr "정의는 비워둘 수 없습니다."
+
+msgid "The message should be valid JSON message."
+msgstr "메시지는 유효한 JSON 메시지여야 합니다."
+
+msgid "A resource type already exists with this slug."
+msgstr "이 슬러그를 가진 리소스 유형이 이미 있습니다."
+
+msgid "A resource type already exists with this definition."
+msgstr "이 정의를 가진 리소스 유형이 이미 있습니다."
+
+msgid "The username should be a valid UTF8 string."
+msgstr "이름은 유효한 UTF8 문자열이어야합니다."
+
+msgid "The username length should be maximum {0} characters."
+msgstr "이름 길이는 최대 {0} 자여야 합니다."
+
+msgid "The uri should be a valid BMP-UTF8 string."
+msgstr "URI는 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The uri length should be maximum {0} characters."
+msgstr "uri의 길이는 최대 {0} 자여야 합니다."
+
+msgid "The description should be a valid UTF8 string."
+msgstr "설명은 유효한 UTF8 문자열이어야합니다."
+
+msgid "The deleted status should not be empty"
+msgstr "삭제된 상태는 비워둘 수 없습니다"
+
+msgid "The identifier of the user who created the resource should be a valid UUID."
+msgstr "리소스를 만든 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the user who created the resource is required."
+msgstr "리소스를 만든 사용자의 식별자가 필요합니다."
+
+msgid "The identifier of the user who created the resource should not be empty."
+msgstr "리소스를 만든 사용자의 식별자는 비워 둘 수 없습니다."
+
+msgid "The identifier of the user who last modified the resource should be a valid UUID."
+msgstr "리소스를 마지막으로 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the user who last modified the resource required."
+msgstr "리소스를 마지막으로 수정한 사용자의 식별자가 필요합니다."
+
+msgid "The identifier of the user who last modified the resource should not be empty."
+msgstr "리소스를 마지막으로 수정한 사용자의 식별자는 비워 둘 수 없습니다."
+
+msgid "The resource type identifier should be a valid UUID."
+msgstr "리소스 유형 식별자는 유효한 UUID여야 합니다."
+
+msgid "A resource type identifier is required."
+msgstr "리소스 유형 식별자가 필요합니다."
+
+msgid "The permissions are required."
+msgstr "권한이 필요합니다."
+
+msgid "The permissions should not be empty."
+msgstr "권한은 비워둘 수 없습니다."
+
+msgid "The permissions should contain only the permission of the owner."
+msgstr "권한에는 소유자의 권한만 포함되어야 합니다."
+
+msgid "The owner secret is required."
+msgstr "소유자 비밀번호가 필요합니다."
+
+msgid "The secrets should not be empty."
+msgstr "비밀번호는 비워둘 수 없습니다."
+
+msgid "The secrets should contain only the secret of the owner."
+msgstr "비밀번호는 오직 소유주의 비밀번호만을 포함해야 합니다."
+
+msgid "The permissions should contain the owner permission."
+msgstr "권한은 소유주의 권한을 포함해야 합니다."
+
+msgid "The secrets should contain the owner secret."
+msgstr "비밀번호는 소유주 비밀번호를 포함해야 합니다."
+
+msgid "The secrets should contain the secrets of all the users having access to the resource."
+msgstr "비밀번호는 리소스에 액세스할 수 있는 모든 사용자의 비밀번호가 포함되어야 합니다."
+
+msgid "The permissions should contain at least the owner permission."
+msgstr "권한은 최소한 소유주의 권한을 포함해야 합니다."
+
+msgid "The resource should not be already soft deleted."
+msgstr "리소스를 임시로 삭제해서는 안 됩니다."
+
+msgid "The user cannot delete this resource."
+msgstr "사용자는 이 리소스를 삭제할 수 없습니다."
+
+msgid "The name should be a valid ASCII string."
+msgstr "이름은 유효한 ASCII 문자열이어야 합니다."
+
+msgid "A role already exists for the given name."
+msgstr "지정한 이름에 대한 역할이 이미 있습니다."
+
+msgid "The role name should be from the list of allowed role names."
+msgstr "역할 이름은 허용된 역할 이름 목록에 있어야 합니다."
+
+msgid "The resource identifier is required."
+msgstr "리소스 식별자가 필요합니다."
+
+msgid "The resource identifier should not be empty."
+msgstr "리소스 식별자는 비워둘 수 없습니다."
+
+msgid "The message should be a valid ASCII string."
+msgstr "메시지는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "A message is required."
+msgstr "메시지가 필요합니다."
+
+msgid "The message should not be empty."
+msgstr "메시지는 비워둘 수 없습니다."
+
+msgid "A secret already exists for the given user and resource."
+msgstr "지정한 사용자 및 리소스에 대한 비밀번호가 이미 있습니다."
+
+msgid "The user identifier by should be a valid UUID."
+msgstr "사용자 식별자는 유효한 UUID여야 합니다."
+
+msgid "A username is required."
+msgstr "사용자이름이 필요합니다."
+
+msgid "The username should be a valid email address."
+msgstr "사용자이름은 유효한 이메일 주소여야 합니다."
+
+msgid "The role identifier should be a valid UUID."
+msgstr "역할 식별자는 유효한 UUID여야 합니다."
+
+msgid "A role identifier is required."
+msgstr "역할 식별자가 필요합니다."
+
+msgid "The profile should not be empty."
+msgstr "프로필은 비워둘 수 없습니다."
+
+msgid "The username should not be empty."
+msgstr "사용자이름은 비워둘 수 없습니다."
+
+msgid "The username length should be maximum 255 characters."
+msgstr "사용자이름 길이는 최대 {0} 자여야 합니다."
+
+msgid "The username is already in use."
+msgstr "사용자이름이 이미 사용 중입니다."
+
+msgid "The role identifier does not exist."
+msgstr "역할 식별자가 존재하지 않습니다."
+
+msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "사용자가 공유 콘텐츠의 단독 소유자가 되어서는 안 되며, 소유권을 다른 사용자에게 이전하세요."
+
+msgid "The user should not be sole group manager of group(s), transfer the management to other users."
+msgstr "사용자가 그룹의 유일한 그룹 관리자가 되어서는 안 되며, 관리를 다른 사용자에게 이전해야 합니다."
+
+msgid "Could not delete the user {0}, please try again later."
+msgstr "{0} 사용자를 삭제할 수 없습니다, 나중에 재시도 하세요."
+
+msgid "The armored key should be a valid ASCII-armored OpenPGP key."
+msgstr "무장된 키는 유효한 ASCII로 무장된 OpenPGP key여야 합니다."
+
+msgid "The message should be a valid ASCII-armored OpenPGP message."
+msgstr "메시지는 유효한 ASCII로 무장된 OpenPGP key여야 합니다."
+
+msgid "The creation date should be set in the past."
+msgstr "생성 날짜는 과거 날짜로 설정해야 합니다."
+
+msgid "The key should not already be expired."
+msgstr "키가 이미 만료되지 않아야 합니다."
+
+msgid "The email should be a valid email address."
+msgstr "이메일은 유효한 이메일 주소여야 합니다."
+
+msgid "The regular expression should be a valid string."
+msgstr ""
+
+msgid "The fingerprint does not match the one of the armored key."
+msgstr "지문이 무장키와 맞지 않습니다."
+
+msgid "The fingerprint should be a string of 40 hexadecimal characters."
+msgstr "지문은 40개의 16진수 문자로 구성된 문자열이어야 합니다."
+
+msgid "The type should be one of the following: RSA, ECC, ECDSA, DH."
+msgstr "유형은 RSA, ECC, ECDSA, DH 중 하나여야 합니다."
+
+msgid "The delete status should be a valid boolean."
+msgstr "삭제된 상태는 유효한 부울이어야 합니다."
+
+msgid "The key identifier should be a string of 8 hexadecimal characters."
+msgstr "키 식별자는 8개의 16진수 문자로 구성된 문자열이어야 합니다."
+
+msgid "{0} just activated their account on passbolt"
+msgstr "{0} 이(가) 패스볼트에서 계정을 활성화했습니다."
+
+msgid "{0} commented on {1}"
+msgstr "{1} 에 주석됨 {0}"
+
+msgid "{0} deleted the group {1}"
+msgstr "{1} 그룹이 {0} 에 의해 삭제됨"
+
+msgid "{0} updated the group {1}"
+msgstr "{1} 그룹이 {0} 에 의해 수정됨"
+
+msgid "{0} added you to the group {1}"
+msgstr "{1} 그룹에 {0} 에 의해 당신이 추가됨"
+
+msgid "{0} requested you to add members to {1}"
+msgstr "{0} 이(가) {1} 에 구성원 추가를 요청함"
+
+msgid "{0} removed you from the group {1}"
+msgstr "{1} 그룹에 {0} 에 의해 당신이 삭제됨"
+
+msgid "{0} updated your membership in the group {1}"
+msgstr "{0} 이(가) {1} 그룹의 구성원 자격이 수정됨"
+
+msgid "{0} just completed the account recovery process"
+msgstr "{0} 이(가) 계정 복구 작업을 방금 완료했습니다."
+
+msgid "You just completed the account recovery process!"
+msgstr "계정 복구 작업을 완료했습니다!"
+
+msgid "Your account recovery, {0}!"
+msgstr "{0} 계정이 복구되었습니다!"
+
+msgid "You added the password {0}"
+msgstr "{0} 암호가 추가되었습니다"
+
+msgid "{0} deleted the password {1}"
+msgstr "{0} 에 의해 {1} 비밀번호가 삭제됨"
+
+msgid "{0} edited the password {1}"
+msgstr "{0} 에 의해 {1} 비밀번호가 수정됨"
+
+msgid "{0} can not complete the account recovery process!"
+msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다."
+
+msgid "{0} shared the password {1}"
+msgstr "{0} 에 의해 {1} 비밀번호가 공유됨"
+
+msgid "{0} deleted user {1}"
+msgstr "{0} 에 의해 {1} 사용자가 삭제됨"
+
+msgid "Welcome to passbolt, {0}!"
+msgstr "패스볼트에 어서 오세요, {0}!"
+
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} 이(가) 여러 그룹의 구성원 자격을 업데이트함"
+
+msgid "Your membership in several groups changed in passbolt"
+msgstr "패스볼트에서 여러 그룹의 구성원 자격이 변경되었습니다"
+
+msgid "{0} deleted several groups"
+msgstr "{0} 이(가) 여러 그룹을 삭제함"
+
+msgid "Several groups were deleted in passbolt"
+msgstr "패스볼트에서 여러 그룹을 삭제함"
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} 이(가) 여러 리소스를 수정함"
+
+msgid "Multiple passwords have been changed in passbolt"
+msgstr "패스볼트에서 여러 개의 암호가 변경됨"
+
+msgid "{0} shared several items with you"
+msgstr "{0} 이(가) 몇개의 아이템을 당신과 공유함"
+
+msgid "Multiple passwords have been shared with you in passbolt"
+msgstr "패스볼트에서 여러 개의 패스워드가 공유됨"
+
+msgid "The purify subject setting should be a boolean."
+msgstr "정화된 제목 설정은 부울이어야 합니다."
+
+msgid "The show comment setting should be a boolean."
+msgstr "주석 보기 설정은 부울이여야 합니다."
+
+msgid "The show description setting should be a boolean."
+msgstr "내용 보기 설정은 부울이여야 합니다."
+
+msgid "The show secret setting should be a boolean."
+msgstr "비밀번호 보기 설정은 부울이여야 합니다."
+
+msgid "The show uri setting should be a boolean."
+msgstr "URI 보기 설정은 부울이여야 합니다."
+
+msgid "The show username setting should be a boolean."
+msgstr "사용자이름 보기 설정은 부울이여야 합니다."
+
+msgid "The send on user setup completed setting should be a boolean."
+msgstr "사용자 설정 완료시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on user recover abort setting should be a boolean."
+msgstr "사용자 복구 중단 설정 보내기는 부울이어야 합니다."
+
+msgid "The send on comment added setting should be a boolean."
+msgstr "주석 추가시 보내기 설정은 부울이여야 합니다."
+
+msgid "The send on group deleted setting should be a boolean."
+msgstr "그룹 삭제시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on group user added setting should be a boolean."
+msgstr "그룹 추가시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on group user deleted setting should be a boolean."
+msgstr "그룹 삭제시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on group user updated setting should be a boolean."
+msgstr "그룹에 사용자 수정시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on group manager updated setting should be a boolean."
+msgstr "그룹에 관리자 수정시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on password created setting should be a boolean."
+msgstr "비밀번호 생성시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on password shared setting should be a boolean."
+msgstr "비밀번호 공유시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on password updated setting should be a boolean."
+msgstr "비밀번호 수정시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on password deleted setting should be a boolean."
+msgstr "비밀번호 삭제시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on user created setting should be a boolean."
+msgstr "사용자 생성시 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on user recovered setting should be a boolean."
+msgstr "사용자 복구시 보내기 설정은 부울이어야 합니다."
+
+msgid "The token is expired."
+msgstr "토큰이 만료되었습니다."
+
+msgid "The authentication token is not valid."
+msgstr "인증 토큰이 올바르지 않습니다."
+
+msgid "The authentication token could not be found."
+msgstr "인증 토큰을 찾을 수 없습니다."
+
+msgid "The token is already consumed."
+msgstr "토큰이 이미 사용되었습니다."
+
+msgid "Validation failed for authenticationToken {0}. {1}"
+msgstr "{0} 인증토큰 유효성에 실패했습니다. {1}"
+
+msgid "Validation success for authenticationToken {0}"
+msgstr "{0} 인증토큰에 대한 유효성 검증 성공"
+
+msgid "Could not save the avatar in the {0} file."
+msgstr "아바타를 {0} 파일에 저장할 수 없습니다."
+
+msgid "The avatar id is not valid."
+msgstr "아바타 Id가 올바르지 않습니다."
+
+msgid "Could not save the comment, please try again later."
+msgstr "주석을 저장할 수 없습니다, 나중에 재시도 하세요."
+
+msgid "Could not validate comment data."
+msgstr "주석 데이터를 검사할 수 없습니다."
+
+msgid "The comment userId is not valid."
+msgstr "주석 userId가 올바르지 않습니다."
+
+msgid "The comment does not exist."
+msgstr "주석이 존재하지 않습니다."
+
+msgid "Could not delete comment."
+msgstr "주석을 제거할 수 없습니다."
+
+msgid "Validation failed for comment {0}. {1}"
+msgstr "{0} 주석에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for comment {0}"
+msgstr "{0} 주석에 대한 유효성 검증 성공"
+
+msgid "You are not allowed to edit this comment."
+msgstr "이 주석을 수정할 권한이 없습니다."
+
+msgid "Could not find comments for the requested model."
+msgstr "요청한 모델에 대한 주석을 찾을 수 없습니다."
+
+msgid "This record is already marked as favorite."
+msgstr "이 레코드는 이미 즐겨찾기로 표시되었습니다."
+
+msgid "Could not validate favorite data."
+msgstr "즐겨찾기 데이터를 검사할 수 없습니다."
+
+msgid "The favorite does not exist."
+msgstr "즐겨찾기가 존재하지 않습니다."
+
+msgid "Could not delete favorite."
+msgstr "즐겨찾기를 제거할 수 없습니다."
+
+msgid "Validation failed for favorite {0}. {1}"
+msgstr "{0} 즐겨찾기에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for favorite {0}"
+msgstr "{0} 즐겨찾기에 대한 유효성 검증 성공"
+
+msgid "Validation success for key {0}"
+msgstr "{0} 키에 대한 유효성 검증 성공"
+
+msgid "Validation failed for key {0}. {1}"
+msgstr "{0} 키에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Encryption success for key {0}"
+msgstr "{0} 키에 대한 암호화 검증 성공"
+
+msgid "Failed to encrypt with key {0}. {1}"
+msgstr "{0} 키로 암호화에 실패했습니다. {1}"
+
+msgid "Key expired: {0}."
+msgstr "키 만료됨: {0}."
+
+msgid "Expiration date valid for key {0}."
+msgstr "{0} 키에 대한 만료 날짜가 유효합니다."
+
+msgid "Validation failed for group {0}. {1}"
+msgstr "{0} 그룹에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for group {0}"
+msgstr "{0} 그룹에 대한 유효성 검증 성공"
+
+msgid "Could not validate group user data."
+msgstr "그룹 사용자 데이터를 검사할 수 없습니다."
+
+msgid "Could not validate sub key data."
+msgstr "하위 키 데이터를 검사할 수 없습니다."
+
+msgid "Public key sub key id could not be found."
+msgstr "공개키 하위 키 Id를 찾을 수 없습니다."
+
+msgid "Could not validate message data."
+msgstr "메시지 데이터를 검사할 수 없습니다."
+
+msgid "Recipient information could not be found."
+msgstr "수신자 정보를 찾을 수 없습니다."
+
+msgid "The public key could not be parsed."
+msgstr "공개키 구문 해석을 할 수 없습니다."
+
+msgid "The armored message must not contain an extra line before the end block."
+msgstr "무장된 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
+
+msgid "The message must contain an asymmetric packet."
+msgstr "메시지에 비대칭 패킷이 포함되어야 합니다."
+
+msgid "The message must contain a symmetric packet."
+msgstr "메시지에 대칭 패킷이 포함되어야 합니다."
+
+msgid "The message must contain only one recipient."
+msgstr "메시지에는 한 명의 수신자만 포함되어야 합니다."
+
+msgid "Unknown key validation rule: {0}"
+msgstr "알 수 없는 키 유효성 검사 규칙: {0}"
+
+msgid "The armored message could not be validated."
+msgstr "무장된 메시지를 검증할 수 없습니다."
+
+msgid "The algorithm is invalid."
+msgstr "알고리즘이 잘못되었습니다."
+
+msgid "The fingerprint id is invalid."
+msgstr "지문 Id가 잘못되었습니다."
+
+msgid "The public key id is invalid."
+msgstr "공개키 id가 잘못되었습니다."
+
+msgid "The key size is not valid."
+msgstr "키 사이즈가 잘못되었습니다."
+
+msgid "The key size must match security recommendations."
+msgstr "키 크기는 보안 권장 사항과 일치해야 합니다."
+
+msgid "The key creation date must not be in the future."
+msgstr "키 생성 날짜는 미래일 수 없습니다."
+
+msgid "The key must not be expired."
+msgstr "키가 만료되면 안 됩니다."
+
+msgid "The key must not include an expiry date."
+msgstr "키에는 만료 날짜가 포함되지 않아야 합니다."
+
+msgid "The key must be revoked."
+msgstr "키를 해지해야 합니다."
+
+msgid "The key must not be revoked."
+msgstr "키를 해지하면 안 됩니다."
+
+msgid "The armored key must not contain an extra line before the end block."
+msgstr "무장키는엔드 블록 앞에 추가 줄이 없어야 합니다."
+
+msgid "The armored key must not contain multiple keys."
+msgstr "무장키에 여러 개의 키를 포함할 수 없습니다."
+
+msgid "The public key could not be validated."
+msgstr "공개키를 검증할 수 없습니다."
+
+msgid "Could not validate permission data."
+msgstr "권한 데이터를 검사할 수 없습니다."
+
+msgid "Validation failed for permission {0}. {1}"
+msgstr "{0} 권한에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for permission {0}"
+msgstr "{0} 권한에 대한 유효성 검증 성공"
+
+msgid "Could not validate permissions data."
+msgstr "권한 데이터를 검사할 수 없습니다."
+
+msgid "Validation failed for profile {0}. {1}"
+msgstr "{0} 프로필 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for profile {0}"
+msgstr "{0} 프로필에 대한 유효성 검증 성공"
+
+msgid "Could not validate resource data."
+msgstr "리소스 데이터를 검사할 수 없습니다."
+
+msgid "An unexpected error occurred, please contact an administrator."
+msgstr ""
+
+msgid "The server returned the following error:"
+msgstr "서버에서 다음과 같은 에러를 반환하였습니다:"
+
+msgid "Validation failed for resource {0}. {1}"
+msgstr "{0} 리소스에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for resource {0}"
+msgstr "{0} 리소스에 대한 유효성 검증 성공"
+
+msgid "You are not allowed to update this resource."
+msgstr "이 리소스를 수정할 수 있는 권한이 없습니다."
+
+msgid "Additional resource types are not enabled on this server."
+msgstr "이 서버에서는 추가 리소스 유형을 사용할 수 없습니다."
+
+msgid "There should be at least 4 roles"
+msgstr "최소 4개의 역할이 있어야 합니다."
+
+msgid "Validation failed for role {0}. {1}"
+msgstr "{0} 역할에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for role {0}"
+msgstr "{0} 역할에 대한 유효성 검증 성공"
+
+msgid "Could not validate secret data."
+msgstr "비밀번호 데이터를 검사할 수 없습니다."
+
+msgid "Validation failed for secret {0}. {1}"
+msgstr "{0} 비밀번호에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for secret {0}"
+msgstr "{0} 비밀번호에 대한 유효성 검증 성공"
+
+msgid "Could not validate secrets data."
+msgstr "비밀번호 데이터를 검사할 수 없습니다."
+
+msgid "The secrets of all the users having access to the resource are required."
+msgstr "리소스에 액세스할 수 있는 모든 사용자의 비밀번호가 필요합니다."
+
+msgid "An authentication token should be provided."
+msgstr "인증토큰이 제공되어야 합니다."
+
+msgid "The authentication token should be a valid UUID."
+msgstr "인증 토큰은 유효한 UUID여야 합니다."
+
+msgid "An OpenPGP key must be provided."
+msgstr "OpenPGP 키가 제공되어야 합니다."
+
+msgid "The authentication token could not be saved."
+msgstr "인증 토큰을 저장할 수 없습니다."
+
+msgid "The user does not exist, has not completed the setup or was deleted."
+msgstr "사용자가 존재하지 않거나 설정을 완료하지 않았거나 삭제되었습니다."
+
+msgid "Could not update the authentication token data."
+msgstr "인증 토큰 데이터를 업데이트할 수 없습니다."
+
+msgid "The key provided does not belong to given user."
+msgstr "제공된 키가 지정된 사용자에게 속하지 않습니다."
+
+msgid "The user does not exist or is not active."
+msgstr "사용자가 존재하지 않거나 활성 상태가 아닙니다."
+
+msgid "The OpenPGP key data is not valid."
+msgstr "OpenPGP 키가 올바르지 않습니다."
+
+msgid "The OpenPGP key can not be used to encrypt."
+msgstr "OpenPGP 키를 사용하여 암호화할 수 없습니다."
+
+msgid "The user does not exist, is already active or has been deleted."
+msgstr "사용자가 존재하지 않거나 이미 활성 상태이거나 삭제되었습니다."
+
+msgid "The user does not exist or is already active."
+msgstr "사용자가 없거나 이미 활성 상태입니다."
+
+msgid "The user should not be a guest."
+msgstr "사용자는 게스트일 수 없습니다."
+
+msgid "Account recovery case must be a string."
+msgstr "계정 복구 사례는 문자열이어야 합니다."
+
+msgid "Account recovery reason not supported."
+msgstr "계정 복구 이유는 지원되지 않습니다."
+
+msgid "Please provide a valid email address."
+msgstr "올바른 이메일 주소를 입력하세요."
+
+msgid "This user does not exist or has been deleted."
+msgstr "사용자가 존재하지 않거나 이미 삭제되었습니다."
+
+msgid "Please register and complete the setup first."
+msgstr "먼저 등록 하고 설정을 완료하세요."
+
+msgid "Please contact your administrator."
+msgstr "관리자에게 문의하세요."
+
+msgid "Validation failed for user {0}. {1}"
+msgstr "{0} 사용자에 대한 검증이 실패되었습니다. {1}"
+
+msgid "Validation success for user {0}"
+msgstr "{0} 사용자에 대한 유효성 검증 성공"
+
+msgid "The directory {0} cannot be deleted"
+msgstr "{0} 디렉토리를 삭제할 수 없습니다"
+
+msgid "Database connection failed"
+msgstr ""
+
+msgid "Could not connect to github repository"
+msgstr "github 리포지토리에 연결할 수 없습니다."
+
+msgid "Could not read tag information on github repository"
+msgstr "github 리포지토리에 태그 정보를 읽을 수 없습니다."
+
+msgid "The key {0} cannot be used to encrypt."
+msgstr "키 {0} 가 암호화에 사용할 수 없습니다."
+
+msgid "The key {0} cannot be used to decrypt."
+msgstr "키 {0} 가 복호화에 사용할 수 없습니다."
+
+msgid "Could not use key {0} for signing."
+msgstr "서명에 {0} 키를 사용할 수 없습니다."
+
+msgid "Could not parse the OpenPGP public key."
+msgstr "OpenPGP 공용키를 구문 분석할 수 없습니다."
+
+msgid "Could not import the OpenPGP key."
+msgstr "OpenPGP 키를 가져올 수 없습니다."
+
+msgid "Could not use the key to sign and encrypt."
+msgstr "키를 사용하여 서명 및 암호화할 수 없습니다."
+
+msgid "Could not use the key to encrypt."
+msgstr "키를 사용하여 암호화할 수 없습니다."
+
+msgid "Expected {0} and got {1}."
+msgstr "{0} 이(가) 필요한데 {1} 을(를) 받았습니다."
+
+msgid "Decryption failed. Invalid signature."
+msgstr "복호화 실패. 서명이 올바르지 않습니다."
+
+msgid "The message cannot be verified."
+msgstr "메시지를 확인할 수 없습니다."
+
+msgid "Could not sign the text. "
+msgstr "텍스트에 서명할 수 없습니다. "
+
+msgid "The OpenPGP server key defined in the config is not found in the file system."
+msgstr "구성에 정의된 OpenPGP 서버키를 파일 시스템에서 찾을 수 없습니다."
+
+msgid "The OpenPGP server key defined in the config cannot be opened."
+msgstr "구성에 정의된 OpenPGP 서버키를 열 수 없습니다."
+
+msgid "The OpenPGP server key defined on file is not a valid private key."
+msgstr "파일에 정의된 OpenPGP 서버키가 올바른 개인키가 아닙니다."
+
+msgid "There is an issue with the OpenPGP server key."
+msgstr "OpenPGP 서버키에 문제가 있습니다."
+
+msgid "The fingerprint does not match the one associated with the key on file."
+msgstr "지문이 파일의 키와 관련된 지문과 일치하지 않습니다."
+
+msgid "No OpenPGP marker found."
+msgstr "OpenPGP 마커를 찾을 수 없습니다."
+
+msgid "Invalid key. No OpenPGP public key package found."
+msgstr "잘못된 키입니다. OpenPGP 공개키 패키지를 찾을 수 없습니다."
+
+msgid "Invalid key. No user ID found."
+msgstr "잘못된 키입니다. 사용자 ID를 찾을 수 없습니다."
+
+msgid "Unsupported algorithm."
+msgstr "지원되지않는 알고리즘."
+
+msgid "Invalid key. No OpenPGP package found."
+msgstr "잘못된 키입니다. OpenPGP 공개키 패키지를 찾을 수 없습니다."
+
+msgid "This is not a valid OpenPGP armored marker."
+msgstr "유효한 OpenPGP 무장 마커가 아닙니다."
+
+msgid "The key {0} was not found in the keyring"
+msgstr "키링에서 {0} 키를 찾을 수 없습니다."
+
+msgid "A value for the theme should be provided."
+msgstr "테마 값을 제공해야 합니다."
+
+msgid "This is not a valid theme."
+msgstr "올바르지 않은 테마입니다."
+
+msgid "The setting type should be one of the following: {0}."
+msgstr "설정 유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "A setting type is required."
+msgstr "설정유형이 필요합니다."
+
+msgid "The setting type should not be empty"
+msgstr "설정 유형은 비워둘 수 없습니다"
+
+msgid "The setting value should be a valid UTF8 string."
+msgstr "설정 값은 유효한 UTF8 문자열이어야합니다."
+
+msgid "The setting value length should be maximum {0} characters."
+msgstr "설정 값의 길이는 최대 {0} 자여야 합니다."
+
+msgid "A value setting is required."
+msgstr "값 설정이 필요합니다."
+
+msgid "The setting value should not be empty."
+msgstr "설정 값은 비워둘 수 없습니다."
+
+msgid "The parameter {0} is not set."
+msgstr "매개변수 {0} 이 설정되지 않았습니다."
+
+msgid "This theme is not supported."
+msgstr "이 테마는 지원되지 않습니다."
+
+msgid "You are not allowed to access this location."
+msgstr "이 위치에 액세스할 수 없습니다."
+
+msgid "The notification settings for the organization were updated."
+msgstr "조직에 대한 알림 설정이 업데이트되었습니다."
+
+msgid "The supplied email notification settings are not valid"
+msgstr "제공된 이메일 알림 설정이 올바르지 않습니다."
+
+msgid "The user signature could not be verified."
+msgstr "사용자 서명을 확인할 수 없습니다."
+
+msgid "The challenge cannot be decrypted."
+msgstr "챌린지의 암호를 해독할 수 없습니다."
+
+msgid "The challenge is invalid. Deserialization failed."
+msgstr "챌린지가 유효하지 않습니다. 역직렬화에 실패했습니다."
+
+msgid "The challenge is invalid. Validation Failed."
+msgstr "챌린지가 유효하지 않습니다. 검사가 실패했습니다."
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr "서버 개인키 지문에 대한 구성을 사용할 수 없거나 완전하지 않습니다."
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr "서버 개인키 패스프레이즈 대한 구성이 올바르지 않습니다."
+
+msgid "The user id is missing or invalid."
+msgstr "사용자 Id가 없거나 올바르지 않습니다."
+
+msgid "The user OpenPGP key does not exist, or is invalid, or has been deleted."
+msgstr "사용자 OpenPGP 키가 없거나 잘못되었거나 삭제되었습니다."
+
+msgid "The user challenge is missing or invalid."
+msgstr "사용자 Id가 없거나 잘못되었습니다."
+
+msgid "The version is invalid."
+msgstr "버전이 잘못되었습니다."
+
+msgid "The domain is invalid."
+msgstr "도메인이 잘못되었습니다."
+
+msgid "The domain is invalid. Expected: {0} and got {1}"
+msgstr "도메인이 잘못되었습니다. 예상됨: {0} 이(가) {1} 을(를) 받았습니다."
+
+msgid "The following file could not be read: {0}."
+msgstr "다음 파일을 읽을 수 없습니다: {0}."
+
+msgid "The authentication was a success."
+msgstr "인증이 성공했습니다."
+
+msgid "The authentication failed."
+msgstr "인증이 실패했습니다."
+
+msgid "The credentials are missing."
+msgstr "자격 증명이 없습니다."
+
+msgid "The user does not exist or is not active or has been deleted."
+msgstr "사용자가 존재하지 않거나 이미 활성 상태이거나 삭제되었습니다."
+
+msgid "The credentials are invalid."
+msgstr "자격 증명이 잘못되었습니다."
+
+msgid "An internal error occurred."
+msgstr "내부 오류가 발생했습니다."
+
+msgid "Authentication security alert"
+msgstr "인증 보안 경고"
+
+msgid "No active refresh token matching the request could be found."
+msgstr "요청과 일치하는 활성 새로 고침 토큰을 찾을 수 없습니다."
+
+msgid "The user is deactivated."
+msgstr "사용자가 비활성화됩니다."
+
+msgid "The user is deleted."
+msgstr "사용자가 삭제되었습니다."
+
+msgid "The verify token is invalid."
+msgstr "확인 토큰이 잘못되었습니다"
+
+msgid "The route {0} is not permitted with JWT authentication."
+msgstr "경로 {0} 이(가) JWT 인증에 허용되지 않습니다."
+
+msgid "The key pair for JWT Authentication is not complete."
+msgstr "JWT 인증 키 쌍이 완전하지 않습니다."
+
+msgid "The JWT public key could not be read or is not valid."
+msgstr "JWT 공개키를 읽을 수 없거나 유효하지 않습니다."
+
+msgid "The JWT private key should be at least {0} bytes long."
+msgstr "JWT 개인키는 {0} 바이트 이상이어야 합니다."
+
+msgid "The configuration {0} is not correctly set."
+msgstr "구성 {0} 이(가) 올바르게 설정되지 않았습니다."
+
+msgid "The refresh token should be a valid UUID."
+msgstr "리프레쉬 토큰은 유효한 UUID여야 합니다."
+
+msgid "The user ID should be a valid UUID."
+msgstr "사용자 Id는 올바른 UUID여야 합니다."
+
+msgid "The refresh token provided was already used."
+msgstr "제공된 리프레쉬 토큰이 이미 사용되었습니다."
+
+msgid "Expired refresh token provided."
+msgstr "만료된 리프레쉬 토큰이 제공됨."
+
+msgid "Invalid verify token expiry."
+msgstr "무효한 확인 토큰 만료."
+
+msgid "Attempt to access an expired verify token."
+msgstr "만료된 확인 토큰에 액세스하려고 합니다."
+
+msgid "Invalid verify token format."
+msgstr "확인 토큰 형식이 확인이 잘못되었습니다."
+
+msgid "Invalid user ID format."
+msgstr "사용자 ID형식이 잘못되었습니다."
+
+msgid "Verify token has been already used in the past."
+msgstr "확인 토큰이 과거에 이미 사용되었습니다."
+
+msgid "Security warning!"
+msgstr "보안 경고!"
+
+msgid "An unknown user with IP: {0} attempted to identify as {1}."
+msgstr "IP가 {0} 인 알 수 없는 사용자가 {1} (으)로 식별하려고 시도했습니다."
+
+msgid "This is a potential security issue."
+msgstr "잠재적인 보안 문제입니다."
+
+msgid "Please investigate!"
+msgstr "조사해주세요!"
+
+msgid "An unknown user with IP: {0}  attempted to steal your login data."
+msgstr "IP가 {0} 인 알 수 없는 사용자가 사용자 데이터를 탈취하려고 시도했습니다."
+
+msgid "Please get in touch with one of your administrators."
+msgstr "관리자 중 한명에게 연락하세요."
+
+msgid "This is not a valid locale."
+msgstr "올바르지 않은 로케일입니다."
+
+msgid "This is not a valid {0}."
+msgstr "올바른 {0} 이(가) 아닙니다."
+
+msgid "The action log identifier should be a valid UUID."
+msgstr "활동 로그 식별자는 유효한 UUID여야 합니다."
+
+msgid "The action log identifier should not be empty."
+msgstr "활동 로그 식별자는 비워둘 수 없습니다."
+
+msgid "The action identifier should be a valid UUID."
+msgstr "활동 식별자는 유효한 UUID여야 합니다."
+
+msgid "An action identifier is required."
+msgstr "활동 식별자가 필요합니다."
+
+msgid "The context should be a valid ASCII string."
+msgstr "컨텍스트는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "The context length should be maximum {0} characters."
+msgstr "컨텍스트 길이는 최대 {0} 자여야 합니다."
+
+msgid "A context is required."
+msgstr "컨텍스트가 필요합니다."
+
+msgid "The status should be a valid boolean."
+msgstr "상태는 유효한 부울이어야 합니다."
+
+msgid "A status is required."
+msgstr "상태가 필요합니다."
+
+msgid "Could not validate action log data."
+msgstr "활동 로그 데이터를 검사할 수 없습니다."
+
+msgid "The date {0} should be after the date {1}."
+msgstr ""
+
+msgid "The identifier should be not be empty."
+msgstr "식별자는 비워둘 수 없습니다."
+
+msgid "Could not validate action data."
+msgstr "활동 데이터를 검사할 수 없습니다."
+
+msgid "An action log identifier is required."
+msgstr "활동 로그 식별자가 필요합니다."
+
+msgid "The object type should be a valid ASCII string."
+msgstr "객체 유형은 유효한 ASCII 문자열이어야 합니다."
+
+msgid "The object type length should be maximum {0} characters."
+msgstr "객체 유형 길이는 최대 {0} 자여야 합니다."
+
+msgid "A object type is required."
+msgstr "객체 유형이 필요합니다."
+
+msgid "The object type should not be empty."
+msgstr "개체 유형은 비워둘 수 없습니다."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "객체 식별자는 유효한 UUID여야 합니다."
+
+msgid "The object identifier should not be empty."
+msgstr "객체 식별자는 비워둘 수 없습니다."
+
+msgid "An object identifier is required."
+msgstr "객체 식별자가 필요합니다."
+
+msgid "The operation type should be one of the following: {0}."
+msgstr "작업 유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "An operation type is required."
+msgstr "작업 유형이 필요합니다."
+
+msgid "The operation type should not be empty."
+msgstr "작업 유형은 비워둘 수 없습니다."
+
+msgid "Could not validate entity history data."
+msgstr "항목 기록 데이터의 유효성을 검사할 수 없습니다."
+
+msgid "An identifier is required."
+msgstr "식별자가 필요합니다."
+
+msgid "The type must be one of the following: {0}."
+msgstr "유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "The type is required."
+msgstr "유형이 필요합니다."
+
+msgid "Could not validate permission history data."
+msgstr "권한 기록 데이터를 검사할 수 없습니다."
+
+msgid "A resource identifier is required."
+msgstr "리소스 식별자가 필요합니다."
+
+msgid "The secret identifier should be a valid UUID."
+msgstr "암호 식별자는 유효한 UUID여야 합니다."
+
+msgid "A secret identifier is required."
+msgstr "암호 식별자가 필요합니다."
+
+msgid "The secret identifier should not be empty."
+msgstr "암호 식별자는 비워둘 수 없습니다."
+
+msgid "Could not validate secret access data."
+msgstr "암호 접근 데이터를 검사할 수 없습니다."
+
+msgid "Could not validate secret history data."
+msgstr "암호 기록 데이터의 유효성을 검사할 수 없습니다."
+
+msgid "Information about the transfer is required."
+msgstr "전송에 대한 정보가 필요합니다."
+
+msgid "The operation was successful"
+msgstr "작업이 성공하였습니다"
+
+msgid "The transfer id is not valid."
+msgstr "전송 id가 잘못되었습니다."
+
+msgid "The authentication token should be a valid uuid."
+msgstr "인증 토큰은 유효한 uuid여야 합니다."
+
+msgid "The authentication token is invalid."
+msgstr "인증 토큰이 올바르지 않습니다."
+
+msgid "The transfer id should be a uuid."
+msgstr "전송 id는 uuid여야 합니다."
+
+msgid "The user id should be a uuid."
+msgstr "사용자 id는 uuid여야 합니다."
+
+msgid "A user id is required"
+msgstr "사용자 id가 필요합니다"
+
+msgid "The hash should be an ascii string."
+msgstr "해시는 ascii 문자열이어야 합니다."
+
+msgid "The hash should be {0} characters in length."
+msgstr "해시 길이는 {0} 자여야 합니다."
+
+msgid "The data transfer hash is required."
+msgstr "데이터 전송 해시가 필요합니다."
+
+msgid "The current page should be a non negative integer."
+msgstr "현재 페이지는 음수가 아닌 정수여야 합니다."
+
+msgid "The current page number is required"
+msgstr "현재 페이지 번호가 필요합니다."
+
+msgid "The current page number should be equal or inferior to the total number of pages."
+msgstr "현재 페이지 번호는 총 페이지 수보다 작거나 같아야 합니다."
+
+msgid "The current page cannot be greater than {0}"
+msgstr "현재 페이지는 {0} 보다 클 수 없습니다."
+
+msgid "The total number of pages should be a non negative integer."
+msgstr "총 페이지 수는 음수가 아닌 정수여야 합니다"
+
+msgid "The total number of pages is required."
+msgstr "총 페이지 수가 필요합니다."
+
+msgid "The total number of pages should be greater than 0."
+msgstr "총 페이지 수는 0보다 커야 합니다."
+
+msgid "The total number of pages cannot be greater than {0}"
+msgstr "총 페이지 수는 {0} 보다 클 수 없습니다."
+
+msgid "The status should not be empty."
+msgstr "상태는 비워둘 수 없습니다."
+
+msgid "The status is required."
+msgstr "상태가 필요합니다."
+
+msgid "The status must be one of the following: {0}."
+msgstr "상태는 다음 중 하나여야 합니다: {0}."
+
+msgid "The user must be active."
+msgstr "사용자가 활성 상태여야 합니다."
+
+msgid "Could not validate the transfer data."
+msgstr "전송 데이터를 검사할 수 없습니다."
+
+msgid "The transfer could not be created."
+msgstr "전송을 만들 수 없습니다."
+
+msgid "Could not update the transfer data."
+msgstr "전송 데이터를 업데이트할 수 없습니다."
+
+msgid "The transfer could not be updated."
+msgstr "전송을 업데이트할 수 없습니다."
+
+msgid "This operation is not allowed."
+msgstr "작업이 허가되지 않았습니다."
+
+msgid "Restarting a transfer is not allowed."
+msgstr "전송을 다시 시작할 수 없습니다."
+
+msgid "The operation is already over."
+msgstr "작업은 이미 끝났습니다."
+
+msgid "The current page does not match the total number of pages."
+msgstr "현재 페이지가 총 페이지 수와 일치하지 않습니다."
+
+msgid "This operation is not allowed for this user."
+msgstr "이 작업은 이 사용자에게 허용되지 않습니다."
+
+msgid "The authentication token is missing."
+msgstr "인증 토큰이 없습니다."
+
+msgid "The authentication token is not valid for this user."
+msgstr "인증 토큰이 이 사용자에게 올바르지 않습니다."
+
+msgid "The authentication token type is invalid."
+msgstr "인증 토큰 유형이 올바르지 않습니다."
+
+msgid "The authentication token is not active."
+msgstr "인증 토큰이 활성화되지 않았습니다."
+
+msgid "The authentication token is expired."
+msgstr "인증 토큰이 만료되었습니다."
+
+msgid "Unable to authenticate to Duo."
+msgstr ""
+
+msgid "Unable to validate the Duo callback data."
+msgstr ""
+
+msgid "A Duo state cookie is required."
+msgstr ""
+
+msgid "The Duo state cookie value should be a string."
+msgstr ""
+
+msgid "The Duo state cookie should be a valid UUID."
+msgstr ""
+
+msgid "This entrypoint is not available anymore."
+msgstr ""
+
+msgid "This authentication provider is not enabled for your organization."
+msgstr "이 인증 공급자는 조직에서 사용할 수 없습니다."
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "이 기능은 AJAX/JSON에서는 사용할 수 없습니다."
+
+msgid "This authentication provider is already setup. Disable it first"
+msgstr "이 인증 공급자가 이미 설정되었습니다. 먼저 사용 중지하세요."
+
+msgid "Multi Factor Authentication is configured!"
+msgstr "다단계인증이 구성되었습니다!"
+
+msgid "MFA authentication is required."
+msgstr "다단계인증이 필요합니다."
+
+msgid "The multi-factor authentication is not required."
+msgstr "다단계인증이 필요하지 않습니다."
+
+msgid "No valid multi-factor authentication settings found for this provider."
+msgstr "이 공급자에 대한 올바른 다단계인증 설정을 찾을 수 없습니다."
+
+msgid "The multi-factor authentication was a success."
+msgstr "다단계인증에 성공했습니다."
+
+msgid "The multi factor authentication settings for the organization were updated."
+msgstr "조직에 대한 다단계인증 설정이 업데이트되었습니다."
+
+msgid "Please setup the TOTP application."
+msgstr "TOTP 앱을 설정하세요."
+
+msgid "Please provide the one-time password."
+msgstr "일회성 암호를 입력하세요."
+
+msgid "The user id is not valid."
+msgstr "사용자id가 잘못되었습니다."
+
+msgid "No multi-factor authentication settings defined for the user."
+msgstr "사용자에 대한 정의된 다단계인증 설정이 없습니다"
+
+msgid "The multi-factor authentication settings for the user were deleted."
+msgstr "사용자에 대한 다단계인증설정이 삭제되었습니다."
+
+msgid "Please setup the Yubikey settings."
+msgstr "Yubikey 설정을 해주세요."
+
+msgid "A state is required."
+msgstr ""
+
+msgid "The state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The state should not be empty."
+msgstr ""
+
+msgid "A duo code is required."
+msgstr ""
+
+msgid "The duo code state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The duo code should not be empty."
+msgstr ""
+
+msgid "The error description should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The error description state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "Something went wrong when validating the one-time password."
+msgstr "일회성 암호를 확인하는 동안 오류가 발생했습니다."
+
+msgid "This OTP provision uri is not valid."
+msgstr "이 OTP 프로비저닝 uri는 유효하지 않습니다."
+
+msgid "An OTP is required."
+msgstr "OTP가 필요합니다."
+
+msgid "The OTP should not be empty."
+msgstr "OTP는 비워둘 수 없습니다."
+
+msgid "This OTP is not valid."
+msgstr "이 OTP가 잘못되었습니다."
+
+msgid "The OTP should be composed of numbers only."
+msgstr "OTP는 숫자로만 구성되어야 합니다."
+
+msgid "The OTP should be at least {0} characters long."
+msgstr "OTP는 최소 {0} 자 이상이어야 합니다."
+
+msgid "This yubikey is not associated with this user."
+msgstr "이 yubikey는 이 사용자와 연결되어 있지 않습니다."
+
+msgid "No Duo error provided"
+msgstr ""
+
+msgid "No Duo error description provided"
+msgstr ""
+
+msgid "Your multi-factor authentication settings were reset by you."
+msgstr "귀하가 다단계인증설정을 재설정했습니다."
+
+msgid "Multi-factor authentication settings were reset."
+msgstr "다단계인증설정을 재설정했습니다."
+
+msgid "Your multi-factor authentication settings were reset by an administrator."
+msgstr "관리자가 다단계인증설정을 재설정했습니다."
+
+msgid "The token should reference an active Duo callback authentication token."
+msgstr ""
+
+msgid "An authentication token state is required."
+msgstr ""
+
+msgid "The Duo state should match the authentication token state."
+msgstr ""
+
+msgid "Could not enable Duo MFA provider."
+msgstr ""
+
+msgid "Unable to verify Duo authentication."
+msgstr ""
+
+msgid "Could not validate the Duo settings."
+msgstr ""
+
+msgid "Could not login using Duo MFA provider."
+msgstr ""
+
+msgid "Unable to connect to Duo services."
+msgstr ""
+
+msgid "Unable to verify Duo code against Duo service."
+msgstr ""
+
+msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
+msgstr ""
+
+msgid "The duo authentication subscriber does not match the operator username."
+msgstr ""
+
+msgid "No configuration set for Duo client ID."
+msgstr ""
+
+msgid "No configuration set for Duo API hostname."
+msgstr ""
+
+msgid "No configuration set for Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo API hostname."
+msgstr ""
+
+msgid "This is not a valid Duo client ID."
+msgstr ""
+
+msgid "Cannot verify Duo settings."
+msgstr ""
+
+msgid "Could not validate Duo configuration"
+msgstr "Duo 구성을 검사할 수 없습니다."
+
+msgid "The MFA token provided does not exist or is inactive."
+msgstr "제공된 다단계인증 토큰이 없거나 비활성 상태입니다."
+
+msgid "No MFA provider set."
+msgstr "다단계인증 공급자가 설정되지 않았습니다."
+
+msgid "MFA verification date is not set for this provider."
+msgstr "이 공급자에 대해 다단계인증 확인 날짜가 설정되지 않았습니다."
+
+msgid "MFA setting OTP provisioning uri is not set."
+msgstr "다단계인증 설정 OTP 프로비저닝 uri가 설정되지 않았습니다."
+
+msgid "MFA setting Yubikey Id is not set."
+msgstr "다단계인증 설정 Yubikey Id가 설정되지 않았습니다."
+
+msgid "The multi-factor authentication settings data should not be empty."
+msgstr "다단계인증 설정 데이터는 비워 둘 수 없습니다."
+
+msgid "The multi-factor authentication providers list is missing."
+msgstr "다단계인증 공급자 목록이 없습니다."
+
+msgid "Unknown MFA provider: {0}."
+msgstr "알 수 없는 다단계인증 공급자: {0}."
+
+msgid "Could not validate multi-factor authentication provider configuration."
+msgstr "다단계인증 공급자 구성을 검사할 수 없습니다."
+
+msgid "No configuration set for Yubikey OTP secret key."
+msgstr "Yubikey OTP 비밀키에 대한 구성이 설정되지 않았습니다."
+
+msgid "No configuration set for Yubikey OTP clientId."
+msgstr "Yubikey OTP clientId에 대한 구성이 설정되지 않았습니다."
+
+msgid "Yubikey OTP clientId should be an integer."
+msgstr "Yubikey OTP clientId는 정수여야 합니다."
+
+msgid "Yubikey OTP secret key is not valid."
+msgstr "Yubikey OTP 비밀키는 유효하지 않습니다."
+
+msgid "Could not validate Yubikey configuration."
+msgstr "Yubikey 구성을 검사할 수 없습니다."
+
+msgid "Duo Multi Factor Authentication"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr "문제가 발생했습니다."
+
+msgid "Please try again later or contact your administrator."
+msgstr "나중에 다시 시도하거나 관리자에 연락하세요."
+
+msgid "Logs"
+msgstr "로그"
+
+msgid "Retry"
+msgstr "재시도"
+
+msgid "Getting started with Duo"
+msgstr ""
+
+msgid "How does it work?"
+msgstr "그것은 어떻게 작동하나요?"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "평소처럼 패스볼트에 로그인하면 됩니다."
+
+msgid "Use you 2FA device to authenticate."
+msgstr ""
+
+msgid "Follow the procedure to login."
+msgstr ""
+
+msgid "Cancel"
+msgstr "취소"
+
+msgid "Get started"
+msgstr "시작하기"
+
+msgid "Requirements"
+msgstr "요구사항"
+
+msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
+msgstr ""
+
+msgid "For the list of supported devices, see:"
+msgstr ""
+
+msgid "Duo authentication methods"
+msgstr ""
+
+msgid "Learn more"
+msgstr "더 알아보기"
+
+msgid "Duo multi-factor authentication is enabled!"
+msgstr "Duo 다단계인증이 활성화되었습니다!"
+
+msgid "When logging in you will be asked to perform Duo Authentication."
+msgstr "로그인 시 Duo 인증을 수행하라는 메시지가 표시됩니다."
+
+msgid "Since"
+msgstr "부터"
+
+msgid "Multi factor authentication verification"
+msgstr "다단계인증 검증"
+
+msgid "Multi Factor Authentication Required"
+msgstr ""
+
+msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
+msgstr ""
+
+msgid "Multi factor authentication"
+msgstr "다단계인증"
+
+msgid "Sorry no multi factor authentication is enabled for this organization."
+msgstr "아쉽게도 이 조직에 대해 다단계인증을 사용할 수 없습니다."
+
+msgid "Please contact your administrator to enable multi-factor authentication."
+msgstr "다단계인증을 사용하려면 관리자에게 문의하세요."
+
+msgid "Please select a provider"
+msgstr "공급자를 선택하세요."
+
+msgid "Enabled"
+msgstr "사용함"
+
+msgid "Disabled"
+msgstr "중지됨"
+
+msgid "What is multi-factor authentication?"
+msgstr "다단계인증이란 무엇입니까?"
+
+msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
+msgstr "다단계인증(MFA)은 두 개 이상의 증거(또는 요인)를 제시해야 하는 사용자의 신원을 확인하는 방법이다."
+
+msgid "learn more"
+msgstr "더 알아보기"
+
+msgid "Time based One Time Password (TOTP)"
+msgstr "시간 기반 일회성 암호(TOTP)"
+
+msgid "Scan this bar code"
+msgstr "이 바코드를 스캔하세요"
+
+msgid "Enter the six digit number as presented on your phone or tablet."
+msgstr "스마트폰 또는 태블릿에 표시된 대로 6자리 숫자를 입력합니다."
+
+msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
+msgstr "계속하려면 스마트폰 또는 태블릿에 시간 기반 일회성 암호(TOTP)를 지원하는 다음과 같은 앱을 설치해야 합니다:"
+
+msgid "or"
+msgstr "또는"
+
+msgid "Getting started with Time based One Time Password (TOTP)"
+msgstr "시간 기반 일회성 암호(TOTP) 시작"
+
+msgid "When using a new browser, you need an additional code from your phone."
+msgstr "새 브라우저를 사용할 때 스마트폰의 추가 코드가 필요합니다."
+
+msgid "Once you enter this code, you can log in."
+msgstr "이 코드를 입력하면 로그인할 수 있습니다."
+
+msgid "Time based One Time Password (TOTP) is enabled!"
+msgstr "시간 기반 일회성 암호(TOTP)가 활성화됨!"
+
+msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
+msgstr "새 기기에서 로그인할 때 모바일의 앱에서 생성된 고유한 인증 코드를 입력해야 합니다."
+
+msgid "Remember this device for a month."
+msgstr "이 기기를 한달 동안 기억."
+
+msgid "Yubikey One Time Password"
+msgstr "Yubikey 일회성 암호"
+
+msgid "Plug in the yubikey and put your finger on it."
+msgstr "Yubikey를 연결하고 손가락을 대세요."
+
+msgid "Yubikey One Time Password is enabled!"
+msgstr "Yubikey 일회성 암호가 활성화되었습니다!"
+
+msgid "When logging in from a new device you will need a unique code generated by your yubikey."
+msgstr "새 기기에서 로그인할 때 yubikey에 의해 생성된 고유 코드가 필요합니다."
+
+msgid "verify"
+msgstr "확인"
+
+msgid "Sign-in with Duo"
+msgstr ""
+
+msgid "Or try with another provider"
+msgstr "또는 다른 공급자로 시도하세요."
+
+msgid "Manage providers"
+msgstr "공급자 관리"
+
+msgid "Turn off"
+msgstr "끄기"
+
+msgid "Your multi-factor authentication is disabled."
+msgstr "다단계인증이 비활성화되었습니다."
+
+msgid "Multi-factor authentication settings were reset for your account by an administrator."
+msgstr "관리자가 다단계인증설정을 재설정했습니다."
+
+msgid "Please contact your administrator if you didn't request this action."
+msgstr "이 작업을 요청하지 않은 경우 관리자에게 문의하십시오."
+
+msgid "Log in passbolt"
+msgstr "패스볼트 로그인"
+
+msgid "The password generator value \"{0}\" is not valid."
+msgstr "암호 생성기 값 \"{0}\" 이(가) 잘못되었습니다."
+
+msgid "5 minutes"
+msgstr "5분"
+
+msgid "15 minutes"
+msgstr "15분"
+
+msgid "30 minutes"
+msgstr "30분"
+
+msgid "1 hour"
+msgstr "1시간"
+
+msgid "until I log out"
+msgstr "로그아웃시"
+
+msgid "Only administrators can view reports."
+msgstr "관리자만 보고서를 볼 수 있습니다."
+
+msgid "The requested report `{0}` does not exist."
+msgstr "요청한 보고서 '{0}' 이(가) 없습니다."
+
+msgid "Description"
+msgstr "설명"
+
+msgid "Passbolt report"
+msgstr "패스볼트 보고서"
+
+msgid "Report name"
+msgstr "보고서 이름"
+
+msgid "Generated by"
+msgstr "생성자"
+
+msgid "Creation date"
+msgstr "생성일자"
+
+msgid "All users have completed the setup."
+msgstr "모든 사용자가 설정을 완료했습니다"
+
+msgid "Name"
+msgstr "이름"
+
+msgid "Username"
+msgstr "사용자이름"
+
+msgid "Created since"
+msgstr "이후 생성됨"
+
+msgid "Setup completed"
+msgstr "설정 완료됨"
+
+msgid "Role"
+msgstr "역할"
+
+msgid "No"
+msgstr "아니오"
+
+msgid "The self registration setting id should be a valid UUID."
+msgstr ""
+
+msgid "An email is required."
+msgstr "이메일이 필요합니다."
+
+msgid "The provider should not be empty."
+msgstr ""
+
+msgid "The provider should be part of the supported list: {0}."
+msgstr ""
+
+msgid "The data should not be empty."
+msgstr "데이터는 비워둘 수 없습니다."
+
+msgid "The list of allowed domains should not be empty."
+msgstr ""
+
+msgid "The list of allowed domains should be an array of strings."
+msgstr ""
+
+msgid "The domain #{0} should be a valid domain."
+msgstr ""
+
+msgid "An email notification setting should be a boolean."
+msgstr "이메일 알림 설정은 부울이여야 합니다."
+
+msgid "Allowed domains: {0}"
+msgstr ""
+
+msgid "{0} edited the self registration settings."
+msgstr ""
+
+msgid "You edited the self registration settings."
+msgstr ""
+
+msgid "{0} just created an account on passbolt!"
+msgstr ""
+
+msgid "The email is already registered."
+msgstr ""
+
+msgid "The self registration plugin is not enabled."
+msgstr ""
+
+msgid "The self registration data could not be validated."
+msgstr ""
+
+msgid "The self registration is disabled."
+msgstr ""
+
+msgid "The domain is not supported for self-registration."
+msgstr ""
+
+msgid "Email domain safe list"
+msgstr ""
+
+msgid "Could not parse the self registration settings found in database."
+msgstr ""
+
+msgid "Could not validate the self registration settings found in database."
+msgstr ""
+
+msgid "Could not validate the self registration settings."
+msgstr ""
+
+msgid "{0} updated the self registration settings"
+msgstr ""
+
+msgid "Status: {0}"
+msgstr ""
+
+msgid "A sender name is required."
+msgstr "보내는 사람 이름이 필요합니다."
+
+msgid "The sender name should not be empty."
+msgstr "보내는 사람 이름은 비워둘 수 없습니다."
+
+msgid "The sender name should be a valid BMP-UTF8 string."
+msgstr "보내는 사람 이름은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "A sender email is required."
+msgstr "보내는 사람 이메일이 필요합니다."
+
+msgid "The sender email should not be empty."
+msgstr "보내는 사람 이메일은 비워둘 수 없습니다."
+
+msgid "The sender email should be a valid BMP-UTF8 string."
+msgstr "보내는 사람 이메일은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "A host name is required."
+msgstr "호스트이름이 필요합니다."
+
+msgid "The host name should not be empty."
+msgstr "호스트이름은 비워둘 수 없습니다."
+
+msgid "The host name should be a valid BMP-UTF8 string."
+msgstr "호스트이름은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "A TLS setting is required."
+msgstr "TLS설정이 필요합니다."
+
+msgid "The TLS setting should be \"true\" or NULL."
+msgstr "TLS 설정은 \"true\" 또는 NULL이어야 합니다."
+
+msgid "A port number is required."
+msgstr "포트 번호가 필요합니다."
+
+msgid "The port number should be numeric."
+msgstr "포트 번호는 반드시 숫자여야합니다."
+
+msgid "The port number should be between {0} and {1}."
+msgstr "포트 번호는 {0} 부터 {1} 사이여야 합니다."
+
+msgid "The username should be a valid BMP-UTF8 string."
+msgstr "사용자이름은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "A password is required."
+msgstr "암호가 필요합니다."
+
+msgid "The password should be a valid BMP-UTF8 string."
+msgstr "암호는 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The test email should be a valid email address."
+msgstr "테스트 이메일은 유효한 이메일 주소여야 합니다."
+
+msgid "The sender email should be a valid email address."
+msgstr "보내는 사람 이메일은 유효한 이메일 주소여야 합니다."
+
+msgid "A test recipient is required."
+msgstr "테스트 수신자가 필요합니다."
+
+msgid "SMTP settings endpoints disabled."
+msgstr ""
+
+msgid "The client should be a valid IP or a valid domain."
+msgstr ""
+
+msgid "Could not validate the smtp settings."
+msgstr "Smtp 설정의 유효성을 검사할 수 없습니다."
+
+msgid "Could not validate the smtp settings found in database."
+msgstr "데이터베이스에 있는 smtp 설정의 유효성을 검사할 수 없습니다."
+
+msgid "The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database."
+msgstr "OpenPGP 서버 키를 사용하여 데이터베이스에 저장된 SMTP 설정을 복호화 할 수 없습니다."
+
+msgid "To fix this problem, you need to configure the SMTP server again."
+msgstr "이 문제를 해결하려면 SMTP 서버를 다시 구성해야 합니다."
+
+msgid "not found"
+msgstr "찾을 수 없음"
+
+msgid "database"
+msgstr "데이타베이스"
+
+msgid "env variables"
+msgstr "환경 변수"
+
+msgid "undefined"
+msgstr "미정"
+
+msgid "Passbolt test email"
+msgstr "패스볼트 테스트 이메일"
+
+msgid "Congratulations!"
+msgstr "축하합니다!"
+
+msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
+msgstr "이 이메일을 수신하면 패스볼트 smtp 구성이 올바르게 작동 중임을 의미합니다."
+
+msgid "The data entered are not correct"
+msgstr "입력한 데이터가 올바르지 않습니다"
+
+msgid "A connection could not be established with the credentials provided."
+msgstr "제공된 자격 증명으로 연결할 수 없습니다."
+
+msgid "Please verify the settings."
+msgstr "설정을 확인하세요."
+
+msgid "The data entered are not correct: {0}"
+msgstr "입력한 데이터가 올바르지 않습니다. {0}"
+
+msgid "The session has expired. Please start the configuration again."
+msgstr "세션이 만료되었습니다. 구성을 다시 시작하세요."
+
+msgid "System check"
+msgstr "시스템 체크"
+
+msgid "Subscription key"
+msgstr "구독 키"
+
+msgid "Database"
+msgstr "데이타베이스"
+
+msgid "Server keys"
+msgstr "서버 키"
+
+msgid "Options"
+msgstr "선택 사항"
+
+msgid "Emails"
+msgstr "이메일"
+
+msgid "First user"
+msgstr "첫 사용자"
+
+msgid "Installation"
+msgstr "설치"
+
+msgid "That's it!"
+msgstr "이상입니다."
+
+msgid "The password should not contain quotes."
+msgstr "암호는 따옴표를 포함할 수 없습니다."
+
+msgid "A database name is required."
+msgstr "데이타베이스 이름이 필요합니다."
+
+msgid "The database name should not be empty."
+msgstr "데이타베이스 이름은 비워둘 수 없습니다."
+
+msgid "The database name should be a valid BMP-UTF8 string."
+msgstr "데이타베이스 이름은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The database name should not contain dashes."
+msgstr "데이타베이스 이름은 대시를 포함할 수 없습니다."
+
+msgid "An OpenPGP public key is required."
+msgstr "OpenPGP 공개키가 필요합니다."
+
+msgid "The OpenPGP public key should not be empty."
+msgstr "OpenPGP 공개키는 비워 둘 수 없습니다."
+
+msgid "The OpenPGP public key should be a valid ASCII string."
+msgstr "OpenPGP 공개키는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "The key is not a valid OpenPGP public key."
+msgstr "키는 유효한 openpgp 공개키여야 합니다."
+
+msgid "The OpenPGP public key should not have an expiry date."
+msgstr "OpenPGP 공개키에는 만료 날짜가 없어야 합니다."
+
+msgid "The OpenPGP public key cannot be used to encrypt."
+msgstr "OpenPGP 공개키를 사용하여 암호화할 수 없습니다."
+
+msgid "An OpenPGP private key is required."
+msgstr "OpenPGP 개인키가 필요합니다."
+
+msgid "The OpenPGP private key should not be empty."
+msgstr "OpenPGP 개인키는 비워 둘 수 없습니다."
+
+msgid "The OpenPGP private key should be a valid ASCII string."
+msgstr "OpenPGP 개인키는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "The value is not a valid OpenPGP private key."
+msgstr "값이 올바른 OpenPGP 개인키가 아닙니다."
+
+msgid "The OpenPGP private key should not have an expiry date."
+msgstr "OpenPGP 개인키에는 만료 날짜가 없어야 합니다."
+
+msgid "The OpenPGP private key cannot be used to decrypt."
+msgstr "OpenPGP 개인키를 사용하여 복호화할 수 없습니다."
+
+msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
+msgstr "패스볼트는 암호로 보호된 OpenPGP 키를 지원하지 않습니다."
+
+msgid "A fingerprint is required."
+msgstr "지문이 필요합니다."
+
+msgid "The fingerprint should not be empty."
+msgstr "지문은 비워둘 수 없습니다."
+
+msgid "The fingerprint should be a valid alphanumeric string."
+msgstr "지문은 올바른 영숫자 문자열이어야 합니다."
+
+msgid "The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints."
+msgstr "지문이 OpenPGP 공개키 및 OpenPGP 개인키 지문과 일치하지 않습니다."
+
+msgid "A full base url is required."
+msgstr "전체 기본 url이 필요합니다."
+
+msgid "The full base url should not be empty"
+msgstr "전체 기본 url은 비워둘 수 없습니다"
+
+msgid "The full base url should be a valid BMP-UTF8 string."
+msgstr "전체 기본 url은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "A force ssl status is required."
+msgstr "강제 ssl 상태가 필요합니다."
+
+msgid "The force ssl setting should be a valid boolean."
+msgstr "강제 ssl 설정은 유효한 부울이어야 합니다."
+
+msgid "The database schema does not match the one expected"
+msgstr "데이터베이스 스키마가 예상된 것과 일치하지 않습니다."
+
+msgid "The database cannot be installed"
+msgstr "데이터베이스를 설치할 수 없습니다."
+
+msgid "There was a problem creating the first user"
+msgstr "첫 번째 사용자를 만드는 동안 문제가 발생했습니다."
+
+msgid "There was a problem creating the registration token"
+msgstr "등록 토큰을 만드는 동안 문제가 발생했습니다."
+
+msgid "The passbolt config is writable."
+msgstr "패스볼트 구성에 쓸 수 있습니다."
+
+msgid "The passbolt config is not writable."
+msgstr "패스볼트 구성에 쓸 수 없습니다."
+
+msgid "Ensure the file "
+msgstr "파일 확인 "
+
+msgid "you can try:"
+msgstr "시도해볼 것:"
+
+msgid "The server OpenPGP public key file is writable."
+msgstr "서버 OpenPGP 공개키 파일에 쓸 수 있습니다."
+
+msgid "The server OpenPGP public key file is not writable."
+msgstr "서버 OpenPGP 공개키 파일에 쓸 수 없습니다."
+
+msgid "Ensure the file {0} is writable by the webserver user."
+msgstr "웹 서버 사용자가 {0} 파일을 쓸 수 있는지 확인하세요."
+
+msgid "The server OpenPGP private key file is writable."
+msgstr "서버 OpenPGP 개인키 파일에 쓸 수 있습니다."
+
+msgid "The server OpenPGP private key file is not writable."
+msgstr "서버 OpenPGP 개인키 파일에 쓸 수 없습니다."
+
+msgid "Create your user account!"
+msgstr "사용자 계정을 생성!"
+
+msgid "Admin user details"
+msgstr "사용자 세부사항 관리"
+
+msgid "First name"
+msgstr "이름"
+
+msgid "Last name"
+msgstr "성"
+
+msgid "mail@yourdomain.com"
+msgstr "mail@yourdomain.com"
+
+msgid "Next"
+msgstr "다음"
+
+msgid "Enter your database details."
+msgstr "데이타베이스 세부사항 입력"
+
+msgid "Database configuration"
+msgstr "데이타베이스 구성"
+
+msgid "An existing database has been detected on your server. The connection details are pre-filled below."
+msgstr "서버에서 기존 데이터베이스가 발견되었습니다. 아래에 연결 세부 정보가 미리 입력되어 있습니다."
+
+msgid "You can keep it as it is (default), or replace it with the details of another database."
+msgstr "현재 상태(기본값)로 유지하거나 다른 데이터베이스의 세부 정보로 바꿀 수 있습니다."
+
+msgid "Database connection url"
+msgstr "데이타베이스 연결 url"
+
+msgid "host name or ip address"
+msgstr "호스트 이름 또는 ip 주소"
+
+msgid "username"
+msgstr "사용자이름"
+
+msgid "password"
+msgstr "암호"
+
+msgid "Password"
+msgstr "암호"
+
+msgid "database name"
+msgstr "데이타베이스 이름"
+
+msgid "Database name"
+msgstr "데이타베이스 이름"
+
+msgid "Enter your SMTP server settings."
+msgstr "SMTP 서버 설정 입력"
+
+msgid "Email configuration"
+msgstr "이메일 구성"
+
+msgid "admin or company name"
+msgstr "관리자 또는 회사 이름"
+
+msgid "Sender name"
+msgstr "보내는 사람 이름"
+
+msgid "email@company.com"
+msgstr "email@company.com"
+
+msgid "Sender email"
+msgstr "보내는 사람 이메일"
+
+msgid "SMTP server configuration"
+msgstr "SMTP 서버 구성"
+
+msgid "SMTP host"
+msgstr "SMTP 호스트"
+
+msgid "Use TLS?"
+msgstr "TLS 사용여부"
+
+msgid "port"
+msgstr "포트"
+
+msgid "Port"
+msgstr "포트"
+
+msgid "client"
+msgstr ""
+
+msgid "Client"
+msgstr ""
+
+msgid "Passbolt is not configured."
+msgstr "패스볼트가 구성되지 않았습니다."
+
+msgid "Passbolt is not configured yet!"
+msgstr "패스볼트가 아직 구성되지 않았습니다."
+
+msgid "If you see this page, it means that passbolt is present on your server but not configured. Click on \"Get Started\" to launch the configuration wizard."
+msgstr "이 페이지가 표시되면 서버에 패스볼트가 존재하지만 구성되지 않았음을 의미합니다. \"시작\"을 클릭하여 구성 마법사를 시작합니다."
+
+msgid "Get Started"
+msgstr "시작하기"
+
+msgid "Create a new server OpenPGP key or {0} an existing one."
+msgstr "새 서버 OpenPGP 키 또는 기존 서버 {0} 을(를) 생성하십시오."
+
+msgid "import"
+msgstr "가져오기"
+
+msgid "Create a new OpenPGP key for your server"
+msgstr "서버에 대한 새 OpenPGP 키 만들기"
+
+msgid "My company server name"
+msgstr "내 회사 서버 이름"
+
+msgid "Server Name"
+msgstr "서버 이름"
+
+msgid "admin@your-server.com"
+msgstr "admin@your-server.com"
+
+msgid "Server Email"
+msgstr "서버 이메일"
+
+msgid "add a comment (optional)"
+msgstr "주석 추가(선택 사항)"
+
+msgid "Comment"
+msgstr "주석"
+
+msgid "Import an existing key or {0} a new one."
+msgstr "기존 키를 가져오거나 {0} 새 키를 가져오세요."
+
+msgid "create"
+msgstr "생성"
+
+msgid "Copy paste the OpenPGP private key below"
+msgstr "아래에 OpenPGP 개인 키를 복사 붙여넣기"
+
+msgid "Browse"
+msgstr "찾아보기"
+
+msgid "Or select a file from your computer"
+msgstr "또는 당신의 컴퓨터에서 파일 선택하세요."
+
+msgid "Some binary things are happening..."
+msgstr "몇 가지 이원적인 일들이 발생하는 중..."
+
+msgid "Passbolt Pro activation."
+msgstr "패스볼트 프로 활성화."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "여기에 패스볼트 구독 키를 복사 붙여넣기"
+
+msgid "Choose your preferences."
+msgstr "기본 설정을 선택하세요."
+
+msgid "Full Base Url"
+msgstr "전체 기본 Url"
+
+msgid "Full base url"
+msgstr "전체 기본 Url"
+
+msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
+msgstr "패스볼트에 액세스할 수 있는 url입니다. 이 url은 이메일의 링크와 같이 패스볼트 url을 자동으로 추측할 수 없는 위치에 사용됩니다. 후행 슬래시가 없습니다."
+
+msgid "Force SSL?"
+msgstr "SSL 강제여부"
+
+msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
+msgstr "SSL을 강제 적용하면 패스볼트가 안전하지 않은 프로토콜에서 오는 연결을 허용하지 않습니다. SSL이 강제 적용되면 서버를 HTTPS로 구성해야 합니다. 그렇게 하는 것이 좋습니다."
+
+msgid "Welcome to Passbolt! Let's get started with the configuration."
+msgstr ""
+
+msgid "Nice one! Your environment is ready for passbolt."
+msgstr "잘했습니다! 사용자 환경이 패스볼트를 사용할 준비가 되었습니다."
+
+msgid "Oops!! Passbolt cannot run yet on your server."
+msgstr "앗!! 패스볼트가 서버에서 실행되지 않았습니다."
+
+msgid "Environment is configured correctly."
+msgstr "환경이 올바르게 구성되었습니다."
+
+msgid "URL rewriting is not properly configured on your server."
+msgstr "서버에 URL 다시 쓰기가 제대로 구성되지 않았습니다."
+
+msgid "GPG is configured correctly."
+msgstr "GPG가 올바르게 구성되었습니다."
+
+msgid "GPG Configuration"
+msgstr "GPG 구성"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "SSL access is enabled."
+msgstr "SSL 접근이 활성화되었습니다."
+
+msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
+msgstr "SSL 액세스를 사용할 수 없습니다. 계속 진행할 수 있지만 계속하기 전에 HTTPS를 사용하도록 웹 서버를 구성하는 것이 좋습니다."
+
+msgid "Start configuration"
+msgstr "구성 시작"
+
+msgid "The configuration is complete"
+msgstr "구성이 완료되었습니다."
+
+msgid "Success!"
+msgstr "성공!"
+
+msgid "You have completed successfully the configuration procedure, congrats!"
+msgstr "구성 절차를 성공적으로 완료했습니다. 축하합니다!"
+
+msgid "You will soon be redirected to passbolt to complete your account setup."
+msgstr "계정 설정을 완료하기 위해 곧 패스볼트로 리디렉션됩니다"
+
+msgid "You will soon be redirected to the login page."
+msgstr "곧 로그인 페이지로 리디렉션됩니다."
+
+msgid "next"
+msgstr "다음"
+
+msgid "Click here if you can't wait"
+msgstr "기다릴수 없으면 여기를 클릭하세요"
+
+msgid "Errors details"
+msgstr "오류 내역"
+
+msgid "Installing"
+msgstr "설치 중"
+
+msgid "Existing installation?"
+msgstr "기존 설치?"
+
+msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
+msgstr "기존 패스볼트 데이터베이스를 사용하려는 경우 데이터를 보관하는 동안 설치 관리자가 해당 데이터베이스를 현재 패스볼트 버전으로 업데이트합니다."
+
+msgid "As a precaution, do not forget to backup your database before you continue."
+msgstr "예방 차원에서 계속하기 전 데이터베이스를 백업하는 것을 잊지 마세요."
+
+msgid "Help"
+msgstr "도움"
+
+msgid "Need help? You can find more information on how to install passbolt in the official online help."
+msgstr "도움이 필요하세요? 패스볼트 설치 방법에 대한 자세한 내용은 공식 온라인 도움말을 참조하세요."
+
+msgid "What subscription key?"
+msgstr "구독 키란?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "구독 키는 패스볼트 프로를 구입할 때 보낸 파일입니다. 패스볼트의 프로의 기능을 활성화하기 위해서는 구독 키가 필요합니다."
+
+msgid "Send test email"
+msgstr "테스트 이메일 보내기"
+
+msgid "The test email has been sent successfully!"
+msgstr "테스트 이메일이 성공적으로 발송되었습니다."
+
+msgid "Email could not be sent:"
+msgstr "이메일이 보내지지 않음:"
+
+msgid "See trace"
+msgstr "추적 보기"
+
+msgid "Your email address"
+msgstr "당신의 이메일 주소"
+
+msgid "Why do I need a SMTP server?"
+msgstr "SMTP 서버가 필요한 이유는 무엇입니까?"
+
+msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
+msgstr "계정 생성 후 초대 이메일을 보내고 이메일 알림을 보내려면 패스볼트에 smtp 서버가 필요합니다."
+
+msgid "The requested address was not found on this server."
+msgstr "요청한 주소를 이 서버에서 찾을 수 없습니다."
+
+msgid "Please double check the url."
+msgstr "url을 다시 확인해 주세요."
+
+msgid "Maybe the page was deleted or moved."
+msgstr "페이지가 삭제되었거나 이동되었을 수 있습니다."
+
+msgid "Health checks"
+msgstr "상태 확인"
+
+msgid "Passbolt API Status"
+msgstr "패스볼트 API 상태"
+
+msgid "SSL access is not enabled."
+msgstr "SSL 액세스를 사용할 수 없습니다."
+
+msgid "Group manager"
+msgstr "그룹 관리자"
+
+msgid "Member"
+msgstr "구성원"
+
+msgid "Updated roles"
+msgstr "역할 업데이트됨"
+
+msgid "is now group manager"
+msgstr "이(가) 지금 그룹 관리자입니다."
+
+msgid "is not anymore group manager"
+msgstr "이(가) 더 이상 그룹 관리자가 아닙니다."
+
+msgid "Terms"
+msgstr "약관"
+
+msgid "Privacy"
+msgstr "개인정보호"
+
+msgid "Credits"
+msgstr "만든 사람들"
+
+msgid "Versions"
+msgstr "버전"
+
+msgid "home"
+msgstr "홈"
+
+msgid "login"
+msgstr "로그인"
+
+msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
+msgstr "{0} ({1}) 이(가) 방금 계정 복구를 완료했습니다. 이 동작이 의심스럽다고 생각되면 언제든지 이 사용자에게 연락하세요."
+
+msgid "View user in passbolt"
+msgstr "패스볼트에서 보기"
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
+
+msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
+msgstr "이 사용자는 개인키 및(또는) 암호를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
+
+msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
+msgstr "안타깝게도 계정을 삭제하고 처음부터 다시 시작하려면 귀하의 도움이 필요합니다."
+
+msgid "Please check with them first to confirm."
+msgstr "확인을 위해 먼저 그들에게 확인하세요."
+
+msgid "Welcome to {0}!"
+msgstr ""
+
+msgid "{0} used the self registration feature to create an account on passbolt."
+msgstr ""
+
+msgid "You have initiated an account recovery!"
+msgstr "계정 복구가 시작되었습니다."
+
+msgid "Welcome back!"
+msgstr "다시 오신 것을 환영합니다!"
+
+msgid "You just requested to recover your passbolt account on this device."
+msgstr "방금 이 기기에서 패스볼트 계정을 복구하도록 요청했습니다."
+
+msgid "Make sure you have a backup of your secret key handy."
+msgstr "비밀키를 백업해 두세요."
+
+msgid "Click on the link below to proceed."
+msgstr "아래 링크를 클릭하여 진행하세요."
+
+msgid "start recovery"
+msgstr "복구 시작"
+
+msgid "You just completed an account recovery. Feel free to get in touch with an admin if you feel this action looks suspicious."
+msgstr "방금 계정 복구를 완료했습니다. 이 동작이 의심스럽다고 생각되면 언제든지 이 관리자에게 연락하세요."
+
+msgid "{0} just created an account for you on passbolt!"
+msgstr "{0} 이(가) 패스볼트에서 계정을 생성했습니다!"
+
+msgid "Welcome {0}"
+msgstr "{0} 어서 오세요."
+
+msgid "{0} just invited you to join passbolt at {1}"
+msgstr "{0} 이(가) {1} 에 패스볼트에 가입하도록 초대했습니다."
+
+msgid "Passbolt is an open source password manager."
+msgstr "패스볼트는 오픈소스 암호 관리자입니다."
+
+msgid "It is designed to allow sharing credentials securely with your team!"
+msgstr "팀과 안전하게 자격 증명을 공유할 수 있도록 고안되었습니다!"
+
+msgid "Let's take the next five minutes to get you started!"
+msgstr "지금부터 5분 동안 시작하겠습니다!"
+
+msgid "get started"
+msgstr "시작하기"
+
+msgid "You just created your account on passbolt!"
+msgstr "방금 패스볼트에 계정을 생성했습니다!"
+
+msgid "You just opened an account on passbolt at {0}."
+msgstr "{0} 에서 패스볼트에 대한 계정을 방금 개설했습니다."
+
+msgid "{0} requested you to add members to a group"
+msgstr "{0} 이(가) {1} 에 구성원 추가를 요청함"
+
+msgid "Group: {0}"
+msgstr "그룹: {0}"
+
+msgid "The following members should be added:"
+msgstr "다음 구성원이 추가되어야 합니다:"
+
+msgid "Edit group members"
+msgstr "그룹 구성원 수정"
+
+msgid "log in passbolt"
+msgstr "패스볼트 로그인"
+
+msgid "{0} deleted the user {1}"
+msgstr "{0} 에 의해 {1} 사용자가 삭제됨"
+
+msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt."
+msgstr "사용자 {0} {1}({2}) 이(가) 패스볼트내 조직에서 삭제되었습니다."
+
+msgid "This user was a member of the following group(s) you manage:"
+msgstr "이 사용자는 당신이 관리하는 다음 그룹(들)의 구성원이었습니다:"
+
+msgid "view it in passbolt"
+msgstr "패스볼트에서 보기"
+
+msgid "{0} deleted a group"
+msgstr "{0} 삭제된 그룹"
+
+msgid "{0} deleted the group \"{1}\" you were a member of."
+msgstr "{0} 이(가) 사용자가 속한 그룹 \"{1}\"을(를) 삭제했습니다."
+
+msgid "All passwords that were shared only with this group were also deleted."
+msgstr "이 그룹에서만 공유되었던 모든 암호 또한 삭제되었습니다."
+
+msgid "As member of the group you now have access to all the passwords that are shared with this group."
+msgstr "이제 그룹의 구성원으로서 이 그룹과 공유되는 모든 암호에 액세스할 수 있습니다."
+
+msgid "And as group manager you are also authorized to edit the members of the group."
+msgstr "또한 그룹 관리자로서 그룹 구성원을 편집할 수 있는 권한이 있습니다."
+
+msgid "You are no longer a member of this group."
+msgstr "더 이상 이 그룹의 구성원이 아닙니다."
+
+msgid "You are no longer authorized to access the passwords shared with this group."
+msgstr "이 그룹과 공유한 암호에 더 이상 액세스할 수 있는 권한이 없습니다."
+
+msgid "Please contact {0} or another group manager if this is a mistake."
+msgstr "오류가 발생한 경우 {0} 또는 다른 그룹 관리자에게 문의하십시오."
+
+msgid "You are now a group manager of this group."
+msgstr "이제 이 그룹의 그룹 관리자 입니다."
+
+msgid "As group manager you are now authorized to edit the members of this group."
+msgstr "이제 그룹 관리자로서 이 그룹의 구성원을 편집할 수 있는 권한이 부여됩니다."
+
+msgid "As member of the group you still have access to all the passwords that are shared with this group."
+msgstr "그룹의 구성원으로서 이 그룹과 공유되는 모든 암호에 대한 액세스 권한이 있습니다."
+
+msgid "You are no longer a group manager of this group."
+msgstr "더 이상 이 그룹의 그룹 관리자가 아닙니다"
+
+msgid "You are no longer authorized to edit the members of this group."
+msgstr "더 이상 이 그룹의 구성원을 편집할 수 있는 권한이 없습니다."
+
+msgid "Edited your membership in several groups"
+msgstr "여러 그룹의 멤버십을 수정했습니다."
+
+msgid "{0} group memberships were affected."
+msgstr "{0} 그룹 멤버십이 영향을 받았습니다."
+
+msgid "It would be too much to list them here, but you can get more information on passbolt."
+msgstr "여기에 나열하기에는 무리가 있지만, 패스볼트에 대한 자세한 정보를 얻을 수 있습니다."
+
+msgid "go to passbolt"
+msgstr "패스볼트로 이동"
+
+msgid "{0} deleted several group"
+msgstr "{0} 이(가) 여러 그룹을 삭제함"
+
+msgid "{0} deleted {1} groups you were a member of."
+msgstr "{0} 이(가) 사용자가 속한 {1} 개 그룹을 삭제했습니다."
+
+msgid "You have saved a new password"
+msgstr "새 암호를 저장했습니다."
+
+msgid "Name: {0}"
+msgstr "이름: {0}"
+
+msgid "Username: {0}"
+msgstr "사용자이름: {0}"
+
+msgid "URL: {0}"
+msgstr "URL: {0}"
+
+msgid "Description: {0}"
+msgstr "설명: {0}"
+
+msgid "{0} shared a password with you"
+msgstr "{0} 이(가) 당신과 암호를 공유함"
+
+msgid "{0} updated the password {1}"
+msgstr "{0} 이(가) {1} 암호를 업데이트함"
+
+msgid "Edited multiple resources"
+msgstr "여러 리소스 수정됨"
+
+msgid "{0} resources were affected."
+msgstr "{0} 개의 리소스가 영향을 받았습니다."
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "여기에 나열하는 건 무리겠지만, 패스볼트로 확인하시면 됩니다."
+
+msgid "view them in passbolt"
+msgstr "패스볼트에서 보기"
+
+msgid "{0} shared passwords with you"
+msgstr "{0} 이(가) 당신과 암호를 공유함"
+
+msgid "{0} resources were shared with you."
+msgstr "{0} 이(가) 당신과 리소스를 공유함"
+
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} 이(가) 패스볼트에서 계정을 활성화했습니다!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "이제 사용자의 패스볼트 활성화 되었으며 암호를 공유할 수 있습니다."
+
+msgid "This user was invited by you {0}."
+msgstr "{0} 이(가) 이 사용자를 초대했습니다."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "공개 등록이 활성화되었기 때문에 이 사용자가 직접 등록했습니다."
+
+msgid "This user was invited by {0} {1}."
+msgstr "{0} {1} 에서 이 사용자를 초대했습니다."
+
+msgid "view users"
+msgstr "사용자 보기"
+
+msgid "This email is an automatic notification sent by"
+msgstr "이 이메일은 다음에서 자동으로 발송되는 알림입니다."
+
+msgid "You can disable these notifications by requesting an administrator to delete your account."
+msgstr "관리자에게 계정 삭제를 요청하여 이러한 알림을 비활성화할 수 있습니다."
+
+msgid "The locale {0} is not valid or not supported."
+msgstr "{0} 로케일이 잘못되었거나 지원되지 않습니다."
+
+msgid "An Internal Error Has Occurred"
+msgstr "내부 오류가 발생했습니다"
+

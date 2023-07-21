@@ -16,25 +16,27 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Chronos\Chronos;
+use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\I18n;
-use Cake\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\TestSuite\EmailTrait;
-use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Cake\Mailer\Mailer;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
+use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
 /**
  * @uses \Passbolt\EmailDigest\Command\SenderCommand
  */
-class SenderCommandTest extends TestCase
+class SenderCommandTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
     use DummyTranslationTestTrait;
-    use EmailTrait;
-    use TruncateDirtyTables;
+    use EmailTestTrait;
+    use EmailDigestMockTestTrait;
 
     /**
      * setUp method
@@ -45,6 +47,7 @@ class SenderCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
+        $this->loadRoutes();
         $this->setDummyFrenchTranslator();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
     }
@@ -61,20 +64,22 @@ class SenderCommandTest extends TestCase
     }
 
     /**
-     * Basic Sender test.
+     * Basic Sender test with SMTP configs from file.
      */
     public function testSenderCommandSender()
     {
-        /** @var \Cake\Datasource\EntityInterface $email */
+        $sender = Mailer::getConfig('default')['from'];
         $email = EmailQueueFactory::make()->persist();
 
         $this->exec('passbolt email_digest send');
 
         $this->assertExitSuccess();
-        $this->assertMailSentFrom($email->get('from_email'));
-        $this->assertMailSentTo($email->get('email'));
-        $this->assertMailContains('Sending email from: ' . $email->get('from_email'));
-        $this->assertMailContains('Sending email to: ' . $email->get('email'));
+        $this->assertMailSentFromAt(0, $sender);
+        $this->assertMailSentToAt(0, [$email->get('email') => $email->get('email')]);
+        $this->assertMailContainsAt(0, 'Sending email to: ' . $email->get('email'));
+        // Assert <head> tag is not duplicated/present only once in the email HTML
+        $this->assertMailBodyStringCount(1, '<head>');
+        $this->assertMailBodyStringCount(1, '</head>');
     }
 
     /**
@@ -91,9 +96,11 @@ class SenderCommandTest extends TestCase
         $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(4)])->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])->setRecipient($frenchSpeakingUser->username)
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(3)])
+            ->setRecipient($frenchSpeakingUser->username)
             ->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])
+            ->persist();
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
             ->setRecipient($frenchSpeakingUser->username)
             ->persist();
@@ -106,5 +113,23 @@ class SenderCommandTest extends TestCase
         $this->assertMailContainsAt(2, $this->getDummyEnglishEmailSentence());
         $this->assertMailContainsAt(3, $this->getDummyFrenchEmailSentence());
         $this->assertSame(I18n::getDefaultLocale(), I18n::getLocale());
+        // Assert <head> tag is not duplicated/present only once in the email HTML
+        $this->assertMailBodyStringCount(1, '<head>');
+        $this->assertMailBodyStringCount(1, '</head>');
+    }
+
+    public function testSenderCommand_NoRowsAreLockedWhenThresholdIsExceeded()
+    {
+        (new AvatarsConfigurationService())->loadConfiguration();
+        $this->persistEmailQueueEntities(['email' => 'john@test.test', 'template' => 'LU/resource_share']);
+
+        $this->exec('passbolt email_digest send');
+
+        $this->assertExitSuccess();
+        $this->assertMailCount(2);
+        $this->assertMailSentToAt(0, ['john@test.test' => 'john@test.test']);
+        // Make sure email queue entries are not locked
+        $count = EmailQueueFactory::find()->where(['locked' => true])->count();
+        $this->assertEquals(0, $count);
     }
 }

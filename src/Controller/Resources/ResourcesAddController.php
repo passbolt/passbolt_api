@@ -22,7 +22,6 @@ use App\Service\Resources\ResourcesAddService;
 use Cake\Event\EventInterface;
 
 /**
- * @property \App\Model\Table\ResourcesTable $Resources
  * @property \App\Model\Table\UsersTable $Users
  */
 class ResourcesAddController extends AppController
@@ -33,12 +32,18 @@ class ResourcesAddController extends AppController
     protected $resourcesAddService;
 
     /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
      * @inheritDoc
      */
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadModel('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
 
         $this->resourcesAddService = new ResourcesAddService();
 
@@ -55,6 +60,8 @@ class ResourcesAddController extends AppController
      */
     public function add()
     {
+        $this->assertJson();
+
         $resource = $this->resourcesAddService->add(
             $this->User->id(),
             $this->getRequest()->getData()

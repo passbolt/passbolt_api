@@ -31,8 +31,12 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
  */
 class JwtKeyPairServiceTest extends TestCase
 {
-    public static $publicFilePath = TMP . 'jwt' . DS . 'jwt.pem';
-    public static $secretFilePath = TMP . 'jwt' . DS . 'jwt.key';
+    /**
+     * Temporary jwt directory
+     *
+     * @var string
+     */
+    protected $jwtDir;
 
     /**
      * @var JwtKeyPairService
@@ -42,24 +46,27 @@ class JwtKeyPairServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new JwtKeyPairService(
-            (new JwtTokenCreateService())->setKeyPath(self::$secretFilePath),
-            (new JwksGetService())->setKeyPath(self::$publicFilePath),
-        );
+        $this->jwtDir = TMP . 'jwt' . rand(1, 10000);
         DirectoryUtility::removeRecursively(TMP . 'jwt');
-        mkdir(TMP . 'jwt');
+        mkdir($this->jwtDir);
+        $this->service = new JwtKeyPairService(
+            (new JwtTokenCreateService())->setKeyPath($this->getSecretFilePath()),
+            (new JwksGetService())->setKeyPath($this->getPublicFilePath()),
+        );
     }
 
     public function tearDown(): void
     {
+        parent::tearDown();
+        DirectoryUtility::removeRecursively($this->jwtDir);
         unset($this->service);
     }
 
     public function testJwtKeyPairService_Valid()
     {
         $this->service->createKeyPair();
-        $this->assertTrue(file_exists(self::$publicFilePath));
-        $this->assertTrue(file_exists(self::$secretFilePath));
+        $this->assertTrue(file_exists($this->getPublicFilePath()));
+        $this->assertTrue(file_exists($this->getSecretFilePath()));
         $uuid = UuidFactory::uuid();
         $token = $this->service->validateKeyPair($uuid);
         $this->assertSame($uuid, $token->sub);
@@ -89,10 +96,10 @@ class JwtKeyPairServiceTest extends TestCase
     {
         $this->service->createKeyPair();
 
-        $secretFileContentCorrupted = 'blah' . file_get_contents(self::$secretFilePath);
-        file_put_contents(self::$secretFilePath, $secretFileContentCorrupted);
-        $this->assertTrue(file_exists(self::$publicFilePath));
-        $this->assertTrue(file_exists(self::$secretFilePath));
+        $secretFileContentCorrupted = 'blah' . file_get_contents($this->getSecretFilePath());
+        file_put_contents($this->getSecretFilePath(), $secretFileContentCorrupted);
+        $this->assertTrue(file_exists($this->getPublicFilePath()));
+        $this->assertTrue(file_exists($this->getSecretFilePath()));
         $this->expectException(InvalidJwtKeyPairException::class);
 
         // suppress warning
@@ -124,5 +131,15 @@ class JwtKeyPairServiceTest extends TestCase
             ROOT . DS . 'bin/cake passbolt create_jwt_keys',
             $this->service->getCreateJwtKeysCommand()
         );
+    }
+
+    private function getPublicFilePath(): string
+    {
+        return $this->jwtDir . DS . 'jwt.pem';
+    }
+
+    private function getSecretFilePath(): string
+    {
+        return $this->jwtDir . DS . 'jwt.key';
     }
 }

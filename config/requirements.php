@@ -15,8 +15,8 @@
 /*
  *  Passbolt requirements
  */
-if (version_compare(PHP_VERSION, '7.3.0') < 0) {
-    trigger_error('Your PHP version must be equal or higher than 7.3.0 to use Passbolt.', E_USER_ERROR);
+if (version_compare(PHP_VERSION, '7.4.0') < 0) {
+    trigger_error('Your PHP version must be equal or higher than 7.4.0 to use Passbolt.', E_USER_ERROR);
 }
 
 if (!extension_loaded('intl')) {
@@ -33,4 +33,12 @@ if (!extension_loaded('gnupg')) {
 
 if (!(extension_loaded('gd') || extension_loaded('imagick'))) {
     trigger_error('You must enable the gd or imagick extensions to use Passbolt.', E_USER_ERROR);
+}
+
+if (!extension_loaded('curl')) {
+    trigger_error('You must enable the curl extensions to use Passbolt.', E_USER_ERROR);
+}
+
+if (!extension_loaded('openssl')) {
+    trigger_error('You must enable the openssl extensions to use Passbolt.', E_USER_ERROR);
 }

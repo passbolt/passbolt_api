@@ -53,6 +53,8 @@ class RecoverCompleteController extends AppController
      */
     public function complete(RecoverCompleteServiceInterface $recoverCompleteService, string $userId)
     {
+        $this->assertJson();
+
         // Do not allow logged in user to complete setup
         if ($this->User->role() !== Role::GUEST) {
             throw new ForbiddenException(__('Only guests are allowed to complete setup.'));

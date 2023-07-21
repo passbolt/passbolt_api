@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Utility\Digest;
 
+use App\Model\Validation\EmailValidationRule;
 use Cake\ORM\Entity;
-use Cake\Validation\Validation;
 use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
@@ -115,7 +115,7 @@ class Digest extends AbstractDigest implements DigestInterface
         }
 
         $operator = $this->getOperatorFromEmail($emailQueueEntity);
-        if (!isset($operator['username']) || !Validation::email($operator['username'])) {
+        if (!isset($operator['username']) || !EmailValidationRule::check($operator['username'])) {
             throw new UnsupportedEmailDigestDataException($emailQueueEntity);
         }
 
@@ -123,13 +123,7 @@ class Digest extends AbstractDigest implements DigestInterface
         $username = $emailQueueEntity['email'];
         $this->addToUserCount($username, $operator);
 
-        if (!$this->isPassThreshold($username, $operator)) {
-            $this->emails[$username][$operator][] = $emailQueueEntity;
-        } else {
-            // no need to store more than one after threshold is reached
-            $email = $this->emails[$username][$operator][0];
-            $this->emails[$username][$operator] = [$email];
-        }
+        $this->emails[$username][$operator][] = $emailQueueEntity;
 
         return $this;
     }
@@ -150,7 +144,7 @@ class Digest extends AbstractDigest implements DigestInterface
                 } elseif (!$this->isPassThreshold($username, $operator)) {
                     $result[] = $this->buildMultipleEmailDigest($emails);
                 } else {
-                    $result[] = $this->onThresholdCallback($emails[0], $numberOfEmails);
+                    $result[] = $this->onThresholdCallback($emails, $numberOfEmails);
                 }
             }
         }
@@ -269,12 +263,12 @@ class Digest extends AbstractDigest implements DigestInterface
      *
      * Must return an array of email digests.
      *
-     * @param \Cake\ORM\Entity $emailQueueEntity An email queue entity
+     * @param \Cake\ORM\Entity[] $emailQueueEntities An email queue entities
      * @param int $emailCount Count of the emails
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      */
-    private function onThresholdCallback(Entity $emailQueueEntity, int $emailCount)
+    private function onThresholdCallback(array $emailQueueEntities, int $emailCount)
     {
-        return call_user_func($this->onThresholdCallback, $emailQueueEntity, $emailCount);
+        return call_user_func($this->onThresholdCallback, $emailQueueEntities, $emailCount);
     }
 }

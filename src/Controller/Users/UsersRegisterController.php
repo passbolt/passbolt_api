@@ -21,9 +21,9 @@ use App\Model\Entity\Role;
 use App\Service\Users\UserRegisterServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
-use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -37,12 +37,7 @@ class UsersRegisterController extends AppController
      */
     public function beforeFilter(EventInterface $event)
     {
-        if (Configure::read('passbolt.registration.public') === true) {
-            $this->Authentication->allowUnauthenticated(['registerGet', 'registerPost']);
-        } else {
-            $msg = __('Registration is not opened to public. Please contact your administrator.');
-            throw new NotFoundException($msg);
-        }
+        $this->Authentication->allowUnauthenticated(['registerGet', 'registerPost']);
 
         return parent::beforeFilter($event);
     }
@@ -52,11 +47,16 @@ class UsersRegisterController extends AppController
      * Display a registration form
      *
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
-     * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Service
+     * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Registration service
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to assess to availability of self registration
      * @return void
+     * @throws \Cake\Http\Exception\NotFoundException if self registration is not open
      */
-    public function registerGet(UserRegisterServiceInterface $userRegisterService)
-    {
+    public function registerGet(
+        UserRegisterServiceInterface $userRegisterService,
+        SelfRegistrationDryRunServiceInterface $dryRunService
+    ): void {
+        $this->assertIsSelfRegistrationOpen($dryRunService);
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
             throw new ForbiddenException(__('Only guests are allowed to register.'));
@@ -71,21 +71,47 @@ class UsersRegisterController extends AppController
      *
      * @throws \Cake\Http\Exception\ForbiddenException if the current user is logged in
      * @param \App\Service\Users\UserRegisterServiceInterface $userRegisterService Service
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService Service to assess to availability of self registration
      * @return void
      */
-    public function registerPost(UserRegisterServiceInterface $userRegisterService)
-    {
-        if (!$this->request->is('json')) {
-            throw new BadRequestException(__('This is not a valid Ajax/Json request.'));
-        }
+    public function registerPost(
+        UserRegisterServiceInterface $userRegisterService,
+        SelfRegistrationDryRunServiceInterface $dryRunService
+    ): void {
+        $this->assertJson();
+
+        $this->assertIsSelfRegistrationOpen($dryRunService);
 
         // Do not allow logged in user to register
         if ($this->User->role() !== Role::GUEST) {
             throw new ForbiddenException(__('Only guests are allowed to register.'));
         }
 
+        // Assert that the user can self register, based on the payload and the self registration settings
+        $dryRunService->canGuestSelfRegister(['email' => $this->getRequest()->getData('username')]);
+
         $user = $userRegisterService->register();
 
         $this->success(__('The operation was successful.'), $user);
+    }
+
+    /**
+     * @param \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface $dryRunService dry run service
+     * @return void
+     * @throws \Cake\Http\Exception\NotFoundException if the user cannot register
+     */
+    protected function assertIsSelfRegistrationOpen(SelfRegistrationDryRunServiceInterface $dryRunService): void
+    {
+        if (!$dryRunService->isSelfRegistrationOpen()) {
+            $msg = __('Registration is not opened to public.') . ' ';
+            $msg .= __('Please contact your administrator.');
+            throw new NotFoundException($msg);
+        }
+        if (Configure::read(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY)) {
+            $msg = __('Registration is not opened to public.') . ' ';
+            $msg .= __('This is due to a security setting.') . ' ';
+            $msg .= __('Please contact your administrator.');
+            throw new NotFoundException($msg);
+        }
     }
 }

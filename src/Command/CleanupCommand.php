@@ -22,6 +22,9 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\ORM\TableRegistry;
 
+/**
+ * CleanupCommand class
+ */
 class CleanupCommand extends PassboltCommand
 {
     /**
@@ -80,6 +83,36 @@ class CleanupCommand extends PassboltCommand
     ];
 
     /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @var \App\Model\Table\RolesTable
+     */
+    protected $Roles;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    protected $GroupsUsers;
+
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    protected $Permissions;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
+
+    /**
      * Add cleanups jobs.
      *
      * @param array $cleanups The cleanups jobs to add
@@ -126,12 +159,18 @@ class CleanupCommand extends PassboltCommand
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadModel('Users');
-        $this->loadModel('Roles');
-        $this->loadModel('Resources');
-        $this->loadModel('GroupsUsers');
-        $this->loadModel('Permissions');
-        $this->loadModel('AuthenticationTokens');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Roles = $this->fetchTable('Roles');
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
+        /** @phpstan-ignore-next-line */
+        $this->GroupsUsers = $this->fetchTable('GroupsUsers');
+        /** @phpstan-ignore-next-line */
+        $this->Permissions = $this->fetchTable('Permissions');
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
 
         if (!isset(self::$cleanups)) {
             self::resetCleanups();
@@ -174,7 +213,10 @@ class CleanupCommand extends PassboltCommand
         foreach (self::$cleanups as $tableName => $tableCleanup) {
             $table = TableRegistry::getTableLocator()->get($tableName);
             foreach ($tableCleanup as $i => $cleanupName) {
+                $timeStart = microtime(true);
                 $cleanupMethod = 'cleanup' . str_replace(' ', '', $cleanupName);
+
+                $io->verbose("Clean up start: $tableName:$cleanupMethod");
                 $recordCount = $table->{$cleanupMethod}($dryRun);
                 $totalErrorCount += $recordCount;
                 if ($recordCount) {
@@ -185,6 +227,10 @@ class CleanupCommand extends PassboltCommand
                         $io->out(__('{0} issues fixed in table {1} ({2})', $recordCount, $tableName, $cleanupName));
                     }
                 }
+
+                $timeEnd = microtime(true);
+                $timeExecuted = round($timeEnd - $timeStart, 2);
+                $io->verbose("Cleanup up end ({$timeExecuted}s): $tableName:$cleanupMethod");
             }
         }
 

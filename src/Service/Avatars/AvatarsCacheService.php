@@ -21,14 +21,14 @@ use App\Model\Table\AvatarsTable;
 use App\Utility\AvatarProcessing;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
-use Cake\Datasource\ModelAwareTrait;
 use Cake\Log\Log;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 use Laminas\Diactoros\Stream;
 
 class AvatarsCacheService
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
 
     /**
      * @var \App\Model\Table\AvatarsTable

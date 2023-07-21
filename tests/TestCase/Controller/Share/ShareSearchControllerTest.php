@@ -19,9 +19,7 @@ namespace App\Test\TestCase\Controller\Share;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class ShareSearchControllerTest extends AppIntegrationTestCase
@@ -29,24 +27,21 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
     use GroupsModelTrait;
 
     public $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles',
-         'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers',
-        'app.Base/Resources', 'app.Base/Permissions',
+        'app.Base/Users',
+        'app.Base/Gpgkeys',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/Resources',
+        'app.Base/Permissions',
     ];
 
-    public function setUp(): void
-    {
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->gpg = OpenPGPBackendFactory::get();
-        parent::setUp();
-    }
-
-    public function testShareSearchArosSuccess()
+    public function testShareSearchController_Success(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->getJson("/share/search-users/resource/$resourceId.json?api-version=2");
+        $this->getJson("/share/search-users/resource/$resourceId.json");
         $aros = $this->_responseJsonBody;
         $this->assertNotEmpty($aros);
         $arosIds = Hash::extract($aros, '{n}.id');
@@ -78,7 +73,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertFalse(array_search($groupDId, $arosIds));
     }
 
-    public function testShareSearchArosSuccess_SearchUserWang()
+    public function testShareSearchController_Success_SearchUserWang(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -90,7 +85,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertEquals(UuidFactory::uuid('user.id.wang'), $aros[0]->id);
     }
 
-    public function testShareSearchArosSuccess_SearchGroupCreative()
+    public function testShareSearchController_Success_SearchGroupCreative(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -102,10 +97,21 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertEquals(UuidFactory::uuid('group.id.creative'), $aros[0]->id);
     }
 
-    public function testShareSearchAros_NotAuthenticated()
+    public function testShareSearchController_Error_NotAuthenticated(): void
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->getJson("/share/search-users/resource/$resourceId.json");
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testShareSearchController_Error_NotJson(): void
+    {
+        $this->authenticateAs('ada');
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        $this->get("/share/search-users/resource/$resourceId");
+        $this->assertResponseCode(404);
     }
 }

@@ -52,7 +52,7 @@ class HealthcheckHtmlHelper extends \App\View\Helper\HealthcheckHtmlHelper
             __('The server OpenPGP public key file is writable.'),
             __('The server OpenPGP public key file is not writable.'),
             [
-                __('Ensure the file ' . CONFIG . 'gpg' . DS . $publicKeyPath . ' is writable by the webserver user.'),
+                __('Ensure the file {0} is writable by the webserver user.', CONFIG . 'gpg' . DS . $publicKeyPath),
                 __('you can try:'),
                 'sudo chown ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . CONFIG . 'gpg',
                 'sudo chmod 775 $(find ' . CONFIG . 'gpg -type d)',
@@ -65,7 +65,7 @@ class HealthcheckHtmlHelper extends \App\View\Helper\HealthcheckHtmlHelper
             __('The server OpenPGP private key file is writable.'),
             __('The server OpenPGP private key file is not writable.'),
             [
-                __('Ensure the file ' . CONFIG . 'gpg' . DS . $privateKeyPath . ' is writable by the webserver user.'),
+                __('Ensure the file {0} is writable by the webserver user.', CONFIG . 'gpg' . DS . $privateKeyPath),
                 __('you can try:'),
                 'sudo chown ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . CONFIG . 'gpg',
                 'sudo chmod 775 $(find ' . CONFIG . 'gpg -type d)',

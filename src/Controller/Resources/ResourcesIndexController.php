@@ -22,11 +22,15 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 
 /**
- * @property \App\Model\Table\ResourcesTable $Resources
  * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class ResourcesIndexController extends AppController
 {
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
     /**
      * @inheritDoc
      */
@@ -36,6 +40,8 @@ class ResourcesIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Resources',
         ]);
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
     }
 
     public $paginate = [
@@ -57,7 +63,7 @@ class ResourcesIndexController extends AppController
      */
     public function index()
     {
-        $this->loadModel('Resources');
+        $this->assertJson();
 
         // Retrieve and sanity the query options.
         $whitelist = [
@@ -71,6 +77,9 @@ class ResourcesIndexController extends AppController
         if (Configure::read('passbolt.plugins.tags')) {
             $whitelist['contain'][] = 'tag'; // @deprecate should be tags
             $whitelist['filter'][] = 'has-tag';
+        }
+        if (Configure::read('passbolt.plugins.folders')) {
+            $whitelist['filter'][] = 'has-parent';
         }
         $options = $this->QueryString->get($whitelist);
 
@@ -102,7 +111,7 @@ class ResourcesIndexController extends AppController
                 try {
                     $this->Resources->Secrets->SecretAccesses->create($secret, $this->User->getAccessControl());
                 } catch (\Exception $e) {
-                    throw new InternalErrorException('Could not log secret access entry.');
+                    throw new InternalErrorException('Could not log secret access entry.', 500, $e);
                 }
             }
         }

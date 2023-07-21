@@ -18,15 +18,19 @@ declare(strict_types=1);
 namespace Passbolt\AccountSettings\Test\TestCase\Controller\Themes;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\Datasource\ModelAwareTrait;
+use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
  * @uses \Passbolt\AccountSettings\Controller\Themes\ThemesIndexController
- * @property \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings
  */
 class ThemesIndexControllerTest extends AppIntegrationTestCase
 {
-    use ModelAwareTrait;
+    use LocatorAwareTrait;
+
+    /**
+     * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
+     */
+    protected $AccountSettings;
 
     public $fixtures = [
         'plugin.Passbolt/AccountSettings.AccountSettings',
@@ -35,13 +39,13 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->loadModel('AccountSettings');
+        $this->AccountSettings = $this->fetchTable('AccountSettings');
     }
 
     public function testThemesIndexSuccess()
     {
         // Authenticate as ada and list the themes
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->get('/account/settings/themes.json?api-version=v2');
         $this->assertResponseOk();
     }

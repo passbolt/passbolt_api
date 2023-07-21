@@ -24,7 +24,6 @@ use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
 use App\View\Helper\AvatarHelper;
 use Cake\ORM\TableRegistry;
-use Cake\TestSuite\IntegrationTestTrait;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
 /**
@@ -35,7 +34,6 @@ use League\Flysystem\Local\LocalFilesystemAdapter;
 class AvatarsViewControllerTest extends AppIntegrationTestCase
 {
     use AvatarsModelTrait;
-    use IntegrationTestTrait;
 
     /**
      * @var \App\Model\Table\AvatarsTable
@@ -47,11 +45,17 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
      */
     public $avatarsCacheService;
 
+    /**
+     * @var string
+     */
+    public $cachedFileLocation;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->Avatars->setFilesystem(new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars'));
+        $this->cachedFileLocation = TMP . 'tests' . DS . 'avatars' . rand(0, 999) . DS;
+        $this->Avatars->setFilesystem(new LocalFilesystemAdapter($this->cachedFileLocation));
         $this->avatarsCacheService = new AvatarsCacheService($this->Avatars);
     }
 
@@ -60,10 +64,11 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
         $this->Avatars->getFilesystem()->deleteDirectory('.');
         unset($this->Avatars);
         unset($this->avatarsCacheService);
+        unset($this->cachedFileLocation);
         parent::tearDown();
     }
 
-    public function validFormatDataProvider()
+    public function validFormatDataProvider(): array
     {
         return [
             [AvatarsConfigurationService::FORMAT_SMALL],
@@ -100,7 +105,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
         $avatar = $this->createAvatar();
 
         $expectedFileContent = file_get_contents(
-            TMP . 'tests' . DS . 'avatars' . DS .
+            $this->cachedFileLocation .
             $this->avatarsCacheService->getAvatarFileName($avatar, $format)
         );
 
@@ -127,7 +132,7 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
     {
         $avatar = $this->createAvatar();
 
-        $fileName = TMP . 'tests' . DS . 'avatars' . DS .
+        $fileName = $this->cachedFileLocation .
             $this->avatarsCacheService->getAvatarFileName($avatar, $format);
 
         $expectedFileContent = file_get_contents($fileName);

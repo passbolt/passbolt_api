@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Test\Factory\ResourceFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
@@ -32,16 +33,25 @@ class ShareControllerTest extends AppIntegrationTestCase
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
     ];
 
+    /**
+     * @var \App\Model\Table\UsersTable|null
+     */
+    public $Users = null;
+
+    /**
+     * @var \App\Utility\OpenPGP\Backends\Gnupg|null
+     */
+    public $gpg = null;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+
         $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->gpg = OpenPGPBackendFactory::get();
     }
 
-    protected function getValidSecret()
+    protected function getValidSecret(): string
     {
         return '-----BEGIN PGP MESSAGE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
@@ -58,7 +68,7 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    public function testSuccess()
+    public function testShareController_Success(): void
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -107,11 +117,11 @@ hcciUFw5
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
-        $this->putJson("/share/resource/$resourceId.json?api-version=v2", $data);
+        $this->putJson("/share/resource/$resourceId.json", $data);
         $this->assertSuccess();
 
         // Load the resource.
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
+        $resource = ResourceFactory::get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
@@ -132,7 +142,7 @@ hcciUFw5
         }
     }
 
-    public function testErrorValidation()
+    public function dataForTestErrorValidation(): array
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
@@ -140,74 +150,80 @@ hcciUFw5
         $userEId = UuidFactory::uuid('user.id.edith');
         $userRId = UuidFactory::uuid('user.id.ruth');
         $userSId = UuidFactory::uuid('user.id.sofia');
-        $testCases = [
-            'cannot a permission that does not exist' => [
+
+        return [
+            ['cannot a permission that does not exist', [
                 'errorField' => 'permissions.0.id.exists',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid()],
                 ]],
-            ],
-            'cannot delete a permission of another resource' => [
+            ]],
+            ['cannot delete a permission of another resource', [
                 'errorField' => 'permissions.0.id.exists',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid("permission.id.$resourceAprilId-$userAId"), 'delete' => true],
                 ]],
-            ],
-            'cannot add a permission with invalid data' => [
+            ]],
+            ['cannot add a permission with invalid data', [
                 'errorField' => 'permissions.0.aro_foreign_key._empty',
                 'data' => ['permissions' => [
                     ['aro' => 'User', 'type' => Permission::OWNER],
                 ]],
-            ],
-            'cannot add a permission for a soft deleted user' => [
+            ]],
+            ['cannot add a permission for a soft deleted user', [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => ['permissions' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userSId,
                     'type' => Permission::OWNER],
                 ]],
-            ],
-            'cannot add a permission for an inactive user' => [
+            ]],
+            ['cannot add a permission for an inactive user', [
                 'errorField' => 'permissions.0.aro_foreign_key.aro_exists',
                 'data' => ['permissions' => [[
                     'aro' => 'User',
                     'aro_foreign_key' => $userRId,
                     'type' => Permission::OWNER],
                 ]],
-            ],
-            'cannot remove the latest owner' => [
+            ]],
+            ['cannot remove the latest owner', [
                 'errorField' => 'permissions.at_least_one_owner',
                 'data' => ['permissions' => [
                     ['id' => UuidFactory::uuid("permission.id.$resourceId-$userAId"), 'delete' => true],
                 ]],
-            ],
+            ]],
             // Test on secrets.
-            'cannot add a permission for a user and forget to send its secret' => [
+            ['cannot add a permission for a user and forget to send its secret', [
                 'errorField' => 'secrets.secrets_provided',
                 'data' => ['permissions' => [
                     ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::READ],
                 ]],
-            ],
-            'cannot add a secret for a user who do not have access to the resource' => [
+            ]],
+            ['cannot add a secret for a user who do not have access to the resource', [
                 'errorField' => 'secrets.0.resource_id.has_resource_access',
                 'data' => ['secrets' => [
                     ['user_id' => $userEId, 'data' => $this->getValidSecret()],
                 ]],
-            ],
+            ]],
         ];
-
-        $this->authenticateAs('ada');
-        foreach ($testCases as $caseLabel => $case) {
-            $this->putJson("/share/resource/$resourceId.json?api-version=2", $case['data']);
-            $this->assertError();
-            $errors = json_decode(json_encode($this->_responseJsonBody), true);
-            $this->assertNotEmpty($errors);
-            $error = Hash::get($errors, $case['errorField']);
-            $this->assertNotNull($error, "Expected error not found ({$case['errorField']}) for the case {$caseLabel}. Errors: " . json_encode($errors));
-        }
     }
 
-    public function testErrorNotValidResourceId()
+    /**
+     * @dataProvider dataForTestErrorValidation
+     */
+    public function testShareController_Error_Validation($caseLabel, $case)
+    {
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $this->authenticateAs('ada');
+        $this->putJson("/share/resource/$resourceId.json", $case['data']);
+        $this->assertError();
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertNotEmpty($errors);
+        $error = Hash::get($errors, $case['errorField']);
+        $this->assertNotNull($error, "Expected error not found ({$case['errorField']}) for the case {$caseLabel}. Errors: " . json_encode($errors));
+    }
+
+    public function testShareController_Error_NotValidResourceId(): void
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -215,7 +231,7 @@ hcciUFw5
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
-    public function testErrorDoesNotExistResource()
+    public function testShareController_Error_DoesNotExistResource(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
@@ -223,7 +239,7 @@ hcciUFw5
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorResourceIsSoftDeleted()
+    public function testShareController_Error_ResourceIsSoftDeleted(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -231,7 +247,7 @@ hcciUFw5
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorAccessDenied()
+    public function testShareController_Error_AccessDenied(): void
     {
         $testCases = [
             'Cannot share a resource if no permission' => [
@@ -250,10 +266,25 @@ hcciUFw5
         }
     }
 
-    public function testErrorNotAuthenticated()
+    public function testShareController_Error_NotAuthenticated(): void
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->putJson("/share/resource/$resourceId.json");
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testShareController_Error_NotJson(): void
+    {
+        // Define actors of this tests
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        // Build the changes.
+        $data = ['permissions' => []];
+
+        $this->authenticateAs('ada');
+        $this->put("/share/resource/$resourceId", $data);
+        $this->assertResponseCode(404);
     }
 }

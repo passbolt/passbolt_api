@@ -22,38 +22,65 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\RulesChecker;
+use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
- * @property \App\Model\Table\GroupsTable $Groups
- * @property \App\Model\Table\GroupsUsersTable $GroupsUsers
- * @property \App\Model\Table\PermissionsTable $Permissions
- * @property \App\Model\Table\ResourcesTable $Resources
+ * UsersDeleteController Class
  */
 class UsersDeleteController extends AppController
 {
     public const DELETE_SUCCESS_EVENT_NAME = 'UsersDeleteController.delete.success';
 
     /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @var \App\Model\Table\GroupsTable
+     */
+    protected $Groups;
+
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    protected $GroupsUsers;
+
+    /**
+     * @var \App\Model\Table\PermissionsTable
+     */
+    protected $Permissions;
+
+    /**
+     * @var \App\Model\Table\ResourcesTable
+     */
+    protected $Resources;
+
+    /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function initialize(): void
     {
-        $this->loadModel('Users');
-        $this->loadModel('Groups');
-        $this->loadModel('GroupsUsers');
-        $this->loadModel('Permissions');
-        $this->loadModel('Resources');
-
-        return parent::beforeFilter($event);
+        parent::initialize();
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Groups = $this->fetchTable('Groups');
+        /** @phpstan-ignore-next-line */
+        $this->GroupsUsers = $this->fetchTable('GroupsUsers');
+        /** @phpstan-ignore-next-line */
+        $this->Permissions = $this->fetchTable('Permissions');
+        /** @phpstan-ignore-next-line */
+        $this->Resources = $this->fetchTable('Resources');
     }
 
     /**
@@ -64,6 +91,8 @@ class UsersDeleteController extends AppController
      */
     public function dryrun(string $id)
     {
+        $this->assertJson();
+
         $user = $this->_validateRequestData($id);
         $this->_validateDelete($user);
         $this->success(__('The user can be deleted.'));
@@ -78,6 +107,8 @@ class UsersDeleteController extends AppController
      */
     public function delete(string $id)
     {
+        $this->assertJson();
+
         $user = $this->_validateRequestData($id);
         // keep a list of group the user was a member of. Useful to notify the group managers after the delete
         $groupIdsNotOnlyMember = $this->GroupsUsers
@@ -179,6 +210,27 @@ class UsersDeleteController extends AppController
                     $body['errors']['resources']['sole_owner'] = $resources;
                     $msg .= ' ' . $errors['id']['soleOwnerOfSharedContent'];
                 }
+
+                if (Configure::read('passbolt.plugins.folders.enabled')) {
+                    $foldersIds = $this->Permissions
+                        ->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $user->id, [
+                            'checkGroupsUsers' => true,
+                        ])
+                        ->all()
+                        ->extract('aco_foreign_key')
+                        ->toArray();
+                    if ($foldersIds) {
+                        $findFoldersOptions = [];
+                        $findFoldersOptions['contain']['permissions.user.profile'] = true;
+                        $findFoldersOptions['contain']['permissions.group'] = true;
+                        $findFoldersOptions['filter']['has-id'] = $foldersIds;
+                        /** @var \Passbolt\Folders\Model\Table\FoldersTable $foldersTable */
+                        $foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
+                        $folders = $foldersTable->findIndex($user->id, $findFoldersOptions);
+                        $body['errors']['folders']['sole_owner'] = $folders;
+                        $msg .= ' ' . $errors['id']['soleOwnerOfSharedContent'];
+                    }
+                }
             }
 
             $groupsToDeleteIds = $this->GroupsUsers
@@ -270,6 +322,15 @@ class UsersDeleteController extends AppController
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
+
+        if (Configure::read('passbolt.plugins.folders.enabled')) {
+            $foldersIdsBlockingDelete = $this->Permissions
+                ->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $user->id, ['checkGroupsUsers' => true])
+                ->all()
+                ->extract('aco_foreign_key')
+                ->toArray();
+            $contentIdBlockingDelete = array_merge($contentIdBlockingDelete, $foldersIdsBlockingDelete);
+        }
         sort($contentIdBlockingDelete);
 
         // If all the resources that are requiring a change are not satisfied, throw an exception.

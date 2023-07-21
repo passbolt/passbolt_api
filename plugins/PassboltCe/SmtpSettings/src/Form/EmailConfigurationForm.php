@@ -16,10 +16,12 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Form;
 
-use Cake\Core\Configure;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
+use Passbolt\SmtpSettings\Model\Validation\SmtpSettingsClientValidationRule;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 
 class EmailConfigurationForm extends Form
 {
@@ -37,6 +39,7 @@ class EmailConfigurationForm extends Form
             ->addField('host', ['type' => 'string'])
             ->addField('tls', ['type' => 'integer'])
             ->addField('port', ['type' => 'string'])
+            ->addField('client', ['type' => 'string'])
             ->addField('username', ['type' => 'string'])
             ->addField('password', ['type' => 'string'])
             ->addField('email_test_to', ['type' => 'string']);
@@ -58,12 +61,7 @@ class EmailConfigurationForm extends Form
         $validator
             ->requirePresence('sender_email', 'create', __('A sender email is required.'))
             ->notEmptyString('sender_email', __('The sender email should not be empty.'))
-            ->utf8('sender_email', __('The sender email should be a valid BMP-UTF8 string.'))
-            ->email(
-                'sender_email',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The sender email should be a valid email address.')
-            );
+            ->utf8('sender_email', __('The sender email should be a valid BMP-UTF8 string.'));
 
         $validator
             ->requirePresence('host', 'create', __('A host name is required.'))
@@ -86,6 +84,10 @@ class EmailConfigurationForm extends Form
             ->range('port', [1, 65535], __('The port number should be between {0} and {1}.', '1', '65535'));
 
         $validator
+            ->allowEmptyString('client')
+            ->add('client', 'isClientValid', new SmtpSettingsClientValidationRule());
+
+        $validator
             ->requirePresence('username', 'create', __('A username is required.'))
             ->allowEmptyString('username')
             ->utf8('username', __('The username should be a valid BMP-UTF8 string.'));
@@ -97,11 +99,50 @@ class EmailConfigurationForm extends Form
 
         $validator
             ->allowEmptyString('email_test_to')
-            ->email(
-                'email_test_to',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The test email should be a valid email address.')
-            );
+            ->add('email_test_to', 'email', new EmailValidationRule([
+                'message' => __('The test email should be a valid email address.'),
+            ]));
+
+        return $validator;
+    }
+
+    /**
+     * - Default validation rules
+     * - Sender email should be a valid email
+     *
+     * @see SmtpSettingsSetService
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
+     */
+    public function validationUpdate(Validator $validator): Validator
+    {
+        $this->validationDefault($validator);
+
+        $validator->add('sender_email', 'email', new EmailValidationRule([
+            'message' => __('The sender email should be a valid email address.'),
+        ]));
+
+        return $validator;
+    }
+
+    /**
+     * - Default validation rules
+     * - Sender email should be a valid email
+     * - Test email recipient should be a valid email
+     *
+     * @see SmtpSettingsSetService
+     * @param \Cake\Validation\Validator $validator validator
+     * @return \Cake\Validation\Validator
+     */
+    public function validationSendTestEmail(Validator $validator): Validator
+    {
+        $this->validationUpdate($validator);
+
+        $validator->requirePresence(
+            SmtpSettingsSendTestMailerService::EMAIL_TEST_TO,
+            'create',
+            __('A test recipient is required.')
+        );
 
         return $validator;
     }
@@ -112,6 +153,7 @@ class EmailConfigurationForm extends Form
     public function execute(array $data, array $options = []): bool
     {
         $data = $this->mapTlsToTrueOrNull($data);
+        $data = $this->setClient($data);
 
         return parent::execute($data, $options);
     }
@@ -128,8 +170,23 @@ class EmailConfigurationForm extends Form
             return $data;
         }
 
-        if ($data['tls'] == false) {
-            $data['tls'] = null;
+        $tls = filter_var($data['tls'], FILTER_VALIDATE_BOOLEAN);
+        $data['tls'] = $tls ? true : null;
+
+        return $data;
+    }
+
+    /**
+     * In order to avoid empty strings passed to client,
+     * we ensure that the client is well set to null is empty
+     *
+     * @param array $data Form data
+     * @return array
+     */
+    protected function setClient(array $data): array
+    {
+        if (!isset($data['client']) || empty($data['client'])) {
+            $data['client'] = null;
         }
 
         return $data;

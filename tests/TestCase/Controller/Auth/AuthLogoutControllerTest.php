@@ -16,17 +16,28 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Controller\Auth\AuthLogoutController;
 use App\Test\Lib\AppIntegrationTestCase;
+use Cake\Core\Configure;
 use Cake\Routing\Router;
-use Zend\Diactoros\Response\RedirectResponse;
+use Laminas\Diactoros\Response\RedirectResponse;
 
 class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
     /**
+     * Tear down
+     */
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, false);
+    }
+
+    /**
      * Check if a redirection is of type ZendRedirect
      * Usefull for high level routes redirections / route alias testing
      */
-    public function assertZendRedirect(string $url)
+    public function assertZendRedirect(string $url): void
     {
         $this->assertTrue($this->_response instanceof RedirectResponse);
         $url = Router::url($url, true);
@@ -35,40 +46,75 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
         $this->assertEquals($url, $location[0]);
     }
 
-    public function testAuthLogoutGetLoggedIn()
-    {
-        $this->logInAsUser();
+    // Test default POST method
 
-        $this->get('/auth/logout');
-        $this->assertRedirect('/auth/login');
+    public function testAuthLogoutController_Success_PostMethod_Json_SignedIn(): void
+    {
+        $this->post('/auth/logout.json');
+        $this->assertNoRedirect();
+        $this->assertResponseContains('You are successfully logged out.');
     }
 
-    public function testAuthLogoutPostLoggedIn()
+    public function testAuthLogoutController_Success_PostMethod_Json_NotSignedIn(): void
     {
         $this->logInAsUser();
+        $this->post('/auth/logout.json');
+        $this->assertResponseContains('You are successfully logged out.');
+        $this->assertNoRedirect();
+    }
 
+    public function testAuthLogoutController_Success_PostMethod_NotJson(): void
+    {
         $this->post('/auth/logout');
         $this->assertRedirect('/auth/login');
     }
 
-    public function testAuthLogoutPostLoggedInWithouthCSRF()
+    public function testAuthLogoutController_Error_CsrfToken(): void
     {
-        $this->logInAsUser();
         $this->disableCsrfToken();
 
-        $this->post('/auth/logout');
+        $this->post('/auth/logout.json');
         $this->assertResponseError('Missing or incorrect CSRF cookie type.');
     }
 
-    public function testAuthLogoutNotLoggedIn()
+    // Test unsecure GET method
+
+    public function testAuthLogoutController_Success_GetMethod_Json_SignedIn(): void
     {
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
+        $this->get('/auth/logout.json');
+        $this->assertNoRedirect();
+        $this->assertResponseContains('You are successfully logged out.');
+    }
+
+    public function testAuthLogoutController_Success_GetMethod_Json_NotSignedIn(): void
+    {
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
+        $this->logInAsUser();
+        $this->get('/auth/logout.json');
+        $this->assertResponseContains('You are successfully logged out.');
+        $this->assertNoRedirect();
+    }
+
+    public function testAuthLogoutController_Success_GetMethod_NotJson(): void
+    {
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
         $this->get('/auth/logout');
         $this->assertRedirect('/auth/login');
     }
 
-    public function testAuthLogoutRedirect()
+    public function testAuthLogoutController_Success_GetMethod_NotJson_LogoutAlias(): void
     {
         $this->get('/logout');
         $this->assertZendRedirect('/auth/logout');
+    }
+
+    public function testAuthLogoutController_Error_GetMethod_GetLogoutEndpointDisabled()
+    {
+        $this->get('/auth/logout');
+        $this->assertResponseError('The logout route should only be accessed with POST method.');
+
+        $this->get('/auth/logout.json');
+        $this->assertResponseError('The logout route should only be accessed with POST method.');
     }
 }

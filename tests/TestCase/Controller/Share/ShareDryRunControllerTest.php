@@ -19,24 +19,23 @@ namespace App\Test\TestCase\Controller\Share;
 
 use App\Model\Entity\Permission;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
 class ShareDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions'];
+    public $fixtures = [
+        'app.Base/Users',
+        'app.Base/Gpgkeys',
+        'app.Base/Profiles',
+        'app.Base/Roles',
+        'app.Base/Groups',
+        'app.Base/GroupsUsers',
+        'app.Base/Resources',
+        'app.Base/Permissions',
+    ];
 
-    public function setUp(): void
-    {
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->gpg = OpenPGPBackendFactory::get();
-        parent::setUp();
-    }
-
-    public function testSuccess()
+    public function testShareDryRunController_Success(): void
     {
         // Define actors of this tests
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
@@ -83,7 +82,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $expectedAddedUsersIds = array_merge($expectedAddedUsersIds, [$userFId]);
 
         $this->authenticateAs('ada');
-        $this->postJson("/share/simulate/resource/$resourceId.json?api-version=v2", $data);
+        $this->postJson("/share/simulate/resource/$resourceId.json", $data);
         $this->assertNotEmpty($this->_responseJsonBody);
         $this->assertNotEmpty($this->_responseJsonBody->changes);
         $addedUsers = $this->_responseJsonBody->changes->added;
@@ -100,6 +99,17 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $this->assertEmpty(array_diff($expectedRemovedUsersIds, $removedUsersIds));
     }
 
+    public function testShareDryRunController_Success_NoChange(): void
+    {
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        $this->authenticateAs('ada');
+        $this->postJson("/share/simulate/resource/$resourceId.json");
+        $this->assertNotEmpty($this->_responseJsonBody);
+        $this->assertNotEmpty($this->_responseJsonBody->changes);
+        $this->assertEmpty($this->_responseJsonBody->changes->added);
+        $this->assertEmpty($this->_responseJsonBody->changes->removed);
+    }
+
     /*
      * The format validation is done by the Resource & Permission model.
      * Test few scenarios to ensure the validation works as expected.
@@ -107,7 +117,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
      * @see App\Test\TestCase\Model\Table\Permissions\PatchEntitiesWithChangesTest
      */
 
-    public function testErrorValidation()
+    public function testShareDryRunController_Error_Validation(): void
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $resourceAprilId = UuidFactory::uuid('resource.id.april');
@@ -151,27 +161,16 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
 
         $this->authenticateAs('ada');
         foreach ($testCases as $caseLabel => $case) {
-            $this->postJson("/share/simulate/resource/$resourceId.json?api-version=2", ['permissions' => $case['data']]);
+            $this->postJson("/share/simulate/resource/$resourceId.json", ['permissions' => $case['data']]);
             $this->assertError();
-            $errors = json_decode(json_encode($this->_responseJsonBody), true);
+            $errors = $this->getResponseBodyAsArray();
             $this->assertNotEmpty($errors);
             $error = Hash::get($errors, $case['errorField']);
             $this->assertNotNull($error, "Expected error not found : {$case['errorField']}. Errors: " . json_encode($errors));
         }
     }
 
-    public function testSuccessNoChange()
-    {
-        $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $this->authenticateAs('ada');
-        $this->postJson("/share/simulate/resource/$resourceId.json");
-        $this->assertNotEmpty($this->_responseJsonBody);
-        $this->assertNotEmpty($this->_responseJsonBody->changes);
-        $this->assertEmpty($this->_responseJsonBody->changes->added);
-        $this->assertEmpty($this->_responseJsonBody->changes->removed);
-    }
-
-    public function testErrorNotValidResourceId()
+    public function testShareDryRunController_Error_NotValidResourceId(): void
     {
         $this->authenticateAs('ada');
         $resourceId = 'invalid-id';
@@ -179,7 +178,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
-    public function testErrorDoesNotExistResource()
+    public function testShareDryRunController_Error_DoesNotExistResource(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid();
@@ -187,7 +186,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorResourceIsSoftDeleted()
+    public function testShareDryRunController_Error_ResourceIsSoftDeleted(): void
     {
         $this->authenticateAs('ada');
         $resourceId = UuidFactory::uuid('resource.id.jquery');
@@ -195,7 +194,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         $this->assertError(404, 'The resource does not exist.');
     }
 
-    public function testErrorAccessDenied()
+    public function testShareDryRunController_Error_AccessDenied(): void
     {
         $testCases = [
             'Cannot share a resource if no permission' => [
@@ -214,10 +213,21 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         }
     }
 
-    public function testErrorNotAuthenticated()
+    public function testShareDryRunController_Error_NotAuthenticated(): void
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
         $this->postJson("/share/simulate/resource/$resourceId.json");
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testShareDryRunController_Error_NotJson(): void
+    {
+        $resourceId = UuidFactory::uuid('resource.id.cakephp');
+        $this->authenticateAs('ada');
+        $this->post("/share/simulate/resource/$resourceId");
+        $this->assertResponseCode(404);
     }
 }

@@ -19,16 +19,19 @@ namespace App\Test\TestCase\Controller\Notifications;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class UsersRegisterNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
+    use SelfRegistrationTestTrait;
 
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
-    public function testUserRegisterNotificationDisabled()
+    public function testUserRegisterNotificationDisabled(): void
     {
+        $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.create', false);
 
         $this->postJson('/users/register.json', [
@@ -44,8 +47,9 @@ class UsersRegisterNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue('aurore@passbolt.com');
     }
 
-    public function testUserRegisterNotificationSuccess()
+    public function testUserRegisterNotificationSuccess(): void
     {
+        $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.create', true);
 
         $this->postJson('/users/register.json', [

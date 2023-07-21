@@ -20,8 +20,10 @@ namespace Passbolt\SmtpSettings\Test\Lib;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use App\Utility\Filesystem\DirectoryUtility;
+use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Mailer\TransportFactory;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSetService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 
 /**
@@ -36,6 +38,17 @@ trait SmtpSettingsTestTrait
      */
     protected $dummyPassboltFile = TMP . 'tests' . DS . 'passbolt.php';
 
+    /**
+     * @return \Cake\Mailer\Message[]
+     */
+    protected function getSentMessages(): array
+    {
+        /** @var \App\Mailer\Transport\DebugTransport $transport */
+        $transport = TransportFactory::get('default');
+
+        return $transport->getMessages();
+    }
+
     private function getSmtpSettingsData(?string $field = null, $value = null): array
     {
         $validData = [
@@ -44,6 +57,7 @@ trait SmtpSettingsTestTrait
             'host' => 'some host',
             'tls' => true,
             'port' => (string)rand(1, 999),
+            'client' => 'passbolt.com',
             'username' => 'test-user',
             'password' => 'test-secret',
         ];
@@ -67,6 +81,13 @@ trait SmtpSettingsTestTrait
         return $setting;
     }
 
+    protected function assertTransportConfigMatches(array $expectedConfig): void
+    {
+        foreach ($expectedConfig as $k => $v) {
+            $this->assertSame($v, TransportFactory::get('default')->getConfig($k));
+        }
+    }
+
     private function setTransportConfig(?string $field = null, $value = null): void
     {
         $validConfig = [
@@ -87,7 +108,9 @@ trait SmtpSettingsTestTrait
     private function makeDummyPassboltFile(array $data)
     {
         $phpConfig = new PhpConfig(TMP . 'tests' . DS);
-        $phpConfig->dump('passbolt', $data);
+        if (!$phpConfig->dump('passbolt', $data)) {
+            $this->markTestSkipped(TMP . 'tests' . DS . 'passbolt not writable, skipping test');
+        }
     }
 
     private function deletePassboltDummyFile(): void
@@ -98,9 +121,7 @@ trait SmtpSettingsTestTrait
     private function assertFileSettingsHaveTheRightKeys(array $settings)
     {
         $keys = array_keys($settings);
-        $expectedKeys = [
-            'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
-        ];
+        $expectedKeys = SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS;
         asort($keys);
         asort($expectedKeys);
 
@@ -110,13 +131,33 @@ trait SmtpSettingsTestTrait
     private function assertDBSettingsHaveTheRightKeys(array $settings)
     {
         $keys = array_keys($settings);
-        $expectedKeys = [
-            'id', 'host', 'port', 'username', 'password', 'tls', 'sender_email', 'sender_name',
-            'created', 'modified', 'created_by', 'modified_by',
-        ];
+        $expectedKeys = array_merge(
+            SmtpSettingsSetService::SMTP_SETTINGS_ALLOWED_FIELDS,
+            ['id', 'created', 'modified', 'created_by', 'modified_by',]
+        );
         asort($keys);
         asort($expectedKeys);
 
         $this->assertEquals(array_values($expectedKeys), array_values($keys));
+    }
+
+    /**
+     * Sets the SMTP settings security flag to false
+     *
+     * @return void
+     */
+    public function enableSmtpSettingsEndpoints()
+    {
+        Configure::write('passbolt.security.smtpSettings.endpointsDisabled', false);
+    }
+
+    /**
+     * Sets the SMTP settings security flag to true
+     *
+     * @return void
+     */
+    public function disableSmtpSettingsEndpoints()
+    {
+        Configure::write('passbolt.security.smtpSettings.endpointsDisabled', true);
     }
 }

@@ -45,7 +45,7 @@ return [
 
     'passbolt' => [
         // GPG Configuration.
-        // The keyring must to be owned and accessible by the webserver user.
+        // The keyring must be owned and accessible by the webserver user.
         // Example: www-data user on Debian
         'gpg' => [
             // Main server key.
@@ -55,9 +55,6 @@ return [
                 'public' => CONFIG . DS . 'gpg' . DS . 'serverkey.asc',
                 'private' => CONFIG . DS . 'gpg' . DS . 'serverkey_private.asc',
             ],
-        ],
-        'registration' => [
-            'public' => <?= $config['options']['public_registration'] ? 'true' : 'false' ?>,
         ],
         'ssl' => [
             'force' => <?= $config['options']['force_ssl'] ? 'true' : 'false' ?>,

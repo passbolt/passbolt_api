@@ -28,7 +28,6 @@ return [
      * - Javascript application config
      * - Meta HTML tags
      * - Gpg
-     * - Registration settings
      * - Selenium mode
      * - Security settings
      * - SSL
@@ -40,6 +39,7 @@ return [
     'passbolt' => [
         // Edition.
         'edition' => 'ce',
+        'featurePluginAdder' => \App\BaseSolutionBootstrapper::class,
 
         // Authentication & Authorisation.
         'auth' => [
@@ -74,6 +74,7 @@ return [
             // Additional email validation settings
             'validate' => [
                 'mx' => filter_var(env('PASSBOLT_EMAIL_VALIDATE_MX', false), FILTER_VALIDATE_BOOLEAN),
+                'regex' => env('PASSBOLT_EMAIL_VALIDATE_REGEX'),
             ],
             'purify' => [
                 'subject' => filter_var(env('PASSBOLT_EMAIL_PURIFY_SUBJECT', false), FILTER_VALIDATE_BOOLEAN),
@@ -84,11 +85,11 @@ return [
             // WARNING: make sure you have backups in place if you disable these.
             // See. https://www.passbolt.com/help/tech/backup
             'show' => [
-                'comment' => filter_var(env('PASSBOLT_EMAIL_SHOW_COMMENT', true), FILTER_VALIDATE_BOOLEAN),
-                'description' => filter_var(env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', true), FILTER_VALIDATE_BOOLEAN),
-                'secret' => filter_var(env('PASSBOLT_EMAIL_SHOW_SECRET', true), FILTER_VALIDATE_BOOLEAN),
-                'uri' => filter_var(env('PASSBOLT_EMAIL_SHOW_URI', true), FILTER_VALIDATE_BOOLEAN),
-                'username' => filter_var(env('PASSBOLT_EMAIL_SHOW_USERNAME', true), FILTER_VALIDATE_BOOLEAN),
+                'comment' => filter_var(env('PASSBOLT_EMAIL_SHOW_COMMENT', false), FILTER_VALIDATE_BOOLEAN),
+                'description' => filter_var(env('PASSBOLT_EMAIL_SHOW_DESCRIPTION', false), FILTER_VALIDATE_BOOLEAN),
+                'secret' => filter_var(env('PASSBOLT_EMAIL_SHOW_SECRET', false), FILTER_VALIDATE_BOOLEAN),
+                'uri' => filter_var(env('PASSBOLT_EMAIL_SHOW_URI', false), FILTER_VALIDATE_BOOLEAN),
+                'username' => filter_var(env('PASSBOLT_EMAIL_SHOW_USERNAME', false), FILTER_VALIDATE_BOOLEAN),
             ],
             // Choose which emails are sent system wide.
             'send' => [
@@ -96,7 +97,7 @@ return [
                     'add' => filter_var(env('PASSBOLT_EMAIL_SEND_COMMENT_ADD', true), FILTER_VALIDATE_BOOLEAN)
                 ],
                 'password' => [
-                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_CREATE', false), FILTER_VALIDATE_BOOLEAN),
                     'share' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_SHARE', true), FILTER_VALIDATE_BOOLEAN),
                     'update' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true), FILTER_VALIDATE_BOOLEAN),
@@ -115,7 +116,10 @@ return [
                         'recover' => [
                             'abort' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_ABORT', true), FILTER_VALIDATE_BOOLEAN),
                             'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_RECOVER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
-                        ]
+                        ],
+                        'register' => [
+                            'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_REGISTER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
                     ]
                 ],
                 'group' => [
@@ -130,7 +134,13 @@ return [
                         // Notify managers when group membership changes.
                         'update' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     ]
-                ]
+                ],
+                'folder' => [
+                    'create' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_CREATE', false), FILTER_VALIDATE_BOOLEAN),
+                    'update' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
+                    'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_DELETE', true), FILTER_VALIDATE_BOOLEAN),
+                    'share' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE', true), FILTER_VALIDATE_BOOLEAN),
+                ],
             ]
         ],
 
@@ -212,6 +222,9 @@ return [
             'resourceTypes' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'totpResourceTypes' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_TOTP_RESOURCE_TYPES_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+            ],
             'mobile' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
@@ -230,13 +243,12 @@ return [
                 ],
             ],
             'smtpSettings' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true), FILTER_VALIDATE_BOOLEAN)
+                // A typo is here covered for backward compatibility
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN)
             ],
-        ],
-
-        // Is public registration allowed.
-        'registration' => [
-            'public' => filter_var(env('PASSBOLT_REGISTRATION_PUBLIC', false), FILTER_VALIDATE_BOOLEAN)
+            'selfRegistration' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
         ],
 
         // Activate specific entry points for selenium testing.
@@ -266,12 +278,38 @@ return [
             'userAgent' => filter_var(env('PASSBOLT_SECURITY_USER_AGENT', true), FILTER_VALIDATE_BOOLEAN),
             // enables the storage and display if the user IP address
             'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
+
+            // Disable SMTP setting endpoint to prevent/lock down SMTP configuration via the administration workspace
+            'smtpSettings' => [
+                'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
+            ],
+            // Enables trusting of HTTP_X headers set by most load balancers.
+            // Only set to true if your instance runs behind load balancers/proxies that you control.
+            'proxies' => [
+                'active' => filter_var(env('PASSBOLT_SECURITY_PROXIES_ACTIVE', false), FILTER_VALIDATE_BOOLEAN),
+                // If your instance is behind multiple proxies, redefine the list of IP addresses of proxies in your control in passbolt.php
+                'trustedProxies' => [],
+            ],
+            'mfa' => [
+                'duoVerifySubscriber' => filter_var(env('PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER', false), FILTER_VALIDATE_BOOLEAN),
+                'maxAttempts' => filter_var(env('PASSBOLT_SECURITY_MFA_MAX_ATTEMPTS', '4'), FILTER_VALIDATE_INT),
+            ],
+            // Disable GET /logout endpoint, closing potential CSRF issue and prevent logout usage via browser URL
+            'getLogoutEndpointEnabled' => filter_var(env('PASSBOLT_SECURITY_GET_LOGOUT_ENDPOINT_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            // Prevent endpoints such as user recover to leak information whether an email is in use or not
+            // This is disabled by default as it prevents legitimate users to know whether their accounts was disabled
+            // as well as prevent open registration to work
+            'preventEmailEnumeration' => filter_var(env('PASSBOLT_SECURITY_PREVENT_EMAIL_ENUMERATION', false), FILTER_VALIDATE_BOOLEAN),
         ],
 
         // Should the app be SSL / HTTPS only.
         // false will render your installation insecure.
         'ssl' => [
-            'force' => filter_var(env('PASSBOLT_SSL_FORCE', true), FILTER_VALIDATE_BOOLEAN)
+            'force' => filter_var(env('PASSBOLT_SSL_FORCE', false), FILTER_VALIDATE_BOOLEAN)
+        ],
+        //ObfuscateFields placeholder
+        'obfuscateFields' => [
+            'placeholder' => env('PASSBOLT_OBFUSCATE_FIELDS_PLACEHOLDER', \App\Controller\Component\ObfuscateFieldsComponent::FIELD_PLACEHOLDER),
         ]
     ],
     // Override the Cake ExceptionRenderer.

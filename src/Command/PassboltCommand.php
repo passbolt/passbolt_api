@@ -28,9 +28,9 @@ use Cake\Core\Configure;
 class PassboltCommand extends Command
 {
     /**
-     * @var bool
+     * @var bool|null
      */
-    public static $isUserRoot = false;
+    public static $isUserRoot = null;
 
     /**
      * The Passbolt welcome banner should be shown only once.
@@ -41,6 +41,18 @@ class PassboltCommand extends Command
     public static $welcomeBannerWasAlreadyShown = false;
 
     /**
+     * List of popular webserver usernames.
+     *
+     * @var string[]
+     */
+    public const KNOWN_WEBSERVER_USERS = [
+        'www-data',
+        'nginx',
+        'apache',
+        'http',
+    ];
+
+    /**
      * @inheritDoc
      */
     public function initialize(): void
@@ -49,7 +61,7 @@ class PassboltCommand extends Command
 
         CommandBootstrap::init();
 
-        if (!isset(self::$isUserRoot)) {
+        if (self::$isUserRoot === null) {
             self::$isUserRoot = (PROCESS_USER === 'root');
         }
     }
@@ -220,6 +232,35 @@ class PassboltCommand extends Command
     }
 
     /**
+     * Checks if user running the command is valid or not. If not, aborts or shows warning depending on severity.
+     *
+     * @param \Cake\Console\ConsoleIo $io IO object.
+     * @return void
+     */
+    protected function assertCurrentProcessUser(ConsoleIo $io)
+    {
+        if (!$this->assertNotRoot($io)) {
+            $this->error(__('aborting'), $io);
+            $this->abort();
+        }
+
+        if (!$this->isWebserverUser()) {
+            $io->out();
+            $io->warning(__('Passbolt commands should only be executed as the web server user.'));
+            $io->out();
+            $io->info(__('The command should be executed with the same user as your web server. By instance:'));
+            $io->info('su -s /bin/bash -c "' . ROOT . '/bin/cake COMMAND" HTTP_USER');
+            $io->info(
+                __(
+                    'where HTTP_USER match your web server user: {0}',
+                    implode(', ', self::KNOWN_WEBSERVER_USERS)
+                )
+            );
+            $io->out();
+        }
+    }
+
+    /**
      * Some of the passbolt commands shouldn't be executed as root.
      * By instance it's the case of the healthcheck command that needs to be executed with the same user as your web server.
      *
@@ -234,13 +275,28 @@ class PassboltCommand extends Command
             $io->out();
             $io->out('The command should be executed with the same user as your web server. By instance:');
             $io->out('su -s /bin/bash -c "' . ROOT . '/bin/cake COMMAND" HTTP_USER');
-            $io->out('where HTTP_USER match your web server user: www-data, nginx, http');
+            $io->out(
+                __(
+                    'where HTTP_USER match your web server user: {0}',
+                    implode(', ', self::KNOWN_WEBSERVER_USERS)
+                )
+            );
             $io->out();
 
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Checks if current process user is known webserver user or not.
+     *
+     * @return bool Returns `true` if known webserver user, `false` otherwise.
+     */
+    protected function isWebserverUser(): bool
+    {
+        return in_array(PROCESS_USER, self::KNOWN_WEBSERVER_USERS);
     }
 
     /**

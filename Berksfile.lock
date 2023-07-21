@@ -1,6 +1,0 @@
-DEPENDENCIES
-  passbolt_package
-    path: tests/cookbooks/passbolt_package
-
-GRAPH
-  passbolt_package (0.1.0)

@@ -2,6 +2,283 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.1] - 2023-07-13
+### Fixed
+- PB-25304 As an administrator the application healthcheck should compare passbolt version with the latest stable release
+- PB-25325 As an administrator running the database healthcheck I should not see a false fail on the default database content
+
+## [4.1.1-rc.2] - 2023-07-11
+### Fixed
+- PB-25304 As an administrator the application healthcheck should compare passbolt version with the latest stable release
+
+## [4.1.1-rc.1] - 2023-07-11
+### Fixed
+- PB-25325 As an administrator running the database healthcheck I should not see a false fail on the default database content
+
+## [4.1.0] - 2023-06-29
+### Added
+- PB-24259 As an administrator I can define with role based access control users' rights
+
+### Improved
+- PB-24744 As a LU the date time format in the response always display the time zone
+- PB-24929 As a LU with multiple MFA providers setup, the latest provider used is proposed by default
+- PB-24488 Non-JSON request should return a 404 if JSON is required
+- PB-24617 As LU I want improved performance while sharing a folder with a user
+
+### Security
+- PB-25030 As an admin I can set a feature flag to prevent user email enumeration
+- PB-24273 As an admin I can disable the GET auth/logout.json endpoint (enabled by default)
+- PB-19510 As a user I should be redirected to HTTPS if SSL FORCE configuration is true
+- PB-24566 As an admin the email settings password should be masked in the test email command log output
+- PB-23591 As a user authenticating I can perform a limited amount of TOTP MFA attempts
+
+### Fixed
+- PB-24658 As an admin I should see no false warning in the email notification configuration section
+- PB-25275 As an admin I should see the option page during installation after creating the server GPG keys
+- PB-25276 As an admin on installation SSL force option should be set to true if the installation is launched over https
+- PB-25274 Set force SSL config to false by default
+
+### Maintenance
+- PB-24925 Updates the fixture factories to its latest version
+- PB-24913 Removes "type" from required JSON schema definition for TOTP resource types
+- PB-24305 Recovery and register legacy routes are not used in emails and commands outputs
+- PB-21604 Extract composer audit task from checkstyle job and make it non-blocking
+- PB-21641 Rename check-style job to static-analysis and make it blocking
+
+## [4.1.0-rc.3] - 2023-06-29
+### Fixed
+- PB-25275 As an admin I should see the option page during installation after creating the server GPG keys
+
+## [4.1.0-rc.2] - 2023-06-28
+### Fixed
+- PB-24273 As an admin I can disable the GET auth/logout.json endpoint (enabled by default)
+- PB-25274 Set force SSL config to false by default
+- PB-25276 Webinstaller SSL force option should be set to true if the installation is launched over https
+
+## [4.1.0-rc.1] - 2023-06-26
+### Added
+- PB-24259 As an administrator I can define with role based access control users' rights
+
+### Improved
+- PB-24744 As a LU the date time format in the response always display the time zone
+- PB-24929 As a LU with multiple MFA providers setup, the latest provider used is proposed by default
+- PB-24488 Non-JSON request should return a 404 if JSON is required
+- PB-24617 As LU I want improved performance while sharing a folder with a user
+
+### Security
+- PB-25030 As an admin I can set a feature flag to prevent user email enumeration
+- PB-24273 As an admin I can enable the GET auth/logout.json endpoint (disabled by default)
+- PB-19510 As a user I should be redirected to HTTPS if SSL FORCE configuration is true
+- PB-24566 As an admin the email settings password should be masked in the test email command log output
+- PB-23591 As a user authenticating I can perform a limited amount of TOTP MFA attempts
+
+### Fixed
+- PB-24658 As an admin I should see no false warning in the email notification configuration section
+
+### Maintenance
+- PB-24925 Updates the fixture factories to its latest version
+- PB-24913 Removes "type" from required JSON schema definition for TOTP resource types
+- PB-24305 Recovery and register legacy routes are not used in emails and commands outputs
+- PB-21604 Extract composer audit task from checkstyle job and make it non-blocking
+- PB-21641 Rename check-style job to static-analysis and make it blocking
+
+## [4.0.2] - 2023-05-25
+### Fixed
+- PB-24644 As an admin I should be able to run migrations on a 32 bit environment
+
+## [4.0.2-rc.1] - 2023-05-24
+### Fixed
+- PB-24644 As an admin I should be able to run migrations on a 32 bit environment
+
+## [4.0.1] - 2023-05-23
+### Added
+- PB-24644 As an admin I should be able to run migrations on a 32 bit environment
+
+## [4.0.1-rc.1] - 2023-05-19
+### Added
+- PB-24644 As an admin I should be able to run migrations on a 32 bit environment
+
+## [4.0.0] - 2023-05-16
+### Added
+- PB-24245 As LU using the API I can manage standalone TOTP and TOTP associated with passwords resources types
+- PB-24086 As an admin I can create a user recovery link from the command line
+
+### Maintenance
+- PB-23321 Upgrade CakePHP to 4.4
+- PB-24296 As a developer I can retrieve in integration tests the body of json requests in array
+- PB-24083 Removes the usage of the Paginator deprecated in CakePHP 4.4
+- PB-23926 Bump PHPUnit to ~9.5.2 to avoid warning messages of 9.6
+- PB-22758 Introduce JWT key injection to enable parallel tests
+- PB-22622 Add CS rule to disallow space after NOT operator
+- PB-23786 Remove PHP 7.3 from the testing pipes
+- PB-24561 Upgrades cakephp/migrations library
+- PB-24073 As a developer I should ensure that the CHANGELOG.md file is in the right format
+- PB-24071 As a developer I can enable feature plugins with the plugins class name
+- PB-24272 Adds contribution link in CONTRIBUTING.md
+
+### Fixed
+- PB-24078 As a user I should receive the correct email avatar text after folder manipulation
+- PB-24039 Action log event listener should not throw error on missing connection
+- PB-23558 Remove PHP 8.2 deprecation warnings
+- PB-23557 Remove PHP 8.1 deprecation warnings
+
+### Security
+- PB-24056 As an admin I can view log stack traces when debug mode is enabled
+- PB-24297 Update guzzlehttp/psr7 to fix composer audit security vulnerability
+
+## [4.0.0-rc.5] - 2023-05-11
+### Maintenance
+- PB-24561 Upgrades cakephp/migrations library
+
+## [4.0.0-rc.4] - 2023-05-05
+### Fixed
+- PB-24561 - Styleguide version bump to v4.0.3
+
+## [4.0.0-rc.3] - 2023-04-28
+### Fixed
+- PB-24051 Fixes field obfuscation not to obfuscate the first element in pure array
+- PB-24470 Fixes recover_user command not showing while running passbolt -h
+
+## [4.0.0-rc.2] - 2023-04-26
+### Added
+- PB-24245 Adds two TOTP resource types feature flag
+- PB-24086 As an admin, I can create a user recovery token from the command line
+- PB-24056 As an admin I can view log stack traces when debug mode is enabled
+
+### Improved
+- PB-24073 As a developer I should ensure that the CHANGELOG.md file is in the right format
+- PB-24071 As a developer I can enable feature plugins with the plugins class name
+- PB-24272 Adds contribution link in CONTRIBUTING.md
+
+### Maintenance
+- PB-23321 Upgrade CakePHP to 4.4
+- PB-24297 Update guzzlehttp/psr7 to fix composer audit security vulnerability
+- PB-24296 As a developer I can retrieve in integration tests the body of json requests in array
+- PB-24083 Removes the usage of the Paginator deprecated in CakePHP 4.4
+- PB-23926 Bump PHPUnit to ~9.5.2 to avoid warning messages of 9.6
+- PB-22758 Introduce JWT key injection to enable parallel tests
+- PB-22622 Add CS rule to disallow space after NOT operator
+- PB-23786 Remove PHP 7.3 from the testing pipes
+
+### Fixed
+- PB-24078 As a user I should receive the correct email avatar text after folder manipulation
+- PB-24039 Action log event listener should not throw error on missing connection
+- PB-23558 Remove PHP 8.2 deprecation warnings
+- PB-23557 Remove PHP 8.1 deprecation warnings
+
+## [3.12.2] - 2023-04-25
+### Security
+- PB-24315 As signed-in user creating resources with encrypted description the API should not store unencrypted descriptions even if provided by the client
+
+## [3.12.0] - 2023-03-15
+### Added
+- PB-20535 As a community user I want to use folders
+- PB-22749 As an administrator I can customise passbolt to output the action logs in syslog
+- PB-22749 As an administrator I can customise passbolt to output the action logs in a file
+- PB-22749 As an administrator I can implement my own action logs handler
+
+### Fixed
+- PB-23717 As a user using the json API I should get a bad request error instead of an internal error if using api-version=v1
+- PB-21826 Fix emails entries should not be locked when threshold limit is exceeded
+- PB-23519 As an administrator running the DUO v4 migration I should not see a warning message if DUO was not configured
+- PB-23721 As an administrator I want to be sure the server key is in the keyring before decrypting users directory settings
+
+### Security
+- PB-23311 As an administrator I should be the only one to know which users have enabled MFA
+
+### Improved
+- PB-23333 As an administrator I should see a notice instead of a warning if I enabled the self registration plugin
+- PB-23722 As a developer running the unit tests I want to be sure the version from the config matches the one from the changelog
+- PB-22892 As a user recovering my account I want to see the success and error pages feedback
+
+### Maintenance
+- PB-23287 Duo multi-factor authentication redirection refactoring
+- PB-23702 Update phpseclib/phpseclib dependency
+
+## [3.11.1] - 2023-03-03
+### Fixed
+- PB-23283 As an administrator I can disable username validation in Duo Callback endpoints
+
+## [3.11.0] - 2023-03-01
+### Added
+- PB-22741 As an administrator I should see an error in the healthcheck if I use php 7.3 or less
+- PB-22747 As an administrator I can define a regular expression to customise email validation
+- PB-22866 As a user I want to use passbolt in Italian
+- PB-22866 As a user I want to use passbolt in Portuguese (Brazil)
+- PB-22866 As a user I want to use passbolt in Korean
+- PB-22866 As a user I want to use passbolt in Romanian
+
+### Fixed
+- PB-21489 As a user I should not see double headers in emails sent by the email digest
+
+### Improved
+- PB-22725 As an administrator I want to manage Duo v4 settings
+- PB-21906 As a user I don’t want to receive email by default when I create a resource or a folder as well as I don’t want to see any details for this content by default
+
+### Maintenance
+- PB-22416 As a developer I can safely deactivate plugins between solutions
+- PB-22756 Fixes a range of failing pagination tests
+- PB-22495 Refactors the SmtpTransport to enhance the code coverage of emails
+
+## [3.10.0] - 2023-02-09
+### Added
+- PB-19784 As a user I can self register if my email domain matches the policy defined by the administrators
+
+### Improved
+- PB-21485 As a server administrator I want to configure the list of active proxies the instance is behind in order to get client IP when necessary
+- PB-21682 As an administrator I want to configure the client option of the SMTP settings
+- PB-22019 As a server administrator I want to configure TOTP MFA secret length
+
+### Maintenance
+- PB-22327 env variable PASSBOLT_PLUGINS_SMTP_SETTINGS renamed in PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED (backward compatible)
+- PB-22406 curl and openssl extensions requirements added
+- PB-22413 bump CakePHP to ^4.3.11
+
+## [3.9.0] - 2023-01-17
+### Added
+- PB-20539 As a user I can protect the authentication to passbolt with a second factor method
+
+### Fixed
+- PB-19601 As an admin running the healthcheck I should not see an unmanaged error if DB connection fails
+- PB-21497 GITHUB-437 As an administrator I should see default user avatar in the email I receive when a user complete the setup
+- PB-21501 GITHUB-411 As an administrator I should see the correct path relative to config tips in the health check report
+- PB-21551 As an administrator I should be able to update with the web installer without getting an error due the subscription
+- PB-21756 As an anonymous user switching MFA provider I should be redirected to the original target
+- PB-21756 As an anonymous user verifying my second factor I should not get a 500 error due to an improperly sanitized redirect parameter
+
+### Improved
+- PB-19653 Rename Google authenticator into Totp authenticator
+- PB-19807 As an administrator I want to know if email hostname availability is enabled in the health check report
+- PB-20985 As an administrator I shouldn't be able to send a test email in command line without defining the recipient
+- PB-21502 As an administrator I want to know if I run a passbolt command without using the webserver user
+- PB-21635 As an administrator I want to the cron events to be logged
+- PB-21751 As anonymous user I don't want to see the TOTP field auto-completed when I verify my second factor authentication
+- PB-19715 As an administrator I want to lock the SMTP settings entry points
+
+### Maintenance
+- PB-19212 Improve PHPUNIT performances
+- PB-19541 Add composer audit job on development pipelines
+- PB-19594 Avoid duplicated pipelines
+- PB-19583 Remove deprecated usage of dummy auth token generation in tests
+- PB-19594 Improve phpunit pipelines environment matrix
+- PB-19706 Refactor favorites add controller into service
+- PB-19707 Refactor favorites delete controller into service
+- PB-20512 Ease debug by attaching original exception to InternalErrorException when missing
+- PB-20541 Replace usage of Cake core Exception with CakeException when not done yet
+- PB-21361 Remove deprecated usage of authenticateAs in tests
+- PB-21658 Add support to PHP 8.2
+
+## [3.8.3] - 2022-11-30
+### Fixed
+- PB-21631 Ensure the OpenPGP server key is in the keyring prior to sending any emails
+
+## [3.8.1] - 2022-11-17
+### Fixed
+- PB-21478 As an administrator, I should be able to edit SMTP settings having a sender email not being a valid email
+- PB-21438 As an administrator using docker, I should be able to access the SMTP settings of my organization
+- PB-21486 As an administrator, I can define the SMTP authentication method via the SMTP admin workspace
+- PB-21481 As an administrator, I want emails to be sent with the sender settings defined in database, if defined in the database
+
 ## [3.8.0] - 2022-11-09
 ### Added
 - PB-19192: As an administrator, I want to manage SMTP settings in the administration workspace
@@ -254,7 +531,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Drop support for PHP < v7.3, application require PHP v7.3 by default
 - Drop support for Composer < v2, application requires Composer v2 by default
 
-## Added
+### Added
 - Add dark theme to the community edition
 - Add new system check utilities in ./bin, for example ./bin/status-report
 - Add web installer automatically populates mysql credentials (VM / Debian Package)
@@ -851,7 +1128,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PASSBOLT-1784: GITHUB-29 PHP7 compatibility issue in migration console tasks
 - PASSBOLT-1790: Fixed update context sent by anonymous usage statistics
 
-## [1.3.0] - 2016-25-11
+## [1.3.0] - 2016-11-25
 ### Fixed
 - PASSBOLT-1721: SSL detection not working in healthcheck
 - PASSBOLT-1708: Accept JSON data content type for HTTP PUT during setup
@@ -1014,7 +1291,12 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.10.0...HEAD
+[3.10.0]: https://github.com/passbolt/passbolt_api/compare/v3.9.0...v3.10.0
+[3.9.0]: https://github.com/passbolt/passbolt_api/compare/v3.8.3...v3.9.0
+[3.8.3]: https://github.com/passbolt/passbolt_api/compare/v3.8.1...v3.8.3
+[3.8.1]: https://github.com/passbolt/passbolt_api/compare/v3.8.0...v3.8.1
+[3.8.0]: https://github.com/passbolt/passbolt_api/compare/v3.7.3...v3.8.0
 [3.7.3]: https://github.com/passbolt/passbolt_api/compare/v3.7.2...v3.7.3
 [3.7.2]: https://github.com/passbolt/passbolt_api/compare/v3.7.1...v3.7.2
 [3.7.1]: https://github.com/passbolt/passbolt_api/compare/v3.7.0...v3.7.1

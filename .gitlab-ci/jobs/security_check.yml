@@ -1,0 +1,34 @@
+.security-check:
+  stage: unit-test
+  variables:
+    PHP_VERSION: "7.4"
+  image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
+  allow_failure: true
+  script:
+    - composer config --global process-timeout 2000
+    - composer audit --locked
+
+security-check:
+  extends: .security-check
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "common"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "develop"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "release"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "master"'
+      when: on_success
+
+security-check-strict:
+  extends: .security-check
+  allow_failure: false
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "common"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "release"'
+      when: on_success
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+      when: on_success

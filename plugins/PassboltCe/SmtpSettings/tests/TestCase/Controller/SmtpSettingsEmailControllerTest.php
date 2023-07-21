@@ -18,15 +18,18 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\TestSuite\EmailTrait;
-use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestEmailService;
+use App\Test\Lib\Utility\EmailTestTrait;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
+/**
+ * @covers \Passbolt\SmtpSettings\Controller\SmtpSettingsEmailController
+ */
 class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
 {
-    use EmailTrait;
+    use EmailTestTrait;
     use SmtpSettingsIntegrationTestTrait;
     use SmtpSettingsTestTrait;
 
@@ -36,23 +39,26 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
         SmtpSettingFactory::make()->persist();
 
         $recipient = 'test@test.test';
-        $data = $this->getSmtpSettingsData() + [SmtpSettingsSendTestEmailService::EMAIL_TEST_TO => $recipient];
+        $data = $this->getSmtpSettingsData() + [SmtpSettingsSendTestMailerService::EMAIL_TEST_TO => $recipient];
         $this->logInAsAdmin();
 
         $trace = ['foo' => 'bar'];
         $this->mockSmtpSettingsSendTestEmailServiceSuccessful($trace);
 
         $this->postJson('/smtp/email.json', $data);
+
         $this->assertSuccess();
-        $this->assertMailSentFrom('johndoe@passbolt.test');
-        $this->assertMailSentTo($recipient);
         $this->assertMailCount(1);
-        $this->assertMailContains('Congratulations!');
-        $this->assertMailContains(
+        $this->assertMailSentFromAt(0, ['johndoe@passbolt.test' => 'John Doe']);
+        $this->assertMailSentToAt(0, [$recipient => $recipient]);
+        $this->assertMailCount(1);
+        $this->assertMailContainsAt(0, 'Congratulations!');
+        $this->assertMailContainsAt(
+            0,
             'If you receive this email, it means that your passbolt smtp configuration is working fine.'
         );
         $debug = $trace;
-        $response = json_decode(json_encode($this->_responseJsonBody), true);
+        $response = $this->getResponseBodyAsArray();
         $this->assertSame(compact('debug'), $response);
     }
 
@@ -93,5 +99,15 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
     {
         $this->getJson('/smtp/settings.json');
         $this->assertAuthenticationError();
+    }
+
+    public function testSmtpSettingsEmailController_Should_Be_Forbidden_If_Security_Enabled()
+    {
+        $this->disableSmtpSettingsEndpoints();
+
+        $this->postJson('/smtp/email.json');
+        $this->assertForbiddenError('SMTP settings endpoints disabled.');
+
+        $this->enableSmtpSettingsEndpoints();
     }
 }

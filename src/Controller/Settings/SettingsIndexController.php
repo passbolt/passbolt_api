@@ -19,16 +19,22 @@ namespace App\Controller\Settings;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
+ * SettingsIndexController Class
  */
 class SettingsIndexController extends AppController
 {
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
     /**
      * Settings visibility key.
      *
@@ -51,7 +57,8 @@ class SettingsIndexController extends AppController
      */
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        $this->loadModel('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
         $this->Authentication->allowUnauthenticated(['index']);
 
         return parent::beforeFilter($event);
@@ -64,6 +71,8 @@ class SettingsIndexController extends AppController
      */
     public function index()
     {
+        $this->assertJson();
+
         $role = $this->User->role();
         // Retrieve and sanity the query options.
         $whitelist = [
@@ -99,11 +108,15 @@ class SettingsIndexController extends AppController
             'passbolt' => [
                 'legal' => Configure::read('passbolt.legal'),
                 'edition' => Configure::read('passbolt.edition'),
-                'registration' => [
-                    'public' => Configure::read('passbolt.registration.public'),
-                ],
             ],
         ];
+        if (is_string(Configure::read(EmailValidationRule::REGEX_CHECK_KEY))) {
+            $baseSettings = Hash::insert(
+                $baseSettings,
+                'passbolt.email.validate.regex',
+                Configure::read(EmailValidationRule::REGEX_CHECK_KEY)
+            );
+        }
         if ($role !== Role::GUEST) {
             // Build settings array.
             $settings = [

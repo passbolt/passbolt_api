@@ -22,7 +22,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Utility\Hash;
 
 /**
- * @property \App\Model\Table\GroupsTable $Groups
+ * GroupsAddController Class
  */
 class GroupsAddController extends AppController
 {
@@ -37,14 +37,16 @@ class GroupsAddController extends AppController
      */
     public function addPost()
     {
+        $this->assertJson();
+
         if (!$this->User->isAdmin()) {
             throw new ForbiddenException();
         }
 
         $data = $this->_formatRequestData();
-
-        $this->loadModel('Groups');
-        $group = $this->Groups->create($data, $this->User->getAccessControl());
+        /** @var \App\Model\Table\GroupsTable $GroupsTable */
+        $GroupsTable = $this->fetchTable('Groups');
+        $group = $GroupsTable->create($data, $this->User->getAccessControl());
 
         $msg = __('The group has been added successfully.');
         $this->success($msg, $group);

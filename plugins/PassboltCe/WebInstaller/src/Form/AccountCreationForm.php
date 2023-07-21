@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Form;
 
-use Cake\Core\Configure;
+use App\Model\Validation\EmailValidationRule;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
@@ -73,11 +73,9 @@ class AccountCreationForm extends Form
                 255,
                 __('The username length should be maximum 255 characters.')
             )
-            ->email(
-                'username',
-                Configure::read('passbolt.email.validate.mx'),
-                __('The username should be a valid email address.')
-            );
+            ->add('username', 'email', new EmailValidationRule([
+                'message' => __('The username should be a valid email address.'),
+            ]));
 
         return $validator;
     }

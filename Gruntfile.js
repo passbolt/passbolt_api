@@ -105,6 +105,7 @@ module.exports = function(grunt) {
             'controls/check_white.svg',
             'controls/chevron-down_black.svg',
             'controls/chevron-down_white.svg',
+            'controls/chevron-down_blue.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
             'controls/dot_black.svg',
@@ -113,8 +114,9 @@ module.exports = function(grunt) {
             'controls/loading_dark.svg',
             'controls/overlay-opacity-50.png',
             'controls/success.svg',
-            'controls/error.svg',
+            'controls/fail.svg',
             'controls/warning.svg',
+            'controls/attention.svg',
             // Login page 3rd party logo
             'third_party/firefox_logo.png',
             'third_party/FirefoxAMO_black.svg',
@@ -147,6 +149,11 @@ module.exports = function(grunt) {
             'illustrations/email.png',
             // Themes preview
             'themes/*.png',
+            // Totp images
+            'diagrams/totp.svg',
+            'third_party/duo.svg',
+            'third_party/google-authenticator.svg',
+            'third_party/yubikey.svg',
           ],
           dest: paths.webroot + 'img',
           expand: true
@@ -183,7 +190,7 @@ module.exports = function(grunt) {
         }, {
           // Javascript applications
           cwd: paths.node_modules_styleguide + 'build/js/dist',
-          src: ['api-account-recovery.js', 'api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js'],
+          src: ['api-account-recovery.js', 'api-app.js', 'api-recover.js', 'api-setup.js', 'api-triage.js', 'api-vendors.js', 'api-feedback.js'],
           dest: paths.js + 'app',
           expand: true
         },]
@@ -205,5 +212,5 @@ module.exports = function(grunt) {
         tasks: ['styleguide-update']
       }
     }
-   });
+  });
 };

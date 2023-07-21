@@ -28,9 +28,7 @@ use Cake\Routing\Router;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 /**
- * @property \App\Model\Table\UsersTable $Users
- * @property \App\Model\Table\RolesTable $Roles
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
+ * RegisterUserCommand class
  */
 class RegisterUserCommand extends PassboltCommand
 {
@@ -38,6 +36,21 @@ class RegisterUserCommand extends PassboltCommand
      * Number of interaction with the console.
      */
     public const DEFAULT_INTERACTIVE_LOOP = 3;
+
+    /**
+     * @var \App\Model\Table\UsersTable
+     */
+    protected $Users;
+
+    /**
+     * @var \App\Model\Table\RolesTable
+     */
+    protected $Roles;
+
+    /**
+     * @var \App\Model\Table\AuthenticationTokensTable
+     */
+    protected $AuthenticationTokens;
 
     /**
      * Initializes the Shell
@@ -50,9 +63,12 @@ class RegisterUserCommand extends PassboltCommand
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadModel('Users');
-        $this->loadModel('Roles');
-        $this->loadModel('AuthenticationTokens');
+        /** @phpstan-ignore-next-line */
+        $this->Users = $this->fetchTable('Users');
+        /** @phpstan-ignore-next-line */
+        $this->Roles = $this->fetchTable('Roles');
+        /** @phpstan-ignore-next-line */
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
     /**
@@ -99,9 +115,7 @@ class RegisterUserCommand extends PassboltCommand
         parent::execute($args, $io);
 
         // Root user is not allowed to execute this command.
-        if (!$this->assertNotRoot($io)) {
-            return $this->errorCode();
-        }
+        $this->assertCurrentProcessUser($io);
 
         // Who is creating the user?
         // use the oldest admin or temporary non existing one
@@ -229,12 +243,12 @@ class RegisterUserCommand extends PassboltCommand
         if (EmailNotificationSettings::get('send.user.create')) {
             $message = __(
                 "To start registration follow the link provided in your mailbox or here: \n{0}",
-                Router::url('/setup/install/' . $user->id . '/' . $token->get('token'), true)
+                Router::url('/setup/start/' . $user->id . '/' . $token->get('token'), true)
             );
         } else {
             $message = __(
                 "To start registration follow the link provided here: \n{0}",
-                Router::url('/setup/install/' . $user->id . '/' . $token->get('token'), true)
+                Router::url('/setup/start/' . $user->id . '/' . $token->get('token'), true)
             );
         }
 

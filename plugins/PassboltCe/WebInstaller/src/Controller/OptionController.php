@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Routing\Router;
 use Passbolt\WebInstaller\Form\OptionsConfigurationForm;
 
@@ -57,6 +57,10 @@ class OptionController extends WebInstallerController
             }
         }
 
+        // Set SSL force dropdown option to true if webinstaller is launched over https
+        $forceSsl = $this->request->getUri()->getScheme() === 'https' ? '1' : '0';
+        $this->request = $this->request->withData('force_ssl', $forceSsl);
+
         $this->set('formExecuteResult', null);
         $this->render($this->stepInfo['template']);
     }
@@ -70,7 +74,7 @@ class OptionController extends WebInstallerController
     {
         try {
             $data = $this->getAndValidateData();
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->_error($e->getMessage());
 
             return;
@@ -94,7 +98,7 @@ class OptionController extends WebInstallerController
         $this->set('formExecuteResult', $optionsConfigurationForm);
 
         if (!$confIsValid) {
-            throw new Exception(__('The data entered are not correct'));
+            throw new CakeException(__('The data entered are not correct'));
         }
 
         return $data;

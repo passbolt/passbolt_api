@@ -1,0 +1,3228 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2023-02-27 10:56+0000\n"
+"PO-Revision-Date: 2023-02-27 12:11\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Spanish\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: es\n"
+"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 212\n"
+"Language: es_ES\n"
+
+msgid "You need to login to access this location."
+msgstr "Necesita iniciar sesión para acceder a esta ubicación."
+
+msgid "The server verify token is missing or invalid."
+msgstr "No se ha encontrado el token de verificación del servidor o no es válido."
+
+msgid "Decryption failed."
+msgstr "Fallo al descifrar."
+
+msgid "Failed to create token."
+msgstr "No se pudo crear el token."
+
+msgid "The user token result should be a valid UUID."
+msgstr "El token de usuario debe ser un UUID válido."
+
+msgid "The user token result could not be found "
+msgstr "No se puede encontrar el token de usuario "
+
+msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
+msgstr "La clave OpenPGP de servidor definida en la configuración no puede ser usada para desencriptar."
+
+msgid "Could not import the user OpenPGP key."
+msgstr "No se ha podido importar la clave OpenPGP de usuario."
+
+msgid "Invalid verify token format, "
+msgstr "Formato de token de verificación no válido, "
+
+msgid "sections are missing or using wrong delimiters."
+msgstr "faltan secciones o utilizan delimitadores erróneos."
+
+msgid "the version numbers do not match."
+msgstr "los números de versión no coinciden."
+
+msgid "wrong version number."
+msgstr "número de versión incorrecto."
+
+msgid "it is not a UUID."
+msgstr "no es una UUID."
+
+msgid "wrong token data length."
+msgstr "longitud de token incorrecta."
+
+msgid "There is no user associated with this key."
+msgstr "No hay ningún usuario asociado a esta clave."
+
+msgid "Page not found."
+msgstr "Página no encontrada."
+
+msgid "This is not a valid Ajax/Json request."
+msgstr "Esta no es una petición Ajax/Json válida."
+
+msgid "You are successfully logged in."
+msgstr "Ha iniciado sesión con éxito."
+
+msgid "The OpenPGP public key information was not found in config."
+msgstr "La información de la clave OpenPGP pública no se encontró en la configuración."
+
+msgid "The operation was successful."
+msgstr "La operación fue exitosa."
+
+msgid "The comment was successfully added."
+msgstr "El comentario se ha añadido correctamente."
+
+msgid "The comment was deleted."
+msgstr "El comentario ha sido eliminado."
+
+msgid "The comment id is not valid."
+msgstr "El id del comentario no es válido."
+
+msgid "The comment was successfully updated."
+msgstr "El comentario se ha actualizado correctamente."
+
+msgid "Invalid order. \"{0}\" is not in the list of allowed order."
+msgstr "Orden no válida. \"{0}\" no está en la lista de pedidos permitidos."
+
+msgid "Invalid order. \"{0}\" is not a valid order."
+msgstr "Orden no válida. \"{0}\" no es un pedido válido."
+
+msgid "Invalid order. \"{0}\" is not a valid field."
+msgstr "Orden no válida. \"{0}\" no es un campo válido."
+
+msgid "Invalid pagination."
+msgstr "Paginación no válida."
+
+msgid "Invalid query string. The filter parameter should be an array."
+msgstr "Cadena de consulta no válida. El parámetro de filtro debe ser un array."
+
+msgid "Invalid query string. The contain parameter should be an array."
+msgstr "Cadena de consulta no válida. El parámetro debe ser un array."
+
+msgid "Invalid filter."
+msgstr "Filtro no válido."
+
+msgid "Invalid order."
+msgstr "Orden no válida."
+
+msgid "Invalid contain."
+msgstr "Contenido no válido."
+
+msgid "No validation rule for filter {0}. Please create one."
+msgstr "No hay ninguna regla de validación para el filtro {0}. Por favor, cree una."
+
+msgid "Filter {0} is not valid."
+msgstr "El filtro {0} no es válido."
+
+msgid "\"{0}\" is not a valid value for filter {1}."
+msgstr "\"{0}\" no es un valor válido para el filtro {1}."
+
+msgid "\"{0}\" is not a valid search filter."
+msgstr "\"{0}\" no es un filtro de búsqueda válido."
+
+msgid "\"{0}\" is not a valid search filter. It is not a UTF8 string."
+msgstr "\"{0}\" no es un filtro de búsqueda válido. No es una cadena UTF8."
+
+msgid "It should be between 1 and 64 char in length."
+msgstr "Debe tener entre 1 y 64 caracteres de longitud."
+
+msgid "\"{0}\" is not a valid user filter."
+msgstr "\"{0}\" no es un filtro de usuario válido."
+
+msgid "\"{0}\" is not a valid user id for filter {1}."
+msgstr "\"{0}\" no es un id de usuario válido para el filtro {1}."
+
+msgid "\"{0}\" is not a valid group filter."
+msgstr "\"{0}\" no es un filtro de grupo válido."
+
+msgid "\"{0}\" is not a valid parent filter."
+msgstr "\"{0}\" no es un filtro padre válido."
+
+msgid "\"{0}\" is not a valid resource id for filter {1}."
+msgstr "\"{0}\" no es un id de recurso válido para el filtro {1}."
+
+msgid "\"{0}\" is not a valid group id for filter {1}."
+msgstr "\"{0}\" no es un id de grupo válido para el filtro {1}."
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
+msgstr "\"{0}\" no es un id padre válido para el filtro {1}."
+
+msgid "\"{0}\" is not a valid timestamp for filter {1}."
+msgstr "\"{0}\" no es un timestamp válido para el filtro {1}."
+
+msgid "\"{0}\" is not a valid datetime for filter {1}."
+msgstr "\"{0}\" no es una fecha válida para el filtro {1}."
+
+msgid "\"{0}\" is not a valid order."
+msgstr "\"{0}\" no es un filtro válido."
+
+msgid "\"{0}\" is not in the list of allowed order."
+msgstr "\"{0}\" no está en el listado de filtros permitidos."
+
+msgid "\"{0}\" is not a valid contain value."
+msgstr "\"{0}\" no es un valor válido."
+
+msgid "undefined user agent"
+msgstr "agente de usuario no definido"
+
+msgid "Access restricted to administrators."
+msgstr "Acceso restringido a administradores."
+
+msgid "Access restricted to unauthenticated users."
+msgstr "Acceso restringido a usuarios no autenticados."
+
+msgid "The user should not be logged in."
+msgstr "El usuario no debe estar conectado."
+
+msgid "This feature is not supported by your version of passbolt."
+msgstr "Esta característica no está soportada por su versión de passbolt."
+
+msgid "The resource identifier should be a valid UUID."
+msgstr "El identificador de recurso debe ser un UUID válido."
+
+msgid "The resource was marked as favorite."
+msgstr "Se ha marcado el recurso como favorito."
+
+msgid "The favorite id is not valid."
+msgstr "El id favorito no es válido."
+
+msgid "The favorite was deleted."
+msgstr "El favorito ha sido eliminado."
+
+msgid "The OpenPGP key identifier should be a valid UUID."
+msgstr "El identificador OpenPGP debe ser un UUID válido."
+
+msgid "The OpenPGP key does not exist."
+msgstr "La clave OpenPGP no existe."
+
+msgid "The group has been added successfully."
+msgstr "El grupo se ha añadido correctamente."
+
+msgid "The group can be deleted."
+msgstr "El grupo puede ser eliminado."
+
+msgid "The group was deleted successfully."
+msgstr "El grupo se ha eliminado correctamente."
+
+msgid "You are not authorized to access that location."
+msgstr "No estás autorizado a acceder a esa ubicación."
+
+msgid "The group identifier should be a valid UUID."
+msgstr "El identificador de grupo debe ser un UUID válido."
+
+msgid "The group does not exist or has been already deleted."
+msgstr "El grupo no existe o ya ha sido eliminado."
+
+msgid "The group cannot be deleted."
+msgstr "El grupo no puede ser eliminado."
+
+msgid "The permissions identifiers must be valid UUID."
+msgstr "Los identificadores de permisos deben ser UUID válidos."
+
+msgid "The group id is not valid."
+msgstr "El id del grupo no es válido."
+
+msgid "The group does not exist."
+msgstr "El grupo no existe."
+
+msgid "All checks ran successfully!"
+msgstr "¡Todas las comprobaciones se han ejecutado con éxito!"
+
+msgid "OK"
+msgstr "OK"
+
+msgid "The identifier should be a valid UUID."
+msgstr "El identificador debe ser un UUID válido."
+
+msgid "The resource does not exist."
+msgstr "El recurso no existe."
+
+msgid "The resource type does not exist."
+msgstr "El tipo de recurso no existe."
+
+msgid "The resource has been added successfully."
+msgstr "El recurso se ha añadido con éxito."
+
+msgid "The resource has been deleted successfully."
+msgstr "El recurso se ha eliminado con éxito."
+
+msgid "You do not have the permission to delete this resource."
+msgstr "No tiene permisos para eliminar este recurso."
+
+msgid "Could not delete the resource."
+msgstr "No se ha podido eliminar el recurso."
+
+msgid "The resource has been updated successfully."
+msgstr "El recurso se ha actualizado con éxito."
+
+msgid "The secret does not exist."
+msgstr "El secreto no existe."
+
+msgid "Only guests are allowed to abort recovery process."
+msgstr "Solo se permite a los invitados abortar el proceso de recuperación."
+
+msgid "An authentication token must be provided."
+msgstr "Debe proporcionarse un token de autenticación."
+
+msgid "The recovery process was aborted."
+msgstr "El proceso de recuperación ha sido cancelado."
+
+msgid "Only guests are allowed to complete setup."
+msgstr "Solo se permite a los invitados completar la configuración."
+
+msgid "The recovery was completed successfully."
+msgstr "La recuperación se completó con éxito."
+
+msgid "Only guests are allowed to proceed with account recovery."
+msgstr "Solo se permite a los invitados proceder a la recuperación de la cuenta."
+
+msgid "The setup was completed successfully."
+msgstr "La configuración se completó con éxito."
+
+msgid "Only guests are allowed to start setup."
+msgstr "Solo se permite a los invitados iniciar la configuración."
+
+msgid "You are not authorized to share this resource."
+msgstr "No está autorizado a compartir este recurso."
+
+msgid "Only administrators can add new users."
+msgstr "Sólo los administradores pueden agregar nuevos usuarios."
+
+msgid "The user was successfully added. This user now need to complete the setup."
+msgstr "El usuario se ha añadido correctamente. Este usuario necesita completar la configuración."
+
+msgid "The user can be deleted."
+msgstr "El usuario se puede eliminar."
+
+msgid "The user has been deleted successfully."
+msgstr "El usuario ha sido eliminado correctamente."
+
+msgid "The user identifier should be a valid UUID."
+msgstr "El identificador de usuario debe ser un UUID válido."
+
+msgid "You are not allowed to delete yourself."
+msgstr "No tienes permiso para borrarte a ti mismo."
+
+msgid "The user does not exist or has been already deleted."
+msgstr "El usuario no existe o ya ha sido eliminado."
+
+msgid "The user cannot be deleted."
+msgstr "El usuario no puede ser eliminado."
+
+msgid "The groups users identifiers must be valid UUID."
+msgstr "Los identificadores de grupos de usuarios deben ser UUID válidos."
+
+msgid "The user does not exist or has been deleted."
+msgstr "El usuario no existe o ha sido eliminado."
+
+msgid "Could not validate user data."
+msgstr "No se han podido validar los datos del usuario."
+
+msgid "Could not find the user data after save. Maybe it has been deleted in the meantime."
+msgstr "No se han podido encontrar los datos de usuario después de guardar. Tal vez se haya eliminado durante el proceso."
+
+msgid "The user has been updated successfully."
+msgstr "El usuario se ha actualizado correctamente."
+
+msgid "Some user data should be provided."
+msgstr "Algunos datos de usuario deben ser proporcionados."
+
+msgid "Updating the OpenPGP key is not allowed."
+msgstr "No se permite actualizar la clave OpenPGP."
+
+msgid "Updating the groups is not allowed."
+msgstr "No se permite actualizar los grupos."
+
+msgid "You are not authorized to edit the role."
+msgstr "No está autorizado a editar el rol."
+
+msgid "Only guests are allowed to recover an account. Please logout first."
+msgstr "Solo se permite a los invitados recuperar una cuenta. Por favor, cierre la sesión primero."
+
+msgid "Recovery process started, check your email."
+msgstr "El proceso de recuperación ha comenzado, revise su correo electrónico."
+
+msgid "Only guests are allowed to register."
+msgstr "Solo se permite a los invitados registrarse."
+
+msgid "Registration is not opened to public. Please contact your administrator."
+msgstr "El registro no está abierto al público. Póngase en contacto con su administrador."
+
+msgid "The user identifier should be a valid UUID or \"me\"."
+msgstr "El identificador de usuario debería ser un UUID válido o \"me\"."
+
+msgid "The user does not exist."
+msgstr "El usuario no existe."
+
+msgid "No admin were found in the database."
+msgstr "No se ha encontrado ningún administrador en la base de datos."
+
+msgid "Invalid expiry time {0}."
+msgstr "Tiempo de expiración no válido {0}."
+
+msgid "The identifier should not be empty."
+msgstr "El identificador no debe estar vacío."
+
+msgid "The token should be a valid UUID."
+msgstr "El token debe ser un UUID válido."
+
+msgid "A token is required."
+msgstr "Se requiere un token."
+
+msgid "The token should not be empty."
+msgstr "El token no debe estar vacío."
+
+msgid "The type should be one of the following: {0}."
+msgstr "El tipo debe ser uno de los siguientes: {0}."
+
+msgid "A type is required."
+msgstr "Se requiere un tipo."
+
+msgid "The type should not be empty."
+msgstr "El tipo no debe estar vacío."
+
+msgid "A user identifier is required."
+msgstr "Se requiere un identificador de usuario."
+
+msgid "The user identifier should not be empty."
+msgstr "El identificador de usuario no debe estar vacío."
+
+msgid "The active status should be a valid boolean."
+msgstr "El estado activo debe ser un booleano válido."
+
+msgid "An active status is required"
+msgstr "Se requiere un estado activo"
+
+msgid "It is not possible to create an authentication token for this user."
+msgstr "No es posible crear un token de autenticación para este usuario."
+
+msgid "A file is required."
+msgstr "Se requiere un archivo."
+
+msgid "The file should not be empty"
+msgstr "El archivo no debe estar vacío"
+
+msgid "The file mime type should be one of the following: {0}."
+msgstr "El tipo de archivo mime debe ser uno de los siguientes: {0}."
+
+msgid "The file extension should be one of the following: {0}."
+msgstr "La extensión del archivo debe ser una de las siguientes: {0}."
+
+msgid "The file is not valid, or exceeds max size of {0} bytes."
+msgstr "El archivo no es válido, o excede el tamaño máximo de {0} bytes."
+
+msgid "Could not save the data in {0} format."
+msgstr "No se han podido guardar los datos en formato {0}."
+
+msgid "The parent comment identifier should be a valid UUID."
+msgstr "El identificador de comentario padre debe ser un UUID válido."
+
+msgid "The commented object type should be one of the following: {0}."
+msgstr "El tipo de objeto comentado debe ser uno de los siguientes: {0}."
+
+msgid "The commented object type is required."
+msgstr "El tipo de objeto comentado es requerido."
+
+msgid "The commented object type should not be empty."
+msgstr "El tipo de objeto comentado no debe estar vacío."
+
+msgid "The commented object identifier should be a valid UUID."
+msgstr "El identificador de objeto comentado debe ser un UUID válido."
+
+msgid "The commented object identifier is required."
+msgstr "El identificador de objeto comentado es requerido."
+
+msgid "The commented object identifier should not be empty."
+msgstr "El identificador de objeto comentado no debe estar vacío."
+
+msgid "The content should be a valid UTF8 string."
+msgstr "El contenido debe ser una cadena UTF8 válida."
+
+msgid "A content is required"
+msgstr "Se requiere un contenido"
+
+msgid "The content should not be empty"
+msgstr "El contenido no puede estar vacío"
+
+msgid "The content length should be between {0} and {1} characters."
+msgstr "La longitud del contenido debe tener entre {0} y {1} caracteres."
+
+msgid "The identifier of the user who created the comment should be a valid UUID."
+msgstr "El identificador del usuario que creó el comentario debe ser un UUID válido."
+
+msgid "The identifier of the user who created the comment is required."
+msgstr "El identificador del usuario que creó el comentario es requerido."
+
+msgid "The identifier of the user who created the comment should not be empty."
+msgstr "El identificador del usuario que creó el comentario no debe estar vacío."
+
+msgid "The identifier of the user who modified the comment should be a valid UUID."
+msgstr "El identificador del usuario que modificó el comentario debe ser un UUID válido."
+
+msgid "The identifier of the user who modified the comment required."
+msgstr "El identificador del usuario que modificó el comentario es requerido."
+
+msgid "The identifier of the user who modified the comment should not be empty."
+msgstr "El identificador del usuario que modificó el comentario no debe estar vacío."
+
+msgid "Access denied."
+msgstr "Acceso denegado."
+
+msgid "The parent comment does not exist."
+msgstr "El comentario 'padre' no existe."
+
+msgid "The user cannot update this comment."
+msgstr "El usuario no puede actualizar este comentario."
+
+msgid "The user cannot delete this comment."
+msgstr "El usuario no puede eliminar este comentario."
+
+msgid "The commented object type does not exist."
+msgstr "El tipo de objeto comentado no existe."
+
+msgid "The favorite object type should be one of the following: {0}."
+msgstr "El tipo de objeto favorito debe ser uno de los siguientes: {0}."
+
+msgid "The favorite object type is required."
+msgstr "El tipo de objeto favorito es necesario."
+
+msgid "The favorite object type should not be empty"
+msgstr "El tipo de objeto favorito no debe estar vacío"
+
+msgid "The favorite object identifier should be a valid UUID."
+msgstr "El identificador de objeto favorito debe ser un UUID válido."
+
+msgid "The favorite object identifier is required."
+msgstr "Se requiere el identificador de objeto favorito."
+
+msgid "The favorite object identifier should not be empty."
+msgstr "El identificador de objeto favorito no debe estar vacío."
+
+msgid "The resource is already marked as favorite."
+msgstr "El recurso ya está marcado como favorito."
+
+msgid "The user cannot delete this favorite."
+msgstr "El usuario no puede eliminar este favorito."
+
+msgid "The armored key should be a valid ASCII string."
+msgstr "La clave blindada debe ser una cadena de texto ASCII válida."
+
+msgid "An armored key is required."
+msgstr "Se requiere una clave blindada."
+
+msgid "The armored key should not be empty."
+msgstr "La clave blindada no debe estar vacía."
+
+msgid "The fingerprint should be a valid ASCII string."
+msgstr "La huella digital debe ser una cadena ASCII válida."
+
+msgid "A fingerprint is required"
+msgstr "Se requiere una huella digital"
+
+msgid "The fingerprint should not be empty"
+msgstr "La huella digital no debe estar vacía"
+
+msgid "A length is required."
+msgstr "Se requiere una longitud."
+
+msgid "The identifier should be a valid BMP-UTF8 string."
+msgstr "El identificador debe ser un texto BMP-UTF8 válido."
+
+msgid "The key identifier should be a valid ASCII string."
+msgstr "El identificador de la clave debe de ser un texto ASCII válido."
+
+msgid "A key identifier is required."
+msgstr "Se requiere un identificador de clave válido."
+
+msgid "The key identifier should not be empty."
+msgstr "El identificador de clave no debe estar vacío."
+
+msgid "The type should be a valid ASCII string."
+msgstr "El tipo debe ser una cadena ASCII válida."
+
+msgid "A type is required"
+msgstr "Se requiere un tipo"
+
+msgid "The type should not be empty"
+msgstr "El tipo no debe estar vacío"
+
+msgid "The expiry should be a valid date."
+msgstr "La fecha de caducidad debe ser válida."
+
+msgid "The creation date should be a valid date."
+msgstr "La fecha de creación debe ser una fecha válida."
+
+msgid "A creation date is required."
+msgstr "Se requiere una fecha de creación."
+
+msgid "The creation date should not be empty."
+msgstr "La fecha de creación no debe estar vacía."
+
+msgid "The deleted status should be a valid boolean."
+msgstr "El estado eliminado debe ser un booleano válido."
+
+msgid "A deleted status is required"
+msgstr "Se requiere un estado eliminado"
+
+msgid "A user identifier is required"
+msgstr "Se requiere un identificador de usuario"
+
+msgid "The user identifier should not be empty"
+msgstr "El identificador de usuario no debe estar vacío"
+
+msgid "You cannot reuse the server keys."
+msgstr "No puede reutilizar las claves del servidor."
+
+msgid "A valid OpenPGP key must be provided."
+msgstr "Una clave OpenPGP válida debe ser proporcionada."
+
+msgid "The OpenPGP armored key could not be parsed."
+msgstr "La clave blindada OpenPGP no pudo ser analizada."
+
+msgid "The OpenPGP armored key could not be validated."
+msgstr "La clave blindada OpenPGP no pudo ser validada."
+
+msgid "The name should be a valid UTF8 string."
+msgstr "El nombre debe ser una cadena UTF8 válida."
+
+msgid "The name length should be maximum {0} characters."
+msgstr "La longitud del nombre debe tener un máximo de {0} caracteres."
+
+msgid "A name is required."
+msgstr "Se requiere un nombre."
+
+msgid "The name should not be empty."
+msgstr "El nombre no debe estar vacío."
+
+msgid "The identifier of the user who created the group should be a valid UUID."
+msgstr "El identificador del usuario que creó el grupo debe ser un UUID válido."
+
+msgid "The identifier of the user who created the group is required."
+msgstr "El identificador del usuario que creó el grupo es necesario."
+
+msgid "The identifier of the user who created the group should not be empty."
+msgstr "El identificador del usuario que creó el grupo no debe estar vacío."
+
+msgid "The identifier of the user who modified the group should be a valid UUID."
+msgstr "El identificador del usuario que modificó el grupo debe ser un UUID válido."
+
+msgid "The identifier of the user who modified the group is required."
+msgstr "El identificador del usuario que modificó el grupo es necesario."
+
+msgid "The identifier of the user who modified the group should not be empty."
+msgstr "El identificador del usuario que modificó el grupo no debe estar vacío."
+
+msgid "The name is already used by another group."
+msgstr "El nombre ya está siendo utilizado por otro grupo."
+
+msgid "A group manager should be provided."
+msgstr "Se debe proporcionar un administrador de grupo."
+
+msgid "The group should not be soft deleted."
+msgstr "El grupo no debe ser eliminado."
+
+msgid "The group should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "El grupo no debe ser el único propietario de contenido compartido, transfiera la propiedad a otros usuarios."
+
+msgid "Could not validate group data."
+msgstr "No se pudo validar los datos del grupo."
+
+msgid "Could not delete the group {0}, please try again later."
+msgstr "No se pudo eliminar el grupo {0}, por favor inténtelo de nuevo más tarde."
+
+msgid "A group identifier is required."
+msgstr "Se requiere un identificador de grupo."
+
+msgid "The group identifier should not be empty."
+msgstr "El identificador del grupo no debe estar vacío."
+
+msgid "The group manager status should be a valid boolean."
+msgstr "El estado del administrador del grupo debe ser un booleano válido."
+
+msgid "A group manager status is required."
+msgstr "Se requiere un estado de administrador de grupo."
+
+msgid "The group manager status should not be empty."
+msgstr "El estado del administrador del grupo no debe estar vacío."
+
+msgid "The user is already member of this group."
+msgstr "Este usuario ya es miembro de este grupo."
+
+msgid "The property length should be maximum {0} characters."
+msgstr "La longitud de la propiedad debe tener un máximo de {0} caracteres."
+
+msgid "A property is required."
+msgstr "Se requiere una propiedad."
+
+msgid "The property should not be empty."
+msgstr "La propiedad no debe estar vacía."
+
+msgid "The property should be an alphabetical string and only dot is accepted as special characters."
+msgstr "La propiedad debe ser una cadena alfabética y solo se acepta el punto como carácter especial."
+
+msgid "The property identifier should be a valid UUID."
+msgstr "El identificador de propiedad debe ser un UUID válido."
+
+msgid "A property identifier is required."
+msgstr "Se requiere un identificador de propiedad."
+
+msgid "The property identifier should not be empty."
+msgstr "El identificador de propiedad no debe estar vacío."
+
+msgid "The value should be a valid UTF8 string."
+msgstr "El valor debe ser una cadena UTF8 válida."
+
+msgid "The value length should be maximum {0} characters."
+msgstr "La longitud del valor debe tener un máximo de {0} caracteres."
+
+msgid "A value is required."
+msgstr "Se requiere un valor."
+
+msgid "The value should not be empty."
+msgstr "El valor no debe estar vacío."
+
+msgid "This property id is already in use."
+msgstr "Este id de propiedad ya está en uso."
+
+msgid "Only admin can create or update organization settings."
+msgstr "Sólo un administrador puede crear o actualizar la configuración de la organización."
+
+msgid "This is not a valid setting."
+msgstr "Esta no es una configuración válida."
+
+msgid "The type of the access control object should be one of the following: {0}."
+msgstr "El tipo del objeto de control de acceso debe ser uno de los siguientes: {0}."
+
+msgid "The type of the access control object is required."
+msgstr "El tipo de objeto de control de acceso es requerido."
+
+msgid "The type of the access control object should not be empty."
+msgstr "El tipo de objeto de control de acceso no debe estar vacío."
+
+msgid "The identifier of the access control object should be a valid UUID."
+msgstr "El identificador del objeto de control de acceso debe ser un UUID válido."
+
+msgid "The identifier of the access control object is required."
+msgstr "El identificador del objeto de control de acceso es requerido."
+
+msgid "The identifier of the access control object should not be empty."
+msgstr "El identificador del objeto de control de acceso no debe estar vacío."
+
+msgid "The access request object type should be one of the following: {0}."
+msgstr "El tipo de objeto de solicitud de acceso debe ser uno de los siguientes: {0}."
+
+msgid "The type of the access request object is required."
+msgstr "El tipo de objeto de solicitud de acceso es obligatorio."
+
+msgid "The access request object type should not be empty."
+msgstr "El tipo de objeto de solicitud de acceso no debe estar vacío."
+
+msgid "The identifier of the access request object should be a valid UUID."
+msgstr "El identificador del objeto de solicitud de acceso debe ser un UUID válido."
+
+msgid "The identifier of the access request object is required."
+msgstr "Se requiere el identificador del objeto de solicitud de acceso."
+
+msgid "The identifier of the access request object should not be empty."
+msgstr "El identificador del objeto de solicitud de acceso no debe estar vacío."
+
+msgid "A permission already exists for the given access control object and access request object."
+msgstr "Ya existe un permiso para el objeto de control de acceso y el objeto de solicitud de acceso."
+
+msgid "The access control object does not exist."
+msgstr "El objeto de control de acceso no existe."
+
+msgid "The access request object does not exist."
+msgstr "El objeto de solicitud de acceso no existe."
+
+msgid "A first name is required."
+msgstr "Se requiere un nombre."
+
+msgid "The first name should not be empty."
+msgstr "El nombre no debe estar vacío."
+
+msgid "The first name should be a valid BMP-UTF8 string."
+msgstr "El nombre debe ser una cadena BMP-UTF8 válida."
+
+msgid "The first name length should be maximum {0} characters."
+msgstr "La longitud del nombre debe ser como máximo {0} caracteres."
+
+msgid "A last name is required."
+msgstr "Se requiere un apellido."
+
+msgid "The last name should not be empty."
+msgstr "El apellido no debe estar vacío."
+
+msgid "The last name should be a valid BMP-UTF8 string."
+msgstr "El apellido debe ser una cadena BMP-UTF8 válida."
+
+msgid "The last name length should be maximum {0} characters."
+msgstr "La longitud del apellido debe ser como máximo de {0} caracteres."
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "El nombre debe ser una cadena BMP-UTF8 válida."
+
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "La etiqueta debe ser una cadena BMP-UTF8 válida."
+
+msgid "A slug is required."
+msgstr "Se requiere una etiqueta."
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "El slug debe tener una longitud máxima de {0} caracteres."
+
+msgid "The slug should not be empty"
+msgstr "El slug no debe estar vacío"
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "La descripción debe ser una cadena válida de caracteres BMP-UTF8."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "La longitud de la descripción debe ser como máximo de {0} caracteres."
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "La definición debe ser una cadena BMP-UTF8 válida."
+
+msgid "A definition is required."
+msgstr "Se requiere una definición."
+
+msgid "The definition should not be empty."
+msgstr "La definición no debe estar vacía."
+
+msgid "The message should be valid JSON message."
+msgstr "El mensaje debe ser un mensaje JSON válido."
+
+msgid "A resource type already exists with this slug."
+msgstr "Ya existe un tipo de recurso con este slug."
+
+msgid "A resource type already exists with this definition."
+msgstr "Ya existe un tipo de recurso con esta definición."
+
+msgid "The username should be a valid UTF8 string."
+msgstr "El nombre de usuario debe ser una cadena UTF8 válida."
+
+msgid "The username length should be maximum {0} characters."
+msgstr "La longitud del nombre de usuario debe tener un máximo de {0} caracteres."
+
+msgid "The uri should be a valid BMP-UTF8 string."
+msgstr "El uri debe ser una cadena BMP-UTF8 válida."
+
+msgid "The uri length should be maximum {0} characters."
+msgstr "La longitud de la uri debe tener un máximo de {0} caracteres."
+
+msgid "The description should be a valid UTF8 string."
+msgstr "La descripción debe ser una cadena UTF8 válida."
+
+msgid "The deleted status should not be empty"
+msgstr "El estado eliminado no debe estar vacío"
+
+msgid "The identifier of the user who created the resource should be a valid UUID."
+msgstr "El identificador del usuario que creó el recurso debe ser un UUID válido."
+
+msgid "The identifier of the user who created the resource is required."
+msgstr "Se requiere el identificador del usuario que creó el recurso."
+
+msgid "The identifier of the user who created the resource should not be empty."
+msgstr "El identificador del usuario que creó el recurso no debe estar vacío."
+
+msgid "The identifier of the user who last modified the resource should be a valid UUID."
+msgstr "El identificador del usuario que modificó por última vez el recurso debe ser un UUID válido."
+
+msgid "The identifier of the user who last modified the resource required."
+msgstr "El identificador del usuario que modificó el recurso por última vez es necesario."
+
+msgid "The identifier of the user who last modified the resource should not be empty."
+msgstr "El identificador del usuario que modificó por última vez el recurso no debe estar vacío."
+
+msgid "The resource type identifier should be a valid UUID."
+msgstr "El identificador de tipo de recurso debe ser un UUID válido."
+
+msgid "A resource type identifier is required."
+msgstr "Se requiere un identificador de tipo de recurso."
+
+msgid "The permissions are required."
+msgstr "Los permisos son necesarios."
+
+msgid "The permissions should not be empty."
+msgstr "Los permisos no deben estar vacíos."
+
+msgid "The permissions should contain only the permission of the owner."
+msgstr "Los permisos deben contener solo el permiso del propietario."
+
+msgid "The owner secret is required."
+msgstr "Se requiere el secreto del propietario."
+
+msgid "The secrets should not be empty."
+msgstr "Los secretos no deben estar vacíos."
+
+msgid "The secrets should contain only the secret of the owner."
+msgstr "Los secretos deben contener únicamente el secreto del propietario."
+
+msgid "The permissions should contain the owner permission."
+msgstr "Los permisos deben contener el permiso de propietario."
+
+msgid "The secrets should contain the owner secret."
+msgstr "Los secretos deben contener el secreto del propietario."
+
+msgid "The secrets should contain the secrets of all the users having access to the resource."
+msgstr "Los secretos deben contener los secretos de todos los usuarios que tengan acceso al recurso."
+
+msgid "The permissions should contain at least the owner permission."
+msgstr "Los permisos deben contener al menos el permiso de propietario."
+
+msgid "The resource should not be already soft deleted."
+msgstr "El recurso no debe haberse eliminado temporalmente."
+
+msgid "The user cannot delete this resource."
+msgstr "El usuario no puede eliminar este recurso."
+
+msgid "The name should be a valid ASCII string."
+msgstr "El nombre debe ser una cadena ASCII válida."
+
+msgid "A role already exists for the given name."
+msgstr "Ya existe un rol para el nombre introducido."
+
+msgid "The role name should be from the list of allowed role names."
+msgstr "El nombre del rol debe estar en la lista de nombres de roles permitidos."
+
+msgid "The resource identifier is required."
+msgstr "El identificador de recurso es requerido."
+
+msgid "The resource identifier should not be empty."
+msgstr "El identificador de recurso no debe estar vacío."
+
+msgid "The message should be a valid ASCII string."
+msgstr "El mensaje debe ser una cadena ASCII válida."
+
+msgid "A message is required."
+msgstr "Se requiere un mensaje."
+
+msgid "The message should not be empty."
+msgstr "El mensaje no debe estar vacío."
+
+msgid "A secret already exists for the given user and resource."
+msgstr "Ya existe un secreto para el usuario y el recurso dados."
+
+msgid "The user identifier by should be a valid UUID."
+msgstr "El identificador de usuario por debe ser un UUID válido."
+
+msgid "A username is required."
+msgstr "Se requiere un nombre de usuario."
+
+msgid "The username should be a valid email address."
+msgstr "El nombre de usuario debe ser una dirección de correo electrónico válida."
+
+msgid "The role identifier should be a valid UUID."
+msgstr "El identificador de rol debe ser un UUID válido."
+
+msgid "A role identifier is required."
+msgstr "Se requiere un identificador de rol."
+
+msgid "The profile should not be empty."
+msgstr "El perfil no debe estar vacío."
+
+msgid "The username should not be empty."
+msgstr "El nombre de usuario no debe estar vacío."
+
+msgid "The username length should be maximum 255 characters."
+msgstr "La longitud del nombre de usuario debe tener un máximo de 255 caracteres."
+
+msgid "The username is already in use."
+msgstr "Este nombre de usuario ya está en uso."
+
+msgid "The role identifier does not exist."
+msgstr "El identificador de rol no existe."
+
+msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "El usuario no debe ser el único propietario de contenido compartido, transfiera la propiedad a otros usuarios."
+
+msgid "The user should not be sole group manager of group(s), transfer the management to other users."
+msgstr "El usuario no debe ser el único administrador de grupo(s), transfiera la gestión a otros usuarios."
+
+msgid "Could not delete the user {0}, please try again later."
+msgstr "No se pudo eliminar el usuario {0}, por favor inténtelo de nuevo más tarde."
+
+msgid "The armored key should be a valid ASCII-armored OpenPGP key."
+msgstr "La clave blindada debe ser una clave OpenPGP con blindaje ASCII válido."
+
+msgid "The message should be a valid ASCII-armored OpenPGP message."
+msgstr "El mensaje debe ser un mensaje ASCII válido con armadura OpenPGP."
+
+msgid "The creation date should be set in the past."
+msgstr "La fecha de creación debe establecerse en el pasado."
+
+msgid "The key should not already be expired."
+msgstr "La clave no debe estar ya caducada."
+
+msgid "The email should be a valid email address."
+msgstr "El correo electrónico debe ser una dirección de correo electrónico válida."
+
+msgid "The regular expression should be a valid string."
+msgstr ""
+
+msgid "The fingerprint does not match the one of the armored key."
+msgstr "La huella digital no coincide con la de la clave blindada."
+
+msgid "The fingerprint should be a string of 40 hexadecimal characters."
+msgstr "La huella digital debe ser una cadena de 40 caracteres hexadecimales."
+
+msgid "The type should be one of the following: RSA, ECC, ECDSA, DH."
+msgstr "El tipo debe ser uno de los siguientes: RSA, ECC, ECDSA, DH."
+
+msgid "The delete status should be a valid boolean."
+msgstr "El estado eliminado debe ser un booleano válido."
+
+msgid "The key identifier should be a string of 8 hexadecimal characters."
+msgstr "El identificador de clave debe ser una cadena de 8 caracteres hexadecimales."
+
+msgid "{0} just activated their account on passbolt"
+msgstr "{0} acaba de activar su cuenta en passbolt"
+
+msgid "{0} commented on {1}"
+msgstr "{0} ha comentado en {1}"
+
+msgid "{0} deleted the group {1}"
+msgstr "{0} ha eliminado el grupo {1}"
+
+msgid "{0} updated the group {1}"
+msgstr "{0} ha actualizado el grupo {1}"
+
+msgid "{0} added you to the group {1}"
+msgstr "{0} te ha añadido al grupo {1}"
+
+msgid "{0} requested you to add members to {1}"
+msgstr "{0} te ha pedido que añadas miembros a {1}"
+
+msgid "{0} removed you from the group {1}"
+msgstr "{0} te ha eliminado del grupo {1}"
+
+msgid "{0} updated your membership in the group {1}"
+msgstr "{0} ha actualizado su membresía en el grupo {1}"
+
+msgid "{0} just completed the account recovery process"
+msgstr "{0} acaba de completar el proceso de recuperación de la cuenta"
+
+msgid "You just completed the account recovery process!"
+msgstr "¡Acabas de completar el proceso de recuperación de cuenta!"
+
+msgid "Your account recovery, {0}!"
+msgstr "¡Su cuenta se recupera, {0}!"
+
+msgid "You added the password {0}"
+msgstr "Ha añadido la contraseña {0}"
+
+msgid "{0} deleted the password {1}"
+msgstr "{0} ha eliminado la contraseña {1}"
+
+msgid "{0} edited the password {1}"
+msgstr "{0} ha editado la contraseña {1}"
+
+msgid "{0} can not complete the account recovery process!"
+msgstr "¡{0} no puede completar el proceso de recuperación de cuenta!"
+
+msgid "{0} shared the password {1}"
+msgstr "{0} ha compartido la contraseña {1}"
+
+msgid "{0} deleted user {1}"
+msgstr "{0} ha eliminado el usuario {1}"
+
+msgid "Welcome to passbolt, {0}!"
+msgstr "¡Bienvenido a passbolt, {0}!"
+
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} ha actualizado su membresía en varios grupos"
+
+msgid "Your membership in several groups changed in passbolt"
+msgstr "Su membresía en varios grupos ha cambiado en passbolt"
+
+msgid "{0} deleted several groups"
+msgstr "{0} ha eliminado varios grupos"
+
+msgid "Several groups were deleted in passbolt"
+msgstr "Varios grupos fueron eliminados en el passbolt"
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} ha hecho cambios en varios recursos"
+
+msgid "Multiple passwords have been changed in passbolt"
+msgstr "Múltiples contraseñas han sido cambiadas en passbolt"
+
+msgid "{0} shared several items with you"
+msgstr "{0} ha compartido varios elementos contigo"
+
+msgid "Multiple passwords have been shared with you in passbolt"
+msgstr "Se han compartido varias contraseñas contigo en passbolt"
+
+msgid "The purify subject setting should be a boolean."
+msgstr "La configuración de \"limpieza\" debe ser un valor booleano."
+
+msgid "The show comment setting should be a boolean."
+msgstr "La configuración de mostrar comentario debe ser un valor booleano."
+
+msgid "The show description setting should be a boolean."
+msgstr "La descripción de mostrar comentario debe ser un valor booleano."
+
+msgid "The show secret setting should be a boolean."
+msgstr "La configuración de mostrar secreto debe ser un valor booleano."
+
+msgid "The show uri setting should be a boolean."
+msgstr "La configuración de mostrar la uri debe ser un booleano."
+
+msgid "The show username setting should be a boolean."
+msgstr "La configuración de mostrar el nombre de usuario debe ser booleana."
+
+msgid "The send on user setup completed setting should be a boolean."
+msgstr "La configuración de envío al finalizar la configuración del usuario debe ser un valor booleano."
+
+msgid "The send on user recover abort setting should be a boolean."
+msgstr "La configuración \"enviar al cancelar la recuperación de usuario\" debe ser un valor booleano."
+
+msgid "The send on comment added setting should be a boolean."
+msgstr "La configuración \"enviar al agregar un comentario\" debe ser un valor booleano."
+
+msgid "The send on group deleted setting should be a boolean."
+msgstr "La configuración \"enviar al eliminar grupo\" debe ser un valor booleano."
+
+msgid "The send on group user added setting should be a boolean."
+msgstr "La configuración \"enviar al agregar un usuario al grupo\" debe ser un valor booleano."
+
+msgid "The send on group user deleted setting should be a boolean."
+msgstr "La configuración \"enviar al eliminar un usuario del grupo\" debe ser un valor booleano."
+
+msgid "The send on group user updated setting should be a boolean."
+msgstr "La configuración \"enviar en la actualización de un usuario en el grupo\" debe ser un valor booleano."
+
+msgid "The send on group manager updated setting should be a boolean."
+msgstr "La configuración \"enviar en la actualización del administrador del grupo\" debe ser un valor booleano."
+
+msgid "The send on password created setting should be a boolean."
+msgstr "La configuración \"enviar al crear la contraseña\" debe ser un valor booleano."
+
+msgid "The send on password shared setting should be a boolean."
+msgstr "La configuración \"enviar al compartir una contraseña\" debe ser un valor booleano."
+
+msgid "The send on password updated setting should be a boolean."
+msgstr "La configuración \"enviar al actualizar la contraseña\" debe ser un valor booleano."
+
+msgid "The send on password deleted setting should be a boolean."
+msgstr "La configuración \"enviar al borrar una contraseña\" debe ser un valor booleano."
+
+msgid "The send on user created setting should be a boolean."
+msgstr "La configuración \"enviar al crear un usuario\" debe ser un valor booleano."
+
+msgid "The send on user recovered setting should be a boolean."
+msgstr "La configuración \"enviar al recuperar un usuario\" debe ser un valor booleano."
+
+msgid "The token is expired."
+msgstr "El token ha expirado."
+
+msgid "The authentication token is not valid."
+msgstr "El token de autenticación no es válido."
+
+msgid "The authentication token could not be found."
+msgstr "El token de autenticación no se ha encontrado."
+
+msgid "The token is already consumed."
+msgstr "El token ya se ha consumido."
+
+msgid "Validation failed for authenticationToken {0}. {1}"
+msgstr "Error de validación para autenticationToken {0}. {1}"
+
+msgid "Validation success for authenticationToken {0}"
+msgstr "Validación correcta para autenticationToken {0}"
+
+msgid "Could not save the avatar in the {0} file."
+msgstr "No se pudo guardar el avatar en el archivo {0}."
+
+msgid "The avatar id is not valid."
+msgstr "El identificador de avatar no es válido."
+
+msgid "Could not save the comment, please try again later."
+msgstr "No se pudo guardar el comentario, por favor inténtelo de nuevo más tarde."
+
+msgid "Could not validate comment data."
+msgstr "No se pudo validar los datos del comentario."
+
+msgid "The comment userId is not valid."
+msgstr "El ID de usuario del comentario no es válido."
+
+msgid "The comment does not exist."
+msgstr "El comentario no existe."
+
+msgid "Could not delete comment."
+msgstr "No se ha podido eliminar el comentario."
+
+msgid "Validation failed for comment {0}. {1}"
+msgstr "La validación falló para el comentario {0}. {1}"
+
+msgid "Validation success for comment {0}"
+msgstr "Validación correcta para el comentario {0}"
+
+msgid "You are not allowed to edit this comment."
+msgstr "No tiene permisos para editar este comentario."
+
+msgid "Could not find comments for the requested model."
+msgstr "No se han podido encontrar comentarios para el modelo solicitado."
+
+msgid "This record is already marked as favorite."
+msgstr "Este registro ya está marcado como favorito."
+
+msgid "Could not validate favorite data."
+msgstr "No se pueden validar los datos favoritos."
+
+msgid "The favorite does not exist."
+msgstr "El favorito no existe."
+
+msgid "Could not delete favorite."
+msgstr "No se puede eliminar el favorito."
+
+msgid "Validation failed for favorite {0}. {1}"
+msgstr "La validación falló para el favorito {0}. {1}"
+
+msgid "Validation success for favorite {0}"
+msgstr "Validación correcta del favorito {0}"
+
+msgid "Validation success for key {0}"
+msgstr "Validación correcta para la clave {0}"
+
+msgid "Validation failed for key {0}. {1}"
+msgstr "La validación falló para la clave {0}. {1}"
+
+msgid "Encryption success for key {0}"
+msgstr "Cifrado exitoso para la clave {0}"
+
+msgid "Failed to encrypt with key {0}. {1}"
+msgstr "Error al cifrar con clave {0}. {1}"
+
+msgid "Key expired: {0}."
+msgstr "Clave caducada: {0}."
+
+msgid "Expiration date valid for key {0}."
+msgstr "Fecha de caducidad válida para la clave {0}."
+
+msgid "Validation failed for group {0}. {1}"
+msgstr "Validación fallida para el grupo {0}. {1}"
+
+msgid "Validation success for group {0}"
+msgstr "Validación correcta para el grupo {0}"
+
+msgid "Could not validate group user data."
+msgstr "No se pudo validar los datos del grupo de usuarios."
+
+msgid "Could not validate sub key data."
+msgstr "No se pudieron validar los datos de la sub-clave."
+
+msgid "Public key sub key id could not be found."
+msgstr "No se pudo encontrar el id de sub-clave de la clave pública."
+
+msgid "Could not validate message data."
+msgstr "No se pudieron validar los datos del mensaje."
+
+msgid "Recipient information could not be found."
+msgstr "La información del destinatario no pudo ser encontrada."
+
+msgid "The public key could not be parsed."
+msgstr "La clave pública no se pudo analizar."
+
+msgid "The armored message must not contain an extra line before the end block."
+msgstr "El mensaje blindado no debe contener una línea extra antes del bloque final."
+
+msgid "The message must contain an asymmetric packet."
+msgstr "El mensaje debe contener un paquete asimétrico."
+
+msgid "The message must contain a symmetric packet."
+msgstr "El mensaje debe contener un paquete simétrico."
+
+msgid "The message must contain only one recipient."
+msgstr "El mensaje debe contener solo un destinatario."
+
+msgid "Unknown key validation rule: {0}"
+msgstr "Regla de validación de clave desconocida: {0}"
+
+msgid "The armored message could not be validated."
+msgstr "El mensaje blindado no pudo ser validado."
+
+msgid "The algorithm is invalid."
+msgstr "El algoritmo no es válido."
+
+msgid "The fingerprint id is invalid."
+msgstr "El id de huella digital no es válido."
+
+msgid "The public key id is invalid."
+msgstr "El id de clave pública no es válido."
+
+msgid "The key size is not valid."
+msgstr "El tamaño de la clave no es válido."
+
+msgid "The key size must match security recommendations."
+msgstr "El tamaño de la clave debe coincidir con las recomendaciones de seguridad."
+
+msgid "The key creation date must not be in the future."
+msgstr "La fecha de creación de la clave no debe estar en el futuro."
+
+msgid "The key must not be expired."
+msgstr "La clave no debe estar caducada."
+
+msgid "The key must not include an expiry date."
+msgstr "La clave no debe incluir una fecha de caducidad."
+
+msgid "The key must be revoked."
+msgstr "La clave debe ser anulada."
+
+msgid "The key must not be revoked."
+msgstr "La clave no debe ser anulada."
+
+msgid "The armored key must not contain an extra line before the end block."
+msgstr "La clave blindada no debe contener una línea extra antes del bloque final."
+
+msgid "The armored key must not contain multiple keys."
+msgstr "La clave blindada no debe contener múltiples claves."
+
+msgid "The public key could not be validated."
+msgstr "La clave pública no pudo ser validada."
+
+msgid "Could not validate permission data."
+msgstr "No se pudieron validar los datos del permiso."
+
+msgid "Validation failed for permission {0}. {1}"
+msgstr "Error de validación para el permiso {0}. {1}"
+
+msgid "Validation success for permission {0}"
+msgstr "Validación correcta para el permiso {0}"
+
+msgid "Could not validate permissions data."
+msgstr "No se pudo validar los datos de permisos."
+
+msgid "Validation failed for profile {0}. {1}"
+msgstr "Error de validación para el perfil {0}. {1}"
+
+msgid "Validation success for profile {0}"
+msgstr "Éxito en la validación para el perfil {0}"
+
+msgid "Could not validate resource data."
+msgstr "No se pudo validar los datos del recurso."
+
+msgid "An unexpected error occurred, please contact an administrator."
+msgstr "Se ha producido un error inesperado, por favor contacte con un administrador."
+
+msgid "The server returned the following error:"
+msgstr "El servidor devolvió el siguiente error:"
+
+msgid "Validation failed for resource {0}. {1}"
+msgstr "Error de validación para el recurso {0}. {1}"
+
+msgid "Validation success for resource {0}"
+msgstr "Éxito en la validación para el recurso {0}"
+
+msgid "You are not allowed to update this resource."
+msgstr "No tienes permisos para actualizar este recurso."
+
+msgid "Additional resource types are not enabled on this server."
+msgstr "Los tipos de recursos adicionales no están habilitados en este servidor."
+
+msgid "There should be at least 4 roles"
+msgstr "Debe haber al menos 4 roles"
+
+msgid "Validation failed for role {0}. {1}"
+msgstr "Error de validación para el rol {0}. {1}"
+
+msgid "Validation success for role {0}"
+msgstr "Validación correcta para el rol {0}"
+
+msgid "Could not validate secret data."
+msgstr "No se pudo validar los datos secretos."
+
+msgid "Validation failed for secret {0}. {1}"
+msgstr "Validación fallida para el secreto {0}. {1}"
+
+msgid "Validation success for secret {0}"
+msgstr "Validación correcta para el secreto {0}"
+
+msgid "Could not validate secrets data."
+msgstr "No se pudo validar los datos secretos."
+
+msgid "The secrets of all the users having access to the resource are required."
+msgstr "Se requieren los secretos de todos los usuarios que tienen acceso al recurso."
+
+msgid "An authentication token should be provided."
+msgstr "Debe proporcionarse un token de autenticación."
+
+msgid "The authentication token should be a valid UUID."
+msgstr "El token de autenticación debe ser un UUID válido."
+
+msgid "An OpenPGP key must be provided."
+msgstr "Se debe proporcionar una clave OpenPGP."
+
+msgid "The authentication token could not be saved."
+msgstr "El token de autenticación no pudo ser guardado."
+
+msgid "The user does not exist, has not completed the setup or was deleted."
+msgstr "El usuario no existe, no ha completado la configuración o ha sido eliminado."
+
+msgid "Could not update the authentication token data."
+msgstr "No se pudieron actualizar los datos del token de autenticación."
+
+msgid "The key provided does not belong to given user."
+msgstr "La clave proporcionada no pertenece al usuario dado."
+
+msgid "The user does not exist or is not active."
+msgstr "El usuario no existe o no está activo."
+
+msgid "The OpenPGP key data is not valid."
+msgstr "Los datos de la clave OpenPGP no son válidos."
+
+msgid "The OpenPGP key can not be used to encrypt."
+msgstr "La clave OpenPGP no se puede usar para cifrar."
+
+msgid "The user does not exist, is already active or has been deleted."
+msgstr "El usuario no existe, ya está activo o ha sido eliminado."
+
+msgid "The user does not exist or is already active."
+msgstr "El usuario no existe o ya está activo."
+
+msgid "The user should not be a guest."
+msgstr "El usuario no debe ser un invitado."
+
+msgid "Account recovery case must be a string."
+msgstr "El caso de recuperación de la cuenta debe ser una cadena."
+
+msgid "Account recovery reason not supported."
+msgstr "Razón de recuperación de la cuenta no soportada."
+
+msgid "Please provide a valid email address."
+msgstr "Por favor, introduzca una dirección de correo electrónico válida."
+
+msgid "This user does not exist or has been deleted."
+msgstr "Este usuario no existe o ha sido eliminado."
+
+msgid "Please register and complete the setup first."
+msgstr "Por favor, regístrese y complete la configuración primero."
+
+msgid "Please contact your administrator."
+msgstr "Por favor, contacte con su administrador."
+
+msgid "Validation failed for user {0}. {1}"
+msgstr "Validación fallida para el usuario {0}. {1}"
+
+msgid "Validation success for user {0}"
+msgstr "Validación correcta para el usuario {0}"
+
+msgid "The directory {0} cannot be deleted"
+msgstr "No se puede eliminar el directorio {0}"
+
+msgid "Database connection failed"
+msgstr "La conexión con la base de datos ha fallado"
+
+msgid "Could not connect to github repository"
+msgstr "No se pudo conectar al repositorio github"
+
+msgid "Could not read tag information on github repository"
+msgstr "No se pudo leer la información de etiquetas en el repositorio github"
+
+msgid "The key {0} cannot be used to encrypt."
+msgstr "La clave {0} no se puede usar para encriptar."
+
+msgid "The key {0} cannot be used to decrypt."
+msgstr "La clave {0} no se puede usar para desencriptar."
+
+msgid "Could not use key {0} for signing."
+msgstr "No se pudo utilizar la clave {0} para firmar."
+
+msgid "Could not parse the OpenPGP public key."
+msgstr "No se pudo procesar la clave OpenPGP pública."
+
+msgid "Could not import the OpenPGP key."
+msgstr "No se pudo importar la clave OpenPGP."
+
+msgid "Could not use the key to sign and encrypt."
+msgstr "No se pudo usar la clave para firmar y encriptar."
+
+msgid "Could not use the key to encrypt."
+msgstr "No se pudo usar la clave para encriptar."
+
+msgid "Expected {0} and got {1}."
+msgstr "Se esperaba {0} y se obtuvo {1}."
+
+msgid "Decryption failed. Invalid signature."
+msgstr "Error al desencriptar. Firma no válida."
+
+msgid "The message cannot be verified."
+msgstr "El mensaje no puede ser verificado."
+
+msgid "Could not sign the text. "
+msgstr "No se ha podido firmar el texto. "
+
+msgid "The OpenPGP server key defined in the config is not found in the file system."
+msgstr "La clave de servidor OpenPGP definida en la configuración no se encuentra en el sistema de archivos."
+
+msgid "The OpenPGP server key defined in the config cannot be opened."
+msgstr "No se puede abrir la clave de servidor OpenPGP definida en la configuración."
+
+msgid "The OpenPGP server key defined on file is not a valid private key."
+msgstr "La clave de servidor OpenPGP definida en el archivo no es una clave privada válida."
+
+msgid "There is an issue with the OpenPGP server key."
+msgstr "Hay un problema con la clave del servidor OpenPGP."
+
+msgid "The fingerprint does not match the one associated with the key on file."
+msgstr "La 'fingerprint' no coincide con la asociada a la clave en el archivo."
+
+msgid "No OpenPGP marker found."
+msgstr "No se encontró ningún marcador OpenPGP."
+
+msgid "Invalid key. No OpenPGP public key package found."
+msgstr "Clave no válida. No se encontró un paquete de clave OpenPGP pública."
+
+msgid "Invalid key. No user ID found."
+msgstr "Clave no válida. No se encontró ID de usuario."
+
+msgid "Unsupported algorithm."
+msgstr "Algoritmo no soportado."
+
+msgid "Invalid key. No OpenPGP package found."
+msgstr "Clave no válida. No se encontró un paquete OpenPGP."
+
+msgid "This is not a valid OpenPGP armored marker."
+msgstr "Este no es un marcador OpenPGP válido."
+
+msgid "The key {0} was not found in the keyring"
+msgstr "La clave {0} no se encontró en el anillo de claves"
+
+msgid "A value for the theme should be provided."
+msgstr "Debe proporcionarse un valor para el tema."
+
+msgid "This is not a valid theme."
+msgstr "Este no es un tema válido."
+
+msgid "The setting type should be one of the following: {0}."
+msgstr "El tipo de ajuste debe ser uno de los siguientes: {0}."
+
+msgid "A setting type is required."
+msgstr "Se necesita un tipo de configuración."
+
+msgid "The setting type should not be empty"
+msgstr "El tipo de configuración no debe estar vacío"
+
+msgid "The setting value should be a valid UTF8 string."
+msgstr "El valor de configuración debe ser una cadena UTF8 válida."
+
+msgid "The setting value length should be maximum {0} characters."
+msgstr "La longitud del valor de configuración debe tener máximo {0} caracteres."
+
+msgid "A value setting is required."
+msgstr "Se requiere un valor de configuración."
+
+msgid "The setting value should not be empty."
+msgstr "El valor de configuración no debe estar vacío."
+
+msgid "The parameter {0} is not set."
+msgstr "El parámetro {0} no está establecido."
+
+msgid "This theme is not supported."
+msgstr "Este tema no está soportado."
+
+msgid "You are not allowed to access this location."
+msgstr "No tienes permisos para acceder a esta ubicación."
+
+msgid "The notification settings for the organization were updated."
+msgstr "Se actualizó la configuración de notificaciones para la organización."
+
+msgid "The supplied email notification settings are not valid"
+msgstr "La configuración de notificación por correo electrónico proporcionada no es válida"
+
+msgid "The user signature could not be verified."
+msgstr "La firma del usuario no pudo ser verificada."
+
+msgid "The challenge cannot be decrypted."
+msgstr "El desafío no se puede descifrar."
+
+msgid "The challenge is invalid. Deserialization failed."
+msgstr "El desafío no es válido. La deserialización falló."
+
+msgid "The challenge is invalid. Validation Failed."
+msgstr "El desafío no es válido. Error de validación."
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr "La configuración de la huella de la clave privada del servidor no está disponible o está incompleta."
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr "La configuración de la contraseña de clave privada del servidor no es válida."
+
+msgid "The user id is missing or invalid."
+msgstr "No se ha encontrado el identificador de usuario o no es válido."
+
+msgid "The user OpenPGP key does not exist, or is invalid, or has been deleted."
+msgstr "La clave OpenPGP del usuario no existe, no es válida o ha sido eliminada."
+
+msgid "The user challenge is missing or invalid."
+msgstr "No se ha encontrado el desafío del usuario o no es válido."
+
+msgid "The version is invalid."
+msgstr "La versión no es válida."
+
+msgid "The domain is invalid."
+msgstr "El dominio no es válido."
+
+msgid "The domain is invalid. Expected: {0} and got {1}"
+msgstr "El dominio no es válido. Se esperaba: {0} y se obtuvo {1}"
+
+msgid "The following file could not be read: {0}."
+msgstr "El siguiente archivo no se pudo leer: {0}."
+
+msgid "The authentication was a success."
+msgstr "La autenticación fue un éxito."
+
+msgid "The authentication failed."
+msgstr "La autenticación falló."
+
+msgid "The credentials are missing."
+msgstr "Faltan las credenciales de acceso."
+
+msgid "The user does not exist or is not active or has been deleted."
+msgstr "El usuario no existe, no está activo o ha sido eliminado."
+
+msgid "The credentials are invalid."
+msgstr "Las credenciales no son válidas."
+
+msgid "An internal error occurred."
+msgstr "Se produjo un error interno."
+
+msgid "Authentication security alert"
+msgstr "Alerta de seguridad de autenticación"
+
+msgid "No active refresh token matching the request could be found."
+msgstr "No se pudo encontrar ningún token de actualización activo que coincida con la solicitud."
+
+msgid "The user is deactivated."
+msgstr "El usuario está desactivado."
+
+msgid "The user is deleted."
+msgstr "El usuario está eliminado."
+
+msgid "The verify token is invalid."
+msgstr "El token de verificación no es válido."
+
+msgid "The route {0} is not permitted with JWT authentication."
+msgstr "La ruta {0} no está permitida con autenticación JWT."
+
+msgid "The key pair for JWT Authentication is not complete."
+msgstr "El par de claves para la autenticación JWT no está completo."
+
+msgid "The JWT public key could not be read or is not valid."
+msgstr "La clave pública JWT no se pudo leer o no es válida."
+
+msgid "The JWT private key should be at least {0} bytes long."
+msgstr "La clave privada JWT debe tener al menos {0} bytes de longitud."
+
+msgid "The configuration {0} is not correctly set."
+msgstr "La configuración {0} no está establecida correctamente."
+
+msgid "The refresh token should be a valid UUID."
+msgstr "El token de actualización debe ser un UUID válido."
+
+msgid "The user ID should be a valid UUID."
+msgstr "El ID de usuario debe ser un UUID válido."
+
+msgid "The refresh token provided was already used."
+msgstr "El token de actualización proporcionado ya ha sido usado."
+
+msgid "Expired refresh token provided."
+msgstr "Token de actualización caducado."
+
+msgid "Invalid verify token expiry."
+msgstr "Caducidad del token de verificación no válida."
+
+msgid "Attempt to access an expired verify token."
+msgstr "Intento de acceso a un token de verificación caducado."
+
+msgid "Invalid verify token format."
+msgstr "Formato de token de verificación no válido."
+
+msgid "Invalid user ID format."
+msgstr "Formato de identificador de usuario no válido."
+
+msgid "Verify token has been already used in the past."
+msgstr "Verificar que el token ya ha sido usado en el pasado."
+
+msgid "Security warning!"
+msgstr "¡Advertencia de seguridad!"
+
+msgid "An unknown user with IP: {0} attempted to identify as {1}."
+msgstr "Un usuario desconocido con IP: {0} intentó identificarse como {1}."
+
+msgid "This is a potential security issue."
+msgstr "Este es un problema de seguridad potencial."
+
+msgid "Please investigate!"
+msgstr "¡Por favor, investiga!"
+
+msgid "An unknown user with IP: {0}  attempted to steal your login data."
+msgstr "Un usuario desconocido con IP: {0}  intentó robar sus datos de inicio de sesión."
+
+msgid "Please get in touch with one of your administrators."
+msgstr "Por favor, póngase en contacto con uno de sus administradores."
+
+msgid "This is not a valid locale."
+msgstr "Esta no es una configuración regional válida."
+
+msgid "This is not a valid {0}."
+msgstr "Esto no es válido {0}."
+
+msgid "The action log identifier should be a valid UUID."
+msgstr "El identificador de registro de acciones debe ser un UUID válido."
+
+msgid "The action log identifier should not be empty."
+msgstr "El identificador de registro de acción no debe estar vacío."
+
+msgid "The action identifier should be a valid UUID."
+msgstr "El identificador de acción debe ser un UUID válido."
+
+msgid "An action identifier is required."
+msgstr "Se requiere un identificador de acción."
+
+msgid "The context should be a valid ASCII string."
+msgstr "El contexto debe ser una cadena ASCII válida."
+
+msgid "The context length should be maximum {0} characters."
+msgstr "La longitud del contexto debe tener un máximo de {0} caracteres."
+
+msgid "A context is required."
+msgstr "Es necesario un contexto."
+
+msgid "The status should be a valid boolean."
+msgstr "El estado debe ser un booleano válido."
+
+msgid "A status is required."
+msgstr "Se requiere un estado."
+
+msgid "Could not validate action log data."
+msgstr "No se pudo validar los datos de registro de acción."
+
+msgid "The date {0} should be after the date {1}."
+msgstr ""
+
+msgid "The identifier should be not be empty."
+msgstr "El identificador no puede estar vacío."
+
+msgid "Could not validate action data."
+msgstr "No se pudo validar los datos de la acción."
+
+msgid "An action log identifier is required."
+msgstr "Se requiere un identificador de registro de acciones."
+
+msgid "The object type should be a valid ASCII string."
+msgstr "El tipo de objeto debe ser una cadena ASCII válida."
+
+msgid "The object type length should be maximum {0} characters."
+msgstr "La longitud del tipo de objeto debe tener un máximo de {0} caracteres."
+
+msgid "A object type is required."
+msgstr "Se requiere un tipo de objeto."
+
+msgid "The object type should not be empty."
+msgstr "El tipo de objeto no debe estar vacío."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "El identificador de objeto debe ser un UUID válido."
+
+msgid "The object identifier should not be empty."
+msgstr "El identificador de objeto no debe estar vacío."
+
+msgid "An object identifier is required."
+msgstr "Se requiere un identificador de objeto."
+
+msgid "The operation type should be one of the following: {0}."
+msgstr "El tipo de operación debe ser uno de los siguientes: {0}."
+
+msgid "An operation type is required."
+msgstr "Se requiere un tipo de operación."
+
+msgid "The operation type should not be empty."
+msgstr "El tipo de operación no debe estar vacío."
+
+msgid "Could not validate entity history data."
+msgstr "No se pudo validar los datos del historial de entidades."
+
+msgid "An identifier is required."
+msgstr "Se requiere un identificador."
+
+msgid "The type must be one of the following: {0}."
+msgstr "El tipo debe ser uno de los siguientes: {0}."
+
+msgid "The type is required."
+msgstr "El tipo es requerido."
+
+msgid "Could not validate permission history data."
+msgstr "No se pudo validar los datos del historial de permisos."
+
+msgid "A resource identifier is required."
+msgstr "Se requiere un identificador de recurso."
+
+msgid "The secret identifier should be a valid UUID."
+msgstr "El identificador secreto debe ser un UUID válido."
+
+msgid "A secret identifier is required."
+msgstr "Se requiere un identificador secreto."
+
+msgid "The secret identifier should not be empty."
+msgstr "El identificador secreto no debe estar vacío."
+
+msgid "Could not validate secret access data."
+msgstr "No se pudo validar los datos secretos de acceso."
+
+msgid "Could not validate secret history data."
+msgstr "No se pudo validar los datos históricos del secreto."
+
+msgid "Information about the transfer is required."
+msgstr "Se requiere información sobre la transferencia."
+
+msgid "The operation was successful"
+msgstr "La operación se realizó con éxito"
+
+msgid "The transfer id is not valid."
+msgstr "El identificador de la transferencia no es válido."
+
+msgid "The authentication token should be a valid uuid."
+msgstr "El token de autenticación debe ser un UUID válido."
+
+msgid "The authentication token is invalid."
+msgstr "El token de autenticación no es válido."
+
+msgid "The transfer id should be a uuid."
+msgstr "El identificador de la transferencia debe ser un UUID."
+
+msgid "The user id should be a uuid."
+msgstr "El identificador de usuario debe ser un UUID."
+
+msgid "A user id is required"
+msgstr "Se requiere un identificador de usuario"
+
+msgid "The hash should be an ascii string."
+msgstr "El hash debe ser una cadena de texto ASCII."
+
+msgid "The hash should be {0} characters in length."
+msgstr "El hash debe tener {0} caracteres de longitud."
+
+msgid "The data transfer hash is required."
+msgstr "Se requiere el hash de transferencia de datos."
+
+msgid "The current page should be a non negative integer."
+msgstr "La página actual debe ser un número entero no negativo."
+
+msgid "The current page number is required"
+msgstr "Se requiere el número de página actual"
+
+msgid "The current page number should be equal or inferior to the total number of pages."
+msgstr "El número de página actual debe ser igual o inferior al número total de páginas."
+
+msgid "The current page cannot be greater than {0}"
+msgstr "La página actual no puede ser mayor que {0}"
+
+msgid "The total number of pages should be a non negative integer."
+msgstr "El número total de páginas debe ser un número entero no negativo."
+
+msgid "The total number of pages is required."
+msgstr "Se requiere el número total de páginas."
+
+msgid "The total number of pages should be greater than 0."
+msgstr "El número total de páginas debe ser mayor que 0."
+
+msgid "The total number of pages cannot be greater than {0}"
+msgstr "El número total de páginas no puede ser superior a {0}"
+
+msgid "The status should not be empty."
+msgstr "El estado no debe estar vacío."
+
+msgid "The status is required."
+msgstr "El estado es obligatorio."
+
+msgid "The status must be one of the following: {0}."
+msgstr "El estado debe ser uno de los siguientes: {0}."
+
+msgid "The user must be active."
+msgstr "El usuario debe estar activo."
+
+msgid "Could not validate the transfer data."
+msgstr "No se pudieron validar los datos de la transferencia."
+
+msgid "The transfer could not be created."
+msgstr "No se pudo crear la transferencia."
+
+msgid "Could not update the transfer data."
+msgstr "No se pudieron actualizar los datos de la transferencia."
+
+msgid "The transfer could not be updated."
+msgstr "No se pudo actualizar la transferencia."
+
+msgid "This operation is not allowed."
+msgstr "Esta operación no está permitida."
+
+msgid "Restarting a transfer is not allowed."
+msgstr "No se permite reiniciar una transferencia."
+
+msgid "The operation is already over."
+msgstr "La operación ya ha finalizado."
+
+msgid "The current page does not match the total number of pages."
+msgstr "La página actual no coincide con el número total de páginas."
+
+msgid "This operation is not allowed for this user."
+msgstr "Esta operación no está permitida para este usuario."
+
+msgid "The authentication token is missing."
+msgstr "No se ha encontrado el token de autenticación."
+
+msgid "The authentication token is not valid for this user."
+msgstr "El token de autenticación no es válido para este usuario."
+
+msgid "The authentication token type is invalid."
+msgstr "El tipo de token de autenticación no es válido."
+
+msgid "The authentication token is not active."
+msgstr "El token de autenticación no está activo."
+
+msgid "The authentication token is expired."
+msgstr "El token de autenticación ha caducado."
+
+msgid "Unable to authenticate to Duo."
+msgstr ""
+
+msgid "Unable to validate the Duo callback data."
+msgstr ""
+
+msgid "A Duo state cookie is required."
+msgstr ""
+
+msgid "The Duo state cookie value should be a string."
+msgstr ""
+
+msgid "The Duo state cookie should be a valid UUID."
+msgstr ""
+
+msgid "This entrypoint is not available anymore."
+msgstr ""
+
+msgid "This authentication provider is not enabled for your organization."
+msgstr "Este proveedor de autenticación no está habilitado para su organización."
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "Esta funcionalidad no está disponible usando AJAX/JSON."
+
+msgid "This authentication provider is already setup. Disable it first"
+msgstr "Este proveedor de autenticación ya está configurado. Desactívalo primero"
+
+msgid "Multi Factor Authentication is configured!"
+msgstr "¡La autenticación de múltiples factores está configurada!"
+
+msgid "MFA authentication is required."
+msgstr "Se requiere autenticación MFA."
+
+msgid "The multi-factor authentication is not required."
+msgstr "La autenticación de múltiples factores no es necesaria."
+
+msgid "No valid multi-factor authentication settings found for this provider."
+msgstr "No se han encontrado configuraciones de autenticación de múltiples factores válidas para este proveedor."
+
+msgid "The multi-factor authentication was a success."
+msgstr "La autenticación de múltiples factores fue un éxito."
+
+msgid "The multi factor authentication settings for the organization were updated."
+msgstr "Se actualizaron las opciones de autenticación de múltiples factores en la organización."
+
+msgid "Please setup the TOTP application."
+msgstr "Por favor, configure la aplicación TOTP."
+
+msgid "Please provide the one-time password."
+msgstr "Por favor, proporcione la contraseña de un solo uso."
+
+msgid "The user id is not valid."
+msgstr "El id de usuario no es válido."
+
+msgid "No multi-factor authentication settings defined for the user."
+msgstr "No hay ajustes de autenticación multifactor definidos para el usuario."
+
+msgid "The multi-factor authentication settings for the user were deleted."
+msgstr "Se eliminaron los ajustes de autenticación de múltiples factores para el usuario."
+
+msgid "Please setup the Yubikey settings."
+msgstr "Por favor, configure los ajustes de Yubikey."
+
+msgid "A state is required."
+msgstr ""
+
+msgid "The state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The state should not be empty."
+msgstr ""
+
+msgid "A duo code is required."
+msgstr ""
+
+msgid "The duo code state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The duo code should not be empty."
+msgstr ""
+
+msgid "The error description should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The error description state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "Something went wrong when validating the one-time password."
+msgstr "Algo salió mal al validar la contraseña de un solo uso."
+
+msgid "This OTP provision uri is not valid."
+msgstr "Este uri de provisión de OTP no es válido."
+
+msgid "An OTP is required."
+msgstr "Se requiere un OTP."
+
+msgid "The OTP should not be empty."
+msgstr "El OTP no debe estar vacío."
+
+msgid "This OTP is not valid."
+msgstr "Este OTP no es válido."
+
+msgid "The OTP should be composed of numbers only."
+msgstr "El OTP debe estar compuesto únicamente de números."
+
+msgid "The OTP should be at least {0} characters long."
+msgstr "El OTP debe tener al menos {0} caracteres."
+
+msgid "This yubikey is not associated with this user."
+msgstr "Esta yubikey no está asociada con este usuario."
+
+msgid "No Duo error provided"
+msgstr ""
+
+msgid "No Duo error description provided"
+msgstr ""
+
+msgid "Your multi-factor authentication settings were reset by you."
+msgstr "Tu configuración de autenticación de múltiples factores ha sido restablecida."
+
+msgid "Multi-factor authentication settings were reset."
+msgstr "Se restablecieron los ajustes de autenticación de múltiples factores."
+
+msgid "Your multi-factor authentication settings were reset by an administrator."
+msgstr "Tu configuración de autenticación de múltiples factores fue restablecida por un administrador."
+
+msgid "The token should reference an active Duo callback authentication token."
+msgstr ""
+
+msgid "An authentication token state is required."
+msgstr ""
+
+msgid "The Duo state should match the authentication token state."
+msgstr ""
+
+msgid "Could not enable Duo MFA provider."
+msgstr ""
+
+msgid "Unable to verify Duo authentication."
+msgstr ""
+
+msgid "Could not validate the Duo settings."
+msgstr ""
+
+msgid "Could not login using Duo MFA provider."
+msgstr ""
+
+msgid "Unable to connect to Duo services."
+msgstr ""
+
+msgid "Unable to verify Duo code against Duo service."
+msgstr ""
+
+msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
+msgstr ""
+
+msgid "The duo authentication subscriber does not match the operator username."
+msgstr ""
+
+msgid "No configuration set for Duo client ID."
+msgstr ""
+
+msgid "No configuration set for Duo API hostname."
+msgstr ""
+
+msgid "No configuration set for Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo API hostname."
+msgstr ""
+
+msgid "This is not a valid Duo client ID."
+msgstr ""
+
+msgid "Cannot verify Duo settings."
+msgstr ""
+
+msgid "Could not validate Duo configuration"
+msgstr "No se pudo validar la configuración de Dúo"
+
+msgid "The MFA token provided does not exist or is inactive."
+msgstr "El token MFA proporcionado no existe o no está activo."
+
+msgid "No MFA provider set."
+msgstr "Ningún proveedor MFA establecido."
+
+msgid "MFA verification date is not set for this provider."
+msgstr "La fecha de verificación de MFA no está establecida para este proveedor."
+
+msgid "MFA setting OTP provisioning uri is not set."
+msgstr "La configuración de uri de aprovisionamiento de OTP no está definida."
+
+msgid "MFA setting Yubikey Id is not set."
+msgstr "La configuración id MFA de la Yubikey Id no está configurada."
+
+msgid "The multi-factor authentication settings data should not be empty."
+msgstr "Los datos de configuración de autenticación de múltiples factores no deben estar vacíos."
+
+msgid "The multi-factor authentication providers list is missing."
+msgstr "Falta la lista de proveedores de autenticación de múltiples factores."
+
+msgid "Unknown MFA provider: {0}."
+msgstr "Proveedor MFA desconocido: {0}."
+
+msgid "Could not validate multi-factor authentication provider configuration."
+msgstr "No se pudo validar la configuración del proveedor de autenticación de múltiples factores."
+
+msgid "No configuration set for Yubikey OTP secret key."
+msgstr "No hay configuración establecida para la clave secreta Yubikey OTP."
+
+msgid "No configuration set for Yubikey OTP clientId."
+msgstr "No hay configuración definida para el clienteId de la Yubikey OTP."
+
+msgid "Yubikey OTP clientId should be an integer."
+msgstr "Yubikey OTP clientId debe ser un entero."
+
+msgid "Yubikey OTP secret key is not valid."
+msgstr "La clave secreta Yubikey OTP no es válida."
+
+msgid "Could not validate Yubikey configuration."
+msgstr "No se pudo validar la configuración de la Yubikey."
+
+msgid "Duo Multi Factor Authentication"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr "Algo salió mal."
+
+msgid "Please try again later or contact your administrator."
+msgstr "Por favor, inténtelo de nuevo más tarde o póngase en contacto con su administrador."
+
+msgid "Logs"
+msgstr "Registros"
+
+msgid "Retry"
+msgstr "Volver a intentar"
+
+msgid "Getting started with Duo"
+msgstr ""
+
+msgid "How does it work?"
+msgstr "¿Cómo funciona?"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "Inicie sesión en passbolt como lo hace normalmente."
+
+msgid "Use you 2FA device to authenticate."
+msgstr ""
+
+msgid "Follow the procedure to login."
+msgstr ""
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Get started"
+msgstr ""
+
+msgid "Requirements"
+msgstr "Requisitos"
+
+msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
+msgstr ""
+
+msgid "For the list of supported devices, see:"
+msgstr ""
+
+msgid "Duo authentication methods"
+msgstr ""
+
+msgid "Learn more"
+msgstr "Más información"
+
+msgid "Duo multi-factor authentication is enabled!"
+msgstr "¡La autenticación Duo de múltiples factores está habilitada!"
+
+msgid "When logging in you will be asked to perform Duo Authentication."
+msgstr "Al iniciar sesión se le pedirá que realice la autenticación de Duo."
+
+msgid "Since"
+msgstr "Desde"
+
+msgid "Multi factor authentication verification"
+msgstr "Verificación de autenticación de múltiples factores"
+
+msgid "Multi Factor Authentication Required"
+msgstr ""
+
+msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
+msgstr ""
+
+msgid "Multi factor authentication"
+msgstr "Autenticación de múltiples factores"
+
+msgid "Sorry no multi factor authentication is enabled for this organization."
+msgstr "Lo sentimos, la autenticación de múltiples factores no está habilitada para esta organización."
+
+msgid "Please contact your administrator to enable multi-factor authentication."
+msgstr "Póngase en contacto con su administrador para habilitar la autenticación de múltiples factores."
+
+msgid "Please select a provider"
+msgstr "Por favor, seleccione un proveedor"
+
+msgid "Enabled"
+msgstr "Activado"
+
+msgid "Disabled"
+msgstr "Desactivado"
+
+msgid "What is multi-factor authentication?"
+msgstr "¿Qué es la autenticación de múltiples factores?"
+
+msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
+msgstr "La autenticación de múltiples factores (MFA) es un método para confirmar la identidad de un usuario que requiere presentar dos o más evidencias (o factor)."
+
+msgid "learn more"
+msgstr "saber más"
+
+msgid "Time based One Time Password (TOTP)"
+msgstr "Contraseña de un solo uso basada en el tiempo (TOTP)"
+
+msgid "Scan this bar code"
+msgstr "Escanear este código de barras"
+
+msgid "Enter the six digit number as presented on your phone or tablet."
+msgstr "Introduzca el número de seis dígitos tal y como aparece en su teléfono o tableta."
+
+msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
+msgstr "Para continuar, debe instalar una aplicación que admita contraseñas de un solo uso basadas en el tiempo (TOTP) en su teléfono o tableta, como:"
+
+msgid "or"
+msgstr "o"
+
+msgid "Getting started with Time based One Time Password (TOTP)"
+msgstr "Primeros pasos con la contraseña de un solo uso basada en el tiempo (TOTP)"
+
+msgid "When using a new browser, you need an additional code from your phone."
+msgstr "Cuando utilice un nuevo navegador, necesitará un código adicional de su teléfono."
+
+msgid "Once you enter this code, you can log in."
+msgstr "Una vez ingresado este código, podrás iniciar sesión."
+
+msgid "Time based One Time Password (TOTP) is enabled!"
+msgstr "¡La contraseña de un solo uso basada en el tiempo (TOTP) está habilitada!"
+
+msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
+msgstr "Al iniciar sesión desde un nuevo dispositivo tendrás que introducir un código de verificación único generado por una aplicación en tu móvil."
+
+msgid "Remember this device for a month."
+msgstr "Recordar este dispositivo durante un mes."
+
+msgid "Yubikey One Time Password"
+msgstr "Contraseña de un solo uso de Yubikey"
+
+msgid "Plug in the yubikey and put your finger on it."
+msgstr "Conecta el yubikey y pon tu dedo sobre él."
+
+msgid "Yubikey One Time Password is enabled!"
+msgstr "¡La contraseña de un solo uso de la Yubikey está habilitada!"
+
+msgid "When logging in from a new device you will need a unique code generated by your yubikey."
+msgstr "Al iniciar sesión desde un nuevo dispositivo necesitarás un código único generado por tu yubikey."
+
+msgid "verify"
+msgstr "verificar"
+
+msgid "Sign-in with Duo"
+msgstr ""
+
+msgid "Or try with another provider"
+msgstr "O pruebe con otro proveedor"
+
+msgid "Manage providers"
+msgstr "Administrar proveedores"
+
+msgid "Turn off"
+msgstr "Desactivar"
+
+msgid "Your multi-factor authentication is disabled."
+msgstr "Su autenticación de múltiples factores está deshabilitada."
+
+msgid "Multi-factor authentication settings were reset for your account by an administrator."
+msgstr "Tu configuración de autenticación de múltiples factores fue restablecida por un administrador."
+
+msgid "Please contact your administrator if you didn't request this action."
+msgstr "Póngase en contacto con su administrador si no solicitó esta acción."
+
+msgid "Log in passbolt"
+msgstr "Iniciar sesión passbolt"
+
+msgid "The password generator value \"{0}\" is not valid."
+msgstr "El valor del generador de contraseñas \"{0}\" no es válido."
+
+msgid "5 minutes"
+msgstr "5 minutos"
+
+msgid "15 minutes"
+msgstr "15 minutos"
+
+msgid "30 minutes"
+msgstr "30 minutos"
+
+msgid "1 hour"
+msgstr "1 hora"
+
+msgid "until I log out"
+msgstr "hasta que cierre la sesión"
+
+msgid "Only administrators can view reports."
+msgstr "Sólo los administradores pueden ver los informes."
+
+msgid "The requested report `{0}` does not exist."
+msgstr "El informe solicitado `{0}` no existe."
+
+msgid "Description"
+msgstr "Descripción"
+
+msgid "Passbolt report"
+msgstr "Informe Passbolt"
+
+msgid "Report name"
+msgstr "Nombre del informe"
+
+msgid "Generated by"
+msgstr "Generado por"
+
+msgid "Creation date"
+msgstr "Fecha de creación"
+
+msgid "All users have completed the setup."
+msgstr "Todos los usuarios han completado la configuración."
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgid "Created since"
+msgstr "Creado desde"
+
+msgid "Setup completed"
+msgstr "Configuración completada"
+
+msgid "Role"
+msgstr "Rol"
+
+msgid "No"
+msgstr "No"
+
+msgid "The self registration setting id should be a valid UUID."
+msgstr "El identificador del ajuste del auto-registro debe ser un UUID válido."
+
+msgid "An email is required."
+msgstr "Se requiere un correo electrónico."
+
+msgid "The provider should not be empty."
+msgstr "El proveedor no debe estar vacío."
+
+msgid "The provider should be part of the supported list: {0}."
+msgstr "El proveedor debe formar parte de la lista de proveedores compatibles: {0}."
+
+msgid "The data should not be empty."
+msgstr "Los datos no deben estar vacíos."
+
+msgid "The list of allowed domains should not be empty."
+msgstr "La lista de dominios permitidos no debe estar vacía."
+
+msgid "The list of allowed domains should be an array of strings."
+msgstr "La lista de dominios permitidos debe ser una matriz de cadenas de texto."
+
+msgid "The domain #{0} should be a valid domain."
+msgstr "El dominio #{0} debe ser un dominio válido."
+
+msgid "An email notification setting should be a boolean."
+msgstr "La \"configuración de notificación por correo electrónico\" debe ser un valor booleano."
+
+msgid "Allowed domains: {0}"
+msgstr "Dominios permitidos: {0}"
+
+msgid "{0} edited the self registration settings."
+msgstr "{0} editó los ajustes del auto-registro."
+
+msgid "You edited the self registration settings."
+msgstr "Ha editado los ajustes del auto-registro."
+
+msgid "{0} just created an account on passbolt!"
+msgstr "¡{0} acaba de crear una cuenta en Passbolt!"
+
+msgid "The email is already registered."
+msgstr "El correo electrónico ya está registrado."
+
+msgid "The self registration plugin is not enabled."
+msgstr "El plugin del auto-registro no está habilitado."
+
+msgid "The self registration data could not be validated."
+msgstr "Los datos del auto-registro no se han podido validar."
+
+msgid "The self registration is disabled."
+msgstr "El auto-registro está desactivado."
+
+msgid "The domain is not supported for self-registration."
+msgstr "El dominio no es compatible con el auto-registro."
+
+msgid "Email domain safe list"
+msgstr "Lista segura de dominios de correo"
+
+msgid "Could not parse the self registration settings found in database."
+msgstr "No se han podido analizar los ajustes del auto-registro encontrados en la base de datos."
+
+msgid "Could not validate the self registration settings found in database."
+msgstr "No se han podido validar los ajustes del auto-registro encontrados en la base de datos."
+
+msgid "Could not validate the self registration settings."
+msgstr "No se han podido validar los ajustes del auto-registro."
+
+msgid "{0} updated the self registration settings"
+msgstr "{0} actualizó los ajustes del auto-registro"
+
+msgid "Status: {0}"
+msgstr "Estado: {0}"
+
+msgid "A sender name is required."
+msgstr "Se requiere un nombre de remitente."
+
+msgid "The sender name should not be empty."
+msgstr "El nombre del remitente no debe estar vacío."
+
+msgid "The sender name should be a valid BMP-UTF8 string."
+msgstr "El nombre del remitente debe ser una cadena BMP-UTF8 válida."
+
+msgid "A sender email is required."
+msgstr "Se requiere un correo electrónico del remitente."
+
+msgid "The sender email should not be empty."
+msgstr "El correo electrónico del remitente no debe estar vacío."
+
+msgid "The sender email should be a valid BMP-UTF8 string."
+msgstr "El correo electrónico del remitente debe ser una cadena BMP-UTF8 válida."
+
+msgid "A host name is required."
+msgstr "Se requiere un nombre de host."
+
+msgid "The host name should not be empty."
+msgstr "El nombre de host no debe estar vacío."
+
+msgid "The host name should be a valid BMP-UTF8 string."
+msgstr "El nombre de host debe ser una cadena BMP-UTF8 válida."
+
+msgid "A TLS setting is required."
+msgstr "Se requiere una configuración TLS."
+
+msgid "The TLS setting should be \"true\" or NULL."
+msgstr "La configuración de TLS debe ser \"true\" o NULL."
+
+msgid "A port number is required."
+msgstr "Un número de puerto es necesario."
+
+msgid "The port number should be numeric."
+msgstr "El número del puerto debe ser numérico."
+
+msgid "The port number should be between {0} and {1}."
+msgstr "El número del puerto debe estar entre {0} y {1}."
+
+msgid "The username should be a valid BMP-UTF8 string."
+msgstr "El nombre de usuario debe ser una cadena BMP-UTF8 válida."
+
+msgid "A password is required."
+msgstr "Se requiere una contraseña."
+
+msgid "The password should be a valid BMP-UTF8 string."
+msgstr "La contraseña debe ser una cadena BMP-UTF8 válida."
+
+msgid "The test email should be a valid email address."
+msgstr "El correo electrónico de prueba debe ser una dirección de correo electrónico válida."
+
+msgid "The sender email should be a valid email address."
+msgstr "El correo electrónico del remitente debe ser una dirección de correo válida."
+
+msgid "A test recipient is required."
+msgstr "El destinatario de la prueba es obligatorio."
+
+msgid "SMTP settings endpoints disabled."
+msgstr "Endpoints de configuración SMTP desactivados."
+
+msgid "The client should be a valid IP or a valid domain."
+msgstr "El cliente debe ser una IP válida o un dominio válido."
+
+msgid "Could not validate the smtp settings."
+msgstr "No se ha podido validar la configuración SMTP."
+
+msgid "Could not validate the smtp settings found in database."
+msgstr "No se han podido validar los ajustes SMTP encontrados en la base de datos."
+
+msgid "The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database."
+msgstr "La clave de servidor OpenPGP no puede utilizarse para descifrar la configuración SMTP almacenada en la base de datos."
+
+msgid "To fix this problem, you need to configure the SMTP server again."
+msgstr "Para solucionar este problema, necesita configurar el servidor SMTP de nuevo."
+
+msgid "not found"
+msgstr "no se ha encontrado"
+
+msgid "database"
+msgstr "base de datos"
+
+msgid "env variables"
+msgstr "variables de entorno"
+
+msgid "undefined"
+msgstr "sin definir"
+
+msgid "Passbolt test email"
+msgstr "Correo electrónico de prueba de Passbolt"
+
+msgid "Congratulations!"
+msgstr "¡Felicidades!"
+
+msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
+msgstr "Si recibe este correo electrónico, significa que su configuración smtp de passbolt funciona bien."
+
+msgid "The data entered are not correct"
+msgstr "Los datos introducidos no son correctos"
+
+msgid "A connection could not be established with the credentials provided."
+msgstr "No se pudo establecer una conexión con las credenciales proporcionadas."
+
+msgid "Please verify the settings."
+msgstr "Por favor verifique la configuración."
+
+msgid "The data entered are not correct: {0}"
+msgstr "Los datos ingresados no son correctos: {0}"
+
+msgid "The session has expired. Please start the configuration again."
+msgstr "La sesión ha caducado. Por favor, inicie la configuración de nuevo."
+
+msgid "System check"
+msgstr "Comprobación del sistema"
+
+msgid "Subscription key"
+msgstr "Clave de suscripción"
+
+msgid "Database"
+msgstr "Base de datos"
+
+msgid "Server keys"
+msgstr "Claves del servidor"
+
+msgid "Options"
+msgstr "Opciones"
+
+msgid "Emails"
+msgstr "Correo electrónico"
+
+msgid "First user"
+msgstr "Primer usuario"
+
+msgid "Installation"
+msgstr "Instalación"
+
+msgid "That's it!"
+msgstr "¡Eso es!"
+
+msgid "The password should not contain quotes."
+msgstr "La contraseña no debe contener comillas."
+
+msgid "A database name is required."
+msgstr "Se requiere un nombre de base de datos."
+
+msgid "The database name should not be empty."
+msgstr "El nombre de la base de datos no debe estar vacío."
+
+msgid "The database name should be a valid BMP-UTF8 string."
+msgstr "El nombre de la base de datos debe ser una cadena BMP-UTF8 válida."
+
+msgid "The database name should not contain dashes."
+msgstr "El nombre de la base de datos no debe contener guiones."
+
+msgid "An OpenPGP public key is required."
+msgstr "Se requiere una clave pública OpenPGP."
+
+msgid "The OpenPGP public key should not be empty."
+msgstr "La clave pública OpenPGP no debe estar vacía."
+
+msgid "The OpenPGP public key should be a valid ASCII string."
+msgstr "La clave pública OpenPGP debe ser una cadena ASCII válida."
+
+msgid "The key is not a valid OpenPGP public key."
+msgstr "La clave no es una clave pública OpenPGP válida."
+
+msgid "The OpenPGP public key should not have an expiry date."
+msgstr "La clave pública OpenPGP no debe tener una fecha de caducidad."
+
+msgid "The OpenPGP public key cannot be used to encrypt."
+msgstr "La clave pública OpenPGP no se puede usar para cifrar."
+
+msgid "An OpenPGP private key is required."
+msgstr "Se requiere una clave privada OpenPGP."
+
+msgid "The OpenPGP private key should not be empty."
+msgstr "La clave privada OpenPGP no debe estar vacía."
+
+msgid "The OpenPGP private key should be a valid ASCII string."
+msgstr "La clave privada OpenPGP debe ser una cadena ASCII válida."
+
+msgid "The value is not a valid OpenPGP private key."
+msgstr "El valor no es una clave privada OpenPGP válida."
+
+msgid "The OpenPGP private key should not have an expiry date."
+msgstr "La clave privada OpenPGP no debe tener una fecha de caducidad."
+
+msgid "The OpenPGP private key cannot be used to decrypt."
+msgstr "La clave privada OpenPGP no se puede usar para descifrar."
+
+msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
+msgstr "Tenga en cuenta que passbolt no soporta la clave OpenPGP protegida con un secreto."
+
+msgid "A fingerprint is required."
+msgstr "Se requiere una huella digital."
+
+msgid "The fingerprint should not be empty."
+msgstr "La huella digital no debe estar vacía."
+
+msgid "The fingerprint should be a valid alphanumeric string."
+msgstr "La huella digital debe ser una cadena alfanumérica válida."
+
+msgid "The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints."
+msgstr "La huella digital no coincide con las huellas digitales de las claves pública y privada de OpenPGP."
+
+msgid "A full base url is required."
+msgstr "Se requiere una url base completa."
+
+msgid "The full base url should not be empty"
+msgstr "La url base completa no debe estar vacía"
+
+msgid "The full base url should be a valid BMP-UTF8 string."
+msgstr "La url base completa debe ser una cadena BMP-UTF8 válida."
+
+msgid "A force ssl status is required."
+msgstr "Se requiere un estado ssl forzado."
+
+msgid "The force ssl setting should be a valid boolean."
+msgstr "La configuración de forzar ssl debe ser un booleano válido."
+
+msgid "The database schema does not match the one expected"
+msgstr "El esquema de base de datos no coincide con el esperado"
+
+msgid "The database cannot be installed"
+msgstr "No se puede instalar la base de datos"
+
+msgid "There was a problem creating the first user"
+msgstr "Hubo un problema al crear el primer usuario"
+
+msgid "There was a problem creating the registration token"
+msgstr "Hubo un problema al crear el token de registro"
+
+msgid "The passbolt config is writable."
+msgstr "Se puede escribir en la configuración de passbolt."
+
+msgid "The passbolt config is not writable."
+msgstr "No se puede escribir en la configuración de passbolt."
+
+msgid "Ensure the file "
+msgstr "Asegúrese de que el archivo "
+
+msgid "you can try:"
+msgstr "puedes probar:"
+
+msgid "The server OpenPGP public key file is writable."
+msgstr "El archivo de clave pública OpenPGP del servidor tiene permisos de escritura."
+
+msgid "The server OpenPGP public key file is not writable."
+msgstr "El archivo de clave pública OpenPGP del servidor no tiene permisos de escritura."
+
+msgid "Ensure the file {0} is writable by the webserver user."
+msgstr "Asegúrese de que el archivo {0} tiene permisos de escritura para el usuario del servidor web."
+
+msgid "The server OpenPGP private key file is writable."
+msgstr "El archivo de clave privada OpenPGP del servidor tiene permisos de escritura."
+
+msgid "The server OpenPGP private key file is not writable."
+msgstr "El archivo de clave privada OpenPGP del servidor no tiene permisos de escritura."
+
+msgid "Create your user account!"
+msgstr "¡Crea tu cuenta de usuario!"
+
+msgid "Admin user details"
+msgstr "Detalles del usuario administrador"
+
+msgid "First name"
+msgstr "Nombre"
+
+msgid "Last name"
+msgstr "Apellidos"
+
+msgid "mail@yourdomain.com"
+msgstr "correo@dominio.es"
+
+msgid "Next"
+msgstr "Siguiente"
+
+msgid "Enter your database details."
+msgstr "Introduzca los detalles de su base de datos."
+
+msgid "Database configuration"
+msgstr "Configuración de la base de datos"
+
+msgid "An existing database has been detected on your server. The connection details are pre-filled below."
+msgstr "Se ha detectado una base de datos existente en su servidor. Los detalles de la conexión están pre-rellenados a continuación."
+
+msgid "You can keep it as it is (default), or replace it with the details of another database."
+msgstr "Puede mantenerlo como es (por defecto), o reemplazarlo con los detalles de otra base de datos."
+
+msgid "Database connection url"
+msgstr "Url de conexión de base de datos"
+
+msgid "host name or ip address"
+msgstr "nombre del host o dirección Ip"
+
+msgid "username"
+msgstr "nombre de usuario"
+
+msgid "password"
+msgstr "contraseña"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "database name"
+msgstr "nombre de la base de datos"
+
+msgid "Database name"
+msgstr "Nombre de la base de datos"
+
+msgid "Enter your SMTP server settings."
+msgstr "Introduzca la configuración de su servidor SMTP."
+
+msgid "Email configuration"
+msgstr "Configuración de correo electrónico"
+
+msgid "admin or company name"
+msgstr "nombre de administrador o empresa"
+
+msgid "Sender name"
+msgstr "Nombre del remitente"
+
+msgid "email@company.com"
+msgstr "correo@empresa.es"
+
+msgid "Sender email"
+msgstr "Correo del remitente"
+
+msgid "SMTP server configuration"
+msgstr "Configuración del servidor SMTP"
+
+msgid "SMTP host"
+msgstr "Servidor SMTP"
+
+msgid "Use TLS?"
+msgstr "¿Usar TLS?"
+
+msgid "port"
+msgstr "puerto"
+
+msgid "Port"
+msgstr "Puerto"
+
+msgid "client"
+msgstr "cliente"
+
+msgid "Client"
+msgstr "Cliente"
+
+msgid "Passbolt is not configured."
+msgstr "Passbolt no está configurado."
+
+msgid "Passbolt is not configured yet!"
+msgstr "Passbolt aún no está configurado!"
+
+msgid "If you see this page, it means that passbolt is present on your server but not configured. Click on \"Get Started\" to launch the configuration wizard."
+msgstr "Si ve esta página, significa que passbolt está presente en su servidor pero no está configurado. Haga clic en \"Empezar\" para iniciar el asistente de configuración."
+
+msgid "Get Started"
+msgstr "Empezar"
+
+msgid "Create a new server OpenPGP key or {0} an existing one."
+msgstr "Cree una nueva clave OpenPGP de servidor o {0} una ya existente."
+
+msgid "import"
+msgstr "importar"
+
+msgid "Create a new OpenPGP key for your server"
+msgstr "Crear una nueva clave OpenPGP para su servidor"
+
+msgid "My company server name"
+msgstr "Nombre del servidor de mi empresa"
+
+msgid "Server Name"
+msgstr "Nombre del Servidor"
+
+msgid "admin@your-server.com"
+msgstr "admin@tu-servidor.es"
+
+msgid "Server Email"
+msgstr "Correo del servidor"
+
+msgid "add a comment (optional)"
+msgstr "añadir un comentario (opcional)"
+
+msgid "Comment"
+msgstr "Comentario"
+
+msgid "Import an existing key or {0} a new one."
+msgstr "Importar una clave existente o {0} una nueva."
+
+msgid "create"
+msgstr "crear"
+
+msgid "Copy paste the OpenPGP private key below"
+msgstr "Copiar pegar la clave privada OpenPGP a continuación"
+
+msgid "Browse"
+msgstr "Navegar"
+
+msgid "Or select a file from your computer"
+msgstr "O selecciona un archivo de tu ordenador"
+
+msgid "Some binary things are happening..."
+msgstr "Algunas cosas binarias están ocurriendo..."
+
+msgid "Passbolt Pro activation."
+msgstr "Activación de Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Copie y pegue su clave de suscripción de Passbolt Pro aquí"
+
+msgid "Choose your preferences."
+msgstr "Elige tus preferencias."
+
+msgid "Full Base Url"
+msgstr "Url Base Completa"
+
+msgid "Full base url"
+msgstr "Url base completa"
+
+msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
+msgstr "Esta es la url en la que passbolt será accesible. Esta url se utilizará para lugares donde la url de passbolt no se puede adivinar automáticamente, como enlaces en correos electrónicos. Sin barra final."
+
+msgid "Force SSL?"
+msgstr "¿Forzar SSL?"
+
+msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
+msgstr "Forzar SSL significa que passbolt no aceptará conexiones provenientes de un protocolo no seguro. Si SSL es forzado, su servidor tiene que ser configurado para HTTPS. Es altamente recomendable que lo haga."
+
+msgid "Welcome to Passbolt! Let's get started with the configuration."
+msgstr "¡Bienvenido a Passbolt! Vamos a empezar con la configuración."
+
+msgid "Nice one! Your environment is ready for passbolt."
+msgstr "¡Perfecto! Su entorno está listo para la aprobación."
+
+msgid "Oops!! Passbolt cannot run yet on your server."
+msgstr "¡Vaya! Passbolt no puede ejecutarse aún en tu servidor."
+
+msgid "Environment is configured correctly."
+msgstr "El entorno está configurado correctamente."
+
+msgid "URL rewriting is not properly configured on your server."
+msgstr "La reescritura de URL no está correctamente configurada en tu servidor."
+
+msgid "GPG is configured correctly."
+msgstr "GPG está configurado correctamente."
+
+msgid "GPG Configuration"
+msgstr "Configuración GPG"
+
+msgid "SSL"
+msgstr "SSL"
+
+msgid "SSL access is enabled."
+msgstr "El acceso SSL está habilitado."
+
+msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
+msgstr "El acceso SSL no está habilitado. Todavía puede continuar, pero es altamente recomendable que configure su servidor web para que use HTTPS antes de continuar."
+
+msgid "Start configuration"
+msgstr "Iniciar configuración"
+
+msgid "The configuration is complete"
+msgstr "La configuración está completa"
+
+msgid "Success!"
+msgstr "¡Éxito!"
+
+msgid "You have completed successfully the configuration procedure, congrats!"
+msgstr "Ha completado con éxito el procedimiento de configuración, ¡felicidades!"
+
+msgid "You will soon be redirected to passbolt to complete your account setup."
+msgstr "Pronto serás redirigido a passbolt para completar la configuración de tu cuenta."
+
+msgid "You will soon be redirected to the login page."
+msgstr "Pronto serás redirigido a la página de inicio de sesión."
+
+msgid "next"
+msgstr "siguiente"
+
+msgid "Click here if you can't wait"
+msgstr "Haz clic aquí si no puedes esperar"
+
+msgid "Errors details"
+msgstr "Detalles de los errores"
+
+msgid "Installing"
+msgstr "Instalando"
+
+msgid "Existing installation?"
+msgstr "¿Instalación existente?"
+
+msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
+msgstr "Si desea utilizar una base de datos de Passbolt existente, el instalador se encargará de actualizarla a la versión actual de Passbolt mientras conserva sus datos."
+
+msgid "As a precaution, do not forget to backup your database before you continue."
+msgstr "Como precaución, no olvide hacer una copia de seguridad de su base de datos antes de continuar."
+
+msgid "Help"
+msgstr "Ayuda"
+
+msgid "Need help? You can find more information on how to install passbolt in the official online help."
+msgstr "¿Necesitas ayuda? Puede encontrar más información sobre cómo instalar passbolt en la ayuda oficial en línea."
+
+msgid "What subscription key?"
+msgstr "¿Qué clave de suscripción?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "La clave de suscripción es un archivo que se le envió cuando compró Passbolt Pro. Necesitamos la clave de suscripción para activar las características Pro de passbolt."
+
+msgid "Send test email"
+msgstr "Enviar correo electrónico de prueba"
+
+msgid "The test email has been sent successfully!"
+msgstr "¡El correo electrónico de prueba ha sido enviado con éxito!"
+
+msgid "Email could not be sent:"
+msgstr "El correo electrónico no pudo ser enviado:"
+
+msgid "See trace"
+msgstr "Ver rastro"
+
+msgid "Your email address"
+msgstr "Tu correo electrónico"
+
+msgid "Why do I need a SMTP server?"
+msgstr "¿Por qué necesito un servidor SMTP?"
+
+msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
+msgstr "Passbolt necesita un servidor SMTP para enviar mensajes de invitación después de la creación de una cuenta y para enviar notificaciones por correo electrónico."
+
+msgid "The requested address was not found on this server."
+msgstr "La dirección solicitada no se encontró en este servidor."
+
+msgid "Please double check the url."
+msgstr "Por favor, comprueba la url."
+
+msgid "Maybe the page was deleted or moved."
+msgstr "Tal vez la página fue eliminada o movida."
+
+msgid "Health checks"
+msgstr "Comprobaciones de salud"
+
+msgid "Passbolt API Status"
+msgstr "Passbolt API Status"
+
+msgid "SSL access is not enabled."
+msgstr "El acceso SSL no está habilitado."
+
+msgid "Group manager"
+msgstr "Administrador de grupo"
+
+msgid "Member"
+msgstr "Miembro"
+
+msgid "Updated roles"
+msgstr "Roles actualizados"
+
+msgid "is now group manager"
+msgstr "ahora es administrador de grupo"
+
+msgid "is not anymore group manager"
+msgstr "ya no es administrador de grupo"
+
+msgid "Terms"
+msgstr "Condiciones"
+
+msgid "Privacy"
+msgstr "Privacidad"
+
+msgid "Credits"
+msgstr "Créditos"
+
+msgid "Versions"
+msgstr "Versiones"
+
+msgid "home"
+msgstr "inicio"
+
+msgid "login"
+msgstr "entrar"
+
+msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
+msgstr "{0} ({1}) acaba de completar una recuperación de cuenta. Siéntase libre de ponerse en contacto con este usuario si cree que esta acción parece sospechosa."
+
+msgid "View user in passbolt"
+msgstr "Ver usuario en passbolt"
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr "¡{0} no puede completar el proceso de recuperación de cuenta!"
+
+msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
+msgstr "Este usuario perdió su clave privada y/o contraseña y no puede completar el proceso de recuperación de cuenta."
+
+msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
+msgstr "Desafortunadamente, necesitarán su ayuda para eliminar su cuenta y reiniciar desde cero."
+
+msgid "Please check with them first to confirm."
+msgstr "Por favor, compruebe primero con ellos para confirmar."
+
+msgid "Welcome to {0}!"
+msgstr "¡Bienvenido a {0}!"
+
+msgid "{0} used the self registration feature to create an account on passbolt."
+msgstr "{0} usó la función de auto-registro para crear una cuenta en Passbolt."
+
+msgid "You have initiated an account recovery!"
+msgstr "¡Has iniciado una recuperación de cuenta!"
+
+msgid "Welcome back!"
+msgstr "¡Bienvenido de nuevo!"
+
+msgid "You just requested to recover your passbolt account on this device."
+msgstr "Has solicitado recuperar tu cuenta de passbolt en este dispositivo."
+
+msgid "Make sure you have a backup of your secret key handy."
+msgstr "Asegúrese de tener una copia de seguridad de su clave secreta a mano."
+
+msgid "Click on the link below to proceed."
+msgstr "Haga clic en el enlace de abajo para continuar."
+
+msgid "start recovery"
+msgstr "iniciar recuperación"
+
+msgid "You just completed an account recovery. Feel free to get in touch with an admin if you feel this action looks suspicious."
+msgstr "Acaba de completar una recuperación de cuenta. Siéntase libre de ponerse en contacto con un administrador si cree que esta acción parece sospechosa."
+
+msgid "{0} just created an account for you on passbolt!"
+msgstr "¡{0} acaba de crear una cuenta para ti en passbolt!"
+
+msgid "Welcome {0}"
+msgstr "Bienvenido {0}"
+
+msgid "{0} just invited you to join passbolt at {1}"
+msgstr "{0} te acaba de invitar a unirte a passbolt en {1}"
+
+msgid "Passbolt is an open source password manager."
+msgstr "Passbolt es un gestor de contraseñas de código abierto."
+
+msgid "It is designed to allow sharing credentials securely with your team!"
+msgstr "Está diseñado para permitir compartir credenciales de forma segura con su equipo!"
+
+msgid "Let's take the next five minutes to get you started!"
+msgstr "¡Tomemos los próximos cinco minutos para empezar!"
+
+msgid "get started"
+msgstr "empezar"
+
+msgid "You just created your account on passbolt!"
+msgstr "¡Acabas de crear tu cuenta en passbolt!"
+
+msgid "You just opened an account on passbolt at {0}."
+msgstr "Acabas de abrir una cuenta de passbolt en {0}."
+
+msgid "{0} requested you to add members to a group"
+msgstr "{0} te ha solicitado agregar miembros a un grupo"
+
+msgid "Group: {0}"
+msgstr "Grupo: {0}"
+
+msgid "The following members should be added:"
+msgstr "Los siguientes miembros deben ser añadidos:"
+
+msgid "Edit group members"
+msgstr "Editar miembros del grupo"
+
+msgid "log in passbolt"
+msgstr "iniciar sesión en passbolt"
+
+msgid "{0} deleted the user {1}"
+msgstr "{0} eliminó al usuario {1}"
+
+msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt."
+msgstr "El usuario {0} {1} ({2}) se ha eliminado de su organización en pasaporte."
+
+msgid "This user was a member of the following group(s) you manage:"
+msgstr "Este usuario era miembro del siguiente grupo(s) que administras:"
+
+msgid "view it in passbolt"
+msgstr "ver en passbolt"
+
+msgid "{0} deleted a group"
+msgstr "{0} eliminó un grupo"
+
+msgid "{0} deleted the group \"{1}\" you were a member of."
+msgstr "{0} eliminó el grupo \"{1}\" del que eras miembro."
+
+msgid "All passwords that were shared only with this group were also deleted."
+msgstr "También se eliminaron todas las contraseñas que fueron compartidas sólo con este grupo."
+
+msgid "As member of the group you now have access to all the passwords that are shared with this group."
+msgstr "Como miembro del grupo ahora tiene acceso a todas las contraseñas que se comparten con este grupo."
+
+msgid "And as group manager you are also authorized to edit the members of the group."
+msgstr "Y como administrador de grupo también está autorizado a editar los miembros del grupo."
+
+msgid "You are no longer a member of this group."
+msgstr "Ya no eres miembro de este grupo."
+
+msgid "You are no longer authorized to access the passwords shared with this group."
+msgstr "Ya no tienes autorización para acceder a las contraseñas compartidas con este grupo."
+
+msgid "Please contact {0} or another group manager if this is a mistake."
+msgstr "Póngase en contacto con {0} u otro administrador de grupo si se trata de un error."
+
+msgid "You are now a group manager of this group."
+msgstr "Ahora eres un administrador de grupo de este grupo."
+
+msgid "As group manager you are now authorized to edit the members of this group."
+msgstr "Como administrador de grupo ahora está autorizado a editar los miembros de este grupo."
+
+msgid "As member of the group you still have access to all the passwords that are shared with this group."
+msgstr "Como miembro del grupo todavía tiene acceso a todas las contraseñas que se comparten con este grupo."
+
+msgid "You are no longer a group manager of this group."
+msgstr "Ya no eres un administrador de grupo de este grupo."
+
+msgid "You are no longer authorized to edit the members of this group."
+msgstr "Ya no tienes autorización para editar los miembros de este grupo."
+
+msgid "Edited your membership in several groups"
+msgstr "Editar tu membresía en varios grupos"
+
+msgid "{0} group memberships were affected."
+msgstr "{0} miembros del grupo se vieron afectados."
+
+msgid "It would be too much to list them here, but you can get more information on passbolt."
+msgstr "Sería demasiado enumerarlos aquí, pero usted puede obtener más información sobre el passbolt."
+
+msgid "go to passbolt"
+msgstr "ir a passbolt"
+
+msgid "{0} deleted several group"
+msgstr "{0} eliminó varios grupos"
+
+msgid "{0} deleted {1} groups you were a member of."
+msgstr "{0} eliminó {1} grupos de los que era miembro."
+
+msgid "You have saved a new password"
+msgstr "Has guardado una nueva contraseña"
+
+msgid "Name: {0}"
+msgstr "Nombre: {0}"
+
+msgid "Username: {0}"
+msgstr "Nombre de usuario: {0}"
+
+msgid "URL: {0}"
+msgstr "URL: {0}"
+
+msgid "Description: {0}"
+msgstr "Descripción: {0}"
+
+msgid "{0} shared a password with you"
+msgstr "{0} compartió una contraseña contigo"
+
+msgid "{0} updated the password {1}"
+msgstr "{0} actualizó la contraseña {1}"
+
+msgid "Edited multiple resources"
+msgstr "Editar varios recursos"
+
+msgid "{0} resources were affected."
+msgstr "{0} recursos fueron afectados."
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Sería demasiado enumerarlos aquí, pero puede ir a verificarlos en passbolt."
+
+msgid "view them in passbolt"
+msgstr "visualizarlos en passbolt"
+
+msgid "{0} shared passwords with you"
+msgstr "{0} compartió una contraseña contigo"
+
+msgid "{0} resources were shared with you."
+msgstr "{0} recursos fueron compartidos contigo."
+
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} acaba de activar su cuenta en passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "El usuario está ahora activo en passbolt y puedes compartir contraseñas con él."
+
+msgid "This user was invited by you {0}."
+msgstr "Este usuario fue invitado por ti {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Este usuario se registró por sí mismo, ya que el registro público está habilitado."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Este usuario fue invitado por {0} {1}."
+
+msgid "view users"
+msgstr "ver usuarios"
+
+msgid "This email is an automatic notification sent by"
+msgstr "Este correo electrónico es una notificación automática enviada por"
+
+msgid "You can disable these notifications by requesting an administrator to delete your account."
+msgstr "Puede desactivar estas notificaciones solicitando a un administrador que elimine su cuenta."
+
+msgid "The locale {0} is not valid or not supported."
+msgstr "La configuración regional {0} no es válida o no es compatible."
+
+msgid "An Internal Error Has Occurred"
+msgstr "Ha ocurrido un error interno"
+

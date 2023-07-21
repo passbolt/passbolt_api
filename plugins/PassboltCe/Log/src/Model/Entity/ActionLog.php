@@ -49,4 +49,24 @@ class ActionLog extends Entity
         'status' => false,
         'created' => false,
     ];
+
+    /**
+     * Returns true if the status is 1
+     *
+     * @return bool
+     */
+    public function isStatusSuccess(): bool
+    {
+        return $this->get('status') == 1;
+    }
+
+    /**
+     * Returns false if the status is not 1
+     *
+     * @return bool
+     */
+    public function isStatusError(): bool
+    {
+        return !$this->isStatusSuccess();
+    }
 }

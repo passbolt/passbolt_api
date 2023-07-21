@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2022-08-09 11:58+0000\n"
+"POT-Creation-Date: 2023-02-27 10:56+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -15,6 +15,9 @@ msgstr ""
 "Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
 
 msgid "You need to login to access this location."
+msgstr ""
+
+msgid "The server verify token is missing or invalid."
 msgstr ""
 
 msgid "Decryption failed."
@@ -71,40 +74,16 @@ msgstr ""
 msgid "The operation was successful."
 msgstr ""
 
-msgid "The resource identifier should be a valid UUID."
-msgstr ""
-
-msgid "Could not save the comment, please try again later."
-msgstr ""
-
 msgid "The comment was successfully added."
-msgstr ""
-
-msgid "The resource does not exist."
-msgstr ""
-
-msgid "Could not validate comment data."
-msgstr ""
-
-msgid "The comment id is not valid."
-msgstr ""
-
-msgid "The comment does not exist."
 msgstr ""
 
 msgid "The comment was deleted."
 msgstr ""
 
-msgid "Could not delete comment."
+msgid "The comment id is not valid."
 msgstr ""
 
 msgid "The comment was successfully updated."
-msgstr ""
-
-msgid "You are not allowed to edit this comment."
-msgstr ""
-
-msgid "Could not find comments for the requested model."
 msgstr ""
 
 msgid "Invalid order. \"{0}\" is not in the list of allowed order."
@@ -161,10 +140,16 @@ msgstr ""
 msgid "\"{0}\" is not a valid group filter."
 msgstr ""
 
+msgid "\"{0}\" is not a valid parent filter."
+msgstr ""
+
 msgid "\"{0}\" is not a valid resource id for filter {1}."
 msgstr ""
 
 msgid "\"{0}\" is not a valid group id for filter {1}."
+msgstr ""
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
 msgstr ""
 
 msgid "\"{0}\" is not a valid timestamp for filter {1}."
@@ -188,28 +173,25 @@ msgstr ""
 msgid "Access restricted to administrators."
 msgstr ""
 
+msgid "Access restricted to unauthenticated users."
+msgstr ""
+
+msgid "The user should not be logged in."
+msgstr ""
+
 msgid "This feature is not supported by your version of passbolt."
+msgstr ""
+
+msgid "The resource identifier should be a valid UUID."
 msgstr ""
 
 msgid "The resource was marked as favorite."
 msgstr ""
 
-msgid "This record is already marked as favorite."
-msgstr ""
-
-msgid "Could not validate favorite data."
-msgstr ""
-
 msgid "The favorite id is not valid."
 msgstr ""
 
-msgid "The favorite does not exist."
-msgstr ""
-
 msgid "The favorite was deleted."
-msgstr ""
-
-msgid "Could not delete favorite."
 msgstr ""
 
 msgid "The OpenPGP key identifier should be a valid UUID."
@@ -255,6 +237,9 @@ msgid "OK"
 msgstr ""
 
 msgid "The identifier should be a valid UUID."
+msgstr ""
+
+msgid "The resource does not exist."
 msgstr ""
 
 msgid "The resource type does not exist."
@@ -362,16 +347,22 @@ msgstr ""
 msgid "Recovery process started, check your email."
 msgstr ""
 
-msgid "Registration is not opened to public. Please contact your administrator."
+msgid "Only guests are allowed to register."
 msgstr ""
 
-msgid "Only guests are allowed to register."
+msgid "Registration is not opened to public. Please contact your administrator."
 msgstr ""
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr ""
 
 msgid "The user does not exist."
+msgstr ""
+
+msgid "No admin were found in the database."
+msgstr ""
+
+msgid "Invalid expiry time {0}."
 msgstr ""
 
 msgid "The identifier should not be empty."
@@ -968,6 +959,12 @@ msgstr ""
 msgid "The key should not already be expired."
 msgstr ""
 
+msgid "The email should be a valid email address."
+msgstr ""
+
+msgid "The regular expression should be a valid string."
+msgstr ""
+
 msgid "The fingerprint does not match the one of the armored key."
 msgstr ""
 
@@ -1145,10 +1142,43 @@ msgstr ""
 msgid "The avatar id is not valid."
 msgstr ""
 
+msgid "Could not save the comment, please try again later."
+msgstr ""
+
+msgid "Could not validate comment data."
+msgstr ""
+
+msgid "The comment userId is not valid."
+msgstr ""
+
+msgid "The comment does not exist."
+msgstr ""
+
+msgid "Could not delete comment."
+msgstr ""
+
 msgid "Validation failed for comment {0}. {1}"
 msgstr ""
 
 msgid "Validation success for comment {0}"
+msgstr ""
+
+msgid "You are not allowed to edit this comment."
+msgstr ""
+
+msgid "Could not find comments for the requested model."
+msgstr ""
+
+msgid "This record is already marked as favorite."
+msgstr ""
+
+msgid "Could not validate favorite data."
+msgstr ""
+
+msgid "The favorite does not exist."
+msgstr ""
+
+msgid "Could not delete favorite."
 msgstr ""
 
 msgid "Validation failed for favorite {0}. {1}"
@@ -1277,7 +1307,7 @@ msgstr ""
 msgid "Could not validate resource data."
 msgstr ""
 
-msgid "An unexpected error occured, please contact an administrator."
+msgid "An unexpected error occurred, please contact an administrator."
 msgstr ""
 
 msgid "The server returned the following error:"
@@ -1380,6 +1410,12 @@ msgid "Validation failed for user {0}. {1}"
 msgstr ""
 
 msgid "Validation success for user {0}"
+msgstr ""
+
+msgid "The directory {0} cannot be deleted"
+msgstr ""
+
+msgid "Database connection failed"
 msgstr ""
 
 msgid "Could not connect to github repository"
@@ -1667,6 +1703,9 @@ msgstr ""
 msgid "Could not validate action log data."
 msgstr ""
 
+msgid "The date {0} should be after the date {1}."
+msgstr ""
+
 msgid "The identifier should be not be empty."
 msgstr ""
 
@@ -1850,6 +1889,399 @@ msgstr ""
 msgid "The authentication token is expired."
 msgstr ""
 
+msgid "Unable to authenticate to Duo."
+msgstr ""
+
+msgid "Unable to validate the Duo callback data."
+msgstr ""
+
+msgid "A Duo state cookie is required."
+msgstr ""
+
+msgid "The Duo state cookie value should be a string."
+msgstr ""
+
+msgid "The Duo state cookie should be a valid UUID."
+msgstr ""
+
+msgid "This entrypoint is not available anymore."
+msgstr ""
+
+msgid "This authentication provider is not enabled for your organization."
+msgstr ""
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr ""
+
+msgid "This authentication provider is already setup. Disable it first"
+msgstr ""
+
+msgid "Multi Factor Authentication is configured!"
+msgstr ""
+
+msgid "MFA authentication is required."
+msgstr ""
+
+msgid "The multi-factor authentication is not required."
+msgstr ""
+
+msgid "No valid multi-factor authentication settings found for this provider."
+msgstr ""
+
+msgid "The multi-factor authentication was a success."
+msgstr ""
+
+msgid "The multi factor authentication settings for the organization were updated."
+msgstr ""
+
+msgid "Please setup the TOTP application."
+msgstr ""
+
+msgid "Please provide the one-time password."
+msgstr ""
+
+msgid "The user id is not valid."
+msgstr ""
+
+msgid "No multi-factor authentication settings defined for the user."
+msgstr ""
+
+msgid "The multi-factor authentication settings for the user were deleted."
+msgstr ""
+
+msgid "Please setup the Yubikey settings."
+msgstr ""
+
+msgid "A state is required."
+msgstr ""
+
+msgid "The state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The state should not be empty."
+msgstr ""
+
+msgid "A duo code is required."
+msgstr ""
+
+msgid "The duo code state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The duo code should not be empty."
+msgstr ""
+
+msgid "The error description should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The error description state should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "Something went wrong when validating the one-time password."
+msgstr ""
+
+msgid "This OTP provision uri is not valid."
+msgstr ""
+
+msgid "An OTP is required."
+msgstr ""
+
+msgid "The OTP should not be empty."
+msgstr ""
+
+msgid "This OTP is not valid."
+msgstr ""
+
+msgid "The OTP should be composed of numbers only."
+msgstr ""
+
+msgid "The OTP should be at least {0} characters long."
+msgstr ""
+
+msgid "This yubikey is not associated with this user."
+msgstr ""
+
+msgid "No Duo error provided"
+msgstr ""
+
+msgid "No Duo error description provided"
+msgstr ""
+
+msgid "Your multi-factor authentication settings were reset by you."
+msgstr ""
+
+msgid "Multi-factor authentication settings were reset."
+msgstr ""
+
+msgid "Your multi-factor authentication settings were reset by an administrator."
+msgstr ""
+
+msgid "The token should reference an active Duo callback authentication token."
+msgstr ""
+
+msgid "An authentication token state is required."
+msgstr ""
+
+msgid "The Duo state should match the authentication token state."
+msgstr ""
+
+msgid "Could not enable Duo MFA provider."
+msgstr ""
+
+msgid "Unable to verify Duo authentication."
+msgstr ""
+
+msgid "Could not validate the Duo settings."
+msgstr ""
+
+msgid "Could not login using Duo MFA provider."
+msgstr ""
+
+msgid "Unable to connect to Duo services."
+msgstr ""
+
+msgid "Unable to verify Duo code against Duo service."
+msgstr ""
+
+msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
+msgstr ""
+
+msgid "The duo authentication subscriber does not match the operator username."
+msgstr ""
+
+msgid "No configuration set for Duo client ID."
+msgstr ""
+
+msgid "No configuration set for Duo API hostname."
+msgstr ""
+
+msgid "No configuration set for Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo client secret."
+msgstr ""
+
+msgid "This is not a valid Duo API hostname."
+msgstr ""
+
+msgid "This is not a valid Duo client ID."
+msgstr ""
+
+msgid "Cannot verify Duo settings."
+msgstr ""
+
+msgid "Could not validate Duo configuration"
+msgstr ""
+
+msgid "The MFA token provided does not exist or is inactive."
+msgstr ""
+
+msgid "No MFA provider set."
+msgstr ""
+
+msgid "MFA verification date is not set for this provider."
+msgstr ""
+
+msgid "MFA setting OTP provisioning uri is not set."
+msgstr ""
+
+msgid "MFA setting Yubikey Id is not set."
+msgstr ""
+
+msgid "The multi-factor authentication settings data should not be empty."
+msgstr ""
+
+msgid "The multi-factor authentication providers list is missing."
+msgstr ""
+
+msgid "Unknown MFA provider: {0}."
+msgstr ""
+
+msgid "Could not validate multi-factor authentication provider configuration."
+msgstr ""
+
+msgid "No configuration set for Yubikey OTP secret key."
+msgstr ""
+
+msgid "No configuration set for Yubikey OTP clientId."
+msgstr ""
+
+msgid "Yubikey OTP clientId should be an integer."
+msgstr ""
+
+msgid "Yubikey OTP secret key is not valid."
+msgstr ""
+
+msgid "Could not validate Yubikey configuration."
+msgstr ""
+
+msgid "Duo Multi Factor Authentication"
+msgstr ""
+
+msgid "Something went wrong."
+msgstr ""
+
+msgid "Please try again later or contact your administrator."
+msgstr ""
+
+msgid "Logs"
+msgstr ""
+
+msgid "Retry"
+msgstr ""
+
+msgid "Getting started with Duo"
+msgstr ""
+
+msgid "How does it work?"
+msgstr ""
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr ""
+
+msgid "Use you 2FA device to authenticate."
+msgstr ""
+
+msgid "Follow the procedure to login."
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Get started"
+msgstr ""
+
+msgid "Requirements"
+msgstr ""
+
+msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
+msgstr ""
+
+msgid "For the list of supported devices, see:"
+msgstr ""
+
+msgid "Duo authentication methods"
+msgstr ""
+
+msgid "Learn more"
+msgstr ""
+
+msgid "Duo multi-factor authentication is enabled!"
+msgstr ""
+
+msgid "When logging in you will be asked to perform Duo Authentication."
+msgstr ""
+
+msgid "Since"
+msgstr ""
+
+msgid "Multi factor authentication verification"
+msgstr ""
+
+msgid "Multi Factor Authentication Required"
+msgstr ""
+
+msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
+msgstr ""
+
+msgid "Multi factor authentication"
+msgstr ""
+
+msgid "Sorry no multi factor authentication is enabled for this organization."
+msgstr ""
+
+msgid "Please contact your administrator to enable multi-factor authentication."
+msgstr ""
+
+msgid "Please select a provider"
+msgstr ""
+
+msgid "Enabled"
+msgstr ""
+
+msgid "Disabled"
+msgstr ""
+
+msgid "What is multi-factor authentication?"
+msgstr ""
+
+msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
+msgstr ""
+
+msgid "learn more"
+msgstr ""
+
+msgid "Time based One Time Password (TOTP)"
+msgstr ""
+
+msgid "Scan this bar code"
+msgstr ""
+
+msgid "Enter the six digit number as presented on your phone or tablet."
+msgstr ""
+
+msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "Getting started with Time based One Time Password (TOTP)"
+msgstr ""
+
+msgid "When using a new browser, you need an additional code from your phone."
+msgstr ""
+
+msgid "Once you enter this code, you can log in."
+msgstr ""
+
+msgid "Time based One Time Password (TOTP) is enabled!"
+msgstr ""
+
+msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
+msgstr ""
+
+msgid "Remember this device for a month."
+msgstr ""
+
+msgid "Yubikey One Time Password"
+msgstr ""
+
+msgid "Plug in the yubikey and put your finger on it."
+msgstr ""
+
+msgid "Yubikey One Time Password is enabled!"
+msgstr ""
+
+msgid "When logging in from a new device you will need a unique code generated by your yubikey."
+msgstr ""
+
+msgid "verify"
+msgstr ""
+
+msgid "Sign-in with Duo"
+msgstr ""
+
+msgid "Or try with another provider"
+msgstr ""
+
+msgid "Manage providers"
+msgstr ""
+
+msgid "Turn off"
+msgstr ""
+
+msgid "Your multi-factor authentication is disabled."
+msgstr ""
+
+msgid "Multi-factor authentication settings were reset for your account by an administrator."
+msgstr ""
+
+msgid "Please contact your administrator if you didn't request this action."
+msgstr ""
+
+msgid "Log in passbolt"
+msgstr ""
+
 msgid "The password generator value \"{0}\" is not valid."
 msgstr ""
 
@@ -1910,94 +2342,76 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-msgid "The data entered are not correct"
+msgid "The self registration setting id should be a valid UUID."
 msgstr ""
 
-msgid "A connection could not be established with the credentials provided."
+msgid "An email is required."
 msgstr ""
 
-msgid "Please verify the settings."
+msgid "The provider should not be empty."
 msgstr ""
 
-msgid "passbolt test email"
+msgid "The provider should be part of the supported list: {0}."
 msgstr ""
 
-msgid "Congratulations!"
+msgid "The data should not be empty."
 msgstr ""
 
-msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
+msgid "The list of allowed domains should not be empty."
 msgstr ""
 
-msgid "The data entered are not correct: {0}"
+msgid "The list of allowed domains should be an array of strings."
 msgstr ""
 
-msgid "The session has expired. Please start the configuration again."
+msgid "The domain #{0} should be a valid domain."
 msgstr ""
 
-msgid "System check"
+msgid "An email notification setting should be a boolean."
 msgstr ""
 
-msgid "Subscription key"
+msgid "Allowed domains: {0}"
 msgstr ""
 
-msgid "Database"
+msgid "{0} edited the self registration settings."
 msgstr ""
 
-msgid "Server keys"
+msgid "You edited the self registration settings."
 msgstr ""
 
-msgid "Emails"
+msgid "{0} just created an account on passbolt!"
 msgstr ""
 
-msgid "Options"
+msgid "The email is already registered."
 msgstr ""
 
-msgid "First user"
+msgid "The self registration plugin is not enabled."
 msgstr ""
 
-msgid "Installation"
+msgid "The self registration data could not be validated."
 msgstr ""
 
-msgid "That's it!"
+msgid "The self registration is disabled."
 msgstr ""
 
-msgid "A host name is required."
+msgid "The domain is not supported for self-registration."
 msgstr ""
 
-msgid "The host name should not be empty."
+msgid "Email domain safe list"
 msgstr ""
 
-msgid "The host name should be a valid BMP-UTF8 string."
+msgid "Could not parse the self registration settings found in database."
 msgstr ""
 
-msgid "A port number is required."
+msgid "Could not validate the self registration settings found in database."
 msgstr ""
 
-msgid "The port number should be numeric."
+msgid "Could not validate the self registration settings."
 msgstr ""
 
-msgid "The port number should be between {0} and {1}."
+msgid "{0} updated the self registration settings"
 msgstr ""
 
-msgid "The username should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The password should not contain quotes."
-msgstr ""
-
-msgid "The password should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "A database name is required."
-msgstr ""
-
-msgid "The database name should not be empty."
-msgstr ""
-
-msgid "The database name should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The database name should not contain dashes."
+msgid "Status: {0}"
 msgstr ""
 
 msgid "A sender name is required."
@@ -2018,19 +2432,142 @@ msgstr ""
 msgid "The sender email should be a valid BMP-UTF8 string."
 msgstr ""
 
-msgid "The sender email should be a valid email address."
+msgid "A host name is required."
+msgstr ""
+
+msgid "The host name should not be empty."
+msgstr ""
+
+msgid "The host name should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "A TLS setting is required."
 msgstr ""
 
-msgid "The TLS setting should be a valid boolean."
+msgid "The TLS setting should be \"true\" or NULL."
+msgstr ""
+
+msgid "A port number is required."
+msgstr ""
+
+msgid "The port number should be numeric."
+msgstr ""
+
+msgid "The port number should be between {0} and {1}."
+msgstr ""
+
+msgid "The username should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "A password is required."
 msgstr ""
 
+msgid "The password should be a valid BMP-UTF8 string."
+msgstr ""
+
 msgid "The test email should be a valid email address."
+msgstr ""
+
+msgid "The sender email should be a valid email address."
+msgstr ""
+
+msgid "A test recipient is required."
+msgstr ""
+
+msgid "SMTP settings endpoints disabled."
+msgstr ""
+
+msgid "The client should be a valid IP or a valid domain."
+msgstr ""
+
+msgid "Could not validate the smtp settings."
+msgstr ""
+
+msgid "Could not validate the smtp settings found in database."
+msgstr ""
+
+msgid "The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database."
+msgstr ""
+
+msgid "To fix this problem, you need to configure the SMTP server again."
+msgstr ""
+
+msgid "not found"
+msgstr ""
+
+msgid "database"
+msgstr ""
+
+msgid "env variables"
+msgstr ""
+
+msgid "undefined"
+msgstr ""
+
+msgid "Passbolt test email"
+msgstr ""
+
+msgid "Congratulations!"
+msgstr ""
+
+msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
+msgstr ""
+
+msgid "The data entered are not correct"
+msgstr ""
+
+msgid "A connection could not be established with the credentials provided."
+msgstr ""
+
+msgid "Please verify the settings."
+msgstr ""
+
+msgid "The data entered are not correct: {0}"
+msgstr ""
+
+msgid "The session has expired. Please start the configuration again."
+msgstr ""
+
+msgid "System check"
+msgstr ""
+
+msgid "Subscription key"
+msgstr ""
+
+msgid "Database"
+msgstr ""
+
+msgid "Server keys"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Emails"
+msgstr ""
+
+msgid "First user"
+msgstr ""
+
+msgid "Installation"
+msgstr ""
+
+msgid "That's it!"
+msgstr ""
+
+msgid "The password should not contain quotes."
+msgstr ""
+
+msgid "A database name is required."
+msgstr ""
+
+msgid "The database name should not be empty."
+msgstr ""
+
+msgid "The database name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The database name should not contain dashes."
 msgstr ""
 
 msgid "An OpenPGP public key is required."
@@ -2093,12 +2630,6 @@ msgstr ""
 msgid "The full base url should be a valid BMP-UTF8 string."
 msgstr ""
 
-msgid "A public registration setting is required."
-msgstr ""
-
-msgid "The public registration setting should be a valid boolean."
-msgstr ""
-
 msgid "A force ssl status is required."
 msgstr ""
 
@@ -2133,6 +2664,9 @@ msgid "The server OpenPGP public key file is writable."
 msgstr ""
 
 msgid "The server OpenPGP public key file is not writable."
+msgstr ""
+
+msgid "Ensure the file {0} is writable by the webserver user."
 msgstr ""
 
 msgid "The server OpenPGP private key file is writable."
@@ -2192,9 +2726,6 @@ msgstr ""
 msgid "Database name"
 msgstr ""
 
-msgid "Cancel"
-msgstr ""
-
 msgid "Enter your SMTP server settings."
 msgstr ""
 
@@ -2226,6 +2757,12 @@ msgid "port"
 msgstr ""
 
 msgid "Port"
+msgstr ""
+
+msgid "client"
+msgstr ""
+
+msgid "Client"
 msgstr ""
 
 msgid "Passbolt is not configured."
@@ -2303,19 +2840,13 @@ msgstr ""
 msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
 msgstr ""
 
-msgid "Allow public registration?"
-msgstr ""
-
-msgid "Allowing public registration means that any visitor can create himself an account on your passbolt. Unless your instance of passbolt is not reachable by the outside world, it is usually a bad idea."
-msgstr ""
-
 msgid "Force SSL?"
 msgstr ""
 
 msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
 msgstr ""
 
-msgid "Welcome to Passbolt Pro! Let's get started with the configuration."
+msgid "Welcome to Passbolt! Let's get started with the configuration."
 msgstr ""
 
 msgid "Nice one! Your environment is ready for passbolt."
@@ -2468,9 +2999,6 @@ msgstr ""
 msgid "login"
 msgstr ""
 
-msgid "register"
-msgstr ""
-
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""
 
@@ -2487,6 +3015,12 @@ msgid "Unfortunately, they will need your help to delete their account and resta
 msgstr ""
 
 msgid "Please check with them first to confirm."
+msgstr ""
+
+msgid "Welcome to {0}!"
+msgstr ""
+
+msgid "{0} used the self registration feature to create an account on passbolt."
 msgstr ""
 
 msgid "You have initiated an account recovery!"

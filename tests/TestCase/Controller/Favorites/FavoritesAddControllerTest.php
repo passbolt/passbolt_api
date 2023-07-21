@@ -18,9 +18,10 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Favorites;
 
 use App\Model\Table\FavoritesTable;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
 class FavoritesAddControllerTest extends AppIntegrationTestCase
@@ -32,11 +33,6 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
      */
     private $Favorites;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
-        'app.Base/Favorites', 'app.Base/Permissions',
-    ];
-
     public function setUp(): void
     {
         parent::setUp();
@@ -44,21 +40,26 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites', $config);
     }
 
-    public function testFavoritesAddSuccess()
+    public function testFavoritesAddController_Success(): void
     {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $this->logInAs($user);
+
+        $resourceId = $resource->get('id');
+        $this->postJson("/favorites/resource/$resourceId.json");
         $this->assertSuccess();
 
         // Expected fields.
         $this->assertFavoriteAttributes($this->_responseJsonBody);
     }
 
-    public function testFavoritesAddCannotModifyNotAccessibleFields()
+    public function testFavoritesAddController_CannotModifyNotAccessibleFields(): void
     {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resourceId = $resource->get('id');
+        $this->logInAs($user);
 
         $favoriteData = [
             'id' => 'modified_id',
@@ -85,67 +86,53 @@ class FavoritesAddControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($favoriteData['user_id'], $favorite->user_id);
     }
 
-    public function testFavoritesAddErrorCsrfToken()
+    public function testFavoritesAddController_ErrorCsrfToken(): void
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->post("/favorites/resource/$resourceId.json?api-version=2");
+
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resourceId = $resource->get('id');
+        $this->logInAs($user);
+
+        $this->post("/favorites/resource/$resourceId.json");
+
         $this->assertResponseCode(403);
     }
 
-    public function testFavoritesAddErrorNotValidId()
+    public function testFavoritesAddController_ErrorNotValidId(): void
     {
-        $this->authenticateAs('dame');
+        $user = UserFactory::make()->user()->persist();
+        $this->logInAs($user);
         $resourceId = 'invalid-id';
+
         $this->postJson("/favorites/resource/$resourceId.json");
+
         $this->assertError(400, 'The resource identifier should be a valid UUID.');
     }
 
-    public function testFavoritesAddErrorDoesNotExistResource()
+    public function testFavoritesAddController_ErrorNotAuthenticated(): void
     {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid();
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
-        $this->assertError(404, 'The resource does not exist.');
-    }
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $resourceId = $resource->get('id');
 
-    public function testFavoritesAddErrorSoftDeletedResource()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
-        $this->assertError(404, 'The resource does not exist.');
-    }
+        $this->postJson("/favorites/resource/$resourceId.json");
 
-    public function testFavoritesAddErrorResourceAccessDenied()
-    {
-        $resourceId = UuidFactory::uuid('resource.id.canjs');
-
-        // Check that the resource exists.
-        $Resources = TableRegistry::getTableLocator()->get('Resources');
-        $resource = $Resources->get($resourceId);
-        $this->assertNotNull($resource);
-
-        // Check that the user cannot access the resource
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.canjs');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
-        $this->assertError(404, 'The resource does not exist.');
-    }
-
-    public function testFavoritesAddErrorAlreadyMarkedAsFavorite()
-    {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
-        $this->assertError(400, 'This record is already marked as favorite.');
-    }
-
-    public function testFavoritesAddErrorNotAuthenticated()
-    {
-        $resourceId = UuidFactory::uuid('resource.id.bower');
-        $this->postJson("/favorites/resource/$resourceId.json?api-version=2");
         $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testFavoritesAddController_Error_NotJson(): void
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        $this->logInAs($user);
+
+        $resourceId = $resource->get('id');
+        $this->post("/favorites/resource/$resourceId");
+        $this->assertResponseCode(404);
     }
 }

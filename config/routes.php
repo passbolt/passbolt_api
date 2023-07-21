@@ -210,20 +210,6 @@ $routes->scope('/resources', function ($routes) {
 });
 
 /**
- * Resources types prefixed routes
- */
-$routes->scope('/resource-types', function ($routes) {
-    $routes->setExtensions(['json']);
-
-    $routes->connect('/', ['prefix' => 'ResourceTypes', 'controller' => 'ResourceTypesIndex', 'action' => 'index'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/{id}', ['prefix' => 'ResourceTypes', 'controller' => 'ResourceTypesView', 'action' => 'view'])
-        ->setPass(['id'])
-        ->setMethods(['GET']);
-});
-
-/**
  * Roles prefixed routes
  */
 $routes->scope('/roles', function ($routes) {
@@ -370,10 +356,6 @@ $routes->scope('/setup', function ($routes) {
     $routes->connect('/recover/{userId}/{tokenId}', ['prefix' => 'Setup', 'controller' => 'RecoverStart', 'action' => 'start'])
         ->setPass(['userId', 'tokenId'])
         ->setMethods(['GET']);
-
-    $routes->connect('/completeRecovery/{userId}', ['prefix' => 'Setup', 'controller' => 'RecoverComplete', 'action' => 'complete'])
-        ->setPass(['userId'])
-        ->setMethods(['PUT', 'POST']);
 });
 
 /**
@@ -381,6 +363,6 @@ $routes->scope('/setup', function ($routes) {
  */
 $routes->scope('/app', function ($routes) {
     $routes->connect('/administration/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
-    $routes->connect('/settings/mfa', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
+    $routes->connect('/settings/mfa/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiApp']);
     $routes->connect('/*', ['prefix' => 'Pages', 'controller' => 'Home', 'action' => 'apiExtApp']);
 });
