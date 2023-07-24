@@ -357,18 +357,10 @@ class LdapDirectory implements DirectoryInterface
      */
     protected function _fetchAndInitializeQuery(string $entryType): Builder
     {
-        if ($entryType === self::ENTRY_TYPE_GROUP) {
-            $fields = [
-                '*',
-                $this->mappingRules[$this->getDirectoryType()][$entryType]['created'],
-                $this->mappingRules[$this->getDirectoryType()][$entryType]['modified'],
-            ];
-        } else {
-            // Get fields that we are interested in from field mappings
-            // This is reduce the response payload from LDAP server to prevent exceeding memory,
-            // and improve query performance.
-            $fields = array_values($this->mappingRules[$this->getDirectoryType()][$entryType]);
-        }
+        // Get fields that we are interested in from field mappings
+        // This is reduce the response payload from LDAP server to prevent exceeding memory,
+        // and improve query performance.
+        $fields = array_values($this->mappingRules[$this->getDirectoryType()][$entryType]);
 
         $query = $this->getQuery($entryType)->select($fields);
 
