@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.2-rc.2] - 2023-07-25
+### Fixed
+- PB-25472 Fix emails not sent for SMTP server using NTLM authentication
+
+### Maintenance
+- PB-25471 Crowdin should export only a selected subset of languages
+
 ## [4.1.1] - 2023-07-13
 ### Fixed
 - PB-25304 As an administrator the application healthcheck should compare passbolt version with the latest stable release
