@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-27 10:56+0000\n"
-"PO-Revision-Date: 2023-02-27 12:11\n"
+"POT-Creation-Date: 2023-07-24 11:52+0000\n"
+"PO-Revision-Date: 2023-07-25 06:51\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -64,11 +64,20 @@ msgstr "Nėra vartotojo, susieto su šiuo raktu."
 msgid "Page not found."
 msgstr "Puslapis nerastas."
 
-msgid "This is not a valid Ajax/Json request."
-msgstr "Tai nėra tinkama Ajax/Json užklausa."
+msgid "Please use .json extension in URL or accept application/json."
+msgstr ""
+
+msgid "The request data can not be empty."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "Jūs sėkmingai prisijungėte."
+
+msgid "You are successfully logged out."
+msgstr ""
+
+msgid "The logout route should only be accessed with POST method."
+msgstr ""
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "„OpenPGP“ viešojo rakto informacija konfigūracijoje nerasta."
@@ -176,10 +185,10 @@ msgid "Access restricted to administrators."
 msgstr "Prieiga suteikta tik administratoriams."
 
 msgid "Access restricted to unauthenticated users."
-msgstr ""
+msgstr "Prieiga apribota neautentifikuotiems naudotojams."
 
 msgid "The user should not be logged in."
-msgstr ""
+msgstr "Vartotojas neturėtų būti prisijungęs.\n"
 
 msgid "This feature is not supported by your version of passbolt."
 msgstr "Šios funkcijos jūsų „passbolt“ versija nepalaiko."
@@ -243,9 +252,6 @@ msgstr "Identifikatorius turėtų būti galiojantis UUID."
 
 msgid "The resource does not exist."
 msgstr "Išteklius neegzistuoja."
-
-msgid "The resource type does not exist."
-msgstr "Ištekliaus tipas neegzistuoja."
 
 msgid "The resource has been added successfully."
 msgstr "Išteklius sėkmingai pridėtas."
@@ -343,6 +349,12 @@ msgstr "Grupių atnaujinti neleidžiama."
 msgid "You are not authorized to edit the role."
 msgstr "Jūs neturite teisės redaguoti vaidmens."
 
+msgid "Multiple has-access filters are not supported."
+msgstr ""
+
+msgid "This operation is not allowed for this user."
+msgstr "Ši operacija neleidžiama šiam vartotojui."
+
 msgid "Only guests are allowed to recover an account. Please logout first."
 msgstr "Tik svečiams leidžiama atkurti paskyrą. Pirmiausia atsijunkite."
 
@@ -352,8 +364,14 @@ msgstr "Pradėtas atkūrimo procesas, patikrinkite el. paštą."
 msgid "Only guests are allowed to register."
 msgstr "Registruotis gali tik svečiai."
 
-msgid "Registration is not opened to public. Please contact your administrator."
-msgstr "Registracija nėra atvira viešai. Kreipkitės į administratorių."
+msgid "Registration is not opened to public."
+msgstr ""
+
+msgid "Please contact your administrator."
+msgstr "Susisiekite su administratoriumi."
+
+msgid "This is due to a security setting."
+msgstr ""
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "Vartotojo identifikatorius turėtų būti galiojantis UUID arba „aš“."
@@ -365,7 +383,7 @@ msgid "No admin were found in the database."
 msgstr "Duomenų bazėje administratoriaus nerasta."
 
 msgid "Invalid expiry time {0}."
-msgstr ""
+msgstr "Neteisingas galiojimo laikas {0}.\n"
 
 msgid "The identifier should not be empty."
 msgstr "Identifikatorius neturėtų būti tuščias."
@@ -766,45 +784,6 @@ msgstr "Pavardė turi būti tinkama BMP-UTF8 eilutė."
 msgid "The last name length should be maximum {0} characters."
 msgstr "Pavardės ilgis turi būti ne ilgesnis nei {0} simboliai."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Pavadinimas turi būti tinkama BMP-UTF8 eilutė."
-
-msgid "The slug should be a valid BMP-UTF8 string."
-msgstr "Etiketė turi būti tinkama BMP-UTF8 eilutė."
-
-msgid "A slug is required."
-msgstr "Reikalinga etiketė."
-
-msgid "The slug length should be maximum {0} characters."
-msgstr "Pavadinimo santrumpos ilgis turi būti ne daugiau kaip {0} simboliai."
-
-msgid "The slug should not be empty"
-msgstr "Pavadinimo santrumpa neturėtų būti tuščia."
-
-msgid "The description should be a valid BMP-UTF8 string."
-msgstr "Aprašymas turi būti tinkama BMP-UTF8 eilutė."
-
-msgid "The description length should be maximum {0} characters."
-msgstr "Aprašo ilgis turi būti daugiausia {0} simbolių."
-
-msgid "The definition should be a valid BMP-UTF8 string."
-msgstr "Apibrėžimas turėtų būti tinkama BMP-UTF8 eilutė."
-
-msgid "A definition is required."
-msgstr "Reikalingas apibrėžimas."
-
-msgid "The definition should not be empty."
-msgstr "Apibrėžimas neturi būti tuščias."
-
-msgid "The message should be valid JSON message."
-msgstr "Pranešimas turi būti galiojantis JSON pranešimas."
-
-msgid "A resource type already exists with this slug."
-msgstr "Ištekliaus tipas su šia pavadinimo santrumpa jau yra."
-
-msgid "A resource type already exists with this definition."
-msgstr "Ištekliaus tipas su šiuo apibrėžimu jau yra."
-
 msgid "The username should be a valid UTF8 string."
 msgstr "Vartotojo vardas turėtų būti galiojanti UTF8 eilutė."
 
@@ -819,6 +798,9 @@ msgstr "URI (universalusis ištekliaus identifikatorius) ilgis turi būti daugia
 
 msgid "The description should be a valid UTF8 string."
 msgstr "Aprašas turi būti tinkama UTF8 eilutė."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "Aprašo ilgis turi būti daugiausia {0} simbolių."
 
 msgid "The deleted status should not be empty"
 msgstr "Ištrinta būsena neturi būti tuščia"
@@ -865,6 +847,9 @@ msgstr "Paslaptys neturėtų būti tuščios."
 msgid "The secrets should contain only the secret of the owner."
 msgstr "Paslaptyse turi būti tik savininko paslaptis."
 
+msgid "The resource type does not exist."
+msgstr "Ištekliaus tipas neegzistuoja."
+
 msgid "The permissions should contain the owner permission."
 msgstr "Leidimuose turi būti savininko leidimas."
 
@@ -885,6 +870,9 @@ msgstr "Vartotojas negali ištrinti šio šaltinio."
 
 msgid "The name should be a valid ASCII string."
 msgstr "Pavadinimas turi būti tinkama ASCII eilutė."
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "Aprašymas turi būti tinkama BMP-UTF8 eilutė."
 
 msgid "A role already exists for the given name."
 msgstr "Suteikto vardo vaidmuo jau yra."
@@ -909,6 +897,9 @@ msgstr "Pranešimas neturi būti tuščias."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Tam tikro vartotojo ir šaltinio paslaptis jau yra."
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Pavadinimas turi būti tinkama BMP-UTF8 eilutė."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Vartotojo identifikatorius turi būti galiojantis UUID."
@@ -1310,7 +1301,7 @@ msgid "Could not validate resource data."
 msgstr "Nepavyko patvirtinti išteklių duomenų."
 
 msgid "An unexpected error occurred, please contact an administrator."
-msgstr ""
+msgstr "Įvyko netikėta klaida, susisiekite su administratoriumi.\n"
 
 msgid "The server returned the following error:"
 msgstr "Serveris grąžino šią klaidą:"
@@ -1405,9 +1396,6 @@ msgstr "Šio vartotojo nėra arba jis buvo ištrintas."
 msgid "Please register and complete the setup first."
 msgstr "Pirmiausia užsiregistruokite ir užbaikite sąranką."
 
-msgid "Please contact your administrator."
-msgstr "Susisiekite su administratoriumi."
-
 msgid "Validation failed for user {0}. {1}"
 msgstr "Nepavyko patvirtinti naudotojo {0}. {1}"
 
@@ -1418,7 +1406,7 @@ msgid "The directory {0} cannot be deleted"
 msgstr "Katalogas {0} negali buti ištrintas"
 
 msgid "Database connection failed"
-msgstr ""
+msgstr "Nepavyko prisijungti prie duomenų bazės\n"
 
 msgid "Could not connect to github repository"
 msgstr "Nepavyko prisijungti prie „github“ saugyklos"
@@ -1531,11 +1519,203 @@ msgstr "Ši tema nepalaikoma."
 msgid "You are not allowed to access this location."
 msgstr "Jums neleidžiama pasiekti šios vietos."
 
+msgid "This is not a valid Ajax/Json request."
+msgstr "Tai nėra tinkama Ajax/Json užklausa."
+
 msgid "The notification settings for the organization were updated."
 msgstr "Buvo atnaujinti organizacijos pranešimų nustatymai."
 
 msgid "The supplied email notification settings are not valid"
 msgstr "Pateikti el. pašto pranešimų nustatymai negalioja"
+
+msgid "The folder has been added successfully."
+msgstr "Aplankas sėkmingai pridėtas."
+
+msgid "The folder id is not valid."
+msgstr "Aplanko identifikacija negalioja."
+
+msgid "The folder has been deleted successfully."
+msgstr "Aplankas sėkmingai ištrintas."
+
+msgid "The folder has been updated successfully."
+msgstr "Aplankas sėkmingai atnaujintas."
+
+msgid "The object type should be one of the following: {0}."
+msgstr "Objekto tipas turi būti vienas iš šių: {0}."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "Objekto identifikatorius turi būti galiojantis UUID."
+
+msgid "The object has been moved successfully."
+msgstr "Objektas sėkmingai perkeltas."
+
+msgid "A folder parent identifier is required."
+msgstr "Būtinas aplanko pirminis identifikatorius."
+
+msgid "The folder parent identifier should be a valid UUID."
+msgstr "Pirminio aplanko identifikatorius turi būti galiojantis UUID."
+
+msgid "Could not validate move data."
+msgstr "Nepavyko patvirtinti perkeltų duomenų."
+
+msgid "The folder identifier should be a valid UUID."
+msgstr "Aplanko identifikatorius turi būti galiojantis UUID."
+
+msgid "The folder identifier should not be empty."
+msgstr "Aplanko identifikatorius neturi būti tuščias."
+
+msgid "Could not validate folder history data."
+msgstr "Nepavyko patvirtinti aplanko istorijos duomenų."
+
+msgid "The child object type should be one of the following: {0}."
+msgstr "Antrinio objekto tipas turi būti vienas iš šių: {0}."
+
+msgid "A child object type is required."
+msgstr "Būtinas antrinis objekto tipas."
+
+msgid "The child object type cannot be empty."
+msgstr "Antrinio objekto tipas negali būti tuščias."
+
+msgid "The child object identifier should be a valid UUID."
+msgstr "Antrinio objekto identifikatorius turi būti galiojantis UUID."
+
+msgid "The child object identifier is required."
+msgstr "Būtinas antrinis objekto identifikatorius."
+
+msgid "The child object identifier should not be empty."
+msgstr "Antrinio objekto identifikatoriaus laukas neturi būti tuščias."
+
+msgid "The user id should not be empty."
+msgstr "Vartotojo tapatybės laukas neturi būti tuščias."
+
+msgid "Could not validate folders relations history data."
+msgstr "Nepavyko patvirtinti aplankų ryšių istorijos duomenų."
+
+msgid "The child object type is required."
+msgstr "Būtinas antrinio objekto tipas."
+
+msgid "The child object type should not be empty."
+msgstr "Antrinio objekto tipo laukas neturi būti tuščias."
+
+msgid "The child object identifier required."
+msgstr "Būtinas antrinis objekto identifikatorius."
+
+msgid "A folder relation already exists for the given child object and user."
+msgstr "Aplanko ryšys jau egzistuoja nurodytam antriniam objektui ir vartotojui."
+
+msgid "The child object does not exist."
+msgstr "Antrinis objektas neegzistuoja."
+
+msgid "The identifier of the user who created the folder should be a valid UUID."
+msgstr "Aplanką sukūrusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who created the folder is required."
+msgstr "Būtinas aplanką sukūrusio vartotojo identifikatorius."
+
+msgid "The identifier of the user who created the folder should not be empty."
+msgstr "Aplanką sukūrusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "The identifier of the user who modified the folder should be a valid UUID."
+msgstr "Aplanką pakeitusio vartotojo identifikatorius turi būti galiojantis UUID."
+
+msgid "The identifier of the user who modified the folder is required."
+msgstr "Būtinas naudotojo, kuris pakeitė aplanką, identifikatorius."
+
+msgid "The identifier of the user who modified the folder should not be empty."
+msgstr "Aplanką pakeitusio vartotojo identifikatorius neturi būti tuščias."
+
+msgid "You added the folder {0}"
+msgstr "Pridėjote aplanką {0}"
+
+msgid "You deleted the folder {0}"
+msgstr ""
+
+msgid "{0} deleted the folder {1}"
+msgstr "{0} ištrynė aplanką {1}"
+
+msgid "{0} shared the folder {1}"
+msgstr "{0} pasidalino aplanku {1}"
+
+msgid "You edited the folder {0}"
+msgstr ""
+
+msgid "{0} edited the folder {1}"
+msgstr "{0} redagavo aplanką {1}"
+
+msgid "An email notification setting should be a boolean."
+msgstr "El. pašto pranešimų nustatymas turi būti loginis."
+
+msgid "Could not validate folder data."
+msgstr "Nepavyko patvirtinti aplanko duomenų."
+
+msgid "The folder parent id should be a valid UUID."
+msgstr ""
+
+msgid "The folder parent must exist."
+msgstr "Pirminis aplankas turi egzistuoti."
+
+msgid "You are not allowed to create content into the parent folder."
+msgstr "Jums neleidžiama kurti turinio pirminiame aplanke."
+
+msgid "You are not allowed to delete this folder."
+msgstr "Jums neleidžiama ištrinti šio aplanko."
+
+msgid "The folder does not exist."
+msgstr "Aplankas neegzistuoja."
+
+msgid "You cannot delete this resource"
+msgstr "Negalite ištrinti šio šaltinio"
+
+msgid "You are not allowed to update the permissions of this folder."
+msgstr "Jums neleidžiama atnaujinti šio aplanko leidimų."
+
+msgid "You are not allowed to update this folder."
+msgstr "Jums neleidžiama atnaujinti šio aplanko."
+
+msgid "Could not validate folder relation data."
+msgstr "Nepavyko patvirtinti aplanko ryšio duomenų."
+
+msgid "The object to move does not exist."
+msgstr "Objekto, kurį reikia perkelti, nėra."
+
+msgid "You are not allowed to move this item out of its parent folder."
+msgstr "Jums neleidžiama perkelti šio elemento iš pirminio aplanko."
+
+msgid "You are not allowed to move this item."
+msgstr "Jums neleidžiama perkelti šio elemento."
+
+msgid "You are not allowed to move an item in read only into the parent folder."
+msgstr "Negalite perkelti elemento tik skaityti į pirminį aplanką."
+
+msgid "The folder parent does not exist."
+msgstr "Pirminio aplanko nėra."
+
+msgid "You have created a new folder"
+msgstr "Sukūrėte naują aplanką"
+
+msgid "Name: {0}"
+msgstr "Vardas: {0}"
+
+msgid "view it in passbolt"
+msgstr "peržiūrėkite jį „passbolt'e“."
+
+msgid "You deleted a folder"
+msgstr ""
+
+msgid "{0} deleted a folder"
+msgstr ""
+
+msgid "log in passbolt"
+msgstr "prisijungti \"passbolt\""
+
+msgid "{0} shared a folder with you"
+msgstr ""
+
+msgid "You edited a folder"
+msgstr ""
+
+msgid "{0} edited a folder"
+msgstr ""
 
 msgid "The user signature could not be verified."
 msgstr "Nepavyko patikrinti vartotojo parašo."
@@ -1675,6 +1855,9 @@ msgstr "Tai netinkama lokalė."
 msgid "This is not a valid {0}."
 msgstr "Tai negalioja {0}."
 
+msgid "The strategy should extend the class: {0}"
+msgstr ""
+
 msgid "The action log identifier should be a valid UUID."
 msgstr "Veiksmų žurnalo identifikatorius turi būti galiojantis UUID."
 
@@ -1728,9 +1911,6 @@ msgstr "Reikalingas objekto tipas."
 
 msgid "The object type should not be empty."
 msgstr "Objekto tipas neturi būti tuščias."
-
-msgid "The object identifier should be a valid UUID."
-msgstr "Objekto identifikatorius turi būti galiojantis UUID."
 
 msgid "The object identifier should not be empty."
 msgstr "Objekto identifikatoriaus laukas neturi būti tuščias."
@@ -1873,9 +2053,6 @@ msgstr "Operacija jau baigta."
 msgid "The current page does not match the total number of pages."
 msgstr "Dabartinis puslapis neatitinka bendro puslapių skaičiaus."
 
-msgid "This operation is not allowed for this user."
-msgstr "Ši operacija neleidžiama šiam vartotojui."
-
 msgid "The authentication token is missing."
 msgstr "Trūksta autentifikavimo prieigos rakto."
 
@@ -1941,6 +2118,9 @@ msgstr "Nustatykite TOTP (laiku pagrįstas vienkartinis slaptažodis) programą.
 
 msgid "Please provide the one-time password."
 msgstr "Pateikite vienkartinį slaptažodį."
+
+msgid "You have been logged out due to too many failed attempts."
+msgstr ""
 
 msgid "The user id is not valid."
 msgstr "Vartotojo ID negalioja."
@@ -2073,6 +2253,12 @@ msgstr ""
 
 msgid "Could not validate Duo configuration"
 msgstr "Nepavyko patvirtinti „Duo“ konfigūracijos"
+
+msgid "The property {0} is visible by administrators only."
+msgstr ""
+
+msgid "The property {0} should be contained in order to filter by {1}."
+msgstr ""
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "Pateiktas MFA prieigos raktas neegzistuoja arba yra neaktyvus."
@@ -2287,6 +2473,96 @@ msgstr "Prisijungti \"Passbolt\""
 msgid "The password generator value \"{0}\" is not valid."
 msgstr "Slaptažodžio generatoriaus reikšmė „{0}“ neteisinga."
 
+msgid "Record not found"
+msgstr ""
+
+msgid "The request data is empty."
+msgstr ""
+
+msgid "The request data is invalid: expected a collection."
+msgstr ""
+
+msgid "The request data is invalid: invalid fields."
+msgstr ""
+
+msgid "The request data is invalid: id missing."
+msgstr ""
+
+msgid "The request data is invalid: id invalid."
+msgstr ""
+
+msgid "The request data is invalid: control_function missing."
+msgstr ""
+
+msgid "The request data is invalid: control_function invalid."
+msgstr ""
+
+msgid "The request data is invalid: ids must be unique."
+msgstr ""
+
+msgid "An action identifier should be a valid UUID."
+msgstr ""
+
+msgid "The foreign model should be a valid ASCII string."
+msgstr ""
+
+msgid "The foreign model should be one of the following: {0}."
+msgstr ""
+
+msgid "The foreign model name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "A foreign model is required."
+msgstr ""
+
+msgid "The foreign model should not be empty."
+msgstr ""
+
+msgid "The control function should be a valid UTF8 string."
+msgstr ""
+
+msgid "The control function name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "The control function is not supported."
+msgstr ""
+
+msgid "A control function is required."
+msgstr ""
+
+msgid "The control function should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who created the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should not be empty."
+msgstr ""
+
+msgid "An RBAC entry already exists for the given id."
+msgstr ""
+
+msgid "An entry already exists for the given role and action ids."
+msgstr ""
+
+msgid "An action already exists for the given name."
+msgstr ""
+
+msgid "The RBAC settings could not be updated."
+msgstr ""
+
+msgid "No data found."
+msgstr ""
+
+msgid "Some data not found."
+msgstr ""
+
+msgid "The UI actions data could not be validated."
+msgstr ""
+
 msgid "5 minutes"
 msgstr "5 minutės"
 
@@ -2344,77 +2620,104 @@ msgstr "Vaidmuo"
 msgid "No"
 msgstr "Ne"
 
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "Etiketė turi būti tinkama BMP-UTF8 eilutė."
+
+msgid "A slug is required."
+msgstr "Reikalinga etiketė."
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "Pavadinimo santrumpos ilgis turi būti ne daugiau kaip {0} simboliai."
+
+msgid "The slug should not be empty"
+msgstr "Pavadinimo santrumpa neturėtų būti tuščia."
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "Apibrėžimas turėtų būti tinkama BMP-UTF8 eilutė."
+
+msgid "A definition is required."
+msgstr "Reikalingas apibrėžimas."
+
+msgid "The definition should not be empty."
+msgstr "Apibrėžimas neturi būti tuščias."
+
+msgid "The message should be valid JSON message."
+msgstr "Pranešimas turi būti galiojantis JSON pranešimas."
+
+msgid "A resource type already exists with this slug."
+msgstr "Ištekliaus tipas su šia pavadinimo santrumpa jau yra."
+
+msgid "A resource type already exists with this definition."
+msgstr "Ištekliaus tipas su šiuo apibrėžimu jau yra."
+
 msgid "The self registration setting id should be a valid UUID."
-msgstr ""
+msgstr "Savarankiškos registracijos nustatymo identifikacija (ID) turi būti galiojantis UUID. "
 
 msgid "An email is required."
 msgstr "Reikalingas el. paštas."
 
 msgid "The provider should not be empty."
-msgstr ""
+msgstr "Teikėjas neturi būti tuščias.\n"
 
 msgid "The provider should be part of the supported list: {0}."
-msgstr ""
+msgstr "Teikėjas turėtų būti palaikomo sąrašo dalis: {0}."
 
 msgid "The data should not be empty."
 msgstr "Duomenys neturi būti tušti."
 
 msgid "The list of allowed domains should not be empty."
-msgstr ""
+msgstr "Leidžiamų domenų sąrašas neturi būti tuščias."
 
 msgid "The list of allowed domains should be an array of strings."
-msgstr ""
+msgstr "Leidžiamų domenų sąrašą turėtų sudaryti eilučių masyvas. "
 
 msgid "The domain #{0} should be a valid domain."
-msgstr ""
-
-msgid "An email notification setting should be a boolean."
-msgstr "El. pašto pranešimų nustatymas turi būti loginis."
+msgstr "Domenas #{0} turi būti galiojantis domenas."
 
 msgid "Allowed domains: {0}"
-msgstr ""
+msgstr "Leidžiami domenai: {0}"
 
 msgid "{0} edited the self registration settings."
-msgstr ""
+msgstr "{0} redagavo savarankiškos registracijos nustatymus."
 
 msgid "You edited the self registration settings."
-msgstr ""
+msgstr "You edited the self registration settings."
 
 msgid "{0} just created an account on passbolt!"
-msgstr ""
+msgstr "{0} ką tik sukūrė paskyrą \"passbolt\"! "
 
 msgid "The email is already registered."
-msgstr ""
+msgstr "Laiškas jau užregistruotas. "
 
 msgid "The self registration plugin is not enabled."
-msgstr ""
+msgstr "Savarankiškos registracijos papildinys neįjungtas."
 
 msgid "The self registration data could not be validated."
-msgstr ""
+msgstr "Nepavyko patvirtinti savarankiškos registracijos duomenų."
 
 msgid "The self registration is disabled."
-msgstr ""
+msgstr "Savarankiška registracija išjungta. "
 
 msgid "The domain is not supported for self-registration."
-msgstr ""
+msgstr "Domenas nepalaikomas savarankiškai registruojantis. "
 
 msgid "Email domain safe list"
-msgstr ""
+msgstr "Saugių el. pašto domenų sąrašas "
 
 msgid "Could not parse the self registration settings found in database."
-msgstr ""
+msgstr "Nepavyko išanalizuoti duomenų bazėje rastų savarankiškos registracijos nustatymų."
 
 msgid "Could not validate the self registration settings found in database."
-msgstr ""
+msgstr "Nepavyko patvirtinti duomenų bazėje rastų saviregistracijos nustatymų."
 
 msgid "Could not validate the self registration settings."
-msgstr ""
+msgstr "Nepavyko patvirtinti savarankiškos registracijos nustatymų. "
 
 msgid "{0} updated the self registration settings"
-msgstr ""
+msgstr "{0} atnaujino savarankiškos registracijos nustatymus"
 
 msgid "Status: {0}"
-msgstr ""
+msgstr "Būsena: {0}"
 
 msgid "A sender name is required."
 msgstr "Būtina nurodyti siuntėjo vardą."
@@ -2477,10 +2780,10 @@ msgid "A test recipient is required."
 msgstr "Būtinas testo gavėjas."
 
 msgid "SMTP settings endpoints disabled."
-msgstr ""
+msgstr "SMTP nustatymų galiniai taškai išjungti.\n"
 
 msgid "The client should be a valid IP or a valid domain."
-msgstr ""
+msgstr "Klientas turi būti galiojantis IP arba galiojantis domenas."
 
 msgid "Could not validate the smtp settings."
 msgstr "Nepavyko patvirtinti smtp nustatymų."
@@ -2849,7 +3152,7 @@ msgid "Forcing SSL means that passbolt will not accept connections coming from a
 msgstr "Priverstinis SSL reiškia, kad „passbolt“ nepriims ryšių, gaunamų iš nesaugaus protokolo. Jei SSL yra priverstinis, jūsų serveris turi būti sukonfigūruotas HTTPS. Labai rekomenduojama tai padaryti."
 
 msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr ""
+msgstr "Sveiki atvykę į Passbolt! Pradėkime nuo konfigūracijos.\n"
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Geras! Jūsų aplinka paruošta slaptažodžiui."
@@ -2950,6 +3253,18 @@ msgstr "Kodėl man reikia SMTP serverio?"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "„Passbolt“ reikalingas smtp serveris, kad sukūrus paskyrą būtų išsiųsti kvietimai ir el. pašto pranešimai."
 
+msgid "Invalid directory type for domain: {0}"
+msgstr ""
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr ""
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Katalogo tipas turėtų būti vienas iš šių: {0}."
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr ""
+
 msgid "The requested address was not found on this server."
 msgstr "Prašomas adresas šiame serveryje nerastas."
 
@@ -3020,10 +3335,10 @@ msgid "Please check with them first to confirm."
 msgstr ""
 
 msgid "Welcome to {0}!"
-msgstr ""
+msgstr "Sveiki atvykę į {0}!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr ""
+msgstr "{0} naudojo savarankiškos registracijos funkciją, kad sukurtų paskyrą naudojant „passbolt“."
 
 msgid "You have initiated an account recovery!"
 msgstr "Pradėjote paskyros atkūrimą!"
@@ -3085,9 +3400,6 @@ msgstr "Turėtų būti įtraukti šie nariai:"
 msgid "Edit group members"
 msgstr "Redaguoti grupės narius"
 
-msgid "log in passbolt"
-msgstr "prisijungti \"passbolt\""
-
 msgid "{0} deleted the user {1}"
 msgstr "{0} ištrynė naudotoją {1}"
 
@@ -3096,9 +3408,6 @@ msgstr "Naudotojas {0} {1} ({2}) dabar ištrintas iš jūsų organizacijos \"Pas
 
 msgid "This user was a member of the following group(s) you manage:"
 msgstr "Šis naudotojas buvo šios jūsų valdomos grupės (-ių) narys:"
-
-msgid "view it in passbolt"
-msgstr "peržiūrėkite jį „passbolt'e“."
 
 msgid "{0} deleted a group"
 msgstr "{0} ištrynė grupę"
@@ -3159,9 +3468,6 @@ msgstr "{0} ištrynė {1} grupes(-ių), kurių narys buvote."
 
 msgid "You have saved a new password"
 msgstr "Išsaugojote naują slaptažodį"
-
-msgid "Name: {0}"
-msgstr "Vardas: {0}"
 
 msgid "Username: {0}"
 msgstr "Vartotojo vardas: {0}"
