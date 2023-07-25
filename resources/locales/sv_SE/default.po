@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-27 10:56+0000\n"
-"PO-Revision-Date: 2023-02-27 12:11\n"
+"POT-Creation-Date: 2023-07-24 11:52+0000\n"
+"PO-Revision-Date: 2023-07-25 06:51\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -64,11 +64,20 @@ msgstr "Det finns ingen användare kopplad till denna nyckel."
 msgid "Page not found."
 msgstr "Sidan hittades inte."
 
-msgid "This is not a valid Ajax/Json request."
-msgstr "Detta är inte en giltig Ajax/Json-förfrågan."
+msgid "Please use .json extension in URL or accept application/json."
+msgstr ""
+
+msgid "The request data can not be empty."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "Du är inloggad."
+
+msgid "You are successfully logged out."
+msgstr ""
+
+msgid "The logout route should only be accessed with POST method."
+msgstr ""
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "Informationen om OpenPGPs publika nyckel hittades inte i konfigurationen."
@@ -244,9 +253,6 @@ msgstr "Identifieraren ska vara ett giltigt UUID."
 msgid "The resource does not exist."
 msgstr "Resursen finns inte."
 
-msgid "The resource type does not exist."
-msgstr "Resurstypen finns inte."
-
 msgid "The resource has been added successfully."
 msgstr "Resursen har lagts till."
 
@@ -343,6 +349,12 @@ msgstr "Det är inte tillåtet att uppdatera grupperna."
 msgid "You are not authorized to edit the role."
 msgstr "Du har inte behörighet att redigera rollen."
 
+msgid "Multiple has-access filters are not supported."
+msgstr ""
+
+msgid "This operation is not allowed for this user."
+msgstr "Denna åtgärd är inte tillåten för den här användaren."
+
 msgid "Only guests are allowed to recover an account. Please logout first."
 msgstr ""
 
@@ -352,8 +364,14 @@ msgstr "Återställningsprocessen har startats, kolla din e-post."
 msgid "Only guests are allowed to register."
 msgstr ""
 
-msgid "Registration is not opened to public. Please contact your administrator."
-msgstr "Registreringen är inte öppen för allmänheten. Kontakta din administratör."
+msgid "Registration is not opened to public."
+msgstr ""
+
+msgid "Please contact your administrator."
+msgstr "Kontakta din administratör."
+
+msgid "This is due to a security setting."
+msgstr ""
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "Användarmarkören ska vara ett giltigt UUID eller \"jag\"."
@@ -766,45 +784,6 @@ msgstr "Efternamnet bör vara en giltig BMP-UTF8-sträng."
 msgid "The last name length should be maximum {0} characters."
 msgstr "Efternamnets längd bör vara högst {0} tecken."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Namnet bör vara en giltig BMP-UTF8-sträng."
-
-msgid "The slug should be a valid BMP-UTF8 string."
-msgstr "Sluggen bör vara en giltig BMP-UTF8-sträng."
-
-msgid "A slug is required."
-msgstr "En slug måste fyllas."
-
-msgid "The slug length should be maximum {0} characters."
-msgstr "Sluggens längd bör vara högst {0} tecken."
-
-msgid "The slug should not be empty"
-msgstr "Sluggen får inte vara tom"
-
-msgid "The description should be a valid BMP-UTF8 string."
-msgstr "Beskrivningen bör vara en giltig BMP-UTF8-sträng."
-
-msgid "The description length should be maximum {0} characters."
-msgstr "Beskrivningens längd bör vara högst {0} tecken."
-
-msgid "The definition should be a valid BMP-UTF8 string."
-msgstr "Definitionen bör vara en giltig BMP-UTF8-sträng."
-
-msgid "A definition is required."
-msgstr "En definition krävs."
-
-msgid "The definition should not be empty."
-msgstr "Definitionen får inte vara tom."
-
-msgid "The message should be valid JSON message."
-msgstr "Meddelandet bör vara ett giltigt JSON-meddelande."
-
-msgid "A resource type already exists with this slug."
-msgstr "Det finns redan en resurstyp med denna slug."
-
-msgid "A resource type already exists with this definition."
-msgstr "En resurstyp finns redan med denna definition."
-
 msgid "The username should be a valid UTF8 string."
 msgstr "Användarnamnet bör vara en giltig UTF8-sträng."
 
@@ -819,6 +798,9 @@ msgstr "URI-längden bör vara maximalt {0} tecken."
 
 msgid "The description should be a valid UTF8 string."
 msgstr "Beskrivningen bör vara en giltig UTF8-sträng."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "Beskrivningens längd bör vara högst {0} tecken."
 
 msgid "The deleted status should not be empty"
 msgstr "Den raderade statusen får inte vara tom"
@@ -865,6 +847,9 @@ msgstr "Hemligheterna bör inte vara tomma."
 msgid "The secrets should contain only the secret of the owner."
 msgstr "Hemligheterna bör endast innehålla ägarens hemligheter."
 
+msgid "The resource type does not exist."
+msgstr "Resurstypen finns inte."
+
 msgid "The permissions should contain the owner permission."
 msgstr "Behörigheterna bör innehålla behörigheten för ägaren."
 
@@ -885,6 +870,9 @@ msgstr "Användaren kan inte ta bort denna resurs."
 
 msgid "The name should be a valid ASCII string."
 msgstr "Namnet bör vara en giltig ASCII-sträng."
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "Beskrivningen bör vara en giltig BMP-UTF8-sträng."
 
 msgid "A role already exists for the given name."
 msgstr "Det finns redan en roll för det angivna namnet."
@@ -909,6 +897,9 @@ msgstr "Meddelandet bör inte vara tomt."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Det finns redan en hemlighet för den givna användaren och resursen."
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Namnet bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Användaridentifieraren av bör vara ett giltigt UUID."
@@ -1405,9 +1396,6 @@ msgstr "Den här användaren finns inte eller har tagits bort."
 msgid "Please register and complete the setup first."
 msgstr "Vänligen registrera dig och slutför installationen först."
 
-msgid "Please contact your administrator."
-msgstr "Kontakta din administratör."
-
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validering misslyckades för användare {0}. {1}"
 
@@ -1531,11 +1519,203 @@ msgstr "Detta tema stöds inte."
 msgid "You are not allowed to access this location."
 msgstr "Du har inte behörighet att komma åt den här platsen."
 
+msgid "This is not a valid Ajax/Json request."
+msgstr "Detta är inte en giltig Ajax/Json-förfrågan."
+
 msgid "The notification settings for the organization were updated."
 msgstr "Aviseringsinställningarna för organisationen uppdaterades."
 
 msgid "The supplied email notification settings are not valid"
 msgstr "Inställningarna för e-postaviseringar är inte giltiga"
+
+msgid "The folder has been added successfully."
+msgstr "Mappen har lagts till."
+
+msgid "The folder id is not valid."
+msgstr "Mapp-id är inte giltigt."
+
+msgid "The folder has been deleted successfully."
+msgstr "Mappen har tagits bort."
+
+msgid "The folder has been updated successfully."
+msgstr "Mappen har uppdaterats."
+
+msgid "The object type should be one of the following: {0}."
+msgstr "Objekttypen bör vara en av följande: {0}."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "Objektidentifieraren ska vara ett giltigt UUID."
+
+msgid "The object has been moved successfully."
+msgstr "Objektet har flyttats."
+
+msgid "A folder parent identifier is required."
+msgstr "En mappöverordnad identifierare krävs."
+
+msgid "The folder parent identifier should be a valid UUID."
+msgstr "Mappens överordnade identifierare bör vara ett giltigt UUID."
+
+msgid "Could not validate move data."
+msgstr "Kunde inte validera flyttdata."
+
+msgid "The folder identifier should be a valid UUID."
+msgstr "Mappens identifierare bör vara ett giltigt UUID."
+
+msgid "The folder identifier should not be empty."
+msgstr "Mappens identifierare får inte vara tom."
+
+msgid "Could not validate folder history data."
+msgstr "Kunde inte validera mapphistorik."
+
+msgid "The child object type should be one of the following: {0}."
+msgstr "Den underordnade objekttypen bör vara ett av följande: {0}."
+
+msgid "A child object type is required."
+msgstr "En underordnad objekttyp krävs."
+
+msgid "The child object type cannot be empty."
+msgstr "Underordnad objekttyp får inte vara tom."
+
+msgid "The child object identifier should be a valid UUID."
+msgstr "Objektidentifieraren för underordnade objekt bör vara ett giltigt UUID."
+
+msgid "The child object identifier is required."
+msgstr "Identifierare för underobjekt krävs."
+
+msgid "The child object identifier should not be empty."
+msgstr "Identifieraren för underobjekt får inte vara tom."
+
+msgid "The user id should not be empty."
+msgstr "Användar-ID får inte vara tomt."
+
+msgid "Could not validate folders relations history data."
+msgstr "Kunde inte validera mappens relationshistorikdata."
+
+msgid "The child object type is required."
+msgstr "Underordnad objekttyp krävs."
+
+msgid "The child object type should not be empty."
+msgstr "Underordnad objekttyp får inte vara tom."
+
+msgid "The child object identifier required."
+msgstr "Identifieraren för underobjekt krävs."
+
+msgid "A folder relation already exists for the given child object and user."
+msgstr "Det finns redan en mapprelation för det angivna underordnade objektet och användaren."
+
+msgid "The child object does not exist."
+msgstr "Det underordnade objektet finns inte."
+
+msgid "The identifier of the user who created the folder should be a valid UUID."
+msgstr "Identifieraren för den användare som skapade mappen bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who created the folder is required."
+msgstr "Identifieraren för den användare som skapade mappen krävs."
+
+msgid "The identifier of the user who created the folder should not be empty."
+msgstr "Identifieraren för användaren som skapade mappen bör inte vara tom."
+
+msgid "The identifier of the user who modified the folder should be a valid UUID."
+msgstr "Identifieraren för den användare som ändrat mappen bör vara ett giltigt UUID."
+
+msgid "The identifier of the user who modified the folder is required."
+msgstr "Identifieraren för den användare som ändrade mappen krävs."
+
+msgid "The identifier of the user who modified the folder should not be empty."
+msgstr "Identifieraren för användaren som ändrade mappen får inte vara tom."
+
+msgid "You added the folder {0}"
+msgstr "Du lade till mappen {0}"
+
+msgid "You deleted the folder {0}"
+msgstr ""
+
+msgid "{0} deleted the folder {1}"
+msgstr "{0} tog bort mappen {1}"
+
+msgid "{0} shared the folder {1}"
+msgstr "{0} delade mappen {1}"
+
+msgid "You edited the folder {0}"
+msgstr ""
+
+msgid "{0} edited the folder {1}"
+msgstr "{0} redigerade mappen {1}"
+
+msgid "An email notification setting should be a boolean."
+msgstr "En e-postavisering bör vara en boolean."
+
+msgid "Could not validate folder data."
+msgstr "Kunde inte validera mappdata."
+
+msgid "The folder parent id should be a valid UUID."
+msgstr ""
+
+msgid "The folder parent must exist."
+msgstr "Mappens överordnade måste finnas."
+
+msgid "You are not allowed to create content into the parent folder."
+msgstr "Du har inte behörighet att skapa innehåll i den överordnade mappen."
+
+msgid "You are not allowed to delete this folder."
+msgstr "Du har inte behörighet att ta bort denna mapp."
+
+msgid "The folder does not exist."
+msgstr "Mappen finns inte."
+
+msgid "You cannot delete this resource"
+msgstr "Du kan inte radera denna resurs"
+
+msgid "You are not allowed to update the permissions of this folder."
+msgstr "Du har inte behörighet att uppdatera behörigheterna för denna mapp."
+
+msgid "You are not allowed to update this folder."
+msgstr "Du har inte behörighet att uppdatera denna mapp."
+
+msgid "Could not validate folder relation data."
+msgstr "Kunde inte validera data för mapprelationer."
+
+msgid "The object to move does not exist."
+msgstr "Objekt att flytta finns inte."
+
+msgid "You are not allowed to move this item out of its parent folder."
+msgstr "Du har inte behörighet att flytta det här objektet från dess överordnade mapp."
+
+msgid "You are not allowed to move this item."
+msgstr "Du har inte behörighet att flytta detta föremål."
+
+msgid "You are not allowed to move an item in read only into the parent folder."
+msgstr "Du har inte behörighet att flytta ett objekt med läsbehörighet till dess överordnade mapp."
+
+msgid "The folder parent does not exist."
+msgstr "Mappens överordnade finns inte."
+
+msgid "You have created a new folder"
+msgstr "Du har skapat en ny mapp"
+
+msgid "Name: {0}"
+msgstr "Namn: {0}"
+
+msgid "view it in passbolt"
+msgstr "visa i passbolt"
+
+msgid "You deleted a folder"
+msgstr ""
+
+msgid "{0} deleted a folder"
+msgstr ""
+
+msgid "log in passbolt"
+msgstr "logga in passbolt"
+
+msgid "{0} shared a folder with you"
+msgstr ""
+
+msgid "You edited a folder"
+msgstr ""
+
+msgid "{0} edited a folder"
+msgstr ""
 
 msgid "The user signature could not be verified."
 msgstr ""
@@ -1675,6 +1855,9 @@ msgstr "Detta är inte ett giltigt språk."
 msgid "This is not a valid {0}."
 msgstr "Detta är inte en giltig {0}."
 
+msgid "The strategy should extend the class: {0}"
+msgstr ""
+
 msgid "The action log identifier should be a valid UUID."
 msgstr "Åtgärdslogg-identifieraren bör vara ett giltigt UUID."
 
@@ -1728,9 +1911,6 @@ msgstr "En objekttyp krävs."
 
 msgid "The object type should not be empty."
 msgstr "Objekttypen får inte vara tom."
-
-msgid "The object identifier should be a valid UUID."
-msgstr "Objektidentifieraren ska vara ett giltigt UUID."
 
 msgid "The object identifier should not be empty."
 msgstr "Objektidentifieraren får inte vara tom."
@@ -1873,9 +2053,6 @@ msgstr "Operationen är redan över."
 msgid "The current page does not match the total number of pages."
 msgstr "Den aktuella sidan matchar inte det totala antalet sidor."
 
-msgid "This operation is not allowed for this user."
-msgstr "Denna åtgärd är inte tillåten för den här användaren."
-
 msgid "The authentication token is missing."
 msgstr "Autentiseringstoken saknas."
 
@@ -1941,6 +2118,9 @@ msgstr "Vänligen konfigurera TOTP-applikationen."
 
 msgid "Please provide the one-time password."
 msgstr "Ange engångslösenordet."
+
+msgid "You have been logged out due to too many failed attempts."
+msgstr ""
 
 msgid "The user id is not valid."
 msgstr "Användar-id är inte giltigt."
@@ -2073,6 +2253,12 @@ msgstr ""
 
 msgid "Could not validate Duo configuration"
 msgstr "Kunde inte validera konfigurationen för Duo"
+
+msgid "The property {0} is visible by administrators only."
+msgstr ""
+
+msgid "The property {0} should be contained in order to filter by {1}."
+msgstr ""
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "MFA-token som tillhandahålls existerar inte eller är inaktiv."
@@ -2287,6 +2473,96 @@ msgstr "Logga in till passbolt"
 msgid "The password generator value \"{0}\" is not valid."
 msgstr "Lösenordsgeneratorns värde \"{0}\" är inte giltigt."
 
+msgid "Record not found"
+msgstr ""
+
+msgid "The request data is empty."
+msgstr ""
+
+msgid "The request data is invalid: expected a collection."
+msgstr ""
+
+msgid "The request data is invalid: invalid fields."
+msgstr ""
+
+msgid "The request data is invalid: id missing."
+msgstr ""
+
+msgid "The request data is invalid: id invalid."
+msgstr ""
+
+msgid "The request data is invalid: control_function missing."
+msgstr ""
+
+msgid "The request data is invalid: control_function invalid."
+msgstr ""
+
+msgid "The request data is invalid: ids must be unique."
+msgstr ""
+
+msgid "An action identifier should be a valid UUID."
+msgstr ""
+
+msgid "The foreign model should be a valid ASCII string."
+msgstr ""
+
+msgid "The foreign model should be one of the following: {0}."
+msgstr ""
+
+msgid "The foreign model name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "A foreign model is required."
+msgstr ""
+
+msgid "The foreign model should not be empty."
+msgstr ""
+
+msgid "The control function should be a valid UTF8 string."
+msgstr ""
+
+msgid "The control function name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "The control function is not supported."
+msgstr ""
+
+msgid "A control function is required."
+msgstr ""
+
+msgid "The control function should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who created the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should not be empty."
+msgstr ""
+
+msgid "An RBAC entry already exists for the given id."
+msgstr ""
+
+msgid "An entry already exists for the given role and action ids."
+msgstr ""
+
+msgid "An action already exists for the given name."
+msgstr ""
+
+msgid "The RBAC settings could not be updated."
+msgstr ""
+
+msgid "No data found."
+msgstr ""
+
+msgid "Some data not found."
+msgstr ""
+
+msgid "The UI actions data could not be validated."
+msgstr ""
+
 msgid "5 minutes"
 msgstr "5 minuter"
 
@@ -2344,6 +2620,36 @@ msgstr "Roll"
 msgid "No"
 msgstr "Nej"
 
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "Sluggen bör vara en giltig BMP-UTF8-sträng."
+
+msgid "A slug is required."
+msgstr "En slug måste fyllas."
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "Sluggens längd bör vara högst {0} tecken."
+
+msgid "The slug should not be empty"
+msgstr "Sluggen får inte vara tom"
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "Definitionen bör vara en giltig BMP-UTF8-sträng."
+
+msgid "A definition is required."
+msgstr "En definition krävs."
+
+msgid "The definition should not be empty."
+msgstr "Definitionen får inte vara tom."
+
+msgid "The message should be valid JSON message."
+msgstr "Meddelandet bör vara ett giltigt JSON-meddelande."
+
+msgid "A resource type already exists with this slug."
+msgstr "Det finns redan en resurstyp med denna slug."
+
+msgid "A resource type already exists with this definition."
+msgstr "En resurstyp finns redan med denna definition."
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr ""
 
@@ -2367,9 +2673,6 @@ msgstr ""
 
 msgid "The domain #{0} should be a valid domain."
 msgstr ""
-
-msgid "An email notification setting should be a boolean."
-msgstr "En e-postavisering bör vara en boolean."
 
 msgid "Allowed domains: {0}"
 msgstr ""
@@ -2950,6 +3253,18 @@ msgstr "Varför behöver jag en SMTP-server?"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt behöver en SMTP-server för att kunna skicka inbjudningsmail efter att ett konto har skapats och för att kunna skicka e-postmeddelanden."
 
+msgid "Invalid directory type for domain: {0}"
+msgstr ""
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr ""
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Katalogtypen bör vara en av följande: {0}."
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr ""
+
 msgid "The requested address was not found on this server."
 msgstr "Den begärda adressen hittades inte på denna server."
 
@@ -3085,9 +3400,6 @@ msgstr "Följande medlemmar bör läggas till:"
 msgid "Edit group members"
 msgstr "Redigera gruppmedlemmar"
 
-msgid "log in passbolt"
-msgstr "logga in passbolt"
-
 msgid "{0} deleted the user {1}"
 msgstr "{0} tog bort användaren {1}"
 
@@ -3096,9 +3408,6 @@ msgstr "Användaren {0} {1} ({2}) tas nu bort från din organisation i passbolt.
 
 msgid "This user was a member of the following group(s) you manage:"
 msgstr "Den här användaren var medlem i följande grupp(er) som du hanterar:"
-
-msgid "view it in passbolt"
-msgstr "visa i passbolt"
 
 msgid "{0} deleted a group"
 msgstr "{0} tog bort en grupp"
@@ -3159,9 +3468,6 @@ msgstr "{0} tog bort {1} grupper som du var medlem av."
 
 msgid "You have saved a new password"
 msgstr "Du har sparat ett nytt lösenord"
-
-msgid "Name: {0}"
-msgstr "Namn: {0}"
 
 msgid "Username: {0}"
 msgstr "Användarnamn: {0}"

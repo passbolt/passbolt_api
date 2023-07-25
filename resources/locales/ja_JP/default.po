@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-27 10:56+0000\n"
-"PO-Revision-Date: 2023-02-27 12:11\n"
+"POT-Creation-Date: 2023-07-24 11:52+0000\n"
+"PO-Revision-Date: 2023-07-25 06:51\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -64,11 +64,20 @@ msgstr "この鍵に関連付けられているユーザーはいません。"
 msgid "Page not found."
 msgstr "ページが見つかりません。"
 
-msgid "This is not a valid Ajax/Json request."
-msgstr "これは有効な Ajax/Json リクエストではありません。"
+msgid "Please use .json extension in URL or accept application/json."
+msgstr ""
+
+msgid "The request data can not be empty."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "正常にログインしました。"
+
+msgid "You are successfully logged out."
+msgstr ""
+
+msgid "The logout route should only be accessed with POST method."
+msgstr ""
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "OpenPGP の公開鍵情報が config に見つかりませんでした。"
@@ -244,9 +253,6 @@ msgstr "識別子は有効な UUID である必要があります。"
 msgid "The resource does not exist."
 msgstr "リソースが存在しません。"
 
-msgid "The resource type does not exist."
-msgstr "リソース型が存在しません。"
-
 msgid "The resource has been added successfully."
 msgstr "リソースが正常に追加されました。"
 
@@ -343,6 +349,12 @@ msgstr "グループの更新はできません。"
 msgid "You are not authorized to edit the role."
 msgstr "ロールを編集する権限がありません。"
 
+msgid "Multiple has-access filters are not supported."
+msgstr ""
+
+msgid "This operation is not allowed for this user."
+msgstr "この操作はこのユーザーには許可されていません。"
+
 msgid "Only guests are allowed to recover an account. Please logout first."
 msgstr ""
 
@@ -352,8 +364,14 @@ msgstr "復旧処理が開始されました。メールを確認してくださ
 msgid "Only guests are allowed to register."
 msgstr ""
 
-msgid "Registration is not opened to public. Please contact your administrator."
-msgstr "登録が公開されていません。管理者に連絡してください。"
+msgid "Registration is not opened to public."
+msgstr ""
+
+msgid "Please contact your administrator."
+msgstr "管理者に問い合わせてください。"
+
+msgid "This is due to a security setting."
+msgstr ""
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "ユーザー識別子は有効なUUIDか\"me\" である必要があります。"
@@ -766,45 +784,6 @@ msgstr "姓は有効なBMP-UTF8文字列でなければなりません。"
 msgid "The last name length should be maximum {0} characters."
 msgstr "姓の長さは {0} 文字以内でなければなりません。"
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "名前は有効なBMP-UTF8文字列でなければなりません。"
-
-msgid "The slug should be a valid BMP-UTF8 string."
-msgstr "スラッグは有効なBMP-UTF8文字列である必要があります。"
-
-msgid "A slug is required."
-msgstr "スラッグが必要です。"
-
-msgid "The slug length should be maximum {0} characters."
-msgstr "スラッグの長さは {0} 文字以内でなければなりません。"
-
-msgid "The slug should not be empty"
-msgstr "スラッグは空にしないでください"
-
-msgid "The description should be a valid BMP-UTF8 string."
-msgstr "説明は有効なBMP-UTF8文字列でなければなりません。"
-
-msgid "The description length should be maximum {0} characters."
-msgstr "説明の長さは {0} 文字以内でなければなりません。"
-
-msgid "The definition should be a valid BMP-UTF8 string."
-msgstr "定義は有効なBMP-UTF8文字列でなければなりません。"
-
-msgid "A definition is required."
-msgstr "定義が必要です。"
-
-msgid "The definition should not be empty."
-msgstr "定義は空にしないでください。"
-
-msgid "The message should be valid JSON message."
-msgstr "メッセージは有効なJSONメッセージでなければなりません。"
-
-msgid "A resource type already exists with this slug."
-msgstr "このスラッグを持つリソース型はすでに存在します。"
-
-msgid "A resource type already exists with this definition."
-msgstr "この定義を持つリソース型はすでに存在します。"
-
 msgid "The username should be a valid UTF8 string."
 msgstr "ユーザー名は有効なUTF8文字列である必要があります。"
 
@@ -819,6 +798,9 @@ msgstr "uriの長さは {0} 文字以内でなければなりません。"
 
 msgid "The description should be a valid UTF8 string."
 msgstr "説明は有効なUTF8文字列でなければなりません。"
+
+msgid "The description length should be maximum {0} characters."
+msgstr "説明の長さは {0} 文字以内でなければなりません。"
 
 msgid "The deleted status should not be empty"
 msgstr "削除されたステータスは空にできません"
@@ -865,6 +847,9 @@ msgstr "秘密は空にしてはいけません。"
 msgid "The secrets should contain only the secret of the owner."
 msgstr "秘密は所有者の秘密のみを含める必要があります。"
 
+msgid "The resource type does not exist."
+msgstr "リソース型が存在しません。"
+
 msgid "The permissions should contain the owner permission."
 msgstr "パーミッションには所有者のパーミッションを含める必要があります。"
 
@@ -885,6 +870,9 @@ msgstr "そのユーザーはこのリソースを削除できません。"
 
 msgid "The name should be a valid ASCII string."
 msgstr "名前は有効な ASCII 文字列でなければなりません。"
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "説明は有効なBMP-UTF8文字列でなければなりません。"
 
 msgid "A role already exists for the given name."
 msgstr "与えられた名前のロールがすでに存在します。"
@@ -909,6 +897,9 @@ msgstr "メッセージは空にできません。"
 
 msgid "A secret already exists for the given user and resource."
 msgstr "秘密はすでに、指定されたユーザーとリソースに存在します。"
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "名前は有効なBMP-UTF8文字列でなければなりません。"
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "ユーザー識別子は有効なUUIDでなければなりません。"
@@ -1405,9 +1396,6 @@ msgstr "このユーザーは存在しないか、削除されています。"
 msgid "Please register and complete the setup first."
 msgstr "最初に登録して、セットアップを完了してください。"
 
-msgid "Please contact your administrator."
-msgstr "管理者に問い合わせてください。"
-
 msgid "Validation failed for user {0}. {1}"
 msgstr "ユーザー {0} の検証に失敗しました。 {1}"
 
@@ -1531,11 +1519,203 @@ msgstr "このテーマはサポートされていません。"
 msgid "You are not allowed to access this location."
 msgstr "この場所にアクセスすることはできません。"
 
+msgid "This is not a valid Ajax/Json request."
+msgstr "これは有効な Ajax/Json リクエストではありません。"
+
 msgid "The notification settings for the organization were updated."
 msgstr "組織の通知設定が更新されました"
 
 msgid "The supplied email notification settings are not valid"
 msgstr "指定されたメール通知設定は有効ではありません"
+
+msgid "The folder has been added successfully."
+msgstr "フォルダが正常に追加されました。"
+
+msgid "The folder id is not valid."
+msgstr "フォルダIDが有効ではありません。"
+
+msgid "The folder has been deleted successfully."
+msgstr "フォルダが正常に削除されました。"
+
+msgid "The folder has been updated successfully."
+msgstr "フォルダが正常に更新されました。"
+
+msgid "The object type should be one of the following: {0}."
+msgstr "オブジェクト型は次のいずれかでなければなりません: {0}."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "オブジェクト識別子は有効なUUIDでなければなりません。"
+
+msgid "The object has been moved successfully."
+msgstr "オブジェクトが正常に移動されました。"
+
+msgid "A folder parent identifier is required."
+msgstr "フォルダの親識別子が必要です。"
+
+msgid "The folder parent identifier should be a valid UUID."
+msgstr "フォルダの親識別子は有効なUUIDでなければなりません。"
+
+msgid "Could not validate move data."
+msgstr "移動データを検証できませんでした。"
+
+msgid "The folder identifier should be a valid UUID."
+msgstr "フォルダ識別子は有効なUUIDでなければなりません。"
+
+msgid "The folder identifier should not be empty."
+msgstr "フォルダ識別子は空にできません。"
+
+msgid "Could not validate folder history data."
+msgstr "フォルダの履歴データを検証できませんでした。"
+
+msgid "The child object type should be one of the following: {0}."
+msgstr "子オブジェクト型は次のいずれかでなければなりません: {0}。"
+
+msgid "A child object type is required."
+msgstr "子オブジェクト型が必要です。"
+
+msgid "The child object type cannot be empty."
+msgstr "子オブジェクト型は空にできません。"
+
+msgid "The child object identifier should be a valid UUID."
+msgstr "子オブジェクト識別子は有効なUUIDでなければなりません。"
+
+msgid "The child object identifier is required."
+msgstr "子オブジェクト識別子が必要です。"
+
+msgid "The child object identifier should not be empty."
+msgstr "子オブジェクト識別子は空にしないでください。"
+
+msgid "The user id should not be empty."
+msgstr "ユーザーIDは空にしないでください。"
+
+msgid "Could not validate folders relations history data."
+msgstr "フォルダ関係の履歴データを検証できませんでした。"
+
+msgid "The child object type is required."
+msgstr "子オブジェクト型が必要です。"
+
+msgid "The child object type should not be empty."
+msgstr "子オブジェクト型は空にしないでください。"
+
+msgid "The child object identifier required."
+msgstr "子オブジェクト識別子が必要です。"
+
+msgid "A folder relation already exists for the given child object and user."
+msgstr "指定された子オブジェクトとユーザーのフォルダ関係はすでに存在します。"
+
+msgid "The child object does not exist."
+msgstr "子オブジェクトは存在しません。"
+
+msgid "The identifier of the user who created the folder should be a valid UUID."
+msgstr "フォルダを作成したユーザーの識別子は有効なUUIDでなければなりません。"
+
+msgid "The identifier of the user who created the folder is required."
+msgstr "フォルダを作成したユーザーの識別子が必要です。"
+
+msgid "The identifier of the user who created the folder should not be empty."
+msgstr "フォルダを作成したユーザーの識別子は空にしないでください。"
+
+msgid "The identifier of the user who modified the folder should be a valid UUID."
+msgstr "フォルダを修正したユーザーの識別子は有効なUUIDでなければなりません。"
+
+msgid "The identifier of the user who modified the folder is required."
+msgstr "フォルダを修正したユーザーの識別子が必要です。"
+
+msgid "The identifier of the user who modified the folder should not be empty."
+msgstr "フォルダを修正したユーザーの識別子は空にしないでください。"
+
+msgid "You added the folder {0}"
+msgstr "フォルダ {0} を追加しました"
+
+msgid "You deleted the folder {0}"
+msgstr ""
+
+msgid "{0} deleted the folder {1}"
+msgstr "{0}さんがフォルダ {1} を削除しました"
+
+msgid "{0} shared the folder {1}"
+msgstr "{0}さんがフォルダ {1} を共有しました"
+
+msgid "You edited the folder {0}"
+msgstr ""
+
+msgid "{0} edited the folder {1}"
+msgstr "{0}さんがフォルダ {1} を編集しました"
+
+msgid "An email notification setting should be a boolean."
+msgstr "メール通知設定はブール値でなければなりません。"
+
+msgid "Could not validate folder data."
+msgstr "フォルダデータを検証できませんでした。"
+
+msgid "The folder parent id should be a valid UUID."
+msgstr ""
+
+msgid "The folder parent must exist."
+msgstr "フォルダの親が存在する必要があります。"
+
+msgid "You are not allowed to create content into the parent folder."
+msgstr "親フォルダにコンテンツを作成することはできません。"
+
+msgid "You are not allowed to delete this folder."
+msgstr "このフォルダを削除することはできません。"
+
+msgid "The folder does not exist."
+msgstr "フォルダが存在しません。"
+
+msgid "You cannot delete this resource"
+msgstr "このリソースを削除することはできません"
+
+msgid "You are not allowed to update the permissions of this folder."
+msgstr "このフォルダのパーミッションを更新することはできません。"
+
+msgid "You are not allowed to update this folder."
+msgstr "このフォルダを更新することはできません。"
+
+msgid "Could not validate folder relation data."
+msgstr "フォルダ関係のデータを検証できませんでした。"
+
+msgid "The object to move does not exist."
+msgstr "移動するオブジェクトは存在しません。"
+
+msgid "You are not allowed to move this item out of its parent folder."
+msgstr "この項目を親フォルダから移動することはできません。"
+
+msgid "You are not allowed to move this item."
+msgstr "この項目を移動することはできません。"
+
+msgid "You are not allowed to move an item in read only into the parent folder."
+msgstr "読み取り専用の項目を親フォルダに移動することはできません。"
+
+msgid "The folder parent does not exist."
+msgstr "フォルダの親が存在しません。"
+
+msgid "You have created a new folder"
+msgstr "新しいフォルダを作成しました"
+
+msgid "Name: {0}"
+msgstr "名前: {0}"
+
+msgid "view it in passbolt"
+msgstr "パスボルトで表示"
+
+msgid "You deleted a folder"
+msgstr ""
+
+msgid "{0} deleted a folder"
+msgstr ""
+
+msgid "log in passbolt"
+msgstr "パスボルトにログイン"
+
+msgid "{0} shared a folder with you"
+msgstr ""
+
+msgid "You edited a folder"
+msgstr ""
+
+msgid "{0} edited a folder"
+msgstr ""
 
 msgid "The user signature could not be verified."
 msgstr ""
@@ -1675,6 +1855,9 @@ msgstr "これは有効なロケールではありません。"
 msgid "This is not a valid {0}."
 msgstr "これは有効な {0} ではありません。"
 
+msgid "The strategy should extend the class: {0}"
+msgstr ""
+
 msgid "The action log identifier should be a valid UUID."
 msgstr "アクションログの識別子は有効 UUIDでなければなりません。"
 
@@ -1728,9 +1911,6 @@ msgstr "オブジェクト型が必要です。"
 
 msgid "The object type should not be empty."
 msgstr "オブジェクト型は空にしないでください。"
-
-msgid "The object identifier should be a valid UUID."
-msgstr "オブジェクト識別子は有効なUUIDでなければなりません。"
 
 msgid "The object identifier should not be empty."
 msgstr "オブジェクト識別子は空にしないでください。"
@@ -1873,9 +2053,6 @@ msgstr "操作はすでに終了しています。"
 msgid "The current page does not match the total number of pages."
 msgstr "現在のページが総ページ数と一致しません。"
 
-msgid "This operation is not allowed for this user."
-msgstr "この操作はこのユーザーには許可されていません。"
-
 msgid "The authentication token is missing."
 msgstr "認証トークンがありません。"
 
@@ -1941,6 +2118,9 @@ msgstr "TOTPアプリケーションをセットアップしてください。"
 
 msgid "Please provide the one-time password."
 msgstr "ワンタイムパスワードを入力してください。"
+
+msgid "You have been logged out due to too many failed attempts."
+msgstr ""
 
 msgid "The user id is not valid."
 msgstr "ユーザーIDが有効ではありません。"
@@ -2073,6 +2253,12 @@ msgstr ""
 
 msgid "Could not validate Duo configuration"
 msgstr "Duoの設定を検証できませんでした"
+
+msgid "The property {0} is visible by administrators only."
+msgstr ""
+
+msgid "The property {0} should be contained in order to filter by {1}."
+msgstr ""
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "指定されたMFAトークンが存在しないか、非アクティブです。"
@@ -2287,6 +2473,96 @@ msgstr "パスボルトにログイン"
 msgid "The password generator value \"{0}\" is not valid."
 msgstr "パスワードジェネレータの値 \"{0}\" は有効ではありません。"
 
+msgid "Record not found"
+msgstr ""
+
+msgid "The request data is empty."
+msgstr ""
+
+msgid "The request data is invalid: expected a collection."
+msgstr ""
+
+msgid "The request data is invalid: invalid fields."
+msgstr ""
+
+msgid "The request data is invalid: id missing."
+msgstr ""
+
+msgid "The request data is invalid: id invalid."
+msgstr ""
+
+msgid "The request data is invalid: control_function missing."
+msgstr ""
+
+msgid "The request data is invalid: control_function invalid."
+msgstr ""
+
+msgid "The request data is invalid: ids must be unique."
+msgstr ""
+
+msgid "An action identifier should be a valid UUID."
+msgstr ""
+
+msgid "The foreign model should be a valid ASCII string."
+msgstr ""
+
+msgid "The foreign model should be one of the following: {0}."
+msgstr ""
+
+msgid "The foreign model name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "A foreign model is required."
+msgstr ""
+
+msgid "The foreign model should not be empty."
+msgstr ""
+
+msgid "The control function should be a valid UTF8 string."
+msgstr ""
+
+msgid "The control function name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "The control function is not supported."
+msgstr ""
+
+msgid "A control function is required."
+msgstr ""
+
+msgid "The control function should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who created the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should not be empty."
+msgstr ""
+
+msgid "An RBAC entry already exists for the given id."
+msgstr ""
+
+msgid "An entry already exists for the given role and action ids."
+msgstr ""
+
+msgid "An action already exists for the given name."
+msgstr ""
+
+msgid "The RBAC settings could not be updated."
+msgstr ""
+
+msgid "No data found."
+msgstr ""
+
+msgid "Some data not found."
+msgstr ""
+
+msgid "The UI actions data could not be validated."
+msgstr ""
+
 msgid "5 minutes"
 msgstr "5分"
 
@@ -2344,6 +2620,36 @@ msgstr "ロール"
 msgid "No"
 msgstr "いいえ"
 
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "スラッグは有効なBMP-UTF8文字列である必要があります。"
+
+msgid "A slug is required."
+msgstr "スラッグが必要です。"
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "スラッグの長さは {0} 文字以内でなければなりません。"
+
+msgid "The slug should not be empty"
+msgstr "スラッグは空にしないでください"
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "定義は有効なBMP-UTF8文字列でなければなりません。"
+
+msgid "A definition is required."
+msgstr "定義が必要です。"
+
+msgid "The definition should not be empty."
+msgstr "定義は空にしないでください。"
+
+msgid "The message should be valid JSON message."
+msgstr "メッセージは有効なJSONメッセージでなければなりません。"
+
+msgid "A resource type already exists with this slug."
+msgstr "このスラッグを持つリソース型はすでに存在します。"
+
+msgid "A resource type already exists with this definition."
+msgstr "この定義を持つリソース型はすでに存在します。"
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr ""
 
@@ -2367,9 +2673,6 @@ msgstr ""
 
 msgid "The domain #{0} should be a valid domain."
 msgstr ""
-
-msgid "An email notification setting should be a boolean."
-msgstr "メール通知設定はブール値でなければなりません。"
 
 msgid "Allowed domains: {0}"
 msgstr ""
@@ -2950,6 +3253,18 @@ msgstr "なぜSMTPサーバーが必要なのですか？"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "パスボルトは、アカウント作成後に招待メールを送信したり、メール通知を送信したりするために、smtpサーバーを必要とします。"
 
+msgid "Invalid directory type for domain: {0}"
+msgstr ""
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr ""
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "ディレクトリの種類は次のいずれかでなければなりません: {0}。"
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr ""
+
 msgid "The requested address was not found on this server."
 msgstr "要求されたアドレスは、このサーバーで見つかりませんでした。"
 
@@ -3085,9 +3400,6 @@ msgstr "次のメンバーを追加する必要があります:"
 msgid "Edit group members"
 msgstr "グループメンバーを編集"
 
-msgid "log in passbolt"
-msgstr "パスボルトにログイン"
-
 msgid "{0} deleted the user {1}"
 msgstr "{0}さんがユーザー{1}さんを削除しました"
 
@@ -3096,9 +3408,6 @@ msgstr "ユーザー {0} {1} ({2}) がパスボルトであなたの組織から
 
 msgid "This user was a member of the following group(s) you manage:"
 msgstr "このユーザーはあなたが管理する以下のグループ（複数）のメンバーでした:"
-
-msgid "view it in passbolt"
-msgstr "パスボルトで表示"
 
 msgid "{0} deleted a group"
 msgstr "{0}さんがグループを削除しました"
@@ -3159,9 +3468,6 @@ msgstr "{0}さんが、あなたがメンバーだった {1}個のグループ�
 
 msgid "You have saved a new password"
 msgstr "新しいパスワードを保存しました"
-
-msgid "Name: {0}"
-msgstr "名前: {0}"
 
 msgid "Username: {0}"
 msgstr "ユーザー名: {0}"
