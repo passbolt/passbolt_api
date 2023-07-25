@@ -45,6 +45,7 @@ class SaveTest extends AppTestCase
                 'username' => true,
                 'role_id' => true,
                 'deleted' => true,
+                'disabled' => true,
                 'active' => true,
                 'profile' => true,
             ],

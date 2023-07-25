@@ -95,11 +95,21 @@ class GpgkeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * Set the armored key and fingerprint to Sofia's one
+     * Set the armored key and fingerprint to ada's one
      *
      * @return $this
      */
     public function withValidOpenPGPKey()
+    {
+        return $this->withAdaKey();
+    }
+
+    /**
+     * Set the armored key and fingerprint to ada's one
+     *
+     * @return $this
+     */
+    public function withAdaKey()
     {
         return $this->patchData([
             'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),

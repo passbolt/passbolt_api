@@ -235,7 +235,7 @@ class JwtRefreshTokenAuthenticatorTest extends TestCase
             ->withData(RefreshTokenAbstractService::REFRESH_TOKEN_DATA_KEY, $token->token)
             ->withData('user_id', $token->user_id);
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The user is deactivated.');
+        $this->expectExceptionMessage('The user is not activated or disabled.');
         $this->authenticator->authenticate($request);
     }
 

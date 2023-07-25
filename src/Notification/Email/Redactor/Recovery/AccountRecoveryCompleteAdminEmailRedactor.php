@@ -67,7 +67,9 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->find('locale')
+            ->find('notDisabled')
             ->where(['Users.id !=' => $user->id]);
+
         foreach ($admins as $admin) {
             $emailCollection->addEmail($this->createAccountRecoveryAdminEmail($admin, $user, $clientIp, $userAgent));
         }

@@ -51,9 +51,6 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
             $redactors[] = new UserRegisterEmailRedactor();
             $redactors[] = new SelfRegistrationUserEmailRedactor();
         }
-        if ($this->isRedactorEnabled('send.group.user.delete')) {
-            $redactors[] = new UserDeleteEmailRedactor();
-        }
         if ($this->isRedactorEnabled('send.comment.add')) {
             $redactors[] = new CommentAddEmailRedactor();
         }
@@ -92,6 +89,7 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
             $redactors[] = new GroupUserUpdateEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.group.user.delete')) {
+            $redactors[] = new UserDeleteEmailRedactor();
             $redactors[] = new GroupUserDeleteEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.group.manager.update')) {

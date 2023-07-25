@@ -86,6 +86,9 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $owner = $this->usersTable->findFirstForEmail($deletedBy);
 
         foreach ($users as $user) {
+            if ($user->isDisabled()) {
+                continue;
+            }
             $emailCollection->addEmail($this->createDeleteEmail($user, $owner, $resource));
         }
 

@@ -110,7 +110,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     {
         $usersIds = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($folder->id);
 
-        return $this->usersTable->find('locale')->where(['Users.id IN' => $usersIds]);
+        return $this->usersTable->find('locale')->find('notDisabled')->where(['Users.id IN' => $usersIds]);
     }
 
     /**

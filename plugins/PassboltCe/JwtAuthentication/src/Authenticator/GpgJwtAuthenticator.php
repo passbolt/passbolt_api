@@ -284,6 +284,10 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
             throw new NotFoundException(__('The user does not exist or has been deleted.'));
         }
 
+        if ($userData->isDisabled()) {
+            throw new NotFoundException(__('The user does not exist or has been deleted.'));
+        }
+
         return $userData;
     }
 

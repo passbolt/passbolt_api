@@ -153,6 +153,10 @@ class UsersTable extends Table
             ->boolean('deleted', __('The deleted status should be a valid boolean.'));
 
         $validator
+            ->dateTime('disabled', ['ymd'], __('The creation date should be a valid date.'))
+            ->allowEmptyDateTime('disabled');
+
+        $validator
             ->requirePresence('profile', 'create', 'A profile is required.')
             // @todo translation comment: is it still something necessary?
             ->allowEmptyString('profile', __('The profile should not be empty.'), false);
@@ -249,6 +253,7 @@ class UsersTable extends Table
                 'accessibleFields' => [
                     'username' => true,
                     'deleted' => true,
+                    'disabled' => false,
                     'profile' => true,
                     'role_id' => true,
                 ],
@@ -266,7 +271,7 @@ class UsersTable extends Table
     }
 
     /**
-     * Edit a given entity with the prodived data according to the permission of the current user role
+     * Edit a given entity with the provided data according to the permission of the current user role
      * Only allow editing the first_name and last_name
      * Also allow editing the role_id but only if admin
      * Other changes such as active or username are not permitted
@@ -282,14 +287,16 @@ class UsersTable extends Table
             'active' => false,
             'deleted' => false,
             'created' => false,
+            'disabled' => false,
             'username' => false,
             'role_id' => false,
             'profile' => true,
             'gpgkey' => false,
         ];
-        // only admins can set roles
+        // only admins can set roles and disable users
         if ($roleName === Role::ADMIN) {
             $accessibleUserFields['role_id'] = true;
+            $accessibleUserFields['disabled'] = true;
         }
 
         $accessibleProfileFields = [

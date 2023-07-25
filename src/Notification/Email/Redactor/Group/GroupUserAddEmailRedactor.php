@@ -103,7 +103,9 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function getRecipients(array $userIds): Query
     {
-        return $this->usersTable->find('locale')->where(['Users.id IN' => $userIds]);
+        return $this->usersTable->find('locale')
+            ->find('notDisabled')
+            ->where(['Users.id IN' => $userIds]);
     }
 
     /**
@@ -113,12 +115,14 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     private function createGroupCreatedEmail(Group $group)
     {
         $emails = [];
+
         $admin = $this->usersTable->findFirstForEmail($group->created_by);
         $userIds = Hash::extract($group->groups_users, '{n}.user_id');
+
         // Don't send notification if the user added themselves
-        $recipients = $this->getRecipients($userIds)->where([
-            'Users.id !=' => $group->created_by,
-        ])->all();
+        $recipients = $this->getRecipients($userIds)
+            ->where(['Users.id !=' => $group->created_by])
+            ->all();
 
         foreach ($group->groups_users as $group_user) {
             if ($group_user->user_id === $group->created_by) {
@@ -126,7 +130,11 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
             }
 
             $recipient = $recipients->firstMatch(['id' => $group_user->user_id]);
-            $emails[] = $this->createGroupUserAddEmail($recipient, $admin, $group, $group_user->is_admin);
+
+            // skip disabled group members
+            if (isset($recipient)) {
+                $emails[] = $this->createGroupUserAddEmail($recipient, $admin, $group, $group_user->is_admin);
+            }
         }
 
         return $emails;
