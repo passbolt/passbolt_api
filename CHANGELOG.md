@@ -1298,7 +1298,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.10.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v4.1.1...HEAD
+[4.1.1]: https://github.com/passbolt/passbolt_api/compare/v4.1.0...v4.1.1
+[4.1.0]: https://github.com/passbolt/passbolt_api/compare/v4.0.2...v4.1.0
+[4.0.2]: https://github.com/passbolt/passbolt_api/compare/v4.0.1...v4.0.2
+[4.0.1]: https://github.com/passbolt/passbolt_api/compare/v4.0.0...v4.0.1
+[4.0.0]: https://github.com/passbolt/passbolt_api/compare/v3.12.2...v4.0.0
+[3.12.2]: https://github.com/passbolt/passbolt_api/compare/v3.12.0...v3.12.2
+[3.12.0]: https://github.com/passbolt/passbolt_api/compare/v3.11.1...v3.12.0
+[3.11.1]: https://github.com/passbolt/passbolt_api/compare/v3.11.0...v3.11.1
+[3.11.0]: https://github.com/passbolt/passbolt_api/compare/v3.10.0...v3.11.0
 [3.10.0]: https://github.com/passbolt/passbolt_api/compare/v3.9.0...v3.10.0
 [3.9.0]: https://github.com/passbolt/passbolt_api/compare/v3.8.3...v3.9.0
 [3.8.3]: https://github.com/passbolt/passbolt_api/compare/v3.8.1...v3.8.3
