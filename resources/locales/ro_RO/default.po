@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-27 10:56+0000\n"
-"PO-Revision-Date: 2023-02-27 12:11\n"
+"POT-Creation-Date: 2023-07-24 11:52+0000\n"
+"PO-Revision-Date: 2023-07-25 06:50\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -64,11 +64,20 @@ msgstr "Nu există niciun utilizator asociat cu această cheie."
 msgid "Page not found."
 msgstr "Pagina nu a fost găsită."
 
-msgid "This is not a valid Ajax/Json request."
-msgstr "Aceasta nu este o cerere validă Ajax/Json."
+msgid "Please use .json extension in URL or accept application/json."
+msgstr ""
+
+msgid "The request data can not be empty."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "Sunteți autentificat cu succes."
+
+msgid "You are successfully logged out."
+msgstr ""
+
+msgid "The logout route should only be accessed with POST method."
+msgstr ""
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "Informațiile cheii publice OpenPGP nu au fost găsite în configurație."
@@ -244,9 +253,6 @@ msgstr "Identificatorul ar trebui să fie un UUID valid."
 msgid "The resource does not exist."
 msgstr "Resursa nu există."
 
-msgid "The resource type does not exist."
-msgstr "Tipul de resursă nu există."
-
 msgid "The resource has been added successfully."
 msgstr "Resursa a fost adăugată cu succes."
 
@@ -343,6 +349,12 @@ msgstr "Actualizarea grupurilor nu este permisă."
 msgid "You are not authorized to edit the role."
 msgstr "Nu sunteți autorizat să modificați rolul."
 
+msgid "Multiple has-access filters are not supported."
+msgstr ""
+
+msgid "This operation is not allowed for this user."
+msgstr "Această operațiune nu este permisă pentru acest utilizator."
+
 msgid "Only guests are allowed to recover an account. Please logout first."
 msgstr "Doar vizitatorii au permisiunea de a recupera un cont. Mai întâi, te rugăm să te deconectezi."
 
@@ -352,8 +364,14 @@ msgstr "Procesul de recuperare a început, verificați-vă e-mailul."
 msgid "Only guests are allowed to register."
 msgstr "Doar vizitatorii au permisiunea să se înregistreze."
 
-msgid "Registration is not opened to public. Please contact your administrator."
-msgstr "Înregistrarea nu este deschisă publicului. Vă rugăm să contactați administratorul."
+msgid "Registration is not opened to public."
+msgstr ""
+
+msgid "Please contact your administrator."
+msgstr "Vă rugăm să contactaţi administratorul."
+
+msgid "This is due to a security setting."
+msgstr ""
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "Identificatorul de utilizator ar trebui să fie un UUID valid sau \"eu\"."
@@ -766,45 +784,6 @@ msgstr "Numele de familie trebuie să fie un șir valid BMP-UTF8."
 msgid "The last name length should be maximum {0} characters."
 msgstr "Lungimea numelui de familie ar trebui să fie de maximum {0} caractere."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Numele trebuie să fie un șir valid BMP-UTF8."
-
-msgid "The slug should be a valid BMP-UTF8 string."
-msgstr "Slug URL-ul trebuie să fie un șir valid BMP-UTF8."
-
-msgid "A slug is required."
-msgstr "Un slug URL este necesar."
-
-msgid "The slug length should be maximum {0} characters."
-msgstr "Lungimea slug ar trebui să fie de maxim {0} caractere."
-
-msgid "The slug should not be empty"
-msgstr "Slug-ul nu trebuie să fie gol"
-
-msgid "The description should be a valid BMP-UTF8 string."
-msgstr "Descrierea trebuie să fie un șir valid BMP-UTF8."
-
-msgid "The description length should be maximum {0} characters."
-msgstr "Lungimea descrierii ar trebui să fie de maxim {0} caractere."
-
-msgid "The definition should be a valid BMP-UTF8 string."
-msgstr "Definiția ar trebui să fie un șir valid BMP-UTF8."
-
-msgid "A definition is required."
-msgstr "O definiţie este necesară."
-
-msgid "The definition should not be empty."
-msgstr "Definiţia nu trebuie să fie goală."
-
-msgid "The message should be valid JSON message."
-msgstr "Mesajul JSON trebuie să fie valid."
-
-msgid "A resource type already exists with this slug."
-msgstr "Un tip de resursă există deja cu acest slug."
-
-msgid "A resource type already exists with this definition."
-msgstr "Un tip de resursă există deja cu această definiție."
-
 msgid "The username should be a valid UTF8 string."
 msgstr "Numele de utilizator trebuie să fie un şir valid UTF8."
 
@@ -819,6 +798,9 @@ msgstr "Lungimea URI ar trebui să fie de maxim {0} caractere."
 
 msgid "The description should be a valid UTF8 string."
 msgstr "Descrierea trebuie să fie un şir valid UTF8."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "Lungimea descrierii ar trebui să fie de maxim {0} caractere."
 
 msgid "The deleted status should not be empty"
 msgstr "Statusul şters nu trebuie să fie gol"
@@ -865,6 +847,9 @@ msgstr "Secretele nu trebuie să fie goale."
 msgid "The secrets should contain only the secret of the owner."
 msgstr "Secretele ar trebui să conțină doar secretul proprietarului."
 
+msgid "The resource type does not exist."
+msgstr "Tipul de resursă nu există."
+
 msgid "The permissions should contain the owner permission."
 msgstr "Permisiunile trebuie să conțină permisiunea proprietarului."
 
@@ -885,6 +870,9 @@ msgstr "Utilizatorul nu poate șterge această resursă."
 
 msgid "The name should be a valid ASCII string."
 msgstr "Numele trebuie să fie un şir ASCII valid."
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "Descrierea trebuie să fie un șir valid BMP-UTF8."
 
 msgid "A role already exists for the given name."
 msgstr "Există deja un rol pentru numele dat."
@@ -909,6 +897,9 @@ msgstr "Mesajul nu trebuie să fie gol."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Există deja un secret pentru utilizatorul și resursele date."
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Numele trebuie să fie un șir valid BMP-UTF8."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Identificatorul de utilizator ar trebui să fie un UUID valid."
@@ -1405,9 +1396,6 @@ msgstr "Acest utilizator nu există sau a fost șters."
 msgid "Please register and complete the setup first."
 msgstr "Vă rugăm să vă înregistrați și să finalizați configurarea mai întâi."
 
-msgid "Please contact your administrator."
-msgstr "Vă rugăm să contactaţi administratorul."
-
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validarea a eșuat pentru utilizatorul {0}. {1}"
 
@@ -1531,11 +1519,203 @@ msgstr "Această temă nu este suportată."
 msgid "You are not allowed to access this location."
 msgstr "Nu aveți permisiunea să accesați această locație."
 
+msgid "This is not a valid Ajax/Json request."
+msgstr "Aceasta nu este o cerere validă Ajax/Json."
+
 msgid "The notification settings for the organization were updated."
 msgstr "Setările de notificare pentru organizație au fost actualizate."
 
 msgid "The supplied email notification settings are not valid"
 msgstr "Setările pentru notificarea prin e-mail furnizate nu sunt valide"
+
+msgid "The folder has been added successfully."
+msgstr "Folderul a fost adăugat cu succes."
+
+msgid "The folder id is not valid."
+msgstr "Id-ul folderului nu este valid."
+
+msgid "The folder has been deleted successfully."
+msgstr "Folderul a fost șters cu succes."
+
+msgid "The folder has been updated successfully."
+msgstr "Folderul a fost actualizat cu succes."
+
+msgid "The object type should be one of the following: {0}."
+msgstr "Tipul obiectului ar trebui să fie unul dintre următoarele: {0}."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "Identificatorul obiectului ar trebui să fie un UUID valid."
+
+msgid "The object has been moved successfully."
+msgstr "Obiectul a fost mutat cu succes."
+
+msgid "A folder parent identifier is required."
+msgstr "Un identificator folder părinte este necesar."
+
+msgid "The folder parent identifier should be a valid UUID."
+msgstr "Identificatorul folderului părinte trebuie să fie un UUID valid."
+
+msgid "Could not validate move data."
+msgstr "Mutarea datelor nu a putut fi validată."
+
+msgid "The folder identifier should be a valid UUID."
+msgstr "Identificatorul folder-ului ar trebui să fie un UUID valid."
+
+msgid "The folder identifier should not be empty."
+msgstr "Identificatorul folderului nu trebuie să fie gol."
+
+msgid "Could not validate folder history data."
+msgstr "Nu s-au putut valida datele din istoricul folderului."
+
+msgid "The child object type should be one of the following: {0}."
+msgstr "Tipul obiectului copil ar trebui să fie unul dintre următoarele: {0}."
+
+msgid "A child object type is required."
+msgstr "Un tip de obiect copil este necesar."
+
+msgid "The child object type cannot be empty."
+msgstr "Tipul obiectului copil nu poate fi gol."
+
+msgid "The child object identifier should be a valid UUID."
+msgstr "Identificatorul obiectului copil ar trebui să fie un UUID valid."
+
+msgid "The child object identifier is required."
+msgstr "Identificatorul obiectului copil este necesar."
+
+msgid "The child object identifier should not be empty."
+msgstr "Identificatorul obiectului copil nu trebuie să fie gol."
+
+msgid "The user id should not be empty."
+msgstr "Id-ul utilizatorului nu trebuie să fie gol."
+
+msgid "Could not validate folders relations history data."
+msgstr "Nu s-au putut valida datele din istoricul relațiilor folderelor."
+
+msgid "The child object type is required."
+msgstr "Tipul obiectului copil este necesar."
+
+msgid "The child object type should not be empty."
+msgstr "Tipul obiectului copil nu trebuie să fie gol."
+
+msgid "The child object identifier required."
+msgstr "Identificatorul obiectului copil este necesar."
+
+msgid "A folder relation already exists for the given child object and user."
+msgstr "Există deja o relație cu folderul pentru obiectul copil și utilizatorul dat."
+
+msgid "The child object does not exist."
+msgstr "Obiectul copil nu există."
+
+msgid "The identifier of the user who created the folder should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a creat folderul ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who created the folder is required."
+msgstr "Identificatorul utilizatorului care a creat folderul este necesar."
+
+msgid "The identifier of the user who created the folder should not be empty."
+msgstr "Identificatorul utilizatorului care a creat folderul nu trebuie să fie gol."
+
+msgid "The identifier of the user who modified the folder should be a valid UUID."
+msgstr "Identificatorul utilizatorului care a modificat folderul ar trebui să fie un UUID valid."
+
+msgid "The identifier of the user who modified the folder is required."
+msgstr "Identificatorul utilizatorului care a modificat folderul este necesar."
+
+msgid "The identifier of the user who modified the folder should not be empty."
+msgstr "Identificatorul utilizatorului care a modificat folderul nu trebuie să fie gol."
+
+msgid "You added the folder {0}"
+msgstr "Ați adăugat folderul {0}"
+
+msgid "You deleted the folder {0}"
+msgstr ""
+
+msgid "{0} deleted the folder {1}"
+msgstr "{0} a șters folderul {1}"
+
+msgid "{0} shared the folder {1}"
+msgstr "{0} a partajat folderul {1}"
+
+msgid "You edited the folder {0}"
+msgstr ""
+
+msgid "{0} edited the folder {1}"
+msgstr "{0} a modificat folderul {1}"
+
+msgid "An email notification setting should be a boolean."
+msgstr "Setarea pentru notificare prin e-mail ar trebui să fie booleană."
+
+msgid "Could not validate folder data."
+msgstr "Nu s-au putut valida datele folderului."
+
+msgid "The folder parent id should be a valid UUID."
+msgstr ""
+
+msgid "The folder parent must exist."
+msgstr "Folderul părinte trebuie să existe."
+
+msgid "You are not allowed to create content into the parent folder."
+msgstr "Nu aveți permisiunea să creați conținut în folderul părinte."
+
+msgid "You are not allowed to delete this folder."
+msgstr "Nu aveţi permisiunea de a şterge acest folder."
+
+msgid "The folder does not exist."
+msgstr "Folderul nu există."
+
+msgid "You cannot delete this resource"
+msgstr "Nu puteți șterge această resursă"
+
+msgid "You are not allowed to update the permissions of this folder."
+msgstr "Nu aveți permisiunea de a actualiza permisiunile acestui folder."
+
+msgid "You are not allowed to update this folder."
+msgstr "Nu aveți permisiunea să actualizați acest folder."
+
+msgid "Could not validate folder relation data."
+msgstr "Nu s-au putut valida datele relației cu folderul."
+
+msgid "The object to move does not exist."
+msgstr "Obiectul de mutat nu există."
+
+msgid "You are not allowed to move this item out of its parent folder."
+msgstr "Nu aveți permisiunea să mutați acest element din dosarul său părinte."
+
+msgid "You are not allowed to move this item."
+msgstr "Nu aveți permisiunea de a muta acest element."
+
+msgid "You are not allowed to move an item in read only into the parent folder."
+msgstr "Nu aveți permisiunea de a muta un element marcat doar pentru citire în dosarul părinte."
+
+msgid "The folder parent does not exist."
+msgstr "Folderul părinte nu există."
+
+msgid "You have created a new folder"
+msgstr "Ați creat un folder nou"
+
+msgid "Name: {0}"
+msgstr "Nume: {0}"
+
+msgid "view it in passbolt"
+msgstr "vizualizați-le în Passbolt"
+
+msgid "You deleted a folder"
+msgstr ""
+
+msgid "{0} deleted a folder"
+msgstr ""
+
+msgid "log in passbolt"
+msgstr "accesează Passbolt"
+
+msgid "{0} shared a folder with you"
+msgstr ""
+
+msgid "You edited a folder"
+msgstr ""
+
+msgid "{0} edited a folder"
+msgstr ""
 
 msgid "The user signature could not be verified."
 msgstr "Semnătura utilizatorului nu a putut fi verificată."
@@ -1675,6 +1855,9 @@ msgstr "Acesta nu este un locale valid."
 msgid "This is not a valid {0}."
 msgstr "Acesta nu este un {0} valid."
 
+msgid "The strategy should extend the class: {0}"
+msgstr ""
+
 msgid "The action log identifier should be a valid UUID."
 msgstr "Identificatorul log-ului de acțiuni ar trebui să fie un UUID valid."
 
@@ -1728,9 +1911,6 @@ msgstr "Un tip de obiect este necesar."
 
 msgid "The object type should not be empty."
 msgstr "Tipul obiectului nu trebuie să fie gol."
-
-msgid "The object identifier should be a valid UUID."
-msgstr "Identificatorul obiectului ar trebui să fie un UUID valid."
 
 msgid "The object identifier should not be empty."
 msgstr "Identificatorul obiectului nu trebuie să fie gol."
@@ -1873,9 +2053,6 @@ msgstr "Operațiunea s-a încheiat deja."
 msgid "The current page does not match the total number of pages."
 msgstr "Numărul paginii curente nu corespunde numărului total de pagini."
 
-msgid "This operation is not allowed for this user."
-msgstr "Această operațiune nu este permisă pentru acest utilizator."
-
 msgid "The authentication token is missing."
 msgstr "Token-ul de autentificare lipsește."
 
@@ -1941,6 +2118,9 @@ msgstr "Vă rugăm să configurați aplicația TOTP."
 
 msgid "Please provide the one-time password."
 msgstr "Vă rugăm să furnizați parola de unică folosință."
+
+msgid "You have been logged out due to too many failed attempts."
+msgstr ""
 
 msgid "The user id is not valid."
 msgstr "Id-ul utilizatorului nu este valid."
@@ -2073,6 +2253,12 @@ msgstr ""
 
 msgid "Could not validate Duo configuration"
 msgstr "Nu s-a putut valida configurația Duo"
+
+msgid "The property {0} is visible by administrators only."
+msgstr ""
+
+msgid "The property {0} should be contained in order to filter by {1}."
+msgstr ""
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "Token-ul MFA furnizat nu există sau este inactiv."
@@ -2287,6 +2473,96 @@ msgstr "Accesează Passbolt"
 msgid "The password generator value \"{0}\" is not valid."
 msgstr "Valoarea generatorului parolei \"{0}\" nu este validă."
 
+msgid "Record not found"
+msgstr ""
+
+msgid "The request data is empty."
+msgstr ""
+
+msgid "The request data is invalid: expected a collection."
+msgstr ""
+
+msgid "The request data is invalid: invalid fields."
+msgstr ""
+
+msgid "The request data is invalid: id missing."
+msgstr ""
+
+msgid "The request data is invalid: id invalid."
+msgstr ""
+
+msgid "The request data is invalid: control_function missing."
+msgstr ""
+
+msgid "The request data is invalid: control_function invalid."
+msgstr ""
+
+msgid "The request data is invalid: ids must be unique."
+msgstr ""
+
+msgid "An action identifier should be a valid UUID."
+msgstr ""
+
+msgid "The foreign model should be a valid ASCII string."
+msgstr ""
+
+msgid "The foreign model should be one of the following: {0}."
+msgstr ""
+
+msgid "The foreign model name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "A foreign model is required."
+msgstr ""
+
+msgid "The foreign model should not be empty."
+msgstr ""
+
+msgid "The control function should be a valid UTF8 string."
+msgstr ""
+
+msgid "The control function name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "The control function is not supported."
+msgstr ""
+
+msgid "A control function is required."
+msgstr ""
+
+msgid "The control function should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who created the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should not be empty."
+msgstr ""
+
+msgid "An RBAC entry already exists for the given id."
+msgstr ""
+
+msgid "An entry already exists for the given role and action ids."
+msgstr ""
+
+msgid "An action already exists for the given name."
+msgstr ""
+
+msgid "The RBAC settings could not be updated."
+msgstr ""
+
+msgid "No data found."
+msgstr ""
+
+msgid "Some data not found."
+msgstr ""
+
+msgid "The UI actions data could not be validated."
+msgstr ""
+
 msgid "5 minutes"
 msgstr "5 minute"
 
@@ -2344,6 +2620,36 @@ msgstr "Rol"
 msgid "No"
 msgstr "Nr"
 
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "Slug URL-ul trebuie să fie un șir valid BMP-UTF8."
+
+msgid "A slug is required."
+msgstr "Un slug URL este necesar."
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "Lungimea slug ar trebui să fie de maxim {0} caractere."
+
+msgid "The slug should not be empty"
+msgstr "Slug-ul nu trebuie să fie gol"
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "Definiția ar trebui să fie un șir valid BMP-UTF8."
+
+msgid "A definition is required."
+msgstr "O definiţie este necesară."
+
+msgid "The definition should not be empty."
+msgstr "Definiţia nu trebuie să fie goală."
+
+msgid "The message should be valid JSON message."
+msgstr "Mesajul JSON trebuie să fie valid."
+
+msgid "A resource type already exists with this slug."
+msgstr "Un tip de resursă există deja cu acest slug."
+
+msgid "A resource type already exists with this definition."
+msgstr "Un tip de resursă există deja cu această definiție."
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr ""
 
@@ -2367,9 +2673,6 @@ msgstr ""
 
 msgid "The domain #{0} should be a valid domain."
 msgstr ""
-
-msgid "An email notification setting should be a boolean."
-msgstr "Setarea pentru notificare prin e-mail ar trebui să fie booleană."
 
 msgid "Allowed domains: {0}"
 msgstr ""
@@ -2950,6 +3253,18 @@ msgstr "De ce am nevoie de un server SMTP?"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt are nevoie de un server SMTP pentru a trimite e-mail-uri de invitație după crearea unui cont și pentru a trimite ulterior notificări e-mail."
 
+msgid "Invalid directory type for domain: {0}"
+msgstr ""
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr ""
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Tipul de director trebuie să fie unul dintre următoarele: {0}."
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr ""
+
 msgid "The requested address was not found on this server."
 msgstr "Adresa solicitată nu a fost găsită pe acest server."
 
@@ -3085,9 +3400,6 @@ msgstr "Următorii membri ar trebui adăugați:"
 msgid "Edit group members"
 msgstr "Modifică membrii grupului"
 
-msgid "log in passbolt"
-msgstr "accesează Passbolt"
-
 msgid "{0} deleted the user {1}"
 msgstr "{0} a șters utilizatorul {1}"
 
@@ -3096,9 +3408,6 @@ msgstr "Utilizatorul {0} {1} ({2}) este acum șters din organizația dvs. în Pa
 
 msgid "This user was a member of the following group(s) you manage:"
 msgstr "Acest utilizator a fost membru al grupului(urilor) pe care îl gestionați:"
-
-msgid "view it in passbolt"
-msgstr "vizualizați-le în Passbolt"
 
 msgid "{0} deleted a group"
 msgstr "{0} a șters un grup"
@@ -3159,9 +3468,6 @@ msgstr "{0} a șters {1} grupuri din care erai membru."
 
 msgid "You have saved a new password"
 msgstr "Ați salvat o nouă parolă"
-
-msgid "Name: {0}"
-msgstr "Nume: {0}"
 
 msgid "Username: {0}"
 msgstr "Nume utilizator: {0}"

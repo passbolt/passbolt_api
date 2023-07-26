@@ -2,6 +2,20 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.2] - 2023-07-26
+### Fixed
+- PB-25472 Fix emails not sent for SMTP server using NTLM authentication
+
+### Maintenance
+- PB-25471 Crowdin should export only a selected subset of languages
+
+## [4.1.2-rc.2] - 2023-07-25
+### Fixed
+- PB-25472 Fix emails not sent for SMTP server using NTLM authentication
+
+### Maintenance
+- PB-25471 Crowdin should export only a selected subset of languages
+
 ## [4.1.1] - 2023-07-13
 ### Fixed
 - PB-25304 As an administrator the application healthcheck should compare passbolt version with the latest stable release
@@ -1291,7 +1305,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v3.10.0...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v4.1.1...HEAD
+[4.1.1]: https://github.com/passbolt/passbolt_api/compare/v4.1.0...v4.1.1
+[4.1.0]: https://github.com/passbolt/passbolt_api/compare/v4.0.2...v4.1.0
+[4.0.2]: https://github.com/passbolt/passbolt_api/compare/v4.0.1...v4.0.2
+[4.0.1]: https://github.com/passbolt/passbolt_api/compare/v4.0.0...v4.0.1
+[4.0.0]: https://github.com/passbolt/passbolt_api/compare/v3.12.2...v4.0.0
+[3.12.2]: https://github.com/passbolt/passbolt_api/compare/v3.12.0...v3.12.2
+[3.12.0]: https://github.com/passbolt/passbolt_api/compare/v3.11.1...v3.12.0
+[3.11.1]: https://github.com/passbolt/passbolt_api/compare/v3.11.0...v3.11.1
+[3.11.0]: https://github.com/passbolt/passbolt_api/compare/v3.10.0...v3.11.0
 [3.10.0]: https://github.com/passbolt/passbolt_api/compare/v3.9.0...v3.10.0
 [3.9.0]: https://github.com/passbolt/passbolt_api/compare/v3.8.3...v3.9.0
 [3.8.3]: https://github.com/passbolt/passbolt_api/compare/v3.8.1...v3.8.3
