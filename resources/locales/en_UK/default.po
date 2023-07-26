@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2023-02-27 10:30+0000\n"
+"POT-Creation-Date: 2023-07-24 11:49+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -62,10 +62,19 @@ msgstr ""
 msgid "Page not found."
 msgstr ""
 
-msgid "This is not a valid Ajax/Json request."
+msgid "Please use .json extension in URL or accept application/json."
+msgstr ""
+
+msgid "The request data can not be empty."
 msgstr ""
 
 msgid "You are successfully logged in."
+msgstr ""
+
+msgid "You are successfully logged out."
+msgstr ""
+
+msgid "The logout route should only be accessed with POST method."
 msgstr ""
 
 msgid "The OpenPGP public key information was not found in config."
@@ -242,9 +251,6 @@ msgstr ""
 msgid "The resource does not exist."
 msgstr ""
 
-msgid "The resource type does not exist."
-msgstr ""
-
 msgid "The resource has been added successfully."
 msgstr ""
 
@@ -341,6 +347,12 @@ msgstr ""
 msgid "You are not authorized to edit the role."
 msgstr ""
 
+msgid "Multiple has-access filters are not supported."
+msgstr ""
+
+msgid "This operation is not allowed for this user."
+msgstr ""
+
 msgid "Only guests are allowed to recover an account. Please logout first."
 msgstr ""
 
@@ -350,7 +362,13 @@ msgstr ""
 msgid "Only guests are allowed to register."
 msgstr ""
 
-msgid "Registration is not opened to public. Please contact your administrator."
+msgid "Registration is not opened to public."
+msgstr ""
+
+msgid "Please contact your administrator."
+msgstr ""
+
+msgid "This is due to a security setting."
 msgstr ""
 
 msgid "The user identifier should be a valid UUID or \"me\"."
@@ -764,45 +782,6 @@ msgstr ""
 msgid "The last name length should be maximum {0} characters."
 msgstr ""
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The slug should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "A slug is required."
-msgstr ""
-
-msgid "The slug length should be maximum {0} characters."
-msgstr ""
-
-msgid "The slug should not be empty"
-msgstr ""
-
-msgid "The description should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The description length should be maximum {0} characters."
-msgstr ""
-
-msgid "The definition should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "A definition is required."
-msgstr ""
-
-msgid "The definition should not be empty."
-msgstr ""
-
-msgid "The message should be valid JSON message."
-msgstr ""
-
-msgid "A resource type already exists with this slug."
-msgstr ""
-
-msgid "A resource type already exists with this definition."
-msgstr ""
-
 msgid "The username should be a valid UTF8 string."
 msgstr ""
 
@@ -816,6 +795,9 @@ msgid "The uri length should be maximum {0} characters."
 msgstr ""
 
 msgid "The description should be a valid UTF8 string."
+msgstr ""
+
+msgid "The description length should be maximum {0} characters."
 msgstr ""
 
 msgid "The deleted status should not be empty"
@@ -863,6 +845,9 @@ msgstr ""
 msgid "The secrets should contain only the secret of the owner."
 msgstr ""
 
+msgid "The resource type does not exist."
+msgstr ""
+
 msgid "The permissions should contain the owner permission."
 msgstr ""
 
@@ -882,6 +867,9 @@ msgid "The user cannot delete this resource."
 msgstr ""
 
 msgid "The name should be a valid ASCII string."
+msgstr ""
+
+msgid "The description should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "A role already exists for the given name."
@@ -906,6 +894,9 @@ msgid "The message should not be empty."
 msgstr ""
 
 msgid "A secret already exists for the given user and resource."
+msgstr ""
+
+msgid "The name should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "The user identifier by should be a valid UUID."
@@ -1409,9 +1400,6 @@ msgstr ""
 msgid "Please register and complete the setup first."
 msgstr ""
 
-msgid "Please contact your administrator."
-msgstr ""
-
 msgid "Validation failed for user {0}. {1}"
 msgstr ""
 
@@ -1535,10 +1523,202 @@ msgstr ""
 msgid "You are not allowed to access this location."
 msgstr ""
 
+msgid "This is not a valid Ajax/Json request."
+msgstr ""
+
 msgid "The notification settings for the organization were updated."
 msgstr ""
 
 msgid "The supplied email notification settings are not valid"
+msgstr ""
+
+msgid "The folder has been added successfully."
+msgstr ""
+
+msgid "The folder id is not valid."
+msgstr ""
+
+msgid "The folder has been deleted successfully."
+msgstr ""
+
+msgid "The folder has been updated successfully."
+msgstr ""
+
+msgid "The object type should be one of the following: {0}."
+msgstr ""
+
+msgid "The object identifier should be a valid UUID."
+msgstr ""
+
+msgid "The object has been moved successfully."
+msgstr ""
+
+msgid "A folder parent identifier is required."
+msgstr ""
+
+msgid "The folder parent identifier should be a valid UUID."
+msgstr ""
+
+msgid "Could not validate move data."
+msgstr ""
+
+msgid "The folder identifier should be a valid UUID."
+msgstr ""
+
+msgid "The folder identifier should not be empty."
+msgstr ""
+
+msgid "Could not validate folder history data."
+msgstr ""
+
+msgid "The child object type should be one of the following: {0}."
+msgstr ""
+
+msgid "A child object type is required."
+msgstr ""
+
+msgid "The child object type cannot be empty."
+msgstr ""
+
+msgid "The child object identifier should be a valid UUID."
+msgstr ""
+
+msgid "The child object identifier is required."
+msgstr ""
+
+msgid "The child object identifier should not be empty."
+msgstr ""
+
+msgid "The user id should not be empty."
+msgstr ""
+
+msgid "Could not validate folders relations history data."
+msgstr ""
+
+msgid "The child object type is required."
+msgstr ""
+
+msgid "The child object type should not be empty."
+msgstr ""
+
+msgid "The child object identifier required."
+msgstr ""
+
+msgid "A folder relation already exists for the given child object and user."
+msgstr ""
+
+msgid "The child object does not exist."
+msgstr ""
+
+msgid "The identifier of the user who created the folder should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who created the folder is required."
+msgstr ""
+
+msgid "The identifier of the user who created the folder should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who modified the folder should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the folder is required."
+msgstr ""
+
+msgid "The identifier of the user who modified the folder should not be empty."
+msgstr ""
+
+msgid "You added the folder {0}"
+msgstr ""
+
+msgid "You deleted the folder {0}"
+msgstr ""
+
+msgid "{0} deleted the folder {1}"
+msgstr ""
+
+msgid "{0} shared the folder {1}"
+msgstr ""
+
+msgid "You edited the folder {0}"
+msgstr ""
+
+msgid "{0} edited the folder {1}"
+msgstr ""
+
+msgid "An email notification setting should be a boolean."
+msgstr ""
+
+msgid "Could not validate folder data."
+msgstr ""
+
+msgid "The folder parent id should be a valid UUID."
+msgstr ""
+
+msgid "The folder parent must exist."
+msgstr ""
+
+msgid "You are not allowed to create content into the parent folder."
+msgstr ""
+
+msgid "You are not allowed to delete this folder."
+msgstr ""
+
+msgid "The folder does not exist."
+msgstr ""
+
+msgid "You cannot delete this resource"
+msgstr ""
+
+msgid "You are not allowed to update the permissions of this folder."
+msgstr ""
+
+msgid "You are not allowed to update this folder."
+msgstr ""
+
+msgid "Could not validate folder relation data."
+msgstr ""
+
+msgid "The object to move does not exist."
+msgstr ""
+
+msgid "You are not allowed to move this item out of its parent folder."
+msgstr ""
+
+msgid "You are not allowed to move this item."
+msgstr ""
+
+msgid "You are not allowed to move an item in read only into the parent folder."
+msgstr ""
+
+msgid "The folder parent does not exist."
+msgstr ""
+
+msgid "You have created a new folder"
+msgstr ""
+
+msgid "Name: {0}"
+msgstr ""
+
+msgid "view it in passbolt"
+msgstr ""
+
+msgid "You deleted a folder"
+msgstr ""
+
+msgid "{0} deleted a folder"
+msgstr ""
+
+msgid "log in passbolt"
+msgstr ""
+
+msgid "{0} shared a folder with you"
+msgstr ""
+
+msgid "You edited a folder"
+msgstr ""
+
+msgid "{0} edited a folder"
 msgstr ""
 
 msgid "The user signature could not be verified."
@@ -1679,6 +1859,9 @@ msgstr ""
 msgid "This is not a valid {0}."
 msgstr ""
 
+msgid "The strategy should extend the class: {0}"
+msgstr ""
+
 msgid "The action log identifier should be a valid UUID."
 msgstr ""
 
@@ -1731,9 +1914,6 @@ msgid "A object type is required."
 msgstr ""
 
 msgid "The object type should not be empty."
-msgstr ""
-
-msgid "The object identifier should be a valid UUID."
 msgstr ""
 
 msgid "The object identifier should not be empty."
@@ -1877,9 +2057,6 @@ msgstr ""
 msgid "The current page does not match the total number of pages."
 msgstr ""
 
-msgid "This operation is not allowed for this user."
-msgstr ""
-
 msgid "The authentication token is missing."
 msgstr ""
 
@@ -1944,6 +2121,9 @@ msgid "Please setup the TOTP application."
 msgstr ""
 
 msgid "Please provide the one-time password."
+msgstr ""
+
+msgid "You have been logged out due to too many failed attempts."
 msgstr ""
 
 msgid "The user id is not valid."
@@ -2076,6 +2256,12 @@ msgid "Cannot verify Duo settings."
 msgstr ""
 
 msgid "Could not validate Duo configuration"
+msgstr ""
+
+msgid "The property {0} is visible by administrators only."
+msgstr ""
+
+msgid "The property {0} should be contained in order to filter by {1}."
 msgstr ""
 
 msgid "The MFA token provided does not exist or is inactive."
@@ -2291,6 +2477,96 @@ msgstr ""
 msgid "The password generator value \"{0}\" is not valid."
 msgstr ""
 
+msgid "Record not found"
+msgstr ""
+
+msgid "The request data is empty."
+msgstr ""
+
+msgid "The request data is invalid: expected a collection."
+msgstr ""
+
+msgid "The request data is invalid: invalid fields."
+msgstr ""
+
+msgid "The request data is invalid: id missing."
+msgstr ""
+
+msgid "The request data is invalid: id invalid."
+msgstr ""
+
+msgid "The request data is invalid: control_function missing."
+msgstr ""
+
+msgid "The request data is invalid: control_function invalid."
+msgstr ""
+
+msgid "The request data is invalid: ids must be unique."
+msgstr ""
+
+msgid "An action identifier should be a valid UUID."
+msgstr ""
+
+msgid "The foreign model should be a valid ASCII string."
+msgstr ""
+
+msgid "The foreign model should be one of the following: {0}."
+msgstr ""
+
+msgid "The foreign model name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "A foreign model is required."
+msgstr ""
+
+msgid "The foreign model should not be empty."
+msgstr ""
+
+msgid "The control function should be a valid UTF8 string."
+msgstr ""
+
+msgid "The control function name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "The control function is not supported."
+msgstr ""
+
+msgid "A control function is required."
+msgstr ""
+
+msgid "The control function should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who created the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should not be empty."
+msgstr ""
+
+msgid "An RBAC entry already exists for the given id."
+msgstr ""
+
+msgid "An entry already exists for the given role and action ids."
+msgstr ""
+
+msgid "An action already exists for the given name."
+msgstr ""
+
+msgid "The RBAC settings could not be updated."
+msgstr ""
+
+msgid "No data found."
+msgstr ""
+
+msgid "Some data not found."
+msgstr ""
+
+msgid "The UI actions data could not be validated."
+msgstr ""
+
 msgid "5 minutes"
 msgstr ""
 
@@ -2348,6 +2624,36 @@ msgstr ""
 msgid "No"
 msgstr ""
 
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "A slug is required."
+msgstr ""
+
+msgid "The slug length should be maximum {0} characters."
+msgstr ""
+
+msgid "The slug should not be empty"
+msgstr ""
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "A definition is required."
+msgstr ""
+
+msgid "The definition should not be empty."
+msgstr ""
+
+msgid "The message should be valid JSON message."
+msgstr ""
+
+msgid "A resource type already exists with this slug."
+msgstr ""
+
+msgid "A resource type already exists with this definition."
+msgstr ""
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr ""
 
@@ -2370,9 +2676,6 @@ msgid "The list of allowed domains should be an array of strings."
 msgstr ""
 
 msgid "The domain #{0} should be a valid domain."
-msgstr ""
-
-msgid "An email notification setting should be a boolean."
 msgstr ""
 
 msgid "Allowed domains: {0}"
@@ -3479,9 +3782,6 @@ msgstr ""
 msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
 msgstr ""
 
-msgid "The folder identifier should be a valid UUID."
-msgstr ""
-
 msgid "Only administrators can view user logs."
 msgstr ""
 
@@ -3581,6 +3881,18 @@ msgstr ""
 msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
 msgstr ""
 
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr ""
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr ""
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr ""
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr ""
+
 msgid "The record model is not valid."
 msgstr ""
 
@@ -3623,49 +3935,13 @@ msgstr ""
 msgid "The simulation was done successfully."
 msgstr ""
 
-msgid "A directory type is required."
+msgid "Need at least one domain configuration."
 msgstr ""
 
-msgid "The directory type should not be empty."
+msgid "The connection name `{0}` should not contain dots"
 msgstr ""
 
-msgid "The directory type should be one of the following: {0}."
-msgstr ""
-
-msgid "A domain name is required."
-msgstr ""
-
-msgid "The domain name should not be empty."
-msgstr ""
-
-msgid "The domain name should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The base DN should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "A server is required."
-msgstr ""
-
-msgid "The server should not be empty."
-msgstr ""
-
-msgid "The server should be a valid BMP-UTF8 string."
-msgstr ""
-
-msgid "The port number should not be empty."
-msgstr ""
-
-msgid "The port number should be between 0 and 65535"
-msgstr ""
-
-msgid "A connection type is required."
-msgstr ""
-
-msgid "The connection type should not be empty."
-msgstr ""
-
-msgid "The connection type should be one of the following: {0}."
+msgid "Invalid connection name"
 msgstr ""
 
 msgid "The identifier of the default admin user is required."
@@ -3701,6 +3977,12 @@ msgstr ""
 msgid "The user path should be a valid BMP-UTF8 string."
 msgstr ""
 
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr ""
+
 msgid "The email prefix/suffix setting should be a valid boolean."
 msgstr ""
 
@@ -3722,6 +4004,9 @@ msgstr ""
 msgid "The sync of created users setting should be a boolean."
 msgstr ""
 
+msgid "The sync of updated users setting should be a boolean."
+msgstr ""
+
 msgid "The sync of deleted users setting should be a boolean."
 msgstr ""
 
@@ -3732,6 +4017,72 @@ msgid "The sync of deleted groups setting should be a boolean."
 msgstr ""
 
 msgid "The sync of updated groups setting should be a boolean."
+msgstr ""
+
+msgid "The fields mapping should be a valid array."
+msgstr ""
+
+msgid "A directory type is required."
+msgstr ""
+
+msgid "The directory type should not be empty."
+msgstr ""
+
+msgid "The directory type should be one of the following: {0}."
+msgstr ""
+
+msgid "A domain name is required."
+msgstr ""
+
+msgid "The domain name should not be empty."
+msgstr ""
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "At least one host is required."
+msgstr ""
+
+msgid "The hosts should be a valid array."
+msgstr ""
+
+msgid "The port number should not be empty."
+msgstr ""
+
+msgid "The port number should be between 0 and 65535"
+msgstr ""
+
+msgid "A connection type is required."
+msgstr ""
+
+msgid "The connection type should not be empty."
+msgstr ""
+
+msgid "The connection type should be one of the following: {0}."
+msgstr ""
+
+msgid "An authentication type is required."
+msgstr ""
+
+msgid "The authentication type should not be empty."
+msgstr ""
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr ""
+
+msgid "The map for this field is required."
+msgstr ""
+
+msgid "The map value should not be empty."
+msgstr ""
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The map configuration for `{0}` fields is required."
 msgstr ""
 
 msgid "The directory name should be a valid UTF8 string."
@@ -3750,9 +4101,6 @@ msgid "An object type is required."
 msgstr ""
 
 msgid "Could not validate directory entry data."
-msgstr ""
-
-msgid "The object type should be one of the following: {0}."
 msgstr ""
 
 msgid "The associated record could not be found."
@@ -3776,10 +4124,34 @@ msgstr ""
 msgid "The child identifier is required."
 msgstr ""
 
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr ""
+
+msgid "New directory settings could not be saved."
+msgstr ""
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr ""
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr ""
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr ""
+
 msgid "A group name is required."
 msgstr ""
 
 msgid "A group member does not match the expected DN format."
+msgstr ""
+
+msgid "Invalid directory type for domain: {0}"
+msgstr ""
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr ""
+
+msgid "LDAP Object class could not be found: {0}"
 msgstr ""
 
 msgid "Subscription key data is required."
@@ -3855,168 +4227,6 @@ msgid "The file {0} could not be read."
 msgstr ""
 
 msgid "Only administrators can update the subscription details."
-msgstr ""
-
-msgid "The folder has been added successfully."
-msgstr ""
-
-msgid "The folder id is not valid."
-msgstr ""
-
-msgid "The folder has been deleted successfully."
-msgstr ""
-
-msgid "The folder has been updated successfully."
-msgstr ""
-
-msgid "The object has been moved successfully."
-msgstr ""
-
-msgid "A folder parent identifier is required."
-msgstr ""
-
-msgid "The folder parent identifier should be a valid UUID."
-msgstr ""
-
-msgid "Could not validate move data."
-msgstr ""
-
-msgid "The folder identifier should not be empty."
-msgstr ""
-
-msgid "Could not validate folder history data."
-msgstr ""
-
-msgid "The child object type should be one of the following: {0}."
-msgstr ""
-
-msgid "A child object type is required."
-msgstr ""
-
-msgid "The child object type cannot be empty."
-msgstr ""
-
-msgid "The child object identifier should be a valid UUID."
-msgstr ""
-
-msgid "The child object identifier is required."
-msgstr ""
-
-msgid "The child object identifier should not be empty."
-msgstr ""
-
-msgid "The user id should not be empty."
-msgstr ""
-
-msgid "Could not validate folders relations history data."
-msgstr ""
-
-msgid "The child object type is required."
-msgstr ""
-
-msgid "The child object type should not be empty."
-msgstr ""
-
-msgid "The child object identifier required."
-msgstr ""
-
-msgid "A folder relation already exists for the given child object and user."
-msgstr ""
-
-msgid "The child object does not exist."
-msgstr ""
-
-msgid "The identifier of the user who created the folder should be a valid UUID."
-msgstr ""
-
-msgid "The identifier of the user who created the folder is required."
-msgstr ""
-
-msgid "The identifier of the user who created the folder should not be empty."
-msgstr ""
-
-msgid "The identifier of the user who modified the folder should be a valid UUID."
-msgstr ""
-
-msgid "The identifier of the user who modified the folder is required."
-msgstr ""
-
-msgid "The identifier of the user who modified the folder should not be empty."
-msgstr ""
-
-msgid "You added the folder {0}"
-msgstr ""
-
-msgid "{0} deleted the folder {1}"
-msgstr ""
-
-msgid "{0} shared the folder {1}"
-msgstr ""
-
-msgid "{0} edited the folder {1}"
-msgstr ""
-
-msgid "Could not validate folder data."
-msgstr ""
-
-msgid "The folder parent id should be a valid UUID."
-msgstr ""
-
-msgid "The folder parent must exist."
-msgstr ""
-
-msgid "You are not allowed to create content into the parent folder."
-msgstr ""
-
-msgid "You are not allowed to delete this folder."
-msgstr ""
-
-msgid "The folder does not exist."
-msgstr ""
-
-msgid "You cannot delete this resource"
-msgstr ""
-
-msgid "You are not allowed to update the permissions of this folder."
-msgstr ""
-
-msgid "You are not allowed to update this folder."
-msgstr ""
-
-msgid "Could not validate folder relation data."
-msgstr ""
-
-msgid "The object to move does not exist."
-msgstr ""
-
-msgid "You are not allowed to move this item out of its parent folder."
-msgstr ""
-
-msgid "You are not allowed to move this item."
-msgstr ""
-
-msgid "You are not allowed to move an item in read only into the parent folder."
-msgstr ""
-
-msgid "The folder parent does not exist."
-msgstr ""
-
-msgid "You have created a new folder"
-msgstr ""
-
-msgid "Name: {0}"
-msgstr ""
-
-msgid "view it in passbolt"
-msgstr ""
-
-msgid "log in passbolt"
-msgstr ""
-
-msgid "shared a folder with you"
-msgstr ""
-
-msgid "{0} updated the folder {1}"
 msgstr ""
 
 msgid "Only administrators are allowed to create/update MFA policies settings."
@@ -4124,6 +4334,9 @@ msgstr ""
 msgid "A URL is required."
 msgstr ""
 
+msgid "The URL should not be empty."
+msgstr ""
+
 msgid "The URL is not supported."
 msgstr ""
 
@@ -4161,6 +4374,21 @@ msgid "A client secret expiry is required."
 msgstr ""
 
 msgid "The expiry should not be empty."
+msgstr ""
+
+msgid "The prompt should not be empty."
+msgstr ""
+
+msgid "The prompt should be one of the following: {0}."
+msgstr ""
+
+msgid "The email claim should not be empty."
+msgstr ""
+
+msgid "The email claim should be one of the following: {0}."
+msgstr ""
+
+msgid "The client id is too large."
 msgstr ""
 
 msgid "The user is not active."
@@ -4250,6 +4478,12 @@ msgstr ""
 msgid "The type of the SSO state is invalid."
 msgstr ""
 
+msgid "{0} activated the SSO setting"
+msgstr ""
+
+msgid "{0} deleted the SSO setting"
+msgstr ""
+
 msgid "The user is missing for the SSO state."
 msgstr ""
 
@@ -4269,6 +4503,9 @@ msgid "Invalid nonce."
 msgstr ""
 
 msgid "No valid SSO settings found."
+msgstr ""
+
+msgid "You must authenticate with Azure again."
 msgstr ""
 
 msgid "The user id should be a valid UUID."
@@ -4340,10 +4577,13 @@ msgstr ""
 msgid "Only administrators can create SSO settings."
 msgstr ""
 
-msgid "Something went wrong when validating the Azure single-sign on settings."
+msgid "Something went wrong when validating the single-sign on settings."
 msgstr ""
 
 msgid "It is not possible to save the SSO settings."
+msgstr ""
+
+msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
 msgstr ""
 
 msgid "The SSO state is invalid."
@@ -4379,13 +4619,25 @@ msgstr ""
 msgid "Failed to public key properties from certificate: {0}"
 msgstr ""
 
-msgid "Azure JWT token is missing."
+msgid "The {0} claim is not present, please contact your administrator."
 msgstr ""
 
-msgid "Unable to decode Azure JWT token."
+msgid "JWT token is missing."
+msgstr ""
+
+msgid "Unable to decode JWT token."
 msgstr ""
 
 msgid "Single-sign on was a success"
+msgstr ""
+
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr ""
+
+msgid "All users can now use the Single Sign-on to perform authentication."
+msgstr ""
+
+msgid "The SSO setting has been deleted by {0}."
 msgstr ""
 
 msgid "The authentication token does not exist or has been deleted."
@@ -4397,6 +4649,9 @@ msgstr ""
 msgid "Could not validate the SSO recover request."
 msgstr ""
 
+msgid "The email is required in URL parameters."
+msgstr ""
+
 msgid "The case field is required."
 msgstr ""
 
@@ -4404,6 +4659,12 @@ msgid "The case is not supported. Only \"default\" case is supported."
 msgstr ""
 
 msgid "The token field is required."
+msgstr ""
+
+msgid "Access to this service requires an invitation. "
+msgstr ""
+
+msgid "Please contact your administrator to request an invitation link."
 msgstr ""
 
 msgid "You do not have the permission to edit shared tags on this resource."

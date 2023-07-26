@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-02-27 10:30+0000\n"
-"PO-Revision-Date: 2023-02-27 12:45\n"
+"POT-Creation-Date: 2023-07-24 11:49+0000\n"
+"PO-Revision-Date: 2023-07-25 06:50\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -64,11 +64,20 @@ msgstr "Es ist kein*e Benutzer*in mit diesem Schlüssel verknüpft."
 msgid "Page not found."
 msgstr "Seite nicht gefunden."
 
-msgid "This is not a valid Ajax/Json request."
-msgstr "Dies ist keine gültige Ajax/Json-Anfrage."
+msgid "Please use .json extension in URL or accept application/json."
+msgstr ""
+
+msgid "The request data can not be empty."
+msgstr ""
 
 msgid "You are successfully logged in."
 msgstr "Sie sind erfolgreich angemeldet."
+
+msgid "You are successfully logged out."
+msgstr ""
+
+msgid "The logout route should only be accessed with POST method."
+msgstr ""
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "Die Informationen zum öffentlichen OpenPGP Schlüssel wurden nicht in der Konfiguration gefunden."
@@ -244,9 +253,6 @@ msgstr "Der Identifier sollte eine gültige UUID sein."
 msgid "The resource does not exist."
 msgstr "Die Ressource existiert nicht."
 
-msgid "The resource type does not exist."
-msgstr "Der Ressourcentyp existiert nicht."
-
 msgid "The resource has been added successfully."
 msgstr "Die Ressource wurde erfolgreich hinzugefügt."
 
@@ -343,6 +349,12 @@ msgstr "Es ist nicht erlaubt die Gruppe zu bearbeiten."
 msgid "You are not authorized to edit the role."
 msgstr "Sie sind nicht berechtigt, die Rolle zu bearbeiten."
 
+msgid "Multiple has-access filters are not supported."
+msgstr ""
+
+msgid "This operation is not allowed for this user."
+msgstr "Dieser Vorgang ist für diesen Benutzer nicht erlaubt."
+
 msgid "Only guests are allowed to recover an account. Please logout first."
 msgstr "Nur Gäste dürfen ein Konto wiederherstellen. Bitte melden Sie sich zuerst ab."
 
@@ -352,8 +364,14 @@ msgstr "Wiederherstellungsprozess gestartet, überprüfen Sie Ihre E-Mail."
 msgid "Only guests are allowed to register."
 msgstr "Nur Gäste dürfen sich registrieren."
 
-msgid "Registration is not opened to public. Please contact your administrator."
-msgstr "Die Registrierung ist nicht für die Öffentlichkeit zugänglich. Bitte wenden Sie sich an Ihre Administrator."
+msgid "Registration is not opened to public."
+msgstr ""
+
+msgid "Please contact your administrator."
+msgstr "Bitte kontaktieren Sie Ihren Administrator."
+
+msgid "This is due to a security setting."
+msgstr ""
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "Der Benutzer-Identifikator sollte eine gültige UUID oder \"me\" sein."
@@ -766,45 +784,6 @@ msgstr "Der Nachname sollte eine gültige BMP-UTF8-Zeichenkette sein."
 msgid "The last name length should be maximum {0} characters."
 msgstr "Die Länge des Nachnamens sollte maximal {0} Zeichen enthalten."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Der Name sollte eine gültige BMP-UTF8-Zeichenkette sein."
-
-msgid "The slug should be a valid BMP-UTF8 string."
-msgstr "Der Slug sollte eine gültige BMP-UTF8-Zeichenkette sein."
-
-msgid "A slug is required."
-msgstr "Ein Slug ist erforderlich."
-
-msgid "The slug length should be maximum {0} characters."
-msgstr "Die Länge des Slug sollte maximal {0} Zeichen enthalten."
-
-msgid "The slug should not be empty"
-msgstr "Der Slug darf nicht leer sein"
-
-msgid "The description should be a valid BMP-UTF8 string."
-msgstr "Die Beschreibung sollte eine gültige BMP-UTF8-Zeichenkette sein."
-
-msgid "The description length should be maximum {0} characters."
-msgstr "Die Beschreibung sollte maximal {0} Zeichen lang sein."
-
-msgid "The definition should be a valid BMP-UTF8 string."
-msgstr "Die Definition sollte eine gültige BMP-UTF8-Zeichenkette sein."
-
-msgid "A definition is required."
-msgstr "Eine Definition ist erforderlich."
-
-msgid "The definition should not be empty."
-msgstr "Die Definition darf nicht leer sein."
-
-msgid "The message should be valid JSON message."
-msgstr "Die Nachricht sollte eine gültige JSON-Nachricht sein."
-
-msgid "A resource type already exists with this slug."
-msgstr "Ein Ressourcentyp existiert bereits mit diesem Slug."
-
-msgid "A resource type already exists with this definition."
-msgstr "Es existiert bereits ein Ressourcentyp mit dieser Definition."
-
 msgid "The username should be a valid UTF8 string."
 msgstr "Der Benutzername sollte eine gültige UTF8-Zeichenkette sein."
 
@@ -819,6 +798,9 @@ msgstr "Die Uri-Länge sollte maximal {0} Zeichen lang sein."
 
 msgid "The description should be a valid UTF8 string."
 msgstr "Die Beschreibung sollte eine gültige BMP-UTF8-Zeichenkette sein."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "Die Beschreibung sollte maximal {0} Zeichen lang sein."
 
 msgid "The deleted status should not be empty"
 msgstr "Der gelöschte Status darf nicht leer sein"
@@ -865,6 +847,9 @@ msgstr "Die Geheimnisse dürfen nicht leer sein."
 msgid "The secrets should contain only the secret of the owner."
 msgstr "Die Geheimnisse sollten nur das Geheimnis des Eigentümers enthalten."
 
+msgid "The resource type does not exist."
+msgstr "Der Ressourcentyp existiert nicht."
+
 msgid "The permissions should contain the owner permission."
 msgstr "Die Berechtigungen müssen die Berechtigung des Eigentümers enthalten."
 
@@ -885,6 +870,9 @@ msgstr "Der Benutzer kann diese Ressource nicht löschen."
 
 msgid "The name should be a valid ASCII string."
 msgstr "Der Name muss eine gültige ASCII-Zeichenkette sein."
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "Die Beschreibung sollte eine gültige BMP-UTF8-Zeichenkette sein."
 
 msgid "A role already exists for the given name."
 msgstr "Für diesen Namen existiert bereits eine Rolle."
@@ -909,6 +897,9 @@ msgstr "Die Nachricht darf nicht leer sein."
 
 msgid "A secret already exists for the given user and resource."
 msgstr "Für den angegebenen Benutzer und die Ressource existiert bereits ein Geheimnis."
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Der Name sollte eine gültige BMP-UTF8-Zeichenkette sein."
 
 msgid "The user identifier by should be a valid UUID."
 msgstr "Die Benutzerkennung muss eine gültige UUID sein."
@@ -965,7 +956,7 @@ msgid "The email should be a valid email address."
 msgstr "Die E-Mail muss eine gültige E-Mail-Adresse sein."
 
 msgid "The regular expression should be a valid string."
-msgstr ""
+msgstr "Der reguläre Ausdruck sollte ein gültiger String sein."
 
 msgid "The fingerprint does not match the one of the armored key."
 msgstr "Der Fingerabdruck entspricht nicht der des gepanzerten Schlüssels."
@@ -983,10 +974,10 @@ msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Der Schlüssel Identifikator muss eine Zeichenkette aus 8 Hexadezimalzeichen sein."
 
 msgid "The provided IP is invalid."
-msgstr ""
+msgstr "Die angegebene IP ist ungültig."
 
 msgid "The provided user agent is invalid."
-msgstr ""
+msgstr "Der angegebene User-Agent ist ungültig."
 
 msgid "{0} just activated their account on passbolt"
 msgstr "{0} hat gerade ihr*sein Konto bei Passwort aktiviert"
@@ -1411,9 +1402,6 @@ msgstr "Benutzer existiert nicht oder wurde gelöscht."
 msgid "Please register and complete the setup first."
 msgstr "Bitte registrieren Sie sich und schließen Sie das Setup zuerst ab."
 
-msgid "Please contact your administrator."
-msgstr "Bitte kontaktieren Sie Ihren Administrator."
-
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validierung fehlgeschlagen für Benutzer*in {0}. {1}"
 
@@ -1537,11 +1525,203 @@ msgstr "Diese Benutzeroberfläche wird nicht unterstützt."
 msgid "You are not allowed to access this location."
 msgstr "Sie sind nicht berechtigt, auf diesen Standort zuzugreifen."
 
+msgid "This is not a valid Ajax/Json request."
+msgstr "Dies ist keine gültige Ajax/Json-Anfrage."
+
 msgid "The notification settings for the organization were updated."
 msgstr "Die Benachrichtigungseinstellungen für die Organisation wurden aktualisiert."
 
 msgid "The supplied email notification settings are not valid"
 msgstr "Die angegebenen E-Mail-Benachrichtigungseinstellungen sind ungültig"
+
+msgid "The folder has been added successfully."
+msgstr "Der Ordner wurde erfolgreich hinzugefügt."
+
+msgid "The folder id is not valid."
+msgstr "Die Ordner-ID ist ungültig."
+
+msgid "The folder has been deleted successfully."
+msgstr "Der Ordner wurde erfolgreich gelöscht."
+
+msgid "The folder has been updated successfully."
+msgstr "Der Ordner wurde erfolgreich aktualisiert."
+
+msgid "The object type should be one of the following: {0}."
+msgstr "Der Objekttyp sollte einer der folgenden sein: {0}."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "Der Objekt-Identifikator sollte eine gültige UUID sein."
+
+msgid "The object has been moved successfully."
+msgstr "Das Objekt wurde erfolgreich verschoben."
+
+msgid "A folder parent identifier is required."
+msgstr "Ein übergeordneter Ordner-Identifikator ist erforderlich."
+
+msgid "The folder parent identifier should be a valid UUID."
+msgstr "Der übergeordnete Ordner-Identifikator sollte eine gültige UUID sein."
+
+msgid "Could not validate move data."
+msgstr "Verschiebungsdaten konnten nicht validiert werden."
+
+msgid "The folder identifier should be a valid UUID."
+msgstr "Der Ordner-Identifikator sollte eine gültige UUID sein."
+
+msgid "The folder identifier should not be empty."
+msgstr "Der Ordner-Identifikator sollte nicht leer sein."
+
+msgid "Could not validate folder history data."
+msgstr "Ordnerverlauf konnte nicht validiert werden."
+
+msgid "The child object type should be one of the following: {0}."
+msgstr "Der untergeordnete Objekttyp sollte einer der folgenden sein: {0}."
+
+msgid "A child object type is required."
+msgstr "Ein untergeordneter Objekttyp ist erforderlich."
+
+msgid "The child object type cannot be empty."
+msgstr "Der untergeordnete Objekttyp darf nicht leer sein."
+
+msgid "The child object identifier should be a valid UUID."
+msgstr "Der untergeordnete Objekt-Identifikator sollte eine gültige UUID sein."
+
+msgid "The child object identifier is required."
+msgstr "Der untergeordnete Objekt-Identifikator ist erforderlich."
+
+msgid "The child object identifier should not be empty."
+msgstr "Die untergeordnete Objekt-Identifikator sollte nicht leer sein."
+
+msgid "The user id should not be empty."
+msgstr "Die Benutzer-ID sollte nicht leer sein."
+
+msgid "Could not validate folders relations history data."
+msgstr "Ordnerverlaufsdaten konnten nicht überprüft werden."
+
+msgid "The child object type is required."
+msgstr "Ein untergeordneter Objekttyp ist erforderlich."
+
+msgid "The child object type should not be empty."
+msgstr "Der untergeordnete Objekttyp darf nicht leer sein."
+
+msgid "The child object identifier required."
+msgstr "Der untergeordnete Objekt-Identifikator ist erforderlich."
+
+msgid "A folder relation already exists for the given child object and user."
+msgstr "Es existiert bereits eine Ordner-Beziehung für das angegebene Unterobjekt und Benutzer."
+
+msgid "The child object does not exist."
+msgstr "Das untergeordnete Objekt existiert nicht."
+
+msgid "The identifier of the user who created the folder should be a valid UUID."
+msgstr "Der Identifikator des Benutzers, welcher die Gruppe erstellt hat, muss eine gültige UUID sein."
+
+msgid "The identifier of the user who created the folder is required."
+msgstr "Der Identifikator des Benutzers, der den Ordner erstellt hat, muss angegeben werden."
+
+msgid "The identifier of the user who created the folder should not be empty."
+msgstr "Der Identifikator des Benutzers, der den Ordner erstellt hat, sollte nicht leer sein."
+
+msgid "The identifier of the user who modified the folder should be a valid UUID."
+msgstr "Der Identifikator des Benutzers, der den Ordner geändert hat, sollte eine gültige UUID sein."
+
+msgid "The identifier of the user who modified the folder is required."
+msgstr "Der Identifikator des Benutzers, der den Ordner bearbeitet hat, muss angegeben werden."
+
+msgid "The identifier of the user who modified the folder should not be empty."
+msgstr "Der Identifikator des Benutzers, der den Ordner bearbeitet hat, sollte nicht leer sein."
+
+msgid "You added the folder {0}"
+msgstr "Sie haben den Ordner {0} hinzugefügt"
+
+msgid "You deleted the folder {0}"
+msgstr ""
+
+msgid "{0} deleted the folder {1}"
+msgstr "{0} hat den Ordner {1} gelöscht"
+
+msgid "{0} shared the folder {1}"
+msgstr "{0} hat den Ordner {1} geteilt"
+
+msgid "You edited the folder {0}"
+msgstr ""
+
+msgid "{0} edited the folder {1}"
+msgstr "{0} hat den Ordner {1} bearbeitet"
+
+msgid "An email notification setting should be a boolean."
+msgstr "Eine E-Mail-Benachrichtigungseinstellung sollte ein Boolescher-Wert sein."
+
+msgid "Could not validate folder data."
+msgstr "Ordnerdaten konnten nicht validiert werden."
+
+msgid "The folder parent id should be a valid UUID."
+msgstr "Der übergeordnete Ordner-ID sollte eine gültige UUID sein."
+
+msgid "The folder parent must exist."
+msgstr "Der übergeordnete Ordner muss vorhanden sein."
+
+msgid "You are not allowed to create content into the parent folder."
+msgstr "Sie sind nicht berechtigt, Inhalte im übergeordneten Ordner zu erstellen."
+
+msgid "You are not allowed to delete this folder."
+msgstr "Sie sind nicht berechtigt, diesen Ordner zu löschen."
+
+msgid "The folder does not exist."
+msgstr "Der Ordner existiert nicht."
+
+msgid "You cannot delete this resource"
+msgstr "Sie können diese Ressource nicht löschen"
+
+msgid "You are not allowed to update the permissions of this folder."
+msgstr "Sie sind nicht berechtigt, die Berechtigungen dieses Ordners zu aktualisieren."
+
+msgid "You are not allowed to update this folder."
+msgstr "Sie sind nicht berechtigt, diesen Ordner zu aktualisieren."
+
+msgid "Could not validate folder relation data."
+msgstr "Ordnerverlaufsdaten konnten nicht validiert werden."
+
+msgid "The object to move does not exist."
+msgstr "Das zu bewegende Objekt existiert nicht."
+
+msgid "You are not allowed to move this item out of its parent folder."
+msgstr "Sie sind nicht berechtigt, dieses Element aus dem übergeordneten Ordner zu verschieben."
+
+msgid "You are not allowed to move this item."
+msgstr "Sie sind nicht berechtigt, dieses Element zu verschieben."
+
+msgid "You are not allowed to move an item in read only into the parent folder."
+msgstr "Sie sind nicht berechtigt, ein Element im Lesemodus in den übergeordneten Ordner zu verschieben."
+
+msgid "The folder parent does not exist."
+msgstr "Der übergeordnete Ordner existiert nicht."
+
+msgid "You have created a new folder"
+msgstr "Sie haben einen neuen Ordner erstellt"
+
+msgid "Name: {0}"
+msgstr "Name: {0}"
+
+msgid "view it in passbolt"
+msgstr "in Passbolt anzeigen"
+
+msgid "You deleted a folder"
+msgstr ""
+
+msgid "{0} deleted a folder"
+msgstr ""
+
+msgid "log in passbolt"
+msgstr "in Passbolt einloggen"
+
+msgid "{0} shared a folder with you"
+msgstr ""
+
+msgid "You edited a folder"
+msgstr ""
+
+msgid "{0} edited a folder"
+msgstr ""
 
 msgid "The user signature could not be verified."
 msgstr "Die Benutzersignatur konnte nicht verifiziert werden."
@@ -1681,6 +1861,9 @@ msgstr "Dies ist kein gültiges Locale."
 msgid "This is not a valid {0}."
 msgstr "Dies ist kein gültiger {0}."
 
+msgid "The strategy should extend the class: {0}"
+msgstr ""
+
 msgid "The action log identifier should be a valid UUID."
 msgstr "Der Action-Log-Identifikator sollte eine gültige UUID sein."
 
@@ -1712,7 +1895,7 @@ msgid "Could not validate action log data."
 msgstr "Konnte die Logdaten der Aktion nicht überprüfen."
 
 msgid "The date {0} should be after the date {1}."
-msgstr ""
+msgstr "Das Datum {0} sollte nach dem Datum {1} liegen."
 
 msgid "The identifier should be not be empty."
 msgstr "Der Identifikator sollte nicht leer sein."
@@ -1734,9 +1917,6 @@ msgstr "Ein Objekttyp ist erforderlich."
 
 msgid "The object type should not be empty."
 msgstr "Der Objekttyp darf nicht leer sein."
-
-msgid "The object identifier should be a valid UUID."
-msgstr "Der Objekt-Identifikator sollte eine gültige UUID sein."
 
 msgid "The object identifier should not be empty."
 msgstr "Der Objekt-Identifikator sollte nicht leer sein."
@@ -1879,9 +2059,6 @@ msgstr "Die Operation ist bereits beendet."
 msgid "The current page does not match the total number of pages."
 msgstr "Die aktuelle Seite entspricht nicht der Gesamtzahl der Seiten."
 
-msgid "This operation is not allowed for this user."
-msgstr "Dieser Vorgang ist für diesen Benutzer nicht erlaubt."
-
 msgid "The authentication token is missing."
 msgstr "Der Authentifizierungstoken fehlt."
 
@@ -1898,22 +2075,22 @@ msgid "The authentication token is expired."
 msgstr "Das Authentifizierungs-Token ist abgelaufen."
 
 msgid "Unable to authenticate to Duo."
-msgstr ""
+msgstr "Duo-Authentifizierung nicht möglich."
 
 msgid "Unable to validate the Duo callback data."
-msgstr ""
+msgstr "Die Duo-Callback-Daten konnten nicht überprüft werden."
 
 msgid "A Duo state cookie is required."
-msgstr ""
+msgstr "Ein Duo-Status-Cookie ist erforderlich."
 
 msgid "The Duo state cookie value should be a string."
-msgstr ""
+msgstr "Der Duo-Status-Cookie-Wert sollte ein String sein."
 
 msgid "The Duo state cookie should be a valid UUID."
-msgstr ""
+msgstr "Der Duo-Status sollte eine gültige UUID sein."
 
 msgid "This entrypoint is not available anymore."
-msgstr ""
+msgstr "Dieser Einstiegspunkt ist nicht mehr verfügbar."
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "Dieser Authentifizierungsanbieter ist für Ihre Organisation nicht aktiviert."
@@ -1948,6 +2125,9 @@ msgstr "Bitte richten Sie die TOTP-Anwendung ein."
 msgid "Please provide the one-time password."
 msgstr "Bitte geben Sie das einmalige Passwort ein."
 
+msgid "You have been logged out due to too many failed attempts."
+msgstr ""
+
 msgid "The user id is not valid."
 msgstr "Die Benutzer-ID ist ungültig."
 
@@ -1961,28 +2141,28 @@ msgid "Please setup the Yubikey settings."
 msgstr "Bitte richten Sie die Yubikey-Einstellungen ein."
 
 msgid "A state is required."
-msgstr ""
+msgstr "Ein Status ist erforderlich."
 
 msgid "The state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Der Status sollte ein gültiger BMP-UTF8-String sein."
 
 msgid "The state should not be empty."
-msgstr ""
+msgstr "Der Status darf nicht leer sein."
 
 msgid "A duo code is required."
-msgstr ""
+msgstr "Ein Duo-Code ist erforderlich."
 
 msgid "The duo code state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Der Duo-Code-Status sollte ein gültiger BMP-UTF8-String sein."
 
 msgid "The duo code should not be empty."
-msgstr ""
+msgstr "Der Duo-Code sollte nicht leer sein."
 
 msgid "The error description should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Die Fehlerbeschreibung sollte ein gültiger BMP-UTF8-String sein."
 
 msgid "The error description state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Der Fehlerbeschreibungsstatus sollte ein gültiger BMP-UTF8-String sein."
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "Bei der Überprüfung des einmaligen Passworts ist ein Fehler aufgetreten."
@@ -2009,10 +2189,10 @@ msgid "This yubikey is not associated with this user."
 msgstr "Dieser Yubikey ist diesem Benutzer nicht zugeordnet."
 
 msgid "No Duo error provided"
-msgstr ""
+msgstr "Kein Duo-Fehler angegeben"
 
 msgid "No Duo error description provided"
-msgstr ""
+msgstr "Keine Duo-Fehlerbeschreibung angegeben"
 
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Ihre Multi-Faktor-Authentifizierungseinstellungen wurden von Ihnen zurückgesetzt."
@@ -2024,61 +2204,67 @@ msgid "Your multi-factor authentication settings were reset by an administrator.
 msgstr "Ihre Multi-Faktor-Authentifizierungseinstellungen wurden von einem Administrator zurückgesetzt."
 
 msgid "The token should reference an active Duo callback authentication token."
-msgstr ""
+msgstr "Das Token sollte ein aktives Duo-Callback-Authentifizierungstoken referenzieren."
 
 msgid "An authentication token state is required."
-msgstr ""
+msgstr "Ein Authentifizierungs-Token-Status ist erforderlich."
 
 msgid "The Duo state should match the authentication token state."
-msgstr ""
+msgstr "Der Duo-Status sollte mit dem Authentifizierungstoken-Status übereinstimmen."
 
 msgid "Could not enable Duo MFA provider."
-msgstr ""
+msgstr "Konnte Duo MFA Anbieter nicht aktivieren."
 
 msgid "Unable to verify Duo authentication."
-msgstr ""
+msgstr "Duo-Authentifizierung konnte nicht verifiziert werden."
 
 msgid "Could not validate the Duo settings."
-msgstr ""
+msgstr "Die Duo-Einstellungen konnten nicht validiert werden."
 
 msgid "Could not login using Duo MFA provider."
-msgstr ""
+msgstr "Anmeldung über den Duo MFA Anbieter nicht möglich."
 
 msgid "Unable to connect to Duo services."
-msgstr ""
+msgstr "Verbindung zu Duo-Diensten nicht möglich."
 
 msgid "Unable to verify Duo code against Duo service."
-msgstr ""
+msgstr "Duo-Code konnte nicht gegen Duo-Dienst verifiziert werden."
 
 msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
-msgstr ""
+msgstr "Der Duo-Authentifizierungs-Ursprungsendpunkt stimmt nicht mit der Duo-Hostnamen-Einstellung der Organisation überein."
 
 msgid "The duo authentication subscriber does not match the operator username."
-msgstr ""
+msgstr "Der Duo-Authentifizierung-Abonnent stimmt nicht mit dem Operator-Benutzernamen überein."
 
 msgid "No configuration set for Duo client ID."
-msgstr ""
+msgstr "Keine Konfiguration für Duo-Client-ID festgelegt."
 
 msgid "No configuration set for Duo API hostname."
-msgstr ""
+msgstr "Keine Konfiguration für Duo API Hostname gesetzt."
 
 msgid "No configuration set for Duo client secret."
-msgstr ""
+msgstr "Keine Konfiguration für den Duo Client Geheimschlüssel gesetzt."
 
 msgid "This is not a valid Duo client secret."
-msgstr ""
+msgstr "Dies ist kein gültiger Duo-Geheimschlüssel."
 
 msgid "This is not a valid Duo API hostname."
-msgstr ""
+msgstr "Dies ist kein gültiger Duo API Hostname."
 
 msgid "This is not a valid Duo client ID."
-msgstr ""
+msgstr "Dies ist keine gültige Duo-Client-ID."
 
 msgid "Cannot verify Duo settings."
-msgstr ""
+msgstr "Duo-Einstellungen können nicht verifiziert werden."
 
 msgid "Could not validate Duo configuration"
 msgstr "Duo-Konfiguration konnte nicht validiert werden"
+
+msgid "The property {0} is visible by administrators only."
+msgstr ""
+
+msgid "The property {0} should be contained in order to filter by {1}."
+msgstr ""
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "Das angegebene MFA-Token existiert nicht oder ist inaktiv."
@@ -2123,7 +2309,7 @@ msgid "Could not validate Yubikey configuration."
 msgstr "Yubikey-Konfiguration konnte nicht validiert werden."
 
 msgid "Duo Multi Factor Authentication"
-msgstr ""
+msgstr "Duo Multi-Faktor-Authentifizierung"
 
 msgid "Something went wrong."
 msgstr "Etwas ist schiefgelaufen."
@@ -2138,7 +2324,7 @@ msgid "Retry"
 msgstr "Wiederholen"
 
 msgid "Getting started with Duo"
-msgstr ""
+msgstr "Erste Schritte mit Duo"
 
 msgid "How does it work?"
 msgstr "Wie funktioniert das?"
@@ -2147,10 +2333,10 @@ msgid "You sign in to passbolt just like you normally do."
 msgstr "Sie melden sich bei Passbolt an, genau wie Sie es normalerweise tun."
 
 msgid "Use you 2FA device to authenticate."
-msgstr ""
+msgstr "Verwenden Sie Ihr 2FA-Gerät zur Authentifizierung."
 
 msgid "Follow the procedure to login."
-msgstr ""
+msgstr "Folgen Sie der Prozedur, um sich anzumelden."
 
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -2162,13 +2348,13 @@ msgid "Requirements"
 msgstr "Voraussetzungen"
 
 msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr ""
+msgstr "Um fortzufahren, müssen Sie die Duo Mobile App installieren oder ein Gerät zur Authentifizierung haben, das von Duo unterstützt wird."
 
 msgid "For the list of supported devices, see:"
-msgstr ""
+msgstr "Für die Liste der unterstützten Geräte, siehe:"
 
 msgid "Duo authentication methods"
-msgstr ""
+msgstr "Duo-Authentifizierungsmethoden"
 
 msgid "Learn more"
 msgstr "Weitere Informationen"
@@ -2186,10 +2372,10 @@ msgid "Multi factor authentication verification"
 msgstr "Multi-Faktor-Authentifizierung Verifizierung"
 
 msgid "Multi Factor Authentication Required"
-msgstr ""
+msgstr "Mehrfachfaktor-Authentifizierung erforderlich"
 
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
-msgstr ""
+msgstr "Eine zusätzliche Authentifizierung wird mit Duo benötigt. Sie werden zur Verifizierung zu Duo weitergeleitet."
 
 msgid "Multi factor authentication"
 msgstr "Multi-Faktor-Authentifizierung"
@@ -2267,7 +2453,7 @@ msgid "verify"
 msgstr "überprüfen"
 
 msgid "Sign-in with Duo"
-msgstr ""
+msgstr "Mit Duo anmelden"
 
 msgid "Or try with another provider"
 msgstr "Oder versuchen Sie mit einem anderen Anbieter"
@@ -2292,6 +2478,96 @@ msgstr "Bei Passbolt eInloggen"
 
 msgid "The password generator value \"{0}\" is not valid."
 msgstr "Der Passwortgeneratorwert \"{0}\" ist ungültig."
+
+msgid "Record not found"
+msgstr ""
+
+msgid "The request data is empty."
+msgstr ""
+
+msgid "The request data is invalid: expected a collection."
+msgstr ""
+
+msgid "The request data is invalid: invalid fields."
+msgstr ""
+
+msgid "The request data is invalid: id missing."
+msgstr ""
+
+msgid "The request data is invalid: id invalid."
+msgstr ""
+
+msgid "The request data is invalid: control_function missing."
+msgstr ""
+
+msgid "The request data is invalid: control_function invalid."
+msgstr ""
+
+msgid "The request data is invalid: ids must be unique."
+msgstr ""
+
+msgid "An action identifier should be a valid UUID."
+msgstr ""
+
+msgid "The foreign model should be a valid ASCII string."
+msgstr ""
+
+msgid "The foreign model should be one of the following: {0}."
+msgstr ""
+
+msgid "The foreign model name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "A foreign model is required."
+msgstr ""
+
+msgid "The foreign model should not be empty."
+msgstr ""
+
+msgid "The control function should be a valid UTF8 string."
+msgstr ""
+
+msgid "The control function name used length should be maximum {0} characters."
+msgstr ""
+
+msgid "The control function is not supported."
+msgstr ""
+
+msgid "A control function is required."
+msgstr ""
+
+msgid "The control function should not be empty."
+msgstr ""
+
+msgid "The identifier of the user who created the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should be a valid UUID."
+msgstr ""
+
+msgid "The identifier of the user who modified the Rbac should not be empty."
+msgstr ""
+
+msgid "An RBAC entry already exists for the given id."
+msgstr ""
+
+msgid "An entry already exists for the given role and action ids."
+msgstr ""
+
+msgid "An action already exists for the given name."
+msgstr ""
+
+msgid "The RBAC settings could not be updated."
+msgstr ""
+
+msgid "No data found."
+msgstr ""
+
+msgid "Some data not found."
+msgstr ""
+
+msgid "The UI actions data could not be validated."
+msgstr ""
 
 msgid "5 minutes"
 msgstr "5 Minuten"
@@ -2350,6 +2626,36 @@ msgstr "Rolle"
 msgid "No"
 msgstr "Nein"
 
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "Der Slug sollte eine gültige BMP-UTF8-Zeichenkette sein."
+
+msgid "A slug is required."
+msgstr "Ein Slug ist erforderlich."
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "Die Länge des Slug sollte maximal {0} Zeichen enthalten."
+
+msgid "The slug should not be empty"
+msgstr "Der Slug darf nicht leer sein"
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "Die Definition sollte eine gültige BMP-UTF8-Zeichenkette sein."
+
+msgid "A definition is required."
+msgstr "Eine Definition ist erforderlich."
+
+msgid "The definition should not be empty."
+msgstr "Die Definition darf nicht leer sein."
+
+msgid "The message should be valid JSON message."
+msgstr "Die Nachricht sollte eine gültige JSON-Nachricht sein."
+
+msgid "A resource type already exists with this slug."
+msgstr "Ein Ressourcentyp existiert bereits mit diesem Slug."
+
+msgid "A resource type already exists with this definition."
+msgstr "Es existiert bereits ein Ressourcentyp mit dieser Definition."
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr "Die Selbstregistrierungs-ID sollte eine gültige UUID sein."
 
@@ -2373,9 +2679,6 @@ msgstr "Die Liste erlaubter Domains sollte ein Array von Strings sein."
 
 msgid "The domain #{0} should be a valid domain."
 msgstr "Die Domain #{0} sollte eine gültige Domain sein."
-
-msgid "An email notification setting should be a boolean."
-msgstr "Eine E-Mail-Benachrichtigungseinstellung sollte ein Boolescher-Wert sein."
 
 msgid "Allowed domains: {0}"
 msgstr "Erlaubte Domains: {0}"
@@ -3481,9 +3784,6 @@ msgstr "{0} ({1}) hat Ihre Wiederherstellungsanfrage abgelehnt."
 msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
 msgstr "Ihre Organisations-Wiederherstellungs-Kontakte haben Ihre Anfrage zur Kontowiederherstellung überprüft und abgelehnt."
 
-msgid "The folder identifier should be a valid UUID."
-msgstr "Der Ordner-Identifikator sollte eine gültige UUID sein."
-
 msgid "Only administrators can view user logs."
 msgstr "Nur Administratoren können Benutzer-Logs ansehen."
 
@@ -3583,6 +3883,18 @@ msgstr "Der {0} {1} wurde erfolgreich gelöscht."
 msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
 msgstr "{0} {1} konnte aufgrund eines internen Fehlers nicht hinzugefügt werden. Bitte versuchen Sie es später erneut."
 
+msgid "The group {0} has been successfully renamed to {1}."
+msgstr "Die Gruppe {0} wurde erfolgreich in {1} umbenannt."
+
+msgid "The group {0} could not be renamed to {1}."
+msgstr "Die Gruppe {0} konnte nicht in {1} umbenannt werden."
+
+msgid "The user {0} full name has been successfully updated to {1} {2}."
+msgstr "Der vollständige Name des Benutzers {0} wurde erfolgreich auf {1} {2} aktualisiert."
+
+msgid "The user {0} full name could not be updated to {1} {2}."
+msgstr "Der vollständige Name des Benutzers {0} konnte nicht auf {1} {2} aktualisiert werden."
+
 msgid "The record model is not valid."
 msgstr "Die Eintrags-ID ist nicht gültig."
 
@@ -3625,50 +3937,14 @@ msgstr "Die Synchronisierung wurde erfolgreich durchgeführt."
 msgid "The simulation was done successfully."
 msgstr "Die Simulation wurde erfolgreich durchgeführt."
 
-msgid "A directory type is required."
-msgstr "Ein Verzeichnistyp ist erforderlich."
+msgid "Need at least one domain configuration."
+msgstr "Mindestens eine Domänenkonfiguration erforderlich."
 
-msgid "The directory type should not be empty."
-msgstr "Der Verzeichnistyp sollte nicht leer sein."
+msgid "The connection name `{0}` should not contain dots"
+msgstr "Der Verbindungsname `{0}` sollte keine Punkte enthalten"
 
-msgid "The directory type should be one of the following: {0}."
-msgstr "Der Verzeichnistyp sollte einer der folgenden sein: {0}."
-
-msgid "A domain name is required."
-msgstr "Ein Domänenname ist erforderlich."
-
-msgid "The domain name should not be empty."
-msgstr "Der Domainname sollte nicht leer sein."
-
-msgid "The domain name should be a valid BMP-UTF8 string."
-msgstr "Der Domainname sollte ein gültiger BMP-UTF8 String sein."
-
-msgid "The base DN should be a valid BMP-UTF8 string."
-msgstr "Der Basis-DN sollte ein gültiger BMP-UTF8 String sein."
-
-msgid "A server is required."
-msgstr "Ein Server ist erforderlich."
-
-msgid "The server should not be empty."
-msgstr "Der Server darf nicht leer sein."
-
-msgid "The server should be a valid BMP-UTF8 string."
-msgstr "Der Server muss ein gültiger BMP-UTF8-String sein."
-
-msgid "The port number should not be empty."
-msgstr "Die Portnummer darf nicht leer sein."
-
-msgid "The port number should be between 0 and 65535"
-msgstr "Die Portnummer muss zwischen 0 und 65535 liegen"
-
-msgid "A connection type is required."
-msgstr "Ein Verbindungstyp ist erforderlich."
-
-msgid "The connection type should not be empty."
-msgstr "Der Verbindungstyp darf nicht leer sein."
-
-msgid "The connection type should be one of the following: {0}."
-msgstr "Der Verbindungstyp muss einer der folgenden sein: {0}."
+msgid "Invalid connection name"
+msgstr "Ungültiger Verbindungsname"
 
 msgid "The identifier of the default admin user is required."
 msgstr "Der Bezeichner des Standard-Administrators ist erforderlich."
@@ -3703,6 +3979,12 @@ msgstr "Die User-Objektklasse muss eine gültige BMP-UTF8-Zeichenkette sein."
 msgid "The user path should be a valid BMP-UTF8 string."
 msgstr "Der Benutzerpfad muss eine gültige BMP-UTF8-Zeichenkette sein."
 
+msgid "The group custom filter should be a valid BMP-UTF8 string."
+msgstr "Der benutzerdefinierte Gruppenfilter sollte ein gültiger BMP-UTF-8 String sein."
+
+msgid "The user custom filter should be a valid BMP-UTF8 string."
+msgstr "Der benutzerdefinierte Benutzerfilter sollte ein gültiger BMP-UTF-8 String sein."
+
 msgid "The email prefix/suffix setting should be a valid boolean."
 msgstr "Die E-Mail-Präfix/Suffix-Einstellung muss ein gültiger boolescher Wert sein."
 
@@ -3724,6 +4006,9 @@ msgstr "Die Einstellung \"Nur aktivierte Benutzer\" muss ein gültiger boolesche
 msgid "The sync of created users setting should be a boolean."
 msgstr "Die Synchronisation der erstellten Benutzereinstellungen sollte ein Boolean sein."
 
+msgid "The sync of updated users setting should be a boolean."
+msgstr "Die Synchronisation der aktualisierten Benutzereinstellungen sollte ein Boolean sein."
+
 msgid "The sync of deleted users setting should be a boolean."
 msgstr "Der Sync Einstellungen für gelöschte Benutzer sollte ein Boolean sein."
 
@@ -3735,6 +4020,72 @@ msgstr "Die Synchronisation der gelöschten Gruppen-Einstellung sollte ein Boole
 
 msgid "The sync of updated groups setting should be a boolean."
 msgstr "Die Synchronisation der aktualisierten Gruppen-Einstellung sollte ein Boolean sein."
+
+msgid "The fields mapping should be a valid array."
+msgstr "Die Zuordnung der Felder muss ein gültiges Array sein."
+
+msgid "A directory type is required."
+msgstr "Ein Verzeichnistyp ist erforderlich."
+
+msgid "The directory type should not be empty."
+msgstr "Der Verzeichnistyp sollte nicht leer sein."
+
+msgid "The directory type should be one of the following: {0}."
+msgstr "Der Verzeichnistyp sollte einer der folgenden sein: {0}."
+
+msgid "A domain name is required."
+msgstr "Ein Domänenname ist erforderlich."
+
+msgid "The domain name should not be empty."
+msgstr "Der Domainname sollte nicht leer sein."
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr "Der Domainname sollte ein gültiger BMP-UTF8 String sein."
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr "Der Basis-DN sollte ein gültiger BMP-UTF8 String sein."
+
+msgid "At least one host is required."
+msgstr "Mindestens ein Host ist erforderlich."
+
+msgid "The hosts should be a valid array."
+msgstr "Die Hosts müssen ein gültiger Array sein."
+
+msgid "The port number should not be empty."
+msgstr "Die Portnummer darf nicht leer sein."
+
+msgid "The port number should be between 0 and 65535"
+msgstr "Die Portnummer muss zwischen 0 und 65535 liegen"
+
+msgid "A connection type is required."
+msgstr "Ein Verbindungstyp ist erforderlich."
+
+msgid "The connection type should not be empty."
+msgstr "Der Verbindungstyp darf nicht leer sein."
+
+msgid "The connection type should be one of the following: {0}."
+msgstr "Der Verbindungstyp muss einer der folgenden sein: {0}."
+
+msgid "An authentication type is required."
+msgstr "Ein Authentifizierungstyp ist erforderlich."
+
+msgid "The authentication type should not be empty."
+msgstr "Der Authentifizierungstyp darf nicht leer sein."
+
+msgid "The authentication type should be one of the following: {0}."
+msgstr "Der Authentifizierungstyp muss einer der folgenden sein: {0}."
+
+msgid "The map for this field is required."
+msgstr "Die Zuweisung für dieses Feld ist erforderlich."
+
+msgid "The map value should not be empty."
+msgstr "Der Zuweisungswert darf nicht leer sein."
+
+msgid "The field name should be a valid BMP-UTF8 string."
+msgstr "Der Feldname sollte ein gültiger BMP-UTF-8 String sein."
+
+msgid "The map configuration for `{0}` fields is required."
+msgstr "Die Zuweisungskonfiguration für `{0}`-Felder ist erforderlich."
 
 msgid "The directory name should be a valid UTF8 string."
 msgstr "Der Verzeichnisname sollte eine gültige UTF8-Zeichenkette sein."
@@ -3753,9 +4104,6 @@ msgstr "Ein Objekttyp ist erforderlich."
 
 msgid "Could not validate directory entry data."
 msgstr "Konnte Verzeichniseinträge nicht validieren."
-
-msgid "The object type should be one of the following: {0}."
-msgstr "Der Objekttyp sollte einer der folgenden sein: {0}."
 
 msgid "The associated record could not be found."
 msgstr "Der zugehörige Eintrag konnte nicht gefunden werden."
@@ -3778,11 +4126,35 @@ msgstr "Der untergeordnete Identifikator sollte eine gültige UUID sein."
 msgid "The child identifier is required."
 msgstr "Der untergeordnete Identifikator ist erforderlich."
 
+msgid "Directory Settings are invalid. Please check your config and try again."
+msgstr "Verzeichniseinstellungen sind ungültig. Bitte überprüfen Sie Ihre Konfiguration und versuchen Sie es erneut."
+
+msgid "New directory settings could not be saved."
+msgstr "Neue Verzeichniseinstellungen konnten nicht gespeichert werden."
+
+msgid "A mapping rule for username attribute could not be found for directory type: {0}"
+msgstr "Eine Zuordnungsregel für das Benutzernamen-Attribut konnte für den Verzeichnistyp nicht gefunden werden: {0}"
+
+msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
+msgstr "Eine Zuordnungsregel für das ID-Attribut konnte für den Verzeichnistyp nicht gefunden werden: {0}"
+
+msgid "Mapping rules could not be found for directory type: {0}"
+msgstr "Zuordnungsregeln konnten für Verzeichnistyp nicht gefunden werden: {0}"
+
 msgid "A group name is required."
 msgstr "Ein Gruppenname ist erforderlich."
 
 msgid "A group member does not match the expected DN format."
 msgstr "Ein Gruppenmitglied stimmt nicht mit dem erwarteten DN-Format überein."
+
+msgid "Invalid directory type for domain: {0}"
+msgstr ""
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr ""
+
+msgid "LDAP Object class could not be found: {0}"
+msgstr ""
 
 msgid "Subscription key data is required."
 msgstr "Abo-Schlüsseldaten sind erforderlich."
@@ -3859,203 +4231,41 @@ msgstr "Die Datei {0} konnte nicht gelesen werden."
 msgid "Only administrators can update the subscription details."
 msgstr "Nur Administratoren können die Abo-Details aktualisieren."
 
-msgid "The folder has been added successfully."
-msgstr "Der Ordner wurde erfolgreich hinzugefügt."
-
-msgid "The folder id is not valid."
-msgstr "Die Ordner-ID ist ungültig."
-
-msgid "The folder has been deleted successfully."
-msgstr "Der Ordner wurde erfolgreich gelöscht."
-
-msgid "The folder has been updated successfully."
-msgstr "Der Ordner wurde erfolgreich aktualisiert."
-
-msgid "The object has been moved successfully."
-msgstr "Das Objekt wurde erfolgreich verschoben."
-
-msgid "A folder parent identifier is required."
-msgstr "Ein übergeordneter Ordner-Identifikator ist erforderlich."
-
-msgid "The folder parent identifier should be a valid UUID."
-msgstr "Der übergeordnete Ordner-Identifikator sollte eine gültige UUID sein."
-
-msgid "Could not validate move data."
-msgstr "Verschiebungsdaten konnten nicht validiert werden."
-
-msgid "The folder identifier should not be empty."
-msgstr "Der Ordner-Identifikator sollte nicht leer sein."
-
-msgid "Could not validate folder history data."
-msgstr "Ordnerverlauf konnte nicht validiert werden."
-
-msgid "The child object type should be one of the following: {0}."
-msgstr "Der untergeordnete Objekttyp sollte einer der folgenden sein: {0}."
-
-msgid "A child object type is required."
-msgstr "Ein untergeordneter Objekttyp ist erforderlich."
-
-msgid "The child object type cannot be empty."
-msgstr "Der untergeordnete Objekttyp darf nicht leer sein."
-
-msgid "The child object identifier should be a valid UUID."
-msgstr "Der untergeordnete Objekt-Identifikator sollte eine gültige UUID sein."
-
-msgid "The child object identifier is required."
-msgstr "Der untergeordnete Objekt-Identifikator ist erforderlich."
-
-msgid "The child object identifier should not be empty."
-msgstr "Die untergeordnete Objekt-Identifikator sollte nicht leer sein."
-
-msgid "The user id should not be empty."
-msgstr "Die Benutzer-ID sollte nicht leer sein."
-
-msgid "Could not validate folders relations history data."
-msgstr "Ordnerverlaufsdaten konnten nicht überprüft werden."
-
-msgid "The child object type is required."
-msgstr "Ein untergeordneter Objekttyp ist erforderlich."
-
-msgid "The child object type should not be empty."
-msgstr "Der untergeordnete Objekttyp darf nicht leer sein."
-
-msgid "The child object identifier required."
-msgstr "Der untergeordnete Objekt-Identifikator ist erforderlich."
-
-msgid "A folder relation already exists for the given child object and user."
-msgstr "Es existiert bereits eine Ordner-Beziehung für das angegebene Unterobjekt und Benutzer."
-
-msgid "The child object does not exist."
-msgstr "Das untergeordnete Objekt existiert nicht."
-
-msgid "The identifier of the user who created the folder should be a valid UUID."
-msgstr "Der Identifikator des Benutzers, welcher die Gruppe erstellt hat, muss eine gültige UUID sein."
-
-msgid "The identifier of the user who created the folder is required."
-msgstr "Der Identifikator des Benutzers, der den Ordner erstellt hat, muss angegeben werden."
-
-msgid "The identifier of the user who created the folder should not be empty."
-msgstr "Der Identifikator des Benutzers, der den Ordner erstellt hat, sollte nicht leer sein."
-
-msgid "The identifier of the user who modified the folder should be a valid UUID."
-msgstr "Der Identifikator des Benutzers, der den Ordner geändert hat, sollte eine gültige UUID sein."
-
-msgid "The identifier of the user who modified the folder is required."
-msgstr "Der Identifikator des Benutzers, der den Ordner bearbeitet hat, muss angegeben werden."
-
-msgid "The identifier of the user who modified the folder should not be empty."
-msgstr "Der Identifikator des Benutzers, der den Ordner bearbeitet hat, sollte nicht leer sein."
-
-msgid "You added the folder {0}"
-msgstr "Sie haben den Ordner {0} hinzugefügt"
-
-msgid "{0} deleted the folder {1}"
-msgstr "{0} hat den Ordner {1} gelöscht"
-
-msgid "{0} shared the folder {1}"
-msgstr "{0} hat den Ordner {1} geteilt"
-
-msgid "{0} edited the folder {1}"
-msgstr "{0} hat den Ordner {1} bearbeitet"
-
-msgid "Could not validate folder data."
-msgstr "Ordnerdaten konnten nicht validiert werden."
-
-msgid "The folder parent id should be a valid UUID."
-msgstr "Der übergeordnete Ordner-ID sollte eine gültige UUID sein."
-
-msgid "The folder parent must exist."
-msgstr "Der übergeordnete Ordner muss vorhanden sein."
-
-msgid "You are not allowed to create content into the parent folder."
-msgstr "Sie sind nicht berechtigt, Inhalte im übergeordneten Ordner zu erstellen."
-
-msgid "You are not allowed to delete this folder."
-msgstr "Sie sind nicht berechtigt, diesen Ordner zu löschen."
-
-msgid "The folder does not exist."
-msgstr "Der Ordner existiert nicht."
-
-msgid "You cannot delete this resource"
-msgstr "Sie können diese Ressource nicht löschen"
-
-msgid "You are not allowed to update the permissions of this folder."
-msgstr "Sie sind nicht berechtigt, die Berechtigungen dieses Ordners zu aktualisieren."
-
-msgid "You are not allowed to update this folder."
-msgstr "Sie sind nicht berechtigt, diesen Ordner zu aktualisieren."
-
-msgid "Could not validate folder relation data."
-msgstr "Ordnerverlaufsdaten konnten nicht validiert werden."
-
-msgid "The object to move does not exist."
-msgstr "Das zu bewegende Objekt existiert nicht."
-
-msgid "You are not allowed to move this item out of its parent folder."
-msgstr "Sie sind nicht berechtigt, dieses Element aus dem übergeordneten Ordner zu verschieben."
-
-msgid "You are not allowed to move this item."
-msgstr "Sie sind nicht berechtigt, dieses Element zu verschieben."
-
-msgid "You are not allowed to move an item in read only into the parent folder."
-msgstr "Sie sind nicht berechtigt, ein Element im Lesemodus in den übergeordneten Ordner zu verschieben."
-
-msgid "The folder parent does not exist."
-msgstr "Der übergeordnete Ordner existiert nicht."
-
-msgid "You have created a new folder"
-msgstr "Sie haben einen neuen Ordner erstellt"
-
-msgid "Name: {0}"
-msgstr "Name: {0}"
-
-msgid "view it in passbolt"
-msgstr "in Passbolt anzeigen"
-
-msgid "log in passbolt"
-msgstr "in Passbolt einloggen"
-
-msgid "shared a folder with you"
-msgstr "hat einen Ordner mit Ihnen geteilt"
-
-msgid "{0} updated the folder {1}"
-msgstr "{0} hat den Ordner {1} aktualisiert"
-
 msgid "Only administrators are allowed to create/update MFA policies settings."
-msgstr ""
+msgstr "Nur Administratoren dürfen MFA-Richtlinien-Einstellungen erstellen/aktualisieren."
 
 msgid "Could not validate the MFA policies settings."
-msgstr ""
+msgstr "Die MFA-Richtlinien-Einstellungen konnten nicht verifiziert werden."
 
 msgid "The policy field is required."
-msgstr ""
+msgstr "Das Policy-Feld ist erforderlich."
 
 msgid "The type of the policy should be one of the following: {0}."
-msgstr ""
+msgstr "Die Richtlinie sollte eine der folgenden sein: {0}."
 
 msgid "The remember me for a month field is required."
-msgstr ""
+msgstr "Das \"angemeldet bleiben für einen Monat\"-Feld ist erforderlich."
 
 msgid "The remember me for a month should be a boolean type."
-msgstr ""
+msgstr "Das \"angemeldet bleiben für einen Monat\"-Feld sollte ein boolscher Typ sein."
 
 msgid "The value should be an array."
-msgstr ""
+msgstr "Der Wert sollte ein Array sein."
 
 msgid "You edited the MFA policy"
-msgstr ""
+msgstr "Sie haben die MFA-Richtlinie bearbeitet"
 
 msgid "{0} edited the MFA policy"
-msgstr ""
+msgstr "{0} hat die MFA-Richtlinie bearbeitet"
 
 msgid "The MFA policy has been updated, the new configuration is as follow:"
-msgstr ""
+msgstr "Die MFA-Richtlinie wurde aktualisiert, die neue Konfiguration lautet wie folgt:"
 
 msgid "Policy: {0}"
-msgstr ""
+msgstr "Richtlinie: {0}"
 
 msgid "Remember me for a month: {0}"
-msgstr ""
+msgstr "Für einen Monat merken: {0}"
 
 msgid "CSRF issue. The state in URL and Cookies do not match."
 msgstr "CSRF-Problem. Der Zustand in URL und Cookies stimmt nicht überein."
@@ -4082,10 +4292,10 @@ msgid "The SSO setting does not exist."
 msgstr "Die SSO-Einstellung existiert nicht."
 
 msgid "SsoRecover plugin is disabled."
-msgstr ""
+msgstr "SsoRecover-Plugin ist deaktiviert."
 
 msgid "The SSO state type is invalid."
-msgstr ""
+msgstr "Der SSO-Statustyp ist ungültig."
 
 msgid "Information about the key is required."
 msgstr "Informationen über den Schlüssel sind erforderlich."
@@ -4126,6 +4336,9 @@ msgstr "Daten müssen ein Array von Eigenschaften sein."
 msgid "A URL is required."
 msgstr "Eine URL ist erforderlich."
 
+msgid "The URL should not be empty."
+msgstr "Die darf nicht leer sein."
+
 msgid "The URL is not supported."
 msgstr "Die URL wird nicht unterstützt."
 
@@ -4165,6 +4378,21 @@ msgstr "Eine Gültigkeitsdauer des Client-Geheimnisses ist erforderlich."
 msgid "The expiry should not be empty."
 msgstr "Die Gültigkeitsdauer darf nicht leer sein."
 
+msgid "The prompt should not be empty."
+msgstr "Die Eingabeaufforderung darf nicht leer sein."
+
+msgid "The prompt should be one of the following: {0}."
+msgstr "Die Richtlinie sollte eine der folgenden sein: {0}."
+
+msgid "The email claim should not be empty."
+msgstr ""
+
+msgid "The email claim should be one of the following: {0}."
+msgstr ""
+
+msgid "The client id is too large."
+msgstr "Die Client-ID ist zu lange."
+
 msgid "The user is not active."
 msgstr "Der Benutzer ist nicht aktiviert."
 
@@ -4178,82 +4406,88 @@ msgid "The status is not supported."
 msgstr "Der Status wird nicht unterstützt."
 
 msgid "The nonce should be a valid ASCII string."
-msgstr ""
+msgstr "Das Nonce muss ein gültiger ASCII-String sein."
 
 msgid "The nonce length should be minimum {0} characters."
-msgstr ""
+msgstr "Die Länge des Nonce darf maximal {0} Zeichen lang sein."
 
 msgid "The nonce length should be maximum {0} characters."
-msgstr ""
+msgstr "Die Länge des Nonce darf maximal {0} Zeichen lang sein."
 
 msgid "A nonce is required."
-msgstr ""
+msgstr "Ein Nonce ist erforderlich."
 
 msgid "The nonce should not be empty."
-msgstr ""
+msgstr "Das Nonce darf nicht leer sein."
 
 msgid "The type length should be maximum {0} characters."
-msgstr ""
+msgstr "Der Typ sollte maximal {0} Zeichen lang sein."
 
 msgid "The state should be a valid ASCII string."
-msgstr ""
+msgstr "Der Status sollte ein gültiger ASCII-String sein."
 
 msgid "The state length should be minimum {0} characters."
-msgstr ""
+msgstr "Der Status sollte mindestens {0} Zeichen lang sein."
 
 msgid "The state length should be maximum {0} characters."
-msgstr ""
+msgstr "Der Status sollte maximal {0} Zeichen lang sein."
 
 msgid "The SSO settings identifier should be a valid UUID."
-msgstr ""
+msgstr "Der SSO-Einstellungen-Identifikator sollte eine gültige UUID sein."
 
 msgid "The SSO settings identifier should not be empty."
-msgstr ""
+msgstr "Der SSO-Einstellungen-Identifikator sollte nicht leer sein."
 
 msgid "The user agent should be a valid ASCII string."
-msgstr ""
+msgstr "Der User-Agent sollte ein gültiger ASCII-String sein."
 
 msgid "The user agent length should be maximum {0} characters."
-msgstr ""
+msgstr "Die Länge des User-Agents sollte maximal {0} Zeichen lang sein."
 
 msgid "A user agent is required."
-msgstr ""
+msgstr "Ein User-Agent wird benötigt."
 
 msgid "The user agent should not be empty."
-msgstr ""
+msgstr "Der User-Agent darf nicht leer sein."
 
 msgid "The IP length should be maximum {0} characters."
-msgstr ""
+msgstr "Die IP-Adresse sollte maximal {0} Zeichen lang sein."
 
 msgid "An IP is required."
-msgstr ""
+msgstr "Eine IP ist erforderlich."
 
 msgid "The IP should not be empty."
-msgstr ""
+msgstr "Die IP darf nicht leer sein."
 
 msgid "This nonce is already in use."
-msgstr ""
+msgstr "Dieses Nonce wird bereits verwendet."
 
 msgid "This state is already in use."
-msgstr ""
+msgstr "Dieser Status wird bereits verwendet."
 
 msgid "The SSO setting identifier does not exist."
-msgstr ""
+msgstr "Die SSO-Einstellungen-Identifikator existiert nicht."
 
 msgid "The user identifier does not exist."
-msgstr ""
+msgstr "Die Benutzerkennung existiert nicht."
 
 msgid "The provided nonce is invalid."
-msgstr ""
+msgstr "Das angegebene Nonce ist ungültig."
 
 msgid "The provided state is invalid."
-msgstr ""
+msgstr "Der angegebene Status ist ungültig."
 
 msgid "The type of the SSO state is invalid."
-msgstr ""
+msgstr "Der Typ des SSO-Status ist ungültig."
+
+msgid "{0} activated the SSO setting"
+msgstr "{0} hat die SSO-Einstellung aktiviert"
+
+msgid "{0} deleted the SSO setting"
+msgstr "{0} hat die SSO-Einstellung gelöscht"
 
 msgid "The user is missing for the SSO state."
-msgstr ""
+msgstr "Der Benutzer fehlt für den SSO-Status."
 
 msgid "Single sign-on failed."
 msgstr "Single Sign-On fehlgeschlagen."
@@ -4268,10 +4502,13 @@ msgid "Username mismatch."
 msgstr "Benutzername stimmt nicht überein."
 
 msgid "Invalid nonce."
-msgstr ""
+msgstr "Ungültiges Nonce."
 
 msgid "No valid SSO settings found."
 msgstr "Keine gültigen SSO-Einstellungen gefunden."
+
+msgid "You must authenticate with Azure again."
+msgstr "Sie müssen sich erneut mit Azure authentifizieren."
 
 msgid "The user id should be a valid UUID."
 msgstr "Die Benutzer-ID sollte eine gültige UUID sein."
@@ -4342,29 +4579,32 @@ msgstr "Die SSO-Einstellung kann nicht dekodiert werden."
 msgid "Only administrators can create SSO settings."
 msgstr "Nur Administratoren können SSO-Einstellungen erstellen."
 
-msgid "Something went wrong when validating the Azure single-sign on settings."
-msgstr "Bei der Validierung der Azure-Single-Sign-On-Einstellungen ist ein Fehler aufgetreten."
+msgid "Something went wrong when validating the single-sign on settings."
+msgstr "Bei der Validierung der Single-Sign-On-Einstellungen ist etwas schief gelaufen."
 
 msgid "It is not possible to save the SSO settings."
 msgstr "Es ist nicht möglich, die SSO-Einstellungen zu speichern."
 
+msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
+msgstr "Der in der Konfiguration definierte OpenPGP-Server-Schlüssel kann nicht zur Verschlüsselung verwendet werden."
+
 msgid "The SSO state is invalid."
-msgstr ""
+msgstr "Der SSO-Status ist ungültig."
 
 msgid "The SSO state is expired."
-msgstr ""
+msgstr "Der SSO-Status ist abgelaufen."
 
 msgid "The SSO state could not be saved."
-msgstr ""
+msgstr "Der SSO-Status konnte nicht gespeichert werden."
 
 msgid "The SSO state does not exist."
-msgstr ""
+msgstr "Der SSO-Status existiert nicht."
 
 msgid "Could not save the SSO state, invalid nonce."
-msgstr ""
+msgstr "Konnte den SSO-Status nicht speichern, ungültiges Nonce."
 
 msgid "Could not save the SSO state, please try again later."
-msgstr ""
+msgstr "SSO-Status konnte nicht gespeichert werden, bitte versuchen Sie es später erneut."
 
 msgid "Cannot parse JWKS endpoint response."
 msgstr "JWKS-Endpunktantwort kann nicht geparst werden."
@@ -4379,34 +4619,55 @@ msgid "Failed to read public key from certificate: {0}"
 msgstr "Fehler beim Lesen des öffentlichen Schlüssels vom Zertifikat: {0}"
 
 msgid "Failed to public key properties from certificate: {0}"
+msgstr "Die Eigenschaften des öffentlichen Schlüssels konnten nicht aus dem Zertifikat abgerufen werden: {0}"
+
+msgid "The {0} claim is not present, please contact your administrator."
 msgstr ""
 
-msgid "Azure JWT token is missing."
-msgstr "Azure JWT-Token fehlt."
+msgid "JWT token is missing."
+msgstr "JWT Token fehlt."
 
-msgid "Unable to decode Azure JWT token."
-msgstr "Azure JWT-Token kann nicht dekodiert werden."
+msgid "Unable to decode JWT token."
+msgstr "JWT Token konnte nicht dekodiert werden."
 
 msgid "Single-sign on was a success"
 msgstr "Single-Sign-On war ein Erfolg"
 
+msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
+msgstr "Der SSO-Provider {0} wurde erfolgreich durch {1} getestet und aktiviert. "
+
+msgid "All users can now use the Single Sign-on to perform authentication."
+msgstr "Alle Benutzer können nun das Single-Sign-on zur Authentifizierung verwenden."
+
+msgid "The SSO setting has been deleted by {0}."
+msgstr "Die SSO-Einstellung wurde von {0} gelöscht."
+
 msgid "The authentication token does not exist or has been deleted."
-msgstr ""
+msgstr "Das Authentifizierungs-Token existiert nicht oder wurde gelöscht."
 
 msgid "The authentication token has been expired."
-msgstr ""
+msgstr "Das Authentifizierungs-Token ist abgelaufen."
 
 msgid "Could not validate the SSO recover request."
-msgstr ""
+msgstr "Die SSO-Wiederherstellungsanfrage konnte nicht validiert werden."
+
+msgid "The email is required in URL parameters."
+msgstr "Die E-Mail-Adresse wird in den URL-Parametern benötigt."
 
 msgid "The case field is required."
-msgstr ""
+msgstr "Das Fallfeld ist erforderlich."
 
 msgid "The case is not supported. Only \"default\" case is supported."
-msgstr ""
+msgstr "Der Fall wird nicht unterstützt. Nur \"Standard\"-Fall wird unterstützt."
 
 msgid "The token field is required."
-msgstr ""
+msgstr "Das Token-Feld ist erforderlich."
+
+msgid "Access to this service requires an invitation. "
+msgstr "Der Zugriff auf diesen Service erfordert eine Einladung. "
+
+msgid "Please contact your administrator to request an invitation link."
+msgstr "Bitte wenden Sie sich an Ihren Administrator, um einen Einladungslink anzufordern."
 
 msgid "You do not have the permission to edit shared tags on this resource."
 msgstr "Sie haben nicht die Berechtigung, freigegebene Tags für diese Ressource zu bearbeiten."
