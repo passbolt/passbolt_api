@@ -1,0 +1,17 @@
+name: Create Release Candidate
+
+on:
+    push:
+        tags:
+            - 'v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+'
+
+jobs:
+    build:
+        name: Create release candidate
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - env:
+                  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+              name: Create Release candidate
+              run: gh release create "${GITHUB_REF#refs/*/}" -p --notes-file RELEASE_NOTES.md
