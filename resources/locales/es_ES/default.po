@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-07-24 11:49+0000\n"
-"PO-Revision-Date: 2023-07-31 10:50\n"
+"POT-Creation-Date: 2023-08-03 13:33+0000\n"
+"PO-Revision-Date: 2023-08-03 16:59\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -4084,8 +4084,38 @@ msgstr "El valor del mapa no debe estar vacío."
 msgid "The field name should be a valid BMP-UTF8 string."
 msgstr "El nombre del campo debe ser una cadena válida BMP-UTF-8."
 
+msgid "The map value length should be maximum {0} characters."
+msgstr ""
+
+msgid "The map value should not be from forbidden fields."
+msgstr ""
+
 msgid "The map configuration for `{0}` fields is required."
 msgstr "Se requiere la configuración del mapa para los campos `{0}`."
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr ""
+
+msgid "The group object class should not be from forbidden fields."
+msgstr ""
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr ""
+
+msgid "The user object class should not be from forbidden fields."
+msgstr ""
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr ""
+
+msgid "The user custom filter contains the forbidden field."
+msgstr ""
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr ""
+
+msgid "The group custom filter contains the forbidden field."
+msgstr ""
 
 msgid "The directory name should be a valid UTF8 string."
 msgstr "El nombre del directorio debe ser una cadena UTF8 válida."
