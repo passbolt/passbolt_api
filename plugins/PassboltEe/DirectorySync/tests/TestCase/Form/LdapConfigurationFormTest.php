@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.2.0
@@ -20,6 +20,7 @@ use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
+use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
@@ -39,6 +40,8 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public static function getDummyFormData(bool $addSecondDomain = false)
     {
+        $defaultConfigSettings = DirectoryOrgSettings::getDefaultSettings();
+
         $settings = [
             'enabled' => true,
             'domains' => [
@@ -71,27 +74,7 @@ class LdapConfigurationFormTest extends AppTestCase
             'sync_groups_create' => true,
             'sync_groups_delete' => false,
             'sync_groups_update' => true,
-            'fields_mapping' => [
-                'ad' => [
-                    'user' => [
-                        'id' => 'custom1',
-                        'firstname' => 'custom2',
-                        'lastname' => 'custom3',
-                        'username' => 'custom4',
-                        'created' => 'custom5',
-                        'modified' => 'custom6',
-                        'groups' => 'custom7',
-                        'enabled' => 'custom8',
-                    ],
-                    'group' => [
-                        'id' => 'custom9',
-                        'name' => 'custom10',
-                        'created' => 'custom11',
-                        'modified' => 'custom12',
-                        'users' => 'custom13',
-                    ],
-                ],
-            ],
+            'fields_mapping' => $defaultConfigSettings['fieldsMapping'],
         ];
         if ($addSecondDomain) {
             $settings['domains']['org_domain_2'] = [
@@ -256,16 +239,13 @@ class LdapConfigurationFormTest extends AppTestCase
      * Note: using dataProvider because the value to modify is an array
      *
      * @param string $dataPath
-     * @param array $data
+     * @param mixed $data Data to set, can be an array or string generally.
      * @param array $expectedErrors
      * @return void
      * @dataProvider provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping
      */
-    public function testDirectoryLdapConfigurationFormValidateError_FieldsMapping(
-        string $dataPath,
-        array $data,
-        array $expectedErrors
-    ) {
+    public function testDirectoryLdapConfigurationFormValidateError_FieldsMapping(string $dataPath, $data, array $expectedErrors)
+    {
         $ldapSettings = self::getDummyFormData();
         $ldapSettings = Hash::insert($ldapSettings, $dataPath, $data);
         $form = new LdapConfigurationForm();
@@ -281,6 +261,8 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping(): array
     {
+        $dummySettingsData = self::getDummyFormData();
+
         return [
             [
                 'dataPath' => 'fields_mapping.ad',
@@ -338,6 +320,53 @@ class LdapConfigurationFormTest extends AppTestCase
                     ],
                 ],
             ],
+            /**
+             * Max length for fields mapping fields' values.
+             */
+            [
+                'dataPath' => 'fields_mapping.openldap.user',
+                'data' => array_replace(
+                    $dummySettingsData['fields_mapping']['openldap']['user'],
+                    [
+                        'firstname' => self::getStringMask('alphaASCII', 150),
+                        'username' => self::getStringMask('alphaASCII', 130),
+                    ]
+                ),
+                'expectedErrors' => [
+                    'openldap' => [
+                        'user' => [
+                            'firstname' => [
+                                'maxLength' => 'The map value length should be maximum 128 characters.',
+                            ],
+                            'username' => [
+                                'maxLength' => 'The map value length should be maximum 128 characters.',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'dataPath' => 'fields_mapping.ad.group',
+                'data' => array_replace(
+                    $dummySettingsData['fields_mapping']['ad']['group'],
+                    [
+                        'created' => self::getStringMask('alphaASCII', 129),
+                        'users' => self::getStringMask('alphaASCII', 150),
+                    ]
+                ),
+                'expectedErrors' => [
+                    'ad' => [
+                        'group' => [
+                            'created' => [
+                                'maxLength' => 'The map value length should be maximum 128 characters.',
+                            ],
+                            'users' => [
+                                'maxLength' => 'The map value length should be maximum 128 characters.',
+                            ],
+                        ],
+                    ],
+                ],
+            ],
         ];
     }
 
@@ -346,7 +375,8 @@ class LdapConfigurationFormTest extends AppTestCase
         $ldapSettings = self::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
-            'utf8' => self::getUtf8TestCases(),
+            'utf8' => self::getUtf8TestCases(128),
+            'maxLength' => self::getMaxLengthTestCases(128),
         ];
         $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'group_object_class', $ldapSettings, $testCases);
     }
@@ -356,7 +386,8 @@ class LdapConfigurationFormTest extends AppTestCase
         $ldapSettings = self::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
-            'utf8' => self::getUtf8TestCases(),
+            'utf8' => self::getUtf8TestCases(128),
+            'maxLength' => self::getMaxLengthTestCases(128),
         ];
         $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'user_object_class', $ldapSettings, $testCases);
     }
@@ -387,6 +418,7 @@ class LdapConfigurationFormTest extends AppTestCase
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
+            'maxLength' => self::getMaxLengthTestCases(10000),
         ];
         $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'group_custom_filters', $ldapSettings, $testCases);
     }
@@ -397,6 +429,7 @@ class LdapConfigurationFormTest extends AppTestCase
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
+            'maxLength' => self::getMaxLengthTestCases(10000),
         ];
         $this->assertFormFieldFormatValidation(LdapConfigurationForm::class, 'user_custom_filters', $ldapSettings, $testCases);
     }
@@ -659,5 +692,61 @@ class LdapConfigurationFormTest extends AppTestCase
         unset($ldapSettings['fields_mapping']);
         $form = new LdapConfigurationForm();
         $this->assertTrue($form->validate($ldapSettings));
+    }
+
+    public function testDirectoryLdapConfigurationForm_ThrowsValidationForbiddenFieldsActive()
+    {
+        $ldapSettings = self::getDummyFormData();
+        // Inject sensitive field names
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.username', 'userPassword');
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.id', 'uniqueUserPassword');
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.created', 'ms-PKI-AccountCredentials');
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.openldap.group.users', 'unixUserPassword');
+        // Filters fields
+        $ldapSettings['user_custom_filters'] = '(&(objectCategory=group)(cn=userPassword))';
+        $ldapSettings['group_custom_filters'] = '(&(objectCategory=group)(cn=unixUserPassword))';
+        // Object class fields
+        $ldapSettings['user_object_class'] = 'userPassword';
+        $ldapSettings['group_object_class'] = 'msPKI-CredentialRoamingTokens';
+
+        $form = new LdapConfigurationForm();
+        $result = $form->validate($ldapSettings);
+
+        $this->assertFalse($result);
+        $errors = $form->getErrors();
+        $this->assertCount(5, $errors);
+        // Fields mapping assertions
+        $this->assertCount(3, $errors['fields_mapping']['ad']['user']);
+        $this->assertArrayHasKey('forbiddenField', $errors['fields_mapping']['ad']['user']['username']);
+        $this->assertArrayHasKey('forbiddenField', $errors['fields_mapping']['ad']['user']['id']);
+        $this->assertArrayHasKey('forbiddenField', $errors['fields_mapping']['ad']['user']['created']);
+        $this->assertArrayHasKey('forbiddenField', $errors['fields_mapping']['openldap']['group']['users']);
+        // Filters assertions
+        $this->assertArrayHasKey('containsForbiddenField', $errors['user_custom_filters']);
+        $this->assertArrayHasKey('containsForbiddenField', $errors['group_custom_filters']);
+        // Object class assertions
+        $this->assertArrayHasKey('forbiddenField', $errors['user_object_class']);
+        $this->assertArrayHasKey('forbiddenField', $errors['group_object_class']);
+    }
+
+    public function testDirectoryLdapConfigurationForm_NotThrowValidationForbiddenFieldsWhenInactive()
+    {
+        Configure::write('passbolt.security.directorySync.forbiddenFields.active', false);
+        $ldapSettings = self::getDummyFormData();
+        // Inject sensitive field names
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.username', 'userPassword');
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.id', 'uniqueUserPassword');
+        $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.created', 'ms-PKI-AccountCredentials');
+        // Filters fields
+        $ldapSettings['user_custom_filters'] = '(&(objectCategory=group)(cn=userPassword))';
+        $ldapSettings['group_custom_filters'] = '(&(objectCategory=group)(cn=unixUserPassword))';
+        // Object class fields
+        $ldapSettings['user_object_class'] = 'userPassword';
+        $ldapSettings['group_object_class'] = 'msPKI-CredentialRoamingTokens';
+
+        $form = new LdapConfigurationForm();
+        $result = $form->validate($ldapSettings);
+
+        $this->assertTrue($result);
     }
 }
