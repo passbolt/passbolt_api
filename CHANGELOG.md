@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.1.3-rc.1] - 2023-08-03
+### Fixed
+- PB-25506 Fix LDAP sync not working after migrating to v4 by allowing administrators to select the field to map to username in LDAP connection
+- PB-25536 Fix OpenLDAP group object class & group member attribute mismatch
+
+### Security
+- PB-25563 PBL-09-001 Mitigate usage of sensitive keywords in user and group custom filters
+- PB-25564 PBL-09-002 Mitigate arbitrary LDAP data exfiltration via fields_mapping
+
 ## [4.1.2] - 2023-07-26
 ### Fixed
 - PB-25472 Fix emails not sent for SMTP server using NTLM authentication
