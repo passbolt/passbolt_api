@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2023-07-24 11:49+0000\n"
-"PO-Revision-Date: 2023-07-25 06:50\n"
+"PO-Revision-Date: 2023-07-31 10:50\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
 msgstr "No se puede usar la clave OpenPGP del servidor definida en la configuración para desencriptar."
 
 msgid "Could not import the user OpenPGP key."
-msgstr "No se pudo importar la clave OpenPGP de usuario."
+msgstr "No se ha podido importar la clave OpenPGP de usuario."
 
 msgid "Invalid verify token format, "
 msgstr "Formato de token de verificación no válido, "
@@ -74,10 +74,10 @@ msgid "You are successfully logged in."
 msgstr "Ha iniciado sesión con éxito."
 
 msgid "You are successfully logged out."
-msgstr ""
+msgstr "Ha cerrado la sesión con éxito."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "La ruta de desconexión debe ser accedida sólo con el método POST."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "La información de la clave OpenPGP pública no se encontró en la configuración."
@@ -365,13 +365,13 @@ msgid "Only guests are allowed to register."
 msgstr "Solo se permite a los invitados registrarse."
 
 msgid "Registration is not opened to public."
-msgstr ""
+msgstr "El registro no está abierto al público."
 
 msgid "Please contact your administrator."
 msgstr "Por favor, contacte con su administrador."
 
 msgid "This is due to a security setting."
-msgstr ""
+msgstr "Esto se debe a un ajuste de seguridad."
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "El identificador de usuario debería ser un UUID válido o \"me\"."
@@ -1634,7 +1634,7 @@ msgid "You added the folder {0}"
 msgstr "Añadiste la carpeta {0}"
 
 msgid "You deleted the folder {0}"
-msgstr ""
+msgstr "Ha eliminado la carpeta {0}"
 
 msgid "{0} deleted the folder {1}"
 msgstr "{0} eliminó la carpeta {1}"
@@ -1643,7 +1643,7 @@ msgid "{0} shared the folder {1}"
 msgstr "{0} ha compartido la carpeta {1}"
 
 msgid "You edited the folder {0}"
-msgstr ""
+msgstr "Ha editado la carpeta {0}"
 
 msgid "{0} edited the folder {1}"
 msgstr "{0} ha editado la carpeta {1}"
@@ -1706,22 +1706,22 @@ msgid "view it in passbolt"
 msgstr "ver en passbolt"
 
 msgid "You deleted a folder"
-msgstr ""
+msgstr "Ha eliminado una carpeta"
 
 msgid "{0} deleted a folder"
-msgstr ""
+msgstr "{0} eliminó una carpeta"
 
 msgid "log in passbolt"
 msgstr "iniciar sesión en passbolt"
 
 msgid "{0} shared a folder with you"
-msgstr ""
+msgstr "{0} ha compartido una carpeta contigo"
 
 msgid "You edited a folder"
-msgstr ""
+msgstr "Ha editado una carpeta"
 
 msgid "{0} edited a folder"
-msgstr ""
+msgstr "{0} editó una carpeta"
 
 msgid "The user signature could not be verified."
 msgstr "No se ha podido verificar la firma del usuario."
@@ -1862,7 +1862,7 @@ msgid "This is not a valid {0}."
 msgstr "Esto no es válido {0}."
 
 msgid "The strategy should extend the class: {0}"
-msgstr ""
+msgstr "La estrategia debe extender la clase: {0}"
 
 msgid "The action log identifier should be a valid UUID."
 msgstr "El identificador de registro de acciones debe ser un UUID válido."
@@ -2480,10 +2480,10 @@ msgid "The password generator value \"{0}\" is not valid."
 msgstr "El valor del generador de contraseñas \"{0}\" no es válido."
 
 msgid "Record not found"
-msgstr ""
+msgstr "Registro no encontrado"
 
 msgid "The request data is empty."
-msgstr ""
+msgstr "Los datos de la solicitud están vacíos."
 
 msgid "The request data is invalid: expected a collection."
 msgstr ""
@@ -2558,16 +2558,16 @@ msgid "An action already exists for the given name."
 msgstr ""
 
 msgid "The RBAC settings could not be updated."
-msgstr ""
+msgstr "No se han podido actualizar los ajustes del RBAC."
 
 msgid "No data found."
-msgstr ""
+msgstr "No se han encontrado datos."
 
 msgid "Some data not found."
-msgstr ""
+msgstr "No se han encontrado algunos datos."
 
 msgid "The UI actions data could not be validated."
-msgstr ""
+msgstr "Los datos de las acciones de la UI no se han podido validar."
 
 msgid "5 minutes"
 msgstr "5 minutos"
@@ -4079,13 +4079,13 @@ msgid "The map for this field is required."
 msgstr ""
 
 msgid "The map value should not be empty."
-msgstr ""
+msgstr "El valor del mapa no debe estar vacío."
 
 msgid "The field name should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "El nombre del campo debe ser una cadena válida BMP-UTF-8."
 
 msgid "The map configuration for `{0}` fields is required."
-msgstr ""
+msgstr "Se requiere la configuración del mapa para los campos `{0}`."
 
 msgid "The directory name should be a valid UTF8 string."
 msgstr "El nombre del directorio debe ser una cadena UTF8 válida."
@@ -4127,19 +4127,19 @@ msgid "The child identifier is required."
 msgstr "El identificador hijo es requerido."
 
 msgid "Directory Settings are invalid. Please check your config and try again."
-msgstr ""
+msgstr "La configuración del directorio no es válida. Por favor, compruebe su configuración e inténtelo de nuevo."
 
 msgid "New directory settings could not be saved."
-msgstr ""
+msgstr "No se ha podido guardar la nueva configuración de directorio."
 
 msgid "A mapping rule for username attribute could not be found for directory type: {0}"
-msgstr ""
+msgstr "No se ha podido encontrar una regla de mapeo para el atributo de nombre de usuario para el tipo de directorio: {0}"
 
 msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
-msgstr ""
+msgstr "No se ha podido encontrar una regla de mapeo para el atributo del ID para el tipo de directorio: {0}"
 
 msgid "Mapping rules could not be found for directory type: {0}"
-msgstr ""
+msgstr "No se han podido encontrar las reglas de mapeo para el tipo de directorio: {0}"
 
 msgid "A group name is required."
 msgstr "Se requiere un nombre de grupo."
@@ -4148,13 +4148,13 @@ msgid "A group member does not match the expected DN format."
 msgstr "Un miembro del grupo no coincide con el formato DN esperado."
 
 msgid "Invalid directory type for domain: {0}"
-msgstr ""
+msgstr "Tipo de directorio no válido para el dominio: {0}"
 
 msgid "Directory type could not be found for domain: {0}"
-msgstr ""
+msgstr "No se ha podido encontrar el tipo de directorio para el dominio: {0}"
 
 msgid "LDAP Object class could not be found: {0}"
-msgstr ""
+msgstr "No se ha podido encontrar la clase del objeto LDAP: {0}"
 
 msgid "Subscription key data is required."
 msgstr "Los datos de la clave de suscripción son obligatorios."
@@ -4337,7 +4337,7 @@ msgid "A URL is required."
 msgstr "Se requiere la URL."
 
 msgid "The URL should not be empty."
-msgstr ""
+msgstr "La URL no debe estar vacía."
 
 msgid "The URL is not supported."
 msgstr "La URL no es compatible."
@@ -4379,19 +4379,19 @@ msgid "The expiry should not be empty."
 msgstr "La caducidad no debe estar vacía."
 
 msgid "The prompt should not be empty."
-msgstr ""
+msgstr "El indicador no debe estar vacío."
 
 msgid "The prompt should be one of the following: {0}."
-msgstr ""
+msgstr "El indicador debe ser uno de los siguientes: {0}."
 
 msgid "The email claim should not be empty."
-msgstr ""
+msgstr "El correo electrónico a reclamar no debe estar vacío."
 
 msgid "The email claim should be one of the following: {0}."
-msgstr ""
+msgstr "El correo electrónico a reclamar debe ser uno de los siguientes: {0}."
 
 msgid "The client id is too large."
-msgstr ""
+msgstr "El id del cliente es demasiado grande."
 
 msgid "The user is not active."
 msgstr "El usuario no está activo."
@@ -4481,10 +4481,10 @@ msgid "The type of the SSO state is invalid."
 msgstr "El tipo de estado del SSO no es válido."
 
 msgid "{0} activated the SSO setting"
-msgstr ""
+msgstr "{0} ha activado la configuración del SSO"
 
 msgid "{0} deleted the SSO setting"
-msgstr ""
+msgstr "{0} ha eliminado la configuración del SSO"
 
 msgid "The user is missing for the SSO state."
 msgstr "No se ha encontrado el usuario para el estado del SSO."
@@ -4508,7 +4508,7 @@ msgid "No valid SSO settings found."
 msgstr "No se han encontrado ajustes SSO válidos."
 
 msgid "You must authenticate with Azure again."
-msgstr ""
+msgstr "Debe autenticarse con Azure de nuevo."
 
 msgid "The user id should be a valid UUID."
 msgstr "El identificador de usuario debe ser un UUID válido."
@@ -4580,13 +4580,13 @@ msgid "Only administrators can create SSO settings."
 msgstr "Sólo los administradores pueden crear ajustes SSO."
 
 msgid "Something went wrong when validating the single-sign on settings."
-msgstr ""
+msgstr "Algo salió mal al validar el inicio de sesión único en los ajustes."
 
 msgid "It is not possible to save the SSO settings."
 msgstr "No es posible guardar los ajustes SSO."
 
 msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
-msgstr ""
+msgstr "No se puede usar la clave OpenPGP del servidor definida en la configuración para encriptar."
 
 msgid "The SSO state is invalid."
 msgstr "El estado del SSO no es válido."
@@ -4622,25 +4622,25 @@ msgid "Failed to public key properties from certificate: {0}"
 msgstr "Error al publicar las propiedades de la clave del certificado: {0}"
 
 msgid "The {0} claim is not present, please contact your administrator."
-msgstr ""
+msgstr "La reclamación {0} no está presente, por favor contacte con su administrador."
 
 msgid "JWT token is missing."
-msgstr ""
+msgstr "No se ha encontrado el token JWT."
 
 msgid "Unable to decode JWT token."
-msgstr ""
+msgstr "No se ha podido decodificar el token JWT."
 
 msgid "Single-sign on was a success"
 msgstr "El inicio de sesión único fue un éxito"
 
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
-msgstr ""
+msgstr "El proveedor del SSO {0} ha sido probado y activado con éxito por {1}. "
 
 msgid "All users can now use the Single Sign-on to perform authentication."
-msgstr ""
+msgstr "Ahora, todos los usuarios pueden utilizar el inicio de sesión único para autenticarse."
 
 msgid "The SSO setting has been deleted by {0}."
-msgstr ""
+msgstr "La configuración del SSO ha sido eliminada por {0}."
 
 msgid "The authentication token does not exist or has been deleted."
 msgstr "El token de autenticación no existe o ha sido eliminado."
@@ -4652,7 +4652,7 @@ msgid "Could not validate the SSO recover request."
 msgstr "No se pudo validar la solicitud de recuperación del SSO."
 
 msgid "The email is required in URL parameters."
-msgstr ""
+msgstr "Se requiere el correo electrónico en los parámetros de la URL."
 
 msgid "The case field is required."
 msgstr "Se requiere el campo caso."
