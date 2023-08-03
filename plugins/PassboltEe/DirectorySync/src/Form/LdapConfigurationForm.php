@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Form;
 
 use App\Model\Entity\Role;
+use Cake\Core\Configure;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Log\Log;
@@ -197,12 +198,12 @@ class LdapConfigurationForm extends Form
             ->utf8('user_path', __('The user path should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmptyString('group_custom_filter')
-            ->utf8('group_custom_filter', __('The group custom filter should be a valid BMP-UTF8 string.'));
+            ->allowEmptyString('group_custom_filters')
+            ->utf8('group_custom_filters', __('The group custom filter should be a valid BMP-UTF8 string.'));
 
         $validator
-            ->allowEmptyString('user_custom_filter')
-            ->utf8('user_custom_filter', __('The user custom filter should be a valid BMP-UTF8 string.'));
+            ->allowEmptyString('user_custom_filters')
+            ->utf8('user_custom_filters', __('The user custom filter should be a valid BMP-UTF8 string.'));
 
         $validator
             ->allowEmptyTime('use_email_prefix_suffix')
@@ -265,6 +266,8 @@ class LdapConfigurationForm extends Form
         $validator
             ->isArray('fields_mapping', __('The fields mapping should be a valid array.'))
             ->addNested('fields_mapping', $fieldsMappingValidator);
+
+        $validator = $this->addForbiddenFieldsValidations($validator);
 
         return $validator;
     }
@@ -353,20 +356,90 @@ class LdapConfigurationForm extends Form
      */
     private function addFieldsMapValidator(Validator $typeValidator, string $section, array $fields): Validator
     {
+        $forbiddenFieldsActive = Configure::read('passbolt.security.directorySync.forbiddenFields.active');
+
         $sectionValidator = new Validator();
         foreach ($fields as $fieldName) {
             $sectionValidator
                 ->requirePresence($fieldName, true, __('The map for this field is required.'))
                 ->notEmptyString($fieldName, __('The map value should not be empty.'))
                 ->scalar($fieldName)
-                ->utf8($fieldName, __('The field name should be a valid BMP-UTF8 string.'));
+                ->utf8($fieldName, __('The field name should be a valid BMP-UTF8 string.'))
+                ->maxLength($fieldName, 128, __('The map value length should be maximum {0} characters.', 128));
+
+            if ($forbiddenFieldsActive) {
+                $sectionValidator->add($fieldName, ['forbiddenField' => [
+                    'rule' => [$this, 'isFieldNameAllowed'],
+                    'message' => __('The map value should not be from forbidden fields.'),
+                ]]);
+            }
         }
+
         $typeValidator
             ->requirePresence($section, true, __('The map configuration for `{0}` fields is required.', [$section]))
             ->isArray($section)
             ->addNested($section, $sectionValidator);
 
         return $typeValidator;
+    }
+
+    /**
+     * @param \Cake\Validation\Validator $validator Validator object.
+     * @return \Cake\Validation\Validator
+     */
+    private function addForbiddenFieldsValidations(Validator $validator): Validator
+    {
+        $forbiddenFieldsActive = Configure::read('passbolt.security.directorySync.forbiddenFields.active');
+
+        if (!$forbiddenFieldsActive) {
+            return $validator;
+        }
+
+        $validator
+            ->maxLength(
+                'group_object_class',
+                128,
+                __('The group object class length should be maximum {0} characters.', 128)
+            )
+            ->add('group_object_class', ['forbiddenField' => [
+                'rule' => [$this, 'isFieldNameAllowed'],
+                'message' => __('The group object class should not be from forbidden fields.'),
+            ]]);
+
+        $validator
+            ->maxLength(
+                'user_object_class',
+                128,
+                __('The user object class length should be maximum {0} characters.', 128)
+            )
+            ->add('user_object_class', ['forbiddenField' => [
+                'rule' => [$this, 'isFieldNameAllowed'],
+                'message' => __('The user object class should not be from forbidden fields.'),
+            ]]);
+
+        $validator
+            ->maxLength(
+                'user_custom_filters',
+                10000,
+                __('The user custom filter length should be maximum {0} characters.', 10000) // 10k limit
+            )
+            ->add('user_custom_filters', ['containsForbiddenField' => [
+                'rule' => [$this, 'isFilterValueAllowed'],
+                'message' => __('The user custom filter contains the forbidden field.'),
+            ]]);
+
+        $validator
+            ->maxLength(
+                'group_custom_filters',
+                10000,
+                __('The group custom filter length should be maximum {0} characters.', 10000) // 10k limit
+            )
+            ->add('group_custom_filters', ['containsForbiddenField' => [
+                'rule' => [$this, 'isFilterValueAllowed'],
+                'message' => __('The group custom filter contains the forbidden field.'),
+            ]]);
+
+        return $validator;
     }
 
     /**
@@ -405,6 +478,38 @@ class LdapConfigurationForm extends Form
             ->find()
             ->where(['Users.id' => $userId, 'Users.active' => 1, 'Users.deleted' => 0])
             ->count() > 0;
+    }
+
+    /**
+     * Checks if the field name value is allowed to use (not from forbidden field attributes).
+     *
+     * @param mixed $fieldName The field name.
+     * @param array|null $context Context array. Not used.
+     * @return bool
+     */
+    public function isFieldNameAllowed($fieldName, ?array $context = null): bool
+    {
+        return !in_array($fieldName, Configure::read('passbolt.security.directorySync.forbiddenFields.fieldNames'));
+    }
+
+    /**
+     * Checks if the filter value contains any sensitive fields.
+     *
+     * @param mixed $value The value to check.
+     * @param array|null $context Context array. Not used.
+     * @return bool
+     */
+    public function isFilterValueAllowed($value, ?array $context = null): bool
+    {
+        $forbiddenFields = Configure::read('passbolt.security.directorySync.forbiddenFields.fieldNames');
+
+        foreach ($forbiddenFields as $forbiddenField) {
+            if (strpos($value, $forbiddenField) !== false) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
