@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.1.3] - 2023-08-03
+## [4.1.3] - 2023-08-04
 ### Fixed
 - PB-25506 Fix LDAP sync not working after migrating to v4 by allowing administrators to select the field to map to username in LDAP connection
 - PB-25536 Fix OpenLDAP group object class & group member attribute mismatch
