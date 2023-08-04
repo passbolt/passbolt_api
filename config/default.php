@@ -368,6 +368,39 @@ return [
             // This is disabled by default as it prevents legitimate users to know whether their accounts was disabled
             // as well as prevent open registration to work
             'preventEmailEnumeration' => filter_var(env('PASSBOLT_SECURITY_PREVENT_EMAIL_ENUMERATION', false), FILTER_VALIDATE_BOOLEAN),
+            'directorySync' => [
+                'forbiddenFields' => [
+                    'active' => filter_var(env('PASSBOLT_SECURITY_DIRECTORY_SYNC_FORBIDDEN_FIELDS_ACTIVE', true), FILTER_VALIDATE_BOOLEAN),
+                    // Disallow certain sensitive fields that should not be queried from LDAP.
+                    // The blocked fields from the passbolt.php get added to this list are added at the end of this list. A merge strategy is applied on the configurations.
+                    'fieldNames' => [
+                        'userPassword',
+                        'User-Password',
+                        'uniqueUserPassword',
+                        'password',
+                        'unixUserPassword',
+                        'msPKIAccountCredentials',
+                        'ms-PKI-AccountCredentials',
+                        'msPKI-CredentialRoamingTokens',
+                        'unicodePwd',
+                        'Unicode-Pwd',
+                        'dBCSPwd',
+                        'DBCS-Pwd',
+                        'lmPwdHistory',
+                        'Lm-Pwd-History',
+                        'ntPwdHistory',
+                        'Nt-Pwd-History',
+                        'pwdProperties',
+                        'Pwd-Properties',
+                        'msDS-ManagedPassword',
+                        'ms-DS-ManagedPassword',
+                        'ms-FVE-RecoveryPassword',
+                        'msFVE-RecoveryPassword',
+                        'supplementalCredentials',
+                        'Supplemental-Credentials',
+                    ],
+                ],
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

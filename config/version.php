@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '4.1.2',
-        'name' => 'Bella ciao',
+        'version' => '4.1.3',
+        'name' => 'Borders',
     ],
 ];

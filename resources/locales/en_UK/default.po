@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2023-07-24 11:49+0000\n"
+"POT-Creation-Date: 2023-08-03 13:33+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -4082,7 +4082,37 @@ msgstr ""
 msgid "The field name should be a valid BMP-UTF8 string."
 msgstr ""
 
+msgid "The map value length should be maximum {0} characters."
+msgstr ""
+
+msgid "The map value should not be from forbidden fields."
+msgstr ""
+
 msgid "The map configuration for `{0}` fields is required."
+msgstr ""
+
+msgid "The group object class length should be maximum {0} characters."
+msgstr ""
+
+msgid "The group object class should not be from forbidden fields."
+msgstr ""
+
+msgid "The user object class length should be maximum {0} characters."
+msgstr ""
+
+msgid "The user object class should not be from forbidden fields."
+msgstr ""
+
+msgid "The user custom filter length should be maximum {0} characters."
+msgstr ""
+
+msgid "The user custom filter contains the forbidden field."
+msgstr ""
+
+msgid "The group custom filter length should be maximum {0} characters."
+msgstr ""
+
+msgid "The group custom filter contains the forbidden field."
 msgstr ""
 
 msgid "The directory name should be a valid UTF8 string."
