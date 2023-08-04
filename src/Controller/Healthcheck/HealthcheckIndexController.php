@@ -57,13 +57,20 @@ class HealthcheckIndexController extends AppController
                 throw new ForbiddenException();
             }
         }
-        $this->viewBuilder()
-            ->setLayout('login')
-            ->setTemplatePath('Healthcheck')
-            ->setTemplate('index');
-        $checks = Healthchecks::all($client);
+
+        $checks = Healthchecks::all();
         $checks = array_merge($this->__webChecks(), $checks);
-        $this->success(__('All checks ran successfully!'), $checks);
+
+        if (!$this->request->is('json')) {
+            $this->viewBuilder()
+                ->setLayout('login')
+                ->setTemplatePath('Healthcheck')
+                ->setTemplate('index');
+            $this->success(__('All checks ran successfully!'), $checks);
+        } else {
+            $this->set('checks', $checks);
+            $this->viewBuilder()->setOption('serialize', ['checks']);
+        }
     }
 
     /**
