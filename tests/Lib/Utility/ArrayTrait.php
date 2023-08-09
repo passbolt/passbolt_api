@@ -47,4 +47,31 @@ trait ArrayTrait
         sort($attributes);
         $this->assertSame($attributesNames, $attributes);
     }
+
+    /**
+     * Asserts that an object has exactly these attributes.
+     *
+     * @param array $expected Expected array.
+     * @param array $actual Result array.
+     * @param bool $filterNull Should filter out null values.
+     * @return void
+     */
+    public function assertArrayEqualsCanonicalizing(array $expected, array $actual, bool $filterNull = false)
+    {
+        // Remove null values from the arrays
+        if ($filterNull) {
+            $expected = array_filter($expected, function ($value) {
+                return !is_null($value);
+            });
+            $actual = array_filter($actual, function ($value) {
+                return !is_null($value);
+            });
+        }
+
+        // Sort both arrays by keys to make it canonicalize
+        ksort($expected);
+        ksort($actual);
+
+        $this->assertEquals($expected, $actual);
+    }
 }

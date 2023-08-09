@@ -12,20 +12,19 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         4.2.0
  */
+namespace Passbolt\PasswordPolicies\Service;
 
-return [
-    'passbolt' => [
-        'plugins' => [
-            'passwordGenerator' => [
-                'version' => '4.2.0',
-            /**
-             * 'defaultPasswordGenerator' => 'password'
-             *
-             * @deprecated with v5.0. The setting is now handled by the PasswordPolicies plugin.
-             */
-            ],
-        ],
-    ],
-];
+use Passbolt\PasswordPolicies\Model\Dto\PasswordPoliciesSettingsDto;
+
+interface PasswordPoliciesGetSettingsInterface
+{
+    /**
+     * Returns passwords policies settings.
+     *
+     * @return \Passbolt\PasswordPolicies\Model\Dto\PasswordPoliciesSettingsDto
+     * @throw FormValidationException If the settings does not validate.
+     */
+    public function get(): PasswordPoliciesSettingsDto;
+}

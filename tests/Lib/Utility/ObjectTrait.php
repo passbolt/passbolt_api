@@ -70,4 +70,18 @@ trait ObjectTrait
             $this->assertObjectHasAttribute($attributeName, $object);
         }
     }
+
+    /**
+     * Asserts that an object doesn't have a list of attributes.
+     *
+     * @param array $attributesNames The list of attributes the object should have.
+     * @param object $object The object to test
+     * @return void
+     */
+    public function assertObjectNotHasAttributes(array $attributesNames, object $object): void
+    {
+        foreach ($attributesNames as $attributeName) {
+            $this->assertObjectNotHasAttribute($attributeName, $object);
+        }
+    }
 }
