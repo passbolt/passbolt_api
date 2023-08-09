@@ -12,20 +12,8 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         4.2.0
  */
+use Cake\Core\Configure;
 
-return [
-    'passbolt' => [
-        'plugins' => [
-            'passwordGenerator' => [
-                'version' => '4.2.0',
-            /**
-             * 'defaultPasswordGenerator' => 'password'
-             *
-             * @deprecated with v5.0. The setting is now handled by the PasswordPolicies plugin.
-             */
-            ],
-        ],
-    ],
-];
+Configure::load('Passbolt/PasswordPolicies.config', 'default', true);

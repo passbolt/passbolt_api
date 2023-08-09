@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
@@ -17,9 +18,12 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/PasswordGenerator', ['path' => '/password-generator'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/PasswordGenerator', ['path' => '/'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
-    $routes->connect('/settings', ['controller' => 'PasswordGeneratorSettings', 'action' => 'index'])
-        ->setMethods(['GET']);
+    /**
+     * @deprecated with v5.0, the legacy password generator settings entry point is replaced by the more complete
+     * password policies settings entry point.
+     */
+    $routes->redirect('/password-generator/settings', '/password-policies/settings.json');
 });
