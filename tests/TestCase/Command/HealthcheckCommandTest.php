@@ -86,6 +86,8 @@ class HealthcheckCommandTest extends AppTestCase
     {
         $this->exec('passbolt healthcheck -d test');
         $this->assertExitSuccess();
+        $this->assertOutputContains('<warning>[WARN] SSL peer certificate does not validate</warning>');
+        $this->assertOutputContains('<warning>[WARN] Hostname does not match when validating certificates.</warning>');
         // Since the tests run with debug on, here will always be at least one error in the healthcheck.
         $this->assertOutputContains('error(s) found. Hang in there!');
     }
