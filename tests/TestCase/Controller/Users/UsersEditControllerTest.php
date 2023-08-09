@@ -47,7 +47,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'Ada edited');
+        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'ada edited');
     }
 
     public function testUsersEditController_Success_AsUserCannotEditProtectedFields(): void
@@ -63,7 +63,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'Ada edited');
+        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'ada edited');
         $this->assertEquals($this->_responseJsonBody->active, true);
         $this->assertEquals($this->_responseJsonBody->deleted, false);
     }
@@ -82,7 +82,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'Ada edited');
+        $this->assertEquals($this->_responseJsonBody->profile->first_name, 'ada edited');
         $this->assertEquals($this->_responseJsonBody->username, $user->username);
         $this->assertEquals($this->_responseJsonBody->active, true);
         $this->assertEquals($this->_responseJsonBody->deleted, false);

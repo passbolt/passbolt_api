@@ -27,6 +27,7 @@ use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
@@ -183,7 +184,7 @@ class Healthchecks
                     'verify_peer_name' => false,
                 ],
             ]);
-            $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
+            $url = Router::url('/healthcheck/status.json', true);
             $response = @file_get_contents($url, false, $context); // phpcs:ignore
             if ($response !== false && !empty($response)) {
                 $json = json_decode($response);
