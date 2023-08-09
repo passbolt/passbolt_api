@@ -452,7 +452,8 @@ trait FormatValidationTrait
         $test = [
             'rule_name' => 'maxLength',
             'test_cases' => [
-                self::getStringMask('alphaASCII', 0) => true,
+                self::getStringMask('alphaASCII', 1) => true,
+                self::getStringMask('alphaASCII', $max - 1) => true,
                 self::getStringMask('alphaASCII', $max) => true,
                 self::getStringMask('alphaASCII', $max + 1) => false,
             ],

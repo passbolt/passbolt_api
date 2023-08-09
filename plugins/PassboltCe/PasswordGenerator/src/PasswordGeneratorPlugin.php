@@ -23,7 +23,8 @@ use Cake\Core\PluginApplicationInterface;
 class PasswordGeneratorPlugin extends BasePlugin
 {
     public const DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY = 'passbolt.plugins.passwordGenerator.defaultPasswordGenerator';
-    public const PASSWORD_GENERATOR_ENABLED_CONFIG_KEY = 'passbolt.plugins.passwordGenerator.enabled';
+
+    public const DEFAULT_PASSWORD_GENERATOR_ENV_KEY = 'PASSBOLT_PLUGINS_PASSWORD_GENERATOR_DEFAULT_GENERATOR';
 
     /**
      * @inheritDoc
@@ -32,33 +33,6 @@ class PasswordGeneratorPlugin extends BasePlugin
     {
         parent::bootstrap($app);
 
-        $this->loadConfigs();
-    }
-
-    /**
-     * Load the plugin's configs.
-     * Check if some config are defined in config/passbolt.php
-     *
-     * @return void
-     */
-    public function loadConfigs(): void
-    {
         Configure::load('Passbolt/PasswordGenerator.config', 'default', true);
-
-        if (
-            !Configure::check(self::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY) &&
-            !empty(env('PASSBOLT_PLUGINS_PASSWORD_GENERATOR_DEFAULT_GENERATOR'))
-        ) {
-            Configure::write(
-                self::DEFAULT_PASSWORD_GENERATOR_CONFIG_KEY,
-                env('PASSBOLT_PLUGINS_PASSWORD_GENERATOR_DEFAULT_GENERATOR')
-            );
-        }
-        if (!Configure::check(self::PASSWORD_GENERATOR_ENABLED_CONFIG_KEY)) {
-            Configure::write(
-                self::PASSWORD_GENERATOR_ENABLED_CONFIG_KEY,
-                env('PASSBOLT_PLUGINS_PASSWORD_GENERATOR_ENABLED', true)
-            );
-        }
     }
 }
