@@ -127,7 +127,8 @@
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/PassboltCe/MultiFactorAuthentication/src",
             "Passbolt\\SelfRegistration\\": "./plugins/PassboltCe/SelfRegistration/src",
             "Passbolt\\TotpResourceTypes\\": "./plugins/PassboltCe/TotpResourceTypes/src",
-            "Passbolt\\Rbacs\\": "./plugins/PassboltCe/Rbacs/src"
+            "Passbolt\\Rbacs\\": "./plugins/PassboltCe/Rbacs/src",
+            "Passbolt\\PasswordPolicies\\": "./plugins/PassboltCe/PasswordPolicies/src"
         }
     },
     "autoload-dev": {
@@ -150,7 +151,8 @@
             "Passbolt\\SelfRegistration\\Test\\": "./plugins/PassboltCe/SelfRegistration/tests",
             "Passbolt\\ResourceTypes\\Test\\": "./plugins/PassboltCe/ResourceTypes/tests",
             "Passbolt\\TotpResourceTypes\\Test\\": "./plugins/PassboltCe/TotpResourceTypes/tests",
-            "Passbolt\\Rbacs\\Test\\": "./plugins/PassboltCe/Rbacs/tests"
+            "Passbolt\\Rbacs\\Test\\": "./plugins/PassboltCe/Rbacs/tests",
+            "Passbolt\\PasswordPolicies\\Test\\": "./plugins/PassboltCe/PasswordPolicies/tests"
         }
     },
     "scripts": {

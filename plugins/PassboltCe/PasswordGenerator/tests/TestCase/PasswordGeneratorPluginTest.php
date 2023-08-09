@@ -15,17 +15,18 @@ declare(strict_types=1);
  * @since         3.3.0
  */
 
-return [
-    'passbolt' => [
-        'plugins' => [
-            'passwordGenerator' => [
-                'version' => '4.2.0',
-            /**
-             * 'defaultPasswordGenerator' => 'password'
-             *
-             * @deprecated with v5.0. The setting is now handled by the PasswordPolicies plugin.
-             */
-            ],
-        ],
-    ],
-];
+namespace Passbolt\PasswordGenerator\Test\TestCase;
+
+use App\Test\Lib\AppIntegrationTestCase;
+
+/**
+ * @covers \Passbolt\PasswordGenerator\PasswordGeneratorPlugin
+ */
+class PasswordGeneratorPluginTest extends AppIntegrationTestCase
+{
+    public function testPasswordGeneratorPlugin_Success_LegacyPasswordGeneratorSettingsRouteRedirect()
+    {
+        $this->get('/password-generator/settings.json');
+        $this->assertRedirect('/password-policies/settings.json');
+    }
+}

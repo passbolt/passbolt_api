@@ -12,20 +12,15 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         4.2.0
  */
+use Cake\Routing\RouteBuilder;
 
-return [
-    'passbolt' => [
-        'plugins' => [
-            'passwordGenerator' => [
-                'version' => '4.2.0',
-            /**
-             * 'defaultPasswordGenerator' => 'password'
-             *
-             * @deprecated with v5.0. The setting is now handled by the PasswordPolicies plugin.
-             */
-            ],
-        ],
-    ],
-];
+/** @var \Cake\Routing\RouteBuilder $routes */
+$routes->plugin('Passbolt/PasswordPolicies', ['path' => '/password-policies'], function (RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
+
+    $routes
+        ->connect('/settings', ['controller' => 'PasswordPoliciesSettingsGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+});
