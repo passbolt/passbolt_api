@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f849f69250bd359129f486174810c4a9",
+    "content-hash": "de53ec3792f56d60e86b9edc1bfb63a0",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -5619,16 +5619,16 @@
         },
         {
             "name": "passbolt/passbolt-selenium-api",
-            "version": "dev-master",
+            "version": "4.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "ade46d4c3095b18316cbb0553f875c50a4dd67b9"
+                "reference": "e44acb03fb144857919b143e2deacdd21fc260cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/ade46d4c3095b18316cbb0553f875c50a4dd67b9",
-                "reference": "ade46d4c3095b18316cbb0553f875c50a4dd67b9",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/e44acb03fb144857919b143e2deacdd21fc260cc",
+                "reference": "e44acb03fb144857919b143e2deacdd21fc260cc",
                 "shasum": ""
             },
             "require": {
@@ -5637,7 +5637,6 @@
             "require-dev": {
                 "phpunit/phpunit": "^8.5 || ^9.3"
             },
-            "default-branch": true,
             "type": "cakephp-plugin",
             "autoload": {
                 "psr-4": {
@@ -5671,7 +5670,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2022-05-10T07:48:13+00:00"
+            "time": "2023-08-10T08:04:27+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
@@ -8704,8 +8703,7 @@
         "cakephp/migrations": 20,
         "robmorgan/phinx": 20,
         "enygma/yubikey": 20,
-        "psy/psysh": 0,
-        "passbolt/passbolt-selenium-api": 20
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -8724,5 +8722,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }
