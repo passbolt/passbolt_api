@@ -98,7 +98,7 @@
         "cakephp/bake": "^2.3.0",
         "phpunit/phpunit": "~9.5.2",
         "cakephp/cakephp-codesniffer": "^4.5",
-        "passbolt/passbolt-selenium-api": "dev-master#ade46d4c3095b18316cbb0553f875c50a4dd67b9",
+        "passbolt/passbolt-selenium-api": "^4.2",
         "passbolt/passbolt-test-data": "^4.1.0",
         "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
         "cakephp/localized": "4.0.0",
