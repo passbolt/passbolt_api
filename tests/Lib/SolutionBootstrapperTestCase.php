@@ -64,6 +64,13 @@ abstract class SolutionBootstrapperTestCase extends TestCase
         $this->assertSame(count($expectedPlugins), $plugins->count());
     }
 
+    protected function assertPluginListContains(PluginCollection $plugins, array $expectedPlugins)
+    {
+        foreach ($expectedPlugins as $pluginName) {
+            $this->assertTrue($plugins->has($pluginName), "Plugin list should contain the plugin:  $pluginName");
+        }
+    }
+
     protected function removePluginFromList(array $list, string $pluginName): array
     {
         return Hash::filter($list, function ($v) use ($pluginName) {

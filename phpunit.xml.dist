@@ -19,6 +19,12 @@
       <directory>./tests/TestCase/Command</directory>
     </testsuite>
   </testsuites>
+    <coverage>
+        <include>
+            <directory suffix=".php">src</directory>
+            <directory suffix=".php">plugins</directory>
+        </include>
+    </coverage>
     <extensions>
         <extension class="\Cake\TestSuite\Fixture\PHPUnitExtension" />
     </extensions>

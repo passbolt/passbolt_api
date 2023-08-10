@@ -95,6 +95,11 @@ trait ResourcesFindersTrait
             $query = $this->_filterQuerySharedWithGroup($query, $options['filter']['is-shared-with-group']);
         }
 
+        // If plugin tag is present and request contains tags
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            $query = \Passbolt\Tags\Model\Table\TagsTable::decorateForeignFind($query, $options, $userId);
+        }
+
         if (Configure::read('passbolt.plugins.folders')) {
             // Filter on resources with the given parent ids.
             if (isset($options['filter']['has-parent'])) {

@@ -60,7 +60,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Get_JsonSuccess(): void
     {
-        $this->getJson('/users/recover.json');
+        $this->getJson('/users/recover.json?api-version=v2');
         $this->assertSuccess();
     }
 
@@ -134,7 +134,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
     public function testUsersRecoverController_Post_JsonError(): void
     {
         foreach ($this->fails as $case => $data) {
-            $this->postJson('/users/recover.json', $data['form-data']);
+            $this->postJson('/users/recover.json?api-version=v2', $data['form-data']);
             $this->assertError(400, $data['error']);
         }
     }

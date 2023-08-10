@@ -21,6 +21,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
 /**
  * App\Command\MigrateCommand Test Case
@@ -30,6 +31,7 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 class MigrateCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use DummySubscriptionTrait;
     use PassboltCommandTestTrait;
     use TruncateDirtyTables;
 
@@ -43,6 +45,7 @@ class MigrateCommandTest extends AppTestCase
         parent::setUp();
         $this->useCommandRunner();
         MigrateCommand::$isUserRoot = false;
+        $this->setUpPathAndPublicSubscriptionKey();
     }
 
     /**
@@ -73,6 +76,7 @@ class MigrateCommandTest extends AppTestCase
      */
     public function testMigrateCommandAsNonRootWithoutBackup()
     {
+        $this->persistValidSubscription();
         $this->exec('passbolt migrate -q -d test');
         $this->assertExitSuccess();
         $this->assertOutputEmpty();
@@ -86,6 +90,7 @@ class MigrateCommandTest extends AppTestCase
      */
     public function testMigrateCommandAsNonRootWithBackup()
     {
+        $this->persistValidSubscription();
         $this->exec('passbolt migrate -q --backup -d test');
         $this->assertExitSuccess();
         $this->assertOutputEmpty();

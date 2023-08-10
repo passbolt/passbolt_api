@@ -1,0 +1,117 @@
+.kitchen-test-runtime:
+  extends: .rules
+  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/ruby:latest
+  stage: package-test-runtime
+  script:
+    - apt update && apt install rsync -y
+    - gem install bundler:2.1.2
+    - bundle install
+    - cat $GL_REGISTRY_CREDS > ./creds.json
+    - bundle exec kitchen verify $KITCHEN_JOB -t tests/integration -l debug
+
+# Debian/Ubuntu package testing
+#
+.kitchen-test-debian-runtime:
+  extends: .kitchen-test-runtime
+  needs:
+    - job: composer
+      artifacts: true
+    - job: build-debian
+      artifacts: true
+  script:
+    - apt update && apt install rsync -y
+    - gem install bundler:2.1.2
+    - bundle install
+    - cat $GL_REGISTRY_CREDS > ./creds.json
+    - bundle exec kitchen verify $KITCHEN_JOB -t tests/integration -l debug
+
+.kitchen-test-yum-runtime:
+  extends: .kitchen-test-runtime
+  needs:
+    - job: composer
+      artifacts: true
+    - job: build-yum
+      artifacts: true
+
+.kitchen-test-yum-7-runtime:
+  extends: .kitchen-test-runtime
+  needs:
+    - job: composer
+      artifacts: true
+    - job: build-yum-7
+      artifacts: true
+
+.kitchen-test-suse-runtime:
+  extends: .kitchen-test-runtime
+  needs:
+    - job: composer
+      artifacts: true
+    - job: build-suse
+      artifacts: true
+
+debian-buster-runtime:
+  extends: .kitchen-test-debian-runtime
+  needs: ["debian-buster-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-debian-buster
+
+debian-bullseye-runtime:
+  extends: .kitchen-test-debian-runtime
+  needs: ["debian-bullseye-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-debian-bullseye
+
+ubuntu-1804-runtime:
+  extends: .kitchen-test-debian-runtime
+  needs: ["ubuntu-1804-break"]
+  allow_failure: true
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-ubuntu-1804
+
+ubuntu-2004-runtime:
+  extends: .kitchen-test-debian-runtime
+  needs: ["ubuntu-2004-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-ubuntu-2004
+
+centos-7-runtime:
+  extends: .kitchen-test-yum-7-runtime
+  needs: ["centos-7-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-centos-7
+
+almalinux-8-runtime:
+  extends: .kitchen-test-yum-runtime
+  needs: ["almalinux-8-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-almalinux-8
+
+fedora-34-runtime:
+  extends: .kitchen-test-yum-runtime
+  needs: ["fedora-34-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-fedora-34
+
+fedora-35-runtime:
+  extends: .kitchen-test-yum-runtime
+  needs: ["fedora-35-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-fedora-35
+
+oraclelinux-8-runtime:
+  extends: .kitchen-test-yum-runtime
+  needs: ["oraclelinux-8-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-oraclelinux-8
+
+rockylinux-8-runtime:
+  extends: .kitchen-test-yum-runtime
+  needs: ["rockylinux-8-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-rockylinux-8
+
+opensuse-leap-15-runtime:
+  extends: .kitchen-test-suse-runtime
+  needs: ["opensuse-leap-15-break"]
+  variables:
+    KITCHEN_JOB: runtime-benchmarks-opensuse-leap-15

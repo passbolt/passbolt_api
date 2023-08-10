@@ -1,0 +1,165 @@
+<?php
+declare(strict_types=1);
+
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         2.2.0
+ */
+namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
+
+use App\Model\Validation\EmailValidationRule;
+use LdapRecord\Models\Entry;
+use Passbolt\DirectorySync\Utility\DirectoryInterface;
+
+/**
+ * Class UserEntry
+ *
+ * @package Passbolt\DirectorySync\Utility\DirectoryEntry
+ */
+class UserEntry extends DirectoryEntry
+{
+    /**
+     * User object
+     *
+     * @var array
+     */
+    public $user;
+
+    /**
+     * Object type (user).
+     *
+     * @var string
+     */
+    public $type = DirectoryInterface::ENTRY_TYPE_USER;
+
+    /**
+     * @var int|null
+     */
+    public $level = null;
+
+    /**
+     * Build user entry from ldap object.
+     *
+     * @param \LdapRecord\Models\Entry $ldapObject ldap object.
+     * @param array $mappingRules mapping rules.
+     * @return $this directory entry.
+     * @throws \Exception
+     */
+    public function buildFromLdapObject(Entry $ldapObject, array $mappingRules)
+    {
+        parent::buildFromLdapObject($ldapObject, $mappingRules);
+        $this->user = [
+            'username' => $this->getFieldValue('username'),
+            'profile' => [
+                'first_name' => $this->getFieldValue('firstname'),
+                'last_name' => $this->getFieldValue('lastname'),
+            ],
+        ];
+        $this->validate();
+
+        return $this;
+    }
+
+    /**
+     * Return the corresponding userEntry from a given ldapObject.
+     *
+     * @param \LdapRecord\Models\Entry $ldapObject ldap object.
+     * @param array $mappingRules mapping rules.
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry user entry.
+     * @throws \Exception
+     */
+    public static function fromLdapObject(Entry $ldapObject, array $mappingRules)
+    {
+        $userEntry = new UserEntry([]);
+        $userEntry->buildFromLdapObject($ldapObject, $mappingRules);
+
+        return $userEntry;
+    }
+
+    /**
+     * Build user entry from array.
+     *
+     * @param array $data data
+     * @return $this
+     */
+    public function buildFromArray(array $data)
+    {
+        parent::buildFromArray($data);
+        if (!empty($data)) {
+            $this->user = $data['user'];
+        }
+        $this->validate();
+
+        return $this;
+    }
+
+    /**
+     * Return a user entry from an array.
+     *
+     * @param array $data data
+     * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry the user entry.
+     */
+    public static function fromArray(array $data): UserEntry
+    {
+        $userEntry = new UserEntry($data);
+
+        return $userEntry;
+    }
+
+    /**
+     * Validate user entry.
+     *
+     * @return bool
+     */
+    protected function _validate(): bool
+    {
+        parent::_validate();
+
+        if (empty($this->user['username'])) {
+            $this->_addError('email', __('A username is required.'));
+        } elseif (!EmailValidationRule::check($this->user['username'], true)) {
+            $this->_addError('email', __('The email should be a valid email address.'));
+        }
+        if (empty($this->user['profile']['first_name'])) {
+            $this->_addError('first_name', __('A first name is required.'));
+        }
+        if (empty($this->user['profile']['last_name'])) {
+            $this->_addError('last_name', __('A last name is required.'));
+        }
+
+        return !$this->hasErrors();
+    }
+
+    /**
+     * Validate User entry.
+     *
+     * @return bool
+     */
+    public function validate(): bool
+    {
+        return $this->_validate();
+    }
+
+    /**
+     * Convert a user entry into a simple array.
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $extraData = [
+            'user' => $this->user,
+        ];
+
+        return array_merge(parent::toArray(), $extraData);
+    }
+}

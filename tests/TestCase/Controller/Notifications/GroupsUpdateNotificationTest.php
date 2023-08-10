@@ -44,7 +44,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->assertEmailInBatchContains('added you to the group', 'carol@passbolt.com');
@@ -65,7 +65,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->assertEmailInBatchContains('added you to the group', 'carol@passbolt.com');
@@ -88,7 +88,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->assertEmailWithRecipientIsInNotQueue('carol@passbolt.com');
@@ -104,7 +104,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->assertEmailInBatchContains('you from the group', 'kathleen@passbolt.com');
@@ -123,7 +123,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->assertEmailWithRecipientIsInNotQueue('kathleen@passbolt.com');
@@ -143,7 +143,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->assertEmailInBatchContains(
@@ -171,7 +171,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->assertEmailWithRecipientIsInNotQueue('jean@passbolt.com');
@@ -195,7 +195,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('ping');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes]);
         $this->assertSuccess();
 
         $this->assertEmailInBatchContains('Added members', 'thelma@passbolt.com');
@@ -226,7 +226,7 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
 
         // Update the group users.
         $this->authenticateAs('ping');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
+        $this->putJson("/groups/$groupId.json?api-version=v2", ['groups_users' => $changes, 'secrets' => []]);
         $this->assertSuccess();
 
         $this->assertEmailWithRecipientIsInNotQueue('thelma@passbolt.com');

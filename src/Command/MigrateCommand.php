@@ -69,6 +69,11 @@ class MigrateCommand extends PassboltCommand
             return $this->errorCode();
         }
 
+        // Normal mode
+        if (!$this->subscriptionCheck($args, $io)) {
+            return $this->errorCode();
+        }
+
         // Migration task
         $io->out(' ' . __('Running migration scripts.'));
         $io->hr();

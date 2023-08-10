@@ -25,11 +25,13 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Faker\Factory;
+use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class InstallCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use DummySubscriptionTrait;
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
     use PassboltCommandTestTrait;
@@ -46,6 +48,8 @@ class InstallCommandTest extends AppTestCase
         InstallCommand::$isUserRoot = false;
         $this->emptyDirectory(CACHE . 'database' . DS);
         $this->enableFeaturePlugin('JwtAuthentication');
+        $this->persistValidSubscription();
+        $this->setUpPathAndPublicSubscriptionKey();
         $this->loadNotificationSettings();
     }
 

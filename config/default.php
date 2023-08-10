@@ -16,6 +16,8 @@
 use App\Model\Entity\AuthenticationToken;
 use App\Utility\AuthToken\AuthTokenExpiryConfigValidator;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
+use Passbolt\Sso\Model\Entity\SsoSetting;
+use Passbolt\Sso\Model\Entity\SsoState;
 
 $authTokenExpiryConfigValidator = new AuthTokenExpiryConfigValidator();
 
@@ -38,8 +40,8 @@ return [
      */
     'passbolt' => [
         // Edition.
-        'edition' => 'ce',
-        'featurePluginAdder' => \App\BaseSolutionBootstrapper::class,
+        'edition' => 'pro',
+        'featurePluginAdder' => \Passbolt\Ee\EeSolutionBootstrapper::class,
 
         // Authentication & Authorisation.
         'auth' => [
@@ -65,6 +67,15 @@ return [
                 ],
                 AuthenticationToken::TYPE_VERIFY_TOKEN => [
                     'expiry' => filter_var(env('PASSBOLT_AUTH_JWT_VERIFY_TOKEN', '1 hour'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                SsoState::TYPE_SSO_SET_SETTINGS => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_SSO_SET_SETTINGS', '10 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                SsoState::TYPE_SSO_GET_KEY => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_SSO_GET_KEY', '10 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
+                ],
+                SsoState::TYPE_SSO_STATE => [
+                    'expiry' => filter_var(env('PASSBOLT_AUTH_SSO_STATE', '10 minutes'), FILTER_CALLBACK, ['options' => $authTokenExpiryConfigValidator])
                 ],
             ]
         ],
@@ -140,6 +151,27 @@ return [
                     'update' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                     'share' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_SHARE', true), FILTER_VALIDATE_BOOLEAN),
+                ],
+                // PRO EDITION ONLY
+                'accountRecovery' => [
+                    'request' => [
+                        'user' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_REQUEST_USER', true), FILTER_VALIDATE_BOOLEAN),
+                        'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_REQUEST_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                        'guessing' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_REQUEST_GUESSING', true), FILTER_VALIDATE_BOOLEAN),
+                    ],
+                    'response' => [
+                        'user' => [
+                            'approved' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_RESPONSE_USER_APPROVED', true), FILTER_VALIDATE_BOOLEAN),
+                            'rejected' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_RESPONSE_USER_REJECTED', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                        'created' => [
+                            'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_RESPONSE_CREATED_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                            'allAdmins' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_RESPONSE_CREATED_ALL_ADMINS', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                    ],
+                    'policy' => [
+                        'update' => filter_var(env('PASSBOLT_EMAIL_SEND_ACCOUNT_RECOVERY_POLICY_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
+                    ],
                 ],
             ]
         ],
@@ -245,6 +277,9 @@ return [
                     ],
                 ],
             ],
+            'accountRecovery' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_ACCOUNT_RECOVERY_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
             'smtpSettings' => [
                 // A typo is here covered for backward compatibility
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN)
@@ -252,15 +287,54 @@ return [
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'sso' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SSO_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+                'providers' => [
+                    SsoSetting::PROVIDER_AZURE => filter_var(
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_AZURE_ENABLED', true),
+                        FILTER_VALIDATE_BOOLEAN
+                    ),
+                    SsoSetting::PROVIDER_GOOGLE => filter_var(
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_GOOGLE_ENABLED', true),
+                        FILTER_VALIDATE_BOOLEAN
+                    ),
+                ],
+            ],
+            'mfaPolicies' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_MFA_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
+            'ssoRecover' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SSO_RECOVER_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'directorySync' => [
+                'caseSensitiveFilters' => filter_var(env('PASSBOLT_PLUGINS_DIRECTORY_SYNC_CASE_SENSITIVE_FILTERS', false), FILTER_VALIDATE_BOOLEAN),
+            ],
             'passwordPolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
+            'passwordPoliciesUpdate' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_POLICIES_UPDATE_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 
         // Activate specific entry points for selenium testing.
         // true will render your installation insecure.
         'selenium' => [
-            'active' => filter_var(env('PASSBOLT_SELENIUM_ACTIVE', false), FILTER_VALIDATE_BOOLEAN)
+            'active' => filter_var(env('PASSBOLT_SELENIUM_ACTIVE', false), FILTER_VALIDATE_BOOLEAN),
+            'sso' => [
+                'active' => filter_var(env('PASSBOLT_SELENIUM_SSO_ACTIVE', false)),
+                'azure' => [
+                    'url' => env('PASSBOLT_SELENIUM_SSO_AZURE_URL', 'https://login.microsoftonline.com'),
+                    'tenantId' => env('PASSBOLT_SELENIUM_SSO_AZURE_TENANT_ID', ''),
+                    'clientId' => env('PASSBOLT_SELENIUM_SSO_AZURE_CLIENT_ID', ''),
+                    'secretId' => env('PASSBOLT_SELENIUM_SSO_AZURE_SECRET_ID', ''),
+                    'secretExpiry' => env('PASSBOLT_SELENIUM_SSO_AZURE_SECRET_EXPIRY', '')
+                ],
+                'google' => [
+                    'clientId' => env('PASSBOLT_SELENIUM_SSO_GOOGLE_CLIENT_ID', ''),
+                    'secretId' => env('PASSBOLT_SELENIUM_SSO_GOOGLE_SECRET_ID', ''),
+                ],
+            ],
         ],
 
         // Security.
@@ -306,6 +380,39 @@ return [
             // This is disabled by default as it prevents legitimate users to know whether their accounts was disabled
             // as well as prevent open registration to work
             'preventEmailEnumeration' => filter_var(env('PASSBOLT_SECURITY_PREVENT_EMAIL_ENUMERATION', false), FILTER_VALIDATE_BOOLEAN),
+            'directorySync' => [
+                'forbiddenFields' => [
+                    'active' => filter_var(env('PASSBOLT_SECURITY_DIRECTORY_SYNC_FORBIDDEN_FIELDS_ACTIVE', true), FILTER_VALIDATE_BOOLEAN),
+                    // Disallow certain sensitive fields that should not be queried from LDAP.
+                    // The blocked fields from the passbolt.php get added to this list are added at the end of this list. A merge strategy is applied on the configurations.
+                    'fieldNames' => [
+                        'userPassword',
+                        'User-Password',
+                        'uniqueUserPassword',
+                        'password',
+                        'unixUserPassword',
+                        'msPKIAccountCredentials',
+                        'ms-PKI-AccountCredentials',
+                        'msPKI-CredentialRoamingTokens',
+                        'unicodePwd',
+                        'Unicode-Pwd',
+                        'dBCSPwd',
+                        'DBCS-Pwd',
+                        'lmPwdHistory',
+                        'Lm-Pwd-History',
+                        'ntPwdHistory',
+                        'Nt-Pwd-History',
+                        'pwdProperties',
+                        'Pwd-Properties',
+                        'msDS-ManagedPassword',
+                        'ms-DS-ManagedPassword',
+                        'ms-FVE-RecoveryPassword',
+                        'msFVE-RecoveryPassword',
+                        'supplementalCredentials',
+                        'Supplemental-Credentials',
+                    ],
+                ],
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

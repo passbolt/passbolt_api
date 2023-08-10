@@ -36,7 +36,8 @@ class SystemCheckController extends WebInstallerController
         $checks['ssl'] = ['is' => $this->request->is('ssl')];
         $checks['system_ok'] = $this->_healthcheckIsOk($checks);
 
-        $nextStepUrl = Router::url('/install/database', true);
+        $nextStepUrl = Router::url('/install/subscription', true);
+
         $this->webInstaller->setSettingsAndSave('initialized', true);
         $this->set('data', $checks);
         $this->set('nextStepUrl', $nextStepUrl);

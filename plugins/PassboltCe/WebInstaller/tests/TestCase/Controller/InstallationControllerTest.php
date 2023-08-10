@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\Ee\Model\Entity\Subscription;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
@@ -233,6 +234,9 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
                 'role_id' => '0d6990c8-4aaa-4456-a333-00e803ba0828',
             ],
         ];
+        if (file_exists(PLUGINS . DS . 'PassboltEe' . DS . 'Ee')) {
+            $data['subscription'] = ['subscription_key' => $this->getValidSubscriptionKey()];
+        }
 
         return $data;
     }
@@ -280,14 +284,14 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->assertNotEmpty($tables);
 
         $result = json_decode($this->_getBodyAsString(), true);
-
         $this->assertTrue(isset($result['user_id']));
         $this->assertTrue(isset($result['token']));
         $this->assertTrue(Validation::uuid($result['user_id']));
         $this->assertTrue(Validation::uuid($result['token']));
+        $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
 
-        // Ensure that the SMTP Settings were saved in the DB
-        $this->assertSame(1, OrganizationSettingFactory::count());
+        // Ensure that the SMTP Settings were saved in the DB as well as the subscription
+        $this->assertSame(2, OrganizationSettingFactory::count());
 
         $filePermission = substr(sprintf('%o', fileperms($testConfigFile)), -4);
         $folderPermission = substr(sprintf('%o', fileperms($testConfigDir)), -4);
@@ -303,7 +307,6 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
      */
     public function testWebInstallerInstallationDoInstall_SuccessWhenFirstUserIsEmpty()
     {
-        $this->markTestSkipped();
         $this->skipTestIfNotWebInstallerFriendly();
         Configure::write('passbolt.gpg.serverKey.fingerprint', null);
         $connection = ConnectionManager::get('default');
@@ -331,8 +334,9 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
 
         $this->get('/install/installation/do_install.json');
 
+        $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
         // Ensure that the SMTP Settings were saved in the DB as well as the subscription
-        $this->assertSame(1, OrganizationSettingFactory::count());
+        $this->assertSame(2, OrganizationSettingFactory::count());
         /** Configuration assertions */
         $filePermission = substr(sprintf('%o', fileperms($testConfigFile)), -4);
         $folderPermission = substr(sprintf('%o', fileperms($testConfigDir)), -4);

@@ -19,6 +19,7 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Model\Entity\Resource;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
@@ -67,6 +68,11 @@ class ResourcesViewController extends AppController
             'creator', 'favorite', 'modifier', 'secret', 'resource-type',
             'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
         ]];
+
+        if (Configure::read('passbolt.plugins.tags.enabled')) {
+            $whitelist['contain'][] = 'tag';
+        }
+
         $options = $this->QueryString->get($whitelist);
 
         // Retrieve the resource.

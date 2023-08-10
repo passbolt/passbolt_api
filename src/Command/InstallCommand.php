@@ -114,6 +114,9 @@ class InstallCommand extends PassboltCommand
         }
 
         // Normal mode
+        if (!$this->subscriptionCheck($args, $io)) {
+            return $this->errorCode();
+        }
         if (!$this->healthchecks($args, $io)) {
             return $this->errorCode();
         }

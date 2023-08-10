@@ -62,7 +62,7 @@ class DatabaseController extends WebInstallerController
     {
         parent::initialize();
 
-        $this->stepInfo['previous'] = '/install';
+        $this->stepInfo['previous'] = '/install/subscription';
         $this->stepInfo['next'] = '/install/gpg_key';
         $this->stepInfo['template'] = 'Pages/database';
 
