@@ -228,6 +228,9 @@ return [
             'mobile' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'desktop' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_DESKTOP_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
             'jwtAuthentication' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
