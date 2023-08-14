@@ -22,6 +22,7 @@ use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
@@ -120,6 +121,30 @@ class UserFactory extends CakephpBaseFactory
     public function active()
     {
         return $this->patchData(['active' => true]);
+    }
+
+    /**
+     * @return $this
+     */
+    public function notDisabled()
+    {
+        return $this->patchData(['disabled' => null]);
+    }
+
+    /**
+     * @return $this
+     */
+    public function disabled()
+    {
+        return $this->patchData(['disabled' => FrozenTime::yesterday()]);
+    }
+
+    /**
+     * @return $this
+     */
+    public function willDisable()
+    {
+        return $this->patchData(['disabled' => FrozenTime::tomorrow()]);
     }
 
     /**

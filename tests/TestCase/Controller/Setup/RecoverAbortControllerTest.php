@@ -191,6 +191,14 @@ class RecoverAbortControllerTest extends AppIntegrationTestCase
         $this->assertError(400, 'The user does not exist');
     }
 
+    public function testRecoverAbortController_Error_DisabledUser(): void
+    {
+        $user = UserFactory::make()->user()->disabled()->persist();
+        $url = '/setup/recover/complete/' . $user->id . '.json';
+        $this->postJson($url, []);
+        $this->assertError(400, 'The user does not exist');
+    }
+
     /**
      * Check that calling url without JSON extension throws a 404
      */

@@ -90,11 +90,11 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Find the users that have access to the resource (including via their groups)
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$comment->foreign_key]]];
-        $users = $this->usersTable->findIndex(Role::USER, $options)->find('locale');
-        if ($users->count() < 2) {
-            // if there is nobody or just one user, give it up
-            return $emailCollection;
-        }
+        $users = $this->usersTable
+            ->findIndex(Role::USER, $options)
+            ->find('locale')
+            ->find('notDisabled')
+            ->all();
 
         $creator = $this->usersTable->findFirstForEmail($comment->created_by);
         $resource = $this->resourcesTable->get($comment->foreign_key);

@@ -145,6 +145,7 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
         $admins = $this->Users
             ->findAdmins()
             ->find('locale')
+            ->find('notDisabled')
             ->where(['Users.id !=' => $user->id]);
 
         foreach ($admins as $admin) {

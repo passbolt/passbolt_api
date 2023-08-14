@@ -185,7 +185,7 @@ abstract class AbstractSsoService
         }
 
         try {
-            $user = (new UserGetService())->getActiveNotDeletedOrFail($ssoState->user_id);
+            $user = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($ssoState->user_id);
         } catch (NotFoundException $exception) {
             throw new BadRequestException(__('The user does not exist or is not active.'), 400, $exception);
         }

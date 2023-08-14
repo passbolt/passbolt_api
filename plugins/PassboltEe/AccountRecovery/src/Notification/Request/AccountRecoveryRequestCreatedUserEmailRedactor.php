@@ -78,7 +78,9 @@ class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailR
         /** @var \App\Model\Entity\User $user */
         $user = $this->Users->findFirstForEmail($request->user_id);
 
-        $emailCollection->addEmail($this->makeUserEmail($user, $request));
+        if (!$user->isDisabled()) {
+            $emailCollection->addEmail($this->makeUserEmail($user, $request));
+        }
 
         return $emailCollection;
     }

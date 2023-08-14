@@ -37,9 +37,9 @@ class SetupStartService extends AbstractStartService implements SetupStartServic
     public function getInfo(string $userId, string $token): array
     {
         try {
-            $user = (new UserGetService())->getNotActiveNotDeletedOrFail($userId);
+            $user = (new UserGetService())->getNotActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
-            throw new BadRequestException(__('The user does not exist or is already active.'));
+            throw new BadRequestException(__('The user does not exist or is already active or is disabled.'));
         }
         $this->assertAuthToken($user, $token);
 

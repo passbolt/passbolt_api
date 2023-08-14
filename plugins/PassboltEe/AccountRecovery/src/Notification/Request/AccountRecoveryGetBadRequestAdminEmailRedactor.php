@@ -83,6 +83,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
         $user = $this->Users->findFirstForEmail($userId);
 
         $admins = $this->Users->findAdmins()
+            ->find('notDisabled')
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);

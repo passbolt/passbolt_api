@@ -63,7 +63,8 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
         $admins = $UsersTable
             ->findAdmins()
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
-            ->find('locale');
+            ->find('locale')
+            ->find('notDisabled');
 
         foreach ($admins as $recipient) {
             $email = $this->createEmailForAdminSelfRegister($recipient, $user);

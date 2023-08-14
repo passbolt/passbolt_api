@@ -91,7 +91,7 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements Subscribed
             ]);
 
         /** @var \App\Model\Entity\User $user */
-        $user = $this->Users->find()
+        $user = $this->Users->find('notDisabled')
             ->where(['Users.id' => $response->account_recovery_request->user_id])
             ->contain('Profiles')
             ->firstOrFail();

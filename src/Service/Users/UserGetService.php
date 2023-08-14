@@ -80,17 +80,20 @@ class UserGetService
      * @param string $userId user id uuid
      * @throws \Cake\Http\Exception\NotFoundException if the user could not be found
      * @throws \Cake\Http\Exception\BadRequestException if the userId is not a valid uuid
-     * @throws \Cake\Http\Exception\BadRequestException if the is not active or deleted
+     * @throws \Cake\Http\Exception\BadRequestException if the is active or deleted or disabled
      * @return \App\Model\Entity\User
      */
-    public function getNotActiveNotDeletedOrFail(string $userId): User
+    public function getNotActiveNotDeletedNotDisabledOrFail(string $userId): User
     {
         $userEntity = $this->getOrFail($userId);
-        if ($userEntity->active) {
-            throw new BadRequestException(__('The user does not exist or is already active.'));
+        if ($userEntity->isActived()) {
+            throw new BadRequestException(__('The user does not exist or is already active or is disabled.'));
         }
-        if ($userEntity->deleted) {
-            throw new BadRequestException(__('The user does not exist or is already active.'));
+        if ($userEntity->isDeleted()) {
+            throw new BadRequestException(__('The user does not exist or is already active or is disabled.'));
+        }
+        if ($userEntity->isDisabled()) {
+            throw new BadRequestException(__('The user does not exist or is already active or is disabled.'));
         }
 
         return $userEntity;
@@ -102,17 +105,23 @@ class UserGetService
      * @param string $userId user id uuid
      * @throws \Cake\Http\Exception\NotFoundException if the user could not be found
      * @throws \Cake\Http\Exception\BadRequestException if the userId is not a valid uuid
-     * @throws \Cake\Http\Exception\BadRequestException if the is not active or deleted
+     * @throws \Cake\Http\Exception\BadRequestException if the is not active or deleted or disabled
      * @return \App\Model\Entity\User
      */
-    public function getActiveNotDeletedOrFail(string $userId): User
+    public function getActiveNotDeletedNotDisabledOrFail(string $userId): User
     {
         $userEntity = $this->getOrFail($userId);
-        if (!$userEntity->active) {
-            throw new BadRequestException(__('The user does not exist or is not active.'));
+        $msg = __('The user does not exist or is not active or is disabled.');
+
+        // Keep cases separate for debug trace purposes
+        if (!$userEntity->isActived()) {
+            throw new BadRequestException($msg);
         }
-        if ($userEntity->deleted) {
-            throw new BadRequestException(__('The user does not exist or is not active.'));
+        if ($userEntity->isDeleted()) {
+            throw new BadRequestException($msg);
+        }
+        if ($userEntity->isDisabled()) {
+            throw new BadRequestException($msg);
         }
 
         return $userEntity;

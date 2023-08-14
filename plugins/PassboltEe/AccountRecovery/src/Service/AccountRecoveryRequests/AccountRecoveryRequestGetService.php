@@ -100,7 +100,7 @@ class AccountRecoveryRequestGetService
         (new AccountRecoveryOrganizationPolicyGetService())->getOrFail();
 
         // Assert user exist, is active and not deleted
-        $userEntity = (new UserGetService())->getActiveNotDeletedOrFail($userId);
+        $userEntity = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
 
         // Assert token exist and is valid and belong to the user and is of the right type
         $tokenEntity = (new AuthenticationTokenGetService())
@@ -147,7 +147,7 @@ class AccountRecoveryRequestGetService
         $tokenEntity = $tokenService->getActiveOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
 
         // Assert user exist, is active and not deleted
-        $userEntity = (new UserGetService())->getActiveNotDeletedOrFail($userId);
+        $userEntity = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
 
         // Assert user is enrolled in the program
         (new AccountRecoveryUserSettingsGetService())->getOrFail($userId);

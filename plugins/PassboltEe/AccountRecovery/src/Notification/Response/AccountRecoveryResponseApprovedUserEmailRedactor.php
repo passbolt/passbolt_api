@@ -83,12 +83,14 @@ class AccountRecoveryResponseApprovedUserEmailRedactor implements SubscribedEmai
             $response->account_recovery_request->authentication_token_id
         );
         /** @var \App\Model\Entity\User $admin */
-        $admin = $this->Users->find()
+        $admin = $this->Users->find('notDisabled')
             ->where(['Users.id' => $response->modified_by])
             ->contain('Profiles')
             ->firstOrFail();
 
-        $emailCollection->addEmail($this->makeUserEmail($user, $admin, $response, $authenticationToken));
+        if (isset($admin)) {
+            $emailCollection->addEmail($this->makeUserEmail($user, $admin, $response, $authenticationToken));
+        }
 
         return $emailCollection;
     }

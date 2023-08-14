@@ -90,6 +90,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
         // This is ugly CakePHP https://github.com/cakephp/cakephp/issues/15689
         return $this->Users->find('locale')
+            ->find('notDisabled')
             ->group($this->Users->aliasField('id'))
             ->select($this->Users)
             ->contain('GroupsUsers.Groups', function (Query $q) use ($filter) {

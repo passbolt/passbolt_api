@@ -25,6 +25,7 @@ use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UuidFactory;
 use Cake\Database\Expression\IdentifierExpression;
+use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
@@ -475,6 +476,23 @@ trait UsersFindersTrait
                  'Users.active' => true,
              ])
              ->order(['Users.created' => 'ASC']);
+    }
+
+    /**
+     * Filter out disabled users.
+     *
+     * @param \Cake\ORM\Query $query query
+     * @return \Cake\ORM\Query
+     */
+    public function findnotDisabled(Query $query)
+    {
+        return $query->where(function (QueryExpression $where) {
+            return $where->or(function (QueryExpression $or) {
+                return $or
+                    ->isNull($this->aliasField('disabled'))
+                    ->gt($this->aliasField('disabled'), FrozenTime::now());
+            });
+        });
     }
 
     /**

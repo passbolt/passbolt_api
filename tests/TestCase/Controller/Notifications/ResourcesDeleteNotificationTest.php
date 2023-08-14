@@ -17,21 +17,18 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
 {
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
-
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Resources', 'app.Base/Secrets',
-        'app.Base/Favorites', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Gpgkeys',
-    ];
 
     public function setUp(): void
     {
@@ -41,31 +38,45 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
 
     public function tearDown(): void
     {
-        $this->unloadNotificationSettings();
         parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
-    public function testResourcesDeleteNotificationDisabled(): void
-    {
-        $this->setEmailNotificationSetting('send.password.delete', false);
-
-        $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
-        $this->assertSuccess();
-
-        // check email notification
-        $this->assertEmailWithRecipientIsInNotQueue('betty@passbolt.com');
-    }
-
-    public function testResourcesDeleteNotificationSuccess(): void
+    public function testResourcesDeleteNotification_NotificationEnabled(): void
     {
         $this->setEmailNotificationSetting('send.password.delete', true);
 
-        $this->authenticateAs('ada');
-        $this->deleteJson('/resources/' . UuidFactory::uuid('resource.id.april') . '.json');
+        RoleFactory::make()->guest()->persist();
+        [$user, $user2] = UserFactory::make(2)->user()->active()->persist();
+        $disabled = UserFactory::make()->user()->disabled()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r = ResourceFactory::make()->withPermissionsFor([$user, $user2, $disabled])->persist();
+
+        $this->logInAs($user);
+        $this->deleteJson('/resources/' . $r->id . '.json');
         $this->assertSuccess();
 
         // check email notification
-        $this->assertEmailInBatchContains('deleted the password april', 'betty@passbolt.com');
+        $this->assertEmailInBatchContains('deleted the password', $user2->username);
+        $this->assertEmailWithRecipientIsInNotQueue($user->username);
+        $this->assertEmailWithRecipientIsInNotQueue($disabled->username);
+    }
+
+    public function testResourcesDeleteNotification_NotificationDisabled(): void
+    {
+        $this->setEmailNotificationSetting('send.password.delete', false);
+
+        RoleFactory::make()->guest()->persist();
+        [$user, $user2] = UserFactory::make(2)->user()->active()->persist();
+        $disabled = UserFactory::make()->user()->disabled()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $r = ResourceFactory::make()->withPermissionsFor([$user, $user2, $disabled])->persist();
+
+        $this->logInAs($user);
+        $this->deleteJson('/resources/' . $r->id . '.json');
+        $this->assertSuccess();
+
+        // check email notification
+        $this->assertEmailQueueIsEmpty();
     }
 }

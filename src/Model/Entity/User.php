@@ -27,6 +27,7 @@ use Cake\ORM\Entity;
  * @property string $username
  * @property bool $active
  * @property bool $deleted
+ * @property \Cake\I18n\FrozenTime|null $disabled
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  * @property \Cake\I18n\FrozenTime $last_logged_in
@@ -67,6 +68,7 @@ class User extends Entity implements IdentityInterface
         'username' => false,
         'active' => false,
         'deleted' => false,
+        'disabled' => false,
         'role_id' => false,
 
         // associated data
@@ -91,5 +93,38 @@ class User extends Entity implements IdentityInterface
     public function getOriginalData(): self
     {
         return $this;
+    }
+
+    /**
+     * @return bool if user disabled datetime field is set and in the past
+     */
+    public function isDisabled(): bool
+    {
+        if (!isset($this->disabled)) {
+            return false;
+        } else {
+            return $this->disabled->isPast();
+        }
+    }
+
+    /**
+     * In future deleted may become a date, so accessing this function instead of the props is better
+     *
+     * @return bool if user is softdeleted
+     */
+    public function isDeleted(): bool
+    {
+        return $this->deleted;
+    }
+
+    /**
+     * In future active may be deprecated for activated that will become a date
+     * So accessing this function instead of the props is better
+     *
+     * @return bool if user is active
+     */
+    public function isActived(): bool
+    {
+        return $this->active;
     }
 }

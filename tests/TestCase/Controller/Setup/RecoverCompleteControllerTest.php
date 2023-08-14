@@ -324,7 +324,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverCompleteController_Error_DeletedUser(): void
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
+        $user = UserFactory::make()->user()->deleted()->persist();
+        $url = '/setup/recover/complete/' . $user->id . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
     }
@@ -336,7 +337,21 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverCompleteController_Error_InactiveUser(): void
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $user = UserFactory::make()->user()->inactive()->persist();
+        $url = '/setup/recover/complete/' . $user->id . '.json';
+        $this->postJson($url, []);
+        $this->assertError(400, 'The user does not exist');
+    }
+
+    /**
+     * @group AN
+     * @group recover
+     * @group recoverComplete
+     */
+    public function testRecoverCompleteController_Error_DisabledUser(): void
+    {
+        $user = UserFactory::make()->user()->disabled()->persist();
+        $url = '/setup/recover/complete/' . $user->id . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
     }

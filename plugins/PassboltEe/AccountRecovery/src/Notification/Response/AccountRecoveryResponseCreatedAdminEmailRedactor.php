@@ -79,12 +79,14 @@ class AccountRecoveryResponseCreatedAdminEmailRedactor implements SubscribedEmai
         /** @var \App\Model\Entity\User $admin */
         $admin = $this->Users->findFirstForEmail($response->modified_by);
         /** @var \App\Model\Entity\User $user */
-        $user = $this->Users->find()
+        $user = $this->Users->find('notDisabled')
             ->where(['Users.id' => $response->account_recovery_request->user_id])
             ->contain('Profiles')
             ->firstOrFail();
 
-        $emailCollection->addEmail($this->makeAdminEmail($user, $admin, $response));
+        if (isset($user)) {
+            $emailCollection->addEmail($this->makeAdminEmail($user, $admin, $response));
+        }
 
         return $emailCollection;
     }

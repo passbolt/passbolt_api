@@ -77,7 +77,9 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Get the users that can access this resource
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
-        $users = $this->usersTable->findIndex(Role::USER, $options)->find('locale');
+        $users = $this->usersTable->findIndex(Role::USER, $options)
+            ->find('locale')
+            ->find('notDisabled');
         $owner = $this->usersTable->findFirstForEmail($resource->modified_by);
 
         // Send emails to everybody that can see the resource

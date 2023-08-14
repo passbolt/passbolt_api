@@ -197,6 +197,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
     private function getGroupManagers(Group $group, array $excludeUsersIds): array
     {
         return $this->usersTable->find('locale')
+            ->find('notDisabled')
             ->select(['Users.username'])
             ->innerJoinWith('GroupsUsers')
             ->where(
