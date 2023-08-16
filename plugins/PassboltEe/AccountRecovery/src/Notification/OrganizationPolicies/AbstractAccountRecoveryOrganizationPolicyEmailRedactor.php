@@ -79,7 +79,7 @@ abstract class AbstractAccountRecoveryOrganizationPolicyEmailRedactor implements
             ->contain(['Profiles' => AvatarsTable::addContainAvatar(),])
             ->all();
 
-        if (empty($admins)) {
+        if (!count($admins)) {
             return $emailCollection;
         }
 

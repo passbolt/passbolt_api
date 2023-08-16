@@ -81,9 +81,10 @@ class MfaPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRedactor
         $admins = $usersTable->findAdmins()
             ->find('notDisabled')
             ->find('locale')
-            ->contain(['Profiles' => AvatarsTable::addContainAvatar()]);
+            ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
+            ->all();
 
-        if (!isset($admins)) {
+        if (!count($admins)) {
             return $emailCollection;
         }
 
