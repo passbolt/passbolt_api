@@ -22,7 +22,7 @@ if (PHP_SAPI === 'cli') {
 $user = $body['user'];
 $admin = $body['admin'];
 $created = $body['created'];
-
+$name = Purifier::clean($admin['profile']['first_name']) . ' ' . Purifier::clean($admin['profile']['last_name']) ;
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
@@ -30,7 +30,7 @@ echo $this->element('Email/module/avatar',[
         'datetime' => $created,
         'text' => __(
             '{0} ({1}) has denied your recovery request.',
-            Purifier::clean($admin['profile']['first_name']),
+            $name,
             Purifier::clean($admin['username']),
         )
     ])

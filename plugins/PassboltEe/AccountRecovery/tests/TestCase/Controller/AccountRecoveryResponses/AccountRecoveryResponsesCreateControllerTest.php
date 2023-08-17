@@ -101,8 +101,9 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
             '/account-recovery/continue/' . $request['user_id'] . '/' . $authenticationToken['token'],
             $user->username
         );
+        $name = $admin->profile->first_name . ' ' . $admin->profile->last_name;
         $this->assertEmailInBatchContains(
-            "{$admin->profile->first_name}($admin->username) has approved your recovery request.",
+            "$name ($admin->username) has approved your recovery request.",
             $user->username
         );
 
@@ -139,8 +140,9 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
             '/account-recovery/continue/',
             $user->username
         );
+        $name = $admin->profile->first_name . ' ' . $admin->profile->last_name;
         $this->assertEmailInBatchContains(
-            "{$admin->profile->first_name} ($admin->username) has denied your recovery request.",
+            "$name ($admin->username) has denied your recovery request.",
             $user->username
         );
 
@@ -154,19 +156,21 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
             "You have updated a recovery request to {$status}.",
             $admin->username
         );
+        $userName = $user->profile->first_name . ' ' . $user->profile->last_name;
         $this->assertEmailInBatchContains(
-            "You have set the status of the account recovery request initiated by {$user->profile->first_name} ({$user->username}) to {$status}.",
+            "You have set the status of the account recovery request initiated by $userName ({$user->username}) to {$status}.",
             $admin->username
         );
 
         // Assess the mail sent to the other admins
         foreach ($admins as $adm) {
+            $adminName = $admin->profile->first_name . ' ' . $admin->profile->last_name;
             $this->assertEmailInBatchContains(
-                "{$admin->profile->first_name}({$admin->username}) has updated a recovery request to {$status}.",
+                "$adminName ({$admin->username}) has updated a recovery request to {$status}.",
                 $adm->username
             );
             $this->assertEmailInBatchContains(
-                "{$admin->profile->first_name} ({$admin->username}) has set the status of the request initiated by {$user->profile->first_name} ({$user->username}) to {$status}.",
+                "$adminName ({$admin->username}) has set the status of the request initiated by $userName ({$user->username}) to {$status}.",
                 $adm->username
             );
         }

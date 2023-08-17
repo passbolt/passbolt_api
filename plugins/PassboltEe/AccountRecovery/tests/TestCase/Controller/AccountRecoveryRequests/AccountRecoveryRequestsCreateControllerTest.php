@@ -97,8 +97,9 @@ class AccountRecoveryRequestsCreateControllerTest extends AccountRecoveryIntegra
 
         $this->assertEmailInBatchContains('You just requested an account recovery');
         foreach ($admins as $admin) {
+            $name = $user->profile->first_name . ' ' . $user->profile->last_name;
             $this->assertEmailInBatchContains(
-                $user->profile->first_name . ' has initiated an account recovery request',
+                $name . ' has initiated an account recovery request',
                 $admin->username
             );
             $this->assertEmailInBatchContains(
