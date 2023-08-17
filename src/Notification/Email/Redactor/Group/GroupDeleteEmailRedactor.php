@@ -107,6 +107,6 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         );
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

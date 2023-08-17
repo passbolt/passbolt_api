@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Notification\Email;
 
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailSubscriptionManager;
+use App\Test\Factory\UserFactory;
 use Cake\Event\Event;
 use Cake\TestSuite\TestCase;
 
@@ -42,11 +43,11 @@ class EmailSubscriptionManagerTest extends TestCase
         $expectedRedactors = [
             $this->createSubscribedRedactor(
                 ['event_name'],
-                new Email('test', 'test', [], 'test')
+                new Email(UserFactory::make()->getEntity(), 'test', [], 'test')
             ),
             $this->createSubscribedRedactor(
                 ['event_name'],
-                new Email('test', 'test', [], 'test')
+                new Email(UserFactory::make()->getEntity(), 'test', [], 'test')
             ),
         ];
         $this->sut->addNewSubscription($expectedRedactors[0]);
@@ -60,11 +61,11 @@ class EmailSubscriptionManagerTest extends TestCase
         $expectedRedactors = [
             $this->createSubscribedRedactor(
                 ['event_name'],
-                new Email('test', 'test', [], 'test')
+                new Email(UserFactory::make()->getEntity(), 'test', [], 'test')
             ),
             $this->createSubscribedRedactor(
                 ['event_name1'],
-                new Email('test', 'test', [], 'test')
+                new Email(UserFactory::make()->getEntity(), 'test', [], 'test')
             ),
         ];
         $this->sut->addNewSubscription($expectedRedactors[0]);

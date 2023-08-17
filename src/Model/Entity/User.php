@@ -123,7 +123,7 @@ class User extends Entity implements IdentityInterface
      *
      * @return bool if user is active
      */
-    public function isActived(): bool
+    public function isActive(): bool
     {
         return $this->active;
     }

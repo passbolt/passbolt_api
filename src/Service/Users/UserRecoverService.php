@@ -89,7 +89,7 @@ class UserRecoverService implements UserRecoverServiceInterface
         $options = ['user' => $user];
         $options['case'] = $this->assertRecoveryCase();
 
-        if ($user->isActived()) {
+        if ($user->isActive()) {
             $options['token'] = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
             $eventName = UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME;
         } else {

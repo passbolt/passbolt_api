@@ -84,6 +84,6 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
 
         $data = ['body' => ['user' => $user, 'token' => $token, 'case' => $case], 'title' => $subject];
 
-        return new Email($user->username, $subject, $data, self::TEMPLATE);
+        return new Email($user, $subject, $data, self::TEMPLATE);
     }
 }

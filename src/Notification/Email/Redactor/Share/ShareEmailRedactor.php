@@ -143,6 +143,6 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }
