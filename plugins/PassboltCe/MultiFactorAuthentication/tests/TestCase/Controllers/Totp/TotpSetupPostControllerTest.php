@@ -166,6 +166,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
+        /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
         $sessionId = 'some_session_id';
         $this->mockSessionId($sessionId);
@@ -193,6 +194,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $accessToken = $this->createJwtTokenAndSetInHeader($user->id);
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
+        /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->post('/mfa/setup/totp.json?api-version=v2', [
             'otpProvisioningUri' => $uri,
@@ -221,6 +223,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $this->assertResponseOk();
         $this->assertNotEmpty($this->_responseJsonBody->otpProvisioningUri);
         $uri = $this->_responseJsonBody->otpProvisioningUri;
+        /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
 
         $this->post('/mfa/setup/totp.json?api-version=v2', [
@@ -241,6 +244,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
+        /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->post('/mfa/setup/totp', [
             'otpProvisioningUri' => $uri,
@@ -266,6 +270,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
+        /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->post('/mfa/setup/totp', [
             'otpProvisioningUri' => $uri,

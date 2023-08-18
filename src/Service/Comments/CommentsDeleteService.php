@@ -61,7 +61,7 @@ class CommentsDeleteService
         // Retrieve the comment.
         try {
             /**
-             * @var \App\Model\Entity\Comment
+             * @var \App\Model\Entity\Comment $comment
              */
             $comment = $this->Comments->get($id);
         } catch (RecordNotFoundException $e) {

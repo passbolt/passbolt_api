@@ -39,7 +39,7 @@ class AccountRecoveryOrganizationPublicKey extends Entity
      * For security purposes, it is advised to set '*' to false
      * and explicitly make individual fields accessible as needed.
      *
-     * @var array
+     * @var array<string, bool>
      */
     protected $_accessible = [
         'fingerprint' => false,

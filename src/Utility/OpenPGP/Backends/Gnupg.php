@@ -388,7 +388,7 @@ class Gnupg extends OpenPGPBackend
             if ($verifySignature === false) {
                 $decrypted = $this->_gpg->decrypt($text);
             } else {
-                /** @psalm-suppress InvalidArgument @phpstan-ignore-next-line  */
+                /** @psalm-suppress InvalidArgument  */
                 $signatureInfo = $this->_gpg->decryptverify($text, $decrypted);
             }
         } catch (\Exception $e) {
@@ -424,7 +424,7 @@ class Gnupg extends OpenPGPBackend
         $this->assertVerifyKey();
         $msg = __('The message cannot be verified.');
         try {
-            /** @psalm-suppress InvalidArgument @phpstan-ignore-next-line */
+            /** @psalm-suppress InvalidArgument */
             $signature = $this->_gpg->verify($signedText, false, $plainText);
             if (empty($signature) || $signature[0]['fingerprint'] !== $this->_verifyKeyFingerprint) {
                 throw new CakeException($msg);

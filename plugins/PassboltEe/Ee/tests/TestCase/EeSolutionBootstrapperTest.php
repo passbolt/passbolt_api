@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Core\PluginCollection;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Ee\EeSolutionBootstrapper;
+use Passbolt\PasswordPoliciesUpdate\PasswordPoliciesUpdatePlugin;
 
 /**
  * EeFeaturePluginAdder class
@@ -64,6 +65,8 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/Sso',
         'Passbolt/MfaPolicies',
         'Passbolt/SsoRecover',
+        'Passbolt/PasswordPolicies',
+        'Passbolt/PasswordPoliciesUpdate',
     ];
 
     public function testEeSolutionBootstrapper_Application_Bootstrap(): void
@@ -113,6 +116,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 
     protected function arrangeAndGetPlugins(): PluginCollection
     {
+        $this->enableFeaturePlugin('Rbacs');
         $this->enableFeaturePlugin('Mobile');
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->enableFeaturePlugin('SmtpSettings');
@@ -122,6 +126,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->enableFeaturePlugin('Sso');
         $this->enableFeaturePlugin('MfaPolicies');
         $this->enableFeaturePlugin('SsoRecover');
+        $this->enableFeaturePlugin(PasswordPoliciesUpdatePlugin::class);
         // These plugins are enabled by default if not defined
         Configure::delete('passbolt.plugins.ee.enabled');
         Configure::delete('passbolt.plugins.multiFactorAuthentication.enabled');

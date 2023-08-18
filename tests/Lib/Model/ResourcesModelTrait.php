@@ -86,7 +86,7 @@ trait ResourcesModelTrait
      * - Secrets.
      * - Folders if folders enabled.
      *
-     * @param Resource $resource
+     * @param \App\Model\Entity\Resource $resource Resource entity.
      * @param string $userId
      * @param array $data
      */

@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Model\Table;
 
-use App\Utility\PassboltText;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -127,24 +126,5 @@ class ProfilesTable extends Table
         $rules->add($rules->existsIn(['user_id'], 'Users'));
 
         return $rules;
-    }
-
-    /**
-     * Event fired before request data is converted into entities
-     * Ucfirst firstname and lastname
-     *
-     * @param \Cake\Event\Event $event event
-     * @param \ArrayObject $data data
-     * @param \ArrayObject $options options
-     * @return void
-     */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
-    {
-        if (isset($data['first_name'])) {
-            $data['first_name'] = PassboltText::ucfirst($data['first_name']);
-        }
-        if (isset($data['last_name'])) {
-            $data['last_name'] = PassboltText::ucfirst($data['last_name']);
-        }
     }
 }

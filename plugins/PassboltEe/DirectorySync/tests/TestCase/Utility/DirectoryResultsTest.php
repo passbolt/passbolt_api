@@ -138,9 +138,9 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
         $this->assertEquals(3, count($retrievedUsers));
 
         $expectedUsers = [
-            'CN=User1,OU=PassboltUsers,DC=passbolt,DC=local',
-            'CN=User2,OU=PassboltUsers,DC=passbolt,DC=local',
-            'CN=User6,OU=PassboltUsers,DC=passbolt,DC=local',
+            strtolower('CN=User1,OU=PassboltUsers,DC=passbolt,DC=local'),
+            strtolower('CN=User2,OU=PassboltUsers,DC=passbolt,DC=local'),
+            strtolower('CN=User6,OU=PassboltUsers,DC=passbolt,DC=local'),
         ];
 
         $this->assertEquals($expectedUsers, array_keys($retrievedUsers));
@@ -173,6 +173,8 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
             'CN=User3,OU=PassboltUsers,DC=passbolt,DC=local',
             'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local',
         ];
+
+        $this->assertSame(count($expectedEntities), count($flatTree));
         foreach ($flatTree as $key => $entity) {
             $this->assertEquals($entity->dn, $expectedEntities[$key]);
         }

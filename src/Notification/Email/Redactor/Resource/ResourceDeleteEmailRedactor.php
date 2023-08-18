@@ -71,7 +71,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     {
         $emailCollection = new EmailCollection();
 
-        /** @var Resource $resource */
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = $event->getData('resource');
         /** @var string $deletedBy */
         $deletedBy = $event->getData('deletedBy');
@@ -95,7 +95,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\User $recipient Email of the recipient user
      * @param \App\Model\Entity\User $owner User who executed the action
-     * @param Resource $resource Resource
+     * @param \App\Model\Entity\Resource $resource Resource
      * @return \App\Notification\Email\Email
      */
     private function createDeleteEmail(User $recipient, User $owner, Resource $resource): Email

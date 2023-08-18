@@ -62,7 +62,7 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     {
         $emailCollection = new EmailCollection();
 
-        /** @var Resource $resource */
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = $event->getData('resource');
         $user = $event->getData('user');
 
@@ -72,7 +72,7 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
-     * @param Resource $resource Resource created.
+     * @param \App\Model\Entity\Resource $resource Resource created.
      * @param \App\Model\Entity\User $user User creating the resource.
      * @return \App\Notification\Email\Email
      */

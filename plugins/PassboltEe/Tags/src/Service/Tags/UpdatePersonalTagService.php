@@ -56,12 +56,18 @@ class UpdatePersonalTagService
         ) {
             $newTag = $tagsTable->findOrCreateTag($slug, $uac);
 
-            // Update all the tag association to the new tag id
-            $resourcesTagsTable->updateUserTag(
-                $uac->getId(),
-                $tag->get('id'),
-                $newTag->get('id')
-            );
+            /**
+             * Update all the tag association to the new tag id (only if new tag is created).
+             *
+             * Note: There is a case where the slug provided by user is already exist, in that case we don't perform the update.
+             */
+            if ($tag->get('id') !== $newTag->get('id')) {
+                $resourcesTagsTable->updateUserTag(
+                    $uac->getId(),
+                    $tag->get('id'),
+                    $newTag->get('id')
+                );
+            }
 
             // Flush all unused tags
             $tagsTable->deleteAllUnusedTags();

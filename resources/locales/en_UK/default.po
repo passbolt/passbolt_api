@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2023-08-03 13:33+0000\n"
+"POT-Creation-Date: 2023-07-24 11:52+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -3941,7 +3941,49 @@ msgstr ""
 msgid "The connection name `{0}` should not contain dots"
 msgstr ""
 
-msgid "Invalid connection name"
+msgid "Invalid directory type for domain: {0}"
+msgstr ""
+
+msgid "Directory type could not be found for domain: {0}"
+msgstr ""
+
+msgid "The directory type should be one of the following: {0}."
+msgstr ""
+
+msgid "A domain name is required."
+msgstr ""
+
+msgid "The domain name should not be empty."
+msgstr ""
+
+msgid "The domain name should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The base DN should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "A server is required."
+msgstr ""
+
+msgid "The server should not be empty."
+msgstr ""
+
+msgid "The server should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The port number should not be empty."
+msgstr ""
+
+msgid "The port number should be between 0 and 65535"
+msgstr ""
+
+msgid "A connection type is required."
+msgstr ""
+
+msgid "The connection type should not be empty."
+msgstr ""
+
+msgid "The connection type should be one of the following: {0}."
 msgstr ""
 
 msgid "The identifier of the default admin user is required."
@@ -4737,6 +4779,9 @@ msgid "A shared status is required."
 msgstr ""
 
 msgid "Could not validate tags data."
+msgstr ""
+
+msgid "LDAP Object class could not be found: {0}"
 msgstr ""
 
 msgid "The requested address was not found on this server."

@@ -195,7 +195,7 @@ class ShareController extends AppController
     /**
      * Notify users
      *
-     * @param Resource $resource affected resource
+     * @param \App\Model\Entity\Resource $resource affected resource
      * @param array $data changes requested by resource owner
      * @return void
      */

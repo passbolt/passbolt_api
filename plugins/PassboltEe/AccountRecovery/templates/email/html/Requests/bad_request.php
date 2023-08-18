@@ -23,6 +23,7 @@ $admin = $body['admin'];
 $created = $body['created'];
 $subject = $body['subject'];
 $clientIp = $body['clientIp'];
+$name = Purifier::clean($user['profile']['first_name']) . ' ' . Purifier::clean($user['profile']['last_name']);
 
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
@@ -34,7 +35,7 @@ echo $this->element('Email/module/avatar',[
 ]);
 
 $text = '<h3>' . __('Suspicious recovery request') . '</h3><br/>';
-$text .= __('An account recovery request was attempted from a user with client IP {0} for {1}.', Purifier::clean($clientIp), Purifier::clean($user['profile']['first_name']));
+$text .= __('An account recovery request was attempted from a user with client IP {0} for {1}.', Purifier::clean($clientIp), $name);
 $text .= ' ' . __('The request could not be found in the database.');
 $text .= ' ' . __('This is a potential security threat.');
 echo $this->element('Email/module/text', [

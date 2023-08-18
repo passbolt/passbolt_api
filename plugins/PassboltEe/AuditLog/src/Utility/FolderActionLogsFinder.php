@@ -40,14 +40,15 @@ class FolderActionLogsFinder extends BaseActionLogsFinder
     {
         return $this->ActionLogs
             ->find()
-            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->select(['ActionLogs__id' => 'ActionLogs.id', 'Actions__name' => 'Actions.name'])
             ->contain(['EntitiesHistory.FoldersHistory'])
+            ->innerJoinWith('Actions')
             ->innerJoinWith('EntitiesHistory.FoldersHistory')
             ->where([
                 'FoldersHistory.folder_id' => $folderId,
                 'ActionLogs.status' => 1,
             ])
-            ->group('ActionLogs.id');
+            ->group(['ActionLogs.id', 'Actions.name']);
     }
 
     /**
@@ -60,8 +61,9 @@ class FolderActionLogsFinder extends BaseActionLogsFinder
     {
         return $this->ActionLogs
             ->find()
-            ->select(['ActionLogs__id' => 'ActionLogs.id'])
+            ->select(['ActionLogs__id' => 'ActionLogs.id', 'Actions__name' => 'Actions.name'])
             ->contain(['EntitiesHistory.PermissionsHistory'])
+            ->innerJoinWith('Actions')
             ->innerJoinWith('EntitiesHistory.PermissionsHistory')
             ->contain(['EntitiesHistory.PermissionsHistory.PermissionsHistoryFolders'])
             ->innerJoinWith('EntitiesHistory.PermissionsHistory.PermissionsHistoryFolders')
@@ -69,7 +71,7 @@ class FolderActionLogsFinder extends BaseActionLogsFinder
                 'PermissionsHistoryFolders.id' => $folderId,
                 'ActionLogs.status' => 1,
             ])
-            ->group('ActionLogs.id');
+            ->group(['ActionLogs.id', 'Actions.name']);
     }
 
     /**

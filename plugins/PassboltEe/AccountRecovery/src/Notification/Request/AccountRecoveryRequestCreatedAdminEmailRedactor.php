@@ -103,7 +103,9 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
         $subject = (new LocaleService())->translateString(
             $locale,
             function () use ($user) {
-                return __('{0} has initiated a recovery request', Purifier::clean($user->profile->first_name));
+                $name = Purifier::clean($user->profile->first_name) . ' ' . Purifier::clean($user->profile->last_name);
+
+                return __('{0} has initiated a recovery request', $name);
             }
         );
 
