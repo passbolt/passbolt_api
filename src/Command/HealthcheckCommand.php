@@ -381,12 +381,12 @@ class HealthcheckCommand extends PassboltCommand
             $checks = Healthchecks::ssl();
         }
         $this->title(__('SSL Certificate'));
-        $this->assert(
+        $this->warning(
             $checks['ssl']['peerValid'],
             __('SSL peer certificate validates'),
             __('SSL peer certificate does not validate')
         );
-        $this->assert(
+        $this->warning(
             $checks['ssl']['hostValid'],
             __('Hostname is matching in SSL certificate.'),
             __('Hostname does not match when validating certificates.')
