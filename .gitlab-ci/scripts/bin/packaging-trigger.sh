@@ -15,19 +15,41 @@ function is_release_candidate () {
   return 0
 }
 
+function is_testing_candidate () {
+  local version=$1
+  if [[ ! $version =~ [0-9]+\.[0-9]+\.[0-9]+-test\.[0-9]+ ]];then
+    return 1
+  fi
+  return 0
+}
+
+function is_stable_candidate () {
+  local version=$1
+  if [[ ! $version =~ [0-9]+\.[0-9]+\.[0-9]+$ ]];then
+    return 1
+  fi
+  return 0
+}
+
 function parse_tag() {
   local tag=$1
 
+  if is_testing_candidate "$tag"; then
+    echo "$tag" | awk -F '-' '{print $1"-"$2}' | tr -d 'v'
+  fi
+
   if is_release_candidate "$tag"; then
     echo "$tag" | awk -F '-' '{print $1"-"$2}' | tr -d 'v'
-  else
+  fi
+
+  if is_stable_candidate "$tag"; then
     echo "$tag" | awk -F '-' '{print $1}' | tr -d 'v'
   fi
 }
 
 if [[ $tag == "" ]]; then
   echo "Error: tag is empty!"
-  exit 1 
+  exit 1
 else
   version="$(parse_tag "$tag")"
 fi
