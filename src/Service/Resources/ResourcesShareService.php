@@ -126,7 +126,7 @@ class ResourcesShareService
      * Update the permissions of a resource.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
-     * @param Resource $resource The target resource
+     * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $changes The list of permissions changes to apply
      * @return array
      * [
@@ -153,7 +153,7 @@ class ResourcesShareService
     /**
      * Handle resource validation errors.
      *
-     * @param Resource $resource The target resource
+     * @param \App\Model\Entity\Resource $resource The target resource
      * @return void
      * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
@@ -169,7 +169,7 @@ class ResourcesShareService
      * Update the secrets.
      *
      * @param \App\Utility\UserAccessControl $uac The operator
-     * @param Resource $resource The target resource
+     * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $data The list of secrets to add
      * @return void
      * @throws \Exception
@@ -216,7 +216,7 @@ class ResourcesShareService
      * Post accesses revoked.
      *
      * @param \App\Utility\UserAccessControl $uac The operator
-     * @param Resource $resource The target permissions
+     * @param \App\Model\Entity\Resource $resource The target permissions
      * @param array $deletedPermissions The list of deleted permissions
      * @return void
      */
@@ -249,7 +249,7 @@ class ResourcesShareService
     /**
      * Post group access revoked treatment.
      *
-     * @param Resource $resource The target resource
+     * @param \App\Model\Entity\Resource $resource The target resource
      * @param string $groupId The target group
      * @return void
      * @throws \Exception
@@ -268,7 +268,7 @@ class ResourcesShareService
      * - Remove the user favorites for this resource.
      * - Trigger an event to notify other plugin about the revoked access.
      *
-     * @param Resource $resource The target resource
+     * @param \App\Model\Entity\Resource $resource The target resource
      * @param string $userId The target user
      * @return void
      */

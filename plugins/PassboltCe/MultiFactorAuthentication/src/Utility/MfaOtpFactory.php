@@ -77,11 +77,10 @@ class MfaOtpFactory
                 $exception
             );
         }
-        $totp = new TOTP(
-            $uac->getUsername(), //label: string shown bellow the code digits
-            $secret
-        );
-        $totp->setIssuer(self::getIssuer()); //issuer: string shown above the code digits
+
+        $totp = TOTP::create($secret);
+        $totp->setLabel($uac->getUsername()); // label: string shown below the code digits
+        $totp->setIssuer(self::getIssuer()); // issuer: string shown above the code digits
 
         return $totp->getProvisioningUri();
     }

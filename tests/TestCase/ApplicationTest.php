@@ -26,6 +26,7 @@ use App\Middleware\HttpProxyMiddleware;
 use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
+use App\Middleware\UuidParserMiddleware;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\Middleware\BodyParserMiddleware;
@@ -64,6 +65,7 @@ class ApplicationTest extends TestCase
             GpgAuthHeadersMiddleware::class,
             CsrfProtectionMiddleware::class,
             HttpProxyMiddleware::class,
+            UuidParserMiddleware::class,
         ];
 
         foreach ($middlewareClassesInOrder as $midClass) {

@@ -39,7 +39,7 @@ class OrganizationSetting extends Entity
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
-     * @var array
+     * @var array<string, bool>
      */
     protected $_accessible = [
         'property_id' => true,
