@@ -242,6 +242,9 @@ return [
 
         // Which plugins are enabled
         'plugins' => [
+            'rbacs' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_RBACS_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
             'export' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_EXPORT_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
@@ -302,6 +305,15 @@ return [
             ],
             'ssoRecover' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SSO_RECOVER_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'directorySync' => [
+                'caseSensitiveFilters' => filter_var(env('PASSBOLT_PLUGINS_DIRECTORY_SYNC_CASE_SENSITIVE_FILTERS', false), FILTER_VALIDATE_BOOLEAN),
+            ],
+            'passwordPolicies' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
+            'passwordPoliciesUpdate' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_POLICIES_UPDATE_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 

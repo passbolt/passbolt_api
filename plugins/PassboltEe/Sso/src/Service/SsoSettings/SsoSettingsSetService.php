@@ -118,13 +118,14 @@ class SsoSettingsSetService
         $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
         $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
         $gpg = OpenPGPBackendFactory::get();
-        $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
 
         try {
+            $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
             $gpg->setEncryptKeyFromFingerprint($fingerprint);
         } catch (\Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
+                $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
                 $gpg->setEncryptKeyFromFingerprint($fingerprint);
             } catch (\Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to encrypt.') . ' ';

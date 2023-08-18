@@ -16,11 +16,28 @@ declare(strict_types=1);
  */
 namespace App\Service\Cookie;
 
+use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
+use Cake\Http\ServerRequest;
 use DateTimeInterface;
 
 abstract class AbstractSecureCookieService
 {
+    public const PASSBOLT_SECURITY_COOKIES_SECURE_CONFIG = 'passbolt.security.cookies.secure';
+
+    /**
+     * Read in the config and in the request is ssl is required.
+     *
+     * Set to true in the configs by default.
+     *
+     * @param \Cake\Http\ServerRequest $request Server request
+     * @return bool
+     */
+    public static function isSslOrCookiesSecure(ServerRequest $request): bool
+    {
+        return Configure::read(self::PASSBOLT_SECURITY_COOKIES_SECURE_CONFIG) || $request->is('ssl');
+    }
+
     /**
      * The path may be adjusted, for example to match
      * organization domain

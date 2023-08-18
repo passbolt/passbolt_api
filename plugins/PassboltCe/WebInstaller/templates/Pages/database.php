@@ -1,4 +1,7 @@
 <?php
+
+use Cake\Database\Driver\Mysql;
+use Cake\Database\Driver\Postgres;
 use Cake\Routing\Router;
 
 $this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);
@@ -35,10 +38,13 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                             <div class="clearfix required">
                                 <label><?php echo __('Database connection url'); ?></label>
                                 <div class="input text singleline connection_info">
-                                    <?= $this->Form->control('type', [
+                                    <?= $this->Form->control('driver', [
                                         'type' => 'select',
-                                        'options' => ['mysql' => 'mysql://'],
-                                        'default' => 'mysql',
+                                        'options' => [
+                                            Mysql::class => 'mysql://',
+                                            Postgres::class => 'postgresql://',
+                                        ],
+                                        'default' => Mysql::class,
                                         'templates' => [
                                             'inputContainer' => '<div class="input text protocol">{{content}}</div>',
                                         ],

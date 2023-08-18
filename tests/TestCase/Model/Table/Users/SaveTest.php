@@ -20,7 +20,6 @@ namespace App\Test\TestCase\Model\Table\Users;
 use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
-use App\Utility\PassboltText;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 
@@ -82,8 +81,8 @@ class SaveTest extends AppTestCase
         $this->assertEquals($testUser['deleted'], $addedUser->deleted);
         $this->assertEquals($testUser['active'], $addedUser->active);
 
-        $this->assertEquals(PassboltText::ucfirst($testUser['profile']['first_name']), $addedUser->profile->first_name);
-        $this->assertEquals(PassboltText::ucfirst($testUser['profile']['last_name']), $addedUser->profile->last_name);
+        $this->assertEquals($testUser['profile']['first_name'], $addedUser->profile->first_name);
+        $this->assertEquals($testUser['profile']['last_name'], $addedUser->profile->last_name);
     }
 
     public function testUsersSaveUpdateSuccess()
@@ -110,8 +109,8 @@ class SaveTest extends AppTestCase
         $this->assertEquals($updateData['deleted'], $fetchedUser->deleted);
         $this->assertEquals($updateData['active'], $fetchedUser->active);
 
-        $this->assertEquals(PassboltText::ucfirst($updateData['profile']['first_name']), $fetchedUser->profile->first_name);
-        $this->assertEquals(PassboltText::ucfirst($updateData['profile']['last_name']), $fetchedUser->profile->last_name);
+        $this->assertEquals($updateData['profile']['first_name'], $fetchedUser->profile->first_name);
+        $this->assertEquals($updateData['profile']['last_name'], $fetchedUser->profile->last_name);
     }
 
     public function testUsersSaveValidationEmailError()

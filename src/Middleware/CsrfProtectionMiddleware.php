@@ -20,10 +20,24 @@ use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Cake\Utility\Security;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Server\RequestHandlerInterface;
 
 class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddleware
 {
     public const PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG = 'passbolt.security.csrfProtection.active';
+
+    /**
+     * @inheritDoc
+     */
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
+    {
+        /** @var \Cake\Http\ServerRequest $request */
+        $this->makeCsrfCookieSecureIfRequestIsSsl($request);
+
+        return parent::process($request, $handler);
+    }
 
     /**
      * @inheritDoc
@@ -76,5 +90,19 @@ class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddl
         }
 
         return false;
+    }
+
+    /**
+     * Read if ssl is required.
+     *
+     * @param \Cake\Http\ServerRequest $request Server request
+     * @return void
+     * @TODO deprecate this method in v5: secure should be isSsl OR PASSBOLT_SECURITY_COOKIES_SECURE_CONFIG true
+     * @deprecated since v4.2.0 use isSslOrCookiesSecure() instead, remove this in v5.
+     * @see AbstractSecureCookieService::isSslOrCookiesSecure()
+     */
+    public function makeCsrfCookieSecureIfRequestIsSsl(ServerRequest $request): void
+    {
+        $this->_config['secure'] = $request->is('ssl');
     }
 }

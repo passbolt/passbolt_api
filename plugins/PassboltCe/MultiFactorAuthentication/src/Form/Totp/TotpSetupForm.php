@@ -28,7 +28,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 class TotpSetupForm extends MfaForm
 {
     /**
-     * @var \OTPHP\TOTPInterface|\OTPHP\HOTPInterface
+     * @var \OTPHP\OTPInterface|\OTPHP\HOTPInterface
      */
     protected $otp;
 

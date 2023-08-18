@@ -22,6 +22,7 @@ use App\Model\Entity\Role;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
 use App\Utility\UserAccessControl;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\ORM\TableRegistry;
@@ -29,6 +30,7 @@ use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\Alias;
+use Passbolt\DirectorySync\Utility\DirectoryEntry\UserCollection;
 use Passbolt\DirectorySync\Utility\SyncError;
 
 /**
@@ -195,6 +197,26 @@ trait GroupUsersSyncTrait
     }
 
     /**
+     * @param string $dn Dn to check.
+     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] $directoryEntries Directory entry entities.
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|null Returns entity if exists, `null` otherwise.
+     */
+    protected function lookupDnInDirectoryEntries(string $dn, array $directoryEntries): ?DirectoryEntry
+    {
+        $dn = (new UserCollection())->transformOffset($dn);
+
+        foreach ($directoryEntries as $directoryEntry) {
+            $directoryName = (new UserCollection())->transformOffset($directoryEntry->directory_name);
+
+            if ($directoryName === $dn) {
+                return $directoryEntry;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Find the directory relations corresponding to an entry.
      *
      * @param string $entryId entry id
@@ -217,22 +239,31 @@ trait GroupUsersSyncTrait
     /**
      * Find directory entries corresponding to a groupUser
      *
-     * @param array $GroupsUsersDn user directory name
-     * @return mixed
+     * @param array $groupsUsersDn user directory name
+     * @return array
      */
-    protected function findDirectoryEntriesForGroupUsers(array $GroupsUsersDn)
+    protected function findDirectoryEntriesForGroupUsers(array $groupsUsersDn)
     {
-        if (empty($GroupsUsersDn)) {
+        if (empty($groupsUsersDn)) {
             return [];
         }
 
-        $directoryGroupUserEntries = $this->DirectoryEntries
+        if (!Configure::read('passbolt.plugins.directorySync.caseSensitiveFilters')) {
+            // Do work to make query check case-insensitive
+            foreach ($groupsUsersDn as $k => $value) {
+                $groupsUsersDn[$k] = strtolower($value);
+            }
+
+            $whereDirectoryNameColumn = 'LOWER(directory_name)';
+        } else {
+            $whereDirectoryNameColumn = 'directory_name';
+        }
+
+        return $this->DirectoryEntries
             ->find()
-            ->where(['directory_name IN' => $GroupsUsersDn, 'foreign_model' => Alias::MODEL_USERS])
+            ->where(["{$whereDirectoryNameColumn} IN" => $groupsUsersDn, 'foreign_model' => Alias::MODEL_USERS])
             ->all()
             ->toArray();
-
-        return $directoryGroupUserEntries;
     }
 
     /**
@@ -251,7 +282,6 @@ trait GroupUsersSyncTrait
 
         $dbUserIdsInGroup = Hash::extract($group->groups_users, '{n}.user_id');
         $directoryGroupUserEntries = $this->findDirectoryEntriesForGroupUsers($data['group']['users']);
-        $directoryGroupUserEntriesByDn = Hash::combine($directoryGroupUserEntries, '{n}.directory_name', '{n}');
 
         // Calculate users to add.
         // We add users that are in group data and not in directoryRelations.
@@ -261,7 +291,8 @@ trait GroupUsersSyncTrait
                 continue;
             }
 
-            if (!isset($directoryGroupUserEntriesByDn[$userDn])) {
+            $directoryGroupUserEntry = $this->lookupDnInDirectoryEntries($userDn, $directoryGroupUserEntries);
+            if ($directoryGroupUserEntry === null) {
                 // If a DN was returned by the directory, but cannot be resolved with our entries, we notify the admin.
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to group {1} because there is no matching directory entry in passbolt.', $userDn, $group->name),//phpcs:ignore
@@ -274,7 +305,7 @@ trait GroupUsersSyncTrait
             }
 
             // The user should be added only if it doesn't already belong to the existing group_users in db.
-            $userId = $directoryGroupUserEntriesByDn[$userDn]->foreign_key;
+            $userId = $directoryGroupUserEntry->foreign_key;
             if ($userId === null) {
                 // The user has been deleted and the group user entry now points to nothing.
                 continue;
@@ -286,7 +317,7 @@ trait GroupUsersSyncTrait
             // If user already has a relation, send ignore report.
             $drExists = $this->DirectoryRelations->exists([
                 'parent_key' => $data['id'],
-                'child_key' => $directoryGroupUserEntriesByDn[$userDn]->id,
+                'child_key' => $directoryGroupUserEntry->id,
             ]);
             if ($drExists) {
                 $u = $this->Users->get($userId);
@@ -295,7 +326,7 @@ trait GroupUsersSyncTrait
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
                     Alias::STATUS_IGNORE,
-                    $directoryGroupUserEntriesByDn[$userDn]
+                    $directoryGroupUserEntry
                 ));
                 continue;
             }
@@ -496,30 +527,33 @@ trait GroupUsersSyncTrait
         // Look for users to sync.
         // Users that are in data and have a correspondence in GroupUsers
         $directoryGroupUserEntries = $this->findDirectoryEntriesForGroupUsers($data['group']['users']);
-        $directoryGroupUserEntriesByDn = Hash::combine($directoryGroupUserEntries, '{n}.directory_name', '{n}');
-        foreach ($data['group']['users'] as $userDn) {
-            if (isset($directoryGroupUserEntriesByDn[$userDn])) {
-                $groupUser = $group->hasUser(['id' => $directoryGroupUserEntriesByDn[$userDn]->foreign_key]);
-                if ($groupUser) {
-                    // Check if there is a corresponding relation.
-                    $relation = $this->DirectoryRelations->lookupByGroupUser($groupUser);
-                    if (!empty($relation)) {
-                        continue;
-                    }
 
-                    // Check if groupUser was created after.
-                    if ($groupUser->created->gt($data['directory_modified'])) {
-                        $toSync[] = $groupUser;
-                    } else {
-                        // Send ignore report.
-                        $this->addReportItem(new ActionReport(
-                            __('The user {0} was not synced with existing membership for group {1} because the membership was created before.', $groupUser->user->username, $group->name),//phpcs:ignore
-                            Alias::MODEL_GROUPS_USERS,
-                            Alias::ACTION_CREATE,
-                            Alias::STATUS_IGNORE,
-                            $directoryGroupUserEntriesByDn[$userDn]
-                        ));
-                    }
+        foreach ($data['group']['users'] as $userDn) {
+            $directoryGroupUserEntry = $this->lookupDnInDirectoryEntries($userDn, $directoryGroupUserEntries);
+            if ($directoryGroupUserEntry === null) {
+                continue;
+            }
+
+            $groupUser = $group->hasUser(['id' => $directoryGroupUserEntry->foreign_key]);
+            if ($groupUser) {
+                // Check if there is a corresponding relation.
+                $relation = $this->DirectoryRelations->lookupByGroupUser($groupUser);
+                if (!empty($relation)) {
+                    continue;
+                }
+
+                // Check if groupUser was created after.
+                if ($groupUser->created->gt($data['directory_modified'])) {
+                    $toSync[] = $groupUser;
+                } else {
+                    // Send ignore report.
+                    $this->addReportItem(new ActionReport(
+                        __('The user {0} was not synced with existing membership for group {1} because the membership was created before.', $groupUser->user->username, $group->name),//phpcs:ignore
+                        Alias::MODEL_GROUPS_USERS,
+                        Alias::ACTION_CREATE,
+                        Alias::STATUS_IGNORE,
+                        $directoryGroupUserEntry
+                    ));
                 }
             }
         }

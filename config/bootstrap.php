@@ -30,6 +30,7 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
  */
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
+use App\Database\Type\LowerCaseUuidType;
 use App\Mailer\Transport\DebugTransport;
 use App\Mailer\Transport\SmtpTransport;
 use Cake\Cache\Cache;
@@ -212,6 +213,8 @@ FrozenTime::setJsonEncodeFormat("yyyy-MM-dd'T'HH':'mm':'ssxxx");
  * @see https://book.cakephp.org/4/en/orm/database-basics.html#adding-custom-types
  */
 TypeFactory::map('json', JsonType::class);
+ // Lower case UUIDs prior to marshalling of persisting data
+TypeFactory::map('uuid', LowerCaseUuidType::class);
 // There is no time-specific type in Cake
 TypeFactory::map('time', StringType::class);
 

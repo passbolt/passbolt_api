@@ -21,6 +21,7 @@ use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Event\EventManager;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
@@ -910,5 +911,89 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         ];
         $this->assertReport($reports[1], $expectedUserGroupReport);
         $this->assertEmailQueueCount(0);
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_HandlesCaseInsensitiveDn()
+    {
+        $this->mockDirectoryUserData('frances', 'frances', 'frances@passbolt.com');
+        $this->mockDirectoryUserData(
+            'betty',
+            'betty',
+            'betty@passbolt.com',
+            null,
+            null,
+            false
+        );
+        $francesEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
+        $bettyEntry = $this->mockDirectoryEntryUser(['fname' => 'betty', 'lname' => 'betty', 'foreign_key' => UuidFactory::uuid('user.id.betty')]);
+        $this->mockDirectoryEntryGroup('marketing');
+        $this->mockDirectoryGroupData('marketing', [
+            'group_users' => [
+                $francesEntry->directory_name,
+                strtolower($bettyEntry->directory_name),
+            ],
+        ]);
+
+        $reports = $this->action->execute();
+
+        $expectedUserGroupReport = [
+            'model' => Alias::MODEL_GROUPS_USERS,
+            'action' => Alias::ACTION_CREATE,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => Alias::MODEL_GROUPS,
+        ];
+        $this->assertReport($reports[0], $expectedUserGroupReport);
+
+        $expectedUserGroupReport = [
+            'model' => Alias::MODEL_GROUPS_USERS,
+            'action' => Alias::ACTION_CREATE,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => Alias::MODEL_GROUPS,
+        ];
+        $this->assertReport($reports[1], $expectedUserGroupReport);
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncGroupUser
+     * @group DirectorySyncGroupUserAdd
+     */
+    public function testDirectorySyncGroupUser_CaseSensitiveDnConfig()
+    {
+        Configure::write('passbolt.plugins.directorySync.caseSensitiveFilters', true);
+
+        $this->mockDirectoryUserData('frances', 'frances', 'frances@passbolt.com');
+        $this->mockDirectoryUserData('betty', 'betty', 'betty@passbolt.com');
+        $francesEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);
+        $bettyEntry = $this->mockDirectoryEntryUser(['fname' => 'betty', 'lname' => 'betty', 'foreign_key' => UuidFactory::uuid('user.id.betty')]);
+        $this->mockDirectoryEntryGroup('marketing');
+        $this->mockDirectoryGroupData('marketing', [
+            'group_users' => [
+                $francesEntry->directory_name,
+                strtolower($bettyEntry->directory_name),
+            ],
+        ]);
+
+        $reports = $this->action->execute();
+
+        $this->assertCount(1, $reports);
+        /** @var \Passbolt\DirectorySync\Actions\Reports\ActionReport $result */
+        $result = $reports[0];
+        $expectedUserGroupReport = [
+            'model' => Alias::MODEL_GROUPS_USERS,
+            'action' => Alias::ACTION_CREATE,
+            'status' => Alias::STATUS_SUCCESS,
+            'type' => Alias::MODEL_GROUPS,
+        ];
+        $this->assertReport($result, $expectedUserGroupReport);
+        $this->assertStringContainsString(
+            'The user frances@passbolt.com was successfully added to the group Marketing',
+            $result->getMessage()
+        );
     }
 }
