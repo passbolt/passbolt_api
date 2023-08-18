@@ -134,6 +134,10 @@ class PassboltCommand extends Command
             'help' => __d('cake_console', 'Utility to import mysql database backups.'),
         ]);
 
+        $parser->addArgument('purge_email_queue', [
+            'help' => __d('cake_console', 'Purge email queue table content.'),
+        ]);
+
         $parser->addArgument('recover_user', [
             'help' => __d('cake_console', 'Get an existing account recovery token, or create a new one.'),
         ]);

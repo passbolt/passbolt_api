@@ -28,6 +28,7 @@ use App\Middleware\HttpProxyMiddleware;
 use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
+use App\Middleware\UuidParserMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\EmailDigest\DigestRegister\GroupDigests;
@@ -104,7 +105,8 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->insertAfter(SessionAuthPreventDeletedUsersMiddleware::class, new AuthenticationMiddleware($this))
             ->add(new GpgAuthHeadersMiddleware())
             ->add($csrf)
-            ->add(new HttpProxyMiddleware());
+            ->add(new HttpProxyMiddleware())
+            ->add(UuidParserMiddleware::class);
 
         /*
          * Additional security headers

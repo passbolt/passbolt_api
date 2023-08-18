@@ -167,7 +167,7 @@ class ResourcesAddService
     /**
      * Manage validation errors.
      *
-     * @param Resource $resource resource
+     * @param \App\Model\Entity\Resource $resource resource
      * @throws \App\Error\Exception\ValidationException if the resource validation failed
      * @return void
      */
@@ -197,7 +197,7 @@ class ResourcesAddService
     /**
      * Triggered by the after save resource event.
      *
-     * @param Resource $resource The created resource
+     * @param \App\Model\Entity\Resource $resource The created resource
      * @param \App\Utility\UserAccessControl $uac The user creating the resource.
      * @param array $data Payload to create the resource.
      * @return void
