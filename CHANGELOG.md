@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.2.0-test.1] - 2023-08-18
+## [4.2.0-test.2] - 2023-08-22
 ### Added
 - PB-24987 As an admin I can define the password generator default settings via the passbolt administration UI
 - PB-25462 As an admin I can deactivate Rbacs with a feature flag
