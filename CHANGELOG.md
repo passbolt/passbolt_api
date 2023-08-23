@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.2.0-test.2] - 2023-08-22
+## [4.2.0-rc.1] - 2023-08-23
 ### Added
 - PB-24987 As an administrator I can define the password policies from the administration UI
 - PB-25462 As an administrator I can deactivate RBACs with a feature flag
