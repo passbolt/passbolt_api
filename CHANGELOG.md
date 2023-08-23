@@ -2,31 +2,29 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.2.0-test.2] - 2023-08-22
+## [4.2.0-rc.1] - 2023-08-23
 ### Added
-- PB-24987 As an admin I can define the password generator default settings via the passbolt administration UI
-- PB-25462 As an admin I can deactivate Rbacs with a feature flag
-- PB-25036 As an admin I can select postgres as database driver on installation
-- PB-21403 As an administrator I can purge the email queue table
+- PB-24987 As an administrator I can define the password policies from the administration UI
+- PB-25462 As an administrator I can deactivate RBACs with a feature flag
+- PB-25036 As an administrator I can select PostgreSQL as database driver on installation
+- PB-21403 As an administrator I can purge the email queue table from the command line
 
 ### Improved
-- PB-24990 Performance optimisation of the secrets table cleanup command on deleted permissions
-- PB-25263 Performance optimisation of a sql query in folder activity tab
-- PB-25264 performance optimisation of sql query retrieving user profiles
-- PB-25199 As a user the UUIDs in the request's URL should be set to lower-cased before marshalling and persisting data
-- PB-25389 As an admin GET healthcheck/status.json should not be logged in the action_logs table
-- PB-25471 As a developer Crowdin should export only a selected subset of languages
-- PB-25734 As a user the first letter of first and last name should be upper-cased when a profile is saved
+- PB-24990 Performance optimisation of the cleanup command responsible to delete secrets without permissions
+- PB-25263 Performance optimisation of the entry point retrieving the folders activity logs
+- PB-25264 Performance optimisation of all the SQL queries retrieving user profiles
+- PB-25199 Lower case UUIDs given as requests parameters before marshalling and persisting data
+- PB-25389 As an administrator healthcheck/status.json requests should not be logged in the action_logs table
+- PB-25734 As a user I do not want the first letters of my first and last names upper-cased when my profile is saved
 
 ### Security
 - PB-25181 CSRF cookie should have secure flag set when site is served under HTTPs
 - PB-25798 Fixes laminas/laminas-diactoros vulnerability by using the longwave/laminas-diactoros package
 
 ### Fixed
-- PB-24931 As a user when I rename a tag with the same name, the tag should not be deleted
 - PB-25472 As a user I can use an SMTP server using NTLM authentication
-- PB-25475 As an admin running the healthcheck, I should be warned for self-signed and wildcard certs instead of having a failure
-- PB-25720 As an admin I should not see a false error in the healthcheck when reading the App.base config
+- PB-25475 As an administrator running the healthcheck, I should be warned for self-signed and wildcard certs instead of having a failure
+- PB-25720 As an administrator I should not see a false error in the healthcheck when reading the App.base config
 
 ### Maintenance
 - PB-21412 Upgrade phpstan to v1.10.15
@@ -39,6 +37,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-22052 Passbolt test data version bump to v4.1.0
 - PB-25379 Update vierge-noire/cakephp-fixture-factories package
 - PB-24575 As a developer release notes should be automatically published on Github on new tag release
+- PB-25471 As a developer Crowdin should export only a selected subset of languages
 - PB-25801 As a developer I can create unpublished test packages
 
 ## [4.1.2] - 2023-07-26
