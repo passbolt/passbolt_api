@@ -51,6 +51,7 @@ class ApplicationTest extends TestCase
         $middleware = $app->middleware($middleware);
 
         $middlewareClassesInOrder = [
+            UuidParserMiddleware::class,
             ContainerInjectorMiddleware::class,
             ContentSecurityPolicyMiddleware::class,
             ErrorHandlerMiddleware::class,
@@ -65,7 +66,6 @@ class ApplicationTest extends TestCase
             GpgAuthHeadersMiddleware::class,
             CsrfProtectionMiddleware::class,
             HttpProxyMiddleware::class,
-            UuidParserMiddleware::class,
         ];
 
         foreach ($middlewareClassesInOrder as $midClass) {

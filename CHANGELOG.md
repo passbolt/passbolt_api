@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.2.0-rc.2] - 2023-08-23
+### Fixed
+- PB-25964 As a user login with JWT authentication the verify-token in the challenge should not be lower cased
+
 ## [4.2.0-rc.1] - 2023-08-23
 ### Added
 - PB-24987 As an administrator I can define the password policies from the administration UI

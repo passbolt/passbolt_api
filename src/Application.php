@@ -106,7 +106,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new GpgAuthHeadersMiddleware())
             ->add($csrf)
             ->add(new HttpProxyMiddleware())
-            ->add(UuidParserMiddleware::class);
+            ->prepend(UuidParserMiddleware::class);
 
         /*
          * Additional security headers

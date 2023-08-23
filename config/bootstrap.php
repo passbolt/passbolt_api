@@ -30,20 +30,17 @@ require __DIR__ . DIRECTORY_SEPARATOR . 'paths.php';
  */
 require CORE_PATH . 'config' . DS . 'bootstrap.php';
 
-use App\Database\Type\LowerCaseUuidType;
 use App\Mailer\Transport\DebugTransport;
 use App\Mailer\Transport\SmtpTransport;
 use Cake\Cache\Cache;
 use Cake\Database\Type\JsonType;
 use Cake\Database\TypeFactory;
-use Cake\Error\ConsoleErrorHandler;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Database\Type\StringType;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorTrap;
 use Cake\Error\ExceptionTrap;
-use Cake\Http\ServerRequest;
 use Cake\I18n\FrozenTime;
 use Cake\Log\Log;
 use Cake\Mailer\Mailer;
@@ -213,8 +210,6 @@ FrozenTime::setJsonEncodeFormat("yyyy-MM-dd'T'HH':'mm':'ssxxx");
  * @see https://book.cakephp.org/4/en/orm/database-basics.html#adding-custom-types
  */
 TypeFactory::map('json', JsonType::class);
- // Lower case UUIDs prior to marshalling of persisting data
-TypeFactory::map('uuid', LowerCaseUuidType::class);
 // There is no time-specific type in Cake
 TypeFactory::map('time', StringType::class);
 
