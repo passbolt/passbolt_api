@@ -112,6 +112,15 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
 
+    public function testGroupsIndexFilterHasUsers_UpperCase(): void
+    {
+        $this->authenticateAs('ada');
+        $urlParameter = 'filter[has-users]=' . strtoupper(UuidFactory::uuid('user.id.irene'));
+        $this->getJson("/groups.json?$urlParameter&api-version=2");
+        $this->assertSuccess();
+        $this->assertCount(3, $this->_responseJsonBody);
+    }
+
     public function testGroupsIndexFilterHasManagersSuccess(): void
     {
         $this->authenticateAs('ada');

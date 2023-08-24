@@ -30,10 +30,9 @@ class EmailSenderException extends Exception
      */
     private $options;
 
-    /**.
-     *
-     * @param \App\Notification\Email\Email $email Email which failed to send
-     * @param array $options Options used to send the email
+    /**
+     * @param \App\Notification\Email\Email $email Email entity
+     * @param array $options Options.
      */
     public function __construct(Email $email, array $options)
     {
