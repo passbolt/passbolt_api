@@ -45,12 +45,13 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         $mappingRules = Configure::read('passbolt.plugins.directorySync.fieldsMapping');
 
         // userData without guid.
+        $dn = 'CN=john,OU=accounts,OU=passbolt,OU=local';
         $userData = [
             'objectGuid' => UuidFactory::uuid('ldap.user.id.john'),
             'givenName' => 'john',
             'sn' => 'doe',
             'mail' => 'john.doe@passbolt.com',
-            'dn' => 'CN=john,OU=accounts,OU=passbolt,OU=local',
+            'dn' => $dn,
             'directoryType' => DirectoryInterface::TYPE_AD,
             'whenCreated' => new \DateTime(),
             'whenChanged' => new \DateTime(),
@@ -64,10 +65,12 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         $DirectoryResults = new DirectoryResults($mappingRules);
         $DirectoryResults->initializeWithLdapResults($ldapUsers, $ldapGroups);
         $users = $DirectoryResults->getUsers();
-        $this->assertTrue(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']));
-        $this->assertTrue(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']->id));
-        $this->assertNotEmpty(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']->id));
-        $this->assertEquals($users['CN=john,OU=accounts,OU=passbolt,OU=local']->id, UuidFactory::uuid('ldap.user.id.john'));
+        $expectedDn = strtolower($dn);
+        $this->assertTrue(isset($users[$expectedDn]));
+        $expectedUserEntry = $users[$expectedDn];
+        $this->assertTrue(isset($expectedUserEntry->id));
+        $this->assertNotEmpty(isset($expectedUserEntry->id));
+        $this->assertEquals($expectedUserEntry->id, UuidFactory::uuid('ldap.user.id.john'));
     }
 
     /**
@@ -82,11 +85,12 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         Configure::load('Passbolt/DirectorySync.config', 'default', true);
         $mappingRules = Configure::read('passbolt.plugins.directorySync.fieldsMapping');
         // userData without guid.
+        $dn = 'CN=john,OU=accounts,OU=passbolt,OU=local';
         $userData = [
             'givenName' => 'john',
             'sn' => 'doe',
             'mail' => 'john.doe@passbolt.com',
-            'dn' => 'CN=john,OU=accounts,OU=passbolt,OU=local',
+            'dn' => $dn,
             'directoryType' => DirectoryInterface::TYPE_AD,
             'whenCreated' => new \DateTime(),
             'whenChanged' => new \DateTime(),
@@ -100,10 +104,12 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         $DirectoryResults = new DirectoryResults($mappingRules);
         $DirectoryResults->initializeWithLdapResults($ldapUsers, $ldapGroups);
         $users = $DirectoryResults->getUsers();
-        $this->assertTrue(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']));
-        $this->assertTrue(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']->id));
-        $this->assertNotEmpty(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']->id));
-        $this->assertEquals($users['CN=john,OU=accounts,OU=passbolt,OU=local']->id, UuidFactory::uuid('CN=john,OU=accounts,OU=passbolt,OU=local'));
+        $expectedDn = strtolower($dn);
+        $this->assertTrue(isset($users[$expectedDn]));
+        $userEntry = $users[$expectedDn];
+        $this->assertTrue(isset($userEntry->id));
+        $this->assertNotEmpty(isset($userEntry->id));
+        $this->assertEquals($userEntry->id, UuidFactory::uuid('CN=john,OU=accounts,OU=passbolt,OU=local'));
     }
 
     /**
@@ -119,12 +125,13 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         $mappingRules = Configure::read('passbolt.plugins.directorySync.fieldsMapping');
 
         // userData with no email, but a uid
+        $dn = 'CN=john,OU=accounts,OU=passbolt,OU=local';
         $userData = [
             'objectGuid' => UuidFactory::uuid('ldap.user.id.john'),
             'givenName' => 'john',
             'sn' => 'doe',
             'uid' => 'jdoe',
-            'dn' => 'CN=john,OU=accounts,OU=passbolt,OU=local',
+            'dn' => $dn,
             'directoryType' => DirectoryInterface::TYPE_AD,
             'whenCreated' => new \DateTime(),
             'whenChanged' => new \DateTime(),
@@ -149,10 +156,12 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationT
         $DirectoryResults = new DirectoryResults($mappingRules);
         $DirectoryResults->initializeWithLdapResults($ldapUsers, $ldapGroups);
         $users = $DirectoryResults->getUsers();
-        $this->assertTrue(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']));
-        $this->assertTrue(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']->user));
-        $this->assertTrue(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']->user['username']));
-        $this->assertNotEmpty(isset($users['CN=john,OU=accounts,OU=passbolt,OU=local']->user['username']));
-        $this->assertEquals($users['CN=john,OU=accounts,OU=passbolt,OU=local']->user['username'], 'jdoe@passbolt.com');
+        $expectedDn = strtolower($dn);
+        $this->assertTrue(isset($users[$expectedDn]));
+        $userEntry = $users[$expectedDn];
+        $this->assertTrue(isset($userEntry->user));
+        $this->assertTrue(isset($userEntry->user['username']));
+        $this->assertNotEmpty(isset($userEntry->user['username']));
+        $this->assertEquals($userEntry->user['username'], 'jdoe@passbolt.com');
     }
 }

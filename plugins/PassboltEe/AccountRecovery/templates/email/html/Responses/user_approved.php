@@ -23,15 +23,15 @@ $user = $body['user'];
 $admin = $body['admin'];
 $created = $body['created'];
 $authenticationToken = $body['authenticationToken'];
-
+$name = Purifier::clean($admin['profile']['first_name']) . ' ' . Purifier::clean($admin['profile']['last_name']);
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $created,
         'text' => __(
-            '{0}({1}) has approved your recovery request.',
-            Purifier::clean($admin['profile']['first_name']),
+            '{0} ({1}) has approved your recovery request.',
+            $name,
             Purifier::clean($admin['username']),
         )
     ])

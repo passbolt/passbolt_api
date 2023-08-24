@@ -256,8 +256,14 @@ trait MockDirectoryTrait
         $this->action->getDirectory()->setGroups($groups);
     }
 
-    protected function mockDirectoryUserData($fname = null, $lname = null, $username = null, $created = null, $modified = null)
-    {
+    protected function mockDirectoryUserData(
+        $fname = null,
+        $lname = null,
+        $username = null,
+        $created = null,
+        $modified = null,
+        $caseSensitive = true
+    ) {
         $fname = $fname ?? '';
         $lname = $lname ?? '';
         $username = $username ?? '';
@@ -268,7 +274,8 @@ trait MockDirectoryTrait
             $modified = '2018-07-09 03:56:42.000000';
         }
         $id = 'ldap.user.id.' . strtolower($fname);
-        $name = 'CN=' . ucfirst($fname) . ' ' . ucfirst($lname) . ',OU=PassboltUsers,DC=passbolt,DC=local';
+        $ou = $caseSensitive ? 'PassboltUsers' : 'passboltusers';
+        $name = 'CN=' . ucfirst($fname) . ' ' . ucfirst($lname) . ',OU=' . $ou . ',DC=passbolt,DC=local';
         $user = [
             'id' => UuidFactory::uuid($id),
             'directory_name' => $name,

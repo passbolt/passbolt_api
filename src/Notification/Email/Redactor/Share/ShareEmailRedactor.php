@@ -110,7 +110,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\User $recipient User to send email to
      * @param \App\Model\Entity\User $owner Owner
-     * @param Resource $resource Resource
+     * @param \App\Model\Entity\Resource $resource Resource
      * @param string   $secret Secret
      * @return \App\Notification\Email\Email
      */

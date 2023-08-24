@@ -171,7 +171,7 @@ class PermissionFactory extends CakephpBaseFactory
     /**
      * Define the aro as group
      *
-     * @param Resource|null $resource (optional) Resource to use as aco_foregin_key
+     * @param \App\Model\Entity\Resource|null $resource (optional) Resource to use as aco_foregin_key
      * @return PermissionFactory
      */
     public function acoResource(?Resource $resource = null): self

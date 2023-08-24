@@ -92,16 +92,4 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->assertResponseOk();
         $this->assertStringContainsString('A connection could not be established with the credentials provided. Please verify the settings.', $data);
     }
-
-    public function testWebInstallerDatabasePostError_DriverNotSupported()
-    {
-        // This breaks further test
-        // Sessions is carried over to next test...
-        $postData = $this->postData();
-        $postData['driver'] = 'invalid-driver';
-        $this->post('/install/database', $postData);
-        $data = $this->_getBodyAsString();
-        $this->assertResponseOk();
-        $this->assertStringContainsString('Could not find driver `invalid-driver` for connection `test`', $data);
-    }
 }

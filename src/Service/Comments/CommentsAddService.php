@@ -112,7 +112,7 @@ class CommentsAddService
     {
         // Build entity and perform basic check.
         /**
-         * @var \App\Model\Entity\Comment
+         * @var \App\Model\Entity\Comment $comment
          */
         $comment = $this->Comments->newEntity(
             [

@@ -114,7 +114,7 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\User $recipient User to notify
      * @param \App\Model\Entity\User $creator Creator of the comment
-     * @param Resource $resource Resource on which a comment was added
+     * @param \App\Model\Entity\Resource $resource Resource on which a comment was added
      * @param \App\Model\Entity\Comment $comment Comment added
      * @return \App\Notification\Email\Email
      */

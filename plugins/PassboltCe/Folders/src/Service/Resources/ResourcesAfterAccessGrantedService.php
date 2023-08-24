@@ -125,7 +125,7 @@ class ResourcesAfterAccessGrantedService
     /**
      * Find the group users not having access to the
      *
-     * @param Resource $resource The resource to search for
+     * @param \App\Model\Entity\Resource $resource The resource to search for
      * @param string $groupId The group identifier to search for
      * @return array<string> An array of user identifiers
      */

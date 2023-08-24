@@ -65,11 +65,9 @@ class DirectoryResults
     private $groups;
 
     /**
-     * Users
-     *
-     * @var array
+     * @var \Passbolt\DirectorySync\Utility\DirectoryEntry\UserCollection
      */
-    private $users;
+    public $userCollection;
 
     /**
      * Invalid users which will be ignored.
@@ -98,7 +96,7 @@ class DirectoryResults
         $this->directorySettings = $settings ?? DirectoryOrgSettings::get();
         $this->ldapUsers = [];
         $this->ldapGroups = [];
-        $this->users = [];
+        $this->userCollection = new UserCollection();
         $this->groups = [];
         $this->invalidUsers = [];
         $this->invalidGroups = [];
@@ -139,14 +137,14 @@ class DirectoryResults
      */
     public function initializeWithEntries(array $userEntries = [], array $groupEntries = [])
     {
-        $this->users = [];
+        $this->userCollection = new UserCollection();
         $this->groups = [];
 
         foreach ($userEntries as $userEntry) {
             if (is_array($userEntry)) {
                 $userEntry = UserEntry::fromArray($userEntry);
             }
-            $this->users[$userEntry->dn] = $userEntry;
+            $this->userCollection->add($userEntry->dn, $userEntry);
         }
 
         foreach ($groupEntries as $groupEntry) {
@@ -327,7 +325,7 @@ class DirectoryResults
     public function getInvalidUsers()
     {
         $invalidUsers = [];
-        foreach ($this->users as $user) {
+        foreach ($this->userCollection->getAll() as $user) {
             if ($user->hasErrors()) {
                 $invalidUsers[] = $user;
             }
@@ -345,7 +343,7 @@ class DirectoryResults
     private function _populateUsers(): void
     {
         foreach ($this->ldapUsers as $ldapUser) {
-            if (!isset($this->users[$ldapUser->getDn()])) {
+            if (!$this->userCollection->has($ldapUser->getDn())) {
                 /** @var string $directoryType */
                 $directoryType = $ldapUser->getFirstAttribute('directoryType');
                 $mappingRules = $this->mappingRules[$directoryType] ?? null;
@@ -356,7 +354,7 @@ class DirectoryResults
                 }
                 $userEntry = UserEntry::fromLdapObject($ldapUser, $mappingRules);
                 if (!empty($ldapUser->getDn())) {
-                    $this->users[$ldapUser->getDn()] = $userEntry;
+                    $this->userCollection->add($ldapUser->getDn(), $userEntry);
                 } else {
                     $this->invalidUsers[] = $userEntry;
                 }
@@ -413,11 +411,11 @@ class DirectoryResults
     public function getUsers(?bool $validOnly = false): array
     {
         if (!$validOnly) {
-            return $this->users;
+            return $this->userCollection->getAll();
         }
 
         $users = [];
-        foreach ($this->users as $key => $user) {
+        foreach ($this->userCollection->getAll() as $key => $user) {
             if (!$user->hasErrors()) {
                 $users[$key] = $user;
             }
@@ -455,7 +453,7 @@ class DirectoryResults
      */
     public function isEmpty(): bool
     {
-        return empty($this->users) && empty($this->groups);
+        return $this->userCollection->isEmpty() && empty($this->groups);
     }
 
     /**
@@ -477,7 +475,7 @@ class DirectoryResults
      */
     public function isUser(string $memberDN): bool
     {
-        return isset($this->users[$memberDN]);
+        return $this->userCollection->has($memberDN);
     }
 
     /**
@@ -500,7 +498,7 @@ class DirectoryResults
             if ($objectType === DirectoryInterface::ENTRY_TYPE_GROUP) {
                 $member = $this->groups[$memberDn];
             } else {
-                $member = $this->users[$memberDn];
+                $member = $this->userCollection->get($memberDn);
             }
             if (empty($membersList) || !in_array($member, $membersList)) {
                 $membersList[] = $member;
@@ -581,10 +579,14 @@ class DirectoryResults
             $allChildren = array_merge($allChildren, $group->group['users']);
         }
 
-        $rootUsers = array_diff(array_keys($this->users), $allChildren);
+        $allChildren = array_map(function ($value) {
+            return $this->userCollection->transformOffset($value);
+        }, $allChildren);
+
+        $rootUsers = array_diff(array_keys($this->userCollection->getAll()), $allChildren);
         $res = [];
         foreach ($rootUsers as $rootUser) {
-            $res[$rootUser] = $this->users[$rootUser];
+            $res[$rootUser] = $this->userCollection->get($rootUser);
         }
 
         return $res;
@@ -607,7 +609,7 @@ class DirectoryResults
             $groups[$groupDn] = $this->_getChildrenRecursive($groupObj);
         }
         foreach ($g['group']['users'] as $userDn) {
-            $users[$userDn] = $this->users[$userDn];
+            $users[$userDn] = $this->userCollection->get($userDn);
         }
 
         $g->group['groups'] = $groups;
@@ -716,7 +718,7 @@ class DirectoryResults
     {
         $users = [];
         foreach ($group['group']['users'] as $userDn) {
-            $users[$userDn] = $this->users[$userDn];
+            $users[$userDn] = $this->userCollection->get($userDn);
         }
 
         return $users;

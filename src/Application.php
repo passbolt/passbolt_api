@@ -28,6 +28,7 @@ use App\Middleware\HttpProxyMiddleware;
 use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
+use App\Middleware\UuidParserMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\EmailDigest\DigestRegister\GroupDigests;
@@ -98,6 +99,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
             ->add(new RoutingMiddleware($this))
             ->insertAfter(RoutingMiddleware::class, ApiVersionMiddleware::class)
+            ->insertAfter(RoutingMiddleware::class, UuidParserMiddleware::class)
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new BodyParserMiddleware())
             ->add(SessionAuthPreventDeletedUsersMiddleware::class)

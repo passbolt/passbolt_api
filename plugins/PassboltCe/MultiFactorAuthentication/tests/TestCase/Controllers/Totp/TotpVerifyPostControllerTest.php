@@ -55,6 +55,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         $redirect = '/foo';
         $user = $this->logInAsUser();
         [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
         $this->post('/mfa/verify/totp?redirect=' . $redirect, [
             'totp' => $otp->now(),
@@ -92,6 +93,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
     {
         $user = $this->logInAsUser();
         [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
         $sessionId = 'Foo';
         $this->mockSessionId($sessionId);
@@ -122,6 +124,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         $user = UserFactory::make()->user()->persist();
         $accessToken = $this->createJwtTokenAndSetInHeader($user->id);
         [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
+        /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
 
         $this->post('/mfa/verify/totp.json?api-version=v2', [
