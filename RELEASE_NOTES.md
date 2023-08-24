@@ -6,7 +6,7 @@ One of the highlights of this release is the first brick of grid  modernization.
 
 Additionally, users will be pleased to see the new resource count chips displayed in the breadcrumb, providing an intuitive way to keep track of filtered resources.
 
-Administrators are not left behind with this release as PostgreSQL is now officially supported from the installation process. Lastly, a few bugs with the command line healthcheck have been fixed and the feature is being prepared to be available in the UI soon.
+Administrators are not left behind with this release as a few bugs with the command line healthcheck have been fixed and the feature is being prepared to be available in the UI soon.
 
 Thank you for being a part of the community and for choosing passbolt.
 
