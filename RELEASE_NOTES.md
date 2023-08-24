@@ -2,11 +2,11 @@ Release song: https://youtu.be/fregObNcHC8
 
 Version 4.2 of the Community Edition introduces a number of enhancements and fixes to the passbolt experience.
 
-One of the highlights in this release is the first brick of the modernization of the grid. With it, you’re in control of what’s shown on your password grid, you can decide which columns you want to see as well as their position and size. This first version is part of a bigger improvement project which consists of making available the customization of the grid and its persistence with the next v4.3.0 release, and later to introduce new columns such as OTP, icon & tag.
+One of the highlights of this release is the first brick of grid  modernization. With it, you’re in control of what’s shown on the password grid. You can decide which columns you want to see, as well as their position and size. This first version is part of a larger improvement project. The aim is to make customization of the grid available and persistent with the next v4.3.0 release, and to later introduce new columns such as OTP, Icon & Tag.
 
-Additionally users will be pleased to see the new resources count chips displayed in the breadcrumb, this will provide an intuitive way to keep tabs on the filtered resources.
+Additionally, users will be pleased to see the new resource count chips displayed in the breadcrumb, providing an intuitive way to keep track of filtered resources.
 
-Administrators are not left behind with this release as PostgreSQL is now officially supported from the installation process. Few bugs on the command line healthcheck were fixed and the feature is getting prepared to be soon available in the UI.
+Administrators are not left behind with this release as a few bugs with the command line healthcheck have been fixed and the feature is being prepared to be available in the UI soon.
 
 Thank you for being a part of the community and for choosing passbolt.
 
