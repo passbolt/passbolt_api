@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Middleware;
 
+use App\Database\Type\LowerCaseUuidType;
+use Cake\Database\TypeFactory;
 use Cake\Http\ServerRequest;
 use Cake\Validation\Validation;
 use Psr\Http\Message\ResponseInterface;
@@ -25,6 +27,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class UuidParserMiddleware implements MiddlewareInterface
 {
+    public const WHITE_LISTED_URLS = [
+        '/auth/jwt/login.json',
+    ];
+
     private ServerRequest $request;
 
     /**
@@ -41,6 +47,7 @@ class UuidParserMiddleware implements MiddlewareInterface
         $this->request = $request;
         $this->lowerCaseUuidInPass();
         $this->lowerCaseUuidInQuery();
+        $this->mapUuidType();
 
         return $handler->handle($this->request);
     }
@@ -98,5 +105,36 @@ class UuidParserMiddleware implements MiddlewareInterface
         }
 
         $this->request = $this->request->withParam($param, $paramsInRequest);
+    }
+
+    /**
+     * Set uuid type to lower case
+     *
+     * @return void
+     */
+    protected function mapUuidType(): void
+    {
+        if ($this->isRouteWhiteListed()) {
+            return;
+        }
+
+        // Lower case UUIDs prior to marshalling of persisting data
+        TypeFactory::map('uuid', LowerCaseUuidType::class);
+    }
+
+    /**
+     * Checks if the request needs UUIDs to be lower cased
+     *
+     * @return bool
+     */
+    protected function isRouteWhiteListed(): bool
+    {
+        foreach (self::WHITE_LISTED_URLS as $path) {
+            if (substr($this->request->getUri()->getPath(), 0, strlen($path)) === $path) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
