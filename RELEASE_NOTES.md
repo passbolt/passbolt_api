@@ -12,7 +12,7 @@ Administrators are not left behind with this release as a few bugs with the comm
 
 Thank you for choosing passbolt, these improvements wouldn’t be possible without your continued support.
 
-## [4.2.0-rc.2] - 2023-08-23
+## [4.2.0] - 2023-08-24
 ### Added
 - PB-24987 As an administrator I can define the password policies from the administration UI
 - PB-25462 As an administrator I can deactivate RBACs with a feature flag
