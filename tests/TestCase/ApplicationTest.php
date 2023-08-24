@@ -51,13 +51,13 @@ class ApplicationTest extends TestCase
         $middleware = $app->middleware($middleware);
 
         $middlewareClassesInOrder = [
-            UuidParserMiddleware::class,
             ContainerInjectorMiddleware::class,
             ContentSecurityPolicyMiddleware::class,
             ErrorHandlerMiddleware::class,
             SslForceMiddleware::class,
             AssetMiddleware::class,
             RoutingMiddleware::class,
+            UuidParserMiddleware::class,
             ApiVersionMiddleware::class,
             SessionPreventExtensionMiddleware::class,
             BodyParserMiddleware::class,
