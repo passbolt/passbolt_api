@@ -1660,7 +1660,8 @@ PB-16161 Refactor to split folder, resource and user related logic in respective
 - AP: User with plugin installed
 - AD: Admin
 
-[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v4.1.3...HEAD
+[Unreleased]: https://github.com/passbolt/passbolt_api/compare/v4.2.0...HEAD
+[4.2.0]: https://github.com/passbolt/passbolt_api/compare/v4.1.3...v4.2.0
 [4.1.3]: https://github.com/passbolt/passbolt_api/compare/v4.1.1...v4.1.3
 [4.1.1]: https://github.com/passbolt/passbolt_api/compare/v4.1.0...v4.1.1
 [4.1.0]: https://github.com/passbolt/passbolt_api/compare/v4.0.2...v4.1.0
