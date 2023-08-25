@@ -70,9 +70,7 @@ class TagsTable extends Table
             'through' => 'ResourcesTags',
         ]);
 
-        $this->hasMany('ResourcesTags', [
-            'className' => 'Passbolt/Tags.ResourcesTags',
-        ]);
+        $this->hasMany('ResourcesTags');
     }
 
     /**
