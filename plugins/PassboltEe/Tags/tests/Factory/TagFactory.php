@@ -65,15 +65,12 @@ class TagFactory extends CakephpBaseFactory
      */
     public function isPersonalFor(Resource $resource, User $user)
     {
-        $this->with(
+        return $this->with(
             'ResourcesTags',
-            ResourcesTagFactory::make([
-                'resource_id' => $resource->id,
-                'user_id' => $user->id,
-            ])
+            ResourcesTagFactory::make()
+                ->with('Resources', $resource)
+                ->with('Users', $user)
         );
-
-        return $this;
     }
 
     /**
@@ -84,13 +81,9 @@ class TagFactory extends CakephpBaseFactory
      */
     public function isSharedFor(Resource $resource)
     {
-        $this->with(
+        return $this->with(
             'ResourcesTags',
-            ResourcesTagFactory::make([
-                'resource_id' => $resource->id,
-            ])
+            ResourcesTagFactory::make()->with('Resources', $resource)
         )->isShared();
-
-        return $this;
     }
 }
