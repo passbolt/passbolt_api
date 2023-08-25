@@ -26,6 +26,7 @@ use App\Middleware\HttpProxyMiddleware;
 use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
+use App\Middleware\UuidParserMiddleware;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\Middleware\BodyParserMiddleware;
@@ -56,6 +57,7 @@ class ApplicationTest extends TestCase
             SslForceMiddleware::class,
             AssetMiddleware::class,
             RoutingMiddleware::class,
+            UuidParserMiddleware::class,
             ApiVersionMiddleware::class,
             SessionPreventExtensionMiddleware::class,
             BodyParserMiddleware::class,

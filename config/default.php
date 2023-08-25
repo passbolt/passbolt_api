@@ -210,6 +210,9 @@ return [
 
         // Which plugins are enabled
         'plugins' => [
+            'rbacs' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_RBACS_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
             'export' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_EXPORT_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
@@ -251,6 +254,9 @@ return [
             ],
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'passwordPolicies' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 

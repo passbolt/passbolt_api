@@ -63,7 +63,7 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
     /**
      * Validates
      *
-     * @param Resource $resource resource
+     * @param \App\Model\Entity\Resource $resource resource
      * @return void
      */
     private function canValidate(Resource $resource)
