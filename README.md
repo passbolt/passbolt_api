@@ -6,7 +6,7 @@
 <br>
 <br>
 
-The open source password manager for teams. 
+The open source password manager for teams.
 
 [![License](https://img.shields.io/github/license/passbolt/passbolt)](LICENSE.txt)
 [![PHPStan Enabled](https://img.shields.io/badge/PHPStan-level%206-brightgreen.svg?style=flat)](https://github.com/phpstan/phpstan)
@@ -16,15 +16,16 @@ The open source password manager for teams.
 <details open="open">
 <summary>Table of Contents</summary>
 
-- [Introduction](#introducing-passbolt)
+- [Introducing Passbolt](#introducing-passbolt)
 - [Get Started](#get-started)
-  - [Available Clients & Apps](#available-clients-and-apps) 
-  - [Mobile Apps](#mobile-apps)
+  - [Run it on your own server, natively](#run-it-on-your-own-server-natively)
+- [Available Clients & Apps](#available-clients-and-apps)
   - [Browser Extensions](#browser-extensions)
+  - [Mobile Apps](#mobile-apps)
   - [CLI](#cli)
   - [Desktop App](#desktop-app)
 - [Contributing](#contributing)
-- [Reporting An Issue](#reporting-a-security-issue)
+- [Reporting a security issue](#reporting-a-security-issue)
 - [License](#license)
 
 </details>
@@ -39,9 +40,9 @@ The open source password manager for teams.
 Passbolt is a security-first, open source password manager for teams. It helps organizations centralize, organize and share passwords and secrets securely.
 
 What makes passbolt different?
-- **Security:** Passbolt security model features user-owned secret keys and end-to-end encryption. It is audited multiple times annually.
-- **Collaboration:** Securely share and audit credentials, with powerful and dependable policies for power users. 
-- **Privacy:** Passbolt is headquartered in the EU,:european_union: specifically in Luxembourg. Passbolt doesn't collect personal data or telemetry. 
+- **Security:** Passbolt security model features user-owned secret keys and end-to-end encryption. It is audited multiple times annually, and [findings](https://help.passbolt.com/faq/security/code-review) are made public.
+- **Collaboration:** Securely share and audit credentials, with powerful and dependable policies for power users.
+- **Privacy:** Passbolt is headquartered in the EU,:european_union: specifically in Luxembourg. Passbolt doesn't collect personal data or telemetry, and can be deployed in an air-gapped environment.
 
 <br>
 
@@ -59,7 +60,7 @@ What makes passbolt different?
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/passbolt/passbolt-links/blob/main/assets/readme/passbolt-pro-cta-light.png">
   <source media="(prefers-color-scheme: light)" srcset="https://github.com/passbolt/passbolt-links/blob/main/assets/readme/passbolt-pro-cta-dark.png">
-  <img alt="passbolt community edition CTA" src="https://github.com/passbolt/passbolt-links/blob/main/assets/readme/passbolt-pro-cta-dark.png">
+  <img alt="passbolt PRO edition CTA" src="https://github.com/passbolt/passbolt-links/blob/main/assets/readme/passbolt-pro-cta-dark.png">
 </picture>
 </a>
 &nbsp; &nbsp;
@@ -67,14 +68,12 @@ What makes passbolt different?
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://github.com/passbolt/passbolt-links/blob/main/assets/readme/passbolt-cloud-cta-light.png">
   <source media="(prefers-color-scheme: light)" srcset="https://github.com/passbolt/passbolt-links/blob/main/assets/readme/passbolt-cloud-cta-dark.png">
-  <img alt="passbolt community edition CTA" src="https://github.com/passbolt/passbolt-links/blob/main/assets/readme/passbolt-cloud-cta-dark.png">
+  <img alt="passbolt Cloud edition CTA" src="https://github.com/passbolt/passbolt-links/blob/main/assets/readme/passbolt-cloud-cta-dark.png">
 </picture>
 </a>
 <br>
 
-### Available Clients And Apps
-
-<br>
+### Run it on your own server, natively
 
 |[![Install passbolt on Docker](https://github.com/passbolt/passbolt-links/blob/main/assets/readme/docker-icon.svg)](https://www.passbolt.com/ce/docker) | [![Install passbolt on Kubernetes](https://github.com/passbolt/passbolt-links/blob/main/assets/readme/kubernetes-icon.svg)](https://www.passbolt.com/ce/kubernetes) | [![Install passbolt on Ubuntu](https://github.com/passbolt/passbolt-links/blob/main/assets/readme/ubuntu-icon.svg)](https://www.passbolt.com/ce/ubuntu) |[![Install passbolt on Debian](https://github.com/passbolt/passbolt-links/blob/main/assets/readme/debian-icon.svg)](https://www.passbolt.com/ce/debian) | [![Install passbolt on RedHat](https://github.com/passbolt/passbolt-links/blob/main/assets/readme/Redhat-icon.svg)](https://www.passbolt.com/ce/redhat) | [![Install passbolt on Raspberry Pi](https://github.com/passbolt/passbolt-links/blob/main/assets/readme/raspberry-pi-icon.svg)](https://www.passbolt.com/ce/raspberry)  | [![Install passbolt on RockyLinux](https://github.com/passbolt/passbolt-links/blob/main/assets/readme/rockylinux-icon.svg)](https://www.passbolt.com/ce/rockylinux) |
 |:--:|:--:|:--:|:--:|:--:|:--:|:--:|
@@ -82,50 +81,45 @@ What makes passbolt different?
 
 <br>
 
+## Available Clients And Apps
+
+### Browser Extensions
+
+- [Chrome](https://chrome.google.com/webstore/detail/passbolt-open-source-pass/didegimhafipceonhjepacocaffmoppf) - Brave, Opera, Vivaldi, & other Chromium browsers
+- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/passbolt/)
+- [Edge](https://microsoftedge.microsoft.com/addons/detail/passbolt-open-source-pa/ljeppgjhohmhpbdhjjjbiflabdgfkhpo)
 
 ### Mobile Apps
 
 - [App Store](https://apps.apple.com/nz/app/passbolt-password-manager/id1569629432)
 - [Google Play Store](https://play.google.com/store/apps/details?id=com.passbolt.mobile.android)
 
-<br>
-
-### Browser Extensions
-
-- [Chrome](https://chrome.google.com/webstore/detail/passbolt-open-source-pass/didegimhafipceonhjepacocaffmoppf)  - Brave, Opera, Vivaldi, & other Chromium browsers
-- [Firefox](https://addons.mozilla.org/en-US/firefox/addon/passbolt/)
-- [Edge](https://microsoftedge.microsoft.com/addons/detail/passbolt-open-source-pa/ljeppgjhohmhpbdhjjjbiflabdgfkhpo)
-
-<br>
-
 ### CLI
 
 Install passbolt CLI tool: [go-passbolt-CLI](https://github.com/passbolt/go-passbolt-cli)
 
-<br>
-
-### Desktop App 
+### Desktop App
 Coming soon [see the pre-alpha version here](https://github.com/passbolt/passbolt-windows).
 
 <br>
 
 # Contributing
 
-Contributing to passbolt with code starts by reading [Contributing.md](https://github.com/passbolt/passbolt_api/blob/master/CONTRIBUTING.md). Join the [community forum](https://community.passbolt.com) to join discussions about feature requests, translations, development, and more. 
+Contributing to passbolt with code starts by reading [Contributing.md](https://github.com/passbolt/passbolt_api/blob/master/CONTRIBUTING.md). Join the [community forum](https://community.passbolt.com) to join discussions about feature requests, translations, development, and more.
 
 <br>
 
 # Reporting a security issue
 
-If you've found a security-related issue with passbolt, please email [security@passbolt.com](mailto:security@passbolt.com). Submitting to GitHub makes the vulnerability public, making it easy to exploit. We'll do a public disclosure of the security issue once it's been fixed. 
+If you've found a security-related issue with passbolt, please email [security@passbolt.com](mailto:security@passbolt.com). Submitting to GitHub makes the vulnerability public, making it easy to exploit. We'll do a public disclosure of the security issue once it's been fixed.
 
-After receiving a report, passbolt will take the following steps: 
+After receiving a report, passbolt will take the following steps:
 
 - Confirmation that the issue has been received and that it's in the process of being addressed.
 - Attempt to reproduce the problem and confirm the vulnerability.
-- Prepare a patch/fix and associated automated tests. 
+- Prepare a patch/fix and associated automated tests.
 - Release a new version of all the affected versions.
-- Prominently announce the problem in the release notes. 
+- Prominently announce the problem in the release notes.
 - If requested, give credit to the reporter.
 
 <br>
