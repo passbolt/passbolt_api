@@ -64,7 +64,9 @@ class AccountRecoveryRequestsGetControllerTest extends AccountRecoveryIntegratio
             $name = $user->profile->first_name . ' ' . $user->profile->last_name;
             $this->assertEmailInBatchContains(
                 "An account recovery request was attempted from a user with client IP $clientIp for $name.",
-                $admin->username
+                $admin->username,
+                '',
+                true
             );
             $this->assertEmailInBatchContains('The request could not be found in the database.', $admin->username);
         }

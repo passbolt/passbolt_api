@@ -100,7 +100,9 @@ class AccountRecoveryRequestsCreateControllerTest extends AccountRecoveryIntegra
             $name = $user->profile->first_name . ' ' . $user->profile->last_name;
             $this->assertEmailInBatchContains(
                 $name . ' has initiated an account recovery request',
-                $admin->username
+                $admin->username,
+                '',
+                true
             );
             $this->assertEmailInBatchContains(
                 Router::url('/app/account-recovery/requests/review/' . $request->get('id'), true),

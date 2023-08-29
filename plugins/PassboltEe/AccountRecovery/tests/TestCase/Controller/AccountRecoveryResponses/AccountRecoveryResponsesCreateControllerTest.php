@@ -104,7 +104,9 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
         $name = $admin->profile->first_name . ' ' . $admin->profile->last_name;
         $this->assertEmailInBatchContains(
             "$name ($admin->username) has approved your recovery request.",
-            $user->username
+            $user->username,
+            '',
+            true
         );
 
         $this->assertAdminEmails($status, $user, $admin, $admins);
@@ -143,7 +145,9 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
         $name = $admin->profile->first_name . ' ' . $admin->profile->last_name;
         $this->assertEmailInBatchContains(
             "$name ($admin->username) has denied your recovery request.",
-            $user->username
+            $user->username,
+            '',
+            true
         );
 
         $this->assertAdminEmails($status, $user, $admin, $admins);
@@ -159,7 +163,9 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
         $userName = $user->profile->first_name . ' ' . $user->profile->last_name;
         $this->assertEmailInBatchContains(
             "You have set the status of the account recovery request initiated by $userName ({$user->username}) to {$status}.",
-            $admin->username
+            $admin->username,
+            '',
+            true
         );
 
         // Assess the mail sent to the other admins
@@ -167,11 +173,15 @@ class AccountRecoveryResponsesCreateControllerTest extends AccountRecoveryIntegr
             $adminName = $admin->profile->first_name . ' ' . $admin->profile->last_name;
             $this->assertEmailInBatchContains(
                 "$adminName ({$admin->username}) has updated a recovery request to {$status}.",
-                $adm->username
+                $adm->username,
+                '',
+                true
             );
             $this->assertEmailInBatchContains(
                 "$adminName ({$admin->username}) has set the status of the request initiated by $userName ({$user->username}) to {$status}.",
-                $adm->username
+                $adm->username,
+                '',
+                true
             );
         }
     }
