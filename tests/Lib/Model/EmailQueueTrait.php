@@ -143,9 +143,17 @@ trait EmailQueueTrait
      * @param string $string String to search for
      * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
+     * @param bool $htmlSpecialChar Convert string to html special characters (useful when searching names)
      */
-    protected function assertEmailInBatchContains(string $string, $i = 0, string $message = ''): void
-    {
+    protected function assertEmailInBatchContains(
+        string $string,
+        $i = 0,
+        string $message = '',
+        bool $htmlSpecialChar = false
+    ): void {
+        if ($htmlSpecialChar) {
+            $string = htmlspecialchars($string);
+        }
         $this->assertStringContainsString($string, $this->renderEmail($i), $message);
     }
 
@@ -155,9 +163,17 @@ trait EmailQueueTrait
      * @param string $string String to search for
      * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
+     * @param bool $htmlSpecialChar Convert string to html special characters (useful when searching names)
      */
-    protected function assertEmailInBatchNotContains(string $string, $i = 0, string $message = ''): void
-    {
+    protected function assertEmailInBatchNotContains(
+        string $string,
+        $i = 0,
+        string $message = '',
+        bool $htmlSpecialChar = false
+    ): void {
+        if ($htmlSpecialChar) {
+            $string = htmlspecialchars($string);
+        }
         $this->assertStringNotContainsString($string, $this->renderEmail($i), $message);
     }
 
