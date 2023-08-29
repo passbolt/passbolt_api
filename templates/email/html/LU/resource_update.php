@@ -20,6 +20,7 @@ if (PHP_SAPI === 'cli') {
 }
 $user = $body['user'];
 $resource = $body['resource'];
+$armoredSecret = $body['armoredSecret'];
 $showUsername = $body['showUsername'];
 $showUri = $body['showUri'];
 $showDescription = $body['showDescription'];
@@ -48,10 +49,8 @@ if ($showDescription && isset($resource['description'])) {
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
-if ($showSecret && isset($resource['secrets'][0]['data'])) {
-    echo $this->element('Email/module/code', [
-        'text' => $resource['secrets'][0]['data']
-    ]);
+if ($showSecret && $armoredSecret !== null) {
+    echo $this->element('Email/module/code', ['text' => $armoredSecret]);
 }
 echo $this->element('Email/module/button', [
     'url' => Router::url("/app/passwords/view/{$resource['id']}", true),
