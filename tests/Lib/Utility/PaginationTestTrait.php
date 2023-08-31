@@ -44,7 +44,7 @@ trait PaginationTestTrait
     {
         $data = [];
         foreach ($this->getRandomArray($n) as $randomValue) {
-            $data[] = [$field => Chronos::now()->subMonth($randomValue)];
+            $data[] = [$field => Chronos::now()->subMonths($randomValue)];
         }
 
         return $data;

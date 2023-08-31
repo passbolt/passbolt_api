@@ -55,8 +55,8 @@ class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
             return [
                 'created_by' => UuidFactory::uuid(),
                 'modified_by' => UuidFactory::uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
                 'deleted' => null,
             ];
         });

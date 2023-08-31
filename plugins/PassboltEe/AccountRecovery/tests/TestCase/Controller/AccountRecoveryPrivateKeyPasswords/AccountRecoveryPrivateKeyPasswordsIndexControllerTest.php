@@ -68,7 +68,7 @@ class AccountRecoveryPrivateKeyPasswordsIndexControllerTest extends AccountRecov
         // Check sort order
         $d1 = new Chronos($r1->modified);
         $d2 = new Chronos($this->_responseJsonBody[1]->modified);
-        $this->assertTrue($d1->gt($d2));
+        $this->assertTrue($d1->greaterThan($d2));
     }
 
     public function testAccountRecoveryPrivateKeyPasswordsIndexController_ErrorForbidden()

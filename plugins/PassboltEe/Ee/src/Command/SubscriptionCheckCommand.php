@@ -19,7 +19,7 @@ namespace Passbolt\Ee\Command;
 use App\Command\PassboltCommand;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
-use Cake\Chronos\Date;
+use Cake\Chronos\ChronosDate;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -153,18 +153,18 @@ class SubscriptionCheckCommand extends PassboltCommand
 
         // Created date output.
         if (isset($data['created'])) {
-            $date = Date::createFromTimestamp(strtotime($data['created']));
+            $date = ChronosDate::parse($data['created']);
             $io->out(__("Valid from:\t<info>{0}</info>", $date->toFormattedDateString()));
         }
 
         // Expiry date output.
         if (isset($data['expiry'])) {
-            $date = Date::createFromTimestamp(strtotime($data['expiry']));
-            $expired = $date->lt(new Date());
+            $date = ChronosDate::parse($data['expiry']);
+            $expired = $date->lessThan(new ChronosDate());
             if ($expired) {
                 $io->out(__("Expires on:\t<error>{0} (expired)</error>", $date->toFormattedDateString()));
             } else {
-                $diffDays = $date->diffInDays(new Date());
+                $diffDays = $date->diffInDays(new ChronosDate());
                 $msg = __("Expires on:\t<info>{0} (in {1} days)</info>", $date->toFormattedDateString(), $diffDays);
                 $io->out($msg);
             }

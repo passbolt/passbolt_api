@@ -162,6 +162,7 @@ trait FormatValidationTrait
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
                 $formData = Hash::insert($formData, $fieldName, $testCaseData);
                 $formData = $this->_adjustEntityData($fieldName, $formData);
+                /** @var \Cake\Form\Form $form */
                 $form = new $FormClass($this->getEventManager());
                 $validate = $form->validate($formData);
 

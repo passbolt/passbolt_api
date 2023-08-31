@@ -58,8 +58,8 @@ class AccountRecoveryPrivateKeyFactory extends CakephpBaseFactory
                 'data' => file_get_contents($file),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }
