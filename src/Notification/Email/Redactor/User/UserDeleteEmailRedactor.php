@@ -118,7 +118,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         );
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             ['body' => ['user' => $user, 'groups' => $groups, 'admin' => $deletedBy], 'title' => $subject],
             'GM/user_delete'

@@ -115,7 +115,7 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
             }
         );
         $email = new Email(
-            $user->username,
+            $user,
             $subject,
             [
                 'body' => [
@@ -156,7 +156,7 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
                 }
             );
             $email = new Email(
-                $admin->username,
+                $admin,
                 $subject,
                 [
                     'body' => [

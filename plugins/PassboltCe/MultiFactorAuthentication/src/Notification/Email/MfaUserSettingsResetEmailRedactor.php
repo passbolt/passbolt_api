@@ -87,7 +87,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
         );
 
         return new Email(
-            $user->username,
+            $user,
             $subject,
             [
                 'title' => $title,
@@ -120,7 +120,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
         );
 
         return new Email(
-            $user->username,
+            $user,
             $subject,
             [
                 'title' => $title,
