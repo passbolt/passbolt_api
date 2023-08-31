@@ -50,7 +50,7 @@ $text = __(
     ucfirst($ssoSetting['provider']),
     Purifier::clean($operator['profile']['first_name'])
 );
-$text .= __('All users can now use the Single Sign-on to perform authentication.');
+$text .= __('All users can now use Single Sign-on to perform authentication.');
 
 echo $this->element('Email/module/text', [
     'text' => $text,

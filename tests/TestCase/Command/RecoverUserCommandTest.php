@@ -21,6 +21,8 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
+use Cake\I18n\FrozenDate;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -56,14 +58,17 @@ class RecoverUserCommandTest extends TestCase
     public function testRecoverUserCommand_Fetch_On_Active_User()
     {
         $user = UserFactory::make()->user()->active()->persist();
-        $token = AuthenticationTokenFactory::make()
+        $expirationDate = Configure::read('passbolt.auth.token.' . AuthenticationToken::TYPE_RECOVER . '.expiry');
+        $activeNonExpiredToken = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
-            ->active()->persist();
+            ->active()
+            ->created(FrozenDate::parse('tomorrow - ' . $expirationDate))
+            ->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
         $this->assertExitSuccess();
         $this->assertOutputContains(
-            Router::url('/setup/recover/start/' . $user->id . '/' . $token['token'], true)
+            Router::url('/setup/recover/start/' . $user->id . '/' . $activeNonExpiredToken['token'], true)
         );
         $this->assertSame(1, AuthenticationTokenFactory::count());
     }
@@ -72,7 +77,7 @@ class RecoverUserCommandTest extends TestCase
     {
         $user = UserFactory::make()->user()->active()->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
-        $this->assertExitError();
+        $this->assertExitError("An active recovery token could not be found for the user {$user->username}.");
         $this->assertSame(0, AuthenticationTokenFactory::count());
     }
 
@@ -92,6 +97,20 @@ class RecoverUserCommandTest extends TestCase
     {
         $user = UserFactory::make()->inactive()->user()->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
-        $this->assertExitError();
+        $this->assertExitError("The user {$user->username} is not active.");
+    }
+
+    public function testRecoverUserCommand_On_Expired_Token()
+    {
+        $user = UserFactory::make()->user()->active()->persist();
+        AuthenticationTokenFactory::make()
+            ->type(AuthenticationToken::TYPE_RECOVER)
+            ->userId($user->id)
+            ->active()
+            ->created(FrozenDate::now()->subDays(100))
+            ->persist();
+        $this->exec('passbolt recover_user -u ' . $user->username);
+        $this->assertExitError("An active recovery token could not be found for the user {$user->username}.");
+        $this->assertOutputContains('You may create one using the option --create.');
     }
 }
