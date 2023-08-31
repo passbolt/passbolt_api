@@ -97,6 +97,6 @@ class SetupRecoverAbortAdminEmailRedactor implements SubscribedEmailRedactorInte
 
         $data = ['body' => ['user' => $user], 'title' => $subject];
 
-        return new Email($admin->username, $subject, $data, self::TEMPLATE);
+        return new Email($admin, $subject, $data, self::TEMPLATE);
     }
 }

@@ -103,7 +103,7 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
         $user = $UsersTable->findFirstForEmail($user->id);
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $this->getSubject($recipient, $user),
             [
                 'body' => compact('user', 'recipient'),

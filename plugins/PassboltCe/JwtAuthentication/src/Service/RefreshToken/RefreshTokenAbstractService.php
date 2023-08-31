@@ -168,7 +168,7 @@ abstract class RefreshTokenAbstractService
         $user = $refreshToken->user;
         if ($user->isDeleted()) {
             throw new UserDeletedException();
-        } elseif (!$user->isActived()) {
+        } elseif (!$user->isActive()) {
             throw new UserDeactivatedException();
         } elseif ($user->isDisabled()) {
             throw new UserDeactivatedException();

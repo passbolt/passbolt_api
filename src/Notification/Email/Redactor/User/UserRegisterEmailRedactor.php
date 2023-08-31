@@ -98,7 +98,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
         ]);
 
         return new Email(
-            $user->username,
+            $user,
             $this->getSubject($user),
             [
                 'body' => [

@@ -136,7 +136,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         }
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => compact('recipient', 'modifier', 'info', 'status', 'subject'),

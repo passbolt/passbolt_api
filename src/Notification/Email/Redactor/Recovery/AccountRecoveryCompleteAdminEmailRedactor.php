@@ -100,6 +100,6 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
 
         $data = ['body' => compact('admin', 'user', 'clientIp', 'userAgent'), 'title' => $subject];
 
-        return new Email($admin->username, $subject, $data, self::TEMPLATE);
+        return new Email($admin, $subject, $data, self::TEMPLATE);
     }
 }

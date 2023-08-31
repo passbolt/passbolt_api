@@ -152,7 +152,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         );
 
         return new Email(
-            $admin->username,
+            $admin,
             $subject,
             [
                 'title' => $subject,

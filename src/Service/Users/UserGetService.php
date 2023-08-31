@@ -86,7 +86,7 @@ class UserGetService
     public function getNotActiveNotDeletedNotDisabledOrFail(string $userId): User
     {
         $userEntity = $this->getOrFail($userId);
-        if ($userEntity->isActived()) {
+        if ($userEntity->isActive()) {
             throw new BadRequestException(__('The user does not exist or is already active or is disabled.'));
         }
         if ($userEntity->isDeleted()) {
@@ -114,7 +114,7 @@ class UserGetService
         $msg = __('The user does not exist or is not active or is disabled.');
 
         // Keep cases separate for debug trace purposes
-        if (!$userEntity->isActived()) {
+        if (!$userEntity->isActive()) {
             throw new BadRequestException($msg);
         }
         if ($userEntity->isDeleted()) {

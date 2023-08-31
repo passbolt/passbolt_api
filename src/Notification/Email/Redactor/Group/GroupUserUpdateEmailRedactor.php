@@ -144,6 +144,6 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         );
         $data = ['body' => ['admin' => $modifiedBy, 'group' => $group, 'isAdmin' => $isAdmin], 'title' => $subject];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

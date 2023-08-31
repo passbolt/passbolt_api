@@ -97,7 +97,7 @@ class SelfRegistrationUserEmailRedactor implements SubscribedEmailRedactorInterf
         $user = $UsersTable->findFirstForEmail($user->id);
 
         return new Email(
-            $user->username,
+            $user,
             $this->getSubject($user),
             [
                 'body' => [

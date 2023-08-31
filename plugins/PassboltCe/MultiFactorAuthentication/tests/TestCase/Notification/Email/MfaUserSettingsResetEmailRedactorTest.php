@@ -54,7 +54,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
     public function testThatEmailUseAdminDeleteTemplateWhenUserIsAdmin()
     {
         $adminUser = UserFactory::make()->admin()->persist();
-        $user = UserFactory::make()->user()->persist();
+        $user = UserFactory::make()->user()->willDisable()->persist();
         $user->set('locale', 'Foo');
         $uac = new UserAccessControl('admin', $adminUser->id, 'ada@passbolt.com');
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
@@ -81,6 +81,7 @@ class MfaUserSettingsResetEmailRedactorTest extends TestCase
         $user->username = 'ada@passbolt.com';
         $user->id = $userId;
         $user->locale = 'Foo';
+        $user->disabled = null;
         $uac = new UserAccessControl('admin', $userId, 'ada@passbolt.com');
         $event = new Event(MfaUserSettingsDeleteController::MFA_USER_ACCOUNT_SETTINGS_DELETE_EVENT);
         $event->setData([
