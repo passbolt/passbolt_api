@@ -77,12 +77,7 @@ class AccountRecoveryOrganizationPoliciesSetControllerTest extends AccountRecove
             if ($admin->id === $user->id) {
                 $this->assertEmailInBatchContains("You have set the account recovery organization policy to $policyValue.", $admin->username);
             } else {
-                $this->assertEmailInBatchContains(
-                    $user->profile->first_name . " has set the account recovery organization policy to $policyValue.",
-                    $admin->username,
-                    '',
-                    true
-                );
+                $this->assertEmailInBatchContains($user->profile->first_name . " has set the account recovery organization policy to $policyValue.", $admin->username);
             }
             $this->assertEmailInBatchContains("The fingerprint of the organization public key is $keyData->fingerprint.", $admin->username);
         }
