@@ -26,7 +26,7 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
 class AuthenticationTokenTest extends TestCase
 {
-    public function dataProviderForSessionId()
+    public function dataProviderForSessionId(): array
     {
         return [
             [[AuthenticationToken::SESSION_ID_KEY => 'Foo'], 'Foo',],

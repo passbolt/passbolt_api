@@ -54,7 +54,7 @@ class SecretAccessFactory extends CakephpBaseFactory
                 'user_id' => $faker->uuid(),
                 'resource_id' => $faker->uuid(),
                 'secret_id' => $faker->uuid(),
-                'created' => Chronos::now()->subMinute($faker->randomNumber(8)),
+                'created' => Chronos::now()->subMinutes($faker->randomNumber(8)),
             ];
         });
     }

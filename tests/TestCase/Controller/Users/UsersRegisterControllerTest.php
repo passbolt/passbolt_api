@@ -154,7 +154,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEquals($user->role_id, $userRoleId);
-        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertTrue($user->created->greaterThan(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersRegisterController_Error_FailValidation(): void
