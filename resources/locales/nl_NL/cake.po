@@ -1,0 +1,474 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: CakePHP Dutch Translation\n"
+"POT-Creation-Date: 2017-11-29 08:39+0100\n"
+"PO-Revision-Date: 2017-11-29 20:17+0100\n"
+"Last-Translator: Anne <annuh@users.noreply.github.com>\n"
+"Language-Team: \n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Poedit 1.8.4\n"
+
+#: src/Template/Error/error400.ctp:40 src/Template/Error/error500.ctp:43
+msgid "Error"
+msgstr "Fout"
+
+#: src/Template/Error/error400.ctp:41
+msgid "The requested address {0} was not found on this server."
+msgstr "Het opgegeven pad {0} is niet gevonden op deze server."
+
+#: src/Template/Error/error500.ctp:41
+msgid "An Internal Error Has Occurred"
+msgstr "Er is een interne fout opgetreden"
+
+#: vendor/cakephp/cakephp/src/Controller/Component/AuthComponent.php:496
+msgid "You are not authorized to access that location."
+msgstr "U heeft geen toestemming om die locatie te bekijken."
+
+#: vendor/cakephp/cakephp/src/Controller/Component/CsrfComponent.php:157
+#: vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:190
+msgid "Missing CSRF token cookie"
+msgstr "CSRF token cookie mist"
+
+#: vendor/cakephp/cakephp/src/Controller/Component/CsrfComponent.php:161
+#: vendor/cakephp/cakephp/src/Http/Middleware/CsrfProtectionMiddleware.php:194
+msgid "CSRF token mismatch."
+msgstr "CSRF komt niet overeen."
+
+#: vendor/cakephp/cakephp/src/Error/ExceptionRenderer.php:258
+msgid "Not Found"
+msgstr "Niet gevonden"
+
+#: vendor/cakephp/cakephp/src/Error/ExceptionRenderer.php:260
+msgid "An Internal Error Has Occurred."
+msgstr "Er is een interne fout opgetreden."
+
+#: vendor/cakephp/cakephp/src/Http/Response.php:2400
+msgid "The requested file contains `..` and will not be read."
+msgstr "Het opgevraagde bestand bevat `..` en zal daarom niet worden geopent."
+
+#: vendor/cakephp/cakephp/src/Http/Response.php:2411
+msgid "The requested file was not found"
+msgstr "Het gevraagde bestand werd niet gevonden"
+
+#: vendor/cakephp/cakephp/src/I18n/Number.php:90
+msgid "{0,number,#,###.##} KB"
+msgstr "{0,number,#,###.##} KB"
+
+#: vendor/cakephp/cakephp/src/I18n/Number.php:92
+msgid "{0,number,#,###.##} MB"
+msgstr "{0,number,#,###.##} MB"
+
+#: vendor/cakephp/cakephp/src/I18n/Number.php:94
+msgid "{0,number,#,###.##} GB"
+msgstr "{0,number,#,###.##} GB"
+
+#: vendor/cakephp/cakephp/src/I18n/Number.php:96
+msgid "{0,number,#,###.##} TB"
+msgstr "{0,number,#,###.##} TB"
+
+#: vendor/cakephp/cakephp/src/I18n/Number.php:88
+msgid "{0,number,integer} Byte"
+msgid_plural "{0,number,integer} Bytes"
+msgstr[0] "{0,number,integer} byte"
+msgstr[1] "{0,number,integer} bytes"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:80
+msgid "{0} from now"
+msgstr "{0} vanaf nu"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:80
+msgid "{0} ago"
+msgstr "{0} geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:83
+msgid "{0} after"
+msgstr "{0} later"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:83
+msgid "{0} before"
+msgstr "{0} ervoor"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:114
+msgid "just now"
+msgstr "zojuist"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:151
+msgid "about a second ago"
+msgstr "ongeveer een seconde geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:152
+msgid "about a minute ago"
+msgstr "ongeveer een minuut geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:153
+msgid "about an hour ago"
+msgstr "ongeveer een uur geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:154;332
+msgid "about a day ago"
+msgstr "ongeveer een dag geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:155;333
+msgid "about a week ago"
+msgstr "ongeveer een week geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:156;334
+msgid "about a month ago"
+msgstr "ongeveer een maand geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:157;335
+msgid "about a year ago"
+msgstr "ongeveer een jaar geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:168
+msgid "in about a second"
+msgstr "over ongeveer een seconde"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:169
+msgid "in about a minute"
+msgstr "over ongeveer een minuut"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:170
+msgid "in about an hour"
+msgstr "over ongeveer een uur"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:171;346
+msgid "in about a day"
+msgstr "over ongeveer een dag"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:172;347
+msgid "in about a week"
+msgstr "over ongeveer een week"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:173;348
+msgid "in about a month"
+msgstr "over ongeveer een maand"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:174;349
+msgid "in about a year"
+msgstr "over ongeveer een jaar"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:304
+msgid "today"
+msgstr "vandaag"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:370
+msgid "%s ago"
+msgstr "%s geleden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:371
+msgid "on %s"
+msgstr "op %s"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:47;126;316
+msgid "{0} year"
+msgid_plural "{0} years"
+msgstr[0] "{0} jaar"
+msgstr[1] "{0} jaren"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:51;129;319
+msgid "{0} month"
+msgid_plural "{0} months"
+msgstr[0] "{0} maand"
+msgstr[1] "{0} maanden"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:57;132;322
+msgid "{0} week"
+msgid_plural "{0} weeks"
+msgstr[0] "{0} week"
+msgstr[1] "{0} weken"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:59;135;325
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} dag"
+msgstr[1] "{0} dagen"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:64;138
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} uur"
+msgstr[1] "{0} uren"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:68;141
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} minuut"
+msgstr[1] "{0} minuten"
+
+#: vendor/cakephp/cakephp/src/I18n/RelativeTimeFormatter.php:72;144
+msgid "{0} second"
+msgid_plural "{0} seconds"
+msgstr[0] "{0} seconde"
+msgstr[1] "{0} seconden"
+
+#: vendor/cakephp/cakephp/src/ORM/RulesChecker.php:57
+msgid "This value is already in use"
+msgstr "Deze waarde is al in gebruik"
+
+#: vendor/cakephp/cakephp/src/ORM/RulesChecker.php:104
+msgid "This value does not exist"
+msgstr "Deze waarde bestaat niet"
+
+#: vendor/cakephp/cakephp/src/ORM/RulesChecker.php:128
+msgid "The count does not match {0}{1}"
+msgstr "Het aantal komt niet overeen {0}{1}"
+
+#: vendor/cakephp/cakephp/src/Utility/Text.php:902
+msgid "and"
+msgstr "en"
+
+#: vendor/cakephp/cakephp/src/Validation/Validator.php:111
+msgid "This field is required"
+msgstr "Dit veld is verplicht"
+
+#: vendor/cakephp/cakephp/src/Validation/Validator.php:112
+msgid "This field cannot be left empty"
+msgstr "Dit veld mag niet leeg zijn"
+
+#: vendor/cakephp/cakephp/src/Validation/Validator.php:1885
+msgid "The provided value is invalid"
+msgstr "De opgegeven waarde is niet geldig"
+
+#: vendor/cakephp/cakephp/src/View/Helper/FormHelper.php:1039
+msgid "New %s"
+msgstr "Nieuw %s"
+
+#: vendor/cakephp/cakephp/src/View/Helper/FormHelper.php:1042
+msgid "Edit %s"
+msgstr "Bewerk %s"
+
+#: vendor/cakephp/cakephp/src/View/Helper/FormHelper.php:1919
+msgid "Submit"
+msgstr "Verzenden"
+
+#: vendor/cakephp/cakephp/src/View/Helper/HtmlHelper.php:795
+msgid "Home"
+msgstr "Home"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:540
+msgid "January"
+msgstr "januari"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:541
+msgid "February"
+msgstr "februari"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:542
+msgid "March"
+msgstr "maart"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:543
+msgid "April"
+msgstr "april"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:544
+msgid "May"
+msgstr "mei"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:545
+msgid "June"
+msgstr "juni"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:546
+msgid "July"
+msgstr "juli"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:547
+msgid "August"
+msgstr "augustus"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:548
+msgid "September"
+msgstr "september"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:549
+msgid "October"
+msgstr "oktober"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:550
+msgid "November"
+msgstr "november"
+
+#: vendor/cakephp/cakephp/src/View/Widget/DateTimeWidget.php:551
+msgid "December"
+msgstr "december"
+
+#~ msgid "on {0}"
+#~ msgstr "op {0}"
+
+#~ msgid "New {0}"
+#~ msgstr "Nieuw {0}"
+
+#~ msgid "Edit {0}"
+#~ msgstr "Wijzig {0}"
+
+#~ msgid "Invalid %s"
+#~ msgstr "%s ongeldig"
+
+#~ msgid "updated"
+#~ msgstr "bijgewerkt"
+
+#~ msgid "saved"
+#~ msgstr "opgeslagen"
+
+#~ msgid "The %1$s has been %2$s"
+#~ msgstr "De %1$s is %2$s"
+
+#~ msgid "Please correct errors below."
+#~ msgstr "Corrigeer de onderstaande fouten aub."
+
+#~ msgid "The %1$s with id: %2$s has been deleted."
+#~ msgstr "De %1$s met id: %2$s werd verwijderd."
+
+#~ msgid "There was an error deleting the %1$s with id: %2$s"
+#~ msgstr "Een fout heeft zich voorgedaan bij het verwijderen van %1$s met id: %2$s"
+
+#~ msgid "This field cannot be left blank"
+#~ msgstr "Dit is een verplicht veld"
+
+#~ msgid "%d KB"
+#~ msgstr "%d KB"
+
+#~ msgid "%.2f MB"
+#~ msgstr "%.2f MB"
+
+#~ msgid "%.2f GB"
+#~ msgstr "%.2f GB"
+
+#~ msgid "%.2f TB"
+#~ msgstr "%.2f TB"
+
+#~ msgid "%d Byte"
+#~ msgid_plural "%d Bytes"
+#~ msgstr[0] "%d Byte"
+#~ msgstr[1] "%d Bytes"
+
+#~ msgid "Today, %s"
+#~ msgstr "Vandaag, %s"
+
+#~ msgid "Yesterday, %s"
+#~ msgstr "Gisteren, %s"
+
+#~ msgid "Tomorrow, %s"
+#~ msgstr "Morgen, %s"
+
+#~ msgid "Sunday"
+#~ msgstr "zondag"
+
+#~ msgid "Monday"
+#~ msgstr "maandag"
+
+#~ msgid "Tuesday"
+#~ msgstr "dinsdag"
+
+#~ msgid "Wednesday"
+#~ msgstr "woensdag"
+
+#~ msgid "Thursday"
+#~ msgstr "donderdag"
+
+#~ msgid "Friday"
+#~ msgstr "vrijdag"
+
+#~ msgid "Saturday"
+#~ msgstr "zaterdag"
+
+#~ msgid "On %s %s"
+#~ msgstr "Op %s %s"
+
+#~ msgid "days"
+#~ msgstr "dagen"
+
+#~ msgid "day"
+#~ msgstr "dag"
+
+#~ msgid "%d year"
+#~ msgid_plural "%d years"
+#~ msgstr[0] "%d jaar"
+#~ msgstr[1] "%d jaren"
+
+#~ msgid "%d month"
+#~ msgid_plural "%d months"
+#~ msgstr[0] "%d maand"
+#~ msgstr[1] "%d maanden"
+
+#~ msgid "%d week"
+#~ msgid_plural "%d weeks"
+#~ msgstr[0] "%d week"
+#~ msgstr[1] "%d weken"
+
+#~ msgid "%d day"
+#~ msgid_plural "%d days"
+#~ msgstr[0] "%d dag"
+#~ msgstr[1] "%d dagen"
+
+#~ msgid "%d hour"
+#~ msgid_plural "%d hours"
+#~ msgstr[0] "%d uur"
+#~ msgstr[1] "%d uren"
+
+#~ msgid "%d minute"
+#~ msgid_plural "%d minutes"
+#~ msgstr[0] "%d minuut"
+#~ msgstr[1] "%d minuten"
+
+#~ msgid "%d second"
+#~ msgid_plural "%d seconds"
+#~ msgstr[0] "%d seconde"
+#~ msgstr[1] "%d seconden"
+
+#~ msgid "Error in field %s"
+#~ msgstr "Fout in veld %s"
+
+#~ msgid "empty"
+#~ msgstr "leeg"
+
+#~ msgid " of "
+#~ msgstr " van "
+
+#~ msgid "Actions"
+#~ msgstr "Acties"
+
+#~ msgid "Delete"
+#~ msgstr "Verwijder"
+
+#~ msgid "Are you sure you want to delete # %s?"
+#~ msgstr "Bent u zeker dat u # %s wilt verwijderen?"
+
+#~ msgid "List"
+#~ msgstr "Lijst"
+
+#~ msgid "List %s"
+#~ msgstr "%s weergeven"
+
+#~ msgid "View"
+#~ msgstr "Bekijk"
+
+#~ msgid "Edit"
+#~ msgstr "Wijzig"
+
+#~ msgid "Are you sure you want to delete"
+#~ msgstr "Bent u zeker dat u wilt verwijderen"
+
+#~ msgid "Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}"
+#~ msgstr "Pagina {:page} van {:pages}, {:current} rijen zichtbaar van {:count} totaal, startend vanaf {:start}, eindigend op {:end}"
+
+#~ msgid "previous"
+#~ msgstr "vorige"
+
+#~ msgid "next"
+#~ msgstr "volgende"
+
+#~ msgid "View %s"
+#~ msgstr "Bekijk %s"
+
+#~ msgid "Delete %s"
+#~ msgstr "Verwijder %s"
+
+#~ msgid "Related %s"
+#~ msgstr "Gerelateerde %s"

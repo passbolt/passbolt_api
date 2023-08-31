@@ -1,0 +1,375 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2014-02-03 10:52+0200\n"
+"PO-Revision-Date: 2014-02-03 13:35-0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: Romanian\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: Controller/Scaffold.php:128
+msgid "Scaffold :: "
+msgstr "Scaffold :: "
+
+#: Controller/Scaffold.php:167;234;303
+msgid "Invalid %s"
+msgstr "Invalid %s"
+
+#: Controller/Scaffold.php:222
+msgid "updated"
+msgstr "actualizat"
+
+#: Controller/Scaffold.php:225
+msgid "saved"
+msgstr "salvat"
+
+#: Controller/Scaffold.php:245
+msgid "The %1$s has been %2$s"
+msgstr "Registrul %1$s a fost %2$s"
+
+#: Controller/Scaffold.php:255
+msgid "Please correct errors below."
+msgstr "Vă rugăm să corectați erorile de mai jos."
+
+#: Controller/Scaffold.php:306
+msgid "The %1$s with id: %2$s has been deleted."
+msgstr "%1%s cu codul: %2%s a fost șters"
+
+#: Controller/Scaffold.php:309
+msgid "There was an error deleting the %1$s with id: %2$s"
+msgstr "Nu s-a putut sterge %1$s cu codul %2$s"
+
+#: Controller/Component/AuthComponent.php:427
+msgid "You are not authorized to access that location."
+msgstr "Nu sunteți autorizat să accesați această locație"
+
+#: Error/ExceptionRenderer.php:209
+msgid "Not Found"
+msgstr "Nu a fost găsit"
+
+#: Error/ExceptionRenderer.php:231
+msgid "An Internal Error Has Occurred."
+msgstr "A apărut o eroare internă."
+
+#: Model/Validator/CakeValidationSet.php:286
+msgid "This field cannot be left blank"
+msgstr "Acest câmp nu poate fi lăsat necompletat"
+
+#: Network/CakeResponse.php:1269
+msgid "The requested file was not found"
+msgstr "Fișierul solicitat nu a fost găsit"
+
+#: Utility/CakeNumber.php:119
+msgid "%s KB"
+msgstr "%s KO"
+
+#: Utility/CakeNumber.php:121
+msgid "%s MB"
+msgstr "%s MO"
+
+#: Utility/CakeNumber.php:123
+msgid "%s GB"
+msgstr "%s GO"
+
+#: Utility/CakeNumber.php:125
+msgid "%s TB"
+msgstr "%s TO"
+
+#: Utility/CakeNumber.php:117
+msgid "%d Byte"
+msgid_plural "%d Bytes"
+msgstr[0] "Bit"
+msgstr[1] "Biti"
+
+#: Utility/CakeTime.php:398
+msgid "Today, %s"
+msgstr "Astăzi, %s"
+
+#: Utility/CakeTime.php:401
+msgid "Yesterday, %s"
+msgstr "Ieri, %s"
+
+#: Utility/CakeTime.php:404
+msgid "Tomorrow, %s"
+msgstr "Mâine, %s"
+
+#: Utility/CakeTime.php:409
+msgid "Sunday"
+msgstr "Duminică"
+
+#: Utility/CakeTime.php:410
+msgid "Monday"
+msgstr "Luni"
+
+#: Utility/CakeTime.php:411
+msgid "Tuesday"
+msgstr "Marți"
+
+#: Utility/CakeTime.php:412
+msgid "Wednesday"
+msgstr "Miercuri"
+
+#: Utility/CakeTime.php:413
+msgid "Thursday"
+msgstr "Joi"
+
+#: Utility/CakeTime.php:414
+msgid "Friday"
+msgstr "Vineri"
+
+#: Utility/CakeTime.php:415
+msgid "Saturday"
+msgstr "Sâmbată"
+
+#: Utility/CakeTime.php:421
+msgid "On %s %s"
+msgstr "La %s %s"
+
+#: Utility/CakeTime.php:742
+msgid "%s ago"
+msgstr "acum %s"
+
+#: Utility/CakeTime.php:743
+msgid "on %s"
+msgstr "la %s"
+
+#: Utility/CakeTime.php:795
+msgid "just now"
+msgstr "chiar acum"
+
+#: Utility/CakeTime.php:911
+msgid "about a second ago"
+msgstr "acum o secundă"
+
+#: Utility/CakeTime.php:912
+msgid "about a minute ago"
+msgstr "acum un minut"
+
+#: Utility/CakeTime.php:913
+msgid "about an hour ago"
+msgstr "acum o oră"
+
+#: Utility/CakeTime.php:914
+msgid "about a day ago"
+msgstr "acum o zi"
+
+#: Utility/CakeTime.php:915
+msgid "about a week ago"
+msgstr "acum o saptamană"
+
+#: Utility/CakeTime.php:916
+msgid "about a year ago"
+msgstr "acum un an"
+
+#: Utility/CakeTime.php:925
+msgid "in about a second"
+msgstr "într-o secundă"
+
+#: Utility/CakeTime.php:926
+msgid "in about a minute"
+msgstr "într-un minut"
+
+#: Utility/CakeTime.php:927
+msgid "in about an hour"
+msgstr "într-o oră"
+
+#: Utility/CakeTime.php:928
+msgid "in about a day"
+msgstr "într-o zi"
+
+#: Utility/CakeTime.php:929
+msgid "in about a week"
+msgstr "într-o saptamana"
+
+#: Utility/CakeTime.php:930
+msgid "in about a year"
+msgstr "într-un an"
+
+#: Utility/CakeTime.php:952;974
+msgid "days"
+msgstr "zile"
+
+#: Utility/CakeTime.php:884
+msgid "%d year"
+msgid_plural "%d years"
+msgstr[0] "%d an"
+msgstr[1] "%d ani"
+
+#: Utility/CakeTime.php:887
+msgid "%d month"
+msgid_plural "%d months"
+msgstr[0] "%d lună"
+msgstr[1] "%d luni"
+
+#: Utility/CakeTime.php:890
+msgid "%d week"
+msgid_plural "%d weeks"
+msgstr[0] "%d săptămână"
+msgstr[1] "%d săptămâni"
+
+#: Utility/CakeTime.php:893
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d zi"
+msgstr[1] "%d zile"
+
+#: Utility/CakeTime.php:896
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d oră"
+msgstr[1] "%d ore"
+
+#: Utility/CakeTime.php:899
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minut"
+msgstr[1] "%d minute"
+
+#: Utility/CakeTime.php:902
+msgid "%d second"
+msgid_plural "%d seconds"
+msgstr[0] "%d secundă"
+msgstr[1] "%d secunde"
+
+#: View/Helper/FormHelper.php:694
+msgid "Error in field %s"
+msgstr "Eroare la câmpul %s"
+
+#: View/Helper/FormHelper.php:883
+#: View/Scaffolds/form.ctp:48
+#: View/Scaffolds/index.ctp:79;94
+#: View/Scaffolds/view.ctp:65;80;190
+msgid "New %s"
+msgstr "Nou %s"
+
+#: View/Helper/FormHelper.php:1457
+msgid "empty"
+msgstr "gol"
+
+#: View/Helper/FormHelper.php:1830
+#: View/Scaffolds/form.ctp:23
+msgid "Submit"
+msgstr "Trimite"
+
+#: View/Helper/FormHelper.php:2760
+msgid "January"
+msgstr "Januarie"
+
+#: View/Helper/FormHelper.php:2761
+msgid "February"
+msgstr "Februarie"
+
+#: View/Helper/FormHelper.php:2762
+msgid "March"
+msgstr "Martie"
+
+#: View/Helper/FormHelper.php:2763
+msgid "April"
+msgstr "Aprilie"
+
+#: View/Helper/FormHelper.php:2764
+msgid "May"
+msgstr "Mai"
+
+#: View/Helper/FormHelper.php:2765
+msgid "June"
+msgstr "Iunie"
+
+#: View/Helper/FormHelper.php:2766
+msgid "July"
+msgstr "Iulie"
+
+#: View/Helper/FormHelper.php:2767
+msgid "August"
+msgstr "August"
+
+#: View/Helper/FormHelper.php:2768
+msgid "September"
+msgstr "Septembrie"
+
+#: View/Helper/FormHelper.php:2769
+msgid "October"
+msgstr "Octombrie"
+
+#: View/Helper/FormHelper.php:2770
+msgid "November"
+msgstr "Noiembrie"
+
+#: View/Helper/FormHelper.php:2771
+msgid "December"
+msgstr "Decembrie"
+
+#: View/Helper/HtmlHelper.php:766
+msgid "Home"
+msgstr "Acasă"
+
+#: View/Helper/PaginatorHelper.php:627
+msgid " of "
+msgstr " de "
+
+#: View/Scaffolds/form.ctp:27
+#: View/Scaffolds/index.ctp:26;77
+#: View/Scaffolds/view.ctp:49
+msgid "Actions"
+msgstr "Acțiuni"
+
+#: View/Scaffolds/form.ctp:31
+#: View/Scaffolds/index.ctp:51
+#: View/Scaffolds/view.ctp:175
+msgid "Delete"
+msgstr "Șterge"
+
+#: View/Scaffolds/form.ctp:34
+#: View/Scaffolds/index.ctp:54
+#: View/Scaffolds/view.ctp:57;178
+msgid "Are you sure you want to delete # %s?"
+msgstr "Sunteți sigur/ă că vreți să stergeți # %s?"
+
+#: View/Scaffolds/form.ctp:37
+msgid "List"
+msgstr "Listă"
+
+#: View/Scaffolds/form.ctp:44
+#: View/Scaffolds/index.ctp:87
+#: View/Scaffolds/view.ctp:61;74
+msgid "List %s"
+msgstr "Listă de %s"
+
+#: View/Scaffolds/index.ctp:48
+#: View/Scaffolds/view.ctp:163
+msgid "View"
+msgstr "Vezi"
+
+#: View/Scaffolds/index.ctp:49
+#: View/Scaffolds/view.ctp:169
+msgid "Edit"
+msgstr "Editare"
+
+#: View/Scaffolds/index.ctp:65
+msgid "Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}"
+msgstr "Pagina {:page} din {:pages}, afișate {:current} înregistrări din {:count} totale, începând cu inregistrarea {:start}, până la {:end}"
+
+#: View/Scaffolds/index.ctp:70
+msgid "previous"
+msgstr "precedenta"
+
+#: View/Scaffolds/index.ctp:72
+msgid "next"
+msgstr "următoarea"
+
+#: View/Scaffolds/view.ctp:20
+msgid "View %s"
+msgstr "Vezi %s"
+
+#: View/Scaffolds/view.ctp:57
+msgid "Delete %s"
+msgstr "Șterge %s"
+
+#: View/Scaffolds/view.ctp:95;135
+msgid "Related %s"
+msgstr "%s înrudit/ă"
