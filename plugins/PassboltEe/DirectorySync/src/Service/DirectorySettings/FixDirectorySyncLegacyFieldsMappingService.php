@@ -83,7 +83,7 @@ class FixDirectorySyncLegacyFieldsMappingService
         }
 
         /** @phpstan-ignore-next-line */
-        return $directorySyncSetting->created->lt($migration->end_time);
+        return $directorySyncSetting->created->lessThan($migration->end_time);
     }
 
     /**

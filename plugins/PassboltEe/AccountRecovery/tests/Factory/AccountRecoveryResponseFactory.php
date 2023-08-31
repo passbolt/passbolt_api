@@ -51,7 +51,7 @@ class AccountRecoveryResponseFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
-            $date = Chronos::now()->subDay($faker->randomNumber(5));
+            $date = Chronos::now()->subDays($faker->randomNumber(5));
 
             return [
                 'account_recovery_request_id' => $faker->uuid(),

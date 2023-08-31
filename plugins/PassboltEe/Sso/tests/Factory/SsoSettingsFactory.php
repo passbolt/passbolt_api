@@ -66,8 +66,8 @@ class SsoSettingsFactory extends CakephpBaseFactory
             'data' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'SsoSettings' . DS . 'azure.msg'),
             'created_by' => UuidFactory::uuid(),
             'modified_by' => UuidFactory::uuid(),
-            'created' => Chronos::now()->subDay(3),
-            'modified' => Chronos::now()->subDay(3),
+            'created' => Chronos::now()->subDays(3),
+            'modified' => Chronos::now()->subDays(3),
         ];
     }
 

@@ -125,7 +125,7 @@ class CleanupTest extends AppTestCase
 
         // Duplicate group user to keep as it is the oldest.
         $duplicateGroupUserToKeep = GroupsUserFactory::make($duplicateGroupUserMeta)
-            ->patchData(['created' => FrozenTime::now()->subDay()])->persist();
+            ->patchData(['created' => FrozenTime::now()->subDays(1)])->persist();
 
         // Witness groups users to not cleanup:
         // - A group user including a group involved in the cleanup

@@ -58,8 +58,8 @@ class OrganizationSettingFactory extends CakephpBaseFactory
                 'property' => $property,
                 'property_id' => UuidFactory::uuid($property),
                 'value' => $faker->text(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
                 'created_by' => UuidFactory::uuid(),
                 'modified_by' => UuidFactory::uuid(),
             ];

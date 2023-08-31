@@ -142,6 +142,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
                 ['user_id' => $userCId, 'data' => $r1EncryptedSecretC],
             ],
         ];
+
         $this->service->update($uac, $r1->id, $data);
 
         // Assert R1 secrets have been updated
@@ -151,7 +152,6 @@ class ResourcesUpdateServiceTest extends AppTestCase
         $this->assertEquals($r1EncryptedSecretB, $r1SecretB->data);
         $r1SecretC = $this->secretsTable->findByResourceIdAndUserId($r1->id, $userCId)->first();
         $this->assertEquals($r1EncryptedSecretC, $r1SecretC->data);
-
         // Assert R1 meta has not been updated except for the modified field.
         $r1Updated = $this->resourcesTable->findById($r1->id)->first();
         $this->assertEquals('R1', $r1Updated->name);
@@ -160,7 +160,6 @@ class ResourcesUpdateServiceTest extends AppTestCase
         $this->assertEquals('R1 description', $r1Updated->description);
         $this->assertEquals('R1', $r1Updated->name);
         $this->assertGreaterThan($r1->modified, $r1Updated->modified);
-
         // Assert R2 secrets have not been updated
         $r2AfterUpdateSecretA = $this->secretsTable->findByResourceIdAndUserId($r2->id, $userAId)->first();
         $this->assertEquals($r2SecretA->data, $r2AfterUpdateSecretA->data);

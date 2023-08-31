@@ -1,4 +1,12 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @var \App\View\AppView $this
+ * @var array $data
+ * @var string $nextStepUrl
+ */
+
 use Cake\Routing\Router;
 
 $this->Html->script('vendors/jquery.min.js', ['block' => 'scriptBottom']);
@@ -59,18 +67,33 @@ $this->Html->script('web_installer/email', ['block' => 'scriptBottom']);
                                 'label' => __('Port'),
                                 'class' => 'required fluid',
                                 'default' => '587']); ?>
+                            <?= $this->Form->control('authentication_method', [
+                                'options' => [
+                                    'username_and_password' => 'Username & password',
+                                    'username_only' => 'Username only',
+                                    'none' => 'None',
+                                ],
+                                'required' => 'required',
+                                'default' => 'username_and_password',
+                                'label' => __('Authentication method'),
+                                'class' => 'required fluid',
+                            ]); ?>
+                            <div id="smtp-config-input-username">
                             <?= $this->Form->control('username', [
                                 'type' => 'text',
                                 'placeholder' => __('username'),
                                 'label' => __('Username'),
                                 'class' => 'fluid',
                             ]); ?>
-                            <?= $this->Form->control('password', [
-                                'placeholder' => __('password'),
-                                'label' => __('Password'),
-                                'class' => 'fluid',
-                                'type' => 'password',
-                            ]); ?>
+                            </div>
+                            <div id="smtp-config-input-password">
+                                <?= $this->Form->control('password', [
+                                    'placeholder' => __('password'),
+                                    'label' => __('Password'),
+                                    'class' => 'fluid',
+                                    'type' => 'password',
+                                ]); ?>
+                            </div>
                             <?= $this->Form->control('client', [
                                 'placeholder' => __('client'),
                                 'label' => __('Client'),

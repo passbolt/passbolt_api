@@ -64,8 +64,8 @@ class SsoKeysFactory extends CakephpBaseFactory
             'data' => self::DATA,
             'created_by' => UuidFactory::uuid(),
             'modified_by' => UuidFactory::uuid(),
-            'created' => Chronos::now()->subDay(3),
-            'modified' => Chronos::now()->subDay(3),
+            'created' => Chronos::now()->subDays(3),
+            'modified' => Chronos::now()->subDays(3),
         ];
     }
 
