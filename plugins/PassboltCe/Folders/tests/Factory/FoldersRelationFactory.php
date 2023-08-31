@@ -59,8 +59,8 @@ class FoldersRelationFactory extends CakephpBaseFactory
                 'foreign_id' => $faker->uuid(),
                 'user_id' => $faker->uuid(),
                 'folder_parent_id' => $faker->uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }

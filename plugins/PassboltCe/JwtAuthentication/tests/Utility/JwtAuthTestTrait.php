@@ -79,7 +79,7 @@ trait JwtAuthTestTrait
             'version' => GpgJwtAuthenticator::PROTOCOL_VERSION,
             'domain' => Router::url('/', true),
             'verify_token' => $verifyToken,
-            'verify_token_expiry' => FrozenTime::now()->addMinute()->toUnixString(),
+            'verify_token_expiry' => FrozenTime::now()->addMinutes(1)->toUnixString(),
         ]));
     }
 

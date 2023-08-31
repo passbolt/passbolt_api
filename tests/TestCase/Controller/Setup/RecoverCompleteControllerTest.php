@@ -109,6 +109,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains(
             "User Agent: <i>$userAgent</i><br/>User IP: <i>$clientIP</i>",
             $user->username,
+            '',
+            false
         );
         // Check that all admins got notified, as well as the user
         foreach ($admins as $admin) {
@@ -119,6 +121,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             $this->assertEmailInBatchContains(
                 "User Agent: <i>$userAgent</i><br/>User IP: <i>$clientIP</i>",
                 $admin->username,
+                '',
+                false
             );
         }
         Configure::write('passbolt.plugins.log.enabled', $logEnabled);

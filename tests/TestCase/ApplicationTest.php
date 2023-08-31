@@ -57,6 +57,7 @@ class ApplicationTest extends TestCase
             SslForceMiddleware::class,
             AssetMiddleware::class,
             RoutingMiddleware::class,
+            UuidParserMiddleware::class,
             ApiVersionMiddleware::class,
             SessionPreventExtensionMiddleware::class,
             BodyParserMiddleware::class,
@@ -65,7 +66,6 @@ class ApplicationTest extends TestCase
             GpgAuthHeadersMiddleware::class,
             CsrfProtectionMiddleware::class,
             HttpProxyMiddleware::class,
-            UuidParserMiddleware::class,
         ];
 
         foreach ($middlewareClassesInOrder as $midClass) {
