@@ -149,10 +149,10 @@ trait EmailQueueTrait
         string $string,
         $i = 0,
         string $message = '',
-        bool $htmlSpecialChar = false
+        bool $htmlSpecialChar = true
     ): void {
         if ($htmlSpecialChar) {
-            $string = htmlspecialchars($string);
+            $string = h($string);
         }
         $this->assertStringContainsString($string, $this->renderEmail($i), $message);
     }
@@ -169,10 +169,10 @@ trait EmailQueueTrait
         string $string,
         $i = 0,
         string $message = '',
-        bool $htmlSpecialChar = false
+        bool $htmlSpecialChar = true
     ): void {
         if ($htmlSpecialChar) {
-            $string = htmlspecialchars($string);
+            $string = h($string);
         }
         $this->assertStringNotContainsString($string, $this->renderEmail($i), $message);
     }
