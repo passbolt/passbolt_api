@@ -125,7 +125,7 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
         );
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => [

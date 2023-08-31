@@ -139,6 +139,6 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements Subscribed
             'status' => $status,
         ], 'title' => $subject,];
 
-        return new Email($recipient->username, $subject, $data, self::ALL_ADMIN_TEMPLATE);
+        return new Email($recipient, $subject, $data, self::ALL_ADMIN_TEMPLATE);
     }
 }

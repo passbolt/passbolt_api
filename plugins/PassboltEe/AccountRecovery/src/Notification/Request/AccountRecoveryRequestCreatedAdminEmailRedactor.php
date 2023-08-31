@@ -116,6 +116,6 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
             'requestId' => $request->id,
         ], 'title' => $subject,];
 
-        return new Email($admin->username, $subject, $data, self::ADMIN_TEMPLATE);
+        return new Email($admin, $subject, $data, self::ADMIN_TEMPLATE);
     }
 }

@@ -125,7 +125,7 @@ class SsoSettingsActivatedEmailRedactor implements SubscribedEmailRedactorInterf
         );
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => [

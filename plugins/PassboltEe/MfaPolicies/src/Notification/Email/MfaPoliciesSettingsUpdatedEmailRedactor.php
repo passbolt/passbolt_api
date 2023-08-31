@@ -125,7 +125,7 @@ class MfaPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRedactor
         );
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => [
