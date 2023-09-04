@@ -78,20 +78,21 @@ class SecretsUpdateSecretsService
 
         $secrets = [];
         if (!empty($userIds)) {
-            $secrets = $this->secretsTable->find()->where([
-                'user_id IN' => $userIds,
-                'resource_id' => $resourceId,
-            ])->toArray();
-        }
-
-        $secretsByUserId = [];
-        if (!empty($secrets)) {
-            $secretsByUserId = Hash::combine($secrets, '{n}.user_id', '{n}');
+            $secrets = $this->secretsTable
+                ->find()
+                ->select(['id', 'user_id', 'resource_id', 'data'])
+                ->where([
+                    'user_id IN' => $userIds,
+                    'resource_id' => $resourceId,
+                ])
+                ->all()
+                ->indexBy('user_id') // group results by user_id
+                ->toArray();
         }
 
         foreach ($data as $rowIndex => $row) {
-            if (array_key_exists($row['user_id'], $secretsByUserId)) {
-                $secret = $secretsByUserId[$row['user_id']];
+            if (array_key_exists($row['user_id'], $secrets)) {
+                $secret = $secrets[$row['user_id']];
                 $result[] = $this->updateSecret($secret, $rowIndex, $row);
             } else {
                 $result[] = $this->addSecret($uac, $rowIndex, $resourceId, $row);
