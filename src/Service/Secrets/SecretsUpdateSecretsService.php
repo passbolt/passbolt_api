@@ -74,11 +74,24 @@ class SecretsUpdateSecretsService
         // Return an array of updated secret
         $result = [];
 
+        $userIds = Hash::extract($data, '{n}.user_id');
+
+        $secrets = [];
+        if (!empty($userIds)) {
+            $secrets = $this->secretsTable->find()->where([
+                'user_id IN' => $userIds,
+                'resource_id' => $resourceId,
+            ])->toArray();
+        }
+
+        $secretsByUserId = [];
+        if (!empty($secrets)) {
+            $secretsByUserId = Hash::combine($secrets, '{n}.user_id', '{n}');
+        }
+
         foreach ($data as $rowIndex => $row) {
-            $userId = Hash::get($row, 'user_id', null);
-            /** @var \App\Model\Entity\Secret|null $secret */
-            $secret = $this->secretsTable->findByResourceIdAndUserId($resourceId, $userId)->first();
-            if ($secret) {
+            if (array_key_exists($row['user_id'], $secretsByUserId)) {
+                $secret = $secretsByUserId[$row['user_id']];
                 $result[] = $this->updateSecret($secret, $rowIndex, $row);
             } else {
                 $result[] = $this->addSecret($uac, $rowIndex, $resourceId, $row);
