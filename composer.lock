@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "547c42ec04fd8cd45177d0ef44d2dca2",
+    "content-hash": "4aa88065dd922dff99acc820ef1e6af8",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3147,16 +3147,16 @@
         },
         {
             "name": "singpolyma/openpgp-php",
-            "version": "0.6.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/singpolyma/openpgp-php.git",
-                "reference": "1c3bdcd2d9c6113c2d6b768e208e7432a48d3a1e"
+                "reference": "9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/singpolyma/openpgp-php/zipball/1c3bdcd2d9c6113c2d6b768e208e7432a48d3a1e",
-                "reference": "1c3bdcd2d9c6113c2d6b768e208e7432a48d3a1e",
+                "url": "https://api.github.com/repos/singpolyma/openpgp-php/zipball/9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe",
+                "reference": "9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe",
                 "shasum": ""
             },
             "require": {
@@ -3170,6 +3170,7 @@
                 "ext-mcrypt": "required if you use encryption cast5",
                 "ext-openssl": "required if you use encryption cast5"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -9589,6 +9590,7 @@
     "stability-flags": {
         "cakephp/migrations": 20,
         "robmorgan/phinx": 20,
+        "singpolyma/openpgp-php": 20,
         "enygma/yubikey": 20,
         "psy/psysh": 0
     },
