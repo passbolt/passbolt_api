@@ -215,6 +215,7 @@ abstract class AbstractSsoService
      * @param string $code JWT access request
      * @param \App\Model\Entity\User $user entity
      * @return \Passbolt\Sso\Utility\OpenId\SsoResourceOwnerInterface
+     * @throws \Passbolt\Sso\Error\Exception\AzureException If any error is thrown from azure provider
      * @throws \Cake\Http\Exception\BadRequestException if resource owner username is not provider or does not match user entity
      */
     public function getResourceOwnerAndAssertAgainstUser(string $code, User $user): SsoResourceOwnerInterface
