@@ -99,14 +99,14 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
             ->add(new RoutingMiddleware($this))
             ->insertAfter(RoutingMiddleware::class, ApiVersionMiddleware::class)
+            ->insertAfter(RoutingMiddleware::class, UuidParserMiddleware::class)
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new BodyParserMiddleware())
             ->add(SessionAuthPreventDeletedUsersMiddleware::class)
             ->insertAfter(SessionAuthPreventDeletedUsersMiddleware::class, new AuthenticationMiddleware($this))
             ->add(new GpgAuthHeadersMiddleware())
             ->add($csrf)
-            ->add(new HttpProxyMiddleware())
-            ->add(UuidParserMiddleware::class);
+            ->add(new HttpProxyMiddleware());
 
         /*
          * Additional security headers

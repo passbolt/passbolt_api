@@ -23,6 +23,8 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Database\Type\UuidType;
+use Cake\Database\TypeFactory;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -66,18 +68,22 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->enableFeaturePlugin('Log');
         RoleFactory::make()->guest()->persist();
         EventManager::instance()->setEventList(new EventList());
+        TypeFactory::map('uuid', UuidType::class);
     }
 
-    public function testJwtLoginControllerTest_Success()
+    public function testJwtLoginControllerTest_Success_With_Uppercase_Verify_Token()
     {
         $user = UserFactory::make()
             ->user()
             ->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())
             ->persist();
 
+        // The verify-token is on purpose here upper-cased to assert that it was not lower cased
+        // during the login action. This is required by Apple mobile devices
+        $verifyToken = strtoupper(UuidFactory::uuid());
         $this->postJson('/auth/jwt/login.json', [
             'user_id' => $user->id,
-            'challenge' => $this->makeChallenge($user, UuidFactory::uuid()),
+            'challenge' => $this->makeChallenge($user, $verifyToken),
         ]);
 
         $this->assertResponseOk('The authentication was a success.');
@@ -89,7 +95,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertSame(GpgJwtAuthenticator::PROTOCOL_VERSION, $challenge->version);
         $this->assertIsString($challenge->access_token);
         $this->assertTrue(Validation::uuid($challenge->refresh_token));
-        $this->assertTrue(Validation::uuid($challenge->verify_token));
+        $this->assertSame($verifyToken, $challenge->verify_token);
         $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->refresh_token, 'user_id' => $user->id])->count());
         $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->verify_token, 'user_id' => $user->id])->count());
 

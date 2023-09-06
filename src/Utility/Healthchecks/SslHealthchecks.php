@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Utility\Healthchecks;
 
-use Cake\Core\Configure;
 use Cake\Http\Client;
+use Cake\Routing\Router;
 
 class SslHealthchecks
 {
@@ -56,7 +56,7 @@ class SslHealthchecks
      */
     public static function peerValid(?array $checks = []): array
     {
-        $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
+        $url = Router::url('/healthcheck/status.json', true);
         try {
             $HttpSocket = new Client([
                 'ssl_verify_peer' => true,
@@ -80,7 +80,7 @@ class SslHealthchecks
      */
     public static function hostValid(?array $checks = []): array
     {
-        $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
+        $url = Router::url('/healthcheck/status.json', true);
         try {
             $HttpSocket = new Client([
                 'ssl_verify_peer' => true,
@@ -105,7 +105,7 @@ class SslHealthchecks
      */
     public static function notSelfSigned(?array $checks = []): array
     {
-        $url = Configure::read('App.fullBaseUrl') . '/healthcheck/status.json';
+        $url = Router::url('/healthcheck/status.json', true);
         try {
             $HttpSocket = new Client([
                 'ssl_verify_peer' => true,

@@ -83,6 +83,10 @@ class EmailController extends WebInstallerController
             return;
         }
 
+        /** @var \Passbolt\SmtpSettings\Form\EmailConfigurationForm $emailConfigForm */
+        $emailConfigForm = $this->viewBuilder()->getVar('formExecuteResult');
+        $data = $emailConfigForm->getData();
+
         if (isset($data['send_test_email'])) {
             $this->sendTestEmail($sendTestEmailService, $data);
             $this->render($this->stepInfo['template']);
@@ -103,7 +107,7 @@ class EmailController extends WebInstallerController
     {
         $form = new EmailConfigurationForm();
         $this->set('formExecuteResult', $form);
-        if (!$form->execute($data)) {
+        if (!$form->execute($data, ['validate' => 'webInstaller'])) {
             throw new CakeException(__('The data entered are not correct'));
         }
     }

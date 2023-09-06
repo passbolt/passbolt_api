@@ -44,6 +44,6 @@ class IsDateInFutureValidationRule extends PassboltValidationRule
             return false;
         }
 
-        return $value->gt(FrozenTime::now());
+        return $value->greaterThan(FrozenTime::now());
     }
 }

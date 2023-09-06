@@ -162,6 +162,7 @@ trait FormatValidationTrait
             foreach ($testCase['test_cases'] as $testCaseData => $expectedResult) {
                 $formData = Hash::insert($formData, $fieldName, $testCaseData);
                 $formData = $this->_adjustEntityData($fieldName, $formData);
+                /** @var \Cake\Form\Form $form */
                 $form = new $FormClass($this->getEventManager());
                 $validate = $form->validate($formData);
 
@@ -452,7 +453,8 @@ trait FormatValidationTrait
         $test = [
             'rule_name' => 'maxLength',
             'test_cases' => [
-                self::getStringMask('alphaASCII', 0) => true,
+                self::getStringMask('alphaASCII', 1) => true,
+                self::getStringMask('alphaASCII', $max - 1) => true,
                 self::getStringMask('alphaASCII', $max) => true,
                 self::getStringMask('alphaASCII', $max + 1) => false,
             ],

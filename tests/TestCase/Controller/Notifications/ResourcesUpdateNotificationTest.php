@@ -108,7 +108,7 @@ W3AI8+rWjK8MGH2T88hCYI/6
         $this->assertEmailWithRecipientIsInNotQueue('betty@passbolt.com');
     }
 
-    public function testResourcesUpdateNotificationSuccess(): void
+    public function testResourcesUpdateNotificationSuccess_Metadata(): void
     {
         $this->setEmailNotificationSetting('send.password.update', true);
 
@@ -131,5 +131,43 @@ W3AI8+rWjK8MGH2T88hCYI/6
 
         // email should be sent to self as backup
         $this->assertEmailInBatchContains('updated the password', 'betty@passbolt.com');
+    }
+
+    public function testResourcesUpdateNotificationSuccess_Secrets(): void
+    {
+        $this->setEmailNotificationSetting('send.password.update', true);
+        // Get and update resource
+        $resourceId = UuidFactory::uuid('resource.id.apache');
+        // Prepare secrets
+        $bettyId = UuidFactory::uuid('user.id.betty');
+        $bettyEncryptedSecret = $this->encryptMessageFor($bettyId, 'R1 secret updated');
+        $carolId = UuidFactory::uuid('user.id.carol');
+        $carolEncryptedSecret = $this->encryptMessageFor($carolId, 'R1 secret updated');
+        $dameId = UuidFactory::uuid('user.id.dame');
+        $dameEncryptedSecret = $this->encryptMessageFor($dameId, 'R1 secret updated');
+        $adaId = UuidFactory::uuid('user.id.ada');
+        $adaEncryptedSecret = $this->encryptMessageFor($adaId, 'R1 secret updated');
+        $data = [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+            'secrets' => [
+                ['user_id' => $bettyId, 'data' => $bettyEncryptedSecret],
+                ['user_id' => $carolId, 'data' => $carolEncryptedSecret],
+                ['user_id' => $dameId, 'data' => $dameEncryptedSecret],
+                ['user_id' => $adaId, 'data' => $adaEncryptedSecret],
+            ],
+        ];
+        $this->authenticateAs('betty');
+
+        $this->putJson("/resources/{$resourceId}.json", $data);
+
+        $this->assertSuccess();
+        // Assert email contents
+        $this->assertEmailInBatchContains('updated the password', 'ada@passbolt.com');
+        $this->assertEmailInBatchContains('updated the password', 'betty@passbolt.com');
+        $this->assertEmailInBatchContains('updated the password', 'carol@passbolt.com');
+        $this->assertEmailInBatchContains('updated the password', 'dame@passbolt.com');
     }
 }

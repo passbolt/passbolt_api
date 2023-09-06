@@ -61,8 +61,8 @@ class RbacFactory extends CakephpBaseFactory
                 'foreign_id' => $faker->uuid(),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'created' => FrozenDate::now()->subDay($faker->randomNumber(4)),
-                'modified' => FrozenDate::now()->subDay($faker->randomNumber(4)),
+                'created' => FrozenDate::now()->subDays($faker->randomNumber(4)),
+                'modified' => FrozenDate::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }

@@ -50,8 +50,8 @@ class FavoriteFactory extends CakephpBaseFactory
                 'user_id' => $faker->uuid(),
                 'foreign_key' => $faker->uuid(),
                 'foreign_model' => $faker->uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }
