@@ -14,11 +14,16 @@
  * @since         2.0.0
  */
 use Cake\Routing\RouteBuilder;
+use Passbolt\DirectorySync\Middleware\DirectorySyncSetEndpointSecurityMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
 $routes->plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
+    $routes->registerMiddleware(
+        DirectorySyncSetEndpointSecurityMiddleware::class,
+        new DirectorySyncSetEndpointSecurityMiddleware()
+    );
 
     $routes->connect('/ignore/toggle/{foreign_model}/{foreign_key}', [
                 'controller' => 'DirectoryIgnore', 'action' => 'toggle',
@@ -42,7 +47,8 @@ $routes->plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function
             ->setMethods(['GET']);
 
     $routes->connect('/settings', ['controller' => 'DirectorySettings', 'action' => 'update'])
-            ->setMethods(['POST', 'PUT']);
+        ->setMethods(['POST', 'PUT'])
+        ->setMiddleware([DirectorySyncSetEndpointSecurityMiddleware::class]);
 
     $routes->connect('/settings', ['controller' => 'DirectorySettings', 'action' => 'disable'])
             ->setMethods(['DELETE']);

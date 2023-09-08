@@ -412,6 +412,7 @@ return [
                         'Supplemental-Credentials',
                     ],
                 ],
+                'setEndpointDisabled' => filter_var(env('PASSBOLT_SECURITY_DIRECTORY_SYNC_SET_ENDPOINT_DISABLED', false), FILTER_VALIDATE_BOOLEAN),
             ],
         ],
 
