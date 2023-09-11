@@ -20,6 +20,7 @@ namespace App\Notification\Email;
 use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Text;
 use EmailQueue\Model\Table\EmailQueueTable;
 
 /**
@@ -28,7 +29,7 @@ use EmailQueue\Model\Table\EmailQueueTable;
  * @package App\Notification\Email
  *
  * Its sole purpose is to send emails. It encapsulates the logic on how the email is sent.
- * In practices it uses the EmailQueue plugin enqueue. Ultimate send responsibility is deferred to a
+ * In practice, it uses the EmailQueue plugin enqueue. Ultimate send responsibility is deferred to a
  * separated command line task (triggered manually or via cron job).
  */
 class EmailSender
@@ -92,7 +93,11 @@ class EmailSender
             'subject' => $this->purifySubject($email->getSubject()),
             'format' => 'html',
             'config' => 'default',
-            'headers' => ['Auto-Submitted' => 'auto-generated'],
+            'headers' => [
+                'Auto-Submitted' => 'auto-generated',
+                // Set message-id header which is by default disabled in the lorenzo/cakephp-email-queue plugin.
+                'Message-ID' => self::getMessageId(),
+            ],
         ];
     }
 
@@ -100,7 +105,7 @@ class EmailSender
      * @param string $subject Subject to purify
      * @return string
      */
-    private function purifySubject(string $subject): string
+    public function purifySubject(string $subject): string
     {
         if ($this->purifySubject) {
             $subject = Purifier::clean($subject);
@@ -122,5 +127,24 @@ class EmailSender
                 'fullBaseUrl' => $this->appFullBaseUrl,
             ],
         ]));
+    }
+
+    /**
+     * Returns a string that can be used directly in Message-ID header.
+     *
+     * @return string
+     *
+     * Original implementation:
+     * @see https://github.com/cakephp/cakephp/blob/4.x/src/Mailer/Message.php#L924
+     */
+    public static function getMessageId(): string
+    {
+        $domain = preg_replace('/\:\d+$/', '', (string)env('HTTP_HOST'));
+        if (empty($domain)) {
+            $domain = php_uname('n');
+        }
+
+        // example: <e8c3db0628f41ea86a03dc53d16d11a@domain.com>
+        return '<' . str_replace('-', '', Text::uuid()) . '@' . $domain . '>';
     }
 }

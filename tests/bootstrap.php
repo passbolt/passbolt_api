@@ -8,6 +8,7 @@ declare(strict_types=1);
  * unit tests in this file.
  */
 
+use Cake\Core\Configure;
 use Cake\TestSuite\ConnectionHelper;
 use Migrations\TestSuite\Migrator;
 
@@ -15,6 +16,8 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 require dirname(__DIR__) . '/config/bootstrap.php';
 
 $_SERVER['PHP_SELF'] = '/';
+
+Configure::write('EmailQueue.serialization_type', 'email_queue.json');
 
 (new ConnectionHelper())->addTestAliases();
 (new Migrator())->run();
