@@ -23,6 +23,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
@@ -113,7 +114,11 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($deletedBy, $user) {
-                return __('{0} deleted user {1}', $deletedBy->profile->first_name, $user->profile->first_name);
+                return __(
+                    '{0} deleted user {1}',
+                    Purifier::clean($deletedBy->profile->first_name),
+                    Purifier::clean($user->profile->first_name)
+                );
             }
         );
 

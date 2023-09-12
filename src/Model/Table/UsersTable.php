@@ -153,7 +153,7 @@ class UsersTable extends Table
             ->boolean('deleted', __('The deleted status should be a valid boolean.'));
 
         $validator
-            ->dateTime('disabled', ['ymd'], __('The creation date should be a valid date.'))
+            ->dateTime('disabled', ['ymd'], __('The disabled date should be a valid date.'))
             ->allowEmptyDateTime('disabled');
 
         $validator
@@ -278,10 +278,10 @@ class UsersTable extends Table
      *
      * @param \App\Model\Entity\User $user User
      * @param array $data request data
-     * @param string $roleName role name for example Role::User or Role::ADMIN
+     * @param \App\Utility\UserAccessControl $uac user performing the action
      * @return \App\Model\Entity\User the patched user entity
      */
-    public function editEntity(User $user, array $data, string $roleName)
+    public function editEntity(User $user, array $data, UserAccessControl $uac): User
     {
         $accessibleUserFields = [
             'active' => false,
@@ -293,9 +293,12 @@ class UsersTable extends Table
             'profile' => true,
             'gpgkey' => false,
         ];
-        // only admins can set roles and disable users
-        if ($roleName === Role::ADMIN) {
+        // only admins can set roles
+        if ($uac->isAdmin()) {
             $accessibleUserFields['role_id'] = true;
+        }
+        // only admins can disable users - though not themselves
+        if ($uac->isAdmin() && $uac->getId() !== $user->id) {
             $accessibleUserFields['disabled'] = true;
         }
 
