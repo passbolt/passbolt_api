@@ -24,7 +24,6 @@ class V430AddUserDisabledField extends AbstractMigration
      */
     public function up()
     {
-        return ;
         $this->table('users')
             ->addColumn('disabled', 'datetime', [
                 'default' => null,
