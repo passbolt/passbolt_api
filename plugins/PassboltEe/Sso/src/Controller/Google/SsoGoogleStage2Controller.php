@@ -23,6 +23,7 @@ use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
 use Passbolt\Sso\Controller\AbstractSsoController;
+use Passbolt\Sso\Error\Exception\GoogleException;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\Google\SsoGoogleService;
@@ -90,8 +91,12 @@ class SsoGoogleStage2Controller extends AbstractSsoController
             throw new BadRequestException($exception->getMessage(), 400, $exception);
         }
 
-        $service = new SsoGoogleService($cookieService, $settingsDto);
-        $uac = $service->assertStateCodeAndGetUac($ssoState, $code, $this->User->ip(), $this->User->userAgent());
+        try {
+            $service = new SsoGoogleService($cookieService, $settingsDto);
+            $uac = $service->assertStateCodeAndGetUac($ssoState, $code, $this->User->ip(), $this->User->userAgent());
+        } catch (GoogleException $e) { // Remap 500 error with 400 when admin is setting up SSO
+            throw new BadRequestException($e->getMessage(), 400, $e);
+        }
 
         // Create authentication token for next step, e.g. activate settings
         $ssoAuthToken = $service->createAuthTokenToActiveSettings($uac, $service->getSettings()->id);

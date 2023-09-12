@@ -71,7 +71,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
         // Check sort order
         $d1 = new Chronos($results->created);
         $d2 = new Chronos($results->modified);
-        $this->assertTrue($d2->gt($d1));
+        $this->assertTrue($d2->greaterThan($d1));
 
         // Check request is updated
         $this->assertEquals(1, AccountRecoveryRequestFactory::count());
@@ -113,7 +113,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
         // Check sort order
         $d1 = new Chronos($results->created);
         $d2 = new Chronos($results->modified);
-        $this->assertTrue($d2->gt($d1));
+        $this->assertTrue($d2->greaterThan($d1));
 
         // Check request is updated
         $this->assertEquals(1, AccountRecoveryRequestFactory::count());

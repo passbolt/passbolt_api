@@ -103,7 +103,7 @@ class SsoSettingsActiveDeletedEmailRedactorTest extends AppTestCase
         $ssoSetting = SsoSettingsFactory::make()->azure()->active()->persist();
         // Create users to test
         $operator = UserFactory::make()->admin()->persist();
-        $admin1 = UserFactory::make(['created' => FrozenTime::now()->subDay(1)])->admin()->persist(); // created set for predictable result
+        $admin1 = UserFactory::make(['created' => FrozenTime::now()->subDays(1)])->admin()->persist(); // created set for predictable result
         $admin2 = UserFactory::make(['created' => FrozenTime::now()])->admin()->persist();
         UserFactory::make()->user()->persist();
         $uac = new ExtendedUserAccessControl(

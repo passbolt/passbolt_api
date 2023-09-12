@@ -72,7 +72,7 @@ class FixDirectorySyncLegacyFieldsMappingServiceTest extends AppTestCase
     {
         $dummySettings = $this->getDummyDirectorySyncSettings('v4');
         // The settings should have been created after the migration to the v4.
-        OrganizationSettingFactory::make(['created' => FrozenTime::now()->addDay()])
+        OrganizationSettingFactory::make(['created' => FrozenTime::now()->addDays(1)])
             ->setPropertyAndValue(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY, json_encode($dummySettings))
             ->persist();
 
