@@ -84,6 +84,8 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
                 'send_admin_user_recover_abort',
                 __('The send on user recover abort setting should be a boolean.')
             )
+            ->boolean('send_admin_user_disable_user', __('The send on user disabled setting should be a boolean.'))
+            ->boolean('send_admin_user_disable_admin', __('The send on admin disabled setting should be a boolean.'))
             ->boolean('send_comment_add', __('The send on comment added setting should be a boolean.'))
             ->boolean('send_group_delete', __('The send on group deleted setting should be a boolean.'))
             ->boolean('send_group_user_add', __('The send on group user added setting should be a boolean.'))

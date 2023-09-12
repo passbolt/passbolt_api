@@ -100,6 +100,10 @@ trait EmailNotificationSettingsTestTrait
                 ],
                 'admin' => [
                     'user' => [
+                        'disable' => [
+                            'admin' => true,
+                            'user' => true,
+                        ],
                         'setup' => [
                             'completed' => true,
                         ],
