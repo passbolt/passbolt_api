@@ -23,9 +23,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class DirectorySyncSetEndpointSecurityMiddleware implements MiddlewareInterface
+class DirectorySyncEndpointsSecurityMiddleware implements MiddlewareInterface
 {
-    public const SECURITY_CONFIG_KEY = 'passbolt.security.directorySync.setEndpointDisabled';
+    public const SECURITY_CONFIG_KEY = 'passbolt.security.directorySync.endpointsDisabled';
 
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.
@@ -35,7 +35,7 @@ class DirectorySyncSetEndpointSecurityMiddleware implements MiddlewareInterface
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
         if (Configure::read(self::SECURITY_CONFIG_KEY)) {
-            throw new ForbiddenException(__('Set directory sync settings endpoint is disabled.'));
+            throw new ForbiddenException(__('Directory sync settings endpoints are disabled.'));
         }
 
         return $handler->handle($request);
