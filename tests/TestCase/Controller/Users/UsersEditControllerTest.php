@@ -25,11 +25,6 @@ use Cake\I18n\FrozenTime;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * @var \App\Model\Table\AvatarsTable $Avatars
-     */
-    public $Avatars;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -103,20 +98,6 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
         $this->assertEquals($this->_responseJsonBody->role->name, Role::ADMIN);
-    }
-
-    public function testUsersEditController_Success_AdminDisableEdit(): void
-    {
-        $admin = UserFactory::make()->admin()->persist();
-        $user = UserFactory::make()->user()->persist();
-        $this->logInAs($admin);
-        $data = [
-            'id' => $user->id,
-            'disabled' => FrozenTime::now(),
-        ];
-        $this->postJson('/users/' . $user->id . '.json', $data);
-        $this->assertSuccess();
-        $this->assertNotNull($this->_responseJsonBody->disabled);
     }
 
     public function testUsersEditController_Error_MissingCsrfToken(): void

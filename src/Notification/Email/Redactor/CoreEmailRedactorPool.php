@@ -33,7 +33,9 @@ use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceUpdateEmailRedactor;
 use App\Notification\Email\Redactor\Setup\SetupRecoverAbortAdminEmailRedactor;
 use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
+use App\Notification\Email\Redactor\User\AdminDisableEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDeleteEmailRedactor;
+use App\Notification\Email\Redactor\User\UserDisableEmailRedactor;
 use App\Notification\Email\Redactor\User\UserRegisterEmailRedactor;
 use Cake\Core\Configure;
 use Passbolt\SelfRegistration\Notification\Email\Redactor\User\SelfRegistrationUserEmailRedactor;
@@ -65,6 +67,12 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         }
         if ($this->isRedactorEnabled('send.admin.user.recover.complete')) {
             $redactors[] = new AccountRecoveryCompleteAdminEmailRedactor();
+        }
+        if ($this->isRedactorEnabled('send.admin.user.disable.user')) {
+            $redactors[] = new UserDisableEmailRedactor();
+        }
+        if ($this->isRedactorEnabled('send.admin.user.disable.admin')) {
+            $redactors[] = new AdminDisableEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.password.share')) {
             $redactors[] = new ShareEmailRedactor();

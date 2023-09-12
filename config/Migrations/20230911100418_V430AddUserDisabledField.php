@@ -10,12 +10,12 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.2.0
+ * @since         4.3.0
  */
 // @codingStandardsIgnoreStart
 use Migrations\AbstractMigration;
 
-class V420AddUserDisabledField extends AbstractMigration
+class V430AddUserDisabledField extends AbstractMigration
 {
     /**
      * Up
@@ -24,11 +24,13 @@ class V420AddUserDisabledField extends AbstractMigration
      */
     public function up()
     {
+        return ;
         $this->table('users')
             ->addColumn('disabled', 'datetime', [
                 'default' => null,
                 'limit' => null,
                 'null' => true,
+                'after' => 'deleted',
             ])
             ->save();
     }

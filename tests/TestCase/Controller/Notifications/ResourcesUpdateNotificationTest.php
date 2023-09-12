@@ -68,7 +68,7 @@ class ResourcesUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertEmailWithRecipientIsInNotQueue($disabled->username);
     }
 
-    public function testResourcesUpdateNotification_NotificationDisabled(): void
+    public function testResourcesUpdateNotification_NotificationDisabled_Metadata(): void
     {
         $this->setEmailNotificationSetting('send.password.update', false);
 

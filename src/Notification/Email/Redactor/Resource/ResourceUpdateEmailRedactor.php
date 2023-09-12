@@ -28,6 +28,7 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Resources\ResourcesUpdateService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Passbolt\Locale\Service\LocaleService;
 
 class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
@@ -74,17 +75,28 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         /** @var \App\Model\Entity\Resource $resource */
         $resource = $event->getData('resource');
+        /** @var \App\Model\Entity\Secret[] $secrets */
+        $secrets = $event->getData('secrets');
 
         // Get the users that can access this resource
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
+        /** @var \App\Model\Entity\User[] $users */
         $users = $this->usersTable->findIndex(Role::USER, $options)
             ->find('locale')
             ->find('notDisabled');
         $owner = $this->usersTable->findFirstForEmail($resource->modified_by);
 
+        $secretsDataById = [];
+        // Secrets can be empty when only metadata is updated
+        if (!empty($secrets)) {
+            $secretsDataById = Hash::combine($secrets, '{n}.user_id', '{n}.data');
+        }
+
         // Send emails to everybody that can see the resource
         foreach ($users as $user) {
-            $emailCollection->addEmail($this->createUpdateEmail($user, $owner, $resource));
+            $emailCollection->addEmail(
+                $this->createUpdateEmail($user, $owner, $resource, $secretsDataById[$user->id] ?? null)
+            );
         }
 
         return $emailCollection;
@@ -94,9 +106,10 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\User $recipient Email of the recipient user
      * @param \App\Model\Entity\User $owner User who executed the action
      * @param \App\Model\Entity\Resource $resource Resource
+     * @param string|null $armoredSecret The secret data string if present
      * @return \App\Notification\Email\Email
      */
-    private function createUpdateEmail(User $recipient, User $owner, Resource $resource): Email
+    private function createUpdateEmail(User $recipient, User $owner, Resource $resource, $armoredSecret): Email
     {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
@@ -104,10 +117,12 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
                 return __('{0} edited the password {1}', $owner->profile->first_name, $resource->name);
             }
         );
+
         $data = [
             'body' => [
                 'user' => $owner,
                 'resource' => $resource,
+                'armoredSecret' => $armoredSecret,
                 'showUsername' => $this->getConfig('show.username'),
                 'showUri' => $this->getConfig('show.uri'),
                 'showDescription' => $this->getConfig('show.description'),

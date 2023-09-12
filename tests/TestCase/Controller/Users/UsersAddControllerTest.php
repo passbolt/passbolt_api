@@ -128,7 +128,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEmpty($user->disabled);
-        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertTrue($user->created->greaterThan(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersAddController_Success_EmailSent(): void

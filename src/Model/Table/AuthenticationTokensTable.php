@@ -247,12 +247,10 @@ class AuthenticationTokensTable extends Table
      * @param string $token uuid of the token to check
      * @param string $userId uuid of the user
      * @param string|null $type token type
-     * @param string|int $expiry the numeric value with space then time type.
-     *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool true if it is valid
      * @deprecated use AuthenticationTokenGetService
      */
-    public function isValid(string $token, string $userId, ?string $type = null, $expiry = null): bool
+    public function isValid(string $token, string $userId, ?string $type = null): bool
     {
         // Are ids valid uuid?
         if (!Validation::uuid($token) || !Validation::uuid($userId)) {
@@ -274,7 +272,7 @@ class AuthenticationTokensTable extends Table
         }
 
         // Is it expired
-        if ($this->isExpired($token, $expiry)) {
+        if ($token->isExpired()) {
             // update the token to inactive
             $token->set('active', false);
             $this->save($token);
@@ -289,13 +287,11 @@ class AuthenticationTokensTable extends Table
      * Check if a token is expired
      *
      * @param \App\Model\Entity\AuthenticationToken $token uuid
-     * @param string|int $expiry the numeric value with space then time type.
-     *    Example of valid types: 6 hours, 2 days, 1 minute.
      * @return bool
      */
-    public function isExpired(AuthenticationToken $token, $expiry = null): bool
+    public function isExpired(AuthenticationToken $token): bool
     {
-        return $token->isExpired($expiry);
+        return $token->isExpired();
     }
 
     /**
