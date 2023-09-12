@@ -41,7 +41,7 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->disabled, null);
+        $this->assertNull($this->_responseJsonBody->disabled);
     }
 
     public function testUsersEditDisableController_Success_AsAdminCannotEditDisabled(): void
@@ -53,7 +53,7 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $admin->id . '.json', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->disabled, null);
+        $this->assertNull($this->_responseJsonBody->disabled);
     }
 
     public function testUsersEditDisableController_Error_Disabled_Not_Parsable(): void

@@ -63,7 +63,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->assertEquals($this->_responseJsonBody->profile->first_name, 'ada edited');
         $this->assertEquals($this->_responseJsonBody->active, true);
         $this->assertEquals($this->_responseJsonBody->deleted, false);
-        $this->assertEquals($this->_responseJsonBody->disabled, null);
+        $this->assertNull($this->_responseJsonBody->disabled);
     }
 
     public function testUsersEditController_Success_AsUserIgnoreNotAllowedFields(): void
