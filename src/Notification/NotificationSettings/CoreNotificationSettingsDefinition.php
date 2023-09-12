@@ -44,6 +44,8 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
             ->addField('send_admin_user_setup_completed', ['type' => 'boolean', 'default' => true])
             ->addField('send_admin_user_recover_abort', ['type' => 'boolean', 'default' => true])
             ->addField('send_admin_user_recover_complete', ['type' => 'boolean', 'default' => true])
+            ->addField('send_admin_user_disable_user', ['type' => 'boolean', 'default' => true])
+            ->addField('send_admin_user_disable_admin', ['type' => 'boolean', 'default' => true])
             ->addField('send_comment_add', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_delete', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_user_add', ['type' => 'boolean', 'default' => true])
