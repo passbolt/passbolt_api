@@ -12,25 +12,18 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         4.3.0
  */
 
 namespace App\Service\Setup;
 
-use Cake\View\ViewBuilder;
-
-interface RecoverStartServiceInterface
+class DefaultRecoverStartService extends AbstractRecoverStartService
 {
     /**
-     * @param string $userId User uuid
-     * @param string $token Register token
-     * @return array data to pass to the view
+     * @param \App\Service\Setup\RecoverStartUserInfoService $recoverStartUserInfoService User info service.
      */
-    public function getInfo(string $userId, string $token): array;
-
-    /**
-     * @param \Cake\View\ViewBuilder $viewBuilder View builder
-     * @return void
-     */
-    public function setTemplate(ViewBuilder $viewBuilder): void;
+    public function __construct(RecoverStartUserInfoService $recoverStartUserInfoService)
+    {
+        $this->add($recoverStartUserInfoService);
+    }
 }

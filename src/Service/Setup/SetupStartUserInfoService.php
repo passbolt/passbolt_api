@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         4.3.0
  */
 
 namespace App\Service\Setup;
@@ -23,51 +23,40 @@ use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\View\ViewBuilder;
 
-class RecoverStartService extends AbstractStartService implements RecoverStartServiceInterface
+class SetupStartUserInfoService implements SetupStartInfoServiceInterface
 {
     /**
      * @inheritDoc
      */
-    public function getInfo(string $userId, string $token): array
+    public function getInfo(string $userId, string $token, ?array $data): array
     {
         try {
-            $user = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
+            $user = (new UserGetService())->getNotActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
-            throw new BadRequestException(__('The user does not exist or is not active or is disabled.'));
+            throw new BadRequestException(__('The user does not exist or is already active or is disabled.'));
         }
 
-        $this->assertAuthToken($token, $user);
+        $this->assertAuthToken($user, $token);
 
-        return compact('user');
+        $data['user'] = $user;
+
+        return $data;
     }
 
     /**
-     * @inheritDoc
-     */
-    public function setTemplate(ViewBuilder $viewBuilder): void
-    {
-        $viewBuilder
-            ->setTemplatePath('/Setup')
-            ->setLayout('default')
-            ->setTemplate('recoverStart');
-    }
-
-    /**
-     * Find the recover token
+     * Check the setup token
      *
-     * @param string $token uuid of the token
      * @param \App\Model\Entity\User $user user attempting to recover
-     * @return void
-     * @throw Custom if the token is not valid
+     * @param string $token uuid of the token
      * @throw BadRequestException if the token is not valid
+     * @return void
      */
-    private function assertAuthToken(string $token, User $user): void
+    private function assertAuthToken(User $user, string $token): void
     {
         try {
             (new AuthenticationTokenGetService())
-                ->getActiveNotExpiredOrFail($token, $user->id, AuthenticationToken::TYPE_RECOVER);
+                ->getActiveNotExpiredOrFail($token, $user->id, AuthenticationToken::TYPE_REGISTER);
         } catch (NotFoundException $exception) {
             throw new BadRequestException(__('The authentication token is not valid.'));
         }

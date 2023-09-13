@@ -12,35 +12,20 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         4.3.0
  */
 
 namespace App\Service\Setup;
 
-use Cake\Http\ServerRequest;
-use Cake\View\ViewBuilder;
-
-interface SetupStartServiceInterface
+interface SetupStartInfoServiceInterface
 {
-    /**
-     * SetupStartServiceInterface constructor.
-     *
-     * @param \Cake\Http\ServerRequest|null $request Server Request
-     */
-    public function __construct(?ServerRequest $request = null);
-
     /**
      * Retrieves user and token information for the setup controllers
      *
      * @param string $userId User uuid
      * @param string $token Register token
+     * @param array|null $data Result data from previous service
      * @return array data to pass to the view
      */
-    public function getInfo(string $userId, string $token): array;
-
-    /**
-     * @param \Cake\View\ViewBuilder $viewBuilder View builder
-     * @return void
-     */
-    public function setTemplate(ViewBuilder $viewBuilder): void;
+    public function getInfo(string $userId, string $token, ?array $data): array;
 }

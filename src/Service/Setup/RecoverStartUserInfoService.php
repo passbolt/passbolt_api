@@ -23,53 +23,41 @@ use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\View\ViewBuilder;
 
-/**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
- * @property \App\Model\Table\UsersTable $Users
- */
-class SetupStartService extends AbstractStartService implements SetupStartServiceInterface
+class RecoverStartUserInfoService implements RecoverStartInfoServiceInterface
 {
     /**
      * @inheritDoc
      */
-    public function getInfo(string $userId, string $token): array
+    public function getInfo(string $userId, string $token, ?array $data): array
     {
         try {
-            $user = (new UserGetService())->getNotActiveNotDeletedNotDisabledOrFail($userId);
+            $user = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
-            throw new BadRequestException(__('The user does not exist or is already active or is disabled.'));
+            throw new BadRequestException(__('The user does not exist or is not active or is disabled.'));
         }
-        $this->assertAuthToken($user, $token);
 
-        return compact('user');
+        $this->assertAuthToken($token, $user);
+
+        $data['user'] = $user;
+
+        return $data;
     }
 
     /**
-     * @inheritDoc
-     */
-    public function setTemplate(ViewBuilder $viewBuilder): void
-    {
-        $viewBuilder
-            ->setTemplatePath('/Setup')
-            ->setLayout('default')
-            ->setTemplate('start');
-    }
-
-    /**
-     * Check the setup token
+     * Find the recover token
      *
-     * @param \App\Model\Entity\User $user user attempting to recover
      * @param string $token uuid of the token
-     * @throw BadRequestException if the token is not valid
+     * @param \App\Model\Entity\User $user user attempting to recover
      * @return void
+     * @throw Custom if the token is not valid
+     * @throw BadRequestException if the token is not valid
      */
-    private function assertAuthToken(User $user, string $token): void
+    private function assertAuthToken(string $token, User $user): void
     {
         try {
             (new AuthenticationTokenGetService())
-                ->getActiveNotExpiredOrFail($token, $user->id, AuthenticationToken::TYPE_REGISTER);
+                ->getActiveNotExpiredOrFail($token, $user->id, AuthenticationToken::TYPE_RECOVER);
         } catch (NotFoundException $exception) {
             throw new BadRequestException(__('The authentication token is not valid.'));
         }
