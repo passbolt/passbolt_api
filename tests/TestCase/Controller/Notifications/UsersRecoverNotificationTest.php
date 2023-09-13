@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
@@ -27,42 +28,64 @@ class UsersRecoverNotificationTest extends AppIntegrationTestCase
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
-
-    public function testUsersRecoverNotificationSuccess(): void
+    public function testUsersRecoverNotificationSuccess_SetupRestart(): void
     {
         $this->setSelfRegistrationSettingsData();
         $this->setEmailNotificationSetting('send.user.recover', true);
 
-        // setup
-        $username = 'ruth@passbolt.com';
+        $username = 'setup@passbolt.com';
+        UserFactory::make()->user()
+            ->patchData(['username' => $username])
+            ->inactive()
+            ->persist();
+
         $this->postJson('/users/recover.json', compact('username'));
         $this->assertSuccess();
         $this->assertEmailInBatchContains('You just opened an account', $username);
+    }
 
-        // recovery
-        $username = 'ada@passbolt.com';
+    public function testUsersRecoverNotificationSuccess_Recover(): void
+    {
+        $this->setSelfRegistrationSettingsData();
+        $this->setEmailNotificationSetting('send.user.recover', true);
+
+        $username = 'recover@passbolt.com';
+        UserFactory::make()->user()
+            ->patchData(['username' => $username])
+            ->active()
+            ->persist();
+
         $this->postJson('/users/recover.json', compact('username'));
         $this->assertSuccess();
         $this->assertEmailInBatchContains('You have initiated an account recovery!', $username);
     }
 
-    public function testUsersCreateNotificationDisabled(): void
+    public function testUsersRecoverNotificationDisabled_SetupRestart(): void
     {
-        // setup
         $this->setEmailNotificationSetting('send.user.create', false);
 
-        $this->postJson('/users/recover.json', ['username' => 'ruth@passbolt.com']);
+        $username = 'setup@passbolt.com';
+        UserFactory::make()->user()
+            ->patchData(['username' => $username])
+            ->inactive()
+            ->persist();
+
+        $this->postJson('/users/recover.json', compact('username'));
         $this->assertSuccess();
         $this->assertEmailWithRecipientIsInNotQueue('ruth@passbolt.com');
     }
 
-    public function testUsersRecoverNotificationDisabled(): void
+    public function testUsersRecoverNotificationDisabled_Recover(): void
     {
-        // recovery
         $this->setEmailNotificationSetting('send.user.recover', false);
 
-        $this->postJson('/users/recover.json', ['username' => 'ada@passbolt.com']);
+        $username = 'recover@passbolt.com';
+        UserFactory::make()->user()
+            ->patchData(['username' => $username])
+            ->active()
+            ->persist();
+
+        $this->postJson('/users/recover.json', compact('username'));
         $this->assertSuccess();
         $this->assertEmailWithRecipientIsInNotQueue('ada@passbolt.com');
     }

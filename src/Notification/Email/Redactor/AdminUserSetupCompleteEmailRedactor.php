@@ -118,7 +118,10 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         }
 
         /** @var \App\Model\Entity\User[] $admins */
-        $admins = $this->usersTable->findAdmins()->find('locale');
+        $admins = $this->usersTable->findAdmins()
+            ->find('locale')
+            ->find('notDisabled');
+
         // Create an email for every admin
         foreach ($admins as $admin) {
             $emailCollection->addEmail(
@@ -155,7 +158,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         );
 
         return new Email(
-            $admin->username,
+            $admin,
             $subject,
             [
                 'title' => $subject,

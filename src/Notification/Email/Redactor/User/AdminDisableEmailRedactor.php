@@ -12,27 +12,30 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.13.0
+ * @since         4.3.0
  */
 
-namespace App\Notification\Email\Redactor\Recovery;
+namespace App\Notification\Email\Redactor\User;
 
-use App\Controller\Users\UsersRecoverController;
-use App\Model\Entity\AuthenticationToken;
+use App\Controller\Users\UsersEditController;
 use App\Model\Entity\User;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Utility\UserAccessControl;
 use Cake\Event\Event;
-use Passbolt\Locale\Service\GetUserLocaleService;
+use Cake\I18n\FrozenTime;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
 
-class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
+/**
+ * Class AdminDisableEmailRedactor
+ */
+class AdminDisableEmailRedactor implements SubscribedEmailRedactorInterface
 {
+    use LocatorAwareTrait;
     use SubscribedEmailRedactorTrait;
-
-    public const TEMPLATE = 'AN/user_recover';
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
@@ -42,7 +45,7 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents(): array
     {
         return [
-            UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME,
+            UsersEditController::EVENT_ADMIN_WAS_DISABLED,
         ];
     }
 
@@ -52,38 +55,44 @@ class AccountRecoveryEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function onSubscribedEvent(Event $event): EmailCollection
     {
-        $emailCollection = new EmailCollection();
+        /** @var \App\Model\Table\UsersTable $UsersTable */
+        $UsersTable = $this->fetchTable('Users');
 
         /** @var \App\Model\Entity\User $user */
         $user = $event->getData('user');
-        /** @var \App\Model\Entity\AuthenticationToken $token */
-        $token = $event->getData('token');
-        /** @var string $case */
-        $case = $event->getData('case') ?? 'default';
+        /** @var \App\Utility\UserAccessControl $operator */
+        $operator = $event->getData('operator');
 
-        $emailCollection->addEmail($this->createAccountRecoveryEmail($user, $token, $case));
+        $recipient = $UsersTable->findFirstForEmail($user->id);
+        // Set the disabled field to the future so the email is well sent
+        // as the Email class will not send mails to disabled users
+        $recipient->set('disabled', FrozenTime::tomorrow());
 
-        return $emailCollection;
+        $email = $this->createEmail($recipient, $operator);
+
+        return (new EmailCollection())->addEmail($email);
     }
 
     /**
-     * @param \App\Model\Entity\User $user User
-     * @param \App\Model\Entity\AuthenticationToken $token Token for recovery
-     * @param string $case 'lost-passphrase' or 'default'
+     * @param \App\Model\Entity\User $user recipient
+     * @param \App\Utility\UserAccessControl $operator admin the user might want to contact
      * @return \App\Notification\Email\Email
      */
-    private function createAccountRecoveryEmail(User $user, AuthenticationToken $token, string $case): Email
+    private function createEmail(User $user, UserAccessControl $operator): Email
     {
-        $locale = (new GetUserLocaleService())->getLocale($user->username);
         $subject = (new LocaleService())->translateString(
-            $locale,
-            function () use ($user) {
-                return __('Your account recovery, {0}!', $user->profile->first_name);
+            $user->locale,
+            function () {
+                return __('Your account has been suspended');
             }
         );
+        $operatorUsername = $operator->getUsername();
 
-        $data = ['body' => ['user' => $user, 'token' => $token, 'case' => $case], 'title' => $subject];
-
-        return new Email($user, $subject, $data, self::TEMPLATE);
+        return new Email(
+            $user,
+            $subject,
+            ['body' => compact('user', 'operatorUsername'), 'title' => $subject],
+            'AD/admin_disable'
+        );
     }
 }

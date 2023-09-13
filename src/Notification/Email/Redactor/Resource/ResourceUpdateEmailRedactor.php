@@ -81,7 +81,9 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         // Get the users that can access this resource
         $options = ['contain' => ['role'], 'filter' => ['has-access' => [$resource->id]]];
         /** @var \App\Model\Entity\User[] $users */
-        $users = $this->usersTable->findIndex(Role::USER, $options)->find('locale');
+        $users = $this->usersTable->findIndex(Role::USER, $options)
+            ->find('locale')
+            ->find('notDisabled');
         $owner = $this->usersTable->findFirstForEmail($resource->modified_by);
 
         $secretsDataById = [];
@@ -128,6 +130,6 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
             ], 'title' => $subject,
         ];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

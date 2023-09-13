@@ -440,7 +440,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $user = UserFactory::make()->active()->deleted()->persist();
         $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, []);
-        $this->assertError(400, 'The user does not exist or is already active.');
+        $this->assertError(400, 'The user does not exist or is already active or is disabled.');
     }
 
     /**
@@ -453,7 +453,20 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         $user = UserFactory::make()->active()->persist();
         $url = '/setup/complete/' . $user->id . '.json';
         $this->postJson($url, []);
-        $this->assertError(400, 'The user does not exist or is already active.');
+        $this->assertError(400, 'The user does not exist or is already active or is disabled.');
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupComplete
+     */
+    public function testSetupCompleteController_Error_DisabledUser(): void
+    {
+        $user = UserFactory::make()->active()->disabled()->persist();
+        $url = '/setup/complete/' . $user->id . '.json';
+        $this->postJson($url, []);
+        $this->assertError(400, 'The user does not exist or is already active or is disabled.');
     }
 
     /**

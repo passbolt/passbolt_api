@@ -106,7 +106,9 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function findUsersUsernameToSendEmailTo(array $usersIds): Query
     {
-        return $this->usersTable->find('locale')->where(['Users.id IN' => $usersIds]);
+        return $this->usersTable->find('locale')
+            ->find('notDisabled')
+            ->where(['Users.id IN' => $usersIds]);
     }
 
     /**
@@ -140,6 +142,6 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

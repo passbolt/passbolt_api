@@ -81,9 +81,11 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
         $user = $this->Users->findFirstForEmail($request->user_id);
 
         $admins = $this->Users->findAdmins()
+            ->find('notDisabled')
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);
+
         foreach ($admins as $admin) {
             $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $request));
         }
@@ -116,6 +118,6 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
             'requestId' => $request->id,
         ], 'title' => $subject,];
 
-        return new Email($admin->username, $subject, $data, self::ADMIN_TEMPLATE);
+        return new Email($admin, $subject, $data, self::ADMIN_TEMPLATE);
     }
 }

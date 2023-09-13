@@ -38,7 +38,7 @@ class RecoverAbortControllerTest extends AppIntegrationTestCase
             ->userId($user->id)
             ->active()
             ->persist();
-        $admin = UserFactory::make()->admin()->active()->persist();
+        $admins = UserFactory::make(3)->admin()->active()->persist();
 
         $url = '/setup/recover/abort/' . $user->id . '.json';
         $data = [
@@ -49,10 +49,13 @@ class RecoverAbortControllerTest extends AppIntegrationTestCase
         $this->postJson($url, $data);
         $this->assertSuccess();
 
-        $this->assertEquals(1, EmailQueueFactory::count());
+        $this->assertEquals(3, EmailQueueFactory::count());
         $this->assertEmailIsInQueue([
-            'email' => $admin->username,
+            'email' => $admins[0]->username,
         ]);
+        $email = EmailQueueFactory::find()->firstOrFail();
+        $this->assertTextEquals('AD/setup_recover_abort', $email->template);
+        $this->assertEmailInBatchContains($user->profile->first_name . ' cannot complete the account recovery process!');
     }
 
     public function testRecoverAbortController_Success_EmailDisabled(): void
@@ -189,6 +192,14 @@ class RecoverAbortControllerTest extends AppIntegrationTestCase
         $url = '/setup/recover/complete/' . $user->id . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
+    }
+
+    public function testRecoverAbortController_Error_DisabledUser(): void
+    {
+        $user = UserFactory::make()->user()->disabled()->persist();
+        $url = '/setup/recover/complete/' . $user->id . '.json';
+        $this->postJson($url, []);
+        $this->assertError(400, 'The user does not exist or is not active or is disabled.');
     }
 
     /**

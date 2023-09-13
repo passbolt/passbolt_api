@@ -12,46 +12,36 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.6.0
+ * @since         4.3.0
  */
 
-namespace Passbolt\AccountRecovery\Notification\Request;
+namespace App\Notification\Email\Redactor\User;
 
+use App\Controller\Users\UsersEditController;
 use App\Model\Entity\User;
+use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
-use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
-use Passbolt\Locale\Service\GetUserLocaleService;
 use Passbolt\Locale\Service\LocaleService;
 
 /**
- * Class AccountRecoveryRequestCreatedUserEmailRedactor
+ * Class UserDisableEmailRedactor
  */
-class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailRedactorInterface
+class UserDisableEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use LocatorAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const USER_TEMPLATE = 'Passbolt/AccountRecovery.Requests/user_request';
-
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
-
-    /**
-     * AccountRecoveryRequestCreatedUserEmailRedactor Constructor
-     */
-    public function __construct()
-    {
-        /** @phpstan-ignore-next-line */
-        $this->Users = $this->fetchTable('Users');
-    }
+    protected UsersTable $Users;
 
     /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
@@ -61,7 +51,7 @@ class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailR
     public function getSubscribedEvents(): array
     {
         return [
-            AccountRecoveryRequestCreateService::REQUEST_CREATED_EVENT_NAME,
+            UsersEditController::EVENT_USER_WAS_DISABLED,
         ];
     }
 
@@ -71,37 +61,56 @@ class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailR
      */
     public function onSubscribedEvent(Event $event): EmailCollection
     {
+        /** @var \App\Model\Table\UsersTable $UsersTable */
+        $UsersTable = $this->fetchTable('Users');
         $emailCollection = new EmailCollection();
-        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request */
-        $request = $event->getSubject();
 
         /** @var \App\Model\Entity\User $user */
-        $user = $this->Users->findFirstForEmail($request->user_id);
+        $user = $event->getData('user');
+        /** @var \App\Utility\UserAccessControl $operator */
+        $operator = $event->getData('operator');
+        $operator = $UsersTable->findFirstForEmail($operator->getId());
 
-        if (!$user->isDisabled()) {
-            $emailCollection->addEmail($this->makeUserEmail($user, $request));
+        $recipients = $UsersTable
+            ->findAdmins()
+            ->find('locale')
+            ->find('notDisabled')
+            ->contain([
+                'Profiles' => AvatarsTable::addContainAvatar(),
+                'Roles',
+            ]);
+
+        /** @var \App\Model\Entity\User $recipient */
+        foreach ($recipients as $recipient) {
+            $email = $this->createEmail($recipient, $user);
+            $emailCollection->addEmail($email);
         }
 
         return $emailCollection;
     }
 
     /**
+     * @param \App\Model\Entity\User $recipient Recipient
      * @param \App\Model\Entity\User $user User
-     * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $request Account recovery request initiated by the user
      * @return \App\Notification\Email\Email
      */
-    private function makeUserEmail(User $user, AccountRecoveryRequest $request): Email
-    {
-        $locale = (new GetUserLocaleService())->getLocale($user->username);
+    private function createEmail(
+        User $recipient,
+        User $user
+    ): Email {
+        $userFullName = Purifier::clean($user->profile->first_name) . ' ' . Purifier::clean($user->profile->last_name);
         $subject = (new LocaleService())->translateString(
-            $locale,
-            function () {
-                return __('You have initiated a recovery request');
+            $recipient->locale,
+            function () use ($userFullName) {
+                return __('{0} has been suspended', $userFullName);
             }
         );
 
-        $data = ['body' => ['user' => $user, 'created' => $request->created,], 'title' => $subject,];
-
-        return new Email($user, $subject, $data, self::USER_TEMPLATE);
+        return new Email(
+            $recipient,
+            $subject,
+            ['body' => compact('userFullName', 'user', 'recipient'), 'title' => $subject],
+            'AD/user_disable'
+        );
     }
 }

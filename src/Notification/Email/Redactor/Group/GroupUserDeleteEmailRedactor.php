@@ -30,6 +30,10 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Locale\Service\LocaleService;
 
+/**
+ * Class GroupUserDeleteEmailRedactor
+ * Email sent to the user when they are removed from a group
+ */
 class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
@@ -102,7 +106,9 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($removedGroupsUsers, '{n}.user_id');
-        $users = $this->usersTable->find('locale')->where(['Users.id IN' => $usersIds]);
+        $users = $this->usersTable->find('locale')
+            ->find('notDisabled')
+            ->where(['Users.id IN' => $usersIds]);
 
         foreach ($users as $user) {
             $emails[] = $this->createGroupUserDeleteEmail($user, $modifiedBy, $group);
@@ -127,6 +133,6 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         );
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

@@ -57,11 +57,16 @@ class SelfRegistrationUserEmailRedactor implements SubscribedEmailRedactorInterf
     {
         $emailCollection = new EmailCollection();
 
-        $user = $event->getData('user');
         $uac = $event->getData('token');
-        $email = $this->createEmailSelfRegister($user, $uac);
 
-        return $emailCollection->addEmail($email);
+        /** @var \App\Model\Entity\User $user */
+        $user = $event->getData('user');
+        if (!$user->isDisabled()) {
+            $email = $this->createEmailSelfRegister($user, $uac);
+            $emailCollection->addEmail($email);
+        }
+
+        return $emailCollection;
     }
 
     /**
@@ -92,7 +97,7 @@ class SelfRegistrationUserEmailRedactor implements SubscribedEmailRedactorInterf
         $user = $UsersTable->findFirstForEmail($user->id);
 
         return new Email(
-            $user->username,
+            $user,
             $this->getSubject($user),
             [
                 'body' => [

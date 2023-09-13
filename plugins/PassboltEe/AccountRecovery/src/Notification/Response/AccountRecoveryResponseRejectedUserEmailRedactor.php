@@ -78,7 +78,7 @@ class AccountRecoveryResponseRejectedUserEmailRedactor implements SubscribedEmai
         /** @var \App\Model\Entity\User $user */
         $user = $this->Users->findFirstForEmail($response->account_recovery_request->user_id);
         /** @var \App\Model\Entity\User $admin */
-        $admin = $this->Users->find()
+        $admin = $this->Users->find('notDisabled')
             ->where(['Users.id' => $response->modified_by])
             ->contain('Profiles')
             ->firstOrFail();
@@ -110,6 +110,6 @@ class AccountRecoveryResponseRejectedUserEmailRedactor implements SubscribedEmai
             'created' => $response->modified,
         ], 'title' => $subject,];
 
-        return new Email($user->username, $subject, $data, self::USER_TEMPLATE);
+        return new Email($user, $subject, $data, self::USER_TEMPLATE);
     }
 }

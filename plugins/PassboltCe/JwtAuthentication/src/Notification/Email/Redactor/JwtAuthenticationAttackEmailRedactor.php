@@ -115,7 +115,7 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
             }
         );
         $email = new Email(
-            $user->username,
+            $user,
             $subject,
             [
                 'body' => [
@@ -145,6 +145,7 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
         $admins = $this->Users
             ->findAdmins()
             ->find('locale')
+            ->find('notDisabled')
             ->where(['Users.id !=' => $user->id]);
 
         foreach ($admins as $admin) {
@@ -155,7 +156,7 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
                 }
             );
             $email = new Email(
-                $admin->username,
+                $admin,
                 $subject,
                 [
                     'body' => [

@@ -25,7 +25,7 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
-use App\Middleware\SessionAuthPreventDeletedUsersMiddleware;
+use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
 use App\Middleware\UuidParserMiddleware;
@@ -102,8 +102,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->insertAfter(RoutingMiddleware::class, UuidParserMiddleware::class)
             ->add(new SessionPreventExtensionMiddleware())
             ->add(new BodyParserMiddleware())
-            ->add(SessionAuthPreventDeletedUsersMiddleware::class)
-            ->insertAfter(SessionAuthPreventDeletedUsersMiddleware::class, new AuthenticationMiddleware($this))
+            ->add(SessionAuthPreventDeletedOrDisabledUsersMiddleware::class)
+            ->insertAfter(
+                SessionAuthPreventDeletedOrDisabledUsersMiddleware::class,
+                new AuthenticationMiddleware($this)
+            )
             ->add(new GpgAuthHeadersMiddleware())
             ->add($csrf)
             ->add(new HttpProxyMiddleware());

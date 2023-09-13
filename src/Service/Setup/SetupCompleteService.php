@@ -140,7 +140,7 @@ class SetupCompleteService extends AbstractCompleteService implements SetupCompl
     protected function getAndAssertUser(string $userId): User
     {
         try {
-            return (new UserGetService())->getNotActiveNotDeletedOrFail($userId);
+            return (new UserGetService())->getNotActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
             $msg = __('The user does not exist, is already active or has been deleted.');
             throw new BadRequestException($msg);

@@ -75,8 +75,13 @@ abstract class AbstractAccountRecoveryOrganizationPolicyEmailRedactor implements
 
         $admins = $this->Users
             ->findAdmins()
+            ->find('notDisabled')
             ->contain(['Profiles' => AvatarsTable::addContainAvatar(),])
             ->all();
+
+        if (!count($admins)) {
+            return $emailCollection;
+        }
 
         $user = $admins->firstMatch(['id' => $uac->getId()]);
 

@@ -78,6 +78,6 @@ class AccountRecoveryCompleteUserEmailRedactor implements SubscribedEmailRedacto
 
         $data = ['body' => compact('user', 'clientIp', 'userAgent'), 'title' => $subject];
 
-        return new Email($user->username, $subject, $data, self::TEMPLATE);
+        return new Email($user, $subject, $data, self::TEMPLATE);
     }
 }
