@@ -20,6 +20,7 @@ namespace App\Notification\Email;
 use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\Utility\Text;
 use EmailQueue\Model\Table\EmailQueueTable;
 
@@ -139,12 +140,25 @@ class EmailSender
      */
     public static function getMessageId(): string
     {
-        $domain = preg_replace('/\:\d+$/', '', (string)env('HTTP_HOST'));
-        if (empty($domain)) {
-            $domain = php_uname('n');
-        }
+        $domain = self::getDomainFromFullBaseUrl();
 
         // example: <e8c3db0628f41ea86a03dc53d16d11a@domain.com>
         return '<' . str_replace('-', '', Text::uuid()) . '@' . $domain . '>';
+    }
+
+    /**
+     * Returns domain part from `Router::url()`.
+     *
+     * @return string The domain value or empty string if unable to parse host.
+     */
+    private static function getDomainFromFullBaseUrl(): string
+    {
+        $parts = parse_url(Router::url('/', true));
+
+        if (!isset($parts['host'])) {
+            return '';
+        }
+
+        return $parts['host'];
     }
 }

@@ -36,7 +36,7 @@ class EmailSenderTest extends AppTestCase
             ->method('enqueue')
             ->willReturn(false);
 
-        $email = new Email('test@test.test', 'Test subject', [], '');
+        $email = new Email(UserFactory::make()->getEntity(), 'Test subject', [], '');
         $sut = new EmailSender($emailQueueMock, self::APP_FULL_BASE_URL);
 
         $isExceptionThrown = false;
