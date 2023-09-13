@@ -26,16 +26,16 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
 class GroupsUsersAddServiceTest extends AppTestCase
 {
-    /**
-     * @var GroupsUsersAddService
-     */
-    public $service;
+    use UserAccessControlTrait;
+
+    public GroupsUsersAddService $service;
 
     public function setUp(): void
     {
@@ -424,6 +424,25 @@ class GroupsUsersAddServiceTest extends AppTestCase
         $this->assertEquals(1, SecretFactory::count());
         $this->assertUserIsMemberOf($g1->id, $u1->id, true);
         $this->assertUserIsNotMemberOf($g1->id, $u2->id);
+    }
+
+    /**
+     * Add a deactivated user to a group
+     */
+    public function testGroupsUsersAddServiceSuccess_AddDisabledMemberToGroup(): void
+    {
+        [$u1, $u2] = UserFactory::make(2)->disabled()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$u1])->persist();
+
+        $uac = $this->makeUac($u1);
+
+        $groupUserData = ['group_id' => $group->id, 'user_id' => $u2->id];
+        $this->service->add($uac, $groupUserData);
+
+        $this->assertEquals(2, GroupsUserFactory::count());
+        $this->assertEquals(0, SecretFactory::count());
+        $this->assertUserIsMemberOf($group->id, $u1->id, true);
+        $this->assertUserIsMemberOf($group->id, $u2->id, false);
     }
 
     /* ******************************************

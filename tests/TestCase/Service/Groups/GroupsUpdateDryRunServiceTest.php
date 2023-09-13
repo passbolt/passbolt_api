@@ -21,7 +21,10 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Service\Groups\GroupsUpdateDryRunService;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
@@ -34,6 +37,8 @@ use Cake\Utility\Hash;
  */
 class GroupsUpdateDryRunServiceTest extends AppTestCase
 {
+    use UserAccessControlTrait;
+
     public $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
@@ -231,6 +236,21 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
         $r1 = $this->addResourceFor(['name' => 'R1'], [$userBId => Permission::OWNER], [$g1->id => Permission::OWNER]);
 
         return [$r1, $g1, $userAId, $userBId];
+    }
+
+    public function testUpdateDryRunSuccess_AddGroupUser_Disabled()
+    {
+        [$user1, $user2] = UserFactory::make(2)->disabled()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$user1])->persist();
+        $data = [
+            ['user_id' => $user2->id, 'is_admin' => false],
+        ];
+
+        $result = $this->service->dryRun($this->makeUac($user1), $group->id, $data);
+
+        // Assert the service result.
+        $this->assertCount(0, $result['secrets']);
+        $this->assertCount(0, $result['secretsNeeded']);
     }
 
     public function testUpdateDryRunError_AddGroupUser_GroupUserValidation()

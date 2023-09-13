@@ -180,7 +180,7 @@ class GroupsUpdateDryRunService
     private function assertUserToAdd(Group $group, string $userId, int $rowIndexRef): void
     {
         try {
-            $this->userGetService->getActiveNotDeletedNotDisabledOrFail($userId);
+            $this->userGetService->getActiveNotDeletedOrFail($userId);
         } catch (NotFoundException | BadRequestException $e) {
             $errors = ['user_id' => ['user_exists' => ['Cannot find the user.']]];
             $group->setError('groups_users', [$rowIndexRef => $errors]);
