@@ -110,6 +110,26 @@ class UserGetService
      */
     public function getActiveNotDeletedNotDisabledOrFail(string $userId): User
     {
+        $userEntity = $this->getActiveNotDeletedOrFail($userId);
+
+        if ($userEntity->isDisabled()) {
+            throw new BadRequestException(__('The user does not exist or is not active or is disabled.'));
+        }
+
+        return $userEntity;
+    }
+
+    /**
+     * Get a user by ID or throw relevant HTTP exceptions
+     *
+     * @param string $userId user id uuid
+     * @throws \Cake\Http\Exception\NotFoundException if the user could not be found
+     * @throws \Cake\Http\Exception\BadRequestException if the userId is not a valid uuid
+     * @throws \Cake\Http\Exception\BadRequestException if the is not active or deleted
+     * @return \App\Model\Entity\User
+     */
+    public function getActiveNotDeletedOrFail(string $userId): User
+    {
         $userEntity = $this->getOrFail($userId);
         $msg = __('The user does not exist or is not active or is disabled.');
 
@@ -118,9 +138,6 @@ class UserGetService
             throw new BadRequestException($msg);
         }
         if ($userEntity->isDeleted()) {
-            throw new BadRequestException($msg);
-        }
-        if ($userEntity->isDisabled()) {
             throw new BadRequestException($msg);
         }
 
