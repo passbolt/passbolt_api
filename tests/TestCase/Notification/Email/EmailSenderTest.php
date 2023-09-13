@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Notification\Email;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailSender;
 use App\Notification\Email\EmailSenderException;
+use App\Test\Factory\UserFactory;
 use App\Utility\Purifier;
 use Cake\TestSuite\TestCase;
 use EmailQueue\Model\Table\EmailQueueTable;
@@ -64,7 +65,7 @@ class EmailSenderTest extends TestCase
 
     public function testThatSendThrowExceptionIfEnqueueFailed()
     {
-        $email = new Email('test', 'test', [], '');
+        $email = new Email(UserFactory::make()->getEntity(), 'test', [], '');
         $options = [
             'template' => $email->getTemplate(),
             'subject' => $this->getSubject($email->getSubject(), $this->purifySubject),
@@ -91,7 +92,7 @@ class EmailSenderTest extends TestCase
 
     public function testThatSendEnqueueEmailWithOptionsWhenPurifySubjectIsDisabled()
     {
-        $email = new Email('test', 'test', [], '');
+        $email = new Email(UserFactory::make()->getEntity(), 'test', [], '');
 
         $options = [
             'template' => $email->getTemplate(),
@@ -120,7 +121,7 @@ class EmailSenderTest extends TestCase
             true
         );
 
-        $email = new Email('test', 'test', [], '');
+        $email = new Email(UserFactory::make()->getEntity(), 'test', [], '');
 
         $options = [
             'template' => $email->getTemplate(),
@@ -150,7 +151,7 @@ class EmailSenderTest extends TestCase
         );
 
         $subject = 'Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long subject with emoticon 😰 - Long su';
-        $email = new Email('test', $subject, [], '');
+        $email = new Email(UserFactory::make()->getEntity(), $subject, [], '');
 
         $options = [
             'template' => $email->getTemplate(),
@@ -174,7 +175,7 @@ class EmailSenderTest extends TestCase
     public function testThatSendEmailAddFullBaseUrlToBodyAndMergeData()
     {
         $expectedData = ['body' => ['some_data' => 'test']];
-        $email = new Email('test', 'test', $expectedData, '');
+        $email = new Email(UserFactory::make()->getEntity(), 'test', $expectedData, '');
 
         $options = [
             'template' => $email->getTemplate(),

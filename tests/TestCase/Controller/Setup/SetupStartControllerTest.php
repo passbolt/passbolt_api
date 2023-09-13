@@ -134,7 +134,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         $url = "/setup/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('The user does not exist or is already active.');
+        $this->assertResponseContains('The user does not exist or is already active or is disabled.');
     }
 
     /**
@@ -149,7 +149,7 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         $url = "/setup/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('The user does not exist or is already active.');
+        $this->assertResponseContains('The user does not exist or is already active or is disabled.');
     }
 
     /**
@@ -164,7 +164,22 @@ class SetupStartControllerTest extends AppIntegrationTestCase
         $url = "/setup/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('The user does not exist or is already active.');
+        $this->assertResponseContains('The user does not exist or is already active or is disabled.');
+    }
+
+    /**
+     * @group AN
+     * @group setup
+     * @group setupStart
+     */
+    public function testSetupStartController_Error_BadRequest_UserDisabled(): void
+    {
+        $token = UuidFactory::uuid();
+        $userId = UserFactory::make()->inactive()->disabled()->persist()->id;
+        $url = "/setup/start/{$userId}/{$token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
+        $this->assertResponseContains('The user does not exist or is already active or is disabled.');
     }
 
     /**

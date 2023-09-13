@@ -17,9 +17,12 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\GroupsUserFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupsUpdateNotificationTest extends AppIntegrationTestCase
@@ -27,208 +30,126 @@ class GroupsUpdateNotificationTest extends AppIntegrationTestCase
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
 
-    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Users',
-        'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Favorites',
-         ];
-
-    public function testUpdateNotificationAddMemberSuccess(): void
+    public function setUp(): void
     {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userCId = UuidFactory::uuid('user.id.carol');
-
-        // Add a user who already has access to all of the resources the group has access.
-        // Carol has the same access as the group Freelancer.
-        // No secret need to be encrypted for the user.
-        $changes[] = ['user_id' => $userCId];
-
-        // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
-        $this->assertSuccess();
-
-        $this->assertEmailInBatchContains('added you to the group', 'carol@passbolt.com');
-        $this->assertEmailInBatchContains('As member of the group', 'carol@passbolt.com');
-        $this->assertEmailInBatchNotContains('And as group manager', 'carol@passbolt.com');
+        parent::setUp();
+        $this->loadNotificationSettings();
     }
 
-    public function testUpdateNotificationAddGroupManagerSuccess(): void
+    public function tearDown(): void
     {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userCId = UuidFactory::uuid('user.id.carol');
-
-        // Add a user who already has access to all of the resources the group has access.
-        // Carol has the same access as the group Freelancer.
-        // No secret need to be encrypted for the user.
-        $changes[] = ['user_id' => $userCId, 'is_admin' => true];
-
-        // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
-        $this->assertSuccess();
-
-        $this->assertEmailInBatchContains('added you to the group', 'carol@passbolt.com');
-        $this->assertEmailInBatchContains('As member of the group', 'carol@passbolt.com');
-        $this->assertEmailInBatchContains('And as group manager', 'carol@passbolt.com');
+        parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
-    public function testUpdateNotificationAddUserDisabled(): void
+    public function testGroupsUpdateNotification_NotificationEnabled(): void
     {
-        $this->setEmailNotificationSetting('send.group.user.add', false);
+        $this->setEmailNotificationSettings([
+            'send.group.user.add' => true,
+            'send.group.user.update' => true,
+            'send.group.user.delete' => true,
+            'send.group.manager.update' => true,
+        ]);
+        RoleFactory::make()->user()->persist();
+        RoleFactory::make()->admin()->persist();
 
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userCId = UuidFactory::uuid('user.id.carol');
+        $admin = UserFactory::make()->admin()->active()->persist();
+        [$add, $add2, $remove, $promote, $demote, $ga] = UserFactory::make(6)->user()->active()->persist();
+        [$gaDisabled, $disabled] = UserFactory::make(2)->user()->active()->disabled()->persist();
 
-        // Add a user who already has access to all of the resources the group has access.
-        // Carol has the same access as the group Freelancer.
-        // No secret need to be encrypted for the user.
-        $changes[] = ['user_id' => $userCId, 'is_admin' => true];
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$admin, $demote, $ga, $gaDisabled])
+            ->withGroupsUsersFor([$remove, $promote])
+            ->persist();
+
+        $gar = GroupsUserFactory::find()->where(['user_id' => $remove->id, 'group_id' => $group->id ])->first();
+        $gad = GroupsUserFactory::find()->where(['user_id' => $demote->id, 'group_id' => $group->id ])->first();
+        $gap = GroupsUserFactory::find()->where(['user_id' => $promote->id, 'group_id' => $group->id ])->first();
 
         // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+        $changes[] = ['user_id' => $add->id]; // Add regular user as regular member
+        $changes[] = ['user_id' => $add2->id, 'is_admin' => true]; // Add user as group admin
+        $changes[] = ['user_id' => $disabled->id]; // Add disabled user as regular member
+        $changes[] = ['id' => $gar->id, 'delete' => true]; // Remove from group
+        $changes[] = ['id' => $gad->id, 'is_admin' => false]; // Demote group admin to regular member
+        $changes[] = ['id' => $gap->id, 'is_admin' => true]; // Promote in group
+
+        $this->logInAs($admin);
+        $this->putJson('/groups/' . $group->id . '.json', ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        $this->assertEmailWithRecipientIsInNotQueue('carol@passbolt.com');
-    }
+        // Regular user added as member
+        $this->assertEmailInBatchContains('added you to the group', $add->username);
+        $this->assertEmailInBatchContains('As member of the group', $add->username);
+        $this->assertEmailInBatchNotContains('And as group manager', $add->username);
 
-    public function testUpdateNotificationRemoveMemberSuccess(): void
-    {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
+        // Regular user added as admin
+        $this->assertEmailInBatchContains('added you to the group', $add2->username);
+        $this->assertEmailInBatchContains('As member of the group', $add2->username);
+        $this->assertEmailInBatchContains('And as group manager', $add2->username);
 
-        // Remove Kathleen.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
+        // Regular user removed from group
+        $this->assertEmailInBatchContains('you from the group', $remove->username);
+        $this->assertEmailInBatchContains('You are no longer a member', $remove->username);
 
-        // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
-        $this->assertSuccess();
+        // No email for disabled users
+        $this->assertEmailWithRecipientIsInNotQueue($disabled->username);
+        $this->assertEmailWithRecipientIsInNotQueue($gaDisabled->username);
 
-        $this->assertEmailInBatchContains('you from the group', 'kathleen@passbolt.com');
-        $this->assertEmailInBatchContains('You are no longer a member', 'kathleen@passbolt.com');
-    }
-
-    public function testUpdateNotificationRemoveMemberDisabled(): void
-    {
-        $this->setEmailNotificationSetting('send.group.user.delete', false);
-
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-
-        // Remove Kathleen.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
-
-        // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
-        $this->assertSuccess();
-
-        $this->assertEmailWithRecipientIsInNotQueue('kathleen@passbolt.com');
-    }
-
-    public function testUpdateNotificationUpdateMembershipSuccess(): void
-    {
-        $this->setEmailNotificationSetting('send.group.user.delete', false);
-
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-
-        // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
-        // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
-
-        // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
-        $this->assertSuccess();
-
+        // Demoted from group
         $this->assertEmailInBatchContains(
             'You are no longer a group manager of this group.',
-            'jean@passbolt.com'
+            $demote->username
         );
 
+        // Promoted as group manager
         $this->assertEmailInBatchContains(
             'You are now a group manager of this group.',
-            'nancy@passbolt.com'
+            $promote->username
         );
+
+        // Admin summary
+        $this->assertEmailInBatchContains('Added members', $ga->username);
+        $this->assertEmailInBatchContains('Removed members', $ga->username);
+        $this->assertEmailInBatchContains('Updated roles', $ga->username);
     }
 
-    public function testUpdateNotificationUpdateMembershipDisabled(): void
+    public function testGroupsUpdateNotification_NotificationDisabled(): void
     {
-        $this->setEmailNotificationSetting('send.group.user.update', false);
+        $this->setEmailNotificationSettings([
+            'send.group.user.add' => false,
+            'send.group.user.update' => false,
+            'send.group.user.delete' => false,
+            'send.group.manager.update' => false,
+        ]);
+        RoleFactory::make()->user()->persist();
+        RoleFactory::make()->admin()->persist();
 
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $admin = UserFactory::make()->admin()->active()->persist();
+        [$add, $add2, $remove, $promote, $demote, $ga] = UserFactory::make(6)->user()->active()->persist();
+        [$gaDisabled, $disabled] = UserFactory::make(2)->user()->active()->disabled()->persist();
 
-        // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
-        // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$admin, $demote, $ga, $gaDisabled])
+            ->withGroupsUsersFor([$remove, $promote])
+            ->persist();
+
+        $gar = GroupsUserFactory::find()->where(['user_id' => $remove->id, 'group_id' => $group->id ])->first();
+        $gad = GroupsUserFactory::find()->where(['user_id' => $demote->id, 'group_id' => $group->id ])->first();
+        $gap = GroupsUserFactory::find()->where(['user_id' => $promote->id, 'group_id' => $group->id ])->first();
 
         // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
+        $changes[] = ['user_id' => $add->id]; // Add regular user as regular member
+        $changes[] = ['user_id' => $add2->id, 'is_admin' => true]; // Add user as group admin
+        $changes[] = ['user_id' => $disabled->id]; // Add disabled user as regular member
+        $changes[] = ['id' => $gar->id, 'delete' => true]; // Remove from group
+        $changes[] = ['id' => $gad->id, 'is_admin' => false]; // Demote group admin to regular member
+        $changes[] = ['id' => $gap->id, 'is_admin' => true]; // Promote in group
+
+        $this->logInAs($admin);
+        $this->putJson('/groups/' . $group->id . '.json', ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        $this->assertEmailWithRecipientIsInNotQueue('jean@passbolt.com');
-        $this->assertEmailWithRecipientIsInNotQueue('nancy@passbolt.com');
-    }
-
-    public function testUpdateNotificationAdminSummarySuccess(): void
-    {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.human_resource');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-
-        // Add users
-        $changes[] = ['user_id' => $userAId, 'is_admin' => true];
-        $changes[] = ['user_id' => $userBId, 'is_admin' => false];
-        // Update memberships
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-wang'), 'is_admin' => true];
-        // Remove users
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-ursula'), 'delete' => true];
-
-        // Update the group users.
-        $this->authenticateAs('ping');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
-        $this->assertSuccess();
-
-        $this->assertEmailInBatchContains('Added members', 'thelma@passbolt.com');
-        $this->assertEmailInBatchContains('Ada Lovelace', 'thelma@passbolt.com');
-        $this->assertEmailInBatchContains('Betty Holberton', 'thelma@passbolt.com');
-        $this->assertEmailInBatchContains('Removed members', 'thelma@passbolt.com');
-        $this->assertEmailInBatchContains('Ursula Martin', 'thelma@passbolt.com');
-        $this->assertEmailInBatchContains('Updated roles', 'thelma@passbolt.com');
-        $this->assertEmailInBatchContains('Wang Xiaoyun', 'thelma@passbolt.com');
-    }
-
-    public function testUpdateNotificationUpdateAdminSummaryDisabled(): void
-    {
-        $this->setEmailNotificationSetting('send.group.manager.update', false);
-
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.human_resource');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-
-        // Add users
-        $changes[] = ['user_id' => $userAId, 'is_admin' => true];
-        $changes[] = ['user_id' => $userBId, 'is_admin' => false];
-        // Update memberships
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-wang'), 'is_admin' => true];
-        // Remove users
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.human_resource-ursula'), 'delete' => true];
-
-        // Update the group users.
-        $this->authenticateAs('ping');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => []]);
-        $this->assertSuccess();
-
-        $this->assertEmailWithRecipientIsInNotQueue('thelma@passbolt.com');
+        $this->assertEmailQueueIsEmpty();
     }
 }

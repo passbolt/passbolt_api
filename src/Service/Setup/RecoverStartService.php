@@ -33,9 +33,9 @@ class RecoverStartService extends AbstractStartService implements RecoverStartSe
     public function getInfo(string $userId, string $token): array
     {
         try {
-            $user = (new UserGetService())->getActiveNotDeletedOrFail($userId);
+            $user = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
-            throw new BadRequestException(__('The user does not exist or is not active.'));
+            throw new BadRequestException(__('The user does not exist or is not active or is disabled.'));
         }
 
         $this->assertAuthToken($token, $user);
