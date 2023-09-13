@@ -788,22 +788,6 @@
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/Setup/AccountRecoveryRecoverStartServiceTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>
-      <code><![CDATA[$policy->created]]></code>
-      <code><![CDATA[$policy->created_by]]></code>
-      <code><![CDATA[$policy->id]]></code>
-      <code><![CDATA[$policy->modified]]></code>
-      <code><![CDATA[$policy->modified_by]]></code>
-      <code><![CDATA[$policy->policy]]></code>
-      <code><![CDATA[$policy->public_key_id]]></code>
-      <code><![CDATA[$setting->user]]></code>
-      <code><![CDATA[$setting->user]]></code>
-      <code><![CDATA[$token->token]]></code>
-      <code><![CDATA[$token->token]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="plugins/PassboltEe/AccountRecovery/tests/TestCase/Service/Setup/AccountRecoverySetupCompleteServiceTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$policy->account_recovery_organization_public_key]]></code>

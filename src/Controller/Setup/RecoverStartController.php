@@ -18,7 +18,7 @@ namespace App\Controller\Setup;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
-use App\Service\Setup\RecoverStartServiceInterface;
+use App\Service\Setup\AbstractRecoverStartService;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use Cake\Core\Configure;
@@ -44,14 +44,14 @@ class RecoverStartController extends AppController
     /**
      * Recover start
      *
-     * @param \App\Service\Setup\RecoverStartServiceInterface $infoService info service
+     * @param \App\Service\Setup\AbstractRecoverStartService $infoService info service
      * @param string $userId uuid of the user
      * @param string $token uuid of the token
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the token is missing or not a uuid
      * @throws \Cake\Http\Exception\BadRequestException if the user id is missing or not a uuid
      */
-    public function start(RecoverStartServiceInterface $infoService, string $userId, string $token): void
+    public function start(AbstractRecoverStartService $infoService, string $userId, string $token): void
     {
         if ($this->request->is('json')) {
             // Do not allow logged in user to recover

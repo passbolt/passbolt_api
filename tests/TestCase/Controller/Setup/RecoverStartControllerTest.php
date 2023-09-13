@@ -23,6 +23,9 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
+/**
+ * @covers \App\Controller\Setup\RecoverStartController
+ */
 class RecoverStartControllerTest extends AppIntegrationTestCase
 {
     public function testRecoverStartController_Success(): void

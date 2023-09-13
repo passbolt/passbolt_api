@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\UserPassphrasePolicies\UserPassphrasePoliciesPlugin;
 
 class AccountRecoveryIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -28,17 +29,21 @@ class AccountRecoveryIntegrationTestCase extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->pluginEnabled = $this->isFeaturePluginEnabled('AccountRecovery');
         if (!$this->pluginEnabled) {
             $this->enableFeaturePlugin('AccountRecovery');
         }
+        $this->disableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
     }
 
     public function tearDown(): void
     {
-        parent::tearDown();
         if (!$this->pluginEnabled) {
             $this->disableFeaturePlugin('AccountRecovery');
         }
+        $this->enableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
+
+        parent::tearDown();
     }
 }

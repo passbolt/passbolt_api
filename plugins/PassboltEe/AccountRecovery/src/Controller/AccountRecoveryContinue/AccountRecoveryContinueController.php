@@ -25,6 +25,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestGetService;
+use Passbolt\Ee\Service\AccountRecoveryContinue\AccountRecoveryContinueAggregatorService;
 
 /**
  * Class AccountRecoveryContinueController
@@ -49,11 +50,15 @@ class AccountRecoveryContinueController extends AppController
      *
      * @param string|null $userId User ID
      * @param string|null $tokenId Token ID
+     * @param \Passbolt\Ee\Service\AccountRecoveryContinue\AccountRecoveryContinueAggregatorService $accountRecoveryContinueService Service instance.
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the data provided is not valid
      */
-    public function get(?string $userId, ?string $tokenId): void
-    {
+    public function get(
+        ?string $userId,
+        ?string $tokenId,
+        AccountRecoveryContinueAggregatorService $accountRecoveryContinueService
+    ): void {
         if (!isset($userId) || !Validation::uuid($userId)) {
             throw new BadRequestException(__('The user id is invalid.'));
         }
@@ -66,8 +71,12 @@ class AccountRecoveryContinueController extends AppController
             if ($this->User->role() !== Role::GUEST) {
                 throw new ForbiddenException(__('Only guests are allowed to proceed with account recovery.'));
             }
+
             (new AccountRecoveryRequestGetService())->getOrFail($userId, $tokenId);
-            $this->success(__('The operation was successful.'));
+
+            $data = $accountRecoveryContinueService->get();
+
+            $this->success(__('The operation was successful.'), $data);
         } else {
             $this->renderHtml();
         }
