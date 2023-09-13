@@ -22,6 +22,9 @@ use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFacto
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
+/**
+ * @covers \App\Controller\Setup\RecoverStartController
+ */
 class RecoverStartControllerTest extends AccountRecoveryIntegrationTestCase
 {
     /**

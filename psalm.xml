@@ -32,6 +32,7 @@
             <directory name="plugins/PassboltEe/MfaPolicies/templates/" />
             <directory name="plugins/PassboltEe/SsoRecover/templates/" />
             <directory name="plugins/PassboltEe/PasswordPoliciesUpdate/templates/" />
+            <directory name="plugins/PassboltEe/UserPassphrasePolicies/templates/" />
         </ignoreFiles>
     </projectFiles>
 </psalm>
