@@ -52,7 +52,8 @@ class DatabaseConfigurationForm extends Form
             ->addField('port', ['type' => 'string'])
             ->addField('username', ['type' => 'string'])
             ->addField('password', ['type' => 'string'])
-            ->addField('database', ['type' => 'string']);
+            ->addField('database', ['type' => 'string'])
+            ->addField('schema', ['type' => 'string']);
     }
 
     /**
@@ -110,6 +111,10 @@ class DatabaseConfigurationForm extends Form
                 },
                 'message' => __('The database name should not contain dashes.'),
             ]);
+
+        $validator
+            ->allowEmptyString('schema')
+            ->utf8('schema', __('The schema should be a valid BMP-UTF8 string.'));
 
         return $validator;
     }

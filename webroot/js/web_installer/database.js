@@ -1,11 +1,28 @@
 $(function() {
+  handleDatabaseDriver();
   $("#driver")
     .chosen({width: '100%', disable_search: true})
     .change(function () {
-      let driver = $("#driver").val();
-      if (driver === 'Cake\\Database\\Driver\\Postgres') {
-        $("#port").val('5432');
-      } else if (driver === 'Cake\\Database\\Driver\\Mysql')
-        $("#port").val('3306');
+      handleDatabaseDriver();
     });
 });
+
+/**
+ * Detect id the driver is Postgres.
+ */
+const handleDatabaseDriver = function() {
+  let schema = $("#schema-block");
+  let port = $("#port");
+  switch ($("#driver").val()) {
+    case 'Cake\\Database\\Driver\\Postgres':
+      port.val('5432');
+      schema.show();
+      break;
+    case 'Cake\\Database\\Driver\\Mysql':
+      port.val('3306');
+      schema.hide();
+      break;
+    default:
+      break;
+  }
+};

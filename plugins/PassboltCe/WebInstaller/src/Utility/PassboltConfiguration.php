@@ -28,7 +28,7 @@ class PassboltConfiguration
      * @param array $settings The webinstaller settings.
      * @return string
      */
-    public function render($settings)
+    public function render(array $settings): string
     {
         $this->viewBuilder();
         $settings = $this->sanitize($settings);

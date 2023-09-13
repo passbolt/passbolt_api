@@ -20,6 +20,7 @@ use App\Utility\Healthchecks;
 use Cake\Core\Exception\CakeException;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
+use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
@@ -37,7 +38,6 @@ class DatabaseConfiguration
         return [
             'className' => 'Cake\Database\Connection',
             // For the moment, we take MySQL per default.
-            // Later we will offer the possibility to choose between MySQL and Postgres in the form
             'driver' => $data['driver'] ?? env('DATASOURCES_DEFAULT_DRIVER', Mysql::class),
             'persistent' => false,
             'host' => $data['host'],
@@ -45,6 +45,7 @@ class DatabaseConfiguration
             'username' => $data['username'],
             'password' => $data['password'],
             'database' => $data['database'],
+            'schema' => $data['schema'] ?? null,
             'encoding' => 'utf8',
             'timezone' => 'UTC',
         ];
@@ -74,7 +75,7 @@ class DatabaseConfiguration
      * @throws \Cake\Core\Exception\CakeException when a connection cannot be established
      * @return bool
      */
-    public static function testConnection()
+    public static function testConnection(): bool
     {
         $connection = ConnectionManager::get('default');
         if (!($connection instanceof Connection)) {
@@ -117,5 +118,28 @@ class DatabaseConfiguration
                 throw new CakeException(__('The database schema does not match the one expected'));
             }
         }
+    }
+
+    /**
+     * If the driver is not Postgres, remove the schema from the data
+     *
+     * @param array $data data
+     * @return array
+     */
+    public static function mapData(array $data): array
+    {
+        $sanitizedData = [
+            'driver' => $data['driver'] ?? null,
+            'host' => $data['host'] ?? null,
+            'port' => $data['port'] ?? null,
+            'username' => $data['username'] ?? null,
+            'password' => $data['password'] ?? null,
+            'database' => $data['database'] ?? null,
+        ];
+        if (isset($data['driver']) && $data['driver'] === Postgres::class) {
+            $sanitizedData['schema'] = $data['schema'] ?? null;
+        }
+
+        return $sanitizedData;
     }
 }

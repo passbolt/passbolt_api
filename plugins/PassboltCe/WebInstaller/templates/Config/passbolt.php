@@ -34,13 +34,11 @@ return [
 
     // Database configuration.
     'Datasources' => [
-        'default' => [
-            'driver' => '<?= $config['database']['driver'] ?>',
-            'host' => '<?= $config['database']['host'] ?>',
-            'port' => '<?= $config['database']['port'] ?>',
-            'username' => '<?= $config['database']['username'] ?>',
-            'password' => '<?= $config['database']['password'] ?>',
-            'database' => '<?= $config['database']['database'] ?>',
+        'default' => [<?php foreach ($config['database'] as $key => $value) {
+echo "
+            '$key' => '$value',";
+    }?>
+
         ],
     ],
 

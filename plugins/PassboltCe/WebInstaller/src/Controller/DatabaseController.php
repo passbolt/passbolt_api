@@ -31,32 +31,24 @@ class DatabaseController extends WebInstallerController
 {
     /**
      * Default password to use in the UI in case the config is provided through a .ini config file.
-     *
-     * @var string
      */
-    private $defaultPassword;
+    private string $defaultPassword;
 
     /**
      * Ini config file content (if ini file provided).
-     *
-     * @var array
      */
-    private $configFile = [];
+    private array $configFile = [];
 
     /**
      * Default config to use  when a ini config file is provided.
-     *
-     * @var string[]
      */
-    private $configFileDefault = [
+    private array $configFileDefault = [
         'type' => 'mysql',
         'host' => '127.0.0.1',
     ];
 
     /**
-     * Initialize.
-     *
-     * @return void
+     * @inheritDoc
      */
     public function initialize(): void
     {
@@ -125,6 +117,7 @@ class DatabaseController extends WebInstallerController
     protected function indexPost(): void
     {
         $data = $this->request->getData();
+        $data = DatabaseConfiguration::mapData($data);
 
         if (!empty($this->configFile) && $data['password'] === $this->defaultPassword) {
             $data['password'] = $this->configFile['password'];
