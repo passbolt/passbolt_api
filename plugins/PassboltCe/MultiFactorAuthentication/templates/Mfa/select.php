@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var array $body
+ * @var bool $isMfaPossible
  */
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -10,23 +11,12 @@ $title = __('Multi factor authentication');
 $this->assign('title', $title);
 $this->assign('pageClass', 'iframe mfa');
 
-$isHttps = env('HTTPS', false);
-$mfaPossible = false;
-foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
-    if ($enabled) {
-        $mfaPossible = true;
-        break;
-    }
-}
 ?>
 <div class="grid grid-responsive-12">
     <div class="row">
         <div class="col7 main-column">
             <h3><?= $title; ?></h3>
-            <?php if ($isHttps) : ?>
-            <h4 class="no-border"><?= __('Sorry the multi factor authentication feature is only available in a secure context (HTTPS).'); ?></h4>
-            <p><?= __('Please contact your administrator to enable multi-factor authentication.'); ?></p>
-            <?php elseif (!$mfaPossible) : ?>
+            <?php if (!$isMfaPossible) : ?>
             <h4 class="no-border"><?= __('Sorry no multi factor authentication is enabled for this organization.'); ?></h4>
             <p><?= __('Please contact your administrator to enable multi-factor authentication.'); ?></p>
             <?php else : ?>
