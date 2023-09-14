@@ -125,7 +125,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $testFile = TMP . 'test_passbolt.php';
         $webInstaller->writePassboltConfigFile($testFile);
         $this->assertFileExists($testFile);
-        $testFileContent = include $testFile;
+        $testFileContent = file_exists($testFile) ? include $testFile : [];
         $this->assertSame($databaseSettings, $testFileContent['Datasources']['default']);
         $this->assertFalse($testFileContent['passbolt']['ssl']['force']);
         unlink($testFile);

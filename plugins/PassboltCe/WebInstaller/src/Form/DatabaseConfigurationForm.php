@@ -113,9 +113,55 @@ class DatabaseConfigurationForm extends Form
             ]);
 
         $validator
-            ->allowEmptyString('schema')
+            ->requirePresence(
+                'schema',
+                function ($data) {
+                    return $this->isDriverPostgres($data);
+                },
+                __('The schema is required on PostgreSQL')
+            )
             ->utf8('schema', __('The schema should be a valid BMP-UTF8 string.'));
 
         return $validator;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(array $data, array $options = []): bool
+    {
+        $data = $this->sanitizeData($data);
+
+        return parent::execute($data, $options);
+    }
+
+    /**
+     * @param array $data data to sanitize
+     * @return array|null[]
+     */
+    private function sanitizeData(array $data): array
+    {
+        $sanitizedData = [
+            'driver' => $data['driver'] ?? null,
+            'host' => $data['host'] ?? null,
+            'port' => $data['port'] ?? null,
+            'username' => $data['username'] ?? null,
+            'password' => $data['password'] ?? null,
+            'database' => $data['database'] ?? null,
+        ];
+        if ($this->isDriverPostgres($data)) {
+            $sanitizedData['schema'] = $data['schema'] ?? null;
+        }
+
+        return $sanitizedData;
+    }
+
+    /**
+     * @param array $data Form data
+     * @return bool
+     */
+    private function isDriverPostgres(array $data): bool
+    {
+        return isset($data['driver']) && $data['driver'] === Postgres::class;
     }
 }

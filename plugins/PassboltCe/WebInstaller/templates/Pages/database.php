@@ -111,10 +111,10 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                                 ]); ?>
                                 <?= $this->Form->control('schema', [
                                     'templates' => [
-                                        'inputContainer' => '<div class="input text last-field" id="schema-block">{{content}}</div>',
+                                        'inputContainer' => '<div class="input text last-field required" id="schema-block">{{content}}</div>',
                                     ],
                                     'type' => 'text',
-                                    'required' => false,
+                                    'required' => true,
                                     'placeholder' => __('schema'),
                                     'label' => __('Schema'),
                                     'class' => 'fluid',

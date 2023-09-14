@@ -117,14 +117,13 @@ class DatabaseController extends WebInstallerController
     protected function indexPost(): void
     {
         $data = $this->request->getData();
-        $data = DatabaseConfiguration::mapData($data);
 
         if (!empty($this->configFile) && $data['password'] === $this->defaultPassword) {
             $data['password'] = $this->configFile['password'];
         }
 
         try {
-            $this->validateData($data);
+            $data = $this->validateData($data);
             $this->testConnection($data);
             DatabaseConfiguration::setDefaultConfig($data);
             $hasAdmin = $this->hasAdmin();
@@ -191,14 +190,18 @@ class DatabaseController extends WebInstallerController
      *
      * @param array $data request data
      * @throws \Cake\Core\Exception\CakeException The data does not validate
-     * @return void
+     * @return array
      */
-    protected function validateData(array $data): void
+    protected function validateData(array $data): array
     {
         $form = new DatabaseConfigurationForm();
         $this->set('formExecuteResult', $form);
         if (!$form->execute($data)) {
             throw new CakeException(__('The data entered are not correct'));
         }
+        /** @var array $data */
+        $data = $form->getData();
+
+        return $data;
     }
 }

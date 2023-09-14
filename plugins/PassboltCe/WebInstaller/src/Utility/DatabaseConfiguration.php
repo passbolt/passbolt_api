@@ -20,7 +20,6 @@ use App\Utility\Healthchecks;
 use Cake\Core\Exception\CakeException;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
-use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
@@ -118,28 +117,5 @@ class DatabaseConfiguration
                 throw new CakeException(__('The database schema does not match the one expected'));
             }
         }
-    }
-
-    /**
-     * If the driver is not Postgres, remove the schema from the data
-     *
-     * @param array $data data
-     * @return array
-     */
-    public static function mapData(array $data): array
-    {
-        $sanitizedData = [
-            'driver' => $data['driver'] ?? null,
-            'host' => $data['host'] ?? null,
-            'port' => $data['port'] ?? null,
-            'username' => $data['username'] ?? null,
-            'password' => $data['password'] ?? null,
-            'database' => $data['database'] ?? null,
-        ];
-        if (isset($data['driver']) && $data['driver'] === Postgres::class) {
-            $sanitizedData['schema'] = $data['schema'] ?? null;
-        }
-
-        return $sanitizedData;
     }
 }
