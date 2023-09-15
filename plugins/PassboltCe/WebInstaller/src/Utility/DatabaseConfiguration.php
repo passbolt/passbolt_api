@@ -37,7 +37,6 @@ class DatabaseConfiguration
         return [
             'className' => 'Cake\Database\Connection',
             // For the moment, we take MySQL per default.
-            // Later we will offer the possibility to choose between MySQL and Postgres in the form
             'driver' => $data['driver'] ?? env('DATASOURCES_DEFAULT_DRIVER', Mysql::class),
             'persistent' => false,
             'host' => $data['host'],
@@ -45,6 +44,7 @@ class DatabaseConfiguration
             'username' => $data['username'],
             'password' => $data['password'],
             'database' => $data['database'],
+            'schema' => $data['schema'] ?? null,
             'encoding' => 'utf8',
             'timezone' => 'UTC',
         ];
@@ -74,7 +74,7 @@ class DatabaseConfiguration
      * @throws \Cake\Core\Exception\CakeException when a connection cannot be established
      * @return bool
      */
-    public static function testConnection()
+    public static function testConnection(): bool
     {
         $connection = ConnectionManager::get('default');
         if (!($connection instanceof Connection)) {

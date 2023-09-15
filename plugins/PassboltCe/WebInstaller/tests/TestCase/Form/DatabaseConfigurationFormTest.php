@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Test\TestCase\Form;
 
 use Cake\Database\Driver\Mysql;
+use Cake\Database\Driver\Postgres;
 use Cake\TestSuite\TestCase;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 
@@ -36,7 +37,7 @@ class DatabaseConfigurationFormTest extends TestCase
         parent::tearDown();
     }
 
-    private function getValidData(): array
+    private function getValidMysqlData(): array
     {
         return [
             'driver' => Mysql::class,
@@ -50,13 +51,13 @@ class DatabaseConfigurationFormTest extends TestCase
 
     public function testDatabaseConfigurationForm_Valid()
     {
-        $data = $this->getValidData();
+        $data = $this->getValidMysqlData();
         $this->assertTrue($this->form->validate($data));
     }
 
     public function testDatabaseConfigurationForm_Missing_Driver()
     {
-        $data = $this->getValidData();
+        $data = $this->getValidMysqlData();
         unset($data['driver']);
         $this->assertFalse($this->form->validate($data));
         $this->assertTrue(is_string($this->form->getErrors()['driver']['_required']));
@@ -64,9 +65,46 @@ class DatabaseConfigurationFormTest extends TestCase
 
     public function testDatabaseConfigurationForm_Invalid_Driver()
     {
-        $data = $this->getValidData();
+        $data = $this->getValidMysqlData();
         $data['driver'] = 'foo';
         $this->assertFalse($this->form->validate($data));
         $this->assertTrue(is_string($this->form->getErrors()['driver']['inList']));
+    }
+
+    public function testDatabaseConfigurationForm_On_Mysql()
+    {
+        $data = $this->getValidMysqlData();
+        $data['schema'] = 'bar';
+
+        $this->assertTrue($this->form->execute($data));
+        $this->assertNull($this->form->getData('schema'));
+    }
+
+    public function testDatabaseConfigurationForm_On_Postgres()
+    {
+        $data = $this->getValidMysqlData();
+        $data['driver'] = Postgres::class;
+        $data['schema'] = 'bar-with-dash';
+
+        $this->assertTrue($this->form->execute($data));
+        $this->assertSame('bar-with-dash', $this->form->getData('schema'));
+    }
+
+    public function testDatabaseConfigurationForm_On_Postgres_Schema_Required()
+    {
+        $data = $this->getValidMysqlData();
+        $data['driver'] = Postgres::class;
+        $data['schema'] = null;
+
+        $this->assertFalse($this->form->execute($data));
+    }
+
+    public function testDatabaseConfigurationForm_On_Postgres_Schema_Should_Be_String()
+    {
+        $data = $this->getValidMysqlData();
+        $data['driver'] = Postgres::class;
+        $data['schema'] = null;
+
+        $this->assertFalse($this->form->execute($data));
     }
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1437e91a5ff535c964e6c03061d2caf",
+    "content-hash": "592f55347c52ee852171713cee1b60b1",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -505,12 +505,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/migrations.git",
-                "reference": "46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2"
+                "reference": "b5d90c06d25443672ae1ec2f1e592002ca1ce85f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/migrations/zipball/46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2",
-                "reference": "46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2",
+                "url": "https://api.github.com/repos/passbolt/migrations/zipball/b5d90c06d25443672ae1ec2f1e592002ca1ce85f",
+                "reference": "b5d90c06d25443672ae1ec2f1e592002ca1ce85f",
                 "shasum": ""
             },
             "require": {
@@ -590,7 +590,7 @@
                 "irc": "irc://irc.freenode.org/cakephp",
                 "source": "https://github.com/cakephp/migrations"
             },
-            "time": "2023-05-19T12:04:41+00:00"
+            "time": "2023-09-13T16:01:07+00:00"
         },
         {
             "name": "cakephp/plugin-installer",
