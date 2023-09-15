@@ -113,7 +113,8 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
                 $this->groupsUsersTable->aliasField('is_admin') => true,
             ])
             ->contain('Users', function (Query $q) {
-                return $q->find('locale');
+                return $q->find('locale')
+                    ->find('notDisabled');
             });
     }
 
@@ -138,7 +139,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
             'groupUsers' => $groupUsers,
         ], 'title' => $subject];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 
     /**

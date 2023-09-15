@@ -21,4 +21,33 @@ $(function () {
 
         return false;
     });
+
+    $.fn.setSmtpConfigInputs = function(authMethod) {
+        if (authMethod === 'username_only') {
+            // Hide from UI
+            $('#smtp-config-input-username').show();
+            $('#smtp-config-input-password').hide();
+            // Clear values from the input
+            $('input[name="password"]').val('');
+        } else if (authMethod === 'none') {
+            // Hide from UI
+            $('#smtp-config-input-username').hide();
+            $('#smtp-config-input-password').hide();
+            // Clear values from the inputs
+            $('input[name="username"]').val('');
+            $('input[name="password"]').val('');
+        } else {
+            // Hide from UI
+            $('#smtp-config-input-username').show();
+            $('#smtp-config-input-password').show();
+        }
+    };
+
+    var authMethodElem = $('select[name="authentication_method"]');
+
+    $(this).setSmtpConfigInputs(authMethodElem.val());
+
+    authMethodElem.on('change', function() {
+        $(this).setSmtpConfigInputs(this.value);
+    });
 });

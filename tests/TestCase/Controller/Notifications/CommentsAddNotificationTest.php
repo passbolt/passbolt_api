@@ -50,7 +50,8 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
     {
         RoleFactory::make()->guest()->persist();
         [$u0, $u1, $u2, $u4] = UserFactory::make(4)->user()->active()->persist();
-        $g1 = GroupFactory::make()->withGroupsManagersFor([$u0])->withGroupsUsersFor([$u1, $u2])->persist();
+        $u3 = UserFactory::make()->user()->active()->disabled()->persist();
+        $g1 = GroupFactory::make()->withGroupsManagersFor([$u0])->withGroupsUsersFor([$u1, $u2, $u3])->persist();
         $resourceId = ResourceFactory::make()->withPermissionsFor([$g1])->persist()->id;
 
         $this->setEmailNotificationSetting('send.comment.add', true);
@@ -73,13 +74,17 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         // except sender and of course user without permission
         $this->assertEmailWithRecipientIsInNotQueue($u0->username);
         $this->assertEmailWithRecipientIsInNotQueue($u4->username);
+
+        // or disabled user
+        $this->assertEmailWithRecipientIsInNotQueue($u3->username);
     }
 
     public function testCommentsAddNotificationUserSuccess(): void
     {
         RoleFactory::make()->guest()->persist();
         [$u0, $u1, $u2] = UserFactory::make(3)->user()->active()->persist();
-        $resourceId = ResourceFactory::make()->withPermissionsFor([$u0, $u1])->persist()->id;
+        $u3 = UserFactory::make()->user()->active()->disabled()->persist();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$u0, $u1, $u3])->persist()->id;
 
         $this->setEmailNotificationSetting('send.comment.add', true);
         $this->setEmailNotificationSetting('show.comment', true);
@@ -100,6 +105,9 @@ class CommentsAddNotificationTest extends AppIntegrationTestCase
         // except sender and user without permissions
         $this->assertEmailWithRecipientIsInNotQueue($u0->username);
         $this->assertEmailWithRecipientIsInNotQueue($u2->username);
+
+        // and disabled user
+        $this->assertEmailWithRecipientIsInNotQueue($u3->username);
     }
 
     public function testCommentsAddNotificationDoNotShowContent(): void

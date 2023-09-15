@@ -54,7 +54,7 @@ class SecretsUpdateSecretsService
     }
 
     /**
-     * Update a resource' secrets.
+     * Update a resource's secrets.
      *
      * @param \App\Utility\UserAccessControl $uac The operator.
      * @param string $resourceId The resource to update the secrets for.
@@ -66,24 +66,43 @@ class SecretsUpdateSecretsService
      *   ],
      *   ...
      * ]
-     * @return void
+     * @return array
      * @throws \Exception If something unexpected occurred
      */
     public function updateSecrets(UserAccessControl $uac, string $resourceId, array $data = [])
     {
+        // Return an array of updated secret
+        $result = [];
+
+        $userIds = Hash::extract($data, '{n}.user_id');
+
+        $secrets = [];
+        if (!empty($userIds)) {
+            $secrets = $this->secretsTable
+                ->find()
+                ->select(['id', 'user_id', 'resource_id', 'data'])
+                ->where([
+                    'user_id IN' => $userIds,
+                    'resource_id' => $resourceId,
+                ])
+                ->all()
+                ->indexBy('user_id') // group results by user_id
+                ->toArray();
+        }
+
         foreach ($data as $rowIndex => $row) {
-            $userId = Hash::get($row, 'user_id', null);
-            /** @var \App\Model\Entity\Secret|null $secret */
-            $secret = $this->secretsTable->findByResourceIdAndUserId($resourceId, $userId)->first();
-            if ($secret) {
-                $this->updateSecret($secret, $rowIndex, $row);
+            if (array_key_exists($row['user_id'], $secrets)) {
+                $secret = $secrets[$row['user_id']];
+                $result[] = $this->updateSecret($secret, $rowIndex, $row);
             } else {
-                $this->addSecret($uac, $rowIndex, $resourceId, $row);
+                $result[] = $this->addSecret($uac, $rowIndex, $resourceId, $row);
             }
         }
 
         $this->deleteOrphanSecrets($resourceId);
         $this->assertAllSecretsAreProvided($resourceId);
+
+        return $result;
     }
 
     /**

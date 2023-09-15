@@ -31,21 +31,6 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
-    ];
-
-    public $fails = [
-        'cannot recover with username that is empty' => [
-            'form-data' => ['username' => ''],
-            'error' => 'Please provide a valid email address.',
-        ],
-        'cannot recover with username is not an email' => [
-            'form-data' => ['username' => 'notanemail'],
-            'error' => 'Please provide a valid email address.',
-        ],
-    ];
-
     public function testUsersRecoverController_Get_Redirect(): void
     {
         $this->get('/recover');
@@ -66,7 +51,17 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_Errors(): void
     {
-        foreach ($this->fails as $case => $data) {
+        $fails = [
+            'cannot recover with username that is empty' => [
+                'form-data' => ['username' => ''],
+                'error' => 'Please provide a valid email address.',
+            ],
+            'cannot recover with username is not an email' => [
+                'form-data' => ['username' => 'notanemail'],
+                'error' => 'Please provide a valid email address.',
+            ],
+        ];
+        foreach ($fails as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
             $result = $this->_getBodyAsString();
             $this->assertStringContainsString($data['error'], $result, 'Error case not respected: ' . $case);
@@ -75,22 +70,31 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_Error_UserDeleted(): void
     {
-        $data = ['username' => 'sofia@passbolt.com'];
-        $error = 'This user does not exist or has been deleted.';
+        $user = UserFactory::make()->deleted()->persist();
+        $data = ['username' => $user->username];
         $this->postJson('/users/recover.json', $data);
         $this->assertResponseCode(404);
         $result = $this->_getBodyAsString();
-        $this->assertStringContainsString($error, $result);
+        $this->assertStringContainsString('deleted', $result);
     }
 
     public function testUsersRecoverController_Post_Error_UserNotExist(): void
     {
         $data = ['username' => 'notauser@passbolt.com'];
-        $error = 'This user does not exist or has been deleted.';
         $this->postJson('/users/recover.json', $data);
         $this->assertResponseCode(404);
         $result = $this->_getBodyAsString();
-        $this->assertStringContainsString($error, $result);
+        $this->assertStringContainsString('not exist', $result);
+    }
+
+    public function testUsersRecoverController_Post_Error_UserDisabled(): void
+    {
+        $user = UserFactory::make()->disabled()->persist();
+        $data = ['username' => $user->username];
+        $this->postJson('/users/recover.json', $data);
+        $this->assertResponseCode(404);
+        $result = $this->_getBodyAsString();
+        $this->assertStringContainsString('disabled', $result);
     }
 
     public function testUsersRecoverController_Post_FalseSuccess_UserNotExist_PreventEnum(): void
@@ -103,7 +107,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_Success_Active_User(): void
     {
-        $username = 'ada@passbolt.com';
+        $user = UserFactory::make()->active()->persist();
+        $username = $user->username;
         $this->postJson('/users/recover.json', compact('username'));
         $this->assertResponseSuccess('Recovery process started, check your email.');
         $this->assertSuccess();
@@ -118,7 +123,8 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_Success_User_That_Has_Not_Completed_Setup(): void
     {
-        $username = 'ruth@passbolt.com';
+        $user = UserFactory::make()->inactive()->persist();
+        $username = $user->username;
         $this->postJson('/users/recover.json', compact('username'));
         $this->assertResponseSuccess('Recovery process started, check your email.');
         $this->assertSuccess();
@@ -133,7 +139,17 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_JsonError(): void
     {
-        foreach ($this->fails as $case => $data) {
+        $fails = [
+            'cannot recover with username that is empty' => [
+                'form-data' => ['username' => ''],
+                'error' => 'Please provide a valid email address.',
+            ],
+            'cannot recover with username is not an email' => [
+                'form-data' => ['username' => 'notanemail'],
+                'error' => 'Please provide a valid email address.',
+            ],
+        ];
+        foreach ($fails as $case => $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
             $this->assertError(400, $data['error']);
         }

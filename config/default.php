@@ -110,6 +110,10 @@ return [
                 ],
                 'admin' => [
                     'user' => [
+                        'disable' => [
+                            'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_DISABLE_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                            'user' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_DISABLE_USER', true), FILTER_VALIDATE_BOOLEAN),
+                        ],
                         'setup' => [
                             'completed' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_SETUP_COMPLETED', true), FILTER_VALIDATE_BOOLEAN),
                         ],
@@ -257,6 +261,10 @@ return [
             ],
             'passwordPolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
+            'disableUser' => [
+                // Feature flag to allow client to tune behavior for backward compatibility
+                'enabled' => true
             ],
         ],
 

@@ -23,35 +23,25 @@ use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\View\ViewBuilder;
 
-class RecoverStartService extends AbstractStartService implements RecoverStartServiceInterface
+class RecoverStartUserInfoService implements RecoverStartInfoServiceInterface
 {
     /**
      * @inheritDoc
      */
-    public function getInfo(string $userId, string $token): array
+    public function getInfo(string $userId, string $token, ?array $data): array
     {
         try {
-            $user = (new UserGetService())->getActiveNotDeletedOrFail($userId);
+            $user = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
-            throw new BadRequestException(__('The user does not exist or is not active.'));
+            throw new BadRequestException(__('The user does not exist or is not active or is disabled.'));
         }
 
         $this->assertAuthToken($token, $user);
 
-        return compact('user');
-    }
+        $data['user'] = $user;
 
-    /**
-     * @inheritDoc
-     */
-    public function setTemplate(ViewBuilder $viewBuilder): void
-    {
-        $viewBuilder
-            ->setTemplatePath('/Setup')
-            ->setLayout('default')
-            ->setTemplate('recoverStart');
+        return $data;
     }
 
     /**

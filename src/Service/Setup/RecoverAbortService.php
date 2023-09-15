@@ -97,7 +97,7 @@ class RecoverAbortService
     protected function getAndAssertUser(string $userId): User
     {
         try {
-            return (new UserGetService())->getActiveNotDeletedOrFail($userId);
+            return (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
             $msg = __('The user does not exist, has not completed the setup or was deleted.');
             throw new BadRequestException($msg);

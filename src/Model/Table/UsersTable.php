@@ -153,6 +153,10 @@ class UsersTable extends Table
             ->boolean('deleted', __('The deleted status should be a valid boolean.'));
 
         $validator
+            ->dateTime('disabled', ['ymd'], __('The disabled date should be a valid date.'))
+            ->allowEmptyDateTime('disabled');
+
+        $validator
             ->requirePresence('profile', 'create', 'A profile is required.')
             // @todo translation comment: is it still something necessary?
             ->allowEmptyString('profile', __('The profile should not be empty.'), false);
@@ -249,6 +253,7 @@ class UsersTable extends Table
                 'accessibleFields' => [
                     'username' => true,
                     'deleted' => true,
+                    'disabled' => false,
                     'profile' => true,
                     'role_id' => true,
                 ],
@@ -266,30 +271,35 @@ class UsersTable extends Table
     }
 
     /**
-     * Edit a given entity with the prodived data according to the permission of the current user role
+     * Edit a given entity with the provided data according to the permission of the current user role
      * Only allow editing the first_name and last_name
      * Also allow editing the role_id but only if admin
      * Other changes such as active or username are not permitted
      *
      * @param \App\Model\Entity\User $user User
      * @param array $data request data
-     * @param string $roleName role name for example Role::User or Role::ADMIN
+     * @param \App\Utility\UserAccessControl $uac user performing the action
      * @return \App\Model\Entity\User the patched user entity
      */
-    public function editEntity(User $user, array $data, string $roleName)
+    public function editEntity(User $user, array $data, UserAccessControl $uac): User
     {
         $accessibleUserFields = [
             'active' => false,
             'deleted' => false,
             'created' => false,
+            'disabled' => false,
             'username' => false,
             'role_id' => false,
             'profile' => true,
             'gpgkey' => false,
         ];
         // only admins can set roles
-        if ($roleName === Role::ADMIN) {
+        if ($uac->isAdmin()) {
             $accessibleUserFields['role_id'] = true;
+        }
+        // only admins can disable users - though not themselves
+        if ($uac->isAdmin() && $uac->getId() !== $user->id) {
+            $accessibleUserFields['disabled'] = true;
         }
 
         $accessibleProfileFields = [

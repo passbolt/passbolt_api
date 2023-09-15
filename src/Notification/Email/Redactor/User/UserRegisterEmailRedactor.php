@@ -53,13 +53,17 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
     {
         $emailCollection = new EmailCollection();
 
-        $user = $event->getData('user');
         $uac = $event->getData('token');
         $adminId = $event->getData('adminId');
 
-        $email = $this->createEmailAdminRegister($user, $uac, $adminId);
+        /** @var \App\Model\Entity\User $user */
+        $user = $event->getData('user');
+        if (!$user->isDisabled()) {
+            $email = $this->createEmailAdminRegister($user, $uac, $adminId);
+            $emailCollection->addEmail($email);
+        }
 
-        return $emailCollection->addEmail($email);
+        return $emailCollection;
     }
 
     /**
@@ -94,7 +98,7 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
         ]);
 
         return new Email(
-            $user->username,
+            $user,
             $this->getSubject($user),
             [
                 'body' => [

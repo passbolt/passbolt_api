@@ -71,10 +71,10 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
         $modifier = $UsersTable->findFirstForEmail($modifiedById);
-
         $admins = $UsersTable
             ->findAdmins()
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
+            ->find('notDisabled')
             ->find('locale');
 
         foreach ($admins as $recipient) {
@@ -136,7 +136,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
         }
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => compact('recipient', 'modifier', 'info', 'status', 'subject'),

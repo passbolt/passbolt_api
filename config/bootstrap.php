@@ -222,3 +222,8 @@ define('PROCESS_USER', $user['name']);
 
 // Are we running passbolt pro?
 define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');
+
+/**
+ * Set email queue plugin serialization type to JSON.
+ */
+Configure::write('EmailQueue.serialization_type', 'email_queue.json');
