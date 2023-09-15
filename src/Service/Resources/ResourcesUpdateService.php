@@ -58,11 +58,6 @@ class ResourcesUpdateService
     private $Resources;
 
     /**
-     * @var \App\Model\Table\SecretsTable
-     */
-    private $Secrets;
-
-    /**
      * @var \App\Service\Secrets\SecretsUpdateSecretsService
      */
     private $secretsUpdateSecretsService;
@@ -78,8 +73,6 @@ class ResourcesUpdateService
         $this->Permissions = $this->fetchTable('Permissions');
         /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
-        /** @phpstan-ignore-next-line */
-        $this->Secrets = $this->fetchTable('Secrets');
     }
 
     /**
@@ -104,12 +97,15 @@ class ResourcesUpdateService
         }
 
         $this->Resources->getConnection()->transactional(
-            function () use (&$resource, $uac, $data, $meta, $secrets) {
+            function () use (&$resource, $uac, $meta, $secrets) {
                 $this->updateResourceMeta($uac, $resource, $meta);
+
+                $updatedSecrets = [];
                 if (!empty($secrets)) {
-                    $this->updateResourceSecrets($uac, $resource, $secrets);
+                    $updatedSecrets = $this->updateResourceSecrets($uac, $resource, $secrets);
                 }
-                $this->postResourceUpdate($uac, $resource, $data);
+
+                $this->postResourceUpdate($uac, $resource, $updatedSecrets);
             }
         );
 
@@ -258,10 +254,10 @@ class ResourcesUpdateService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $data The list of secrets to update
-     * @return void
+     * @return \App\Model\Entity\Secret[]
      * @throws \Exception If an unexpected error occurred
      */
-    private function updateResourceSecrets(UserAccessControl $uac, Resource $resource, array $data): void
+    private function updateResourceSecrets(UserAccessControl $uac, Resource $resource, array $data): array
     {
         $usersIdsHavingAccess = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resource->id);
         sort($usersIdsHavingAccess);
@@ -275,11 +271,14 @@ class ResourcesUpdateService
         }
 
         try {
-            $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+            $secrets = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
         } catch (CustomValidationException $e) {
+            $secrets = [];
             $resource->setError('secrets', $e->getErrors());
             $this->handleValidationErrors($resource);
         }
+
+        return $secrets;
     }
 
     /**
@@ -287,14 +286,12 @@ class ResourcesUpdateService
      *
      * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
      * @param \App\Model\Entity\Resource $resource The updated resource
-     * @param array $data The request data
+     * @param \App\Model\Entity\Secret[] $secrets The secrets
      * @return void
      */
-    private function postResourceUpdate(UserAccessControl $uac, Resource $resource, array $data): void
+    private function postResourceUpdate(UserAccessControl $uac, Resource $resource, array $secrets): void
     {
-        $secrets = $this->Secrets->findByResourcesUser([$resource->id], $uac->getId())->all()->toArray();
-        $resource['secrets'] = $secrets;
-        $eventData = ['resource' => $resource, 'accessControl' => $uac, 'data' => $data];
+        $eventData = ['resource' => $resource, 'accessControl' => $uac, 'secrets' => $secrets];
         $this->dispatchEvent(static::UPDATE_SUCCESS_EVENT_NAME, $eventData);
     }
 }

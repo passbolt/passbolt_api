@@ -21,14 +21,10 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Cake\I18n\FrozenTime;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * @var \App\Model\Table\AvatarsTable $Avatars
-     */
-    public $Avatars;
-
     public function setUp(): void
     {
         parent::setUp();
@@ -57,6 +53,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => $user->id,
             'active' => false,
             'deleted' => true,
+            'disabled' => FrozenTime::yesterday(),
             'profile' => [
                 'first_name' => 'ada edited',
             ],
@@ -66,6 +63,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         $this->assertEquals($this->_responseJsonBody->profile->first_name, 'ada edited');
         $this->assertEquals($this->_responseJsonBody->active, true);
         $this->assertEquals($this->_responseJsonBody->deleted, false);
+        $this->assertNull($this->_responseJsonBody->disabled);
     }
 
     public function testUsersEditController_Success_AsUserIgnoreNotAllowedFields(): void

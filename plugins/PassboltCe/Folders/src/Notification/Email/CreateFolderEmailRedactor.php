@@ -102,7 +102,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
         );
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => [

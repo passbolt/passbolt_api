@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         4.3.0
  */
 
 namespace App\Service\Setup;
@@ -23,38 +23,25 @@ use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\Users\UserGetService;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\View\ViewBuilder;
 
-/**
- * @property \App\Model\Table\AuthenticationTokensTable $AuthenticationTokens
- * @property \App\Model\Table\UsersTable $Users
- */
-class SetupStartService extends AbstractStartService implements SetupStartServiceInterface
+class SetupStartUserInfoService implements SetupStartInfoServiceInterface
 {
     /**
      * @inheritDoc
      */
-    public function getInfo(string $userId, string $token): array
+    public function getInfo(string $userId, string $token, ?array $data): array
     {
         try {
-            $user = (new UserGetService())->getNotActiveNotDeletedOrFail($userId);
+            $user = (new UserGetService())->getNotActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
-            throw new BadRequestException(__('The user does not exist or is already active.'));
+            throw new BadRequestException(__('The user does not exist or is already active or is disabled.'));
         }
+
         $this->assertAuthToken($user, $token);
 
-        return compact('user');
-    }
+        $data['user'] = $user;
 
-    /**
-     * @inheritDoc
-     */
-    public function setTemplate(ViewBuilder $viewBuilder): void
-    {
-        $viewBuilder
-            ->setTemplatePath('/Setup')
-            ->setLayout('default')
-            ->setTemplate('start');
+        return $data;
     }
 
     /**

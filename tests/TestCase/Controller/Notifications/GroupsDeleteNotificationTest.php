@@ -17,9 +17,11 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupsDeleteNotificationTest extends AppIntegrationTestCase
@@ -27,19 +29,32 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
 
-    public $Groups;
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->loadNotificationSettings();
+    }
 
-    public $fixtures = [
-        'app.Base/Groups', 'app.Base/Users', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Roles',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Base/Gpgkeys', 'app.Base/Secrets',
-    ];
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
+    }
 
     public function testGroupsDeleteNotificationDisabled(): void
     {
         $this->setEmailNotificationSetting('send.group.delete', false);
 
-        $this->authenticateAs('edith');
-        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json');
+        RoleFactory::make()->user()->persist();
+        RoleFactory::make()->admin()->persist();
+
+        $admin = UserFactory::make()->admin()->active()->persist();
+        [$ga, $user] = UserFactory::make(2)->user()->active()->persist();
+        $disabled = UserFactory::make()->user()->active()->disabled()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$admin, $ga])->withGroupsUsersFor([$user, $disabled])->persist();
+
+        $this->logInAs($admin);
+        $this->deleteJson('/groups/' . $group->id . '.json');
         $this->assertResponseSuccess();
 
         // check email notification
@@ -50,14 +65,45 @@ class GroupsDeleteNotificationTest extends AppIntegrationTestCase
     {
         $this->setEmailNotificationSetting('send.group.delete', true);
 
-        $this->authenticateAs('edith');
-        $this->deleteJson('/groups/' . UuidFactory::uuid('group.id.freelancer') . '.json');
+        RoleFactory::make()->user()->persist();
+        RoleFactory::make()->admin()->persist();
+
+        $admin = UserFactory::make()->admin()->active()->persist();
+        [$ga, $user] = UserFactory::make(2)->user()->active()->persist();
+        $disabled = UserFactory::make()->user()->active()->disabled()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$admin, $ga])->withGroupsUsersFor([$user, $disabled])->persist();
+
+        $this->logInAs($admin);
+        $this->deleteJson('/groups/' . $group->id . '.json');
         $this->assertResponseSuccess();
 
-        // check email notification
-        $this->assertEmailInBatchContains('deleted the group ', 'frances@passbolt.com');
+        // email sent to group admin
+        $this->assertEmailInBatchContains('deleted the group ', $ga->username);
 
-        // emails are not send if you add yourself to a group
-        $this->assertEmailWithRecipientIsInNotQueue('edith@passbolt.com');
+        // email sent to regular members
+        $this->assertEmailInBatchContains('deleted the group ', $user->username);
+
+        // emails are not send to user that deleted the group
+        $this->assertEmailWithRecipientIsInNotQueue($admin->username);
+
+        // emails are not send to disabled user
+        $this->assertEmailWithRecipientIsInNotQueue($disabled->username);
+    }
+
+    public function testGroupsDeleteNotificationSuccess_NoEmails(): void
+    {
+        $this->setEmailNotificationSetting('send.group.delete', true);
+
+        RoleFactory::make()->user()->persist();
+        RoleFactory::make()->admin()->persist();
+
+        $admin = UserFactory::make()->admin()->active()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$admin])->persist();
+
+        $this->logInAs($admin);
+        $this->deleteJson('/groups/' . $group->id . '.json');
+        $this->assertResponseSuccess();
+
+        $this->assertEmailQueueIsEmpty();
     }
 }

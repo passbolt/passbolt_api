@@ -33,6 +33,7 @@ use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use CakephpFixtureFactories\ORM\FactoryTableRegistry;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
 use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
@@ -80,6 +81,8 @@ abstract class AppTestCase extends TestCase
         DigestFactory::clearInstance();
         EmailNotificationSettings::flushCache();
         $this->clearPlugins();
+        FactoryTableRegistry::getTableLocator()->clear();
+
         parent::tearDown();
     }
 

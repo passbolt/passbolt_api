@@ -166,9 +166,11 @@ abstract class RefreshTokenAbstractService
 
         // Check if the user was not deleted or deactivated since the refresh token was issued.
         $user = $refreshToken->user;
-        if ($user->deleted) {
+        if ($user->isDeleted()) {
             throw new UserDeletedException();
-        } elseif (!$user->active) {
+        } elseif (!$user->isActive()) {
+            throw new UserDeactivatedException();
+        } elseif ($user->isDisabled()) {
             throw new UserDeactivatedException();
         }
 
