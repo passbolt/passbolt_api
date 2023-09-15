@@ -64,7 +64,7 @@ class ConvertEmailVariablesToJsonServiceTest extends AppTestCase
          */
         FactoryTableRegistry::getTableLocator()->clear();
         TableRegistry::getTableLocator()->clear();
-        $this->loadPlugins(['Passbolt/EmailDigest' => []]); // This sets the serialize type to Json
+        Configure::write('EmailQueue.serialization_type', 'email_queue.json'); // Set serialize type to Json
 
         $service = new ConvertEmailVariablesToJsonService();
         $service->convert();

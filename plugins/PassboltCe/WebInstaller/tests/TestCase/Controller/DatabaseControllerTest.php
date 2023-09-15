@@ -34,12 +34,17 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->restoreTestConnection();
     }
 
-    public function testWebInstallerDatabaseViewSuccess()
+    public function testDatabaseControllerViewSuccess()
     {
         $this->get('/install/database');
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
         $this->assertStringContainsString('Database configuration', $data);
+        $this->assertStringContainsString('Database connection url', $data);
+        $this->assertStringContainsString('Username', $data);
+        $this->assertStringContainsString('Password', $data);
+        $this->assertStringContainsString('Database name', $data);
+        $this->assertStringContainsString('Schema', $data);
     }
 
     /**
@@ -60,7 +65,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         ];
     }
 
-    public function testWebInstallerDatabasePostSuccess()
+    public function testDatabaseControllerPostSuccess()
     {
         $postData = $this->getTestDatasourceFromConfig();
         $this->post('/install/database', $postData);
@@ -71,7 +76,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         // $this->assertSession(false, 'webinstaller.hasAdmin');
     }
 
-    public function testWebInstallerDatabasePostError_InvalidData()
+    public function testDatabaseControllerPostError_InvalidData()
     {
         $postData = $this->postData();
         $postData['port'] = 'invalid-port';
@@ -81,7 +86,7 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
         $this->assertStringContainsString('The data entered are not correct', $data);
     }
 
-    public function testWebInstallerDatabasePostError_CannotConnectToTheDatabase()
+    public function testDatabaseControllerPostError_CannotConnectToTheDatabase()
     {
         // This breaks further test
         // Sessions is carried over to next test...

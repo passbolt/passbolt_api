@@ -24,6 +24,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\Ee\Model\Entity\Subscription;
+use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
@@ -264,6 +265,9 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $connection = ConnectionManager::get('default');
 
         $config = $this->getInstallSessionData();
+        $form = (new DatabaseConfigurationForm());
+        $this->assertTrue($form->execute($config['database']));
+        $config['database'] = $form->getData();
         $this->initWebInstallerSession($config);
 
         $tables = $connection->getSchemaCollection()->listTables();

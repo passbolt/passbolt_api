@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @var \App\View\AppView $this
+ */
+
 use Cake\Database\Driver\Mysql;
 use Cake\Database\Driver\Postgres;
 use Cake\Routing\Router;
@@ -96,15 +100,28 @@ $this->Html->script('web_installer/database', ['block' => 'scriptBottom']);
                                     'label' => __('Password'),
                                     'class' => 'fluid',
                                 ]); ?>
+                            </div>
+                            <div class="singleline clearfix">
+                                <?= $this->Form->control('database', [
+                                    'type' => 'text',
+                                    'required' => 'required',
+                                    'placeholder' => __('database name'),
+                                    'label' => __('Database name'),
+                                    'class' => 'required fluid',
+                                ]); ?>
+                                <?= $this->Form->control('schema', [
+                                    'templates' => [
+                                        'inputContainer' => '<div class="input text last-field required" id="schema-block">{{content}}</div>',
+                                    ],
+                                    'type' => 'text',
+                                    'required' => true,
+                                    'placeholder' => __('schema'),
+                                    'label' => __('Schema'),
+                                    'class' => 'fluid',
+                                    'default' => 'public',
+                                ]); ?>
 
                             </div>
-                            <?= $this->Form->control('database', [
-                                'type' => 'text',
-                                'required' => 'required',
-                                'placeholder' => __('database name'),
-                                'label' => __('Database name'),
-                                'class' => 'required fluid',
-                            ]); ?>
                         </div>
                     </div>
                 </div>
