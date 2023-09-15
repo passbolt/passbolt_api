@@ -31,32 +31,24 @@ class DatabaseController extends WebInstallerController
 {
     /**
      * Default password to use in the UI in case the config is provided through a .ini config file.
-     *
-     * @var string
      */
-    private $defaultPassword;
+    private string $defaultPassword;
 
     /**
      * Ini config file content (if ini file provided).
-     *
-     * @var array
      */
-    private $configFile = [];
+    private array $configFile = [];
 
     /**
      * Default config to use  when a ini config file is provided.
-     *
-     * @var string[]
      */
-    private $configFileDefault = [
+    private array $configFileDefault = [
         'type' => 'mysql',
         'host' => '127.0.0.1',
     ];
 
     /**
-     * Initialize.
-     *
-     * @return void
+     * @inheritDoc
      */
     public function initialize(): void
     {
@@ -131,7 +123,7 @@ class DatabaseController extends WebInstallerController
         }
 
         try {
-            $this->validateData($data);
+            $data = $this->validateData($data);
             $this->testConnection($data);
             DatabaseConfiguration::setDefaultConfig($data);
             $hasAdmin = $this->hasAdmin();
@@ -198,14 +190,18 @@ class DatabaseController extends WebInstallerController
      *
      * @param array $data request data
      * @throws \Cake\Core\Exception\CakeException The data does not validate
-     * @return void
+     * @return array
      */
-    protected function validateData(array $data): void
+    protected function validateData(array $data): array
     {
         $form = new DatabaseConfigurationForm();
         $this->set('formExecuteResult', $form);
         if (!$form->execute($data)) {
             throw new CakeException(__('The data entered are not correct'));
         }
+        /** @var array $data */
+        $data = $form->getData();
+
+        return $data;
     }
 }
