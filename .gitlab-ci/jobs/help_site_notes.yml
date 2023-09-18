@@ -7,7 +7,7 @@ help_site_notes:
   image: debian
   script: |
     source .gitlab-ci/scripts/lib/version-check.sh
-    if is_release_candidate "$tag" || is_test_candidate "$tag"; then
+    if is_release_candidate "$tag" || is_testing_candidate "$tag"; then
       echo "The tag is not a stable candidate. Skipping release notes creation..."
       exit 0
     fi
