@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
 use Passbolt\DirectorySync\Test\TestCase\Form\LdapConfigurationFormTest;
 use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
@@ -182,6 +183,23 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->authenticateAs('dame');
         $this->putJson('/directorysync/settings.json?api-version=2', []);
         $this->assertError(403);
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncController
+     * @group DirectorySyncController_DirectorySettingsController
+     * @group DirectorySyncController_DirectorySettingsController_Update
+     */
+    public function testDirectorySync_DirectorySettingsController_Update_EndpointDisabled()
+    {
+        $this->logInAsAdmin();
+        Configure::write(DirectorySyncEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY, true);
+
+        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $this->putJson('/directorysync/settings.json?api-version=2', $formData);
+
+        $this->assertForbiddenError('Directory sync settings endpoints are disabled');
     }
 
     /**

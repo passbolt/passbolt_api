@@ -1,0 +1,285 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2016-02-29 21:46+0900\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: Template/Error/error400.ctp:33
+#: Template/Error/error500.ctp:35
+msgid "Error"
+msgstr "エラー"
+
+#: Template/Error/error400.ctp:35
+msgid "The requested address %s was not found on this server."
+msgstr "要求されたアドレス %s はこのサーバー上に見つかりませんでした。"
+
+#: Template/Error/error500.ctp:33
+msgid "An Internal Error Has Occurred"
+msgstr "内部エラーが発生しました"
+
+#: Controller/Component/AuthComponent.php:454
+msgid "You are not authorized to access that location."
+msgstr "アクセスするための権限がありません。"
+
+#: Controller/Component/CsrfComponent.php:154
+msgid "Missing CSRF token cookie"
+msgstr "CSRFトークンのクッキーが見つかりません"
+
+#: Controller/Component/CsrfComponent.php:158
+msgid "CSRF token mismatch."
+msgstr "CSRFトークンが一致しません。"
+
+#: Error/ExceptionRenderer.php:248
+msgid "Not Found"
+msgstr "見つかりません"
+
+#: Error/ExceptionRenderer.php:250
+msgid "An Internal Error Has Occurred."
+msgstr "内部エラーが発生しました。"
+
+#: I18n/Number.php:89
+msgid "{0,number,#,###.##} KB"
+msgstr "{0,number,#,###.##}KB"
+
+#: I18n/Number.php:91
+msgid "{0,number,#,###.##} MB"
+msgstr "{0,number,#,###.##}MB"
+
+#: I18n/Number.php:93
+msgid "{0,number,#,###.##} GB"
+msgstr "{0,number,#,###.##}GB"
+
+#: I18n/Number.php:95
+msgid "{0,number,#,###.##} TB"
+msgstr "{0,number,#,###.##}TB"
+
+#: I18n/Number.php:87
+msgid "{0,number,integer} Byte"
+msgid_plural "{0,number,integer} Bytes"
+msgstr[0] "{0,number,integer}バイト"
+msgstr[1] "{0,number,integer}バイト"
+
+#: I18n/RelativeTimeFormatter.php:80
+msgid "{0} from now"
+msgstr "今から{0}後"
+
+#: I18n/RelativeTimeFormatter.php:80
+msgid "{0} ago"
+msgstr "今から{0}前"
+
+#: I18n/RelativeTimeFormatter.php:82
+msgid "{0} after"
+msgstr "{0}後"
+
+#: I18n/RelativeTimeFormatter.php:82
+msgid "{0} before"
+msgstr "{0}前"
+
+#: I18n/RelativeTimeFormatter.php:113
+msgid "just now"
+msgstr "たった今"
+
+#: I18n/RelativeTimeFormatter.php:150
+msgid "about a second ago"
+msgstr "約1秒前"
+
+#: I18n/RelativeTimeFormatter.php:151
+msgid "about a minute ago"
+msgstr "約1分前"
+
+#: I18n/RelativeTimeFormatter.php:152
+msgid "about an hour ago"
+msgstr "約1時間前"
+
+#: I18n/RelativeTimeFormatter.php:153;326
+msgid "about a day ago"
+msgstr "約1日前"
+
+#: I18n/RelativeTimeFormatter.php:154;327
+msgid "about a week ago"
+msgstr "約1週間前"
+
+#: I18n/RelativeTimeFormatter.php:155;329
+msgid "about a year ago"
+msgstr "約1年前"
+
+#: I18n/RelativeTimeFormatter.php:165
+msgid "in about a second"
+msgstr "約1秒後"
+
+#: I18n/RelativeTimeFormatter.php:166
+msgid "in about a minute"
+msgstr "約1分後"
+
+#: I18n/RelativeTimeFormatter.php:167
+msgid "in about an hour"
+msgstr "約1時間後"
+
+#: I18n/RelativeTimeFormatter.php:168;339
+msgid "in about a day"
+msgstr "約1日後"
+
+#: I18n/RelativeTimeFormatter.php:169;340
+msgid "in about a week"
+msgstr "約1週間後"
+
+#: I18n/RelativeTimeFormatter.php:170;342
+msgid "in about a year"
+msgstr "約1年後"
+
+#: I18n/RelativeTimeFormatter.php:362
+msgid "%s ago"
+msgstr "%s前"
+
+#: I18n/RelativeTimeFormatter.php:363
+msgid "on %s"
+msgstr "%s"
+
+#: I18n/RelativeTimeFormatter.php:47;125;310
+msgid "{0} year"
+msgid_plural "{0} years"
+msgstr[0] "{0}年"
+msgstr[1] "{0}年"
+
+#: I18n/RelativeTimeFormatter.php:51;128;313
+msgid "{0} month"
+msgid_plural "{0} months"
+msgstr[0] "{0}か月"
+msgstr[1] "{0}か月"
+
+#: I18n/RelativeTimeFormatter.php:57;131;316
+msgid "{0} week"
+msgid_plural "{0} weeks"
+msgstr[0] "{0}週間"
+msgstr[1] "{0}週間"
+
+#: I18n/RelativeTimeFormatter.php:59;134;319
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0}日"
+msgstr[1] "{0}日"
+
+#: I18n/RelativeTimeFormatter.php:64;137
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0}時間"
+msgstr[1] "{0}時間"
+
+#: I18n/RelativeTimeFormatter.php:68;140
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0}分"
+msgstr[1] "{0}分"
+
+#: I18n/RelativeTimeFormatter.php:72;143
+msgid "{0} second"
+msgid_plural "{0} seconds"
+msgstr[0] "{0}秒"
+msgstr[1] "{0}秒"
+
+#: I18n/RelativeTimeFormatter.php:298
+msgid "today"
+msgstr "今日"
+
+#: Network/Response.php:1417
+msgid "The requested file was not found"
+msgstr "要求されたファイルが見つかりませんでした"
+
+#: ORM/RulesChecker.php:49
+msgid "This value is already in use"
+msgstr "この値はすでに使用中です"
+
+#: ORM/RulesChecker.php:83
+msgid "This value does not exist"
+msgstr "この値は存在しません"
+
+#: Utility/Text.php:724
+msgid "and"
+msgstr "および"
+
+#: Validation/Validator.php:103
+msgid "This field is required"
+msgstr "このフィールドは必須です"
+
+#: Validation/Validator.php:104
+msgid "This field cannot be left empty"
+msgstr "このフィールドは空欄にできません"
+
+#: Validation/Validator.php:1406
+msgid "The provided value is invalid"
+msgstr "与えられた値は無効です"
+
+#: View/Helper/FormHelper.php:926
+msgid "New %s"
+msgstr "新規%s"
+
+#: View/Helper/FormHelper.php:929
+msgid "Edit %s"
+msgstr "%s編集"
+
+#: View/Helper/FormHelper.php:1730
+msgid "Submit"
+msgstr "送信"
+
+#: View/Helper/HtmlHelper.php:770
+msgid "Home"
+msgstr "ホーム"
+
+#: View/Widget/DateTimeWidget.php:530
+msgid "January"
+msgstr "1月"
+
+#: View/Widget/DateTimeWidget.php:531
+msgid "February"
+msgstr "2月"
+
+#: View/Widget/DateTimeWidget.php:532
+msgid "March"
+msgstr "3月"
+
+#: View/Widget/DateTimeWidget.php:533
+msgid "April"
+msgstr "4月"
+
+#: View/Widget/DateTimeWidget.php:534
+msgid "May"
+msgstr "5月"
+
+#: View/Widget/DateTimeWidget.php:535
+msgid "June"
+msgstr "6月"
+
+#: View/Widget/DateTimeWidget.php:536
+msgid "July"
+msgstr "7月"
+
+#: View/Widget/DateTimeWidget.php:537
+msgid "August"
+msgstr "8月"
+
+#: View/Widget/DateTimeWidget.php:538
+msgid "September"
+msgstr "9月"
+
+#: View/Widget/DateTimeWidget.php:539
+msgid "October"
+msgstr "10月"
+
+#: View/Widget/DateTimeWidget.php:540
+msgid "November"
+msgstr "11月"
+
+#: View/Widget/DateTimeWidget.php:541
+msgid "December"
+msgstr "12月"
+

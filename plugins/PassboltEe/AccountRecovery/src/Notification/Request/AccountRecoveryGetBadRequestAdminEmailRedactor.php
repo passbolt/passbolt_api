@@ -83,6 +83,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
         $user = $this->Users->findFirstForEmail($userId);
 
         $admins = $this->Users->findAdmins()
+            ->find('notDisabled')
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);
@@ -127,6 +128,6 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
             'subject' => $subject,
         ], 'title' => $subject,];
 
-        return new Email($admin->username, $subject, $data, self::ADMIN_TEMPLATE);
+        return new Email($admin, $subject, $data, self::ADMIN_TEMPLATE);
     }
 }

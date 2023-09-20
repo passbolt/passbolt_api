@@ -160,7 +160,7 @@ abstract class AbstractSsoController extends AppController
         }
 
         try {
-            $user = (new UserGetService())->getActiveNotDeletedOrFail($userId);
+            $user = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
         } catch (NotFoundException $exception) {
             throw new BadRequestException(__('The user does not exist or is not active.'), 400, $exception);
         }

@@ -50,9 +50,9 @@ class AccountRecoveryEmailRedactorTest extends AppIntegrationTestCase
 
         $user = UserFactory::make()->withAvatar()->user()->persist();
 
-        /** @var UsersTable $Users */
+        /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
-        /** @var User $user */
+        /** @var \App\Model\Entity\User $user */
         $user = $Users->findByUsername($user->username)->first();
         $token = AuthenticationTokenFactory::make()->persist();
         $case = 'default';

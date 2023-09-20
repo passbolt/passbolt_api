@@ -307,7 +307,7 @@ class SsoStatesTableTest extends SsoTestCase
         $this->assertInstanceOf(SsoState::class, $result);
 
         // Deleted
-        $ssoState = SsoStateFactory::make(['deleted' => Chronos::now()->subMinute(1)])->persist();
+        $ssoState = SsoStateFactory::make(['deleted' => Chronos::now()->subMinutes(1)])->persist();
         $result = SsoStateFactory::find('active')->where(['state' => $ssoState->state])->first();
         $this->assertNull($result);
     }

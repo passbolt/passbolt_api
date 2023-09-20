@@ -75,7 +75,7 @@ class PasswordPoliciesSettingsForm extends Form
             )
             ->boolean(
                 'external_dictionary_check',
-                __('The external dictionary check should be a boolean type.')
+                __('The external dictionary check should be a boolean.')
             );
 
         $validator

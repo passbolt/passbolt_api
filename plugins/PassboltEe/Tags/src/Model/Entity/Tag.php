@@ -24,6 +24,7 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $slug
  * @property bool $is_shared
+ * @property \Cake\I18n\FrozenTime $created
  *
  * @property \App\Model\Entity\Resource[] $resources
  * @property \Cake\ORM\Entity[] $resources_tags

@@ -56,7 +56,7 @@ class UsersRecoverControllerTest extends LogIntegrationTestCase
         $this->assertEmailIsInQueue(['email' => $username, 'template' => 'AN/user_register_self']);
         $this->assertEmailQueueCount(1);
         $link = '<a href="' . Router::url('/', true) . '">' . Router::url('/', true) . '</a>';
-        $this->assertEmailInBatchContains("You just opened an account on passbolt at {$link}.", $username);
+        $this->assertEmailInBatchContains("You just opened an account on passbolt at {$link}.", $username, '', false);
         $this->assertActionLogsCount(1);
         $this->assertEntitiesHistoryCount(0);
     }

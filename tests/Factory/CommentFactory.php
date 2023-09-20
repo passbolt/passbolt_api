@@ -60,8 +60,8 @@ class CommentFactory extends CakephpBaseFactory
                 'foreign_key' => $faker->uuid(),
                 'foreign_model' => $faker->uuid(),
                 'content' => $faker->text(256),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
             ];

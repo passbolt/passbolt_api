@@ -69,7 +69,9 @@ class SetupRecoverAbortAdminEmailRedactor implements SubscribedEmailRedactorInte
 
         // Create an email for every admin
         /** @var \App\Model\Entity\User[] $admins */
-        $admins = $usersTable->findAdmins()->find('locale');
+        $admins = $usersTable->findAdmins()
+            ->find('locale')
+            ->find('notDisabled');
         foreach ($admins as $admin) {
             $email = $this->createAbortEmail($admin, $user);
             $emailCollection->addEmail($email);
@@ -95,6 +97,6 @@ class SetupRecoverAbortAdminEmailRedactor implements SubscribedEmailRedactorInte
 
         $data = ['body' => ['user' => $user], 'title' => $subject];
 
-        return new Email($admin->username, $subject, $data, self::TEMPLATE);
+        return new Email($admin, $subject, $data, self::TEMPLATE);
     }
 }

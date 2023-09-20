@@ -72,6 +72,6 @@ class AccountRecoveryOrganizationPolicyDisableEmailRedactor extends AbstractAcco
             'subject' => $subject,
         ], 'title' => $subject,];
 
-        return new Email($admin->username, $subject, $data, self::EMAIL_TEMPLATE);
+        return new Email($admin, $subject, $data, self::EMAIL_TEMPLATE);
     }
 }

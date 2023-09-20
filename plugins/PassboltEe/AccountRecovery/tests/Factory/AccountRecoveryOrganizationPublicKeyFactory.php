@@ -28,6 +28,7 @@ use Faker\Generator;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey|\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[] persist()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey getEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[] getEntities()
+ * @method static  \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey firstOrFail($conditions = null)
  */
 class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
 {
@@ -55,8 +56,8 @@ class AccountRecoveryOrganizationPublicKeyFactory extends CakephpBaseFactory
             return [
                 'created_by' => UuidFactory::uuid(),
                 'modified_by' => UuidFactory::uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
                 'deleted' => null,
             ];
         });

@@ -81,9 +81,14 @@ class SsoSettingsActivatedEmailRedactor implements SubscribedEmailRedactorInterf
         // Get all the other active admins to notify them
         $admins = $usersTable
             ->findAdmins()
+            ->find('notDisabled')
             ->find('locale')
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
             ->toArray();
+
+        if (!isset($admins)) {
+            return $emailCollection;
+        }
 
         // Required as we don't have sent email to operator
         [$operator, $recipients] = $this->filterOperatorAndRecipient($admins, $uac);
@@ -120,7 +125,7 @@ class SsoSettingsActivatedEmailRedactor implements SubscribedEmailRedactorInterf
         );
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => [

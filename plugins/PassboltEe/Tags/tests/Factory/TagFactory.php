@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace Passbolt\Tags\Test\Factory;
 
+use App\Model\Entity\Resource;
+use App\Model\Entity\User;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -49,6 +51,46 @@ class TagFactory extends CakephpBaseFactory
      */
     public function isShared(bool $isShared = true)
     {
-        return $this->setField('is_shared', $isShared);
+        $this->setField('is_shared', $isShared);
+
+        return $this;
+    }
+
+    /**
+     * Is tagging the given resource for the given user
+     *
+     * @param Resource $resource The resource tog
+     * @param User $user The user to tag the resource for
+     * @return $this
+     */
+    public function isPersonalFor(Resource $resource, User $user)
+    {
+        $this->with(
+            'ResourcesTags',
+            ResourcesTagFactory::make([
+                'resource_id' => $resource->id,
+                'user_id' => $user->id,
+            ])
+        );
+
+        return $this;
+    }
+
+    /**
+     * Is tagging the given resource for the given user
+     *
+     * @param Resource $resource The resource tog
+     * @return $this
+     */
+    public function isSharedFor(Resource $resource)
+    {
+        $this->with(
+            'ResourcesTags',
+            ResourcesTagFactory::make([
+                'resource_id' => $resource->id,
+            ])
+        )->isShared();
+
+        return $this;
     }
 }

@@ -123,7 +123,7 @@ trait SyncUpdateTrait
     public function updateUser(User $existingUser, array $data): void
     {
         try {
-            $user = $this->Users->editEntity($existingUser, $data, Role::ADMIN);
+            $user = $this->Users->editEntity($existingUser, $data, new UserAccessControl(Role::ADMIN));
             $result = $this->Users->save($user, ['checkrules' => false]);
 
             if (!$result) {

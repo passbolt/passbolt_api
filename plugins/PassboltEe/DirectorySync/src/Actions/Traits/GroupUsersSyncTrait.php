@@ -543,7 +543,7 @@ trait GroupUsersSyncTrait
                 }
 
                 // Check if groupUser was created after.
-                if ($groupUser->created->gt($data['directory_modified'])) {
+                if ($groupUser->created->greaterThan($data['directory_modified'])) {
                     $toSync[] = $groupUser;
                 } else {
                     // Send ignore report.

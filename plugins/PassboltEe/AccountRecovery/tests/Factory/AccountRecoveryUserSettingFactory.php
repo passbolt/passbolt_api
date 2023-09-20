@@ -57,8 +57,8 @@ class AccountRecoveryUserSettingFactory extends CakephpBaseFactory
                 'user_id' => $faker->uuid(),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
-                'modified' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
+                'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }

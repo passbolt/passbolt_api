@@ -1494,7 +1494,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->setField('id', UuidFactory::uuid('acr.org_public_key_old.id'))
             ->setField('fingerprint', '2D7CF2B7FD9643DEBF63633CFC7F5D048541513F')
             ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'old_revoked_public.key'))
-            ->setField('deleted', Chronos::now()->subDay())
+            ->setField('deleted', Chronos::now()->subDays(1))
             ->persist();
 
         AccountRecoveryUserSettingFactory::make()
@@ -1552,7 +1552,7 @@ NZMBGPJsxOKQExEOZncOVsY7ZqLrecuR8UJBQnhPd1aoz3HCJppaPxL4Q==
             ->setField('id', UuidFactory::uuid('acr.org_public_key_old.id'))
             ->setField('fingerprint', '2D7CF2B7FD9643DEBF63633CFC7F5D048541513F')
             ->setField('armored_key', file_get_contents(FIXTURES . 'OpenPGP' . DS . 'PublicKeys' . DS . 'old_revoked_public.key'))
-            ->setField('deleted', Chronos::now()->subDay())
+            ->setField('deleted', Chronos::now()->subDays(1))
             ->persist();
 
         AccountRecoveryUserSettingFactory::make()

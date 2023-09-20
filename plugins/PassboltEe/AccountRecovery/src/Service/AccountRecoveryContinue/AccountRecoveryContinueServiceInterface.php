@@ -12,25 +12,17 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.5.0
+ * @since         4.3.0
  */
 
-namespace App\Service\Setup;
+namespace Passbolt\AccountRecovery\Service\AccountRecoveryContinue;
 
-use Cake\View\ViewBuilder;
-
-interface RecoverStartServiceInterface
+interface AccountRecoveryContinueServiceInterface
 {
     /**
-     * @param string $userId User uuid
-     * @param string $token Register token
-     * @return array data to pass to the view
+     * Returns the data to pass in the response.
+     *
+     * @return array|null
      */
-    public function getInfo(string $userId, string $token): array;
-
-    /**
-     * @param \Cake\View\ViewBuilder $viewBuilder View builder
-     * @return void
-     */
-    public function setTemplate(ViewBuilder $viewBuilder): void;
+    public function get(): ?array;
 }

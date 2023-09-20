@@ -65,7 +65,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        $expiry = FrozenTime::now()->addMinute()->toUnixString();
+        $expiry = FrozenTime::now()->addMinutes(1)->toUnixString();
         $this->service->validateToken($expiry, UuidFactory::uuid(), UuidFactory::uuid());
         $this->service->validateToken((int)$expiry, UuidFactory::uuid(), UuidFactory::uuid());
     }
@@ -98,7 +98,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         $this->expectException(InvalidVerifyTokenException::class);
         $this->expectExceptionMessage('Invalid verify token format.');
-        $this->service->validateToken(FrozenTime::now()->addMinute()->toUnixString(), $token, 'Bar');
+        $this->service->validateToken(FrozenTime::now()->addMinutes(1)->toUnixString(), $token, 'Bar');
     }
 
     public function testVerifyTokenValidationService_IsNotNonce()
@@ -110,7 +110,7 @@ class VerifyTokenValidationServiceTest extends TestCase
         $token = $existingToken->token;
         $this->expectException(ConsumedVerifyTokenAccessException::class);
         $this->expectExceptionMessage('Verify token has been already used in the past.');
-        $this->service->validateToken(FrozenTime::now()->addMinute()->toUnixString(), $token, $userId);
+        $this->service->validateToken(FrozenTime::now()->addMinutes(1)->toUnixString(), $token, $userId);
         $this->assertEventFired(ConsumedVerifyTokenAccessException::class);
     }
 
@@ -119,8 +119,8 @@ class VerifyTokenValidationServiceTest extends TestCase
         return [
             [null],
             [''],
-            [FrozenTime::now()->addHour(5)->toUnixString()], // This is past the max validity of one hour
-            [FrozenTime::now()->addMinute()], // This is not a unix time!
+            [FrozenTime::now()->addHours(5)->toUnixString()], // This is past the max validity of one hour
+            [FrozenTime::now()->addMinutes(1)], // This is not a unix time!
         ];
     }
 
@@ -128,7 +128,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         return [
             [FrozenTime::yesterday()->toUnixString()],
-            [FrozenTime::now()->subSecond()->toUnixString()],
+            [FrozenTime::now()->subSeconds(1)->toUnixString()],
         ];
     }
 

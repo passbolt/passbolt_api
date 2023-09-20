@@ -19,12 +19,8 @@ namespace App\Test\TestCase\Notification\Email\Redactor\Setup;
 
 use App\Notification\Email\Redactor\Setup\SetupRecoverAbortAdminEmailRedactor;
 use App\Service\Setup\RecoverAbortService;
-use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use Cake\Event\Event;
-use Cake\Event\EventManager;
-use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 
 class SetupRecoverAbortAdminEmailRedactorTest extends AppIntegrationTestCase
 {
@@ -38,22 +34,5 @@ class SetupRecoverAbortAdminEmailRedactorTest extends AppIntegrationTestCase
             ],
             (new SetupRecoverAbortAdminEmailRedactor())->getSubscribedEvents()
         );
-    }
-
-    public function testSetupRecoverAbortAdminEmailRedactor_Success()
-    {
-        UserFactory::make(3)->withAvatar()->admin()->persist();
-        $user = UserFactory::make()->withAvatar()->user()->persist();
-
-        // Needed to load event listeners / settings
-        $this->getJson('/auth/is-authenticated.json');
-
-        // Trigger event
-        $event = new Event(RecoverAbortService::RECOVER_ABORT_EVENT_NAME, null, compact('user'));
-        EventManager::instance()->dispatch($event);
-
-        $this->assertSame(3, EmailQueueFactory::count());
-        $email = EmailQueueFactory::find()->firstOrFail();
-        $this->assertTextEquals('AD/setup_recover_abort', $email->template);
     }
 }

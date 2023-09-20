@@ -52,7 +52,7 @@ class DirectoryRelationFactory extends CakephpBaseFactory
             return [
                 'parent_key' => UuidFactory::uuid(),
                 'child_key' => UuidFactory::uuid(),
-                'created' => FrozenDate::now()->subDay($faker->randomNumber(1)),
+                'created' => FrozenDate::now()->subDays($faker->randomNumber(1)),
             ];
         });
     }

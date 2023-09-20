@@ -78,7 +78,16 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
         /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
         // Get all the active admins to notify them all
-        $admins = $usersTable->findAdmins()->find('locale')->contain(['Profiles' => AvatarsTable::addContainAvatar()]);
+        $admins = $usersTable->findAdmins()
+            ->find('notDisabled')
+            ->find('locale')
+            ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
+            ->all();
+
+        if (!count($admins)) {
+            return $emailCollection;
+        }
+
         $operator = $usersTable->findFirstForEmail($uac->getId());
 
         // Send emails to all the administrators
@@ -116,7 +125,7 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
         );
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => [

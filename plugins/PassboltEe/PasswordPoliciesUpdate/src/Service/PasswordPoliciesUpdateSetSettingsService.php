@@ -48,7 +48,7 @@ class PasswordPoliciesUpdateSetSettingsService
     {
         if (!$uac->isAdmin()) {
             throw new ForbiddenException(
-                __('Only administrators are allowed to create/update pass policies settings.')
+                __('Only administrators are allowed to create/update password policies settings.')
             );
         }
 

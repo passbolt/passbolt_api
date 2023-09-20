@@ -98,10 +98,17 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     {
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($updatedGroupsUsers, '{n}.user_id');
-        $users = $this->usersTable->find('locale')->where(['Users.id IN' => $usersIds]);
-        $whoIsAdmin = Hash::combine($updatedGroupsUsers, '{n}.user_id', '{n}.is_admin');
+        $users = $this->usersTable->find('locale')
+            ->find('notDisabled')
+            ->where(['Users.id IN' => $usersIds]);
 
         $emails = [];
+        if (empty($users)) {
+            return $emails;
+        }
+
+        $whoIsAdmin = Hash::combine($updatedGroupsUsers, '{n}.user_id', '{n}.is_admin');
+
         foreach ($users as $user) {
             $isAdmin = isset($whoIsAdmin[$user->id]) && $whoIsAdmin[$user->id];
             $emails[] = $this->createUpdateMembershipGroupUpdateEmail($user, $isAdmin, $modifiedBy, $group);
@@ -137,6 +144,6 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         );
         $data = ['body' => ['admin' => $modifiedBy, 'group' => $group, 'isAdmin' => $isAdmin], 'title' => $subject];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

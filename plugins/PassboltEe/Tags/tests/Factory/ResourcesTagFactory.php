@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Tags\Test\Factory;
 
+use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -38,6 +39,7 @@ class ResourcesTagFactory extends CakephpBaseFactory
             return [
                 'tag_id' => $faker->uuid(),
                 'resource_id' => $faker->uuid(),
+                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
             ];
         });
     }

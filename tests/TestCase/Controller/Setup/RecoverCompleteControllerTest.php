@@ -109,6 +109,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains(
             "User Agent: <i>$userAgent</i><br/>User IP: <i>$clientIP</i>",
             $user->username,
+            '',
+            false
         );
         // Check that all admins got notified, as well as the user
         foreach ($admins as $admin) {
@@ -119,6 +121,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
             $this->assertEmailInBatchContains(
                 "User Agent: <i>$userAgent</i><br/>User IP: <i>$clientIP</i>",
                 $admin->username,
+                '',
+                false
             );
         }
         Configure::write('passbolt.plugins.log.enabled', $logEnabled);
@@ -324,7 +328,8 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverCompleteController_Error_DeletedUser(): void
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.sofia') . '.json';
+        $user = UserFactory::make()->user()->deleted()->persist();
+        $url = '/setup/recover/complete/' . $user->id . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
     }
@@ -336,9 +341,23 @@ class RecoverCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverCompleteController_Error_InactiveUser(): void
     {
-        $url = '/setup/recover/complete/' . UuidFactory::uuid('user.id.ruth') . '.json';
+        $user = UserFactory::make()->user()->inactive()->persist();
+        $url = '/setup/recover/complete/' . $user->id . '.json';
         $this->postJson($url, []);
         $this->assertError(400, 'The user does not exist');
+    }
+
+    /**
+     * @group AN
+     * @group recover
+     * @group recoverComplete
+     */
+    public function testRecoverCompleteController_Error_DisabledUser(): void
+    {
+        $user = UserFactory::make()->user()->disabled()->persist();
+        $url = '/setup/recover/complete/' . $user->id . '.json';
+        $this->postJson($url, []);
+        $this->assertError(400, 'The user does not exist or is not active or is disabled.');
     }
 
     /**

@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Notification\Email;
 
+use App\Model\Entity\User;
+
 /**
  * Class Email
  *
@@ -28,41 +30,49 @@ namespace App\Notification\Email;
  */
 class Email
 {
-    /**
-     * @var string
-     */
-    private $recipient;
-    /**
-     * @var string
-     */
-    private $subject;
-    /**
-     * @var array
-     */
-    private $data;
-    /**
-     * @var string
-     */
-    private $template;
+    private User $recipientUser;
+    private string $recipient;
+    private string $subject;
+    private array $data;
+    private string $template;
 
     /**
-     * @param string $recipient Email recipient
+     * @param \App\Model\Entity\User $recipientUser Email recipient user entity
      * @param string $subject Subject of the email
      * @param array  $data Data to inject in the email template
      * @param string $template Template to use for the email
      */
-    public function __construct(string $recipient, string $subject, array $data, string $template)
+    public function __construct(User $recipientUser, string $subject, array $data, string $template)
     {
-        $this->recipient = $recipient;
+        $this->recipientUser = $recipientUser;
+        $this->recipient = $recipientUser->username;
         $this->subject = $subject;
         $this->data = $data;
         $this->template = $template;
     }
 
     /**
+     * Check if the 'disabled' field is in the properties. If not, we consider the status of the recipient as unknown
+     * and the user is considered as disabled.
+     *
+     * If 'disabled' is defined, fallbacks on the User entity logic
+     *
+     * @return bool
+     */
+    public function isRecipientUserDisabled(): bool
+    {
+        $isDisabledInUserProperties = array_key_exists('disabled', $this->recipientUser->toArray());
+        if (!$isDisabledInUserProperties) {
+            return true;
+        }
+
+        return $this->recipientUser->isDisabled();
+    }
+
+    /**
      * @return string
      */
-    public function getRecipient()
+    public function getRecipient(): string
     {
         return $this->recipient;
     }
@@ -70,7 +80,7 @@ class Email
     /**
      * @return string
      */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }
@@ -78,7 +88,7 @@ class Email
     /**
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }
@@ -86,7 +96,7 @@ class Email
     /**
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->template;
     }
@@ -95,9 +105,9 @@ class Email
      * Return a new instance of Email with the provided data
      *
      * @param array $data Data to use for the email
-     * @return \App\Notification\Email\Email
+     * @return self
      */
-    public function withData(array $data)
+    public function withData(array $data): self
     {
         $new = clone $this;
         $new->data = $data;

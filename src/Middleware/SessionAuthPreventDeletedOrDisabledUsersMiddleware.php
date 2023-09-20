@@ -23,7 +23,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class SessionAuthPreventDeletedUsersMiddleware implements MiddlewareInterface
+class SessionAuthPreventDeletedOrDisabledUsersMiddleware implements MiddlewareInterface
 {
     /**
      * Destroys the session if an authenticated user is in the session
@@ -39,7 +39,7 @@ class SessionAuthPreventDeletedUsersMiddleware implements MiddlewareInterface
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
         $userId = $request->getSession()->read('Auth.user.id');
-        if (is_string($userId) && $this->isUserSoftDeleted($userId)) {
+        if (is_string($userId) && $this->isUserDeletedOrDisabled($userId)) {
             $request->getSession()->destroy();
         }
 
@@ -47,20 +47,25 @@ class SessionAuthPreventDeletedUsersMiddleware implements MiddlewareInterface
     }
 
     /**
-     * Returns true if the a user with the provided userId
-     * is soft deleted.
+     * Returns true if the user with the provided userId
+     * is deleted or disabled.
      *
      * @param string $userId user ID
      * @return bool
      */
-    public function isUserSoftDeleted(string $userId): bool
+    public function isUserDeletedOrDisabled(string $userId): bool
     {
-        return TableRegistry::getTableLocator()->get('Users')
-            ->find()
-            ->where([
-                'Users.id' => $userId,
-                'Users.deleted' => true,
-            ])
-            ->count() > 0;
+        try {
+            /** @var \App\Model\Entity\User $user */
+            $user = TableRegistry::getTableLocator()->get('Users')
+                ->find()
+                ->where(['Users.id' => $userId])
+                ->firstOrFail();
+        } catch (\Exception $exception) {
+            // Not found => hard deleted
+            return true;
+        }
+
+        return $user->isDeleted() || $user->isDisabled();
     }
 }

@@ -16,10 +16,21 @@ declare(strict_types=1);
  */
 namespace Passbolt\Ee;
 
+use App\Service\Setup\AbstractRecoverStartService;
+use App\Service\Setup\AbstractSetupStartService;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
+use Passbolt\AccountRecovery\Service\Setup\RecoverStartAccountRecoveryInfoService;
+use Passbolt\AccountRecovery\Service\Setup\SetupStartAccountRecoveryInfoService;
 use Passbolt\Ee\Command\SubscriptionCheckCommand;
 use Passbolt\Ee\Command\SubscriptionImportCommand;
+use Passbolt\Ee\Service\AccountRecoveryContinue\AccountRecoveryContinueAggregatorService;
+use Passbolt\Ee\Service\Setup\EeRecoverStartService;
+use Passbolt\Ee\Service\Setup\EeSetupStartService;
+use Passbolt\UserPassphrasePolicies\Service\AccountRecovery\AccountRecoveryContinueUserPassphrasePoliciesService;
+use Passbolt\UserPassphrasePolicies\Service\Setup\RecoverStartUserPassphrasePoliciesInfoService;
+use Passbolt\UserPassphrasePolicies\Service\Setup\SetupStartUserPassphrasePoliciesInfoService;
+use Psr\Container\ContainerInterface;
 
 class EePlugin extends BasePlugin
 {
@@ -34,5 +45,29 @@ class EePlugin extends BasePlugin
         $commands->add('passbolt subscription_import', SubscriptionImportCommand::class);
 
         return $commands;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->extend(AbstractSetupStartService::class)
+            ->setConcrete(EeSetupStartService::class)
+            ->addArguments([
+                SetupStartAccountRecoveryInfoService::class,
+                SetupStartUserPassphrasePoliciesInfoService::class,
+            ]);
+
+        $container->extend(AbstractRecoverStartService::class)
+            ->setConcrete(EeRecoverStartService::class)
+            ->addArguments([
+                RecoverStartAccountRecoveryInfoService::class,
+                RecoverStartUserPassphrasePoliciesInfoService::class,
+            ]);
+
+        $container
+            ->add(AccountRecoveryContinueAggregatorService::class)
+            ->addArgument(AccountRecoveryContinueUserPassphrasePoliciesService::class);
     }
 }

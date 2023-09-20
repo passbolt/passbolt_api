@@ -61,7 +61,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinute(2)])
+        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
@@ -80,7 +80,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinute(2)])
+        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
@@ -99,7 +99,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // Old actions
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinute(2)])
+        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
@@ -128,7 +128,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
         // Set max attempts to 1
         Configure::write('passbolt.security.mfa.maxAttempts', 1);
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinute(2)])
+        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
@@ -149,7 +149,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
         // Set max attempts to 0 (that means no limit for failed attempts), GO CRAZY!
         Configure::write('passbolt.security.mfa.maxAttempts', 0);
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinute(2)])
+        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
@@ -168,7 +168,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinute(2)])
+        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
             ->setActionId('JwtLogin.loginPost')
             ->userId($user->id)
             ->persist();
@@ -187,7 +187,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinute(2)])
+        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
             ->setActionId('JwtLogin.loginPost')
             ->userId($user->id)
             ->persist();
@@ -227,7 +227,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
         Configure::write('passbolt.security.mfa.maxAttempts', 2);
         // login action
         $actionId = $isJwtAuth ? 'JwtLogin.loginPost' : 'AuthLogin.loginPost';
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinute(2)])
+        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->setActionId($actionId)
             ->persist();

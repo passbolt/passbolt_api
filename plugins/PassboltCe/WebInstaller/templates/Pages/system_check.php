@@ -1,4 +1,11 @@
 <?php
+declare(strict_types=1);
+
+/**
+ * @var \App\View\AppView $this
+ * @var array $data
+ * @var string $nextStepUrl
+ */
 use Passbolt\WebInstaller\View\Helper\HealthcheckHtmlHelper;
 
 $healtcheck = new HealthcheckHtmlHelper();

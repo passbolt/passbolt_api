@@ -84,6 +84,10 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
             // Get the details of whoever did the changes
             $owner = $this->usersTable->findFirstForEmail($ownerId);
             $users = $this->getUserFromIds($userIds);
+
+            if (empty($users)) {
+                return $emailCollection;
+            }
             $secrets = Hash::combine($changes['secrets'], '{n}.user_id', '{n}.data');
 
             foreach ($users as $user) {
@@ -104,7 +108,10 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function getUserFromIds(array $userIds)
     {
-        return $this->usersTable->find('locale')->where(['Users.id IN' => $userIds]);
+        return $this->usersTable
+            ->find('locale')
+            ->find('notDisabled')
+            ->where(['Users.id IN' => $userIds]);
     }
 
     /**
@@ -136,6 +143,6 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

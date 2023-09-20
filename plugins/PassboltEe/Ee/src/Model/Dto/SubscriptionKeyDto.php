@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Ee\Model\Dto;
 
+use Cake\Chronos\Chronos;
 use Cake\I18n\FrozenDate;
 
 class SubscriptionKeyDto
@@ -112,8 +113,8 @@ class SubscriptionKeyDto
             $key['subscription_id'] ?? '',
             $key['users'] ?? 0,
             $key['email'] ?? '',
-            isset($key['expiry']) ? new FrozenDate($key['expiry']) : FrozenDate::now(),
-            isset($key['created']) ? new FrozenDate($key['created']) : FrozenDate::now(),
+            isset($key['expiry']) ? new FrozenDate($key['expiry']) : Chronos::now(),
+            isset($key['created']) ? new FrozenDate($key['created']) : Chronos::now(),
         );
     }
 }

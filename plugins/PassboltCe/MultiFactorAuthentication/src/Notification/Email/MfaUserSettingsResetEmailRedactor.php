@@ -87,7 +87,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
         );
 
         return new Email(
-            $user->username,
+            $user,
             $subject,
             [
                 'title' => $title,
@@ -120,7 +120,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
         );
 
         return new Email(
-            $user->username,
+            $user,
             $subject,
             [
                 'title' => $title,
@@ -137,9 +137,15 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
-        $email = $this->createEmail($event->getData('target'), $event->getData('uac'));
 
-        return $emailCollection->addEmail($email);
+        /** @var \App\Model\Entity\User $user */
+        $user = $event->getData('target');
+        if (!$user->isDisabled()) {
+            $email = $this->createEmail($event->getData('target'), $event->getData('uac'));
+            $emailCollection->addEmail($email);
+        }
+
+        return $emailCollection;
     }
 
     /**
