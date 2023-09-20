@@ -13,6 +13,22 @@ function is_release_candidate () {
   return 0
 }
 
+function is_testing_candidate () {
+  local version=$1
+  if [[ ! $version =~ [0-9]+\.[0-9]+\.[0-9]+-test\.[0-9]+ ]];then
+    return 1
+  fi
+  return 0
+}
+
+function is_stable_candidate () {
+  local version=$1
+  if [[ ! $version =~ [0-9]+\.[0-9]+\.[0-9]+$ ]];then
+    return 1
+  fi
+  return 0
+}
+
 function validate_config_version_and_api_tag () {
   local version_file="$1"
   local version

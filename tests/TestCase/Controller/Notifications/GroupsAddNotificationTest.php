@@ -17,9 +17,10 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\UuidFactory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class GroupsAddNotificationTest extends AppIntegrationTestCase
@@ -27,51 +28,69 @@ class GroupsAddNotificationTest extends AppIntegrationTestCase
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
 
-    public $Groups;
-
-    public $fixtures = [
-        'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Roles',
-          'app.Base/Gpgkeys',
-    ];
-
-    public function testGroupsUsersAddNotificationDisabled(): void
+    public function setUp(): void
     {
-        $this->setEmailNotificationSetting('send.group.user.add', false);
+        parent::setUp();
+        $this->loadNotificationSettings();
+    }
 
-        $this->authenticateAs('admin');
-        $this->postJson('/groups.json', [
-            'Group' => ['name' => 'Temp Group'],
-            'GroupUsers' => [
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => 1]],
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
-            ],
-        ]);
-        $this->assertResponseSuccess();
-
-        // check email notification
-        $this->assertEmailQueueIsEmpty();
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        $this->unloadNotificationSettings();
     }
 
     public function testGroupsUsersAddNotificationSuccess(): void
     {
         $this->setEmailNotificationSetting('send.group.user.add', true);
+        RoleFactory::make()->user()->persist();
+        RoleFactory::make()->admin()->persist();
 
-        $this->authenticateAs('admin');
+        $admin = UserFactory::make()->admin()->active()->persist();
+        [$ga, $user] = UserFactory::make(2)->user()->active()->persist();
+        $disabled = UserFactory::make()->user()->active()->disabled()->persist();
+
+        $this->logInAs($admin);
         $this->postJson('/groups.json', [
             'Group' => ['name' => 'Temp Group'],
             'GroupUsers' => [
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.ada'), 'is_admin' => true]],
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.betty')]],
-                ['GroupUser' => ['user_id' => UuidFactory::uuid('user.id.admin')]],
+                ['GroupUser' => ['user_id' => $ga->id, 'is_admin' => true]],
+                ['GroupUser' => ['user_id' => $user->id]],
+                ['GroupUser' => ['user_id' => $disabled->id]],
             ],
         ]);
-        $this->assertResponseSuccess();
+        $this->assertResponseCode(200);
 
         // check email notification
         $this->assertEmailQueueCount(2);
-        $this->assertEmailInBatchContains('Admin added you to the group Temp Group', 'ada@passbolt.com');
-        $this->assertEmailInBatchContains('And as group manager you', 'ada@passbolt.com');
-        $this->assertEmailInBatchContains('Admin added you to the group Temp Group', 'betty@passbolt.com');
-        $this->assertEmailInBatchNotContains('And as group manager you', 'betty@passbolt.com');
+        $this->assertEmailInBatchContains('added you to the group Temp Group', $ga->username);
+        $this->assertEmailInBatchContains('And as group manager you', $ga->username);
+        $this->assertEmailInBatchContains('added you to the group Temp Group', $user->username);
+        $this->assertEmailInBatchNotContains('And as group manager you', $user->username);
+    }
+
+    public function testGroupsUsersAddNotificationDisabled(): void
+    {
+        $this->setEmailNotificationSetting('send.group.user.add', false);
+        RoleFactory::make()->user()->persist();
+        RoleFactory::make()->admin()->persist();
+
+        $admin = UserFactory::make()->admin()->active()->persist();
+        [$ga, $user] = UserFactory::make(2)->user()->active()->persist();
+        $disabled = UserFactory::make()->user()->active()->disabled()->persist();
+
+        $this->logInAs($admin);
+        $this->postJson('/groups.json', [
+            'Group' => ['name' => 'Temp Group'],
+            'GroupUsers' => [
+                ['GroupUser' => ['user_id' => $ga->id, 'is_admin' => true]],
+                ['GroupUser' => ['user_id' => $user->id]],
+                ['GroupUser' => ['user_id' => $disabled->id]],
+            ],
+        ]);
+        $this->assertResponseCode(200);
+
+        // check email notification
+        $this->assertEmailQueueIsEmpty();
     }
 }

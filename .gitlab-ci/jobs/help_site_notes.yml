@@ -6,9 +6,9 @@ help_site_notes:
     GPG_KEY_GRIP: $HELP_SITE_GPG_KEYGRIP
   image: debian
   script: |
-    source .gitlab-ci/scripts/bin/set-env.sh "$CI_COMMIT_TAG"
-    if is_release_candidate "$tag"; then
-      echo "The tag is for a release candidate. Skipping release notes creation..."
+    source .gitlab-ci/scripts/lib/version-check.sh
+    if is_release_candidate "$tag" || is_testing_candidate "$tag"; then
+      echo "The tag is not a stable candidate. Skipping release notes creation..."
       exit 0
     fi
     apt update && apt install -y git curl gpg

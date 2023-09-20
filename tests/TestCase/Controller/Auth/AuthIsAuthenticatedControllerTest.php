@@ -53,11 +53,24 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
     }
 
     /**
-     * @covers \App\Middleware\SessionAuthPreventDeletedUsersMiddleware::process
+     * @covers \App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware::process
      */
     public function testAuthIsAuthenticatedController_Error_SoftDeletedLoggedUserShouldBeForbiddenToRequestTheApi(): void
     {
         $user = UserFactory::make()->user()->deleted()->persist();
+
+        $this->loginAs($user);
+        $this->getJson('/auth/is-authenticated.json');
+        $this->assertEmpty($this->getSession()->read());
+        $this->assertAuthenticationError();
+    }
+
+    /**
+     * @covers \App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware::process
+     */
+    public function testAuthIsAuthenticatedController_Error_DisabledLoggedUserShouldBeForbiddenToRequestTheApi(): void
+    {
+        $user = UserFactory::make()->user()->disabled()->persist();
 
         $this->loginAs($user);
         $this->getJson('/auth/is-authenticated.json');

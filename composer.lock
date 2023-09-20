@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "de53ec3792f56d60e86b9edc1bfb63a0",
+    "content-hash": "592f55347c52ee852171713cee1b60b1",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -443,16 +443,16 @@
         },
         {
             "name": "cakephp/chronos",
-            "version": "2.3.3",
+            "version": "2.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/chronos.git",
-                "reference": "b5d962b7ae615ec5dc053e1d5b57d561fa9a231c"
+                "reference": "9c7e438cba4eed1796ec19ad3874defa9eb9aeac"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/chronos/zipball/b5d962b7ae615ec5dc053e1d5b57d561fa9a231c",
-                "reference": "b5d962b7ae615ec5dc053e1d5b57d561fa9a231c",
+                "url": "https://api.github.com/repos/cakephp/chronos/zipball/9c7e438cba4eed1796ec19ad3874defa9eb9aeac",
+                "reference": "9c7e438cba4eed1796ec19ad3874defa9eb9aeac",
                 "shasum": ""
             },
             "require": {
@@ -497,7 +497,7 @@
                 "issues": "https://github.com/cakephp/chronos/issues",
                 "source": "https://github.com/cakephp/chronos"
             },
-            "time": "2023-04-19T15:05:35+00:00"
+            "time": "2023-08-06T22:54:27+00:00"
         },
         {
             "name": "cakephp/migrations",
@@ -505,12 +505,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/migrations.git",
-                "reference": "46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2"
+                "reference": "b5d90c06d25443672ae1ec2f1e592002ca1ce85f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/migrations/zipball/46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2",
-                "reference": "46a3e7bf6f26e71b7c4287497b6d2e47eded1ae2",
+                "url": "https://api.github.com/repos/passbolt/migrations/zipball/b5d90c06d25443672ae1ec2f1e592002ca1ce85f",
+                "reference": "b5d90c06d25443672ae1ec2f1e592002ca1ce85f",
                 "shasum": ""
             },
             "require": {
@@ -590,7 +590,7 @@
                 "irc": "irc://irc.freenode.org/cakephp",
                 "source": "https://github.com/cakephp/migrations"
             },
-            "time": "2023-05-19T12:04:41+00:00"
+            "time": "2023-09-13T16:01:07+00:00"
         },
         {
             "name": "cakephp/plugin-installer",
@@ -2483,16 +2483,16 @@
         },
         {
             "name": "singpolyma/openpgp-php",
-            "version": "0.6.0",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/singpolyma/openpgp-php.git",
-                "reference": "1c3bdcd2d9c6113c2d6b768e208e7432a48d3a1e"
+                "reference": "9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/singpolyma/openpgp-php/zipball/1c3bdcd2d9c6113c2d6b768e208e7432a48d3a1e",
-                "reference": "1c3bdcd2d9c6113c2d6b768e208e7432a48d3a1e",
+                "url": "https://api.github.com/repos/singpolyma/openpgp-php/zipball/9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe",
+                "reference": "9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe",
                 "shasum": ""
             },
             "require": {
@@ -2506,6 +2506,7 @@
                 "ext-mcrypt": "required if you use encryption cast5",
                 "ext-openssl": "required if you use encryption cast5"
             },
+            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
@@ -8702,6 +8703,7 @@
     "stability-flags": {
         "cakephp/migrations": 20,
         "robmorgan/phinx": 20,
+        "singpolyma/openpgp-php": 20,
         "enygma/yubikey": 20,
         "psy/psysh": 0
     },
@@ -8722,5 +8724,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }

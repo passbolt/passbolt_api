@@ -90,7 +90,10 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $webInstaller = new WebInstaller(null);
 
         // Add the database configuration.
-        $databaseSettings = $this->getTestDatasourceFromConfig();
+        $databaseSettings = [
+            'foo' => 'foo-value',
+            'bar' => 'bar-value',
+        ];
         $webInstaller->setSettings('database', $databaseSettings);
 
         // Add the gpg configuration to generate a new server key.
@@ -119,8 +122,13 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         ];
         $webInstaller->setSettings('options', $optionsSettings);
 
-        $webInstaller->writePassboltConfigFile();
-        $this->assertFileExists(CONFIG . 'passbolt.php');
+        $testFile = TMP . 'test_passbolt.php';
+        $webInstaller->writePassboltConfigFile($testFile);
+        $this->assertFileExists($testFile);
+        $testFileContent = file_exists($testFile) ? include $testFile : [];
+        $this->assertSame($databaseSettings, $testFileContent['Datasources']['default']);
+        $this->assertFalse($testFileContent['passbolt']['ssl']['force']);
+        unlink($testFile);
     }
 
     public function testWebInstallerUtilityInstallDatabaseSuccessAndCreateFirstUserSuccess()

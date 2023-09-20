@@ -52,17 +52,6 @@
     DATASOURCES_DEFAULT_ENCODING: 'utf8'
     DATASOURCES_TEST_ENCODING: 'utf8'
     DATASOURCES_TEST_PORT: 5432
-  before_script:
-    - apt-get install wget git unzip -yqq
-    - sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt buster-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
-    - wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | tee ~/apt-pg.key
-    - apt-key add  ~/apt-pg.key
-    - apt-get update
-    - apt-get install libpq-dev postgresql-client-12 -yqq
-    - docker-php-ext-install pdo_pgsql
-    - docker-php-ext-enable pdo_pgsql
-    - printf "postgres:5432:test:user:testing-password" > ~/.pgpass
-    - chmod 0600 ~/.pgpass
 # TO BE REPLACED WITH
 #  before_script:
 #    - apt-get update
@@ -113,10 +102,21 @@ seq-php7.4-mysql5.7:
   rules:
     - if: '$TEST_DISABLED == null'
 
-seq-php7.4-postgres:
+seq-php8.0-postgres13:
   variables:
-    PHP_VERSION: "7.4"
-    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-12-alpine'
+    PHP_VERSION: "8.0"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-13-alpine'
+  extends:
+    - .postgres-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+
+seq-php8.1-postgres15:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: '$CI_REGISTRY/postgres-15-alpine'
   extends:
     - .postgres-template
     - .test-template

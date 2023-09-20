@@ -240,11 +240,11 @@ class FoldersRelationsCleanupTest extends FoldersTestCase
     public function testCleanupDuplicatedFoldersRelations()
     {
         // Original folders relations to keep.
-        $originalFolderFolderRelationToKeep = FoldersRelationFactory::make(['modified' => FrozenTime::now()->subDay()])->withForeignModelFolder()->withUser()->withFolderParent()->persist();
+        $originalFolderFolderRelationToKeep = FoldersRelationFactory::make(['modified' => FrozenTime::now()->subDays(1)])->withForeignModelFolder()->withUser()->withFolderParent()->persist();
         $originalFolderRelationToKeepMeta = $originalFolderFolderRelationToKeep->extractOriginal(['foreign_model', 'foreign_id', 'user_id', 'folder_parent_id', 'modified']);
-        $originalResourceFolderRelationToKeep = FoldersRelationFactory::make(['modified' => FrozenTime::now()->subDay()])->withForeignModelResource()->withUser()->withFolderParent()->persist();
+        $originalResourceFolderRelationToKeep = FoldersRelationFactory::make(['modified' => FrozenTime::now()->subDays(1)])->withForeignModelResource()->withUser()->withFolderParent()->persist();
         $originalResourceRelationToKeepMeta = $originalResourceFolderRelationToKeep->extractOriginal(['foreign_model', 'foreign_id', 'user_id', 'folder_parent_id', 'modified']);
-        $originalResourceFolderRelationAtRootToKeep = FoldersRelationFactory::make(['modified' => FrozenTime::now()->subDay()])->withForeignModelResource()->withUser()->folderParent(FoldersRelation::ROOT)->persist();
+        $originalResourceFolderRelationAtRootToKeep = FoldersRelationFactory::make(['modified' => FrozenTime::now()->subDays(1)])->withForeignModelResource()->withUser()->folderParent(FoldersRelation::ROOT)->persist();
         $originalResourceRelationAtRootMeta = $originalResourceFolderRelationAtRootToKeep->extractOriginal(['foreign_model', 'foreign_id', 'user_id', 'folder_parent_id', 'modified']);
 
         // Duplicated foldersRelations to cleanup.

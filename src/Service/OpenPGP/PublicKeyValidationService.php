@@ -242,7 +242,7 @@ class PublicKeyValidationService
 
         $frozenTime = new FrozenTime($datetimeString);
 
-        return $frozenTime->gt(FrozenTime::now());
+        return $frozenTime->greaterThan(FrozenTime::now());
     }
 
     /**

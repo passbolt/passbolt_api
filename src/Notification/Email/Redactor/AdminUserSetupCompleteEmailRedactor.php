@@ -118,7 +118,10 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         }
 
         /** @var \App\Model\Entity\User[] $admins */
-        $admins = $this->usersTable->findAdmins()->find('locale');
+        $admins = $this->usersTable->findAdmins()
+            ->find('locale')
+            ->find('notDisabled');
+
         // Create an email for every admin
         foreach ($admins as $admin) {
             $emailCollection->addEmail(
@@ -136,7 +139,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      * @param \Cake\I18n\FrozenTime $invitedWhen When user was invited
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $admin, User $userCompletedSetup, User $invitedBy, FrozenTime $invitedWhen)
+    private function createEmail(User $admin, User $userCompletedSetup, User $invitedBy, FrozenTime $invitedWhen): Email
     {
         /** @var \App\Model\Entity\Profile $profile */
         $profile = $userCompletedSetup->profile;
@@ -147,9 +150,15 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
                 return __('{0} just activated their account on passbolt', $profile->first_name);
             }
         );
+        $invitedWhen = (new LocaleService())->translateString(
+            $admin->locale,
+            function () use ($invitedWhen) {
+                return $invitedWhen->timeAgoInWords(['accuracy' => 'day']);
+            }
+        );
 
         return new Email(
-            $admin->username,
+            $admin,
             $subject,
             [
                 'title' => $subject,
@@ -157,7 +166,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
                     'user' => $userCompletedSetup,
                     'admin' => $admin,
                     'invitedBy' => $invitedBy,
-                    'invitedWhen' => $invitedWhen->timeAgoInWords(['accuracy' => 'day']),
+                    'invitedWhen' => $invitedWhen,
                     'invitedByYou' => $invitedBy->id === $admin->id,
                 ],
             ],

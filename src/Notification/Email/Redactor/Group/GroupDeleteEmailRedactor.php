@@ -78,8 +78,10 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $usersIds = Hash::extract($group->groups_users, '{n}.user_id');
         // Don't send notification if user is the one who deleted the group
         $users = $this->usersTable->find('locale')
+            ->find('notDisabled')
             ->where(['Users.id IN' => $usersIds])
-            ->where(['Users.id !=' => $deletedBy]);
+            ->where(['Users.id !=' => $deletedBy])
+            ->all();
 
         foreach ($users as $user) {
             $email = $this->createGroupDeleteEmail($user, $admin, $group);
@@ -105,6 +107,6 @@ class GroupDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         );
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

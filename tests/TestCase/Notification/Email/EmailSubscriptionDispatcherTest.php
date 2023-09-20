@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Notification\Email;
 
+use App\Model\Entity\User;
 use App\Notification\Email\CollectSubscribedEmailRedactorEvent;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
@@ -24,6 +25,7 @@ use App\Notification\Email\EmailSender;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\EmailSubscriptionManager;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
+use App\Test\Factory\UserFactory;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\TestSuite\TestCase;
@@ -161,8 +163,43 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $subscribedRedactorMock = $this->createMock(SubscribedEmailRedactorInterface::class);
         $subscribedRedactors = [$subscribedRedactorMock];
         $emails = [
-            new Email('test', 'test', ['test'], 'test'),
-            new Email('test', 'test', ['test'], 'test'),
+            new Email(UserFactory::make()->willDisable()->getEntity(), 'test', ['test'], 'test'),
+            new Email(UserFactory::make()->willDisable()->getEntity(), 'test', ['test'], 'test'),
+        ];
+
+        $subscribedRedactorMock->expects($this->once())
+            ->method('onSubscribedEvent')
+            ->willReturn(new EmailCollection($emails));
+
+        $this->emailSubscriptionManagerMock->expects($this->once())
+            ->method('getSubscriptionsForEvent')
+            ->with($event)
+            ->willReturn($subscribedRedactors);
+
+        $this->emailSenderMock->expects($this->exactly(2))
+            ->method('sendEmail')
+            ->withConsecutive(
+                [$this->equalTo($emails[0])],
+                [$this->equalTo($emails[1])],
+            );
+
+        $this->sut->dispatch($event);
+    }
+
+    public function testEmailSubscriptionDispatcherSendEmailSkippedForDisabledRecipients()
+    {
+        $event = new Event('test_event');
+        $subscribedRedactorMock = $this->createMock(SubscribedEmailRedactorInterface::class);
+        $subscribedRedactors = [$subscribedRedactorMock];
+        $enabledUser = UserFactory::make()->willDisable()->getEntity();
+        $userWithDisabledToNull = new User(['username' => 'Foo', 'disabled' => null]);
+        $disabledUser = UserFactory::make()->disabled()->getEntity();
+        $userWithNoDisabledFieldProvided = new User(['username' => 'Foo']);
+        $emails = [
+            new Email($enabledUser, 'test', ['test'], 'test'),
+            new Email($userWithDisabledToNull, 'test', ['test'], 'test'),
+            new Email($disabledUser, 'test', ['test'], 'test'),
+            new Email($userWithNoDisabledFieldProvided, 'test', ['test'], 'test'),
         ];
 
         $subscribedRedactorMock->expects($this->once())
@@ -191,8 +228,8 @@ class EmailSubscriptionDispatcherTest extends TestCase
         $subscribedRedactorMock = $this->createMock(SubscribedEmailRedactorInterface::class);
         $subscribedRedactors = [$subscribedRedactorMock];
         $emails = [
-            new Email('test', 'test', ['test'], 'test'),
-            new Email('test', 'test', ['test'], 'test'),
+            new Email(UserFactory::make()->willDisable()->getEntity(), 'test', ['test'], 'test'),
+            new Email(UserFactory::make()->willDisable()->getEntity(), 'test', ['test'], 'test'),
         ];
         $exception = new Exception();
         $emailCollection = new EmailCollection($emails);
@@ -223,11 +260,11 @@ class EmailSubscriptionDispatcherTest extends TestCase
     /**
      * @return array
      */
-    public function provideSubscribedRedactors()
+    public function provideSubscribedRedactors(): array
     {
         $emails = [
-            new Email('test@test.test', 'test_subject', [], 'test_template'),
-            new Email('test2@test.test', 'test_subject2', ['some_test_data'], 'test_template2'),
+            new Email(UserFactory::make()->willDisable()->getEntity(), 'test_subject', [], 'test_template'),
+            new Email(UserFactory::make()->willDisable()->getEntity(), 'test_subject2', ['some_test_data'], 'test_template2'),
         ];
 
         return [

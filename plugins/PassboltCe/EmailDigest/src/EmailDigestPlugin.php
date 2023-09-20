@@ -18,7 +18,6 @@ namespace Passbolt\EmailDigest;
 
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
-use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\EmailDigest\Command\PreviewCommand;
 use Passbolt\EmailDigest\Command\SenderCommand;
@@ -31,20 +30,6 @@ class EmailDigestPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
-        $this->setEmailTemplateVariablesSerializationType();
-    }
-
-    /**
-     * Emails are stored serialized in Json format.
-     * Decoding is made with associative array.
-     *
-     * @see EmailQueueTable::_initializeSchema()
-     * @return void
-     */
-    public function setEmailTemplateVariablesSerializationType(): void
-    {
-        // Set the EmailQueue Serialization type to json.
-        Configure::write('EmailQueue.serialization_type', 'email_queue.json');
     }
 
     /**
