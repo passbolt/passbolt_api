@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\TotpResourceTypes\Test\TestCase\Controller\Settings;
 
 use App\Test\Lib\AppIntegrationTestCase;
-use Passbolt\TotpResourceTypes\TotpResourceTypesPlugin;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
@@ -27,8 +26,8 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->logInAsUser();
         $this->getJson('/settings.json?api-version=2');
         $this->assertSuccess();
-        // Assert TOTP resource type disabled by default
-        $this->assertFalse($this->_responseJsonBody->passbolt->plugins->totpResourceTypes->enabled);
+        // Assert TOTP resource type enabled by default
+        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->totpResourceTypes->enabled);
     }
 
     public function testSettingsIndexController_SuccessAsAN()
@@ -37,17 +36,5 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         // Assert TOTP resource type plugin is not visible for anonymous users
         $this->assertObjectNotHasAttribute('totpResourceTypes', $this->_responseJsonBody->passbolt->plugins);
-    }
-
-    public function testSettingsIndexController_Success_TotpResourceTypeEnabled()
-    {
-        $this->logInAsUser();
-        // Enable TotpResourceType plugin
-        $this->enableFeaturePlugin(TotpResourceTypesPlugin::class);
-
-        $this->getJson('/settings.json?api-version=2');
-
-        $this->assertSuccess();
-        $this->assertTrue($this->_responseJsonBody->passbolt->plugins->totpResourceTypes->enabled);
     }
 }
