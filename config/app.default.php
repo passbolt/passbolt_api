@@ -343,7 +343,7 @@ return [
             'ssl_key' => env('DATASOURCES_DEFAULT_SSL_KEY', ''),
             'ssl_cert' => env('DATASOURCES_DEFAULT_SSL_CERT', ''),
             'ssl_ca' => env('DATASOURCES_DEFAULT_SSL_CA', ''),
-            'encoding' => env('DATASOURCES_DEFAULT_ENCODING','utf8mb4'),
+            'encoding' => env('DATASOURCES_DEFAULT_ENCODING',''),
 
         ],
 
@@ -355,7 +355,7 @@ return [
             'driver' => env('DATASOURCES_TEST_DRIVER', Mysql::class),
             'persistent' => false,
             'timezone' => 'UTC',
-            'encoding' => env('DATASOURCES_TEST_ENCODING','utf8mb4'),
+            'encoding' => env('DATASOURCES_TEST_ENCODING',''),
             'flags' => [],
             'cacheMetadata' => true,
             'quoteIdentifiers' => env('DATASOURCES_QUOTE_IDENTIFIER', true),
