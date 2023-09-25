@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.3.0-test.2] - 2023-09-25
+### Fixed
+- PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
+
 ## [4.3.0-rc.1] - 2023-09-21
 ### Added
 - PB-25405 As an administrator installing passbolt through the web installer, I should be able to configure authentication method for SMTP
