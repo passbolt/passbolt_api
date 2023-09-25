@@ -78,6 +78,7 @@ class DatabaseConfigurationFormTest extends TestCase
 
         $this->assertTrue($this->form->execute($data));
         $this->assertNull($this->form->getData('schema'));
+        $this->assertNull($this->form->getData('encoding'));
     }
 
     public function testDatabaseConfigurationForm_On_Postgres()
@@ -88,6 +89,7 @@ class DatabaseConfigurationFormTest extends TestCase
 
         $this->assertTrue($this->form->execute($data));
         $this->assertSame('bar-with-dash', $this->form->getData('schema'));
+        $this->assertSame('utf8', $this->form->getData('encoding'));
     }
 
     public function testDatabaseConfigurationForm_On_Postgres_Schema_Required()
