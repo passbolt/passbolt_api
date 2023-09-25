@@ -19,7 +19,6 @@ namespace Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource;
 
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -94,13 +93,11 @@ class DbEmailNotificationSettingsSource implements ReadableEmailNotificationSett
      *
      * @return bool
      */
-    public function isAvailable(): bool
+    public function isAvailable()
     {
         try {
             $this->organizationSettingsTable->exists([]);
         } catch (Exception $exception) {
-            Log::error($exception->getMessage());
-
             return false;
         }
 
