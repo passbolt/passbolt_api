@@ -1,10 +1,8 @@
 # This function parses a tag in the form of:
-# v3.11.0-rc.1-pro-all
+# v3.11.0-rc.1
 #
 # All of the fields are mandatory:
 # Version: v3.11.0-rc.1|v3.11.0
-# Passbolt flavour: pro|ce
-# Per package filter: all|rpm|debian
 #
 # It also provides the component based on if it is RC: testing|stable
 function parse_tag() {

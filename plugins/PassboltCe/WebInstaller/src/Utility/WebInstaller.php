@@ -34,10 +34,7 @@ use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionServic
 
 class WebInstaller
 {
-    /**
-     * @var \Cake\Http\Session|null
-     */
-    protected $session = null;
+    protected ?Session $session = null;
 
     /**
      * @var array|mixed
@@ -207,13 +204,14 @@ class WebInstaller
     /**
      * Write passbolt configuration file.
      *
+     * @param string $fileName config/passbolt.php
      * @return void
      */
-    public function writePassboltConfigFile(): void
+    public function writePassboltConfigFile(string $fileName = CONFIG . 'passbolt.php'): void
     {
         $passboltConfig = new PassboltConfiguration();
         $contents = $passboltConfig->render($this->settings);
-        file_put_contents(CONFIG . 'passbolt.php', $contents);
+        file_put_contents($fileName, $contents);
     }
 
     /**

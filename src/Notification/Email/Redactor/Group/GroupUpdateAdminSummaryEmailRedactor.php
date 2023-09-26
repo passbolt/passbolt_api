@@ -165,7 +165,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
             'title' => $subject,
         ];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 
     /**
@@ -197,7 +197,11 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
     private function getGroupManagers(Group $group, array $excludeUsersIds): array
     {
         return $this->usersTable->find('locale')
-            ->select(['Users.username'])
+            ->find('notDisabled')
+            ->select([
+                'Users.username',
+                'Users.disabled',
+            ])
             ->innerJoinWith('GroupsUsers')
             ->where(
                 [

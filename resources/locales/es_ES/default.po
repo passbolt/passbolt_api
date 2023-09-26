@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-07-24 11:52+0000\n"
-"PO-Revision-Date: 2023-07-25 06:51\n"
+"POT-Creation-Date: 2023-09-19 15:36+0000\n"
+"PO-Revision-Date: 2023-09-20 08:32\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -38,7 +38,7 @@ msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
 msgstr "No se puede usar la clave OpenPGP del servidor definida en la configuración para desencriptar."
 
 msgid "Could not import the user OpenPGP key."
-msgstr "No se pudo importar la clave OpenPGP de usuario."
+msgstr "No se ha podido importar la clave OpenPGP de usuario."
 
 msgid "Invalid verify token format, "
 msgstr "Formato de token de verificación no válido, "
@@ -74,10 +74,10 @@ msgid "You are successfully logged in."
 msgstr "Ha iniciado sesión con éxito."
 
 msgid "You are successfully logged out."
-msgstr ""
+msgstr "Ha cerrado la sesión con éxito."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "La ruta de desconexión solo debe ser accesible con el método POST."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "La información de la clave OpenPGP pública no se encontró en la configuración."
@@ -350,7 +350,7 @@ msgid "You are not authorized to edit the role."
 msgstr "No está autorizado a editar el rol."
 
 msgid "Multiple has-access filters are not supported."
-msgstr ""
+msgstr "Los múltiples filtros de acceso no son compatibles."
 
 msgid "This operation is not allowed for this user."
 msgstr "Esta operación no está permitida para este usuario."
@@ -365,13 +365,13 @@ msgid "Only guests are allowed to register."
 msgstr "Solo se permite a los invitados registrarse."
 
 msgid "Registration is not opened to public."
-msgstr ""
+msgstr "El registro no está abierto al público."
 
 msgid "Please contact your administrator."
 msgstr "Por favor, contacte con su administrador."
 
 msgid "This is due to a security setting."
-msgstr ""
+msgstr "Esto se debe a un ajuste de seguridad."
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "El identificador de usuario debería ser un UUID válido o \"me\"."
@@ -916,6 +916,9 @@ msgstr "El identificador de rol debe ser un UUID válido."
 msgid "A role identifier is required."
 msgstr "Se requiere un identificador de rol."
 
+msgid "The disabled date should be a valid date."
+msgstr ""
+
 msgid "The profile should not be empty."
 msgstr "El perfil no debe estar vacío."
 
@@ -1021,8 +1024,14 @@ msgstr "¡{0} no puede completar el proceso de recuperación de cuenta!"
 msgid "{0} shared the password {1}"
 msgstr "{0} ha compartido la contraseña {1}"
 
+msgid "Your account has been suspended"
+msgstr ""
+
 msgid "{0} deleted user {1}"
 msgstr "{0} ha eliminado el usuario {1}"
+
+msgid "{0} has been suspended"
+msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "¡Bienvenido a passbolt, {0}!"
@@ -1074,6 +1083,12 @@ msgstr "La configuración de envío al finalizar la configuración del usuario d
 
 msgid "The send on user recover abort setting should be a boolean."
 msgstr "La configuración \"enviar al cancelar la recuperación de usuario\" debe ser un valor booleano."
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr ""
+
+msgid "The send on admin disabled setting should be a boolean."
+msgstr ""
 
 msgid "The send on comment added setting should be a boolean."
 msgstr "La configuración \"enviar al agregar un comentario\" debe ser un valor booleano."
@@ -1363,8 +1378,8 @@ msgstr "No se pudieron actualizar los datos del token de autenticación."
 msgid "The key provided does not belong to given user."
 msgstr "La clave proporcionada no pertenece al usuario dado."
 
-msgid "The user does not exist or is not active."
-msgstr "El usuario no existe o no está activo."
+msgid "The user does not exist or is not active or is disabled."
+msgstr ""
 
 msgid "The OpenPGP key data is not valid."
 msgstr "Los datos de la clave OpenPGP no son válidos."
@@ -1375,8 +1390,8 @@ msgstr "La clave OpenPGP no se puede usar para cifrar."
 msgid "The user does not exist, is already active or has been deleted."
 msgstr "El usuario no existe, ya está activo o ha sido eliminado."
 
-msgid "The user does not exist or is already active."
-msgstr "El usuario no existe o ya está activo."
+msgid "The user does not exist or is already active or is disabled."
+msgstr ""
 
 msgid "The user should not be a guest."
 msgstr "El usuario no debe ser un invitado."
@@ -1395,6 +1410,9 @@ msgstr "Este usuario no existe o ha sido eliminado."
 
 msgid "Please register and complete the setup first."
 msgstr "Por favor, regístrese y complete la configuración primero."
+
+msgid "This user has been disabled."
+msgstr ""
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validación fallida para el usuario {0}. {1}"
@@ -1628,7 +1646,7 @@ msgid "You added the folder {0}"
 msgstr "Añadiste la carpeta {0}"
 
 msgid "You deleted the folder {0}"
-msgstr ""
+msgstr "Ha eliminado la carpeta {0}"
 
 msgid "{0} deleted the folder {1}"
 msgstr "{0} eliminó la carpeta {1}"
@@ -1637,7 +1655,7 @@ msgid "{0} shared the folder {1}"
 msgstr "{0} ha compartido la carpeta {1}"
 
 msgid "You edited the folder {0}"
-msgstr ""
+msgstr "Ha editado la carpeta {0}"
 
 msgid "{0} edited the folder {1}"
 msgstr "{0} ha editado la carpeta {1}"
@@ -1700,22 +1718,22 @@ msgid "view it in passbolt"
 msgstr "ver en passbolt"
 
 msgid "You deleted a folder"
-msgstr ""
+msgstr "Ha eliminado una carpeta"
 
 msgid "{0} deleted a folder"
-msgstr ""
+msgstr "{0} eliminó una carpeta"
 
 msgid "log in passbolt"
 msgstr "iniciar sesión en passbolt"
 
 msgid "{0} shared a folder with you"
-msgstr ""
+msgstr "{0} ha compartido una carpeta contigo"
 
 msgid "You edited a folder"
-msgstr ""
+msgstr "Ha editado una carpeta"
 
 msgid "{0} edited a folder"
-msgstr ""
+msgstr "{0} editó una carpeta"
 
 msgid "The user signature could not be verified."
 msgstr "No se ha podido verificar la firma del usuario."
@@ -1780,8 +1798,8 @@ msgstr "Alerta de seguridad de autenticación"
 msgid "No active refresh token matching the request could be found."
 msgstr "No se pudo encontrar ningún token de actualización activo que coincida con la solicitud."
 
-msgid "The user is deactivated."
-msgstr "El usuario está desactivado."
+msgid "The user is not activated or disabled."
+msgstr ""
 
 msgid "The user is deleted."
 msgstr "El usuario está eliminado."
@@ -1856,7 +1874,7 @@ msgid "This is not a valid {0}."
 msgstr "Esto no es válido {0}."
 
 msgid "The strategy should extend the class: {0}"
-msgstr ""
+msgstr "La estrategia debe extender la clase: {0}"
 
 msgid "The action log identifier should be a valid UUID."
 msgstr "El identificador de registro de acciones debe ser un UUID válido."
@@ -2120,7 +2138,7 @@ msgid "Please provide the one-time password."
 msgstr "Por favor, proporcione la contraseña de un solo uso."
 
 msgid "You have been logged out due to too many failed attempts."
-msgstr ""
+msgstr "Se ha cerrado la sesión debido a demasiados intentos fallidos."
 
 msgid "The user id is not valid."
 msgstr "El id de usuario no es válido."
@@ -2255,10 +2273,10 @@ msgid "Could not validate Duo configuration"
 msgstr "No se pudo validar la configuración de Dúo"
 
 msgid "The property {0} is visible by administrators only."
-msgstr ""
+msgstr "La propiedad {0} es visible solo por los administradores."
 
 msgid "The property {0} should be contained in order to filter by {1}."
-msgstr ""
+msgstr "La propiedad {0} debe tener contenido para filtrar por {1}."
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "El token MFA proporcionado no existe o no está activo."
@@ -2470,98 +2488,221 @@ msgstr "Póngase en contacto con su administrador si no solicitó esta acción."
 msgid "Log in passbolt"
 msgstr "Iniciar sesión passbolt"
 
-msgid "The password generator value \"{0}\" is not valid."
-msgstr "El valor del generador de contraseñas \"{0}\" no es válido."
+msgid "Could not retrieve the password policies."
+msgstr ""
+
+msgid "The default generator is required."
+msgstr ""
+
+msgid "The default generator should be one of the following: {0}."
+msgstr ""
+
+msgid "The external dictionary check is required."
+msgstr ""
+
+msgid "The external dictionary check should be a boolean."
+msgstr ""
+
+msgid "The password generator settings is required."
+msgstr ""
+
+msgid "The password generator settings should not be empty."
+msgstr ""
+
+msgid "The password generator settings should have at least one mask selected."
+msgstr ""
+
+msgid "The passphrase generator settings is required."
+msgstr ""
+
+msgid "The passphrase generator settings should not be empty."
+msgstr ""
+
+msgid "Could not validate the password policies settings."
+msgstr ""
+
+msgid "The passphrase generator words is required."
+msgstr ""
+
+msgid "The passphrase generator words should be between {0} and {1}."
+msgstr ""
+
+msgid "The passphrase generator word separator is required."
+msgstr ""
+
+msgid "The passphrase generator word separator should be a valid UTF8 string."
+msgstr ""
+
+msgid "The passphrase generator word separator should be maximum {0} characters."
+msgstr ""
+
+msgid "The passphrase generator word case is required."
+msgstr ""
+
+msgid "The passphrase generator word case should be one of the following: {0}."
+msgstr ""
+
+msgid "The password generator length should be between {0} and {1}."
+msgstr ""
+
+msgid "The password generator length is required."
+msgstr ""
+
+msgid "The password generator mask upper is required."
+msgstr ""
+
+msgid "The password generator mask upper should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask lower is required."
+msgstr ""
+
+msgid "The password generator mask lower should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask digit is required."
+msgstr ""
+
+msgid "The password generator mask digit should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask parenthesis is required."
+msgstr ""
+
+msgid "The password generator mask parenthesis should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask emoji is required."
+msgstr ""
+
+msgid "The password generator mask emoji should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char1 is required."
+msgstr ""
+
+msgid "The password generator mask char1 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char2 is required."
+msgstr ""
+
+msgid "The password generator mask char2 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char3 is required."
+msgstr ""
+
+msgid "The password generator mask char3 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char4 is required."
+msgstr ""
+
+msgid "The password generator mask char4 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char5 is required."
+msgstr ""
+
+msgid "The password generator mask char5 should be a boolean type."
+msgstr ""
+
+msgid "The password generator exclude look alike chars is required."
+msgstr ""
+
+msgid "The password generator exclude look alike chars should be a boolean type."
+msgstr ""
 
 msgid "Record not found"
-msgstr ""
+msgstr "Registro no encontrado"
 
 msgid "The request data is empty."
-msgstr ""
+msgstr "Los datos de la solicitud están vacíos."
 
 msgid "The request data is invalid: expected a collection."
-msgstr ""
+msgstr "Los datos de la solicitud no son válidos: se esperaba una colección."
 
 msgid "The request data is invalid: invalid fields."
-msgstr ""
+msgstr "Los datos de la solicitud no son válidos: campos no válidos."
 
 msgid "The request data is invalid: id missing."
-msgstr ""
+msgstr "Los datos de la solicitud no son válidos: no se encuentra el ID."
 
 msgid "The request data is invalid: id invalid."
-msgstr ""
+msgstr "Los datos de la solicitud no son válidos: ID no válido."
 
 msgid "The request data is invalid: control_function missing."
-msgstr ""
+msgstr "Los datos de la solicitud no son válidos: no se encuentra control_function."
 
 msgid "The request data is invalid: control_function invalid."
-msgstr ""
+msgstr "Los datos de la solicitud no son válidos: control_function no es válido."
 
 msgid "The request data is invalid: ids must be unique."
-msgstr ""
+msgstr "Los datos de la solicitud no son válidos: los IDs deben ser únicos."
 
 msgid "An action identifier should be a valid UUID."
-msgstr ""
+msgstr "Un identificador de acción debe ser un UUID válido."
 
 msgid "The foreign model should be a valid ASCII string."
-msgstr ""
+msgstr "El modelo externo debe ser una cadena ASCII válida."
 
 msgid "The foreign model should be one of the following: {0}."
-msgstr ""
+msgstr "El modelo externo debe ser uno de los siguientes: {0}."
 
 msgid "The foreign model name used length should be maximum {0} characters."
-msgstr ""
+msgstr "El nombre del modelo externo utilizado debe tener un máximo de {0} caracteres."
 
 msgid "A foreign model is required."
-msgstr ""
+msgstr "Se necesita un modelo externo."
 
 msgid "The foreign model should not be empty."
-msgstr ""
+msgstr "El modelo externo no debe estar vacío."
 
 msgid "The control function should be a valid UTF8 string."
-msgstr ""
+msgstr "La función de control debe ser una cadena UTF8 válida."
 
 msgid "The control function name used length should be maximum {0} characters."
-msgstr ""
+msgstr "El nombre de la función de control debe tener un máximo de {0} caracteres."
 
 msgid "The control function is not supported."
-msgstr ""
+msgstr "La función de control no es compatible."
 
 msgid "A control function is required."
-msgstr ""
+msgstr "Se requiere una función de control."
 
 msgid "The control function should not be empty."
-msgstr ""
+msgstr "La función de control no debe estar vacía."
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
-msgstr ""
+msgstr "El identificador del usuario que creó el RBAC debe ser un UUID válido."
 
 msgid "The identifier of the user who modified the Rbac should be a valid UUID."
-msgstr ""
+msgstr "El identificador del usuario que modificó el RBAC debe ser un UUID válido."
 
 msgid "The identifier of the user who modified the Rbac should not be empty."
-msgstr ""
+msgstr "El identificador del usuario que modificó el RBAC no debe estar vacío."
 
 msgid "An RBAC entry already exists for the given id."
-msgstr ""
+msgstr "Ya existe una entrada RBAC para el id proporcionado."
 
 msgid "An entry already exists for the given role and action ids."
-msgstr ""
+msgstr "Ya existe una entrada para los identificadores de rol y acción proporcionados."
 
 msgid "An action already exists for the given name."
-msgstr ""
+msgstr "Ya existe una acción para el nombre proporcionado."
 
 msgid "The RBAC settings could not be updated."
-msgstr ""
+msgstr "No se han podido actualizar los ajustes del RBAC."
 
 msgid "No data found."
-msgstr ""
+msgstr "No se han encontrado datos."
 
 msgid "Some data not found."
-msgstr ""
+msgstr "No se han encontrado algunos datos."
 
 msgid "The UI actions data could not be validated."
-msgstr ""
+msgstr "Los datos de las acciones de la UI no se han podido validar."
 
 msgid "5 minutes"
 msgstr "5 minutos"
@@ -2773,6 +2914,12 @@ msgstr "La contraseña debe ser una cadena BMP-UTF8 válida."
 msgid "The test email should be a valid email address."
 msgstr "El correo electrónico de prueba debe ser una dirección de correo electrónico válida."
 
+msgid "The authentication method is required."
+msgstr ""
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr ""
+
 msgid "The sender email should be a valid email address."
 msgstr "El correo electrónico del remitente debe ser una dirección de correo válida."
 
@@ -2860,6 +3007,15 @@ msgstr "Instalación"
 msgid "That's it!"
 msgstr "¡Eso es!"
 
+msgid "A driver name is required."
+msgstr ""
+
+msgid "The driver name should not be empty."
+msgstr ""
+
+msgid "The database driver should be one of the following: {0}."
+msgstr ""
+
 msgid "The password should not contain quotes."
 msgstr "La contraseña no debe contener comillas."
 
@@ -2874,6 +3030,12 @@ msgstr "El nombre de la base de datos debe ser una cadena BMP-UTF8 válida."
 
 msgid "The database name should not contain dashes."
 msgstr "El nombre de la base de datos no debe contener guiones."
+
+msgid "The schema is required on PostgreSQL"
+msgstr ""
+
+msgid "The schema should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "An OpenPGP public key is required."
 msgstr "Se requiere una clave pública OpenPGP."
@@ -3031,6 +3193,12 @@ msgstr "nombre de la base de datos"
 msgid "Database name"
 msgstr "Nombre de la base de datos"
 
+msgid "schema"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Enter your SMTP server settings."
 msgstr "Introduzca la configuración de su servidor SMTP."
 
@@ -3063,6 +3231,9 @@ msgstr "puerto"
 
 msgid "Port"
 msgstr "Puerto"
+
+msgid "Authentication method"
+msgstr "Método de autenticación"
 
 msgid "client"
 msgstr "cliente"
@@ -3253,18 +3424,6 @@ msgstr "¿Por qué necesito un servidor SMTP?"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt necesita un servidor SMTP para enviar mensajes de invitación después de la creación de una cuenta y para enviar notificaciones por correo electrónico."
 
-msgid "Invalid directory type for domain: {0}"
-msgstr ""
-
-msgid "Directory type could not be found for domain: {0}"
-msgstr ""
-
-msgid "The directory type should be one of the following: {0}."
-msgstr "El tipo de directorio debe ser uno de los siguientes: {0}."
-
-msgid "LDAP Object class could not be found: {0}"
-msgstr ""
-
 msgid "The requested address was not found on this server."
 msgstr "La dirección solicitada no se encontró en este servidor."
 
@@ -3316,6 +3475,21 @@ msgstr "inicio"
 msgid "login"
 msgstr "entrar"
 
+msgid "Account suspended"
+msgstr ""
+
+msgid "Your account has been suspended."
+msgstr ""
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr ""
+
+msgid "Contact your admin"
+msgstr ""
+
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) acaba de completar una recuperación de cuenta. Siéntase libre de ponerse en contacto con este usuario si cree que esta acción parece sospechosa."
 
@@ -3333,6 +3507,21 @@ msgstr "Desafortunadamente, necesitarán su ayuda para eliminar su cuenta y rein
 
 msgid "Please check with them first to confirm."
 msgstr "Por favor, compruebe primero con ellos para confirmar."
+
+msgid "User suspended"
+msgstr ""
+
+msgid "The user {0} has been suspended."
+msgstr ""
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can share resources and add this user to a group."
+msgstr ""
+
+msgid "Check user suspension"
+msgstr ""
 
 msgid "Welcome to {0}!"
 msgstr "¡Bienvenido a {0}!"

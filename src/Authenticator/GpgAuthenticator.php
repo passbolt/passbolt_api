@@ -391,7 +391,7 @@ class GpgAuthenticator extends SessionAuthenticator
 
         /** @var \App\Model\Entity\User $user */
         $user = $Users->find('auth', ['fingerprint' => $fingerprint])->first();
-        if (empty($user)) {
+        if (empty($user) || $user->isDisabled()) {
             $this->_debug('User not found.');
 
             return null;

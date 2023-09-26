@@ -52,7 +52,8 @@ class DatabaseConfigurationForm extends Form
             ->addField('port', ['type' => 'string'])
             ->addField('username', ['type' => 'string'])
             ->addField('password', ['type' => 'string'])
-            ->addField('database', ['type' => 'string']);
+            ->addField('database', ['type' => 'string'])
+            ->addField('schema', ['type' => 'string']);
     }
 
     /**
@@ -111,6 +112,57 @@ class DatabaseConfigurationForm extends Form
                 'message' => __('The database name should not contain dashes.'),
             ]);
 
+        $validator
+            ->requirePresence(
+                'schema',
+                function ($data) {
+                    return $this->isDriverPostgres($data);
+                },
+                __('The schema is required on PostgreSQL')
+            )
+            ->utf8('schema', __('The schema should be a valid BMP-UTF8 string.'));
+
         return $validator;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function execute(array $data, array $options = []): bool
+    {
+        $data = $this->sanitizeData($data);
+
+        return parent::execute($data, $options);
+    }
+
+    /**
+     * @param array $data data to sanitize
+     * @return array|null[]
+     */
+    private function sanitizeData(array $data): array
+    {
+        $sanitizedData = [
+            'driver' => $data['driver'] ?? null,
+            'host' => $data['host'] ?? null,
+            'port' => $data['port'] ?? null,
+            'username' => $data['username'] ?? null,
+            'password' => $data['password'] ?? null,
+            'database' => $data['database'] ?? null,
+        ];
+        if ($this->isDriverPostgres($data)) {
+            $sanitizedData['schema'] = $data['schema'] ?? null;
+            $sanitizedData['encoding'] = $data['encoding'] ?? 'utf8';
+        }
+
+        return $sanitizedData;
+    }
+
+    /**
+     * @param array $data Form data
+     * @return bool
+     */
+    private function isDriverPostgres(array $data): bool
+    {
+        return isset($data['driver']) && $data['driver'] === Postgres::class;
     }
 }

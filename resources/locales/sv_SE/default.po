@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-07-24 11:52+0000\n"
-"PO-Revision-Date: 2023-07-25 06:51\n"
+"POT-Creation-Date: 2023-09-19 15:36+0000\n"
+"PO-Revision-Date: 2023-09-20 08:32\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -916,6 +916,9 @@ msgstr "Rollidentifieraren bör vara ett giltigt UUID."
 msgid "A role identifier is required."
 msgstr "En rollidentifierare krävs."
 
+msgid "The disabled date should be a valid date."
+msgstr ""
+
 msgid "The profile should not be empty."
 msgstr "Profilen bör inte vara tom."
 
@@ -1021,8 +1024,14 @@ msgstr ""
 msgid "{0} shared the password {1}"
 msgstr "{0} delade lösenordet {1}"
 
+msgid "Your account has been suspended"
+msgstr ""
+
 msgid "{0} deleted user {1}"
 msgstr "{0} tog bort användare {1}"
+
+msgid "{0} has been suspended"
+msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Välkommen till passbolt, {0}!"
@@ -1073,6 +1082,12 @@ msgid "The send on user setup completed setting should be a boolean."
 msgstr "Inställningen att skicka när användarkonfigurationen är klar måste vara en boolean."
 
 msgid "The send on user recover abort setting should be a boolean."
+msgstr ""
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr ""
+
+msgid "The send on admin disabled setting should be a boolean."
 msgstr ""
 
 msgid "The send on comment added setting should be a boolean."
@@ -1363,8 +1378,8 @@ msgstr ""
 msgid "The key provided does not belong to given user."
 msgstr "Nyckeln som anges tillhör inte användaren."
 
-msgid "The user does not exist or is not active."
-msgstr "Användaren existerar inte eller är inte aktiv."
+msgid "The user does not exist or is not active or is disabled."
+msgstr ""
 
 msgid "The OpenPGP key data is not valid."
 msgstr "OpenPGP-nyckeldatan är inte giltig."
@@ -1375,7 +1390,7 @@ msgstr ""
 msgid "The user does not exist, is already active or has been deleted."
 msgstr "Användaren finns inte, är redan aktiv eller har tagits bort."
 
-msgid "The user does not exist or is already active."
+msgid "The user does not exist or is already active or is disabled."
 msgstr ""
 
 msgid "The user should not be a guest."
@@ -1395,6 +1410,9 @@ msgstr "Den här användaren finns inte eller har tagits bort."
 
 msgid "Please register and complete the setup first."
 msgstr "Vänligen registrera dig och slutför installationen först."
+
+msgid "This user has been disabled."
+msgstr ""
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validering misslyckades för användare {0}. {1}"
@@ -1780,7 +1798,7 @@ msgstr ""
 msgid "No active refresh token matching the request could be found."
 msgstr "Ingen aktiv uppdateringstoken som matchar förfrågan kunde hittas."
 
-msgid "The user is deactivated."
+msgid "The user is not activated or disabled."
 msgstr ""
 
 msgid "The user is deleted."
@@ -2470,8 +2488,131 @@ msgstr "Kontakta din administratör om du inte begärde denna åtgärd."
 msgid "Log in passbolt"
 msgstr "Logga in till passbolt"
 
-msgid "The password generator value \"{0}\" is not valid."
-msgstr "Lösenordsgeneratorns värde \"{0}\" är inte giltigt."
+msgid "Could not retrieve the password policies."
+msgstr ""
+
+msgid "The default generator is required."
+msgstr ""
+
+msgid "The default generator should be one of the following: {0}."
+msgstr ""
+
+msgid "The external dictionary check is required."
+msgstr ""
+
+msgid "The external dictionary check should be a boolean."
+msgstr ""
+
+msgid "The password generator settings is required."
+msgstr ""
+
+msgid "The password generator settings should not be empty."
+msgstr ""
+
+msgid "The password generator settings should have at least one mask selected."
+msgstr ""
+
+msgid "The passphrase generator settings is required."
+msgstr ""
+
+msgid "The passphrase generator settings should not be empty."
+msgstr ""
+
+msgid "Could not validate the password policies settings."
+msgstr ""
+
+msgid "The passphrase generator words is required."
+msgstr ""
+
+msgid "The passphrase generator words should be between {0} and {1}."
+msgstr ""
+
+msgid "The passphrase generator word separator is required."
+msgstr ""
+
+msgid "The passphrase generator word separator should be a valid UTF8 string."
+msgstr ""
+
+msgid "The passphrase generator word separator should be maximum {0} characters."
+msgstr ""
+
+msgid "The passphrase generator word case is required."
+msgstr ""
+
+msgid "The passphrase generator word case should be one of the following: {0}."
+msgstr ""
+
+msgid "The password generator length should be between {0} and {1}."
+msgstr ""
+
+msgid "The password generator length is required."
+msgstr ""
+
+msgid "The password generator mask upper is required."
+msgstr ""
+
+msgid "The password generator mask upper should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask lower is required."
+msgstr ""
+
+msgid "The password generator mask lower should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask digit is required."
+msgstr ""
+
+msgid "The password generator mask digit should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask parenthesis is required."
+msgstr ""
+
+msgid "The password generator mask parenthesis should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask emoji is required."
+msgstr ""
+
+msgid "The password generator mask emoji should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char1 is required."
+msgstr ""
+
+msgid "The password generator mask char1 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char2 is required."
+msgstr ""
+
+msgid "The password generator mask char2 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char3 is required."
+msgstr ""
+
+msgid "The password generator mask char3 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char4 is required."
+msgstr ""
+
+msgid "The password generator mask char4 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char5 is required."
+msgstr ""
+
+msgid "The password generator mask char5 should be a boolean type."
+msgstr ""
+
+msgid "The password generator exclude look alike chars is required."
+msgstr ""
+
+msgid "The password generator exclude look alike chars should be a boolean type."
+msgstr ""
 
 msgid "Record not found"
 msgstr ""
@@ -2773,6 +2914,12 @@ msgstr "Lösenordet bör vara en giltig BMP-UTF8-sträng."
 msgid "The test email should be a valid email address."
 msgstr "Testmeddelandet bör vara en giltig e-postadress."
 
+msgid "The authentication method is required."
+msgstr ""
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr ""
+
 msgid "The sender email should be a valid email address."
 msgstr "Avsändarens e-postadress bör vara en giltig e-postadress."
 
@@ -2860,6 +3007,15 @@ msgstr "Installation"
 msgid "That's it!"
 msgstr "Det var det!"
 
+msgid "A driver name is required."
+msgstr ""
+
+msgid "The driver name should not be empty."
+msgstr ""
+
+msgid "The database driver should be one of the following: {0}."
+msgstr ""
+
 msgid "The password should not contain quotes."
 msgstr "Lösenordet bör ej innehålla citat."
 
@@ -2874,6 +3030,12 @@ msgstr "Databasnamnet bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The database name should not contain dashes."
 msgstr "Databasnamnet får inte innehålla bindestreck."
+
+msgid "The schema is required on PostgreSQL"
+msgstr ""
+
+msgid "The schema should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "An OpenPGP public key is required."
 msgstr "En publik OpenPGP-nyckel krävs."
@@ -3031,6 +3193,12 @@ msgstr "databasens namn"
 msgid "Database name"
 msgstr "Databasens namn"
 
+msgid "schema"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Enter your SMTP server settings."
 msgstr "Ange inställningarna för din SMTP-server."
 
@@ -3063,6 +3231,9 @@ msgstr "port"
 
 msgid "Port"
 msgstr "Port"
+
+msgid "Authentication method"
+msgstr ""
 
 msgid "client"
 msgstr ""
@@ -3253,18 +3424,6 @@ msgstr "Varför behöver jag en SMTP-server?"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "Passbolt behöver en SMTP-server för att kunna skicka inbjudningsmail efter att ett konto har skapats och för att kunna skicka e-postmeddelanden."
 
-msgid "Invalid directory type for domain: {0}"
-msgstr ""
-
-msgid "Directory type could not be found for domain: {0}"
-msgstr ""
-
-msgid "The directory type should be one of the following: {0}."
-msgstr "Katalogtypen bör vara en av följande: {0}."
-
-msgid "LDAP Object class could not be found: {0}"
-msgstr ""
-
 msgid "The requested address was not found on this server."
 msgstr "Den begärda adressen hittades inte på denna server."
 
@@ -3316,6 +3475,21 @@ msgstr "hem"
 msgid "login"
 msgstr "logga in"
 
+msgid "Account suspended"
+msgstr ""
+
+msgid "Your account has been suspended."
+msgstr ""
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr ""
+
+msgid "Contact your admin"
+msgstr ""
+
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""
 
@@ -3332,6 +3506,21 @@ msgid "Unfortunately, they will need your help to delete their account and resta
 msgstr ""
 
 msgid "Please check with them first to confirm."
+msgstr ""
+
+msgid "User suspended"
+msgstr ""
+
+msgid "The user {0} has been suspended."
+msgstr ""
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can share resources and add this user to a group."
+msgstr ""
+
+msgid "Check user suspension"
 msgstr ""
 
 msgid "Welcome to {0}!"

@@ -88,11 +88,17 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
-        /** @var \App\Model\Entity\User $recipient */
-        $recipient = $this->usersTable->findById($userId)->find('locale')->first();
 
-        $email = $this->createEmail($recipient, $operator, $folder);
-        $emailCollection->addEmail($email);
+        /** @var \App\Model\Entity\User $recipient */
+        $recipient = $this->usersTable->findById($userId)
+            ->find('locale')
+            ->find('notDisabled')
+            ->first();
+
+        if (isset($recipient)) {
+            $email = $this->createEmail($recipient, $operator, $folder);
+            $emailCollection->addEmail($email);
+        }
 
         return $emailCollection;
     }
@@ -120,6 +126,6 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient->username, $subject, $data, self::TEMPLATE);
+        return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
 }

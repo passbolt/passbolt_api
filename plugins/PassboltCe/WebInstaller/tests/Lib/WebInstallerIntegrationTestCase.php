@@ -60,7 +60,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
         Configure::write('passbolt.webInstaller.configured', false);
     }
 
-    public function getTestDatasourceFromConfig()
+    public function getTestDatasourceFromConfig(): array
     {
         $engine = new PhpConfig();
         try {

@@ -30,6 +30,6 @@ trait MiddlewareTestTrait
         $controllerFactoryStub = $this->getMockBuilder(ControllerFactoryInterface::class)->getMock();
         $controllerFactoryStub->method('invoke')->willReturn($response);
 
-        return new Application('', new EventManager(), $controllerFactoryStub);
+        return new Application(CONFIG, new EventManager(), $controllerFactoryStub);
     }
 }

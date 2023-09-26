@@ -112,7 +112,7 @@ class MfaVerifiedToken
 
         // Remember me
         if (isset($data->remember) && $data->remember === true) {
-            if ($token->created->wasWithinLast(MfaVerifiedCookie::MAX_DURATION)) {
+            if (!$token->isExpired(MfaVerifiedCookie::MAX_DURATION)) {
                 return true;
             }
         }
