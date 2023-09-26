@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-07-24 11:52+0000\n"
-"PO-Revision-Date: 2023-07-25 06:51\n"
+"POT-Creation-Date: 2023-09-19 15:36+0000\n"
+"PO-Revision-Date: 2023-09-20 08:32\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -916,6 +916,9 @@ msgstr "ロール識別子は有効なUUIDである必要があります。"
 msgid "A role identifier is required."
 msgstr "ロール識別子が必要です。"
 
+msgid "The disabled date should be a valid date."
+msgstr ""
+
 msgid "The profile should not be empty."
 msgstr "プロファイルは空にしないでください。"
 
@@ -1021,8 +1024,14 @@ msgstr ""
 msgid "{0} shared the password {1}"
 msgstr "{0} さんがパスワード {1} を共有しました"
 
+msgid "Your account has been suspended"
+msgstr ""
+
 msgid "{0} deleted user {1}"
 msgstr "{0} さんがユーザー {1} を削除しました"
+
+msgid "{0} has been suspended"
+msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "パスボルトへようこそ、 {0} さん！"
@@ -1073,6 +1082,12 @@ msgid "The send on user setup completed setting should be a boolean."
 msgstr "ユーザーセットアップ完了時に送信する設定はブール値である必要があります。"
 
 msgid "The send on user recover abort setting should be a boolean."
+msgstr ""
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr ""
+
+msgid "The send on admin disabled setting should be a boolean."
 msgstr ""
 
 msgid "The send on comment added setting should be a boolean."
@@ -1363,8 +1378,8 @@ msgstr ""
 msgid "The key provided does not belong to given user."
 msgstr "提供されたキーは、指定されたユーザーのものではありません。"
 
-msgid "The user does not exist or is not active."
-msgstr "ユーザーが存在しないか、アクティブではありません。"
+msgid "The user does not exist or is not active or is disabled."
+msgstr ""
 
 msgid "The OpenPGP key data is not valid."
 msgstr "OpenPGP の鍵データが有効ではありません。"
@@ -1375,7 +1390,7 @@ msgstr ""
 msgid "The user does not exist, is already active or has been deleted."
 msgstr "そのユーザーは存在しないか、すでにアクティブか削除されています。"
 
-msgid "The user does not exist or is already active."
+msgid "The user does not exist or is already active or is disabled."
 msgstr ""
 
 msgid "The user should not be a guest."
@@ -1395,6 +1410,9 @@ msgstr "このユーザーは存在しないか、削除されています。"
 
 msgid "Please register and complete the setup first."
 msgstr "最初に登録して、セットアップを完了してください。"
+
+msgid "This user has been disabled."
+msgstr ""
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "ユーザー {0} の検証に失敗しました。 {1}"
@@ -1780,7 +1798,7 @@ msgstr ""
 msgid "No active refresh token matching the request could be found."
 msgstr "リクエストに一致するアクティブなリフレッシュトークンが見つかりませんでした。"
 
-msgid "The user is deactivated."
+msgid "The user is not activated or disabled."
 msgstr ""
 
 msgid "The user is deleted."
@@ -2470,8 +2488,131 @@ msgstr "この操作をリクエストしていない場合は、管理者に問
 msgid "Log in passbolt"
 msgstr "パスボルトにログイン"
 
-msgid "The password generator value \"{0}\" is not valid."
-msgstr "パスワードジェネレータの値 \"{0}\" は有効ではありません。"
+msgid "Could not retrieve the password policies."
+msgstr ""
+
+msgid "The default generator is required."
+msgstr ""
+
+msgid "The default generator should be one of the following: {0}."
+msgstr ""
+
+msgid "The external dictionary check is required."
+msgstr ""
+
+msgid "The external dictionary check should be a boolean."
+msgstr ""
+
+msgid "The password generator settings is required."
+msgstr ""
+
+msgid "The password generator settings should not be empty."
+msgstr ""
+
+msgid "The password generator settings should have at least one mask selected."
+msgstr ""
+
+msgid "The passphrase generator settings is required."
+msgstr ""
+
+msgid "The passphrase generator settings should not be empty."
+msgstr ""
+
+msgid "Could not validate the password policies settings."
+msgstr ""
+
+msgid "The passphrase generator words is required."
+msgstr ""
+
+msgid "The passphrase generator words should be between {0} and {1}."
+msgstr ""
+
+msgid "The passphrase generator word separator is required."
+msgstr ""
+
+msgid "The passphrase generator word separator should be a valid UTF8 string."
+msgstr ""
+
+msgid "The passphrase generator word separator should be maximum {0} characters."
+msgstr ""
+
+msgid "The passphrase generator word case is required."
+msgstr ""
+
+msgid "The passphrase generator word case should be one of the following: {0}."
+msgstr ""
+
+msgid "The password generator length should be between {0} and {1}."
+msgstr ""
+
+msgid "The password generator length is required."
+msgstr ""
+
+msgid "The password generator mask upper is required."
+msgstr ""
+
+msgid "The password generator mask upper should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask lower is required."
+msgstr ""
+
+msgid "The password generator mask lower should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask digit is required."
+msgstr ""
+
+msgid "The password generator mask digit should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask parenthesis is required."
+msgstr ""
+
+msgid "The password generator mask parenthesis should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask emoji is required."
+msgstr ""
+
+msgid "The password generator mask emoji should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char1 is required."
+msgstr ""
+
+msgid "The password generator mask char1 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char2 is required."
+msgstr ""
+
+msgid "The password generator mask char2 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char3 is required."
+msgstr ""
+
+msgid "The password generator mask char3 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char4 is required."
+msgstr ""
+
+msgid "The password generator mask char4 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char5 is required."
+msgstr ""
+
+msgid "The password generator mask char5 should be a boolean type."
+msgstr ""
+
+msgid "The password generator exclude look alike chars is required."
+msgstr ""
+
+msgid "The password generator exclude look alike chars should be a boolean type."
+msgstr ""
 
 msgid "Record not found"
 msgstr ""
@@ -2773,6 +2914,12 @@ msgstr "パスワードは有効なBMP-UTF8文字列である必要がありま�
 msgid "The test email should be a valid email address."
 msgstr "テストメールアドレスは有効なメールアドレスである必要があります。"
 
+msgid "The authentication method is required."
+msgstr ""
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr ""
+
 msgid "The sender email should be a valid email address."
 msgstr "送信者のメールアドレスは有効なメールアドレスでなければなりません。"
 
@@ -2860,6 +3007,15 @@ msgstr "インストール"
 msgid "That's it!"
 msgstr "以上です！"
 
+msgid "A driver name is required."
+msgstr ""
+
+msgid "The driver name should not be empty."
+msgstr ""
+
+msgid "The database driver should be one of the following: {0}."
+msgstr ""
+
 msgid "The password should not contain quotes."
 msgstr "パスワードには引用符を含めないでください。"
 
@@ -2874,6 +3030,12 @@ msgstr "データベース名は有効なBMP-UTF8文字列でなければなり�
 
 msgid "The database name should not contain dashes."
 msgstr "データベース名にダッシュを含めないでください。"
+
+msgid "The schema is required on PostgreSQL"
+msgstr ""
+
+msgid "The schema should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "An OpenPGP public key is required."
 msgstr "OpenPGP 公開鍵が必要です。"
@@ -3031,6 +3193,12 @@ msgstr "データベース名"
 msgid "Database name"
 msgstr "データベース名"
 
+msgid "schema"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Enter your SMTP server settings."
 msgstr "SMTPサーバーの設定を入力します。"
 
@@ -3063,6 +3231,9 @@ msgstr "ポート"
 
 msgid "Port"
 msgstr "ポート"
+
+msgid "Authentication method"
+msgstr ""
 
 msgid "client"
 msgstr ""
@@ -3253,18 +3424,6 @@ msgstr "なぜSMTPサーバーが必要なのですか？"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "パスボルトは、アカウント作成後に招待メールを送信したり、メール通知を送信したりするために、smtpサーバーを必要とします。"
 
-msgid "Invalid directory type for domain: {0}"
-msgstr ""
-
-msgid "Directory type could not be found for domain: {0}"
-msgstr ""
-
-msgid "The directory type should be one of the following: {0}."
-msgstr "ディレクトリの種類は次のいずれかでなければなりません: {0}。"
-
-msgid "LDAP Object class could not be found: {0}"
-msgstr ""
-
 msgid "The requested address was not found on this server."
 msgstr "要求されたアドレスは、このサーバーで見つかりませんでした。"
 
@@ -3316,6 +3475,21 @@ msgstr "ホーム"
 msgid "login"
 msgstr "ログイン"
 
+msgid "Account suspended"
+msgstr ""
+
+msgid "Your account has been suspended."
+msgstr ""
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr ""
+
+msgid "Contact your admin"
+msgstr ""
+
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""
 
@@ -3332,6 +3506,21 @@ msgid "Unfortunately, they will need your help to delete their account and resta
 msgstr ""
 
 msgid "Please check with them first to confirm."
+msgstr ""
+
+msgid "User suspended"
+msgstr ""
+
+msgid "The user {0} has been suspended."
+msgstr ""
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can share resources and add this user to a group."
+msgstr ""
+
+msgid "Check user suspension"
 msgstr ""
 
 msgid "Welcome to {0}!"
