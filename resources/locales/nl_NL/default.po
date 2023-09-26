@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-08-03 13:33+0000\n"
-"PO-Revision-Date: 2023-08-03 16:59\n"
+"POT-Creation-Date: 2023-09-19 17:30+0200\n"
+"PO-Revision-Date: 2023-09-20 10:09\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -916,6 +916,9 @@ msgstr "De ID van de functie moet een geldige UUID zijn."
 msgid "A role identifier is required."
 msgstr "Een functie-ID is vereist."
 
+msgid "The disabled date should be a valid date."
+msgstr "De uitgeschakelde datum moet een geldige datum zijn."
+
 msgid "The profile should not be empty."
 msgstr "Het profiel moet ingevuld worden."
 
@@ -1027,8 +1030,14 @@ msgstr "{0} kan het herstelproces van de account niet voltooien!"
 msgid "{0} shared the password {1}"
 msgstr "{0} heeft het wachtwoord {1} gedeeld"
 
+msgid "Your account has been suspended"
+msgstr "Uw account is opgeschort"
+
 msgid "{0} deleted user {1}"
 msgstr "{0} heeft gebruiker {1} verwijderd"
+
+msgid "{0} has been suspended"
+msgstr "{0} is opgeschort"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Welkom bij Passbolt, {0}!"
@@ -1080,6 +1089,12 @@ msgstr "De instelling voor \"verzenden zodra de gebruikersinstallatie is voltooi
 
 msgid "The send on user recover abort setting should be a boolean."
 msgstr "De instelling voor \"verzenden zodra het herstel van een gebruiker is afgebroken\" moet een Boolean zijn."
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een gebruiker is opgeschort\" moet een Boolean zijn."
+
+msgid "The send on admin disabled setting should be a boolean."
+msgstr "De instelling voor \"verzenden zodra een administrator is uitgeschakeld\" moet een Boolean zijn."
 
 msgid "The send on comment added setting should be a boolean."
 msgstr "De instelling voor \"verzenden zodra een opmerking is toegevoegd\" moet een Boolean zijn."
@@ -1369,8 +1384,8 @@ msgstr "De gegevens van het authenticatietoken konden niet worden bijgewerkt."
 msgid "The key provided does not belong to given user."
 msgstr "De aangeboden sleutel behoort niet toe aan de opgegeven gebruiker."
 
-msgid "The user does not exist or is not active."
-msgstr "De gebruiker bestaat niet of is niet actief."
+msgid "The user does not exist or is not active or is disabled."
+msgstr ""
 
 msgid "The OpenPGP key data is not valid."
 msgstr "De gegevens van de OpenPGP-sleutel zijn niet geldig."
@@ -1381,8 +1396,8 @@ msgstr "De OpenPGP-sleutel kan niet worden gebruikt om te versleutelen."
 msgid "The user does not exist, is already active or has been deleted."
 msgstr "De gebruiker bestaat niet, is al actief of is verwijderd."
 
-msgid "The user does not exist or is already active."
-msgstr "De gebruiker bestaat niet of is al actief."
+msgid "The user does not exist or is already active or is disabled."
+msgstr ""
 
 msgid "The user should not be a guest."
 msgstr "De gebruiker mag geen gast zijn."
@@ -1401,6 +1416,9 @@ msgstr "Deze gebruiker bestaat niet of is verwijderd."
 
 msgid "Please register and complete the setup first."
 msgstr "Registreer en voltooi eerst de installatie."
+
+msgid "This user has been disabled."
+msgstr ""
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validatie is mislukt voor gebruiker {0}. {1}"
@@ -1786,8 +1804,8 @@ msgstr "Authenticatie-beveiligingswaarschuwing"
 msgid "No active refresh token matching the request could be found."
 msgstr "Er kon geen actief vernieuwingstoken worden gevonden die overeenkomt met het verzoek."
 
-msgid "The user is deactivated."
-msgstr "De gebruiker is uitgeschakeld."
+msgid "The user is not activated or disabled."
+msgstr ""
 
 msgid "The user is deleted."
 msgstr "De gebruiker is verwijderd."
@@ -2476,8 +2494,131 @@ msgstr "Neem contact op met je beheerder als je niet om deze actie hebt gevraagd
 msgid "Log in passbolt"
 msgstr "Meld je aan bij Passbolt"
 
-msgid "The password generator value \"{0}\" is not valid."
-msgstr "De waarde \"{0}\" van de wachtwoord-generator is niet geldig."
+msgid "Could not retrieve the password policies."
+msgstr ""
+
+msgid "The default generator is required."
+msgstr ""
+
+msgid "The default generator should be one of the following: {0}."
+msgstr ""
+
+msgid "The external dictionary check is required."
+msgstr ""
+
+msgid "The external dictionary check should be a boolean."
+msgstr ""
+
+msgid "The password generator settings is required."
+msgstr ""
+
+msgid "The password generator settings should not be empty."
+msgstr ""
+
+msgid "The password generator settings should have at least one mask selected."
+msgstr ""
+
+msgid "The passphrase generator settings is required."
+msgstr ""
+
+msgid "The passphrase generator settings should not be empty."
+msgstr ""
+
+msgid "Could not validate the password policies settings."
+msgstr ""
+
+msgid "The passphrase generator words is required."
+msgstr ""
+
+msgid "The passphrase generator words should be between {0} and {1}."
+msgstr ""
+
+msgid "The passphrase generator word separator is required."
+msgstr ""
+
+msgid "The passphrase generator word separator should be a valid UTF8 string."
+msgstr ""
+
+msgid "The passphrase generator word separator should be maximum {0} characters."
+msgstr ""
+
+msgid "The passphrase generator word case is required."
+msgstr ""
+
+msgid "The passphrase generator word case should be one of the following: {0}."
+msgstr ""
+
+msgid "The password generator length should be between {0} and {1}."
+msgstr ""
+
+msgid "The password generator length is required."
+msgstr ""
+
+msgid "The password generator mask upper is required."
+msgstr ""
+
+msgid "The password generator mask upper should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask lower is required."
+msgstr ""
+
+msgid "The password generator mask lower should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask digit is required."
+msgstr ""
+
+msgid "The password generator mask digit should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask parenthesis is required."
+msgstr ""
+
+msgid "The password generator mask parenthesis should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask emoji is required."
+msgstr ""
+
+msgid "The password generator mask emoji should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char1 is required."
+msgstr ""
+
+msgid "The password generator mask char1 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char2 is required."
+msgstr ""
+
+msgid "The password generator mask char2 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char3 is required."
+msgstr ""
+
+msgid "The password generator mask char3 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char4 is required."
+msgstr ""
+
+msgid "The password generator mask char4 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char5 is required."
+msgstr ""
+
+msgid "The password generator mask char5 should be a boolean type."
+msgstr ""
+
+msgid "The password generator exclude look alike chars is required."
+msgstr ""
+
+msgid "The password generator exclude look alike chars should be a boolean type."
+msgstr ""
 
 msgid "Record not found"
 msgstr ""
@@ -2779,6 +2920,12 @@ msgstr "Het wachtwoord moet een geldige BMP-UTF8-tekenreeks zijn."
 msgid "The test email should be a valid email address."
 msgstr "Het e-mailadres voor de test moet een geldig e-mailadres zijn."
 
+msgid "The authentication method is required."
+msgstr ""
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr ""
+
 msgid "The sender email should be a valid email address."
 msgstr "Het e-mailadres van de afzender moet een geldig e-mailadres zijn."
 
@@ -2866,6 +3013,15 @@ msgstr "Installatie"
 msgid "That's it!"
 msgstr "Dat is alles!"
 
+msgid "A driver name is required."
+msgstr ""
+
+msgid "The driver name should not be empty."
+msgstr ""
+
+msgid "The database driver should be one of the following: {0}."
+msgstr ""
+
 msgid "The password should not contain quotes."
 msgstr "Het wachtwoord mag geen aanhalingstekens bevatten."
 
@@ -2880,6 +3036,12 @@ msgstr "De naam van de database moet een geldige BMP-UTF8-tekenreeks zijn."
 
 msgid "The database name should not contain dashes."
 msgstr "De naam van de database mag geen koppeltekens bevatten."
+
+msgid "The schema is required on PostgreSQL"
+msgstr ""
+
+msgid "The schema should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "An OpenPGP public key is required."
 msgstr "Een openbare OpenPGP-sleutel is vereist."
@@ -3046,6 +3208,12 @@ msgstr "naam van de database"
 msgid "Database name"
 msgstr "Naam van de database"
 
+msgid "schema"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Enter your SMTP server settings."
 msgstr "Voer uw SMTP-serverinstellingen in."
 
@@ -3078,6 +3246,9 @@ msgstr "poort"
 
 msgid "Port"
 msgstr "Poort"
+
+msgid "Authentication method"
+msgstr ""
 
 msgid "client"
 msgstr ""
@@ -3712,6 +3883,9 @@ msgstr "{0} is een account-herstelverzoek gestart"
 msgid "Recovery request"
 msgstr ""
 
+msgid "{0} has initiated an account recovery request."
+msgstr "{0} is een account-herstelverzoek gestart."
+
 msgid "Since you are an administrator, you are requested to help them."
 msgstr ""
 
@@ -3754,13 +3928,13 @@ msgstr ""
 msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
 msgstr ""
 
-msgid "{0}({1}) has updated a recovery request to {2}."
+msgid "{0} ({1}) has updated a recovery request to {2}."
 msgstr ""
 
 msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
 msgstr ""
 
-msgid "{0}({1}) has approved your recovery request."
+msgid "{0} ({1}) has approved your recovery request."
 msgstr ""
 
 msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
@@ -4117,6 +4291,9 @@ msgstr ""
 msgid "The group custom filter contains the forbidden field."
 msgstr ""
 
+msgid "Directory sync settings endpoints are disabled."
+msgstr ""
+
 msgid "The directory name should be a valid UTF8 string."
 msgstr "De naam van de directory moet een geldige UTF8-tekenreeks zijn."
 
@@ -4297,6 +4474,21 @@ msgstr ""
 msgid "Remember me for a month: {0}"
 msgstr ""
 
+msgid "You edited the password policy"
+msgstr ""
+
+msgid "{0} edited the password policy"
+msgstr ""
+
+msgid "Only administrators are allowed to create/update password policies settings."
+msgstr ""
+
+msgid "The password policy settings has been updated by {0}."
+msgstr ""
+
+msgid "you"
+msgstr "jij"
+
 msgid "CSRF issue. The state in URL and Cookies do not match."
 msgstr ""
 
@@ -4317,6 +4509,9 @@ msgstr ""
 
 msgid "The settings id is required in URL parameters."
 msgstr ""
+
+msgid "The user does not exist or is not active."
+msgstr "De gebruiker bestaat niet of is niet actief."
 
 msgid "The SSO setting does not exist."
 msgstr ""
@@ -4666,7 +4861,7 @@ msgstr ""
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
 msgstr ""
 
-msgid "All users can now use the Single Sign-on to perform authentication."
+msgid "All users can now use Single Sign-on to perform authentication."
 msgstr ""
 
 msgid "The SSO setting has been deleted by {0}."
@@ -4741,6 +4936,30 @@ msgstr "Een gedeelde status is vereist."
 msgid "Could not validate tags data."
 msgstr "De labelgegevens konden niet worden gevalideerd."
 
+msgid "Could not retrieve the user passphrase policies."
+msgstr ""
+
+msgid "The entropy minimum is required."
+msgstr ""
+
+msgid "The entropy minimum should be between {0} and {1}."
+msgstr ""
+
+msgid "You edited the user passphrase policy"
+msgstr ""
+
+msgid "{0} edited the user passphrase policy"
+msgstr ""
+
+msgid "Could not validate the user passphrase policies settings."
+msgstr ""
+
+msgid "Only administrators are allowed to create/update user passphrase policies settings."
+msgstr ""
+
+msgid "The user passphrase policy settings has been updated by {0}."
+msgstr ""
+
 msgid "The requested address was not found on this server."
 msgstr "Het opgevraagde adres is niet gevonden op deze server."
 
@@ -4792,6 +5011,21 @@ msgstr "startpagina"
 msgid "login"
 msgstr "inloggen"
 
+msgid "Account suspended"
+msgstr ""
+
+msgid "Your account has been suspended."
+msgstr ""
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr ""
+
+msgid "Contact your admin"
+msgstr ""
+
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""
 
@@ -4808,6 +5042,21 @@ msgid "Unfortunately, they will need your help to delete their account and resta
 msgstr ""
 
 msgid "Please check with them first to confirm."
+msgstr ""
+
+msgid "User suspended"
+msgstr ""
+
+msgid "The user {0} has been suspended."
+msgstr ""
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can share resources and add this user to a group."
+msgstr ""
+
+msgid "Check user suspension"
 msgstr ""
 
 msgid "Welcome to {0}!"
