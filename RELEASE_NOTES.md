@@ -1,17 +1,19 @@
 Release song: https://youtu.be/s88r_q7oufE
 
-Hey community members,
+The latest version of Pro is here – take a look at what’s new in 4.3.
 
-Prepare for an exciting update! 🥁
+One enhancement is improved portability of TOTP (Time Based One Time Password). TOTP can now be conveniently viewed across both the web and mobile applications. Although the creation of TOTP remains mobile-centric, version 4.3 provides convenient access to reading and retrieving TOTP content in the browser, resulting in greater usability.
 
-Passbolt is thrilled to announce that the v4.3.0 Release Candidate is officially available for testing.
+Improvements have also been made to grid customisation. Any changes made to the grid are now persistent, meaning your tailored experience is saved from session to session. And to make the new TOTP portability even more accessible, an option has been added to display a column for your TOTP content.
 
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, please share and report any issues you come across.
+Admins can now manage passphrase policies alongside their password policies. These policies include: setting minimal entropy, managing access to external tools for monitoring if a passphrase has been compromised, and choosing to enforce policies for existing users.
 
-Enjoy the testing journey! ♥️
+Other updates include improvements to SQL query performance (retrieving resource tags and system tags), restricting LDAP-related settings, some bug fixes, and a number of performance improvements.
+
+Thank you for choosing passbolt and for your continued support.
 
 
-## [4.3.0-rc.1] - 2023-09-21
+## [4.3.0] - 2023-09-26
 ### Added
 - PB-26092 As an administrator I can configure policy for user passphrase
 - PB-25405 As an administrator installing passbolt through the web installer, I should be able to configure authentication method for SMTP
@@ -35,6 +37,7 @@ Enjoy the testing journey! ♥️
 - PB-25802 As a user I want to see localized date in my emails
 - PB-25500 Fix wording in SSO enabled email
 - PB-25863 Fix emails not sent due to message-id header missing
+- PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
 
 ### Maintenance
 - PB-25709 Remove unused resources tags indexes
