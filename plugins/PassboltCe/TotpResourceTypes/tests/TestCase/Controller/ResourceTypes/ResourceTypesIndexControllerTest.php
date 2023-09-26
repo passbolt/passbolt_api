@@ -31,26 +31,6 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 {
     use ResourceTypesModelTrait;
 
-    /**
-     * @inheritDoc
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        $this->enableFeaturePlugin(TotpResourceTypesPlugin::class);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->disableFeaturePlugin(TotpResourceTypesPlugin::class);
-    }
-
     public function testResourceTypesIndex_Success_WithTotpResourceTypes()
     {
         $this->loadFixtureScenario(ResourceTypesScenario::class);

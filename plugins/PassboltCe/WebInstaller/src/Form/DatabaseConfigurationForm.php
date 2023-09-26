@@ -151,6 +151,7 @@ class DatabaseConfigurationForm extends Form
         ];
         if ($this->isDriverPostgres($data)) {
             $sanitizedData['schema'] = $data['schema'] ?? null;
+            $sanitizedData['encoding'] = $data['encoding'] ?? 'utf8';
         }
 
         return $sanitizedData;
