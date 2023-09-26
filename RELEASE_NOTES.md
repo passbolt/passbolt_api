@@ -1,16 +1,14 @@
 Release song: https://youtu.be/s88r_q7oufE
 
-Hey community members,
+Introducing the newest release of passbolt – get to know version 4.3
 
-Prepare for an exciting update! 🥁
+This update extends the portability of TOTP (Time Based One Time Password) content. You can now access TOTP items from passbolt’s mobile app and web interface. While the ability to create a TOTP is still limited to mobile, this update lets you view them through the browser, adding to its flexibility and usability.
 
-Passbolt is thrilled to announce that the v4.3.0 Release Candidate is officially available for testing.
+Improvements have also been made to the customisation of the grid in the password workspace. This update makes edits to the grid persistent, meaning that changes will now be saved between sessions. To further improve overall usability, an optional column for TOTP has also been added.
 
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, please share and report any issues you come across.
+Thank you for using passbolt, for contributing to the vision, and your feedback.
 
-Enjoy the testing journey! ♥️
-
-## [4.3.0-rc.1] - 2023-09-21
+## [4.3.0] - 2023-09-26
 ### Added
 - PB-25405 As an administrator installing passbolt through the web installer, I should be able to configure authentication method for SMTP
 - PB-25185 As a signed-in user on the browser extension, I want to export my account to configure the Windows application
@@ -27,6 +25,7 @@ Enjoy the testing journey! ♥️
 ### Fixed
 - PB-25802 As a user I want to see localized date in my emails
 - PB-25863 Fix emails not sent due to message-id header missing
+- PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
 
 ### Maintenance
 - PB-25894 Run CI on postgres versions 13 and 15 instead of version 12 only
