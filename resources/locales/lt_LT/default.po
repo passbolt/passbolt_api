@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-07-24 11:52+0000\n"
-"PO-Revision-Date: 2023-07-25 06:51\n"
+"POT-Creation-Date: 2023-09-19 15:36+0000\n"
+"PO-Revision-Date: 2023-09-20 08:32\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -916,6 +916,9 @@ msgstr "Vaidmens identifikatorius turi būti galiojantis UUID."
 msgid "A role identifier is required."
 msgstr "Būtinas vaidmens identifikatorius."
 
+msgid "The disabled date should be a valid date."
+msgstr ""
+
 msgid "The profile should not be empty."
 msgstr "Profilis neturėtų būti tuščias."
 
@@ -1021,8 +1024,14 @@ msgstr "{0} negali užbaigti paskyros atkūrimo proceso!"
 msgid "{0} shared the password {1}"
 msgstr "{0} pasidalino slaptažodžiu {1}"
 
+msgid "Your account has been suspended"
+msgstr ""
+
 msgid "{0} deleted user {1}"
 msgstr "{0} ištrynė naudotoją {1}"
+
+msgid "{0} has been suspended"
+msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Sveiki atvykę į „passbolt“, {0}!"
@@ -1073,6 +1082,12 @@ msgid "The send on user setup completed setting should be a boolean."
 msgstr "Nustatymas „Siųsti, kai naudotojo sąranka baigta“ turėtų būti loginis."
 
 msgid "The send on user recover abort setting should be a boolean."
+msgstr ""
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr ""
+
+msgid "The send on admin disabled setting should be a boolean."
 msgstr ""
 
 msgid "The send on comment added setting should be a boolean."
@@ -1363,8 +1378,8 @@ msgstr "Nepavyko atnaujinti autentifikavimo prieigos rakto duomenų."
 msgid "The key provided does not belong to given user."
 msgstr "Pateiktas raktas nepriklauso nurodytam vartotojui."
 
-msgid "The user does not exist or is not active."
-msgstr "Vartotojo nėra arba jis nėra aktyvus."
+msgid "The user does not exist or is not active or is disabled."
+msgstr ""
 
 msgid "The OpenPGP key data is not valid."
 msgstr "OpenPGP rakto duomenys neteisingi."
@@ -1375,8 +1390,8 @@ msgstr "OpenPGP raktas negali būti naudojamas šifravimui."
 msgid "The user does not exist, is already active or has been deleted."
 msgstr "Vartotojo nėra, jis jau yra aktyvus arba buvo ištrintas."
 
-msgid "The user does not exist or is already active."
-msgstr "Vartotojo nėra arba jis jau aktyvus."
+msgid "The user does not exist or is already active or is disabled."
+msgstr ""
 
 msgid "The user should not be a guest."
 msgstr "Vartotojas neturėtų būti svečias."
@@ -1395,6 +1410,9 @@ msgstr "Šio vartotojo nėra arba jis buvo ištrintas."
 
 msgid "Please register and complete the setup first."
 msgstr "Pirmiausia užsiregistruokite ir užbaikite sąranką."
+
+msgid "This user has been disabled."
+msgstr ""
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Nepavyko patvirtinti naudotojo {0}. {1}"
@@ -1780,8 +1798,8 @@ msgstr "Autentifikavimo saugos įspėjimas"
 msgid "No active refresh token matching the request could be found."
 msgstr "Nerasta aktyvaus atnaujinimo prieigos rakto, atitinkančio užklausą."
 
-msgid "The user is deactivated."
-msgstr "Vartotojas išjungtas."
+msgid "The user is not activated or disabled."
+msgstr ""
 
 msgid "The user is deleted."
 msgstr "Vartotojas ištrintas."
@@ -2470,8 +2488,131 @@ msgstr "Jei neprašėte šio veiksmo, susisiekite su administratoriumi."
 msgid "Log in passbolt"
 msgstr "Prisijungti \"Passbolt\""
 
-msgid "The password generator value \"{0}\" is not valid."
-msgstr "Slaptažodžio generatoriaus reikšmė „{0}“ neteisinga."
+msgid "Could not retrieve the password policies."
+msgstr ""
+
+msgid "The default generator is required."
+msgstr ""
+
+msgid "The default generator should be one of the following: {0}."
+msgstr ""
+
+msgid "The external dictionary check is required."
+msgstr ""
+
+msgid "The external dictionary check should be a boolean."
+msgstr ""
+
+msgid "The password generator settings is required."
+msgstr ""
+
+msgid "The password generator settings should not be empty."
+msgstr ""
+
+msgid "The password generator settings should have at least one mask selected."
+msgstr ""
+
+msgid "The passphrase generator settings is required."
+msgstr ""
+
+msgid "The passphrase generator settings should not be empty."
+msgstr ""
+
+msgid "Could not validate the password policies settings."
+msgstr ""
+
+msgid "The passphrase generator words is required."
+msgstr ""
+
+msgid "The passphrase generator words should be between {0} and {1}."
+msgstr ""
+
+msgid "The passphrase generator word separator is required."
+msgstr ""
+
+msgid "The passphrase generator word separator should be a valid UTF8 string."
+msgstr ""
+
+msgid "The passphrase generator word separator should be maximum {0} characters."
+msgstr ""
+
+msgid "The passphrase generator word case is required."
+msgstr ""
+
+msgid "The passphrase generator word case should be one of the following: {0}."
+msgstr ""
+
+msgid "The password generator length should be between {0} and {1}."
+msgstr ""
+
+msgid "The password generator length is required."
+msgstr ""
+
+msgid "The password generator mask upper is required."
+msgstr ""
+
+msgid "The password generator mask upper should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask lower is required."
+msgstr ""
+
+msgid "The password generator mask lower should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask digit is required."
+msgstr ""
+
+msgid "The password generator mask digit should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask parenthesis is required."
+msgstr ""
+
+msgid "The password generator mask parenthesis should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask emoji is required."
+msgstr ""
+
+msgid "The password generator mask emoji should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char1 is required."
+msgstr ""
+
+msgid "The password generator mask char1 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char2 is required."
+msgstr ""
+
+msgid "The password generator mask char2 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char3 is required."
+msgstr ""
+
+msgid "The password generator mask char3 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char4 is required."
+msgstr ""
+
+msgid "The password generator mask char4 should be a boolean type."
+msgstr ""
+
+msgid "The password generator mask char5 is required."
+msgstr ""
+
+msgid "The password generator mask char5 should be a boolean type."
+msgstr ""
+
+msgid "The password generator exclude look alike chars is required."
+msgstr ""
+
+msgid "The password generator exclude look alike chars should be a boolean type."
+msgstr ""
 
 msgid "Record not found"
 msgstr ""
@@ -2773,6 +2914,12 @@ msgstr "Slaptažodis turi būti tinkama BMP-UTF8 eilutė."
 msgid "The test email should be a valid email address."
 msgstr "Bandomasis el. pašto adresas turi būti galiojantis el. paštas."
 
+msgid "The authentication method is required."
+msgstr ""
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr ""
+
 msgid "The sender email should be a valid email address."
 msgstr "Siuntėjo el. paštas turi būti galiojantis el.pašto adresas."
 
@@ -2860,6 +3007,15 @@ msgstr "Instaliacija"
 msgid "That's it!"
 msgstr "Viskas!"
 
+msgid "A driver name is required."
+msgstr ""
+
+msgid "The driver name should not be empty."
+msgstr ""
+
+msgid "The database driver should be one of the following: {0}."
+msgstr ""
+
 msgid "The password should not contain quotes."
 msgstr "Slaptažodyje neturi būti kabučių."
 
@@ -2874,6 +3030,12 @@ msgstr "Duomenų bazės pavadinimas turi būti tinkama BMP-UTF8 eilutė."
 
 msgid "The database name should not contain dashes."
 msgstr "Duomenų bazės pavadinime neturėtų būti brūkšnelių."
+
+msgid "The schema is required on PostgreSQL"
+msgstr ""
+
+msgid "The schema should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "An OpenPGP public key is required."
 msgstr "Reikalingas OpenPGP viešasis raktas."
@@ -3031,6 +3193,12 @@ msgstr "duomenų bazės pavadinimas"
 msgid "Database name"
 msgstr "Duomenų bazės pavadinimas"
 
+msgid "schema"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Enter your SMTP server settings."
 msgstr "Įveskite SMTP serverio nustatymus."
 
@@ -3063,6 +3231,9 @@ msgstr "praėjimas"
 
 msgid "Port"
 msgstr "Praėjimas"
+
+msgid "Authentication method"
+msgstr "Autentifikavimo metodas"
 
 msgid "client"
 msgstr ""
@@ -3253,18 +3424,6 @@ msgstr "Kodėl man reikia SMTP serverio?"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "„Passbolt“ reikalingas smtp serveris, kad sukūrus paskyrą būtų išsiųsti kvietimai ir el. pašto pranešimai."
 
-msgid "Invalid directory type for domain: {0}"
-msgstr ""
-
-msgid "Directory type could not be found for domain: {0}"
-msgstr ""
-
-msgid "The directory type should be one of the following: {0}."
-msgstr "Katalogo tipas turėtų būti vienas iš šių: {0}."
-
-msgid "LDAP Object class could not be found: {0}"
-msgstr ""
-
 msgid "The requested address was not found on this server."
 msgstr "Prašomas adresas šiame serveryje nerastas."
 
@@ -3316,6 +3475,21 @@ msgstr "Pradžia"
 msgid "login"
 msgstr "Prisijungti"
 
+msgid "Account suspended"
+msgstr ""
+
+msgid "Your account has been suspended."
+msgstr ""
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr ""
+
+msgid "Contact your admin"
+msgstr ""
+
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""
 
@@ -3332,6 +3506,21 @@ msgid "Unfortunately, they will need your help to delete their account and resta
 msgstr ""
 
 msgid "Please check with them first to confirm."
+msgstr ""
+
+msgid "User suspended"
+msgstr ""
+
+msgid "The user {0} has been suspended."
+msgstr ""
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can share resources and add this user to a group."
+msgstr ""
+
+msgid "Check user suspension"
 msgstr ""
 
 msgid "Welcome to {0}!"
