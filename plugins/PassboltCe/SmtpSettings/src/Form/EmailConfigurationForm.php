@@ -25,6 +25,12 @@ use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 
 class EmailConfigurationForm extends Form
 {
+    public const ALLOWED_AUTH_METHODS = [
+        'username_and_password',
+        'username_only',
+        'none',
+    ];
+
     /**
      * Email configuration schema.
      *
@@ -107,6 +113,24 @@ class EmailConfigurationForm extends Form
     }
 
     /**
+     * @param \Cake\Validation\Validator $validator The validator class object.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationWebInstaller(Validator $validator): Validator
+    {
+        $this->validationDefault($validator);
+
+        $validator
+            ->requirePresence('authentication_method', true, __('The authentication method is required.'))
+            ->inList('authentication_method', self::ALLOWED_AUTH_METHODS, __(
+                'The authentication method should be one of the following: {0}.',
+                implode(', ', self::ALLOWED_AUTH_METHODS)
+            ));
+
+        return $validator;
+    }
+
+    /**
      * - Default validation rules
      * - Sender email should be a valid email
      *
@@ -154,6 +178,7 @@ class EmailConfigurationForm extends Form
     {
         $data = $this->mapTlsToTrueOrNull($data);
         $data = $this->setClient($data);
+        $data = $this->filterUsernameAndPassword($data);
 
         return parent::execute($data, $options);
     }
@@ -187,6 +212,26 @@ class EmailConfigurationForm extends Form
     {
         if (!isset($data['client']) || empty($data['client'])) {
             $data['client'] = null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param array $data The data to filter.
+     * @return array
+     */
+    private function filterUsernameAndPassword(array $data): array
+    {
+        if (!isset($data['authentication_method'])) {
+            return $data;
+        }
+
+        if ($data['authentication_method'] === 'none') {
+            $data['username'] = $data['username'] === '' ? null : $data['username'];
+            $data['password'] = $data['password'] === '' ? null : $data['password'];
+        } elseif ($data['authentication_method'] === 'username_only') {
+            $data['password'] = $data['password'] === '' ? null : $data['password'];
         }
 
         return $data;

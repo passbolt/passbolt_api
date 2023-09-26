@@ -12,21 +12,18 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.3.0
+ * @since         4.3.0
  */
 
-namespace App\Test\TestCase\Model\Table\AuthenticationTokens;
+namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
-use App\Test\Lib\AppTestCase;
 use Cake\I18n\FrozenDate;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\TestSuite\TestCase;
 
-/**
- * IsExpiredTest Class
- */
-class IsExpiredTest extends AppTestCase
+class AuthenticationTokenIsExpiredTest extends TestCase
 {
     use LocatorAwareTrait;
 
@@ -44,25 +41,25 @@ class IsExpiredTest extends AppTestCase
     public function expiryData(): array
     {
         return [
-            [null, false],
-            ['', false],
-            ['1 hour', true],
-            ['1 week', false],
+            [AuthenticationToken::TYPE_REFRESH_TOKEN, false], // month
+            [AuthenticationToken::TYPE_RECOVER, false], // days
+            [AuthenticationToken::TYPE_VERIFY_TOKEN, true], // hour
+            [AuthenticationToken::TYPE_LOGIN, true], // minutes
         ];
     }
 
     /**
      * @dataProvider expiryData
      */
-    public function testAuthenticationTokensIsExpired($expiry, bool $isExpired)
+    public function testAuthenticationTokens_Created_Yesterday($type, bool $isExpired)
     {
-        /** @var AuthenticationToken $token */
+        /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = AuthenticationTokenFactory::make()
-            ->type(AuthenticationToken::TYPE_REGISTER)
+            ->type($type)
             ->created(FrozenDate::yesterday())
             ->getEntity();
 
-        $result = $this->AuthenticationTokens->isExpired($token, $expiry);
+        $result = $this->AuthenticationTokens->isExpired($token);
         $this->assertSame($isExpired, $result);
     }
 }

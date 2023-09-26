@@ -1,56 +1,48 @@
-Release song: https://youtu.be/fregObNcHC8
+Release song: https://youtu.be/s88r_q7oufE
 
-Passbolt’s latest release, Pro version 4.2, introduces some new functionalities and fixes.
+The latest version of Pro is here – take a look at what’s new in 4.3.
 
-One of the highlights of this release is the first brick of grid  modernization. With it, you’re in control of what’s shown on the password grid. You can decide which columns you want to see, as well as their position and size. This first version is part of a larger improvement project. The aim is to make customization of the grid available and persistent with the next v4.3.0 release, and to later introduce new columns such as OTP, Icon & Tag.
+One enhancement is improved portability of TOTP (Time Based One Time Password). TOTP can now be conveniently viewed across both the web and mobile applications. Although the creation of TOTP remains mobile-centric, version 4.3 provides convenient access to reading and retrieving TOTP content in the browser, resulting in greater usability.
 
-Another new feature is Password Policies, which allows administrators to control a range of password-related settings. They can set defaults for generated passwords to ensure they meet their organisation’s requirements. They can also specify whether passwords can be verified against compromised databases.
+Improvements have also been made to grid customisation. Any changes made to the grid are now persistent, meaning your tailored experience is saved from session to session. And to make the new TOTP portability even more accessible, an option has been added to display a column for your TOTP content.
 
-Additionally, users will be pleased to see the new resource count chips displayed in the breadcrumb, providing an intuitive way to keep track of filtered resources.
+Admins can now manage passphrase policies alongside their password policies. These policies include: setting minimal entropy, managing access to external tools for monitoring if a passphrase has been compromised, and choosing to enforce policies for existing users.
 
-Administrators are not left behind with this release as a few bugs with the command line healthcheck have been fixed and the feature is being prepared to be available in the UI soon.
+Other updates include improvements to SQL query performance (retrieving resource tags and system tags), restricting LDAP-related settings, some bug fixes, and a number of performance improvements.
 
-Thank you for choosing passbolt, these improvements wouldn’t be possible without your continued support.
+Thank you for choosing passbolt and for your continued support.
 
-## [4.2.0] - 2023-08-24
+
+## [4.3.0] - 2023-09-26
 ### Added
-- PB-24987 As an administrator I can define the password policies from the administration UI
-- PB-25462 As an administrator I can deactivate RBACs with a feature flag
-- PB-25036 As an administrator I can select PostgreSQL as database driver on installation
-- PB-21403 As an administrator I can purge the email queue table from the command line
+- PB-26092 As an administrator I can configure policy for user passphrase
+- PB-25405 As an administrator installing passbolt through the web installer, I should be able to configure authentication method for SMTP
+- PB-25977 As an administrator I can truncate all account recovery tables, dropping all user and organisation settings
+- PB-25185 As a signed-in user on the browser extension, I want to export my account to configure the Windows application
+- PB-25685 As an administrator I can lock the set LDAP settings endpoint
+- PB-25944 As an administrator I can define the schema on installation with Postgres
+- PB-25497 As an administrator I can disable users (experimental)
 
 ### Improved
-- PB-24990 Performance optimisation of the cleanup command responsible to delete secrets without permissions
-- PB-25263 Performance optimisation of the entry point retrieving the folders activity logs
-- PB-25264 Performance optimisation of all the SQL queries retrieving user profiles
-- PB-25199 Lower case UUIDs given as requests parameters before marshalling and persisting data
-- PB-25389 As an administrator healthcheck/status.json requests should not be logged in the action_logs table
-- PB-25734 As a user I do not want the first letters of my first and last names upper-cased when my profile is saved
+- PB-25709 Performance optimisation of all the SQL queries retrieving resources tags
+- PB-25973 Performance optimisation of the SQL query retrieving tags
+- PB-24916 Adjust SSO Azure error to return 400 instead of 500 when testing configuration
+- PB-25999 Performance optimisation of update secret process
+- PB-26097 Adds cake.po translation files for all languages supported by CakePHP
 
 ### Security
-- PB-25181 CSRF cookie should have secure flag set when site is served under HTTPs
-- PB-25798 Fixes laminas/laminas-diactoros vulnerability by using the longwave/laminas-diactoros package
+- PB-25827 As a user with encrypted message enabled in the email content visibility, I would like to see the gpg message encrypted with my key when a password is updated
 
 ### Fixed
-- PB-24931 As a user when I rename a tag with the same name, the tag should not be deleted
-- PB-25019 As an administrator I can define LDAP filters case sensitivity
-- PB-24986 As a user decrypting the SSO organisation settings I should not get a 500 error when the key could not be found in the keyring
-- PB-25859 As an administrator notified of an account recovery I should see the first and last name of the acting user in the email
-- PB-25472 As a user I can use an SMTP server using NTLM authentication
-- PB-25475 As an administrator running the healthcheck, I should be warned for self-signed and wildcard certs instead of having a failure
-- PB-25720 As an administrator I should not see a false error in the healthcheck when reading the App.base config
-- PB-25800 As an administrator I should be able to migrate from v3 my default LDAP settings
+- PB-25802 As a user I want to see localized date in my emails
+- PB-25500 Fix wording in SSO enabled email
+- PB-25863 Fix emails not sent due to message-id header missing
+- PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
 
 ### Maintenance
-- PB-21412 Upgrade phpstan to v1.10.15
-- PB-21413 Upgrade psalm version to v5.12.0
-- PB-21414 Upgrade cakephp codesniffer to v4.7
-- PB-21672 Bump lorenzo/cakephp-email-queue package to 5.1
-- PB-21917 Bump bcrowe/cakephp-api-pagination to v3.0.0
-- PB-21918 Bump spomky-labs/otphp to v10.0.3
-- PB-21919 Update enygma/yubikey package
-- PB-22052 Passbolt test data version bump to v4.1.0
-- PB-25379 Update vierge-noire/cakephp-fixture-factories package
-- PB-24575 As a developer release notes should be automatically published on Github on new tag release
-- PB-25471 As a developer Crowdin should export only a selected subset of languages
-- PB-25801 As a developer I can create unpublished test packages
+- PB-25709 Remove unused resources tags indexes
+- PB-25894 Run CI on postgres versions 13 and 15 instead of version 12 only
+- PB-25969 As a developer, I can render emails in tests with html special chars
+- PB-26107 Upgrade the cakephp/chronos library
+- PB-26159 Update singpolyma/openpgp-php to improve compatibility with PHP 8.2
+- PB-25247 Add integration tests on the MFA select provider endpoint

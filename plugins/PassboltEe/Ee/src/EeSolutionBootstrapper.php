@@ -93,5 +93,6 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
         $this->addFeaturePluginIfEnabled($app, 'SsoRecover');
         $this->addFeaturePluginIfEnabled($app, 'PasswordPolicies');
         $this->addFeaturePluginIfEnabled($app, 'PasswordPoliciesUpdate');
+        $this->addFeaturePluginIfEnabled($app, 'UserPassphrasePolicies');
     }
 }

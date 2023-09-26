@@ -31,7 +31,7 @@ class UserDeactivatedException extends BadRequestException
     public function __construct(?string $message = null, ?int $code = null, ?Throwable $previous = null)
     {
         if (empty($message)) {
-            $message = __('The user is deactivated.');
+            $message = __('The user is not activated or disabled.');
         }
         parent::__construct($message, $code, $previous);
     }

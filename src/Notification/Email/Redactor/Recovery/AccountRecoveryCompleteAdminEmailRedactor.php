@@ -67,7 +67,9 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->find('locale')
+            ->find('notDisabled')
             ->where(['Users.id !=' => $user->id]);
+
         foreach ($admins as $admin) {
             $emailCollection->addEmail($this->createAccountRecoveryAdminEmail($admin, $user, $clientIp, $userAgent));
         }
@@ -98,6 +100,6 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
 
         $data = ['body' => compact('admin', 'user', 'clientIp', 'userAgent'), 'title' => $subject];
 
-        return new Email($admin->username, $subject, $data, self::TEMPLATE);
+        return new Email($admin, $subject, $data, self::TEMPLATE);
     }
 }

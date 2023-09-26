@@ -75,6 +75,6 @@ class AccountRecoveryOrganizationPolicyEnableEmailRedactor extends AbstractAccou
             'fingerprint' => $policy->account_recovery_organization_public_key->fingerprint,
         ], 'title' => $subject,];
 
-        return new Email($admin->username, $subject, $data, self::EMAIL_TEMPLATE);
+        return new Email($admin, $subject, $data, self::EMAIL_TEMPLATE);
     }
 }

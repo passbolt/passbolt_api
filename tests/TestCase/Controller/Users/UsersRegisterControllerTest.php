@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Controller\Users\UsersRecoverController;
 use App\Model\Entity\Role;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
@@ -154,7 +155,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEquals($user->role_id, $userRoleId);
-        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertTrue($user->created->greaterThan(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersRegisterController_Error_FailValidation(): void
@@ -238,8 +239,10 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     public function testUsersRegisterController_Error_PreventUserEnumeration(): void
     {
         Configure::write(UsersRecoverController::PREVENT_EMAIL_ENUMERATION_CONFIG_KEY, true);
+
+        $deleted = UserFactory::make()->user()->deleted()->persist();
         $data = [
-            'username' => 'aurore@passbolt.com',
+            'username' => $deleted->username,
             'profile' => [
                 'first_name' => 'Aurore',
                 'last_name' => 'Avarguès-Weber',

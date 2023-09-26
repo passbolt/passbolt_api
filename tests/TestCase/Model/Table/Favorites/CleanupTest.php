@@ -121,7 +121,7 @@ class CleanupTest extends AppTestCase
         FavoriteFactory::make($duplicateFavoriteMeta)->persist();
 
         // Duplicate favorite to keep as it is the oldest.
-        $duplicateFavoriteToKeep = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['modified' => FrozenTime::now()->subDay()])->persist();
+        $duplicateFavoriteToKeep = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['modified' => FrozenTime::now()->subDays(1)])->persist();
 
         // Witness favorites to not cleanup:
         // - A favorite including a user involved in the cleanup

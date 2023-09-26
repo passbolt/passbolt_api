@@ -63,7 +63,8 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
         $admins = $UsersTable
             ->findAdmins()
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
-            ->find('locale');
+            ->find('locale')
+            ->find('notDisabled');
 
         foreach ($admins as $recipient) {
             $email = $this->createEmailForAdminSelfRegister($recipient, $user);
@@ -102,7 +103,7 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
         $user = $UsersTable->findFirstForEmail($user->id);
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $this->getSubject($recipient, $user),
             [
                 'body' => compact('user', 'recipient'),

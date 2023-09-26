@@ -81,6 +81,7 @@ class SsoSettingsActiveDeletedEmailRedactor implements SubscribedEmailRedactorIn
         // Get all the other active admins to notify them
         $admins = $usersTable
             ->findAdmins()
+            ->find('notDisabled')
             ->find('locale')
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
             ->toArray();
@@ -120,7 +121,7 @@ class SsoSettingsActiveDeletedEmailRedactor implements SubscribedEmailRedactorIn
         );
 
         return new Email(
-            $recipient->username,
+            $recipient,
             $subject,
             [
                 'body' => [

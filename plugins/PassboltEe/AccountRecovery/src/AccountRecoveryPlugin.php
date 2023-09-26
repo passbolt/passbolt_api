@@ -17,9 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery;
 
 use App\Service\Setup\RecoverCompleteServiceInterface;
-use App\Service\Setup\RecoverStartServiceInterface;
 use App\Service\Setup\SetupCompleteServiceInterface;
-use App\Service\Setup\SetupStartServiceInterface;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
@@ -31,9 +29,9 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Notification\AccountRecoveryEmailRedactorPool;
 use Passbolt\AccountRecovery\Notification\AccountRecoveryNotificationSettingsDefinition;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverCompleteService;
-use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverStartService;
 use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupCompleteService;
-use Passbolt\AccountRecovery\Service\Setup\AccountRecoverySetupStartService;
+use Passbolt\AccountRecovery\Service\Setup\RecoverStartAccountRecoveryInfoService;
+use Passbolt\AccountRecovery\Service\Setup\SetupStartAccountRecoveryInfoService;
 use Passbolt\AccountRecovery\ServiceProvider\AccountRecoveryOrganizationPolicyServiceProvider;
 
 class AccountRecoveryPlugin extends BasePlugin
@@ -54,15 +52,11 @@ class AccountRecoveryPlugin extends BasePlugin
     public function services(ContainerInterface $container): void
     {
         $container->addServiceProvider(new AccountRecoveryOrganizationPolicyServiceProvider());
-        $container
-            ->extend(RecoverStartServiceInterface::class)
-            ->setConcrete(AccountRecoveryRecoverStartService::class);
+        $container->add(SetupStartAccountRecoveryInfoService::class);
+        $container->add(RecoverStartAccountRecoveryInfoService::class);
         $container
             ->extend(RecoverCompleteServiceInterface::class)
             ->setConcrete(AccountRecoveryRecoverCompleteService::class);
-        $container
-            ->extend(SetupStartServiceInterface::class)
-            ->setConcrete(AccountRecoverySetupStartService::class);
         $container
             ->extend(SetupCompleteServiceInterface::class)
             ->setConcrete(AccountRecoverySetupCompleteService::class);

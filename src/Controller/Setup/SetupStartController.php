@@ -18,7 +18,7 @@ namespace App\Controller\Setup;
 
 use App\Controller\AppController;
 use App\Model\Entity\Role;
-use App\Service\Setup\SetupStartServiceInterface;
+use App\Service\Setup\AbstractSetupStartService;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
@@ -42,14 +42,14 @@ class SetupStartController extends AppController
     /**
      * Setup start
      *
-     * @param \App\Service\Setup\SetupStartServiceInterface $infoService info service
+     * @param \App\Service\Setup\AbstractSetupStartService $infoService info service
      * @param string $userId uuid of the user
      * @param string $token uuid of the token
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the token is missing or not a uuid
      * @throws \Cake\Http\Exception\BadRequestException if the user id is missing or not a uuid
      */
-    public function start(SetupStartServiceInterface $infoService, string $userId, string $token): void
+    public function start(AbstractSetupStartService $infoService, string $userId, string $token): void
     {
         if ($this->request->is('json')) {
             // Do not allow logged in user to start setup
@@ -60,7 +60,11 @@ class SetupStartController extends AppController
             $this->success(__('The operation was successful.'), $data);
         } else {
             $this->set('title', Configure::read('passbolt.meta.description'));
-            $infoService->setTemplate($this->viewBuilder());
+
+            $this->viewBuilder()
+                ->setTemplatePath('/Setup')
+                ->setLayout('default')
+                ->setTemplate('start');
         }
     }
 }

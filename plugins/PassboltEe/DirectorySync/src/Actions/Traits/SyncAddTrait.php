@@ -45,7 +45,7 @@ trait SyncAddTrait
         // Do not overly report already successfully synced entities
         if (isset($entry) && !isset($entry->foreign_key)) {
             // If entity in directory was created before the entity in the db, we update the field and send report.
-            if ($data['directory_created']->lte($existingEntity->get('created'))) {
+            if ($data['directory_created']->lessthanOrEquals($existingEntity->get('created'))) {
                 $this->DirectoryEntries->updateForeignKey($entry, $existingEntity->id);
                 $this->addReportItem(new ActionReport(
                     __(
@@ -206,7 +206,7 @@ trait SyncAddTrait
         // do not try to recreate
         $status = Alias::STATUS_ERROR;
         $entity = null;
-        if ($data['directory_created']->lt($existingEntity->get('modified'))) {
+        if ($data['directory_created']->lessThan($existingEntity->get('modified'))) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
             $reportData = new SyncError($entry, null);
             $msg = __(

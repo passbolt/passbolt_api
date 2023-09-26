@@ -33,6 +33,9 @@ use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryResponseFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryIntegrationTestCase;
 
+/**
+ * @covers \Passbolt\AccountRecovery\Controller\AccountRecoveryContinue\AccountRecoveryContinueController
+ */
 class AccountRecoveryContinueControllerTest extends AccountRecoveryIntegrationTestCase
 {
     public function testAccountRecoveryContinueController_Page_ErrorTokenId()
@@ -141,6 +144,8 @@ class AccountRecoveryContinueControllerTest extends AccountRecoveryIntegrationTe
             ->persist();
 
         $this->getJson('/account-recovery/continue/' . $user->id . '/' . $token->token . '.json');
+
         $this->assertResponseCode(200);
+        $this->assertNull($this->getResponseBodyAsArray());
     }
 }

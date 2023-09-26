@@ -18,6 +18,8 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Model\Entity\Role;
 use App\Test\Factory\AuthenticationTokenFactory;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
@@ -29,14 +31,13 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
-        'app.Base/Profiles',
-    ];
-
     public function testUsersAddController_Success(): void
     {
-        $this->authenticateAs('admin');
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->user()->persist();
+        $admin = UserFactory::make()->admin()->persist();
+
+        $this->logInAs($admin);
         $roles = TableRegistry::getTableLocator()->get('Roles');
         $adminRoleId = $roles->getIdByName(Role::ADMIN);
         $userRoleId = $roles->getIdByName(Role::USER);
@@ -95,7 +96,11 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 
     public function testUsersAddController_Success_CannotModifyNotAccessibleFields(): void
     {
-        $this->authenticateAs('admin');
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->user()->persist();
+        $admin = UserFactory::make()->admin()->persist();
+
+        $this->logInAs($admin);
         $date = '1983-04-01 23:34:45';
         $userId = UuidFactory::uuid('user.id.aurore');
 
@@ -103,6 +108,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             'id' => $userId,
             'active' => 1,
             'deleted' => 1,
+            'disabled' => FrozenTime::now(),
             'created' => $date,
             'modified' => $date,
             'username' => 'aurore@passbolt.com',
@@ -121,12 +127,17 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($user->id, $userId);
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
-        $this->assertTrue($user->created->gt(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertEmpty($user->disabled);
+        $this->assertTrue($user->created->greaterThan(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersAddController_Success_EmailSent(): void
     {
-        $this->authenticateAs('admin');
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->user()->persist();
+        $admin = UserFactory::make()->admin()->persist();
+
+        $this->logInAs($admin);
         $data = [
             'username' => 'aurore@passbolt.com',
             'profile' => [
@@ -146,6 +157,9 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 
     public function testUsersAddController_Error_NotLoggedIn(): void
     {
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->user()->persist();
+        UserFactory::make()->admin()->persist();
         $data = [
             'username' => 'notallowed@passbolt.com',
             'profile' => [
@@ -159,7 +173,10 @@ class UsersAddControllerTest extends AppIntegrationTestCase
 
     public function testUsersAddController_Error_NotAdmin(): void
     {
-        $this->authenticateAs('ada');
+        RoleFactory::make()->guest()->persist();
+        $user = UserFactory::make()->user()->persist();
+
+        $this->logInAs($user);
         $data = [
             'username' => 'notallowed@passbolt.com',
             'profile' => [
@@ -174,16 +191,23 @@ class UsersAddControllerTest extends AppIntegrationTestCase
     public function testUsersAddController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('admin');
+        RoleFactory::make()->guest()->persist();
+        $admin = UserFactory::make()->admin()->persist();
+
+        $this->logInAs($admin);
         $this->post('/users.json');
         $this->assertResponseCode(403);
     }
 
     public function testUsersAddController_Errror_RequestDataApiUserExist(): void
     {
-        $this->authenticateAs('admin');
+        RoleFactory::make()->guest()->persist();
+        $user = RoleFactory::make()->user()->persist();
+        $admin = UserFactory::make()->admin()->persist();
+
+        $this->logInAs($admin);
         $data = [
-            'username' => 'ada@passbolt.com',
+            'username' => $user->username,
             'profile' => [
                 'first_name' => 'ada',
                 'last_name' => 'lovelace',
@@ -198,7 +222,11 @@ class UsersAddControllerTest extends AppIntegrationTestCase
      */
     public function testUsersAddController_Error_NotJson(): void
     {
-        $this->authenticateAs('admin');
+        RoleFactory::make()->guest()->persist();
+        RoleFactory::make()->user()->persist();
+        $admin = UserFactory::make()->admin()->persist();
+
+        $this->logInAs($admin);
         $data = [
             'username' => 'ada@passbolt.com',
             'profile' => [

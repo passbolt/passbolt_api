@@ -89,7 +89,7 @@ class UserRecoverService implements UserRecoverServiceInterface
         $options = ['user' => $user];
         $options['case'] = $this->assertRecoveryCase();
 
-        if ($user->active) {
+        if ($user->isActive()) {
             $options['token'] = $this->AuthenticationTokens->generate($user->id, AuthenticationToken::TYPE_RECOVER);
             $eventName = UsersRecoverController::RECOVER_SUCCESS_EVENT_NAME;
         } else {
@@ -200,6 +200,12 @@ class UserRecoverService implements UserRecoverServiceInterface
             } else {
                 $msg .= __('Please contact your administrator.');
             }
+            throw new NotFoundException($msg);
+        }
+
+        if ($user->isDisabled()) {
+            $msg = __('This user has been disabled.') . ' ';
+            $msg .= __('Please contact your administrator.');
             throw new NotFoundException($msg);
         }
 

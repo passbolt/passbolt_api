@@ -20,12 +20,15 @@ namespace Passbolt\AccountRecovery\Test\TestCase\Service\Setup;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
-use Passbolt\AccountRecovery\Service\Setup\AccountRecoveryRecoverStartService;
+use Passbolt\AccountRecovery\Service\Setup\RecoverStartAccountRecoveryInfoService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryUserSettingFactory;
 use Passbolt\AccountRecovery\Test\Lib\AccountRecoveryTestCase;
 
-class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
+/**
+ * @covers \Passbolt\AccountRecovery\Service\Setup\RecoverStartAccountRecoveryInfoService
+ */
+class RecoverStartAccountRecoveryInfoServiceTest extends AccountRecoveryTestCase
 {
     public $service;
 
@@ -33,7 +36,7 @@ class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
     {
         parent::setUp();
 
-        $this->service = (new AccountRecoveryRecoverStartService());
+        $this->service = (new RecoverStartAccountRecoveryInfoService());
     }
 
     public function tearDown(): void
@@ -50,21 +53,24 @@ class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
     public function testAccountRecoveryRecoverStartService_GetInfo_WithAccountRecoveryPolicy()
     {
         $status = 'Foo';
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting $setting */
         $setting = AccountRecoveryUserSettingFactory::make()
             ->withUser()
             ->setField('status', $status)
             ->persist();
         $user = $setting->user;
+        /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
             ->persist();
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
         $policy = AccountRecoveryOrganizationPolicyFactory::make()
             ->withAccountRecoveryOrganizationPublicKey()
             ->persist();
 
-        $info = $this->service->getInfo($user->id, $token->token);
+        $info = $this->service->getInfo($user->id, $token->token, ['user' => $user]);
 
         $this->assertNotNull($info['user']);
         $this->assertSame(compact('status'), $info['user']['account_recovery_user_setting']);
@@ -91,18 +97,20 @@ class AccountRecoveryRecoverStartServiceTest extends AccountRecoveryTestCase
     public function testAccountRecoveryRecoverStartService_GetInfo_WithoutAccountRecoveryPolicy()
     {
         $status = 'Foo';
+        /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting $setting */
         $setting = AccountRecoveryUserSettingFactory::make()
             ->withUser()
             ->setField('status', $status)
             ->persist();
         $user = $setting->user;
+        /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
             ->persist();
 
-        $info = $this->service->getInfo($user->id, $token->token);
+        $info = $this->service->getInfo($user->id, $token->token, ['user' => $user]);
 
         $this->assertNotNull($info['user']);
         $this->assertSame(compact('status'), $info['user']['account_recovery_user_setting']);

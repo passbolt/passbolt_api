@@ -67,6 +67,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/SsoRecover',
         'Passbolt/PasswordPolicies',
         'Passbolt/PasswordPoliciesUpdate',
+        'Passbolt/UserPassphrasePolicies',
     ];
 
     public function testEeSolutionBootstrapper_Application_Bootstrap(): void

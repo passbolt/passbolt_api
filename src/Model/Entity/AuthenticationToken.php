@@ -97,8 +97,9 @@ class AuthenticationToken extends Entity
             $expiryDuration = null;
         }
         $interval = $expiryDuration ?? $this->getExpiryDuration();
+        $expirationDate = FrozenTime::now()->modify('-' . $interval);
 
-        return !$this->created->wasWithinLast($interval);
+        return $this->created->lessThan($expirationDate);
     }
 
     /**

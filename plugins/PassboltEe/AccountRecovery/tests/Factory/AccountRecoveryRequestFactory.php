@@ -57,7 +57,7 @@ class AccountRecoveryRequestFactory extends CakephpBaseFactory
     protected function setDefaultTemplate(): void
     {
         $this->setDefaultData(function (Generator $faker) {
-            $date = Chronos::today()->subDay($faker->randomNumber(5));
+            $date = Chronos::today()->subDays($faker->randomNumber(5));
 
             return [
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING,

@@ -52,7 +52,7 @@ class SsoKeysGetController extends AbstractSsoController
         $this->User->assertNotLoggedIn();
 
         try {
-            $user = (new UserGetService())->getActiveNotDeletedOrFail($userId);
+            $user = (new UserGetService())->getActiveNotDeletedNotDisabledOrFail($userId);
             $uac = new ExtendedUserAccessControl(
                 Role::GUEST,
                 $userId,

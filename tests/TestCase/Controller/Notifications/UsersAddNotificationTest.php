@@ -16,10 +16,10 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Notifications;
 
-use App\Model\Entity\Role;
+use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class UsersAddNotificationTest extends AppIntegrationTestCase
@@ -27,41 +27,41 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
 
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/GroupsUsers', 'app.Base/Roles',
-        'app.Base/Profiles',
-    ];
-
-    public function testUserAddNotificationDisabled(): void
+    public function testUserAddNotification_NotificationDisabled(): void
     {
         $this->setEmailNotificationSetting('send.user.create', false);
-        $username = 'new@passbolt.com';
 
-        $this->authenticateAs('admin');
-        $roles = TableRegistry::getTableLocator()->get('Roles');
+        RoleFactory::make()->guest()->persist();
+        $role = RoleFactory::make()->user()->persist();
+        $admin = UserFactory::make()->admin()->active()->persist();
+
+        $this->logInAs($admin);
         $this->postJson('/users.json', [
-                'username' => $username,
-                'role_id' => $roles->getIdByName(Role::ADMIN),
-                'profile' => [
-                    'first_name' => 'new',
-                    'last_name' => 'user',
-                ],
-            ]);
+            'username' => 'new.user@passbolt.com',
+            'role_id' => $role->id,
+            'profile' => [
+                'first_name' => 'new',
+                'last_name' => 'user',
+            ],
+        ]);
         $this->assertResponseSuccess();
 
         // check email notification
-        $this->assertEmailWithRecipientIsInNotQueue($username);
+        $this->assertEmailQueueIsEmpty();
     }
 
-    public function testUserAddNotificationSuccess(): void
+    public function testUserAddNotification_NotificationEnabled(): void
     {
         $this->setEmailNotificationSetting('send.user.create', true);
 
-        $this->authenticateAs('admin');
-        $roles = TableRegistry::getTableLocator()->get('Roles');
+        RoleFactory::make()->guest()->persist();
+        $role = RoleFactory::make()->user()->persist();
+        $admin = UserFactory::make()->admin()->active()->persist();
+
+        $this->logInAs($admin);
         $this->postJson('/users.json', [
             'username' => 'new.user@passbolt.com',
-            'role_id' => $roles->getIdByName(Role::ADMIN),
+            'role_id' => $role->id,
             'profile' => [
                 'first_name' => 'new',
                 'last_name' => 'user',

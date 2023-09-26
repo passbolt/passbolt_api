@@ -23,6 +23,9 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
+/**
+ * @covers \App\Controller\Setup\RecoverStartController
+ */
 class RecoverStartControllerTest extends AppIntegrationTestCase
 {
     public function testRecoverStartController_Success(): void
@@ -100,7 +103,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $url = "/setup/recover/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('The user does not exist or is not active.');
+        $this->assertResponseContains('The user does not exist or is not active or is disabled.');
     }
 
     public function testRecoverStartController_Error_UserNotExist(): void
@@ -110,7 +113,7 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $url = "/setup/recover/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('The user does not exist or is not active.');
+        $this->assertResponseContains('The user does not exist or is not active or is disabled.');
     }
 
     public function testRecoverStartController_Error_UserDeleted(): void
@@ -120,7 +123,17 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $url = "/setup/recover/start/{$userId}/{$token}.json";
         $this->getJson($url);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('The user does not exist or is not active.');
+        $this->assertResponseContains('The user does not exist or is not active or is disabled.');
+    }
+
+    public function testRecoverStartController_Error_UserDisabled(): void
+    {
+        $userId = UserFactory::make()->active()->disabled()->persist()->id;
+        $token = UuidFactory::uuid();
+        $url = "/setup/recover/start/{$userId}/{$token}.json";
+        $this->getJson($url);
+        $this->assertResponseCode(400);
+        $this->assertResponseContains('The user does not exist or is not active or is disabled.');
     }
 
     public function testRecoverStartController_Error_TokenDoesntExist(): void

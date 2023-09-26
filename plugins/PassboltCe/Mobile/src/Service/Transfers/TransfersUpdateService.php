@@ -174,7 +174,7 @@ class TransfersUpdateService
         if ($transfer->authentication_token->active !== true) {
             throw new ForbiddenException(__('The authentication token is not active.'));
         }
-        if ($this->AuthenticationTokens->isExpired($transfer->authentication_token)) {
+        if ($transfer->authentication_token->isExpired()) {
             throw new ForbiddenException(__('The authentication token is expired.'));
         }
     }

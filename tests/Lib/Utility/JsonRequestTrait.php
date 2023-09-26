@@ -137,7 +137,7 @@ trait JsonRequestTrait
         $this->_responseJsonPagination = $this->_responseJson->header->pagination ?? null;
     }
 
-    public function getResponseBodyAsArray(): array
+    public function getResponseBodyAsArray(): ?array
     {
         return json_decode(json_encode($this->_responseJsonBody), true);
     }

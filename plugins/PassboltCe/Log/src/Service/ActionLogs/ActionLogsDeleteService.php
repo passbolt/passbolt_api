@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Log\Service\ActionLogs;
 
 use App\Utility\UserAction;
-use Cake\Chronos\Date;
+use Cake\Chronos\ChronosDate;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
@@ -35,10 +35,10 @@ class ActionLogsDeleteService
 
     /**
      * @param string $actionName Action name (no UUID) which logs will be deleted.
-     * @param ?\Cake\Chronos\Date $cutOffDate Delete entries strictly older than this date. Delete all if null
+     * @param ?\Cake\Chronos\ChronosDate $cutOffDate Delete entries strictly older than this date. Delete all if null
      * @return void
      */
-    public function delete(string $actionName, ?Date $cutOffDate = null): void
+    public function delete(string $actionName, ?ChronosDate $cutOffDate = null): void
     {
         $this->validateActionName($actionName);
         $conditions = [
