@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2023-08-22 13:08+0200\n"
+"POT-Creation-Date: 2023-09-19 15:36+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -914,6 +914,9 @@ msgstr ""
 msgid "A role identifier is required."
 msgstr ""
 
+msgid "The disabled date should be a valid date."
+msgstr ""
+
 msgid "The profile should not be empty."
 msgstr ""
 
@@ -1019,7 +1022,13 @@ msgstr ""
 msgid "{0} shared the password {1}"
 msgstr ""
 
+msgid "Your account has been suspended"
+msgstr ""
+
 msgid "{0} deleted user {1}"
+msgstr ""
+
+msgid "{0} has been suspended"
 msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
@@ -1071,6 +1080,12 @@ msgid "The send on user setup completed setting should be a boolean."
 msgstr ""
 
 msgid "The send on user recover abort setting should be a boolean."
+msgstr ""
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr ""
+
+msgid "The send on admin disabled setting should be a boolean."
 msgstr ""
 
 msgid "The send on comment added setting should be a boolean."
@@ -1361,7 +1376,7 @@ msgstr ""
 msgid "The key provided does not belong to given user."
 msgstr ""
 
-msgid "The user does not exist or is not active."
+msgid "The user does not exist or is not active or is disabled."
 msgstr ""
 
 msgid "The OpenPGP key data is not valid."
@@ -1373,7 +1388,7 @@ msgstr ""
 msgid "The user does not exist, is already active or has been deleted."
 msgstr ""
 
-msgid "The user does not exist or is already active."
+msgid "The user does not exist or is already active or is disabled."
 msgstr ""
 
 msgid "The user should not be a guest."
@@ -1392,6 +1407,9 @@ msgid "This user does not exist or has been deleted."
 msgstr ""
 
 msgid "Please register and complete the setup first."
+msgstr ""
+
+msgid "This user has been disabled."
 msgstr ""
 
 msgid "Validation failed for user {0}. {1}"
@@ -1778,7 +1796,7 @@ msgstr ""
 msgid "No active refresh token matching the request could be found."
 msgstr ""
 
-msgid "The user is deactivated."
+msgid "The user is not activated or disabled."
 msgstr ""
 
 msgid "The user is deleted."
@@ -2480,7 +2498,7 @@ msgstr ""
 msgid "The external dictionary check is required."
 msgstr ""
 
-msgid "The external dictionary check should be a boolean type."
+msgid "The external dictionary check should be a boolean."
 msgstr ""
 
 msgid "The password generator settings is required."
@@ -2894,6 +2912,12 @@ msgstr ""
 msgid "The test email should be a valid email address."
 msgstr ""
 
+msgid "The authentication method is required."
+msgstr ""
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr ""
+
 msgid "The sender email should be a valid email address."
 msgstr ""
 
@@ -3003,6 +3027,12 @@ msgid "The database name should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "The database name should not contain dashes."
+msgstr ""
+
+msgid "The schema is required on PostgreSQL"
+msgstr ""
+
+msgid "The schema should be a valid BMP-UTF8 string."
 msgstr ""
 
 msgid "An OpenPGP public key is required."
@@ -3161,6 +3191,12 @@ msgstr ""
 msgid "Database name"
 msgstr ""
 
+msgid "schema"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Enter your SMTP server settings."
 msgstr ""
 
@@ -3192,6 +3228,9 @@ msgid "port"
 msgstr ""
 
 msgid "Port"
+msgstr ""
+
+msgid "Authentication method"
 msgstr ""
 
 msgid "client"
@@ -3434,6 +3473,21 @@ msgstr ""
 msgid "login"
 msgstr ""
 
+msgid "Account suspended"
+msgstr ""
+
+msgid "Your account has been suspended."
+msgstr ""
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr ""
+
+msgid "Contact your admin"
+msgstr ""
+
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""
 
@@ -3450,6 +3504,21 @@ msgid "Unfortunately, they will need your help to delete their account and resta
 msgstr ""
 
 msgid "Please check with them first to confirm."
+msgstr ""
+
+msgid "User suspended"
+msgstr ""
+
+msgid "The user {0} has been suspended."
+msgstr ""
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can share resources and add this user to a group."
+msgstr ""
+
+msgid "Check user suspension"
 msgstr ""
 
 msgid "Welcome to {0}!"

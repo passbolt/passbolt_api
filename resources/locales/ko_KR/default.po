@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-07-24 11:52+0000\n"
-"PO-Revision-Date: 2023-07-25 06:51\n"
+"POT-Creation-Date: 2023-09-19 15:36+0000\n"
+"PO-Revision-Date: 2023-09-22 02:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Language: ko_KR\n"
 
 msgid "You need to login to access this location."
-msgstr "이 위치에 액세스하려면 로그인해야 합니다."
+msgstr "이 위치에 접근하려면 로그인해야 합니다."
 
 msgid "The server verify token is missing or invalid."
 msgstr "서버 확인 토큰이 없거나 잘못되었습니다."
@@ -65,19 +65,19 @@ msgid "Page not found."
 msgstr "페이지를 찾을 수 없습니다."
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr ""
+msgstr "URL에 json 확장자를 사용하거나 application/json 을 수락하세요."
 
 msgid "The request data can not be empty."
-msgstr ""
+msgstr "요청 데이터는 비워둘 수 없습니다."
 
 msgid "You are successfully logged in."
-msgstr "성공적으로 로그인 되었습니다."
+msgstr "로그인에 성공하였습니다."
 
 msgid "You are successfully logged out."
-msgstr ""
+msgstr "로그아웃에 성공하였습니다."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "로그아웃 경로는 POST 방법으로만 접근해야 합니다."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "구성에서 OpenPGP 공개키 정보를 찾을 수 없습니다."
@@ -182,10 +182,10 @@ msgid "undefined user agent"
 msgstr "정의되지 않은 사용자 에이전트"
 
 msgid "Access restricted to administrators."
-msgstr "액세스는 관리자로 제한됩니다."
+msgstr "관리자로 접근이 제한됩니다."
 
 msgid "Access restricted to unauthenticated users."
-msgstr "인증되지 않은 사용자만 액세스할 수 있습니다."
+msgstr "인증되지 않은 사용자만 접근할 수 있습니다."
 
 msgid "The user should not be logged in."
 msgstr "사용자는 로그인하면 안 됩니다."
@@ -221,7 +221,7 @@ msgid "The group was deleted successfully."
 msgstr "그룹이 성공적으로 삭제되었습니다."
 
 msgid "You are not authorized to access that location."
-msgstr "해당 위치에 액세스할 수 있는 권한이 없습니다."
+msgstr "해당 위치에 접근할 수 있는 권한이 없습니다."
 
 msgid "The group identifier should be a valid UUID."
 msgstr "그룹 식별자는 유효한 UUID여야 합니다."
@@ -350,7 +350,7 @@ msgid "You are not authorized to edit the role."
 msgstr "역할을 수정할 수 있는 권한이 없습니다."
 
 msgid "Multiple has-access filters are not supported."
-msgstr ""
+msgstr "다중 접근 필터는 지원되지 않습니다."
 
 msgid "This operation is not allowed for this user."
 msgstr "이 작업은 이 사용자에게 허용되지 않습니다."
@@ -365,13 +365,13 @@ msgid "Only guests are allowed to register."
 msgstr "게스트만 등록할 수 있습니다."
 
 msgid "Registration is not opened to public."
-msgstr ""
+msgstr "등록은 공개적으로 노출되지 않았습니다."
 
 msgid "Please contact your administrator."
 msgstr "관리자에게 문의하세요."
 
 msgid "This is due to a security setting."
-msgstr ""
+msgstr "보안 설정으로 인해 발생합니다."
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "사용자 식별자는 유효한 UUID이거나 \"나\" 이어야 합니다\"."
@@ -716,49 +716,49 @@ msgid "This is not a valid setting."
 msgstr "올바르지 않은 설정입니다."
 
 msgid "The type of the access control object should be one of the following: {0}."
-msgstr "액세스 제어 개체 유형은 다음 중 하나여야 합니다: {0}"
+msgstr "접근 제어 개체 유형은 다음 중 하나여야 합니다: {0}"
 
 msgid "The type of the access control object is required."
-msgstr "액세스 제어 개체의 유형이 필요합니다."
+msgstr "접근 제어 개체의 유형이 필요합니다."
 
 msgid "The type of the access control object should not be empty."
-msgstr "액세스 제어 개체 유형은 비워둘 수 없습니다."
+msgstr "접근 제어 개체 유형은 비워둘 수 없습니다."
 
 msgid "The identifier of the access control object should be a valid UUID."
-msgstr "액세스 제어 개체 식별자는 유효한 UUID여야 합니다."
+msgstr "접근 제어 개체 식별자는 유효한 UUID여야 합니다."
 
 msgid "The identifier of the access control object is required."
-msgstr "액세스 제어 개체의 식별자가 필요합니다."
+msgstr "접근 제어 개체의 식별자가 필요합니다."
 
 msgid "The identifier of the access control object should not be empty."
-msgstr "액세스 제어 개체 식별자는 비워 둘 수 없습니다."
+msgstr "접근 제어 개체 식별자는 비워 둘 수 없습니다."
 
 msgid "The access request object type should be one of the following: {0}."
-msgstr "액세스 요청 개체 유형은 다음 중 하나여야 합니다: {0}."
+msgstr "접근 요청 개체 유형은 다음 중 하나여야 합니다: {0}."
 
 msgid "The type of the access request object is required."
-msgstr "액세스 제어 개체의 유형이 필요합니다."
+msgstr "접근 제어 개체의 유형이 필요합니다."
 
 msgid "The access request object type should not be empty."
-msgstr "액세스 요청 객체 유형은 비워 둘 수 없습니다."
+msgstr "접근 요청 객체 유형은 비워 둘 수 없습니다."
 
 msgid "The identifier of the access request object should be a valid UUID."
-msgstr "액세스 요청 개체 식별자는 유효한 UUID여야 합니다."
+msgstr "접근 요청 개체 식별자는 유효한 UUID여야 합니다."
 
 msgid "The identifier of the access request object is required."
-msgstr "액세스 요청 개체의 식별자가 필요합니다."
+msgstr "접근 요청 개체의 식별자가 필요합니다."
 
 msgid "The identifier of the access request object should not be empty."
-msgstr "액세스 요청 개체 식별자는 비워 둘 수 없습니다."
+msgstr "접근 요청 개체 식별자는 비워 둘 수 없습니다."
 
 msgid "A permission already exists for the given access control object and access request object."
-msgstr "지정된 액세스 제어 개체 및 액세스 요청 개체에 대한 사용 권한이 이미 있습니다."
+msgstr "지정된 접근 제어 개체 및 액세스 요청 개체에 대한 사용 권한이 이미 있습니다."
 
 msgid "The access control object does not exist."
-msgstr "액세스 제어 개체가 없습니다."
+msgstr "접근 제어 개체가 없습니다."
 
 msgid "The access request object does not exist."
-msgstr "액세스 요청 개체가 없습니다."
+msgstr "접근 요청 개체가 없습니다."
 
 msgid "A first name is required."
 msgstr "이름이 필요합니다."
@@ -857,7 +857,7 @@ msgid "The secrets should contain the owner secret."
 msgstr "비밀번호는 소유주 비밀번호를 포함해야 합니다."
 
 msgid "The secrets should contain the secrets of all the users having access to the resource."
-msgstr "비밀번호는 리소스에 액세스할 수 있는 모든 사용자의 비밀번호가 포함되어야 합니다."
+msgstr "비밀번호는 리소스에 접근할 수 있는 모든 사용자의 비밀번호가 포함되어야 합니다."
 
 msgid "The permissions should contain at least the owner permission."
 msgstr "권한은 최소한 소유주의 권한을 포함해야 합니다."
@@ -915,6 +915,9 @@ msgstr "역할 식별자는 유효한 UUID여야 합니다."
 
 msgid "A role identifier is required."
 msgstr "역할 식별자가 필요합니다."
+
+msgid "The disabled date should be a valid date."
+msgstr "비활성화된 날짜는 유효한 날짜여야 합니다."
 
 msgid "The profile should not be empty."
 msgstr "프로필은 비워둘 수 없습니다."
@@ -1021,8 +1024,14 @@ msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다."
 msgid "{0} shared the password {1}"
 msgstr "{0} 에 의해 {1} 비밀번호가 공유됨"
 
+msgid "Your account has been suspended"
+msgstr "계정이 정지되었습니다"
+
 msgid "{0} deleted user {1}"
 msgstr "{0} 에 의해 {1} 사용자가 삭제됨"
+
+msgid "{0} has been suspended"
+msgstr "{0} 이(가) 정지되었습니다."
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "패스볼트에 어서 오세요, {0}!"
@@ -1074,6 +1083,12 @@ msgstr "사용자 설정 완료시 보내기 설정은 부울이어야 합니다
 
 msgid "The send on user recover abort setting should be a boolean."
 msgstr "사용자 복구 중단 설정 보내기는 부울이어야 합니다."
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr "사용자 비활성화 보내기 설정은 부울이어야 합니다."
+
+msgid "The send on admin disabled setting should be a boolean."
+msgstr "관리자 비활성화 보내기 설정은 부울이어야 합니다."
 
 msgid "The send on comment added setting should be a boolean."
 msgstr "주석 추가시 보내기 설정은 부울이여야 합니다."
@@ -1340,7 +1355,7 @@ msgid "Could not validate secrets data."
 msgstr "비밀번호 데이터를 검사할 수 없습니다."
 
 msgid "The secrets of all the users having access to the resource are required."
-msgstr "리소스에 액세스할 수 있는 모든 사용자의 비밀번호가 필요합니다."
+msgstr "리소스에 접근할 수 있는 모든 사용자의 비밀번호가 필요합니다."
 
 msgid "An authentication token should be provided."
 msgstr "인증토큰이 제공되어야 합니다."
@@ -1363,8 +1378,8 @@ msgstr "인증 토큰 데이터를 업데이트할 수 없습니다."
 msgid "The key provided does not belong to given user."
 msgstr "제공된 키가 지정된 사용자에게 속하지 않습니다."
 
-msgid "The user does not exist or is not active."
-msgstr "사용자가 존재하지 않거나 활성 상태가 아닙니다."
+msgid "The user does not exist or is not active or is disabled."
+msgstr "사용자가 존재하지 않거나 활성 중이 아니거나 비활성화 상태입니다."
 
 msgid "The OpenPGP key data is not valid."
 msgstr "OpenPGP 키가 올바르지 않습니다."
@@ -1375,8 +1390,8 @@ msgstr "OpenPGP 키를 사용하여 암호화할 수 없습니다."
 msgid "The user does not exist, is already active or has been deleted."
 msgstr "사용자가 존재하지 않거나 이미 활성 상태이거나 삭제되었습니다."
 
-msgid "The user does not exist or is already active."
-msgstr "사용자가 없거나 이미 활성 상태입니다."
+msgid "The user does not exist or is already active or is disabled."
+msgstr "사용자가 존재하지 않거나 이미 활성 중이거나 비활성화 상태입니다."
 
 msgid "The user should not be a guest."
 msgstr "사용자는 게스트일 수 없습니다."
@@ -1395,6 +1410,9 @@ msgstr "사용자가 존재하지 않거나 이미 삭제되었습니다."
 
 msgid "Please register and complete the setup first."
 msgstr "먼저 등록 하고 설정을 완료하세요."
+
+msgid "This user has been disabled."
+msgstr "이 사용자는 사용할 수 없습니다."
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "{0} 사용자에 대한 검증이 실패되었습니다. {1}"
@@ -1517,7 +1535,7 @@ msgid "This theme is not supported."
 msgstr "이 테마는 지원되지 않습니다."
 
 msgid "You are not allowed to access this location."
-msgstr "이 위치에 액세스할 수 없습니다."
+msgstr "이 위치에 접근할 수 없습니다."
 
 msgid "This is not a valid Ajax/Json request."
 msgstr "올바른 Ajax/Json 요청이 아닙니다."
@@ -1628,7 +1646,7 @@ msgid "You added the folder {0}"
 msgstr "폴더 {0} 이(가) 추가됨"
 
 msgid "You deleted the folder {0}"
-msgstr ""
+msgstr "{0} 폴더를 삭제했습니다"
 
 msgid "{0} deleted the folder {1}"
 msgstr "{0} 이(가) {1} 폴더를 삭제함"
@@ -1637,7 +1655,7 @@ msgid "{0} shared the folder {1}"
 msgstr "{0} 이(가) {1} 폴더를 공유함"
 
 msgid "You edited the folder {0}"
-msgstr ""
+msgstr "{0} 폴더를 수정했습니다"
 
 msgid "{0} edited the folder {1}"
 msgstr "{0} 이(가) {1} 폴더를 수정함"
@@ -1700,22 +1718,22 @@ msgid "view it in passbolt"
 msgstr "패스볼트에서 보기"
 
 msgid "You deleted a folder"
-msgstr ""
+msgstr "폴더를 삭제했습니다"
 
 msgid "{0} deleted a folder"
-msgstr ""
+msgstr "{0} 이(가) 폴더를 삭제함"
 
 msgid "log in passbolt"
 msgstr "패스볼트 로그인"
 
 msgid "{0} shared a folder with you"
-msgstr ""
+msgstr "{0} 이(가) 당신과 암호를 공유함"
 
 msgid "You edited a folder"
-msgstr ""
+msgstr "폴더를 수정했습니다"
 
 msgid "{0} edited a folder"
-msgstr ""
+msgstr "{0} 이(가) 폴더를 수정함"
 
 msgid "The user signature could not be verified."
 msgstr "사용자 서명을 확인할 수 없습니다."
@@ -1780,8 +1798,8 @@ msgstr "인증 보안 경고"
 msgid "No active refresh token matching the request could be found."
 msgstr "요청과 일치하는 활성 새로 고침 토큰을 찾을 수 없습니다."
 
-msgid "The user is deactivated."
-msgstr "사용자가 비활성화됩니다."
+msgid "The user is not activated or disabled."
+msgstr ""
 
 msgid "The user is deleted."
 msgstr "사용자가 삭제되었습니다."
@@ -1820,7 +1838,7 @@ msgid "Invalid verify token expiry."
 msgstr "무효한 확인 토큰 만료."
 
 msgid "Attempt to access an expired verify token."
-msgstr "만료된 확인 토큰에 액세스하려고 합니다."
+msgstr "만료된 확인 토큰에 접근하려고 합니다."
 
 msgid "Invalid verify token format."
 msgstr "확인 토큰 형식이 확인이 잘못되었습니다."
@@ -1856,7 +1874,7 @@ msgid "This is not a valid {0}."
 msgstr "올바른 {0} 이(가) 아닙니다."
 
 msgid "The strategy should extend the class: {0}"
-msgstr ""
+msgstr "방법은 다음 클래스를 확장해야 합니다. {0}"
 
 msgid "The action log identifier should be a valid UUID."
 msgstr "활동 로그 식별자는 유효한 UUID여야 합니다."
@@ -2096,22 +2114,22 @@ msgid "This authentication provider is already setup. Disable it first"
 msgstr "이 인증 공급자가 이미 설정되었습니다. 먼저 사용 중지하세요."
 
 msgid "Multi Factor Authentication is configured!"
-msgstr "다단계인증이 구성되었습니다!"
+msgstr "다단계 인증이 구성되었습니다!"
 
 msgid "MFA authentication is required."
 msgstr "다단계인증이 필요합니다."
 
 msgid "The multi-factor authentication is not required."
-msgstr "다단계인증이 필요하지 않습니다."
+msgstr "다단계 인증이 필요하지 않습니다."
 
 msgid "No valid multi-factor authentication settings found for this provider."
-msgstr "이 공급자에 대한 올바른 다단계인증 설정을 찾을 수 없습니다."
+msgstr "이 공급자에 대한 올바른 다단계 인증 설정을 찾을 수 없습니다."
 
 msgid "The multi-factor authentication was a success."
-msgstr "다단계인증에 성공했습니다."
+msgstr "다단계 인증에 성공했습니다."
 
 msgid "The multi factor authentication settings for the organization were updated."
-msgstr "조직에 대한 다단계인증 설정이 업데이트되었습니다."
+msgstr "조직에 대한 다단계 인증 설정이 업데이트되었습니다."
 
 msgid "Please setup the TOTP application."
 msgstr "TOTP 앱을 설정하세요."
@@ -2120,16 +2138,16 @@ msgid "Please provide the one-time password."
 msgstr "일회성 암호를 입력하세요."
 
 msgid "You have been logged out due to too many failed attempts."
-msgstr ""
+msgstr "실패한 시도 횟수가 너무 많아 로그아웃되었습니다."
 
 msgid "The user id is not valid."
 msgstr "사용자id가 잘못되었습니다."
 
 msgid "No multi-factor authentication settings defined for the user."
-msgstr "사용자에 대한 정의된 다단계인증 설정이 없습니다"
+msgstr "사용자에 대한 정의된 다단계 인증 설정이 없습니다"
 
 msgid "The multi-factor authentication settings for the user were deleted."
-msgstr "사용자에 대한 다단계인증설정이 삭제되었습니다."
+msgstr "사용자에 대한 다단계 인증 설정이 삭제되었습니다."
 
 msgid "Please setup the Yubikey settings."
 msgstr "Yubikey 설정을 해주세요."
@@ -2189,13 +2207,13 @@ msgid "No Duo error description provided"
 msgstr "제공된 Duo 오류 설명 없음"
 
 msgid "Your multi-factor authentication settings were reset by you."
-msgstr "귀하가 다단계인증설정을 재설정했습니다."
+msgstr "귀하가 다단계 인증 설정을 재설정했습니다."
 
 msgid "Multi-factor authentication settings were reset."
-msgstr "다단계인증설정을 재설정했습니다."
+msgstr "다단계 인증 설정을 재설정했습니다."
 
 msgid "Your multi-factor authentication settings were reset by an administrator."
-msgstr "관리자가 다단계인증설정을 재설정했습니다."
+msgstr "관리자가 다단계 인증 설정을 재설정했습니다."
 
 msgid "The token should reference an active Duo callback authentication token."
 msgstr "토큰은 활성 Duo 콜백 인증 토큰을 참조해야 합니다."
@@ -2255,10 +2273,10 @@ msgid "Could not validate Duo configuration"
 msgstr "Duo 구성을 검사할 수 없습니다."
 
 msgid "The property {0} is visible by administrators only."
-msgstr ""
+msgstr "{0} 속성은 관리자만 볼 수 있습니다."
 
 msgid "The property {0} should be contained in order to filter by {1}."
-msgstr ""
+msgstr "{1} 을(를) 기준으로 필터링하려면 {0} 속성이 포함되어야 합니다."
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "제공된 다단계인증 토큰이 없거나 비활성 상태입니다."
@@ -2276,16 +2294,16 @@ msgid "MFA setting Yubikey Id is not set."
 msgstr "다단계인증 설정 Yubikey Id가 설정되지 않았습니다."
 
 msgid "The multi-factor authentication settings data should not be empty."
-msgstr "다단계인증 설정 데이터는 비워 둘 수 없습니다."
+msgstr "다단계 인증 설정 데이터는 비워 둘 수 없습니다."
 
 msgid "The multi-factor authentication providers list is missing."
-msgstr "다단계인증 공급자 목록이 없습니다."
+msgstr "다단계 인증 공급자 목록이 없습니다."
 
 msgid "Unknown MFA provider: {0}."
 msgstr "알 수 없는 다단계인증 공급자: {0}."
 
 msgid "Could not validate multi-factor authentication provider configuration."
-msgstr "다단계인증 공급자 구성을 검사할 수 없습니다."
+msgstr "다단계 인증 공급자 구성을 검사할 수 없습니다."
 
 msgid "No configuration set for Yubikey OTP secret key."
 msgstr "Yubikey OTP 비밀키에 대한 구성이 설정되지 않았습니다."
@@ -2303,7 +2321,7 @@ msgid "Could not validate Yubikey configuration."
 msgstr "Yubikey 구성을 검사할 수 없습니다."
 
 msgid "Duo Multi Factor Authentication"
-msgstr "Duo 다단계인증"
+msgstr "Duo 다단계 인증"
 
 msgid "Something went wrong."
 msgstr "문제가 발생했습니다."
@@ -2354,7 +2372,7 @@ msgid "Learn more"
 msgstr "더 알아보기"
 
 msgid "Duo multi-factor authentication is enabled!"
-msgstr "Duo 다단계인증이 활성화되었습니다!"
+msgstr "Duo 다단계 인증이 활성화되었습니다!"
 
 msgid "When logging in you will be asked to perform Duo Authentication."
 msgstr "로그인 시 Duo 인증을 수행하라는 메시지가 표시됩니다."
@@ -2363,22 +2381,22 @@ msgid "Since"
 msgstr "부터"
 
 msgid "Multi factor authentication verification"
-msgstr "다단계인증 검증"
+msgstr "다단계 인증 검증"
 
 msgid "Multi Factor Authentication Required"
-msgstr "다단계인증이 필요"
+msgstr "다단계 인증이 필요"
 
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
 msgstr "Duo를 사용한 추가 인증이 필요합니다. 확인을 위해 Duo로 리디렉션됩니다."
 
 msgid "Multi factor authentication"
-msgstr "다단계인증"
+msgstr "다단계 인증"
 
 msgid "Sorry no multi factor authentication is enabled for this organization."
-msgstr "아쉽게도 이 조직에 대해 다단계인증을 사용할 수 없습니다."
+msgstr "아쉽게도 이 조직에 대해 다단계 인증을 사용할 수 없습니다."
 
 msgid "Please contact your administrator to enable multi-factor authentication."
-msgstr "다단계인증을 사용하려면 관리자에게 문의하세요."
+msgstr "다단계 인증을 사용하려면 관리자에게 문의하세요."
 
 msgid "Please select a provider"
 msgstr "공급자를 선택하세요."
@@ -2390,10 +2408,10 @@ msgid "Disabled"
 msgstr "중지됨"
 
 msgid "What is multi-factor authentication?"
-msgstr "다단계인증이란 무엇입니까?"
+msgstr "다단계 인증이란?"
 
 msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
-msgstr "다단계인증(MFA)은 두 개 이상의 증거(또는 요인)를 제시해야 하는 사용자의 신원을 확인하는 방법이다."
+msgstr "다단계 인증(MFA)은 두 개 이상의 증거(또는 요인)를 제시해야 하는 사용자의 신원을 확인하는 방법이다."
 
 msgid "learn more"
 msgstr "더 알아보기"
@@ -2459,10 +2477,10 @@ msgid "Turn off"
 msgstr "끄기"
 
 msgid "Your multi-factor authentication is disabled."
-msgstr "다단계인증이 비활성화되었습니다."
+msgstr "다단계 인증이 비활성화되었습니다."
 
 msgid "Multi-factor authentication settings were reset for your account by an administrator."
-msgstr "관리자가 다단계인증설정을 재설정했습니다."
+msgstr "관리자가 다단계 인증 설정을 재설정했습니다."
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "이 작업을 요청하지 않은 경우 관리자에게 문의하십시오."
@@ -2470,98 +2488,221 @@ msgstr "이 작업을 요청하지 않은 경우 관리자에게 문의하십시
 msgid "Log in passbolt"
 msgstr "패스볼트 로그인"
 
-msgid "The password generator value \"{0}\" is not valid."
-msgstr "암호 생성기 값 \"{0}\" 이(가) 잘못되었습니다."
+msgid "Could not retrieve the password policies."
+msgstr "암호 정책을 검색할 수 없습니다."
+
+msgid "The default generator is required."
+msgstr "기본 생성기가 필요합니다."
+
+msgid "The default generator should be one of the following: {0}."
+msgstr "기본 생성기는 다음 중 하나여야 합니다: {0}."
+
+msgid "The external dictionary check is required."
+msgstr "외부 사전 확인이 필요합니다."
+
+msgid "The external dictionary check should be a boolean."
+msgstr ""
+
+msgid "The password generator settings is required."
+msgstr "암호 생성기 설정이 필요합니다."
+
+msgid "The password generator settings should not be empty."
+msgstr "암호 생성기 설정은 비워둘 수 없습니다."
+
+msgid "The password generator settings should have at least one mask selected."
+msgstr "암호 생성기 설정에는 마스킹을 하나 이상 선택해야 합니다."
+
+msgid "The passphrase generator settings is required."
+msgstr "패스프레이즈 생성기 설정이 필요합니다."
+
+msgid "The passphrase generator settings should not be empty."
+msgstr "패스프레이즈 생성기 설정은 비워둘 수 없습니다."
+
+msgid "Could not validate the password policies settings."
+msgstr "암호 정책 설정의 유효성을 검사할 수 없습니다."
+
+msgid "The passphrase generator words is required."
+msgstr "패스프레이즈 생성기 단어가 필요합니다."
+
+msgid "The passphrase generator words should be between {0} and {1}."
+msgstr "패스프레이즈 생성기는 {0} 에서 {1} 사이입니다."
+
+msgid "The passphrase generator word separator is required."
+msgstr "패스프레이즈 생성기 단어 구분 기호가 필요합니다."
+
+msgid "The passphrase generator word separator should be a valid UTF8 string."
+msgstr "패스프레이즈 생성기 단어 구분 기호는 유효한 UTF8 문자열이어야 합니다."
+
+msgid "The passphrase generator word separator should be maximum {0} characters."
+msgstr "패스프레이즈 생성기 구분 기호는 최대 {0} 자여야 합니다."
+
+msgid "The passphrase generator word case is required."
+msgstr "패스프레이즈 생성기 단어 대소문자가 필요합니다."
+
+msgid "The passphrase generator word case should be one of the following: {0}."
+msgstr "패스프레이즈 생성기 단어 대소문자는 다음 중 하나여야 합니다: {0}."
+
+msgid "The password generator length should be between {0} and {1}."
+msgstr "암호 생성기 길이는 {0} 에서 {1} 사이입니다."
+
+msgid "The password generator length is required."
+msgstr "패스프레이즈 생성기 길이가 필요합니다."
+
+msgid "The password generator mask upper is required."
+msgstr "암호 생성기 대문자 마스킹이 필요합니다."
+
+msgid "The password generator mask upper should be a boolean type."
+msgstr "암호 생성기 대문자 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask lower is required."
+msgstr "암호 생성기 소문자 마스킹이 필요합니다."
+
+msgid "The password generator mask lower should be a boolean type."
+msgstr "암호 생성기 소문자 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask digit is required."
+msgstr "암호 생성기 숫자 마스킹이 필요합니다."
+
+msgid "The password generator mask digit should be a boolean type."
+msgstr "암호 생성기 숫자 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask parenthesis is required."
+msgstr "암호 생성기 괄호 마스킹이 필요합니다."
+
+msgid "The password generator mask parenthesis should be a boolean type."
+msgstr "암호 생성기 괄호 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask emoji is required."
+msgstr "암호 생성기 이모지 마스킹이 필요합니다."
+
+msgid "The password generator mask emoji should be a boolean type."
+msgstr "암호 생성기 이모지 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask char1 is required."
+msgstr "암호 생성기 첫 번재 문자 마스킹이 필요합니다."
+
+msgid "The password generator mask char1 should be a boolean type."
+msgstr "암호 생성기 첫 번째 문자 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask char2 is required."
+msgstr "암호 생성기 두 번째 문자 마스킹이 필요합니다."
+
+msgid "The password generator mask char2 should be a boolean type."
+msgstr "암호 생성기 두 번째 문자 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask char3 is required."
+msgstr "암호 생성기 세 번째 문자 마스킹이 필요합니다."
+
+msgid "The password generator mask char3 should be a boolean type."
+msgstr "암호 생성기 세 번째 문자 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask char4 is required."
+msgstr "암호 생성기 네 번째 문자 마스킹이 필요합니다."
+
+msgid "The password generator mask char4 should be a boolean type."
+msgstr "암호 생성기 네 번째 문자 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator mask char5 is required."
+msgstr "암호 생성기 다섯 번째 문자 마스킹이 필요합니다."
+
+msgid "The password generator mask char5 should be a boolean type."
+msgstr "암호 생성기 다섯 번째 문자 마스킹은 부울 유형이어야 합니다."
+
+msgid "The password generator exclude look alike chars is required."
+msgstr "암호 생성기의 유사 문자 제외가 필요합니다."
+
+msgid "The password generator exclude look alike chars should be a boolean type."
+msgstr "암호 생성기의 유사 문자 제외는 부울 유형이어야 합니다."
 
 msgid "Record not found"
-msgstr ""
+msgstr "레코드가 존재하지 않음"
 
 msgid "The request data is empty."
-msgstr ""
+msgstr "요청 데이터가 없습니다."
 
 msgid "The request data is invalid: expected a collection."
-msgstr ""
+msgstr "요청 데이터가 잘못되었습니다. 수집이 필요합니다."
 
 msgid "The request data is invalid: invalid fields."
-msgstr ""
+msgstr "요청 데이터가 잘못되었습니다: 잘못된 필드"
 
 msgid "The request data is invalid: id missing."
-msgstr ""
+msgstr "요청 데이터가 잘못되었습니다: ID 누락"
 
 msgid "The request data is invalid: id invalid."
-msgstr ""
+msgstr "요청 데이터가 잘못되었습니다: 잘못된 ID"
 
 msgid "The request data is invalid: control_function missing."
-msgstr ""
+msgstr "요청 데이터가 잘못되었습니다: control_function 누락"
 
 msgid "The request data is invalid: control_function invalid."
-msgstr ""
+msgstr "요청 데이터가 잘못되었습니다: 잘못된 control_function"
 
 msgid "The request data is invalid: ids must be unique."
-msgstr ""
+msgstr "요청 데이터가 잘못되었습니다: IDS는 유일해야함"
 
 msgid "An action identifier should be a valid UUID."
-msgstr ""
+msgstr "활동 식별자는 유효한 UUID여야 합니다."
 
 msgid "The foreign model should be a valid ASCII string."
-msgstr ""
+msgstr "외부 모델은 올바른 ASCII 문자열이어야 합니다."
 
 msgid "The foreign model should be one of the following: {0}."
-msgstr ""
+msgstr "외부 모델은 다음 중 하나여야 합니다: {0}."
 
 msgid "The foreign model name used length should be maximum {0} characters."
-msgstr ""
+msgstr "외부 모델 이름의 길이는 최대 {0} 자여야 합니다."
 
 msgid "A foreign model is required."
-msgstr ""
+msgstr "외부 모델이 필요합니다."
 
 msgid "The foreign model should not be empty."
-msgstr ""
+msgstr "외부 모델은 비워둘 수 없습니다."
 
 msgid "The control function should be a valid UTF8 string."
-msgstr ""
+msgstr "제어 기능은 유효한 UTF8 문자열이어야 합니다."
 
 msgid "The control function name used length should be maximum {0} characters."
-msgstr ""
+msgstr "제어 기능 이름의 길이는 최대 {0} 자여야 합니다."
 
 msgid "The control function is not supported."
-msgstr ""
+msgstr "제어 기능이 지원되지 않습니다."
 
 msgid "A control function is required."
-msgstr ""
+msgstr "제어 기능이 필요합니다."
 
 msgid "The control function should not be empty."
-msgstr ""
+msgstr "제어 기능은 비워둘 수 없습니다."
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
-msgstr ""
+msgstr "역할 기반 액세스 제어를 생성한 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "The identifier of the user who modified the Rbac should be a valid UUID."
-msgstr ""
+msgstr "역할 기반 접근 제어를 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "The identifier of the user who modified the Rbac should not be empty."
-msgstr ""
+msgstr "역할 기반 접근 제어를 수정한 사용자의 식별자는 비워 둘 수 없습니다."
 
 msgid "An RBAC entry already exists for the given id."
-msgstr ""
+msgstr "지정된 ID에 대한 역할 기반 접근 제어 항목이 이미 있습니다."
 
 msgid "An entry already exists for the given role and action ids."
-msgstr ""
+msgstr "지정된 역할 및 작업 ID에 대한 항목이 이미 있습니다."
 
 msgid "An action already exists for the given name."
-msgstr ""
+msgstr "지정된 이름에 대한 작업이 이미 있습니다."
 
 msgid "The RBAC settings could not be updated."
-msgstr ""
+msgstr "역할 기반 접근 제어 설정을 업데이트할 수 없습니다."
 
 msgid "No data found."
-msgstr ""
+msgstr "데이터가 없음."
 
 msgid "Some data not found."
-msgstr ""
+msgstr "일부 데이터가 없음."
 
 msgid "The UI actions data could not be validated."
-msgstr ""
+msgstr "UI 작업 데이터를 확인할 수 없습니다."
 
 msgid "5 minutes"
 msgstr "5분"
@@ -2576,7 +2717,7 @@ msgid "1 hour"
 msgstr "1시간"
 
 msgid "until I log out"
-msgstr "로그아웃시"
+msgstr "로그아웃할 때까지"
 
 msgid "Only administrators can view reports."
 msgstr "관리자만 보고서를 볼 수 있습니다."
@@ -2773,6 +2914,12 @@ msgstr "암호는 유효한 BMP-UTF8 문자열이어야합니다."
 msgid "The test email should be a valid email address."
 msgstr "테스트 이메일은 유효한 이메일 주소여야 합니다."
 
+msgid "The authentication method is required."
+msgstr ""
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr ""
+
 msgid "The sender email should be a valid email address."
 msgstr "보내는 사람 이메일은 유효한 이메일 주소여야 합니다."
 
@@ -2860,6 +3007,15 @@ msgstr "설치"
 msgid "That's it!"
 msgstr "이상입니다."
 
+msgid "A driver name is required."
+msgstr "드라이버 이름이 필요합니다."
+
+msgid "The driver name should not be empty."
+msgstr "드라이버 이름은 비워둘 수 없습니다."
+
+msgid "The database driver should be one of the following: {0}."
+msgstr "데이터베이스 드라이버는 다음 중 하나여야 합니다: {0}."
+
 msgid "The password should not contain quotes."
 msgstr "암호는 따옴표를 포함할 수 없습니다."
 
@@ -2874,6 +3030,12 @@ msgstr "데이타베이스 이름은 유효한 BMP-UTF8 문자열이어야합니
 
 msgid "The database name should not contain dashes."
 msgstr "데이타베이스 이름은 대시를 포함할 수 없습니다."
+
+msgid "The schema is required on PostgreSQL"
+msgstr ""
+
+msgid "The schema should be a valid BMP-UTF8 string."
+msgstr ""
 
 msgid "An OpenPGP public key is required."
 msgstr "OpenPGP 공개키가 필요합니다."
@@ -3031,6 +3193,12 @@ msgstr "데이타베이스 이름"
 msgid "Database name"
 msgstr "데이타베이스 이름"
 
+msgid "schema"
+msgstr ""
+
+msgid "Schema"
+msgstr ""
+
 msgid "Enter your SMTP server settings."
 msgstr "SMTP 서버 설정 입력"
 
@@ -3063,6 +3231,9 @@ msgstr "포트"
 
 msgid "Port"
 msgstr "포트"
+
+msgid "Authentication method"
+msgstr "인증 방법"
 
 msgid "client"
 msgstr "클라이언트"
@@ -3143,7 +3314,7 @@ msgid "Full base url"
 msgstr "전체 기본 Url"
 
 msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
-msgstr "패스볼트에 액세스할 수 있는 url입니다. 이 url은 이메일의 링크와 같이 패스볼트 url을 자동으로 추측할 수 없는 위치에 사용됩니다. 후행 슬래시가 없습니다."
+msgstr "패스볼트에 접근할 수 있는 url입니다. 이 url은 이메일의 링크와 같이 패스볼트 url을 자동으로 추측할 수 없는 위치에 사용됩니다. 후행 슬래시가 없습니다."
 
 msgid "Force SSL?"
 msgstr "SSL 강제여부"
@@ -3179,7 +3350,7 @@ msgid "SSL access is enabled."
 msgstr "SSL 접근이 활성화되었습니다."
 
 msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
-msgstr "SSL 액세스를 사용할 수 없습니다. 계속 진행할 수 있지만 계속하기 전에 HTTPS를 사용하도록 웹 서버를 구성하는 것이 좋습니다."
+msgstr "SSL 접근을 사용할 수 없습니다. 계속 진행할 수 있지만 계속하기 전에 HTTPS를 사용하도록 웹 서버를 구성하는 것이 좋습니다."
 
 msgid "Start configuration"
 msgstr "구성 시작"
@@ -3253,18 +3424,6 @@ msgstr "SMTP 서버가 필요한 이유는 무엇입니까?"
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "계정 생성 후 초대 이메일을 보내고 이메일 알림을 보내려면 패스볼트에 smtp 서버가 필요합니다."
 
-msgid "Invalid directory type for domain: {0}"
-msgstr ""
-
-msgid "Directory type could not be found for domain: {0}"
-msgstr ""
-
-msgid "The directory type should be one of the following: {0}."
-msgstr "디렉토리 유형은 다음 중 하나여야 합니다: {0}."
-
-msgid "LDAP Object class could not be found: {0}"
-msgstr ""
-
 msgid "The requested address was not found on this server."
 msgstr "요청한 주소를 이 서버에서 찾을 수 없습니다."
 
@@ -3281,7 +3440,7 @@ msgid "Passbolt API Status"
 msgstr "패스볼트 API 상태"
 
 msgid "SSL access is not enabled."
-msgstr "SSL 액세스를 사용할 수 없습니다."
+msgstr "SSL 접근을 사용할 수 없습니다."
 
 msgid "Group manager"
 msgstr "그룹 관리자"
@@ -3316,6 +3475,21 @@ msgstr "홈"
 msgid "login"
 msgstr "로그인"
 
+msgid "Account suspended"
+msgstr ""
+
+msgid "Your account has been suspended."
+msgstr ""
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr ""
+
+msgid "Contact your admin"
+msgstr ""
+
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) 이(가) 방금 계정 복구를 완료했습니다. 이 동작이 의심스럽다고 생각되면 언제든지 이 사용자에게 연락하세요."
 
@@ -3333,6 +3507,21 @@ msgstr "안타깝게도 계정을 삭제하고 처음부터 다시 시작하려�
 
 msgid "Please check with them first to confirm."
 msgstr "확인을 위해 먼저 그들에게 확인하세요."
+
+msgid "User suspended"
+msgstr ""
+
+msgid "The user {0} has been suspended."
+msgstr ""
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr ""
+
+msgid "Other users can share resources and add this user to a group."
+msgstr ""
+
+msgid "Check user suspension"
+msgstr ""
 
 msgid "Welcome to {0}!"
 msgstr "{0} 에 오신 것을 환영합니다!"
@@ -3419,7 +3608,7 @@ msgid "All passwords that were shared only with this group were also deleted."
 msgstr "이 그룹에서만 공유되었던 모든 암호 또한 삭제되었습니다."
 
 msgid "As member of the group you now have access to all the passwords that are shared with this group."
-msgstr "이제 그룹의 구성원으로서 이 그룹과 공유되는 모든 암호에 액세스할 수 있습니다."
+msgstr "이제 그룹의 구성원으로서 이 그룹과 공유되는 모든 암호에 접근할 수 있습니다."
 
 msgid "And as group manager you are also authorized to edit the members of the group."
 msgstr "또한 그룹 관리자로서 그룹 구성원을 편집할 수 있는 권한이 있습니다."
@@ -3428,7 +3617,7 @@ msgid "You are no longer a member of this group."
 msgstr "더 이상 이 그룹의 구성원이 아닙니다."
 
 msgid "You are no longer authorized to access the passwords shared with this group."
-msgstr "이 그룹과 공유한 암호에 더 이상 액세스할 수 있는 권한이 없습니다."
+msgstr "이 그룹과 공유한 암호에 더 이상 접근할 수 있는 권한이 없습니다."
 
 msgid "Please contact {0} or another group manager if this is a mistake."
 msgstr "오류가 발생한 경우 {0} 또는 다른 그룹 관리자에게 문의하십시오."
@@ -3440,7 +3629,7 @@ msgid "As group manager you are now authorized to edit the members of this group
 msgstr "이제 그룹 관리자로서 이 그룹의 구성원을 편집할 수 있는 권한이 부여됩니다."
 
 msgid "As member of the group you still have access to all the passwords that are shared with this group."
-msgstr "그룹의 구성원으로서 이 그룹과 공유되는 모든 암호에 대한 액세스 권한이 있습니다."
+msgstr "그룹의 구성원으로서 이 그룹과 공유되는 모든 암호에 대한 접근 권한이 있습니다."
 
 msgid "You are no longer a group manager of this group."
 msgstr "더 이상 이 그룹의 그룹 관리자가 아닙니다"

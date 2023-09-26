@@ -1,300 +1,279 @@
-# LANGUAGE translation of CakePHP Application
-# Copyright YEAR NAME <EMAIL@ADDRESS>
-#
 msgid ""
 msgstr ""
-"Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2017-04-20 20:41+0200\n"
-"PO-Revision-Date: 2017-04-20 21:03+0200\n"
-"Language-Team: EMAIL@ADDRESS\n"
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2020-11-11 13:56+0100\n"
+"PO-Revision-Date: 2023-09-20 08:32\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: French\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.7\n"
-"Last-Translator: Guillaume Lafarge <contact@prys.me>\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: fr\n"
+"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/cake.po\n"
+"X-Crowdin-File-ID: 338\n"
 "Language: fr_FR\n"
 
-#: Template/Error/error400.ctp:36 Template/Error/error500.ctp:41
+#: Error/error400.php:36
+#: Error/error500.php:40
 msgid "Error"
 msgstr "Erreur"
 
-#: Template/Error/error400.ctp:37
+#: Error/error400.php:37
 msgid "The requested address {0} was not found on this server."
-msgstr "L'adresse demandée {0} n'a pas été trouvée sur ce serveur."
+msgstr ""
 
-#: Template/Error/error500.ctp:39
+#: Error/error500.php:38
 msgid "An Internal Error Has Occurred"
-msgstr "Une Erreur Interne s'est produite"
+msgstr "Une erreur interne est survenue"
 
-#: Controller/Component/AuthComponent.php:496
+#: Controller/Component/AuthComponent.php:462
 msgid "You are not authorized to access that location."
-msgstr "Vous n'êtes pas autorisé à accéder à cet endroit."
+msgstr "Vous n'êtes pas autorisé à accéder à cet emplacement."
 
-#: Controller/Component/CsrfComponent.php:155
-msgid "Missing CSRF token cookie"
-msgstr "Il manque le Cookie avec le token CSRF"
-
-#: Controller/Component/CsrfComponent.php:159
-msgid "CSRF token mismatch."
-msgstr "Le token CRSF ne correspond pas."
-
-#: Error/ExceptionRenderer.php:258
+#: Error/ExceptionRenderer.php:304
 msgid "Not Found"
-msgstr "Non trouvé"
+msgstr ""
 
-#: Error/ExceptionRenderer.php:260
+#: Error/ExceptionRenderer.php:306
 msgid "An Internal Error Has Occurred."
-msgstr "Une Erreur Interne s'est produite."
+msgstr "Une erreur interne est survenue."
 
-#: Http/Response.php:2259
+#: Http/Middleware/CsrfProtectionMiddleware.php:286
+msgid "Missing or incorrect CSRF cookie type."
+msgstr ""
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:290
+msgid "Missing or invalid CSRF cookie."
+msgstr ""
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:311
+msgid "CSRF token from either the request body or request headers did not match or is missing."
+msgstr ""
+
+#: Http/Response.php:1490
 msgid "The requested file contains `..` and will not be read."
-msgstr "Le fichier demandé contient `..` et ne sera pas lu."
+msgstr ""
 
-#: Http/Response.php:2270
+#: Http/Response.php:1498
 msgid "The requested file was not found"
-msgstr "Le fichier demandé n'a pas été trouvé"
+msgstr ""
 
-#: I18n/Number.php:90
+#: I18n/Number.php:116
 msgid "{0,number,#,###.##} KB"
-msgstr "{0,number,#,###.##} KB"
+msgstr ""
 
-#: I18n/Number.php:92
+#: I18n/Number.php:118
 msgid "{0,number,#,###.##} MB"
-msgstr "{0,number,#,###.##} MB"
+msgstr ""
 
-#: I18n/Number.php:94
+#: I18n/Number.php:120
 msgid "{0,number,#,###.##} GB"
-msgstr "{0,number,#,###.##} GB"
+msgstr ""
 
-#: I18n/Number.php:96
+#: I18n/Number.php:122
 msgid "{0,number,#,###.##} TB"
-msgstr "{0,number,#,###.##} TB"
+msgstr ""
 
-#: I18n/Number.php:88
+#: I18n/Number.php:114
 msgid "{0,number,integer} Byte"
 msgid_plural "{0,number,integer} Bytes"
-msgstr[0] "{0,number,integer} Octet"
-msgstr[1] "{0,number,integer} Octets"
+msgstr[0] ""
+msgstr[1] ""
 
-#: I18n/RelativeTimeFormatter.php:80
+#: I18n/RelativeTimeFormatter.php:86
 msgid "{0} from now"
-msgstr "{0} à partir de maintenant"
+msgstr ""
 
-#: I18n/RelativeTimeFormatter.php:80
+#: I18n/RelativeTimeFormatter.php:86
 msgid "{0} ago"
-msgstr "il y a {0}"
+msgstr ""
 
-#: I18n/RelativeTimeFormatter.php:83
+#: I18n/RelativeTimeFormatter.php:89
 msgid "{0} after"
-msgstr "{0} après"
+msgstr ""
 
-#: I18n/RelativeTimeFormatter.php:83
+#: I18n/RelativeTimeFormatter.php:89
 msgid "{0} before"
-msgstr "{0} avant"
+msgstr ""
 
-#: I18n/RelativeTimeFormatter.php:114
+#: I18n/RelativeTimeFormatter.php:120
 msgid "just now"
-msgstr "A l'instant"
+msgstr "à l'instant"
 
-#: I18n/RelativeTimeFormatter.php:151
+#: I18n/RelativeTimeFormatter.php:157
 msgid "about a second ago"
-msgstr "il y a environ une seconde"
+msgstr ""
 
-#: I18n/RelativeTimeFormatter.php:152
+#: I18n/RelativeTimeFormatter.php:158
 msgid "about a minute ago"
-msgstr "il y a environ une minute"
+msgstr ""
 
-#: I18n/RelativeTimeFormatter.php:153
+#: I18n/RelativeTimeFormatter.php:159
 msgid "about an hour ago"
-msgstr "il y a environ une heure"
+msgstr ""
 
-#: I18n/RelativeTimeFormatter.php:154;332
-msgid "about a day ago"
-msgstr "il y a environ un jour"
-
-#: I18n/RelativeTimeFormatter.php:155;333
-msgid "about a week ago"
-msgstr "il y a environ une semaine"
-
-#: I18n/RelativeTimeFormatter.php:156;334
-msgid "about a month ago"
-msgstr "il y a environ un mois"
-
-#: I18n/RelativeTimeFormatter.php:157;335
-msgid "about a year ago"
-msgstr "il y a environ un an"
-
-#: I18n/RelativeTimeFormatter.php:168
-msgid "in about a second"
-msgstr "dans environ une seconde"
-
-#: I18n/RelativeTimeFormatter.php:169
-msgid "in about a minute"
-msgstr "dans environ une minute"
-
-#: I18n/RelativeTimeFormatter.php:170
-msgid "in about an hour"
-msgstr "dans environ une heure"
-
-#: I18n/RelativeTimeFormatter.php:171;346
-msgid "in about a day"
-msgstr "dans environ un jour"
-
-#: I18n/RelativeTimeFormatter.php:172;347
-msgid "in about a week"
-msgstr "dans environ une semaine"
-
-#: I18n/RelativeTimeFormatter.php:173;348
-msgid "in about a month"
-msgstr "dans environ un mois"
-
-#: I18n/RelativeTimeFormatter.php:174;349
-msgid "in about a year"
-msgstr "dans environ un an"
-
-#: I18n/RelativeTimeFormatter.php:304
-msgid "today"
-msgstr "aujourd'hui"
-
+#: I18n/RelativeTimeFormatter.php:160
 #: I18n/RelativeTimeFormatter.php:370
-msgid "%s ago"
-msgstr "il y a %s"
+msgid "about a day ago"
+msgstr ""
 
+#: I18n/RelativeTimeFormatter.php:161
 #: I18n/RelativeTimeFormatter.php:371
-msgid "on %s"
-msgstr "sur %s"
+msgid "about a week ago"
+msgstr ""
 
-#: I18n/RelativeTimeFormatter.php:47;126;316
+#: I18n/RelativeTimeFormatter.php:162
+#: I18n/RelativeTimeFormatter.php:372
+msgid "about a month ago"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:163
+#: I18n/RelativeTimeFormatter.php:373
+msgid "about a year ago"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:174
+msgid "in about a second"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:175
+msgid "in about a minute"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:176
+msgid "in about an hour"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:177
+#: I18n/RelativeTimeFormatter.php:384
+msgid "in about a day"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:178
+#: I18n/RelativeTimeFormatter.php:385
+msgid "in about a week"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:179
+#: I18n/RelativeTimeFormatter.php:386
+msgid "in about a month"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:180
+#: I18n/RelativeTimeFormatter.php:387
+msgid "in about a year"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:342
+msgid "today"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:409
+msgid "%s ago"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:410
+msgid "on %s"
+msgstr ""
+
+#: I18n/RelativeTimeFormatter.php:53
+#: I18n/RelativeTimeFormatter.php:132
+#: I18n/RelativeTimeFormatter.php:354
 msgid "{0} year"
 msgid_plural "{0} years"
-msgstr[0] "{0} année"
-msgstr[1] "{0} années"
+msgstr[0] ""
+msgstr[1] ""
 
-#: I18n/RelativeTimeFormatter.php:51;129;319
+#: I18n/RelativeTimeFormatter.php:57
+#: I18n/RelativeTimeFormatter.php:135
+#: I18n/RelativeTimeFormatter.php:357
 msgid "{0} month"
 msgid_plural "{0} months"
-msgstr[0] "{0} mois"
-msgstr[1] "{0} mois"
+msgstr[0] ""
+msgstr[1] ""
 
-#: I18n/RelativeTimeFormatter.php:57;132;322
+#: I18n/RelativeTimeFormatter.php:63
+#: I18n/RelativeTimeFormatter.php:138
+#: I18n/RelativeTimeFormatter.php:360
 msgid "{0} week"
 msgid_plural "{0} weeks"
-msgstr[0] "{0} semaine"
-msgstr[1] "{0} semaines"
+msgstr[0] ""
+msgstr[1] ""
 
-#: I18n/RelativeTimeFormatter.php:59;135;325
+#: I18n/RelativeTimeFormatter.php:65
+#: I18n/RelativeTimeFormatter.php:141
+#: I18n/RelativeTimeFormatter.php:363
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] "{0} jour"
-msgstr[1] "{0} jours"
+msgstr[0] ""
+msgstr[1] ""
 
-#: I18n/RelativeTimeFormatter.php:64;138
+#: I18n/RelativeTimeFormatter.php:70
+#: I18n/RelativeTimeFormatter.php:144
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] "{0} heure"
-msgstr[1] "{0} heures"
+msgstr[0] ""
+msgstr[1] ""
 
-#: I18n/RelativeTimeFormatter.php:68;141
+#: I18n/RelativeTimeFormatter.php:74
+#: I18n/RelativeTimeFormatter.php:147
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] "{0} minute"
-msgstr[1] "{0} minutes"
+msgstr[0] ""
+msgstr[1] ""
 
-#: I18n/RelativeTimeFormatter.php:72;144
+#: I18n/RelativeTimeFormatter.php:78
+#: I18n/RelativeTimeFormatter.php:150
 msgid "{0} second"
 msgid_plural "{0} seconds"
-msgstr[0] "{0} seconde"
-msgstr[1] "{0} secondes"
+msgstr[0] ""
+msgstr[1] ""
 
-#: ORM/RulesChecker.php:57
+#: ORM/RulesChecker.php:55
 msgid "This value is already in use"
-msgstr "Cette valeur est déjà utilisée"
+msgstr ""
 
-#: ORM/RulesChecker.php:104
+#: ORM/RulesChecker.php:102
 msgid "This value does not exist"
-msgstr "Cette valeur n'existe pas"
+msgstr ""
 
-#: ORM/RulesChecker.php:128
+#: ORM/RulesChecker.php:224
+msgid "Cannot modify row: a constraint for the `{0}` association fails."
+msgstr ""
+
+#: ORM/RulesChecker.php:262
 msgid "The count does not match {0}{1}"
-msgstr "The count does not match {0}{1}"
+msgstr ""
 
-#: Utility/Text.php:899
+#: Utility/Text.php:915
 msgid "and"
 msgstr "et"
 
-#: Validation/Validator.php:103
+#: Validation/Validator.php:2500
 msgid "This field is required"
-msgstr "Ce champ est requis"
+msgstr ""
 
-#: Validation/Validator.php:104
+#: Validation/Validator.php:2520
+#: View/Form/ArrayContext.php:249
 msgid "This field cannot be left empty"
-msgstr "Ce champ ne peut être laissé vide"
+msgstr ""
 
-#: Validation/Validator.php:1782
+#: Validation/Validator.php:2672
 msgid "The provided value is invalid"
-msgstr "La valeur fournie n'est pas correcte"
+msgstr ""
 
-#: View/Helper/FormHelper.php:1008
-msgid "New %s"
-msgstr "Nouveau %s"
+#: View/Helper/FormHelper.php:981
+msgid "Edit {0}"
+msgstr ""
 
-#: View/Helper/FormHelper.php:1011
-msgid "Edit %s"
-msgstr "Modifier %s"
+#: View/Helper/FormHelper.php:983
+msgid "New {0}"
+msgstr ""
 
-#: View/Helper/FormHelper.php:1887
+#: View/Helper/FormHelper.php:1890
 msgid "Submit"
-msgstr "Envoyer"
+msgstr "Soumettre"
 
-#: View/Helper/HtmlHelper.php:793
-msgid "Home"
-msgstr "Accueil"
-
-#: View/Widget/DateTimeWidget.php:540
-msgid "January"
-msgstr "Janvier"
-
-#: View/Widget/DateTimeWidget.php:541
-msgid "February"
-msgstr "Février"
-
-#: View/Widget/DateTimeWidget.php:542
-msgid "March"
-msgstr "Mars"
-
-#: View/Widget/DateTimeWidget.php:543
-msgid "April"
-msgstr "Avril"
-
-#: View/Widget/DateTimeWidget.php:544
-msgid "May"
-msgstr "Mai"
-
-#: View/Widget/DateTimeWidget.php:545
-msgid "June"
-msgstr "Juin"
-
-#: View/Widget/DateTimeWidget.php:546
-msgid "July"
-msgstr "Juillet"
-
-#: View/Widget/DateTimeWidget.php:547
-msgid "August"
-msgstr "Août"
-
-#: View/Widget/DateTimeWidget.php:548
-msgid "September"
-msgstr "Septembre"
-
-#: View/Widget/DateTimeWidget.php:549
-msgid "October"
-msgstr "Octobre"
-
-#: View/Widget/DateTimeWidget.php:550
-msgid "November"
-msgstr "Novembre"
-
-#: View/Widget/DateTimeWidget.php:551
-msgid "December"
-msgstr "Décembre"
