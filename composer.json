@@ -16,6 +16,9 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "cakephp/plugin-installer": true
+        },
+        "audit": {
+          "abandoned": "report"
         }
     },
     "authors": [
