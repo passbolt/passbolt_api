@@ -65,7 +65,6 @@ class FoldersCreateService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();
         $this->permissionsCreateService = new PermissionsCreateService();

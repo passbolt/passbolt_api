@@ -33,7 +33,6 @@ class FoldersIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Folders',
         ]);
-        /** @phpstan-ignore-next-line */
         $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
     }
 

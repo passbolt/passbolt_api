@@ -41,7 +41,6 @@ class PermissionsHealthcheckService extends AbstractHealthcheckService
     public function __construct(?PermissionsTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
-        /** @phpstan-ignore-next-line */
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Permissions');
         $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);
     }

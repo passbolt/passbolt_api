@@ -63,11 +63,8 @@ class RegisterUserCommand extends PassboltCommand
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
-        /** @phpstan-ignore-next-line */
         $this->Roles = $this->fetchTable('Roles');
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 

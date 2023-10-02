@@ -82,11 +82,8 @@ class FoldersShareService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
-        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
 
         $this->foldersRelationsAddItemsToUserTreeService = new FoldersRelationsAddItemsToUserTreeService();

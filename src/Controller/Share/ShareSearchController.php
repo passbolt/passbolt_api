@@ -47,9 +47,7 @@ class ShareSearchController extends AppController
     {
         $this->assertJson();
 
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
-        /** @phpstan-ignore-next-line */
         $this->Groups = $this->fetchTable('Groups');
 
         // Build the find options.

@@ -56,7 +56,6 @@ class UiActionsInsertDefaultsService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->uiActionsTable = TableRegistry::getTableLocator()->get('Passbolt/Rbacs.UiActions');
     }
 

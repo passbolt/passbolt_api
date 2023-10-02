@@ -46,7 +46,6 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
      */
     public function __construct(?UsersTable $usersTable = null)
     {
-        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 

@@ -41,7 +41,6 @@ class CreateAccessTokenCommand extends PassboltCommand
     {
         parent::initialize();
 
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

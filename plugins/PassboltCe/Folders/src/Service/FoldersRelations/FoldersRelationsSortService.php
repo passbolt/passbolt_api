@@ -35,7 +35,6 @@ class FoldersRelationsSortService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
     }
 

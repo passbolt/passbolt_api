@@ -33,7 +33,6 @@ class DirectorySyncController extends DirectoryController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 
