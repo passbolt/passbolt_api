@@ -38,7 +38,6 @@ class RbacsUpdateService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->rbacsTable = TableRegistry::getTableLocator()->get('Passbolt/Rbacs.Rbacs');
     }
 

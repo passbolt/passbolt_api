@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "592f55347c52ee852171713cee1b60b1",
+    "content-hash": "60fefbabef44f36dcd5893e3812f94ab",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -4005,6 +4005,61 @@
                 }
             ],
             "time": "2022-06-29T23:37:57+00:00"
+        },
+        {
+            "name": "cakedc/cakephp-phpstan",
+            "version": "2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/CakeDC/cakephp-phpstan.git",
+                "reference": "850f4b2ab375c89962260096c924c11b56dbce00"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/CakeDC/cakephp-phpstan/zipball/850f4b2ab375c89962260096c924c11b56dbce00",
+                "reference": "850f4b2ab375c89962260096c924c11b56dbce00",
+                "shasum": ""
+            },
+            "require": {
+                "cakephp/cakephp": "^4.0.0",
+                "php": ">=7.2.0",
+                "phpstan/phpstan": "^1.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan-phpunit": "^1.0",
+                "phpunit/phpunit": "^8.5",
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "phpstan-extension",
+            "extra": {
+                "phpstan": {
+                    "includes": [
+                        "extension.neon"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "CakeDC\\PHPStan\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "CakeDC",
+                    "homepage": "http://www.cakedc.com",
+                    "role": "Author"
+                }
+            ],
+            "description": "CakePHP 4 plugin extension for PHPStan.",
+            "support": {
+                "issues": "https://github.com/CakeDC/cakephp-phpstan/issues",
+                "source": "https://github.com/CakeDC/cakephp-phpstan/tree/2.0.1"
+            },
+            "time": "2021-12-27T17:20:02+00:00"
         },
         {
             "name": "cakephp/bake",

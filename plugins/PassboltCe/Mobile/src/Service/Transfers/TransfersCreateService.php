@@ -46,7 +46,6 @@ class TransfersCreateService
      */
     public function __construct(?TransfersTable $transfersTable = null)
     {
-        /** @phpstan-ignore-next-line */
         $this->Transfers = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
     }
 
