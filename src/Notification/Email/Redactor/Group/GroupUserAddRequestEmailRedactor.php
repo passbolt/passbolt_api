@@ -52,9 +52,7 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
      */
     public function __construct(?UsersTable $usersTable = null, ?GroupsUsersTable $groupsUsersTable = null)
     {
-        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 

@@ -37,7 +37,6 @@ class UiActionsCreateService
      */
     public function __construct(?UiActionsTable $uiActionsTable = null)
     {
-        /** @phpstan-ignore-next-line */
         $this->uiActionsTable = $uiActionsTable ?? TableRegistry::getTableLocator()->get('Passbolt/Rbacs.UiActions');
     }
 
