@@ -35,7 +35,6 @@ class GroupsUsersUpdateService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 

@@ -52,16 +52,12 @@ class TransfersUpdateService
      */
     public function __construct(?TransfersTable $transfersTable = null, ?AuthenticationTokensTable $authTable = null)
     {
-        /** @phpstan-ignore-next-line */
         $this->Transfers = $transfersTable ?? TableRegistry::getTableLocator()->get('Passbolt/Mobile.Transfers');
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $authTable ?? TableRegistry::getTableLocator()->get('AuthenticationTokens');
 
         // Cleanup the tokens if needed
         // @later (tm) could be moved in a cron job
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens->setActiveExpiredTokenToInactive(AuthenticationToken::TYPE_MOBILE_TRANSFER);
-        /** @phpstan-ignore-next-line */
         $this->Transfers->cancelAllTransfersWithInactiveAuthenticationToken();
     }
 

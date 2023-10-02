@@ -40,7 +40,6 @@ class ResourcesIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Resources',
         ]);
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
     }
 

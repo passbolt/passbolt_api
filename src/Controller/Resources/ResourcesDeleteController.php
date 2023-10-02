@@ -54,9 +54,7 @@ class ResourcesDeleteController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

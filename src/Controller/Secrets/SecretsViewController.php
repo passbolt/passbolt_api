@@ -42,7 +42,6 @@ class SecretsViewController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Secrets = $this->fetchTable('Secrets');
     }
 

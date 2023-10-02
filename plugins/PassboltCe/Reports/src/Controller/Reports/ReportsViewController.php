@@ -50,7 +50,6 @@ class ReportsViewController extends AppController
     {
         parent::initialize();
         $this->reportViewService = new ReportViewService();
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

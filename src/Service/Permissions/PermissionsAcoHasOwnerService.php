@@ -32,7 +32,6 @@ class PermissionsAcoHasOwnerService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 

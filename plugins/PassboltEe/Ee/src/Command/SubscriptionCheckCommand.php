@@ -46,7 +46,6 @@ class SubscriptionCheckCommand extends PassboltCommand
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Subscriptions = $this->fetchTable('Passbolt/Ee.Subscriptions');
     }
 

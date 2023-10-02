@@ -41,7 +41,6 @@ class SubscriptionsViewController extends AppController
             throw new ForbiddenException(__('You are not allowed to access this location.'));
         }
 
-        /** @phpstan-ignore-next-line */
         $this->Subscriptions = $this->fetchTable('Passbolt/Ee.Subscriptions');
         try {
             $service = new SubscriptionKeyGetService();

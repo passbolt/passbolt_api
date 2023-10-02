@@ -49,9 +49,7 @@ class GroupsCommand extends DirectorySyncCommand
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Groups = $this->fetchTable('Groups');
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

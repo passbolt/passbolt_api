@@ -69,9 +69,7 @@ class GroupsUpdateService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
-        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->groupGetService = new GroupGetService();
         $this->groupsUsersCreateService = new GroupsUsersAddService();
