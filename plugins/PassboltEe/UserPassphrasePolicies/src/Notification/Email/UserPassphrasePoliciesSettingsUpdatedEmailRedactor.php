@@ -60,16 +60,16 @@ class UserPassphrasePoliciesSettingsUpdatedEmailRedactor implements SubscribedEm
     {
         $emailCollection = new EmailCollection();
 
-        /** @var \Passbolt\UserPassphrasePolicies\Model\Dto\UserPassphrasePoliciesSettingsDto $userPassphrasePoliciesSettingsDto */
-        $userPassphrasePoliciesSettingsDto = $event->getData('userPassphrasePoliciesSetting');
-        if (!$userPassphrasePoliciesSettingsDto instanceof UserPassphrasePoliciesSettingsDto) {
-            throw new InvalidArgumentException('`userPassphrasePoliciesSetting` is missing from event data.');
-        }
-
         /** @var \App\Utility\ExtendedUserAccessControl $uac */
         $uac = $event->getData('uac');
         if (!$uac instanceof ExtendedUserAccessControl) {
             throw new InvalidArgumentException('`uac` is missing from event data.');
+        }
+
+        /** @var \Passbolt\UserPassphrasePolicies\Model\Dto\UserPassphrasePoliciesSettingsDto $userPassphrasePoliciesSettingsDto */
+        $userPassphrasePoliciesSettingsDto = $event->getData('userPassphrasePoliciesSetting');
+        if (!$userPassphrasePoliciesSettingsDto instanceof UserPassphrasePoliciesSettingsDto) {
+            throw new InvalidArgumentException('`userPassphrasePoliciesSetting` is missing from event data.');
         }
 
         $clientIp = $uac->getUserIp();
