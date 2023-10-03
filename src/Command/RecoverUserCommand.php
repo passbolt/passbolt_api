@@ -66,11 +66,10 @@ class RecoverUserCommand extends PassboltCommand
             $this->abort();
         }
 
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
         /** @var \App\Model\Entity\User|null $user */
-        $user = $this->fetchTable('Users')
-            ->find()
-            ->where(compact('username'))
-            ->first();
+        $user = $usersTable->find('active')->where(['username' => $username])->first();
         if (is_null($user)) {
             $io->error("The user {$username} could not be found.");
             $this->abort();

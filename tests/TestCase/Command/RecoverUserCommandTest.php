@@ -113,4 +113,19 @@ class RecoverUserCommandTest extends TestCase
         $this->assertExitError("An active recovery token could not be found for the user {$user->username}.");
         $this->assertOutputContains('You may create one using the option --create.');
     }
+
+    public function testRecoverUserCommand_WithSameUsernamePresent(): void
+    {
+        $username = 'ada@passbolt.com';
+        // Create two users with same username.
+        // 1. First would be active & deleted
+        // 2. Second with active & not delete(`deleted=0`)
+        UserFactory::make(['username' => $username])->user()->active()->deleted()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make(['username' => $username])->user()->active()->persist();
+
+        $this->exec('passbolt recover_user -c -u ' . $user->username);
+
+        $this->assertExitSuccess();
+    }
 }
