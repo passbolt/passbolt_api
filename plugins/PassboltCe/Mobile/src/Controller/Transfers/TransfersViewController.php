@@ -40,7 +40,6 @@ class TransfersViewController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Transfers = $this->fetchTable('Passbolt/Mobile.Transfers');
     }
 

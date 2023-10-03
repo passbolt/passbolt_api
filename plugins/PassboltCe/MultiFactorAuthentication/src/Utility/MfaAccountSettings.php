@@ -80,7 +80,6 @@ class MfaAccountSettings
      */
     public function __construct(UserAccessControl $uac, ?array $settings = null)
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
         $this->uac = $uac;
         $this->settings = $settings;

@@ -107,7 +107,8 @@
         "passbolt/passbolt-test-data": "^4.1.0",
         "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
         "cakephp/localized": "4.0.0",
-        "vimeo/psalm": "^5.0.0"
+        "vimeo/psalm": "^5.0.0",
+        "cakedc/cakephp-phpstan": "^2.0"
     },
     "autoload": {
         "psr-4": {

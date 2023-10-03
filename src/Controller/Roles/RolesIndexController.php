@@ -37,7 +37,6 @@ class RolesIndexController extends AppController
     {
         $this->assertJson();
 
-        /** @phpstan-ignore-next-line */
         $this->Roles = $this->fetchTable('Roles');
         $roles = $this->Roles->find('all');
         $this->success(__('The operation was successful.'), $roles);

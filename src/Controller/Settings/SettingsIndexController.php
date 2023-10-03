@@ -57,7 +57,6 @@ class SettingsIndexController extends AppController
      */
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
         $this->Authentication->allowUnauthenticated(['index']);
 

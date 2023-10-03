@@ -34,7 +34,6 @@ class SecretsCreateService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
     }
 

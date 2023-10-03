@@ -49,7 +49,6 @@ class SecretsUpdateSecretsService
     {
         $this->accessService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->secretCreateService = new SecretsCreateService();
-        /** @phpstan-ignore-next-line */
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
     }
 

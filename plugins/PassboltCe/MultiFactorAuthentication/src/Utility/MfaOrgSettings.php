@@ -65,7 +65,6 @@ class MfaOrgSettings
         }
         $settings[MfaSettings::PROVIDERS] = $this->formatProviders($settings[MfaSettings::PROVIDERS]);
         $this->settings = $settings;
-        /** @phpstan-ignore-next-line  */
         $this->OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
     }
 

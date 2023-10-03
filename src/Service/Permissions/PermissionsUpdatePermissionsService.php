@@ -49,7 +49,6 @@ class PermissionsUpdatePermissionsService
     {
         $this->permissionsAcoHasOwnerService = new PermissionsAcoHasOwnerService();
         $this->permissionsCreateService = new PermissionsCreateService();
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = $permissionsTable ?? TableRegistry::getTableLocator()->get('Permissions');
     }
 
