@@ -51,10 +51,10 @@ git clone -b master https://"$HELPSITE_TOKEN_NAME":"$HELPSITE_TOKEN"@"$HELP_SITE
 cd "$PASSBOLT_HELP_DIR"
 
 create_release_notes
-git checkout -b release_notes_"$CI_COMMIT_TAG"
+git checkout -b release_notes_"$CI_COMMIT_TAG"_"$PASSBOLT_FLAVOUR"
 git add _releases/"$PASSBOLT_FLAVOUR"/"$CI_COMMIT_TAG".md
 git commit -m ":robot: Automatically added release notes for version $CI_COMMIT_TAG $PASSBOLT_FLAVOUR"
 glab auth login --token "$HELPSITE_TOKEN"
-mr_url=$(glab mr create -s release_notes_"$CI_COMMIT_TAG" -b master -d ":robot: Release notes for $CI_COMMIT_TAG $PASSBOLT_FLAVOUR" -t "Release notes for $CI_COMMIT_TAG" --push --repo "passbolt/passbolt-help" | grep 'https://gitlab.com/passbolt/passbolt-help/-/merge_requests/')
+mr_url=$(glab mr create -s release_notes_"$CI_COMMIT_TAG"_"$PASSBOLT_FLAVOUR" -b master -d ":robot: Release notes for $CI_COMMIT_TAG $PASSBOLT_FLAVOUR" -t "Release notes for $PASSBOLT_FLAVOUR $CI_COMMIT_TAG" --push --repo "passbolt/passbolt-help" | grep 'https://gitlab.com/passbolt/passbolt-help/-/merge_requests/')
 cd -
 bash .gitlab-ci/scripts/bin/slack-status-messages.sh ":notebook: New helpsite release notes created for $CI_COMMIT_TAG $PASSBOLT_FLAVOUR" "$mr_url"
