@@ -61,8 +61,10 @@ class RecoverUserCommand extends PassboltCommand
 
         $username = $args->getOption('username');
 
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
         /** @var \App\Model\Entity\User|null $user */
-        $user = $this->fetchTable('Users')
+        $user = $usersTable
             ->findByUsername($username)
             ->find('active')
             ->find('notDisabled')
