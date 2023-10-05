@@ -321,6 +321,12 @@ return [
                         env('PASSBOLT_PLUGINS_SSO_PROVIDER_GOOGLE_ENABLED', true),
                         FILTER_VALIDATE_BOOLEAN
                     ),
+                    // Generic provider is disabled by default
+                    // As SSO provider domain is not known by the client, it is considered less safe
+                    SsoSetting::PROVIDER_OAUTH2 =>  filter_var(
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_OAUHT2_ENABLED', false),
+                        FILTER_VALIDATE_BOOLEAN
+                    ),
                 ],
             ],
             'mfaPolicies' => [
@@ -363,6 +369,13 @@ return [
                 'google' => [
                     'clientId' => env('PASSBOLT_SELENIUM_SSO_GOOGLE_CLIENT_ID', ''),
                     'secretId' => env('PASSBOLT_SELENIUM_SSO_GOOGLE_SECRET_ID', ''),
+                ],
+                'oauth2' => [
+                    'url' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_URL', ''),
+                    'clientId' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_CLIENT_ID', ''),
+                    'secretId' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_SECRET_ID', ''),
+                    'scope' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_SCOPE', 'openid'),
+                    'openIdConfigurationPath' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_OPENID_CONFIGURATION_PATH', ''),
                 ],
             ],
         ],

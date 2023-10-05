@@ -39,13 +39,16 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
         $this->postJson('/sso/azure/login.json', ['user_id' => $user->id]);
 
         $this->assertSuccess();
-        $response = $this->_responseJsonBody;
-        $this->assertStringContainsString('microsoft', $response->url);
-        $this->assertObjectHasAttributes(
-            ['login_hint', 'response_type', 'nonce', 'state', 'scope', 'redirect_uri', 'client_id'],
-            $response->data
-        );
-        $this->assertSame($user->username, $response->data->login_hint);
+        $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('microsoft', $url);
+        $this->assertStringContainsString('login_hint', $url);
+        $this->assertStringContainsString('scope', $url);
+        $this->assertStringContainsString('redirect_uri', $url);
+        $this->assertStringContainsString('response_type', $url);
+        $this->assertStringContainsString('client_id', $url);
+        $this->assertStringContainsString('state', $url);
+        $this->assertStringContainsString('nonce', $url);
+
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
@@ -61,13 +64,16 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
         $this->postJson('/sso/azure/login.json', ['user_id' => $user->id]);
 
         $this->assertSuccess();
-        $response = $this->_responseJsonBody;
-        $this->assertStringContainsString('microsoft', $response->url);
-        $this->assertObjectHasAttributes(
-            ['login_hint', 'response_type', 'nonce', 'state', 'scope', 'redirect_uri', 'client_id'],
-            $response->data
-        );
-        $this->assertSame($user->username, $response->data->login_hint);
+        $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('microsoft', $url);
+        $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
+        $this->assertStringContainsString('scope=' . rawurlencode('openid profile email'), $url);
+        $this->assertStringContainsString('redirect_uri', $url);
+        $this->assertStringContainsString('response_type=code', $url);
+        $this->assertStringContainsString('client_id', $url);
+        $this->assertStringContainsString('state', $url);
+        $this->assertStringContainsString('nonce', $url);
+
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);

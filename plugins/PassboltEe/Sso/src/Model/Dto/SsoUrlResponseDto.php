@@ -17,27 +17,36 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Model\Dto;
 
+use InvalidArgumentException;
 use JsonSerializable;
 use Passbolt\Sso\Utility\UrlParser;
 
-class SsoUrlDto implements JsonSerializable
+class SsoUrlResponseDto implements JsonSerializable
 {
+    public const HTTP_GET = 'GET';
+    public const HTTP_POST = 'POST';
+
     /**
-     * @var string
+     * @var string url with parameters such as nonce, state, etc.
      */
     private $url;
 
     /**
-     * @var string
+     * @var string http method
      */
-    private $method = 'GET';
+    private $method;
 
     /**
      * @param string $url SSO URL.
+     * @param string|null $method GET|POST
      */
-    public function __construct(string $url)
+    public function __construct(string $url, ?string $method = null)
     {
         $this->url = $url;
+        $this->method = $method ?? self::HTTP_GET;
+        if ($this->method !== self::HTTP_GET && $this->method !== self::HTTP_POST) {
+            throw new InvalidArgumentException('This SSO Url Method is not supported');
+        }
     }
 
     /**
@@ -45,14 +54,29 @@ class SsoUrlDto implements JsonSerializable
      */
     public function setPostMethod(): void
     {
-        $this->method = 'POST';
+        $this->method = self::HTTP_POST;
     }
 
     /**
+     * @return string url
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @return mixed string|array to be serialized
      * @inheritDoc
      */
     public function jsonSerialize()
     {
+        if ($this->method === self::HTTP_GET) {
+            return [
+                'url' => $this->url,
+            ];
+        }
+
         return [
             'method' => $this->method,
             'url' => UrlParser::getUrlOnly($this->url),

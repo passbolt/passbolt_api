@@ -67,17 +67,20 @@ class GoogleRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
 
         $this->assertSuccess();
         // Assert URL
-        $response = $this->_responseJsonBody;
-        $this->assertStringContainsString('oauth2/v2/auth', $response->url);
-        $this->assertObjectHasAttributes(
-            ['response_type', 'nonce', 'state', 'scope', 'redirect_uri', 'client_id'],
-            $response->data
+        $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('oauth2/v2/auth', $url);
+        $this->assertStringContainsString('nonce', $url);
+        $this->assertStringContainsString("client_id={$ssoSettingsDto->data->toArray()['client_id']}", $url);
+        $this->assertStringContainsString(
+            'scope=' . rawurlencode(implode(' ', ['openid', 'profile', 'email'])),
+            $url
         );
-        $this->assertObjectNotHasAttribute('login_hint', $response->data);
-        $this->assertSame('GET', $response->method);
-        $this->assertSame($ssoSettingsDto->data->toArray()['client_id'], $response->data->client_id);
-        $this->assertSame(implode(' ', ['openid', 'profile', 'email']), $response->data->scope);
-        $this->assertSame(Router::url('/sso/google/redirect', true), $response->data->redirect_uri);
+        $this->assertStringContainsString(
+            'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
+            $url
+        );
+        $this->assertStringNotContainsString('login_hint', $url);
+
         /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::find()->firstOrFail();
         $this->assertEquals(SsoState::TYPE_SSO_RECOVER, $ssoState->type);

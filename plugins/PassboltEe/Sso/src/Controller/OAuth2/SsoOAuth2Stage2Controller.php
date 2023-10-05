@@ -12,20 +12,19 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.0.0
+ * @since         4.1.0
  */
 
-namespace Passbolt\Sso\Controller\Google;
+namespace Passbolt\Sso\Controller\OAuth2;
 
 use App\Service\Cookie\AbstractSecureCookieService;
-use Cake\Http\Exception\BadRequestException;
 use Passbolt\Sso\Controller\AbstractSso2Stage2Controller;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
-use Passbolt\Sso\Service\Sso\Google\SsoGoogleService;
+use Passbolt\Sso\Service\Sso\OAuth2\SsoOAuth2Service;
 
-class SsoGoogleStage2Controller extends AbstractSso2Stage2Controller
+class SsoOAuth2Stage2Controller extends AbstractSso2Stage2Controller
 {
     /**
      * @inheritDoc
@@ -34,7 +33,7 @@ class SsoGoogleStage2Controller extends AbstractSso2Stage2Controller
         AbstractSecureCookieService $cookieService,
         SsoSettingsDto $settingsDto
     ): AbstractSsoService {
-        return new SsoGoogleService($cookieService, $settingsDto);
+        return new SsoOAuth2Service($cookieService, $settingsDto);
     }
 
     /**
@@ -42,21 +41,6 @@ class SsoGoogleStage2Controller extends AbstractSso2Stage2Controller
      */
     protected function getProviderName(): string
     {
-        return SsoSetting::PROVIDER_GOOGLE;
-    }
-
-    /**
-     * Handle both user is admin and trying to validate a setting or regular user SSO return.
-     * Triage is different in Google since POST is not supported it is removed, the rest is the same
-     *
-     * @param \App\Service\Cookie\AbstractSecureCookieService $cookieService Cookie service
-     * @return void
-     */
-    public function triage(AbstractSecureCookieService $cookieService): void
-    {
-        if ($this->getRequest()->is('post')) {
-            throw new BadRequestException('POST redirect is not supported for Google SSO provider.');
-        }
-        parent::triage($cookieService);
+        return SsoSetting::PROVIDER_OAUTH2;
     }
 }

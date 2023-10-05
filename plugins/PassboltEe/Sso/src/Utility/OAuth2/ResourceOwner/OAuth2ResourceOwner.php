@@ -14,12 +14,12 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.1.0
  */
-namespace Passbolt\Sso\Utility\Ctie\ResourceOwner;
+namespace Passbolt\Sso\Utility\OAuth2\ResourceOwner;
 
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use Passbolt\Sso\Utility\OpenId\SsoResourceOwnerInterface;
 
-class CtieResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInterface
+class OAuth2ResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInterface
 {
     /**
      * Response payload

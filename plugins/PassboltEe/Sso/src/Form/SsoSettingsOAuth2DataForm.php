@@ -12,13 +12,14 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         4.4.0
  */
 namespace Passbolt\Sso\Form;
 
 use Cake\Validation\Validator;
+use Passbolt\Sso\Model\Validation\IsValidOpenIdBaseUrl;
 
-class SsoSettingsCtieDataForm extends BaseSsoSettingsForm
+class SsoSettingsOAuth2DataForm extends BaseSsoSettingsForm
 {
     /**
      * @inheritDoc
@@ -28,9 +29,14 @@ class SsoSettingsCtieDataForm extends BaseSsoSettingsForm
         $validator = new Validator();
 
         $validator
-            ->requirePresence('base_url', __('A base URL is required.'))
-            ->notEmptyString('base_url', __('The base URL should not be empty.'))
-            ->maxLength('base_url', 256, __('The base URL is too large.'));
+            ->requirePresence('url', __('A base URL is required.'))
+            ->notEmptyString('url', __('The base URL should not be empty.'))
+            ->maxLength('url', 256, __('The base URL is too large.'))
+            ->add('url', 'custom', new IsValidOpenIdBaseUrl());
+
+        $validator
+            ->allowEmptyString('openid_configuration_path')
+            ->utf8('openid_configuration_path', __('The OpenID configuration path should be a valid BMP-UTF8 string.'));
 
         $validator
             ->requirePresence('client_id', __('A client id is required.'))

@@ -15,17 +15,17 @@ declare(strict_types=1);
  * @since         4.1.0
  */
 
-namespace Passbolt\Sso\Controller\Ctie;
+namespace Passbolt\Sso\Controller\OAuth2;
 
 use App\Service\Cookie\AbstractSecureCookieService;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\NotFoundException;
 use Passbolt\Sso\Controller\AbstractSsoController;
 use Passbolt\Sso\Model\Entity\SsoState;
-use Passbolt\Sso\Service\Sso\Ctie\SsoCtieService;
+use Passbolt\Sso\Service\Sso\OAuth2\SsoOAuth2Service;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 
-class SsoCtieStage1DryRunController extends AbstractSsoController
+class SsoOAuth2Stage1DryRunController extends AbstractSsoController
 {
     /**
      * Perform a SSO Login dry run for a given settings_id
@@ -51,12 +51,10 @@ class SsoCtieStage1DryRunController extends AbstractSsoController
 
         // Redirect to provider
         $url = $this->getSsoUrlWithCookie(
-            new SsoCtieService($cookieService, $settingsDto),
+            new SsoOAuth2Service($cookieService, $settingsDto),
             $uac,
             SsoState::TYPE_SSO_SET_SETTINGS
         );
-
-        $url->setPostMethod();
 
         $this->success(__('The operation was successful.'), $url);
     }

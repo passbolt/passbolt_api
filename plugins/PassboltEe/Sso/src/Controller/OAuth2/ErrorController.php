@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.1.0
  */
 
-namespace Passbolt\Sso\Controller\Ctie;
+namespace Passbolt\Sso\Controller\OAuth2;
 
 use Passbolt\Sso\Controller\SsoErrorController;
 

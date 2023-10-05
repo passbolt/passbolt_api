@@ -15,23 +15,21 @@ declare(strict_types=1);
  * @since         4.1.0
  */
 
-namespace Passbolt\Sso\Service\Sso\Ctie;
+namespace Passbolt\Sso\Service\Sso\OAuth2;
 
 use App\Utility\ExtendedUserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
 use League\OAuth2\Client\Provider\AbstractProvider;
-use Passbolt\Sso\Model\Dto\SsoSettingsCtieDataDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
+use Passbolt\Sso\Model\Dto\SsoSettingsOAuth2DataDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
-use Passbolt\Sso\Utility\Ctie\Provider\CtieProvider;
+use Passbolt\Sso\Utility\OAuth2\Provider\OAuth2Provider;
 
-class SsoCtieService extends AbstractSsoService
+class SsoOAuth2Service extends AbstractSsoService
 {
-    // ABSTRACT CLASS PUBLIC FUNCTIONS DEFINITION
-
     /**
      * Get authorization URL from the provider; this returns the
      * urlAuthorize option and generates and applies any necessary parameters
@@ -62,14 +60,15 @@ class SsoCtieService extends AbstractSsoService
      */
     protected function getOAuthProvider(SsoSettingsDto $settings): AbstractProvider
     {
-        /** @var \Passbolt\Sso\Model\Dto\SsoSettingsCtieDataDto $data */
+        /** @var \Passbolt\Sso\Model\Dto\SsoSettingsOAuth2DataDto $data */
         $data = $settings->data;
 
-        return new CtieProvider([
-            'baseUrl' => $data->base_url,
+        return new OAuth2Provider([
             'clientId' => $data->client_id,
             'clientSecret' => $data->client_secret,
-            'redirectUri' => Router::url('/sso/ctie/redirect', true),
+            'redirectUri' => Router::url('/sso/oauth2/redirect', true),
+            'openIdBaseUri' => $data->url,
+            'openIdConfigurationPath' => $data->openid_configuration_path,
         ]);
     }
 
@@ -80,11 +79,11 @@ class SsoCtieService extends AbstractSsoService
     {
         try {
             $ssoSettings = (new SsoSettingsGetService())->getActiveOrFail(true);
-            if ($ssoSettings->provider !== SsoSetting::PROVIDER_CTIE) {
-                throw new BadRequestException('Invalid provider. Expected CTIE.');
+            if ($ssoSettings->provider !== SsoSetting::PROVIDER_OAUTH2) {
+                throw new BadRequestException('Invalid provider. Expected OAuth2.');
             }
-            if (!($ssoSettings->data instanceof SsoSettingsCtieDataDto)) {
-                throw new BadRequestException('Invalid provider data. Expected CTIE settings.');
+            if (!($ssoSettings->data instanceof SsoSettingsOAuth2DataDto)) {
+                throw new BadRequestException('Invalid provider data. Expected OAuth2 settings.');
             }
         } catch (\Exception $exception) {
             throw new BadRequestException(__('No valid SSO settings found.'), 400, $exception);
@@ -92,6 +91,4 @@ class SsoCtieService extends AbstractSsoService
 
         return $ssoSettings;
     }
-
-    // HELPERS
 }

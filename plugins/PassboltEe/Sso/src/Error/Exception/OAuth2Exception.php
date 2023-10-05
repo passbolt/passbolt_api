@@ -20,7 +20,7 @@ use Cake\Core\Exception\CakeException;
 use Cake\Log\Log;
 use Throwable;
 
-class CtieException extends CakeException
+class OAuth2Exception extends CakeException
 {
     /**
      * Error.
@@ -45,7 +45,7 @@ class CtieException extends CakeException
         $this->errorDescription = $errorDescription;
 
         if (!in_array($error, $this->allowedErrors())) {
-            Log::error('Unkown CTIE error:' . $error);
+            Log::error('Unkown OAuth2 error:' . $error);
         }
 
         parent::__construct($errorDescription, $code ?? $this->_defaultCode, $previous);
@@ -62,7 +62,7 @@ class CtieException extends CakeException
     }
 
     /**
-     * Return error message from CTIE (non translated)
+     * Return error message from OAuth2 (non translated)
      *
      * @return string
      */
@@ -75,7 +75,7 @@ class CtieException extends CakeException
      * @see https://openid.net/specs/openid-connect-core-1_0.html#AuthError
      * @return string[]
      */
-    public static function allowedErrors(): array
+    public function allowedErrors(): array
     {
         return [
             'interaction_required',

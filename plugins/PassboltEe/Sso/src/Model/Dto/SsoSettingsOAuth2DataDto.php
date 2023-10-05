@@ -18,14 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Model\Dto;
 
 /**
- * Data Transfer Object class for SSO CTIE.
+ * Data Transfer Object class for SSO OAuth2.
  */
-class SsoSettingsCtieDataDto implements SsoSettingsDataDtoInterface
+class SsoSettingsOAuth2DataDto implements SsoSettingsDataDtoInterface
 {
     /**
      * @var string
      */
-    public $base_url;
+    public $url;
 
     /**
      * @var string
@@ -38,19 +38,26 @@ class SsoSettingsCtieDataDto implements SsoSettingsDataDtoInterface
     public $client_secret;
 
     /**
+     * @var string
+     */
+    public $openid_configuration_path;
+
+    /**
      * Constructor.
      *
      * @param array $data with
-     *  - base_url string
+     *  - url string
      *  - client_id string
      *  - client_secret string
+     *  - openid_configuration_path string
      * @return void
      */
     public function __construct(array $data)
     {
-        $this->base_url = $data['base_url'] ?? '';
+        $this->url = $data['url'] ?? '';
         $this->client_id = $data['client_id'] ?? '';
         $this->client_secret = $data['client_secret'] ?? '';
+        $this->openid_configuration_path = $data['openid_configuration_path'] ?? '';
     }
 
     /**
@@ -59,9 +66,10 @@ class SsoSettingsCtieDataDto implements SsoSettingsDataDtoInterface
     public function toArray(): array
     {
         return [
-            'base_url' => $this->base_url,
+            'url' => $this->url,
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
+            'openid_configuration_path' => $this->openid_configuration_path,
         ];
     }
 }

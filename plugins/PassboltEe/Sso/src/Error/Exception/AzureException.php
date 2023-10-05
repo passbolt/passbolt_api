@@ -16,22 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\Sso\Error\Exception;
 
-use Cake\Core\Exception\CakeException;
 use Cake\Log\Log;
 use Throwable;
 
-class AzureException extends CakeException
+class AzureException extends OAuth2Exception
 {
-    /**
-     * @var string $error
-     */
-    protected $error;
-
-    /**
-     * @var string $errorDescription
-     */
-    protected $errorDescription;
-
     /**
      * Constructor.
      *
@@ -46,33 +35,11 @@ class AzureException extends CakeException
      */
     public function __construct(string $error, string $errorDescription, ?int $code = null, ?Throwable $previous = null)
     {
-        $this->error = $error;
-        $this->errorDescription = $errorDescription;
-
         if (!in_array($error, $this->allowedErrors())) {
             Log::error('Unkown Azure error:' . $error);
         }
-        parent::__construct($errorDescription, $code ?? $this->_defaultCode, $previous);
-    }
 
-    /**
-     * Return error code
-     *
-     * @return string
-     */
-    public function getError(): string
-    {
-        return $this->error;
-    }
-
-    /**
-     * Return error message from Azure (non translated)
-     *
-     * @return string
-     */
-    public function getErrorDescription(): string
-    {
-        return $this->errorDescription;
+        parent::__construct($error, $errorDescription, $code, $previous);
     }
 
     /**
@@ -80,7 +47,7 @@ class AzureException extends CakeException
      *
      * @return string[]
      */
-    public static function allowedErrors(): array
+    public function allowedErrors(): array
     {
         return [
             /*

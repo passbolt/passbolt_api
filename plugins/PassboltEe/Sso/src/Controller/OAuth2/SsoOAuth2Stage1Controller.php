@@ -15,15 +15,15 @@ declare(strict_types=1);
  * @since         4.1.0
  */
 
-namespace Passbolt\Sso\Controller\Ctie;
+namespace Passbolt\Sso\Controller\OAuth2;
 
 use App\Service\Cookie\AbstractSecureCookieService;
 use Cake\Event\EventInterface;
 use Passbolt\Sso\Controller\AbstractSsoController;
 use Passbolt\Sso\Model\Entity\SsoState;
-use Passbolt\Sso\Service\Sso\Ctie\SsoCtieService;
+use Passbolt\Sso\Service\Sso\OAuth2\SsoOAuth2Service;
 
-class SsoCtieStage1Controller extends AbstractSsoController
+class SsoOAuth2Stage1Controller extends AbstractSsoController
 {
     /**
      * @inheritDoc
@@ -49,9 +49,7 @@ class SsoCtieStage1Controller extends AbstractSsoController
         $uac = $this->getUacFromData();
 
         // Redirect to provider
-        $url = $this->getSsoUrlWithCookie(new SsoCtieService($cookieService), $uac, SsoState::TYPE_SSO_GET_KEY);
-
-        $url->setPostMethod();
+        $url = $this->getSsoUrlWithCookie(new SsoOAuth2Service($cookieService), $uac, SsoState::TYPE_SSO_GET_KEY);
 
         $this->success(__('The operation was successful.'), $url);
     }

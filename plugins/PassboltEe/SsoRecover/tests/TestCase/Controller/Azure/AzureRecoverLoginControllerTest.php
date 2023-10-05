@@ -66,16 +66,15 @@ class AzureRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
         $this->postJson('/sso/recover/azure.json');
 
         $this->assertSuccess();
-        $response = $this->_responseJsonBody;
-        $this->assertStringContainsString('microsoft', $response->url);
-        $this->assertObjectHasAttributes(
-            ['response_type', 'nonce', 'state', 'scope', 'redirect_uri', 'client_id'],
-            $response->data
-        );
-        $this->assertSame('GET', $response->method);
-        $this->assertSame($ssoSettingsDto->data->toArray()['client_id'], $response->data->client_id);
-        $this->assertSame(implode(' ', ['openid', 'profile', 'email']), $response->data->scope);
-        $this->assertSame(Router::url('/sso/azure/redirect', true), $response->data->redirect_uri);
+        $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('microsoft', $url);
+        $this->assertStringContainsString('scope=openid%20profile%20email', $url);
+        $this->assertStringContainsString('redirect_uri=' . rawurlencode(Router::url('/sso/azure/redirect', true)), $url);
+        $this->assertStringContainsString('response_type=code', $url);
+        $this->assertStringContainsString('client_id=' . $ssoSettingsDto->data->toArray()['client_id'], $url);
+        $this->assertStringContainsString('state', $url);
+        $this->assertStringContainsString('nonce', $url);
+
         /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::find()->firstOrFail();
         $this->assertEquals(SsoState::TYPE_SSO_RECOVER, $ssoState->type);

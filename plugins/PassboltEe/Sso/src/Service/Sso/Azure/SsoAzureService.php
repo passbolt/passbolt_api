@@ -88,7 +88,7 @@ class SsoAzureService extends AbstractSsoService
             'clientSecret' => $data->client_secret,
             'redirectUri' => Router::url('/sso/azure/redirect', true),
             'tenant' => $data->tenant_id,
-            'urlLogin' => $data->url ?? null,
+            'openIdBaseUri' => $data->url ?? null,
             'emailClaim' => $data->email_claim ?? null,
         ]);
     }

@@ -21,7 +21,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Firebase\JWT\JWT;
 use League\OAuth2\Client\Token\AccessToken;
-use Passbolt\Sso\Utility\Provider\BaseOauth2Provider;
+use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
 
 /**
  * Extend BaseAccessToken to include id_token support
@@ -30,7 +30,7 @@ use Passbolt\Sso\Utility\Provider\BaseOauth2Provider;
 class BaseIdToken extends AccessToken
 {
     /**
-     * @var \Passbolt\Sso\Utility\Provider\BaseOauth2Provider $provider provider
+     * @var \Passbolt\Sso\Utility\Provider\AbstractOauth2Provider $provider provider
      */
     protected $provider;
 
@@ -46,11 +46,11 @@ class BaseIdToken extends AccessToken
 
     /**
      * @param array $options such as access_token, refresh_token and id_token
-     * @param \Passbolt\Sso\Utility\Provider\BaseOauth2Provider $provider provider
+     * @param \Passbolt\Sso\Utility\Provider\AbstractOauth2Provider $provider provider
      * @throws \Cake\Http\Exception\InternalErrorException if keys to verify JWT cannot be fetched or validated
      * @throws \Cake\Http\Exception\BadRequestException if JWT doesn't validate
      */
-    public function __construct(array $options, BaseOauth2Provider $provider)
+    public function __construct(array $options, AbstractOauth2Provider $provider)
     {
         parent::__construct($options);
 

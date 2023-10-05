@@ -23,7 +23,7 @@ use Cake\TestSuite\TestCase;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Test\Lib\AzureProviderTestTrait;
 use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
-use Passbolt\Sso\Utility\Provider\BaseOauth2Provider;
+use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
 
 /**
  * @covers \Passbolt\Sso\Utility\Azure\Provider\AzureProvider
@@ -40,9 +40,9 @@ class AzureProviderTest extends TestCase
         }
     }
 
-    public function testSsoAzureProvider_ExtendsBaseOauth2Provider(): void
+    public function testSsoAzureProvider_ExtendsAbstractOauth2Provider(): void
     {
-        $this->assertInstanceOf(BaseOauth2Provider::class, $this->getDummyAzureProvider());
+        $this->assertInstanceOf(AbstractOauth2Provider::class, $this->getDummyAzureProvider());
     }
 
     public function testSsoAzureProvider_getBaseAuthorizationUrl(): void
@@ -93,12 +93,12 @@ class AzureProviderTest extends TestCase
             'clientSecret' => Configure::read('passbolt.selenium.sso.azure.secretId'),
             'redirectUri' => Router::url('/sso/azure/redirect', true),
             'tenant' => null,
-            'urlLogin' => null,
+            'openIdBaseUri' => null,
             'emailClaim' => null,
         ]);
 
         $this->assertEquals(SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL, $provider->emailClaim);
-        $this->assertEquals('https://login.microsoftonline.com', $provider->urlLogin);
-        $this->assertEquals('', $provider->tenant);
+        $this->assertEquals('https://login.microsoftonline.com//v2.0', $provider->getOpenIdBaseUri());
+        $this->assertEquals('', $provider->getTenant());
     }
 }

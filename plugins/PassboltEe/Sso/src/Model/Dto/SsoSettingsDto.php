@@ -78,8 +78,8 @@ class SsoSettingsDto extends AbstractSsoSettingsDto
                 return new SsoSettingsAzureDataDto($data);
             case SsoSetting::PROVIDER_GOOGLE:
                 return new SsoSettingsGoogleDataDto($data);
-            case SsoSetting::PROVIDER_CTIE:
-                return new SsoSettingsCtieDataDto($data);
+            case SsoSetting::PROVIDER_OAUTH2:
+                return new SsoSettingsOAuth2DataDto($data);
             default:
                 throw new InternalErrorException('SSO provider not implemented.');
         }
