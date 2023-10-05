@@ -28,7 +28,11 @@ class UsersEditControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         RoleFactory::make()->guest()->persist();
+        // Mock user agent and IP
+        $this->mockUserAgent('PHPUnit');
+        $this->mockUserIp();
     }
 
     public function testUsersEditController_Success_AsUser(): void
@@ -97,7 +101,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
-        $this->assertEquals($this->_responseJsonBody->role->name, Role::ADMIN);
+        $this->assertEquals(Role::ADMIN, $this->_responseJsonBody->role->name);
     }
 
     public function testUsersEditController_Error_MissingCsrfToken(): void

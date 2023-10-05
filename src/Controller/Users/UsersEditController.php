@@ -38,6 +38,8 @@ class UsersEditController extends AppController
     public const EVENT_USER_WAS_DISABLED = 'Controller.UsersEditController.userWasDisabled';
     public const EVENT_ADMIN_WAS_DISABLED = 'Controller.UsersEditController.adminWasDisabled';
 
+    public const EVENT_USER_AFTER_UPDATE = 'Controller.UsersEditController.afterUpdate';
+
     /**
      * User edit action
      * Allow editing firstname / lastname and role only for admin
@@ -72,10 +74,14 @@ class UsersEditController extends AppController
             throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
         }
         $this->Users->checkRules($user);
-        if ($user->getErrors()) {
+        if (!empty($user->getErrors())) {
             throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
         }
         $isBeingDisabled = $wasDisabledNull && !is_null($user->disabled);
+
+        // Used when sending after update event
+        // We need entity's dirty state to know which column values has been changed.
+        $userEntity = clone $user;
 
         // Save
         if (!$this->Users->save($user, ['checkrules' => false])) {
@@ -94,6 +100,8 @@ class UsersEditController extends AppController
         if ($isBeingDisabled) {
             $this->sendEmailOnUserDisable($user);
         }
+
+        $this->sendAfterUpdateEvent($userEntity);
 
         $this->success(__('The user has been updated successfully.'), $user);
     }
@@ -157,5 +165,24 @@ class UsersEditController extends AppController
             $event = new Event(static::EVENT_ADMIN_WAS_DISABLED, $this, $emailData);
             $this->getEventManager()->dispatch($event);
         }
+    }
+
+    /**
+     * Dispatch a common after update event to hook into several functionality on top.
+     *
+     * @param \App\Model\Entity\User $user User entity object with dirty state(before save).
+     * @return void
+     */
+    private function sendAfterUpdateEvent(User $user): void
+    {
+        $operator = $this->User->getExtendAccessControl();
+
+        $emailData = [
+            'operator' => $operator,
+            'user' => $user,
+        ];
+
+        $event = new Event(static::EVENT_USER_AFTER_UPDATE, $this, $emailData);
+        $this->getEventManager()->dispatch($event);
     }
 }

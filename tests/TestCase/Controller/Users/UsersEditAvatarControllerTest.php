@@ -42,6 +42,9 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
         $this->setTestLocalFilesystemAdapter();
         RoleFactory::make()->guest()->persist();
+        // Mock user agent and IP
+        $this->mockUserAgent('PHPUnit');
+        $this->mockUserIp();
     }
 
     public function tearDown(): void

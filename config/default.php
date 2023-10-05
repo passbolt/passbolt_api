@@ -124,6 +124,14 @@ return [
                         'register' => [
                             'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_REGISTER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
                         ],
+                        'adminRoleRevoked' => [
+                            /**
+                             * - admin: `true`(default) sends email to all admins except the person whose role has been changed. Set to `false` to stop sending emails to all.
+                             * - user: `false`(default) doesn't send email to the person whose role has been changed. Set to `true` to notify them.
+                             */
+                            'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_ROLE_REVOKED_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                            'user' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_ROLE_REVOKED_USER', false), FILTER_VALIDATE_BOOLEAN),
+                        ],
                     ]
                 ],
                 'group' => [
