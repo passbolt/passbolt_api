@@ -227,6 +227,11 @@ class Healthchecks
     public static function environment(?array $checks = []): array
     {
         $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.4', '>=');
+        $checks['environment']['minPhpVersion'] = version_compare(
+            PHP_VERSION,
+            Configure::read('passbolt.healthcheck.minPhpVersion'),
+            '>='
+        );
         $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
         $checks['environment']['gnupg'] = extension_loaded('gnupg');

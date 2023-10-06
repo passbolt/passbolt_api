@@ -219,6 +219,14 @@ class HealthcheckCommand extends PassboltCommand
             __('PHP version {0}.', PHP_VERSION),
             __('PHP version is too low, passbolt need PHP 7.4 or higher.')
         );
+        $this->warning(
+            $checks['environment']['minPhpVersion'],
+            __('PHP version is {0} or above.', Configure::read('passbolt.healthcheck.minPhpVersion')),
+            __(
+                'PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment.', // phpcs:ignore
+                Configure::read('passbolt.healthcheck.minPhpVersion')
+            )
+        );
         $this->assert(
             $checks['environment']['pcre'],
             __('PCRE compiled with unicode support.'),

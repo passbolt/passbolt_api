@@ -199,7 +199,8 @@ return [
 
         // Healthcheck
         'healthcheck' => [
-            'error' => filter_var(env('PASSBOLT_HEALTHCHECK_ERROR', false), FILTER_VALIDATE_BOOLEAN)
+            'error' => filter_var(env('PASSBOLT_HEALTHCHECK_ERROR', false), FILTER_VALIDATE_BOOLEAN),
+            'minPhpVersion' => '8.1',
         ],
 
         // Legal
