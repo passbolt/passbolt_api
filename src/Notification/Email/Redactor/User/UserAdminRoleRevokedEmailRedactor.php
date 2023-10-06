@@ -92,9 +92,13 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
             ->toArray();
         if (Configure::read(self::CONFIG_KEY_SEND_USER_EMAIL)) {
             $recipients[] = $usersTable
-                ->findByUsername($user->username)
                 ->find('notDisabled')
                 ->find('locale')
+                ->where(['Users.id' => $user->id, 'Users.deleted' => false])
+                ->contain([
+                    'Roles',
+                    'Profiles' => AvatarsTable::addContainAvatar(),
+                ])
                 ->firstOrFail();
         }
 
@@ -158,14 +162,14 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
     {
         /** @var \App\Model\Table\RolesTable $rolesTable */
         $rolesTable = $this->fetchTable('Roles');
-        /** @var \App\Model\Entity\Role $role */
-        $role = $rolesTable
+        /** @var \App\Model\Entity\Role $roleAdmin */
+        $roleAdmin = $rolesTable
             ->find()
             ->select(['id', 'name'])
             ->where(['name' => Role::ADMIN])
             ->firstOrFail();
 
-        if ($user->getOriginal('role_id') === $role->id && $user->role_id !== $role->id) {
+        if ($user->getOriginal('role_id') === $roleAdmin->id && $user->role_id !== $roleAdmin->id) {
             return true;
         }
 

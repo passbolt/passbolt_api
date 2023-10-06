@@ -49,12 +49,11 @@ echo $this->element('Email/module/avatar', [
     ]),
 ]);
 
-$text = __(
-    '{0} changed {1} role to {2} from admin.',
-    $operatorFullName,
-    $user['id'] === $recipient['id'] ? __('your') : $userFullName . __("'s"),
-    Role::USER
-);
+$text = __('{0} changed role of {1} to admin.', $operatorFullName, $userFullName);
+if ($user['id'] === $recipient['id']) {
+    $text = __('{0} changed your role to admin.', $operatorFullName);
+}
+
 $text .= ' ';
 $text .= __(
     '{0} can no longer perform administration tasks.',
@@ -67,5 +66,5 @@ echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/app/users/view/' . $user['id'], true),
-    'text' => __('view it in passbolt'),
+    'text' => __('View it in passbolt'),
 ]);

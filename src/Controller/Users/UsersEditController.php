@@ -81,7 +81,7 @@ class UsersEditController extends AppController
 
         // Used when sending after update event
         // We need entity's dirty state to know which column values has been changed.
-        $userEntity = clone $user;
+        $userEntityWithDirtyState = clone $user;
 
         // Save
         if (!$this->Users->save($user, ['checkrules' => false])) {
@@ -101,7 +101,7 @@ class UsersEditController extends AppController
             $this->sendEmailOnUserDisable($user);
         }
 
-        $this->sendAfterUpdateEvent($userEntity);
+        $this->sendAfterUpdateEvent($userEntityWithDirtyState);
 
         $this->success(__('The user has been updated successfully.'), $user);
     }
