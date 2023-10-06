@@ -75,10 +75,14 @@ class HealthchecksTest extends AppIntegrationTestCase
         $check = Healthchecks::environment();
         $expectedCheck = [
             'environment' => [
-                'phpVersion' => (bool)version_compare(PHP_VERSION, '7.4', '>='),
-                'minPhpVersion' => (bool)version_compare(
+                'phpVersion' => (bool)version_compare(
                     PHP_VERSION,
-                    Configure::read('passbolt.healthcheck.minPhpVersion'),
+                    Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG),
+                    '>='
+                ),
+                'nextMinPhpVersion' => (bool)version_compare(
+                    PHP_VERSION,
+                    Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG),
                     '>='
                 ),
                 'pcre' => true,

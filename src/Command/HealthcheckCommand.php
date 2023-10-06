@@ -217,14 +217,15 @@ class HealthcheckCommand extends PassboltCommand
         $this->assert(
             $checks['environment']['phpVersion'],
             __('PHP version {0}.', PHP_VERSION),
-            __('PHP version is too low, passbolt need PHP 7.4 or higher.')
+            __('PHP version is too low, passbolt need PHP {0} or higher.', Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG)) // phpcs:ignore
         );
+        $nextMinPhpVersion = Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG);
         $this->warning(
-            $checks['environment']['minPhpVersion'],
-            __('PHP version is {0} or above.', Configure::read('passbolt.healthcheck.minPhpVersion')),
+            $checks['environment']['nextMinPhpVersion'],
+            __('PHP version is {0} or above.', $nextMinPhpVersion),
             __(
                 'PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment.', // phpcs:ignore
-                Configure::read('passbolt.healthcheck.minPhpVersion')
+                $nextMinPhpVersion
             )
         );
         $this->assert(
