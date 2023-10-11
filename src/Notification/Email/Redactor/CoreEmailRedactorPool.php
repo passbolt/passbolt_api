@@ -33,6 +33,7 @@ use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceUpdateEmailRedactor;
 use App\Notification\Email\Redactor\Setup\SetupRecoverAbortAdminEmailRedactor;
 use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
+use App\Notification\Email\Redactor\User\AdminDeleteEmailRedactor;
 use App\Notification\Email\Redactor\User\AdminDisableEmailRedactor;
 use App\Notification\Email\Redactor\User\UserAdminRoleRevokedEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDeleteEmailRedactor;
@@ -110,6 +111,9 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         }
         if (Configure::read(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_EMAIL_ENABLED)) {
             $redactors[] = new UserAdminRoleRevokedEmailRedactor();
+        }
+        if (Configure::read(AdminDeleteEmailRedactor::CONFIG_KEY_EMAIL_ENABLED)) {
+            $redactors[] = new AdminDeleteEmailRedactor();
         }
 
         return $redactors;

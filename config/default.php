@@ -127,12 +127,20 @@ return [
                         'adminRoleRevoked' => [
                             /**
                              * - admin: `true`(default) sends email to all admins except the person whose role has been changed. Set to `false` to stop sending emails to all.
-                             * - user: `false`(default) doesn't send email to the person whose role has been changed. Set to `true` to notify them.
+                             * - user: `false`(default) don't send email to the person whose role has been changed. Set to `true` to notify them.
                              */
                             'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_ROLE_REVOKED_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
                             'user' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_ROLE_REVOKED_USER', false), FILTER_VALIDATE_BOOLEAN),
                         ],
-                    ]
+                        'delete' => [
+                            /**
+                             * - admin: `true`(default) sends email to all admins except the person who got deleted. Set to `false` to stop sending emails to all admins.
+                             * - user: `false`(default) don't send email to the person who got deleted. Set to `true` to notify them.
+                             */
+                            'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_DELETE_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                            'user' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_DELETE_USER', false), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                    ],
                 ],
                 'group' => [
                     // Notify all members that a group was deleted.
