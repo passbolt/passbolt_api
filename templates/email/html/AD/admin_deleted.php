@@ -31,8 +31,8 @@ $recipient = $body['recipient'];
 $operator = $body['operator'];
 /** @var array $user */
 $user = $body['user'];
-$userFullName = Purifier::clean($user['profile']['first_name']) . ' ' . Purifier::clean($user['profile']['last_name']);
-$operatorFullName = Purifier::clean($operator['profile']['first_name']) . ' ' . Purifier::clean($operator['profile']['last_name']);
+$userFullName = Purifier::clean($user['profile']['full_name']);
+$operatorFullName = Purifier::clean($operator['profile']['full_name']);
 
 $avatarText = __('{0} deleted administrator {1}', $operatorFullName, $userFullName);
 if ($recipient['id'] === $operator['id']) {

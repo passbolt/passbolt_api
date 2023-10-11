@@ -129,8 +129,8 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($user, $recipient, $deletedBy) {
-                $operatorFullName = Purifier::clean($deletedBy->profile->first_name) . ' ' . Purifier::clean($deletedBy->profile->last_name); // phpcs:ignore
-                $userFullName = Purifier::clean($user->profile->first_name) . ' ' . Purifier::clean($user->profile->last_name); // phpcs:ignore
+                $operatorFullName = Purifier::clean($deletedBy->profile->full_name);
+                $userFullName = Purifier::clean($user->profile->full_name);
 
                 if ($recipient->id === $deletedBy->id) {
                     return __('You deleted administrator {0}', $userFullName);
@@ -141,6 +141,10 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
                 return __('{0} deleted administrator {1}', $operatorFullName, $userFullName);
             }
         );
+
+        // Expose full name virtual field so it can be used in template file
+        $user->profile->setVirtual(['full_name']);
+        $deletedBy->profile->setVirtual(['full_name']);
 
         return new Email(
             $recipient,
