@@ -69,7 +69,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
             $operator->username
         );
         $this->assertEmailInBatchContains(
-            "The user {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
             $operator->username
         );
         $this->assertEmailInBatchContains(
@@ -77,7 +77,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
             $johnAdmin->username
         );
         $this->assertEmailInBatchContains(
-            "The user {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
             $johnAdmin->username
         );
     }
@@ -130,7 +130,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
             $operator->username
         );
         $this->assertEmailInBatchContains(
-            "The user {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
             $operator->username
         );
         // Group manager is notified
@@ -180,7 +180,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
             $operator->username
         );
         $this->assertEmailInBatchContains(
-            "The user {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
             $operator->username
         );
         // Group manager is notified

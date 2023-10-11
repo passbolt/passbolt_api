@@ -51,7 +51,7 @@ echo $this->element('Email/module/avatar', [
 
 if ($recipient['id'] !== $user['id']) {
     $text = __(
-        'The user {0} ({1}) is now deleted from your organisation in passbolt by {2}.',
+        'The administrator {0} ({1}) is now deleted from your organisation in passbolt by {2}.',
         $userFullName,
         Purifier::clean($user['username']),
         $operatorFullName
@@ -62,7 +62,9 @@ if ($recipient['id'] !== $user['id']) {
 
 echo $this->element('Email/module/text', ['text' => $text]);
 
-echo $this->element('Email/module/button', [
-    'url' => Router::url('/', true),
-    'text' => __('Log in passbolt'),
-]);
+if ($recipient['id'] !== $user['id']) {
+    echo $this->element('Email/module/button', [
+        'url' => Router::url('/', true),
+        'text' => __('Log in passbolt'),
+    ]);
+}
