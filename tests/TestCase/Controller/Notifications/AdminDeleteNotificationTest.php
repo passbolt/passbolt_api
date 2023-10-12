@@ -69,7 +69,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
             $operator->username
         );
         $this->assertEmailInBatchContains(
-            "The administrator {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
             $operator->username
         );
         $this->assertEmailInBatchContains(
@@ -77,7 +77,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
             $johnAdmin->username
         );
         $this->assertEmailInBatchContains(
-            "The administrator {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
             $johnAdmin->username
         );
     }
@@ -130,7 +130,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
             $operator->username
         );
         $this->assertEmailInBatchContains(
-            "The administrator {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
             $operator->username
         );
         // Group manager is notified
@@ -143,6 +143,57 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
             $johnAdmin->username
         );
         $this->assertEmailInBatchContains($group->name, $johnAdmin->username);
+    }
+
+    /**
+     * If send.group.user.delete redactor is disabled, group manager who is admin will get notified as admin not GM.
+     *
+     * @return void
+     */
+    public function testAdminDeleteNotification_GroupUserDeleteRedactorDisabled(): void
+    {
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->active()->persist();
+        /** @var \App\Model\Entity\User $operator */
+        $operator = UserFactory::make()->admin()->active()->persist();
+        /** @var \App\Model\Entity\User $johnAdmin */
+        $johnAdmin = UserFactory::make()->admin()->active()->persist();
+        // Create group related entries
+        /** @var \App\Model\Entity\Group $group */
+        $group = GroupFactory::make(['name' => 'Marketing'])->withGroupsManagersFor([$johnAdmin])->persist();
+        GroupsUserFactory::make()
+            ->with('Users', $admin)
+            ->with('Groups', $group)
+            ->persist();
+        // Disable sending user delete email to group managers
+        Configure::write('passbolt.email.send.group.user.delete', false);
+
+        $this->logInAs($operator);
+        $this->deleteJson("/users/{$admin->id}.json");
+
+        $this->assertSuccess();
+        // Email assertions
+        $this->assertEmailQueueCount(2);
+        $adminFullName = Purifier::clean($admin->profile->full_name);
+        $operatorFullName = Purifier::clean($operator->profile->full_name);
+        // Admin #1
+        $this->assertEmailInBatchContains(
+            "You deleted administrator {$adminFullName}",
+            $operator->username
+        );
+        $this->assertEmailInBatchContains(
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
+            $operator->username
+        );
+        // Admin #2
+        $this->assertEmailInBatchContains(
+            "{$operatorFullName} deleted administrator {$adminFullName}",
+            $johnAdmin->username
+        );
+        $this->assertEmailInBatchContains(
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
+            $operator->username
+        );
     }
 
     public function testAdminDeleteNotification_SentToAdminWhoGotDeleted(): void
@@ -172,15 +223,16 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $adminFullName = Purifier::clean($admin->profile->full_name);
         $operatorFullName = Purifier::clean($operator->profile->full_name);
         // Deleted admin is notified
-        $this->assertEmailInBatchContains('You have been deleted', $admin->username);
+        $this->assertEmailInBatchContains("{$operatorFullName} deleted your account", $admin->username);
         $this->assertEmailInBatchContains("{$operatorFullName} deleted you from the passbolt organisation", $admin->username);
+        $this->assertEmailInBatchNotContains('Log in passbolt', $admin->username);
         // Admin is notified
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
             $operator->username
         );
         $this->assertEmailInBatchContains(
-            "The administrator {$adminFullName} ({$admin->username}) is now deleted from your organisation in passbolt by {$operatorFullName}.",
+            "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
             $operator->username
         );
         // Group manager is notified

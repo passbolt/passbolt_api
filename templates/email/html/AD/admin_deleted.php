@@ -38,7 +38,7 @@ $avatarText = __('{0} deleted administrator {1}', $operatorFullName, $userFullNa
 if ($recipient['id'] === $operator['id']) {
     $avatarText = __('You deleted administrator {0}', $userFullName);
 } elseif ($recipient['id'] === $user['id']) {
-    $avatarText = __('You have been deleted');
+    $avatarText = __('{0} deleted your account', $operatorFullName);
 }
 echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($operator['profile']['avatar']),
@@ -51,14 +51,16 @@ echo $this->element('Email/module/avatar', [
 
 if ($recipient['id'] !== $user['id']) {
     $text = __(
-        'The administrator {0} ({1}) is now deleted from your organisation in passbolt by {2}.',
+        'The administrator {0} ({1}) is now deleted from the passbolt organisation.',
         $userFullName,
-        Purifier::clean($user['username']),
-        $operatorFullName
+        Purifier::clean($user['username'])
     );
 } else {
     $text = __('{0} deleted you from the passbolt organisation.', $operatorFullName);
 }
+
+$text .= ' ';
+$text .= __('Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious.');
 
 echo $this->element('Email/module/text', ['text' => $text]);
 

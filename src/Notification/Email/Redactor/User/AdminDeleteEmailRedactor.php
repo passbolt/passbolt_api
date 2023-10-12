@@ -30,6 +30,7 @@ use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use InvalidArgumentException;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Locale\Service\LocaleService;
 
 /**
@@ -96,7 +97,7 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $deletedBy = $this->Users->findFirstForEmail($deletedById);
-        $recipients = $this->getAdministratorsWithoutGroupManagers($deletedUser, $groupsIds);
+        $recipients = $this->getAdministrators($deletedUser, $groupsIds);
 
         if (Configure::read(self::CONFIG_KEY_SEND_USER_EMAIL)) {
             $recipients[] = $this->Users
@@ -135,7 +136,7 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
                 if ($recipient->id === $deletedBy->id) {
                     return __('You deleted administrator {0}', $userFullName);
                 } elseif ($recipient->id === $user->id) {
-                    return __('You have been deleted');
+                    return __('{0} deleted your account', $operatorFullName);
                 }
 
                 return __('{0} deleted administrator {1}', $operatorFullName, $userFullName);
@@ -166,7 +167,7 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      * @param array $groupsIds Group IDs this user belonged to.
      * @return array
      */
-    private function getAdministratorsWithoutGroupManagers(User $deletedUser, array $groupsIds): array
+    private function getAdministrators(User $deletedUser, array $groupsIds): array
     {
         $adminsQuery = $this->Users
             ->findAdmins()
@@ -175,15 +176,16 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
             ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
             ->where(['Users.id !=' => $deletedUser->id]);
 
-        if (!empty($groupsIds)) {
-            // Filter out group managers to prevent sending duplicate email
+        // Filter out group managers to prevent sending duplicate email
+        $groupUserDeleteRedactorEnabled = EmailNotificationSettings::get('send.group.user.delete');
+        if (!empty($groupsIds) && $groupUserDeleteRedactorEnabled) {
             $groupManagerIdsSubQuery = $this->Users
                 ->find('notDisabled')
                 ->group($this->Users->aliasField('id'))
                 ->select('id')
-                ->matching('GroupsUsers.Groups', function (Query $q) use ($groupsIds) {
+                ->matching('GroupsUsers', function (Query $q) use ($groupsIds) {
                     return $q->where([
-                        'Groups.id IN' => $groupsIds,
+                        'GroupsUsers.group_id IN' => $groupsIds,
                         'GroupsUsers.is_admin' => 1,
                     ]);
                 });
