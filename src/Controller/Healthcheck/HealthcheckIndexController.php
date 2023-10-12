@@ -69,7 +69,7 @@ class HealthcheckIndexController extends AppController
             $this->success(__('All checks ran successfully!'), $checks);
         } else {
             $this->set('checks', $checks);
-            $this->viewBuilder()->setOption('serialize', ['checks']);
+            $this->success(__('The operation was successful.'), compact('checks'));
         }
     }
 
