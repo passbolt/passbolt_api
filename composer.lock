@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e9b64c0da023d5d84454ae773e0e091",
+    "content-hash": "ea3d42465bd893371b4b62d33a052822",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1320,22 +1320,22 @@
         },
         {
             "name": "directorytree/ldaprecord",
-            "version": "v2.19.3",
+            "version": "v2.20.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/DirectoryTree/LdapRecord.git",
-                "reference": "3557d500b24b331852e4c9ebea1e712b7629cb09"
+                "reference": "5bd0a5a9d257cf1049ae83055dbba4c3479ddf16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord/zipball/3557d500b24b331852e4c9ebea1e712b7629cb09",
-                "reference": "3557d500b24b331852e4c9ebea1e712b7629cb09",
+                "url": "https://api.github.com/repos/DirectoryTree/LdapRecord/zipball/5bd0a5a9d257cf1049ae83055dbba4c3479ddf16",
+                "reference": "5bd0a5a9d257cf1049ae83055dbba4c3479ddf16",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-ldap": "*",
-                "illuminate/contracts": "^5.0|^6.0|^7.0|^8.0|^9.0",
+                "illuminate/contracts": "^5.0|^6.0|^7.0|^8.0|^9.0|^10.0",
                 "nesbot/carbon": "^1.0|^2.0",
                 "php": ">=7.3",
                 "psr/log": "^1.0|^2.0|^3.0",
@@ -1390,7 +1390,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-01-16T14:11:36+00:00"
+            "time": "2023-10-11T16:34:34+00:00"
         },
         {
             "name": "donatj/phpuseragentparser",
@@ -9668,5 +9668,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
