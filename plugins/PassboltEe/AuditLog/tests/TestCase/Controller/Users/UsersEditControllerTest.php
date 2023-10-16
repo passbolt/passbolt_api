@@ -29,6 +29,9 @@ class UsersEditControllerTest extends LogIntegrationTestCase
     {
         parent::setUp();
         RoleFactory::make()->guest()->persist();
+        // Mock user agent and IP
+        $this->mockUserAgent('PHPUnit');
+        $this->mockUserIp();
     }
 
     public function testUsersEditAdminRoleEditSuccess()
