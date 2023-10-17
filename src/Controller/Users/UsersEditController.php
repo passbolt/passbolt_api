@@ -110,14 +110,14 @@ class UsersEditController extends AppController
      * Assert request sanity and return the sanitized data
      *
      * @param string $id user uuid
-     * @return array|null
+     * @return array
      * @throws \Cake\Http\Exception\BadRequestException if gpgkey is sent (v2 only)
      * @throws \Cake\Http\Exception\BadRequestException if groups data is sent (v2 only)
      * @throws \Cake\Http\Exception\BadRequestException if role data is sent (v2 only)
      * @throws \Cake\Http\Exception\ForbiddenException if the user is not admin or not editing themselves
      * @throws \Cake\Http\Exception\BadRequestException if the user id is invalid, if data is not provided or invalid
      */
-    protected function _validateRequestData(string $id)
+    protected function _validateRequestData(string $id): array
     {
         // Admin can edit all users, other users can only edit themselves
         if ($this->User->role() !== Role::ADMIN && $id !== $this->User->id()) {

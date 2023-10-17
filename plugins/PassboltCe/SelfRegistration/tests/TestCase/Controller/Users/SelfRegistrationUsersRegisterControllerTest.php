@@ -83,13 +83,13 @@ class SelfRegistrationUsersRegisterControllerTest extends AppIntegrationTestCase
 
     public function testSelfRegistrationUsersRegisterController_ExistingDeletedUserWithSameUsername()
     {
-        $username = 'JohnDoe@passbolt.com';
-        UserFactory::make(compact('username'))->user()->persist();
+        $username = 'john@passbolt.com';
+        $existingUser = UserFactory::make(compact('username'))->user()->persist();
         $this->setSelfRegistrationSettingsData();
 
         // 1) Try to create a user with same username as an existing one.
         $data = [
-            'username' => $username,
+            'username' => strtoupper($username),
             'profile' => [
                 'first_name' => 'Ping',
                 'last_name' => 'Duplicate',
@@ -101,20 +101,16 @@ class SelfRegistrationUsersRegisterControllerTest extends AppIntegrationTestCase
 
         // 2) Soft delete the existing user.
         $users = TableRegistry::getTableLocator()->get('Users');
-        $user = $users->find()
-            ->where(['username' => $username])
-            ->first();
-        $users->softDelete($user, ['checkRules' => false]);
+        $users->softDelete($existingUser, ['checkRules' => false]);
 
         // 3) Try again with same data, it should be successful.
         $this->postJson('/users/register.json', $data);
         $this->assertResponseOk();
+        $createdUserId = $this->_responseJson->body->id;
 
         // 4) Soft delete the non deleted existing user again.
         $users = TableRegistry::getTableLocator()->get('Users');
-        $user = $users->find()
-            ->where(['username' => $username, 'deleted' => false])
-            ->first();
+        $user = $users->get($createdUserId);
         $users->softDelete($user, ['checkRules' => false]);
 
         // 5) Try again with same data, it should be successful again.
