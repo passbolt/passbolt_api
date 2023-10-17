@@ -219,7 +219,7 @@ seq-php8.1-mysql8:
 ## CENTOS 7 - with remi and mariadb repos
 seq-php8.2-mariadb10.3:
   variables:
-    PHP_VERSION: "7.4"
+    PHP_VERSION: "8.2"
     DATABASE_ENGINE_VERSION: '$CI_REGISTRY/mariadb-10.3'
   extends:
     - .mysql-template

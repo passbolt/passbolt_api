@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Test\TestCase\Service\Rbacs;
 
 use App\Test\Factory\RoleFactory;
-use Cake\ORM\Exception\PersistenceFailedException;
 use Passbolt\Rbacs\Service\Rbacs\RbacsInsertDefaultsService;
 use Passbolt\Rbacs\Service\UiActions\UiActionsInsertDefaultsService;
 use Passbolt\Rbacs\Test\Factory\RbacFactory;
@@ -41,21 +40,19 @@ class RbacsInsertDefaultsServiceTest extends RbacsTestCase
         $this->assertEquals(count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS), count($entities));
     }
 
-    public function testRbacsInsertDefaultsService_Error_Duplicates(): void
+    public function testRbacsInsertDefaultsService_Success_NoDuplicates(): void
     {
         RoleFactory::make()->user()->persist();
 
         (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
         $service = new RbacsInsertDefaultsService();
 
-        $entities = $service->allowAllUiActionsForUsers();
+        // do a first run with everything
+        $service->allowAllUiActionsForUsers();
 
-        try {
-            $service->allowAllUiActionsForUsers();
-            $this->fail();
-        } catch (PersistenceFailedException $exception) {
-            // No duplicates
-            $this->assertEquals(count(UiActionsInsertDefaultsService::DEFAULT_UI_ACTIONS), count($entities));
-        }
+        // do a second run with everything, nothing should have been inserted
+        $entities = $service->allowAllUiActionsForUsers();
+        // No duplicates
+        $this->assertEquals(0, count($entities));
     }
 }

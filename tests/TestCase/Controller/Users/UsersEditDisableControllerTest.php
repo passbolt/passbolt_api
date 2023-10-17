@@ -30,6 +30,9 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         RoleFactory::make()->guest()->persist();
+        // Mock user agent and IP
+        $this->mockUserAgent('PHPUnit');
+        $this->mockUserIp();
     }
 
     public function testUsersEditDisableController_Success_AsUserCannotEditDisabled(): void

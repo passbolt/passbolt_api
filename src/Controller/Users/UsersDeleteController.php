@@ -122,6 +122,7 @@ class UsersDeleteController extends AppController
         });
 
         $this->_notifyUsers($user, $groupIdsNotOnlyMember);
+
         $this->success(__('The user has been deleted successfully.'));
     }
 

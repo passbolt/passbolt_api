@@ -49,6 +49,7 @@ class UiActionsInsertDefaultsService
         'Resources.editPasswordGeneratorSettings',
         'Users.viewWorkspace',
         'Users.viewGroups',
+        'Mobile.transfer',
     ];
 
     /**
