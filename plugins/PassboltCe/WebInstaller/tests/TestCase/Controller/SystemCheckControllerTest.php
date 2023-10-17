@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
+use App\Utility\Healthchecks;
+use Cake\Core\Configure;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
@@ -38,8 +40,18 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
         $data = $this->_getBodyAsString();
 
         $this->assertResponseOk();
-        if (version_compare(PHP_VERSION, '7.4', '<')) {
+        $minPhpVersion = Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG);
+        $nextMinPhpVersion = Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG);
+        if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
             $this->assertStringContainsString('PHP version is too low', $data);
+        } elseif (version_compare(PHP_VERSION, $nextMinPhpVersion, '<=')) {
+            $this->assertStringContainsString(
+                __(
+                    'PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment', // phpcs:ignore
+                    $nextMinPhpVersion
+                ),
+                $data
+            );
         } else {
             $this->assertStringContainsString('. Database', $data);
             $this->assertStringContainsString('Nice one! Your environment is ready for passbolt.', $data);
@@ -55,10 +67,21 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
     public function testWebInstallerSystemCheckViewSuccess_LicensePluginEnabled()
     {
         $this->get('/install/system_check');
+
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        if (version_compare(PHP_VERSION, '7.4', '<')) {
+        $minPhpVersion = Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG);
+        $nextMinPhpVersion = Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG);
+        if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
             $this->assertStringContainsString('PHP version is too low', $data);
+        } elseif (version_compare(PHP_VERSION, $nextMinPhpVersion, '<=')) {
+            $this->assertStringContainsString(
+                __(
+                    'PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment', // phpcs:ignore
+                    $nextMinPhpVersion
+                ),
+                $data
+            );
         } else {
             $this->assertStringContainsString('. Subscription key', $data);
             $this->assertStringContainsString('Start configuration', $data);
