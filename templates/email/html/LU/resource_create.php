@@ -50,7 +50,7 @@ echo $this->element('Email/module/text', [
 ]);
 if ($showSecret) {
     echo $this->element('Email/module/code', [
-        'text' => $resource['secrets'][0]['data']
+        'text' => Purifier::clean($resource['secrets'][0]['data'])
     ]);
 }
 echo $this->element('Email/module/button', [

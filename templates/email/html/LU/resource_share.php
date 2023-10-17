@@ -52,7 +52,7 @@ echo $this->element('Email/module/text', [
 ]);
 if ($showSecret) {
     echo $this->element('Email/module/code', [
-        'text' => $secret
+        'text' => Purifier::clean($secret)
     ]);
 }
 echo $this->element('Email/module/button', [
