@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App\Service\Users;
 
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
 use App\Utility\Healthchecks\AbstractHealthcheckService;
 use App\Utility\Healthchecks\Healthcheck;
 use Cake\ORM\TableRegistry;
@@ -31,17 +30,17 @@ class UsersHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $table;
+    private $Users;
+
+    private array $usernameDuplicates = [];
 
     /**
      * Users Healthcheck constructor.
-     *
-     * @param \App\Model\Table\UsersTable|null $table secret table
      */
-    public function __construct(?UsersTable $table = null)
+    public function __construct()
     {
         parent::__construct(self::NAME, self::CATEGORY);
-        $this->table = $table ?? TableRegistry::getTableLocator()->get('Users');
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
         $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);
     }
 
@@ -50,9 +49,10 @@ class UsersHealthcheckService extends AbstractHealthcheckService
      */
     public function check(): array
     {
-        $records = $this->table->find()->all();
+        $records = $this->Users->find()->all();
+        $this->usernameDuplicates = $this->Users->listDuplicateUsernames()->toArray();
 
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 
@@ -67,13 +67,17 @@ class UsersHealthcheckService extends AbstractHealthcheckService
      */
     private function canValidate(User $user): void
     {
-        $copy = $this->table->newEntity($user->toArray());
-        $error = $copy->getErrors();
+        $copy = $this->Users->newEntity($user->toArray(), ['validate' => 'healthcheck',]);
 
-        // Ignore profile
-        unset($error['profile']);
+        if (array_key_exists($user->id, $this->usernameDuplicates)) {
+            $msg = __('The username {0} is a duplicate.', $this->usernameDuplicates[$user->id]);
+            $copy->setError(
+                'username',
+                ['uniqueUsername' => $msg]
+            );
+        }
 
-        if (count($error)) {
+        if (count($copy->getErrors())) {
             $msg = __('Validation failed for user {0}. {1}', $user->id, json_encode($copy->getErrors()));
             $this->checks[self::CHECK_VALIDATES]->fail()
             ->addDetail($msg, Healthcheck::STATUS_ERROR);

@@ -235,11 +235,11 @@ abstract class SyncAction
         $defaultUser = $this->directoryOrgSettings->getDefaultUser();
         if (!empty($defaultUser)) {
             // Get default user from database.
-            $defaultUser = $this->Users->find()
+            $defaultUser = $this->Users->findByUsernameCaseAware($defaultUser)
+                ->find('notDisabled')
                 ->where([
                     'Users.deleted' => false,
                     'Users.active' => true,
-                    'Users.username' => $defaultUser,
                     'Users.role_id' => $this->Users->Roles->getIdByName(Role::ADMIN),
                 ])
                 ->first();

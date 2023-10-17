@@ -66,9 +66,9 @@ class UserSyncAction extends SyncAction
      */
     protected function getUserFromData(string $username)
     {
-        $existingUser = $this->Users->find()
+        $existingUser = $this->Users
+            ->findByUsernameCaseAware($username)
             ->select(['id', 'username', 'active', 'deleted', 'created', 'modified'])
-            ->where(compact('username'))
             ->order(['Users.modified' => 'DESC'])
             ->first();
         if (!isset($existingUser) || empty($existingUser)) {
