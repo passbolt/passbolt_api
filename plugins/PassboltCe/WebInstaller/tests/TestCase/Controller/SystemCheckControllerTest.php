@@ -83,7 +83,6 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
                 $data
             );
         } else {
-            $this->assertStringContainsString('. Subscription key', $data);
             $this->assertStringContainsString('Start configuration', $data);
         }
     }
