@@ -50,6 +50,7 @@ class UiActionsInsertDefaultsService
         'Users.viewWorkspace',
         'Users.viewGroups',
         'Mobile.transfer',
+        'Desktop.transfer',
     ];
 
     /**
