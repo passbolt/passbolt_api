@@ -19,7 +19,7 @@ if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
 $user = $body['user'];
-$userFullName = $body['userFullName'];
+$userFullName = Purifier::clean($body['userFullName']);
 
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
