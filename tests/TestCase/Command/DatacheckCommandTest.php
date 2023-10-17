@@ -89,4 +89,27 @@ class DatacheckCommandTest extends AppTestCase
             $this->assertOutputContains("Data integrity for $check.");
         }
     }
+
+    public function testDatacheckCommand_Users_Username_Validation()
+    {
+        // Create two users with the same username
+        $username = 'foo@passbolt.com';
+        $duplicateUsernames = UserFactory::make(compact('username'), 2)->persist();
+
+        // Create user with username not a valid email
+        $username = 'foo';
+        $noValidEmail = UserFactory::make(compact('username'))->persist();
+
+        // Create two users with the same invalid username
+        $username = 'bar';
+        $duplicateInvalidUsernames = UserFactory::make(compact('username'), 2)->persist();
+
+        $this->exec('passbolt datacheck');
+        $this->assertOutputContains('[FAIL] Validation failed for user ' . $noValidEmail->id . '. {"username":{"email":"The username should be a valid email address."}}');
+        $this->assertOutputContains('[FAIL] Validation failed for user ' . $duplicateUsernames[0]->id . '. {"username":{"uniqueUsername":"The username ' . $duplicateUsernames[0]->username . ' is a duplicate."}}');
+        $this->assertOutputContains('[FAIL] Validation failed for user ' . $duplicateUsernames[1]->id . '. {"username":{"uniqueUsername":"The username ' . $duplicateUsernames[1]->username . ' is a duplicate."}}');
+        $this->assertOutputContains('[FAIL] Validation failed for user ' . $duplicateInvalidUsernames[0]->id);
+        $this->assertOutputContains('[FAIL] Validation failed for user ' . $duplicateInvalidUsernames[1]->id);
+        $this->assertOutputContains('{"username":{"email":"The username should be a valid email address.","uniqueUsername":"The username ' . $duplicateInvalidUsernames[0]->username . ' is a duplicate."}}');
+    }
 }

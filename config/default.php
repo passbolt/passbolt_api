@@ -304,6 +304,11 @@ return [
             // enables the storage and display if the user IP address
             'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
 
+            'username' => [
+                'lowerCase' => filter_var(env('PASSBOLT_SECURITY_USERNAME_LOWER_CASE', false), FILTER_VALIDATE_BOOLEAN),
+                'caseSensitive' => filter_var(env('PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE', false), FILTER_VALIDATE_BOOLEAN),
+            ],
+
             // Disable SMTP setting endpoint to prevent/lock down SMTP configuration via the administration workspace
             'smtpSettings' => [
                 'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
