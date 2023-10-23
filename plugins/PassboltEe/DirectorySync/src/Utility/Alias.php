@@ -21,6 +21,7 @@ class Alias
     public const STATUS_SUCCESS = 'success';
     public const STATUS_IGNORE = 'ignore';
     public const STATUS_ERROR = 'error';
+    public const STATUS_WARNING = 'warning';
     public const STATUS_SYNC = 'sync';
 
     public const MODEL_USERS = 'Users';

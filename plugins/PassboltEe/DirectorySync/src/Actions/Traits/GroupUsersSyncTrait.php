@@ -150,7 +150,7 @@ trait GroupUsersSyncTrait
                     __('The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually.', $u->username, $group->name),//phpcs:ignore
                     Alias::MODEL_GROUPS_USERS,
                     Alias::ACTION_CREATE,
-                    Alias::STATUS_SUCCESS,
+                    Alias::STATUS_WARNING,
                     $u
                 ));
             }
