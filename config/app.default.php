@@ -455,13 +455,13 @@ return [
         'cookie' => env('SESSION_COOKIE', 'passbolt_session'),
         'defaults' => env('SESSION_DEFAULTS', 'php'),
         /**
-         * SSO: For "response_mode=form_post" request we don't get cookies set as "Lax" that makes user to forget their session.
-         * That's why override `session.cookie_samesite` value to use "None" to make it work.
-         *
-         * @see https://github.com/nextauthjs/next-auth/issues/1664#issuecomment-815285862
+         * SSO Note
+         * When redirect request HTTP method is set to POST and cookies are set to samesite=Lax,
+         * the cookies will not be sent and thus session will be dropped. In this case
+         * You may need to override `session.cookie_samesite` value to use "None" to make it work.
          */
         'ini' => [
-            'session.cookie_samesite' => 'None',
+            'session.cookie_samesite' => env('SESSION_COOKIE_SAMESITE', 'Lax'),
         ],
     ],
 ];
