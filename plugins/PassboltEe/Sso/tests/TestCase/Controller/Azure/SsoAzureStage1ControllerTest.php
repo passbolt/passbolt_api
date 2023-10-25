@@ -58,6 +58,8 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
     public function testSsoAzureStage1Controller_SuccessWithSubdir(): void
     {
         Configure::write('App.base', '/passbolt');
+
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $this->createAzureSettingsFromConfig($user);
 
