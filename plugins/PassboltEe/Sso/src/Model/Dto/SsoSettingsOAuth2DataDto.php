@@ -43,6 +43,11 @@ class SsoSettingsOAuth2DataDto implements SsoSettingsDataDtoInterface
     public $openid_configuration_path;
 
     /**
+     * @var string
+     */
+    public $scope;
+
+    /**
      * Constructor.
      *
      * @param array $data with
@@ -50,6 +55,7 @@ class SsoSettingsOAuth2DataDto implements SsoSettingsDataDtoInterface
      *  - client_id string
      *  - client_secret string
      *  - openid_configuration_path string
+     *  - scope string
      * @return void
      */
     public function __construct(array $data)
@@ -58,6 +64,7 @@ class SsoSettingsOAuth2DataDto implements SsoSettingsDataDtoInterface
         $this->client_id = $data['client_id'] ?? '';
         $this->client_secret = $data['client_secret'] ?? '';
         $this->openid_configuration_path = $data['openid_configuration_path'] ?? '';
+        $this->scope = $data['scope'] ?? '';
     }
 
     /**
@@ -70,6 +77,7 @@ class SsoSettingsOAuth2DataDto implements SsoSettingsDataDtoInterface
             'client_id' => $this->client_id,
             'client_secret' => $this->client_secret,
             'openid_configuration_path' => $this->openid_configuration_path,
+            'scope' => $this->scope,
         ];
     }
 }
