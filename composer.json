@@ -97,7 +97,7 @@
         "enygma/yubikey": "dev-master#31802c4f5ef24df87c4710e5893bdf8ad73554be",
         "duosecurity/duo_universal_php": "^1.0",
         "league/oauth2-client": "^2.6",
-        "directorytree/ldaprecord": "^2.19"
+        "directorytree/ldaprecord": "^2.20"
     },
     "require-dev": {
         "phpstan/phpstan": "~1.10.0",
