@@ -900,16 +900,6 @@
       <code><![CDATA[$john->username]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Azure/SsoAzureStage1ControllerTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-      <code><![CDATA[$user->id]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="plugins/PassboltEe/Sso/tests/TestCase/Controller/Azure/SsoAzureStage1DryRunControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$settings->id]]></code>

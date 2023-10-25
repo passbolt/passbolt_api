@@ -33,6 +33,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_Success(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $this->createAzureSettingsFromConfig($user);
 
@@ -87,6 +88,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_ErrorLoggedIn(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         SsoSettingsFactory::make()->azure()->active()->persist();
 
@@ -100,6 +102,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_ErrorDeletedUser(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->deleted()->persist();
         SsoSettingsFactory::make()->azure()->active()->persist();
 
@@ -112,6 +115,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_ErrorInactiveUser(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->inactive()->persist();
         SsoSettingsFactory::make()->azure()->active()->persist();
 
@@ -157,6 +161,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_ErrorNoActiveSettings(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         SsoSettingsFactory::make()->azure()->draft()->persist();
 
