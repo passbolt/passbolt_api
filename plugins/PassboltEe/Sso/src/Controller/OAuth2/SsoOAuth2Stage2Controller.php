@@ -12,19 +12,19 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.0.0
+ * @since         4.4.0
  */
 
-namespace Passbolt\Sso\Controller\Google;
+namespace Passbolt\Sso\Controller\OAuth2;
 
 use App\Service\Cookie\AbstractSecureCookieService;
 use Passbolt\Sso\Controller\AbstractSso2Stage2Controller;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
-use Passbolt\Sso\Service\Sso\Google\SsoGoogleService;
+use Passbolt\Sso\Service\Sso\OAuth2\SsoOAuth2Service;
 
-class SsoGoogleStage2Controller extends AbstractSso2Stage2Controller
+class SsoOAuth2Stage2Controller extends AbstractSso2Stage2Controller
 {
     /**
      * @inheritDoc
@@ -33,7 +33,7 @@ class SsoGoogleStage2Controller extends AbstractSso2Stage2Controller
         AbstractSecureCookieService $cookieService,
         SsoSettingsDto $settingsDto
     ): AbstractSsoService {
-        return new SsoGoogleService($cookieService, $settingsDto);
+        return new SsoOAuth2Service($cookieService, $settingsDto);
     }
 
     /**
@@ -41,6 +41,6 @@ class SsoGoogleStage2Controller extends AbstractSso2Stage2Controller
      */
     protected function getProviderName(): string
     {
-        return SsoSetting::PROVIDER_GOOGLE;
+        return SsoSetting::PROVIDER_OAUTH2;
     }
 }

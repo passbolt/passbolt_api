@@ -80,6 +80,7 @@ class GoogleRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
             $url
         );
         $this->assertStringNotContainsString('login_hint', $url);
+
         /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::find()->firstOrFail();
         $this->assertEquals(SsoState::TYPE_SSO_RECOVER, $ssoState->type);

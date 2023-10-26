@@ -33,6 +33,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_Success(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $this->createAzureSettingsFromConfig($user);
 
@@ -42,6 +43,13 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
         $url = $this->_responseJsonBody->url;
         $this->assertStringContainsString('microsoft', $url);
         $this->assertStringContainsString('login_hint', $url);
+        $this->assertStringContainsString('scope', $url);
+        $this->assertStringContainsString('redirect_uri', $url);
+        $this->assertStringContainsString('response_type', $url);
+        $this->assertStringContainsString('client_id', $url);
+        $this->assertStringContainsString('state', $url);
+        $this->assertStringContainsString('nonce', $url);
+
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
@@ -51,6 +59,8 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
     public function testSsoAzureStage1Controller_SuccessWithSubdir(): void
     {
         Configure::write('App.base', '/passbolt');
+
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $this->createAzureSettingsFromConfig($user);
 
@@ -59,7 +69,14 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
         $this->assertSuccess();
         $url = $this->_responseJsonBody->url;
         $this->assertStringContainsString('microsoft', $url);
-        $this->assertStringContainsString('login_hint', $url);
+        $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
+        $this->assertStringContainsString('scope=' . rawurlencode('openid profile email'), $url);
+        $this->assertStringContainsString('redirect_uri', $url);
+        $this->assertStringContainsString('response_type=code', $url);
+        $this->assertStringContainsString('client_id', $url);
+        $this->assertStringContainsString('state', $url);
+        $this->assertStringContainsString('nonce', $url);
+
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);
@@ -71,6 +88,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_ErrorLoggedIn(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         SsoSettingsFactory::make()->azure()->active()->persist();
 
@@ -84,6 +102,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_ErrorDeletedUser(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->deleted()->persist();
         SsoSettingsFactory::make()->azure()->active()->persist();
 
@@ -96,6 +115,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_ErrorInactiveUser(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->inactive()->persist();
         SsoSettingsFactory::make()->azure()->active()->persist();
 
@@ -141,6 +161,7 @@ class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
      */
     public function testSsoAzureStage1Controller_ErrorNoActiveSettings(): void
     {
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         SsoSettingsFactory::make()->azure()->draft()->persist();
 

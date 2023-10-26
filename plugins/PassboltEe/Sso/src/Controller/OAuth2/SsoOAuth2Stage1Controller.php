@@ -12,23 +12,18 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.0.0
+ * @since         4.4.0
  */
 
-namespace Passbolt\SsoRecover\Controller\Google;
+namespace Passbolt\Sso\Controller\OAuth2;
 
-use App\Model\Entity\Role;
 use App\Service\Cookie\AbstractSecureCookieService;
-use App\Utility\ExtendedUserAccessControl;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventInterface;
-use Cake\Http\Exception\BadRequestException;
 use Passbolt\Sso\Controller\AbstractSsoController;
 use Passbolt\Sso\Model\Entity\SsoState;
-use Passbolt\Sso\Service\Sso\Google\SsoGoogleService;
-use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
+use Passbolt\Sso\Service\Sso\OAuth2\SsoOAuth2Service;
 
-class GoogleRecoverLoginController extends AbstractSsoController
+class SsoOAuth2Stage1Controller extends AbstractSsoController
 {
     /**
      * @inheritDoc
@@ -36,35 +31,25 @@ class GoogleRecoverLoginController extends AbstractSsoController
     public function beforeFilter(EventInterface $event)
     {
         parent::beforeFilter($event);
-
-        $this->Authentication->allowUnauthenticated(['login']);
+        $this->Authentication->allowUnauthenticated(['stage1']);
     }
 
     /**
-     * Return a URL to redirect the user to perform SSO (without hint)
+     * Return a URL to redirect the user to perform SSO
      *
      * @param \App\Service\Cookie\AbstractSecureCookieService $cookieService Cookie service
      * @return void
      */
-    public function login(AbstractSecureCookieService $cookieService): void
+    public function stage1(AbstractSecureCookieService $cookieService): void
     {
-        try {
-            (new SsoSettingsGetService())->getActiveOrFail();
-        } catch (RecordNotFoundException $e) {
-            throw new BadRequestException(__('The SSO settings do not exist.'), null, $e);
-        }
+        $this->assertJson();
 
+        // User must not be logged in and be active/not deleted
         $this->User->assertNotLoggedIn();
+        $uac = $this->getUacFromData();
 
-        $uac = new ExtendedUserAccessControl(
-            Role::GUEST,
-            null,
-            null,
-            $this->User->ip(),
-            $this->User->userAgent()
-        );
-
-        $url = $this->getSsoUrlWithCookie(new SsoGoogleService($cookieService), $uac, SsoState::TYPE_SSO_RECOVER);
+        // Redirect to provider
+        $url = $this->getSsoUrlWithCookie(new SsoOAuth2Service($cookieService), $uac, SsoState::TYPE_SSO_GET_KEY);
 
         $this->success(__('The operation was successful.'), $url);
     }

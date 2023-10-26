@@ -43,7 +43,11 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
 
         $this->assertSuccess();
         $url = $this->_responseJsonBody->url;
+        $this->assertStringContainsString('https://', $url);
+        $this->assertStringContainsString('google.com', $url);
         $this->assertStringContainsString('oauth2/v2/auth', $url);
+        $this->assertStringContainsString('response_type=code', $url);
+        $this->assertStringContainsString('state', $url);
         $this->assertStringContainsString('nonce', $url);
         $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
         $this->assertStringContainsString("client_id={$ssoSetting->data->toArray()['client_id']}", $url);
@@ -55,6 +59,7 @@ class SsoGoogleStage1ControllerTest extends SsoIntegrationTestCase
             'redirect_uri=' . rawurlencode(Router::url('/sso/google/redirect', true)),
             $url
         );
+
         // assert sso state cookie
         $this->assertCookieSet(AbstractSsoService::SSO_STATE_COOKIE);
         $cookie = $this->_response->getCookie(AbstractSsoService::SSO_STATE_COOKIE);

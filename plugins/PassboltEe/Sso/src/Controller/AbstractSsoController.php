@@ -24,6 +24,7 @@ use App\Utility\ExtendedUserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Sso\Model\Dto\SsoUrlResponseDto;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Utility\Validation\OAuthTokenValidation;
@@ -48,6 +49,25 @@ abstract class AbstractSsoController extends AppController
     }
 
     /**
+     * Protect from CSRF by checking if state in URL and cookie matches
+     *
+     * @throws \Cake\Http\Exception\BadRequestException if the state is not provided in cookie or URL or there is a mismatch
+     * @return string
+     */
+    public function getStateAndAssertAgainstCookie(): string
+    {
+        $state = $this->getRequest()->getData('state');
+        $stateCookie = $this->getStateFromCookie();
+        if ($state !== $stateCookie) {
+            throw new BadRequestException(
+                __('CSRF issue. The state in request data does not match with cookie value.')
+            );
+        }
+
+        return $state;
+    }
+
+    /**
      * @throws \Cake\Http\Exception\BadRequestException if the state is not provided in cookie or invalid type
      * @return string state
      */
@@ -68,6 +88,21 @@ abstract class AbstractSsoController extends AppController
     {
         $error = $this->request->getQuery('error');
         $desc = $this->request->getQuery('error_description');
+
+        if (!is_string($error) || !is_string($desc)) {
+            return null;
+        } else {
+            return [$error => $desc];
+        }
+    }
+
+    /**
+     * @return array with error and message
+     */
+    public function assertErrorFromRequestData(): ?array
+    {
+        $error = $this->getRequest()->getData('error');
+        $desc = $this->getRequest()->getData('error_description');
 
         if (!is_string($error) || !is_string($desc)) {
             return null;
@@ -113,6 +148,20 @@ abstract class AbstractSsoController extends AppController
         $code = $this->request->getQuery('code');
         if (!isset($code) || !is_string($code)) {
             throw new BadRequestException(__('The code is required in URL parameters.'));
+        }
+
+        return $code;
+    }
+
+    /**
+     * @throws \Cake\Http\Exception\BadRequestException if the code (access token) is not provided in request data
+     * @return string code
+     */
+    public function getCodeFromRequestData(): string
+    {
+        $code = $this->getRequest()->getData('code');
+        if (!isset($code) || !is_string($code)) {
+            throw new BadRequestException(__('The code is required in request data.'));
         }
 
         return $code;
@@ -178,19 +227,19 @@ abstract class AbstractSsoController extends AppController
      * @param \Passbolt\Sso\Service\Sso\AbstractSsoService $ssoService service
      * @param \App\Utility\ExtendedUserAccessControl $uac user access control
      * @param string $type Type of state
-     * @return string url
+     * @return \Passbolt\Sso\Model\Dto\SsoUrlResponseDto SSO URL DTO object.
      */
     protected function getSsoUrlWithCookie(
         AbstractSsoService $ssoService,
         ExtendedUserAccessControl $uac,
         string $type
-    ): string {
+    ): SsoUrlResponseDto {
         $url = $ssoService->getAuthorizationUrl($uac); // generates state
         $cookie = $ssoService->createStateCookie($uac, $type);
 
         // Redirect user to the provider with the cookie set
         $this->response = $this->getResponse()->withCookie($cookie);
 
-        return $url;
+        return new SsoUrlResponseDto($url);
     }
 }
