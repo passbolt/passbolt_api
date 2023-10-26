@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Controller\Google;
 
 use App\Service\Cookie\AbstractSecureCookieService;
-use Cake\Http\Exception\BadRequestException;
 use Passbolt\Sso\Controller\AbstractSso2Stage2Controller;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
@@ -43,20 +42,5 @@ class SsoGoogleStage2Controller extends AbstractSso2Stage2Controller
     protected function getProviderName(): string
     {
         return SsoSetting::PROVIDER_GOOGLE;
-    }
-
-    /**
-     * Handle both user is admin and trying to validate a setting or regular user SSO return.
-     * Triage is different in Google since POST is not supported it is removed, the rest is the same
-     *
-     * @param \App\Service\Cookie\AbstractSecureCookieService $cookieService Cookie service
-     * @return void
-     */
-    public function triage(AbstractSecureCookieService $cookieService): void
-    {
-        if ($this->getRequest()->is('post')) {
-            throw new BadRequestException('POST redirect is not supported for Google SSO provider.');
-        }
-        parent::triage($cookieService);
     }
 }

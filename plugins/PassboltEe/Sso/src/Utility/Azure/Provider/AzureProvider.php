@@ -134,19 +134,18 @@ class AzureProvider extends AbstractOauth2Provider
      */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
-        if (isset($data['error'])) {
-            if (
-                is_string($data['error']) && isset($data['error_description'])
-                && is_string($data['error_description'])
-            ) {
-                throw new AzureException($data['error'], $data['error_description']);
-            } else {
-                throw new IdentityProviderException(
-                    $response->getReasonPhrase(),
-                    $response->getStatusCode(),
-                    (string)$response->getBody()
-                );
-            }
+        if (empty($data['error'])) {
+            return;
+        }
+
+        if (is_string($data['error']) && isset($data['error_description']) && is_string($data['error_description'])) {
+            throw new AzureException($data['error'], $data['error_description']);
+        } else {
+            throw new IdentityProviderException(
+                $response->getReasonPhrase(),
+                $response->getStatusCode(),
+                (string)$response->getBody()
+            );
         }
     }
 

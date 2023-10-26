@@ -25,7 +25,7 @@ use Passbolt\Sso\Test\Factory\SsoStateFactory;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
 
 /**
- * @see \Passbolt\Sso\Controller\Google\SsoGoogleStage2Controller
+ * @covers \Passbolt\Sso\Controller\Google\SsoGoogleStage2Controller
  */
 class SsoGoogleStage2ControllerTest extends SsoIntegrationTestCase
 {
@@ -235,5 +235,30 @@ class SsoGoogleStage2ControllerTest extends SsoIntegrationTestCase
         $this->get('/sso/google/redirect?state=' . $ssoState->state . '&code=' . UuidFactory::uuid());
 
         $this->assertResponseCode(400, 'SsoRecover plugin is disabled');
+    }
+
+    /**
+     * 404 - if request method is POST, only GET is allowed for Google provider
+     */
+    public function testSsoGoogleStage2Controller_Error_PostMethodNotAllowed(): void
+    {
+        /** @var \Passbolt\Sso\Model\Entity\SsoSetting $settings */
+        $settings = SsoSettingsFactory::make()->google()->active()->persist();
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
+        $ssoState = SsoStateFactory::make()
+            ->withTypeSsoRecover()
+            ->userId($admin->id)
+            ->ssoSettingsId($settings->id)
+            ->persist();
+        $this->cookie('passbolt_sso_state', $ssoState->state);
+
+        $this->post('/sso/google/redirect', [
+            'state' => $ssoState->state,
+            'code' => UuidFactory::uuid(),
+        ]);
+
+        $this->assertResponseCode(404);
     }
 }
