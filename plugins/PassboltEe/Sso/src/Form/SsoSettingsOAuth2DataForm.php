@@ -36,18 +36,25 @@ class SsoSettingsOAuth2DataForm extends BaseSsoSettingsForm
 
         $validator
             ->allowEmptyString('openid_configuration_path')
-            ->utf8('openid_configuration_path', __('The OpenID configuration path should be a valid BMP-UTF8 string.'));
+            ->utf8('openid_configuration_path', __('The OpenID configuration path should be a valid BMP-UTF8 string.'))
+            ->maxLength('openid_configuration_path', 256, __('The OpenID configuration path is too large.'));
 
         $validator
             ->requirePresence('client_id', __('A client id is required.'))
             ->notEmptyString('client_id', __('The client id should not be empty.'))
+            ->utf8('client_id', __('The client id should be a valid BMP-UTF8 string.'))
             ->maxLength('client_id', 256, __('The client id is too large.'));
 
         $validator
             ->requirePresence('client_secret', __('A client secret is required.'))
             ->notEmptyString('client_secret', __('The client secret should not be empty.'))
-            ->ascii('client_secret', __('The client secret should be a valid string.'))
+            ->utf8('client_secret', __('The client id should be a valid BMP-UTF8 string.'))
             ->maxLength('client_secret', 256, __('The client secret is too large.'));
+
+        $validator
+            ->allowEmptyString('scope')
+            ->ascii('scope', __('The scope should be a valid string.'))
+            ->maxLength('scope', 256, __('The scope is too large.'));
 
         return $validator;
     }
