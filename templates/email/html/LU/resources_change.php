@@ -12,7 +12,6 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
  */
-use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
 use Cake\I18n\FrozenTime;

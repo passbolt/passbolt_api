@@ -27,6 +27,7 @@ use App\Model\Traits\Users\UsersFindersTrait;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -69,6 +70,8 @@ class UsersTable extends Table
 
     public const AFTER_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterRegister.success';
     public const AFTER_SELF_REGISTER_SUCCESS_EVENT_NAME = 'Model.Users.afterSelfRegister.success';
+    public const PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE = 'passbolt.security.username.caseSensitive';
+    public const PASSBOLT_SECURITY_USERNAME_LOWER_CASE = 'passbolt.security.username.lowerCase';
 
     /**
      * Initialize method
@@ -187,6 +190,17 @@ class UsersTable extends Table
     }
 
     /**
+     * Healthcheck validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationHealthcheck(Validator $validator): Validator
+    {
+        return $this->validationDefault($validator)->remove('profile');
+    }
+
+    /**
      * Register validation rules.
      *
      * @param \Cake\Validation\Validator $validator Validator instance.
@@ -215,7 +229,8 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules): RulesChecker
     {
         // Add rule
-        $rules->add($rules->isUnique(['username', 'deleted']), 'uniqueUsername', [
+        $rules->add([$this, 'isUniqueUsername'], 'uniqueUsername', [
+            'errorField' => 'username',
             'message' => __('The username is already in use.'),
         ]);
         $rules->add($rules->existsIn(['role_id'], 'Roles'), 'validRole', [
@@ -238,13 +253,72 @@ class UsersTable extends Table
     }
 
     /**
+     * Lower case the username if the username is not case-sensitive
+     *
+     * @param \Cake\Event\Event $event Event
+     * @param \ArrayObject $data data
+     * @param \ArrayObject $options options
+     * @return void
+     */
+    public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options): void
+    {
+        if ($this->isUsernameLowerCase() && is_string($data['username'] ?? null)) {
+            $data['username'] = mb_strtolower($data['username']);
+        }
+    }
+
+    /**
+     * If false (default), username are not case-sensitive: john@passbolt.com and John@passbolt.com cannot be both not-deleted
+     * If true, username is case-sensitive: john@passbolt.com and John@passbolt.com can both be not-deleted
+     *
+     * @return bool
+     */
+    public function isUsernameCaseSensitive(): bool
+    {
+        return Configure::read(self::PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE);
+    }
+
+    /**
+     * Lower case username before marshaling if true
+     *
+     * @return bool
+     */
+    public function isUsernameLowerCase(): bool
+    {
+        return Configure::read(self::PASSBOLT_SECURITY_USERNAME_LOWER_CASE, true);
+    }
+
+    /**
+     * Assert that the username is unique among all non-deleted users
+     *
+     * @param \App\Model\Entity\User $user user being saved
+     * @return bool
+     * @throws \Cake\Http\Exception\InternalErrorException if the username field is not accessible
+     */
+    public function isUniqueUsername(User $user): bool
+    {
+        if (!$user->isNew() && !$user->isDirty('username')) {
+            return true;
+        }
+        if (is_null($user->username)) {
+            throw new InternalErrorException('The field username is not accessible.');
+        }
+        $userExists = $this
+                ->findByUsernameCaseAware($user->username)
+                ->where(['deleted' => false])
+                ->all()->count() > 0;
+
+        return $userExists === false;
+    }
+
+    /**
      * Return a user entity
      *
      * @param array $data the request data
      * @throws \InvalidArgumentException if role name is not valid
      * @return \App\Model\Entity\User
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): User
     {
         return $this->newEntity(
             $data,

@@ -19,7 +19,6 @@ namespace App\Command;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
-use App\Model\Validation\EmailValidationRule;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -61,23 +60,17 @@ class RecoverUserCommand extends PassboltCommand
         $this->assertCurrentProcessUser($io);
 
         $username = $args->getOption('username');
-        if (!EmailValidationRule::check($username)) {
-            $io->error('The username should be a valid email.');
-            $this->abort();
-        }
 
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
         /** @var \App\Model\Entity\User|null $user */
-        $user = $this->fetchTable('Users')
-            ->find()
-            ->where(compact('username'))
+        $user = $usersTable
+            ->findByUsername($username)
+            ->find('active')
+            ->find('notDisabled')
             ->first();
         if (is_null($user)) {
-            $io->error("The user {$username} could not be found.");
-            $this->abort();
-        }
-        if (!$user->active) {
-            $io->error("The user {$username} is not active.");
-            $this->abort();
+            $io->abort('The user does not exist or is not active or is disabled.');
         }
 
         if ($args->getOption('create')) {
@@ -130,7 +123,7 @@ class RecoverUserCommand extends PassboltCommand
             ])->orderDesc('created')->first();
 
         if (is_null($token) || $token->isExpired()) {
-            $io->error("An active recovery token could not be found for the user {$user->username}.");
+            $io->info("An active recovery token could not be found for the user {$user->username}.");
             $io->info('You may create one using the option --create.');
             $this->abort();
         }

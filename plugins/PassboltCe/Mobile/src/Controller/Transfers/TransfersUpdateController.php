@@ -48,7 +48,6 @@ class TransfersUpdateController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated(['updateNoSession']);
-        /** @phpstan-ignore-next-line */
         $this->Transfers = $this->fetchTable('Passbolt/Mobile.Transfers');
 
         return parent::beforeFilter($event);

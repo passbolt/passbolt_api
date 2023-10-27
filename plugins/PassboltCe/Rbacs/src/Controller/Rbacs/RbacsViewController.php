@@ -37,7 +37,6 @@ class RbacsViewController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Rbacs = $this->fetchTable('Passbolt/Rbacs.Rbacs');
         $this->loadComponent('ApiPagination', [
             'model' => 'Rbacs',

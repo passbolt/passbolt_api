@@ -67,9 +67,7 @@ class FoldersRelationsAddItemsToUserTreeService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-        /** @phpstan-ignore-next-line */
         $this->permissionsTables = TableRegistry::getTableLocator()->get('Permissions');
         $this->foldersRelationsSortService = new FoldersRelationsSortService();
         $this->foldersRelationsCreateService = new FoldersRelationsCreateService();

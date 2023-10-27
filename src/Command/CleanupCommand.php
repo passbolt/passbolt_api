@@ -159,17 +159,11 @@ class CleanupCommand extends PassboltCommand
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
-        /** @phpstan-ignore-next-line */
         $this->Roles = $this->fetchTable('Roles');
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
-        /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->Permissions = $this->fetchTable('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
 
         if (!isset(self::$cleanups)) {
