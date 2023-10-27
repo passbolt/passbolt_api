@@ -221,6 +221,7 @@ class ActionReport
         return $status === Alias::STATUS_SUCCESS
             || $status === Alias::STATUS_ERROR
             || $status === Alias::STATUS_IGNORE
+            || $status === Alias::STATUS_WARNING
             || $status === Alias::STATUS_SYNC;
     }
 
