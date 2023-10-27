@@ -46,7 +46,6 @@ class SsoSettingsActivateService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->SsoSettings = TableRegistry::getTableLocator()->get('Passbolt/Sso.SsoSettings');
     }
 
@@ -122,8 +121,7 @@ class SsoSettingsActivateService
         }
 
         try {
-            /** @phpstan-ignore-next-line */
-            $this->SsoSettings = TableRegistry::getTableLocator()->get('Passbolt/Sso.SsoSettings');
+                $this->SsoSettings = TableRegistry::getTableLocator()->get('Passbolt/Sso.SsoSettings');
             /** @var \Passbolt\Sso\Model\Entity\SsoSetting $ssoSettings */
             $ssoSettings = $this->SsoSettings->find()->where(['id' => $id])->firstOrFail();
         } catch (RecordNotFoundException $exception) {

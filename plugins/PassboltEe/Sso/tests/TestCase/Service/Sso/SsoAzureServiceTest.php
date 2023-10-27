@@ -73,7 +73,7 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
         $this->assertStringContainsString('client_id=' . $data['client_id'], $url);
         $this->assertStringContainsString('state=' . $ssoState->state, $url);
         $this->assertStringContainsString('prompt=login', $url);
-        $this->assertStringContainsString('login_hint=' . urlencode($user->username), $url);
+        $this->assertStringContainsString('login_hint=' . rawurlencode($user->username), $url);
 
         // Check cookie props
         $this->assertTrue($cookie->isHttpOnly());

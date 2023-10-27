@@ -33,8 +33,8 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
     {
         $user = UserFactory::make()->admin()->persist();
         $settings = $this->createAzureSettingsFromConfig($user, SsoSetting::STATUS_DRAFT);
-
         $this->logInAs($user);
+
         $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->id]);
 
         $this->assertSuccess();

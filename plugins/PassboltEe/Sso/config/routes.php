@@ -37,7 +37,6 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
     /**
      * Endpoints related to Azure provider.
      */
-
     $azure = SsoSetting::PROVIDER_AZURE;
     if (Configure::read("passbolt.plugins.sso.providers.{$azure}")) {
         $routes
@@ -62,13 +61,12 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
                 'controller' => 'SsoAzureStage2',
                 'action' => 'triage',
             ])
-            ->setMethods(['GET']);
+            ->setMethods(['GET', 'POST']);
     }
 
     /**
      * Endpoints related to Google provider.
      */
-
     $google = SsoSetting::PROVIDER_GOOGLE;
     if (Configure::read("passbolt.plugins.sso.providers.{$google}")) {
         $routes
@@ -93,10 +91,43 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
                 'controller' => 'SsoGoogleStage2',
                 'action' => 'triage',
             ])
-            ->setMethods(['GET']);
+            ->setMethods(['GET']); // No POST for Google
     }
 
-    // Generic success pages
+    /**
+     * Endpoints related to generic oauth2 endpoint.
+     */
+    $oauth2 = SsoSetting::PROVIDER_OAUTH2;
+    if (Configure::read("passbolt.plugins.sso.providers.{$oauth2}")) {
+        $routes
+            ->connect('/oauth2/login/dry-run', [
+                'prefix' => 'OAuth2',
+                'controller' => 'SsoOAuth2Stage1DryRun',
+                'action' => 'stage1DryRun',
+            ])
+            ->setMethods(['POST']);
+
+        $routes
+            ->connect('/oauth2/login', [
+                'prefix' => 'OAuth2',
+                'controller' => 'SsoOAuth2Stage1',
+                'action' => 'stage1',
+            ])
+            ->setMethods(['POST']);
+
+        $routes
+            ->connect('/oauth2/redirect', [
+                'prefix' => 'OAuth2',
+                'controller' => 'SsoOAuth2Stage2',
+                'action' => 'triage',
+            ])
+            ->setMethods(['GET', 'POST']);
+    }
+
+    /**
+     * Common pages to all providers
+     */
+    // Login success
 
     $routes->connect('/login/success', [
             'prefix' => 'Success',

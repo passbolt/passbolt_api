@@ -446,17 +446,18 @@ trait FormatValidationTrait
      * Test cases for maxLength validation rule.
      *
      * @param int $max maximum
+     * @param string $maskName Valid mask name - {@see \App\Test\Lib\AppTestCase::initStringMasks()}.
      * @return array
      */
-    public static function getMaxLengthTestCases($max)
+    public static function getMaxLengthTestCases($max, string $maskName = 'alphaASCII')
     {
         $test = [
             'rule_name' => 'maxLength',
             'test_cases' => [
-                self::getStringMask('alphaASCII', 1) => true,
-                self::getStringMask('alphaASCII', $max - 1) => true,
-                self::getStringMask('alphaASCII', $max) => true,
-                self::getStringMask('alphaASCII', $max + 1) => false,
+                self::getStringMask($maskName, 1) => true,
+                self::getStringMask($maskName, $max - 1) => true,
+                self::getStringMask($maskName, $max) => true,
+                self::getStringMask($maskName, $max + 1) => false,
             ],
         ];
 

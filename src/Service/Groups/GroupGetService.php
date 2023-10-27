@@ -42,7 +42,6 @@ class GroupGetService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
     }
 

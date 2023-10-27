@@ -37,7 +37,6 @@ class DirectoryIgnoreController extends DirectoryController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->DirectoryIgnore = $this->fetchTable('Passbolt/DirectorySync.DirectoryIgnore');
     }
 

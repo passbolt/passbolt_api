@@ -39,7 +39,6 @@ class AccountRecoveryRequestsIndexController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryRequests = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
         $this->loadComponent('ApiPagination', [
             'model' => 'AccountRecoveryRequests',

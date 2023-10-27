@@ -46,6 +46,7 @@ class SsoSetting extends Entity
      */
     public const PROVIDER_AZURE = 'azure';
     public const PROVIDER_GOOGLE = 'google';
+    public const PROVIDER_OAUTH2 = 'oauth2';
 
     /**
      * List of supported providers.
@@ -55,6 +56,7 @@ class SsoSetting extends Entity
     public const ALLOWED_PROVIDERS = [
         self::PROVIDER_AZURE,
         self::PROVIDER_GOOGLE,
+        self::PROVIDER_OAUTH2,
     ];
 
     /**

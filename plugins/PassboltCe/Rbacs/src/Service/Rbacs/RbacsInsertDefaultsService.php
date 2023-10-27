@@ -35,10 +35,13 @@ class RbacsInsertDefaultsService
         /** @var \App\Model\Entity\Role $role */
         $role = $Roles->find()->where(['name' => Role::USER])->firstOrFail();
 
-        $UiActions = TableRegistry::getTableLocator()->get('Passbolt/Rbacs.UiActions');
-        $uiactions = $UiActions->find()->all();
-
         $Rbacs = TableRegistry::getTableLocator()->get('Passbolt/Rbacs.Rbacs');
+        $alreadyExistingRbacUiActionIds = $Rbacs->find()->select('foreign_id');
+
+        $UiActions = TableRegistry::getTableLocator()->get('Passbolt/Rbacs.UiActions');
+        $uiactions = $UiActions->find()
+            ->where(['UiActions.id NOT IN' => $alreadyExistingRbacUiActionIds]);
+
         $entities = [];
 
         foreach ($uiactions as $uiaction) {

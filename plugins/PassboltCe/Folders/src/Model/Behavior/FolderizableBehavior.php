@@ -102,7 +102,6 @@ class FolderizableBehavior extends Behavior
      */
     public function initialize(array $config): void
     {
-        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         parent::initialize($config);
     }

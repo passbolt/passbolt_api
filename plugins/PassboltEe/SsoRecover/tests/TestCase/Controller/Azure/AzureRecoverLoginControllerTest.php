@@ -19,6 +19,7 @@ namespace Passbolt\SsoRecover\Test\TestCase\Controller\Azure;
 
 use App\Test\Factory\UserFactory;
 use Cake\Routing\Exception\MissingRouteException;
+use Cake\Routing\Router;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Test\Factory\SsoStateFactory;
@@ -65,12 +66,15 @@ class AzureRecoverLoginControllerTest extends SsoRecoverIntegrationTestCase
         $this->postJson('/sso/recover/azure.json');
 
         $this->assertSuccess();
-        // Assert URL
         $url = $this->_responseJsonBody->url;
         $this->assertStringContainsString('microsoft', $url);
-        $this->assertStringContainsString('state=', $url);
-        $this->assertStringContainsString('nonce=', $url);
-        $this->assertStringNotContainsString('login_hint', $url);
+        $this->assertStringContainsString('scope=openid%20profile%20email', $url);
+        $this->assertStringContainsString('redirect_uri=' . rawurlencode(Router::url('/sso/azure/redirect', true)), $url);
+        $this->assertStringContainsString('response_type=code', $url);
+        $this->assertStringContainsString('client_id=' . $ssoSettingsDto->data->toArray()['client_id'], $url);
+        $this->assertStringContainsString('state', $url);
+        $this->assertStringContainsString('nonce', $url);
+
         /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::find()->firstOrFail();
         $this->assertEquals(SsoState::TYPE_SSO_RECOVER, $ssoState->type);

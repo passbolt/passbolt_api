@@ -47,7 +47,6 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     public function __construct(?array $config = [], ?UsersTable $usersTable = null)
     {
         $this->setConfig($config);
-        /** @phpstan-ignore-next-line */
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
     }
 

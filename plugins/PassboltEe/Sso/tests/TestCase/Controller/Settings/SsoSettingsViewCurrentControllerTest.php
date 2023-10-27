@@ -154,7 +154,14 @@ class SsoSettingsViewCurrentControllerTest extends SsoIntegrationTestCase
     public function testSsoSettingsViewCurrentController_SuccessEmptyAdmin(): void
     {
         $this->logInAsAdmin();
-
+        Configure::write(
+            'passbolt.plugins.sso.providers',
+            [
+                SsoSetting::PROVIDER_AZURE => true,
+                SsoSetting::PROVIDER_GOOGLE => true,
+                SsoSetting::PROVIDER_OAUTH2 => false,
+            ]
+        );
         $this->getJson('/sso/settings/current.json');
 
         $this->assertSuccess();

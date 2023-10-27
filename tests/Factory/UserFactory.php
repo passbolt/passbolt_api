@@ -142,6 +142,14 @@ class UserFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
+    public function created(FrozenTime $created)
+    {
+        return $this->setField('created', $created);
+    }
+
+    /**
+     * @return $this
+     */
     public function willDisable()
     {
         return $this->patchData(['disabled' => FrozenTime::tomorrow()]);

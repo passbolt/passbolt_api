@@ -44,11 +44,8 @@ class HandleGroupUserDeletedService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->tagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
-        /** @phpstan-ignore-next-line */
         $this->resourcesTagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
     }
 

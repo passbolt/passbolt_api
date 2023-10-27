@@ -45,7 +45,6 @@ abstract class BaseActionLogsFinder
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->ActionLogs = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
     }
 

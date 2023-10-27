@@ -50,9 +50,9 @@ echo $this->element('Email/module/text', [
     'text' => $text
 ]);
 if ($showSecret && $armoredSecret !== null) {
-    echo $this->element('Email/module/code', ['text' => $armoredSecret]);
+    echo $this->element('Email/module/code', ['text' => Purifier::clean($armoredSecret)]);
 }
 echo $this->element('Email/module/button', [
     'url' => Router::url("/app/passwords/view/{$resource['id']}", true),
-    'text' => __('view it in passbolt')
+    'text' => __('View it in passbolt')
 ]);

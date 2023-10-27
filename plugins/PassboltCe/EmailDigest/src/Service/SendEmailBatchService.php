@@ -51,7 +51,6 @@ class SendEmailBatchService
      */
     public function __construct(?EmailQueueTable $table = null, ?EmailDigestService $emailDigestService = null)
     {
-        /** @phpstan-ignore-next-line  */
         $this->emailQueueTable = $table ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
         $this->emailDigestService = $emailDigestService ?? new EmailDigestService();
     }
