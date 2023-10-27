@@ -22,6 +22,7 @@ use App\Model\Validation\EmailValidationRule;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
+use App\Utility\Healthchecks;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
@@ -92,17 +93,16 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('error(s) found. Hang in there!');
     }
 
-    public function testHealthcheckCommand_Environment()
+    public function testHealthcheckCommand_Environment_Unhappy_Path()
     {
+        Configure::write(Healthchecks::PHP_MIN_VERSION_CONFIG, '40');
+        Configure::write(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG, '50');
         $this->exec('passbolt healthcheck -d test --environment');
 
         $this->assertExitSuccess();
 
-        $expectedOutput = 'No error found. Nice one sparky!';
-        if (version_compare(PHP_VERSION, '7.4', '<')) {
-            $expectedOutput = 'error(s) found. Hang in there!';
-        }
-        $this->assertOutputContains($expectedOutput);
+        $this->assertOutputContains('[FAIL] PHP version is too low, passbolt need PHP 40 or higher.');
+        $this->assertOutputContains('[WARN] PHP version less than 50 will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment.');
     }
 
     public function testHealthcheckCommand_Application_Happy_Path()

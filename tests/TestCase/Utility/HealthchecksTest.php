@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Utility;
 
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\Healthchecks;
+use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
@@ -74,7 +75,16 @@ class HealthchecksTest extends AppIntegrationTestCase
         $check = Healthchecks::environment();
         $expectedCheck = [
             'environment' => [
-                'phpVersion' => (bool)version_compare(PHP_VERSION, '7.4', '>='),
+                'phpVersion' => (bool)version_compare(
+                    PHP_VERSION,
+                    Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG),
+                    '>='
+                ),
+                'nextMinPhpVersion' => (bool)version_compare(
+                    PHP_VERSION,
+                    Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG),
+                    '>='
+                ),
                 'pcre' => true,
                 'mbstring' => true,
                 'gnupg' => true,

@@ -71,13 +71,9 @@ class FoldersDeleteService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->foldersTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.Folders');
-        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->userHasPermissionService = new UserHasPermissionService();

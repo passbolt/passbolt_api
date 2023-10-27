@@ -34,7 +34,6 @@ class FavoritesDeleteService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Favorites = TableRegistry::getTableLocator()->get('Favorites');
     }
 

@@ -17,18 +17,22 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Database\Type;
 
+use App\Middleware\UuidParserMiddleware;
+use App\Model\Entity\User;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Utility\MiddlewareTestTrait;
 use App\Utility\UuidFactory;
 use Cake\Database\Driver\Mysql;
+use Cake\Http\ServerRequest;
 use Cake\I18n\FrozenDate;
-use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 class LowerCaseUuidTypeTest extends TestCase
 {
+    use MiddlewareTestTrait;
     use TruncateDirtyTables;
 
     /**
@@ -44,6 +48,10 @@ class LowerCaseUuidTypeTest extends TestCase
 
     public function testLowerCaseUuidType_New_Entity()
     {
+        (new UuidParserMiddleware())->process(
+            new ServerRequest(),
+            $this->mockHandler()
+        );
         $uuid = UuidFactory::uuid();
         $UUID = strtoupper($uuid);
 
@@ -87,7 +95,7 @@ class LowerCaseUuidTypeTest extends TestCase
         ];
 
         // Skip marshalling when saving by using the entity object directly
-        $user = new Entity($data);
+        $user = new User($data);
         $savedUser = $this->Users->save($user);
         $this->assertEmpty($user->getErrors());
         $this->assertSame($UUID, $savedUser['id']);

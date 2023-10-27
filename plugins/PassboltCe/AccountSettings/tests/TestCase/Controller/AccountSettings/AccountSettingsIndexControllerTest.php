@@ -35,7 +35,7 @@ class AccountSettingsIndexControllerTest extends AppIntegrationTestCase
         $user = UserFactory::make()
             ->user()
             ->with('AccountSettings', AccountSettingFactory::make()->theme('dummy_theme'))
-            ->with('AccountSettings', AccountSettingFactory::make()->locale('dummy_locale'))
+            ->with('AccountSettings', AccountSettingFactory::make()->locale('en_UK'))
             ->with('AccountSettings', AccountSettingFactory::make()->setPropertyValue('dummy_prop', 'dummy_prop'))
             ->persist();
 
@@ -45,7 +45,7 @@ class AccountSettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertResponseOk();
         $this->assertSame(2, count($this->_responseJsonBody));
         $this->assertResponseContains('dummy_theme');
-        $this->assertResponseContains('dummy_locale');
+        $this->assertResponseContains('en_UK');
         $this->assertResponseNotContains('dummy_prop');
     }
 

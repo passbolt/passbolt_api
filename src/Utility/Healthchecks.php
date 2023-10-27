@@ -39,6 +39,16 @@ class Healthchecks
     use FeaturePluginAwareTrait;
 
     /**
+     * The minimum PHP version soon required. Healthcheck will warn if not satisfied yet.
+     */
+    public const PHP_NEXT_MIN_VERSION_CONFIG = 'php.nextMinVersion';
+
+    /**
+     * The minimum PHP version required. Healthcheck will fail if not satisfied yet.
+     */
+    public const PHP_MIN_VERSION_CONFIG = 'php.minVersion';
+
+    /**
      * Run all healthchecks
      *
      * @return array
@@ -226,7 +236,16 @@ class Healthchecks
      */
     public static function environment(?array $checks = []): array
     {
-        $checks['environment']['phpVersion'] = version_compare(PHP_VERSION, '7.4', '>=');
+        $checks['environment']['phpVersion'] = version_compare(
+            PHP_VERSION,
+            Configure::read(self::PHP_MIN_VERSION_CONFIG),
+            '>='
+        );
+        $checks['environment']['nextMinPhpVersion'] = version_compare(
+            PHP_VERSION,
+            Configure::read(self::PHP_NEXT_MIN_VERSION_CONFIG),
+            '>='
+        );
         $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
         $checks['environment']['gnupg'] = extension_loaded('gnupg');
