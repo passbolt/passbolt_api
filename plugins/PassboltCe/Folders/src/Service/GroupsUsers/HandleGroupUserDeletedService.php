@@ -40,7 +40,6 @@ class HandleGroupUserDeletedService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('FoldersRelations');

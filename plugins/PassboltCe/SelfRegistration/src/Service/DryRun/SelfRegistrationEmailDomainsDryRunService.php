@@ -19,6 +19,7 @@ namespace Passbolt\SelfRegistration\Service\DryRun;
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\FormValidationException;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\ORM\TableRegistry;
 use Passbolt\SelfRegistration\Form\DryRun\SelfRegistrationEmailDomainsDryRunForm;
 
 class SelfRegistrationEmailDomainsDryRunService extends SelfRegistrationAbstractDryRunService
@@ -77,6 +78,13 @@ class SelfRegistrationEmailDomainsDryRunService extends SelfRegistrationAbstract
      */
     protected function checkEmailDomainIsAllowed(string $email, array $allowedDomains): void
     {
+        /** @var \App\Model\Table\UsersTable $UsersTable */
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
+        if (!$UsersTable->isUsernameCaseSensitive()) {
+            $email = mb_strtolower($email);
+            $allowedDomains = array_map('mb_strtolower', $allowedDomains);
+        }
+
         $domain = explode('@', $email)[1] ?? null;
         $isDomainAllowed = in_array($domain, $allowedDomains);
         if (!$isDomainAllowed) {

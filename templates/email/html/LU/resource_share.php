@@ -52,10 +52,10 @@ echo $this->element('Email/module/text', [
 ]);
 if ($showSecret) {
     echo $this->element('Email/module/code', [
-        'text' => $secret
+        'text' => Purifier::clean($secret)
     ]);
 }
 echo $this->element('Email/module/button', [
     'url' => Router::url("/app/passwords/view/{$resource['id']}", true),
-    'text' => __('view it in passbolt')
+    'text' => __('View it in passbolt')
 ]);

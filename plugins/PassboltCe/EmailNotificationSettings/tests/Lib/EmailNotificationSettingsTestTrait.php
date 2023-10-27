@@ -67,73 +67,19 @@ trait EmailNotificationSettingsTestTrait
      * Returns default email notification values.
      *
      * @return array
+     * @throws \Exception When config file can't be read
      */
     public function getDefaultEmailNotificationConfig(): array
     {
-        return [
-            'purify' => [
-                'subject' => false,
-            ],
+        $configPath = CONFIG . 'default.php';
+        if (!is_file($configPath) || !is_readable($configPath)) {
+            throw new \Exception(
+                __('The {0} data file can not be found/read: {1}', 'default.php', CONFIG)
+            );
+        }
 
-            'show' => [
-                'comment' => false,
-                'description' => false,
-                'secret' => false,
-                'uri' => false,
-                'username' => false,
-            ],
+        $defaultConfigArray = include $configPath;
 
-            'send' => [
-                'comment' => [
-                    'add' => true,
-                ],
-                'password' => [
-                    'create' => false,
-                    'share' => true,
-                    'update' => true,
-                    'delete' => true,
-                ],
-                'user' => [
-                    'create' => true,
-                    'recover' => true,
-                    'recoverComplete' => true,
-                ],
-                'admin' => [
-                    'user' => [
-                        'disable' => [
-                            'admin' => true,
-                            'user' => true,
-                        ],
-                        'setup' => [
-                            'completed' => true,
-                        ],
-                        'recover' => [
-                            'abort' => true,
-                            'complete' => true,
-                        ],
-                        'register' => [
-                            'complete' => true,
-                        ],
-                    ],
-                ],
-                'group' => [
-                    'delete' => true,
-                    'user' => [
-                        'add' => true,
-                        'delete' => true,
-                        'update' => true,
-                    ],
-                    'manager' => [
-                        'update' => true,
-                    ],
-                ],
-                'folder' => [
-                    'create' => false,
-                    'update' => true,
-                    'delete' => true,
-                    'share' => true,
-                ],
-            ],
-        ];
+        return $defaultConfigArray['passbolt']['email'];
     }
 }

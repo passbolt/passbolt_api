@@ -49,11 +49,8 @@ class GroupsUsersAddService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
     }
 

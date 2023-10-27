@@ -33,7 +33,9 @@ use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceUpdateEmailRedactor;
 use App\Notification\Email\Redactor\Setup\SetupRecoverAbortAdminEmailRedactor;
 use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
+use App\Notification\Email\Redactor\User\AdminDeleteEmailRedactor;
 use App\Notification\Email\Redactor\User\AdminDisableEmailRedactor;
+use App\Notification\Email\Redactor\User\UserAdminRoleRevokedEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\User\UserDisableEmailRedactor;
 use App\Notification\Email\Redactor\User\UserRegisterEmailRedactor;
@@ -106,6 +108,12 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         if ($this->isRedactorEnabled('send.admin.user.setup.completed') && $logEnabled) {
             $redactors[] = new AdminUserSetupCompleteEmailRedactor();
+        }
+        if (Configure::read(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_EMAIL_ENABLED)) {
+            $redactors[] = new UserAdminRoleRevokedEmailRedactor();
+        }
+        if (Configure::read(AdminDeleteEmailRedactor::CONFIG_KEY_EMAIL_ENABLED)) {
+            $redactors[] = new AdminDeleteEmailRedactor();
         }
 
         return $redactors;

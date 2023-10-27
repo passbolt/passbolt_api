@@ -24,6 +24,9 @@ use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @covers \App\Controller\Users\UsersDeleteController
+ */
 class UsersDeleteControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;

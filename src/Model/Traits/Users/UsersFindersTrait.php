@@ -24,6 +24,7 @@ use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UuidFactory;
+use Cake\Collection\CollectionInterface;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\FrozenTime;
@@ -375,13 +376,109 @@ trait UsersFindersTrait
         }
 
         // show active first and do not count deleted ones
-        return $this->find()
-            ->where(['Users.username' => $username, 'Users.deleted' => false])
+        return $this->findByUsernameCaseAware($username)
+            ->where(['deleted' => false])
             ->contain([
                 'Roles',
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
             ->order(['Users.active' => 'DESC']);
+    }
+
+    /**
+     * Search a user by username. If username are defined as case-sensitive,
+     * filter out the false matches
+     *
+     * @param string $username username to query
+     * @return \Cake\ORM\Query
+     * @see UsersTable::isUsernameCaseSensitive()
+     * @throws \InvalidArgumentException if the username is not valid email
+     */
+    public function findByUsernameCaseAware(string $username): Query
+    {
+        $query = $this->find()->where([
+            'LOWER(Users.username)' => mb_strtolower($username),
+        ]);
+
+        if ($this->isUsernameCaseSensitive()) {
+            $query->formatResults(function (CollectionInterface $results) use ($username): CollectionInterface {
+                    return $results->filter(function (User $user) use ($username) {
+                        return $user->username === $username;
+                    })->compile(false);
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Lists ['user_id' => 'username'] not deleted and featured multiple times
+     *
+     * @return \Cake\ORM\Query
+     */
+    public function listDuplicateUsernames(): Query
+    {
+        if ($this->isUsernameCaseSensitive()) {
+            return $this->listDuplicateUsernameCaseSensitive();
+        } else {
+            return $this->listDuplicateUsernamesCaseInsensitive();
+        }
+    }
+
+    /**
+     * Lists all duplicated lower-cased usernames
+     *
+     * @return \Cake\ORM\Query
+     */
+    protected function listDuplicateUsernamesCaseInsensitive(): Query
+    {
+        $subQueryOfLowerCasedUsernameDuplicates = $this
+            ->find('list', ['valueField' => 'lower_username'])
+            ->disableHydration()
+            ->select([
+                'lower_username' => 'LOWER(Users.username)',
+                'count' => $this->find()->func()->count('id'),
+            ])
+            ->where(['deleted' => false])
+            ->group('LOWER(Users.username)')
+            ->having(['count >' => 1]);
+
+        if ($subQueryOfLowerCasedUsernameDuplicates->count() === 0) {
+            return $subQueryOfLowerCasedUsernameDuplicates;
+        }
+
+        return $this->find('list', ['keyField' => 'id', 'valueField' => 'username'])
+            ->disableHydration()
+            ->select(['id', 'username'])
+            ->where([
+                'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates->all()->toList(),
+                'deleted' => false,
+            ])
+            ->orderAsc('LOWER(username)');
+    }
+
+    /**
+     * @return \Cake\ORM\Query
+     */
+    protected function listDuplicateUsernameCaseSensitive(): Query
+    {
+        // Let PHP remove the unique usernames, case sensitive
+        $filterUniqueCaseSensitive = function (CollectionInterface $results): CollectionInterface {
+            $duplicates = $results->toArray();
+            foreach (array_count_values($duplicates) as $val => $c) {
+                if ($c === 1) {
+                    $results = $results->reject(function (string $value) use ($val) {
+                        return $val === $value;
+                    });
+                }
+            }
+
+            return $results->compile(false);
+        };
+
+        return $this
+            ->listDuplicateUsernamesCaseInsensitive()
+            ->formatResults($filterUniqueCaseSensitive);
     }
 
     /**
@@ -416,8 +513,15 @@ trait UsersFindersTrait
      */
     public function findFirstAdmin(): ?User
     {
+        $tableHasDisabledField = $this->getSchema()->hasColumn('disabled');
+        $query = $this->find();
+        // This check is required as this method is called in migrations
+        // anterior to the creation of the "disabled" field
+        if ($tableHasDisabledField) {
+            $query->find('notDisabled');
+        }
         /** @var \App\Model\Entity\User $user */
-        $user = $this->find()
+        $user = $query
             ->where([
                 'Users.deleted' => false,
                 'Users.active' => true,
@@ -484,7 +588,7 @@ trait UsersFindersTrait
      * @param \Cake\ORM\Query $query query
      * @return \Cake\ORM\Query
      */
-    public function findnotDisabled(Query $query)
+    public function findNotDisabled(Query $query): Query
     {
         return $query->where(function (QueryExpression $where) {
             return $where->or(function (QueryExpression $or) {
