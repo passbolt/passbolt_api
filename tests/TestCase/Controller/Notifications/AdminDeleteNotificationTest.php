@@ -23,7 +23,6 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
@@ -62,8 +61,8 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
         // Email assertions
         $this->assertEmailQueueCount(2);
-        $adminFullName = Purifier::clean($admin->profile->full_name);
-        $operatorFullName = Purifier::clean($operator->profile->full_name);
+        $adminFullName = $admin->profile->full_name;
+        $operatorFullName = $operator->profile->full_name;
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
             $operator->username
@@ -123,8 +122,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
         // Email assertions
         $this->assertEmailQueueCount(2);
-        $adminFullName = Purifier::clean($admin->profile->full_name);
-        $operatorFullName = Purifier::clean($operator->profile->full_name);
+        $adminFullName = $admin->profile->full_name;
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
             $operator->username
@@ -174,8 +172,8 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
         // Email assertions
         $this->assertEmailQueueCount(2);
-        $adminFullName = Purifier::clean($admin->profile->full_name);
-        $operatorFullName = Purifier::clean($operator->profile->full_name);
+        $adminFullName = $admin->profile->full_name;
+        $operatorFullName = $operator->profile->full_name;
         // Admin #1
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
@@ -220,8 +218,8 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
         // Email assertions
         $this->assertEmailQueueCount(3);
-        $adminFullName = Purifier::clean($admin->profile->full_name);
-        $operatorFullName = Purifier::clean($operator->profile->full_name);
+        $adminFullName = $admin->profile->full_name;
+        $operatorFullName = $operator->profile->full_name;
         // Deleted admin is notified
         $this->assertEmailInBatchContains("{$operatorFullName} deleted your account", $admin->username);
         $this->assertEmailInBatchContains("{$operatorFullName} deleted you from the passbolt organisation", $admin->username);
