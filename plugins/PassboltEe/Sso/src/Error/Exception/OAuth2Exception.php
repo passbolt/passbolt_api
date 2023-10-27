@@ -48,7 +48,7 @@ class OAuth2Exception extends CakeException
             Log::error('Unkown OAuth2 error:' . $error);
         }
 
-        parent::__construct($errorDescription, $code ?? $this->_defaultCode, $previous);
+        parent::__construct($errorDescription, $code ?? 400, $previous);
     }
 
     /**
