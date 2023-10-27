@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
 
 ### Improved
-- PB 27948 Guest identification by their username should be case-insensitive, unless specified in configuration
+- PB-27948 Guest identification by their username should be case-insensitive, unless specified in configuration
 - PB-27957 Send notifications to all administrators when an administrator is deleted
 - PB-27941 Send notifications to administrators when an administrator loses its administrator role
 - PB-28171 Enable the email digest by default
