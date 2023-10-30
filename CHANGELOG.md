@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.0-test.2] - 2023-10-30
+### Added
+- PB-28482 Styleguide version bump to v4.4.0
+
 ## [4.4.0-test.1] - 2023-10-27
 ### Added
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC

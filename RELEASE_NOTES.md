@@ -1,6 +1,6 @@
 TBD
 
-## [4.4.0-test.1] - 2023-10-27
+## [4.4.0-test.2] - 2023-10-30
 ### Added
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
 - PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
