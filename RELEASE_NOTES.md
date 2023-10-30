@@ -1,6 +1,6 @@
 TBD
 
-## [4.4.0-test.1] - 2023-10-27
+## [4.4.0-test.2] - 2023-10-27
 ### Added
 - PB-27950 As a user I can use generic OAuth2 as single sign on provider
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
