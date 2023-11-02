@@ -35,45 +35,30 @@ class ResourceTypesDataCommand extends DataCommand
                 'name' => 'Simple password',
                 'description' => 'The original passbolt resource type, where the secret is a non empty string.',
                 'definition' => json_encode([
-                    "resource" => [
-                        "type" => "object",
-                        "required" => [
-                            "name"
+                    'resource' => [
+                        'type' => 'object',
+                        'required' => ['name'],
+                        'properties' => [
+                            'name' => [
+                                'type' => 'string',
+                                'maxLength' => 255,
+                            ],
+                            'username' => [
+                                'anyOf' => [
+                                    [
+                                        'type' => 'string',
+                                        'maxLength' => 255,
+                                    ],
+                                    [
+                                        'type' => null,
+                                    ],
+                                ],
+                            ],
                         ],
-                        "properties" => [
-                            "name" => [
-                                "type" => "string",
-                                "maxLength" => 64
-                            ],
-                            "username" => [
-                                "anyOf" => [[
-                                    "type" => "string",
-                                    "maxLength" => 64
-                                ], [
-                                    "type" => "null"
-                                ]]
-                            ],
-                            "uri" => [
-                                "anyOf" => [[
-                                    "type" => "string",
-                                    "maxLength" => 1024
-                                ], [
-                                    "type" => "null"
-                                ]]
-                            ],
-                            "description" => [
-                                "anyOf" => [[
-                                    "type" => "string",
-                                    "maxLength" => 10000
-                                ], [
-                                    "type" => "null"
-                                ]]
-                            ],
-                        ]
                     ],
-                    "secret" => [
-                        "type" => "string",
-                        "maxLength" => 4096
+                    'secret' => [
+                        'type' => 'string',
+                        'maxLength' => 4096
                     ],
                 ]),
                 'created' => date("Y-m-d H:i:s"),
@@ -85,51 +70,195 @@ class ResourceTypesDataCommand extends DataCommand
                 'name' => 'Password with description',
                 'description' => 'A resource with the password and the description encrypted.',
                 'definition' => json_encode([
-                    "resource" => [
-                        "type" => "object",
-                        "required" => [
-                            "name"
+                    'resource' => [
+                        'type' => 'object',
+                        'required' => [
+                            'name',
                         ],
-                        "properties" => [
-                            "name" => [
-                                "type" => "string",
-                                "maxLength" => 64
+                        'properties' => [
+                            'name' => [
+                                'type' => 'string',
+                                'maxLength' => 255,
                             ],
-                            "username" => [
-                                "anyOf" => [[
-                                    "type" => "string",
-                                    "maxLength" => 64
-                                ], [
-                                    "type" => "null"
-                                ]]
+                            'username' => [
+                                'anyOf' => [
+                                    [
+                                        'type' => 'string',
+                                        'maxLength' => 255,
+                                    ],
+                                    [
+                                        'type' => 'null',
+                                    ],
+                                ],
                             ],
-                            "uri" => [
-                                "anyOf" => [[
-                                    "type" => "string",
-                                    "maxLength" => 1024
-                                ], [
-                                    "type" => "null"
-                                ]]
+                            'uri' => [
+                                'anyOf' => [
+                                    [
+                                        'type' => 'string',
+                                        'maxLength' => 1024,
+                                    ],
+                                    [
+                                        'type' => 'null',
+                                    ],
+                                ],
                             ],
-                        ]
+                        ],
                     ],
-                    "secret" => [
-                        "type" => "object",
-                        "required" => [
-                            "password"
+                    'secret' => [
+                        'type' => 'object',
+                        'required' => [
+                            'password',
                         ],
-                        "properties" => [
-                            "password" => [
-                                "type" => "string",
-                                "maxLength" => 4096
+                        'properties' => [
+                            'password' => [
+                                'type' => 'string',
+                                'maxLength' => 4096,
                             ],
-                            "description" => [
-                                "anyOf" => [[
-                                    "type" => "string",
-                                    "maxLength" => 10000
-                                ], [
-                                    "type" => "null"
-                                ]]
+                            'description' => [
+                                'anyOf' => [
+                                    [
+                                        'type' => 'string',
+                                        'maxLength' => 10000,
+                                    ],
+                                    [
+                                        'type' => 'null',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]),
+                'created' => date("Y-m-d H:i:s"),
+                'modified' => date("Y-m-d H:i:s"),
+            ],
+            [
+                'id' => UuidFactory::uuid('resource-types.id.totp'),
+                'slug' => 'totp',
+                'name' => 'Standalone TOTP',
+                'description' => 'A resource with standalone TOTP fields.',
+                'definition' => json_encode([
+                    'resource' => [
+                        'type' => 'object',
+                        'required' => [
+                            'name',
+                        ],
+                        'properties' => [
+                            'name' => [
+                                'type' => 'string',
+                                'maxLength' => 255,
+                            ],
+                            'uri' => [
+                                'anyOf' => [
+                                    [
+                                        'type' => 'string',
+                                        'maxLength' => 1024,
+                                    ],
+                                    [
+                                        'type' => 'null',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'secret' => [
+                        'type' => 'object',
+                        'required' => [
+                            'totp',
+                        ],
+                        'properties' => [
+                            'totp' => [
+                                'type' => 'object',
+                                'required' => ['secret_key', 'digits', 'algorithm'],
+                                'properties' => [
+                                    'algorithm' => [
+                                        'type' => 'string',
+                                        'minLength' => 4,
+                                        'maxLength' => 6,
+                                    ],
+                                    'secret_key' => [
+                                        'type' => 'string',
+                                        'maxLength' => 1024,
+                                    ],
+                                    'digits' => [
+                                        'type' => 'number',
+                                        'minimum' => 6,
+                                        'exclusiveMaximum' => 9,
+                                    ],
+                                    'period' => [
+                                        'type' => 'number',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ]),
+                'created' => date("Y-m-d H:i:s"),
+                'modified' => date("Y-m-d H:i:s"),
+            ],
+            [
+                'id' => UuidFactory::uuid('resource-types.id.password-description-totp'),
+                'slug' => 'totp',
+                'name' => 'Password, Description and TOTP',
+                'description' => 'A resource with encrypted password, description and TOTP fields.',
+                'definition' => json_encode([
+                    'resource' => [
+                        'type' => 'object',
+                        'required' => ['name'],
+                        'properties' => [
+                            'name' => [
+                                'type' => 'string',
+                                'maxLength' => 255,
+                            ],
+                            'username' => [
+                                'anyOf' => [
+                                    ['type' => 'string', 'maxLength' => 255],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                            'uri' => [
+                                'anyOf' => [
+                                    ['type' => 'string', 'maxLength' => 1024],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                        ],
+                    ],
+                    'secret' => [
+                        'type' => 'object',
+                        'required' => ['password', 'totp'],
+                        'properties' => [
+                            'password' => [
+                                'type' => 'string',
+                                'maxLength' => 4096,
+                            ],
+                            'description' => [
+                                'anyOf' => [
+                                    ['type' => 'string', 'maxLength' => 10000],
+                                    ['type' => 'null'],
+                                ],
+                            ],
+                            'totp' => [
+                                'type' => 'object',
+                                'required' => ['secret_key', 'digits', 'algorithm'],
+                                'properties' => [
+                                    'algorithm' => [
+                                        'type' => 'string',
+                                        'minLength' => 4,
+                                        'maxLength' => 6,
+                                    ],
+                                    'secret_key' => [
+                                        'type' => 'string',
+                                        'maxLength' => 1024,
+                                    ],
+                                    'digits' => [
+                                        'type' => 'number',
+                                        'minimum' => 6,
+                                        'exclusiveMaximum' => 9,
+                                    ],
+                                    'period' => [
+                                        'type' => 'number',
+                                    ],
+                                ],
                             ],
                         ],
                     ],
