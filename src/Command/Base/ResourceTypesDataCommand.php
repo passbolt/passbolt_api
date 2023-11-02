@@ -197,7 +197,7 @@ class ResourceTypesDataCommand extends DataCommand
             ],
             [
                 'id' => UuidFactory::uuid('resource-types.id.password-description-totp'),
-                'slug' => 'totp',
+                'slug' => 'password-description-totp',
                 'name' => 'Password, Description and TOTP',
                 'description' => 'A resource with encrypted password, description and TOTP fields.',
                 'definition' => json_encode([
