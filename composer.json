@@ -104,7 +104,7 @@
         "phpunit/phpunit": "~9.5.2",
         "cakephp/cakephp-codesniffer": "^4.5",
         "passbolt/passbolt-selenium-api": "^4.2",
-        "passbolt/passbolt-test-data": "^4.1.0",
+        "passbolt/passbolt-test-data": "^4.4",
         "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
         "cakephp/localized": "4.0.0",
         "vimeo/psalm": "^5.0.0",
