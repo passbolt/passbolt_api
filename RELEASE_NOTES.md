@@ -1,6 +1,16 @@
-TBD
+Release song: https://www.youtube.com/watch?v=6Ejga4kJUts
 
-## [4.4.0-test.2] - 2023-10-27
+Hey community members,
+
+Prepare for an exciting update! 🥁
+
+Passbolt is thrilled to announce that the v4.4.0 Release Candidate is officially available for testing.
+
+The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, please share and report any issues you come across.
+
+Enjoy the testing journey! ♥️
+
+## [4.4.0-rc.1] - 2023-11-03
 ### Added
 - PB-27950 As a user I can use generic OAuth2 as single sign on provider
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
@@ -19,7 +29,7 @@ TBD
 ### Fixed
 - PB-26158 As an administrator I should be able to use the memberof LDAP filter following with a ldap-query
 - PB-27895 Fixes a wrong user passphrase policy URL in email the email sent after setting edition
-- PB-25477 As an administrator, I should be able to recreate a user with an email that exists in the db
+- PB-25477 As an administrator, I should be able to recreate a user with an email that exists in the db via the command line
 - PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
 - PB-27857 Fix help site release notes automation by adding flavour on help site release notes merge request
 
