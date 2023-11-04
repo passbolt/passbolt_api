@@ -54,5 +54,5 @@ interface DigestInterface
      * @param \Cake\ORM\Entity $emailQueueEntity An instance of EmailDigest
      * @return bool
      */
-    public function canAddToDigest(Entity $emailQueueEntity);
+    public function canAddToDigest(Entity $emailQueueEntity): bool;
 }

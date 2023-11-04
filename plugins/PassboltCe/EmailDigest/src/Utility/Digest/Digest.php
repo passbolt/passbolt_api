@@ -21,6 +21,8 @@ use Cake\ORM\Entity;
 use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
+use Passbolt\Locale\Event\LocaleEmailQueueListener;
+use Passbolt\Locale\Service\LocaleService;
 
 /**
  * Default digest to fall back to building a single email
@@ -139,18 +141,22 @@ class Digest extends AbstractDigest implements DigestInterface
         foreach ($this->emails as $username => $emailsByOperator) {
             foreach ($emailsByOperator as $operator => $emails) {
                 $numberOfEmails = $this->getEmailCount($username, $operator);
+                $renderFromEmailPreview = true;
                 if ($numberOfEmails === 1) {
-                    $result[] = $this->buildSingleEmailDigest($emails[0]);
+                    $digest = $this->buildSingleEmailDigest($emails[0]);
                 } elseif (!$this->isPassThreshold($username, $operator)) {
-                    $result[] = $this->buildMultipleEmailDigest($emails);
+                    $digest = $this->buildMultipleEmailDigest($emails);
                 } else {
-                    $result[] = $this->onThresholdCallback($emails, $numberOfEmails);
+                    $digest = $this->onThresholdCallback($emails, $numberOfEmails);
+                    $renderFromEmailPreview = false; // Do not render the emails in the digest
+                }
+                $result[] = $digest;
+                if ($renderFromEmailPreview) {
+                    $digest->setContent(
+                        $this->renderDigestContentFromEmailPreview($this->emailPreviewFactory, $digest)
+                    );
                 }
             }
-        }
-
-        foreach ($result as $digest) {
-            $digest->setContent($this->renderDigestContentFromEmailPreview($this->emailPreviewFactory, $digest));
         }
 
         /** @var \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[] $result */
@@ -161,7 +167,7 @@ class Digest extends AbstractDigest implements DigestInterface
      * @param array $emails array of EmailQueue Entity
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
      */
-    public function buildMultipleEmailDigest(array $emails)
+    protected function buildMultipleEmailDigest(array $emails): EmailDigest
     {
         $digest = new EmailDigest();
         foreach ($emails as $i => $emailQueueEntity) {
@@ -169,10 +175,10 @@ class Digest extends AbstractDigest implements DigestInterface
             if (!isset($operator['profile']['first_name']) || !is_string($operator['profile']['first_name'])) {
                 throw new UnsupportedEmailDigestDataException($emailQueueEntity);
             }
-
-            $firstName = $operator['profile']['first_name'];
-            $digest->addEmailData($emailQueueEntity)
-                ->setSubject(__($this->subject, $firstName))
+            $subject = $this->getTranslatedSubject($operator['profile']['first_name'], $emailQueueEntity);
+            $digest
+                ->addEmailData($emailQueueEntity)
+                ->setSubject($subject)
                 ->setEmailRecipient($emailQueueEntity->email);
         }
 
@@ -185,11 +191,11 @@ class Digest extends AbstractDigest implements DigestInterface
      * @param \Cake\ORM\Entity $emailQueueEntity An email entity
      * @return bool
      */
-    public function canAddToDigest(Entity $emailQueueEntity)
+    public function canAddToDigest(Entity $emailQueueEntity): bool
     {
         $executedBy = $this->getOperatorFromEmail($emailQueueEntity);
 
-        return !empty($executedBy) ? $this->isTemplateSupported($emailQueueEntity->get('template')) : false;
+        return !empty($executedBy) && $this->isTemplateSupported($emailQueueEntity->get('template'));
     }
 
     /**
@@ -198,9 +204,9 @@ class Digest extends AbstractDigest implements DigestInterface
      * @param string $template Template to use
      * @return bool
      */
-    private function isTemplateSupported(string $template)
+    private function isTemplateSupported(string $template): bool
     {
-        return !empty($this->supportedTemplates) ? in_array($template, $this->supportedTemplates) : true;
+        return empty($this->supportedTemplates) || in_array($template, $this->supportedTemplates);
     }
 
     /**
@@ -270,5 +276,30 @@ class Digest extends AbstractDigest implements DigestInterface
     private function onThresholdCallback(array $emailQueueEntities, int $emailCount)
     {
         return call_user_func($this->onThresholdCallback, $emailQueueEntities, $emailCount);
+    }
+
+    /**
+     * @param string $operatorFirstName First name of the operator
+     * @param \Cake\ORM\Entity $emailQueueEntity EmailQueue Entity
+     * @return string
+     */
+    private function getTranslatedSubject(string $operatorFirstName, Entity $emailQueueEntity): string
+    {
+        $emailLocale = $emailQueueEntity['template_vars'][LocaleEmailQueueListener::VIEW_VAR_KEY] ?? null;
+
+        $makeSubject = function () use ($operatorFirstName): string {
+            return __($this->subject, $operatorFirstName);
+        };
+
+        if ($emailLocale !== null) {
+            $subject = (new LocaleService())->translateString(
+                $emailLocale,
+                $makeSubject
+            );
+        } else {
+            $subject = $makeSubject();
+        }
+
+        return $subject;
     }
 }

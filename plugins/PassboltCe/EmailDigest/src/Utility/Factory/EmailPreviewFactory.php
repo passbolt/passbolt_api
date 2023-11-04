@@ -63,6 +63,7 @@ class EmailPreviewFactory
     public function renderFromEmailEntity(Entity $email): string
     {
         $viewVars = empty($email->template_vars) ? [] : $email->template_vars;
+        $viewVars['locale'] = $email->get('template_vars')['locale'];
 
         $renderer = new Renderer();
         $renderer

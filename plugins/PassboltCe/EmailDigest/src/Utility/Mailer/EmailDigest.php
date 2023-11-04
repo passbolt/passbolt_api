@@ -19,7 +19,6 @@ namespace Passbolt\EmailDigest\Utility\Mailer;
 
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
-use Passbolt\Locale\Service\LocaleService;
 
 class EmailDigest implements EmailDigestInterface
 {
@@ -187,17 +186,6 @@ class EmailDigest implements EmailDigestInterface
      */
     public function getSubject()
     {
-        $locale = $this->emailsData[0]['template_vars']['locale'] ?? null;
-
-        if ($locale !== null) {
-            return (new LocaleService())->translateString(
-                $locale,
-                function () {
-                    return $this->subject;
-                }
-            );
-        }
-
         return $this->subject;
     }
 

@@ -27,6 +27,8 @@ use Passbolt\EmailDigest\Utility\Digest\Digest;
 use Passbolt\EmailDigest\Utility\Digest\DigestRegisterTrait;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
+use Passbolt\Locale\Event\LocaleEmailQueueListener;
+use Passbolt\Locale\Service\LocaleService;
 
 /**
  * Register new digest related to Resources.
@@ -80,8 +82,17 @@ class ResourceDigests implements EventListenerInterface
                     $emailDigest->addEmailData($emailQueueEntity);
                 }
 
+                $locale = $emailData->get('template_vars')['locale'];
+                $subject = (new LocaleService())->translateString(
+                    $locale,
+                    function () {
+                        return __('Multiple passwords have been changed in passbolt');
+                    }
+                );
+
                 $emailDigest
-                    ->setSubject(__('Multiple passwords have been changed in passbolt'))
+                    ->setSubject($subject)
+                    ->addLayoutVar(LocaleEmailQueueListener::VIEW_VAR_KEY, $locale)
                     ->setTemplate(static::RESOURCE_CHANGES_TEMPLATE)
                     ->setEmailRecipient($emailData->get('email'))
                     ->addTemplateVar('user', $emailData->get('template_vars')['body']['user'])
@@ -120,8 +131,17 @@ class ResourceDigests implements EventListenerInterface
                     $emailDigest->addEmailData($emailQueueEntity);
                 }
 
+                $locale = $emailData->get('template_vars')['locale'];
+                $subject = (new LocaleService())->translateString(
+                    $locale,
+                    function () {
+                        return __('Multiple passwords have been shared with you in passbolt');
+                    }
+                );
+
                 $emailDigest
-                    ->setSubject(__('Multiple passwords have been shared with you in passbolt'))
+                    ->setSubject($subject)
+                    ->addLayoutVar(LocaleEmailQueueListener::VIEW_VAR_KEY, $locale)
                     ->setTemplate(static::RESOURCE_SHARE_MULTIPLE_TEMPLATE)
                     ->setEmailRecipient($emailData->get('email'))
                     ->addTemplateVar('owner', $emailData->get('template_vars')['body']['owner'])

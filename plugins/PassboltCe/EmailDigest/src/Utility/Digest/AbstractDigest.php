@@ -53,8 +53,10 @@ abstract class AbstractDigest implements DigestInterface
      * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $digest Email digest to use to render
      * @return string
      */
-    protected function renderDigestContentFromEmailPreview(EmailPreviewFactory $factory, EmailDigestInterface $digest)
-    {
+    protected function renderDigestContentFromEmailPreview(
+        EmailPreviewFactory $factory,
+        EmailDigestInterface $digest
+    ): string {
         $emailDigestContent = [];
         foreach ($digest->getEmailsData() as $emailData) {
             $emailDigestContent[] = $factory->renderFromEmailEntity($emailData);
@@ -67,7 +69,7 @@ abstract class AbstractDigest implements DigestInterface
      * @param \Cake\ORM\Entity $emailQueueEntity entity
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
      */
-    public function buildSingleEmailDigest(Entity $emailQueueEntity): EmailDigest
+    protected function buildSingleEmailDigest(Entity $emailQueueEntity): EmailDigest
     {
         return (new EmailDigest())
             ->addEmailData($emailQueueEntity)

@@ -82,7 +82,7 @@ class SingleDigest extends AbstractDigest implements DigestInterface
      * @param \Cake\ORM\Entity $emailQueueEntity An email entity
      * @return bool
      */
-    public function canAddToDigest(Entity $emailQueueEntity)
+    public function canAddToDigest(Entity $emailQueueEntity): bool
     {
         return true;
     }
