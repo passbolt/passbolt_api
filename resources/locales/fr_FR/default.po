@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 15:36+0000\n"
-"PO-Revision-Date: 2023-09-20 08:32\n"
+"POT-Creation-Date: 2023-10-27 11:15+0000\n"
+"PO-Revision-Date: 2023-10-27 14:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -65,19 +65,19 @@ msgid "Page not found."
 msgstr "Page introuvable."
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr ""
+msgstr "Veuillez utiliser l'extension .json dans l'URL ou accepter application/json."
 
 msgid "The request data can not be empty."
-msgstr ""
+msgstr "Les données de la requête ne doivent pas être vides."
 
 msgid "You are successfully logged in."
 msgstr "Vous avez été connecté avec succès."
 
 msgid "You are successfully logged out."
-msgstr ""
+msgstr "Vous êtes déconnecté avec succès."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "La route de déconnexion ne doit être accessible que par la méthode POST."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "Les informations de la clé publique OpenPGP n'ont pas été trouvées dans la configuration."
@@ -185,7 +185,7 @@ msgid "Access restricted to administrators."
 msgstr "Accès limité aux administrateurs."
 
 msgid "Access restricted to unauthenticated users."
-msgstr ""
+msgstr "Accès restreint aux utilisateurs non authentifiés."
 
 msgid "The user should not be logged in."
 msgstr ""
@@ -350,7 +350,7 @@ msgid "You are not authorized to edit the role."
 msgstr "Vous n'êtes pas autorisé à modifier le rôle."
 
 msgid "Multiple has-access filters are not supported."
-msgstr ""
+msgstr "Les filtres multi-accès ne sont pas pris en charge."
 
 msgid "This operation is not allowed for this user."
 msgstr "Cette opération n’est pas autorisée pour cet utilisateur."
@@ -365,13 +365,13 @@ msgid "Only guests are allowed to register."
 msgstr "Seuls les invités sont autorisés à s'enregistrer."
 
 msgid "Registration is not opened to public."
-msgstr ""
+msgstr "L'inscription n'est pas ouverte au public."
 
 msgid "Please contact your administrator."
 msgstr "Veuillez contacter votre administrateur."
 
 msgid "This is due to a security setting."
-msgstr ""
+msgstr "Cela est dû à un paramètre de sécurité."
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "L'identifiant de l'utilisateur doit être un UUID valide ou \"me\"."
@@ -959,7 +959,7 @@ msgid "The email should be a valid email address."
 msgstr "L'email doit être une adresse email valide."
 
 msgid "The regular expression should be a valid string."
-msgstr ""
+msgstr "L'expression régulière doit être une chaîne de caractères valide."
 
 msgid "The fingerprint does not match the one of the armored key."
 msgstr "L'empreinte ne correspond à aucune des clés sécurisées."
@@ -1024,7 +1024,22 @@ msgstr "{0} ne peut pas compléter le processus de récupération de compte !"
 msgid "{0} shared the password {1}"
 msgstr "{0} a partagé le mot de passe {1}"
 
+msgid "You deleted administrator {0}"
+msgstr ""
+
+msgid "{0} deleted your account"
+msgstr ""
+
+msgid "{0} deleted administrator {1}"
+msgstr ""
+
 msgid "Your account has been suspended"
+msgstr ""
+
+msgid "Your admin role has been revoked"
+msgstr ""
+
+msgid "{0}'s admin role has been revoked"
 msgstr ""
 
 msgid "{0} deleted user {1}"
@@ -1414,6 +1429,9 @@ msgstr "Veuillez d'abord vous inscrire et terminer la configuration."
 msgid "This user has been disabled."
 msgstr ""
 
+msgid "The username {0} is a duplicate."
+msgstr ""
+
 msgid "Validation failed for user {0}. {1}"
 msgstr "Échec de validation de l'utilisateur {0}. {1}"
 
@@ -1646,7 +1664,7 @@ msgid "You added the folder {0}"
 msgstr "Vous avez ajouté le dossier {0}"
 
 msgid "You deleted the folder {0}"
-msgstr ""
+msgstr "Vous avez supprimé le dossier {0}"
 
 msgid "{0} deleted the folder {1}"
 msgstr "{0} a supprimé le dossier {1}"
@@ -1655,7 +1673,7 @@ msgid "{0} shared the folder {1}"
 msgstr "{0} a partagé le dossier {1}"
 
 msgid "You edited the folder {0}"
-msgstr ""
+msgstr "Vous avez modifié le dossier {0}"
 
 msgid "{0} edited the folder {1}"
 msgstr "{0} a édité le dossier {1}"
@@ -1714,26 +1732,26 @@ msgstr "Vous avez créé un nouveau dossier"
 msgid "Name: {0}"
 msgstr "Nom : {0}"
 
-msgid "view it in passbolt"
-msgstr "le voir dans Passbolt"
+msgid "View it in passbolt"
+msgstr "Le voir dans Passbolt"
 
 msgid "You deleted a folder"
-msgstr ""
+msgstr "Vous avez supprimé un dossier"
 
 msgid "{0} deleted a folder"
-msgstr ""
+msgstr "{0} a supprimé un dossier"
 
 msgid "log in passbolt"
 msgstr "connectez-vous à passbolt"
 
 msgid "{0} shared a folder with you"
-msgstr ""
+msgstr "{0} a partagé un dossier avec vous"
 
 msgid "You edited a folder"
-msgstr ""
+msgstr "Vous avez édité un dossier"
 
 msgid "{0} edited a folder"
-msgstr ""
+msgstr "{0} a édité un dossier"
 
 msgid "The user signature could not be verified."
 msgstr "La signature de l'utilisateur n'a pas pu être vérifiée."
@@ -1874,7 +1892,7 @@ msgid "This is not a valid {0}."
 msgstr "Ce n'est pas un {0} valide."
 
 msgid "The strategy should extend the class: {0}"
-msgstr ""
+msgstr "La stratégie devrait étendre la classe : {0}"
 
 msgid "The action log identifier should be a valid UUID."
 msgstr "L'identifiant du journal d'action doit être un UUID valide."
@@ -1907,7 +1925,7 @@ msgid "Could not validate action log data."
 msgstr "Impossible de valider les données du journal d'action."
 
 msgid "The date {0} should be after the date {1}."
-msgstr ""
+msgstr "La date {0} doit être postérieure à la date {1}."
 
 msgid "The identifier should be not be empty."
 msgstr "L'identifiant ne doit pas être vide."
@@ -2087,22 +2105,22 @@ msgid "The authentication token is expired."
 msgstr "Le jeton d'authentification a expiré."
 
 msgid "Unable to authenticate to Duo."
-msgstr ""
+msgstr "Impossible de s'authentifier sur Duo."
 
 msgid "Unable to validate the Duo callback data."
-msgstr ""
+msgstr "Impossible de valider les données de rappel Duo."
 
 msgid "A Duo state cookie is required."
-msgstr ""
+msgstr "Un cookie d'état Duo est requis."
 
 msgid "The Duo state cookie value should be a string."
-msgstr ""
+msgstr "La valeur du cookie d'état Duo doit être une chaîne de caractères."
 
 msgid "The Duo state cookie should be a valid UUID."
-msgstr ""
+msgstr "Le cookie d'état Duo doit être un UUID valide."
 
 msgid "This entrypoint is not available anymore."
-msgstr ""
+msgstr "Ce point d'entrée n'est plus disponible."
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "Ce fournisseur d'authentification n'est pas activé pour votre organisation."
@@ -2138,7 +2156,7 @@ msgid "Please provide the one-time password."
 msgstr "Veuillez renseigner le mot de passe à usage unique."
 
 msgid "You have been logged out due to too many failed attempts."
-msgstr ""
+msgstr "Vous avez été déconnecté en raison de trop de tentatives infructueuses."
 
 msgid "The user id is not valid."
 msgstr "L'identifiant de l'utilisateur n'est pas valide."
@@ -2153,28 +2171,28 @@ msgid "Please setup the Yubikey settings."
 msgstr "Veuillez configurer les paramètres pour Yubikey."
 
 msgid "A state is required."
-msgstr ""
+msgstr "Un statut est requis."
 
 msgid "The state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "L'état doit être une chaîne BMP-UTF8 valide."
 
 msgid "The state should not be empty."
-msgstr ""
+msgstr "L'état ne doit pas être vide."
 
 msgid "A duo code is required."
-msgstr ""
+msgstr "Un code duo est requis."
 
 msgid "The duo code state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "L'état du code duo doit être une chaîne BMP-UTF8 valide."
 
 msgid "The duo code should not be empty."
-msgstr ""
+msgstr "Le code duo ne doit pas être vide."
 
 msgid "The error description should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "La description de l'erreur doit être une chaîne BMP-UTF8 valide."
 
 msgid "The error description state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "L'état de description de l'erreur doit être une chaîne BMP-UTF8 valide."
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "Quelque chose s'est mal passé lors de la validation du mot de passe à usage unique."
@@ -2201,10 +2219,10 @@ msgid "This yubikey is not associated with this user."
 msgstr "Cette yubikey n'est pas associée à cet utilisateur."
 
 msgid "No Duo error provided"
-msgstr ""
+msgstr "Aucune erreur Duo n'a été fournie"
 
 msgid "No Duo error description provided"
-msgstr ""
+msgstr "Aucune description d'erreurs Duo n'a été fournie"
 
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Vos paramètres d’authentification multi-facteurs ont été réinitialisés par vous."
@@ -2216,49 +2234,49 @@ msgid "Your multi-factor authentication settings were reset by an administrator.
 msgstr "Vos paramètres d'authentification multi-facteurs ont été réinitialisés par un administrateur."
 
 msgid "The token should reference an active Duo callback authentication token."
-msgstr ""
+msgstr "Le jeton devrait référencer un jeton d'authentification de rappel Duo actif."
 
 msgid "An authentication token state is required."
-msgstr ""
+msgstr "Un état de jeton d'authentification est requis."
 
 msgid "The Duo state should match the authentication token state."
-msgstr ""
+msgstr "L'état Duo doit correspondre à l'état du jeton d'authentification."
 
 msgid "Could not enable Duo MFA provider."
-msgstr ""
+msgstr "Impossible d'activer le fournisseur d'authentification multiple Duo."
 
 msgid "Unable to verify Duo authentication."
-msgstr ""
+msgstr "Impossible de vérifier l'authentification Duo."
 
 msgid "Could not validate the Duo settings."
-msgstr ""
+msgstr "Impossible de valider les paramètres Duo."
 
 msgid "Could not login using Duo MFA provider."
-msgstr ""
+msgstr "Impossible de se connecter à l'aide du fournisseur d'authentification multiple Duo."
 
 msgid "Unable to connect to Duo services."
-msgstr ""
+msgstr "Impossible de se connecter aux services Duo."
 
 msgid "Unable to verify Duo code against Duo service."
-msgstr ""
+msgstr "Impossible de vérifier le code Duo par rapport au service Duo."
 
 msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
-msgstr ""
+msgstr "Le point de terminaison de l'authentification duo ne correspond pas au nom d'hôte duo de l'organisation."
 
 msgid "The duo authentication subscriber does not match the operator username."
-msgstr ""
+msgstr "L'abonné à l'authentification duo ne correspond pas au nom d'utilisateur de l'opérateur."
 
 msgid "No configuration set for Duo client ID."
-msgstr ""
+msgstr "Aucune configuration définie pour l'ID du client Duo."
 
 msgid "No configuration set for Duo API hostname."
-msgstr ""
+msgstr "Aucune configuration définie pour le nom d'hôte de l'API Duo."
 
 msgid "No configuration set for Duo client secret."
-msgstr ""
+msgstr "Aucune configuration définie pour le secret du client Duo."
 
 msgid "This is not a valid Duo client secret."
-msgstr ""
+msgstr "Ce n'est pas une clé secrète Duo valide."
 
 msgid "This is not a valid Duo API hostname."
 msgstr ""
@@ -3475,6 +3493,15 @@ msgstr "accueil"
 msgid "login"
 msgstr "connexion"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
 msgid "Account suspended"
 msgstr ""
 
@@ -3489,6 +3516,18 @@ msgstr ""
 
 msgid "Contact your admin"
 msgstr ""
+
+msgid "{0} changed role of {1} to admin."
+msgstr ""
+
+msgid "{0} changed your role to admin."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
+msgstr ""
+
+msgid "You"
+msgstr "Vous"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) vient de terminer la récupération d'un compte. N'hésitez pas à contacter cet utilisateur si vous pensez que cette action semble suspecte."

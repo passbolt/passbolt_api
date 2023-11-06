@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 15:36+0000\n"
-"PO-Revision-Date: 2023-09-20 09:30\n"
+"POT-Creation-Date: 2023-10-27 11:15+0000\n"
+"PO-Revision-Date: 2023-10-27 14:26\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -1024,8 +1024,23 @@ msgstr "{0} kan het herstelproces van de account niet voltooien!"
 msgid "{0} shared the password {1}"
 msgstr "{0} heeft het wachtwoord {1} gedeeld"
 
+msgid "You deleted administrator {0}"
+msgstr ""
+
+msgid "{0} deleted your account"
+msgstr ""
+
+msgid "{0} deleted administrator {1}"
+msgstr ""
+
 msgid "Your account has been suspended"
 msgstr "Uw account is opgeschort"
+
+msgid "Your admin role has been revoked"
+msgstr ""
+
+msgid "{0}'s admin role has been revoked"
+msgstr ""
 
 msgid "{0} deleted user {1}"
 msgstr "{0} heeft gebruiker {1} verwijderd"
@@ -1414,6 +1429,9 @@ msgstr "Registreer en voltooi eerst de installatie."
 msgid "This user has been disabled."
 msgstr ""
 
+msgid "The username {0} is a duplicate."
+msgstr ""
+
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validatie is mislukt voor gebruiker {0}. {1}"
 
@@ -1714,8 +1732,8 @@ msgstr "Je hebt een nieuwe map aangemaakt"
 msgid "Name: {0}"
 msgstr "Naam: {0}"
 
-msgid "view it in passbolt"
-msgstr "bekijk het in Passbolt"
+msgid "View it in passbolt"
+msgstr "Bekijk het in Passbolt"
 
 msgid "You deleted a folder"
 msgstr ""
@@ -3475,6 +3493,15 @@ msgstr "startpagina"
 msgid "login"
 msgstr "inloggen"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
 msgid "Account suspended"
 msgstr ""
 
@@ -3489,6 +3516,18 @@ msgstr ""
 
 msgid "Contact your admin"
 msgstr ""
+
+msgid "{0} changed role of {1} to admin."
+msgstr ""
+
+msgid "{0} changed your role to admin."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
+msgstr ""
+
+msgid "You"
+msgstr "Jij"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""

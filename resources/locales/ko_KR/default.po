@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 15:36+0000\n"
-"PO-Revision-Date: 2023-09-22 02:25\n"
+"POT-Creation-Date: 2023-10-27 11:15+0000\n"
+"PO-Revision-Date: 2023-11-02 02:13\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1024,8 +1024,23 @@ msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다."
 msgid "{0} shared the password {1}"
 msgstr "{0} 에 의해 {1} 비밀번호가 공유됨"
 
+msgid "You deleted administrator {0}"
+msgstr "관리자 {0} 이(가) 삭제됨"
+
+msgid "{0} deleted your account"
+msgstr "{0} 이(가) 당신의 계정을 삭제함"
+
+msgid "{0} deleted administrator {1}"
+msgstr "{0} 이(가) 관리자 {1} 을(를) 삭제함"
+
 msgid "Your account has been suspended"
 msgstr "계정이 정지되었습니다"
+
+msgid "Your admin role has been revoked"
+msgstr "관리자 역할이 취소되었습니다"
+
+msgid "{0}'s admin role has been revoked"
+msgstr "{0} 의 관리자 역할이 취소되었습니다"
 
 msgid "{0} deleted user {1}"
 msgstr "{0} 에 의해 {1} 사용자가 삭제됨"
@@ -1414,6 +1429,9 @@ msgstr "먼저 등록 하고 설정을 완료하세요."
 msgid "This user has been disabled."
 msgstr "이 사용자는 사용할 수 없습니다."
 
+msgid "The username {0} is a duplicate."
+msgstr "사용자이름 {0} 이(가) 중복입니다."
+
 msgid "Validation failed for user {0}. {1}"
 msgstr "{0} 사용자에 대한 검증이 실패되었습니다. {1}"
 
@@ -1714,7 +1732,7 @@ msgstr "새 폴더가 생성되었습니다."
 msgid "Name: {0}"
 msgstr "이름: {0}"
 
-msgid "view it in passbolt"
+msgid "View it in passbolt"
 msgstr "패스볼트에서 보기"
 
 msgid "You deleted a folder"
@@ -1799,7 +1817,7 @@ msgid "No active refresh token matching the request could be found."
 msgstr "요청과 일치하는 활성 새로 고침 토큰을 찾을 수 없습니다."
 
 msgid "The user is not activated or disabled."
-msgstr ""
+msgstr "사용자가 활성화되지 않았거나 중지되었습니다."
 
 msgid "The user is deleted."
 msgstr "사용자가 삭제되었습니다."
@@ -2339,10 +2357,10 @@ msgid "Getting started with Duo"
 msgstr "Duo 시작하기"
 
 msgid "How does it work?"
-msgstr "그것은 어떻게 작동하나요?"
+msgstr "어떻게 작동하나요?"
 
 msgid "You sign in to passbolt just like you normally do."
-msgstr "평소처럼 패스볼트에 로그인하면 됩니다."
+msgstr "평소와 마찬가지로 패스볼트에 로그인합니다."
 
 msgid "Use you 2FA device to authenticate."
 msgstr "2FA 장치를 사용하여 인증합니다."
@@ -2501,7 +2519,7 @@ msgid "The external dictionary check is required."
 msgstr "외부 사전 확인이 필요합니다."
 
 msgid "The external dictionary check should be a boolean."
-msgstr ""
+msgstr "외부 사전 확인은 부울이어야 합니다."
 
 msgid "The password generator settings is required."
 msgstr "암호 생성기 설정이 필요합니다."
@@ -2915,10 +2933,10 @@ msgid "The test email should be a valid email address."
 msgstr "테스트 이메일은 유효한 이메일 주소여야 합니다."
 
 msgid "The authentication method is required."
-msgstr ""
+msgstr "인증 방법이 필요합니다."
 
 msgid "The authentication method should be one of the following: {0}."
-msgstr ""
+msgstr "인증 방법은 다음 중 하나여야 합니다: {0}."
 
 msgid "The sender email should be a valid email address."
 msgstr "보내는 사람 이메일은 유효한 이메일 주소여야 합니다."
@@ -3032,10 +3050,10 @@ msgid "The database name should not contain dashes."
 msgstr "데이타베이스 이름은 대시를 포함할 수 없습니다."
 
 msgid "The schema is required on PostgreSQL"
-msgstr ""
+msgstr "PostgreSQL에서 스키마가 필요합니다"
 
 msgid "The schema should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "스키마는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "An OpenPGP public key is required."
 msgstr "OpenPGP 공개키가 필요합니다."
@@ -3194,10 +3212,10 @@ msgid "Database name"
 msgstr "데이타베이스 이름"
 
 msgid "schema"
-msgstr ""
+msgstr "스키마"
 
 msgid "Schema"
-msgstr ""
+msgstr "스키마"
 
 msgid "Enter your SMTP server settings."
 msgstr "SMTP 서버 설정 입력"
@@ -3422,7 +3440,7 @@ msgid "Why do I need a SMTP server?"
 msgstr "SMTP 서버가 필요한 이유는 무엇입니까?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
-msgstr "계정 생성 후 초대 이메일을 보내고 이메일 알림을 보내려면 패스볼트에 smtp 서버가 필요합니다."
+msgstr "패스볼트는 계정 생성 후 초대 메일을 발송하고 메일 알림을 보내기 위해 smtp 서버가 필요합니다."
 
 msgid "The requested address was not found on this server."
 msgstr "요청한 주소를 이 서버에서 찾을 수 없습니다."
@@ -3475,20 +3493,41 @@ msgstr "홈"
 msgid "login"
 msgstr "로그인"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr "관리자 {0} ({1}) 이(가) 패스볼트 조직에서 삭제되었습니다."
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr "{0} 이(가) 패스볼트 조직에서 사용자를 삭제하였습니다."
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr "이 조치가 의심스럽다면 작업 시작 시 관리자에게 언제든지 연락하세요."
+
 msgid "Account suspended"
-msgstr ""
+msgstr "계정 정지"
 
 msgid "Your account has been suspended."
-msgstr ""
+msgstr "계정이 정지되었습니다."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "패스볼트 로그인 할 수 없으며 이메일 알림을 받을 수 없습니다."
 
 msgid "Other users can still share resources with you and add you to a group."
-msgstr ""
+msgstr "다른 사용자는 여전히 사용자와 리소스를 공유하고 사용자를 그룹에 추가할 수 있습니다."
 
 msgid "Contact your admin"
-msgstr ""
+msgstr "관리자에게 연락"
+
+msgid "{0} changed role of {1} to admin."
+msgstr "{0} 이(가) {1} 의 역할을 관리자로 변경했습니다."
+
+msgid "{0} changed your role to admin."
+msgstr "{0} 이(가) 관리자로 역할을 변경했습니다."
+
+msgid "{0} can no longer perform administration tasks."
+msgstr "{0} 이(가) 더 이상 관리 작업을 수행할 수 없습니다."
+
+msgid "You"
+msgstr "당신"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) 이(가) 방금 계정 복구를 완료했습니다. 이 동작이 의심스럽다고 생각되면 언제든지 이 사용자에게 연락하세요."
@@ -3509,19 +3548,19 @@ msgid "Please check with them first to confirm."
 msgstr "확인을 위해 먼저 그들에게 확인하세요."
 
 msgid "User suspended"
-msgstr ""
+msgstr "사용자 중지됨"
 
 msgid "The user {0} has been suspended."
-msgstr ""
+msgstr "{0} 사용자가 중지됨."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "이 사용자는 패스볼트 로그인 할 수 없으며 이메일 알림을 받을 수 없습니다."
 
 msgid "Other users can share resources and add this user to a group."
-msgstr ""
+msgstr "다른 사용자는 리소스를 공유하고 이 사용자를 그룹에 추가할 수 있습니다"
 
 msgid "Check user suspension"
-msgstr ""
+msgstr "사용자 중지 확인"
 
 msgid "Welcome to {0}!"
 msgstr "{0} 에 오신 것을 환영합니다!"
