@@ -39,6 +39,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/app/passwords/view", true),
-    'text' => __('view them in passbolt')
+    'url' => Router::url('/', true),
+    'text' => __('View them in passbolt')
 ]);

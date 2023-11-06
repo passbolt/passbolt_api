@@ -28,7 +28,7 @@ class DigestsPoolTest extends TestCase
     /**
      * @var DigestsPool
      */
-    private $digestsPool;
+    private DigestsPool $digestsPool;
 
     public function setUp(): void
     {
