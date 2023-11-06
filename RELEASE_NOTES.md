@@ -10,7 +10,7 @@ The best part? All you have to do is head to GitHub and dive in! Of course, you 
 
 Enjoy the testing journey! ♥️
 
-## [4.4.0-rc.1] - 2023-11-03
+## [4.4.0-test.3] - 2023-11-06
 ### Added
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
 - PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
