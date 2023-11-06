@@ -150,12 +150,13 @@ class Digest extends AbstractDigest implements DigestInterface
                     $digest = $this->onThresholdCallback($emails, $numberOfEmails);
                     $renderFromEmailPreview = false; // Do not render the emails in the digest
                 }
-                $result[] = $digest;
                 if ($renderFromEmailPreview) {
                     $digest->setContent(
                         $this->renderDigestContentFromEmailPreview($this->emailPreviewFactory, $digest)
                     );
                 }
+
+                $result[] = $digest;
             }
         }
 
