@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 15:36+0000\n"
-"PO-Revision-Date: 2023-09-20 10:28\n"
+"POT-Creation-Date: 2023-10-27 11:15+0000\n"
+"PO-Revision-Date: 2023-10-30 10:04\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -77,7 +77,7 @@ msgid "You are successfully logged out."
 msgstr "Disconnessione avvenuta con successo."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "Bisognerebbe accedere al percorso di logout solo attraverso il metodo POST."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "Le informazioni della chiave pubblica OpenPGP non sono state trovate nella configurazione."
@@ -1024,8 +1024,23 @@ msgstr "{0} non può completare il processo di recupero dell'account!"
 msgid "{0} shared the password {1}"
 msgstr "{0} ha condiviso la password {1}"
 
+msgid "You deleted administrator {0}"
+msgstr "Hai eliminato l'amministratore {0}"
+
+msgid "{0} deleted your account"
+msgstr "{0} ha eliminato il tuo account"
+
+msgid "{0} deleted administrator {1}"
+msgstr "{0} ha eliminato l'amministratore {1}"
+
 msgid "Your account has been suspended"
 msgstr "Il tuo account è stato sospeso"
+
+msgid "Your admin role has been revoked"
+msgstr "Il tuo ruolo di amministratore è stato revocato"
+
+msgid "{0}'s admin role has been revoked"
+msgstr "Il ruolo di amministratore di {0} è stato revocato"
 
 msgid "{0} deleted user {1}"
 msgstr "{0} ha eliminato l'utente {1}"
@@ -1414,6 +1429,9 @@ msgstr "Registrati e completa prima la configurazione."
 msgid "This user has been disabled."
 msgstr "Questo utente è stato disabilitato."
 
+msgid "The username {0} is a duplicate."
+msgstr "Il nome utente {0} è un duplicato."
+
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validazione dell'utente {0} fallita. {1}"
 
@@ -1714,8 +1732,8 @@ msgstr "Hai creato una nuova cartella"
 msgid "Name: {0}"
 msgstr "Nome: {0}"
 
-msgid "view it in passbolt"
-msgstr "visualizza in Passbolt"
+msgid "View it in passbolt"
+msgstr "Visualizza in passbolt"
 
 msgid "You deleted a folder"
 msgstr "Hai eliminato una cartella"
@@ -1874,7 +1892,7 @@ msgid "This is not a valid {0}."
 msgstr "Questo non è valido {0}."
 
 msgid "The strategy should extend the class: {0}"
-msgstr ""
+msgstr "La strategia dovrebbe estendere la classe: {0}"
 
 msgid "The action log identifier should be a valid UUID."
 msgstr "L'identificatore del log di azione deve essere un UUID valido."
@@ -2246,7 +2264,7 @@ msgid "The duo authentication origin endpoint does not match the organization se
 msgstr "L'endpoint di origine dell'autenticazione Duo non corrisponde all'hostname Duo nelle impostazioni dell'organizzazione."
 
 msgid "The duo authentication subscriber does not match the operator username."
-msgstr ""
+msgstr "L'abbonato all'autenticazione Duo non corrisponde al nome utente dell'operatore."
 
 msgid "No configuration set for Duo client ID."
 msgstr "Nessuna configurazione impostata per l'ID client Duo."
@@ -3475,6 +3493,15 @@ msgstr "home"
 msgid "login"
 msgstr "accedi"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr "L'amministratore {0} ({1}) è stato eliminato dall'organizzazione in Passbolt."
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr "{0} ti ha cancellato dall'organizzazione in Passbolt."
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr "Sentiti libero di contattare l'amministratore che ha originato l'azione, se pensi che l'azione sia sospetta."
+
 msgid "Account suspended"
 msgstr "Account sospeso"
 
@@ -3489,6 +3516,18 @@ msgstr "Gli altri utenti possono ancora condividere le risorse con te, o aggiung
 
 msgid "Contact your admin"
 msgstr "Contatta l'amministratore"
+
+msgid "{0} changed role of {1} to admin."
+msgstr "{0} ha modificato il ruolo di {1} ad amministratore."
+
+msgid "{0} changed your role to admin."
+msgstr "{0} ha modificato il tuo ruolo ad amministratore."
+
+msgid "{0} can no longer perform administration tasks."
+msgstr "{0} non può più eseguire compiti di amministrazione."
+
+msgid "You"
+msgstr "Tu"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) ha appena completato un recupero account. Contatta pure questo utente se ritieni che l'azione sia sospetta."

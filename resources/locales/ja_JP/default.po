@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 15:36+0000\n"
-"PO-Revision-Date: 2023-09-20 08:32\n"
+"POT-Creation-Date: 2023-10-27 11:15+0000\n"
+"PO-Revision-Date: 2023-10-27 14:26\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -1024,7 +1024,22 @@ msgstr ""
 msgid "{0} shared the password {1}"
 msgstr "{0} さんがパスワード {1} を共有しました"
 
+msgid "You deleted administrator {0}"
+msgstr ""
+
+msgid "{0} deleted your account"
+msgstr ""
+
+msgid "{0} deleted administrator {1}"
+msgstr ""
+
 msgid "Your account has been suspended"
+msgstr ""
+
+msgid "Your admin role has been revoked"
+msgstr ""
+
+msgid "{0}'s admin role has been revoked"
 msgstr ""
 
 msgid "{0} deleted user {1}"
@@ -1414,6 +1429,9 @@ msgstr "最初に登録して、セットアップを完了してください。
 msgid "This user has been disabled."
 msgstr ""
 
+msgid "The username {0} is a duplicate."
+msgstr ""
+
 msgid "Validation failed for user {0}. {1}"
 msgstr "ユーザー {0} の検証に失敗しました。 {1}"
 
@@ -1714,7 +1732,7 @@ msgstr "新しいフォルダを作成しました"
 msgid "Name: {0}"
 msgstr "名前: {0}"
 
-msgid "view it in passbolt"
+msgid "View it in passbolt"
 msgstr "パスボルトで表示"
 
 msgid "You deleted a folder"
@@ -3475,6 +3493,15 @@ msgstr "ホーム"
 msgid "login"
 msgstr "ログイン"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
 msgid "Account suspended"
 msgstr ""
 
@@ -3489,6 +3516,18 @@ msgstr ""
 
 msgid "Contact your admin"
 msgstr ""
+
+msgid "{0} changed role of {1} to admin."
+msgstr ""
+
+msgid "{0} changed your role to admin."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
+msgstr ""
+
+msgid "You"
+msgstr "あなた"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""

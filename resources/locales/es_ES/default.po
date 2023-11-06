@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 15:36+0000\n"
-"PO-Revision-Date: 2023-09-20 08:32\n"
+"POT-Creation-Date: 2023-10-27 11:15+0000\n"
+"PO-Revision-Date: 2023-10-27 14:26\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1024,7 +1024,22 @@ msgstr "¡{0} no puede completar el proceso de recuperación de cuenta!"
 msgid "{0} shared the password {1}"
 msgstr "{0} ha compartido la contraseña {1}"
 
+msgid "You deleted administrator {0}"
+msgstr ""
+
+msgid "{0} deleted your account"
+msgstr ""
+
+msgid "{0} deleted administrator {1}"
+msgstr ""
+
 msgid "Your account has been suspended"
+msgstr ""
+
+msgid "Your admin role has been revoked"
+msgstr ""
+
+msgid "{0}'s admin role has been revoked"
 msgstr ""
 
 msgid "{0} deleted user {1}"
@@ -1414,6 +1429,9 @@ msgstr "Por favor, regístrese y complete la configuración primero."
 msgid "This user has been disabled."
 msgstr ""
 
+msgid "The username {0} is a duplicate."
+msgstr ""
+
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validación fallida para el usuario {0}. {1}"
 
@@ -1714,8 +1732,8 @@ msgstr "Has creado una nueva carpeta"
 msgid "Name: {0}"
 msgstr "Nombre: {0}"
 
-msgid "view it in passbolt"
-msgstr "ver en passbolt"
+msgid "View it in passbolt"
+msgstr "Ver en passbolt"
 
 msgid "You deleted a folder"
 msgstr "Ha eliminado una carpeta"
@@ -2489,52 +2507,52 @@ msgid "Log in passbolt"
 msgstr "Iniciar sesión passbolt"
 
 msgid "Could not retrieve the password policies."
-msgstr ""
+msgstr "No se han podido recuperar las políticas de contraseña."
 
 msgid "The default generator is required."
-msgstr ""
+msgstr "Se requiere el generador predeterminado."
 
 msgid "The default generator should be one of the following: {0}."
-msgstr ""
+msgstr "El generador predeterminado debe ser uno de los siguientes: {0}."
 
 msgid "The external dictionary check is required."
-msgstr ""
+msgstr "Se requiere la comprobación del diccionario externo."
 
 msgid "The external dictionary check should be a boolean."
 msgstr ""
 
 msgid "The password generator settings is required."
-msgstr ""
+msgstr "Se requiere la configuración del generador de contraseñas."
 
 msgid "The password generator settings should not be empty."
-msgstr ""
+msgstr "La configuración del generador de contraseñas no debe estar vacía."
 
 msgid "The password generator settings should have at least one mask selected."
-msgstr ""
+msgstr "La configuración del generador de contraseñas debe tener al menos una máscara seleccionada."
 
 msgid "The passphrase generator settings is required."
-msgstr ""
+msgstr "Se requiere la configuración del generador de contraseñas."
 
 msgid "The passphrase generator settings should not be empty."
-msgstr ""
+msgstr "La configuración del generador de contraseñas no debe estar vacía."
 
 msgid "Could not validate the password policies settings."
-msgstr ""
+msgstr "No se ha podido validar la configuración de las políticas de contraseña."
 
 msgid "The passphrase generator words is required."
-msgstr ""
+msgstr "Se requieren las palabras generadoras de contraseñas."
 
 msgid "The passphrase generator words should be between {0} and {1}."
-msgstr ""
+msgstr "Las palabras generadoras de contraseñas deben estar entre {0} y {1}."
 
 msgid "The passphrase generator word separator is required."
-msgstr ""
+msgstr "Se requiere el separador de las palabras generadoras de contraseñas."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
-msgstr ""
+msgstr "El separador de palabras generadoras de contraseñas debe ser una cadena UTF8 válida."
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr ""
+msgstr "El separador de palabras generadoras de contraseñas debe tener un máximo de {0} caracteres."
 
 msgid "The passphrase generator word case is required."
 msgstr ""
@@ -3475,6 +3493,15 @@ msgstr "inicio"
 msgid "login"
 msgstr "entrar"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
 msgid "Account suspended"
 msgstr ""
 
@@ -3489,6 +3516,18 @@ msgstr ""
 
 msgid "Contact your admin"
 msgstr ""
+
+msgid "{0} changed role of {1} to admin."
+msgstr ""
+
+msgid "{0} changed your role to admin."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
+msgstr ""
+
+msgid "You"
+msgstr "Usted"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) acaba de completar una recuperación de cuenta. Siéntase libre de ponerse en contacto con este usuario si cree que esta acción parece sospechosa."
