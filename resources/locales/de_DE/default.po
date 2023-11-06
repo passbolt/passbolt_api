@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 17:30+0200\n"
-"PO-Revision-Date: 2023-09-20 10:09\n"
+"POT-Creation-Date: 2023-10-27 15:02+0200\n"
+"PO-Revision-Date: 2023-11-03 01:15\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -1030,8 +1030,23 @@ msgstr "{0} kann die Kontowiederherstellung nicht abschließen!"
 msgid "{0} shared the password {1}"
 msgstr "{0} hat das Passwort {1} geteilt"
 
+msgid "You deleted administrator {0}"
+msgstr "Sie haben den Administrator {0} gelöscht"
+
+msgid "{0} deleted your account"
+msgstr "{0} hat Ihren Account gelöscht"
+
+msgid "{0} deleted administrator {1}"
+msgstr "{0} hat den Administrator {1} gelöscht"
+
 msgid "Your account has been suspended"
 msgstr ""
+
+msgid "Your admin role has been revoked"
+msgstr "Ihre Admin-Rolle wurde widerrufen"
+
+msgid "{0}'s admin role has been revoked"
+msgstr "Die Admin-Rolle von {0} wurde widerrufen"
 
 msgid "{0} deleted user {1}"
 msgstr "{0} hat Benutzer*in {1} gelöscht"
@@ -1418,7 +1433,10 @@ msgid "Please register and complete the setup first."
 msgstr "Bitte registrieren Sie sich und schließen Sie das Setup zuerst ab."
 
 msgid "This user has been disabled."
-msgstr ""
+msgstr "Dieser Benutzer wurde deaktiviert."
+
+msgid "The username {0} is a duplicate."
+msgstr "Der Benutzername {0} existiert bereits."
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validierung fehlgeschlagen für Benutzer*in {0}. {1}"
@@ -1720,8 +1738,8 @@ msgstr "Sie haben einen neuen Ordner erstellt"
 msgid "Name: {0}"
 msgstr "Name: {0}"
 
-msgid "view it in passbolt"
-msgstr "in Passbolt anzeigen"
+msgid "View it in passbolt"
+msgstr "In Passbolt anzeigen"
 
 msgid "You deleted a folder"
 msgstr "Sie haben einen Ordner gelöscht"
@@ -1805,7 +1823,7 @@ msgid "No active refresh token matching the request could be found."
 msgstr "Es wurde kein aktiver Aktualisierungstoken mit der Anfrage gefunden."
 
 msgid "The user is not activated or disabled."
-msgstr ""
+msgstr "Der Benutzer ist nicht aktiviert oder deaktiviert."
 
 msgid "The user is deleted."
 msgstr "Der Benutzer wurde gelöscht."
@@ -2507,7 +2525,7 @@ msgid "The external dictionary check is required."
 msgstr "Die externe Wörterbuchprüfung ist erforderlich."
 
 msgid "The external dictionary check should be a boolean."
-msgstr ""
+msgstr "Die externe Überprüfung des Wörterbuchs sollte ein Boolean sein."
 
 msgid "The password generator settings is required."
 msgstr "Die Passwortgenerator-Einstellungen sind erforderlich."
@@ -3209,10 +3227,10 @@ msgid "Database name"
 msgstr "Datenbankname"
 
 msgid "schema"
-msgstr ""
+msgstr "schema"
 
 msgid "Schema"
-msgstr ""
+msgstr "Schema"
 
 msgid "Enter your SMTP server settings."
 msgstr "Geben Sie Ihre SMTP-Server-Einstellungen ein."
@@ -4292,7 +4310,7 @@ msgid "The group custom filter contains the forbidden field."
 msgstr "Der benutzerdefinierte Gruppen-Filter enthält das verbotene Feld."
 
 msgid "Directory sync settings endpoints are disabled."
-msgstr ""
+msgstr "Endpunkte für Verzeichnissync-Einstellungen sind deaktiviert."
 
 msgid "The directory name should be a valid UTF8 string."
 msgstr "Der Verzeichnisname sollte eine gültige UTF8-Zeichenkette sein."
@@ -4474,6 +4492,9 @@ msgstr "Richtlinie: {0}"
 msgid "Remember me for a month: {0}"
 msgstr "Für einen Monat merken: {0}"
 
+msgid "view it in passbolt"
+msgstr "in Passbolt anzeigen"
+
 msgid "You edited the password policy"
 msgstr "Sie haben die Passwortrichtlinie bearbeitet"
 
@@ -4489,8 +4510,17 @@ msgstr "Die Einstellungen für die Kennwortrichtlinien wurden durch {0} aktualis
 msgid "you"
 msgstr "sie"
 
+msgid "SsoRecover plugin is disabled."
+msgstr "SsoRecover-Plugin ist deaktiviert."
+
+msgid "The SSO state type is invalid."
+msgstr "Der SSO-Statustyp ist ungültig."
+
 msgid "CSRF issue. The state in URL and Cookies do not match."
 msgstr "CSRF-Problem. Der Zustand in URL und Cookies stimmt nicht überein."
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
+msgstr ""
 
 msgid "The state is required in cookie."
 msgstr "Der Zustand ist im Cookie erforderlich."
@@ -4504,6 +4534,9 @@ msgstr "Der Zustand wird in den URL-Parametern benötigt."
 msgid "The code is required in URL parameters."
 msgstr "Der Code wird in den URL-Parametern benötigt."
 
+msgid "The code is required in request data."
+msgstr ""
+
 msgid "The user id is required in URL parameters."
 msgstr "Die Benutzer-ID wird in den URL-Parametern benötigt."
 
@@ -4515,12 +4548,6 @@ msgstr "Benutzer existiert nicht oder ist nicht aktiv."
 
 msgid "The SSO setting does not exist."
 msgstr "Die SSO-Einstellung existiert nicht."
-
-msgid "SsoRecover plugin is disabled."
-msgstr "SsoRecover-Plugin ist deaktiviert."
-
-msgid "The SSO state type is invalid."
-msgstr "Der SSO-Statustyp ist ungültig."
 
 msgid "Information about the key is required."
 msgstr "Informationen über den Schlüssel sind erforderlich."
@@ -4618,6 +4645,30 @@ msgstr ""
 msgid "The client id is too large."
 msgstr "Die Client-ID ist zu lange."
 
+msgid "A base URL is required."
+msgstr ""
+
+msgid "The base URL should not be empty."
+msgstr ""
+
+msgid "The base URL is too large."
+msgstr ""
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The OpenID configuration path is too large."
+msgstr ""
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The scope should be a valid string."
+msgstr ""
+
+msgid "The scope is too large."
+msgstr ""
+
 msgid "The user is not active."
 msgstr "Der Benutzer ist nicht aktiviert."
 
@@ -4698,6 +4749,9 @@ msgstr "Die Benutzerkennung existiert nicht."
 
 msgid "The provided nonce is invalid."
 msgstr "Das angegebene Nonce ist ungültig."
+
+msgid "The URL should start with https://"
+msgstr ""
 
 msgid "The provided state is invalid."
 msgstr "Der angegebene Status ist ungültig."
@@ -4940,10 +4994,10 @@ msgid "Could not retrieve the user passphrase policies."
 msgstr ""
 
 msgid "The entropy minimum is required."
-msgstr ""
+msgstr "Das Entropie Minimum ist erforderlich."
 
 msgid "The entropy minimum should be between {0} and {1}."
-msgstr ""
+msgstr "Das Entropie Minimum sollte zwischen {0} und {1} liegen."
 
 msgid "You edited the user passphrase policy"
 msgstr ""
@@ -5011,6 +5065,15 @@ msgstr "Start"
 msgid "login"
 msgstr "Anmelden"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
 msgid "Account suspended"
 msgstr ""
 
@@ -5025,6 +5088,18 @@ msgstr ""
 
 msgid "Contact your admin"
 msgstr ""
+
+msgid "{0} changed role of {1} to admin."
+msgstr ""
+
+msgid "{0} changed your role to admin."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
+msgstr ""
+
+msgid "You"
+msgstr "Sie"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) hat gerade eine Kontowiederherstellung abgeschlossen. Nehmen Sie Kontakt mit diesem Benutzer auf, wenn Sie das Gefühl haben, dass diese Aktion verdächtig aussieht."
