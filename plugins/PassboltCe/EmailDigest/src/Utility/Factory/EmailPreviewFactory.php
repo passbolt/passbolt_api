@@ -45,8 +45,10 @@ class EmailPreviewFactory
      * @param string|null $layout Layout file name to set.
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview
      */
-    public function renderEmailPreviewFromDigest(EmailDigestInterface $emailDigest, ?string $layout = null)
-    {
+    public function renderEmailPreviewFromDigest(
+        EmailDigestInterface $emailDigest,
+        ?string $layout = null
+    ): EmailPreview {
         $email = $this->mapEmailDigestToMailerEmail(new Mailer('default'), $emailDigest);
 
         $this->configureEmailView($email, $emailDigest->getTemplate(), $layout);
@@ -63,6 +65,7 @@ class EmailPreviewFactory
     public function renderFromEmailEntity(Entity $email): string
     {
         $viewVars = empty($email->template_vars) ? [] : $email->template_vars;
+        $viewVars['locale'] = $email->get('template_vars')['locale'];
 
         $renderer = new Renderer();
         $renderer
@@ -109,8 +112,12 @@ class EmailPreviewFactory
      * @param string|null $theme Theme name.
      * @return void
      */
-    private function configureEmailView(Mailer $email, string $template, ?string $layout = null, ?string $theme = null)
-    {
+    private function configureEmailView(
+        Mailer $email,
+        string $template,
+        ?string $layout = null,
+        ?string $theme = null
+    ): void {
         $email->viewBuilder()
             ->setVar('title', 'Email digest preview')
             ->setLayout($layout)
@@ -125,21 +132,19 @@ class EmailPreviewFactory
      * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest An instance of EmailDigest
      * @return \Cake\Mailer\Mailer
      */
-    private function mapEmailDigestToMailerEmail(Mailer $email, EmailDigestInterface $emailDigest)
+    private function mapEmailDigestToMailerEmail(Mailer $email, EmailDigestInterface $emailDigest): Mailer
     {
         $emailData = $emailDigest->getEmailsData()[0];
         if (!empty($emailData->from_email) && !empty($emailData->from_name)) {
             $email->setFrom($emailData->from_email, $emailData->from_name);
         }
 
-        $email
+        return $email
             ->setTo($emailDigest->getEmailRecipient())
             ->setSubject($emailDigest->getSubject())
             ->setEmailFormat($emailDigest->getEmailFormat())
             ->setMessageId(false)
             ->setViewVars($emailDigest->getViewVars())
             ->setReturnPath($email->getFrom());
-
-        return $email;
     }
 }

@@ -34,17 +34,17 @@ class DigestFactory
     /**
      * @var static|null
      */
-    private static $instance = null;
+    private static ?DigestFactory $instance = null;
 
     /**
      * @var \Passbolt\EmailDigest\Utility\Digest\DigestsPool
      */
-    private $digestsPool;
+    private DigestsPool $digestsPool;
 
     /**
      * @var bool
      */
-    private $isDigestRegisterEventDispatched;
+    private bool $isDigestRegisterEventDispatched;
 
     /**
      * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool|null $digestsPool DigestPool
@@ -59,9 +59,9 @@ class DigestFactory
     /**
      * Return a singleton of the DigestsPool
      *
-     * @return \Passbolt\EmailDigest\Utility\Factory\DigestFactory
+     * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (!isset(static::$instance)) {
             static::$instance = new static();

@@ -31,8 +31,6 @@ use App\Middleware\SslForceMiddleware;
 use App\Middleware\UuidParserMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
-use App\Notification\EmailDigest\DigestRegister\GroupDigests;
-use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Service\Cookie\AbstractSecureCookieService;
@@ -198,13 +196,6 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             $this->getEventManager()
                 ->on(new CoreEmailRedactorPool())
                 ->on(new CoreNotificationSettingsDefinition());
-        }
-
-        if (PHP_SAPI === 'cli' || (Configure::read('debug') && Configure::read('passbolt.selenium.active'))) {
-            // Core email digests
-            $this->getEventManager()
-                ->on(new GroupDigests())
-                ->on(new ResourceDigests());
         }
     }
 

@@ -48,6 +48,7 @@ use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\PasswordPoliciesUpdate\PasswordPoliciesUpdatePlugin;
 
@@ -107,6 +108,7 @@ abstract class AppIntegrationTestCase extends TestCase
         OpenPGPBackendFactory::reset();
         UserAction::destroy();
         DigestsPool::clearInstance();
+        DigestFactory::clearInstance();
         EmailNotificationSettings::flushCache();
         $this->clearPlugins();
         parent::tearDown();

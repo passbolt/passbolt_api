@@ -22,20 +22,19 @@ use App\Notification\Email\Redactor\Resource\ResourceDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceUpdateEmailRedactor;
 use App\Notification\Email\Redactor\Share\ShareEmailRedactor;
 use Cake\Core\Configure;
-use Cake\Event\EventListenerInterface;
+use Passbolt\EmailDigest\Utility\Digest\AbstractDigestRegister;
 use Passbolt\EmailDigest\Utility\Digest\Digest;
-use Passbolt\EmailDigest\Utility\Digest\DigestRegisterTrait;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
+use Passbolt\Locale\Event\LocaleEmailQueueListener;
+use Passbolt\Locale\Service\LocaleService;
 
 /**
  * Register new digest related to Resources.
  * All templates matching the list of supported templates will be aggregated together in a same email.
  */
-class ResourceDigests implements EventListenerInterface
+class ResourceDigests extends AbstractDigestRegister
 {
-    use DigestRegisterTrait;
-
     public const RESOURCE_CHANGES_TEMPLATE = 'LU/resources_change';
     public const RESOURCE_SHARE_MULTIPLE_TEMPLATE = 'LU/resources_share';
 
@@ -43,7 +42,7 @@ class ResourceDigests implements EventListenerInterface
      * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool Instance of the marshaller
      * @return void
      */
-    public function addDigestsPool(DigestsPool $digestsPool)
+    public function addDigestsPool(DigestsPool $digestsPool): void
     {
         $digestsPool->addDigest($this->createResourceShareDigest());
         $digestsPool->addDigest($this->createResourceChangesDigest());
@@ -58,7 +57,7 @@ class ResourceDigests implements EventListenerInterface
      *
      * @return \Passbolt\EmailDigest\Utility\Digest\Digest
      */
-    private function createResourceChangesDigest()
+    private function createResourceChangesDigest(): Digest
     {
         return new Digest(
             __('{0} has made changes on several resources', '{0}'),
@@ -80,15 +79,22 @@ class ResourceDigests implements EventListenerInterface
                     $emailDigest->addEmailData($emailQueueEntity);
                 }
 
-                $emailDigest
-                    ->setSubject(__('Multiple passwords have been changed in passbolt'))
+                $locale = $emailData->get('template_vars')['locale'];
+                $subject = (new LocaleService())->translateString(
+                    $locale,
+                    function () {
+                        return __('Multiple passwords have been changed in passbolt');
+                    }
+                );
+
+                return $emailDigest
+                    ->setSubject($subject)
+                    ->addLayoutVar(LocaleEmailQueueListener::VIEW_VAR_KEY, $locale)
                     ->setTemplate(static::RESOURCE_CHANGES_TEMPLATE)
                     ->setEmailRecipient($emailData->get('email'))
                     ->addTemplateVar('user', $emailData->get('template_vars')['body']['user'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
-
-                return $emailDigest;
             }
         );
     }
@@ -100,7 +106,7 @@ class ResourceDigests implements EventListenerInterface
      *
      * @return \Passbolt\EmailDigest\Utility\Digest\Digest
      */
-    private function createResourceShareDigest()
+    private function createResourceShareDigest(): Digest
     {
         return new Digest(
             __('{0} shared several items with you', '{0}'),
@@ -120,15 +126,22 @@ class ResourceDigests implements EventListenerInterface
                     $emailDigest->addEmailData($emailQueueEntity);
                 }
 
-                $emailDigest
-                    ->setSubject(__('Multiple passwords have been shared with you in passbolt'))
+                $locale = $emailData->get('template_vars')['locale'];
+                $subject = (new LocaleService())->translateString(
+                    $locale,
+                    function () {
+                        return __('Multiple passwords have been shared with you in passbolt');
+                    }
+                );
+
+                return $emailDigest
+                    ->setSubject($subject)
+                    ->addLayoutVar(LocaleEmailQueueListener::VIEW_VAR_KEY, $locale)
                     ->setTemplate(static::RESOURCE_SHARE_MULTIPLE_TEMPLATE)
                     ->setEmailRecipient($emailData->get('email'))
                     ->addTemplateVar('owner', $emailData->get('template_vars')['body']['owner'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
-
-                return $emailDigest;
             }
         );
     }
