@@ -28,7 +28,7 @@ class DebugTransport extends SmtpTransport
     /**
      * @var \Cake\Mailer\Message[]
      */
-    protected $messages = [];
+    protected array $messages = [];
 
     /**
      * @inheritDoc

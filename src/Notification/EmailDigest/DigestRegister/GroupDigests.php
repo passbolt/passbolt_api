@@ -21,16 +21,15 @@ use App\Notification\Email\Redactor\Group\GroupUserAddEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserDeleteEmailRedactor;
 use App\Notification\Email\Redactor\Group\GroupUserUpdateEmailRedactor;
 use Cake\Core\Configure;
-use Cake\Event\EventListenerInterface;
+use Passbolt\EmailDigest\Utility\Digest\AbstractDigestRegister;
 use Passbolt\EmailDigest\Utility\Digest\Digest;
-use Passbolt\EmailDigest\Utility\Digest\DigestRegisterTrait;
 use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
+use Passbolt\Locale\Event\LocaleEmailQueueListener;
+use Passbolt\Locale\Service\LocaleService;
 
-class GroupDigests implements EventListenerInterface
+class GroupDigests extends AbstractDigestRegister
 {
-    use DigestRegisterTrait;
-
     public const GROUP_USERS_CHANGES_TEMPLATE = 'LU/group_users_change';
     public const GROUPS_DELETE_TEMPLATE = 'LU/groups_delete';
 
@@ -38,7 +37,7 @@ class GroupDigests implements EventListenerInterface
      * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool Instance of the digest pool
      * @return void
      */
-    public function addDigestsPool(DigestsPool $digestsPool)
+    public function addDigestsPool(DigestsPool $digestsPool): void
     {
         $digestsPool->addDigest($this->createGroupMembershipDigest());
         $digestsPool->addDigest($this->createGroupDeleteDigest());
@@ -47,7 +46,7 @@ class GroupDigests implements EventListenerInterface
     /**
      * @return \Passbolt\EmailDigest\Utility\Digest\Digest
      */
-    private function createGroupMembershipDigest()
+    private function createGroupMembershipDigest(): Digest
     {
         return new Digest(
             __('{0} updated your memberships in several groups', '{0}'),
@@ -63,15 +62,22 @@ class GroupDigests implements EventListenerInterface
             function (array $emailQueueEntities, int $emailCount) {
                 $emailData = $emailQueueEntities[0];
 
-                $digest = (new EmailDigest())
-                    ->setSubject(__('Your membership in several groups changed in passbolt'))
+                $locale = $emailData->get('template_vars')['locale'];
+                $subject = (new LocaleService())->translateString(
+                    $locale,
+                    function () {
+                        return __('Your membership in several groups changed in passbolt');
+                    }
+                );
+
+                return (new EmailDigest())
+                    ->setSubject($subject)
+                    ->addLayoutVar(LocaleEmailQueueListener::VIEW_VAR_KEY, $locale)
                     ->setTemplate(static::GROUP_USERS_CHANGES_TEMPLATE)
                     ->setEmailRecipient($emailData->get('email'))
                     ->addTemplateVar('user', $emailData->get('template_vars')['body']['user'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
-
-                return $digest;
             }
         );
     }
@@ -79,7 +85,7 @@ class GroupDigests implements EventListenerInterface
     /**
      * @return \Passbolt\EmailDigest\Utility\Digest\Digest
      */
-    private function createGroupDeleteDigest()
+    private function createGroupDeleteDigest(): Digest
     {
         return new Digest(
             __('{0} deleted several groups', '{0}'),
@@ -93,15 +99,22 @@ class GroupDigests implements EventListenerInterface
             function (array $emailQueueEntities, int $emailCount) {
                 $emailData = $emailQueueEntities[0];
 
-                $digest = (new EmailDigest())
-                    ->setSubject(__('Several groups were deleted in passbolt'))
+                $locale = $emailData->get('template_vars')['locale'];
+                $subject = (new LocaleService())->translateString(
+                    $locale,
+                    function () {
+                        return __('Several groups were deleted in passbolt');
+                    }
+                );
+
+                return (new EmailDigest())
+                    ->setSubject($subject)
+                    ->addLayoutVar(LocaleEmailQueueListener::VIEW_VAR_KEY, $locale)
                     ->setTemplate(static::GROUPS_DELETE_TEMPLATE)
                     ->setEmailRecipient($emailData->get('email'))
                     ->addTemplateVar('user', $emailData->get('template_vars')['body']['user'])
                     ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
                     ->addTemplateVar('count', $emailCount);
-
-                return $digest;
             }
         );
     }

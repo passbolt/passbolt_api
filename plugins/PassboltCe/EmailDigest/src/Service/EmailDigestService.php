@@ -53,7 +53,7 @@ class EmailDigestService
     /**
      * Handle the emails data for each recipient and transform them to emails digests
      *
-     * @param array $emails An array of emails entities from email queue.
+     * @param \Cake\ORM\Entity[] $emails An array of emails entities from email queue.
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */

@@ -16,13 +16,15 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Utility\Digest;
 
+use Cake\Event\EventListenerInterface;
+
 /**
- * Components interested into adding new digest through the event system can use this convenience trait.
+ * Components interested into adding new digest through the event system should extend this class.
  * It eases the registration of digests by providing boilerplate code to add new digest instances to the digest pool.
  *
- * Only the method "addDigest" needs to be implemented by registers.
+ * Only the method "addDigestsPool" needs to be implemented by registers.
  */
-trait DigestRegisterTrait
+abstract class AbstractDigestRegister implements EventListenerInterface
 {
     /**
      * @return array<string, mixed>
@@ -38,9 +40,9 @@ trait DigestRegisterTrait
      * A class registering digests must implement this method
      *
      * @param \Passbolt\EmailDigest\Utility\Digest\DigestsPool $digestsPool digest pool
-     * @return mixed
+     * @return void
      */
-    abstract public function addDigestsPool(DigestsPool $digestsPool);
+    abstract public function addDigestsPool(DigestsPool $digestsPool): void;
 
     /**
      * @param \Passbolt\EmailDigest\Utility\Digest\DigestRegisterEvent $event An instance of the event
