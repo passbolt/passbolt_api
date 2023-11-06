@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.0-test.3] - 2023-11-06
+### Added
+- PB-28537 As a user I should receive email digests translated in my locale
+
 ## [4.4.0-rc.1] - 2023-11-03
 ### Added
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
