@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.4.0
  */
-namespace Passbolt\EmailDigest\Test\TestCase\Command;
+namespace Passbolt\EmailDigest\Test\TestCase\Service;
 
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Test\Factory\UserFactory;
@@ -24,27 +24,36 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\I18n;
+use Passbolt\EmailDigest\Service\SendEmailBatchService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
-class SenderCommandCreateResourceChangesDigestTest extends AppIntegrationTestCase
+class SendEmailBatchServiceCreateResourceChangesDigestTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
     use EmailQueueTrait;
     use EmailTestTrait;
     use ResourcesModelTrait;
 
+    private SendEmailBatchService $service;
+
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
 
+        $this->useCommandRunner();
+        $this->service = new SendEmailBatchService();
         $this->setEmailNotificationsSetting('password.create', true);
-        $this->getDebugTransport()->clearMessages();
     }
 
-    public function testSenderCommandCreateResourceChangesDigest_SendNextEmailsBatch_One_Email()
+    public function tearDown(): void
+    {
+        unset($this->service);
+        parent::tearDown();
+    }
+
+    public function testSendEmailBatchServiceCreateResourceChangesDigest_SendNextEmailsBatch_One_Email()
     {
         ResourceTypeFactory::make()->default()->persist();
         $data = $this->getDummyResourcesPostData([
@@ -66,8 +75,7 @@ class SenderCommandCreateResourceChangesDigestTest extends AppIntegrationTestCas
         $this->postJson('/resources.json', $data);
         $this->assertSuccess();
 
-        $this->exec('passbolt email_digest send');
-        $this->assertExitSuccess();
+        $this->service->sendNextEmailsBatch();
 
         $this->assertSame(1, ResourceFactory::count());
         $this->assertMailCount(1);
@@ -75,7 +83,7 @@ class SenderCommandCreateResourceChangesDigestTest extends AppIntegrationTestCas
         $this->assertMailContainsAt(0, 'Vous avez enregistré un nouveau mot de passe');
     }
 
-    public function testSenderCommandCreateResourceChangesDigest_SendNextEmailsBatch_Below_Threshold()
+    public function testSendEmailBatchServiceCreateResourceChangesDigest_SendNextEmailsBatch_Below_Threshold()
     {
         ResourceTypeFactory::make()->default()->persist();
         $data = $this->getDummyResourcesPostData([
@@ -100,8 +108,7 @@ class SenderCommandCreateResourceChangesDigestTest extends AppIntegrationTestCas
             $this->assertSuccess();
         }
 
-        $this->exec('passbolt email_digest send');
-        $this->assertExitSuccess();
+        $this->service->sendNextEmailsBatch();
 
         $recipientFirstName = $frenchSpeakingUser->profile->first_name;
         $this->assertSame($nResourcesAdded, ResourceFactory::count());
@@ -111,9 +118,9 @@ class SenderCommandCreateResourceChangesDigestTest extends AppIntegrationTestCas
         $this->assertMailContainsAt(0, 'Vous avez enregistré un nouveau mot de passe');
     }
 
-    public function testSenderCommandCreateResourceChangesDigest_SendNextEmailsBatch_Above_Threshold()
+    public function testSendEmailBatchServiceCreateResourceChangesDigest_SendNextEmailsBatch_Above_Threshold()
     {
-        $nResourcesAdded = 30;
+        $nResourcesAdded = 15;
         $operator = UserFactory::make()->withAvatar()->persist();
         EmailQueueFactory::make($nResourcesAdded)
             ->setRecipient('foo@bar.baz')

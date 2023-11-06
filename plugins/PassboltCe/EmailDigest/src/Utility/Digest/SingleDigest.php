@@ -49,9 +49,9 @@ class SingleDigest extends AbstractDigest implements DigestInterface
      * Add an email
      *
      * @param \Cake\ORM\Entity $emailQueueEntity An email entity
-     * @return $this
+     * @return \Passbolt\EmailDigest\Utility\Digest\DigestInterface
      */
-    public function addEmailEntity(Entity $emailQueueEntity)
+    public function addEmailEntity(Entity $emailQueueEntity): DigestInterface
     {
         $this->emails[] = $emailQueueEntity;
 

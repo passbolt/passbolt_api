@@ -107,10 +107,10 @@ class Digest extends AbstractDigest implements DigestInterface
      * If it exists, the email will be part of the same digest, if not a new digest is created for the email.
      *
      * @param \Cake\ORM\Entity $emailQueueEntity An email entity
-     * @return $this
+     * @return \Passbolt\EmailDigest\Utility\Digest\DigestInterface
      * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
-    public function addEmailEntity(Entity $emailQueueEntity)
+    public function addEmailEntity(Entity $emailQueueEntity): DigestInterface
     {
         if (!$this->canAddToDigest($emailQueueEntity)) {
             throw new UnsupportedEmailDigestDataException($emailQueueEntity);

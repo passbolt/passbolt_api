@@ -36,9 +36,9 @@ interface DigestInterface
      * Add some email entities to digest.
      *
      * @param \Cake\ORM\Entity $emailQueueEntity An email entity to add to the digest
-     * @return \Passbolt\EmailDigest\Utility\Digest\DigestInterface
+     * @return self
      */
-    public function addEmailEntity(Entity $emailQueueEntity);
+    public function addEmailEntity(Entity $emailQueueEntity): DigestInterface;
 
     /**
      * Return a list of emails. Even if the digest return one, the digest must be in an array.

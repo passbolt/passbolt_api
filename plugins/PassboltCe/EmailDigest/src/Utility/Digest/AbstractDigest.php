@@ -32,13 +32,12 @@ abstract class AbstractDigest implements DigestInterface
      *
      * @var \Cake\ORM\Entity[]
      */
-    protected $emailsData = [];
+    protected array $emailsData = [];
 
     /**
-     * @param \Cake\ORM\Entity $emailQueueEntity Email entity to use to marshal digests.
-     * @return static
+     * @inheritDoc
      */
-    public function addEmailEntity(Entity $emailQueueEntity)
+    public function addEmailEntity(Entity $emailQueueEntity): DigestInterface
     {
         $this->emailsData[] = $emailQueueEntity;
 

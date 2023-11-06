@@ -16,8 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest;
 
+use App\Notification\EmailDigest\DigestRegister\GroupDigests;
+use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
+use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\EmailDigest\Command\PreviewCommand;
 use Passbolt\EmailDigest\Command\SenderCommand;
@@ -30,6 +33,13 @@ class EmailDigestPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
+
+        if (PHP_SAPI === 'cli' || (Configure::read('debug') && Configure::read('passbolt.selenium.active'))) {
+            // Core email digests
+            $app->getEventManager()
+                ->on(new GroupDigests())
+                ->on(new ResourceDigests());
+        }
     }
 
     /**
