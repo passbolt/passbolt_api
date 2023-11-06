@@ -180,7 +180,7 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * Return the subject of the digest
+     * Return the translated subject of the digest
      *
      * @return string
      */
