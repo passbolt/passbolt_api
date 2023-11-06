@@ -48,7 +48,7 @@ class EmailQueueFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             $email = $faker->email();
             $title = $faker->sentence();
-            $locale = $faker->locale();
+            $locale = 'en-UK';
 
             return [
                 'email' => $email,
