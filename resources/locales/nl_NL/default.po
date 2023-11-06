@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 17:30+0200\n"
-"PO-Revision-Date: 2023-09-20 10:09\n"
+"POT-Creation-Date: 2023-10-27 15:02+0200\n"
+"PO-Revision-Date: 2023-10-28 10:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -1030,8 +1030,23 @@ msgstr "{0} kan het herstelproces van de account niet voltooien!"
 msgid "{0} shared the password {1}"
 msgstr "{0} heeft het wachtwoord {1} gedeeld"
 
+msgid "You deleted administrator {0}"
+msgstr ""
+
+msgid "{0} deleted your account"
+msgstr ""
+
+msgid "{0} deleted administrator {1}"
+msgstr ""
+
 msgid "Your account has been suspended"
 msgstr "Uw account is opgeschort"
+
+msgid "Your admin role has been revoked"
+msgstr ""
+
+msgid "{0}'s admin role has been revoked"
+msgstr ""
 
 msgid "{0} deleted user {1}"
 msgstr "{0} heeft gebruiker {1} verwijderd"
@@ -1420,6 +1435,9 @@ msgstr "Registreer en voltooi eerst de installatie."
 msgid "This user has been disabled."
 msgstr ""
 
+msgid "The username {0} is a duplicate."
+msgstr ""
+
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validatie is mislukt voor gebruiker {0}. {1}"
 
@@ -1720,8 +1738,8 @@ msgstr "Je hebt een nieuwe map aangemaakt"
 msgid "Name: {0}"
 msgstr "Naam: {0}"
 
-msgid "view it in passbolt"
-msgstr "bekijk het in Passbolt"
+msgid "View it in passbolt"
+msgstr "Bekijk het in Passbolt"
 
 msgid "You deleted a folder"
 msgstr ""
@@ -4474,6 +4492,9 @@ msgstr ""
 msgid "Remember me for a month: {0}"
 msgstr ""
 
+msgid "view it in passbolt"
+msgstr "bekijk het in Passbolt"
+
 msgid "You edited the password policy"
 msgstr ""
 
@@ -4489,7 +4510,16 @@ msgstr ""
 msgid "you"
 msgstr "jij"
 
+msgid "SsoRecover plugin is disabled."
+msgstr ""
+
+msgid "The SSO state type is invalid."
+msgstr ""
+
 msgid "CSRF issue. The state in URL and Cookies do not match."
+msgstr ""
+
+msgid "CSRF issue. The state in request data does not match with cookie value."
 msgstr ""
 
 msgid "The state is required in cookie."
@@ -4504,6 +4534,9 @@ msgstr ""
 msgid "The code is required in URL parameters."
 msgstr ""
 
+msgid "The code is required in request data."
+msgstr ""
+
 msgid "The user id is required in URL parameters."
 msgstr ""
 
@@ -4514,12 +4547,6 @@ msgid "The user does not exist or is not active."
 msgstr "De gebruiker bestaat niet of is niet actief."
 
 msgid "The SSO setting does not exist."
-msgstr ""
-
-msgid "SsoRecover plugin is disabled."
-msgstr ""
-
-msgid "The SSO state type is invalid."
 msgstr ""
 
 msgid "Information about the key is required."
@@ -4618,6 +4645,30 @@ msgstr ""
 msgid "The client id is too large."
 msgstr ""
 
+msgid "A base URL is required."
+msgstr ""
+
+msgid "The base URL should not be empty."
+msgstr ""
+
+msgid "The base URL is too large."
+msgstr ""
+
+msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The OpenID configuration path is too large."
+msgstr ""
+
+msgid "The client id should be a valid BMP-UTF8 string."
+msgstr ""
+
+msgid "The scope should be a valid string."
+msgstr ""
+
+msgid "The scope is too large."
+msgstr ""
+
 msgid "The user is not active."
 msgstr ""
 
@@ -4697,6 +4748,9 @@ msgid "The user identifier does not exist."
 msgstr ""
 
 msgid "The provided nonce is invalid."
+msgstr ""
+
+msgid "The URL should start with https://"
 msgstr ""
 
 msgid "The provided state is invalid."
@@ -5011,6 +5065,15 @@ msgstr "startpagina"
 msgid "login"
 msgstr "inloggen"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
 msgid "Account suspended"
 msgstr ""
 
@@ -5025,6 +5088,18 @@ msgstr ""
 
 msgid "Contact your admin"
 msgstr ""
+
+msgid "{0} changed role of {1} to admin."
+msgstr ""
+
+msgid "{0} changed your role to admin."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
+msgstr ""
+
+msgid "You"
+msgstr "Jij"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr ""
