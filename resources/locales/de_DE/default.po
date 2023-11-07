@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-09-19 15:36+0000\n"
-"PO-Revision-Date: 2023-09-20 08:32\n"
+"POT-Creation-Date: 2023-10-27 11:15+0000\n"
+"PO-Revision-Date: 2023-11-03 00:54\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -1024,8 +1024,23 @@ msgstr "{0} kann die Kontowiederherstellung nicht abschließen!"
 msgid "{0} shared the password {1}"
 msgstr "{0} hat das Passwort {1} geteilt"
 
+msgid "You deleted administrator {0}"
+msgstr "Sie haben den Administrator {0} gelöscht"
+
+msgid "{0} deleted your account"
+msgstr "{0} hat Ihren Account gelöscht"
+
+msgid "{0} deleted administrator {1}"
+msgstr "{0} hat den Administrator {1} gelöscht"
+
 msgid "Your account has been suspended"
 msgstr ""
+
+msgid "Your admin role has been revoked"
+msgstr "Ihre Admin-Rolle wurde widerrufen"
+
+msgid "{0}'s admin role has been revoked"
+msgstr "Die Admin-Rolle von {0} wurde widerrufen"
 
 msgid "{0} deleted user {1}"
 msgstr "{0} hat Benutzer*in {1} gelöscht"
@@ -1412,7 +1427,10 @@ msgid "Please register and complete the setup first."
 msgstr "Bitte registrieren Sie sich und schließen Sie das Setup zuerst ab."
 
 msgid "This user has been disabled."
-msgstr ""
+msgstr "Dieser Benutzer wurde deaktiviert."
+
+msgid "The username {0} is a duplicate."
+msgstr "Der Benutzername {0} existiert bereits."
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validierung fehlgeschlagen für Benutzer*in {0}. {1}"
@@ -1714,8 +1732,8 @@ msgstr "Sie haben einen neuen Ordner erstellt"
 msgid "Name: {0}"
 msgstr "Name: {0}"
 
-msgid "view it in passbolt"
-msgstr "in Passbolt anzeigen"
+msgid "View it in passbolt"
+msgstr "In Passbolt anzeigen"
 
 msgid "You deleted a folder"
 msgstr "Sie haben einen Ordner gelöscht"
@@ -1799,7 +1817,7 @@ msgid "No active refresh token matching the request could be found."
 msgstr "Es wurde kein aktiver Aktualisierungstoken mit der Anfrage gefunden."
 
 msgid "The user is not activated or disabled."
-msgstr ""
+msgstr "Der Benutzer ist nicht aktiviert oder deaktiviert."
 
 msgid "The user is deleted."
 msgstr "Der Benutzer wurde gelöscht."
@@ -2501,7 +2519,7 @@ msgid "The external dictionary check is required."
 msgstr "Die externe Wörterbuchprüfung ist erforderlich."
 
 msgid "The external dictionary check should be a boolean."
-msgstr ""
+msgstr "Die externe Überprüfung des Wörterbuchs sollte ein Boolean sein."
 
 msgid "The password generator settings is required."
 msgstr "Die Passwortgenerator-Einstellungen sind erforderlich."
@@ -3194,10 +3212,10 @@ msgid "Database name"
 msgstr "Datenbankname"
 
 msgid "schema"
-msgstr ""
+msgstr "schema"
 
 msgid "Schema"
-msgstr ""
+msgstr "Schema"
 
 msgid "Enter your SMTP server settings."
 msgstr "Geben Sie Ihre SMTP-Server-Einstellungen ein."
@@ -3475,6 +3493,15 @@ msgstr "Start"
 msgid "login"
 msgstr "Anmelden"
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
 msgid "Account suspended"
 msgstr ""
 
@@ -3489,6 +3516,18 @@ msgstr ""
 
 msgid "Contact your admin"
 msgstr ""
+
+msgid "{0} changed role of {1} to admin."
+msgstr ""
+
+msgid "{0} changed your role to admin."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
+msgstr ""
+
+msgid "You"
+msgstr "Sie"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
 msgstr "{0} ({1}) hat gerade eine Kontowiederherstellung abgeschlossen. Nehmen Sie Kontakt mit diesem Benutzer auf, wenn Sie das Gefühl haben, dass diese Aktion verdächtig aussieht."
