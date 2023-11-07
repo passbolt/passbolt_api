@@ -146,11 +146,6 @@ parameters:
 			path: src/Controller/Share/ShareController.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Controller/Users/UsersEditController.php
-
-		-
 			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
 			count: 1
 			path: src/Model/Table/GroupsTable.php

@@ -16,6 +16,9 @@
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "cakephp/plugin-installer": true
+        },
+        "audit": {
+          "abandoned": "report"
         }
     },
     "authors": [
@@ -71,6 +74,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-curl": "*",
+        "composer/composer": "^2.6.4",
         "cakephp/cakephp": "^4.4.15",
         "cakephp/chronos": "2.4.*",
         "longwave/laminas-diactoros": "^2.14.1",
@@ -100,10 +104,11 @@
         "phpunit/phpunit": "~9.5.2",
         "cakephp/cakephp-codesniffer": "^4.5",
         "passbolt/passbolt-selenium-api": "^4.2",
-        "passbolt/passbolt-test-data": "^4.1.0",
+        "passbolt/passbolt-test-data": "^4.4",
         "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
         "cakephp/localized": "4.0.0",
-        "vimeo/psalm": "^5.0.0"
+        "vimeo/psalm": "^5.0.0",
+        "cakedc/cakephp-phpstan": "^2.0"
     },
     "autoload": {
         "psr-4": {

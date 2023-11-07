@@ -71,15 +71,10 @@ class UsersDeleteController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
-        /** @phpstan-ignore-next-line */
         $this->Groups = $this->fetchTable('Groups');
-        /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->Permissions = $this->fetchTable('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
     }
 
@@ -127,6 +122,7 @@ class UsersDeleteController extends AppController
         });
 
         $this->_notifyUsers($user, $groupIdsNotOnlyMember);
+
         $this->success(__('The user has been deleted successfully.'));
     }
 

@@ -40,7 +40,6 @@ class CommentsViewService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Comments = TableRegistry::getTableLocator()->get('Comments');
     }
 

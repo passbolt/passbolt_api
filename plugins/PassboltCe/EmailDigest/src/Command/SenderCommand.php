@@ -51,6 +51,6 @@ class SenderCommand extends PassboltCommand
 
         $emailSenderService->sendNextEmailsBatch((int)$args->getOption('limit'));
 
-        return self::CODE_SUCCESS;
+        return $this->successCode();
     }
 }

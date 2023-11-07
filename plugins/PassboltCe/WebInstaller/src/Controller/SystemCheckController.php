@@ -51,7 +51,11 @@ class SystemCheckController extends WebInstallerController
      */
     protected function _healthcheckIsOk($checks)
     {
+        // Do not block installation if this check fails
+        unset($checks['environment']['nextMinPhpVersion']);
+
         $envCheckResults = array_values($checks['environment']);
+
         $webInstallerChecksResults = array_values($checks['webInstaller']);
         $gpgKeys = ['lib', 'gpgHome', 'gpgHomeWritable'];
         $gpgChecks = [];

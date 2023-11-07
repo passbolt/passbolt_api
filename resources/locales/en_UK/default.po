@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2023-09-19 15:36+0000\n"
+"POT-Creation-Date: 2023-10-27 11:15+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -1022,7 +1022,22 @@ msgstr ""
 msgid "{0} shared the password {1}"
 msgstr ""
 
+msgid "You deleted administrator {0}"
+msgstr ""
+
+msgid "{0} deleted your account"
+msgstr ""
+
+msgid "{0} deleted administrator {1}"
+msgstr ""
+
 msgid "Your account has been suspended"
+msgstr ""
+
+msgid "Your admin role has been revoked"
+msgstr ""
+
+msgid "{0}'s admin role has been revoked"
 msgstr ""
 
 msgid "{0} deleted user {1}"
@@ -1412,6 +1427,9 @@ msgstr ""
 msgid "This user has been disabled."
 msgstr ""
 
+msgid "The username {0} is a duplicate."
+msgstr ""
+
 msgid "Validation failed for user {0}. {1}"
 msgstr ""
 
@@ -1712,7 +1730,7 @@ msgstr ""
 msgid "Name: {0}"
 msgstr ""
 
-msgid "view it in passbolt"
+msgid "View it in passbolt"
 msgstr ""
 
 msgid "You deleted a folder"
@@ -3473,6 +3491,15 @@ msgstr ""
 msgid "login"
 msgstr ""
 
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr ""
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr ""
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr ""
+
 msgid "Account suspended"
 msgstr ""
 
@@ -3486,6 +3513,18 @@ msgid "Other users can still share resources with you and add you to a group."
 msgstr ""
 
 msgid "Contact your admin"
+msgstr ""
+
+msgid "{0} changed role of {1} to admin."
+msgstr ""
+
+msgid "{0} changed your role to admin."
+msgstr ""
+
+msgid "{0} can no longer perform administration tasks."
+msgstr ""
+
+msgid "You"
 msgstr ""
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."

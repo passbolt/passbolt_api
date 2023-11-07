@@ -41,7 +41,6 @@ class UiActionsIndexController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->UiActions = $this->fetchTable('Passbolt/Rbacs.UiActions');
         $this->loadComponent('ApiPagination', [
             'model' => 'UiActions',

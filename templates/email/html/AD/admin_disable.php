@@ -40,6 +40,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => 'mailto:' . $operatorUsername,
+    'url' => 'mailto:' . Purifier::clean($operatorUsername),
     'text' => __('Contact your admin')
 ]);

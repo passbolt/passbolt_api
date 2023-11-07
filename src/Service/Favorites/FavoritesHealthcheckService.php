@@ -41,7 +41,6 @@ class FavoritesHealthcheckService extends AbstractHealthcheckService
     public function __construct(?FavoritesTable $table = null)
     {
         parent::__construct(self::NAME, self::CATEGORY);
-        /** @phpstan-ignore-next-line */
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Favorites');
         $this->checks[self::CHECK_VALIDATES] = $this->healthcheckFactory(self::CHECK_VALIDATES, true);
     }

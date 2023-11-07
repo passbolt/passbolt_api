@@ -32,7 +32,8 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 
-$text = __('The user {0} {1} ({2}) is now deleted from your organisation in passbolt.',
+$text = __(
+    'The user {0} {1} ({2}) is now deleted from your organisation in passbolt.',
     Purifier::clean($user['profile']['first_name']),
     Purifier::clean($user['profile']['last_name']),
     Purifier::clean($user['username'])
@@ -49,5 +50,5 @@ echo $this->element('Email/module/text', [
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/', true),
-    'text' => __('log in passbolt')
+    'text' => __('Log in passbolt')
 ]);

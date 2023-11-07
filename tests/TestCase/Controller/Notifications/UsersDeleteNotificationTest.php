@@ -16,9 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Notification\Email\Redactor\User\AdminDeleteEmailRedactor;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 
 class UsersDeleteNotificationTest extends AppIntegrationTestCase
 {
@@ -32,11 +34,13 @@ class UsersDeleteNotificationTest extends AppIntegrationTestCase
 
     public function testUsersDeleteNotificationSuccess(): void
     {
-        $this->authenticateAs('admin');
         $francesId = UuidFactory::uuid('user.id.ursula');
-        $this->deleteJson('/users/' . $francesId . '.json');
-        $this->assertSuccess();
+        Configure::write(AdminDeleteEmailRedactor::CONFIG_KEY_EMAIL_ENABLED, false);
 
+        $this->authenticateAs('admin');
+        $this->deleteJson('/users/' . $francesId . '.json');
+
+        $this->assertSuccess();
         $this->assertEmailInBatchContains('deleted the user Ursula', 'ping@passbolt.com');
         $this->assertEmailInBatchContains('Human resource', 'ping@passbolt.com');
         $this->assertEmailInBatchContains('IT support', 'ping@passbolt.com');

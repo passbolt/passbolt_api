@@ -38,6 +38,8 @@ class UsersEditController extends AppController
     public const EVENT_USER_WAS_DISABLED = 'Controller.UsersEditController.userWasDisabled';
     public const EVENT_ADMIN_WAS_DISABLED = 'Controller.UsersEditController.adminWasDisabled';
 
+    public const EVENT_USER_AFTER_UPDATE = 'Controller.UsersEditController.afterUpdate';
+
     /**
      * User edit action
      * Allow editing firstname / lastname and role only for admin
@@ -72,10 +74,14 @@ class UsersEditController extends AppController
             throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
         }
         $this->Users->checkRules($user);
-        if ($user->getErrors()) {
+        if (!empty($user->getErrors())) {
             throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
         }
         $isBeingDisabled = $wasDisabledNull && !is_null($user->disabled);
+
+        // Used when sending after update event
+        // We need entity's dirty state to know which column values has been changed.
+        $userEntityWithDirtyState = clone $user;
 
         // Save
         if (!$this->Users->save($user, ['checkrules' => false])) {
@@ -95,6 +101,8 @@ class UsersEditController extends AppController
             $this->sendEmailOnUserDisable($user);
         }
 
+        $this->sendAfterUpdateEvent($userEntityWithDirtyState);
+
         $this->success(__('The user has been updated successfully.'), $user);
     }
 
@@ -102,14 +110,14 @@ class UsersEditController extends AppController
      * Assert request sanity and return the sanitized data
      *
      * @param string $id user uuid
-     * @return array|null
+     * @return array
      * @throws \Cake\Http\Exception\BadRequestException if gpgkey is sent (v2 only)
      * @throws \Cake\Http\Exception\BadRequestException if groups data is sent (v2 only)
      * @throws \Cake\Http\Exception\BadRequestException if role data is sent (v2 only)
      * @throws \Cake\Http\Exception\ForbiddenException if the user is not admin or not editing themselves
      * @throws \Cake\Http\Exception\BadRequestException if the user id is invalid, if data is not provided or invalid
      */
-    protected function _validateRequestData(string $id)
+    protected function _validateRequestData(string $id): array
     {
         // Admin can edit all users, other users can only edit themselves
         if ($this->User->role() !== Role::ADMIN && $id !== $this->User->id()) {
@@ -157,5 +165,24 @@ class UsersEditController extends AppController
             $event = new Event(static::EVENT_ADMIN_WAS_DISABLED, $this, $emailData);
             $this->getEventManager()->dispatch($event);
         }
+    }
+
+    /**
+     * Dispatch a common after update event to hook into several functionality on top.
+     *
+     * @param \App\Model\Entity\User $user User entity object with dirty state(before save).
+     * @return void
+     */
+    private function sendAfterUpdateEvent(User $user): void
+    {
+        $operator = $this->User->getExtendAccessControl();
+
+        $emailData = [
+            'operator' => $operator,
+            'user' => $user,
+        ];
+
+        $event = new Event(static::EVENT_USER_AFTER_UPDATE, $this, $emailData);
+        $this->getEventManager()->dispatch($event);
     }
 }
