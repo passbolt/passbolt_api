@@ -41,7 +41,14 @@ class SsoProvidersGetControllerTest extends SsoIntegrationTestCase
     public function testSsoProvidersGetController_Success(): void
     {
         $this->logInAsAdmin();
-
+        Configure::write(
+            'passbolt.plugins.sso.providers',
+            [
+                SsoSetting::PROVIDER_AZURE => true,
+                SsoSetting::PROVIDER_GOOGLE => true,
+                SsoSetting::PROVIDER_OAUTH2 => false,
+            ]
+        );
         $this->getJson('/sso/providers.json');
 
         $this->assertSuccess();

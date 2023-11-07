@@ -36,7 +36,6 @@ class SsoSettingsIndexController extends AppController
     {
         parent::initialize();
 
-        /** @phpstan-ignore-next-line */
         $this->SsoSettings = $this->fetchTable('Passbolt/Sso.SsoSettings');
         $this->loadComponent('ApiPagination', ['model' => 'SsoSettings']);
     }

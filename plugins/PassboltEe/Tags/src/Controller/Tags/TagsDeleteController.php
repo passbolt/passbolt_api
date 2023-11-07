@@ -38,9 +38,7 @@ class TagsDeleteController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        /** @phpstan-ignore-next-line */
         $this->Tags = $this->fetchTable('Passbolt/Tags.Tags');
-        /** @phpstan-ignore-next-line */
         $this->ResourcesTags = $this->fetchTable('Passbolt/Tags.ResourcesTags');
     }
 

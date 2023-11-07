@@ -1,48 +1,36 @@
-Release song: https://youtu.be/s88r_q7oufE
+Release song: https://www.youtube.com/watch?v=6Ejga4kJUts
 
-The latest version of Pro is here – take a look at what’s new in 4.3.
+Version 4.4 of Passbolt Pro is now available, packed full of improvements and new functionalities.
 
-One enhancement is improved portability of TOTP (Time Based One Time Password). TOTP can now be conveniently viewed across both the web and mobile applications. Although the creation of TOTP remains mobile-centric, version 4.3 provides convenient access to reading and retrieving TOTP content in the browser, resulting in greater usability.
+This update also introduces an additional option for SSO: a generic OAuth 2.0 provider is now available, expanding your authentication options and providing even more versatility. Another highlight of this update is improved notifications, so you can effortlessly stay in the know. Admins now have the ability to suspend and unsuspend users with ease. TOTP creation and editing can now be done directly from the browser.
 
-Improvements have also been made to grid customisation. Any changes made to the grid are now persistent, meaning your tailored experience is saved from session to session. And to make the new TOTP portability even more accessible, an option has been added to display a column for your TOTP content.
+If you’re a system operator, please note that using older PHP versions will now trigger a healthcheck warning. Support for PHP 7.4 and 8.0 will be discontinued soon. Admins are encouraged to upgrade to PHP 8.1 or higher and use the latest version of the passbolt API.  But it's not all about major features; this version also includes a number of other improvements and fixes to make your passbolt experience smoother and more efficient.
 
-Admins can now manage passphrase policies alongside their password policies. These policies include: setting minimal entropy, managing access to external tools for monitoring if a passphrase has been compromised, and choosing to enforce policies for existing users.
+Upgrade to version 4.4 to take advantage of these improvements. Thank you for using and supporting passbolt!
 
-Other updates include improvements to SQL query performance (retrieving resource tags and system tags), restricting LDAP-related settings, some bug fixes, and a number of performance improvements.
-
-Thank you for choosing passbolt and for your continued support.
-
-
-## [4.3.0] - 2023-09-26
+## [4.4.0] - 2023-11-07
 ### Added
-- PB-26092 As an administrator I can configure policy for user passphrase
-- PB-25405 As an administrator installing passbolt through the web installer, I should be able to configure authentication method for SMTP
-- PB-25977 As an administrator I can truncate all account recovery tables, dropping all user and organisation settings
-- PB-25185 As a signed-in user on the browser extension, I want to export my account to configure the Windows application
-- PB-25685 As an administrator I can lock the set LDAP settings endpoint
-- PB-25944 As an administrator I can define the schema on installation with Postgres
-- PB-25497 As an administrator I can disable users (experimental)
+- PB-27950 As a user I can use generic OAuth2 as single sign on provider
+- PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
+- PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
 
 ### Improved
-- PB-25709 Performance optimisation of all the SQL queries retrieving resources tags
-- PB-25973 Performance optimisation of the SQL query retrieving tags
-- PB-24916 Adjust SSO Azure error to return 400 instead of 500 when testing configuration
-- PB-25999 Performance optimisation of update secret process
-- PB-26097 Adds cake.po translation files for all languages supported by CakePHP
+- PB-26123 Update message for LDAP sync adding users to groups
+- PB-27948 Guest identification by their username should be case-insensitive, unless specified in configuration
+- PB-27957 Send notifications to all administrators when an administrator is deleted
+- PB-27941 Send notifications to administrators when an administrator loses its administrator role
+- PB-28171 Enable the email digest by default
 
 ### Security
-- PB-25827 As a user with encrypted message enabled in the email content visibility, I would like to see the gpg message encrypted with my key when a password is updated
+- PB-28274 Fixes an XSS Security issue with mail content sanitization
 
 ### Fixed
-- PB-25802 As a user I want to see localized date in my emails
-- PB-25500 Fix wording in SSO enabled email
-- PB-25863 Fix emails not sent due to message-id header missing
+- PB-26158 As an administrator I should be able to use the memberof LDAP filter following with a ldap-query
+- PB-27895 Fixes a wrong user passphrase policy URL in email the email sent after setting edition
+- PB-25477 As an administrator, I should be able to recreate a user with an email that exists in the db via the command line
 - PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
+- PB-27857 Fix help site release notes automation by adding flavour on help site release notes merge request
 
 ### Maintenance
-- PB-25709 Remove unused resources tags indexes
-- PB-25894 Run CI on postgres versions 13 and 15 instead of version 12 only
-- PB-25969 As a developer, I can render emails in tests with html special chars
-- PB-26107 Upgrade the cakephp/chronos library
-- PB-26159 Update singpolyma/openpgp-php to improve compatibility with PHP 8.2
-- PB-25247 Add integration tests on the MFA select provider endpoint
+- PB-27932 Improve code static by using cakedccakephp/phpstan
+- PB-28079 Remove deprecation warnings from the test suite

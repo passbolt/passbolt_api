@@ -67,7 +67,7 @@ class DigestsCollection extends AbstractDigest implements DigestInterface
      * @param \Cake\ORM\Entity $emailQueueEntity An email entity from email queue
      * @return bool return false if no digest in the pool supports the email data.
      */
-    public function canAddToDigest(Entity $emailQueueEntity)
+    public function canAddToDigest(Entity $emailQueueEntity): bool
     {
         foreach ($this->digestsPool->getDigests() as $digest) {
             if ($digest->canAddToDigest($emailQueueEntity)) {
@@ -80,10 +80,10 @@ class DigestsCollection extends AbstractDigest implements DigestInterface
 
     /**
      * @param \Cake\ORM\Entity $emailQueueEntity An instance of email entity
-     * @return $this
+     * @return \Passbolt\EmailDigest\Utility\Digest\DigestInterface
      * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
-    public function addEmailEntity(Entity $emailQueueEntity)
+    public function addEmailEntity(Entity $emailQueueEntity): DigestInterface
     {
         foreach ($this->digestsPool->getDigests() as $digest) {
             if ($digest->canAddToDigest($emailQueueEntity)) {

@@ -28,7 +28,6 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Utility\Azure\Provider;
 
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Http\Exception\NotImplementedException;
 use Firebase\JWT\Key;
 use League\OAuth2\Client\Grant\AbstractGrant;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
@@ -40,11 +39,10 @@ use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Utility\Azure\OpenId\AzureIdToken;
 use Passbolt\Sso\Utility\Azure\ResourceOwner\AzureResourceOwner;
 use Passbolt\Sso\Utility\Grant\JwtBearer;
-use Passbolt\Sso\Utility\OpenId\BaseIdToken;
-use Passbolt\Sso\Utility\Provider\BaseOauth2Provider;
+use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
 use Psr\Http\Message\ResponseInterface;
 
-class AzureProvider extends BaseOauth2Provider
+class AzureProvider extends AbstractOauth2Provider
 {
     use BearerAuthorizationTrait;
 
@@ -56,17 +54,12 @@ class AzureProvider extends BaseOauth2Provider
     /**
      * @var string default base url for login
      */
-    public $urlLogin = 'https://login.microsoftonline.com';
-
-    /**
-     * @var array $scope
-     */
-    public $scope = [];
+    public const AZURE_OPENID_BASE_URI = 'https://login.microsoftonline.com';
 
     /**
      * @var string $tenant name
      */
-    public $tenant = '';
+    protected $tenant = '';
 
     /**
      * Email claim alias field to check as username/email.
@@ -80,9 +73,14 @@ class AzureProvider extends BaseOauth2Provider
      */
     public function __construct(array $options = [], array $collaborators = [])
     {
-        $options['tenant'] = $options['tenant'] ?? $this->tenant;
-        $options['urlLogin'] = $options['urlLogin'] ?? $this->urlLogin;
+        // Variations allowed on baseUri for example for gov agencies
+        $options['openIdBaseUri'] = $options['openIdBaseUri'] ?? self::AZURE_OPENID_BASE_URI;
+
+        // Variations allowed on email mapping
         $options['emailClaim'] = $options['emailClaim'] ?? $this->emailClaim;
+
+        // Custom azure field
+        $options['tenant'] = $options['tenant'] ?? $this->tenant;
 
         parent::__construct($options, $collaborators);
 
@@ -90,38 +88,12 @@ class AzureProvider extends BaseOauth2Provider
     }
 
     /**
-     * ABSTRACT METHODS
-     *
-     * @see \League\OAuth2\Client\Provider\AbstractProvider
-     */
-
-    /**
-     * @inheritDoc
-     */
-    protected function checkResponse(ResponseInterface $response, $data): void
-    {
-        if (isset($data['error'])) {
-            if (
-                is_string($data['error']) && isset($data['error_description'])
-                && is_string($data['error_description'])
-            ) {
-                throw new AzureException($data['error'], $data['error_description']);
-            } else {
-                throw new IdentityProviderException(
-                    $response->getReasonPhrase(),
-                    $response->getStatusCode(),
-                    (string)$response->getBody()
-                );
-            }
-        }
-    }
-
-    /**
      * @return string
      */
     public function getOpenIdBaseUri(): string
     {
-        return $this->urlLogin . '/' . $this->tenant . '/v' . self::ENDPOINT_VERSION_2_0;
+        // Azure specificity: tenant is added to the base as well as API version
+        return parent::getOpenIdBaseUri() . '/' . $this->getTenant() . '/v' . self::ENDPOINT_VERSION_2_0;
     }
 
     /**
@@ -129,9 +101,8 @@ class AzureProvider extends BaseOauth2Provider
      */
     public function getOpenIdConfigurationUri(): string
     {
-        return $this->getOpenIdBaseUri() .
-            '/.well-known/openid-configuration?appid=' .
-            $this->getClientId();
+        // Azure specificity: appid is happened
+        return parent::getOpenIdConfigurationUri() . '?appid=' . $this->getClientId();
     }
 
     /**
@@ -145,11 +116,37 @@ class AzureProvider extends BaseOauth2Provider
     /**
      * @inheritDoc
      */
-    public function getResourceOwnerDetailsUrl(AccessToken $token): string
+    protected function createAccessToken(array $response, AbstractGrant $grant): AccessToken
     {
-        // Not needed, we will get the resource owner information from JWT token claims
-        // And not the userinfo_endpoint
-        throw new NotImplementedException();
+        return new AzureIdToken($response, $this);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
+    {
+        return new AzureResourceOwner($response, $this->emailClaim);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function checkResponse(ResponseInterface $response, $data): void
+    {
+        if (empty($data['error'])) {
+            return;
+        }
+
+        if (is_string($data['error']) && isset($data['error_description']) && is_string($data['error_description'])) {
+            throw new AzureException($data['error'], $data['error_description']);
+        } else {
+            throw new IdentityProviderException(
+                $response->getReasonPhrase(),
+                $response->getStatusCode(),
+                (string)$response->getBody()
+            );
+        }
     }
 
     /**
@@ -190,7 +187,7 @@ class AzureProvider extends BaseOauth2Provider
      * @param array $responseKeys keys from Jwks endpoint
      * @return array of openssl compatible keys
      */
-    public function parseJwksKeys(array $responseKeys): array
+    protected function parseJwksKeys(array $responseKeys): array
     {
         $keys = [];
         foreach ($responseKeys as $i => $keyinfo) {
@@ -233,59 +230,5 @@ class AzureProvider extends BaseOauth2Provider
         }
 
         return $keys;
-    }
-
-    /**
-     * REDEFINED METHODS
-     *
-     * @see \League\OAuth2\Client\Provider\AbstractProvider
-     */
-
-    /**
-     * @inheritDoc
-     */
-    protected function getDefaultScopes(): array
-    {
-        return ['openid', 'profile', 'email'];
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getScopeSeparator(): string
-    {
-        return ' ';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function createAccessToken(array $response, AbstractGrant $grant): AccessToken
-    {
-        return new AzureIdToken($response, $this);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
-    {
-        return new AzureResourceOwner($response, $this->emailClaim);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function getResourceOwner(AccessToken $token): ResourceOwnerInterface
-    {
-        // We get resource owner information from id_token only
-        // We could fall back calling user info API user access_token but we rather not
-        if ($token instanceof BaseIdToken) {
-            $data = $token->getIdTokenClaims();
-
-            return $this->createResourceOwner($data, $token);
-        }
-
-        throw new InternalErrorException('AccessToken should be an instance of BaseIdToken class.');
     }
 }

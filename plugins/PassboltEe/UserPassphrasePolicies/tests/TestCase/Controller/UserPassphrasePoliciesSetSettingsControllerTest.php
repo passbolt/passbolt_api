@@ -18,8 +18,15 @@ declare(strict_types=1);
 namespace Passbolt\UserPassphrasePolicies\Test\TestCase\Controller;
 
 use App\Test\Factory\RoleFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
+use Cake\I18n\FrozenTime;
 use Cake\Routing\Exception\MissingRouteException;
+use Cake\Routing\Router;
+use Passbolt\UserPassphrasePolicies\Service\UserPassphrasePoliciesSetSettingsService;
 use Passbolt\UserPassphrasePolicies\Test\Factory\UserPassphrasePoliciesSettingFactory;
 use Passbolt\UserPassphrasePolicies\UserPassphrasePoliciesPlugin;
 
@@ -28,6 +35,8 @@ use Passbolt\UserPassphrasePolicies\UserPassphrasePoliciesPlugin;
  */
 class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTestCase
 {
+    use EmailQueueTrait;
+
     /**
      * @inheritDoc
      */
@@ -41,6 +50,8 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         // Mock user agent and IP so extended user access control don't fail
         $this->mockUserAgent();
         $this->mockUserIp();
+        // Enable event tracking for emails
+        EventManager::instance()->setEventList(new EventList());
     }
 
     /**
@@ -93,7 +104,10 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
 
     public function testUserPassphrasePoliciesSetSettingsController_SuccessCreate()
     {
-        $admin = $this->logInAsAdmin();
+        $operatorAdmin = $this->logInAsAdmin();
+        $nAdmins = 2;
+        /** @var \App\Model\Entity\User[] $admins */
+        $admins = UserFactory::make(['created' => FrozenTime::now()->subDays(1)], $nAdmins)->admin()->persist();
         $data = [
             'entropy_minimum' => '128',
             'external_dictionary_check' => false,
@@ -109,8 +123,8 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         $this->assertObjectHasAttribute('id', $response);
         $this->assertObjectHasAttribute('created', $response);
         $this->assertObjectHasAttribute('modified', $response);
-        $this->assertSame($admin->id, $response->created_by);
-        $this->assertSame($admin->id, $response->modified_by);
+        $this->assertSame($operatorAdmin->id, $response->created_by);
+        $this->assertSame($operatorAdmin->id, $response->modified_by);
         /**
          * Make sure entry is created in the DB.
          *
@@ -119,11 +133,29 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         $settings = UserPassphrasePoliciesSettingFactory::find()->toArray();
         $this->assertCount(1, $settings);
         $this->assertArrayEqualsCanonicalizing($data, $settings[0]->value);
+        // Assert email content
+        $this->assertEventFired(UserPassphrasePoliciesSetSettingsService::EVENT_SETTINGS_UPDATED);
+        $this->assertEmailQueueCount($nAdmins + 1);
+        $this->assertEmailInBatchContains('You edited the user passphrase policy');
+        $fullName = sprintf('%s %s', $operatorAdmin->profile->first_name, $operatorAdmin->profile->last_name);
+        foreach ($admins as $admin) {
+            $this->assertEmailInBatchContains(
+                sprintf('%s edited the user passphrase policy', $fullName),
+                $admin->username
+            );
+            $this->assertEmailInBatchContains(
+                Router::url('/app/administration/user-passphrase-policies', true),
+                $admin->username
+            );
+        }
     }
 
     public function testUserPassphrasePoliciesSetSettingsController_SuccessUpdate()
     {
-        $admin = $this->logInAsAdmin();
+        $operatorAdmin = $this->logInAsAdmin();
+        $nAdmins = 1;
+        /** @var \App\Model\Entity\User[] $admins */
+        $admins = UserFactory::make(['created' => FrozenTime::now()->subDays(1)], $nAdmins)->admin()->persist();
         UserPassphrasePoliciesSettingFactory::make()->persist();
         $data = [
             'entropy_minimum' => 80,
@@ -139,7 +171,7 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         $this->assertObjectHasAttribute('id', $response);
         $this->assertObjectHasAttribute('created', $response);
         $this->assertObjectHasAttribute('modified', $response);
-        $this->assertSame($admin->id, $response->modified_by);
+        $this->assertSame($operatorAdmin->id, $response->modified_by);
         /**
          * Make sure entry is created in the DB.
          *
@@ -148,5 +180,20 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         $settings = UserPassphrasePoliciesSettingFactory::find()->toArray();
         $this->assertCount(1, $settings);
         $this->assertArrayEqualsCanonicalizing($data, $settings[0]->value);
+        // Assert email content
+        $this->assertEventFired(UserPassphrasePoliciesSetSettingsService::EVENT_SETTINGS_UPDATED);
+        $this->assertEmailQueueCount($nAdmins + 1);
+        $this->assertEmailInBatchContains('You edited the user passphrase policy');
+        $fullName = sprintf('%s %s', $operatorAdmin->profile->first_name, $operatorAdmin->profile->last_name);
+        foreach ($admins as $admin) {
+            $this->assertEmailInBatchContains(
+                sprintf('%s edited the user passphrase policy', $fullName),
+                $admin->username
+            );
+            $this->assertEmailInBatchContains(
+                Router::url('/app/administration/user-passphrase-policies', true),
+                $admin->username
+            );
+        }
     }
 }

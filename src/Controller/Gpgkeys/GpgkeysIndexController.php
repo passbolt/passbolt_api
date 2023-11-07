@@ -37,7 +37,6 @@ class GpgkeysIndexController extends AppController
         $this->loadComponent('ApiPagination', [
             'model' => 'Gpgkeys',
         ]);
-        /** @phpstan-ignore-next-line */
         $this->Gpgkeys = $this->fetchTable('Gpgkeys');
     }
 

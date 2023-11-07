@@ -33,12 +33,12 @@ class DigestsPool
     /**
      * @var static|null
      */
-    private static $instance = null;
+    private static ?DigestsPool $instance = null;
 
     /**
      * @var array
      */
-    private $digests = [];
+    private array $digests = [];
 
     /**
      * Access to constructor is restricted because it is a singleton.
@@ -50,9 +50,9 @@ class DigestsPool
     /**
      * Return a singleton of the DigestsPool
      *
-     * @return \Passbolt\EmailDigest\Utility\Digest\DigestsPool
+     * @return static
      */
-    public static function getInstance()
+    public static function getInstance(): self
     {
         if (!isset(static::$instance)) {
             static::$instance = new static();
@@ -93,7 +93,7 @@ class DigestsPool
      *
      * @return \Passbolt\EmailDigest\Utility\Digest\DigestInterface[]
      */
-    public function getDigests()
+    public function getDigests(): array
     {
         $digests = $this->digests;
 

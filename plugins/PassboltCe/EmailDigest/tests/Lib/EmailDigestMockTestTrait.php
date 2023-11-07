@@ -53,7 +53,7 @@ trait EmailDigestMockTestTrait
                 return $this->emailDigests;
             }
 
-            public function canAddToDigest(Entity $emailQueueEntity)
+            public function canAddToDigest(Entity $emailQueueEntity): bool
             {
                 return $this->canAddToDigests;
             }

@@ -135,7 +135,23 @@ return [
                         'register' => [
                             'complete' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_REGISTER_COMPLETE', true), FILTER_VALIDATE_BOOLEAN),
                         ],
-                    ]
+                        'adminRoleRevoked' => [
+                            /**
+                             * - admin: `true`(default) sends email to all admins except the person whose role has been changed. Set to `false` to stop sending emails to all.
+                             * - user: `false`(default) don't send email to the person whose role has been changed. Set to `true` to notify them.
+                             */
+                            'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_ROLE_REVOKED_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                            'user' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_ROLE_REVOKED_USER', false), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                        'delete' => [
+                            /**
+                             * - admin: `true`(default) sends email to all admins except the person who got deleted. Set to `false` to stop sending emails to all admins.
+                             * - user: `false`(default) don't send email to the person who got deleted. Set to `true` to notify them.
+                             */
+                            'admin' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_DELETE_ADMIN', true), FILTER_VALIDATE_BOOLEAN),
+                            'user' => filter_var(env('PASSBOLT_EMAIL_SEND_ADMIN_USER_ADMIN_DELETE_USER', false), FILTER_VALIDATE_BOOLEAN),
+                        ],
+                    ],
                 ],
                 'group' => [
                     // Notify all members that a group was deleted.
@@ -231,7 +247,7 @@ return [
 
         // Healthcheck
         'healthcheck' => [
-            'error' => filter_var(env('PASSBOLT_HEALTHCHECK_ERROR', false), FILTER_VALIDATE_BOOLEAN)
+            'error' => filter_var(env('PASSBOLT_HEALTHCHECK_ERROR', false), FILTER_VALIDATE_BOOLEAN),
         ],
 
         // Legal
@@ -305,6 +321,12 @@ return [
                         env('PASSBOLT_PLUGINS_SSO_PROVIDER_GOOGLE_ENABLED', true),
                         FILTER_VALIDATE_BOOLEAN
                     ),
+                    // Generic provider is disabled by default
+                    // As SSO provider domain is not known by the client, it is considered less safe
+                    SsoSetting::PROVIDER_OAUTH2 =>  filter_var(
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_OAUHT2_ENABLED', false),
+                        FILTER_VALIDATE_BOOLEAN
+                    ),
                 ],
             ],
             'mfaPolicies' => [
@@ -348,6 +370,13 @@ return [
                     'clientId' => env('PASSBOLT_SELENIUM_SSO_GOOGLE_CLIENT_ID', ''),
                     'secretId' => env('PASSBOLT_SELENIUM_SSO_GOOGLE_SECRET_ID', ''),
                 ],
+                'oauth2' => [
+                    'url' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_URL', ''),
+                    'clientId' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_CLIENT_ID', ''),
+                    'secretId' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_SECRET_ID', ''),
+                    'scope' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_SCOPE', 'openid'),
+                    'openIdConfigurationPath' => env('PASSBOLT_SELENIUM_SSO_OAUTH2_OPENID_CONFIGURATION_PATH', ''),
+                ],
             ],
         ],
 
@@ -372,6 +401,11 @@ return [
             'userAgent' => filter_var(env('PASSBOLT_SECURITY_USER_AGENT', true), FILTER_VALIDATE_BOOLEAN),
             // enables the storage and display if the user IP address
             'userIp' => filter_var(env('PASSBOLT_SECURITY_USER_IP', true), FILTER_VALIDATE_BOOLEAN),
+
+            'username' => [
+                'lowerCase' => filter_var(env('PASSBOLT_SECURITY_USERNAME_LOWER_CASE', false), FILTER_VALIDATE_BOOLEAN),
+                'caseSensitive' => filter_var(env('PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE', false), FILTER_VALIDATE_BOOLEAN),
+            ],
 
             // Disable SMTP setting endpoint to prevent/lock down SMTP configuration via the administration workspace
             'smtpSettings' => [

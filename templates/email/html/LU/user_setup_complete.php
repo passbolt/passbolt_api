@@ -15,7 +15,6 @@
  */
 
 use App\Model\Entity\User;
-use App\Notification\Email\Redactor\AdminUserSetupCompleteEmailRedactor;
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;

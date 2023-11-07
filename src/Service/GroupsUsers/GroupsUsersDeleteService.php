@@ -54,13 +54,9 @@ class GroupsUsersDeleteService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        /** @phpstan-ignore-next-line */
         $this->favoritesTable = TableRegistry::getTableLocator()->get('Favorites');
     }
 

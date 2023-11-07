@@ -51,7 +51,6 @@ class SendEmailBatchService
      */
     public function __construct(?EmailQueueTable $table = null, ?EmailDigestService $emailDigestService = null)
     {
-        /** @phpstan-ignore-next-line  */
         $this->emailQueueTable = $table ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
         $this->emailDigestService = $emailDigestService ?? new EmailDigestService();
     }
@@ -63,7 +62,7 @@ class SendEmailBatchService
      * @return void
      * @throws \Exception
      */
-    public function sendNextEmailsBatch($limit = 10): void
+    public function sendNextEmailsBatch(int $limit = 10): void
     {
         Configure::write('App.baseUrl', '/');
 
@@ -151,7 +150,7 @@ class SendEmailBatchService
      * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest An instance of EmailDigest
      * @return \Cake\Mailer\Mailer
      */
-    private function mapEmailDigestToMailerEmail(Mailer $email, EmailDigestInterface $emailDigest)
+    private function mapEmailDigestToMailerEmail(Mailer $email, EmailDigestInterface $emailDigest): Mailer
     {
         $email
             ->setTo($emailDigest->getEmailRecipient())

@@ -65,7 +65,6 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     {
         parent::__construct(self::NAME, self::CATEGORY);
         $this->gpg = $gpg ?? OpenPGPBackendFactory::get();
-        /** @phpstan-ignore-next-line */
         $this->table = $table ?? TableRegistry::getTableLocator()->get('Gpgkeys');
         $this->gopengpgFormatRule = new GopengpgFormatRule();
         $this->checks = [

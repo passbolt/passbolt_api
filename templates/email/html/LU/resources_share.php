@@ -31,7 +31,7 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $owner,
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} shared passwords with you', $owner['profile']['first_name'])
+        'text' => __('{0} shared passwords with you', Purifier::clean($owner['profile']['first_name']))
     ])
 ]);
 
@@ -43,6 +43,6 @@ echo $this->element('Email/module/text', [
 ]);
 
 echo $this->element('Email/module/button', [
-    'url' => Router::url("/app/passwords", true),
-    'text' => __('view them in passbolt')
+    'url' => Router::url('/app/passwords', true),
+    'text' => __('View them in passbolt')
 ]);

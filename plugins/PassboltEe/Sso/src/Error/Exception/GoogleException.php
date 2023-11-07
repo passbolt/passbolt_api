@@ -16,66 +16,28 @@ declare(strict_types=1);
  */
 namespace Passbolt\Sso\Error\Exception;
 
-use Cake\Core\Exception\CakeException;
 use Cake\Log\Log;
 use Throwable;
 
-class GoogleException extends CakeException
+class GoogleException extends OAuth2Exception
 {
-    /**
-     * Error.
-     *
-     * @var string
-     */
-    protected $error;
-
-    /**
-     * Error description.
-     *
-     * @var string
-     */
-    protected $errorDescription;
-
     /**
      * @inheritDoc
      */
     public function __construct(string $error, string $errorDescription, ?int $code = null, ?Throwable $previous = null)
     {
-        $this->error = $error;
-        $this->errorDescription = $errorDescription;
-
         if (!in_array($error, $this->allowedErrors())) {
             Log::error('Unkown Google error:' . $error);
         }
 
-        parent::__construct($errorDescription, $code ?? $this->_defaultCode, $previous);
-    }
-
-    /**
-     * Return error code
-     *
-     * @return string
-     */
-    public function getError(): string
-    {
-        return $this->error;
-    }
-
-    /**
-     * Return error message from Google (non translated)
-     *
-     * @return string
-     */
-    public function getErrorDescription(): string
-    {
-        return $this->errorDescription;
+        parent::__construct($error, $errorDescription, $code, $previous);
     }
 
     /**
      * @see https://support.google.com/accounts/answer/12917337?hl=en
      * @return string[]
      */
-    public static function allowedErrors(): array
+    public function allowedErrors(): array
     {
         return [
             /**

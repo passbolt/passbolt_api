@@ -48,6 +48,7 @@ class EmailQueueFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) {
             $email = $faker->email();
             $title = $faker->sentence();
+            $locale = $faker->locale();
 
             return [
                 'email' => $email,
@@ -55,7 +56,7 @@ class EmailQueueFactory extends CakephpBaseFactory
                 'config' => 'default',
                 'template' => 'test_email',
                 'layout' => 'default',
-                'template_vars' => json_encode(compact('email', 'title')),
+                'template_vars' => json_encode(compact('email', 'title', 'locale')),
                 'theme' => '',
                 'format' => 'html',
                 'sent' => 0,
@@ -99,7 +100,7 @@ class EmailQueueFactory extends CakephpBaseFactory
      */
     public function setTemplate(string $template)
     {
-        return $this->patchData(compact($template));
+        return $this->patchData(compact('template'));
     }
 
     /**

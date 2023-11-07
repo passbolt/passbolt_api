@@ -65,13 +65,9 @@ class GroupsUpdateDryRunService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
-        /** @phpstan-ignore-next-line */
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->groupGetService = new GroupGetService();
         $this->userGetService = new UserGetService();

@@ -49,6 +49,8 @@ class UiActionsInsertDefaultsService
         'Resources.editPasswordGeneratorSettings',
         'Users.viewWorkspace',
         'Users.viewGroups',
+        'Mobile.transfer',
+        'Desktop.transfer',
     ];
 
     /**
@@ -56,7 +58,6 @@ class UiActionsInsertDefaultsService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->uiActionsTable = TableRegistry::getTableLocator()->get('Passbolt/Rbacs.UiActions');
     }
 

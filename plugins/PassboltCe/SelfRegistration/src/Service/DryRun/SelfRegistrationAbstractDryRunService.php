@@ -46,22 +46,18 @@ abstract class SelfRegistrationAbstractDryRunService implements SelfRegistration
     /**
      * Check that the email is not assigned to a registered user.
      *
-     * @param string $email Value to check
+     * @param string $username Value to check
      * @return void
      * @throws \Cake\Http\Exception\ForbiddenException if the user is already registered
      */
-    protected function checkEmailNotPreviouslyRegistered(string $email): void
+    protected function checkEmailNotPreviouslyRegistered(string $username): void
     {
-        // @todo [NICE TO HAVE] move it into UsersFinderTrait with other similar finders.
-        $nonDeletedUserExists = TableRegistry::getTableLocator()
-                ->get('Users')
-                ->find()
-                ->where([
-                    'Users.username' => $email,
-                    'deleted' => false,
-                ])
-                ->count() > 0;
-        if ($nonDeletedUserExists) {
+        /** @var \App\Model\Table\UsersTable $UsersTable */
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
+        $user = $UsersTable->buildEntity(compact('username'));
+        $isUnique = $UsersTable->isUniqueUsername($user);
+
+        if (!$isUnique) {
             throw new ForbiddenException(__('The email is already registered.'));
         }
     }

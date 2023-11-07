@@ -105,6 +105,8 @@ abstract class AppTestCase extends TestCase
             'alphaEmojis' => '', // List of smileys.
             'special' => '!@#$%^&*()_-+={}[]:";<>?,./\\|~ ',
             'html' => '<h1>La solution gestion de mot de passe</h1> parfaite pour les <b>business</b> et les <span style="font-size:10px">petites</span> entreprises sans oublier les accents <span style="background: url()">indispensables</span> dans l\'alphabet latin ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÚÚÚÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ',
+            'unsecureUrl' => 'http://passbolt.test',
+            'secureUrl' => 'https://passbolt.test',
         ];
 
         // Init emojis. (Covers all common smileys: 1F601 - 1F64F)

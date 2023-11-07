@@ -19,8 +19,8 @@ namespace Passbolt\Log\Test\TestCase\Service\ActionLogs;
 
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
-use Cake\Chronos\Date;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\FrozenDate;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Log\Service\ActionLogs\ActionLogsDeleteService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
@@ -77,20 +77,20 @@ class ActionLogsDeleteServiceTest extends AppTestCase
         // Actions to be kept
         ActionLogFactory::make($nToBeKept)
             ->setActionId($actionName)
-            ->setField('created', Date::today())
+            ->setField('created', FrozenDate::today())
             ->persist();
 
         // Actions to be deleted
         ActionLogFactory::make($nToBeDeleted)
             ->setActionId($actionName)
-            ->setField('created', Date::yesterday())
+            ->setField('created', FrozenDate::yesterday())
             ->persist();
 
         // Some random actions to be kept
         ActionLogFactory::make($nRandomActions)->persist();
 
         $service = new ActionLogsDeleteService();
-        $service->delete($actionName, Date::today());
+        $service->delete($actionName, FrozenDate::today());
 
         $actionsLeft = ActionLogFactory::find()->where(['action_id' => UuidFactory::uuid($actionName)]);
         $this->assertSame($nRandomActions + $nToBeKept, ActionLogFactory::count());

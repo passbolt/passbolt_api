@@ -60,7 +60,6 @@ class EmailSender
         ?string $appFullBaseUrl = null,
         ?bool $purifySubject = false
     ) {
-        /** @phpstan-ignore-next-line */
         $this->emailQueue = $emailQueue ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
         $this->appFullBaseUrl = $appFullBaseUrl ?? Configure::read('App.fullBaseUrl');
         $this->purifySubject = $purifySubject ?? Configure::read('passbolt.email.purify.subject');

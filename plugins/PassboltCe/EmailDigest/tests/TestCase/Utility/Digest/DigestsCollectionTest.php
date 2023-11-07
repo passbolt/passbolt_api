@@ -144,7 +144,7 @@ class DigestsCollectionTest extends TestCase
         $digest->expects($this->once())
             ->method('addEmailEntity')
             ->with($emailEntity)
-            ->willReturn(true);
+            ->willReturn($digest);
 
         $digest->expects($this->once())
             ->method('canAddToDigest')
@@ -156,7 +156,7 @@ class DigestsCollectionTest extends TestCase
         $digest->expects($this->never())
             ->method('addEmailEntity')
             ->with($emailEntity)
-            ->willReturn(true);
+            ->willReturn($digest);
 
         $digest->expects($this->never())
             ->method('canAddToDigest')

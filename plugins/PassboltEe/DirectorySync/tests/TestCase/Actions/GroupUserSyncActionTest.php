@@ -607,7 +607,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $expectedUserGroupReport = [
             'action' => Alias::ACTION_CREATE,
             'model' => Alias::MODEL_GROUPS_USERS,
-            'status' => Alias::STATUS_SUCCESS,
+            'status' => Alias::STATUS_WARNING,
             'type' => Alias::MODEL_USERS,
         ];
         $this->assertReport($reports[0], $expectedUserGroupReport);

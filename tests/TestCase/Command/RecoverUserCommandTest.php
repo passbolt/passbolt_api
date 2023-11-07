@@ -77,7 +77,8 @@ class RecoverUserCommandTest extends TestCase
     {
         $user = UserFactory::make()->user()->active()->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
-        $this->assertExitError("An active recovery token could not be found for the user {$user->username}.");
+        $this->assertExitError();
+        $this->assertOutputContains("An active recovery token could not be found for the user {$user->username}.");
         $this->assertSame(0, AuthenticationTokenFactory::count());
     }
 
@@ -93,11 +94,20 @@ class RecoverUserCommandTest extends TestCase
         $this->assertSame(1, AuthenticationTokenFactory::count());
     }
 
+    public function testRecoverUserCommand_Create_On_Disabled_User()
+    {
+        $user = UserFactory::make()->user()->active()->disabled()->persist();
+        $this->exec('passbolt recover_user -c -u ' . $user->username);
+        $this->assertExitError();
+        $this->assertErrorContains('The user does not exist or is not active or is disabled.');
+    }
+
     public function testRecoverUserCommand_On_Inactive_User()
     {
         $user = UserFactory::make()->inactive()->user()->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
-        $this->assertExitError("The user {$user->username} is not active.");
+        $this->assertExitError();
+        $this->assertErrorContains('The user does not exist or is not active or is disabled.');
     }
 
     public function testRecoverUserCommand_On_Expired_Token()
@@ -110,7 +120,27 @@ class RecoverUserCommandTest extends TestCase
             ->created(FrozenDate::now()->subDays(100))
             ->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
-        $this->assertExitError("An active recovery token could not be found for the user {$user->username}.");
+        $this->assertExitError();
         $this->assertOutputContains('You may create one using the option --create.');
+        $this->assertOutputContains("An active recovery token could not be found for the user {$user->username}.");
+    }
+
+    public function testRecoverUserCommand_WithSameUsernamePresent(): void
+    {
+        $username = 'ada@passbolt.com';
+        // Create two users with same username.
+        // 1. First would be active & deleted
+        // 2. Second with active & not delete(`deleted=0`)
+        UserFactory::make(compact('username'), 10)->user()->active()->deleted()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make(compact('username'))->user()->active()->persist();
+
+        $this->exec('passbolt recover_user -c -u ' . $user->username);
+
+        $this->assertExitSuccess();
+        $token = AuthenticationTokenFactory::firstOrFail();
+        $this->assertOutputContains(
+            Router::url('/setup/recover/start/' . $user->id . '/' . $token['token'], true)
+        );
     }
 }

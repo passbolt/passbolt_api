@@ -56,11 +56,8 @@ class ResourcesAfterAccessGrantedService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
 
         $this->foldersRelationsAddItemsToUserTree = new FoldersRelationsAddItemsToUserTreeService();

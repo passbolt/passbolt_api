@@ -1,5 +1,6 @@
 includes:
     - phpstan-baseline.neon
+    - vendor/cakedc/cakephp-phpstan/extension.neon
 
 parameters:
     level: 6
