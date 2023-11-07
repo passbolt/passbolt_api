@@ -1,16 +1,14 @@
 Release song: https://www.youtube.com/watch?v=6Ejga4kJUts
 
-Hey community members,
+Version 4.4 of Passbolt Pro is now available, packed full of improvements and new functionalities.
 
-Prepare for an exciting update! 🥁
+This update also introduces an additional option for SSO: a generic OAuth 2.0 provider is now available, expanding your authentication options and providing even more versatility. Another highlight of this update is improved notifications, so you can effortlessly stay in the know. Admins now have the ability to suspend and unsuspend users with ease. TOTP creation and editing can now be done directly from the browser.
 
-Passbolt is thrilled to announce that the v4.4.0 Release Candidate is officially available for testing.
+If you’re a system operator, please note that using older PHP versions will now trigger a healthcheck warning. Support for PHP 7.4 and 8.0 will be discontinued soon. Admins are encouraged to upgrade to PHP 8.1 or higher and use the latest version of the passbolt API.  But it's not all about major features; this version also includes a number of other improvements and fixes to make your passbolt experience smoother and more efficient.
 
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, please share and report any issues you come across.
+Upgrade to version 4.4 to take advantage of these improvements. Thank you for using and supporting passbolt!
 
-Enjoy the testing journey! ♥️
-
-## [4.4.0-test.3] - 2023-11-06
+## [4.4.0] - 2023-11-07
 ### Added
 - PB-27950 As a user I can use generic OAuth2 as single sign on provider
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
