@@ -44,7 +44,11 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
         $nextMinPhpVersion = Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG);
         if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
             $this->assertStringContainsString('PHP version is too low', $data);
-        } elseif (version_compare(PHP_VERSION, $nextMinPhpVersion, '<=')) {
+        } elseif (
+            version_compare(PHP_VERSION, $minPhpVersion, '>=')
+            && version_compare(PHP_VERSION, $nextMinPhpVersion, '<=')
+        ) {
+            // Warning is shown to user
             $this->assertStringContainsString(
                 __(
                     'PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment', // phpcs:ignore
@@ -52,6 +56,10 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
                 ),
                 $data
             );
+            // User can continue with the installation
+            $this->assertStringContainsString('Nice one! Your environment is ready for passbolt.', $data);
+            $this->assertStringContainsString('GPG is configured correctly.', $data);
+            $this->assertStringContainsString('Start configuration', $data);
         } else {
             $this->assertStringContainsString('. Database', $data);
             $this->assertStringContainsString('Nice one! Your environment is ready for passbolt.', $data);

@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
+use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
+use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
@@ -50,7 +52,7 @@ class PreviewCommandTest extends AppIntegrationTestCase
         $this->useCommandRunner();
         $this->loadRoutes();
         $this->setDummyFrenchTranslator();
-        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
+        (new AvatarsConfigurationService())->loadConfiguration();
     }
 
     /**
@@ -139,12 +141,18 @@ class PreviewCommandTest extends AppIntegrationTestCase
 
     public function testPreviewCommand_ThresholdExceeded(): void
     {
-        $this->persistEmailQueueEntities([
-            'email' => 'john@test.test',
-            'template' => 'LU/resource_share',
+        (new AvatarsConfigurationService())->loadConfiguration();
+        $nResourcesAdded = 15;
+        $operator = UserFactory::make()->withAvatar()->persist();
+        $recipient = 'john@test.test';
+        EmailQueueFactory::make([
             'from_name' => 'No reply',
             'from_email' => 'no-reply@test.test',
-        ]);
+        ], $nResourcesAdded)
+            ->setRecipient($recipient)
+            ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
+            ->setField('template_vars.body.user', $operator)
+            ->persist();
 
         $this->exec('passbolt email_digest preview');
 
@@ -152,6 +160,6 @@ class PreviewCommandTest extends AppIntegrationTestCase
         $this->assertMailCount(0); // Make sure preview doesn't send emails
         $this->assertOutputContains('From: No reply <no-reply@test.test>');
         $this->assertOutputContains('To: john@test.test');
-        $this->assertOutputContains('Subject: Multiple passwords have been shared with you in passbolt');
+        $this->assertOutputContains('Subject: Multiple passwords have been changed in passbolt');
     }
 }
