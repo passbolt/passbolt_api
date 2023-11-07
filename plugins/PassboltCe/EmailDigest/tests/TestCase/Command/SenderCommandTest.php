@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
+use App\Notification\Email\Redactor\Group\GroupUserAddEmailRedactor;
+use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
@@ -49,7 +51,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->useCommandRunner();
         $this->loadRoutes();
         $this->setDummyFrenchTranslator();
-        $this->loadPlugins(['Passbolt/EmailDigest' => []]);
+        (new AvatarsConfigurationService())->loadConfiguration();
     }
 
     /**
@@ -120,16 +122,55 @@ class SenderCommandTest extends AppIntegrationTestCase
 
     public function testSenderCommand_NoRowsAreLockedWhenThresholdIsExceeded()
     {
-        (new AvatarsConfigurationService())->loadConfiguration();
-        $this->persistEmailQueueEntities(['email' => 'john@test.test', 'template' => 'LU/resource_share']);
+        $nResourcesAdded = 15;
+        $operator = UserFactory::make()->withAvatar()->persist();
+        $recipient = 'john@test.test';
+        EmailQueueFactory::make($nResourcesAdded)
+            ->setRecipient($recipient)
+            ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
+            ->setField('template_vars.body.user', $operator)
+            ->persist();
 
         $this->exec('passbolt email_digest send');
 
         $this->assertExitSuccess();
-        $this->assertMailCount(2);
-        $this->assertMailSentToAt(0, ['john@test.test' => 'john@test.test']);
+        $this->assertMailCount(1);
+        $this->assertMailSentToAt(0, [$recipient => $recipient]);
         // Make sure email queue entries are not locked
         $count = EmailQueueFactory::find()->where(['locked' => true])->count();
         $this->assertEquals(0, $count);
+    }
+
+    public function testSenderCommandMultipleDigests()
+    {
+        $recipient = 'foo@bar.baz';
+        $nEmailsSent = 15;
+        $user = UserFactory::make()->withAvatar()->persist();
+        $admin = UserFactory::make()->withAvatar()->persist();
+        EmailQueueFactory::make($nEmailsSent)
+            ->setRecipient($recipient)
+            ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
+            ->setField('template_vars.body.user', $user)
+            ->persist();
+
+        EmailQueueFactory::make($nEmailsSent)
+            ->setRecipient($recipient)
+            ->setTemplate(GroupUserAddEmailRedactor::TEMPLATE)
+            ->setField('template_vars.body.admin', $admin)
+            ->setField('template_vars.body.user', $user)
+            ->persist();
+
+        $this->exec('passbolt email_digest send');
+        $this->assertExitSuccess();
+
+        $this->assertMailCount(2);
+
+        $this->assertMailSubjectContainsAt(0, 'Multiple passwords have been changed in passbolt');
+        $this->assertMailContainsAt(0, $nEmailsSent . ' resources were affected.');
+        $this->assertMailContainsAt(0, 'Edited multiple resources');
+
+        $this->assertMailSubjectContainsAt(1, 'Your membership in several groups changed in passbolt');
+        $this->assertMailContainsAt(1, $nEmailsSent . ' group memberships were affected.');
+        $this->assertMailContainsAt(1, 'Edited your membership in several groups');
     }
 }

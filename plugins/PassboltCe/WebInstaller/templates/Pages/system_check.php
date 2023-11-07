@@ -34,10 +34,12 @@ $healtcheck = new HealthcheckHtmlHelper();
                     ?>
                     <?= $this->Flash->render() ?>
                     <?php
-                    if ($data['system_ok']) {
-                        echo '<div class="message success">' . __('Environment is configured correctly.') . '</div>';
-                    } else {
+                    if (!$data['system_ok']) {
                         $healtcheck->assertEnvironment($data);
+                    } elseif ($data['system_ok'] && !$data['environment']['nextMinPhpVersion']) {
+                        $healtcheck->assertEnvironment($data);
+                    } else {
+                        echo '<div class="message success">' . __('Environment is configured correctly.') . '</div>';
                     }
                     ?>
                     <!-- if the javascript does not load this message will be shown -->
