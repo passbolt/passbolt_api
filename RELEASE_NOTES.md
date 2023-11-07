@@ -1,16 +1,19 @@
 Release song: https://www.youtube.com/watch?v=6Ejga4kJUts
 
-Hey community members,
+Version 4.4 of the Community Edition has launched with new capabilities and improvements.
 
-Prepare for an exciting update! 🥁
+With this release, users are able to manage TOTPs directly from the browser, providing an extended TOTP experience across all their devices. They can now be created, deleted, organised and shared with others just like any other resource type.
 
-Passbolt is thrilled to announce that the v4.4.0 Release Candidate is officially available for testing.
+Another highlight of this release, administrators now have the ability to suspend/unsuspend users. This new feature will offer administrators with more control over access management of their instance. By example, they will be able to prevent access to the passbolt instance for users in temporary leave, therefore enforce company policies.
 
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, please share and report any issues you come across.
+And that's not all – a number of fixes and enhancements have been implemented to improve user experience. Among them, notification emails are now aggregated in certain cases, including limiting emails when a user imports a large amount of passwords.
 
-Enjoy the testing journey! ♥️
+If you’re a system operator, please note that using older PHP versions will now trigger a healthcheck warning. Support for PHP 7.4 and 8.0 will be discontinued soon. Admins are encouraged to upgrade to PHP 8.1 or higher and use the latest version of the passbolt API.
 
-## [4.4.0-test.3] - 2023-11-06
+Get the most out of passbolt – upgrade to version 4.4. Thanks for continuing to support passbolt and for being part of the community!
+
+
+## [4.4.0] - 2023-11-07
 ### Added
 - PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
 - PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
