@@ -151,6 +151,7 @@ class SenderCommandTest extends AppIntegrationTestCase
             ->setRecipient($recipient)
             ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
             ->setField('template_vars.body.user', $user)
+            ->setField('template_vars.locale', 'en-UK')
             ->persist();
 
         EmailQueueFactory::make($nEmailsSent)
@@ -158,6 +159,7 @@ class SenderCommandTest extends AppIntegrationTestCase
             ->setTemplate(GroupUserAddEmailRedactor::TEMPLATE)
             ->setField('template_vars.body.admin', $admin)
             ->setField('template_vars.body.user', $user)
+            ->setField('template_vars.locale', 'en-UK')
             ->persist();
 
         $this->exec('passbolt email_digest send');
