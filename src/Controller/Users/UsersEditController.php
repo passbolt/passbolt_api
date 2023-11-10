@@ -20,6 +20,7 @@ use App\Controller\AppController;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Table\AvatarsTable;
 use App\Model\Table\UsersTable;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -27,6 +28,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Exception;
+use League\Flysystem\FilesystemAdapter;
 
 /**
  * UsersEditController Class
@@ -45,9 +47,10 @@ class UsersEditController extends AppController
      * Allow editing firstname / lastname and role only for admin
      *
      * @param string $id user uuid
+     * @param \League\Flysystem\FilesystemAdapter $filesystemAdapter file system adapter to write the avatar in cache if saved
      * @return void
      */
-    public function editPost(string $id)
+    public function editPost(string $id, FilesystemAdapter $filesystemAdapter)
     {
         $this->assertJson();
 
@@ -84,7 +87,11 @@ class UsersEditController extends AppController
         $userEntityWithDirtyState = clone $user;
 
         // Save
-        if (!$this->Users->save($user, ['checkrules' => false])) {
+        $saveOptions = [
+            'checkrules' => false,
+            AvatarsTable::FILESYSTEM_ADAPTER_OPTION => $filesystemAdapter,
+        ];
+        if (!$this->Users->save($user, $saveOptions)) {
             throw new InternalErrorException('Could not save the user data. Please try again later.');
         }
 

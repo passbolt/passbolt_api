@@ -51,7 +51,7 @@ class UsersViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('profile', $this->_responseJsonBody);
         $this->assertProfileAttributes($this->_responseJsonBody->profile);
         $this->assertObjectHasAttribute('avatar', $this->_responseJsonBody->profile);
-        $this->assertAvatarAttributes($this->_responseJsonBody->profile->avatar);
+        $this->assertObjectHasAttributes(['small', 'medium'], $this->_responseJsonBody->profile->avatar->url);
         $this->assertObjectHasAttribute('gpgkey', $this->_responseJsonBody);
         $this->assertGpgkeyAttributes($this->_responseJsonBody->gpgkey);
         $this->assertObjectHasAttribute('role', $this->_responseJsonBody);

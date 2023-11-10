@@ -21,7 +21,6 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\SslForceMiddleware;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
@@ -54,7 +53,6 @@ use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 abstract class AppIntegrationTestCase extends TestCase
 {
     use ArrayTrait;
-    use AvatarsModelTrait;
     use EntityTrait;
     use ErrorIntegrationTestTrait;
     use FeaturePluginAwareTrait;
