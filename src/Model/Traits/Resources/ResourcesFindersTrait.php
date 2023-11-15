@@ -55,7 +55,6 @@ trait ResourcesFindersTrait
 
         $event = TableFindIndexBefore::create($query, $findIndexOptions, $this);
 
-        /** @var \App\Model\Event\TableFindIndexBefore $event */
         $this->getEventManager()->dispatch($event);
 
         // Filter out deleted resources
