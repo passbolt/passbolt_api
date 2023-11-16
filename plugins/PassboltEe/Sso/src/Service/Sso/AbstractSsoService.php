@@ -64,6 +64,8 @@ abstract class AbstractSsoService
      */
     public const SSO_STATE_COOKIE = 'passbolt_sso_state';
 
+    public const SSO_SECURITY_REDIRECT_METHOD_CONFIG = 'passbolt.plugins.sso.security.redirectMethod';
+
     /**
      * Build the url to redirect the user to
      *
