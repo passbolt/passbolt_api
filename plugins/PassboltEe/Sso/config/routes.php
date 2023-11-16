@@ -61,7 +61,7 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
                 'controller' => 'SsoAzureStage2',
                 'action' => 'triage',
             ])
-            ->setMethods(['GET', 'POST']);
+            ->setMethods(['GET', 'POST']); // POST requires session cookie to be set to sameSite=None, see app.php
     }
 
     /**
@@ -121,7 +121,7 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
                 'controller' => 'SsoOAuth2Stage2',
                 'action' => 'triage',
             ])
-            ->setMethods(['GET', 'POST']);
+            ->setMethods(['GET', 'POST']); // POST requires session cookie to be set to sameSite=None, see app.php
     }
 
     /**
