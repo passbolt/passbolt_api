@@ -17,11 +17,15 @@ declare(strict_types=1);
 
 namespace Passbolt\EmailDigest\Utility\Factory;
 
+use Cake\Core\Configure;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\Renderer;
 use Cake\ORM\Entity;
+use Passbolt\EmailDigest\Utility\Digest\Digest;
+use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 use Passbolt\EmailDigest\Utility\Mailer\EmailPreview;
+use Passbolt\Locale\Event\LocaleEmailQueueListener;
 
 /**
  * Create email previews from an email entity or from an email digest.
@@ -62,7 +66,7 @@ class EmailPreviewFactory
      * @param \Cake\ORM\Entity $email Email entity.
      * @return string
      */
-    public function renderFromEmailEntity(Entity $email): string
+    private function renderFromEmailEntity(Entity $email): string
     {
         $viewVars = empty($email->template_vars) ? [] : $email->template_vars;
         $viewVars['locale'] = $email->get('template_vars')['locale'];
@@ -75,6 +79,80 @@ class EmailPreviewFactory
             ->setLayout('Passbolt/EmailDigest.digest');
 
         return $renderer->render('', ['html'])['html'];
+    }
+
+    /**
+     * @param \Cake\ORM\Entity $emailQueueEntity entity
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
+     */
+    public function buildSingleEmailDigest(Entity $emailQueueEntity): EmailDigest
+    {
+        return (new EmailDigest())
+            ->addEmailData($emailQueueEntity)
+            ->setSubject($emailQueueEntity->get('subject'))
+            ->setEmailRecipient($emailQueueEntity->get('email'));
+    }
+
+    /**
+     * Renders an email digest with multiple emails rendered in it
+     *
+     * @param \Passbolt\EmailDigest\Utility\Digest\Digest $digest digest to render
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
+     */
+    public function buildMultipleEmailDigest(Digest $digest): EmailDigest
+    {
+        $subject = $digest->getTemplate()->getTranslatedSubject($digest);
+
+        $emailDigest = new EmailDigest();
+        foreach ($digest->getEmailQueues() as $emailQueueEntity) {
+            $emailDigest
+                ->addEmailData($emailQueueEntity)
+                ->setSubject($subject)
+                ->setEmailRecipient($emailQueueEntity->get('email'));
+        }
+
+        return $emailDigest;
+    }
+
+    /**
+     * Renders an email with a summary of what happened in the 11+ emails of the digest
+     *
+     * @param \Passbolt\EmailDigest\Utility\Digest\Digest $digest digest
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
+     */
+    public function buildSummaryEmailDigest(Digest $digest): EmailDigest
+    {
+        $template = $digest->getTemplate();
+        $subject = $template->getTranslatedSubject($digest);
+
+        return (new EmailDigest())
+            ->addEmailData($digest->getFirstEmailQueue())
+            ->setEmailIds($digest->getEmailQueueIds())
+            ->setSubject($subject)
+            ->addLayoutVar(LocaleEmailQueueListener::VIEW_VAR_KEY, $digest->getLocale())
+            ->setTemplate($template->getDigestTemplate())
+            ->setEmailRecipient($digest->getRecipient())
+            ->addTemplateVar($template->getOperatorVariableKey(), $digest->getOperator())
+            ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
+            ->addTemplateVar('subject', $subject)
+            ->addTemplateVar('count', $digest->getEmailQueueCount());
+    }
+
+    /**
+     * Helper method which render the content of every emails contained in a digest into a string to be used
+     * as the content of the digest.
+     *
+     * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest Email digest to use to render
+     * @return string
+     */
+    public function renderDigestContentFromEmailPreview(EmailDigestInterface $emailDigest): string
+    {
+        $emailDigestContent = [];
+        foreach ($emailDigest->getEmailsData() as $emailData) {
+            $emailDigestContent[] = $this->renderFromEmailEntity($emailData);
+        }
+
+        return implode('', $emailDigestContent);
     }
 
     /**

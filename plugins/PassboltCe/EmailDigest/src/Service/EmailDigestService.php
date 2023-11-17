@@ -17,7 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\EmailDigest\Service;
 
-use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
+use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
+use Passbolt\EmailDigest\Utility\DigestCollection\DigestsCollection;
+use Passbolt\EmailDigest\Utility\DigestCollection\SingleDigestCollection;
 
 /**
  * The EmailDigestService is a service designed to aggregate multiple emails together.
@@ -38,39 +40,27 @@ use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
 class EmailDigestService
 {
     /**
-     * @var \Passbolt\EmailDigest\Utility\Factory\DigestFactory
-     */
-    private $digestFactory;
-
-    /**
-     * @param \Passbolt\EmailDigest\Utility\Factory\DigestFactory|null $digestFactory Factory
-     */
-    public function __construct(?DigestFactory $digestFactory = null)
-    {
-        $this->digestFactory = $digestFactory ?? DigestFactory::getInstance();
-    }
-
-    /**
      * Handle the emails data for each recipient and transform them to emails digests
      *
      * @param \Cake\ORM\Entity[] $emails An array of emails entities from email queue.
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
-    public function createDigests(array $emails): array
+    public function createEmailDigests(array $emails): array
     {
         // Group the emails entities by recipient and create digests for each group of emails.
-        $digestsCollection = $this->digestFactory->createDigestsCollection();
-        $fallback = $this->digestFactory->createSingleDigest();
+        $digestsCollection = new DigestsCollection();
+        // Collect all the emails that are not covered by an email digest
+        $singleDigestCollection = new SingleDigestCollection();
 
         foreach ($emails as $emailQueueEntity) {
-            if ($digestsCollection->canAddToDigest($emailQueueEntity)) {
+            try {
                 $digestsCollection->addEmailEntity($emailQueueEntity);
-            } else {
-                $fallback->addEmailEntity($emailQueueEntity);
+            } catch (UnsupportedEmailDigestDataException $exception) {
+                $singleDigestCollection->addEmailEntity($emailQueueEntity);
             }
         }
 
-        return array_merge($fallback->marshalEmails(), $digestsCollection->marshalEmails());
+        return array_merge($singleDigestCollection->marshalEmails(), $digestsCollection->marshalEmails());
     }
 }

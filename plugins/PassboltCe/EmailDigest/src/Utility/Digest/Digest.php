@@ -16,291 +16,213 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Utility\Digest;
 
-use App\Model\Validation\EmailValidationRule;
+use App\Model\Entity\User;
+use Cake\Log\Log;
 use Cake\ORM\Entity;
-use Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException;
+use Cake\Utility\Hash;
 use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
-use Passbolt\EmailDigest\Utility\Mailer\EmailDigest;
-use Passbolt\Locale\Event\LocaleEmailQueueListener;
-use Passbolt\Locale\Service\LocaleService;
+use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
- * Default digest to fall back to building a single email
- * Adding more than one email to the digest will return as many "digests" as there is emails.
+ * Digest gathering all emails for one recipient, one operator, and one digest template
  */
-class Digest extends AbstractDigest implements DigestInterface
+class Digest
 {
     public const MAXIMUM_EMAILS_IN_DIGEST = 10;
 
     /**
-     * @var \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory
-     */
-    private $emailPreviewFactory;
-
-    /**
-     * @var array
-     */
-    private $emails;
-
-    /**
-     * @var array
-     */
-    private $emailCount;
-
-    /**
-     * List of supported templates. An empty list means that all templates are supported.
-     * Email with a template included in this list will be part of the same digest.
+     * Emails queues gathered in this digest
      *
-     * @var string[]
+     * @var \Cake\ORM\Entity[]
      */
-    private $supportedTemplates;
+    private array $emailQueues = [];
 
     /**
-     * Name of the variable in template vars body which contain the user.
+     * @var string
+     */
+    private string $recipient;
+
+    /**
+     * Operator execuring the action
      * i.e. in template, $body['user'] contains the user executing the action, then $executedByTemplateVarKey = 'user';
      * in template, if $body['admin'] contains the user executing the action, then $executedByTemplateVarKey = 'admin'
      *
-     * @var string
+     * @var \App\Model\Entity\User
      */
-    private $executedByTemplateVarKey;
+    private User $operator;
 
     /**
-     * Subject of the digest.
+     * @var \Passbolt\EmailDigest\Utility\Digest\AbstractDigestTemplate
+     */
+    private AbstractDigestTemplate $template;
+
+    /**
+     * In case the emails queue are shared across various organizations,
+     * each digest are responsible for one single full base URL
      *
      * @var string
      */
-    private $subject;
-
-    /**
-     * @var callable
-     */
-    private $onThresholdCallback;
+    private string $fullBaseUrl;
 
     /**
      * Digest constructor.
      *
-     * @param string $subject templates
-     * @param array $supportedTemplates subject
-     * @param string $executedByTemplateVarKey key to look for user info in email data
-     * @param callable $onThresholdCallback what to do when too many emails are present in digest
-     * @param \Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory|null $emailPreviewFactory email preview factory
+     * @param string $recipient digest recipient
+     * @param \App\Model\Entity\User $operator operator
+     * @param string $fullBaseUrl full base url
+     * @param \Cake\ORM\Entity $emailQueue first email queue passed into the digest. A digest cannot be empty
+     * @param \Passbolt\EmailDigest\Utility\Digest\AbstractDigestTemplate $template digest template used to render this digest
      */
     public function __construct(
-        string $subject,
-        array $supportedTemplates,
-        string $executedByTemplateVarKey,
-        callable $onThresholdCallback,
-        ?EmailPreviewFactory $emailPreviewFactory = null
+        string $recipient,
+        User $operator,
+        string $fullBaseUrl,
+        Entity $emailQueue,
+        AbstractDigestTemplate $template
     ) {
-        $this->supportedTemplates = $supportedTemplates;
-        $this->subject = $subject;
-        $this->executedByTemplateVarKey = $executedByTemplateVarKey;
-        $this->onThresholdCallback = $onThresholdCallback;
-        $this->emailPreviewFactory = $emailPreviewFactory ?? new EmailPreviewFactory();
-        $this->emails = [];
-        $this->emailCount = [];
+        $this->recipient = $recipient;
+        $this->operator = $operator;
+        $this->fullBaseUrl = $fullBaseUrl;
+        $this->template = $template;
+        $this->addEmail($emailQueue);
     }
 
     /**
-     * Handle a collection of digests internally. Each time a new email is added,,
-     * it checks if a digest in the collection already exists with the same template than the one from the email to add.
-     * If it exists, the email will be part of the same digest, if not a new digest is created for the email.
-     *
-     * @param \Cake\ORM\Entity $emailQueueEntity An email entity
-     * @return \Passbolt\EmailDigest\Utility\Digest\DigestInterface
-     * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
+     * @return \App\Model\Entity\User
      */
-    public function addEmailEntity(Entity $emailQueueEntity): DigestInterface
+    public function getOperator(): User
     {
-        if (!$this->canAddToDigest($emailQueueEntity)) {
-            throw new UnsupportedEmailDigestDataException($emailQueueEntity);
-        }
+        return $this->operator;
+    }
 
-        $operator = $this->getOperatorFromEmail($emailQueueEntity);
-        if (!isset($operator['username']) || !EmailValidationRule::check($operator['username'])) {
-            throw new UnsupportedEmailDigestDataException($emailQueueEntity);
-        }
+    /**
+     * @return bool
+     */
+    public function isRecipientTheOperator(): bool
+    {
+        return $this->getOperator()->username === $this->recipient;
+    }
 
-        $operator = $operator['username'];
-        $username = $emailQueueEntity['email'];
-        $this->addToUserCount($username, $operator);
+    /**
+     * @return \Passbolt\EmailDigest\Utility\Digest\AbstractDigestTemplate
+     */
+    public function getTemplate(): AbstractDigestTemplate
+    {
+        return $this->template;
+    }
 
-        $this->emails[$username][$operator][] = $emailQueueEntity;
+    /**
+     * The recipient of the digest
+     *
+     * @return string
+     */
+    public function getRecipient(): string
+    {
+        return $this->recipient;
+    }
+
+    /**
+     * The full base URL covered by the digest
+     *
+     * @return string
+     */
+    public function getFullBaseUrl(): string
+    {
+        return $this->fullBaseUrl;
+    }
+
+    /**
+     * @return \Cake\ORM\Entity[]
+     */
+    public function getEmailQueues(): array
+    {
+        return $this->emailQueues;
+    }
+
+    /**
+     * @return \Cake\ORM\Entity
+     */
+    public function getFirstEmailQueue(): Entity
+    {
+        return $this->emailQueues[0];
+    }
+
+    /**
+     * Get a list of all the email ids
+     *
+     * @return array
+     */
+    public function getEmailQueueIds(): array
+    {
+        return (array)Hash::extract($this->emailQueues, '{n}.id');
+    }
+
+    /**
+     * Get the number of emails in the digest
+     *
+     * @return int
+     */
+    public function getEmailQueueCount(): int
+    {
+        return count($this->emailQueues);
+    }
+
+    /**
+     * Append an email to this digest
+     *
+     * @param \Cake\ORM\Entity $emailQueue Email queue
+     * @return $this
+     */
+    public function addEmail(Entity $emailQueue)
+    {
+        $this->emailQueues[] = $emailQueue;
 
         return $this;
     }
 
     /**
-     * Process and set the content of the emails (as EmailDigest).
+     * Render the digest into an Email Digest ready to be sent
      *
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
+     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface
      */
-    public function marshalEmails(): array
+    public function marshalEmails(): EmailDigestInterface
     {
-        $result = [];
-        foreach ($this->emails as $username => $emailsByOperator) {
-            foreach ($emailsByOperator as $operator => $emails) {
-                $numberOfEmails = $this->getEmailCount($username, $operator);
-                $renderFromEmailPreview = true;
-                if ($numberOfEmails === 1) {
-                    $digest = $this->buildSingleEmailDigest($emails[0]);
-                } elseif (!$this->isPassThreshold($username, $operator)) {
-                    $digest = $this->buildMultipleEmailDigest($emails);
-                } else {
-                    $digest = $this->onThresholdCallback($emails, $numberOfEmails);
-                    $renderFromEmailPreview = false; // Do not render the emails in the digest
-                }
-                if ($renderFromEmailPreview) {
-                    $digest->setContent(
-                        $this->renderDigestContentFromEmailPreview($this->emailPreviewFactory, $digest)
-                    );
-                }
-
-                $result[] = $digest;
-            }
-        }
-
-        /** @var \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[] $result */
-        return $result;
-    }
-
-    /**
-     * @param array $emails array of EmailQueue Entity
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigest
-     */
-    protected function buildMultipleEmailDigest(array $emails): EmailDigest
-    {
-        $digest = new EmailDigest();
-        foreach ($emails as $i => $emailQueueEntity) {
-            $operator = $this->getOperatorFromEmail($emailQueueEntity);
-            if (!isset($operator['profile']['first_name']) || !is_string($operator['profile']['first_name'])) {
-                throw new UnsupportedEmailDigestDataException($emailQueueEntity);
-            }
-            $subject = $this->getTranslatedSubject($operator['profile']['first_name'], $emailQueueEntity);
-            $digest
-                ->addEmailData($emailQueueEntity)
-                ->setSubject($subject)
-                ->setEmailRecipient($emailQueueEntity->email);
-        }
-
-        return $digest;
-    }
-
-    /**
-     * Single email digest can always add any email.
-     *
-     * @param \Cake\ORM\Entity $emailQueueEntity An email entity
-     * @return bool
-     */
-    public function canAddToDigest(Entity $emailQueueEntity): bool
-    {
-        $executedBy = $this->getOperatorFromEmail($emailQueueEntity);
-
-        return !empty($executedBy) && $this->isTemplateSupported($emailQueueEntity->get('template'));
-    }
-
-    /**
-     * Return true if the template is supported by the digest, false otherwise.
-     *
-     * @param string $template Template to use
-     * @return bool
-     */
-    private function isTemplateSupported(string $template): bool
-    {
-        return empty($this->supportedTemplates) || in_array($template, $this->supportedTemplates);
-    }
-
-    /**
-     * Return the user from the variable of the email.
-     *
-     * @param \Cake\ORM\Entity $emailData An email queue entity
-     * @return \App\Model\Entity\User|null
-     */
-    private function getOperatorFromEmail(Entity $emailData)
-    {
-        return $emailData->get('template_vars')['body'][$this->executedByTemplateVarKey] ?? null;
-    }
-
-    /**
-     * Add +1 to the total email count for a given user
-     *
-     * @param string $username email of the user affected by the action
-     * @param string $operator email of the user doing the action
-     * @return void
-     */
-    private function addToUserCount(string $username, string $operator)
-    {
-        if (!isset($this->emailCount[$username][$operator])) {
-            $this->emailCount[$username][$operator] = 1;
+        $numberOfEmails = $this->getEmailQueueCount();
+        $renderFromEmailPreview = true;
+        $emailPreviewFactory = new EmailPreviewFactory();
+        if ($numberOfEmails === 1) {
+            // If the digest contains only one email, render one single email
+            $emailDigest = $emailPreviewFactory->buildSingleEmailDigest($this->getFirstEmailQueue());
+        } elseif ($numberOfEmails <= self::MAXIMUM_EMAILS_IN_DIGEST) {
+            // If the digest contains between 2 and 10 emails, render all the emails in one single digest
+            $emailDigest = $emailPreviewFactory->buildMultipleEmailDigest($this);
         } else {
-            $this->emailCount[$username][$operator]++;
+            // If the digest contains more than 10 emails, render only one single email summarizing what happened
+            $emailDigest = $emailPreviewFactory->buildSummaryEmailDigest($this);
+            $renderFromEmailPreview = false; // Do not render the emails in the digest
         }
-    }
-
-    /**
-     * Return email count for given user and operator
-     *
-     * @param string $username email of the user affected by the action
-     * @param string $operator email of the user doing the action
-     * @return int
-     */
-    private function getEmailCount(string $username, string $operator)
-    {
-        if (!isset($this->emailCount[$username]) || !isset($this->emailCount[$username][$operator])) {
-            return 0;
-        }
-
-        return $this->emailCount[$username][$operator];
-    }
-
-    /**
-     * Return true if threshold is passed for a given user and operator
-     *
-     * @param string $username email of the user affected by the action
-     * @param string $operator email of the user doing the action
-     * @return bool
-     */
-    private function isPassThreshold(string $username, string $operator)
-    {
-        return $this->emailCount[$username][$operator] > self::MAXIMUM_EMAILS_IN_DIGEST;
-    }
-
-    /**
-     * Callback executed when the maximum threshold defined is reached.
-     *
-     * Must return an array of email digests.
-     *
-     * @param \Cake\ORM\Entity[] $emailQueueEntities An email queue entities
-     * @param int $emailCount Count of the emails
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
-     */
-    private function onThresholdCallback(array $emailQueueEntities, int $emailCount)
-    {
-        return call_user_func($this->onThresholdCallback, $emailQueueEntities, $emailCount);
-    }
-
-    /**
-     * @param string $operatorFirstName First name of the operator
-     * @param \Cake\ORM\Entity $emailQueueEntity EmailQueue Entity
-     * @return string
-     */
-    private function getTranslatedSubject(string $operatorFirstName, Entity $emailQueueEntity): string
-    {
-        $emailLocale = $emailQueueEntity['template_vars'][LocaleEmailQueueListener::VIEW_VAR_KEY] ?? null;
-
-        $makeSubject = function () use ($operatorFirstName): string {
-            return __($this->subject, $operatorFirstName);
-        };
-
-        if ($emailLocale !== null) {
-            $subject = (new LocaleService())->translateString(
-                $emailLocale,
-                $makeSubject
+        if ($renderFromEmailPreview) {
+            $emailDigest->setContent(
+                $emailPreviewFactory->renderDigestContentFromEmailPreview($emailDigest)
             );
-        } else {
-            $subject = $makeSubject();
         }
 
-        return $subject;
+        return $emailDigest;
+    }
+
+    /**
+     * Get the locale of the first email, which is the same for all emails
+     * as the recipient is the same for all emails of a digest
+     *
+     * @return string|null
+     */
+    public function getLocale(): ?string
+    {
+        $locale = $this->getFirstEmailQueue()->get('template_vars')['locale'] ?? null;
+        if (is_null($locale)) {
+            Log::error('No locale was defined for this email.');
+        }
+
+        return $locale;
     }
 }
