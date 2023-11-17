@@ -193,16 +193,32 @@ class AvatarsTable extends Table
      * Used mainly to populate an avatar when no there is no result with the default avatar url.
      *
      * @param \Cake\Collection\CollectionInterface $avatars list of avatars (\App\Model\Entity\Avatar)
+     * @param bool $isHydrationEnabled if hydration is enabled, return an Avatar object, otherwise an array
      * @return mixed
-     * @deprecated the fallback avatar url is handled by the AvatarHelper.
      */
-    public static function formatResults(CollectionInterface $avatars)
+    private static function formatResults(CollectionInterface $avatars, bool $isHydrationEnabled)
     {
-        return $avatars->map(function ($avatar) {
+        return $avatars->map(function ($avatar) use ($isHydrationEnabled) {
+            $sizes = Configure::read('FileStorage.imageSizes.Avatar');
+            $url = [];
+            // Add path for each available size.
+            foreach ($sizes as $size => $filters) {
+                $url[$size] = AvatarHelper::getAvatarUrl([
+                    'id' => $avatar['id'] ?? null,
+                ], $size);
+            }
+
             if (empty($avatar)) {
                 // If avatar is empty, we instantiate one.
                 // The virtual field will take care of retrieving the default avatar.
-                $avatar = new Avatar();
+                $avatar = $isHydrationEnabled ? new Avatar() : [];
+            }
+
+            if ($avatar instanceof Avatar) {
+                $avatar->setVirtual(['url'], true);
+                $avatar->set('url', (object)$url);
+            } else {
+                $avatar['url'] = $url;
             }
 
             return $avatar;
@@ -222,8 +238,8 @@ class AvatarsTable extends Table
                 // Formatter for empty avatars.
                 return $q
                     ->select(['Avatars.id', 'Avatars.profile_id', 'Avatars.created', 'Avatars.modified'])
-                    ->formatResults(function (CollectionInterface $avatars) {
-                        return AvatarsTable::formatResults($avatars);
+                    ->formatResults(function (CollectionInterface $avatars, Query $mainQuery) {
+                        return AvatarsTable::formatResults($avatars, $mainQuery->isHydrationEnabled());
                     });
             },
         ];
