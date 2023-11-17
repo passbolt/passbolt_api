@@ -28,7 +28,6 @@ use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
-use Cake\Collection\CollectionInterface;
 use Cake\Core\Exception\CakeException;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
@@ -345,21 +344,16 @@ class AccountRecoveryRequestsTable extends Table
                 ]);
             };
             $associations['Creator.Profiles'] = function (Query $q) {
-                return $q->select([
-                    'id',
-                    'user_id',
-                    'first_name',
-                    'last_name',
-                    'created',
-                    'modified',
-                ]);
-            };
-            $associations['Creator.Profiles.Avatars'] = function (Query $q) {
-                // Formatter for empty avatars.
-                return $q->select(['id', 'profile_id', 'created', 'modified'])
-                    ->formatResults(function (CollectionInterface $avatars) {
-                        return AvatarsTable::formatResults($avatars);
-                    });
+                return $q
+                    ->select([
+                        'id',
+                        'user_id',
+                        'first_name',
+                        'last_name',
+                        'created',
+                        'modified',
+                    ])
+                    ->contain(AvatarsTable::addContainAvatar());
             };
         }
 

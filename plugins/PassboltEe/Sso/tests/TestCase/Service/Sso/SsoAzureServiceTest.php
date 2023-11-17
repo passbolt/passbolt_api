@@ -21,10 +21,12 @@ use App\Service\Cookie\DefaultSecureCookieService;
 use App\Test\Factory\UserFactory;
 use App\Utility\ExtendedUserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\FrozenTime;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoState;
+use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Service\Sso\Azure\SsoAzureService;
 use Passbolt\Sso\Test\Factory\SsoStateFactory;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
@@ -79,6 +81,33 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
         $this->assertTrue($cookie->isHttpOnly());
         $this->assertTrue($cookie->isSecure());
         $this->assertEquals($ssoState->state, $cookie->getValue());
+    }
+
+    public function testSsoAzureService_getAuthorizationUrl_Response_Mode_Query(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->active()->persist();
+        $this->createAzureSettingsFromConfig($user);
+        $uac = new ExtendedUserAccessControl($user->role->name, $user->id, $user->username, '127.0.0.1', 'phpunit');
+
+        // Main service features = generate url + cookie
+        $sut = new SsoAzureService(new DefaultSecureCookieService());
+        $url = $sut->getAuthorizationUrl($uac);
+        $this->assertTextContains('response_mode=query', $url);
+    }
+
+    public function testSsoAzureService_getAuthorizationUrl_Response_Mode_Post(): void
+    {
+        Configure::write(AbstractSsoService::SSO_SECURITY_REDIRECT_METHOD_CONFIG, 'POST');
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->active()->persist();
+        $this->createAzureSettingsFromConfig($user);
+        $uac = new ExtendedUserAccessControl($user->role->name, $user->id, $user->username, '127.0.0.1', 'phpunit');
+
+        // Main service features = generate url + cookie
+        $sut = new SsoAzureService(new DefaultSecureCookieService());
+        $url = $sut->getAuthorizationUrl($uac);
+        $this->assertTextContains('response_mode=form_post', $url);
     }
 
     public function testSsoAzureService_Error(): void
