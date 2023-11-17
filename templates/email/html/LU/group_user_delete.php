@@ -27,7 +27,7 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $admin,
         'datetime' => FrozenTime::now(),
-        'text' => __('{0} removed you from the group {1}', Purifier::clean($admin['profile']['first_name']), Purifier::clean($group['name']))
+        'text' => $title,
     ])
 ]);
 

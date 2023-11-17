@@ -5,33 +5,6 @@
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/EmailDigest/src/Utility/Digest/DigestRegisterEvent.php">
-    <MissingTemplateParam>
-      <code>DigestRegisterEvent</code>
-    </MissingTemplateParam>
-  </file>
-  <file src="plugins/PassboltCe/EmailDigest/tests/TestCase/Command/PreviewCommandTest.php">
-    <InvalidArrayOffset>
-      <code>$sender[$senderEmail]</code>
-    </InvalidArrayOffset>
-    <InvalidCast>
-      <code>$senderEmail</code>
-      <code>$senderEmail</code>
-    </InvalidCast>
-    <InvalidPropertyFetch>
-      <code><![CDATA[$frenchSpeakingUser->username]]></code>
-    </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltCe/EmailDigest/tests/TestCase/Command/SenderCommandTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$frenchSpeakingUser->username]]></code>
-    </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltCe/EmailDigest/tests/TestCase/Service/PreviewEmailBatchServiceTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$frenchSpeakingUser->username]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="plugins/PassboltCe/EmailNotificationSettings/src/Utility/EmailNotificationSettingsDefinitionRegisterEvent.php">
     <MissingTemplateParam>
       <code>EmailNotificationSettingsDefinitionRegisterEvent</code>

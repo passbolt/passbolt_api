@@ -75,7 +75,7 @@ class SendEmailBatchServiceCreateResourceChangesDigestTest extends AppIntegratio
         $this->postJson('/resources.json', $data);
         $this->assertSuccess();
 
-        $this->service->sendNextEmailsBatch();
+        $this->service->sendNextEmailsBatch(EmailQueueFactory::find()->all()->toArray());
 
         $this->assertSame(1, ResourceFactory::count());
         $this->assertMailCount(1);
@@ -98,7 +98,7 @@ class SendEmailBatchServiceCreateResourceChangesDigestTest extends AppIntegratio
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale('fr-FR')->persist();
         /** @psalm-suppress InternalMethod */
         I18n::getTranslator('default', 'fr_FR')->getPackage()->addMessages([
-            '{0} has made changes on several resources' => '{0} a apporté des modifications à plusieurs ressources',
+            'You made changes on several resources' => 'Vous avez apporté des modifications à plusieurs ressources',
             'You have saved a new password' => 'Vous avez enregistré un nouveau mot de passe',
         ]);
 
@@ -108,19 +108,20 @@ class SendEmailBatchServiceCreateResourceChangesDigestTest extends AppIntegratio
             $this->assertSuccess();
         }
 
-        $this->service->sendNextEmailsBatch();
+        $this->service->sendNextEmailsBatch(EmailQueueFactory::find()->all()->toArray());
 
-        $recipientFirstName = $frenchSpeakingUser->profile->first_name;
         $this->assertSame($nResourcesAdded, ResourceFactory::count());
 
         $this->assertMailCount(1);
-        $this->assertMailSubjectContainsAt(0, $recipientFirstName . ' a apporté des modifications à plusieurs ressources');
+        $this->assertMailSubjectContainsAt(0, 'Vous avez apporté des modifications à plusieurs ressources');
+        $this->assertMailContainsAt(0, 'Vous avez apporté des modifications à plusieurs ressources');
         $this->assertMailContainsAt(0, 'Vous avez enregistré un nouveau mot de passe');
     }
 
     public function testSendEmailBatchServiceCreateResourceChangesDigest_SendNextEmailsBatch_Above_Threshold()
     {
         $nResourcesAdded = 15;
+        /** @var \App\Model\Entity\User $operator */
         $operator = UserFactory::make()->withAvatar()->persist();
         EmailQueueFactory::make($nResourcesAdded)
             ->setRecipient('foo@bar.baz')
@@ -131,7 +132,7 @@ class SendEmailBatchServiceCreateResourceChangesDigestTest extends AppIntegratio
 
         /** @psalm-suppress InternalMethod */
         I18n::getTranslator('default', 'fr_FR')->getPackage()->addMessages([
-            'Multiple passwords have been changed in passbolt' => 'Plusieurs mots de passe ont été modifiés dans passbolt',
+            '{0} has made changes on several resources' => '{0} a apporté des modifications à plusieurs ressources',
             '{0} resources were affected.' => '{0} ressources ont été affectées.',
         ]);
 
@@ -139,7 +140,8 @@ class SendEmailBatchServiceCreateResourceChangesDigestTest extends AppIntegratio
         $this->assertExitSuccess();
 
         $this->assertMailCount(1);
-        $this->assertMailSubjectContainsAt(0, 'Plusieurs mots de passe ont été modifiés dans passbolt');
+        $this->assertMailSubjectContainsAt(0, $operator->profile->full_name . ' a apporté des modifications à plusieurs ressources');
+        $this->assertMailContainsAt(0, $operator->profile->full_name . ' a apporté des modifications à plusieurs ressources');
         $this->assertMailContainsAt(0, $nResourcesAdded . ' ressources ont été affectées.');
     }
 }
