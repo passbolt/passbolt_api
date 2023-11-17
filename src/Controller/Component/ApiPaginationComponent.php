@@ -22,17 +22,11 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Inflector;
 
-/**
- * @property \Authentication\Controller\Component\AuthenticationComponent $Authentication
- */
 class ApiPaginationComponent extends BaseApiComponent
 {
     public const MAX_LIMIT = 1000000;
 
-    /**
-     * @var array
-     */
-    public $defaultConfig = [
+    public array $defaultConfig = [
         'visible' => [
             'count',
             'limit',
@@ -40,10 +34,7 @@ class ApiPaginationComponent extends BaseApiComponent
         ],
     ];
 
-    /**
-     * @var array
-     */
-    public $paginate;
+    public array $paginate;
 
     /**
      * @inheritDoc
