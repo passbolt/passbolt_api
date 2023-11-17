@@ -28,23 +28,23 @@ interface EmailDigestInterface extends EmailInterface
      * An array of data composed with email queue format
      *
      * @param \Cake\ORM\Entity $emailQueueEntity An email entity
-     * @return $this
+     * @return self
      */
-    public function addEmailData(Entity $emailQueueEntity);
+    public function addEmailData(Entity $emailQueueEntity): self;
 
     /**
      * Return the emails entity associated to the email digest
      *
      * @return \Cake\ORM\Entity[]
      */
-    public function getEmailsData();
+    public function getEmailsData(): array;
 
     /**
      * Render the content of the email digest.
      *
      * @return string
      */
-    public function getContent();
+    public function getContent(): string;
 
     /**
      * A digest must be able to return the ids of the emails which compose the digest.
@@ -52,17 +52,19 @@ interface EmailDigestInterface extends EmailInterface
      *
      * @return string[]
      */
-    public function getEmailIds();
+    public function getEmailIds(): array;
 
     /**
+     * Define the content of the email digest
+     *
      * @param string $digestContent Content of the digest
-     * @return $this
+     * @return self
      */
-    public function setContent(string $digestContent);
+    public function setContent(string $digestContent): self;
 
     /**
      * @param string $template Template
-     * @return $this
+     * @return self
      */
-    public function setTemplate(string $template);
+    public function setTemplate(string $template): self;
 }

@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest\Test\TestCase\Command;
 
+use App\Notification\DigestTemplate\GroupMembershipDigestTemplate;
+use App\Notification\DigestTemplate\ResourceChangesDigestTemplate;
 use App\Notification\Email\Redactor\Group\GroupUserAddEmailRedactor;
 use App\Notification\Email\Redactor\Resource\ResourceCreateEmailRedactor;
 use App\Service\Avatars\AvatarsConfigurationService;
@@ -28,6 +30,7 @@ use Cake\I18n\I18n;
 use Cake\Mailer\Mailer;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
+use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
 
 /**
@@ -95,6 +98,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
 
+        /** @var \App\Model\Entity\User $frenchSpeakingUser */
         $frenchSpeakingUser = UserFactory::make()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make(['created' => Chronos::now()->subDays(4)])->persist();
@@ -145,8 +149,8 @@ class SenderCommandTest extends AppIntegrationTestCase
     {
         $recipient = 'foo@bar.baz';
         $nEmailsSent = 15;
-        $user = UserFactory::make()->withAvatar()->persist();
-        $admin = UserFactory::make()->withAvatar()->persist();
+        [$user, $admin] = UserFactory::make(2)->withAvatar()->persist();
+
         EmailQueueFactory::make($nEmailsSent)
             ->setRecipient($recipient)
             ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
@@ -160,17 +164,25 @@ class SenderCommandTest extends AppIntegrationTestCase
             ->setField('template_vars.body.user', $user)
             ->persist();
 
+        // Upgrade priority of this template to ensure that the emails are sent in this order
+        $priorityResourceChange = rand();
+        DigestTemplateRegistry::getInstance()->addTemplate(new ResourceChangesDigestTemplate($priorityResourceChange));
+        DigestTemplateRegistry::getInstance()->addTemplate(
+            new GroupMembershipDigestTemplate($priorityResourceChange + 1)
+        );
+
         $this->exec('passbolt email_digest send');
         $this->assertExitSuccess();
 
         $this->assertMailCount(2);
-
-        $this->assertMailSubjectContainsAt(0, 'Multiple passwords have been changed in passbolt');
+        $subject = $user->profile->full_name . ' has made changes on several resources';
+        $this->assertMailSubjectContainsAt(0, $subject);
         $this->assertMailContainsAt(0, $nEmailsSent . ' resources were affected.');
-        $this->assertMailContainsAt(0, 'Edited multiple resources');
+        $this->assertMailContainsAt(0, $subject);
 
-        $this->assertMailSubjectContainsAt(1, 'Your membership in several groups changed in passbolt');
+        $subject = $user->profile->full_name . ' updated your memberships in several groups';
+        $this->assertMailSubjectContainsAt(1, $subject);
+        $this->assertMailContainsAt(1, $subject);
         $this->assertMailContainsAt(1, $nEmailsSent . ' group memberships were affected.');
-        $this->assertMailContainsAt(1, 'Edited your membership in several groups');
     }
 }

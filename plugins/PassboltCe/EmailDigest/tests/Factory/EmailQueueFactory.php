@@ -11,8 +11,9 @@ use Faker\Generator;
 /**
  * EmailQueueFactory
  *
- * @method \Cake\Datasource\EntityInterface persist()
- * @method \Cake\Datasource\EntityInterface getEntity()
+ * @method \Cake\ORM\Entity|\Cake\ORM\Entity[] persist()
+ * @method \Cake\ORM\Entity getEntity()
+ * @method \Cake\ORM\Entity[] getEntities()
  */
 class EmailQueueFactory extends CakephpBaseFactory
 {
@@ -49,6 +50,8 @@ class EmailQueueFactory extends CakephpBaseFactory
             $email = $faker->email();
             $title = $faker->sentence();
             $locale = 'en-UK';
+            $fullBaseUrl = '/';
+            $body = compact('fullBaseUrl');
 
             return [
                 'email' => $email,
@@ -56,7 +59,7 @@ class EmailQueueFactory extends CakephpBaseFactory
                 'config' => 'default',
                 'template' => 'test_email',
                 'layout' => 'default',
-                'template_vars' => json_encode(compact('email', 'title', 'locale')),
+                'template_vars' => json_encode(compact('email', 'title', 'locale', 'fullBaseUrl', 'body')),
                 'theme' => '',
                 'format' => 'html',
                 'sent' => 0,
@@ -131,5 +134,34 @@ class EmailQueueFactory extends CakephpBaseFactory
     public function sent()
     {
         return $this->setField('sent', true);
+    }
+
+    /**
+     * @param string $fullBaseUrl full base url
+     * @return EmailQueueFactory
+     */
+    public function setFullBaseUrl(string $fullBaseUrl)
+    {
+        return $this->setField('template_vars.body.fullBaseUrl', $fullBaseUrl);
+    }
+
+    /**
+     * @param string $subject locale of the email
+     * @return EmailQueueFactory
+     */
+    public function setSubject(string $subject)
+    {
+        $this->setField('template_vars.body.subject', $subject);
+
+        return $this->setField('subject', $subject);
+    }
+
+    /**
+     * @param string $locale locale of the email
+     * @return EmailQueueFactory
+     */
+    public function setLocale(string $locale)
+    {
+        return $this->setField('template_vars.locale', $locale);
     }
 }
