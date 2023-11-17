@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Query;
+use Cake\Utility\Hash;
 
 /**
  * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
@@ -84,9 +85,9 @@ class ResourcesIndexController extends AppController
         $options = $this->QueryString->get($whitelist);
 
         // Retrieve the resources.
-        $resources = $this->Resources->findIndex($this->User->id(), $options);
-        $this->_logSecretAccesses($resources);
-        $this->paginate($resources->disableHydration());
+        $resources = $this->Resources->findIndex($this->User->id(), $options)->disableHydration();
+        $this->paginate($resources);
+        $this->_logSecretAccesses($resources, $options);
         $this->success(__('The operation was successful.'), $resources);
     }
 
@@ -94,22 +95,33 @@ class ResourcesIndexController extends AppController
      * Log secrets accesses in secretAccesses table.
      *
      * @param \Cake\ORM\Query $resources resources
+     * @param array $queryOptions The query options
      * @return void
      */
-    protected function _logSecretAccesses(Query $resources)
+    protected function _logSecretAccesses(Query $resources, array $queryOptions)
     {
+        $containSecret = (bool)Hash::get($queryOptions, 'contain.secret');
+        if (!$containSecret) {
+            return;
+        }
+
         if (!$this->Resources->getAssociation('Secrets')->hasAssociation('SecretAccesses')) {
             return;
         }
 
         foreach ($resources as $resource) {
-            if (!isset($resource->secrets)) {
+            $secrets = Hash::get($resource, 'secrets');
+            if (!isset($secrets)) {
                 continue;
             }
 
-            foreach ($resource->secrets as $secret) {
+            foreach ($secrets as $secret) {
                 try {
-                    $this->Resources->Secrets->SecretAccesses->create($secret, $this->User->getAccessControl());
+                    $this->Resources->Secrets->SecretAccesses->createFromSecretDetails(
+                        $this->User->getAccessControl(),
+                        Hash::get($secret, 'resource_id'),
+                        Hash::get($secret, 'id'),
+                    );
                 } catch (\Exception $e) {
                     throw new InternalErrorException('Could not log secret access entry.', 500, $e);
                 }

@@ -98,7 +98,7 @@ class ResourcesViewController extends AppController
             try {
                 /** @var \Passbolt\Log\Model\Table\SecretAccessesTable $SecretAccesses */
                 $SecretAccesses = $Secrets->getAssociation('SecretAccesses');
-                $SecretAccesses->create($secret, $this->User->getAccessControl());
+                $SecretAccesses->createFromSecretEntity($this->User->getAccessControl(), $secret);
             } catch (Exception $e) {
                 throw new InternalErrorException('Could not log secret access entry.', 500, $e);
             }
