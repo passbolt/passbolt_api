@@ -89,6 +89,9 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         if (!$deletedUser instanceof User) {
             throw new InvalidArgumentException('`user` is missing from event data.');
         }
+        if (!$deletedUser->role->isAdmin()) {
+            return $emailCollection;
+        }
 
         /** @var array $groupsIds */
         $groupsIds = $event->getData('groupsIds');

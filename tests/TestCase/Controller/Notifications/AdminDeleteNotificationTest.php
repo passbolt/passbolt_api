@@ -48,37 +48,49 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
 
     public function testAdminDeleteNotification_Success(): void
     {
-        /** @var \App\Model\Entity\User $admin */
-        $admin = UserFactory::make()->admin()->active()->persist();
-        /** @var \App\Model\Entity\User $operator */
-        $operator = UserFactory::make()->admin()->active()->persist();
-        /** @var \App\Model\Entity\User $johnAdmin */
-        $johnAdmin = UserFactory::make()->admin()->active()->persist();
+        [$adminDeleted, $operator, $otherAdmin] = UserFactory::make(3)->admin()->persist();
+        // This admin should not receive notifications
+        UserFactory::make()->admin()->disabled()->persist();
+        // This user should not receive notifications
+        UserFactory::make()->user()->persist();
 
         $this->logInAs($operator);
-        $this->deleteJson("/users/{$admin->id}.json");
+        $this->deleteJson("/users/{$adminDeleted->id}.json");
 
         $this->assertSuccess();
         // Email assertions
         $this->assertEmailQueueCount(2);
-        $adminFullName = $admin->profile->full_name;
+        $adminFullName = $adminDeleted->profile->full_name;
         $operatorFullName = $operator->profile->full_name;
         $this->assertEmailInBatchContains(
             "You deleted administrator {$adminFullName}",
             $operator->username
         );
         $this->assertEmailInBatchContains(
-            "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
+            "The administrator {$adminFullName} ({$adminDeleted->username}) is now deleted from the passbolt organisation.",
             $operator->username
         );
         $this->assertEmailInBatchContains(
             "{$operatorFullName} deleted administrator {$adminFullName}",
-            $johnAdmin->username
+            $otherAdmin->username
         );
         $this->assertEmailInBatchContains(
-            "The administrator {$adminFullName} ({$admin->username}) is now deleted from the passbolt organisation.",
-            $johnAdmin->username
+            "The administrator {$adminFullName} ({$adminDeleted->username}) is now deleted from the passbolt organisation.",
+            $otherAdmin->username
         );
+    }
+
+    public function testAdminDeleteNotification_Delete_User_Should_Not_Send_Notification(): void
+    {
+        /** @var \App\Model\Entity\User $userDeleted */
+        $userDeleted = UserFactory::make()->user()->persist();
+
+        $this->logInAsAdmin();
+        $this->deleteJson("/users/{$userDeleted->id}.json");
+
+        $this->assertSuccess();
+        // No emails should be sent if the deleted user is not an admin
+        $this->assertEmailQueueCount(0);
     }
 
     public function testAdminDeleteNotification_NotificationOff(): void
