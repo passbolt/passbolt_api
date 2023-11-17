@@ -22,7 +22,6 @@ use Cake\Mailer\Mailer;
 use Cake\Network\Exception\SocketException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\EmailTrait;
-use EmailQueue\Model\Table\EmailQueueTable;
 use Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface;
 
 /**
@@ -41,34 +40,25 @@ class SendEmailBatchService
     private $emailQueueTable;
 
     /**
-     * @var \Passbolt\EmailDigest\Service\EmailDigestService
+     * SendEmailBatchService construct
      */
-    private $emailDigestService;
-
-    /**
-     * @param \EmailQueue\Model\Table\EmailQueueTable|null $table An instance of EmailQueueTable
-     * @param \Passbolt\EmailDigest\Service\EmailDigestService|null $emailDigestService digest service
-     */
-    public function __construct(?EmailQueueTable $table = null, ?EmailDigestService $emailDigestService = null)
+    public function __construct()
     {
-        $this->emailQueueTable = $table ?? TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
-        $this->emailDigestService = $emailDigestService ?? new EmailDigestService();
+        $this->emailQueueTable = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
     }
 
     /**
      * Get and send the next emails batch from the email queue. The size of the email batch is determined by $limit.
      *
-     * @param int $limit Size of the emails batch.
+     * @param \Cake\ORM\Entity[] $emailQueues array of emails.
      * @return void
      * @throws \Exception
      */
-    public function sendNextEmailsBatch(int $limit = 10): void
+    public function sendNextEmailsBatch(array $emailQueues): void
     {
         Configure::write('App.baseUrl', '/');
 
-        $emails = $this->emailQueueTable->getBatch($limit);
-
-        $emailDigests = $this->emailDigestService->createDigests($emails);
+        $emailDigests = (new EmailDigestService())->createEmailDigests($emailQueues);
 
         foreach ($emailDigests as $digest) {
             $this->sendDigest($digest);

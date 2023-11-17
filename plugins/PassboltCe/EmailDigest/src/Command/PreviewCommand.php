@@ -22,6 +22,8 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 
 class PreviewCommand extends PassboltCommand
@@ -57,10 +59,21 @@ class PreviewCommand extends PassboltCommand
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $emailSenderService = new PreviewEmailBatchService();
-
         $limit = (int)$args->getOption('limit');
-        $previews = $emailSenderService->previewNextEmailsBatch($limit);
+        /** @var \EmailQueue\Model\Table\EmailQueueTable $EmailQueueTable */
+        $EmailQueueTable = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
+        $emailQueues = $EmailQueueTable->getBatch($limit);
+
+        Configure::write('App.baseUrl', '/');
+
+        if (!empty($emailQueues)) {
+            // we release the locks as soon as we get the emails
+            // we don't want to block the next batch ran by a cron job because of lock.
+            // technically, to do better, we should write the same query ran in getBatch method without locking the emails
+            $EmailQueueTable->releaseLocks(Hash::extract($emailQueues, '{n}.id'));
+        }
+
+        $previews = (new PreviewEmailBatchService())->previewNextEmailsBatch($emailQueues);
         foreach ($previews as $preview) {
             $io->out($preview->getHeaders());
             if ($args->getOption('body') === true) {

@@ -6,16 +6,6 @@ parameters:
 			path: plugins/PassboltCe/AccountSettings/src/Model/Table/AccountSettingsTable.php
 
 		-
-			message: "#^Unsafe access to private property Passbolt\\\\EmailDigest\\\\Utility\\\\Digest\\\\DigestsPool\\:\\:\\$instance through static\\:\\:\\.$#"
-			count: 4
-			path: plugins/PassboltCe/EmailDigest/src/Utility/Digest/DigestsPool.php
-
-		-
-			message: "#^Unsafe access to private property Passbolt\\\\EmailDigest\\\\Utility\\\\Factory\\\\DigestFactory\\:\\:\\$instance through static\\:\\:\\.$#"
-			count: 4
-			path: plugins/PassboltCe/EmailDigest/src/Utility/Factory/DigestFactory.php
-
-		-
 			message: "#^Unsafe access to private property Passbolt\\\\EmailNotificationSettings\\\\Utility\\\\EmailNotificationSettings\\:\\:\\$configSettingsSource through static\\:\\:\\.$#"
 			count: 4
 			path: plugins/PassboltCe/EmailNotificationSettings/src/Utility/EmailNotificationSettings.php
