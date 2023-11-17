@@ -120,7 +120,7 @@ trait EmailTestTrait
      */
     public function assertMailContainsAt(int $at, string $contents, string $message = ''): void
     {
-        $this->assertTextContains($contents, $this->getMailAt($at)->getBodyString(), $message);
+        $this->assertTextContains(h($contents), $this->getMailAt($at)->getBodyString(), $message);
     }
 
     /**
@@ -132,7 +132,7 @@ trait EmailTestTrait
      */
     public function assertMailSubjectContainsAt(int $at, string $contents, string $message = ''): void
     {
-        $this->assertTextContains($contents, $this->getMailAt($at)->getOriginalSubject(), $message);
+        $this->assertTextContains(h($contents), $this->getMailAt($at)->getOriginalSubject(), $message);
     }
 
     /**

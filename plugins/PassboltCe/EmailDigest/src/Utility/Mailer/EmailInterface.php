@@ -28,7 +28,7 @@ interface EmailInterface
      *
      * @return string
      */
-    public function getEmailRecipient();
+    public function getEmailRecipient(): string;
 
     /**
      * Return the subject of the email digest
@@ -36,14 +36,14 @@ interface EmailInterface
      *
      * @return string
      */
-    public function getSubject();
+    public function getSubject(): string;
 
     /**
      * Return the template vars associated to the digest
      *
      * @return array
      */
-    public function getViewVars();
+    public function getViewVars(): array;
 
     /**
      * Return the format of the email digest
@@ -51,7 +51,7 @@ interface EmailInterface
      *
      * @return string
      */
-    public function getEmailFormat();
+    public function getEmailFormat(): string;
 
     /**
      * Return the template file to use with this email digest
@@ -59,35 +59,45 @@ interface EmailInterface
      *
      * @return string
      */
-    public function getTemplate();
+    public function getTemplate(): string;
 
     /**
      * Add a variable to the template variables for the email.
      *
      * @param string $name Name of the variable
      * @param mixed $value Value of the variable
-     * @return $this
+     * @return self
      */
-    public function addTemplateVar(string $name, $value);
+    public function addTemplateVar(string $name, $value): self;
 
     /**
      * Add a variable to the layout variables for the email.
      *
      * @param string $name Name of the variable
      * @param mixed $value Value of the variable
-     * @return $this
+     * @return self
      */
-    public function addLayoutVar(string $name, $value);
+    public function addLayoutVar(string $name, $value): self;
 
     /**
      * @param string $subject Subject of the digest
-     * @return $this
+     * @return self
      */
-    public function setSubject(string $subject);
+    public function setSubject(string $subject): self;
 
     /**
-     * @param string $recipient Recipient of the digest
-     * @return $this
+     * Return the email recipient
+     *
+     * @param string $recipient Email Recipient of the digest, i.e: ada@passbolt.com
+     * @return self
      */
-    public function setEmailRecipient(string $recipient);
+    public function setEmailRecipient(string $recipient): self;
+
+    /**
+     * Sets the list of ids of the emails part of the digest
+     *
+     * @param string[] $emailIds email ids of the emails under this email digest
+     * @return self
+     */
+    public function setEmailIds(array $emailIds): self;
 }
