@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.1] - 2023-11-20
+### Improved
+- PB-28521 Alter the gpgkeys.uid column length to 769 to enable the synchronisation of user with very long names
+
+### Fixed
+- PB-27957 As an administrator I should be notified that an administrator was deleted only when an administrator has been deleted, and not a regular user
+
+### Maintenance
+- PB-27927 Remove unused user_agents table
+- PB-28616 Refactor the email digest plugin code for easier usage and maintainability
+
 ## [4.4.1-test.3] - 2023-11-20
 ### Fixed
 - PB-27616 Revert performance improvements as further investigation is required
