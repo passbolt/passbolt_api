@@ -153,7 +153,6 @@ trait EmailQueueTrait
     ): void {
         if ($htmlSpecialChar) {
             $string = h($string);
-            $string = htmlspecialchars($string);
         }
         $this->assertStringContainsString($string, $this->renderEmail($i), $message);
     }
@@ -174,7 +173,6 @@ trait EmailQueueTrait
     ): void {
         if ($htmlSpecialChar) {
             $string = h($string);
-            $string = htmlspecialchars($string);
         }
         $this->assertStringNotContainsString($string, $this->renderEmail($i), $message);
     }

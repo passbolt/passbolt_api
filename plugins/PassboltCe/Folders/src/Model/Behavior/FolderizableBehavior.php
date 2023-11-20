@@ -114,7 +114,7 @@ class FolderizableBehavior extends Behavior
      * @return \Cake\ORM\Query
      * @see $_defaultConfig
      */
-    public function findFolderParentId(Query $query, array $options): Query
+    public function findFolderParentId(Query $query, array $options)
     {
         return $this->formatResults($query, $options['user_id']);
     }
@@ -126,22 +126,20 @@ class FolderizableBehavior extends Behavior
      * @param string $userId The user id for whom the request has been executed.
      * @return \Cake\ORM\Query
      */
-    public function formatResults(Query $query, string $userId): Query
+    public function formatResults(Query $query, string $userId)
     {
         return $query->formatResults(function (CollectionInterface $results) use ($userId) {
             $itemsIds = $results->extract('id')->toArray();
             $itemsFolderParentIdsHash = $this->getItemsFolderParentIdHash($itemsIds, $userId);
             $itemsUsageHash = $this->getItemsUsageHash($itemsIds);
 
-            // The entity passed may be an entity interface, or an array if the hydration has been disabled
-            return $results->map(function ($entity) use ($itemsFolderParentIdsHash, $itemsUsageHash) {
-                $entityId = $entity['id'];
-                if (array_key_exists($entityId, $itemsFolderParentIdsHash)) {
-                    $folderParentId = $itemsFolderParentIdsHash[$entityId];
+            return $results->map(function (EntityInterface $entity) use ($itemsFolderParentIdsHash, $itemsUsageHash) {
+                if (array_key_exists($entity->get('id'), $itemsFolderParentIdsHash)) {
+                    $folderParentId = $itemsFolderParentIdsHash[$entity->get('id')];
                     $entity = $this->addFolderParentIdProperty($entity, $folderParentId);
                 }
-                if (array_key_exists($entityId, $itemsUsageHash)) {
-                    $isPersonal = $itemsUsageHash[$entityId] === 1;
+                if (array_key_exists($entity->get('id'), $itemsUsageHash)) {
+                    $isPersonal = $itemsUsageHash[$entity->get('id')] === 1;
                     $entity = $this->addPersonalStatusProperty($entity, $isPersonal);
                 }
 
@@ -216,18 +214,14 @@ class FolderizableBehavior extends Behavior
     /**
      * Add the folder_parent_id property to an entity
      *
-     * @param array|\Cake\Datasource\EntityInterface $entity The target entity
+     * @param \Cake\Datasource\EntityInterface $entity The target entity
      * @param string|null $folderParentId The folder parent id
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface
      */
-    private function addFolderParentIdProperty($entity, ?string $folderParentId = null)
+    private function addFolderParentIdProperty(EntityInterface $entity, ?string $folderParentId = null)
     {
-        if ($entity instanceof EntityInterface) {
-            $entity->setVirtual([self::FOLDER_PARENT_ID_PROPERTY], true);
-            $entity->set(self::FOLDER_PARENT_ID_PROPERTY, $folderParentId);
-        } else {
-            $entity[self::FOLDER_PARENT_ID_PROPERTY] = $folderParentId;
-        }
+        $entity->setVirtual([self::FOLDER_PARENT_ID_PROPERTY], true);
+        $entity->set(self::FOLDER_PARENT_ID_PROPERTY, $folderParentId);
 
         return $entity;
     }
@@ -235,18 +229,14 @@ class FolderizableBehavior extends Behavior
     /**
      * Add the personal status property to an entity
      *
-     * @param array|\Cake\Datasource\EntityInterface $entity The target entity
+     * @param \Cake\Datasource\EntityInterface $entity The target entity
      * @param bool $isPersonal The status
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface
      */
-    private function addPersonalStatusProperty($entity, bool $isPersonal)
+    private function addPersonalStatusProperty(EntityInterface $entity, bool $isPersonal)
     {
-        if ($entity instanceof EntityInterface) {
-            $entity->setVirtual([self::PERSONAL_PROPERTY], true);
-            $entity->set(self::PERSONAL_PROPERTY, $isPersonal);
-        } else {
-            $entity[self::PERSONAL_PROPERTY] = $isPersonal;
-        }
+        $entity->setVirtual([self::PERSONAL_PROPERTY], true);
+        $entity->set(self::PERSONAL_PROPERTY, $isPersonal);
 
         return $entity;
     }
