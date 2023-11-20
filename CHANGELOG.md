@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.1-test.3] - 2023-11-20
+### Fixed
+- PB-27616 Revert performance improvements as further investigation is required
+
 ## [4.4.1-test.2] - 2023-11-20
 ### Maintenance
 - PB-28521 Alter the gpgkeys.uid column length to 769
