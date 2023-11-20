@@ -19,7 +19,6 @@ namespace App\Test\TestCase\Model\Table\Permissions;
 
 use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;
-use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -27,8 +26,6 @@ use PassboltTestData\Lib\PermissionMatrix;
 
 class FindViewAcoPermissionsTest extends AppTestCase
 {
-    use AvatarsModelTrait;
-
     public $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Profiles', 'app.Base/Resources', 'app.Base/Users'];
 
     /**
@@ -84,7 +81,12 @@ class FindViewAcoPermissionsTest extends AppTestCase
         $permission = Hash::extract($permissions->toArray(), '{n}[aro=User]')[0];
         $this->assertPermissionAttributes($permission);
         $this->assertProfileAttributes($permission->user->profile);
-        $this->assertAvatarAttributes($permission->user->profile->avatar);
+        $this->assertObjectHasAttribute('avatar', $permission->user->profile);
+        $this->assertArrayHasKey('url', $permission->user->profile->avatar);
+        $this->assertArrayHasKey('medium', $permission->user->profile->avatar->url);
+        $this->assertArrayHasKey('small', $permission->user->profile->avatar->url);
+        $this->assertStringContainsString('/img/avatar/user_medium.png', $permission->user->profile->avatar->url['medium']);
+        $this->assertStringContainsString('/img/avatar/user.png', $permission->user->profile->avatar->url['small']);
     }
 
     public function testPermissions()

@@ -20,7 +20,6 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
 
 /**
  * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
@@ -85,18 +84,18 @@ class ResourcesIndexController extends AppController
 
         // Retrieve the resources.
         $resources = $this->Resources->findIndex($this->User->id(), $options);
-        $this->_logSecretAccesses($resources);
-        $this->paginate($resources->disableHydration());
+        $this->_logSecretAccesses($resources->all()->toArray());
+        $this->paginate($resources);
         $this->success(__('The operation was successful.'), $resources);
     }
 
     /**
      * Log secrets accesses in secretAccesses table.
      *
-     * @param \Cake\ORM\Query $resources resources
+     * @param array $resources resources
      * @return void
      */
-    protected function _logSecretAccesses(Query $resources)
+    protected function _logSecretAccesses(array $resources)
     {
         if (!$this->Resources->getAssociation('Secrets')->hasAssociation('SecretAccesses')) {
             return;

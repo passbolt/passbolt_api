@@ -35,18 +35,9 @@ class AddContainAvatarTest extends TestCase
     {
         parent::setUp();
         $this->Users = $this->fetchTable('Users');
-        $this->loadRoutes();
     }
 
-    public function enableHydration(): array
-    {
-        return [[true], [false]];
-    }
-
-    /**
-     * @dataProvider enableHydration
-     */
-    public function testAvatarsTableAddContainAvatar_Should_Not_Retrieve_Avatar_Data(bool $isHydrationEnabled)
+    public function testAvatarsTableAddContainAvatar_Should_Not_Retrieve_Avatar_Data()
     {
         $user = UserFactory::make()->withAvatar()->user()->persist();
 
@@ -56,18 +47,14 @@ class AddContainAvatarTest extends TestCase
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
-            ->enableHydration($isHydrationEnabled)
             ->firstOrFail();
 
-        $this->assertSame($user->profile->avatar->id, $retrievedUser['profile']['avatar']['id']);
+        $this->assertSame($user->profile->avatar->id, $retrievedUser->profile->avatar->id);
         $this->assertNotNull($user->profile->avatar->data);
-        $this->assertNull($retrievedUser['profile']['avatar']['data'] ?? null);
+        $this->assertNull($retrievedUser->profile->avatar->data ?? null);
     }
 
-    /**
-     * @dataProvider enableHydration
-     */
-    public function testAvatarsTableAddContainAvatar_On_Empty_Avatar(bool $isHydrationEnabled)
+    public function testAvatarsTableAddContainAvatar_On_Empty_Avatar()
     {
         $user = UserFactory::make()->user()->persist();
 
@@ -77,17 +64,12 @@ class AddContainAvatarTest extends TestCase
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
-            ->enableHydration($isHydrationEnabled)
             ->firstOrFail();
 
         $this->assertNull($user->profile->avatar->id ?? null);
         $this->assertNull($user->profile->avatar->data ?? null);
-        $this->assertNull($retrievedUser['profile']['avatar']['id'] ?? null);
-        $this->assertNull($retrievedUser['profile']['avatar']['data'] ?? null);
-        if ($isHydrationEnabled) {
-            $this->assertIsObject($retrievedUser['profile']['avatar']['url']);
-        } else {
-            $this->assertIsArray($retrievedUser['profile']['avatar']['url']);
-        }
+        $this->assertNull($retrievedUser->profile->avatar->id ?? null);
+        $this->assertNull($retrievedUser->profile->avatar->data ?? null);
+        $this->assertIsArray($retrievedUser->profile->avatar->url);
     }
 }
