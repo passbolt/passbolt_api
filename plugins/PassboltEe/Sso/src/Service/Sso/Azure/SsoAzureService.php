@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Service\Sso\Azure;
 
 use App\Utility\ExtendedUserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -47,10 +48,15 @@ class SsoAzureService extends AbstractSsoService
     {
         $prompt = $this->getSettings()->getData()->toArray()['prompt'];
 
+        // Prefer response_mode=query, unless specified in the config
+        // e.g. GET response to avoid the session cookie samesite="None" requirement
+        $redirectMethod = Configure::read(self::SSO_SECURITY_REDIRECT_METHOD_CONFIG) ?? 'GET';
+        $responseMode = $redirectMethod === 'POST' ? 'form_post' : 'query';
+
         $options = [
             'response_type' => 'code',
             'nonce' => $this->generateNonce(),
-            'response_mode' => 'form_post',
+            'response_mode' => $responseMode,
         ];
 
         /**

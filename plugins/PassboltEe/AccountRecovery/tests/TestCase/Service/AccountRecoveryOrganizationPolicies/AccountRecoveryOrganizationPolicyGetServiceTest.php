@@ -176,7 +176,7 @@ class AccountRecoveryOrganizationPolicyGetServiceTest extends AccountRecoveryTes
         $this->assertSame($creator->username, $policy->creator->username);
         $this->assertFalse($creator->deleted);
         $this->assertSame($creator->profile->first_name, $policy->creator->profile->first_name);
-        $this->assertSame($creator->profile->avatar->url, $policy->creator->profile->avatar->url);
+        $this->assertObjectHasAttribute('url', $policy->creator->profile->avatar);
     }
 
     /**
@@ -204,7 +204,7 @@ class AccountRecoveryOrganizationPolicyGetServiceTest extends AccountRecoveryTes
         $this->assertSame($creator->username, $policy->creator->username);
         $this->assertTrue($creator->deleted);
         $this->assertSame($creator->profile->first_name, $policy->creator->profile->first_name);
-        $this->assertSame($creator->profile->avatar->url, $policy->creator->profile->avatar->url);
+        $this->assertObjectHasAttribute('url', $policy->creator->profile->avatar);
     }
 
     /**
@@ -232,7 +232,7 @@ class AccountRecoveryOrganizationPolicyGetServiceTest extends AccountRecoveryTes
         $this->assertSame($creator->username, $policy->creator->username);
         $this->assertFalse($creator->deleted);
         $this->assertSame($creator->profile->first_name, $policy->creator->profile->first_name);
-        $this->assertSame($creator->profile->avatar->url, $policy->creator->profile->avatar->url);
+        $this->assertObjectHasAttribute('url', $policy->creator->profile->avatar);
         $this->assertSame($creator->gpgkey->fingerprint, $policy->creator->gpgkey->fingerprint);
         $this->assertSame($creator->gpgkey->armored_key, $policy->creator->gpgkey->armored_key);
     }

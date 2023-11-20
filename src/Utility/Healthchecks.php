@@ -387,7 +387,6 @@ class Healthchecks
             'resources',
             'roles',
             'secrets',
-            'user_agents',
             'users',
         ];
 

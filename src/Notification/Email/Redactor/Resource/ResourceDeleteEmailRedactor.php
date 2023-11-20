@@ -25,6 +25,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
@@ -105,12 +106,17 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($owner, $resource) {
-                return __('{0} deleted the password {1}', $owner->profile->first_name, $resource->name);
+                return __(
+                    '{0} deleted the password {1}',
+                    Purifier::clean($owner->profile->first_name),
+                    Purifier::clean($resource->name)
+                );
             }
         );
         $data = [
             'body' => [
                 'user' => $owner,
+                'subject' => $subject,
                 'resource' => $resource,
                 'showUsername' => $this->getConfig('show.username'),
                 'showUri' => $this->getConfig('show.uri'),
