@@ -17,8 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Test\TestCase\Model\Table\Tags;
 
 use App\Error\Exception\CustomValidationException;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Tags\Model\Table\TagsTable;
+use Passbolt\Tags\TagsPlugin;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
@@ -136,5 +141,45 @@ class TagsTableTest extends TagTestCase
         $tags = $tags1->union($tags2);
 
         $this->assertSame(2, $tags->count());
+    }
+
+    public function hydrateQuery(): array
+    {
+        return [[true], [false]];
+    }
+
+    /**
+     * @dataProvider hydrateQuery
+     */
+    public function testTagsTable_decorateForeignFind(bool $hydrateQuery)
+    {
+        $this->loadPlugins([TagsPlugin::class => []]);
+        $user = UserFactory::make()->persist();
+        $userId = $user->get('id');
+        $resource = ResourceFactory::make()->persist();
+        [$tag] = TagFactory::make(3)->persist();
+
+        ResourcesTagFactory::make([
+            'tag_id' => $tag->get('id'),
+            'resource_id' => $resource->get('id'),
+            'user_id' => $userId,
+        ])->persist();
+
+        $query = TableRegistry::getTableLocator()
+            ->get('Resources')
+            ->find()
+            ->where(['Resources.id' => $resource->get('id')]);
+        if (!$hydrateQuery) {
+            $query->disableHydration();
+        }
+        $options['contain']['all_tags'] = true;
+        $options['contain']['tag'] = true;
+        $options['filter']['has-tag'] = $tag->get('slug');
+
+        TagsTable::decorateForeignFind($query, $options, $userId);
+
+        $retrievedTag = $query->toArray()[0]['tags'][0];
+        $this->assertSame($tag['id'], $retrievedTag['id']);
+        $this->assertArrayNotHasKey('_joinData', $retrievedTag);
     }
 }

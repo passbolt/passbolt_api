@@ -39,7 +39,7 @@ class ResourcesTagFactory extends CakephpBaseFactory
             return [
                 'tag_id' => $faker->uuid(),
                 'resource_id' => $faker->uuid(),
-                'created' => Chronos::now()->subDay($faker->randomNumber(4)),
+                'created' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }
