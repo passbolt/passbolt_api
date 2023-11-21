@@ -140,28 +140,31 @@ trait EmailQueueTrait
     /**
      * Asserts that a string is found in an email of the email queue.
      *
-     * @param string $string String to search for
+     * @param string|string[] $string String, or array of strings, to search for
      * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
      * @param bool $htmlSpecialChar Convert string to html special characters (useful when searching names)
      */
     protected function assertEmailInBatchContains(
-        string $string,
+        $string,
         $i = 0,
         string $message = '',
         bool $htmlSpecialChar = true
     ): void {
-        if ($htmlSpecialChar) {
-            $string = h($string);
-            $string = htmlspecialchars($string);
+        $strings = (array)$string;
+        $renderedEmail = $this->renderEmail($i);
+        foreach ($strings as $string) {
+            if ($htmlSpecialChar) {
+                $string = h($string);
+            }
+            $this->assertStringContainsString($string, $renderedEmail, $message);
         }
-        $this->assertStringContainsString($string, $this->renderEmail($i), $message);
     }
 
     /**
      * Asserts that a string is not found in an email of the email queue.
      *
-     * @param string $string String to search for
+     * @param string|string[] $string String, or array of strings to search for
      * @param int|string $i Email position in the queue (start with 0), default 0, or the username of the recipient
      * @param string $message Error message
      * @param bool $htmlSpecialChar Convert string to html special characters (useful when searching names)
@@ -172,11 +175,14 @@ trait EmailQueueTrait
         string $message = '',
         bool $htmlSpecialChar = true
     ): void {
-        if ($htmlSpecialChar) {
-            $string = h($string);
-            $string = htmlspecialchars($string);
+        $strings = (array)$string;
+        $renderedEmail = $this->renderEmail($i);
+        foreach ($strings as $string) {
+            if ($htmlSpecialChar) {
+                $string = h($string);
+            }
+            $this->assertStringNotContainsString($string, $renderedEmail, $message);
         }
-        $this->assertStringNotContainsString($string, $this->renderEmail($i), $message);
     }
 
     /**
