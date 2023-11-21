@@ -48,7 +48,10 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAdminRoleRevokedController_NotificationEnabled(): void
     {
-        $jane = UserFactory::make(['username' => 'jane@passbolt.test'])->admin()->persist();
+        $jane = UserFactory::make(['username' => 'jane@passbolt.test'])
+            ->admin()
+            ->with('Profiles', ['first_name' => 'Jane', 'last_name' => 'Doe'])
+            ->persist();
         $john = UserFactory::make(['username' => 'john@passbolt.test'])->admin()->persist();
         $ada = UserFactory::make(['username' => 'ada@passbolt.test'])->admin()->persist();
         UserFactory::make()->user()->persist();
@@ -67,10 +70,9 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         // Email assertions
         $this->assertEventFired(UsersEditController::EVENT_USER_AFTER_UPDATE);
         $this->assertEmailQueueCount(2);
-        $userFullName = $jane->profile->first_name . ' ' . $jane->profile->last_name;
         foreach ([$john, $ada] as $admin) {
             $this->assertEmailInBatchContains(
-                sprintf('%s\'s admin role has been revoked', $userFullName),
+                sprintf('%s\'s admin role has been revoked', $jane->profile->full_name),
                 $admin->username,
                 '',
                 false
@@ -107,7 +109,10 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAdminRoleRevokedController_NotifyUserWhoseRoleIsChanged(): void
     {
-        $jane = UserFactory::make(['username' => 'jane@passbolt.test'])->admin()->persist();
+        $jane = UserFactory::make(['username' => 'jane@passbolt.test'])
+            ->admin()
+            ->with('Profiles', ['first_name' => 'Jane', 'last_name' => 'Doe'])
+            ->persist();
         $john = UserFactory::make(['username' => 'john@passbolt.test'])->admin()->persist();
         $ada = UserFactory::make(['username' => 'ada@passbolt.test'])->admin()->persist();
         UserFactory::make()->user()->persist();
@@ -134,10 +139,9 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
             Router::url('/app/users/view/' . $jane->id, true),
             $jane->username
         );
-        $userFullName = $jane->profile->first_name . ' ' . $jane->profile->last_name;
         foreach ([$john, $ada] as $admin) {
             $this->assertEmailInBatchContains(
-                sprintf('%s\'s admin role has been revoked', $userFullName),
+                sprintf('%s\'s admin role has been revoked', $jane->profile->full_name),
                 $admin->username,
                 '',
                 false

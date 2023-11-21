@@ -18,6 +18,7 @@ use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
+$subject = $body['subject'];
 $user = $body['user'];
 $resource = $body['resource'];
 $showUsername = $body['showUsername'];
@@ -29,7 +30,7 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $resource['modified'],
-        'text' => __('{0} deleted the password {1}', Purifier::clean($user['profile']['first_name']), Purifier::clean($resource['name']))
+        'text' => $subject,
     ])
 ]);
 
