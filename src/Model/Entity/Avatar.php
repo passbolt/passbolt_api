@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Model\Entity;
 
+use App\View\Helper\AvatarHelper;
+use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use Psr\Http\Message\StreamInterface;
 
@@ -26,9 +28,12 @@ use Psr\Http\Message\StreamInterface;
  * @property \Cake\I18n\FrozenTime $created_at
  * @property \Cake\I18n\FrozenTime|null $updated_at
  * @property \App\Model\Entity\Profile $profile
+ * @property-read array $url
  */
 class Avatar extends Entity
 {
+    protected $_virtual = ['url'];
+
     /**
      * The avatar data never needs to be served. it is stored in cache.
      *
@@ -51,6 +56,27 @@ class Avatar extends Entity
     protected $_accessible = [
         '*' => true,
     ];
+
+    /**
+     * Url virtual field implementation.
+     *
+     * @return array
+     */
+    protected function _getUrl()
+    {
+        $sizes = Configure::read('FileStorage.imageSizes.Avatar');
+        $avatarsPath = [];
+        // Add path for each available size.
+        foreach ($sizes as $size => $filters) {
+            $avatarsPath[$size] = AvatarHelper::getAvatarUrl([
+                'id' => $this->id,
+                'data' => $this->data,
+            ], $size);
+        }
+
+        // Transform original model to add paths.
+        return $avatarsPath;
+    }
 
     /**
      * Get data in string format.

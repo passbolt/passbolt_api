@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\EmailDigest\Utility\Mailer;
 
 use Cake\ORM\Entity;
-use Cake\Utility\Hash;
 
 class EmailDigest implements EmailDigestInterface
 {
@@ -37,56 +36,42 @@ class EmailDigest implements EmailDigestInterface
      */
     public const TPL_VAR_DIGEST_CONTENT = 'digest_content';
 
-    /**
-     * @var array
-     */
-    private $emailsData = [];
-
-    /**
-     * @var string
-     */
-    private $content;
-
-    /**
-     * @var string
-     */
-    private $recipient;
-
-    /**
-     * @var string
-     */
-    private $subject;
-
+    private array $emailsData = [];
+    private array $emailIds = [];
+    private string $content;
+    private string $recipient;
+    private string $subject;
     /**
      * @var string|null Template to use to compose the email
      */
-    private $template = null;
-
-    /**
-     * @var array
-     */
-    private $templateVars = [];
-
-    /**
-     * @var array
-     */
-    private $layoutVars = [];
+    private ?string $template = null;
+    private array $templateVars = [];
+    private array $layoutVars = [];
 
     /**
      * Return the list of ids of the emails part of the digest
      *
      * @return string[]
      */
-    public function getEmailIds()
+    public function getEmailIds(): array
     {
-        return Hash::extract($this->emailsData, '{n}.id');
+        return $this->emailIds;
     }
 
     /**
-     * @param \Cake\ORM\Entity $emailQueueEntity An instance of EmailQueue entity
-     * @return $this
+     * @inheritDoc
      */
-    public function addEmailData(Entity $emailQueueEntity)
+    public function setEmailIds(array $emailIds): self
+    {
+        $this->emailIds = $emailIds;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function addEmailData(Entity $emailQueueEntity): self
     {
         $this->emailsData[] = $emailQueueEntity;
 
@@ -94,9 +79,9 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * @return \Cake\ORM\Entity[]
+     * @inheritDoc
      */
-    public function getEmailsData()
+    public function getEmailsData(): array
     {
         return $this->emailsData;
     }
@@ -106,7 +91,7 @@ class EmailDigest implements EmailDigestInterface
      *
      * @return array
      */
-    public function getViewVars()
+    public function getViewVars(): array
     {
         $vars = $this->templateVars;
 
@@ -120,19 +105,17 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * @return string
+     * @inheritDoc
      */
-    public function getEmailFormat()
+    public function getEmailFormat(): string
     {
         return self::DEFAULT_FORMAT;
     }
 
     /**
-     * Return the path of the template file to use for this email
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->template ?? self::DEFAULT_TEMPLATE;
     }
@@ -140,18 +123,15 @@ class EmailDigest implements EmailDigestInterface
     /**
      * @return string
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
 
     /**
-     * Return the email recipient
-     *
-     * @param string $recipient Email Recipient of the digest, i.e: ada@passbolt.com
-     * @return $this
+     * @inheritDoc
      */
-    public function setEmailRecipient(string $recipient)
+    public function setEmailRecipient(string $recipient): self
     {
         $this->recipient = $recipient;
 
@@ -159,20 +139,17 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * Return the email recipient
-     *
-     * @return string
+     * @inheritDoc
      */
-    public function getEmailRecipient()
+    public function getEmailRecipient(): string
     {
         return $this->recipient;
     }
 
     /**
-     * @param string $subject Subject of the digest
-     * @return $this
+     * @inheritDoc
      */
-    public function setSubject(string $subject)
+    public function setSubject(string $subject): self
     {
         $this->subject = $subject;
 
@@ -184,18 +161,15 @@ class EmailDigest implements EmailDigestInterface
      *
      * @return string
      */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }
 
     /**
-     * Define the content of the email digest
-     *
-     * @param string $digestContent Content of the digest
-     * @return $this
+     * @inheritDoc
      */
-    public function setContent(string $digestContent)
+    public function setContent(string $digestContent): self
     {
         $this->content = $digestContent;
 
@@ -203,10 +177,9 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * @param string $template Template
-     * @return $this
+     * @inheritDoc
      */
-    public function setTemplate(string $template)
+    public function setTemplate(string $template): self
     {
         $this->template = $template;
 
@@ -214,13 +187,9 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * Add key/value pair to "body" variable available in email view
-     *
-     * @param string $name Name of the variable to add to be used with the template of the email
-     * @param mixed $value Value of the variable
-     * @return $this
+     * @inheritDoc
      */
-    public function addTemplateVar(string $name, $value)
+    public function addTemplateVar(string $name, $value): self
     {
         $this->templateVars[$name] = $value;
 
@@ -228,13 +197,9 @@ class EmailDigest implements EmailDigestInterface
     }
 
     /**
-     * Add variable available in email template
-     *
-     * @param string $name Name of the variable to add to be used with the layout of the email
-     * @param mixed $value Value of the variable
-     * @return $this
+     * @inheritDoc
      */
-    public function addLayoutVar(string $name, $value)
+    public function addLayoutVar(string $name, $value): self
     {
         $this->layoutVars[$name] = $value;
 

@@ -21,7 +21,7 @@ use Cake\Core\PluginCollection;
 use Cake\TestSuite\IntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
-use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
+use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class SolutionBootstrapperTestCase extends TestCase
@@ -39,7 +39,7 @@ abstract class SolutionBootstrapperTestCase extends TestCase
         parent::setUp();
         $this->app = $this->createApp();
         $this->clearPlugins();
-        DigestsPool::clearInstance();
+        DigestTemplateRegistry::clearInstance();
         EmailNotificationSettings::flushCache();
     }
 

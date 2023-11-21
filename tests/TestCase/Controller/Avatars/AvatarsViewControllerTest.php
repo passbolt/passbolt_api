@@ -111,6 +111,13 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
 
         $this->get('avatars/view/' . $avatar->id . '/' . $format . AvatarHelper::IMAGE_EXTENSION);
         $this->assertResponseEquals($expectedFileContent);
+
+        // Ensure that the virtual field is correctly constructed.
+        $virtualField = [
+            AvatarsConfigurationService::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar->toArray(), AvatarsConfigurationService::FORMAT_MEDIUM),
+            AvatarsConfigurationService::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar->toArray()),
+        ];
+        $this->assertSame($virtualField, $avatar->url);
     }
 
     /**
@@ -135,6 +142,13 @@ class AvatarsViewControllerTest extends AppIntegrationTestCase
 
         $this->get('avatars/view/' . $avatar->id . '/' . $format . AvatarHelper::IMAGE_EXTENSION);
         $this->assertResponseEquals($expectedFileContent);
+
+        // Ensure that the virtual field is correctly constructed.
+        $virtualField = [
+            AvatarsConfigurationService::FORMAT_MEDIUM => AvatarHelper::getAvatarUrl($avatar->toArray(), AvatarsConfigurationService::FORMAT_MEDIUM),
+            AvatarsConfigurationService::FORMAT_SMALL => AvatarHelper::getAvatarUrl($avatar->toArray()),
+        ];
+        $this->assertSame($virtualField, $avatar->url);
     }
 
     /**

@@ -21,13 +21,14 @@ if (PHP_SAPI === 'cli') {
 }
 $user = $body['user'];
 $count = $body['count'];
+$subject = $body['subject'];
 
 echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => new FrozenTime(),
-        'text' => __('Edited your membership in several groups')
+        'text' => $subject,
     ])
 ]);
 

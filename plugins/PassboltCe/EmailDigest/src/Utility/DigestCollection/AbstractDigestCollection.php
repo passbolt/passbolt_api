@@ -12,10 +12,10 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.13.0
+ * @since         4.5.0
  */
 
-namespace Passbolt\EmailDigest\Utility\Digest;
+namespace Passbolt\EmailDigest\Utility\DigestCollection;
 
 use Cake\ORM\Entity;
 
@@ -30,15 +30,15 @@ use Cake\ORM\Entity;
  *
  * @see EmailDigestInterface
  */
-interface DigestInterface
+abstract class AbstractDigestCollection
 {
     /**
-     * Add some email entities to digest.
+     * Add some email entities to digest collection
      *
-     * @param \Cake\ORM\Entity $emailQueueEntity An email entity to add to the digest
+     * @param \Cake\ORM\Entity $emailQueue An email entity to add to the digest collection
      * @return self
      */
-    public function addEmailEntity(Entity $emailQueueEntity): DigestInterface;
+    abstract public function addEmailEntity(Entity $emailQueue): self;
 
     /**
      * Return a list of emails. Even if the digest return one, the digest must be in an array.
@@ -46,13 +46,5 @@ interface DigestInterface
      *
      * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
      */
-    public function marshalEmails(): array;
-
-    /**
-     * Return a boolean indicating if the digest can handle the given email entity from email queue and marshal it into an email digest.
-     *
-     * @param \Cake\ORM\Entity $emailQueueEntity An instance of EmailDigest
-     * @return bool
-     */
-    public function canAddToDigest(Entity $emailQueueEntity): bool;
+    abstract public function marshalEmails(): array;
 }

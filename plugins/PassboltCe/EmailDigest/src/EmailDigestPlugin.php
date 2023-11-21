@@ -16,14 +16,16 @@ declare(strict_types=1);
  */
 namespace Passbolt\EmailDigest;
 
-use App\Notification\EmailDigest\DigestRegister\GroupDigests;
-use App\Notification\EmailDigest\DigestRegister\ResourceDigests;
+use App\Notification\DigestTemplate\GroupMembershipDigestTemplate;
+use App\Notification\DigestTemplate\GroupUserDeleteDigestTemplate;
+use App\Notification\DigestTemplate\ResourceChangesDigestTemplate;
+use App\Notification\DigestTemplate\ResourceShareDigestTemplate;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
-use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\EmailDigest\Command\PreviewCommand;
 use Passbolt\EmailDigest\Command\SenderCommand;
+use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 
 class EmailDigestPlugin extends BasePlugin
 {
@@ -34,12 +36,12 @@ class EmailDigestPlugin extends BasePlugin
     {
         parent::bootstrap($app);
 
-        if (PHP_SAPI === 'cli' || (Configure::read('debug') && Configure::read('passbolt.selenium.active'))) {
-            // Core email digests
-            $app->getEventManager()
-                ->on(new GroupDigests())
-                ->on(new ResourceDigests());
-        }
+        // Core email digests
+        DigestTemplateRegistry::getInstance()
+            ->addTemplate(new ResourceChangesDigestTemplate())
+            ->addTemplate(new ResourceShareDigestTemplate())
+            ->addTemplate(new GroupUserDeleteDigestTemplate())
+            ->addTemplate(new GroupMembershipDigestTemplate());
     }
 
     /**

@@ -599,15 +599,17 @@ class V340MigrateASCIIFieldsEncoding extends AbstractMigration
             ])
             ->save();
 
-        $this->table('user_agents')
-            ->changeColumn('id', 'uuid', [
-                'default' => null,
-                'limit' => null,
-                'null' => false,
-                'encoding' => 'ascii',
-                'collation' => 'ascii_general_ci'
-            ])
-            ->save();
+        if ($this->hasTable('user_agents')) {
+            $this->table('user_agents')
+                ->changeColumn('id', 'uuid', [
+                    'default' => null,
+                    'limit' => null,
+                    'null' => false,
+                    'encoding' => 'ascii',
+                    'collation' => 'ascii_general_ci'
+                ])
+                ->save();
+        }
 
         $this->table('users')
             ->changeColumn('id', 'uuid', [
