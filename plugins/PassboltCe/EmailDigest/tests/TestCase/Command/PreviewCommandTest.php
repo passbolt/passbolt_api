@@ -71,6 +71,7 @@ class PreviewCommandTest extends AppIntegrationTestCase
      */
     public function testPreviewCommand_Without_Body(): void
     {
+        /** @var array $sender */
         $sender = Mailer::getConfig('default')['from'];
         $senderEmail = array_keys($sender)[0];
         $senderName = $sender[$senderEmail];
@@ -117,6 +118,7 @@ class PreviewCommandTest extends AppIntegrationTestCase
     {
         $this->loadPlugins(['Passbolt/Locale' => []]);
         $frenchLocale = 'fr-FR';
+        /** @var \App\Model\Entity\User $frenchSpeakingUser */
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
         EmailQueueFactory::make()->listeningToBeforeSave()->persist();
@@ -143,6 +145,7 @@ class PreviewCommandTest extends AppIntegrationTestCase
     {
         (new AvatarsConfigurationService())->loadConfiguration();
         $nResourcesAdded = 15;
+        /** @var \App\Model\Entity\User $operator */
         $operator = UserFactory::make()->withAvatar()->persist();
         $recipient = 'john@test.test';
         EmailQueueFactory::make([
@@ -160,6 +163,6 @@ class PreviewCommandTest extends AppIntegrationTestCase
         $this->assertMailCount(0); // Make sure preview doesn't send emails
         $this->assertOutputContains('From: No reply <no-reply@test.test>');
         $this->assertOutputContains('To: john@test.test');
-        $this->assertOutputContains('Subject: Multiple passwords have been changed in passbolt');
+        $this->assertOutputContains('Subject: ' . $operator->profile->full_name . ' has made changes on several resources');
     }
 }

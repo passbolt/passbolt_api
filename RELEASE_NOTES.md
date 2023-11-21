@@ -1,37 +1,18 @@
-Release song: https://www.youtube.com/watch?v=6Ejga4kJUts
+Release song: https://youtu.be/RbmS3tQJ7Os?si=lp8QM5B-R65C8Jek
 
-Version 4.4 of the Community Edition has launched with new capabilities and improvements.
+Passbolt v4.4.1 is a maintenance release aimed at addressing issues reported by the community, which were introduced in the previous release.
 
-With this release, users are able to manage TOTPs directly from the browser, providing an extended TOTP experience across all their devices. They can now be created, deleted, organised and shared with others just like any other resource type.
+The update addresses an issue concerning user roles in email notifications. Previously, administrators received notifications when another administrator was deleted. However, the deletion of any user, regardless of their administrator status, was incorrectly reported as an administrator deletion. This issue has been resolved.
 
-Another highlight of this release, administrators now have the ability to suspend/unsuspend users. This new feature will offer administrators with more control over access management of their instance. By example, they will be able to prevent access to the passbolt instance for users in temporary leave, therefore enforce company policies.
+We extend our gratitude to the community members who reported these issues. Your support and patience are greatly appreciated.
 
-And that's not all – a number of fixes and enhancements have been implemented to improve user experience. Among them, notification emails are now aggregated in certain cases, including limiting emails when a user imports a large amount of passwords.
-
-If you’re a system operator, please note that using older PHP versions will now trigger a healthcheck warning. Support for PHP 7.4 and 8.0 will be discontinued soon. Admins are encouraged to upgrade to PHP 8.1 or higher and use the latest version of the passbolt API.
-
-Get the most out of passbolt – upgrade to version 4.4. Thanks for continuing to support passbolt and for being part of the community!
-
-
-## [4.4.0] - 2023-11-07
-### Added
-- PB-27773 As an administrator I can deny access to the mobile setup screen with RBAC
-- PB-27951 As system operator I should be warned in the healthcheck when using PHP < 8.1, as support for PHP versions 7.4 and 8.0 will soon be removed
-
+## [4.4.1] - 2023-11-20
 ### Improved
-- PB-27948 Guest identification by their username should be case-insensitive, unless specified in configuration
-- PB-27957 Send notifications to all administrators when an administrator is deleted
-- PB-27941 Send notifications to administrators when an administrator loses its administrator role
-- PB-28171 Enable the email digest by default
-
-### Security
-- PB-28274 Fixes an XSS Security issue with mail content sanitization
+- PB-28521 Alter the gpgkeys.uid column length to 769 to enable the synchronisation of user with very long names
 
 ### Fixed
-- PB-25477 As an administrator, I should be able to recreate a user with an email that exists in the db via the command line
-- PB-27799 As an administrator installing passbolt on PostgreSQL, the database encoding should be set to utf-8
-- PB-27857 Fix help site release notes automation by adding flavour on help site release notes merge request
+- PB-27957 As an administrator I should be notified that an administrator was deleted only when an administrator has been deleted, and not a regular user
 
 ### Maintenance
-- PB-27932 Improve code static by using cakedccakephp/phpstan
-- PB-28079 Remove deprecation warnings from the test suite
+- PB-27927 Remove unused user_agents table
+- PB-28616 Refactor the email digest plugin code for easier usage and maintainability

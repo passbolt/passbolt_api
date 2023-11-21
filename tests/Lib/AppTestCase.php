@@ -35,8 +35,7 @@ use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\ORM\FactoryTableRegistry;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\EmailDigest\Utility\Digest\DigestsPool;
-use Passbolt\EmailDigest\Utility\Factory\DigestFactory;
+use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 
 abstract class AppTestCase extends TestCase
@@ -77,8 +76,7 @@ abstract class AppTestCase extends TestCase
      */
     public function tearDown(): void
     {
-        DigestsPool::clearInstance();
-        DigestFactory::clearInstance();
+        DigestTemplateRegistry::clearInstance();
         EmailNotificationSettings::flushCache();
         $this->clearPlugins();
         FactoryTableRegistry::getTableLocator()->clear();
