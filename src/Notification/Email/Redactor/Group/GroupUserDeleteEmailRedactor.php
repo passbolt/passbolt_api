@@ -25,6 +25,7 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Groups\GroupsUpdateService;
+use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -127,7 +128,11 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($admin, $group) {
-                return __('{0} removed you from the group {1}', $admin->profile->first_name, $group->name);
+                return __(
+                    '{0} removed you from the group {1}',
+                    Purifier::clean($admin['profile']['first_name']),
+                    Purifier::clean($group['name'])
+                );
             }
         );
         $data = ['body' => ['admin' => $admin, 'group' => $group], 'title' => $subject];

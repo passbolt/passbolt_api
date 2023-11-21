@@ -57,12 +57,12 @@ class PreviewEmailBatchServiceTest extends AppTestCase
     public function testPreviewNextEmailBatch(): void
     {
         $numberOfEmails = 3;
-        $limit = $numberOfEmails - 1;
-        EmailQueueFactory::make($numberOfEmails)->persist();
+        /** @var \Cake\ORM\Entity[] $emails */
+        $emails = EmailQueueFactory::make($numberOfEmails)->getEntities();
 
-        $result = $this->previewEmailBatchService->previewNextEmailsBatch($limit);
+        $result = $this->previewEmailBatchService->previewNextEmailsBatch($emails);
 
-        $this->assertSame($limit, count($result));
+        $this->assertSame($numberOfEmails, count($result));
         foreach ($result as $email) {
             $this->assertNotEmpty($email->getHeaders());
             $this->assertNotEmpty($email->getContent());
@@ -74,15 +74,16 @@ class PreviewEmailBatchServiceTest extends AppTestCase
         $this->loadPlugins(['Passbolt/Locale' => []]);
 
         $frenchLocale = 'fr-FR';
+        /** @var \App\Model\Entity\User $frenchSpeakingUser */
         $frenchSpeakingUser = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
+        $emails[] = EmailQueueFactory::make(['created' => Chronos::now()->subDays(2)])->persist();
+        $emails[] = EmailQueueFactory::make(['created' => Chronos::now()->subDays(1)])
             ->setRecipient($frenchSpeakingUser->username)
             ->persist();
-        EmailQueueFactory::make(['created' => Chronos::now()])->persist();
+        $emails[] = EmailQueueFactory::make(['created' => Chronos::now()])->persist();
 
-        $emailBatch = $this->previewEmailBatchService->previewNextEmailsBatch();
+        $emailBatch = $this->previewEmailBatchService->previewNextEmailsBatch($emails);
         $emailInEnglish1 = $emailBatch[0];
         $emailInFrench = $emailBatch[1];
         $emailInEnglish2 = $emailBatch[2];

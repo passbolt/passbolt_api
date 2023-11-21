@@ -230,4 +230,14 @@ class UserFactory extends CakephpBaseFactory
             'data' => file_get_contents($filename),
         ]);
     }
+
+    /**
+     * @return UserFactory this
+     */
+    public function withAvatarNull(): self
+    {
+        return $this->with('Profiles.Avatars', [
+            'data' => null,
+        ]);
+    }
 }
