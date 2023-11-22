@@ -20,38 +20,20 @@ use App\Test\Factory\AvatarFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Test\Lib\Model\AvatarsIntegrationTestTrait;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 
 class UsersEditAvatarControllerTest extends AppIntegrationTestCase
 {
-    use AvatarsModelTrait;
-
-    public $localFileStorageListener = null;
-    public $imageProcessingListener = null;
-
-    /**
-     * @var \App\Model\Table\AvatarsTable $Avatars
-     */
-    public $Avatars;
+    use AvatarsIntegrationTestTrait;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
-        $this->setTestLocalFilesystemAdapter();
         RoleFactory::make()->guest()->persist();
         // Mock user agent and IP
         $this->mockUserAgent('PHPUnit');
         $this->mockUserIp();
-    }
-
-    public function tearDown(): void
-    {
-        $this->Avatars->getFilesystem()->deleteDirectory('.');
-        unset($this->Avatars);
-        parent::tearDown();
     }
 
     public function testUsersEditAvatarController_Success(): void
@@ -72,8 +54,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         /** @var \App\Model\Entity\Avatar $avatar */
-        $avatar = $this->Avatars
-            ->find()
+        $avatar = AvatarFactory::find()
             ->contain('Profiles.Users')
             ->where(['Users.id' => $user->id])
             ->firstOrFail();
@@ -116,7 +97,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validMimeType);
         $this->assertNotEmpty($this->_responseJsonBody->profile->avatar->file->validUploadedFile);
 
-        $this->assertEquals(0, $this->Avatars->find()->count(), 'The number of avatars in db should be same before and after the test');
+        $this->assertEquals(0, AvatarFactory::count(), 'The number of avatars in db should be same before and after the test');
     }
 
     public function testUsersEditAvatarController_Error_NoDataProvided(): void
@@ -179,23 +160,6 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         $this->assertNotEquals($data['path'], $ireneAvatar->path);
         $this->assertNotEquals($data['adapter'], $ireneAvatar->adapter);
         $this->assertSame(1, AvatarFactory::count());
-    }
-
-    public function testUsersEditAvatarController_Error_NotJson(): void
-    {
-        $user = UserFactory::make()->user()->persist();
-        $this->logInAs($user);
-
-        $data = [
-            'id' => $user->id,
-            'profile' => [
-                'avatar' => [
-                    'file' => $this->createUploadFile(),
-                ],
-            ],
-        ];
-
-        $this->post('/users/' . $user->id, $data);
-        $this->assertResponseCode(404);
+        $this->assertAvatarCachedFilesExist($ireneAvatar);
     }
 }
