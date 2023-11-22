@@ -90,7 +90,6 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         }
         if ($this->isRedactorEnabled('send.group.user.add')) {
             $redactors[] = new GroupUserAddEmailRedactor();
-            $redactors[] = new GroupUserAddRequestEmailRedactor();
         }
         if ($this->isRedactorEnabled('send.group.delete')) {
             $redactors[] = new GroupDeleteEmailRedactor();
@@ -104,6 +103,9 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
         }
         if ($this->isRedactorEnabled('send.group.manager.update')) {
             $redactors[] = new GroupUpdateAdminSummaryEmailRedactor();
+        }
+        if ($this->isRedactorEnabled('send.group.manager.requestAddUser')) {
+            $redactors[] = new GroupUserAddRequestEmailRedactor();
         }
         $logEnabled = Configure::read('passbolt.plugins.log.enabled');
         if ($this->isRedactorEnabled('send.admin.user.setup.completed') && $logEnabled) {
