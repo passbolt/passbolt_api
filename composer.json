@@ -171,7 +171,7 @@
         "cs-check": "phpcs -d memory_limit=512M --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "cs-fix": "phpcbf -d memory_limit=512M --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "install-dev": [
-            "@composer install --dev",
+            "@composer install",
             "npm install",
             "./node_modules/.bin/grunt appjs-update",
             "./node_modules/.bin/grunt styleguide-update"
