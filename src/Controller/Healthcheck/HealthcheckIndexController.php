@@ -20,6 +20,7 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
+use Cake\Http\Client;
 use Cake\Http\Exception\ForbiddenException;
 
 class HealthcheckIndexController extends AppController
@@ -39,9 +40,10 @@ class HealthcheckIndexController extends AppController
      * Display information about the passbolt instance
      * It is only available in debug mode and for logged in administrators
      *
+     * @param ?\Cake\Http\Client $client client used to query the healthcheck endpoint
      * @return void
      */
-    public function index()
+    public function index(?Client $client)
     {
         // Allow access only in debug mode or if logged in as admin
         if (Configure::read('debug') == 0) {
@@ -53,7 +55,7 @@ class HealthcheckIndexController extends AppController
             ->setLayout('login')
             ->setTemplatePath('Healthcheck')
             ->setTemplate('index');
-        $checks = Healthchecks::all();
+        $checks = Healthchecks::all($client);
         $checks = array_merge($this->__webChecks(), $checks);
         $this->success(__('All checks ran successfully!'), $checks);
     }

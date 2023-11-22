@@ -35,6 +35,7 @@ use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Service\Cookie\DefaultSecureCookieService;
+use App\ServiceProvider\CommandServiceProvider;
 use App\ServiceProvider\SetupServiceProvider;
 use App\ServiceProvider\TestEmailServiceProvider;
 use App\ServiceProvider\UserServiceProvider;
@@ -46,6 +47,7 @@ use Cake\Core\ContainerInterface;
 use Cake\Core\Exception\MissingPluginException;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
+use Cake\Http\Client;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
@@ -281,6 +283,10 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->addServiceProvider(new TestEmailServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
+        $container->add(Client::class)->setConcrete(null);
+        if (PHP_SAPI === 'cli') {
+            $container->addServiceProvider(new CommandServiceProvider());
+        }
     }
 
     /**

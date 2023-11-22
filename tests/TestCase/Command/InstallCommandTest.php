@@ -20,8 +20,10 @@ use App\Command\InstallCommand;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Http\Client;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Faker\Factory;
@@ -32,6 +34,7 @@ class InstallCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use DummySubscriptionTrait;
+    use HealthcheckRequestTestTrait;
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
     use PassboltCommandTestTrait;
@@ -51,6 +54,9 @@ class InstallCommandTest extends AppTestCase
         $this->persistValidSubscription();
         $this->setUpPathAndPublicSubscriptionKey();
         $this->loadNotificationSettings();
+        $this->mockService(Client::class, function () {
+            return $this->getMockedHealthcheckStatusRequest();
+        });
     }
 
     public function tearDown(): void

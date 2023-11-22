@@ -18,39 +18,53 @@ declare(strict_types=1);
 namespace App\Test\Lib\Model;
 
 use App\Model\Entity\Avatar;
-use App\Service\Avatars\AvatarsCacheService;
 use App\Service\Avatars\AvatarsConfigurationService;
-use App\Test\Factory\AvatarFactory;
 use App\Test\Factory\ProfileFactory;
+use Cake\Core\TestSuite\ContainerStubTrait;
 use Cake\ORM\TableRegistry;
-use Laminas\Diactoros\Stream;
 use Laminas\Diactoros\UploadedFile;
+use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 
 /**
  * @property \App\Model\Table\AvatarsTable $Avatars
  */
-trait AvatarsModelTrait
+trait AvatarsIntegrationTestTrait
 {
+    use ContainerStubTrait;
+
+    private string $cachedFileLocation;
+    private FilesystemAdapter $filesystemAdapter;
+
     /**
-     * Asserts that an object has all the attributes an avatar should have.
+     * Mocks the file system adapter to store avatars in a temporary cache
+     * unique for each test in order to run parallel testing
      *
-     * @param object $avatar
+     * @before
+     * @return void
      */
-    protected function assertAvatarAttributes($avatar)
+    protected function mockAvatarAdapter(): void
     {
-        $this->assertObjectHasAttributes(['url'], $avatar);
-        $this->assertObjectHasAttributes(['small', 'medium'], $avatar->url);
+        $this->cachedFileLocation = TMP . 'tests' . DS . 'avatars' . rand(0, 99999) . DS;
+        $this->filesystemAdapter = new LocalFilesystemAdapter(
+            $this->cachedFileLocation
+        );
+        $this->mockService(FilesystemAdapter::class, function () {
+            return $this->filesystemAdapter;
+        });
     }
 
     /**
-     * Asserts that an object has the urls required.
+     * Clean any avatars stored in the temporary cache
      *
-     * @param object $avatar
+     * @after
+     * @return void
      */
-    protected function assertAvatarUrlAttributes($avatar)
+    protected function cleanAvatarCache(): void
     {
-        $this->assertObjectHasAttributes(['url'], $avatar);
+        $this->filesystemAdapter->deleteDirectory('');
+        unset($this->filesystemAdapter);
+        unset($this->cachedFileLocation);
     }
 
     /**
@@ -67,7 +81,7 @@ trait AvatarsModelTrait
             'profile_id' => $profileId,
         ];
 
-        /** @var AvatarsTable $AvatarsTable */
+        /** @var \App\Model\Table\AvatarsTable $AvatarsTable */
         $AvatarsTable = TableRegistry::getTableLocator()->get('Avatars');
         if ($avatar) {
             $avatar = $AvatarsTable->patchEntity($avatar, $data);
@@ -75,7 +89,10 @@ trait AvatarsModelTrait
             $avatar = $AvatarsTable->newEntity($data);
         }
 
-        return $AvatarsTable->saveOrFail($avatar);
+        return $AvatarsTable->saveOrFail(
+            $avatar,
+            [$AvatarsTable::FILESYSTEM_ADAPTER_OPTION => $this->filesystemAdapter]
+        );
     }
 
     /**
@@ -97,25 +114,19 @@ trait AvatarsModelTrait
         );
     }
 
-    private function assertAvatarCachedFilesExist(Avatar $avatar)
+    private function assertAvatarCachedFilesExist(Avatar $avatar, $exists = true)
     {
-        $service = new AvatarsCacheService($this->Avatars);
-        $this->assertInstanceOf(Stream::class, $service->readSteamFromId($avatar->id, AvatarsConfigurationService::FORMAT_SMALL));
-        $this->assertInstanceOf(Stream::class, $service->readSteamFromId($avatar->id, AvatarsConfigurationService::FORMAT_MEDIUM));
-        $this->assertInstanceOf(Stream::class, $service->readSteamFromId($avatar->id, 'whateverFormatWillReturnSmall'));
-        $this->assertTextEndsWith('.jpg', $service->getAvatarFileName($avatar));
-        $this->assertTextEndsWith('.jpg', $service->getAvatarFileName($avatar, 'medium'));
-    }
-
-    /**
-     * Set the avatar directory to tmp/tests/avatars
-     * The file system of both the regular table and avatar factory
-     * table need to be set
-     */
-    protected function setTestLocalFilesystemAdapter(): void
-    {
-        $testFileSystem = new LocalFilesystemAdapter(TMP . 'tests' . DS . 'avatars');
-        TableRegistry::getTableLocator()->get('Avatars')->setFilesystem($testFileSystem);
-        AvatarFactory::make()->getTable()->setFilesystem($testFileSystem);
+        $this->assertSame(
+            $exists,
+            $this
+                ->filesystemAdapter
+                ->fileExists($avatar->id . DS . AvatarsConfigurationService::FORMAT_SMALL . '.jpg')
+        );
+        $this->assertSame(
+            $exists,
+            $this
+                ->filesystemAdapter
+                ->fileExists($avatar->id . DS . AvatarsConfigurationService::FORMAT_MEDIUM . '.jpg')
+        );
     }
 }

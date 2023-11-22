@@ -9,6 +9,7 @@ use App\View\Helper\AvatarHelper;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\Log\Log;
+use League\Flysystem\FilesystemAdapter;
 
 /**
  * AvatarsViewController
@@ -32,19 +33,20 @@ class AvatarsViewController extends AppController
      *
      * @param string $id Avatar id.
      * @param string $format Avatar format.
+     * @param \League\Flysystem\FilesystemAdapter $filesystemAdapter file system adapter to read the avatars
      * @return \Cake\Http\Response
      */
-    public function view(string $id, string $format): Response
-    {
-        /** @var \App\Model\Table\AvatarsTable $avatarsTable */
-        $avatarsTable = $this->fetchTable('Avatars');
-
+    public function view(
+        string $id,
+        string $format,
+        FilesystemAdapter $filesystemAdapter
+    ): Response {
         $formatIsValid = $this->validateImageFormat($format);
         if ($formatIsValid === false) {
             $id = null;
         }
 
-        $service = new AvatarsCacheService($avatarsTable);
+        $service = new AvatarsCacheService($filesystemAdapter);
 
         try {
             $stream = $service->readSteamFromId($id, $format);

@@ -18,7 +18,6 @@ namespace Passbolt\Mobile\Test\TestCase\Controller\Transfers;
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Utility\UuidFactory;
@@ -26,7 +25,6 @@ use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;
 
 class TransfersViewControllerTest extends AppIntegrationTestCase
 {
-    use AvatarsModelTrait;
     use ProfilesModelTrait;
     use TransfersModelTrait;
     use UsersModelTrait;
@@ -79,7 +77,7 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
         $this->assertTransferAttributes($this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->user);
         $this->assertProfileAttributes($this->_responseJsonBody->user->profile);
-        $this->assertAvatarAttributes($this->_responseJsonBody->user->profile->avatar);
+        $this->assertObjectHasAttributes(['small', 'medium'], $this->_responseJsonBody->user->profile->avatar->url);
     }
 
     public function testMobileTransfersViewController_ErrorNotFound()
