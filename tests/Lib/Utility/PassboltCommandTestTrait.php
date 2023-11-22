@@ -21,7 +21,7 @@ trait PassboltCommandTestTrait
     public function assertCommandCannotBeRunAsRootUser(string $commandClassName)
     {
         /** @var \App\Command\PassboltCommand $cmd */
-        $cmd = new $commandClassName();
+        $cmd = new $commandClassName(null);
 
         $cmd::$isUserRoot = true;
         $this->exec($cmd::defaultName());
