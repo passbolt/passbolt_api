@@ -20,7 +20,7 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
-class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
+class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
@@ -30,7 +30,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // Success with currect personal and shared tags for resource with direct and group permissions
 
-    public function testTagsResourcesIndexContainSuccess()
+    public function testTagsResourcesIndexControllerContainSuccess()
     {
         $this->authenticateAs('ada');
         $expected = [
@@ -59,7 +59,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // Success on filter by personal tag without contain
 
-    public function testTagsResourcesIndexFilterSuccess()
+    public function testTagsResourcesIndexControllerFilterSuccess()
     {
         $this->authenticateAs('ada');
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
@@ -76,7 +76,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // Success on filter by personal tag without contain on a tag used by someone else
 
-    public function testTagsResourcesIndexFilterSuccessPersonalTagUsedBySomeoneElse()
+    public function testTagsResourcesIndexControllerFilterSuccessPersonalTagUsedBySomeoneElse()
     {
         $this->authenticateAs('betty');
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=alpha');
@@ -89,7 +89,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // Success on filter by personal tag with contain
 
-    public function testTagsResourcesIndexFilterContainSuccess()
+    public function testTagsResourcesIndexControllerFilterContainSuccess()
     {
         $this->authenticateAs('ada');
         $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tag]=alpha');
@@ -106,7 +106,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // Success on filter by shared tag with contain
 
-    public function testTagsResourcesIndexFilterSharedTagSuccess()
+    public function testTagsResourcesIndexControllerFilterSharedTagSuccess()
     {
         $this->authenticateAs('ada');
         $this->getJson('/resources.json?api-version=2&contain[tag]=1&filter[has-tag]=%23bravo');
@@ -119,7 +119,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // Success with empty result set is returned when filtering on a tag that does not exist
 
-    public function testTagsResourcesIndexFilterNonExistingTagEmptySuccess()
+    public function testTagsResourcesIndexControllerFilterNonExistingTagEmptySuccess()
     {
         $this->authenticateAs('ada');
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=परदेशीपरदेशी');
@@ -130,7 +130,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // Success with tag in non latin character
 
-    public function testTagsResourcesIndexFilterExistingUtf8TagSuccess()
+    public function testTagsResourcesIndexControllerFilterExistingUtf8TagSuccess()
     {
         $this->authenticateAs('ada');
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=परदेशी-परदेशी');
@@ -141,7 +141,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // Success with empty result set is returned when filtering on a tag I do not have resource for
 
-    public function testTagsResourcesIndexFilterNotMyTagEmptySuccess()
+    public function testTagsResourcesIndexControllerFilterNotMyTagEmptySuccess()
     {
         $this->authenticateAs('betty');
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=fox-trot');
@@ -152,7 +152,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
 
     // An error message should be shown if the value in the tag filter is empty
 
-    public function testTagsResourcesIndexFilterEmptyError()
+    public function testTagsResourcesIndexControllerFilterEmptyError()
     {
         $this->authenticateAs('betty');
         $this->getJson('/resources.json?api-version=2&filter[has-tag]=&contain[tag]=');
@@ -162,7 +162,7 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
     }
 
     // An error message should be shown if the tag in the tag filter is too long
-    public function testTagsResourcesIndexFilterTooLongError()
+    public function testTagsResourcesIndexControllerFilterTooLongError()
     {
         $this->authenticateAs('betty');
         $tag = bin2hex(openssl_random_pseudo_bytes(256));
