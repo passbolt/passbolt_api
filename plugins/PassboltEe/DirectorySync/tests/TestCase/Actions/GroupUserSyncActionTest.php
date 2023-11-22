@@ -44,9 +44,11 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->initAction();
+        // Enable email notifications
         $this->loadNotificationSettings();
-        $this->setEmailNotificationSetting('send.group.user.add', true);
+        $this->setEmailNotificationSetting('send.group.manager.requestAddUser', true);
         EventManager::instance()->on(new CoreEmailRedactorPool());
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
         // Init CommandBootstrap to handle email notifications.
