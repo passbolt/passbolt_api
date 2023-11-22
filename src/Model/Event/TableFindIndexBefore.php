@@ -92,9 +92,9 @@ class TableFindIndexBefore extends Event
      * @param \Cake\ORM\Query $query Query
      * @param \App\Model\Table\Dto\FindIndexOptions $options Options
      * @param \Cake\ORM\Table $table Table
-     * @return self
+     * @return \App\Model\Event\TableFindIndexBefore
      */
-    public static function create(Query $query, FindIndexOptions $options, Table $table): self
+    public static function create(Query $query, FindIndexOptions $options, Table $table)
     {
         return new static(static::EVENT_NAME, $table, [
             'query' => $query,
