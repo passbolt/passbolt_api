@@ -164,7 +164,8 @@ return [
                     'manager' => [
                         // Notify managers when group membership changes.
                         'update' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
-                    ]
+                        'requestAddUser' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_REQUEST_ADD_USER', true), FILTER_VALIDATE_BOOLEAN),
+                    ],
                 ],
                 'folder' => [
                     'create' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_CREATE', false), FILTER_VALIDATE_BOOLEAN),
