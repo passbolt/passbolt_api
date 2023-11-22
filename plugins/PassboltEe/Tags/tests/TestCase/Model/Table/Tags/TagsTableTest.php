@@ -22,7 +22,6 @@ use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Tags\Model\Table\TagsTable;
-use Passbolt\Tags\TagsPlugin;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
@@ -143,17 +142,16 @@ class TagsTableTest extends TagTestCase
         $this->assertSame(2, $tags->count());
     }
 
-    public function hydrateQuery(): array
+    public function hydrateQueryProvider(): array
     {
         return [[true], [false]];
     }
 
     /**
-     * @dataProvider hydrateQuery
+     * @dataProvider hydrateQueryProvider
      */
     public function testTagsTable_decorateForeignFind(bool $hydrateQuery)
     {
-        $this->loadPlugins([TagsPlugin::class => []]);
         $user = UserFactory::make()->persist();
         $userId = $user->get('id');
         $resource = ResourceFactory::make()->persist();
