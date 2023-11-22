@@ -52,6 +52,7 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
             ->addField('send_group_user_delete', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_user_update', ['type' => 'boolean', 'default' => true])
             ->addField('send_group_manager_update', ['type' => 'boolean', 'default' => true])
+            ->addField('send_group_manager_requestAddUser', ['type' => 'boolean', 'default' => true])
             ->addField('send_password_create', ['type' => 'boolean', 'default' => false])
             ->addField('send_password_share', ['type' => 'boolean', 'default' => true])
             ->addField('send_password_update', ['type' => 'boolean', 'default' => true])
@@ -92,6 +93,10 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
             ->boolean('send_group_user_delete', __('The send on group user deleted setting should be a boolean.'))
             ->boolean('send_group_user_update', __('The send on group user updated setting should be a boolean.'))
             ->boolean('send_group_manager_update', __('The send on group manager updated setting should be a boolean.'))
+            ->boolean(
+                'send_group_manager_requestAddUser',
+                __('The send on group manager request add user should be a boolean.')
+            )
             ->boolean('send_password_create', __('The send on password created setting should be a boolean.'))
             ->boolean('send_password_share', __('The send on password shared setting should be a boolean.'))
             ->boolean('send_password_update', __('The send on password updated setting should be a boolean.'))
