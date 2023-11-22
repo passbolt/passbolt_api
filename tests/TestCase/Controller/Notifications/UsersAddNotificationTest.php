@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Notifications;
 
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
@@ -56,20 +57,39 @@ class UsersAddNotificationTest extends AppIntegrationTestCase
 
         RoleFactory::make()->guest()->persist();
         $role = RoleFactory::make()->user()->persist();
-        $admin = UserFactory::make()->admin()->active()->persist();
+        $admin = UserFactory::make()
+            ->admin()
+            ->active()
+            ->with('Profiles', [
+                'first_name' => '<Steve>',
+                'last_name' => 'Doe',
+            ])
+            ->persist();
 
+        $firstName = 'John\'s';
+        $lastName = 'O\'Connor';
+        $username = 'new@passbolt.com';
         $this->logInAs($admin);
         $this->postJson('/users.json', [
-            'username' => 'new.user@passbolt.com',
+            'username' => $username,
             'role_id' => $role->id,
             'profile' => [
-                'first_name' => 'new',
-                'last_name' => 'user',
+                'first_name' => $firstName,
+                'last_name' => $lastName,
             ],
         ]);
         $this->assertResponseSuccess();
+        $userId = $this->_responseJsonBody->id;
 
         // check email notification
-        $this->assertEmailInBatchContains('just created an account for you', 'new.user@passbolt.com');
+        $this->assertEmailInBatchContains(
+            [
+                $admin->profile->first_name . ' just created an account for you',
+                $admin->profile->first_name . ' just invited you to join passbolt',
+                'Welcome ' . $firstName,
+                '/setup/start/' . $userId . '/' . AuthenticationTokenFactory::firstOrFail()->token,
+            ],
+            $username
+        );
     }
 }
