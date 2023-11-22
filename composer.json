@@ -108,7 +108,8 @@
         "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
         "cakephp/localized": "4.0.0",
         "vimeo/psalm": "^5.0.0",
-        "cakedc/cakephp-phpstan": "^2.0"
+        "cakedc/cakephp-phpstan": "^2.0",
+        "johnkary/phpunit-speedtrap": "^4.0"
     },
     "autoload": {
         "psr-4": {
