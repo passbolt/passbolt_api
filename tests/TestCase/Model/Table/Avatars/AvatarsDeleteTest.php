@@ -17,15 +17,17 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Avatars;
 
+use App\Model\Entity\Avatar;
+use App\Model\Table\AvatarsTable;
 use App\Test\Factory\AvatarFactory;
-use App\Test\Factory\UserFactory;
-use App\Utility\UuidFactory;
+use App\Test\Lib\Model\AvatarsIntegrationTestTrait;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
-class AvatarsCleanupTest extends TestCase
+class AvatarsDeleteTest extends TestCase
 {
+    use AvatarsIntegrationTestTrait;
     use TruncateDirtyTables;
 
     /**
@@ -55,47 +57,29 @@ class AvatarsCleanupTest extends TestCase
     public function tearDown(): void
     {
         unset($this->Avatars);
-
         parent::tearDown();
     }
 
-    public function hardDelete(): array
+    public function testAvatarsDelete_Should_Clean_Filesystem()
     {
-        return [[false], [true]];
+        $avatar = $this->createAvatar();
+        $this->assertAvatarCachedFilesExist($avatar);
+
+        $this->Avatars->delete($avatar, [AvatarsTable::FILESYSTEM_ADAPTER_OPTION => $this->filesystemAdapter]);
+        $this->assertSame(0, AvatarFactory::count());
+        $this->assertAvatarCachedFilesExist($avatar, false);
     }
 
-    /**
-     * @dataProvider hardDelete
-     */
-    public function testAvatarsCleanupDeletedUsers(bool $hardDelete)
+    public function testAvatarsDelete_Should_Clean_Orphan_After_Saving_An_Avatar()
     {
-        // Create avatar with non deleted user
-        UserFactory::make(1)->with('Profiles.Avatars')->persist();
-        // Create avatar with deleted user - Soft
-        UserFactory::make(2)->with('Profiles.Avatars')->deleted()->persist();
-        // Create avatar with no user - Hard
-        AvatarFactory::make(3)->withProfile()->persist();
+        AvatarFactory::make()->setField('data', null)->persist();
+        $avatarOriginal = $this->createAvatar();
+        $this->assertAvatarCachedFilesExist($avatarOriginal);
 
-        if ($hardDelete) {
-            $output = $this->Avatars->cleanupHardDeletedUsers();
-            $expectedOutput = 3;
-        } else {
-            $output = $this->Avatars->cleanupSoftDeletedUsers();
-            $expectedOutput = 2;
-        }
-        $this->assertSame($expectedOutput, $output);
-        $this->assertSame(6 - $expectedOutput, AvatarFactory::count());
-    }
+        $avatarUpdated = $this->createAvatar(new Avatar(['profile_id' => $avatarOriginal->profile_id]));
 
-    public function testAvatarsCleanupDeletedFavorites()
-    {
-        // Create avatar with profile
-        AvatarFactory::make(1)->withProfile()->persist();
-        // Create avatar with no profile
-        AvatarFactory::make(2)->patchData(['profile_id' => UuidFactory::uuid('foo')])->persist();
-
-        $output = $this->Avatars->cleanupHardDeletedProfiles();
-        $this->assertSame(2, $output);
         $this->assertSame(1, AvatarFactory::count());
+        $this->assertAvatarCachedFilesExist($avatarOriginal, false);
+        $this->assertAvatarCachedFilesExist($avatarUpdated, true);
     }
 }

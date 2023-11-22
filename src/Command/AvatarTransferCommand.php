@@ -23,6 +23,9 @@ use Cake\Console\ConsoleOptionParser;
 use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 
+/**
+ * @deprecated to be removed in v5.0
+ */
 class AvatarTransferCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;

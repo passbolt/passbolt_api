@@ -2,7 +2,7 @@
 ## Prerequisite
 Make sure you have the developement dependencies install.
 ```
-composer install --dev
+composer install
 ```
 
 ## How do I run the unit tests
