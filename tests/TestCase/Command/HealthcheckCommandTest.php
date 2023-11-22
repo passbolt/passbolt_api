@@ -145,7 +145,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->setSelfRegistrationSettingsData();
         Configure::write(EmailValidationRule::MX_CHECK_KEY, false);
         Configure::write('passbolt.js.build', 'test');
-        Configure::write('passbolt.email.send', 'false');
+        Configure::write('passbolt.email.send.comment.add', false);
 
         $this->exec('passbolt healthcheck -d test --application');
 
