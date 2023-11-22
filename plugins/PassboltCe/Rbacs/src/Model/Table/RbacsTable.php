@@ -22,6 +22,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Rbacs\Model\Entity\Rbac;
+use Passbolt\Rbacs\Model\Rule\IsControlFunctionAllowedRule;
 
 /**
  * Rbacs Model
@@ -42,7 +43,6 @@ use Passbolt\Rbacs\Model\Entity\Rbac;
  * @property \Passbolt\Rbacs\Model\Table\UiActionsTable&\Cake\ORM\Association\HasOne $UiAction
  * @method \Passbolt\Rbacs\Model\Entity\Rbac newEmptyEntity()
  * @method \Passbolt\Rbacs\Model\Entity\Rbac[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Rbacs\Model\Entity\Rbac[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\Rbac[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\Rbac[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
  * @method \Cake\ORM\Query findById(string $id)
@@ -129,7 +129,7 @@ class RbacsTable extends Table
                 implode(', ', Rbac::ALLOWED_FOREIGN_MODELS)
             ))
             ->maxLength(
-                'control_function',
+                'foreign_model',
                 Rbac::MAX_FOREIGN_MODEL_LENGTH,
                 __(
                     'The foreign model name used length should be maximum {0} characters.',
@@ -185,6 +185,7 @@ class RbacsTable extends Table
             ),
             ['errorField' => 'id']
         );
+
         $rules->add(
             $rules->isUnique(
                 ['role_id', 'foreign_id'],
@@ -192,6 +193,11 @@ class RbacsTable extends Table
             ),
             ['errorField' => 'role_id']
         );
+
+        $rules->add(new IsControlFunctionAllowedRule(), 'isControlFunctionAllowed', [
+            'errorField' => 'control_function',
+            'message' => __('The control function is not allowed for this UI Action.'),
+        ]);
 
         return $rules;
     }

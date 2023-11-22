@@ -150,4 +150,21 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
         ]]);
         $this->assertResponseCode(404);
     }
+
+    public function testRbacsUpdateController_Error_NotAllowedControlFunction(): void
+    {
+        $rbac = $this->setupDefaultRbacs();
+        $this->logInAsAdmin();
+
+        $this->putJson('/rbacs.json', [
+            [
+                'id' => $rbac->id,
+                'control_function' => Rbac::CONTROL_FUNCTION_ALLOW_IF_GROUP_MANAGER_IN_ONE_GROUP,
+            ],
+        ]);
+
+        $this->assertResponseCode(400);
+        $responseArray = $this->getResponseBodyAsArray();
+        $this->assertArrayHasKey('isControlFunctionAllowed', $responseArray['control_function']);
+    }
 }
