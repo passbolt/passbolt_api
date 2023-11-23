@@ -22,7 +22,12 @@
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "jquery": "^3.5.1",
+    "lockfile-lint": "^4.12.1",
     "openpgp": "5.2.1",
     "passbolt-styleguide": "^4.4.1"
+  },
+  "scripts": {
+    "lint": "npm run lint:lockfile",
+    "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts npm --allowed-schemes \"https:\" --empty-hostname false"
   }
 }
