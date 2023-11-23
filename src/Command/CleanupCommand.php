@@ -36,6 +36,9 @@ class CleanupCommand extends PassboltCommand
      * @var array The list of default cleanup jobs to perform.
      */
     private static $defaultCleanups = [
+        'Groups' => [
+            'With No Members',
+        ],
         'GroupsUsers' => [
             'Soft Deleted Users',
             'Hard Deleted Users',
