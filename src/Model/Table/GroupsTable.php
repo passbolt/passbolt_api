@@ -20,6 +20,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Groups\GroupsFindersTrait;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
@@ -59,6 +60,7 @@ use Cake\Validation\Validator;
 class GroupsTable extends Table
 {
     use GroupsFindersTrait;
+    use TableCleanupTrait;
 
     public const GROUP_CREATE_SUCCESS_EVENT_NAME = 'Model.Groups.create.success';
 
@@ -357,5 +359,16 @@ class GroupsTable extends Table
         }
 
         return true;
+    }
+
+    /**
+     * Delete all groups records with no members(groups_users).
+     *
+     * @param bool $dryRun false
+     * @return int Number of affected records
+     */
+    public function cleanupWithNoMembers($dryRun = false)
+    {
+        return $this->cleanupHardDeleted('GroupsUsers', $dryRun);
     }
 }

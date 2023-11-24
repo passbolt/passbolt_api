@@ -20,3 +20,10 @@ static-analysis:
       when: on_success
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "master"'
       when: on_success
+
+static-analysis-js:
+  stage: unit-test
+  image: node:18
+  script:
+    - npm ci
+    - npm run lint

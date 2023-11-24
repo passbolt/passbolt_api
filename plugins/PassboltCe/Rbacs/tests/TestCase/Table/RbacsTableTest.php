@@ -17,10 +17,14 @@ declare(strict_types=1);
 
 namespace Passbolt\Rbacs\Test\TestCase\Table;
 
+use App\Test\Factory\RoleFactory;
 use App\Test\Lib\Model\FormatValidationTrait;
+use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Rbacs\Model\Entity\Rbac;
+use Passbolt\Rbacs\Model\Entity\UiAction;
 use Passbolt\Rbacs\Test\Factory\RbacFactory;
+use Passbolt\Rbacs\Test\Factory\UiActionFactory;
 use Passbolt\Rbacs\Test\Lib\RbacsTestCase;
 
 class RbacsTableTest extends RbacsTestCase
@@ -108,5 +112,83 @@ class RbacsTableTest extends RbacsTestCase
         ];
         $data = RbacFactory::make()->getEntity()->toArray();
         $this->assertFieldFormatValidation($this->Rbacs, 'modified_by', $data, self::getDummyRbacsEntityDefaultOptions(), $testCases);
+    }
+
+    public function testRbacsTable_BuildRules_AllowedControlFunctionForUiAction_Valid(): void
+    {
+        $userRole = RoleFactory::make()->user()->persist();
+        $uiAction = UiActionFactory::make()->name(UiAction::NAME_RESOURCES_IMPORT)->persist();
+        $data = [
+            'role_id' => $userRole->get('id'),
+            'control_function' => Rbac::CONTROL_FUNCTION_ALLOW,
+            'foreign_model' => Rbac::FOREIGN_MODEL_UI_ACTION,
+            'foreign_id' => $uiAction->get('id'),
+        ];
+        $rbac = $this->Rbacs->newEntity($data, [
+            'accessibleFields' => [
+                'role_id' => true,
+                'control_function' => true,
+                'foreign_model' => true,
+                'foreign_id' => true,
+            ],
+        ]);
+
+        $result = $this->Rbacs->save($rbac);
+
+        $this->assertInstanceOf(Rbac::class, $result);
+    }
+
+    public function testRbacsTable_BuildRules_AllowedControlFunctionForUiAction_Invalid(): void
+    {
+        $userRole = RoleFactory::make()->user()->persist();
+        $uiAction = UiActionFactory::make()->name(UiAction::NAME_RESOURCES_IMPORT)->persist();
+        $data = [
+            'role_id' => $userRole->get('id'),
+            'control_function' => Rbac::CONTROL_FUNCTION_ALLOW_IF_GROUP_MANAGER_IN_ONE_GROUP,
+            'foreign_model' => Rbac::FOREIGN_MODEL_UI_ACTION,
+            'foreign_id' => $uiAction->get('id'),
+        ];
+        $rbac = $this->Rbacs->newEntity($data, [
+            'accessibleFields' => [
+                'role_id' => true,
+                'control_function' => true,
+                'foreign_model' => true,
+                'foreign_id' => true,
+            ],
+        ]);
+
+        $result = $this->Rbacs->save($rbac);
+
+        $this->assertFalse($result);
+        $errors = $rbac->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertArrayHasKey('isControlFunctionAllowed', $errors['control_function']);
+    }
+
+    public function testRbacsTable_BuildRules_AllowedControlFunctionForUiAction_Invalid_ForeignIdNotPresent(): void
+    {
+        $userRole = RoleFactory::make()->user()->persist();
+        UiActionFactory::make()->name(UiAction::NAME_RESOURCES_IMPORT)->persist();
+        $data = [
+            'role_id' => $userRole->get('id'),
+            'control_function' => Rbac::CONTROL_FUNCTION_ALLOW_IF_GROUP_MANAGER_IN_ONE_GROUP,
+            'foreign_model' => Rbac::FOREIGN_MODEL_UI_ACTION,
+            'foreign_id' => UuidFactory::uuid(),
+        ];
+        $rbac = $this->Rbacs->newEntity($data, [
+            'accessibleFields' => [
+                'role_id' => true,
+                'control_function' => true,
+                'foreign_model' => true,
+                'foreign_id' => true,
+            ],
+        ]);
+
+        $result = $this->Rbacs->save($rbac);
+
+        $this->assertFalse($result);
+        $errors = $rbac->getErrors();
+        $this->assertNotEmpty($errors);
+        $this->assertArrayHasKey('isControlFunctionAllowed', $errors['control_function']);
     }
 }

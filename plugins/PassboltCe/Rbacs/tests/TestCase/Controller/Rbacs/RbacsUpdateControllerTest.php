@@ -20,9 +20,11 @@ namespace Passbolt\Rbacs\Test\TestCase\Controller\Rbacs;
 use App\Test\Factory\RoleFactory;
 use App\Utility\UuidFactory;
 use Passbolt\Rbacs\Model\Entity\Rbac;
+use Passbolt\Rbacs\Model\Entity\UiAction;
 use Passbolt\Rbacs\Service\Rbacs\RbacsInsertDefaultsService;
 use Passbolt\Rbacs\Service\UiActions\UiActionsInsertDefaultsService;
 use Passbolt\Rbacs\Test\Factory\RbacFactory;
+use Passbolt\Rbacs\Test\Factory\UiActionFactory;
 use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
 
 /**
@@ -62,6 +64,38 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
 
         $c = RbacFactory::find()->where(['control_function' => Rbac::CONTROL_FUNCTION_DENY])->count();
         $this->assertEquals(1, $c);
+    }
+
+    public function testRbacsUpdateController_Success_AllowIfGroupManager(): void
+    {
+        $this->setupDefaultRbacs();
+        $this->logInAsAdmin();
+        $uiActionSubQuery = UiActionFactory::find()->select(['id'])->where(['name' => UiAction::NAME_USERS_VIEW_WORKSPACE]);
+        /** @var \Passbolt\Rbacs\Model\Entity\Rbac $usersViewWorkspaceRbac */
+        $usersViewWorkspaceRbac = RbacFactory::find()->where([
+            'foreign_model' => Rbac::FOREIGN_MODEL_UI_ACTION,
+            'foreign_id' => $uiActionSubQuery,
+        ])->firstOrFail();
+
+        $this->putJson('/rbacs.json', [
+            [
+                'id' => $usersViewWorkspaceRbac->id,
+                'control_function' => Rbac::CONTROL_FUNCTION_ALLOW_IF_GROUP_MANAGER_IN_ONE_GROUP,
+            ],
+        ]);
+
+        $this->assertSuccess();
+        /** @var \Passbolt\Rbacs\Model\Entity\Rbac[] $result */
+        $result = RbacFactory::find()->where(['id' => $usersViewWorkspaceRbac->id])->toArray();
+        $this->assertCount(1, $result);
+        $this->assertSame(
+            Rbac::CONTROL_FUNCTION_ALLOW_IF_GROUP_MANAGER_IN_ONE_GROUP,
+            $result[0]->control_function
+        );
+        $this->assertSame(
+            Rbac::FOREIGN_MODEL_UI_ACTION,
+            $result[0]->foreign_model
+        );
     }
 
     public function testRbacsUpdateController_Error_NotExist(): void
@@ -115,5 +149,22 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
             'control_function' => Rbac::CONTROL_FUNCTION_DENY,
         ]]);
         $this->assertResponseCode(404);
+    }
+
+    public function testRbacsUpdateController_Error_NotAllowedControlFunction(): void
+    {
+        $rbac = $this->setupDefaultRbacs();
+        $this->logInAsAdmin();
+
+        $this->putJson('/rbacs.json', [
+            [
+                'id' => $rbac->id,
+                'control_function' => Rbac::CONTROL_FUNCTION_ALLOW_IF_GROUP_MANAGER_IN_ONE_GROUP,
+            ],
+        ]);
+
+        $this->assertResponseCode(400);
+        $responseArray = $this->getResponseBodyAsArray();
+        $this->assertArrayHasKey('isControlFunctionAllowed', $responseArray['control_function']);
     }
 }
