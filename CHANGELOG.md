@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.2] - 2023-11-28
+### Improved
+- PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
+
 ## [4.4.2-test.1] - 2023-11-27
 ### Improved
 - PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
