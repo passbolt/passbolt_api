@@ -167,8 +167,8 @@ class TagsTable extends Table
             // Remove join data
             $query->formatResults(function (CollectionInterface $results) {
                 return $results->map(function ($row) {
-                    foreach ($row->tags as $i => $tag) {
-                        unset($row->tags[$i]['_joinData']);
+                    foreach ($row['tags'] as $i => $tag) {
+                        unset($row['tags'][$i]['_joinData']);
                     }
 
                     return $row;
