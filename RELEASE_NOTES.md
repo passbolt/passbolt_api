@@ -1,18 +1,12 @@
-Release song: https://youtu.be/RbmS3tQJ7Os?si=lp8QM5B-R65C8Jek
+Release song: https://youtu.be/6JNwqRF32ZI
 
-Passbolt v4.4.1 is a maintenance release aimed at addressing issues reported by the community, which were introduced in the previous release.
+Passbolt version 4.4.2 has been released, primarily as a maintenance update to address specific issues reported by users. This version includes two main fixes.
 
-The update addresses an issue concerning user roles in email notifications. Previously, administrators received notifications when another administrator was deleted. However, the deletion of any user, regardless of their administrator status, was incorrectly reported as an administrator deletion. This issue has been resolved.
+The first fix concerns the Time-based One-Time Password (TOTP) feature. In the previous version, there was an issue where users could accidentally delete the TOTP secret for a resource while editing its description from the sidebar. This has been corrected in the latest update.
 
-We extend our gratitude to the community members who reported these issues. Your support and patience are greatly appreciated.
+The second fix improves the performance of the application, specifically when users are retrieving their resources. This update is part of an ongoing effort to enhance the overall performance of the application, with further improvements planned for future releases.
 
-## [4.4.1] - 2023-11-20
+We extend our gratitude to the community member who reported this issue.
+## [4.4.2] - 2023-11-28
 ### Improved
-- PB-28521 Alter the gpgkeys.uid column length to 769 to enable the synchronisation of user with very long names
-
-### Fixed
-- PB-27957 As an administrator I should be notified that an administrator was deleted only when an administrator has been deleted, and not a regular user
-
-### Maintenance
-- PB-27927 Remove unused user_agents table
-- PB-28616 Refactor the email digest plugin code for easier usage and maintainability
+- PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
