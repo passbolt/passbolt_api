@@ -354,5 +354,8 @@ return [
     // Override the Cake ExceptionRenderer.
     'Error' => [
         'exceptionRenderer' => 'App\Error\AppExceptionRenderer',
-    ]
+        'skipLog' => [
+            'Authentication\Authenticator\UnauthenticatedException',
+        ],
+    ],
 ];
