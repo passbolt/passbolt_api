@@ -90,6 +90,7 @@ class EmailPreviewFactory
         return (new EmailDigest())
             ->addEmailData($emailQueueEntity)
             ->setSubject($emailQueueEntity->get('subject'))
+            ->setEmailIds([$emailQueueEntity->id])
             ->setEmailRecipient($emailQueueEntity->get('email'));
     }
 
@@ -110,6 +111,8 @@ class EmailPreviewFactory
                 ->setSubject($subject)
                 ->setEmailRecipient($emailQueueEntity->get('email'));
         }
+
+        $emailDigest->setEmailIds($digest->getEmailQueueIds());
 
         return $emailDigest;
     }

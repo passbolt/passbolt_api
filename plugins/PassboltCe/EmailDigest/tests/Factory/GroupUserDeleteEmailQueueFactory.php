@@ -23,9 +23,11 @@ class GroupUserDeleteEmailQueueFactory extends EmailQueueFactory
     protected function setDefaultTemplate(): void
     {
         parent::setDefaultTemplate();
-        $this->setTemplate(GroupUserDeleteEmailRedactor::TEMPLATE);
-        $this->setGroup();
-        $this->setOperator();
+        $this
+            ->setSubject()
+            ->setTemplate(GroupUserDeleteEmailRedactor::TEMPLATE)
+            ->setGroup()
+            ->setOperator();
     }
 
     /**
