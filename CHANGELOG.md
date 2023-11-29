@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.4.2] - 2023-11-29
+### Improved
+- PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
+
+### Fixed
+- PB-28991 As a user emails should be resent if the first attempt failed
+
+## [4.4.2-test.1] - 2023-11-27
+### Improved
+- PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
+
 ## [4.4.1] - 2023-11-20
 ### Improved
 - PB-28521 Alter the gpgkeys.uid column length to 769 to enable the synchronisation of user with very long names
