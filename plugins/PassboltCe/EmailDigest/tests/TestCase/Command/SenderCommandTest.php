@@ -24,10 +24,12 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
+use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\I18n;
 use Cake\Mailer\Mailer;
+use Cake\Network\Exception\SocketException;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
@@ -124,15 +126,37 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->assertMailBodyStringCount(1, '</head>');
     }
 
-    public function testSenderCommand_NoRowsAreLockedWhenThresholdIsExceeded()
+    public function noRowsLockedProvider(): array
     {
-        $nResourcesAdded = 15;
-        $operator = UserFactory::make()->withAvatar()->persist();
+        return [
+            ['single_email' => 1],
+            ['multiple_emails_in_digest' => 2],
+            ['threshold_exceeded' => 11],
+        ];
+    }
+
+    /**
+     * @dataProvider noRowsLockedProvider
+     */
+    public function testSenderCommand_EmailQueueRowsAreUnlockedAfterSuccessfulSend(int $nResourcesAdded)
+    {
+        $operator = UserFactory::make()->withAvatar()->getEntity();
         $recipient = 'john@test.test';
         EmailQueueFactory::make($nResourcesAdded)
             ->setRecipient($recipient)
             ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
             ->setField('template_vars.body.user', $operator)
+            ->setField('template_vars.body.resource', [
+                // Dummy data to render email without any warnings
+                'id' => UuidFactory::uuid(),
+                'created' => 'now',
+                'name' => 'My pass',
+                'secrets' => [['data' => 'foo bar baz']],
+            ])
+            ->setField('template_vars.body.showUsername', false)
+            ->setField('template_vars.body.showUri', false)
+            ->setField('template_vars.body.showDescription', false)
+            ->setField('template_vars.body.showSecret', false)
             ->persist();
 
         $this->exec('passbolt email_digest send');
@@ -143,6 +167,56 @@ class SenderCommandTest extends AppIntegrationTestCase
         // Make sure email queue entries are not locked
         $count = EmailQueueFactory::find()->where(['locked' => true])->count();
         $this->assertEquals(0, $count);
+        // Make sure email queue entries are sent
+        $count = EmailQueueFactory::find()->where(['sent' => true, 'locked' => false])->count();
+        $this->assertEquals($nResourcesAdded, $count);
+    }
+
+    /**
+     * @dataProvider noRowsLockedProvider
+     */
+    public function testSenderCommand_EmailQueueRowsAreUnlockedAfterFailedSend(int $nResourcesAdded)
+    {
+        $operator = UserFactory::make()->withAvatar()->getEntity();
+        $recipient = 'john@test.test';
+        EmailQueueFactory::make($nResourcesAdded)
+            ->setRecipient($recipient)
+            ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
+            ->setField('template_vars.body.user', $operator)
+            ->setField('template_vars.body.resource', [
+                // Dummy data to render email without any warnings
+                'id' => UuidFactory::uuid(),
+                'created' => 'now',
+                'name' => 'My pass',
+                'secrets' => [['data' => 'foo bar baz']],
+            ])
+            ->setField('template_vars.body.showUsername', false)
+            ->setField('template_vars.body.showUri', false)
+            ->setField('template_vars.body.showDescription', false)
+            ->setField('template_vars.body.showSecret', false)
+            ->persist();
+
+        $mockedEmailQueue = $this->getMockForModel(
+            'EmailQueue.EmailQueue',
+            ['success',],
+            ['table' => 'email_queue',]
+        );
+        $mockedEmailQueue
+            ->expects($this->once())
+            ->method('success')
+            ->willThrowException(new SocketException());
+
+        $this->exec('passbolt email_digest send');
+
+        $this->assertExitSuccess();
+        $this->assertMailCount(1);
+        $this->assertMailSentToAt(0, [$recipient => $recipient]);
+        // Make sure email queue entries are not locked
+        $count = EmailQueueFactory::find()->where(['locked' => true])->count();
+        $this->assertEquals(0, $count);
+        // Make sure email queue entries are not sent
+        $count = EmailQueueFactory::find()->where(['sent' => false, 'locked' => false])->count();
+        $this->assertEquals($nResourcesAdded, $count);
     }
 
     public function testSenderCommandMultipleDigests()
@@ -173,6 +247,9 @@ class SenderCommandTest extends AppIntegrationTestCase
 
         $this->exec('passbolt email_digest send');
         $this->assertExitSuccess();
+
+        $sentCount = EmailQueueFactory::find()->where(['sent' => true])->count();
+        $this->assertSame($nEmailsSent * 2, $sentCount);
 
         $this->assertMailCount(2);
         $subject = $user->profile->full_name . ' has made changes on several resources';
