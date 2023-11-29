@@ -28,6 +28,7 @@ class ResourceDeleteEmailQueueFactory extends EmailQueueFactory
     {
         parent::setDefaultTemplate();
         $this
+            ->setSubject()
             ->setTemplate(ResourceDeleteEmailRedactor::TEMPLATE)
             ->setResource()
             ->setOperator()
