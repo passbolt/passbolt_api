@@ -131,20 +131,32 @@ class SecretAccessesTable extends Table
     }
 
     /**
-     * Create a new SecretAccess
+     * Create a new SecretAccess from a secret entity
      *
-     * @param \App\Model\Entity\Secret $secret the secret entity
      * @param \App\Utility\UserAccessControl $uac user access control object
+     * @param \App\Model\Entity\Secret $secret the secret entity
      * @return bool|\Cake\Datasource\EntityInterface|false|mixed
      */
-    public function create(Secret $secret, UserAccessControl $uac)
+    public function createFromSecretEntity(UserAccessControl $uac, Secret $secret)
     {
-        $userId = $uac->getId();
+        return $this->createFromSecretDetails($uac, $secret->resource_id, $secret->id);
+    }
 
+    /**
+     * Create a new SecretAccess from a secret entity
+     *
+     * @param \App\Utility\UserAccessControl $uac user access control object
+     * @param string $resourceId The resource identifier
+     * @param string $secretId The secret identifier
+     * @return bool|\Cake\Datasource\EntityInterface|false|mixed
+     * @throws \App\Error\Exception\ValidationException
+     */
+    public function createFromSecretDetails(UserAccessControl $uac, string $resourceId, string $secretId)
+    {
         $data = [
-            'user_id' => $userId,
-            'resource_id' => $secret->resource_id,
-            'secret_id' => $secret->id,
+            'user_id' => $uac->getId(),
+            'resource_id' => $resourceId,
+            'secret_id' => $secretId,
         ];
 
         // Check validation rules.

@@ -34,6 +34,9 @@ use Passbolt\EmailDigest\Test\Factory\ResourceDeleteEmailQueueFactory;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\Locale\LocalePlugin;
 
+/**
+ * @covers \Passbolt\EmailDigest\Service\SendEmailBatchService
+ */
 class SendEmailBatchServiceUnitTest extends TestCase
 {
     use EmailTestTrait;
@@ -64,13 +67,13 @@ class SendEmailBatchServiceUnitTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSendEmailBatchService_On_No_Email()
+    public function testSendEmailBatchServiceUnitTest_On_No_Email()
     {
         $this->service->sendNextEmailsBatch([]);
         $this->assertMailCount(0);
     }
 
-    public function testSendEmailBatchService_On_Email_With_Unknown_Template()
+    public function testSendEmailBatchServiceUnitTest_On_Email_With_Unknown_Template()
     {
         $email = EmailQueueFactory::make()->setTemplate('foo')->getEntity();
         $this->expectException(MissingTemplateException::class);
@@ -90,7 +93,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
     /**
      * @dataProvider withAndWithoutDigestTemplate
      */
-    public function testSendEmailBatchService_On_One_Email_Translated(bool $withDigestTemplate)
+    public function testSendEmailBatchServiceUnitTest_On_One_Email_Translated(bool $withDigestTemplate)
     {
         if (!$withDigestTemplate) {
             DigestTemplateRegistry::clearInstance();
@@ -99,6 +102,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
         $resourceDeleted = ResourceFactory::make()->getEntity();
         $subjectTranslated = 'Le sujet';
         $email = ResourceDeleteEmailQueueFactory::make()
+            ->setId()
             ->setOperator($operator)
             ->setResource($resourceDeleted)
             ->setSubject($subjectTranslated)
@@ -117,7 +121,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
     /**
      * @dataProvider withAndWithoutDigestTemplate
      */
-    public function testSendEmailBatchService_On_Multiple_Emails_Same_Recipient_Below_Threshold(
+    public function testSendEmailBatchServiceUnitTest_On_Multiple_Emails_Same_Recipient_Below_Threshold(
         bool $withDigestTemplate
     ) {
         if (!$withDigestTemplate) {
@@ -130,6 +134,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
         $recipient = 'foo@passbolt.com';
         $nEmails = rand(2, 10);
         $emails = ResourceDeleteEmailQueueFactory::make($nEmails)
+            ->setId()
             ->setRecipient($recipient)
             ->setOperator($operator)
             ->setResource($resourceDeleted)
@@ -159,7 +164,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
     /**
      * @dataProvider withAndWithoutDigestTemplate
      */
-    public function testSendEmailBatchService_On_Same_Digest_Template_Various_Recipients(
+    public function testSendEmailBatchServiceUnitTest_On_Same_Digest_Template_Various_Recipients(
         bool $withDigestTemplate
     ) {
         if (!$withDigestTemplate) {
@@ -173,12 +178,14 @@ class SendEmailBatchServiceUnitTest extends TestCase
         $nEmails1 = rand(2, 10);
         $nEmails2 = rand(2, 10);
         $emails1 = ResourceDeleteEmailQueueFactory::make($nEmails1)
+            ->setId()
             ->setRecipient($recipient1)
             ->setOperator($operator)
             ->setResource($resourceDeleted1)
             ->setSubject($subject)
             ->getEntities();
         $emails2 = ResourceDeleteEmailQueueFactory::make($nEmails2)
+            ->setId()
             ->setRecipient($recipient2)
             ->setOperator($operator)
             ->setResource($resourceDeleted2)
@@ -222,7 +229,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
     /**
      * @dataProvider withAndWithoutDigestTemplate
      */
-    public function testSendEmailBatchService_On_Multiple_Emails_Multiple_Operators_Below_Threshold(
+    public function testSendEmailBatchServiceUnitTest_On_Multiple_Emails_Multiple_Operators_Below_Threshold(
         bool $withDigestTemplate
     ) {
         if (!$withDigestTemplate) {
@@ -236,6 +243,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
         $nEmails1 = rand(2, 10);
         $nEmails2 = rand(2, 10);
         $emails1 = ResourceDeleteEmailQueueFactory::make($nEmails1)
+            ->setId()
             ->setRecipient($recipient)
             ->setOperator($operator1)
             ->setResource($resourceDeleted1)
@@ -243,6 +251,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
             ->setLocale('fr-FR')
             ->getEntities();
         $emails2 = ResourceDeleteEmailQueueFactory::make($nEmails2)
+            ->setId()
             ->setRecipient($recipient)
             ->setOperator($operator2)
             ->setResource($resourceDeleted2)
@@ -287,7 +296,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
     /**
      * @dataProvider withAndWithoutDigestTemplate
      */
-    public function testSendEmailBatchService_On_Multiple_Emails_Multiple_Operators_Below_And_Above_Threshold(
+    public function testSendEmailBatchServiceUnitTest_On_Multiple_Emails_Multiple_Operators_Below_And_Above_Threshold(
         bool $withDigestTemplate
     ) {
         if (!$withDigestTemplate) {
@@ -297,10 +306,11 @@ class SendEmailBatchServiceUnitTest extends TestCase
         [$resourceDeleted1, $resourceDeleted2] = ResourceFactory::make(2)->getEntities();
         $subjectTranslated = 'Le sujet';
         $recipient = 'foo@passbolt.com';
-        $nEmails1 = 10 + rand(2, 10);
-        $nEmails2 = rand(2, 10);
+        $nEmails1 = 12;
+        $nEmails2 = 2;
         // These emails are above the threshold
         $emails1 = ResourceDeleteEmailQueueFactory::make($nEmails1)
+            ->setId()
             ->setRecipient($recipient)
             ->setOperator($operator1)
             ->setResource($resourceDeleted1)
@@ -308,6 +318,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
             ->setLocale('fr-FR')
             ->getEntities();
         $emails2 = ResourceDeleteEmailQueueFactory::make($nEmails2)
+            ->setId()
             ->setRecipient($recipient)
             ->setOperator($operator2)
             ->setResource($resourceDeleted2)
@@ -350,7 +361,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
         }
     }
 
-    public function testSendEmailBatchService_On_Multiple_Emails_Multiple_Operators_Multiple_Digest_Templates_Below_And_Above_Threshold()
+    public function testSendEmailBatchServiceUnitTest_On_Multiple_Emails_Multiple_Operators_Multiple_Digest_Templates_Below_And_Above_Threshold()
     {
         DigestTemplateRegistry::clearInstance();
         // Emails of the Group User delete template should be sent first
@@ -416,7 +427,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
         $this->assertMailSubjectContainsAt(3, $operator2->profile->full_name . ' has made changes on several resources');
     }
 
-    public function testSendEmailBatchService_On_Multiple_Full_Base_Url()
+    public function testSendEmailBatchServiceUnitTest_On_Multiple_Full_Base_Url()
     {
         $recipient = 'test@passbolt.com';
         $subject = 'Some subject';
