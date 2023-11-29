@@ -146,11 +146,12 @@ class EmailQueueFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param string $subject locale of the email
-     * @return EmailQueueFactory
+     * @param ?string $subject locale of the email
+     * @return $this
      */
-    public function setSubject(string $subject)
+    public function setSubject(?string $subject = null)
     {
+        $subject = $subject ?? $this->getFaker()->sentence(3);
         $this->setField('template_vars.body.subject', $subject);
 
         return $this->setField('subject', $subject);
@@ -163,5 +164,16 @@ class EmailQueueFactory extends CakephpBaseFactory
     public function setLocale(string $locale)
     {
         return $this->setField('template_vars.locale', $locale);
+    }
+
+    /**
+     * Sets the id of the email. Useful in unit testing, when an ID should be defined, but no persistence needed
+     *
+     * @param int|null $id email Id
+     * @return $this
+     */
+    public function setId(?int $id = null)
+    {
+        return $this->setField('id', $id ?? $this->getFaker()->randomNumber(4));
     }
 }
