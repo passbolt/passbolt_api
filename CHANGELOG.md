@@ -6,6 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Improved
 - PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
 
+### Fixed
+- PB-28991 As a user emails should be resent if the first attempt failed
+
 ## [4.4.2-test.1] - 2023-11-27
 ### Improved
 - PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point

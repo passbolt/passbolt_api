@@ -10,3 +10,6 @@ We extend our gratitude to the community member who reported this issue.
 ## [4.4.2] - 2023-11-28
 ### Improved
 - PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
+
+### Fixed
+- PB-28991 As a user emails should be resent if the first attempt failed
