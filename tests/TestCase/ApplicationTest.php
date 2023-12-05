@@ -27,6 +27,7 @@ use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
 use App\Middleware\UuidParserMiddleware;
+use App\Middleware\ValidCookieNameMiddleware;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\Middleware\BodyParserMiddleware;
@@ -52,6 +53,7 @@ class ApplicationTest extends TestCase
 
         $middlewareClassesInOrder = [
             ContainerInjectorMiddleware::class,
+            ValidCookieNameMiddleware::class,
             ContentSecurityPolicyMiddleware::class,
             ErrorHandlerMiddleware::class,
             SslForceMiddleware::class,
