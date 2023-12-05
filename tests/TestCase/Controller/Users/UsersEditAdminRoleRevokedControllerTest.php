@@ -119,6 +119,7 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
             ->admin()
             ->with('Profiles', ['first_name' => 'Jane', 'last_name' => 'Doe'])
             ->persist();
+        /** @var \App\Model\Entity\User $john */
         $john = UserFactory::make(['username' => 'john@passbolt.test'])->admin()->persist();
         $ada = UserFactory::make(['username' => 'ada@passbolt.test'])->admin()->persist();
         UserFactory::make()->user()->persist();
@@ -139,12 +140,12 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         // Email assertions
         $this->assertEventFired(UsersEditController::EVENT_USER_AFTER_UPDATE);
         $this->assertEmailQueueCount(3);
-        $this->assertEmailInBatchContains('Your admin role has been revoked', $jane->username);
-        $this->assertEmailInBatchContains('You can no longer perform administration tasks.', $jane->username);
-        $this->assertEmailInBatchContains(
+        $this->assertEmailInBatchContains([
+            'Your admin role has been revoked',
+            'You can no longer perform administration tasks.',
+            $john->profile->full_name . ' changed your role to user.',
             Router::url('/app/users/view/' . $jane->id, true),
-            $jane->username
-        );
+        ], $jane->username);
         $userFullName = Purifier::clean($jane->profile->first_name . ' ' . $jane->profile->last_name);
         foreach ([$john, $ada] as $admin) {
             $this->assertEmailInBatchContains(
@@ -154,7 +155,10 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
                 false
             );
             $this->assertEmailInBatchContains(
-                Router::url('/app/users/view/' . $jane->id, true),
+                [
+                    "{$john->profile->full_name} changed the role of {$userFullName} to user.",
+                    Router::url('/app/users/view/' . $jane->id, true),
+                ],
                 $admin->username
             );
         }
