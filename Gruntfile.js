@@ -144,6 +144,8 @@ module.exports = function(grunt) {
             'third_party/sendgrid.svg',
             'third_party/sendinblue.svg',
             'third_party/zoho.svg',
+            'third_party/outlook.svg',
+            'third_party/office365.svg',
 
             // Setup
             'illustrations/email.png',
