@@ -29,6 +29,7 @@ use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
 use App\Middleware\UuidParserMiddleware;
+use App\Middleware\ValidCookieNameMiddleware;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
@@ -92,6 +93,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
          * - Apply CSRF protection
          */
         $middlewareQueue
+            ->add(ValidCookieNameMiddleware::class)
             ->prepend(new ContainerInjectorMiddleware($this->getContainer()))
             ->add(new ContentSecurityPolicyMiddleware())
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
