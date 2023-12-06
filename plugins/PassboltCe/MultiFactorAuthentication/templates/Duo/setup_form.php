@@ -137,7 +137,7 @@ use Cake\Routing\Router;
             </div>
             <?= $this->Form->create($setupForm, $formContext); ?>
                 <div class="actions-wrapper">
-                    <a href="<?= Router::url('/mfa/setup/select', true); ?>" class="button cancel"><?= __('Cancel'); ?></a>
+                    <a href="app/settings/mfa" target="_top" rel="noopener noreferrer" class="button cancel"><?= __('Cancel'); ?></a>
                     <button type="submit" class="button primary"><?= __('Get started'); ?></button>
                 </div>
             <?= $this->Form->end(); ?>
