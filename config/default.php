@@ -339,6 +339,12 @@ return [
             // This is disabled by default as it prevents legitimate users to know whether their accounts was disabled
             // as well as prevent open registration to work
             'preventEmailEnumeration' => filter_var(env('PASSBOLT_SECURITY_PREVENT_EMAIL_ENUMERATION', false), FILTER_VALIDATE_BOOLEAN),
+            'email' => [
+                'anonymiseAdministratorIdentity' => filter_var(
+                    env('PASSBOLT_SECURITY_EMAIL_ANONYMISE_ADMINISTRATOR_IDENTITY', false),
+                    FILTER_VALIDATE_BOOLEAN
+                ),
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

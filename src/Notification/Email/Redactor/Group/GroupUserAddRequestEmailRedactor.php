@@ -25,6 +25,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -35,6 +36,8 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
     use SubscribedEmailRedactorTrait;
 
     public const TEMPLATE = 'GM/group_user_request';
+
+    public const CONFIG_KEY_ANONYMISE_ADMINISTRATOR_IDENTITY = 'passbolt.security.email.anonymiseAdministratorIdentity';
 
     /**
      * @var \App\Model\Table\UsersTable
@@ -125,16 +128,24 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
      */
     private function createGroupUserAddEmail(User $recipient, User $admin, Group $group, array $groupUsers): Email
     {
+        $anonymiseAdministratorIdentity = Configure::read(self::CONFIG_KEY_ANONYMISE_ADMINISTRATOR_IDENTITY);
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($admin, $group) {
-                return __('{0} requested you to add members to {1}', $admin->profile->first_name, $group->name);
+            function () use ($admin, $group, $anonymiseAdministratorIdentity) {
+                $text = __('{0} requested you to add members to {1}', $admin->profile->first_name, $group->name);
+                if ($anonymiseAdministratorIdentity) {
+                    $text = __('You have been requested to add members to {0}', $group->name);
+                }
+
+                return $text;
             }
         );
+
         $data = ['body' => [
             'admin' => $admin,
             'group' => $group,
             'groupUsers' => $groupUsers,
+            'anonymiseAdministratorIdentity' => $anonymiseAdministratorIdentity,
         ], 'title' => $subject];
 
         return new Email($recipient, $subject, $data, self::TEMPLATE);
