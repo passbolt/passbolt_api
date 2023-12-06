@@ -463,6 +463,12 @@ return [
                 ],
                 'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN),
             ],
+            'email' => [
+                'anonymiseAdministratorIdentity' => filter_var(
+                    env('PASSBOLT_SECURITY_EMAIL_ANONYMISE_ADMINISTRATOR_IDENTITY', false),
+                    FILTER_VALIDATE_BOOLEAN
+                ),
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.
