@@ -134,7 +134,7 @@ trait GroupUsersSyncTrait
 
                 continue;
             } elseif (!$u->active) {
-                $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $u->username, $group->name);//phpcs:ignore
+                $msg = __('The user {0} could not be added to the group {1} because they have not yet activated his account.', $u->username, $group->name);//phpcs:ignore
                 $this->addReportItem(new ActionReport(
                     $msg,
                     Alias::MODEL_GROUPS_USERS,
@@ -407,7 +407,7 @@ trait GroupUsersSyncTrait
                 if (($isNotActive && $isDeleted) || $isDeleted) {
                     $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $user->username, $group->name);//phpcs:ignore
                 } elseif ($isNotActive) {
-                    $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $user->username, $group->name);//phpcs:ignore
+                    $msg = __('The user {0} could not be added to the group {1} because they have not yet activated his account.', $user->username, $group->name);//phpcs:ignore
                 } else {
                     $msg = __('The user {0} could not be added to the group {1} because of validation issues.', $user->username, $group->name);//phpcs:ignore
                 }
