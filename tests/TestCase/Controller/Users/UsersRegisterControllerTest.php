@@ -45,7 +45,19 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->setSelfRegistrationSettingsData();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tearDown(): void
+    {
+        // Reset timezone to UTC
+        date_default_timezone_set('UTC');
+
+        parent::tearDown();
     }
 
     public function testUsersRegisterController_Get_Success(): void
@@ -63,6 +75,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                     'first_name' => '傅',
                     'last_name' => '苹',
                 ],
+                'timezone' => 'UTC',
             ]],
             ['slavic_name' => [
                 'username' => 'borka@passbolt.com',
@@ -70,6 +83,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                     'first_name' => 'Borka',
                     'last_name' => 'Jerman Blažič',
                 ],
+                'timezone' => 'UTC',
             ]],
             ['french_name' => [
                 'username' => 'aurore@passbolt.com',
@@ -78,6 +92,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
                     'last_name' => 'Avarguès-Weber',
                 ],
                 'locale' => 'fr-FR',
+                'timezone' => 'Europe/Paris',
             ]],
         ];
     }
@@ -87,7 +102,10 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
      */
     public function testUsersRegisterController_Success(array $data): void
     {
+        date_default_timezone_set($data['timezone']);
+
         $this->postJson('/users/register.json', $data);
+
         $this->assertResponseSuccess();
 
         // Check user was saved
@@ -120,6 +138,12 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
             'subject' => "Welcome to passbolt, {$data['profile']['first_name']}!",
             'template' => 'AN/user_register_self',
         ]);
+
+        // Check timezone displaying alongside the datetime
+        $this->assertEmailInBatchContains(
+            sprintf('%s (%s)', FrozenTime::parse($user->get('created'))->nice(), $data['timezone']),
+            $data['username']
+        );
     }
 
     public function testUsersRegisterController_Success_CannotModifyNotAccessibleFields(): void
