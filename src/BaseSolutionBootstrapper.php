@@ -59,6 +59,7 @@ class BaseSolutionBootstrapper
         $app->addPlugin('Passbolt/InFormIntegration', ['bootstrap' => true, 'routes' => false]);
         $app->addPlugin('Passbolt/Locale', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
+        $this->addFeaturePluginIfEnabled($app, 'PasswordExpiry');
         $this->addFeaturePluginIfEnabled($app, 'ResourceTypes');
         $this->addFeaturePluginIfEnabled($app, 'TotpResourceTypes', ['bootstrap' => true, 'routes' => false]);
         $app->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);

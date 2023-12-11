@@ -138,6 +138,7 @@
             "Passbolt\\JwtAuthentication\\": "./plugins/PassboltCe/JwtAuthentication/src",
             "Passbolt\\Import\\": "./plugins/PassboltCe/Import/src",
             "Passbolt\\Export\\": "./plugins/PassboltCe/Export/src",
+            "Passbolt\\PasswordExpiry\\": "./plugins/PassboltCe/PasswordExpiry/src",
             "Passbolt\\ResourceTypes\\": "./plugins/PassboltCe/ResourceTypes/src",
             "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/PassboltCe/MultiFactorAuthentication/src",
@@ -148,7 +149,8 @@
             "Passbolt\\Rbacs\\": "./plugins/PassboltCe/Rbacs/src",
             "Passbolt\\PasswordPolicies\\": "./plugins/PassboltCe/PasswordPolicies/src",
             "Passbolt\\PasswordPoliciesUpdate\\": "./plugins/PassboltEe/PasswordPoliciesUpdate/src",
-            "Passbolt\\UserPassphrasePolicies\\": "./plugins/PassboltEe/UserPassphrasePolicies/src"
+            "Passbolt\\UserPassphrasePolicies\\": "./plugins/PassboltEe/UserPassphrasePolicies/src",
+            "Passbolt\\PasswordExpiryPolicies\\": "./plugins/PassboltEe/PasswordExpiryPolicies/src"
         }
     },
     "autoload-dev": {
@@ -174,6 +176,7 @@
             "Passbolt\\Mobile\\Test\\": "./plugins/PassboltCe/Mobile/tests",
             "Passbolt\\JwtAuthentication\\Test\\": "./plugins/PassboltCe/JwtAuthentication/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/PassboltCe/MultiFactorAuthentication/tests",
+            "Passbolt\\PasswordExpiry\\Test\\": "./plugins/PassboltCe/PasswordExpiry/tests",
             "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests",
             "Passbolt\\SelfRegistration\\Test\\": "./plugins/PassboltCe/SelfRegistration/tests",
             "Passbolt\\Sso\\Test\\": "./plugins/PassboltEe/Sso/tests",
@@ -183,7 +186,8 @@
             "Passbolt\\Rbacs\\Test\\": "./plugins/PassboltCe/Rbacs/tests",
             "Passbolt\\PasswordPolicies\\Test\\": "./plugins/PassboltCe/PasswordPolicies/tests",
             "Passbolt\\PasswordPoliciesUpdate\\Test\\": "./plugins/PassboltEe/PasswordPoliciesUpdate/tests",
-            "Passbolt\\UserPassphrasePolicies\\Test\\": "./plugins/PassboltEe/UserPassphrasePolicies/tests"
+            "Passbolt\\UserPassphrasePolicies\\Test\\": "./plugins/PassboltEe/UserPassphrasePolicies/tests",
+            "Passbolt\\PasswordExpiryPolicies\\Test\\": "./plugins/PassboltEe/PasswordExpiryPolicies/tests"
         }
     },
     "scripts": {
