@@ -13,3 +13,16 @@ if [[ "$DIGEST_ENABLED" = 1 ]]; then
 else
     "$DIR"/cake EmailQueue.sender
 fi
+
+TIME=$(date +%H:%M);
+if [ "$TIME" = "06:00" ]; then
+    RUN_DAILY_COMMAND=1;
+else
+    RUN_DAILY_COMMAND=0;
+fi
+
+PASSWORD_EXPIRY_ENABLED=${PASSWORD_EXPIRY_ENABLED:-1}
+PASSWORD_EXPIRY_ADVANCED_ENABLED=${PASSWORD_EXPIRY_ADVANCED_ENABLED:-1}
+if [ "$PASSWORD_EXPIRY_ENABLED" = 1 ] && [ "$PASSWORD_EXPIRY_ADVANCED_ENABLED" = 1 ] && [ "$RUN_DAILY_COMMAND" = 1 ]; then
+    "$DIR"/cake passbolt notify_about_expired_resources
+fi
