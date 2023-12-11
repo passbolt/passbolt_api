@@ -63,10 +63,20 @@ class ResourcesUpdateService
     private $secretsUpdateSecretsService;
 
     /**
-     * Instantiate the service.
+     * Service to assert that the expiry date provided in the payload is valid
+     *
+     * @var \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService
      */
-    public function __construct()
+    protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
+
+    /**
+     * Instantiate the service.
+     *
+     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService Password expiry service
+     */
+    public function __construct(PasswordExpiryValidationServiceInterface $passwordExpiryValidationService)
     {
+        $this->passwordExpiryValidationService = $passwordExpiryValidationService;
         $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         /** @phpstan-ignore-next-line */
@@ -76,7 +86,7 @@ class ResourcesUpdateService
     }
 
     /**
-     * Update a resource for the current user.
+     * Update a resource for the logged-in user.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $id The resource to update
@@ -86,6 +96,7 @@ class ResourcesUpdateService
      */
     public function update(UserAccessControl $uac, string $id, ?array $data = []): Resource
     {
+        $this->passwordExpiryValidationService->validateAndParseExpiryDate($data);
         $resource = $this->getResource($uac, $id);
         $meta = $this->extractDataResourceMeta($data);
         $meta = $this->presetOrAssertResourceType($meta);
@@ -184,6 +195,9 @@ class ResourcesUpdateService
         if (array_key_exists('resource_type_id', $data)) {
             $meta['resource_type_id'] = $data['resource_type_id'];
         }
+        if (array_key_exists('expired', $data)) {
+            $meta['expired'] = $data['expired'];
+        }
 
         return $meta;
     }
@@ -227,6 +241,7 @@ class ResourcesUpdateService
             'modified' => true,
             'modified_by' => true,
             'resource_type_id' => true,
+            'expired' => true,
         ];
 
         return $this->Resources->patchEntity($resource, $data, ['accessibleFields' => $accessibleFields]);

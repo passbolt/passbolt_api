@@ -22,6 +22,7 @@ use App\Model\Entity\Group;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
+use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -32,6 +33,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\PasswordExpiry\Event\PasswordExpiryOnDeleteGroupEventListener;
 
 /**
  * GroupsDeleteController Class
@@ -92,13 +94,19 @@ class GroupsDeleteController extends AppController
      * Group delete action
      *
      * @param string $id group uuid
+     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService checks if the expiry date needs to be updated when user is disabled
      * @throws \Cake\Http\Exception\InternalErrorException if group cannot be deleted
      * @throws \Exception
      * @return void
      */
-    public function delete(string $id)
-    {
+    public function delete(
+        string $id,
+        PasswordExpiryValidationServiceInterface $passwordExpiryValidationService
+    ) {
         $this->assertJson();
+        if ($passwordExpiryValidationService->isExpiryAutomatic()) {
+            $this->Groups->getEventManager()->on(new PasswordExpiryOnDeleteGroupEventListener());
+        }
 
         $this->GroupsUsers->getConnection()->transactional(function () use ($id) {
             $group = $this->_validateRequestData($id);

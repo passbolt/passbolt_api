@@ -23,6 +23,7 @@ use App\Model\Entity\Resource;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -55,14 +56,24 @@ class ResourcesAddService
     protected $Users;
 
     /**
-     * ResourcesAddService constructor.
+     * Service to assert that the expiry date provided in the payload is valid
+     *
+     * @var \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService
      */
-    public function __construct()
+    protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
+
+    /**
+     * ResourcesAddService constructor.
+     *
+     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService Password expiry service
+     */
+    public function __construct(PasswordExpiryValidationServiceInterface $passwordExpiryValidationService)
     {
         /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
         /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
+        $this->passwordExpiryValidationService = $passwordExpiryValidationService;
     }
 
     /**
@@ -72,18 +83,20 @@ class ResourcesAddService
      * fresh database. To counter this issue, the saving process is
      * performed several times in case a PDO Exception is encountered.
      *
-     * @param string $userId User ID creating the resource.
+     * @param \App\Utility\UserAccessControl $uac User access control.
      * @param array $data Payload to create the resource.
      * @return Resource
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\ServiceUnavailableException
      * @see ResourcesAddServiceStressTest
      */
-    public function add(string $userId, array $data): Resource
+    public function add(UserAccessControl $uac, array $data): Resource
     {
+        $this->passwordExpiryValidationService->validateAndParseExpiryDate($data);
+        $this->attachListenerToAfterSaveEvent($uac, $data);
         $attempts = 1;
         do {
-            $resource = $this->buildEntity($userId, $data);
+            $resource = $this->buildEntity($uac->getId(), $data);
             $this->handleValidationError($resource);
             try {
                 $this->Resources->save($resource);
@@ -137,6 +150,7 @@ class ResourcesAddService
                 'username' => true,
                 'uri' => true,
                 'description' => true,
+                'expired' => true,
                 'created_by' => true,
                 'modified_by' => true,
                 'secrets' => true,
@@ -214,5 +228,27 @@ class ResourcesAddService
         $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->Resources->getEventManager()->dispatch($event);
         $this->handleValidationError($resource);
+    }
+
+    /**
+     * Create the after save events on the Resources table.
+     *
+     * @param \App\Utility\UserAccessControl $uac User access control.
+     * @param array $data Payload.
+     * @return void
+     */
+    protected function attachListenerToAfterSaveEvent(UserAccessControl $uac, array $data): void
+    {
+        $this->Resources->getEventManager()->on(
+            'Model.afterSave',
+            ['priority' => 1],
+            function (EventInterface $event, $resource) use ($uac, $data) {
+                $this->afterSave(
+                    $resource,
+                    $uac,
+                    $data
+                );
+            }
+        );
     }
 }

@@ -63,8 +63,8 @@ class ResourcesUpdateNotificationTest extends AppIntegrationTestCase
         $this->assertSuccess();
 
         // check email notification
-        $this->assertEmailInBatchContains('updated the password', $user2->username);
-        $this->assertEmailInBatchContains('updated the password', $user->username);
+        $this->assertEmailInBatchContains('edited the password', $user2->username);
+        $this->assertEmailInBatchContains('edited the password', $user->username);
         $this->assertEmailWithRecipientIsInNotQueue($disabled->username);
     }
 

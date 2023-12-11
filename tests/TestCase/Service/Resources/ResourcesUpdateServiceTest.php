@@ -20,7 +20,10 @@ namespace App\Test\TestCase\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Service\Resources\PasswordExpiryDefaultValidationService;
+use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesUpdateService;
+use App\Test\Factory\UserFactory;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
 use App\Test\Fixture\Base\GroupsUsersFixture;
@@ -78,7 +81,15 @@ class ResourcesUpdateServiceTest extends AppTestCase
         parent::setUp();
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        $this->service = new ResourcesUpdateService();
+        $this->service = new ResourcesUpdateService(new PasswordExpiryDefaultValidationService());
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->resourcesTable);
+        unset($this->secretsTable);
+        unset($this->service);
     }
 
     public function testUpdateResourcesSuccess_UpdateResourceMeta()
@@ -299,20 +310,10 @@ class ResourcesUpdateServiceTest extends AppTestCase
         }
     }
 
-    public function testUpdateResourcesError_NoAccessToResource()
+    public function testUpdateResourcesService_Should_Fail_If_Expiration_Date_Is_In_Payload()
     {
-        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourcesError_InsufficientPermission();
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $uac = new UserAccessControl(Role::USER, $userCId);
-        $data = [
-            'name' => 'R1 updated',
-        ];
-
-        try {
-            $this->service->update($uac, $r1->id, $data);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (NotFoundException $e) {
-            $this->assertEquals('The resource does not exist.', $e->getMessage());
-        }
+        $uac = UserFactory::make()->user()->persistedUAC();
+        $this->expectExceptionMessage('The password expiry plugin is not enabled.');
+        $this->service->update($uac, 'foo', [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'foo']);
     }
 }

@@ -438,16 +438,26 @@ class UsersTable extends Table
         // find all the resources that only belongs to the user and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. checkRules)
-        $resourceIds = $this->Permissions
+        $resourceIdsWithPermissionForThisUserOnly = $this->Permissions
             ->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
-        if (!empty($resourceIds)) {
+        $resourcesShared = $this->Permissions
+            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true,])
+            ->select(['aco_foreign_key']);
+        if (!empty($resourceIdsWithPermissionForThisUserOnly)) {
             /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
-            $Resources->softDeleteAll($resourceIds);
+            $Resources->softDeleteAll($resourceIdsWithPermissionForThisUserOnly);
+            $resourcesShared->where([
+                'aco_foreign_key NOT IN' => $resourceIdsWithPermissionForThisUserOnly,
+            ]);
         }
+        $resourcesShared = $resourcesShared
+            ->all()
+            ->extract('aco_foreign_key')
+            ->toArray();
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             // Find all the folders that only belongs to the deleted user and delete them.
@@ -510,7 +520,11 @@ class UsersTable extends Table
 
         // Mark user as deleted
         $user->deleted = true;
-        if (!$this->save($user, ['checkRules' => false])) {
+        $options = [
+            'checkRules' => false,
+            'resourcesShared' => $resourcesShared,
+        ];
+        if (!$this->save($user, $options)) {
             $msg = __('Could not delete the user {0}, please try again later.', $user->username);
             throw new InternalErrorException($msg);
         }

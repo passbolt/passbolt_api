@@ -182,9 +182,12 @@ class SecretsUpdateSecretsService
      * @param string $resourceId The target resource
      * @return void
      */
-    private function deleteOrphanSecrets(string $resourceId)
+    private function deleteOrphanSecrets(string $resourceId): void
     {
         $usersIds = $this->accessService->getUsersIdsHavingAccessTo($resourceId);
+        if (empty($usersIds)) {
+            return;
+        }
 
         $this->secretsTable->deleteAll([
             'resource_id' => $resourceId,

@@ -313,15 +313,29 @@ class GroupsTable extends Table
         // find all the resources that only belongs to the group and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
-        $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
+        $resourceIdsWithPermissionForThisGroupOnly = $this->Permissions
+            ->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
-        if (!empty($resourceIds)) {
+        $resourcesSharedOutsideOfTheGroup = $this->Permissions
+            ->find()
+            ->where([
+                'aco' => PermissionsTable::RESOURCE_ACO,
+                'aro_foreign_key' => $group->id,
+            ]);
+        if (!empty($resourceIdsWithPermissionForThisGroupOnly)) {
             /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
-            $Resources->softDeleteAll($resourceIds);
+            $Resources->softDeleteAll($resourceIdsWithPermissionForThisGroupOnly);
+            $resourcesSharedOutsideOfTheGroup->where([
+                'aco_foreign_key NOT IN' => $resourceIdsWithPermissionForThisGroupOnly,
+            ]);
         }
+        $resourcesSharedOutsideOfTheGroup = $resourcesSharedOutsideOfTheGroup
+            ->all()
+            ->extract('aco_foreign_key')
+            ->toArray();
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             // Find all the folders that only belongs to the deleted group and delete them.
@@ -353,7 +367,12 @@ class GroupsTable extends Table
 
         // Mark group as deleted
         $group->deleted = true;
-        if (!$this->save($group, ['checkRules' => false, 'validate' => false])) {
+        $options = [
+            'checkRules' => false,
+            'validate' => false,
+            'resourcesSharedOutsideTheGroup' => $resourcesSharedOutsideOfTheGroup,
+        ];
+        if (!$this->save($group, $options)) {
             $msg = __('Could not delete the group {0}, please try again later.', $group->name);
             throw new InternalErrorException($msg);
         }

@@ -22,6 +22,7 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\UsersTable;
+use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
@@ -29,6 +30,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Exception;
 use League\Flysystem\FilesystemAdapter;
+use Passbolt\PasswordExpiry\Event\PasswordExpiryOnDisableUserEventListener;
 
 /**
  * UsersEditController Class
@@ -48,18 +50,25 @@ class UsersEditController extends AppController
      *
      * @param string $id user uuid
      * @param \League\Flysystem\FilesystemAdapter $filesystemAdapter file system adapter to write the avatar in cache if saved
+     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService checks if the expiry date needs to be updated when user is disabled
      * @return void
      */
-    public function editPost(string $id, FilesystemAdapter $filesystemAdapter)
-    {
+    public function editPost(
+        string $id,
+        FilesystemAdapter $filesystemAdapter,
+        PasswordExpiryValidationServiceInterface $passwordExpiryValidationService
+    ) {
         $this->assertJson();
+        /** @var \App\Model\Table\UsersTable $usersTable */
+        $usersTable = $this->fetchTable('Users');
+        $this->Users = $usersTable;
+        if ($passwordExpiryValidationService->isExpiryAutomatic()) {
+            $this->Users->getEventManager()->on(new PasswordExpiryOnDisableUserEventListener());
+        }
 
         $data = $this->_validateRequestData($id);
 
         // Try to find the user and validate changes it
-        /** @var \App\Model\Table\UsersTable $usersTable */
-        $usersTable = $this->fetchTable('Users');
-        $this->Users = $usersTable;
         try {
             /** @var \App\Model\Entity\User $user */
             $user = $this->Users->findView($id, $this->User->role())->first();
