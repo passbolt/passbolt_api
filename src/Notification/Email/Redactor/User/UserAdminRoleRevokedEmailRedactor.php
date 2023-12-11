@@ -129,7 +129,7 @@ class UserAdminRoleRevokedEmailRedactor implements SubscribedEmailRedactorInterf
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($user, $recipient) {
-                $userFullName = Purifier::clean($user->profile->first_name) . ' ' . Purifier::clean($user->profile->last_name); // phpcs:ignore
+                $userFullName = Purifier::clean($user->profile->full_name);
 
                 return $user->id === $recipient->id ?
                     __('Your admin role has been revoked') :
