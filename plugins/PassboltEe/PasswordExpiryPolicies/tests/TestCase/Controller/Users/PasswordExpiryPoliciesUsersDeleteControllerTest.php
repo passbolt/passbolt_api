@@ -36,7 +36,9 @@ class PasswordExpiryPoliciesUsersDeleteControllerTest extends AppIntegrationTest
     {
         PasswordExpiryPoliciesSettingFactory::make()->automaticExpiryDisabled()->persist();
 
+        /** @var \App\Model\Entity\User $userToDelete */
         $userToDelete = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceSharedViewed */
         $resourceSharedViewed = ResourceFactory::make()
             ->withPermissionsFor([$userToDelete])
             ->persist();

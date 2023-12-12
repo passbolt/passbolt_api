@@ -52,7 +52,7 @@ class PasswordExpirySettingsGetControllerTest extends AppIntegrationTestCase
         $this->getJson('/password-expiry/settings.json');
         $this->assertSuccess();
 
-        $response = (array)$this->_responseJsonBody;
+        $response = $this->getResponseBodyAsArray();
         $this->assertSame($setting->get('id'), $response['id']);
         $this->assertTrue($response[PasswordExpirySettingsDto::AUTOMATIC_EXPIRY]);
         $this->assertTrue($response[PasswordExpirySettingsDto::AUTOMATIC_UPDATE]);

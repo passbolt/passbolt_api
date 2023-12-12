@@ -25,7 +25,7 @@ class PasswordExpirySettingsSetController extends AppController
     /**
      * Create/update password expiry settings
      *
-     * @param \Passbolt\PasswordExpiry\Service\Settings\PasswordExpirySetSettingsServiceInterface $setSettingsService Validation form
+     * @param \Passbolt\PasswordExpiry\Service\Settings\PasswordExpirySetSettingsServiceInterface $setSettingsService Set settings service instance.
      * @return void
      */
     public function post(PasswordExpirySetSettingsServiceInterface $setSettingsService)

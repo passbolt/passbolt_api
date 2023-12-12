@@ -37,7 +37,6 @@ class PasswordExpiryOnDeleteUserEventListener extends PasswordExpiryAbstractOnUs
 
         /** @var string[] $resourcesShared */
         $resourcesShared = $options['resourcesShared'];
-        /** @var \App\Model\Table\PermissionsTable $PermissionsTable */
-        $this->expireResourcesAccessedByUser($user, $resourcesShared);
+        $this->expireResourcesAccessedByUserAndNotifyOtherOwners($user, $resourcesShared);
     }
 }

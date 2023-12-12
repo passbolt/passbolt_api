@@ -103,11 +103,11 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
     }
 
     /**
-     * Find all users that have access to the resources that are being expired, in order
+     * Find all users that have owner access to the resources that are being expired, in order
      * to notify them
      *
      * @param array $expiringResourcesIds Resources that have just been expired
-     * @param array $userIdsToSkip Resources that have just been expired
+     * @param array $userIdsToSkip Users that should not be notified, e.g. if a user is being disabled or deleted
      * @return \Cake\ORM\Query
      */
     protected function findUsersToNotify(array $expiringResourcesIds, array $userIdsToSkip): Query

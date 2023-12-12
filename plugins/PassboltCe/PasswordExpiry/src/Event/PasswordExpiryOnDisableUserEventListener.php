@@ -40,13 +40,13 @@ class PasswordExpiryOnDisableUserEventListener extends PasswordExpiryAbstractOnU
         /** @var \App\Model\Table\PermissionsTable $PermissionsTable */
         $PermissionsTable = TableRegistry::getTableLocator()->get('Permissions');
         $resourceIdsTheUserHadAccessTo = $PermissionsTable
-            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true,])
+            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
             ->select(['Permissions.aco_foreign_key'])
             ->distinct()
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
 
-        $this->expireResourcesAccessedByUser($user, $resourceIdsTheUserHadAccessTo);
+        $this->expireResourcesAccessedByUserAndNotifyOtherOwners($user, $resourceIdsTheUserHadAccessTo);
     }
 }

@@ -23,7 +23,15 @@ use Passbolt\PasswordExpiry\Model\Dto\PasswordExpirySettingsDto;
 
 class PasswordExpiryGetSettingsService extends PasswordExpirySettingsAbstractService implements PasswordExpiryGetSettingsServiceInterface // phpcs:ignore
 {
-    protected PasswordExpirySettingsDto $dto;
+    protected ?PasswordExpirySettingsDto $dto;
+
+    /**
+     * Instantiate the dto as required by the static analysers
+     */
+    public function __construct()
+    {
+        $this->dto = null;
+    }
 
     /**
      * Returns Password expiry settings.
@@ -33,7 +41,7 @@ class PasswordExpiryGetSettingsService extends PasswordExpirySettingsAbstractSer
      */
     final public function get(): PasswordExpirySettingsDto
     {
-        if (isset($this->dto)) {
+        if (!is_null($this->dto)) {
             return $this->dto;
         }
 
@@ -43,23 +51,25 @@ class PasswordExpiryGetSettingsService extends PasswordExpirySettingsAbstractSer
         /** @var \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|null $passwordExpirySettings */
         $passwordExpirySettings = $passwordExpirySettingsTable->find()->first();
 
-        if ($passwordExpirySettings !== null) {
-            if (!is_array($passwordExpirySettings->value)) {
-                throw new InternalErrorException('The value should be an array');
-            }
-
-            $data = $passwordExpirySettings->value;
-            $form = $this->getForm();
-            if (!$form->execute($data)) {
-                throw new FormValidationException(
-                    __('Could not validate the password expiry settings.'),
-                    $form
-                );
-            }
-            $this->dto = $this->createDTOFromEntity($passwordExpirySettings, $form);
-        } else {
+        if (is_null($passwordExpirySettings)) {
             $this->dto = $this->createDTOFromArray([]);
+
+            return $this->dto;
         }
+
+        if (!is_array($passwordExpirySettings->value)) {
+            throw new InternalErrorException('The value should be an array');
+        }
+
+        $data = $passwordExpirySettings->value;
+        $form = $this->getForm();
+        if (!$form->execute($data)) {
+            throw new FormValidationException(
+                __('Could not validate the password expiry settings.'),
+                $form
+            );
+        }
+        $this->dto = $this->createDTOFromEntity($passwordExpirySettings, $form);
 
         return $this->dto;
     }

@@ -25,7 +25,7 @@ class PasswordExpirySettingsGetController extends AppController
     /**
      * Returns Password expiry settings.
      *
-     * @param \Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface $getSettingsService Validation form
+     * @param \Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface $getSettingsService Get settings service instance.
      * @return void
      */
     public function get(PasswordExpiryGetSettingsServiceInterface $getSettingsService): void

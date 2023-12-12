@@ -175,7 +175,7 @@ class PasswordExpirySettingsDto
             return $this->getSettingsIfDisabled();
         }
 
-        return array_merge(['id' => $this->id,], $this->getValue(), [
+        return array_merge(['id' => $this->id], $this->getValue(), [
             'created' => $this->created,
             'created_by' => $this->created_by,
             'modified' => $this->modified,

@@ -152,6 +152,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
 
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesService_ResourcesExpiredOrExpiringWithinDays()
     {
+        /** @var \App\Model\Entity\Resource[] $resources */
         $resources = ResourceFactory::make([
             ['expired' => null], // to be ignored
             ['expired' => FrozenTime::now()->subDays(1)], // to be ignored, it is expired

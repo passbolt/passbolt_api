@@ -41,9 +41,9 @@ class PasswordExpiryDeleteSettingsService
         /** @var \Passbolt\PasswordExpiry\Model\Table\PasswordExpirySettingsTable $passwordExpirySettingsTable */
         $passwordExpirySettingsTable = $this->fetchTable('Passbolt/PasswordExpiry.PasswordExpirySettings');
 
-        /** @var \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|null $setting */
-        $setting = $passwordExpirySettingsTable->find()->first();
-        if (is_null($setting) || $setting->get('id') !== $id) {
+        try {
+            $setting = $passwordExpirySettingsTable->get($id);
+        } catch (\Throwable $exception) {
             throw new NotFoundException(__('The password expiry setting does not exist.'));
         }
 

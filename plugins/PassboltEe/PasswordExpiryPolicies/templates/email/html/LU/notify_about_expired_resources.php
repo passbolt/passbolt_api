@@ -24,8 +24,6 @@ use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
-/** @var array $recipient */
-$recipient = $body['recipient'];
 $message = $body['message'];
 
 echo $this->element('Email/module/avatar', [
@@ -45,5 +43,5 @@ echo $this->element('Email/module/text', [
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/app/passwords/filter/expired', true),
-    'text' => __('view them in passbolt'),
+    'text' => __('View them in passbolt'),
 ]);

@@ -57,7 +57,7 @@ class PasswordExpiryGroupsDeleteControllerTest extends AppIntegrationTestCase
             ->withGroupsUsersFor([$viewerActive1, $viewerActive2])
             ->persist();
 
-        [$resource1, $resource2,] = ResourceFactory::make(4)
+        [$resource1, $resource2] = ResourceFactory::make(4)
             ->withPermissionsFor([$owner1])
             ->withPermissionsFor([$group, $viewerActive2], Permission::READ)
             ->withSecretsFor($allUsers)

@@ -74,7 +74,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
 
     /**
      * @param array $data payload
-     * @return string[] array with the resourceIds as keys and the expiry date as value
+     * @return array<string, \Cake\I18n\FrozenTime|null> array with the resourceIds as keys and the expiry date as value
      * @throws \Cake\Http\Exception\BadRequestException if the expired value are not valid
      * @throws \Cake\Http\Exception\BadRequestException if the resource_id value are not valid
      * @throws \Cake\Http\Exception\BadRequestException if the resource_id value is found twice in the payload
@@ -151,7 +151,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC performing the action
-     * @param string[] $expiryDateList array with the resourceIds as keys and the expiry date as value
+     * @param array<string, \Cake\I18n\FrozenTime|null> $expiryDateList array with the resourceIds as keys and the expiry date as value
      * @return \Cake\Datasource\ResultSetInterface
      * @throws \Exception if the entities could not be saved
      */

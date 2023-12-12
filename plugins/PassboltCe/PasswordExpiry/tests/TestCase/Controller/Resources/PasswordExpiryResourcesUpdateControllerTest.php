@@ -38,6 +38,8 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         PasswordExpirySettingFactory::make()->persist();
 
         $operator = UserFactory::make()->user()->persist();
+
+        /** @var \App\Model\Entity\Resource $resourceToUpdate */
         $resourceToUpdate = ResourceFactory::make()->expired()->withPermissionsFor([$operator])->persist();
         $this->assertTrue($resourceToUpdate->isExpired());
         $this->logInAs($operator);
@@ -76,6 +78,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
             $expiryDate = FrozenTime::tomorrow();
         }
         [$operator, $ownerWithAccess, $editorWithAccess] = UserFactory::make(4)->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceToUpdate */
         $resourceToUpdate = ResourceFactory::make(['name' => 'Foo'])
             ->expired($expiryDate)
             ->withPermissionsFor([$operator, $ownerWithAccess])

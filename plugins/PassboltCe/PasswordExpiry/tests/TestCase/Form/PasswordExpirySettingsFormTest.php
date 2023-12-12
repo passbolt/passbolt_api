@@ -48,31 +48,46 @@ class PasswordExpirySettingsFormTest extends TestCase
         parent::tearDown();
     }
 
-    public function data(): array
+    public function passwordExpirySettingsFormDataProvider(): array
     {
         return [
-          [[], false],
-          [[
-              PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
-              PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
-          ], false],
-          [[
-              PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
-              PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
-          ], false],
-          [[
-              PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
-              PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
-          ], false],
-          [[
-              PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
-              PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
-          ], true],
+            [
+                'inputData' => [],
+                'expectedResult' => false,
+            ],
+            [
+                'inputData' => [
+                    PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
+                    PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
+                ],
+                'expectedResult' => false,
+            ],
+            [
+                'inputData' => [
+                    PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
+                    PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
+                ],
+                'expectedResult' => false,
+            ],
+            [
+                'inputData' => [
+                    PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => false,
+                    PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
+                ],
+                'expectedResult' => false,
+            ],
+            [
+                'inputData' => [
+                    PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
+                    PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
+                ],
+                'expectedResult' => true,
+            ],
         ];
     }
 
     /**
-     * @dataProvider data
+     * @dataProvider passwordExpirySettingsFormDataProvider
      */
     public function testPasswordExpirySettingsForm(array $data, bool $expectedResult)
     {

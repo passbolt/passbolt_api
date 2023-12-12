@@ -40,10 +40,8 @@ class PasswordExpiryUsersDeleteControllerTest extends AppIntegrationTestCase
         PasswordExpirySettingFactory::make()->persist();
 
         [$owner, $userToDelete] = UserFactory::make(2)->user()->persist();
-        $resourceSharedViewed = ResourceFactory::make()
-            ->withPermissionsFor([$userToDelete, $owner])
-            ->persist();
-        $resourceSharedNotViewed = ResourceFactory::make()
+
+        [$resourceSharedViewed, $resourceSharedNotViewed] = ResourceFactory::make(2)
             ->withPermissionsFor([$userToDelete, $owner])
             ->persist();
         SecretAccessFactory::make()

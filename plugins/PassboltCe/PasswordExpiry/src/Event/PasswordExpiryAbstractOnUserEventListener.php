@@ -52,11 +52,15 @@ abstract class PasswordExpiryAbstractOnUserEventListener implements EventListene
     ): void;
 
     /**
+     * When a user is deleted or disabled, the resources he had access to
+     * and that were shared with other users need to be expired. At least if
+     * the user ever decrypted them.
+     *
      * @param \App\Model\Entity\User $user user deleted or disabled
-     * @param string[] $resourcesShared user deleted or disabled
+     * @param string[] $resourcesShared resources that the user had access to and that were share with other users
      * @return void
      */
-    protected function expireResourcesAccessedByUser(
+    protected function expireResourcesAccessedByUserAndNotifyOtherOwners(
         User $user,
         array $resourcesShared
     ): void {
@@ -68,13 +72,17 @@ abstract class PasswordExpiryAbstractOnUserEventListener implements EventListene
             $user->id
         );
 
-        if (!empty($resourceIds)) {
-            $userIdsToSkip = [$user->id];
-            $this->dispatchEvent(
-                self::PASSWORD_EXPIRY_ON_USER_DISABLED_OR_DELETED,
-                compact('resourceIds', 'userIdsToSkip'),
-                $this
-            );
+        if (empty($resourceIds)) {
+            return;
         }
+
+        // Skip the user deleted/disabled, as it should not be notified that they have expired passwords.
+        // Since we are in beforeSave, the user is not deleted/disabled in DB yet
+        $userIdsToSkip = [$user->id];
+        $this->dispatchEvent(
+            self::PASSWORD_EXPIRY_ON_USER_DISABLED_OR_DELETED,
+            compact('resourceIds', 'userIdsToSkip'),
+            $this
+        );
     }
 }

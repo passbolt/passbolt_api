@@ -127,7 +127,7 @@ trait SyncTrait
             }
 
             try {
-                /** @var \App\Model\Table\UsersTable|\Passbolt\DirectorySync\Actions\Traits\GroupsTable $model */
+                /** @var \App\Model\Table\UsersTable|\App\Model\Table\GroupsTable $model */
                 $model = $this->{self::ENTITY_TYPE};
                 if (!$model->softDelete($entity)) {
                     // The entity cannot be deleted (for example: it is the sole owner of shared passwords)

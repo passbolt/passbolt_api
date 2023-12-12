@@ -57,7 +57,6 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
         $emailCollection = new EmailCollection();
 
         $expiryNotificationInDays = $event->getData('expiryNotificationInDays');
-        $notifyIfAboutToExpire = $event->getData('notifyIfAboutToExpire');
         $notifyIfExpiresToday = $event->getData('notifyIfExpiresToday');
 
         /** @var \Cake\ORM\Query $users */
@@ -74,7 +73,6 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
                 $this->createEmail(
                     $user,
                     $expiryNotificationInDays,
-                    $notifyIfAboutToExpire,
                     $notifyIfExpiresToday
                 ),
             );
@@ -86,14 +84,12 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
     /**
      * @param \App\Model\Entity\User $recipient the recipient to send email to.
      * @param null|int $expiryNotificationInDays send notification N days prior to expiry
-     * @param bool $notifyIfAboutToExpire email notification setting
      * @param bool $notifyIfExpiresToday email notification setting
      * @return \App\Notification\Email\Email
      */
     private function createEmail(
         User $recipient,
         ?int $expiryNotificationInDays,
-        bool $notifyIfAboutToExpire,
         bool $notifyIfExpiresToday
     ): Email {
         $localeService = new LocaleService();
@@ -105,7 +101,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
         );
         $message = $localeService->translateString(
             $recipient->locale,
-            function () use ($expiryNotificationInDays, $notifyIfAboutToExpire, $notifyIfExpiresToday) {
+            function () use ($expiryNotificationInDays, $notifyIfExpiresToday) {
                 if ($notifyIfExpiresToday && !$expiryNotificationInDays) {
                     return __('Some of your passwords are expired.');
                 } elseif (!$notifyIfExpiresToday && $expiryNotificationInDays) {
@@ -120,13 +116,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
             $recipient,
             $subject,
             [
-                'body' => compact(
-                    'recipient',
-                    'expiryNotificationInDays',
-                    'notifyIfAboutToExpire',
-                    'notifyIfExpiresToday',
-                    'message'
-                ),
+                'body' => compact('message'),
                 'title' => $subject,
             ],
             self::TEMPLATE

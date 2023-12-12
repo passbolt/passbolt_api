@@ -39,7 +39,9 @@ class PasswordExpiryPoliciesUsersEditDisableControllerTest extends AppIntegratio
     {
         PasswordExpiryPoliciesSettingFactory::make()->automaticExpiryDisabled()->persist();
 
+        /** @var \App\Model\Entity\User $userToDisable */
         $userToDisable = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\Resource $resourceSharedViewed */
         $resourceSharedViewed = ResourceFactory::make()
             ->withPermissionsFor([$userToDisable])
             ->persist();

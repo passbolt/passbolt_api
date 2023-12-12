@@ -145,6 +145,7 @@ class PasswordExpiryGroupsUpdateControllerTest extends AppIntegrationTestCase
             ->persist();
 
         // $resource1 will not expire as the viewer has permission through direct permission
+        /** @var \App\Model\Entity\Resource $resource1 */
         $resource1 = ResourceFactory::make()
             ->withPermissionsFor([$group], Permission::READ)
             ->withPermissionsFor([$viewerActive1])
@@ -223,6 +224,7 @@ class PasswordExpiryGroupsUpdateControllerTest extends AppIntegrationTestCase
             ->persist();
 
         // Will not expire as the viewer has still permission through group2
+        /** @var \App\Model\Entity\Resource $resource1 */
         $resource1 = ResourceFactory::make()
             ->withPermissionsFor([$group1, $group2])
             ->withSecretsFor($allUsers)

@@ -60,7 +60,6 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
     public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
-        /** @var string[] $resourceIds */
         /** @var Resource $resource */
         $resource = $event->getData('resource');
         /** @var \App\Model\Table\UsersTable $UsersTable */

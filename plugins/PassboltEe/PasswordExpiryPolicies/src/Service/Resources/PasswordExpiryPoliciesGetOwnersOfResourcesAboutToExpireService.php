@@ -20,7 +20,7 @@ namespace Passbolt\PasswordExpiryPolicies\Service\Resources;
 use App\Model\Entity\Permission;
 use Cake\Console\Exception\StopException;
 use Cake\Event\EventDispatcherTrait;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -63,23 +63,19 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
             throw new StopException(__('Password expiry is not activated.'));
         }
 
-        $expiryNotificationInDays = $settings->getExpiryNotification();
-
         // Notify resource owners that some resources are about to expire
-        $notifyIfAboutToExpire =
-            EmailNotificationSettings::get('send.password.aboutToExpire')
-            && $expiryNotificationInDays;
+        $expiryNotificationInDays = EmailNotificationSettings::get('send.password.aboutToExpire') ?
+            $settings->getExpiryNotification() : null;
 
         // Notify resource owners that resources are expiring today
         $notifyIfExpiresToday = (bool)EmailNotificationSettings::get('send.password.expire');
 
-        $users = $this->getUsersToNotify($expiryNotificationInDays, $notifyIfAboutToExpire, $notifyIfExpiresToday);
+        $users = $this->getUsersToNotify($expiryNotificationInDays, $notifyIfExpiresToday);
 
         $this->dispatchEvent(
             self::NOTIFY_ABOUT_EXPIRED_RESOURCES_EVENT_NAME,
             compact(
                 'users',
-                'notifyIfAboutToExpire',
                 'notifyIfExpiresToday',
                 'expiryNotificationInDays'
             ),
@@ -93,18 +89,15 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
      * Query on UsersTable to retrieve all owners
      *
      * @param null|int $expiryNotificationInDays send notification N days prior to expiry
-     * @param bool $notifyIfAboutToExpire email notification setting
      * @param bool $notifyIfExpiresToday email notification setting
-     * @return \Cake\ORM\Query|null
+     * @return \Cake\ORM\Query
      */
     public function getUsersToNotify(
         ?int $expiryNotificationInDays,
-        bool $notifyIfAboutToExpire = true,
         bool $notifyIfExpiresToday = true
-    ): ?Query {
+    ): Query {
         $expiringResourceIds = $this->findResourcesExpiringTodayOrInNDays(
             $expiryNotificationInDays,
-            $notifyIfAboutToExpire,
             $notifyIfExpiresToday
         )->select('id');
 
@@ -122,39 +115,39 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
      * Query all resources expired or expiring in N days
      *
      * @param int|null $expiresInDays expires in exactly this number of days
-     * @param bool $notifyIfAboutToExpire notify owners that their passwords is about to expire in N days
      * @param bool $notifyIfExpiresToday notify owners that their passwords are expiring today
      * @return \Cake\ORM\Query
      */
     public function findResourcesExpiringTodayOrInNDays(
         ?int $expiresInDays,
-        bool $notifyIfAboutToExpire = true,
         bool $notifyIfExpiresToday = true
     ): Query {
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $expiredResources = $ResourcesTable->find();
-        if ($notifyIfAboutToExpire && $notifyIfExpiresToday) {
+        $today = FrozenTime::today();
+        $tomorrow = FrozenTime::tomorrow();
+        if ($expiresInDays && $notifyIfExpiresToday) {
             $condition = [
                 'OR' => [
                     [
-                        'expired >=' => FrozenDate::today(),
-                        'expired <' => FrozenDate::tomorrow(),
+                        'expired >=' => $today,
+                        'expired <' => $tomorrow,
                     ],
                     [
-                        'expired >=' => FrozenDate::today()->addDays($expiresInDays),
-                        'expired <' => FrozenDate::tomorrow()->addDays($expiresInDays),
+                        'expired >=' => $today->addDays($expiresInDays),
+                        'expired <' => $tomorrow->addDays($expiresInDays),
                     ],
                 ],
             ];
-        } elseif ($notifyIfAboutToExpire && !$notifyIfExpiresToday) {
+        } elseif ($expiresInDays) {
             $condition = [
-                'expired >=' => FrozenDate::today()->addDays($expiresInDays),
-                'expired <' => FrozenDate::tomorrow()->addDays($expiresInDays),
+                'expired >=' => $today->addDays($expiresInDays),
+                'expired <' => $tomorrow->addDays($expiresInDays),
             ];
-        } elseif (!$notifyIfAboutToExpire && $notifyIfExpiresToday) {
+        } elseif ($notifyIfExpiresToday) {
             $condition = [
-                'expired >=' => FrozenDate::today(),
-                'expired <' => FrozenDate::tomorrow(),
+                'expired >=' => $today,
+                'expired <' => $tomorrow,
             ];
         } else {
             throw new StopException(__('Password expiry email notifications are disabled.'));
