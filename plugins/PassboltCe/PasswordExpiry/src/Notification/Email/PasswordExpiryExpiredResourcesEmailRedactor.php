@@ -32,7 +32,7 @@ use Passbolt\Locale\Service\LocaleService;
 use Passbolt\PasswordExpiry\Event\PasswordExpiryAbstractOnUserEventListener;
 use Passbolt\PasswordExpiry\Event\PasswordExpiryOnDeleteGroupEventListener;
 use Passbolt\PasswordExpiry\Service\Groups\PasswordExpiryExpireResourcesOnGroupsUpdateService;
-use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesOnResourceShareService;
+use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourceOnShareService;
 
 class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -50,7 +50,7 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
     public function getSubscribedEvents(): array
     {
         return [
-            PasswordExpiryExpireResourcesOnResourceShareService::EVENT_EXPIRE_RESOURCE_ON_SHARE,
+            PasswordExpiryExpireResourceOnShareService::EVENT_EXPIRE_RESOURCE_ON_SHARE,
             PasswordExpiryExpireResourcesOnGroupsUpdateService::EVENT_EXPIRE_RESOURCES_ON_GROUP_UPDATE,
             PasswordExpiryAbstractOnUserEventListener::PASSWORD_EXPIRY_ON_USER_DISABLED_OR_DELETED,
             PasswordExpiryOnDeleteGroupEventListener::PASSWORD_EXPIRY_ON_GROUP_DELETE,

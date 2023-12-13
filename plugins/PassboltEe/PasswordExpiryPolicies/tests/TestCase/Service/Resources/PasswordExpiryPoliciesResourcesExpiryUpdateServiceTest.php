@@ -122,7 +122,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
         $payload = [['id' => UuidFactory::uuid(), 'expired' => FrozenTime::today()]];
         $uac = $this->mockUserAccessControl();
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('Password expiry is not enabled.');
+        $this->expectExceptionMessage('The expiry date is required.');
         $this->service->updateMany($uac, $payload);
     }
 

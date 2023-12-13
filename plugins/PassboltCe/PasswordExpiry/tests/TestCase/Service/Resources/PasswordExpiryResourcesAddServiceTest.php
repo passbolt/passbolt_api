@@ -17,12 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\PasswordExpiry\Test\TestCase\Service\Resources;
 
-use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesAddService;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\Http\Exception\BadRequestException;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
@@ -53,16 +51,47 @@ class PasswordExpiryResourcesAddServiceTest extends AppTestCase
      * Ensures that the expires field is not assignable
      * if password expiry is not enabled in DB
      */
-    public function testPasswordExpiryResourcesAddService_Pwd_Expiry_Settings_Disabled_Should_Throw_Exception()
+    public function testPasswordExpiryResourcesAddService_Pwd_Expiry_Settings_Disabled_Should_Ignore_Expired_Field()
     {
         // Arrange
         $uac = UserFactory::make()->user()->persistedUAC();
-        $payload = [
-            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'Foo',
-        ];
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('Password expiry is not enabled.');
-        $this->service->add($uac, $payload);
+        $payload = $this->getDummyResourcesPostData([
+            'name' => 'Nouveau nom de resource privée',
+            'username' => 'username@domain.com',
+            'uri' => 'https://www.mon-domain.com',
+            'description' => 'Nouvelle description de resource privée',
+        ]);
+
+        $values = ['foo', '2000-01-01', null];
+        foreach ($values as $expired) {
+            $payload['expired'] = $expired;
+            $resource = $this->service->add($uac, $payload);
+            $this->assertNull($resource->get('expired'));
+        }
+        $this->assertSame(count($values), ResourceFactory::count());
+    }
+
+    /**
+     * Ensures that the expires field is not assignable
+     * if password expiry is not enabled in DB
+     */
+    public function testPasswordExpiryResourcesAddService_Pwd_Expiry_Settings_Enabled_Should_Ignore_Non_Null_Values()
+    {
+        // Arrange
+        $uac = UserFactory::make()->user()->persistedUAC();
+        $payload = $this->getDummyResourcesPostData([
+            'name' => 'Nouveau nom de resource privée',
+            'username' => 'username@domain.com',
+            'uri' => 'https://www.mon-domain.com',
+            'description' => 'Nouvelle description de resource privée',
+        ]);
+
+        foreach (['foo', '2000-01-01'] as $expired) {
+            $payload['expired'] = $expired;
+            $resource = $this->service->add($uac, $payload);
+            $this->assertNull($resource->get('expired'));
+        }
+        $this->assertSame(2, ResourceFactory::count());
     }
 
     public function testPasswordExpiryResourcesAddService_Pwd_Expiry_With_Expiry_Date_Not_Set()
@@ -86,24 +115,5 @@ class PasswordExpiryResourcesAddServiceTest extends AppTestCase
         $resource = ResourceFactory::find()->firstOrFail();
         $this->assertSame(1, ResourceFactory::count());
         $this->assertNull($resource->expired);
-    }
-
-    /**
-     * Ensures that the expires field is set to null
-     */
-    public function testPasswordExpiryResourcesAddService_Pwd_Expiry_With_Expiry_Date_Not_Null()
-    {
-        // Arrange
-        $uac = UserFactory::make()->user()->persistedUAC();
-        // Enable the pwd expiry in settings
-        PasswordExpirySettingFactory::make()->persist();
-
-        $payload = $this->getDummyResourcesPostData([
-            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'Foo',
-        ]);
-
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The expiration date should be null.');
-        $this->service->add($uac, $payload);
     }
 }

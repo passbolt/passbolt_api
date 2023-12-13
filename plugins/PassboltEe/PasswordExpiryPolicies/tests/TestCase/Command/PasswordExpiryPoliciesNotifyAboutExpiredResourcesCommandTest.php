@@ -21,25 +21,19 @@ use App\Test\Factory\GroupFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\FrozenTime;
-use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiryPolicies\Command\PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand;
-use Passbolt\PasswordExpiryPolicies\PasswordExpiryPoliciesPlugin;
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService;
 use Passbolt\PasswordExpiryPolicies\Test\Factory\PasswordExpiryPoliciesSettingFactory;
 
-class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends TestCase
+class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
     use EmailQueueTrait;
-    use FeaturePluginAwareTrait;
-    use TruncateDirtyTables;
 
     /**
      * setUp method
@@ -51,8 +45,6 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends TestC
         parent::setUp();
         $this->useCommandRunner();
         HealthcheckCommand::$isUserRoot = false;
-        $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
-        $this->enableFeaturePlugin(PasswordExpiryPoliciesPlugin::class);
     }
 
     /**

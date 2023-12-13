@@ -29,7 +29,6 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Passbolt\PasswordExpiry\Service\Groups\PasswordExpiryExpireResourcesOnGroupsUpdateService;
 
 class GroupsUpdateService
 {
@@ -65,19 +64,16 @@ class GroupsUpdateService
      */
     private $groupsUsersRemoveService;
 
-    private ?PasswordExpiryExpireResourcesOnGroupsUpdateService $expireResourcesOnGroupsUpdateService;
+    private ExpireResourcesOnGroupsUpdateServiceInterface $expireResourcesOnGroupsUpdateService;
 
     /**
-     * @param \Passbolt\PasswordExpiry\Service\Groups\PasswordExpiryExpireResourcesOnGroupsUpdateService|string|null $expireResourcesOnGroupsUpdateService Service to expire resources when users are removed from a group
+     * @param \App\Service\Groups\ExpireResourcesOnGroupsUpdateServiceInterface $expireResourcesOnGroupsUpdateService Service to expire resources when users are removed from a group
      * @return void
      */
-    public function __construct($expireResourcesOnGroupsUpdateService = null)
-    {
-        if ($expireResourcesOnGroupsUpdateService instanceof PasswordExpiryExpireResourcesOnGroupsUpdateService) {
-            $this->expireResourcesOnGroupsUpdateService = $expireResourcesOnGroupsUpdateService;
-        } else {
-            $this->expireResourcesOnGroupsUpdateService = null;
-        }
+    public function __construct(
+        ExpireResourcesOnGroupsUpdateServiceInterface $expireResourcesOnGroupsUpdateService
+    ) {
+        $this->expireResourcesOnGroupsUpdateService = $expireResourcesOnGroupsUpdateService;
         $this->groupsTable = TableRegistry::getTableLocator()->get('Groups');
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->groupGetService = new GroupGetService();
@@ -131,14 +127,11 @@ class GroupsUpdateService
                 $addedGroupsUsers = $this->addGroupsUsers($uac, $group, $changes, $secrets);
                 $updatedGroupsUsers = $this->updateGroupsUsers($uac, $group, $changes);
                 $deletedGroupsUsers = $this->deleteGroupsUsers($uac, $group, $changes);
-                $this->expireResourcesIfUsersLostPermission($group, $deletedGroupsUsers);
-                $this->notifyUsers(
-                    $uac,
+                $this->expireResourcesOnGroupsUpdateService->expireResourcesIfUsersLostPermission(
                     $group,
-                    $addedGroupsUsers,
-                    $updatedGroupsUsers,
                     $deletedGroupsUsers
                 );
+                $this->notifyUsers($uac, $group, $addedGroupsUsers, $updatedGroupsUsers, $deletedGroupsUsers);
             }
         );
 
@@ -457,27 +450,5 @@ class GroupsUpdateService
             'userId' => $uac->getId(),
         ]);
         $this->groupsTable->getEventManager()->dispatch($event);
-    }
-
-    /**
-     * Expire resources for which the users lost access
-     * and had previous access to.
-     *
-     * Returns null if the password expiry plugin is not loaded
-     *
-     * @param \App\Model\Entity\Group $group Group in update
-     * @param \App\Model\Entity\GroupsUser[] $deletedGroupsUsers GroupsUsers deleted
-     * @return ?bool return true if some passwords got expired, to include the information in the email, null if the password expiry feature is not active
-     */
-    protected function expireResourcesIfUsersLostPermission(Group $group, array $deletedGroupsUsers): ?bool
-    {
-        if (is_null($this->expireResourcesOnGroupsUpdateService)) {
-            return null;
-        }
-
-        return $this->expireResourcesOnGroupsUpdateService->expireResourcesIfUsersLostPermission(
-            $group,
-            $deletedGroupsUsers
-        );
     }
 }

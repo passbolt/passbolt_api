@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\PasswordExpiry\Event;
 
 use App\Model\Entity\User;
+use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventInterface;
@@ -29,14 +30,32 @@ abstract class PasswordExpiryAbstractOnUserEventListener implements EventListene
 
     public const PASSWORD_EXPIRY_ON_USER_DISABLED_OR_DELETED = 'PasswordExpiryOnUserEventListener.expire_resources';
 
+    protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
+
     /**
      * @inheritDoc
      */
     public function implementedEvents(): array
     {
         return [
+            'Application.buildContainer' => 'setPasswordExpiryValidationServiceOnBuildContainerEvent',
             'Model.beforeSave' => 'expireSharedResources',
         ];
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface $event event sent on container resolution
+     * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function setPasswordExpiryValidationServiceOnBuildContainerEvent(EventInterface $event): void
+    {
+        /** @var \Cake\Core\ContainerInterface $container */
+        $container = $event->getData('container');
+        /** @var \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService */
+        $passwordExpiryValidationService = $container->get(PasswordExpiryValidationServiceInterface::class);
+        $this->passwordExpiryValidationService = $passwordExpiryValidationService;
     }
 
     /**
@@ -65,6 +84,9 @@ abstract class PasswordExpiryAbstractOnUserEventListener implements EventListene
         array $resourcesShared
     ): void {
         if (empty($resourcesShared)) {
+            return;
+        }
+        if (!$this->passwordExpiryValidationService->isExpiryAutomatic()) {
             return;
         }
         $resourceIds = (new PasswordExpiryExpireResourcesService())->expireResources(

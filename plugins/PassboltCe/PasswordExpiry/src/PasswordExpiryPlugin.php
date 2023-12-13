@@ -16,20 +16,23 @@ declare(strict_types=1);
  */
 namespace Passbolt\PasswordExpiry;
 
-use App\Service\Groups\GroupsUpdateService;
+use App\Service\Groups\ExpireResourcesOnGroupsUpdateServiceInterface;
+use App\Service\Resources\ExpireResourceOnShareServiceInterface;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
-use App\Service\Resources\ResourcesShareService;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
+use Passbolt\PasswordExpiry\Event\PasswordExpiryOnDeleteGroupEventListener;
+use Passbolt\PasswordExpiry\Event\PasswordExpiryOnDeleteUserEventListener;
+use Passbolt\PasswordExpiry\Event\PasswordExpiryOnDisableUserEventListener;
 use Passbolt\PasswordExpiry\Event\PasswordExpiryResourceMarkedAsExpiredEventListener;
 use Passbolt\PasswordExpiry\Notification\DigestTemplate\PasswordExpiryPasswordMarkedExpiredDigestTemplate;
 use Passbolt\PasswordExpiry\Notification\Email\PasswordExpiryRedactorPool;
 use Passbolt\PasswordExpiry\Notification\NotificationSettings\PasswordExpiryNotificationSettingsDefinition;
 use Passbolt\PasswordExpiry\Service\Groups\PasswordExpiryExpireResourcesOnGroupsUpdateService;
-use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesOnResourceShareService;
+use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourceOnShareService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface;
@@ -49,6 +52,9 @@ class PasswordExpiryPlugin extends BasePlugin
 
         // Register email redactors and listen to user disabling/deleting
         $app->getEventManager()
+            ->on(new PasswordExpiryOnDeleteGroupEventListener())
+            ->on(new PasswordExpiryOnDeleteUserEventListener())
+            ->on(new PasswordExpiryOnDisableUserEventListener())
             ->on(new PasswordExpiryResourceMarkedAsExpiredEventListener())
             ->on(new PasswordExpiryNotificationSettingsDefinition())
             ->on(new PasswordExpiryRedactorPool());
@@ -74,14 +80,12 @@ class PasswordExpiryPlugin extends BasePlugin
             ->setConcrete(PasswordExpiryValidationService::class)
             ->addArgument(PasswordExpiryGetSettingsServiceInterface::class);
         $container
-            ->extend(ResourcesShareService::class)
-            ->addArgument(PasswordExpiryExpireResourcesOnResourceShareService::class);
+            ->extend(ExpireResourceOnShareServiceInterface::class)
+            ->setConcrete(PasswordExpiryExpireResourceOnShareService::class)
+            ->addArgument(PasswordExpiryValidationServiceInterface::class);
         $container
-            ->add(PasswordExpiryExpireResourcesOnResourceShareService::class);
-        $container
-            ->extend(GroupsUpdateService::class)
-            ->addArgument(PasswordExpiryExpireResourcesOnGroupsUpdateService::class);
-        $container
-            ->add(PasswordExpiryExpireResourcesOnGroupsUpdateService::class);
+            ->extend(ExpireResourcesOnGroupsUpdateServiceInterface::class)
+            ->setConcrete(PasswordExpiryExpireResourcesOnGroupsUpdateService::class)
+            ->addArgument(PasswordExpiryValidationServiceInterface::class);
     }
 }

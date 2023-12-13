@@ -31,7 +31,6 @@ use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesOnResourceShareService;
 
 class ResourcesShareService
 {
@@ -68,21 +67,16 @@ class ResourcesShareService
      */
     private $userHasPermissionService;
 
-    private ?PasswordExpiryExpireResourcesOnResourceShareService $expireResourcesOnResourceShareService;
+    private ExpireResourceOnShareServiceInterface $expireResourcesOnResourceShareService;
 
     /**
      * Instantiate the service.
      *
-     * @param string|\Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesOnResourceShareService $expireResourcesOnResourceShareService service to expire a resource if users lost permission on this permission
+     * @param \App\Service\Resources\ExpireResourceOnShareServiceInterface $expireResourcesOnResourceShareService service to expire a resource if users lost permission on this permission
      */
-    public function __construct($expireResourcesOnResourceShareService = null)
-    {
-        if ($expireResourcesOnResourceShareService instanceof PasswordExpiryExpireResourcesOnResourceShareService) {
-            $this->expireResourcesOnResourceShareService = $expireResourcesOnResourceShareService;
-        } else {
-            $this->expireResourcesOnResourceShareService = null;
-        }
-
+    public function __construct(
+        ExpireResourceOnShareServiceInterface $expireResourcesOnResourceShareService
+    ) {
         /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
         /** @phpstan-ignore-next-line */
@@ -91,6 +85,7 @@ class ResourcesShareService
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         $this->userHasPermissionService = new UserHasPermissionService();
+        $this->expireResourcesOnResourceShareService = $expireResourcesOnResourceShareService;
     }
 
     /**
@@ -103,24 +98,26 @@ class ResourcesShareService
      * @return Resource
      * @throws \Exception
      */
-    public function share(
-        UserAccessControl $uac,
-        string $resourceId,
-        array $changes = [],
-        array $secrets = []
-    ): Resource {
+    public function share(UserAccessControl $uac, string $resourceId, array $changes = [], array $secrets = [])
+    {
         $resource = $this->getResource($resourceId);
 
-        $userIdsWithAccessBeforeShare = $this->permissionsGetUsersIdsHavingAccessToService
-            ->getUsersIdsHavingAccessTo($resourceId);
+        $this->expireResourcesOnResourceShareService->collectUsersIdsHavingAccessToResource(
+            $this->permissionsGetUsersIdsHavingAccessToService,
+            $resource,
+            $changes
+        );
 
         $this->Resources->getConnection()->transactional(
-            function () use ($uac, $resource, $changes, $secrets, $userIdsWithAccessBeforeShare) {
+            function () use ($uac, $resource, $changes, $secrets) {
                 $updatePermissionsResult = $this->updatePermissions($uac, $resource, $changes);
                 $this->updateSecrets($uac, $resource, $secrets);
                 $this->postAccessesGranted($uac, $updatePermissionsResult['added']);
                 $this->postAccessesRevoked($uac, $resource, $updatePermissionsResult['removed']);
-                $this->expireResourceIfUsersLostPermission($resource, $userIdsWithAccessBeforeShare);
+                $this->expireResourcesOnResourceShareService->expireResourceIfUsersLostPermission(
+                    $this->permissionsGetUsersIdsHavingAccessToService,
+                    $resource
+                );
             }
         );
 
@@ -132,32 +129,6 @@ class ResourcesShareService
         $this->getEventManager()->dispatch($event);
 
         return $resource;
-    }
-
-    /**
-     * Expire the resource if some users lost permission and accessed the resource
-     * secret in the past.
-     *
-     * @param \App\Model\Entity\Resource $resource resources to be expired if exposed to users
-     * @param array $userIdsWithAccessBeforeShare user who lost permission
-     * @return bool true if some resources got expired
-     */
-    protected function expireResourceIfUsersLostPermission(
-        Resource $resource,
-        array $userIdsWithAccessBeforeShare
-    ): bool {
-        if (is_null($this->expireResourcesOnResourceShareService)) {
-            return false;
-        }
-
-        $userIdsHavingAccessAfterShare = $this->permissionsGetUsersIdsHavingAccessToService
-            ->getUsersIdsHavingAccessTo($resource->id);
-
-        return $this->expireResourcesOnResourceShareService->expireResourceIfUsersLostPermission(
-            $resource,
-            $userIdsWithAccessBeforeShare,
-            $userIdsHavingAccessAfterShare
-        );
     }
 
     /**
@@ -279,7 +250,7 @@ class ResourcesShareService
     private function postAccessesRevoked(UserAccessControl $uac, Resource $resource, array $deletedPermissions = [])
     {
         foreach ($deletedPermissions as $deletedPermission) {
-            $this->notifyAccessRevoked($uac, $resource, $deletedPermission);
+            $this->notifyAccessRevoked($uac, $deletedPermission);
             if ($deletedPermission->aro === PermissionsTable::GROUP_ARO) {
                 $this->postGroupAccessRevoked($resource, $deletedPermission->aro_foreign_key);
             } else {
@@ -291,15 +262,14 @@ class ResourcesShareService
     /**
      * Trigger an event to notify other components about the revoked permissions.
      *
-     * @param \App\Utility\UserAccessControl $accessControl The operator
-     * @param \App\Model\Entity\Resource $resource The revoked permission
+     * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Permission $permission The revoked permission
      * @return void
      */
-    private function notifyAccessRevoked(UserAccessControl $accessControl, Resource $resource, Permission $permission)
+    private function notifyAccessRevoked(UserAccessControl $uac, Permission $permission)
     {
-        $eventData = compact('permission', 'resource', 'accessControl');
-        $event = new Event(self::AFTER_ACCESS_REVOKED_EVENT_NAME, $this, $eventData);
+        $eventData = ['permission' => $permission, 'accessControl' => $uac];
+        $event = new Event('Service.ResourcesShare.afterAccessRevoked', $this, $eventData);
         $this->Resources->getEventManager()->dispatch($event);
     }
 

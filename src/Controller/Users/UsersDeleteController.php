@@ -22,7 +22,6 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
-use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -33,7 +32,6 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Passbolt\PasswordExpiry\Event\PasswordExpiryOnDeleteUserEventListener;
 
 /**
  * UsersDeleteController Class
@@ -99,16 +97,12 @@ class UsersDeleteController extends AppController
      * User delete action
      *
      * @param string $id user uuid
-     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService checks if the expiry date needs to be updated when user is deleted
      * @throws \Exception if user cannot be deleted
      * @return void
      */
-    public function delete(string $id, PasswordExpiryValidationServiceInterface $passwordExpiryValidationService)
+    public function delete(string $id)
     {
         $this->assertJson();
-        if ($passwordExpiryValidationService->isExpiryAutomatic()) {
-            $this->Users->getEventManager()->on(new PasswordExpiryOnDeleteUserEventListener());
-        }
 
         $user = $this->_validateRequestData($id);
         // keep a list of group the user was a member of. Useful to notify the group managers after the delete
@@ -117,6 +111,7 @@ class UsersDeleteController extends AppController
             ->all()
             ->extract('group_id')
             ->toArray();
+
         $this->GroupsUsers->getConnection()->transactional(function () use ($user) {
             $this->_transferGroupsManagers($user);
             $this->_transferContentOwners($user);

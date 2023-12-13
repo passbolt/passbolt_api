@@ -22,7 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\Http\Exception\BadRequestException;
+use Cake\I18n\FrozenTime;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
@@ -49,25 +49,60 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
         parent::tearDown();
     }
 
-    public function testPasswordExpiryResourcesUpdateService_Update_With_Expiry_Date()
+    public function dataProvider()
     {
-        // Enable the pwd expiry in settings
-        PasswordExpirySettingFactory::make()->persist();
+        return [
+            [
+                'isFeatureEnabled' => false,
+                'expiredFieldInPayload' => null,
+                'isExpiredBefore' => true,
+                'isExpiredAfter' => true,
+            ],
+            [
+                'isFeatureEnabled' => true,
+                'expiredFieldInPayload' => 'foo',
+                'isExpiredBefore' => true,
+                'isExpiredAfter' => true,
+            ],
+            [
+                'isFeatureEnabled' => true,
+                'expiredFieldInPayload' => null,
+                'isExpiredBefore' => true,
+                'isExpiredAfter' => false,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider dataProvider
+     */
+    public function testPasswordExpiryResourcesUpdateService(
+        bool $isFeatureEnabled,
+        $expiredFieldInPayload,
+        bool $isExpiredBefore,
+        bool $isExpiredAfter
+    ) {
+        if ($isFeatureEnabled) {
+            // Enable the pwd expiry in settings
+            PasswordExpirySettingFactory::make()->persist();
+        }
 
         // Arrange
         $owner = UserFactory::make()->user()->persist();
         // Create an expired resource
+        $originalExpiryDate = $isExpiredBefore ? FrozenTime::yesterday() : FrozenTime::tomorrow();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
-            ->expired()
+            ->expired($originalExpiryDate)
             ->withPermissionsFor([$owner])
             ->persist();
-        $this->assertTrue($resource->isExpired());
+
+        $originalExpiryDate = $resource->expired;
 
         $newName = 'Nouveau nom de resource privée';
         $payload = [
             'name' => 'Nouveau nom de resource privée',
-            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => null,
+            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => $expiredFieldInPayload,
         ];
 
         $this->service->update($this->makeUac($owner), $resource->id, $payload);
@@ -75,52 +110,12 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
         // Assert
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::find()->firstOrFail();
-        $this->assertFalse($resource->isExpired());
+        $this->assertSame($isExpiredAfter, $resource->isExpired());
         $this->assertSame($newName, $resource->name);
-    }
-
-    public function testPasswordExpiryResourcesUpdateService_Update_With_Expiry_Not_Null()
-    {
-        // Enable the pwd expiry in settings
-        PasswordExpirySettingFactory::make()->persist();
-
-        // Arrange
-        $owner = UserFactory::make()->user()->persist();
-        // Create an expired resource
-        /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()
-            ->expired()
-            ->withPermissionsFor([$owner])
-            ->persist();
-        $this->assertTrue($resource->isExpired());
-
-        $payload = [
-            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'Foo',
-        ];
-
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The expiration date should be null.');
-        $this->service->update($this->makeUac($owner), $resource->id, $payload);
-    }
-
-    public function testPasswordExpiryResourcesUpdateService_Update_With_Settings_Not_Set()
-    {
-        // Arrange
-        $owner = UserFactory::make()->user()->persist();
-        // Create an expired resource
-        /** @var \App\Model\Entity\Resource $resource */
-        $resource = ResourceFactory::make()
-            ->expired()
-            ->withPermissionsFor([$owner])
-            ->persist();
-        $this->assertTrue($resource->isExpired());
-
-        $payload = [
-            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => null,
-        ];
-
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('Password expiry is not enabled.');
-        $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        if ($isFeatureEnabled && $expiredFieldInPayload === null) {
+            $this->assertNull($resource->expired);
+        } else {
+            $this->assertEquals($originalExpiryDate, $resource->expired);
+        }
     }
 }

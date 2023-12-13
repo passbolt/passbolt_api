@@ -113,9 +113,7 @@ class PasswordExpirySettingsUpdatedEmailRedactor implements SubscribedEmailRedac
             $subject,
             [
                 'body' => [
-                    'recipient' => $recipient,
                     'operator' => $operator,
-                    'operatorFullName' => $operatorFullName,
                     'setting' => $passwordExpirySetting,
                     'ip' => $clientIp,
                     'user_agent' => $userAgent,

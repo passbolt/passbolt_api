@@ -24,6 +24,8 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
 use Passbolt\PasswordExpiry\Service\Groups\PasswordExpiryExpireResourcesOnGroupsUpdateService;
+use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
+use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 
 class PasswordExpiryExpireResourcesOnGroupsUpdateServiceTest extends AppTestCase
@@ -33,7 +35,11 @@ class PasswordExpiryExpireResourcesOnGroupsUpdateServiceTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new PasswordExpiryExpireResourcesOnGroupsUpdateService();
+        $this->service = new PasswordExpiryExpireResourcesOnGroupsUpdateService(
+            new PasswordExpiryValidationService(
+                new PasswordExpiryGetSettingsService()
+            )
+        );
     }
 
     public function tearDown(): void

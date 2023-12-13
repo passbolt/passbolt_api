@@ -293,10 +293,14 @@ class GroupsTable extends Table
      * Delete all UserGroups association entries
      * Delete all Permissions associated with this group
      *
+     * Using a service here would require vast refactoring in Active Directory.
+     * It is however recommended refactoring this method within a service.
+     *
      * @throws \InvalidArgumentException if $group is not a valid group entity
      * @param \App\Model\Entity\Group $group entity
      * @param array|null $options additional delete options such as ['checkRules' => true]
      * @return bool status
+     * @see PasswordExpiryOnDeleteGroupEventListener::expireResourcesOnDeletedGroup
      */
     public function softDelete(Group $group, ?array $options = null): bool
     {
@@ -318,12 +322,10 @@ class GroupsTable extends Table
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
+        // Query resources that are shared with users outside the group being deleted
+        // These will be marked as deleted if they were accessed by the users of the group deleted
         $resourcesSharedOutsideOfTheGroup = $this->Permissions
-            ->find()
-            ->where([
-                'aco' => PermissionsTable::RESOURCE_ACO,
-                'aro_foreign_key' => $group->id,
-            ]);
+            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $group->id);
         if (!empty($resourceIdsWithPermissionForThisGroupOnly)) {
             /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
@@ -353,6 +355,17 @@ class GroupsTable extends Table
                     ->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
             }
         }
+        // Get the users in groups before deletion
+        if ($group->has('groups_users')) {
+            $usersInGroup = Hash::extract($group, 'groups_users.{n}.user_id');
+        } else {
+            $usersInGroup = $this->GroupsUsers->find()
+                ->select('user_id')
+                ->where(['group_id' => $group->id])
+                ->all()
+                ->extract('user_id')
+                ->toArray();
+        }
 
         // Delete all group memberships
         $this->GroupsUsers->deleteAll(['group_id' => $group->id]);
@@ -371,6 +384,7 @@ class GroupsTable extends Table
             'checkRules' => false,
             'validate' => false,
             'resourcesSharedOutsideTheGroup' => $resourcesSharedOutsideOfTheGroup,
+            'usersInGroup' => $usersInGroup,
         ];
         if (!$this->save($group, $options)) {
             $msg = __('Could not delete the group {0}, please try again later.', $group->name);

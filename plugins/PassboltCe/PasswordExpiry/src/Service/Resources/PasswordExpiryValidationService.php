@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\PasswordExpiry\Service\Resources;
 
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
-use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\FrozenTime;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface;
 
@@ -40,9 +39,15 @@ class PasswordExpiryValidationService implements PasswordExpiryValidationService
     }
 
     /**
+     * Check if the expiry date is in the data provided in the payload
+     * If the feature is not enabled, remove expiry date from the payload
+     * If data is passed that are not compatible with the solution in place, e.g. a date when only null is accepte,
+     * remove expiry date from the payload
+     *
+     * Finally parse the date passed in the payload into a date, or null
+     *
      * @param array $data Payload
      * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the plugin is not enabled. If false, only future dates are valid
      */
     final public function validateAndParseExpiryDate(array &$data): void
     {
@@ -51,10 +56,17 @@ class PasswordExpiryValidationService implements PasswordExpiryValidationService
         }
         $dto = $this->settingsService->get();
         if (!$dto->isSettingsEnabled()) {
-            throw new BadRequestException(__('Password expiry is not enabled.'));
+            unset($data[self::PASSWORD_EXPIRED_DATE]);
+
+            return;
         }
         $expiryDate = $data[self::PASSWORD_EXPIRED_DATE];
-        $this->validateValue($expiryDate);
+        $isDateValueValid = $this->isDateValueValid($expiryDate);
+        if (!$isDateValueValid) {
+            unset($data[self::PASSWORD_EXPIRED_DATE]);
+
+            return;
+        }
         if (!is_null($expiryDate)) {
             $data[self::PASSWORD_EXPIRED_DATE] = FrozenTime::parse($expiryDate);
         }
@@ -64,14 +76,11 @@ class PasswordExpiryValidationService implements PasswordExpiryValidationService
      * Expiry date must be null
      *
      * @param ?string $expiryDate Expiry date
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the expiration date provided is not null
+     * @return bool
      */
-    protected function validateValue(?string $expiryDate): void
+    protected function isDateValueValid(?string $expiryDate): bool
     {
-        if (!is_null($expiryDate)) {
-            throw new BadRequestException(__('The expiration date should be null.'));
-        }
+        return is_null($expiryDate);
     }
 
     /**

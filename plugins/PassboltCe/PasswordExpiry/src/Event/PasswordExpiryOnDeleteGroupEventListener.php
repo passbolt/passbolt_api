@@ -17,12 +17,12 @@ declare(strict_types=1);
 namespace Passbolt\PasswordExpiry\Event;
 
 use App\Model\Entity\Group;
+use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
 
 class PasswordExpiryOnDeleteGroupEventListener implements EventListenerInterface
@@ -31,14 +31,32 @@ class PasswordExpiryOnDeleteGroupEventListener implements EventListenerInterface
 
     public const PASSWORD_EXPIRY_ON_GROUP_DELETE = 'PasswordExpiryOnDeleteGroupEventListener.expire_resources';
 
+    protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
+
     /**
      * @inheritDoc
      */
     public function implementedEvents(): array
     {
         return [
+            'Application.buildContainer' => 'setPasswordExpiryValidationServiceOnBuildContainerEvent',
             'Model.beforeSave' => 'expireResourcesOnDeletedGroup',
         ];
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface $event event sent on container resolution
+     * @return void
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     */
+    public function setPasswordExpiryValidationServiceOnBuildContainerEvent(EventInterface $event): void
+    {
+        /** @var \Cake\Core\ContainerInterface $container */
+        $container = $event->getData('container');
+        /** @var \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService */
+        $passwordExpiryValidationService = $container->get(PasswordExpiryValidationServiceInterface::class);
+        $this->passwordExpiryValidationService = $passwordExpiryValidationService;
     }
 
     /**
@@ -56,13 +74,17 @@ class PasswordExpiryOnDeleteGroupEventListener implements EventListenerInterface
         if (!$groupIsBeingDeleted) {
             return;
         }
-        $usersInGroup = Hash::extract($group, 'groups_users.{n}.user_id');
-        if (count($usersInGroup) === 0) {
-            return;
-        }
         /** @var string[] $resourcesSharedOutsideTheGroup */
         $resourcesSharedOutsideTheGroup = $options['resourcesSharedOutsideTheGroup'];
         if (count($resourcesSharedOutsideTheGroup) === 0) {
+            return;
+        }
+        /** @var string[] $usersInGroup */
+        $usersInGroup = $options['usersInGroup'];
+        if (count($usersInGroup) === 0) {
+            return;
+        }
+        if (!$this->passwordExpiryValidationService->isExpiryAutomatic()) {
             return;
         }
 

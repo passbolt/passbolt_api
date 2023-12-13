@@ -91,11 +91,11 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
             if (!Validation::uuid($resourceId)) {
                 throw new BadRequestException(__('The identifier should be a valid UUID.'));
             }
+            $this->validationService->validateAndParseExpiryDate($resource);
             $isExpiredDefined = array_key_exists($this->validationService::PASSWORD_EXPIRED_DATE, $resource);
             if (!$isExpiredDefined) {
                 throw new BadRequestException(__('The expiry date is required.'));
             }
-            $this->validationService->validateAndParseExpiryDate($resource);
             $expiryDate = $resource[$this->validationService::PASSWORD_EXPIRED_DATE];
             if (array_key_exists($resourceId, $dataSanitized)) {
                 throw new BadRequestException(__('The identifier should be unique: {0}.', $resourceId));

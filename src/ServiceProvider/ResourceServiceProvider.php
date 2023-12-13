@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace App\ServiceProvider;
 
+use App\Service\Resources\ExpireResourceOnShareDefaultService;
+use App\Service\Resources\ExpireResourceOnShareServiceInterface;
 use App\Service\Resources\PasswordExpiryDefaultValidationService;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesAddService;
@@ -31,6 +33,7 @@ class ResourceServiceProvider extends ServiceProvider
         PasswordExpiryValidationServiceInterface::class,
         ResourcesAddService::class,
         ResourcesUpdateService::class,
+        ExpireResourceOnShareServiceInterface::class,
         ResourcesShareService::class,
     ];
 
@@ -45,8 +48,16 @@ class ResourceServiceProvider extends ServiceProvider
         $container
             ->add(ResourcesUpdateService::class)
             ->addArgument(PasswordExpiryValidationServiceInterface::class);
+        $container->add(
+            PasswordExpiryValidationServiceInterface::class,
+            PasswordExpiryDefaultValidationService::class
+        );
+        $container->add(
+            ExpireResourceOnShareServiceInterface::class,
+            ExpireResourceOnShareDefaultService::class
+        );
         $container
-            ->add(PasswordExpiryValidationServiceInterface::class, PasswordExpiryDefaultValidationService::class);
-        $container->add(ResourcesShareService::class);
+            ->add(ResourcesShareService::class)
+            ->addArgument(ExpireResourceOnShareServiceInterface::class);
     }
 }

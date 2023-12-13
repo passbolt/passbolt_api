@@ -58,12 +58,20 @@ class PasswordExpiryPoliciesResourcesAddServiceTest extends AppTestCase
     {
         // Arrange
         $uac = UserFactory::make()->user()->persistedUAC();
-        $payload = [
-            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'Foo',
-        ];
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('Password expiry is not enabled.');
-        $this->service->add($uac, $payload);
+        $payload = $this->getDummyResourcesPostData([
+            'name' => 'Nouveau nom de resource privée',
+            'username' => 'username@domain.com',
+            'uri' => 'https://www.mon-domain.com',
+            'description' => 'Nouvelle description de resource privée',
+        ]);
+
+        $values = ['foo', '2000-01-01', null];
+        foreach ($values as $expired) {
+            $payload['expired'] = $expired;
+            $resource = $this->service->add($uac, $payload);
+            $this->assertNull($resource->get('expired'));
+        }
+        $this->assertSame(count($values), ResourceFactory::count());
     }
 
     public function testPasswordExpiryPoliciesResourcesAddService_Pwd_Expiry_With_Expiry_Date_Null()
@@ -113,9 +121,6 @@ class PasswordExpiryPoliciesResourcesAddServiceTest extends AppTestCase
         $this->assertEquals($expiryDate, $resource->expired);
     }
 
-    /**
-     * Expiry date in the future is a success
-     */
     public function testPasswordExpiryPoliciesResourcesAddService_Pwd_Expiry_With_Expiry_Date_Not_Set()
     {
         // Arrange

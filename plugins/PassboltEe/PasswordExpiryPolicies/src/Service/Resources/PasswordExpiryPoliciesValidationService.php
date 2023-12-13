@@ -29,26 +29,24 @@ use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 class PasswordExpiryPoliciesValidationService extends PasswordExpiryValidationService
 {
     /**
-     * Expiry date must be in the future, or null
+     * Expiry date must be null or parsable
      *
      * @param ?string $expiryDate Expiry date
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the expiration date provided is not in the future
-     * @throws \Cake\Http\Exception\BadRequestException if the expiration date provided is parsable
+     * @return bool
+     * @throws \Cake\Http\Exception\BadRequestException if the expiration date provided is not parsable
      */
-    protected function validateValue(?string $expiryDate): void
+    protected function isDateValueValid(?string $expiryDate): bool
     {
         if (is_null($expiryDate)) {
-            return;
+            return true;
         }
 
         try {
-            $parsedExpiryDate = FrozenTime::parse($expiryDate);
+            FrozenTime::parse($expiryDate);
         } catch (\Throwable $e) {
-            $parsedExpiryDate = null;
-        }
-        if (is_null($parsedExpiryDate)) {
             throw new BadRequestException(__('The expiration date should be null or a valid datetime.'));
         }
+
+        return true;
     }
 }

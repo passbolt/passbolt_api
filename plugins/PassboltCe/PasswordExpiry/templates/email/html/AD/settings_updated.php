@@ -23,13 +23,9 @@ use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
-/** @var array $recipient */
-$recipient = $body['recipient'];
 /** @var array $operator */
 $operator = $body['operator'];
-/** @var string $operatorFullName */
-$operatorFullName = $body['operatorFullName'];
-/** @var \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting $setting */
+/** @var array $setting */
 $setting = $body['setting'];
 /** @var string $userAgent */
 $userAgent = $body['user_agent'];
@@ -41,9 +37,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
         'datetime' => $setting['modified'],
-        'text' => $operator['id'] === $recipient['id'] ?
-            __('You edited the password expiry settings') :
-            __('{0} edited the password expiry settings', $operatorFullName),
+        'text' => $title,
     ]),
 ]);
 
@@ -57,5 +51,5 @@ echo $this->element('Email/module/user_info', compact('userAgent', 'clientIp'));
 
 echo $this->element('Email/module/button', [
     'url' => Router::url('/app/administration/password-expiry', true),
-    'text' => __('View it in passbolt'),
+    'text' => __('View them in passbolt'),
 ]);

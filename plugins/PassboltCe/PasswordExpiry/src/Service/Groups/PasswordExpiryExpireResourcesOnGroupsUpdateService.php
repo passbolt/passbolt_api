@@ -19,11 +19,12 @@ namespace Passbolt\PasswordExpiry\Service\Groups;
 
 use App\Model\Entity\Group;
 use App\Model\Table\PermissionsTable;
+use App\Service\Groups\ExpireResourcesOnGroupsUpdateServiceInterface;
+use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
-use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 
 /**
  * Mark resources as expired if:
@@ -32,16 +33,24 @@ use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
  * - AND these users have viewed the secret in the past
  * - AND the permission is not expired yet
  */
-class PasswordExpiryExpireResourcesOnGroupsUpdateService
+class PasswordExpiryExpireResourcesOnGroupsUpdateService implements ExpireResourcesOnGroupsUpdateServiceInterface
 {
     use EventDispatcherTrait;
 
     public const EVENT_EXPIRE_RESOURCES_ON_GROUP_UPDATE = 'PasswordExpiry.ExpireResourcesOnGroupsUpdateService.expire';
 
+    protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
+
     /**
-     * @param \App\Model\Entity\Group $group Group being updated
-     * @param array $deletedGroupsUsers Array of GroupUsers being deleted
-     * @return bool
+     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService password expiry validation service
+     */
+    public function __construct(PasswordExpiryValidationServiceInterface $passwordExpiryValidationService)
+    {
+        $this->passwordExpiryValidationService = $passwordExpiryValidationService;
+    }
+
+    /**
+     * @inheritDoc
      */
     public function expireResourcesIfUsersLostPermission(Group $group, array $deletedGroupsUsers): bool
     {
@@ -51,10 +60,7 @@ class PasswordExpiryExpireResourcesOnGroupsUpdateService
             return false;
         }
 
-        // Return false if the feature is not enabled
-        $service = new PasswordExpiryGetSettingsService();
-        $pwdExpirySettings = $service->get();
-        if (!$pwdExpirySettings->isSettingsEnabled()) {
+        if (!$this->passwordExpiryValidationService->isExpiryAutomatic()) {
             return false;
         }
 

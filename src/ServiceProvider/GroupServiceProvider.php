@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace App\ServiceProvider;
 
+use App\Service\Groups\ExpireResourcesOnGroupsUpdateDefaultService;
+use App\Service\Groups\ExpireResourcesOnGroupsUpdateServiceInterface;
 use App\Service\Groups\GroupsUpdateService;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
@@ -24,6 +26,7 @@ use Cake\Core\ServiceProvider;
 class GroupServiceProvider extends ServiceProvider
 {
     protected $provides = [
+        ExpireResourcesOnGroupsUpdateServiceInterface::class,
         GroupsUpdateService::class,
     ];
 
@@ -32,6 +35,12 @@ class GroupServiceProvider extends ServiceProvider
      */
     public function services(ContainerInterface $container): void
     {
-        $container->add(GroupsUpdateService::class);
+        $container->add(
+            ExpireResourcesOnGroupsUpdateServiceInterface::class,
+            ExpireResourcesOnGroupsUpdateDefaultService::class
+        );
+        $container
+            ->add(GroupsUpdateService::class)
+            ->addArgument(ExpireResourcesOnGroupsUpdateServiceInterface::class);
     }
 }

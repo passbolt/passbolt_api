@@ -181,8 +181,7 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => null,
         ];
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('Password expiry is not enabled.');
-        $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        $resource = $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        $this->assertTrue($resource->isExpired());
     }
 }
