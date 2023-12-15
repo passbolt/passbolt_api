@@ -43,8 +43,13 @@ class SsoIntegrationTestCase extends SsoTestCase
     public const IP_ADDRESS = '127.0.0.1';
     public const USER_AGENT = 'phpunit';
 
+    private array $disabledSsoProviders = [
+        SsoSetting::PROVIDER_OAUTH2,
+        SsoSetting::PROVIDER_ADFS,
+    ];
+
     /**
-     * Setup.
+     * @inheritDoc
      */
     public function setUp(): void
     {
@@ -56,10 +61,23 @@ class SsoIntegrationTestCase extends SsoTestCase
             'REMOTE_ADDR' => self::IP_ADDRESS,
             'HTTP_USER_AGENT' => self::USER_AGENT,
         ]]);
+
+        // Enable disabled SSO providers for testing
+        foreach ($this->disabledSsoProviders as $provider) {
+            Configure::write("passbolt.plugins.sso.providers.{$provider}", true);
+        }
     }
 
+    /**
+     * @inheritDoc
+     */
     public function tearDown(): void
     {
+        // Reset
+        foreach ($this->disabledSsoProviders as $provider) {
+            Configure::write("passbolt.plugins.sso.providers.{$provider}", false);
+        }
+
         parent::tearDown();
     }
 

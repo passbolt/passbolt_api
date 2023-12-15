@@ -334,8 +334,13 @@ return [
                     ),
                     // Generic provider is disabled by default
                     // As SSO provider domain is not known by the client, it is considered less safe
-                    SsoSetting::PROVIDER_OAUTH2 =>  filter_var(
+                    SsoSetting::PROVIDER_OAUTH2 => filter_var(
                         env('PASSBOLT_PLUGINS_SSO_PROVIDER_OAUHT2_ENABLED', false),
+                        FILTER_VALIDATE_BOOLEAN
+                    ),
+                    // Microsoft AD FS is disabled by default, because it's still in early stage and requires more rigorous testing
+                    SsoSetting::PROVIDER_ADFS => filter_var(
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_ADFS_ENABLED', false),
                         FILTER_VALIDATE_BOOLEAN
                     ),
                 ],

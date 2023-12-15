@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Controller\OAuth2;
 
 use App\Service\Cookie\AbstractSecureCookieService;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Passbolt\Sso\Controller\AbstractSsoController;
 use Passbolt\Sso\Model\Entity\SsoState;
@@ -50,12 +51,38 @@ class SsoOAuth2Stage1DryRunController extends AbstractSsoController
         }
 
         // Redirect to provider
+        $providerService = $this->getSsoServiceName();
+        $this->assertProviderServiceClass($providerService);
         $url = $this->getSsoUrlWithCookie(
-            new SsoOAuth2Service($cookieService, $settingsDto),
+            new $providerService($cookieService, $settingsDto),
             $uac,
             SsoState::TYPE_SSO_SET_SETTINGS
         );
 
         $this->success(__('The operation was successful.'), $url->jsonSerialize());
+    }
+
+    /**
+     * Returns SSO service name that will be used to create the service instance.
+     *
+     * @return string
+     */
+    protected function getSsoServiceName(): string
+    {
+        return SsoOAuth2Service::class;
+    }
+
+    /**
+     * Asserts if given service class exist.
+     *
+     * @param string $providerService Provider service class name.
+     * @return void
+     * @throws \Cake\Http\Exception\InternalErrorException When provided service class doesn't exist
+     */
+    private function assertProviderServiceClass(string $providerService): void
+    {
+        if (!class_exists($providerService)) {
+            throw new InternalErrorException("SSO Provider class `$providerService` not found");
+        }
     }
 }

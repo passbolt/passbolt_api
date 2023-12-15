@@ -12,55 +12,52 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.4.0
+ * @since         4.6.0
  */
 
-namespace Passbolt\Sso\Utility\OAuth2\Provider;
+namespace Passbolt\Sso\Utility\Adfs\Provider;
 
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
+use Passbolt\Sso\Error\Exception\AdfsException;
 use Passbolt\Sso\Error\Exception\OAuth2Exception;
-use Passbolt\Sso\Utility\Grant\JwtBearer;
-use Passbolt\Sso\Utility\OAuth2\ResourceOwner\OAuth2ResourceOwner;
-use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
+use Passbolt\Sso\Model\Entity\SsoSetting;
+use Passbolt\Sso\Utility\Adfs\ResourceOwner\AdfsResourceOwner;
+use Passbolt\Sso\Utility\OAuth2\Provider\OAuth2Provider;
 use Psr\Http\Message\ResponseInterface;
 
-class OAuth2Provider extends AbstractOauth2Provider
+class AdfsProvider extends OAuth2Provider
 {
     use BearerAuthorizationTrait;
+
+    /**
+     * Email claim field.
+     *
+     * @var string
+     */
+    public string $emailClaim = SsoSetting::ADFS_EMAIL_CLAIM_UPN;
 
     /**
      * @inheritDoc
      */
     public function __construct(array $options = [], array $collaborators = [])
     {
-        parent::__construct($options, $collaborators);
+        $options['emailClaim'] = $options['emailClaim'] ?? $this->emailClaim;
 
-        $this->grantFactory->setGrant('jwt_bearer', new JwtBearer());
+        parent::__construct($options, $collaborators);
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @throws \Passbolt\Sso\Error\Exception\OAuth2Exception When error and error description is present
-     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException When unknown error faced
+     * @inheritDoc
      */
     protected function checkResponse(ResponseInterface $response, $data): void
     {
-        if (empty($data['error'])) {
-            return;
-        }
-
-        if (is_string($data['error']) && isset($data['error_description']) && is_string($data['error_description'])) {
-            throw new OAuth2Exception($data['error'], $data['error_description']);
-        } else {
-            throw new IdentityProviderException(
-                $response->getReasonPhrase(),
-                $response->getStatusCode(),
-                (string)$response->getBody()
-            );
+        try {
+            parent::checkResponse($response, $data);
+        } catch (OAuth2Exception $e) {
+            // Map OAuth2 exception with ADFS exception
+            throw new AdfsException($data['error'], $data['error_description']);
         }
     }
 
@@ -69,6 +66,6 @@ class OAuth2Provider extends AbstractOauth2Provider
      */
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
-        return new OAuth2ResourceOwner($response);
+        return new AdfsResourceOwner($response, $this->emailClaim);
     }
 }
