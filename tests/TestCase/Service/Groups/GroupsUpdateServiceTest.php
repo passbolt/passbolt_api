@@ -19,10 +19,10 @@ namespace App\Test\TestCase\Service\Groups;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
-use App\Service\Groups\ExpireResourcesOnGroupsUpdateDefaultService;
 use App\Service\Groups\GroupsUpdateService;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
@@ -55,7 +55,7 @@ class GroupsUpdateServiceTest extends AppTestCase
         parent::setUp();
         $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
         $this->service = new GroupsUpdateService(
-            new ExpireResourcesOnGroupsUpdateDefaultService()
+            new ResourcesExpireResourcesFallbackServiceService()
         );
     }
 

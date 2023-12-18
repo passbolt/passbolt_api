@@ -19,8 +19,10 @@ namespace App\Service\Resources;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
@@ -274,6 +276,7 @@ class ResourcesUpdateService
      */
     private function updateResourceSecrets(UserAccessControl $uac, Resource $resource, array $data): array
     {
+        $secrets = [];
         $usersIdsHavingAccess = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resource->id);
         sort($usersIdsHavingAccess);
         $usersIdsSecretsProvided = Hash::extract($data, '{n}.user_id');
@@ -286,9 +289,9 @@ class ResourcesUpdateService
         }
 
         try {
-            $secrets = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+            $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+            $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
         } catch (CustomValidationException $e) {
-            $secrets = [];
             $resource->setError('secrets', $e->getErrors());
             $this->handleValidationErrors($resource);
         }

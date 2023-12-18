@@ -17,135 +17,124 @@ declare(strict_types=1);
 
 namespace Passbolt\PasswordExpiry\Service\Resources;
 
+use App\Model\Entity\Secret;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
+use Cake\Database\Expression\IdentifierExpression;
+use Cake\Database\Expression\TupleComparison;
 use Cake\Event\EventDispatcherTrait;
 use Cake\I18n\FrozenTime;
-use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\TableRegistry;
 
 /**
  * Mark resources as expired if:
+ * @todo review the comment
  * - OR
- *  - a user has lost permission to this resource
- *  - a user has lost permission on a group with access to the resources
- * - AND the user has viewed the secret in the past
+ *  - some users lost access to resources by losing group access
+ * - AND these users have viewed the secret in the past
  * - AND the permission is not expired yet
  */
-class PasswordExpiryExpireResourcesService
+class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesServiceInterface
 {
     use EventDispatcherTrait;
-    use LocatorAwareTrait;
+
+    public const PASSWORD_EXPIRY_RESOURCES_EXPIRED_EVENT_NAME = 'PasswordExpiry.ExpireResourcesOnGroupsUpdateService.expire';
+
+    protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
 
     /**
-     * @param \Cake\ORM\Query|array<int, string> $resourceIds resource IDs to expire
-     * @param string $userId user ID loosing permission
-     * @return ?array returns the number of resources expired by the action
+     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService password expiry validation service
      */
-    public function expireResources($resourceIds, string $userId): ?array
+    public function __construct(PasswordExpiryValidationServiceInterface $passwordExpiryValidationService)
     {
-        if (is_array($resourceIds) && count($resourceIds) === 0) {
-            return null;
-        }
-        $resourceIds = $this->filterByResourceAccessForOneUser($userId, $resourceIds);
-
-        $resourceIdsExpired = $this->setResourcesAsExpired($resourceIds);
-
-        if (empty($resourceIdsExpired)) {
-            return null;
-        }
-
-        return $resourceIdsExpired;
+        $this->passwordExpiryValidationService = $passwordExpiryValidationService;
     }
 
     /**
-     * @param string $resourceId resource ID to expire
-     * @param array|\Cake\ORM\Query $userIdsLosingPermission check if one of these user IDs accessed to this resource
-     * @return ?string[] returns the list of resources expired by this action
+     * @inheritDoc
      */
-    public function expireOneResource(string $resourceId, $userIdsLosingPermission): ?array
+    public function expireResourcesForSecrets(array $secrets = []): bool
     {
-        if (is_array($userIdsLosingPermission) && count($userIdsLosingPermission) === 0) {
-            return null;
+        if (empty($secrets)) {
+            return false;
         }
 
-        $usersThatAccessedToThisResourceSecretInThePast = $this->filterByResourceAccessForOneResource(
-            $resourceId,
-            $userIdsLosingPermission
-        )->toArray();
-
-        if (count($usersThatAccessedToThisResourceSecretInThePast) === 0) {
-            return null;
+        if (!$this->passwordExpiryValidationService->isExpiryAutomatic()) {
+            return false;
         }
 
-        $resourcesExpiring = $this->setResourcesAsExpired([$resourceId]);
-        if (empty($resourcesExpiring)) {
-            return null;
+        $resourcesIdsToExpire = $this->findResourcesIdsToExpire($secrets);
+        if(empty($resourcesIdsToExpire)) {
+            return false;
         }
 
-        return $resourcesExpiring;
+        $this->markResourcesAsExpired($resourcesIdsToExpire);
+        $this->notifyResourcesOwners($resourcesIdsToExpire);
+
+        return true;
     }
 
     /**
-     * @param array|\Cake\ORM\Query $resourceIds resources to expire
-     * @return array returns a list of the resource IDs being expired by the action
+     * Find resources that need to be expired.
+     * Note: The algorithm will return the resources that have a secret consumed irrespective of the timeline. If
+     * a resource password was rotated after the resource secret was consumed, it will still be returned.
+     * Note 2: Already expired resources are not returned.
+     * @param \Cake\ORM\Query|array<Secret> $secrets The deleted secrets
+     * @return array returns the ids of the resources that were consumed
      */
-    protected function setResourcesAsExpired($resourceIds): array
+    private function findResourcesIdsToExpire(array $secrets): array
     {
+        $secretsTuplesDto = array_map(function (Secret $secret) {
+            // @todo assert deleted secret is a secret entity
+            return $secret->extract(['user_id', 'resource_id']);
+        }, $secrets);
+
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
+        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+        return $resourcesTable->find('notExpired')
+            ->select(['Resources.id'])
+            ->join([
+                'table' => TableRegistry::getTableLocator()->get('SecretAccesses')->getTable(),
+                'type' => 'INNER',
+                'conditions' => [
+                    'secret_accesses.resource_id' => new IdentifierExpression('Resources.id'),
+                    new TupleComparison(['secret_accesses.user_id', 'secret_accesses.resource_id'], $secretsTuplesDto, [], 'IN')
+                ],
+            ])
+            ->all()->extract('id')->toArray();
+    }
+
+    /**
+     * Mark a list of resources as expired.
+     * @param array $resourceIds resources id to expire
+     * @return void
+     */
+    private function markResourcesAsExpired(array $resourceIds): void
+    {
+        if  (empty($resourceIds)) {
+            return;
+        }
+
         /** @var \App\Model\Table\ResourcesTable $ResourcesTable */
-        $ResourcesTable = $this->fetchTable('Resources');
-        $filterByNotExpiredResourceExpression = function () use ($ResourcesTable) {
-            return $ResourcesTable->notExpiredQueryExpression();
-        };
-        $conditionsToExpire = [$filterByNotExpiredResourceExpression, 'Resources.id IN' => $resourceIds];
-
-        $resourcesExpiring = $ResourcesTable->find('list', ['valueField' => 'id'])
-            ->select('id')
-            ->disableHydration()
-            ->where($conditionsToExpire)
-            ->toArray();
-
-        // If no resources will be expired, return empty
-        if (empty($resourcesExpiring)) {
-            return $resourcesExpiring;
-        }
-
+        $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $ResourcesTable->updateAll(
             [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => FrozenTime::now()->subSeconds(2)],
-            $conditionsToExpire,
+            ['Resources.id IN' => $resourceIds],
         );
-
-        return $resourcesExpiring;
     }
 
     /**
-     * @param string $userId user ID loosing permission
-     * @param array|\Cake\ORM\Query $resourceIds Resources ids that are to be expired if the user ever viewed them
-     * @return \Cake\ORM\Query
+     * Notify resources owners about passwords expiry.
+     * @param string[] $resourceIds Resource ids that have just expired.
+     * @return void
      */
-    protected function filterByResourceAccessForOneUser(string $userId, $resourceIds): Query
-    {
-        return $this->fetchTable('Passbolt/Log.SecretAccesses')
-            ->find()
-            ->select(['SecretAccesses.resource_id'])
-            ->where([
-                'SecretAccesses.user_id' => $userId,
-                'SecretAccesses.resource_id IN' => $resourceIds,
-            ]);
-    }
-
-    /**
-     * @param string $resourceId resource ID potentially expiring
-     * @param array|\Cake\ORM\Query $userIds check if one of these user IDs accessed to this resource
-     * @return \Cake\ORM\Query
-     */
-    protected function filterByResourceAccessForOneResource(string $resourceId, $userIds): Query
-    {
-        return $this->fetchTable('Passbolt/Log.SecretAccesses')
-            ->find()
-            ->select(['SecretAccesses.user_id'])
-            ->where([
-                'SecretAccesses.user_id IN' => $userIds,
-                'SecretAccesses.resource_id' => $resourceId,
-            ]);
+    private function notifyResourcesOwners(
+        array $resourceIds
+    ): void {
+        $this->dispatchEvent(
+            self::PASSWORD_EXPIRY_RESOURCES_EXPIRED_EVENT_NAME,
+            compact('resourceIds'),
+            $this
+        );
     }
 }

@@ -121,9 +121,9 @@ class PasswordExpiryGroupsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains($emailContent, $owner2->username);
 
         $subject = $owner1->profile->first_name . ' removed you from the group ' . $group->name;
-        $this->assetEmailSubject($viewerActive1->username, $subject);
-        $this->assetEmailSubject($viewerActive2->username, $subject);
-        $this->assetEmailSubject($viewerInactive->username, $subject);
+        $this->assertEmailSubject($viewerActive1->username, $subject);
+        $this->assertEmailSubject($viewerActive2->username, $subject);
+        $this->assertEmailSubject($viewerInactive->username, $subject);
         // 2 emails are sent to the two users keeping permission
         // 2 emails are sent to the two users in the group keeping permission
         // 1 email is sent to the user with permission access to the expired resource
@@ -200,7 +200,7 @@ class PasswordExpiryGroupsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains($emailContent, $owner2->username);
 
         $subject = $owner1->profile->first_name . ' removed you from the group ' . $group->name;
-        $this->assetEmailSubject($viewerActive1->username, $subject);
+        $this->assertEmailSubject($viewerActive1->username, $subject);
         // Two emails are sent to the two users keeping permission
         // One email is sent to user losing permission
         $this->assertEmailQueueCount(3);
@@ -277,7 +277,7 @@ class PasswordExpiryGroupsUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmailInBatchContains($emailContent, $owner2->username);
 
         $subject = $owner1->profile->first_name . ' removed you from the group ' . $group1->name;
-        $this->assetEmailSubject($viewerActive1->username, $subject);
+        $this->assertEmailSubject($viewerActive1->username, $subject);
         // Two emails are sent to the two users keeping permission
         // One email is sent to user losing permission
         $this->assertEmailQueueCount(3);

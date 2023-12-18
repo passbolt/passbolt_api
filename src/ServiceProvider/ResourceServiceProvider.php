@@ -17,11 +17,12 @@ declare(strict_types=1);
 
 namespace App\ServiceProvider;
 
-use App\Service\Resources\ExpireResourceOnShareDefaultService;
-use App\Service\Resources\ExpireResourceOnShareServiceInterface;
+use App\Service\Groups\GroupsUpdateService;
 use App\Service\Resources\PasswordExpiryDefaultValidationService;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesAddService;
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use App\Service\Resources\ResourcesShareService;
 use App\Service\Resources\ResourcesUpdateService;
 use Cake\Core\ContainerInterface;
@@ -33,31 +34,34 @@ class ResourceServiceProvider extends ServiceProvider
         PasswordExpiryValidationServiceInterface::class,
         ResourcesAddService::class,
         ResourcesUpdateService::class,
-        ExpireResourceOnShareServiceInterface::class,
         ResourcesShareService::class,
     ];
 
     /**
-     * @inheritDoc
+     * @inheritDo
      */
     public function services(ContainerInterface $container): void
     {
+        $container->add(
+            PasswordExpiryValidationServiceInterface::class,
+            PasswordExpiryDefaultValidationService::class
+        );
+        $container->add(
+            ResourcesExpireResourcesServiceInterface::class,
+            ResourcesExpireResourcesFallbackServiceService::class
+        );
+
         $container
             ->add(ResourcesAddService::class)
             ->addArgument(PasswordExpiryValidationServiceInterface::class);
         $container
             ->add(ResourcesUpdateService::class)
             ->addArgument(PasswordExpiryValidationServiceInterface::class);
-        $container->add(
-            PasswordExpiryValidationServiceInterface::class,
-            PasswordExpiryDefaultValidationService::class
-        );
-        $container->add(
-            ExpireResourceOnShareServiceInterface::class,
-            ExpireResourceOnShareDefaultService::class
-        );
+        $container
+            ->add(GroupsUpdateService::class)
+            ->addArgument(ResourcesExpireResourcesServiceInterface::class);
         $container
             ->add(ResourcesShareService::class)
-            ->addArgument(ExpireResourceOnShareServiceInterface::class);
+            ->addArgument(ResourcesExpireResourcesServiceInterface::class);
     }
 }

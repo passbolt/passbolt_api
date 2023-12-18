@@ -47,6 +47,7 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
         [$userToDisable, $ownerWithResourceShared1, $ownerWithGroupShared1] = UserFactory::make(3)->user()->persist();
         [$resourceSharedViewed, $resourceSharedNotViewed] = ResourceFactory::make(2)
             ->withPermissionsFor([$userToDisable, $ownerWithResourceShared1])
+            ->withSecretsFor([$userToDisable, $ownerWithResourceShared1])
             ->persist();
 
         $group = GroupFactory::make()
@@ -54,6 +55,7 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
             ->persist();
         [$resourcesSharedViaGroupViewed, $resourcesSharedViaGroupNotViewed] = ResourceFactory::make(2)
             ->withPermissionsFor([$group])
+            ->withSecretsFor([$group])
             ->persist();
 
         SecretAccessFactory::make()
@@ -75,9 +77,6 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
         $this->assertSuccess();
         $userDisabled = UserFactory::get($userToDisable->id);
         $this->assertTrue($userDisabled->isDisabled());
-        $this->assertEmailQueueCount(4);
-        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin1->username);
-        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin2->username);
         $resourceSharedViewed = ResourceFactory::get($resourceSharedViewed->id);
         $resourceSharedNotViewed = ResourceFactory::get($resourceSharedNotViewed->id);
         $resourcesSharedViaGroupViewed = ResourceFactory::get($resourcesSharedViaGroupViewed->id);
@@ -87,6 +86,9 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
         $this->assertTrue($resourcesSharedViaGroupViewed->isExpired());
         $this->assertFalse($resourcesSharedViaGroupNotViewed->isExpired());
 
+        $this->assertEmailQueueCount(4);
+        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin1->username);
+        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin2->username);
         $emailContent = [
             'Some of your passwords expired',
             'Access for users to your shared passwords have been revoked.',

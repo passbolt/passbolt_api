@@ -27,8 +27,8 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
-use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourceOnShareService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
+use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 
@@ -40,7 +40,7 @@ class PasswordExpiryResourcesShareServiceTest extends AppTestCase
     {
         parent::setUp();
         $this->service = new ResourcesShareService(
-            new PasswordExpiryExpireResourceOnShareService(
+            new PasswordExpiryExpireResourcesService(
                 new PasswordExpiryValidationService(
                     new PasswordExpiryGetSettingsService()
                 )
@@ -88,6 +88,7 @@ class PasswordExpiryResourcesShareServiceTest extends AppTestCase
         foreach ($permissionToDeleteId as $id) {
             $changes[] = ['id' => $id, 'delete' => true];
         }
+
         $this->service->share($uac, $resource->id, $changes);
 
         // Assert

@@ -15,19 +15,17 @@ declare(strict_types=1);
  * @since         4.5.0
  */
 
-namespace App\Service\Groups;
-
-use App\Model\Entity\Group;
+namespace App\Service\Resources;
 
 /**
- * Class ExpireResourcesOnGroupsUpdateDefaultService.
+ * Class ResourcesExpireResourcesFallbackServiceService.
  */
-class ExpireResourcesOnGroupsUpdateDefaultService implements ExpireResourcesOnGroupsUpdateServiceInterface
+class ResourcesExpireResourcesFallbackServiceService implements ResourcesExpireResourcesServiceInterface
 {
     /**
      * @inheritDoc
      */
-    public function expireResourcesIfUsersLostPermission(Group $group, array $deletedGroupsUsers): bool
+    public function expireResourcesForSecrets(array $secrets = []): bool
     {
         return false;
     }

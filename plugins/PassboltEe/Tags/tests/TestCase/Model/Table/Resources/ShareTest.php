@@ -19,7 +19,7 @@ namespace Passbolt\Tags\Test\TestCase\Model\Table\Resources;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Service\Resources\ExpireResourceOnShareDefaultService;
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Service\Resources\ResourcesShareService;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
@@ -95,7 +95,7 @@ hcciUFw5
 
         // Share.
         $uac = new UserAccessControl(Role::USER, $userAId);
-        $resourceShareService = new ResourcesShareService(new ExpireResourceOnShareDefaultService());
+        $resourceShareService = new ResourcesShareService(new ResourcesExpireResourcesFallbackServiceService());
         $resourceShareService->share($uac, $resourceAId, $changes, $secrets);
 
         $this->assertUserHasNotAccessResources($userAId, [$resourceAId]);

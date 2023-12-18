@@ -29,10 +29,8 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
-use Passbolt\PasswordExpiry\Event\PasswordExpiryAbstractOnUserEventListener;
-use Passbolt\PasswordExpiry\Event\PasswordExpiryOnDeleteGroupEventListener;
-use Passbolt\PasswordExpiry\Service\Groups\PasswordExpiryExpireResourcesOnGroupsUpdateService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourceOnShareService;
+use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
 
 class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -50,10 +48,10 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
     public function getSubscribedEvents(): array
     {
         return [
-            PasswordExpiryExpireResourceOnShareService::EVENT_EXPIRE_RESOURCE_ON_SHARE,
-            PasswordExpiryExpireResourcesOnGroupsUpdateService::EVENT_EXPIRE_RESOURCES_ON_GROUP_UPDATE,
-            PasswordExpiryAbstractOnUserEventListener::PASSWORD_EXPIRY_ON_USER_DISABLED_OR_DELETED,
-            PasswordExpiryOnDeleteGroupEventListener::PASSWORD_EXPIRY_ON_GROUP_DELETE,
+//            PasswordExpiryExpireResourceOnShareService::EVENT_EXPIRE_RESOURCE_ON_SHARE,
+            PasswordExpiryExpireResourcesService::PASSWORD_EXPIRY_RESOURCES_EXPIRED_EVENT_NAME,
+//            PasswordExpiryAbstractOnUserEventListener::PASSWORD_EXPIRY_ON_USER_DISABLED_OR_DELETED,
+//            PasswordExpiryOnDeleteGroupEventListener::PASSWORD_EXPIRY_ON_GROUP_DELETE,
         ];
     }
 

@@ -17,13 +17,16 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Group;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Groups\GroupsFindersTrait;
+use App\Service\GroupsUsers\GroupsUsersDeleteService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Database\Expression\TupleComparison;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
@@ -299,10 +302,10 @@ class GroupsTable extends Table
      * @throws \InvalidArgumentException if $group is not a valid group entity
      * @param \App\Model\Entity\Group $group entity
      * @param array|null $options additional delete options such as ['checkRules' => true]
-     * @return bool status
+     * @return EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      * @see PasswordExpiryOnDeleteGroupEventListener::expireResourcesOnDeletedGroup
      */
-    public function softDelete(Group $group, ?array $options = null): bool
+    public function softDelete(Group $group, ?array $options = null)
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {
@@ -314,30 +317,24 @@ class GroupsTable extends Table
             }
         }
 
+        $entitiesChanges = new EntitiesChangesDto();
+
+        $groupUsersIds = $this->GroupsUsers->findByGroupId($group->id)
+            ->select('user_id')->all()->extract('user_id')->toArray();
+        $lostUsersAccesses = $this->Permissions->findAcosAccessesDiffBetweenGroupAndUsers(PermissionsTable::RESOURCE_ACO, $group->id, $groupUsersIds);
+//        dd($lostUsersAccesses->all()->toArray());
         // find all the resources that only belongs to the group and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
-        $resourceIdsWithPermissionForThisGroupOnly = $this->Permissions
-            ->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
+        $resourceIds = $this->Permissions->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $group->id)
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
-        // Query resources that are shared with users outside the group being deleted
-        // These will be marked as deleted if they were accessed by the users of the group deleted
-        $resourcesSharedOutsideOfTheGroup = $this->Permissions
-            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $group->id);
-        if (!empty($resourceIdsWithPermissionForThisGroupOnly)) {
+        if (!empty($resourceIds)) {
             /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
-            $Resources->softDeleteAll($resourceIdsWithPermissionForThisGroupOnly);
-            $resourcesSharedOutsideOfTheGroup->where([
-                'aco_foreign_key NOT IN' => $resourceIdsWithPermissionForThisGroupOnly,
-            ]);
+            $Resources->softDeleteAll($resourceIds);
         }
-        $resourcesSharedOutsideOfTheGroup = $resourcesSharedOutsideOfTheGroup
-            ->all()
-            ->extract('aco_foreign_key')
-            ->toArray();
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             // Find all the folders that only belongs to the deleted group and delete them.
@@ -355,17 +352,17 @@ class GroupsTable extends Table
                     ->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
             }
         }
-        // Get the users in groups before deletion
-        if ($group->has('groups_users')) {
-            $usersInGroup = Hash::extract($group, 'groups_users.{n}.user_id');
-        } else {
-            $usersInGroup = $this->GroupsUsers->find()
-                ->select('user_id')
-                ->where(['group_id' => $group->id])
-                ->all()
-                ->extract('user_id')
-                ->toArray();
-        }
+
+        $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
+        /** @var \App\Model\Table\SecretsTable $Secrets */
+        $secretsToDelete = $secretsTable->find()
+            ->select(['id', 'resource_id', 'user_id'])
+            ->where(new TupleComparison(['user_id', 'resource_id'], $lostUsersAccesses, [], 'IN'))
+            ->all()
+            ->toArray();
+//        dd($lostUsersAccesses->all()->toArray());
+        $secretsTable->deleteMany($secretsToDelete);
+        $entitiesChanges->addDeletedEntities($secretsToDelete);
 
         // Delete all group memberships
         $this->GroupsUsers->deleteAll(['group_id' => $group->id]);
@@ -374,24 +371,14 @@ class GroupsTable extends Table
         // Delete all the secrets that lost permissions in the process
         $this->Permissions->deleteAll(['aro_foreign_key' => $group->id]);
 
-        /** @var \App\Model\Table\SecretsTable $Secrets */
-        $Secrets = TableRegistry::getTableLocator()->get('Secrets');
-        $Secrets->cleanupHardDeletedPermissions();
-
         // Mark group as deleted
         $group->deleted = true;
-        $options = [
-            'checkRules' => false,
-            'validate' => false,
-            'resourcesSharedOutsideTheGroup' => $resourcesSharedOutsideOfTheGroup,
-            'usersInGroup' => $usersInGroup,
-        ];
-        if (!$this->save($group, $options)) {
+        if (!$this->save($group, ['checkRules' => false, 'validate' => false])) {
             $msg = __('Could not delete the group {0}, please try again later.', $group->name);
             throw new InternalErrorException($msg);
         }
 
-        return true;
+        return $entitiesChanges;
     }
 
     /**

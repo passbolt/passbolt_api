@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use App\Model\Entity\Group;
 use App\Model\Entity\Permission;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
@@ -96,8 +97,15 @@ class ResourceFactory extends CakephpBaseFactory
     public function withSecretsFor(array $users): ResourceFactory
     {
         foreach ($users as $user) {
-            $secretData = ['user_id' => $user->id];
-            $this->with('Secrets', $secretData);
+            if ($user instanceof User) {
+                $secretData = ['user_id' => $user->id];
+                $this->with('Secrets', $secretData);
+            } elseif ($user instanceof Group) {
+                foreach ($user->groups_users as $groupUser) {
+                    $secretData = ['user_id' => $groupUser->user_id];
+                    $this->with('Secrets', $secretData);
+                }
+            }
         }
 
         return $this;

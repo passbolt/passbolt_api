@@ -17,9 +17,11 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
+use App\Model\Entity\Secret;
 use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
@@ -421,7 +423,7 @@ class UsersTable extends Table
      *
      * @param \App\Model\Entity\User $user entity
      * @param array|null $options additional delete options such as ['checkRules' => true]
-     * @return bool status
+     * @return EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      */
     public function softDelete(User $user, ?array $options = null)
     {
@@ -435,29 +437,21 @@ class UsersTable extends Table
             }
         }
 
+        $entitiesChanges = new EntitiesChangesDto();
+
         // find all the resources that only belongs to the user and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. checkRules)
-        $resourceIdsWithPermissionForThisUserOnly = $this->Permissions
+        $resourceIds = $this->Permissions
             ->findAcosOnlyAroCanAccess(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true])
             ->all()
             ->extract('aco_foreign_key')
             ->toArray();
-        $resourcesShared = $this->Permissions
-            ->findAllByAro(PermissionsTable::RESOURCE_ACO, $user->id, ['checkGroupsUsers' => true,])
-            ->select(['aco_foreign_key']);
-        if (!empty($resourceIdsWithPermissionForThisUserOnly)) {
+        if (!empty($resourceIds)) {
             /** @var \App\Model\Table\ResourcesTable $Resources */
             $Resources = TableRegistry::getTableLocator()->get('Resources');
-            $Resources->softDeleteAll($resourceIdsWithPermissionForThisUserOnly);
-            $resourcesShared->where([
-                'aco_foreign_key NOT IN' => $resourceIdsWithPermissionForThisUserOnly,
-            ]);
+            $Resources->softDeleteAll($resourceIds);
         }
-        $resourcesShared = $resourcesShared
-            ->all()
-            ->extract('aco_foreign_key')
-            ->toArray();
 
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             // Find all the folders that only belongs to the deleted user and delete them.
@@ -500,7 +494,12 @@ class UsersTable extends Table
 
         // Delete all secrets
         $Secrets = TableRegistry::getTableLocator()->get('Secrets');
-        $Secrets->deleteAll(['user_id' => $user->id]);
+        $secretsToDelete = $Secrets->find()
+            ->select(['id', 'user_id', 'resource_id'])
+            ->where(['user_id' => $user->id])
+            ->all()->toArray();
+        $Secrets->deleteMany($secretsToDelete);
+        $entitiesChanges->addDeletedEntities($secretsToDelete);
 
         // Delete all favorites
         $Favorites = TableRegistry::getTableLocator()->get('Favorites');
@@ -520,16 +519,12 @@ class UsersTable extends Table
 
         // Mark user as deleted
         $user->deleted = true;
-        $options = [
-            'checkRules' => false,
-            'resourcesShared' => $resourcesShared,
-        ];
-        if (!$this->save($user, $options)) {
+        if (!$this->save($user, ['checkRules' => false])) {
             $msg = __('Could not delete the user {0}, please try again later.', $user->username);
             throw new InternalErrorException($msg);
         }
 
-        return true;
+        return $entitiesChanges;
     }
 
     /**

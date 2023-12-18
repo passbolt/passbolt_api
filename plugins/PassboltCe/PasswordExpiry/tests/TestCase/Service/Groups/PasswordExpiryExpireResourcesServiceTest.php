@@ -17,25 +17,28 @@ declare(strict_types=1);
 
 namespace Passbolt\PasswordExpiry\Test\TestCase\Service\Groups;
 
+use App\Model\Dto\EntitiesChangesDto;
+use App\Model\Entity\Secret;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
-use Passbolt\PasswordExpiry\Service\Groups\PasswordExpiryExpireResourcesOnGroupsUpdateService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
+use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 
-class PasswordExpiryExpireResourcesOnGroupsUpdateServiceTest extends AppTestCase
+class PasswordExpiryExpireResourcesServiceTest extends AppTestCase
 {
-    public PasswordExpiryExpireResourcesOnGroupsUpdateService $service;
+    public PasswordExpiryExpireResourcesService $service;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new PasswordExpiryExpireResourcesOnGroupsUpdateService(
+        $this->service = new PasswordExpiryExpireResourcesService(
             new PasswordExpiryValidationService(
                 new PasswordExpiryGetSettingsService()
             )
@@ -60,12 +63,14 @@ class PasswordExpiryExpireResourcesOnGroupsUpdateServiceTest extends AppTestCase
         $group = GroupFactory::make()->withGroupsManagersFor([$manager])->withGroupsUsersFor([$user1, $user2])->persist();
         [$resource1, $resource2] = ResourceFactory::make(2)
             ->withPermissionsFor([$group])
+            ->withSecretsFor([$group])
             ->persist();
 
         // Create another group with the 2 first users, and resources in that group
         $someOtherGroupWithoutUser2 = GroupFactory::make()->withGroupsManagersFor([$manager])->withGroupsUsersFor([$user1,])->persist();
         [$otherResource1, $otherResource2] = ResourceFactory::make(2)
             ->withPermissionsFor([$someOtherGroupWithoutUser2])
+            ->withSecretsFor([$someOtherGroupWithoutUser2])
             ->persist();
 
         // The user2 will be removed from the group
@@ -76,8 +81,11 @@ class PasswordExpiryExpireResourcesOnGroupsUpdateServiceTest extends AppTestCase
             ->persist();
 
         GroupsUserFactory::make()->getTable()->deleteOrFail($group->groups_users[2]);
-        $deletedGroupUsers = [$group->groups_users[2]];
-        $result = $this->service->expireResourcesIfUsersLostPermission($group, $deletedGroupUsers);
+        SecretFactory::make()->getTable()->deleteOrFail($resource1->secrets[2]);
+        SecretFactory::make()->getTable()->deleteOrFail($resource2->secrets[2]);
+        $entitiesChangesDto = new EntitiesChangesDto(null, null, [$group->groups_users[2], $resource1->secrets[2], $resource2->secrets[2]]);
+        $deletedSecrets = $entitiesChangesDto->getDeletedEntities(Secret::class);
+        $result = $this->service->expireResourcesForSecrets($deletedSecrets);
         $this->assertTrue($result);
 
         // Assert that the resources in the group where user 2 was member are expired

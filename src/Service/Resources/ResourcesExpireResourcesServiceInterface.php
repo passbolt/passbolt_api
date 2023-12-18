@@ -15,22 +15,18 @@ declare(strict_types=1);
  * @since         4.5.0
  */
 
-namespace App\Service\Groups;
-
-use App\Model\Entity\Group;
+namespace App\Service\Resources;
 
 /**
- * Class ExpireResourcesOnGroupsUpdateServiceInterface.
+ * Class ResourcesExpireResourcesServiceInterface.
  */
-interface ExpireResourcesOnGroupsUpdateServiceInterface
+interface ResourcesExpireResourcesServiceInterface
 {
     /**
-     * When a user is removed from a group, mark the resources
-     * they lost access for as expired, if these were ever accessed
+     * Expire passwords which had a secret consumed by a user who lost access to it.
      *
-     * @param \App\Model\Entity\Group $group Group being updated
-     * @param array $deletedGroupsUsers Array of GroupUsers being deleted
+     * @param array $secrets The secrets to expire the resources for.
      * @return bool
      */
-    public function expireResourcesIfUsersLostPermission(Group $group, array $deletedGroupsUsers): bool;
+    public function expireResourcesForSecrets(array $secrets = []): bool;
 }

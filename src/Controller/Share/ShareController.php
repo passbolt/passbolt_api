@@ -20,7 +20,7 @@ namespace App\Controller\Share;
 use App\Controller\AppController;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Service\Resources\ExpireResourceOnShareDefaultService;
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Service\Resources\ResourcesShareService;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
@@ -74,7 +74,7 @@ class ShareController extends AppController
         $this->_assertRequestParameters($resourceId);
         $data = $this->request->getData();
         $changes = Hash::get($data, 'permissions') ?? [];
-        $resourcesShareService = new ResourcesShareService(new ExpireResourceOnShareDefaultService());
+        $resourcesShareService = new ResourcesShareService(new ResourcesExpireResourcesFallbackServiceService());
         $dryRunResult = $resourcesShareService->shareDryRun($uac, $resourceId, $changes);
 
         $output = $this->_formatDryRunResult($dryRunResult['added'], $dryRunResult['deleted']);

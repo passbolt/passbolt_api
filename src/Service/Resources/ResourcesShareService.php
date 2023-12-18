@@ -19,8 +19,10 @@ namespace App\Service\Resources;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
@@ -67,15 +69,18 @@ class ResourcesShareService
      */
     private $userHasPermissionService;
 
-    private ExpireResourceOnShareServiceInterface $expireResourcesOnResourceShareService;
+    /**
+     * @var ResourcesExpireResourcesServiceInterface
+     */
+    private ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
 
     /**
      * Instantiate the service.
      *
-     * @param \App\Service\Resources\ExpireResourceOnShareServiceInterface $expireResourcesOnResourceShareService service to expire a resource if users lost permission on this permission
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService Service to expire resources that were consumed by users who lost access to them.
      */
     public function __construct(
-        ExpireResourceOnShareServiceInterface $expireResourcesOnResourceShareService
+        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService
     ) {
         /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
@@ -85,7 +90,7 @@ class ResourcesShareService
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         $this->userHasPermissionService = new UserHasPermissionService();
-        $this->expireResourcesOnResourceShareService = $expireResourcesOnResourceShareService;
+        $this->resourcesExpireResourcesService = $resourcesExpireResourcesService;
     }
 
     /**
@@ -98,25 +103,19 @@ class ResourcesShareService
      * @return Resource
      * @throws \Exception
      */
-    public function share(UserAccessControl $uac, string $resourceId, array $changes = [], array $secrets = [])
+    public function share(UserAccessControl $uac, string $resourceId, array $changes = [], array $secrets = []): Resource
     {
         $resource = $this->getResource($resourceId);
 
-        $this->expireResourcesOnResourceShareService->collectUsersIdsHavingAccessToResource(
-            $this->permissionsGetUsersIdsHavingAccessToService,
-            $resource,
-            $changes
-        );
-
         $this->Resources->getConnection()->transactional(
             function () use ($uac, $resource, $changes, $secrets) {
-                $updatePermissionsResult = $this->updatePermissions($uac, $resource, $changes);
-                $this->updateSecrets($uac, $resource, $secrets);
-                $this->postAccessesGranted($uac, $updatePermissionsResult['added']);
-                $this->postAccessesRevoked($uac, $resource, $updatePermissionsResult['removed']);
-                $this->expireResourcesOnResourceShareService->expireResourceIfUsersLostPermission(
-                    $this->permissionsGetUsersIdsHavingAccessToService,
-                    $resource
+                $entitiesChanges = $this->updatePermissions($uac, $resource, $changes);
+                $entitiesChanges->merge($this->updateSecrets($uac, $resource, $secrets));
+                $this->postAccessesGranted($uac, $entitiesChanges->getAddedEntities(Permission::class));
+                $this->postAccessesRevoked($uac, $resource, $entitiesChanges->getDeletedEntities(Permission::class));
+//                var_dump($entitiesChanges->getDeletedEntities(Permission::class));
+                $this->resourcesExpireResourcesService->expireResourcesForSecrets(
+                    $entitiesChanges->getDeletedEntities(Secret::class)
                 );
             }
         );
@@ -155,17 +154,13 @@ class ResourcesShareService
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $changes The list of permissions changes to apply
-     * @return array
-     * [
-     *   added => <array> List of added permissions
-     *   deleted => <array> List of deleted permissions
-     *   updated => <array> List of updated permissions
-     * ]
+     * @return ?EntitiesChangesDto
      * @throws \Exception If something unexpected occurred
      */
-    private function updatePermissions(UserAccessControl $uac, Resource $resource, array $changes): array
+    private function updatePermissions(UserAccessControl $uac, Resource $resource, array $changes): EntitiesChangesDto
     {
-        $result = [];
+        $result = new EntitiesChangesDto();
+
         try {
             $result = $this->permissionsUpdatePermissionsService
                 ->updatePermissions($uac, PermissionsTable::RESOURCE_ACO, $resource->id, $changes);
@@ -198,17 +193,21 @@ class ResourcesShareService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $data The list of secrets to add
-     * @return void
+     * @return EntitiesChangesDto
      * @throws \Exception
      */
-    private function updateSecrets(UserAccessControl $uac, Resource $resource, array $data)
+    private function updateSecrets(UserAccessControl $uac, Resource $resource, array $data): EntitiesChangesDto
     {
+        $result = new EntitiesChangesDto();
+
         try {
-            $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+            $result = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
         } catch (CustomValidationException $e) {
             $resource->setError('secrets', $e->getErrors());
             $this->handleValidationErrors($resource);
         }
+
+        return $result;
     }
 
     /**
@@ -269,7 +268,7 @@ class ResourcesShareService
     private function notifyAccessRevoked(UserAccessControl $uac, Permission $permission)
     {
         $eventData = ['permission' => $permission, 'accessControl' => $uac];
-        $event = new Event('Service.ResourcesShare.afterAccessRevoked', $this, $eventData);
+        $event = new Event(self::AFTER_ACCESS_REVOKED_EVENT_NAME, $this, $eventData);
         $this->Resources->getEventManager()->dispatch($event);
     }
 
