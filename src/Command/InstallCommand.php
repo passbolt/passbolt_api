@@ -39,9 +39,11 @@ class InstallCommand extends PassboltCommand
     private ?Client $client;
 
     /**
+     * The client passed in the constructor might be null when run using the selenium tests
+     *
      * @param ?\Cake\Http\Client $client client requesting the healthcheck status
      */
-    public function __construct(?Client $client)
+    public function __construct(?Client $client = null)
     {
         parent::__construct();
         $this->client = $client;
