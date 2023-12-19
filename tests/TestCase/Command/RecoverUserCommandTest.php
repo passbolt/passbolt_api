@@ -57,7 +57,7 @@ class RecoverUserCommandTest extends TestCase
 
     public function testRecoverUserCommand_Fetch_On_Active_User()
     {
-        $user = UserFactory::make()->user()->active()->persist();
+        [$user] = UserFactory::make(2)->user()->active()->persist();
         $expirationDate = Configure::read('passbolt.auth.token.' . AuthenticationToken::TYPE_RECOVER . '.expiry');
         $activeNonExpiredToken = AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_RECOVER)
@@ -75,7 +75,7 @@ class RecoverUserCommandTest extends TestCase
 
     public function testRecoverUserCommand_Create_On_Active_User_Without_Token()
     {
-        $user = UserFactory::make()->user()->active()->persist();
+        [$user] = UserFactory::make(2)->user()->active()->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
         $this->assertExitError();
         $this->assertOutputContains("An active recovery token could not be found for the user {$user->username}.");
@@ -84,7 +84,7 @@ class RecoverUserCommandTest extends TestCase
 
     public function testRecoverUserCommand_Create_On_Active_User()
     {
-        $user = UserFactory::make()->user()->active()->persist();
+        [$user] = UserFactory::make(2)->user()->active()->persist();
         $this->exec('passbolt recover_user -c -u ' . $user->username);
         $this->assertExitSuccess();
         $token = AuthenticationTokenFactory::find()->firstOrFail();
@@ -92,6 +92,14 @@ class RecoverUserCommandTest extends TestCase
             Router::url('/setup/recover/start/' . $user->id . '/' . $token['token'], true)
         );
         $this->assertSame(1, AuthenticationTokenFactory::count());
+    }
+
+    public function testRecoverUserCommand_Create_On_Deleted_User()
+    {
+        $user = UserFactory::make()->user()->active()->deleted()->persist();
+        $this->exec('passbolt recover_user -c -u ' . $user->username);
+        $this->assertExitError();
+        $this->assertErrorContains('The user does not exist or is not active or is disabled.');
     }
 
     public function testRecoverUserCommand_Create_On_Disabled_User()
