@@ -80,9 +80,9 @@ class GroupsUsersDeleteService
 
         $this->groupsUsersTable->getConnection()->transactional(function () use ($uac, $groupUser, $entitiesChangesDto) {
             $this->groupsUsersTable->delete($groupUser);
-            $entitiesChangesDto->addDeletedEntity($groupUser);
+            $entitiesChangesDto->pushDeletedEntity($groupUser);
             $deletedSecrets = $this->deleteLostAccessAssociatedSecrets($groupUser);
-            $entitiesChangesDto->addDeletedEntities($deletedSecrets);
+            $entitiesChangesDto->pushDeletedEntities($deletedSecrets);
             $this->deleteLostAccessAssociatedFavorites($groupUser);
             $this->dispatchGroupUserRemovedEvent($uac, $groupUser);
         });

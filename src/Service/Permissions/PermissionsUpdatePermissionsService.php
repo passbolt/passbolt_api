@@ -77,7 +77,7 @@ class PermissionsUpdatePermissionsService
             // A new permission is provided when no id is found in the raw data.
             if (is_null($permissionId)) {
                 $permission = $this->addPermission($uac, $rowIndex, $aco, $acoForeignkey, $row);
-                $entitiesChanges->addAddedEntity($permission);
+                $entitiesChanges->pushAddedEntity($permission);
             } else {
                 // If a property delete is found and set to true, then delete the permission.
                 // Otherwise update it.
@@ -85,10 +85,10 @@ class PermissionsUpdatePermissionsService
                 $delete = Hash::get($row, 'delete');
                 if ($delete) {
                     $permission = $this->deletePermission($permission);
-                    $entitiesChanges->addDeletedEntity($permission);
+                    $entitiesChanges->pushDeletedEntity($permission);
                 } else {
                     $permission = $this->updatePermission($uac, $rowIndex, $permission, $row);
-                    $entitiesChanges->addUpdatedEntity($permission);
+                    $entitiesChanges->pushUpdatedEntity($permission);
                 }
             }
         }

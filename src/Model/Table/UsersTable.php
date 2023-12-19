@@ -499,7 +499,7 @@ class UsersTable extends Table
             ->where(['user_id' => $user->id])
             ->all()->toArray();
         $Secrets->deleteMany($secretsToDelete);
-        $entitiesChanges->addDeletedEntities($secretsToDelete);
+        $entitiesChanges->pushDeletedEntities($secretsToDelete);
 
         // Delete all favorites
         $Favorites = TableRegistry::getTableLocator()->get('Favorites');

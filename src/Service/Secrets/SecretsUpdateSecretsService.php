@@ -92,15 +92,15 @@ class SecretsUpdateSecretsService
             if (array_key_exists($row['user_id'], $secrets)) {
                 $secret = $secrets[$row['user_id']];
                 $updatedSecret = $this->updateSecret($secret, $rowIndex, $row);
-                $entitiesChanges->addUpdatedEntity($updatedSecret);
+                $entitiesChanges->pushUpdatedEntity($updatedSecret);
             } else {
                 $addedSecret = $this->addSecret($uac, $rowIndex, $resourceId, $row);
-                $entitiesChanges->addAddedEntity($addedSecret);
+                $entitiesChanges->pushAddedEntity($addedSecret);
             }
         }
 
         $deletedSecrets = $this->deleteLostAccessSecrets($resourceId);
-        $entitiesChanges->addDeletedEntities($deletedSecrets);
+        $entitiesChanges->pushDeletedEntities($deletedSecrets);
         $this->assertAllSecretsAreProvided($resourceId);
 
         return $entitiesChanges;

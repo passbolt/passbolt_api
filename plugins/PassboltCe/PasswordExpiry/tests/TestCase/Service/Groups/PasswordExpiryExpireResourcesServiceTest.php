@@ -83,7 +83,7 @@ class PasswordExpiryExpireResourcesServiceTest extends AppTestCase
         GroupsUserFactory::make()->getTable()->deleteOrFail($group->groups_users[2]);
         SecretFactory::make()->getTable()->deleteOrFail($resource1->secrets[2]);
         SecretFactory::make()->getTable()->deleteOrFail($resource2->secrets[2]);
-        $entitiesChangesDto = new EntitiesChangesDto(null, null, [$group->groups_users[2], $resource1->secrets[2], $resource2->secrets[2]]);
+        $entitiesChangesDto = new EntitiesChangesDto([], [], [$group->groups_users[2], $resource1->secrets[2], $resource2->secrets[2]]);
         $deletedSecrets = $entitiesChangesDto->getDeletedEntities(Secret::class);
         $result = $this->service->expireResourcesForSecrets($deletedSecrets);
         $this->assertTrue($result);

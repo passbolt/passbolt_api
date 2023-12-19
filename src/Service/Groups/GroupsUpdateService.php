@@ -293,7 +293,7 @@ class GroupsUpdateService
 
         foreach ($updateGroupsUsersChanges as $rowIndexRef => $updateGroupsUsersChange) {
             $groupUser = $this->updateGroupUser($uac, $group, $updateGroupsUsersChange, $rowIndexRef);
-            $entitiesChangesDto->addUpdatedEntity($groupUser);
+            $entitiesChangesDto->pushUpdatedEntity($groupUser);
         }
 
         return $entitiesChangesDto;

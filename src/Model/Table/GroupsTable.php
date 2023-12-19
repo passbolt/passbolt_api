@@ -360,9 +360,9 @@ class GroupsTable extends Table
             ->where(new TupleComparison(['user_id', 'resource_id'], $lostUsersAccesses, [], 'IN'))
             ->all()
             ->toArray();
-//        dd($lostUsersAccesses->all()->toArray());
+
         $secretsTable->deleteMany($secretsToDelete);
-        $entitiesChanges->addDeletedEntities($secretsToDelete);
+        $entitiesChanges->pushDeletedEntities($secretsToDelete);
 
         // Delete all group memberships
         $this->GroupsUsers->deleteAll(['group_id' => $group->id]);

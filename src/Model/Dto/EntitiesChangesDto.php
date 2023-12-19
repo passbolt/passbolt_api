@@ -21,157 +21,170 @@ use Cake\ORM\Entity;
 class EntitiesChangesDto
 {
     /**
-     * @var array
+     * Array of added entities.
+     * @var Entity[]
      */
-    protected array $added;
+    protected array $added = [];
+
     /**
-     * @var array
+     * Array of deleted entities.
+     * @var Entity[]
      */
-    protected array $deleted;
+    protected array $deleted = [];
+
     /**
-     * @var array
+     * Arrau of updated entities.
+     * @var Entity[]
      */
-    protected array $updated;
+    protected array $updated = [];
 
     /**
      * Constructor.
      *
-     * @param array|null $added The added entities
-     * @param array|null $updated The updated entities
-     * @param array|null $deleted The deleted entities
+     * @param Entity[]|null $added The added entities
+     * @param Entity[]|null $updated The updated entities
+     * @param Entity[]|null $deleted The deleted entities
      */
     final public function __construct(
         ?array $added = [],
         ?array $updated = [],
         ?array $deleted = []
     ) {
-        $this->added = $added ?? [];
-        $this->updated = $updated ?? [];
-        $this->deleted = $deleted ?? [];
+        $this->pushAddedEntities($added);
+        $this->pushUpdatedEntities($updated);
+        $this->pushDeletedEntities($deleted);
     }
 
     /**
-     * @param Entity $entity
+     * Push an array of added entities.
+     * @param Entity[] $entities The array of entities.
      * @return void
      */
-    public function addDeletedEntity(Entity $entity):void
+    public function pushAddedEntities(array $entities = []):void
     {
-        $this->addEntity($this->deleted, $entity);
+        $this->pushEntities($this->added, $entities);
     }
 
     /**
-     * @param array $destEntitiesStack
-     * @param $entity
+     * Push an array of entities.
+     * @param array $destEntitiesStack The instance array reference to push the entities to.
+     * @param Entity[] $entities The array of entities.
      * @return void
      */
-    private function addEntity(array &$destEntitiesStack, $entity): void
+    private function pushEntities(array &$destEntitiesStack, array $entities): void
+    {
+        foreach($entities as $entity)  {
+            $this->pushEntity($destEntitiesStack, $entity);
+        }
+    }
+
+    /**
+     * Push an added entity.
+     * @param array $destEntitiesStack The instance array reference to push the entities to.
+     * @param Entity|null $entity The entity to add.
+     * @return void
+     * @throws \TypeError If the provided entity argument is not a valid Entity.
+     */
+    private function pushEntity(array &$destEntitiesStack, ?Entity $entity = null): void
     {
         if (!$entity){
             return;
         }
-        // @todo assert entity
+        if (!($entity instanceof Entity)) {
+            throw new \TypeError('The entity parameter should be either a valid Entity instance or null.');
+        }
         $destEntitiesStack[] = $entity;
     }
 
     /**
+     * Push updated entities.
+     * @param Entity[] $entities The array of entities.
+     * @return void
+     */
+    public function pushUpdatedEntities(array $entities = []):void
+    {
+        $this->pushEntities($this->updated, $entities);
+    }
+
+    /**
+     * Push an array of deleted entities.
+     * @param Entity[] $entities The array of entities.
+     * @return void
+     */
+    public function pushDeletedEntities(array $entities = []):void
+    {
+        $this->pushEntities($this->deleted, $entities);
+    }
+
+    /**
+     * Push a deleted entity.
      * @param Entity $entity
      * @return void
      */
-    public function addAddedEntity(Entity $entity):void
+    public function pushDeletedEntity(Entity $entity):void
     {
-        $this->addEntity($this->added, $entity);
+        $this->pushEntity($this->deleted, $entity);
     }
 
     /**
+     * Push an added entity.
      * @param Entity $entity
      * @return void
      */
-    public function addUpdatedEntity(?Entity $entity):void
+    public function pushAddedEntity(Entity $entity):void
     {
-        $this->addEntity($this->updated, $entity);
+        $this->pushEntity($this->added, $entity);
     }
 
     /**
-     * @param string|null $filterClassName
-     * @return array
+     * Push an updated entity.
+     * @param Entity $entity
+     * @return void
      */
-    public function getDeletedEntities(?string $filterClassName): array
+    public function pushUpdatedEntity(?Entity $entity):void
     {
-        if (!$filterClassName) {
-            return $this->deleted;
-        }
-
-        return array_filter($this->deleted, function ($entity) use($filterClassName) {
-            return is_a($entity, $filterClassName);
-        });
+        $this->pushEntity($this->updated, $entity);
     }
 
     /**
-     * @param EntitiesChangesDto $entitiesChangesDto
+     * Get the deleted entities.
+     * @param string|null $filterClassName Filter the result by entities type.
+     * @return Entity[]
+     */
+    public function getDeletedEntities(?string $filterClassName = null): array
+    {
+        return $this->getEntities($this->deleted, $filterClassName);
+    }
+
+    /**
+     * Merge entities changes.
+     * @param EntitiesChangesDto $entitiesChangesDto The entities changes to merge.
      * @return void
      */
     public function merge(EntitiesChangesDto $entitiesChangesDto): void
     {
-        $this->addAddedEntities($entitiesChangesDto->added);
-        $this->addUpdatedEntities($entitiesChangesDto->updated);
-        $this->addDeletedEntities($entitiesChangesDto->deleted);
+        $this->pushAddedEntities($entitiesChangesDto->added);
+        $this->pushUpdatedEntities($entitiesChangesDto->updated);
+        $this->pushDeletedEntities($entitiesChangesDto->deleted);
     }
 
     /**
-     * @param array $entities
-     * @return void
+     * Get added entities.
+     * @param string|null $filterClassName Filter the result by entities type.
+     * @return Entity[]
      */
-    public function addAddedEntities(array $entities = []):void
-    {
-        $this->addEntities($this->added, $entities);
-    }
-
-    /**
-     * @param array $destEntitiesStack
-     * @param array $entities
-     * @return void
-     */
-    private function addEntities(array &$destEntitiesStack, array $entities): void
-    {
-        foreach($entities as $entity)  {
-//            dd($destEntitiesStack);
-            $this->addEntity($destEntitiesStack, $entity);
-        }
-    }
-
-    /**
-     * @param array $entities
-     * @return void
-     */
-    public function addUpdatedEntities(array $entities = []):void
-    {
-        $this->addEntities($this->updated, $entities);
-    }
-
-    /**
-     * @param array $entities
-     * @return void
-     */
-    public function addDeletedEntities(array $entities = []):void
-    {
-        $this->addEntities($this->deleted, $entities);
-    }
-
-    /**
-     * @param string|null $filterClassName
-     * @return array
-     */
-    public function getAddedEntities(?string $filterClassName): array
+    public function getAddedEntities(?string $filterClassName = null): array
     {
         return $this->getEntities($this->added, $filterClassName);
     }
 
     /**
-     * @param array $destEntitiesStack
-     * @param string|null $filterClassName
-     * @return array
+     * Get entities.
+     * @param array $destEntitiesStack The instance array reference to push the entities to.
+     * @param string|null $filterClassName Filter the result by entities type.
+     * @return Entity[]
      */
-    private function getEntities(array $destEntitiesStack, ?string $filterClassName): array
+    private function getEntities(array $destEntitiesStack, ?string $filterClassName = null): array
     {
         if (!$filterClassName) {
             return $destEntitiesStack;
@@ -183,10 +196,11 @@ class EntitiesChangesDto
     }
 
     /**
-     * @param string|null $filterClassName
-     * @return array
+     * Get updated entities.
+     * @param string|null $filterClassName Filter the result by entities type.
+     * @return Entity[]
      */
-    public function getUpdatedEntities(?string $filterClassName): array
+    public function getUpdatedEntities(?string $filterClassName = null): array
     {
         return $this->getEntities($this->updated, $filterClassName);
     }

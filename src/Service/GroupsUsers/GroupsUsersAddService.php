@@ -95,10 +95,10 @@ class GroupsUsersAddService
         return $this->groupsUsersTable->getConnection()->transactional(
             function () use ($uac, $groupUser, $secretsData, $missingAccessResourcesIds, $entitiesChangesDto) {
                 $this->saveGroupUser($groupUser);
-                $entitiesChangesDto->addAddedEntity($groupUser);
+                $entitiesChangesDto->pushAddedEntity($groupUser);
                 $secrets = $this->buildSecretsEntities($groupUser, $missingAccessResourcesIds, $secretsData);
                 $this->saveSecrets($groupUser, $secrets);
-                $entitiesChangesDto->addAddedEntities($secrets);
+                $entitiesChangesDto->pushAddedEntities($secrets);
                 $this->dispatchGroupUserAddedEvent($uac, $entitiesChangesDto);
 
                 return $entitiesChangesDto;
