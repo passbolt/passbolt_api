@@ -18,10 +18,10 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Middleware;
 
 use App\Middleware\HttpProxyMiddleware;
-use App\Test\Lib\Utility\MiddlewareTestTrait;
+use App\Test\Lib\Http\TestRequestHandler;
 use Cake\Core\Configure;
 use Cake\Http\Response;
-use Cake\Http\ServerRequest;
+use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -29,8 +29,6 @@ use Cake\TestSuite\TestCase;
  */
 class HttpProxyMiddlewareTest extends TestCase
 {
-    use MiddlewareTestTrait;
-
     /**
      * @var string
      */
@@ -68,13 +66,15 @@ class HttpProxyMiddlewareTest extends TestCase
     public function testHttpProxyMiddlewareTest_No_Proxy()
     {
         $realClientIP = '1.2.3.4';
-        putenv("REMOTE_ADDR={$realClientIP}");
-
-        $request = new ServerRequest();
+        $request = ServerRequestFactory::fromGlobals(['REMOTE_ADDR' => $realClientIP]);
+        // Mock response
         $response = new Response();
+        $requestHandler = new TestRequestHandler(function ($request) use ($response) {
+            return $response;
+        });
 
         $middleware = new HttpProxyMiddleware();
-        $middleware->process($request, $this->mockHandler($response));
+        $middleware->process($request, $requestHandler);
 
         $this->assertEmpty($response->getHeader('Access-Control-Expose-Headers'));
         $this->assertEquals($request->clientIp(), $realClientIP);
@@ -85,20 +85,22 @@ class HttpProxyMiddlewareTest extends TestCase
         $realClientIP = '2.3.4.5';
         $proxyIP = '1.2.3.4';
         Configure::write(HttpProxyMiddleware::PASSBOLT_SECURITY_PROXIES_ACTIVE_CONFIG_NAME, true);
-        putenv("REMOTE_ADDR=$proxyIP");
-        putenv("HTTP_X_REAL_IP=$realClientIP");
-
-        $request = new ServerRequest();
+        $request = ServerRequestFactory::fromGlobals([
+            'REMOTE_ADDR' => $proxyIP,
+            'HTTP_X_REAL_IP' => $realClientIP,
+        ]);
         $response = new Response();
+        $requestHandler = new TestRequestHandler(function ($request) use ($response) {
+            return $response;
+        });
 
         $middleware = new HttpProxyMiddleware();
-        $response = $middleware->process($request, $this->mockHandler($response));
+        $response = $middleware->process($request, $requestHandler);
 
         $this->assertEquals(
             HttpProxyMiddleware::HTTP_HEADERS_WHITELIST,
             $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS)
         );
-
         $this->assertEquals($request->clientIp(), $realClientIP);
         Configure::write(HttpProxyMiddleware::PASSBOLT_SECURITY_PROXIES_ACTIVE_CONFIG_NAME, false);
     }
@@ -108,19 +110,22 @@ class HttpProxyMiddlewareTest extends TestCase
         $realClientIP = '2.3.4.5';
         $proxyIP = '1.2.3.4';
         Configure::write(HttpProxyMiddleware::PASSBOLT_SECURITY_PROXIES_ACTIVE_CONFIG_NAME, false);
-        putenv("REMOTE_ADDR=$proxyIP");
-        putenv("HTTP_X_REAL_IP=$realClientIP");
+        $request = ServerRequestFactory::fromGlobals([
+            'REMOTE_ADDR' => $proxyIP,
+            'HTTP_X_REAL_IP' => $realClientIP,
+        ]);
 
-        $request = new ServerRequest();
         $response = new Response();
+        $requestHandler = new TestRequestHandler(function ($request) use ($response) {
+            return $response;
+        });
 
         $middleware = new HttpProxyMiddleware();
-        $response = $middleware->process($request, $this->mockHandler($response));
+        $response = $middleware->process($request, $requestHandler);
 
         $this->assertEmpty(
             $response->getHeader(HttpProxyMiddleware::ACCESS_CONTROL_EXPOSE_HEADERS)
         );
-
         $this->assertEquals($request->clientIp(), $proxyIP);
     }
 }

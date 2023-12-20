@@ -38,10 +38,10 @@ use Passbolt\Log\Model\Entity\SecretHistory;
  * @method \Passbolt\Log\Model\Entity\SecretHistory[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretHistory[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\SecretHistory>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\SecretHistory>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\SecretHistory>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\SecretHistory>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class SecretsHistoryTable extends Table
 {

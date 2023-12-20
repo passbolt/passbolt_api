@@ -451,8 +451,7 @@ trait UsersFindersTrait
     protected function listDuplicateUsernamesCaseInsensitive(): Query
     {
         $subQueryOfLowerCasedUsernameDuplicates = $this
-            ->find('list', ['valueField' => 'lower_username'])
-            ->disableHydration()
+            ->find()
             ->select([
                 'lower_username' => 'LOWER(Users.username)',
                 'count' => $this->find()->func()->count('id'),
@@ -461,15 +460,25 @@ trait UsersFindersTrait
             ->group('LOWER(Users.username)')
             ->having(['count >' => 1]);
 
+        // We want to return Query object but result we want requires a collection,
+        // hence to reduce executing multiple queries(1 for count and 2nd to get usernames)
+        $lowerCasedUsernameDuplicatesQuery = $subQueryOfLowerCasedUsernameDuplicates;
+
+        $subQueryOfLowerCasedUsernameDuplicates = $subQueryOfLowerCasedUsernameDuplicates
+            ->all()
+            ->map(function ($row) {
+                return $row->lower_username;
+            });
+
         if ($subQueryOfLowerCasedUsernameDuplicates->count() === 0) {
-            return $subQueryOfLowerCasedUsernameDuplicates;
+            return $lowerCasedUsernameDuplicatesQuery;
         }
 
         return $this->find('list', ['keyField' => 'id', 'valueField' => 'username'])
             ->disableHydration()
             ->select(['id', 'username'])
             ->where([
-                'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates->all()->toList(),
+                'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates->toArray(),
                 'deleted' => false,
             ])
             ->orderAsc('LOWER(username)');
