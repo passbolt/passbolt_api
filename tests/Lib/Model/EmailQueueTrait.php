@@ -224,7 +224,7 @@ trait EmailQueueTrait
     protected function renderAllEmails(): void
     {
         $emailCount = ConnectionManager::get('test')
-            ->newQuery()
+            ->selectQuery()
             ->select('*')
             ->from('email_queue')
             ->execute()
@@ -257,7 +257,7 @@ trait EmailQueueTrait
     protected function deleteEmailQueue(): void
     {
         ConnectionManager::get('test')
-            ->newQuery()
+            ->deleteQuery()
             ->delete('email_queue')
             ->execute();
     }

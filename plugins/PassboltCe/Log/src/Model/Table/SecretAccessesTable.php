@@ -38,10 +38,10 @@ use Passbolt\Log\Model\Entity\SecretAccess;
  * @method \Passbolt\Log\Model\Entity\SecretAccess[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretAccess|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretAccess saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretAccess[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\SecretAccess>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\SecretAccess>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\SecretAccess>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\SecretAccess>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class SecretAccessesTable extends Table

@@ -37,10 +37,10 @@ use Cake\Validation\Validator;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType newEmptyEntity()
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\ResourceTypes\Model\Entity\ResourceType>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\ResourceTypes\Model\Entity\ResourceType>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\ResourceTypes\Model\Entity\ResourceType>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\ResourceTypes\Model\Entity\ResourceType>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class ResourceTypesTable extends Table
 {

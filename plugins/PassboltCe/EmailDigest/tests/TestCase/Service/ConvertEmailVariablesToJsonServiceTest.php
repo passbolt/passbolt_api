@@ -92,8 +92,10 @@ class ConvertEmailVariablesToJsonServiceTest extends AppTestCase
             'email' => $originalUnsentEmail->get('email'),
         ])->firstOrFail()->get('template_vars');
 
-        $rawVars = ConnectionManager::get('default')
-            ->newQuery()
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get('default');
+        $rawVars = $connection
+            ->selectQuery()
             ->select('template_vars')
             ->from('email_queue')
             ->execute()

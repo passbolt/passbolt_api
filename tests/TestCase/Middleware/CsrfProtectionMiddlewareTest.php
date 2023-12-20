@@ -20,7 +20,7 @@ namespace App\Test\TestCase\Middleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Utility\MiddlewareTestTrait;
+use App\Test\Lib\Http\TestRequestHandler;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 
@@ -29,15 +29,13 @@ use Cake\Http\ServerRequest;
  */
 class CsrfProtectionMiddlewareTest extends AppIntegrationTestCase
 {
-    use MiddlewareTestTrait;
-
     public function testCsrfProtectionMiddleware_SSL_And_Cookie_Secure_Activated()
     {
         $request = (new ServerRequest())->withEnv('HTTPS', 'on');
         $middleware = new CsrfProtectionMiddleware();
 
         /** @var \Cake\Http\ServerRequest $response */
-        $response = $middleware->process($request, $this->mockHandler());
+        $response = $middleware->process($request, new TestRequestHandler());
 
         $csrfToken = $response->getCookieCollection()->get('csrfToken');
         $this->assertTrue($csrfToken->isSecure());
@@ -53,7 +51,7 @@ class CsrfProtectionMiddlewareTest extends AppIntegrationTestCase
         $middleware = new CsrfProtectionMiddleware();
 
         /** @var \Cake\Http\ServerRequest $response */
-        $response = $middleware->process($request, $this->mockHandler());
+        $response = $middleware->process($request, new TestRequestHandler());
 
         $csrfToken = $response->getCookieCollection()->get('csrfToken');
         $this->assertFalse($csrfToken->isSecure());
@@ -66,7 +64,7 @@ class CsrfProtectionMiddlewareTest extends AppIntegrationTestCase
         $middleware = new CsrfProtectionMiddleware();
 
         /** @var \Cake\Http\ServerRequest $response */
-        $response = $middleware->process($request, $this->mockHandler());
+        $response = $middleware->process($request, new TestRequestHandler());
 
         $csrfToken = $response->getCookieCollection()->get('csrfToken');
         $this->assertTrue($csrfToken->isSecure());
@@ -79,7 +77,7 @@ class CsrfProtectionMiddlewareTest extends AppIntegrationTestCase
         $middleware = new CsrfProtectionMiddleware();
 
         /** @var \Cake\Http\ServerRequest $response */
-        $response = $middleware->process($request, $this->mockHandler());
+        $response = $middleware->process($request, new TestRequestHandler());
 
         $csrfToken = $response->getCookieCollection()->get('csrfToken');
         $this->assertFalse($csrfToken->isSecure());
