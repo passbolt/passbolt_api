@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Service\Sso\Adfs;
 
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
+use GuzzleHttp\Client;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use Passbolt\Sso\Model\Dto\SsoSettingsAdfsDataDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
@@ -38,14 +39,23 @@ class SsoAdfsService extends SsoOAuth2Service
         /** @var \Passbolt\Sso\Model\Dto\SsoSettingsAdfsDataDto $data */
         $data = $settings->data;
 
-        return new AdfsProvider([
-            'clientId' => $data->client_id,
-            'clientSecret' => $data->client_secret,
-            'redirectUri' => Router::url('/sso/adfs/redirect', true),
-            'openIdBaseUri' => $data->url,
-            'openIdConfigurationPath' => $data->openid_configuration_path,
-            'emailClaim' => $data->email_claim,
-        ]);
+        $collaborators = [];
+        $httpClient = $this->getCustomHttpClient();
+        if ($httpClient instanceof Client) {
+            $collaborators['httpClient'] = $httpClient;
+        }
+
+        return new AdfsProvider(
+            [
+                'clientId' => $data->client_id,
+                'clientSecret' => $data->client_secret,
+                'redirectUri' => Router::url('/sso/adfs/redirect', true),
+                'openIdBaseUri' => $data->url,
+                'openIdConfigurationPath' => $data->openid_configuration_path,
+                'emailClaim' => $data->email_claim,
+            ],
+            $collaborators
+        );
     }
 
     /**

@@ -18,8 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Service\Sso\OAuth2;
 
 use App\Utility\ExtendedUserAccessControl;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
+use GuzzleHttp\Client;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsOAuth2DataDto;
@@ -52,6 +54,53 @@ class SsoOAuth2Service extends AbstractSsoService
         return $this->provider->getAuthorizationUrl($options);
     }
 
+    /**
+     * @return bool|string
+     */
+    private function getSsoSslVerifyConfigValue()
+    {
+        $ssoSslVerifyConfig = Configure::read('passbolt.security.sso.sslVerify');
+
+        if (is_null($ssoSslVerifyConfig)) {
+            return false;
+        }
+
+        // If it's string then it must be a valid path to root CA file.
+        if (is_string($ssoSslVerifyConfig)) {
+            if (!file_exists($ssoSslVerifyConfig)) {
+                throw new BadRequestException(__('Provided root CA file does not exist'));
+            }
+
+            return $ssoSslVerifyConfig;
+        }
+
+        // Skip SSL verify check
+        if (is_bool($ssoSslVerifyConfig)) {
+            if ($ssoSslVerifyConfig !== false) {
+                throw new BadRequestException(
+                    __('Invalid value provided in `passbolt.security.sso.sslVerify` config')
+                );
+            }
+
+            return $ssoSslVerifyConfig;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return \GuzzleHttp\Client|void
+     */
+    protected function getCustomHttpClient()
+    {
+        $ssoSslVerify = $this->getSsoSslVerifyConfigValue();
+        if (!$ssoSslVerify) {
+            return;
+        }
+
+        return new Client(['verify' => $ssoSslVerify]);
+    }
+
     // ABSTRACT CLASS PROTECTED FUNCTIONS DEFINITION
 
     /**
@@ -63,13 +112,22 @@ class SsoOAuth2Service extends AbstractSsoService
         /** @var \Passbolt\Sso\Model\Dto\SsoSettingsOAuth2DataDto $data */
         $data = $settings->data;
 
-        return new OAuth2Provider([
-            'clientId' => $data->client_id,
-            'clientSecret' => $data->client_secret,
-            'redirectUri' => Router::url('/sso/oauth2/redirect', true),
-            'openIdBaseUri' => $data->url,
-            'openIdConfigurationPath' => $data->openid_configuration_path,
-        ]);
+        $collaborators = [];
+        $httpClient = $this->getCustomHttpClient();
+        if ($httpClient instanceof Client) {
+            $collaborators['httpClient'] = $httpClient;
+        }
+
+        return new OAuth2Provider(
+            [
+                'clientId' => $data->client_id,
+                'clientSecret' => $data->client_secret,
+                'redirectUri' => Router::url('/sso/oauth2/redirect', true),
+                'openIdBaseUri' => $data->url,
+                'openIdConfigurationPath' => $data->openid_configuration_path,
+            ],
+            $collaborators
+        );
     }
 
     /**

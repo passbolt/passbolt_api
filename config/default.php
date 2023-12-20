@@ -484,6 +484,17 @@ return [
                     FILTER_VALIDATE_BOOLEAN
                 ),
             ],
+            'sso' => [
+                /**
+                 * Useful for OAuth 2.0 and AD FS providers when using self-signed certificate.
+                 *
+                 * Accepted values:
+                 * - `null` - Default. Not using self-signed certificate.
+                 * - `'/path/to/rootCA.crt'` - Path to custom root CA certificate.
+                 * - `false` - Don't verify SSL peer certificate. Dangerous!
+                 */
+                'sslVerify' => env('PASSBOLT_SECURITY_SSO_SSL_VERIFY', null),
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.
