@@ -54,10 +54,10 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AccountRecoveryRequestsTable extends Table
@@ -235,7 +235,7 @@ class AccountRecoveryRequestsTable extends Table
      */
     public function rejectAllNonCompleted(UserAccessControl $userAccessControl): void
     {
-        $this->query()
+        $this->updateQuery()
             ->update()
             ->set([
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
@@ -260,7 +260,7 @@ class AccountRecoveryRequestsTable extends Table
      */
     public function findIndex(array $options): Query
     {
-        $query = $this->query();
+        $query = $this->selectQuery();
 
         $fields = [
             'id',

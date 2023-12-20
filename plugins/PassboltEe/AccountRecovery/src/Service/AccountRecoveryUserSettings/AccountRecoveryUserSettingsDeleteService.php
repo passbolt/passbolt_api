@@ -39,8 +39,7 @@ class AccountRecoveryUserSettingsDeleteService
     }
 
     /**
-     * @return \Cake\Datasource\ResultSetInterface|array<\Cake\Datasource\EntityInterface>|false Entities list
-     *   on success, false on failure.
+     * @return iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|false Entities list on success, false on failure.
      */
     public function deleteAllRejected()
     {
