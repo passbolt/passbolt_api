@@ -418,11 +418,26 @@ class DirectoryOrgSettings
     protected static function encrypt(string $data): string
     {
         $gpgConfig = Configure::read('passbolt.gpg');
-        $keyid = $gpgConfig['serverKey']['fingerprint'];
+        $fingerprint = $gpgConfig['serverKey']['fingerprint'];
         $passphrase = $gpgConfig['serverKey']['passphrase'];
         $gpg = OpenPGPBackendFactory::get();
-        $gpg->setSignKeyFromFingerprint($keyid, $passphrase);
-        $gpg->setEncryptKeyFromFingerprint($keyid);
+
+        try {
+            $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+            $gpg->setEncryptKeyFromFingerprint($fingerprint);
+        } catch (\Exception $exception) {
+            try {
+                // Try again by importing key into keyring
+                $gpg->importServerKeyInKeyring();
+                $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+                $gpg->setEncryptKeyFromFingerprint($fingerprint);
+            } catch (\Exception $exception) {
+                $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
+                $msg .= $exception->getMessage();
+
+                throw new InternalErrorException($msg, 500, $exception);
+            }
+        }
 
         return $gpg->encrypt($data, true);
     }

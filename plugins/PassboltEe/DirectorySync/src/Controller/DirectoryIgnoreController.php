@@ -24,7 +24,9 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Validation\Validation;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * @property \Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable $DirectoryIgnore
@@ -37,6 +39,9 @@ class DirectoryIgnoreController extends DirectoryController
     public function initialize(): void
     {
         parent::initialize();
+
+        $this->directoryOrgSettings = DirectoryOrgSettings::get();
+
         $this->DirectoryIgnore = $this->fetchTable('Passbolt/DirectorySync.DirectoryIgnore');
     }
 
@@ -177,5 +182,17 @@ class DirectoryIgnoreController extends DirectoryController
         }
 
         return $foreignModel;
+    }
+
+    /**
+     * Assert the directory is configured.
+     *
+     * @return void
+     */
+    protected function assertDirectoryEnabled()
+    {
+        if (!$this->directoryOrgSettings->isEnabled()) {
+            throw new ServiceUnavailableException('Directory sync plugin is not enabled.');
+        }
     }
 }
