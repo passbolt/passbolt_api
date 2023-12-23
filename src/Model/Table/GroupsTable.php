@@ -23,10 +23,9 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Groups\GroupsFindersTrait;
-use App\Service\GroupsUsers\GroupsUsersDeleteService;
+use App\Service\Secrets\SecretsFindSecretsAccessibleViaGroupOnlyService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\Database\Expression\TupleComparison;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\RulesChecker;
@@ -319,10 +318,19 @@ class GroupsTable extends Table
 
         $entitiesChanges = new EntitiesChangesDto();
 
+        // Delete the secrets group users will lose the access to.
         $groupUsersIds = $this->GroupsUsers->findByGroupId($group->id)
             ->select('user_id')->all()->extract('user_id')->toArray();
-        $lostUsersAccesses = $this->Permissions->findAcosAccessesDiffBetweenGroupAndUsers(PermissionsTable::RESOURCE_ACO, $group->id, $groupUsersIds);
-//        dd($lostUsersAccesses->all()->toArray());
+        $secretsFindSecretsAccessibleViaGroupOnlyService = new SecretsFindSecretsAccessibleViaGroupOnlyService();
+        $secretsToDelete = $secretsFindSecretsAccessibleViaGroupOnlyService->find(
+            $group->id,
+            $groupUsersIds,
+            PermissionsTable::RESOURCE_ACO
+        )->select(['id', 'resource_id', 'user_id'])->all()->toArray();
+
+        $this->Permissions->Resources->Secrets->deleteMany($secretsToDelete);
+        $entitiesChanges->pushDeletedEntities($secretsToDelete);
+
         // find all the resources that only belongs to the group and mark them as deleted
         // Note: all resources that cannot be deleted should have been
         // transferred to other people already (ref. delete checkRules)
@@ -353,16 +361,6 @@ class GroupsTable extends Table
             }
         }
 
-        $secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        /** @var \App\Model\Table\SecretsTable $Secrets */
-        $secretsToDelete = $secretsTable->find()
-            ->select(['id', 'resource_id', 'user_id'])
-            ->where(new TupleComparison(['user_id', 'resource_id'], $lostUsersAccesses, [], 'IN'))
-            ->all()
-            ->toArray();
-
-        $secretsTable->deleteMany($secretsToDelete);
-        $entitiesChanges->pushDeletedEntities($secretsToDelete);
 
         // Delete all group memberships
         $this->GroupsUsers->deleteAll(['group_id' => $group->id]);

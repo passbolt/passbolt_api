@@ -83,6 +83,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
             ->expired($expiryDate)
             ->withPermissionsFor([$operator, $ownerWithAccess])
             ->withPermissionsFor([$editorWithAccess], Permission::UPDATE)
+            ->withSecretsFor([$operator, $ownerWithAccess, $editorWithAccess])
             ->persist();
         $this->logInAs($operator);
 
