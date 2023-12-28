@@ -55,50 +55,33 @@ class SsoOAuth2Service extends AbstractSsoService
     }
 
     /**
-     * @return bool|string
-     */
-    private function getSsoSslVerifyConfigValue()
-    {
-        $ssoSslVerifyConfig = Configure::read('passbolt.security.sso.sslVerify');
-
-        if (is_null($ssoSslVerifyConfig)) {
-            return false;
-        }
-
-        // If it's string then it must be a valid path to root CA file.
-        if (is_string($ssoSslVerifyConfig)) {
-            if (!file_exists($ssoSslVerifyConfig)) {
-                throw new BadRequestException(__('Provided root CA file does not exist'));
-            }
-
-            return $ssoSslVerifyConfig;
-        }
-
-        // Skip SSL verify check
-        if (is_bool($ssoSslVerifyConfig)) {
-            if ($ssoSslVerifyConfig !== false) {
-                throw new BadRequestException(
-                    __('Invalid value provided in `passbolt.security.sso.sslVerify` config')
-                );
-            }
-
-            return $ssoSslVerifyConfig;
-        }
-
-        return false;
-    }
-
-    /**
      * @return \GuzzleHttp\Client|void
      */
     protected function getCustomHttpClient()
     {
-        $ssoSslVerify = $this->getSsoSslVerifyConfigValue();
-        if (!$ssoSslVerify) {
+        $ssoSslVerify = Configure::read('passbolt.security.sso.sslVerify');
+        $ssoSslCafile = Configure::read('passbolt.security.sso.sslCafile');
+
+        if ($ssoSslVerify && is_null($ssoSslCafile)) {
             return;
         }
 
-        return new Client(['verify' => $ssoSslVerify]);
+        if (!$ssoSslVerify) {
+            // Skip SSL verify check
+            $verify = false;
+        } else {
+            if (!is_string($ssoSslCafile)) {
+                throw new BadRequestException(__('Invalid value provided in `passbolt.security.sso.sslCafile` config'));
+            } elseif (!file_exists($ssoSslCafile)) {
+                throw new BadRequestException(__('Provided root CA file does not exist'));
+            }
+
+            // Use custom root CA certificate file
+            $verify = $ssoSslCafile;
+        }
+
+        // @see https://docs.guzzlephp.org/en/stable/request-options.html#verify
+        return new Client(['verify' => $verify]);
     }
 
     // ABSTRACT CLASS PROTECTED FUNCTIONS DEFINITION

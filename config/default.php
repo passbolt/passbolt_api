@@ -489,11 +489,19 @@ return [
                  * Useful for OAuth 2.0 and AD FS providers when using self-signed certificate.
                  *
                  * Accepted values:
-                 * - `null` - Default. Not using self-signed certificate.
-                 * - `'/path/to/rootCA.crt'` - Path to custom root CA certificate.
-                 * - `false` - Don't verify SSL peer certificate. Dangerous!
+                 * - `true` - Default. It will verify SSL certification and SSL certificate against the host name
+                 * - `false` - Disable SSL certification verification (not recommended).
                  */
-                'sslVerify' => env('PASSBOLT_SECURITY_SSO_SSL_VERIFY', null),
+                'sslVerify' => filter_var(
+                    env('PASSBOLT_SECURITY_SSO_SSL_VERIFY', true),
+                    FILTER_VALIDATE_BOOLEAN
+                ),
+                /**
+                 * Accepted values:
+                 * - `null` - Default. Uses built in cafile.
+                 * - `'/path/to/rootCA.crt'` (string) - Path to custom root CA certificate.
+                 */
+                'sslCafile' => env('PASSBOLT_SECURITY_SSO_SSL_CAFILE', null),
             ],
         ],
 
