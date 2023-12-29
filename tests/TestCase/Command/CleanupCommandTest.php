@@ -100,4 +100,14 @@ class CleanupCommandTest extends AppTestCase
         $this->assertSame($groupWithMember->get('id'), $groups[0]->get('id'));
         $this->assertSame(1, UserFactory::find()->count());
     }
+
+    public function testCleanupCommand_NoActiveAdministrator()
+    {
+        $this->exec('passbolt cleanup');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Cleanup shell');
+        $this->assertOutputContains('(fix mode)');
+        $this->assertErrorContains('Cleanup command cannot be executed on an instance having no active administrator');
+    }
 }
