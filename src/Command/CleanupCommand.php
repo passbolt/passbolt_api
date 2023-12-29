@@ -206,6 +206,14 @@ class CleanupCommand extends PassboltCommand
         }
         $io->hr();
 
+        // Don't run cleanup command if there's no active administrator
+        $admin = $this->Users->findFirstAdmin();
+        if (is_null($admin)) {
+            $io->warning(__('Cleanup command cannot be executed on an instance having no active administrator.'));
+
+            return $this->successCode();
+        }
+
         $totalErrorCount = 0;
         foreach (self::$cleanups as $tableName => $tableCleanup) {
             $table = TableRegistry::getTableLocator()->get($tableName);
