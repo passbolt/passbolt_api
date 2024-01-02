@@ -60,7 +60,7 @@
         },
         {
             "type": "vcs",
-            "url": "https://github.com/ishanvyas22/cakephp-email-queue.git",
+            "url": "https://github.com/passbolt/cakephp-email-queue.git",
             "no-api": true
         }
     ],
