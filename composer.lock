@@ -2069,16 +2069,16 @@
         },
         {
             "name": "lorenzo/cakephp-email-queue",
-            "version": "dev-upgrade-cake45",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ishanvyas22/cakephp-email-queue.git",
-                "reference": "8a89d0406aff296a072d5dc8675a16d25a94493f"
+                "url": "https://github.com/passbolt/cakephp-email-queue.git",
+                "reference": "ed3e3e0c66999a5d0ce31f311ad89cbbd95f16d5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ishanvyas22/cakephp-email-queue/zipball/8a89d0406aff296a072d5dc8675a16d25a94493f",
-                "reference": "8a89d0406aff296a072d5dc8675a16d25a94493f",
+                "url": "https://api.github.com/repos/passbolt/cakephp-email-queue/zipball/ed3e3e0c66999a5d0ce31f311ad89cbbd95f16d5",
+                "reference": "ed3e3e0c66999a5d0ce31f311ad89cbbd95f16d5",
                 "shasum": ""
             },
             "require": {
@@ -2090,6 +2090,7 @@
                 "php-coveralls/php-coveralls": "^2.1",
                 "phpunit/phpunit": "^9.6"
             },
+            "default-branch": true,
             "type": "cakephp-plugin",
             "autoload": {
                 "psr-4": {
@@ -2121,7 +2122,7 @@
                 "preview",
                 "queue"
             ],
-            "time": "2023-11-23T05:16:47+00:00"
+            "time": "2024-01-02T11:47:33+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
