@@ -17,21 +17,45 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Controller\Adfs;
 
-use Passbolt\Sso\Controller\OAuth2\SsoOAuth2Stage1DryRunController;
+use App\Service\Cookie\AbstractSecureCookieService;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\NotFoundException;
+use Passbolt\Sso\Controller\AbstractSsoController;
+use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\Adfs\SsoAdfsService;
+use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 
-/**
- * @see \Passbolt\Sso\Controller\OAuth2\SsoOAuth2Stage1DryRunController For full code.
- */
-class SsoAdfsStage1DryRunController extends SsoOAuth2Stage1DryRunController
+class SsoAdfsStage1DryRunController extends AbstractSsoController
 {
     /**
-     * Returns SSO service name that will be used to create the service instance.
+     * Perform a SSO Login dry run for a given settings_id
      *
-     * @return string
+     * @param \App\Service\Cookie\AbstractSecureCookieService $cookieService Cookie service
+     * @return void
      */
-    protected function getSsoServiceName(): string
+    public function stage1DryRun(AbstractSecureCookieService $cookieService): void
     {
-        return SsoAdfsService::class;
+        $this->assertJson();
+
+        // User must be an admin
+        $this->User->assertIsAdmin();
+        $uac = $this->User->getExtendAccessControl();
+
+        // There must be a draft setting to build the provider with
+        $settingsId = $this->getSettingsIdFromData();
+        try {
+            $settingsDto = (new SsoSettingsGetService())->getDraftByIdOrFail($settingsId, true);
+        } catch (RecordNotFoundException $exception) {
+            throw new NotFoundException(__('The SSO setting does not exist.'), 404, $exception);
+        }
+
+        // Redirect to provider
+        $url = $this->getSsoUrlWithCookie(
+            new SsoAdfsService($cookieService, $settingsDto),
+            $uac,
+            SsoState::TYPE_SSO_SET_SETTINGS
+        );
+
+        $this->success(__('The operation was successful.'), $url);
     }
 }

@@ -17,21 +17,40 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Controller\Adfs;
 
-use Passbolt\Sso\Controller\OAuth2\SsoOAuth2Stage1Controller;
+use App\Service\Cookie\AbstractSecureCookieService;
+use Cake\Event\EventInterface;
+use Passbolt\Sso\Controller\AbstractSsoController;
+use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\Adfs\SsoAdfsService;
 
-/**
- * @see \Passbolt\Sso\Controller\OAuth2\SsoOAuth2Stage1Controller For full code.
- */
-class SsoAdfsStage1Controller extends SsoOAuth2Stage1Controller
+class SsoAdfsStage1Controller extends AbstractSsoController
 {
     /**
-     * Returns SSO service name that will be used to create the service instance.
-     *
-     * @return string
+     * @inheritDoc
      */
-    protected function getSsoServiceName(): string
+    public function beforeFilter(EventInterface $event)
     {
-        return SsoAdfsService::class;
+        parent::beforeFilter($event);
+        $this->Authentication->allowUnauthenticated(['stage1']);
+    }
+
+    /**
+     * Return a URL to redirect the user to perform SSO
+     *
+     * @param \App\Service\Cookie\AbstractSecureCookieService $cookieService Cookie service
+     * @return void
+     */
+    public function stage1(AbstractSecureCookieService $cookieService): void
+    {
+        $this->assertJson();
+
+        // User must not be logged in and be active/not deleted
+        $this->User->assertNotLoggedIn();
+        $uac = $this->getUacFromData();
+
+        // Redirect to provider
+        $url = $this->getSsoUrlWithCookie(new SsoAdfsService($cookieService), $uac, SsoState::TYPE_SSO_GET_KEY);
+
+        $this->success(__('The operation was successful.'), $url);
     }
 }

@@ -56,10 +56,10 @@ class SsoAdfsService extends SsoOAuth2Service
         try {
             $ssoSettings = (new SsoSettingsGetService())->getActiveOrFail(true);
             if ($ssoSettings->provider !== SsoSetting::PROVIDER_ADFS) {
-                throw new BadRequestException('Invalid provider. Expected AD FS.');
+                throw new BadRequestException(__('Invalid provider. Expected AD FS.'));
             }
             if (!($ssoSettings->data instanceof SsoSettingsAdfsDataDto)) {
-                throw new BadRequestException('Invalid provider data. Expected AD FS settings.');
+                throw new BadRequestException(__('Invalid provider data. Expected AD FS settings.'));
             }
         } catch (\Exception $exception) {
             throw new BadRequestException(__('No valid SSO settings found.'), 400, $exception);

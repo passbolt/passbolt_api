@@ -181,7 +181,7 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
                 'client_secret' => UuidFactory::uuid(),
                 'openid_configuration_path' => '/.well-known/openid-configuration',
                 'scope' => 'openid email profile',
-                'email_claim' => 'upn',
+                'email_claim' => SsoSetting::ADFS_EMAIL_CLAIM_UPN,
             ],
         ];
 
