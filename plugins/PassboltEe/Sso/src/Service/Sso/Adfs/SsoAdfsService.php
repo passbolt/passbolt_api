@@ -41,6 +41,7 @@ class SsoAdfsService extends SsoOAuth2Service
 
         $collaborators = [];
         $httpClient = $this->getCustomHttpClient();
+        // Set custom HTTP client when using self-signed SSL certificate
         if ($httpClient instanceof Client) {
             $collaborators['httpClient'] = $httpClient;
         }

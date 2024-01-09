@@ -87,6 +87,13 @@ class SsoSettingsFactory extends CakephpBaseFactory
         return $this->patchData(['provider' => SsoSetting::PROVIDER_GOOGLE])->patchData(['data' => $file]);
     }
 
+    public function oauth2(): SsoSettingsFactory
+    {
+        $file = file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'SsoSettings' . DS . 'oauth2.msg');
+
+        return $this->patchData(['provider' => SsoSetting::PROVIDER_OAUTH2])->patchData(['data' => $file]);
+    }
+
     public function adfs(): SsoSettingsFactory
     {
         $file = file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'SsoSettings' . DS . 'adfs.msg');

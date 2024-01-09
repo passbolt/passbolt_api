@@ -55,15 +55,18 @@ class SsoOAuth2Service extends AbstractSsoService
     }
 
     /**
-     * @return \GuzzleHttp\Client|void
+     * Build custom HTTP client used to pass to SSO provider.
+     * Sets `verify` option (depending on what is specified in the config) when instantiating the HTTP client.
+     *
+     * @return \GuzzleHttp\Client|null Returns custom HTTP client if config is adjusted, `null` otherwise.
      */
-    protected function getCustomHttpClient()
+    protected function getCustomHttpClient(): ?Client
     {
         $ssoSslVerify = Configure::read('passbolt.security.sso.sslVerify');
         $ssoSslCafile = Configure::read('passbolt.security.sso.sslCafile');
 
         if ($ssoSslVerify && is_null($ssoSslCafile)) {
-            return;
+            return null;
         }
 
         if (!$ssoSslVerify) {
