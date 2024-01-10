@@ -452,33 +452,17 @@ trait UsersFindersTrait
     {
         $subQueryOfLowerCasedUsernameDuplicates = $this
             ->find()
-            ->select([
-                'lower_username' => 'LOWER(Users.username)',
-                'count' => $this->find()->func()->count('id'),
-            ])
+            // MAX() here is just to make MySQL happy without that query breaks in MySQL(especially in 5.7)
+            ->select(['lower_username' => 'MAX(LOWER(Users.username))'])
             ->where(['deleted' => false])
             ->group('LOWER(Users.username)')
-            ->having(['count >' => 1]);
-
-        // We want to return Query object but result we want requires a collection,
-        // hence to reduce executing multiple queries(1 for count and 2nd to get usernames)
-        $lowerCasedUsernameDuplicatesQuery = $subQueryOfLowerCasedUsernameDuplicates;
-
-        $subQueryOfLowerCasedUsernameDuplicates = $subQueryOfLowerCasedUsernameDuplicates
-            ->all()
-            ->map(function ($row) {
-                return $row->lower_username;
-            });
-
-        if ($subQueryOfLowerCasedUsernameDuplicates->count() === 0) {
-            return $lowerCasedUsernameDuplicatesQuery;
-        }
+            ->having('count(*) > 1');
 
         return $this->find('list', ['keyField' => 'id', 'valueField' => 'username'])
             ->disableHydration()
             ->select(['id', 'username'])
             ->where([
-                'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates->toArray(),
+                'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates,
                 'deleted' => false,
             ])
             ->orderAsc('LOWER(username)');
