@@ -19,7 +19,6 @@ namespace App\Service\Resources;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
-use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
@@ -65,20 +64,10 @@ class ResourcesUpdateService
     private $secretsUpdateSecretsService;
 
     /**
-     * Service to assert that the expiry date provided in the payload is valid
-     *
-     * @var \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService
-     */
-    protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
-
-    /**
      * Instantiate the service.
-     *
-     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService Password expiry service
      */
-    public function __construct(PasswordExpiryValidationServiceInterface $passwordExpiryValidationService)
+    public function __construct()
     {
-        $this->passwordExpiryValidationService = $passwordExpiryValidationService;
         $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
         /** @phpstan-ignore-next-line */
@@ -98,7 +87,6 @@ class ResourcesUpdateService
      */
     public function update(UserAccessControl $uac, string $id, ?array $data = []): Resource
     {
-        $this->passwordExpiryValidationService->validateAndParseExpiryDate($data);
         $resource = $this->getResource($uac, $id);
         $meta = $this->extractDataResourceMeta($data);
         $meta = $this->presetOrAssertResourceType($meta);

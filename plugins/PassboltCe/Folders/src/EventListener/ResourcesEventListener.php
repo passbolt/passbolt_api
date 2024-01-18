@@ -97,7 +97,7 @@ class ResourcesEventListener implements EventListenerInterface
     }
 
     /**
-     * Handle a resource after an access has removed.
+     * Handle a resource after an access has been revoked.
      *
      * @param \Cake\Event\Event $event The event.
      * @return void

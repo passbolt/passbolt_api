@@ -21,7 +21,6 @@ use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Avatar;
 use App\Model\Entity\Role;
-use App\Model\Entity\Secret;
 use App\Model\Entity\User;
 use App\Model\Rule\IsNotSoleManagerOfNonEmptyGroupRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
@@ -423,7 +422,7 @@ class UsersTable extends Table
      *
      * @param \App\Model\Entity\User $user entity
      * @param array|null $options additional delete options such as ['checkRules' => true]
-     * @return EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
+     * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      */
     public function softDelete(User $user, ?array $options = null)
     {

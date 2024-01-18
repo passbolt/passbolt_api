@@ -26,6 +26,8 @@ class PasswordExpiryPoliciesSettingsDto extends PasswordExpirySettingsDto
     public function getValue(): array
     {
         return parent::getValue() + [
+            self::POLICY_OVERRIDE => $this->policy_override,
+            self::DEFAULT_EXPIRY_PERIOD => $this->default_expiry_period,
             self::EXPIRY_NOTIFICATION => $this->expiry_notification,
         ];
     }
@@ -33,9 +35,9 @@ class PasswordExpiryPoliciesSettingsDto extends PasswordExpirySettingsDto
     /**
      * @inheritDoc
      */
-    protected function getSettingsIfDisabled(): array
+    protected function getDefaultSettingsIfFeatureIsDisabled(): array
     {
-        return parent::getSettingsIfDisabled() + [
+        return parent::getDefaultSettingsIfFeatureIsDisabled() + [
                 self::POLICY_OVERRIDE => false,
                 self::DEFAULT_EXPIRY_PERIOD => null,
                 self::EXPIRY_NOTIFICATION => null,

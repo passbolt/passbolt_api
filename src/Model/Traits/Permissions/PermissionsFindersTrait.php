@@ -21,7 +21,6 @@ use App\Model\Table\AvatarsTable;
 use App\Model\Table\PermissionsTable;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
-use Cake\Database\Expression\TupleComparison;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -373,7 +372,7 @@ trait PermissionsFindersTrait
      *
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $groupId The group identifier.
-     * @param string $userId The user identifier.
+     * @param string $usersIds The user identifier.
      * @return \Cake\ORM\Query
      */
     public function findAcosAccessesDiffBetweenGroupAndUsers(string $acoType, string $groupId, array $usersIds): Query
@@ -433,7 +432,6 @@ trait PermissionsFindersTrait
             });
 //            ->where(new TupleComparison(['Permissions.user_id', 'permissions.resource_id'], $directUsersAccessesQuery, [], 'NOT IN'))
 ////            ->where(new TupleComparison(['user_id', 'resource_id'], $inheritedUsersAccessesExcludingGroupQuery, [], 'NOT IN'))
-            ;
     }
 
     /**

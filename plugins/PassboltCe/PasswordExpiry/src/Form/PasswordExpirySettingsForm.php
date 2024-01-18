@@ -33,7 +33,7 @@ class PasswordExpirySettingsForm extends Form
             ->inList(
                 PasswordExpirySettingsDto::AUTOMATIC_EXPIRY,
                 [true],
-                __('The {0} field must be true.', PasswordExpirySettingsDto::AUTOMATIC_EXPIRY)
+                __('The automatic_expiry field must be true.')
             );
 
         $validator
@@ -42,7 +42,7 @@ class PasswordExpirySettingsForm extends Form
             ->inList(
                 PasswordExpirySettingsDto::AUTOMATIC_UPDATE,
                 [true],
-                __('The {0} field must be true.', PasswordExpirySettingsDto::AUTOMATIC_UPDATE)
+                __('The automatic_update field must be true.')
             );
 
         return $validator;
@@ -60,7 +60,7 @@ class PasswordExpirySettingsForm extends Form
 
     /**
      * @param array $data Data to sanitize
-     * @return array|null[]
+     * @return array
      */
     protected function sanitizeData(array $data): array
     {

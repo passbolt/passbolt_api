@@ -129,9 +129,9 @@ class PasswordExpirySettingsDto
     /**
      * @return bool
      */
-    public function isSettingsEnabled(): bool
+    public function isPasswordExpiryFeatureEnabled(): bool
     {
-        return is_string($this->id);
+        return !is_null($this->id);
     }
 
     /**
@@ -158,7 +158,7 @@ class PasswordExpirySettingsDto
     /**
      * @return array
      */
-    protected function getSettingsIfDisabled(): array
+    protected function getDefaultSettingsIfFeatureIsDisabled(): array
     {
         return [
             self::AUTOMATIC_EXPIRY => false,
@@ -171,8 +171,8 @@ class PasswordExpirySettingsDto
      */
     public function toArray(): ?array
     {
-        if (!$this->isSettingsEnabled()) {
-            return $this->getSettingsIfDisabled();
+        if (!$this->isPasswordExpiryFeatureEnabled()) {
+            return $this->getDefaultSettingsIfFeatureIsDisabled();
         }
 
         return array_merge(['id' => $this->id], $this->getValue(), [

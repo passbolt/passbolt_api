@@ -17,15 +17,13 @@ declare(strict_types=1);
 
 namespace Passbolt\PasswordExpiryPolicies\Test\TestCase\Service\Resources;
 
+use App\Error\Exception\ValidationException;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\FrozenTime;
-use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesValidationService;
-use Passbolt\PasswordExpiryPolicies\Service\Settings\PasswordExpiryPoliciesGetSettingsService;
 use Passbolt\PasswordExpiryPolicies\Test\Factory\PasswordExpiryPoliciesSettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -36,11 +34,7 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new ResourcesUpdateService(
-            new PasswordExpiryPoliciesValidationService(
-                new PasswordExpiryPoliciesGetSettingsService()
-            )
-        );
+        $this->service = new ResourcesUpdateService();
         ResourceTypeFactory::make()->default()->persist();
     }
 
@@ -160,8 +154,8 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'Foo',
         ];
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The expiration date should be null or a valid datetime.');
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Could not validate resource data.');
         $this->service->update($this->makeUac($owner), $resource->id, $payload);
     }
 
@@ -181,7 +175,8 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => null,
         ];
 
+        // Although the password expiry is deactivated, the password is now marked as not expired
         $resource = $this->service->update($this->makeUac($owner), $resource->id, $payload);
-        $this->assertTrue($resource->isExpired());
+        $this->assertFalse($resource->isExpired());
     }
 }

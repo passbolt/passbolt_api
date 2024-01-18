@@ -116,6 +116,9 @@ trait UsersFindersTrait
      */
     public function filterQueryByResourcesAccess(Query $query, $resourceIds, array $permissionTypes = []): Query
     {
+        if (is_array($resourceIds) && empty($resourceIds))  {
+            return $query;
+        }
         // The query requires a join with Permissions not constraint with the default condition added by the HasMany
         // relationship : Users.id = Permissions.aro_foreign_key.
         // The join will be used in relation to Groups as well, to find the users inherited permissions from Groups.

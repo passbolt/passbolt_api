@@ -48,7 +48,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand extends PassboltC
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
         return $parser->setDescription([
-            __('Notify resource owners about their password expiry.'),
+            __('Notify resource owners about their expired passwords.'),
         ]);
     }
 

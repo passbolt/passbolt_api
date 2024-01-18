@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\PasswordExpiryPolicies\Form;
 
+use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Passbolt\PasswordExpiry\Form\PasswordExpirySettingsForm;
 use Passbolt\PasswordExpiry\Model\Dto\PasswordExpirySettingsDto;
@@ -57,24 +58,17 @@ class PasswordExpiryPoliciesSettingsForm extends PasswordExpirySettingsForm
      */
     protected function sanitizeData(array $data): array
     {
-        $castToInt = function (array $data, string $key): ?int {
-            $value = $data[$key] ?? null;
-
-            return is_null($value) ? null : intval($value);
-        };
+        $defaultPeriod = Hash::get($data, PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD);
+        $defaultPeriod = is_numeric($defaultPeriod) ? intval($defaultPeriod) : $defaultPeriod;
+        $expiryNotification = Hash::get($data, PasswordExpirySettingsDto::EXPIRY_NOTIFICATION);
+        $expiryNotification = is_numeric($expiryNotification) ? intval($expiryNotification) : $expiryNotification;
 
         return [
             PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => $data[PasswordExpirySettingsDto::AUTOMATIC_EXPIRY] ?? null,
             PasswordExpirySettingsDto::AUTOMATIC_UPDATE => $data[PasswordExpirySettingsDto::AUTOMATIC_UPDATE] ?? null,
             PasswordExpirySettingsDto::POLICY_OVERRIDE => $data[PasswordExpirySettingsDto::POLICY_OVERRIDE] ?? null,
-            PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => $castToInt(
-                $data,
-                PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD
-            ),
-            PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => $castToInt(
-                $data,
-                PasswordExpirySettingsDto::EXPIRY_NOTIFICATION
-            ),
+            PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => $defaultPeriod,
+            PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => $expiryNotification,
         ];
     }
 }

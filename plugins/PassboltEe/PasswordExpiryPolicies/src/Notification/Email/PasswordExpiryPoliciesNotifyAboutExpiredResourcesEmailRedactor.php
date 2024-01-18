@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\PasswordExpiryPolicies\Notification\Email;
 
 use App\Model\Entity\User;
-use App\Model\Table\AvatarsTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -59,15 +58,10 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
         $expiryNotificationInDays = $event->getData('expiryNotificationInDays');
         $notifyIfExpiresToday = $event->getData('notifyIfExpiresToday');
 
-        /** @var \Cake\ORM\Query $users */
+        /** @var array $users */
         $users = $event->getData('users');
-        $users
-            ->find('locale')
-            ->contain(['Profiles' => AvatarsTable::addContainAvatar()])
-            ->find('active')
-            ->find('notDisabled');
 
-        // Send emails to all the administrators
+        // Send emails to all the owners
         foreach ($users as $user) {
             $emailCollection->addEmail(
                 $this->createEmail(

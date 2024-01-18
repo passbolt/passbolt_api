@@ -23,8 +23,6 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\I18n\FrozenTime;
-use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
-use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -35,11 +33,7 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new ResourcesUpdateService(
-            new PasswordExpiryValidationService(
-                new PasswordExpiryGetSettingsService()
-            )
-        );
+        $this->service = new ResourcesUpdateService();
         ResourceTypeFactory::make()->default()->persist();
     }
 
@@ -56,11 +50,11 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
                 'isFeatureEnabled' => false,
                 'expiredFieldInPayload' => null,
                 'isExpiredBefore' => true,
-                'isExpiredAfter' => true,
+                'isExpiredAfter' => false,
             ],
             [
                 'isFeatureEnabled' => true,
-                'expiredFieldInPayload' => 'foo',
+                'expiredFieldInPayload' => '2000-01-01',
                 'isExpiredBefore' => true,
                 'isExpiredAfter' => true,
             ],
@@ -112,10 +106,10 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
         $resource = ResourceFactory::find()->firstOrFail();
         $this->assertSame($isExpiredAfter, $resource->isExpired());
         $this->assertSame($newName, $resource->name);
-        if ($isFeatureEnabled && $expiredFieldInPayload === null) {
+        if (!$isExpiredAfter) {
             $this->assertNull($resource->expired);
         } else {
-            $this->assertEquals($originalExpiryDate, $resource->expired);
+            $this->assertEquals(FrozenTime::parse($expiredFieldInPayload), $resource->expired);
         }
     }
 }

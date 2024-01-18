@@ -66,7 +66,7 @@ class SecretsUpdateSecretsService
      *   ],
      *   ...
      * ]
-     * @return EntitiesChangesDto
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \Exception If something unexpected occurred
      */
     public function updateSecrets(UserAccessControl $uac, string $resourceId, array $data = []): EntitiesChangesDto
@@ -182,7 +182,7 @@ class SecretsUpdateSecretsService
      * Delete the secrets for which the users have no access anymore.
      *
      * @param string $resourceId The target resource
-     * @return array<Secret> The array of deleted secrets
+     * @return array<\App\Model\Entity\Secret> The array of deleted secrets
      */
     private function deleteLostAccessSecrets(string $resourceId): array
     {

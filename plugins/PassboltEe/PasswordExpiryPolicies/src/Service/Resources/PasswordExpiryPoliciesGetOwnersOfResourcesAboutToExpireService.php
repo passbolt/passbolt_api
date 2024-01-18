@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\PasswordExpiryPolicies\Service\Resources;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\AvatarsTable;
 use Cake\Console\Exception\StopException;
 use Cake\Event\EventDispatcherTrait;
 use Cake\I18n\FrozenTime;
@@ -36,8 +37,6 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
     use EventDispatcherTrait;
 
     protected PasswordExpiryGetSettingsServiceInterface $settingsService;
-
-    protected int $expiringInDays;
 
     public const NOTIFY_ABOUT_EXPIRED_RESOURCES_EVENT_NAME = 'GetOwnersOfResourcesAboutToExpireService.execute.success';
 
@@ -59,7 +58,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
     {
         $settings = $this->settingsService->get();
 
-        if (!$settings->isSettingsEnabled()) {
+        if (!$settings->isPasswordExpiryFeatureEnabled()) {
             throw new StopException(__('Password expiry is not activated.'));
         }
 
@@ -71,14 +70,17 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
         $notifyIfExpiresToday = (bool)EmailNotificationSettings::get('send.password.expire');
 
         $users = $this->getUsersToNotify($expiryNotificationInDays, $notifyIfExpiresToday);
+        $users
+            ->find('locale')
+            ->contain(['Profiles' => AvatarsTable::addContainAvatar()]);
 
         $this->dispatchEvent(
             self::NOTIFY_ABOUT_EXPIRED_RESOURCES_EVENT_NAME,
-            compact(
-                'users',
-                'notifyIfExpiresToday',
-                'expiryNotificationInDays'
-            ),
+            [
+                'users' => $users->all()->toArray(),
+                'notifyIfExpiresToday' => $notifyIfExpiresToday,
+                'expiryNotificationInDays' => $expiryNotificationInDays,
+            ],
             $this
         );
 
@@ -105,7 +107,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
         $usersToNotify = $UsersTable
             ->find('notDisabled')
-            ->find('active')
+            ->find('activeNotDeleted')
             ->order([], true); // Remove any order as it is not relevant here and breaks in MySQL
 
         return $UsersTable->filterQueryByResourcesAccess($usersToNotify, $expiringResourceIds, [Permission::OWNER]);
@@ -126,29 +128,22 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
         $expiredResources = $ResourcesTable->find();
         $today = FrozenTime::today();
         $tomorrow = FrozenTime::tomorrow();
+        $aboutToExpireCondition = [
+            'expired >=' => $today->addDays($expiresInDays ?? 0),
+            'expired <' => $tomorrow->addDays($expiresInDays ?? 0),
+        ];
+        $expiredCondition = [
+            'expired >=' => $today,
+            'expired <' => $tomorrow,
+        ];
         if ($expiresInDays && $notifyIfExpiresToday) {
             $condition = [
-                'OR' => [
-                    [
-                        'expired >=' => $today,
-                        'expired <' => $tomorrow,
-                    ],
-                    [
-                        'expired >=' => $today->addDays($expiresInDays),
-                        'expired <' => $tomorrow->addDays($expiresInDays),
-                    ],
-                ],
+                'OR' => [$aboutToExpireCondition, $expiredCondition],
             ];
         } elseif ($expiresInDays) {
-            $condition = [
-                'expired >=' => $today->addDays($expiresInDays),
-                'expired <' => $tomorrow->addDays($expiresInDays),
-            ];
+            $condition = $aboutToExpireCondition;
         } elseif ($notifyIfExpiresToday) {
-            $condition = [
-                'expired >=' => $today,
-                'expired <' => $tomorrow,
-            ];
+            $condition = $expiredCondition;
         } else {
             throw new StopException(__('Password expiry email notifications are disabled.'));
         }

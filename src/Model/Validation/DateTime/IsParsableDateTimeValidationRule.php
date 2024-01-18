@@ -15,20 +15,29 @@ declare(strict_types=1);
  * @since         4.5.0
  */
 
-namespace App\Service\Resources;
+namespace App\Model\Validation\DateTime;
+
+use App\Model\Validation\PassboltValidationRule;
+use Cake\I18n\FrozenTime;
 
 /**
- * Class PasswordExpiryValidationServiceInterface.
+ * Check that the date is parsable
  */
-interface PasswordExpiryValidationServiceInterface
+class IsParsableDateTimeValidationRule extends PassboltValidationRule
 {
-    public const PASSWORD_EXPIRED_DATE = 'expired';
+    /**
+     * @inheritDoc
+     */
+    public function defaultErrorMessage($value, $context): string
+    {
+        return __('The date could not be parsed.');
+    }
 
     /**
-     * True if the password expiry settings are enabled and
-     * password automatically expire on permission losses by a user
-     *
-     * @return bool
+     * @inheritDoc
      */
-    public function isExpiryAutomatic(): bool;
+    public function rule($value, $context): bool
+    {
+        return is_null($value) || is_a($value, FrozenTime::class);
+    }
 }

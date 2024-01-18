@@ -68,13 +68,11 @@ class GroupsUpdateService
     private $groupsUsersRemoveService;
 
     /**
-     * @var ResourcesExpireResourcesServiceInterface
+     * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
      */
     private ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
 
     /**qsq
-     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService Service to expire resources that were consumed by users who lost access to them.
-     * @return void
      */
     public function __construct(
         ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService
@@ -134,7 +132,8 @@ class GroupsUpdateService
                 $entitiesChangesDto->merge($this->updateGroupsUsers($uac, $group, $changes));
                 $entitiesChangesDto->merge($this->deleteGroupsUsers($uac, $group, $changes));
                 $this->resourcesExpireResourcesService->expireResourcesForSecrets(
-                    $entitiesChangesDto->getDeletedEntities(Secret::class));
+                    $entitiesChangesDto->getDeletedEntities(Secret::class)
+                );
                 $this->notifyUsers($uac, $group, $entitiesChangesDto);
             }
         );
@@ -209,7 +208,7 @@ class GroupsUpdateService
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $changes The list of group users changes.
      * @param array $secretsData The list of secrets to add.
-     * @return EntitiesChangesDto Entities changes applied following the addition of users to groups
+     * @return \App\Model\Dto\EntitiesChangesDto Entities changes applied following the addition of users to groups
      * @throws \Exception If an unexpected error occurred.
      */
     private function addGroupsUsers(UserAccessControl $uac, Group $group, array $changes, array $secretsData): EntitiesChangesDto
@@ -239,7 +238,7 @@ class GroupsUpdateService
      * @param array $groupUserData The data of the group user to add.
      * @param array $secretsData The data of the secrets to add.
      * @param int $rowIndexRef The index of the treated group user in the request data, for error purpose.
-     * @return EntitiesChangesDto Entities changes applied following the addition of the user to group
+     * @return \App\Model\Dto\EntitiesChangesDto Entities changes applied following the addition of the user to group
      * @throws \App\Error\Exception\ValidationException If a validation error occured while inserting the new group user.
      * @throws \Exception If an unexpected error occurred.
      */
@@ -268,7 +267,7 @@ class GroupsUpdateService
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $changes The list of group users changes.
-     * @return EntitiesChangesDto Array of updated GroupUser
+     * @return \App\Model\Dto\EntitiesChangesDto Array of updated GroupUser
      */
     private function updateGroupsUsers(UserAccessControl $uac, Group $group, array $changes): EntitiesChangesDto
     {
@@ -327,13 +326,14 @@ class GroupsUpdateService
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $groupUserData The data of the group user to update.
      * @param int $rowIndexRef The index of the treated group user in the request data, for error purpose.
-     * @return GroupsUser|void
+     * @return \App\Model\Entity\GroupsUser|void
      */
     private function updateGroupUser(
         UserAccessControl $uac,
         Group $group,
         array $groupUserData,
-        int $rowIndexRef) {
+        int $rowIndexRef
+    ) {
         $groupUserToUpdate = $this->getAndAssertGroupUserFromData($group, $groupUserData, $rowIndexRef);
 
         // Return if there is no group role change requested.
@@ -388,7 +388,7 @@ class GroupsUpdateService
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $changes The list of group users changes.
-     * @return EntitiesChangesDto
+     * @return \App\Model\Dto\EntitiesChangesDto
      */
     private function deleteGroupsUsers(UserAccessControl $uac, Group $group, array $changes): EntitiesChangesDto
     {
@@ -411,7 +411,7 @@ class GroupsUpdateService
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $groupUserData The data of the group user to delete.
      * @param int $rowIndexRef The index of the treated group user in the request data, for error purpose.
-     * @return EntitiesChangesDto
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \Exception
      */
     private function deleteGroupUser(
@@ -438,7 +438,7 @@ class GroupsUpdateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param \App\Model\Entity\Group $group The updated group
-     * @param array $addedGroupsUsers the list of added groups users
+     * @param array $entitiesChanges the list of added groups users
      * @param array $updatedGroupsUsers the list of updated groups suers
      * @param \App\Model\Entity\GroupsUser[] $deletedGroupsUsers the list of deleted groups users
      * @return void

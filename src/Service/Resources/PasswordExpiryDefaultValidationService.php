@@ -27,18 +27,6 @@ use Cake\Http\Exception\BadRequestException;
 class PasswordExpiryDefaultValidationService implements PasswordExpiryValidationServiceInterface
 {
     /**
-     * @param array $data Payload
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the plugin is not enabled
-     */
-    public function validateAndParseExpiryDate(array &$data): void
-    {
-        if (isset($data[self::PASSWORD_EXPIRED_DATE])) {
-            throw new BadRequestException(__('The password expiry plugin is not enabled.'));
-        }
-    }
-
-    /**
      * @inheritDoc
      */
     public function isExpiryAutomatic(): bool

@@ -23,7 +23,6 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Groups\GroupsFindersTrait;
-use App\Service\GroupsUsers\GroupsUsersDeleteService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Database\Expression\TupleComparison;
@@ -302,7 +301,7 @@ class GroupsTable extends Table
      * @throws \InvalidArgumentException if $group is not a valid group entity
      * @param \App\Model\Entity\Group $group entity
      * @param array|null $options additional delete options such as ['checkRules' => true]
-     * @return EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
+     * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      * @see PasswordExpiryOnDeleteGroupEventListener::expireResourcesOnDeletedGroup
      */
     public function softDelete(Group $group, ?array $options = null)

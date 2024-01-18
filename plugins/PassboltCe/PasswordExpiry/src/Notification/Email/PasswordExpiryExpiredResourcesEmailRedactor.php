@@ -29,7 +29,6 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
-use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourceOnShareService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
 
 class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailRedactorInterface

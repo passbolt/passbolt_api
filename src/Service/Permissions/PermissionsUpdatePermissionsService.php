@@ -60,7 +60,7 @@ class PermissionsUpdatePermissionsService
      * @param string $aco The type of entity
      * @param string $acoForeignkey The target entity id
      * @param array|null $data The permissions to update
-     * @return EntitiesChangesDto
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \Exception If something unexpected occurred
      */
     public function updatePermissions(
