@@ -61,7 +61,6 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
         $today = FrozenTime::tomorrow()->toDateTimeString();
 
         return [
-            [[], 'The data should not be empty'],
             [['id' => null], 'An array of arrays is expected.'],
             [[['id' => null,]], 'The identifier should be a valid UUID.'],
             [[['id' => null, 'expired' => '2000-01-01']], 'The identifier should be a valid UUID.'],
@@ -117,13 +116,12 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
         $this->service->updateMany($uac, $payload);
     }
 
-    public function testPasswordExpiryPoliciesResourcesExpiryUpdateService_No_Settings_In_DB()
+    public function testPasswordExpiryPoliciesResourcesExpiryUpdateService_Empty_Payload_Should_Succeed()
     {
-        $payload = [['id' => UuidFactory::uuid(), 'expired' => FrozenTime::today()]];
+        PasswordExpiryPoliciesSettingFactory::make()->persist();
         $uac = $this->mockUserAccessControl();
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The expiry date is required.');
-        $this->service->updateMany($uac, $payload);
+        $result = $this->service->updateMany($uac, []);
+        $this->assertNull($result);
     }
 
     public function testPasswordExpiryPoliciesResourcesExpiryUpdateService_Update_Success()

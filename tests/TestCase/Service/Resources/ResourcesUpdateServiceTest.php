@@ -20,7 +20,6 @@ namespace App\Test\TestCase\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
-use App\Service\Resources\PasswordExpiryDefaultValidationService;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\UserFactory;
@@ -81,7 +80,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
         parent::setUp();
         $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->secretsTable = TableRegistry::getTableLocator()->get('Secrets');
-        $this->service = new ResourcesUpdateService(new PasswordExpiryDefaultValidationService());
+        $this->service = new ResourcesUpdateService();
     }
 
     public function tearDown(): void

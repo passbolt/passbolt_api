@@ -61,7 +61,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
         $optionParser = new ConsoleOptionParser();
         $cmd->buildOptionParser($optionParser);
         $this->assertSame(
-            'Notify resource owners about their password expiry.',
+            'Notify resource owners about their expired passwords.',
             $optionParser->getDescription()
         );
     }

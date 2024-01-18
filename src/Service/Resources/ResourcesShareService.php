@@ -70,7 +70,7 @@ class ResourcesShareService
     private $userHasPermissionService;
 
     /**
-     * @var ResourcesExpireResourcesServiceInterface
+     * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
      */
     private ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
 
@@ -113,7 +113,7 @@ class ResourcesShareService
                 $entitiesChanges->merge($this->updateSecrets($uac, $resource, $secrets));
                 $this->postAccessesGranted($uac, $entitiesChanges->getAddedEntities(Permission::class));
                 $this->postAccessesRevoked($uac, $resource, $entitiesChanges->getDeletedEntities(Permission::class));
-//                var_dump($entitiesChanges->getDeletedEntities(Permission::class));
+            //                var_dump($entitiesChanges->getDeletedEntities(Permission::class));
                 $this->resourcesExpireResourcesService->expireResourcesForSecrets(
                     $entitiesChanges->getDeletedEntities(Secret::class)
                 );
@@ -154,7 +154,7 @@ class ResourcesShareService
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $changes The list of permissions changes to apply
-     * @return ?EntitiesChangesDto
+     * @return ?\App\Model\Dto\EntitiesChangesDto
      * @throws \Exception If something unexpected occurred
      */
     private function updatePermissions(UserAccessControl $uac, Resource $resource, array $changes): EntitiesChangesDto
@@ -193,7 +193,7 @@ class ResourcesShareService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $data The list of secrets to add
-     * @return EntitiesChangesDto
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \Exception
      */
     private function updateSecrets(UserAccessControl $uac, Resource $resource, array $data): EntitiesChangesDto

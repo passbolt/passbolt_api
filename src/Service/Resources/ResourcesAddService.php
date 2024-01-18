@@ -56,24 +56,14 @@ class ResourcesAddService
     protected $Users;
 
     /**
-     * Service to assert that the expiry date provided in the payload is valid
-     *
-     * @var \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService
-     */
-    protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
-
-    /**
      * ResourcesAddService constructor.
-     *
-     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $passwordExpiryValidationService Password expiry service
      */
-    public function __construct(PasswordExpiryValidationServiceInterface $passwordExpiryValidationService)
+    public function __construct()
     {
         /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
         /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
-        $this->passwordExpiryValidationService = $passwordExpiryValidationService;
     }
 
     /**
@@ -92,7 +82,6 @@ class ResourcesAddService
      */
     public function add(UserAccessControl $uac, array $data): Resource
     {
-        $this->passwordExpiryValidationService->validateAndParseExpiryDate($data);
         $this->attachListenerToAfterSaveEvent($uac, $data);
         $attempts = 1;
         do {

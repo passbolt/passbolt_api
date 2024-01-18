@@ -77,7 +77,7 @@ class GroupsUsersAddService
      *   ],
      *   ...
      * ]
-     * @return EntitiesChangesDto
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \App\Error\Exception\ValidationException If it could not validate group user data.
      * @throws \App\Error\Exception\ValidationException If it could not validate secrets data.
      * @throws \App\Error\Exception\ValidationException If secrets for resources the user has gotten access by being added to the group are missing.
@@ -309,10 +309,10 @@ class GroupsUsersAddService
      * Dispatch group user added event.
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
-     * @param \App\Model\Entity\GroupsUser $groupUser The group user to remove.
+     * @param \App\Model\Entity\GroupsUser $entitiesChangesDto The group user to remove.
      * @return void
      */
-    private function dispatchGroupUserAddedEvent(UserAccessControl $uac, EntitiesChangesDto $entitiesChangesDto ): void
+    private function dispatchGroupUserAddedEvent(UserAccessControl $uac, EntitiesChangesDto $entitiesChangesDto): void
     {
         $eventData = ['entitiesChanges' => $entitiesChangesDto, 'accessControl' => $uac];
         $event = new Event(self::AFTER_GROUP_USER_ADDED_EVENT_NAME, $this, $eventData);

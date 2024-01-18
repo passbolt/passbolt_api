@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\PasswordExpiryPolicies\Service\Resources;
 
-use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 
 /**
@@ -28,25 +26,4 @@ use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
  */
 class PasswordExpiryPoliciesValidationService extends PasswordExpiryValidationService
 {
-    /**
-     * Expiry date must be null or parsable
-     *
-     * @param ?string $expiryDate Expiry date
-     * @return bool
-     * @throws \Cake\Http\Exception\BadRequestException if the expiration date provided is not parsable
-     */
-    protected function isDateValueValid(?string $expiryDate): bool
-    {
-        if (is_null($expiryDate)) {
-            return true;
-        }
-
-        try {
-            FrozenTime::parse($expiryDate);
-        } catch (\Throwable $e) {
-            throw new BadRequestException(__('The expiration date should be null or a valid datetime.'));
-        }
-
-        return true;
-    }
 }

@@ -38,7 +38,7 @@ class ResourceServiceProvider extends ServiceProvider
     ];
 
     /**
-     * @inheritDo
+     * @inheritDoc
      */
     public function services(ContainerInterface $container): void
     {
@@ -51,12 +51,8 @@ class ResourceServiceProvider extends ServiceProvider
             ResourcesExpireResourcesFallbackServiceService::class
         );
 
-        $container
-            ->add(ResourcesAddService::class)
-            ->addArgument(PasswordExpiryValidationServiceInterface::class);
-        $container
-            ->add(ResourcesUpdateService::class)
-            ->addArgument(PasswordExpiryValidationServiceInterface::class);
+        $container->add(ResourcesAddService::class);
+        $container->add(ResourcesUpdateService::class);
         $container
             ->add(GroupsUpdateService::class)
             ->addArgument(ResourcesExpireResourcesServiceInterface::class);

@@ -301,7 +301,7 @@ class GroupsTable extends Table
      * @throws \InvalidArgumentException if $group is not a valid group entity
      * @param \App\Model\Entity\Group $group entity
      * @param array|null $options additional delete options such as ['checkRules' => true]
-     * @return EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
+     * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      * @see PasswordExpiryOnDeleteGroupEventListener::expireResourcesOnDeletedGroup
      */
     public function softDelete(Group $group, ?array $options = null)
@@ -360,7 +360,6 @@ class GroupsTable extends Table
                     ->updateAll(['folder_parent_id' => null], ['folder_parent_id IN ' => $foldersIds]);
             }
         }
-
 
         // Delete all group memberships
         $this->GroupsUsers->deleteAll(['group_id' => $group->id]);

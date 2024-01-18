@@ -20,7 +20,6 @@ namespace App\Service\GroupsUsers;
 use App\Error\Exception\ValidationException;
 use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\GroupsUser;
-use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
@@ -67,7 +66,7 @@ class GroupsUsersDeleteService
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $groupUserId The group user id to delete
-     * @return EntitiesChangesDto
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \App\Error\Exception\ValidationException if it cannot find group user.
      * @throws \App\Error\Exception\ValidationException Cannot delete the last group manager.
      * @throws \Exception If something went wrong
@@ -116,7 +115,7 @@ class GroupsUsersDeleteService
      * Delete the secrets for the resources the user lost access after being removed from the group.
      *
      * @param \App\Model\Entity\GroupsUser $groupUser The group user to delete.
-     * @return array<Secret>
+     * @return array<\App\Model\Entity\Secret>
      */
     private function deleteLostAccessAssociatedSecrets(GroupsUser $groupUser): array
     {

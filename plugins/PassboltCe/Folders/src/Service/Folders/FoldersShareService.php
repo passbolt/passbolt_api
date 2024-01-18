@@ -21,7 +21,6 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
-use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
@@ -124,7 +123,7 @@ class FoldersShareService
                 $this->moveSelfOrganizedContentWithInsufficientPermissionToRoot($uac, $folder);
             }
             $this->postPermissionsRevoked($folder, $deletedPermissions);
-            $this->postPermissionsAdded($uac, $folder, $addedPermissions );
+            $this->postPermissionsAdded($uac, $folder, $addedPermissions);
         });
 
         return $folder;
@@ -176,7 +175,7 @@ class FoldersShareService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param array $changes The list of permissions changes
-     * @return EntitiesChangesDto
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \App\Error\Exception\ValidationException If the permissions didn't validate
      * @throws \Exception If something went wrong
      */

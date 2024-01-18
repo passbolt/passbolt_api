@@ -107,6 +107,20 @@ class PasswordExpiryPoliciesSettingsFormTest extends TestCase
                 PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => null,
                 PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => 1,
             ], true],
+            ['expiry period empty string' => [
+                PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
+                PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
+                PasswordExpirySettingsDto::POLICY_OVERRIDE => true,
+                PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => '',
+                PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => 1,
+            ], true],
+            ['expiry notification empty string' => [
+                PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => true,
+                PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
+                PasswordExpirySettingsDto::POLICY_OVERRIDE => true,
+                PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => null,
+                PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => '',
+            ], true],
         ];
     }
 

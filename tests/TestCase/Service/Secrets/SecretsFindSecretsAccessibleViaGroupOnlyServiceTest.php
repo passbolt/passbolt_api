@@ -52,7 +52,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_AssertGroupIdParameter()
     {
         try {
-            $this->service->find("not-a-valid-uuid", [], PermissionsTable::RESOURCE_ACO);
+            $this->service->find('not-a-valid-uuid', [], PermissionsTable::RESOURCE_ACO);
             $this->assertFalse('Parameter groupId should throw a TypeError exception');
         } catch (\TypeError $error) {
             $this->assertFalse(false);
@@ -76,6 +76,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
     /*
      * Even if group has permissions, find should return empty result if no users given.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_NoResult_NoUsersGiven()
     {
         $owner1 = UserFactory::make()->persist();
@@ -93,6 +94,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
     /*
      * Even if group has permission, it shouldn't return nothing for users not in group having no permission.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_NoResult_UserNotInGroupWithNoPermission()
     {
         [$owner1, $owner2] = UserFactory::make(2)->persist();
@@ -111,6 +113,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
      * Even if group has permission, it shouldn't return the secrets of another user not member of the group
      * having direct permissions for the same resources as the group.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_NoResult_UserNotInGroupWithDirectPermission()
     {
         [$owner1, $owner2] = UserFactory::make(2)->persist();
@@ -129,6 +132,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
      * Even if group has permission, it shouldn't return the secrets of another user not member of the group
      * having inherited permissions from another group for the same resources as the group.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_NoResult_UserNotInGroupWithOtherGroupPermission()
     {
         [$owner1, $owner2] = UserFactory::make(2)->persist();
@@ -148,6 +152,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
      * Even if group has permission, it shouldn't return the secrets of another user not member of the group
      * having direct & inherited permissions from another group for the same resources as the group.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_NoResult_UserNotInGroupWithOtherDirectAndGroupPermission()
     {
         [$owner1, $owner2] = UserFactory::make(2)->persist();
@@ -167,6 +172,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
      * Even if group has permission, it shouldn't return the secrets of a user member of the group having also
      * direct permissions.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_NoResult_UserInGroupWithDirectPermission()
     {
         [$owner1] = UserFactory::make(2)->persist();
@@ -185,6 +191,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
      * Even if group has permission, it shouldn't return the secrets of a user member of the group having also
      * inherited permissions from another group.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_NoResult_UserInGroupWithOtherGroupPermission()
     {
         [$owner1] = UserFactory::make(2)->persist();
@@ -204,6 +211,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
      * Even if group has permission, it shouldn't return the secrets of a user member of the group having also
      * inherited permissions from another group and direct permission.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_NoResult_UserInGroupWithDirectAndOtherGroupPermission()
     {
         [$owner1] = UserFactory::make(2)->persist();
@@ -226,6 +234,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
     /*
      * It should return secret for a user having permissions only via group.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_SingleResult_UserInGroupWithGroupPermission()
     {
         $owner1 = UserFactory::make()->persist();
@@ -244,6 +253,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
     /*
      * It should return secret for a user having permissions only via group containing other users.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_SingleResult_UsersInGroupWithGroupPermission()
     {
         [$owner1, $owner2] = UserFactory::make(2)->persist();
@@ -262,6 +272,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
     /*
      * It should return secret for users having permissions only via group.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_MultipleResult_UsersInGroupWithGroupPermission()
     {
         [$owner1, $owner2] = UserFactory::make(2)->persist();
@@ -282,6 +293,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
     /*
      * It should return secrets for a user having permissions only via group on multiple resources.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_MultipleResults_UserInGroupWithMultiplePermissions()
     {
         $owner1 = UserFactory::make()->persist();
@@ -302,6 +314,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
     /*
      * It should return secrets for users having permissions only via group on multiple resources.
      */
+
     public function testSecretsFindSecretsAccessibleViaGroupOnlyService_Find_MultipleResults_UsersInGroupWithMultiplePermissions()
     {
         [$owner1, $owner2] = UserFactory::make(2)->persist();
@@ -386,7 +399,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
             ->persist();
 
         $result = $this->service->find($group1->id, [
-            $user1->id, $user2->id, $user3->id, $user4->id, $user5->id, $user6->id, $user7->id, $user8->id, $user9->id
+            $user1->id, $user2->id, $user3->id, $user4->id, $user5->id, $user6->id, $user7->id, $user8->id, $user9->id,
 
         ], PermissionsTable::RESOURCE_ACO)
             ->select(['resource_id', 'user_id'])->disableHydration()->all()->toArray();

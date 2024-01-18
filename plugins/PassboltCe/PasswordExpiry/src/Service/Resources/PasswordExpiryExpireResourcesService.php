@@ -28,6 +28,7 @@ use Cake\ORM\TableRegistry;
 
 /**
  * Mark resources as expired if:
+ *
  * @todo review the comment
  * - OR
  *  - some users lost access to resources by losing group access
@@ -64,7 +65,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
         }
 
         $resourcesIdsToExpire = $this->findResourcesIdsToExpire($secrets);
-        if(empty($resourcesIdsToExpire)) {
+        if (empty($resourcesIdsToExpire)) {
             return false;
         }
 
@@ -79,7 +80,8 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
      * Note: The algorithm will return the resources that have a secret consumed irrespective of the timeline. If
      * a resource password was rotated after the resource secret was consumed, it will still be returned.
      * Note 2: Already expired resources are not returned.
-     * @param \Cake\ORM\Query|array<Secret> $secrets The deleted secrets
+     *
+     * @param \Cake\ORM\Query|array<\App\Model\Entity\Secret> $secrets The deleted secrets
      * @return array returns the ids of the resources that were consumed
      */
     private function findResourcesIdsToExpire(array $secrets): array
@@ -91,6 +93,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
 
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
+
         return $resourcesTable->find('notExpired')
             ->select(['Resources.id'])
             ->join([
@@ -98,7 +101,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
                 'type' => 'INNER',
                 'conditions' => [
                     'secret_accesses.resource_id' => new IdentifierExpression('Resources.id'),
-                    new TupleComparison(['secret_accesses.user_id', 'secret_accesses.resource_id'], $secretsTuplesDto, [], 'IN')
+                    new TupleComparison(['secret_accesses.user_id', 'secret_accesses.resource_id'], $secretsTuplesDto, [], 'IN'),
                 ],
             ])
             ->all()->extract('id')->toArray();
@@ -106,12 +109,13 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
 
     /**
      * Mark a list of resources as expired.
+     *
      * @param array $resourceIds resources id to expire
      * @return void
      */
     private function markResourcesAsExpired(array $resourceIds): void
     {
-        if  (empty($resourceIds)) {
+        if (empty($resourceIds)) {
             return;
         }
 
@@ -125,6 +129,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
 
     /**
      * Notify resources owners about passwords expiry.
+     *
      * @param string[] $resourceIds Resource ids that have just expired.
      * @return void
      */

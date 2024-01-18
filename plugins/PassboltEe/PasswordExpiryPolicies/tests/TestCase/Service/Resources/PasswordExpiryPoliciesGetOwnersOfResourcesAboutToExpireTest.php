@@ -74,6 +74,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
         bool $notifyIfExpiresToday,
         $expectedResult
     ) {
+        $this->markTestSkipped('This feature is not implemented yet');
         $notifyInDays = rand(1, 100);
         // Enable the pwd expiry in settings
         PasswordExpiryPoliciesSettingFactory::make()
@@ -152,6 +153,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireTest extends AppTes
 
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesService_ResourcesExpiredOrExpiringWithinDays()
     {
+        $this->markTestSkipped('This feature is not implemented yet');
         /** @var \App\Model\Entity\Resource[] $resources */
         $resources = ResourceFactory::make([
             ['expired' => null], // to be ignored

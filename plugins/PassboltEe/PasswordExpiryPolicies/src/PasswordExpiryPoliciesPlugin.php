@@ -78,8 +78,6 @@ class PasswordExpiryPoliciesPlugin extends BasePlugin
         $container
             ->extend(PasswordExpiryValidationServiceInterface::class)
             ->setConcrete(PasswordExpiryPoliciesValidationService::class);
-        $container
-            ->add(PasswordExpiryPoliciesResourcesExpiryUpdateService::class)
-            ->addArgument(PasswordExpiryValidationServiceInterface::class);
+        $container->add(PasswordExpiryPoliciesResourcesExpiryUpdateService::class);
     }
 }

@@ -19,7 +19,6 @@ namespace Passbolt\PasswordExpiryPolicies\Service\Resources;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
-use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesUpdateService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\ResultSetInterface;
@@ -38,27 +37,20 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
 {
     use EventDispatcherTrait;
 
-    private PasswordExpiryValidationServiceInterface $validationService;
-
-    /**
-     * @param \App\Service\Resources\PasswordExpiryValidationServiceInterface $validationService validation service
-     */
-    public function __construct(PasswordExpiryValidationServiceInterface $validationService)
-    {
-        $this->validationService = $validationService;
-    }
-
     /**
      * Update a resource for the logged-in user.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param array $data The resource data
-     * @return \Cake\Datasource\ResultSetInterface
+     * @return ?\Cake\Datasource\ResultSetInterface
      * @throws \Exception If an unexpected error occurred
      * @throws \Cake\ORM\Exception\PersistenceFailedException If a resource couldn't be saved.
      */
-    public function updateMany(UserAccessControl $uac, array $data = []): ResultSetInterface
+    public function updateMany(UserAccessControl $uac, array $data = []): ?ResultSetInterface
     {
+        if (empty($data)) {
+            return null;
+        }
         $expiryDateList = $this->validateAndParsePayload($data);
         $resourceIds = array_keys($expiryDateList);
         $this->validateUacPermissions($uac, $resourceIds);
@@ -91,12 +83,11 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
             if (!Validation::uuid($resourceId)) {
                 throw new BadRequestException(__('The identifier should be a valid UUID.'));
             }
-            $this->validationService->validateAndParseExpiryDate($resource);
-            $isExpiredDefined = array_key_exists($this->validationService::PASSWORD_EXPIRED_DATE, $resource);
+            $isExpiredDefined = array_key_exists('expired', $resource);
             if (!$isExpiredDefined) {
                 throw new BadRequestException(__('The expiry date is required.'));
             }
-            $expiryDate = $resource[$this->validationService::PASSWORD_EXPIRED_DATE];
+            $expiryDate = $resource['expired'];
             if (array_key_exists($resourceId, $dataSanitized)) {
                 throw new BadRequestException(__('The identifier should be unique: {0}.', $resourceId));
             }
@@ -115,7 +106,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the user does not have update rights on one of the resources
      */
-    protected function validateUacPermissions(UserAccessControl $uac, array $resourceIds = [])
+    protected function validateUacPermissions(UserAccessControl $uac, array $resourceIds)
     {
         /** @var \App\Model\Table\PermissionsTable $PermissionsTable */
         $PermissionsTable = TableRegistry::getTableLocator()->get('Permissions');
@@ -165,7 +156,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
             ->select([
                 'id',
                 'name',
-                $this->validationService::PASSWORD_EXPIRED_DATE,
+                'expired',
                 'created',
                 'modified',
                 'created_by',
@@ -181,11 +172,11 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
             }
             $ResourcesTable->patchEntity($resource, [
                 'id' => $resourceId,
-                $this->validationService::PASSWORD_EXPIRED_DATE => $expiryDatetime,
+                'expired' => $expiryDatetime,
                 'modified_by' => $uac->getId(),
             ], [
                 'accessibleFields' => [
-                    $this->validationService::PASSWORD_EXPIRED_DATE => true,
+                    'expired' => true,
                     'modified_by' => true,
                 ],
             ]);

@@ -27,8 +27,8 @@ use Passbolt\PasswordExpiry\Event\PasswordExpiryResourceMarkedAsExpiredEventList
 use Passbolt\PasswordExpiry\Notification\DigestTemplate\PasswordExpiryPasswordMarkedExpiredDigestTemplate;
 use Passbolt\PasswordExpiry\Notification\Email\PasswordExpiryRedactorPool;
 use Passbolt\PasswordExpiry\Notification\NotificationSettings\PasswordExpiryNotificationSettingsDefinition;
-use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
+use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpirySetSettingsService;

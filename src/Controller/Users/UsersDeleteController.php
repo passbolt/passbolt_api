@@ -99,7 +99,7 @@ class UsersDeleteController extends AppController
      * User delete action
      *
      * @param string $id user uuid
-     * @param ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService Service to expire resources that were consumed by users who lost access to them.
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService Service to expire resources that were consumed by users who lost access to them.
      * @return void
      * @throws \Exception if user cannot be deleted
      */
