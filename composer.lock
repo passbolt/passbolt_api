@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a7d1c87fd18c905f0b30d1a5f1ea8fb6",
+    "content-hash": "ce9a83b0c21884e3875f6d50761e69a7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -7077,16 +7077,16 @@
         },
         {
             "name": "passbolt/passbolt-selenium-api",
-            "version": "dev-develop",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "5da33c2ad383b50cf65afe6cf34a5d890fd8c5d3"
+                "reference": "aeadd476cf382bc404eeef48950de372bcb68503"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/5da33c2ad383b50cf65afe6cf34a5d890fd8c5d3",
-                "reference": "5da33c2ad383b50cf65afe6cf34a5d890fd8c5d3",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/aeadd476cf382bc404eeef48950de372bcb68503",
+                "reference": "aeadd476cf382bc404eeef48950de372bcb68503",
                 "shasum": ""
             },
             "require": {
@@ -7128,7 +7128,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2023-12-12T09:40:36+00:00"
+            "time": "2024-01-22T12:19:34+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
@@ -9714,8 +9714,7 @@
         "robmorgan/phinx": 20,
         "singpolyma/openpgp-php": 20,
         "enygma/yubikey": 20,
-        "psy/psysh": 0,
-        "passbolt/passbolt-selenium-api": 20
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -9735,5 +9734,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
