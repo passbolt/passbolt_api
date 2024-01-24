@@ -28,7 +28,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateController extends AppControlle
      * @param \Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesResourcesExpiryUpdateService $updateService Validation form
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the logged-in user does not have update permission on all the resources in the payload
-     * @throws \Passbolt\PasswordExpiryPolicies\Controller\BadRequestException if the data passed in the payload is not valid
+     * @throws \Cake\Http\Exception\BadRequestException if the data passed in the payload is not valid
      */
     public function post(PasswordExpiryPoliciesResourcesExpiryUpdateService $updateService)
     {

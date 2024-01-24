@@ -105,7 +105,7 @@ class GroupsDeleteController extends AppController
         $this->assertJson();
         $group = null;
 
-        $this->GroupsUsers->getConnection()->transactional(function () use ($id, &$group, $resourcesExpireResourcesService) {
+        $this->GroupsUsers->getConnection()->transactional(function () use ($id, &$group, $resourcesExpireResourcesService) { //phpcs:ignore
             $group = $this->_validateRequestData($id);
             $this->_transferContentOwners($group);
             $this->_validateDelete($group);

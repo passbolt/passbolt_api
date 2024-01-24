@@ -22,6 +22,7 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\Expression\TupleComparison;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Query;
 use Cake\Validation\Validation;
 
 class SecretsFindSecretsAccessibleViaGroupOnlyService
@@ -57,7 +58,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
      * @param ?string $acoType The type of ACO to find the accesses for.
      * @return \Cake\ORM\Query
      */
-    public function find(string $groupId, array $usersIds, ?string $acoType = null): \Cake\ORM\Query
+    public function find(string $groupId, array $usersIds, ?string $acoType = null): Query
     {
         if (!Validation::uuid($groupId)) {
             throw new \TypeError(__('The group id should be a valid UUID.'));
@@ -171,7 +172,15 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
             ->where(new TupleComparison(['user_id', 'resource_id'], $inheritedAccessesFromGroupOnly, [], 'IN'));
     }
 
-    public function findWithExists(string $groupId, array $usersIds, ?string $acoType = null): \Cake\ORM\Query
+    /**
+     * Find secrets that users can access only from a given group using exists
+     *
+     * @param string $groupId The group to find the accesses for.
+     * @param array $usersIds The list of users to find the accesses for.
+     * @param ?string $acoType The type of ACO to find the accesses for.
+     * @return \Cake\ORM\Query
+     */
+    public function findWithExists(string $groupId, array $usersIds, ?string $acoType = null): Query
     {
         if (!Validation::uuid($groupId)) {
             throw new \TypeError(__('The group id should be a valid UUID.'));
@@ -223,10 +232,10 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
                 'resource_id' => 'PermissionsDirect.aco_foreign_key',
             ])
             ->where([
-                'PermissionsDirect.aco' => $inheritedAccessesFromTargetGroupQuery->newExpr('PermissionsInheritedFromGroup.aco'),
+                'PermissionsDirect.aco' => $inheritedAccessesFromTargetGroupQuery->newExpr('PermissionsInheritedFromGroup.aco'), //phpcs:ignore
                 'PermissionsDirect.aro' => PermissionsTable::USER_ARO,
-                'PermissionsDirect.aro_foreign_key' => $inheritedAccessesFromTargetGroupQuery->newExpr('GroupsUsersForInheritedFromGroup.user_id'),
-                'PermissionsDirect.aco_foreign_key' => $inheritedAccessesFromTargetGroupQuery->newExpr('PermissionsInheritedFromGroup.aco_foreign_key'),
+                'PermissionsDirect.aro_foreign_key' => $inheritedAccessesFromTargetGroupQuery->newExpr('GroupsUsersForInheritedFromGroup.user_id'), //phpcs:ignore
+                'PermissionsDirect.aco_foreign_key' => $inheritedAccessesFromTargetGroupQuery->newExpr('PermissionsInheritedFromGroup.aco_foreign_key'), //phpcs:ignore
             ]);
 
         // INHERITED_FROM_OTHER_GROUPS_ACCESSES
@@ -246,21 +255,22 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
                 ],
             ])
             ->where([
-                'PermissionsInheritedOtherGroups.aco' => $inheritedAccessesFromTargetGroupQuery->newExpr('PermissionsInheritedFromGroup.aco'),
+                'PermissionsInheritedOtherGroups.aco' => $inheritedAccessesFromTargetGroupQuery->newExpr('PermissionsInheritedFromGroup.aco'), //phpcs:ignore
                 'PermissionsInheritedOtherGroups.aro' => PermissionsTable::GROUP_ARO,
-                'GroupsUsersForInheritedFromOtherGroups.group_id <>' => $inheritedAccessesFromTargetGroupQuery->newExpr('GroupsUsersForInheritedFromGroup.group_id'),
-                'GroupsUsersForInheritedFromOtherGroups.user_id' => $inheritedAccessesFromTargetGroupQuery->newExpr('GroupsUsersForInheritedFromGroup.user_id'),
-                'PermissionsInheritedOtherGroups.aco_foreign_key' => $inheritedAccessesFromTargetGroupQuery->newExpr('PermissionsInheritedFromGroup.aco_foreign_key'),
+                'GroupsUsersForInheritedFromOtherGroups.group_id <>' => $inheritedAccessesFromTargetGroupQuery->newExpr('GroupsUsersForInheritedFromGroup.group_id'), //phpcs:ignore
+                'GroupsUsersForInheritedFromOtherGroups.user_id' => $inheritedAccessesFromTargetGroupQuery->newExpr('GroupsUsersForInheritedFromGroup.user_id'), //phpcs:ignore
+                'PermissionsInheritedOtherGroups.aco_foreign_key' => $inheritedAccessesFromTargetGroupQuery->newExpr('PermissionsInheritedFromGroup.aco_foreign_key'), //phpcs:ignore
             ]);
 
         // R = INHERITED_FROM_GROUP_ACCESSES - ( INHERITED_FROM_OTHER_GROUPS_ACCESSES + DIRECT_USERS_ACCESSES)
         $inheritedAccessesFromTargetGroupOnlyQuery = $inheritedAccessesFromTargetGroupQuery
-            ->where(function (QueryExpression $exp) use ($directAccessesQuery, $inheritedAccessesExcludingTargetGroupQuery) {
+            ->where(function (QueryExpression $exp) use ($directAccessesQuery, $inheritedAccessesExcludingTargetGroupQuery) { //phpcs:ignore
+
                 return $exp->notExists($directAccessesQuery)
                     ->notExists($inheritedAccessesExcludingTargetGroupQuery);
             });
 
         return $this->secretsTable->find()
-            ->where(new TupleComparison(['user_id', 'resource_id'], $inheritedAccessesFromTargetGroupOnlyQuery, [], 'IN'));
+            ->where(new TupleComparison(['user_id', 'resource_id'], $inheritedAccessesFromTargetGroupOnlyQuery, [], 'IN')); //phpcs:ignore
     }
 }

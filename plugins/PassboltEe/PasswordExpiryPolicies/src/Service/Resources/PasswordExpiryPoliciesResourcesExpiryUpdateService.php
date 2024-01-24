@@ -153,15 +153,6 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
         $resources = $ResourcesTable
             ->find()
             ->whereInList('id', array_keys($expiryDateList))
-            ->select([
-                'id',
-                'name',
-                'expired',
-                'created',
-                'modified',
-                'created_by',
-                'modified_by',
-            ])
             ->all();
 
         foreach ($expiryDateList as $resourceId => $expiryDatetime) {

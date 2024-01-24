@@ -23,8 +23,6 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Chronos\ChronosInterface;
-use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
-use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -35,11 +33,7 @@ class PasswordExpiryResourcesAddServiceTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new ResourcesAddService(
-            new PasswordExpiryValidationService(
-                new PasswordExpiryGetSettingsService()
-            )
-        );
+        $this->service = new ResourcesAddService();
         ResourceTypeFactory::make()->default()->persist();
     }
 

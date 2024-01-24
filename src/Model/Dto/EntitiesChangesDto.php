@@ -127,7 +127,7 @@ class EntitiesChangesDto
     /**
      * Push a deleted entity.
      *
-     * @param \Cake\ORM\Entity $entity
+     * @param \Cake\ORM\Entity $entity entity deleted
      * @return void
      */
     public function pushDeletedEntity(Entity $entity): void
@@ -138,7 +138,7 @@ class EntitiesChangesDto
     /**
      * Push an added entity.
      *
-     * @param \Cake\ORM\Entity $entity
+     * @param \Cake\ORM\Entity $entity entity added
      * @return void
      */
     public function pushAddedEntity(Entity $entity): void
@@ -149,7 +149,7 @@ class EntitiesChangesDto
     /**
      * Push an updated entity.
      *
-     * @param \Cake\ORM\Entity $entity
+     * @param \Cake\ORM\Entity|null $entity entity updated
      * @return void
      */
     public function pushUpdatedEntity(?Entity $entity): void

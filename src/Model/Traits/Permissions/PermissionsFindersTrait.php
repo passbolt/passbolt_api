@@ -372,7 +372,7 @@ trait PermissionsFindersTrait
      *
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $groupId The group identifier.
-     * @param string $usersIds The user identifier.
+     * @param string[] $usersIds The user identifier.
      * @return \Cake\ORM\Query
      */
     public function findAcosAccessesDiffBetweenGroupAndUsers(string $acoType, string $groupId, array $usersIds): Query
@@ -415,8 +415,6 @@ trait PermissionsFindersTrait
                 'aro_foreign_key' => $groupId,
             ]);
 
-//        dd($inheritedUsersAccessesExcludingGroupQuery->all()->toArray());
-
         return $groupUsersAccessesQuery
             ->leftJoin(['DirectUsersAccesses' => $directUsersAccessesQuery], [
                 'DirectUsersAccesses.resource_id' => new IdentifierExpression('Permissions.aco_foreign_key'),
@@ -430,8 +428,6 @@ trait PermissionsFindersTrait
                 return $exp->isNull('DirectUsersAccesses.resource_id')
                     ->isNull('InheritedUsersAccesses.resource_id');
             });
-//            ->where(new TupleComparison(['Permissions.user_id', 'permissions.resource_id'], $directUsersAccessesQuery, [], 'NOT IN'))
-////            ->where(new TupleComparison(['user_id', 'resource_id'], $inheritedUsersAccessesExcludingGroupQuery, [], 'NOT IN'))
     }
 
     /**

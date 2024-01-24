@@ -81,7 +81,6 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
             $resource = json_decode(json_encode($resource), true);
             $this->assertSame($resource['expired'], $newExpiryDateInThePast);
             $this->assertSame($resource['modified_by'], $user->get('id'));
-            $this->assertSame(['id', 'name', 'expired', 'created', 'modified', 'created_by', 'modified_by'], array_keys($resource));
         }
 
         $this->assertEmailIsInQueue([
@@ -141,7 +140,6 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
             $resource = json_decode(json_encode($resource), true);
             $this->assertSame($resource['expired'], $newExpiryDateInTheFuture);
             $this->assertSame($resource['modified_by'], $user->get('id'));
-            $this->assertSame(['id', 'name', 'expired', 'created', 'modified', 'created_by', 'modified_by'], array_keys($resource));
             $this->assertEmailInBatchContains('You edited the password ' . $resource['name'], $i);
         }
         $this->assertEmailInBatchNotContains('This resource is not expired anymore.', 0);

@@ -39,7 +39,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
 {
     use EventDispatcherTrait;
 
-    public const PASSWORD_EXPIRY_RESOURCES_EXPIRED_EVENT_NAME = 'PasswordExpiry.ExpireResourcesOnGroupsUpdateService.expire';
+    public const PASSWORD_EXPIRY_RESOURCES_EXPIRED_EVENT_NAME = 'PasswordExpiry.ExpireResourcesOnGroupsUpdateService.expire'; //phpcs:ignore
 
     protected PasswordExpiryValidationServiceInterface $passwordExpiryValidationService;
 
@@ -81,7 +81,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
      * a resource password was rotated after the resource secret was consumed, it will still be returned.
      * Note 2: Already expired resources are not returned.
      *
-     * @param \Cake\ORM\Query|array<\App\Model\Entity\Secret> $secrets The deleted secrets
+     * @param array<\App\Model\Entity\Secret> $secrets The deleted secrets
      * @return array returns the ids of the resources that were consumed
      */
     private function findResourcesIdsToExpire(array $secrets): array
@@ -101,7 +101,12 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
                 'type' => 'INNER',
                 'conditions' => [
                     'secret_accesses.resource_id' => new IdentifierExpression('Resources.id'),
-                    new TupleComparison(['secret_accesses.user_id', 'secret_accesses.resource_id'], $secretsTuplesDto, [], 'IN'),
+                    new TupleComparison(
+                        ['secret_accesses.user_id', 'secret_accesses.resource_id'],
+                        $secretsTuplesDto,
+                        [],
+                        'IN'
+                    ),
                 ],
             ])
             ->all()->extract('id')->toArray();

@@ -309,7 +309,7 @@ class GroupsUsersAddService
      * Dispatch group user added event.
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
-     * @param \App\Model\Entity\GroupsUser $entitiesChangesDto The group user to remove.
+     * @param \App\Model\Dto\EntitiesChangesDto $entitiesChangesDto The DTO with the group user to remove.
      * @return void
      */
     private function dispatchGroupUserAddedEvent(UserAccessControl $uac, EntitiesChangesDto $entitiesChangesDto): void

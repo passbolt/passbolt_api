@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Actions\Traits;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
+use App\Model\Entity\GroupsUser;
 use App\Model\Entity\Role;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
@@ -391,7 +392,13 @@ trait GroupUsersSyncTrait
             ];
 
             try {
-                $groupUser = $groupsUsersAddService->add($uac, $groupUserData);
+                /** @var \App\Model\Entity\GroupsUser|null $groupUser */
+                $groupUser = $groupsUsersAddService
+                    ->add($uac, $groupUserData)
+                    ->getAddedEntities(GroupsUser::class)[0] ?? null;
+                if (is_null($groupUser)) {
+                    throw new \Exception();
+                }
                 $this->DirectoryRelations->createFromGroupUser($groupUser);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} was successfully added to the group {1}.', $user->username, $group->name),

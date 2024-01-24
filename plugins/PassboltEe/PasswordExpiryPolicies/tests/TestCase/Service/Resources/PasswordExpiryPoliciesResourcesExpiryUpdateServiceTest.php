@@ -28,8 +28,6 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\I18n\FrozenTime;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesResourcesExpiryUpdateService;
-use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesValidationService;
-use Passbolt\PasswordExpiryPolicies\Service\Settings\PasswordExpiryPoliciesGetSettingsService;
 use Passbolt\PasswordExpiryPolicies\Test\Factory\PasswordExpiryPoliciesSettingFactory;
 
 class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
@@ -42,11 +40,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new PasswordExpiryPoliciesResourcesExpiryUpdateService(
-            new PasswordExpiryPoliciesValidationService(
-                new PasswordExpiryPoliciesGetSettingsService()
-            )
-        );
+        $this->service = new PasswordExpiryPoliciesResourcesExpiryUpdateService();
     }
 
     public function tearDown(): void

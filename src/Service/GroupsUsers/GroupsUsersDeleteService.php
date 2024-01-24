@@ -77,7 +77,7 @@ class GroupsUsersDeleteService
         $groupUser = $this->groupsUsersTable->get($groupUserId);
         $this->assertAtLeastOneGroupManager($groupUser);
 
-        $this->groupsUsersTable->getConnection()->transactional(function () use ($uac, $groupUser, $entitiesChangesDto) {
+        $this->groupsUsersTable->getConnection()->transactional(function () use ($uac, $groupUser, $entitiesChangesDto) { //phpcs:ignore
             $this->groupsUsersTable->delete($groupUser);
             $entitiesChangesDto->pushDeletedEntity($groupUser);
             $deletedSecrets = $this->deleteLostAccessAssociatedSecrets($groupUser);

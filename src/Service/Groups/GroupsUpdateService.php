@@ -72,7 +72,8 @@ class GroupsUpdateService
      */
     private ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
 
-    /**qsq
+    /**
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService expire resource service
      */
     public function __construct(
         ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService
@@ -211,8 +212,12 @@ class GroupsUpdateService
      * @return \App\Model\Dto\EntitiesChangesDto Entities changes applied following the addition of users to groups
      * @throws \Exception If an unexpected error occurred.
      */
-    private function addGroupsUsers(UserAccessControl $uac, Group $group, array $changes, array $secretsData): EntitiesChangesDto
-    {
+    private function addGroupsUsers(
+        UserAccessControl $uac,
+        Group $group,
+        array $changes,
+        array $secretsData
+    ): EntitiesChangesDto {
         $entitiesChangesDto = new EntitiesChangesDto();
         $isUacManager = $this->groupsUsersTable->isManager($uac->getId(), $group->id);
 
@@ -222,7 +227,13 @@ class GroupsUpdateService
 
         foreach ($changes as $rowIndexRef => $groupUserData) {
             if (GroupsUsersChangeValidator::isAddChange($groupUserData)) {
-                $addedGroupsUserEntitiesChangesDto = $this->addGroupUser($uac, $group, $groupUserData, $secretsData, $rowIndexRef);
+                $addedGroupsUserEntitiesChangesDto = $this->addGroupUser(
+                    $uac,
+                    $group,
+                    $groupUserData,
+                    $secretsData,
+                    $rowIndexRef
+                );
                 $entitiesChangesDto->merge($addedGroupsUserEntitiesChangesDto);
             }
         }
@@ -252,13 +263,16 @@ class GroupsUpdateService
         $userId = Hash::get($groupUserData, 'user_id');
         $groupUserData['group_id'] = $group->id;
         $userSecretsData = Hash::extract($secretsData, "{n}[user_id={$userId}]");
+        $dto = new EntitiesChangesDto();
 
         try {
-            return $this->groupsUsersCreateService->add($uac, $groupUserData, $userSecretsData);
+            $dto = $this->groupsUsersCreateService->add($uac, $groupUserData, $userSecretsData);
         } catch (ValidationException $e) {
             $group->setError('groups_users', [$rowIndexRef => $e->getErrors()]);
             $this->handleValidationErrors($group);
         }
+
+        return $dto;
     }
 
     /**
@@ -343,7 +357,7 @@ class GroupsUpdateService
         }
 
         try {
-            $groupUser = $this->groupsUsersUpdateService->update($uac, $groupUserToUpdate->id, $groupUserData);
+            return $this->groupsUsersUpdateService->update($uac, $groupUserToUpdate->id, $groupUserData);
         } catch (ValidationException $e) {
             $group->setError('groups_users', [$rowIndexRef => $e->getErrors() ?? $e->getMessage()]);
             $this->handleValidationErrors($group);
@@ -351,8 +365,6 @@ class GroupsUpdateService
             $group->setError('groups_users', [$rowIndexRef => ['id' => ['exists' => ['Cannot find the group user.']]]]);
             $this->handleValidationErrors($group);
         }
-
-        return $groupUser;
     }
 
     /**
@@ -421,9 +433,10 @@ class GroupsUpdateService
         int $rowIndexRef
     ): EntitiesChangesDto {
         $groupUser = $this->getAndAssertGroupUserFromData($group, $groupUserData, $rowIndexRef);
+        $dto = new EntitiesChangesDto();
 
         try {
-            return $this->groupsUsersRemoveService->delete($uac, $groupUser->id);
+            $dto = $this->groupsUsersRemoveService->delete($uac, $groupUser->id);
         } catch (ValidationException $e) {
             $group->setError('groups_users', [$rowIndexRef => $e->getErrors() ?? $e->getMessage()]);
             $this->handleValidationErrors($group);
@@ -431,6 +444,8 @@ class GroupsUpdateService
             $group->setError('groups_users', [$rowIndexRef => ['id' => ['exists' => ['Cannot find the group user.']]]]);
             $this->handleValidationErrors($group);
         }
+
+        return $dto;
     }
 
     /**
@@ -438,9 +453,7 @@ class GroupsUpdateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param \App\Model\Entity\Group $group The updated group
-     * @param array $entitiesChanges the list of added groups users
-     * @param array $updatedGroupsUsers the list of updated groups suers
-     * @param \App\Model\Entity\GroupsUser[] $deletedGroupsUsers the list of deleted groups users
+     * @param \App\Model\Dto\EntitiesChangesDto $entitiesChanges the list of added groups users
      * @return void
      */
     private function notifyUsers(

@@ -278,6 +278,7 @@ class ResourcesUpdateService
 
         try {
             $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+            /** @var \App\Model\Entity\Secret[] $secrets */
             $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
         } catch (CustomValidationException $e) {
             $resource->setError('secrets', $e->getErrors());
