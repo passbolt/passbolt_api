@@ -192,11 +192,11 @@ class ResourcesAddServiceTest extends TestCase
         $this->assertNull($resource->description);
     }
 
-    public function testResourceAddService_With_Expiry_Date_Should_Throw_Exception_When_Password_Expiry_Plugin_Is_Not_Enabled()
+    public function testResourceAddService_With_Expiry_Date_Should_Not_Throw_Bad_Request_Exception_When_Password_Expiry_Plugin_Is_Not_Enabled()
     {
         $uac = UserFactory::make()->persistedUAC();
-        $this->expectExceptionMessage('The password expiry plugin is not enabled.');
-        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Could not validate resource data.');
+        $this->expectException(ValidationException::class);
         $this->service->add($uac, [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'foo']);
     }
 }

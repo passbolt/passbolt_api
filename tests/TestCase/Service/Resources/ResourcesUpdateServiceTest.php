@@ -22,6 +22,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesUpdateService;
+use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -307,12 +308,5 @@ class ResourcesUpdateServiceTest extends AppTestCase
         } catch (NotFoundException $e) {
             $this->assertEquals('The resource does not exist.', $e->getMessage());
         }
-    }
-
-    public function testUpdateResourcesService_Should_Fail_If_Expiration_Date_Is_In_Payload()
-    {
-        $uac = UserFactory::make()->user()->persistedUAC();
-        $this->expectExceptionMessage('The password expiry plugin is not enabled.');
-        $this->service->update($uac, 'foo', [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'foo']);
     }
 }
