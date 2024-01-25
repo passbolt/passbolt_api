@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cf07075452f3d64312ce4d318d2ee507",
+    "content-hash": "ce9a83b0c21884e3875f6d50761e69a7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -521,7 +521,7 @@
             },
             "require-dev": {
                 "cakephp/bake": "^2.6.0",
-                "cakephp/cakephp": "^4.3.0",
+                "cakephp/cakephp": "^4.5.0",
                 "cakephp/cakephp-codesniffer": "^4.1",
                 "phpunit/phpunit": "^9.5.0"
             },
@@ -4067,7 +4067,7 @@
             "description": "Pure-PHP implementation of the OpenPGP Message Format (RFC 4880)",
             "support": {
                 "issues": "https://github.com/singpolyma/openpgp-php/issues",
-                "source": "https://github.com/singpolyma/openpgp-php/tree/0.6.0"
+                "source": "https://github.com/singpolyma/openpgp-php/tree/master"
             },
             "funding": [
                 {
@@ -7077,16 +7077,16 @@
         },
         {
             "name": "passbolt/passbolt-selenium-api",
-            "version": "4.2.0",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "e44acb03fb144857919b143e2deacdd21fc260cc"
+                "reference": "aeadd476cf382bc404eeef48950de372bcb68503"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/e44acb03fb144857919b143e2deacdd21fc260cc",
-                "reference": "e44acb03fb144857919b143e2deacdd21fc260cc",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/aeadd476cf382bc404eeef48950de372bcb68503",
+                "reference": "aeadd476cf382bc404eeef48950de372bcb68503",
                 "shasum": ""
             },
             "require": {
@@ -7128,7 +7128,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2023-08-10T08:04:27+00:00"
+            "time": "2024-01-22T12:19:34+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
@@ -9159,12 +9159,12 @@
             "version": "3.7.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
+                "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
                 "reference": "ed8e00df0a83aa96acf703f8c2979ff33341f879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ed8e00df0a83aa96acf703f8c2979ff33341f879",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ed8e00df0a83aa96acf703f8c2979ff33341f879",
                 "reference": "ed8e00df0a83aa96acf703f8c2979ff33341f879",
                 "shasum": ""
             },
@@ -9209,6 +9209,20 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCSStandards",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                }
+            ],
             "time": "2023-02-22T23:07:41+00:00"
         },
         {
