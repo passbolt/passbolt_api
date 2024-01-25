@@ -78,6 +78,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $englishUser = UserFactory::make()->user()->withLocale($englishLocale)->persist();
         $frenchUser2 = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withCreatorAndPermission($frenchUser)->persist();
 
         $data = [];
