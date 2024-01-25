@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "462508de9bda752bbfa70040eeb034e2",
+    "content-hash": "a3b35da33812bc79c4e98fb829190cf7",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -6102,16 +6102,16 @@
         },
         {
             "name": "passbolt/passbolt-selenium-api",
-            "version": "4.2.0",
+            "version": "4.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-selenium-api",
-                "reference": "e44acb03fb144857919b143e2deacdd21fc260cc"
+                "reference": "aeadd476cf382bc404eeef48950de372bcb68503"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/e44acb03fb144857919b143e2deacdd21fc260cc",
-                "reference": "e44acb03fb144857919b143e2deacdd21fc260cc",
+                "url": "https://api.github.com/repos/passbolt/passbolt-selenium-api/zipball/aeadd476cf382bc404eeef48950de372bcb68503",
+                "reference": "aeadd476cf382bc404eeef48950de372bcb68503",
                 "shasum": ""
             },
             "require": {
@@ -6153,7 +6153,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2023-08-10T08:04:27+00:00"
+            "time": "2024-01-22T12:19:34+00:00"
         },
         {
             "name": "passbolt/passbolt-test-data",
