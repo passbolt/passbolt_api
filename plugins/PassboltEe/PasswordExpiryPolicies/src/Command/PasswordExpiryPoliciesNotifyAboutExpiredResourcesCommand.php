@@ -57,6 +57,8 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand extends PassboltC
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
+        $io->info('This command is not available for now.');
+        $this->abort();
         parent::execute($args, $io);
         // Root user is not allowed to execute this command.
         $this->assertCurrentProcessUser($io);

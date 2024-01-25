@@ -53,7 +53,8 @@ class PasswordExpiryPoliciesSettingsGetControllerTest extends AppIntegrationTest
         $this->assertTrue($response[PasswordExpirySettingsDto::AUTOMATIC_UPDATE]);
         $this->assertTrue($response[PasswordExpirySettingsDto::POLICY_OVERRIDE]);
         $this->assertSame($setting->value[PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD], $response[PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD]);
-        $this->assertSame($setting->value[PasswordExpirySettingsDto::EXPIRY_NOTIFICATION], $response[PasswordExpirySettingsDto::EXPIRY_NOTIFICATION]);
+        $this->assertArrayNotHasKey(PasswordExpirySettingsDto::EXPIRY_NOTIFICATION, $setting->value);
+//        $this->assertSame($setting->value[PasswordExpirySettingsDto::EXPIRY_NOTIFICATION], $response[PasswordExpirySettingsDto::EXPIRY_NOTIFICATION]);
         $this->assertNotNull($response['created']);
         $this->assertNotNull($response['modified']);
         $this->assertNotNull($response['created_by']);
@@ -73,7 +74,7 @@ class PasswordExpiryPoliciesSettingsGetControllerTest extends AppIntegrationTest
             PasswordExpirySettingsDto::AUTOMATIC_UPDATE => false,
             PasswordExpirySettingsDto::POLICY_OVERRIDE => false,
             PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => null,
-            PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => null,
+//            PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => null,
         ], $response);
     }
 }

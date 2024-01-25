@@ -28,7 +28,7 @@ class PasswordExpiryPoliciesSettingsDto extends PasswordExpirySettingsDto
         return parent::getValue() + [
             self::POLICY_OVERRIDE => $this->policy_override,
             self::DEFAULT_EXPIRY_PERIOD => $this->default_expiry_period,
-            self::EXPIRY_NOTIFICATION => $this->expiry_notification,
+//            self::EXPIRY_NOTIFICATION => $this->expiry_notification,
         ];
     }
 
@@ -40,7 +40,7 @@ class PasswordExpiryPoliciesSettingsDto extends PasswordExpirySettingsDto
         return parent::getDefaultSettingsIfFeatureIsDisabled() + [
                 self::POLICY_OVERRIDE => false,
                 self::DEFAULT_EXPIRY_PERIOD => null,
-                self::EXPIRY_NOTIFICATION => null,
+//                self::EXPIRY_NOTIFICATION => null,
         ];
     }
 }

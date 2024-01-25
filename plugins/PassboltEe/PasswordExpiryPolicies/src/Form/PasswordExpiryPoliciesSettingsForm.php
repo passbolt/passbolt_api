@@ -45,10 +45,10 @@ class PasswordExpiryPoliciesSettingsForm extends PasswordExpirySettingsForm
             ->allowEmptyString(PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD)
             ->naturalNumber(PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD);
 
-        $validator
-            ->requirePresence(PasswordExpirySettingsDto::EXPIRY_NOTIFICATION)
-            ->allowEmptyString(PasswordExpirySettingsDto::EXPIRY_NOTIFICATION)
-            ->naturalNumber(PasswordExpirySettingsDto::EXPIRY_NOTIFICATION);
+//        $validator
+//            ->requirePresence(PasswordExpirySettingsDto::EXPIRY_NOTIFICATION)
+//            ->allowEmptyString(PasswordExpirySettingsDto::EXPIRY_NOTIFICATION)
+//            ->naturalNumber(PasswordExpirySettingsDto::EXPIRY_NOTIFICATION);
 
         return $validator;
     }
@@ -60,15 +60,15 @@ class PasswordExpiryPoliciesSettingsForm extends PasswordExpirySettingsForm
     {
         $defaultPeriod = Hash::get($data, PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD);
         $defaultPeriod = is_numeric($defaultPeriod) ? intval($defaultPeriod) : $defaultPeriod;
-        $expiryNotification = Hash::get($data, PasswordExpirySettingsDto::EXPIRY_NOTIFICATION);
-        $expiryNotification = is_numeric($expiryNotification) ? intval($expiryNotification) : $expiryNotification;
+//        $expiryNotification = Hash::get($data, PasswordExpirySettingsDto::EXPIRY_NOTIFICATION);
+//        $expiryNotification = is_numeric($expiryNotification) ? intval($expiryNotification) : $expiryNotification;
 
         return [
             PasswordExpirySettingsDto::AUTOMATIC_EXPIRY => $data[PasswordExpirySettingsDto::AUTOMATIC_EXPIRY] ?? null,
             PasswordExpirySettingsDto::AUTOMATIC_UPDATE => $data[PasswordExpirySettingsDto::AUTOMATIC_UPDATE] ?? null,
             PasswordExpirySettingsDto::POLICY_OVERRIDE => $data[PasswordExpirySettingsDto::POLICY_OVERRIDE] ?? null,
             PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => $defaultPeriod,
-            PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => $expiryNotification,
+//            PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => $expiryNotification,
         ];
     }
 }

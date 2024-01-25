@@ -23,7 +23,6 @@ use Cake\Core\PluginApplicationInterface;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpirySetSettingsServiceInterface;
 use Passbolt\PasswordExpiryPolicies\Command\PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand;
-use Passbolt\PasswordExpiryPolicies\Notification\Email\PasswordExpiryPoliciesRedactorPool;
 use Passbolt\PasswordExpiryPolicies\Notification\NotificationSettings\PasswordExpiryPoliciesNotificationSettingsDefinition; // phpcs:ignore
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService;
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesResourcesExpiryUpdateService;
@@ -42,9 +41,10 @@ class PasswordExpiryPoliciesPlugin extends BasePlugin
         parent::bootstrap($app);
 
         // Register email redactors
-        $app->getEventManager()
-            ->on(new PasswordExpiryPoliciesRedactorPool())
-            ->on(new PasswordExpiryPoliciesNotificationSettingsDefinition());
+        // Uncomment when re-introducing notification of passwords about to expire
+//        $app->getEventManager()
+//            ->on(new PasswordExpiryPoliciesRedactorPool())
+//            ->on(new PasswordExpiryPoliciesNotificationSettingsDefinition());
     }
 
     /**

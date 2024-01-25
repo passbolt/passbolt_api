@@ -36,7 +36,7 @@ class PasswordExpiryPoliciesSettingFactory extends PasswordExpirySettingFactory
             PasswordExpirySettingsDto::AUTOMATIC_UPDATE => true,
             PasswordExpirySettingsDto::POLICY_OVERRIDE => true,
             PasswordExpirySettingsDto::DEFAULT_EXPIRY_PERIOD => $this->getFaker()->numberBetween(1, 100),
-            PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => $this->getFaker()->numberBetween(1, 100),
+//            PasswordExpirySettingsDto::EXPIRY_NOTIFICATION => $this->getFaker()->numberBetween(1, 100),
         ];
     }
 

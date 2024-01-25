@@ -42,6 +42,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
      */
     public function setUp(): void
     {
+        $this->markTestSkipped();
         parent::setUp();
         $this->useCommandRunner();
         HealthcheckCommand::$isUserRoot = false;

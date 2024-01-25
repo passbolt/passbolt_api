@@ -113,7 +113,6 @@ return [
                     'update' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true), FILTER_VALIDATE_BOOLEAN),
                     'expire' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_EXPIRE', true), FILTER_VALIDATE_BOOLEAN),
-                    'aboutToExpire' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_ABOUT_TO_EXPIRE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'user' => [
                     // WARNING: disabling PASSBOLT_EMAIL_SEND_USER_CREATE and PASSBOLT_EMAIL_SEND_USER_RECOVER will prevent user from signing up.
