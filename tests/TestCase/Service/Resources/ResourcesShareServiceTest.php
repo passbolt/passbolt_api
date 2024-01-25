@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Service\Resources\ResourcesShareService;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
@@ -73,7 +74,9 @@ class ResourcesShareServiceTest extends AppTestCase
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Users = TableRegistry::getTableLocator()->get('Users');
-        $this->service = new ResourcesShareService();
+        $this->service = new ResourcesShareService(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
     }
 
     public function tearDown(): void

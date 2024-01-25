@@ -113,7 +113,7 @@ trait EmailQueueTrait
      * @param string $email Recipient
      * @param string $expectedLocale Expected locale
      */
-    protected function assetEmailLocale(string $email, string $expectedLocale)
+    protected function assertEmailLocale(string $email, string $expectedLocale)
     {
         $emails = EmailQueueFactory::find()->where(compact('email'));
         $this->assertTrue($emails->count() > 0);
@@ -128,7 +128,7 @@ trait EmailQueueTrait
      * @param string $email Recipient
      * @param string $expectedSubject Expected subject
      */
-    protected function assetEmailSubject(string $email, string $expectedSubject)
+    protected function assertEmailSubject(string $email, string $expectedSubject)
     {
         $emails = EmailQueueFactory::find()->where(compact('email'));
         $this->assertTrue($emails->count() > 0);

@@ -22,6 +22,7 @@ use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\UsersTable;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
@@ -48,10 +49,14 @@ class UsersEditController extends AppController
      *
      * @param string $id user uuid
      * @param \League\Flysystem\FilesystemAdapter $filesystemAdapter file system adapter to write the avatar in cache if saved
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService Service to expire resources that were consumed by users who lost access to them.
      * @return void
      */
-    public function editPost(string $id, FilesystemAdapter $filesystemAdapter)
-    {
+    public function editPost(
+        string $id,
+        FilesystemAdapter $filesystemAdapter,
+        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService
+    ) {
         $this->assertJson();
 
         $data = $this->_validateRequestData($id);
@@ -93,6 +98,14 @@ class UsersEditController extends AppController
         ];
         if (!$this->Users->save($user, $saveOptions)) {
             throw new InternalErrorException('Could not save the user data. Please try again later.');
+        }
+
+        if ($isBeingDisabled) {
+            /** @var \App\Model\Table\SecretsTable $secretsTable */
+            $secretsTable = $this->fetchTable('Secrets');
+            $secretToExpire = $secretsTable->findByUserId($id)
+                ->select(['id', 'user_id', 'resource_id'])->all()->toArray();
+            $resourcesExpireResourcesService->expireResourcesForSecrets($secretToExpire);
         }
 
         // Get the updated version (ex. Role needs to be fetched again if role_id changed)

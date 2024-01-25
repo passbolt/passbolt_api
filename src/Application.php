@@ -37,6 +37,7 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Service\Cookie\DefaultSecureCookieService;
 use App\ServiceProvider\CommandServiceProvider;
+use App\ServiceProvider\ResourceServiceProvider;
 use App\ServiceProvider\SetupServiceProvider;
 use App\ServiceProvider\TestEmailServiceProvider;
 use App\ServiceProvider\UserServiceProvider;
@@ -284,6 +285,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->add(AbstractSecureCookieService::class, DefaultSecureCookieService::class);
         $container->addServiceProvider(new TestEmailServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
+        $container->addServiceProvider(new ResourceServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
         $container->add(Client::class)->setConcrete(null);
         if (PHP_SAPI === 'cli') {

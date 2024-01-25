@@ -19,6 +19,7 @@ namespace Passbolt\Folders\EventListener;
 
 use App\Model\Entity\Resource;
 use App\Service\Resources\ResourcesAddService;
+use App\Service\Resources\ResourcesShareService;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Passbolt\Folders\Service\Resources\ResourcesAfterAccessGrantedService;
@@ -46,7 +47,7 @@ class ResourcesEventListener implements EventListenerInterface
             ],
             'Model.Resource.afterSoftDelete' => 'handleResourceAfterSoftDeleteEvent',
             'Service.ResourcesShare.afterAccessGranted' => 'handleResourceAfterAccessGrantedEvent',
-            'Service.ResourcesShare.afterAccessRevoked' => 'handleResourceAfterAccessRevokedEvent',
+            ResourcesShareService::AFTER_ACCESS_REVOKED_EVENT_NAME => 'handleResourceAfterAccessRevokedEvent',
         ];
     }
 
@@ -96,7 +97,7 @@ class ResourcesEventListener implements EventListenerInterface
     }
 
     /**
-     * Handle a resource after an access has been granted.
+     * Handle a resource after an access has been revoked.
      *
      * @param \Cake\Event\Event $event The event.
      * @return void
