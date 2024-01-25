@@ -131,6 +131,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
             ->persist();
         $resource3 = ResourceFactory::make()
             ->withPermissionsFor([$group], Permission::UPDATE)
+            ->withPermissionsFor([$user], Permission::READ) // Set the min permission to read
             ->expired(FrozenTime::today()->subDays(3))
             ->persist();
         $newExpiryDate1 = FrozenTime::today()->addDays(3);

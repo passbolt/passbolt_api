@@ -99,7 +99,7 @@ class GroupsUsersAddService
                 $secrets = $this->buildSecretsEntities($groupUser, $missingAccessResourcesIds, $secretsData);
                 $this->saveSecrets($groupUser, $secrets);
                 $entitiesChangesDto->pushAddedEntities($secrets);
-                $this->dispatchGroupUserAddedEvent($uac, $entitiesChangesDto);
+                $this->dispatchGroupUserAddedEvent($uac, $groupUser);
 
                 return $entitiesChangesDto;
             }
@@ -309,12 +309,12 @@ class GroupsUsersAddService
      * Dispatch group user added event.
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
-     * @param \App\Model\Dto\EntitiesChangesDto $entitiesChangesDto The DTO with the group user to remove.
+     * @param \App\Model\Entity\GroupsUser $groupUser The group user to remove.
      * @return void
      */
-    private function dispatchGroupUserAddedEvent(UserAccessControl $uac, EntitiesChangesDto $entitiesChangesDto): void
+    private function dispatchGroupUserAddedEvent(UserAccessControl $uac, GroupsUser $groupUser): void
     {
-        $eventData = ['entitiesChanges' => $entitiesChangesDto, 'accessControl' => $uac];
+        $eventData = ['groupUser' => $groupUser, 'accessControl' => $uac];
         $event = new Event(self::AFTER_GROUP_USER_ADDED_EVENT_NAME, $this, $eventData);
         $this->groupsUsersTable->getEventManager()->dispatch($event);
     }

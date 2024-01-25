@@ -113,20 +113,15 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
         $resourcesWithPermissionForUac = $PermissionsTable
             ->findAllByAro(PermissionsTable::RESOURCE_ACO, $uac->getId(), ['checkGroupsUsers' => true])
             ->select(['Permissions.aco_foreign_key', 'Permissions.type'])
-            ->where(['Permissions.aco_foreign_key IN' => $resourceIds])
-            ->orderAsc('Permissions.type')
+            ->where([
+                'Permissions.aco_foreign_key IN' => $resourceIds,
+                'Permissions.type >=' => Permission::UPDATE,
+            ])
+            ->orderDesc('Permissions.type')
             ->all();
 
         if ($resourcesWithPermissionForUac->isEmpty()) {
             throw new BadRequestException(__('You are not allowed to update these resources.'));
-        }
-        /** @var \App\Model\Entity\Permission $lowestPermissionOnResourcesRequested */
-        $lowestPermissionOnResourcesRequested = $resourcesWithPermissionForUac->first();
-        if ($lowestPermissionOnResourcesRequested->type < Permission::UPDATE) {
-            throw new BadRequestException(__(
-                'You are not allowed to update this resource: {0}',
-                $lowestPermissionOnResourcesRequested->aco_foreign_key
-            ));
         }
 
         $resourceIdsWithPermissionForUac = $resourcesWithPermissionForUac->extract('aco_foreign_key')->toArray();

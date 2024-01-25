@@ -28,7 +28,6 @@ use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
-use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
