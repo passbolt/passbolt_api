@@ -286,12 +286,12 @@ class ResourcesTable extends Table
             $data['description'] = null;
         }
         if (isset($data['expired']) && !empty($data['expired'])) {
+            // Parse the expired date into a time object
             try {
                 $data['expired'] = FrozenTime::parse($data['expired']);
             } catch (\Throwable $e) {
-                // If the expired date cannot be parsed, unset its value to avoid validation
-                // issue
-//                unset($data['expired']);
+                // If the expired date cannot be parsed, let the validation
+                // handle the fail
             }
         }
     }

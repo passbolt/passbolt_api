@@ -397,7 +397,7 @@ trait GroupUsersSyncTrait
                     ->add($uac, $groupUserData)
                     ->getAddedEntities(GroupsUser::class)[0] ?? null;
                 if (is_null($groupUser)) {
-                    throw new \Exception();
+                    throw new \Exception('A GroupUser entity should be present in the DTO');
                 }
                 $this->DirectoryRelations->createFromGroupUser($groupUser);
                 $this->addReportItem(new ActionReport(

@@ -47,10 +47,7 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
     public function getSubscribedEvents(): array
     {
         return [
-//            PasswordExpiryExpireResourceOnShareService::EVENT_EXPIRE_RESOURCE_ON_SHARE,
             PasswordExpiryExpireResourcesService::PASSWORD_EXPIRY_RESOURCES_EXPIRED_EVENT_NAME,
-//            PasswordExpiryAbstractOnUserEventListener::PASSWORD_EXPIRY_ON_USER_DISABLED_OR_DELETED,
-//            PasswordExpiryOnDeleteGroupEventListener::PASSWORD_EXPIRY_ON_GROUP_DELETE,
         ];
     }
 

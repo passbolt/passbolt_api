@@ -16,17 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\PasswordExpiryPolicies;
 
-use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsServiceInterface;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpirySetSettingsServiceInterface;
 use Passbolt\PasswordExpiryPolicies\Command\PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand;
-use Passbolt\PasswordExpiryPolicies\Notification\NotificationSettings\PasswordExpiryPoliciesNotificationSettingsDefinition; // phpcs:ignore
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService;
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesResourcesExpiryUpdateService;
-use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesValidationService;
 use Passbolt\PasswordExpiryPolicies\Service\Settings\PasswordExpiryPoliciesGetSettingsService;
 use Passbolt\PasswordExpiryPolicies\Service\Settings\PasswordExpiryPoliciesSetSettingsService;
 use Psr\Container\ContainerInterface;
@@ -75,9 +72,6 @@ class PasswordExpiryPoliciesPlugin extends BasePlugin
         $container
             ->add(PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand::class)
             ->addArgument(PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService::class);
-        $container
-            ->extend(PasswordExpiryValidationServiceInterface::class)
-            ->setConcrete(PasswordExpiryPoliciesValidationService::class);
         $container->add(PasswordExpiryPoliciesResourcesExpiryUpdateService::class);
     }
 }
