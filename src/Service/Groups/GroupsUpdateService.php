@@ -340,20 +340,20 @@ class GroupsUpdateService
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $groupUserData The data of the group user to update.
      * @param int $rowIndexRef The index of the treated group user in the request data, for error purpose.
-     * @return \App\Model\Entity\GroupsUser|void
+     * @return ?\App\Model\Entity\GroupsUser
      */
     private function updateGroupUser(
         UserAccessControl $uac,
         Group $group,
         array $groupUserData,
         int $rowIndexRef
-    ) {
+    ): ?GroupsUser {
         $groupUserToUpdate = $this->getAndAssertGroupUserFromData($group, $groupUserData, $rowIndexRef);
 
         // Return if there is no group role change requested.
         $isAdmin = Hash::get($groupUserData, 'is_admin');
         if ($groupUserToUpdate->is_admin === $isAdmin) {
-            return;
+            return null;
         }
 
         try {
@@ -365,6 +365,8 @@ class GroupsUpdateService
             $group->setError('groups_users', [$rowIndexRef => ['id' => ['exists' => ['Cannot find the group user.']]]]);
             $this->handleValidationErrors($group);
         }
+
+        return null;
     }
 
     /**
