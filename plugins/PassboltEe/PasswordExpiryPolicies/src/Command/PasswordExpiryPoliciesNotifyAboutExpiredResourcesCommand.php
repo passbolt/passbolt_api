@@ -20,7 +20,6 @@ use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Cake\Console\Exception\StopException;
 use Cake\Event\EventDispatcherTrait;
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService;
 
@@ -59,20 +58,20 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand extends PassboltC
     {
         $io->info('This command is not available for now.');
         $this->abort();
-        parent::execute($args, $io);
-        // Root user is not allowed to execute this command.
-        $this->assertCurrentProcessUser($io);
-
-        try {
-            $nUsers = $this->service->notifyUsers()->all()->count();
-        } catch (StopException $e) {
-            $io->info($e->getMessage());
-
-            return $this->successCode();
-        }
-
-        $io->success(__('{0} resource owners were notified.', $nUsers));
-
-        return $this->successCode();
+//        parent::execute($args, $io);
+//        // Root user is not allowed to execute this command.
+//        $this->assertCurrentProcessUser($io);
+//
+//        try {
+//            $nUsers = $this->service->notifyUsers()->all()->count();
+//        } catch (StopException $e) {
+//            $io->info($e->getMessage());
+//
+//            return $this->successCode();
+//        }
+//
+//        $io->success(__('{0} resource owners were notified.', $nUsers));
+//
+//        return $this->successCode();
     }
 }

@@ -48,6 +48,7 @@ abstract class SolutionBootstrapperTestCase extends TestCase
         $this->clearPlugins();
         unset($this->app);
 
+        EmailNotificationSettings::flushCache();
         parent::tearDown();
     }
 
