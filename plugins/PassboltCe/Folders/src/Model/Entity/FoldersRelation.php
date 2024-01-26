@@ -29,8 +29,8 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $user_id
  * @property \App\Model\Entity\Resource $resource
- * @property \Cake\ORM\Entity $folder
- * @property \Cake\ORM\Entity|null $folders_parent
+ * @property \Passbolt\Folders\Model\Entity\Folder $folder
+ * @property \Passbolt\Folders\Model\Entity\Folder|null $folders_parent
  * @property \App\Model\Entity\User $user
  * @property \Cake\ORM\Entity $folders_relations_history
  */

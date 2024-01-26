@@ -26,6 +26,7 @@ use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Resources\ResourcesUpdateService;
+use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -108,12 +109,21 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
      * @param string|null $armoredSecret The secret data string if present
      * @return \App\Notification\Email\Email
      */
-    private function createUpdateEmail(User $recipient, User $owner, Resource $resource, $armoredSecret): Email
+    private function createUpdateEmail(User $recipient, User $owner, Resource $resource, ?string $armoredSecret): Email
     {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($owner, $resource) {
-                return __('{0} edited the password {1}', $owner->profile->first_name, $resource->name);
+            function () use ($recipient, $owner, $resource) {
+                $resourceName = Purifier::clean($resource->name);
+                if ($recipient->id === $owner->id) {
+                    return __('You edited the password {0}', $resourceName);
+                }
+
+                return __(
+                    '{0} edited the password {1}',
+                    Purifier::clean($owner->profile->first_name),
+                    $resourceName
+                );
             }
         );
 

@@ -46,7 +46,7 @@ class SoftDeleteTest extends AppTestCase
     {
         $userIId = UuidFactory::uuid('user.id.irene');
         $user = $this->Users->get($userIId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userIId);
     }
 
@@ -54,7 +54,7 @@ class SoftDeleteTest extends AppTestCase
     {
         $userJId = UuidFactory::uuid('user.id.jean');
         $user = $this->Users->get($userJId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userJId);
         $this->assertResourceIsSoftDeleted(UuidFactory::uuid('resource.id.mailvelope'));
     }
@@ -84,7 +84,7 @@ class SoftDeleteTest extends AppTestCase
         ])->first();
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userKId);
         $this->assertResourceIsNotSoftDeleted($resourceMId);
         $this->assertPermission($resourceMId, $userLId, Permission::OWNER);
@@ -94,7 +94,7 @@ class SoftDeleteTest extends AppTestCase
     {
         $userLId = UuidFactory::uuid('user.id.lynne');
         $user = $this->Users->get($userLId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userLId);
         $this->assertResourceIsNotSoftDeleted(UuidFactory::uuid('resource.id.mocha'));
     }
@@ -125,7 +125,7 @@ class SoftDeleteTest extends AppTestCase
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
         $user = $this->Users->get($userMId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userMId);
         $this->assertResourceIsNotSoftDeleted($resourceNId);
     }
@@ -136,7 +136,7 @@ class SoftDeleteTest extends AppTestCase
         $groupLId = UuidFactory::uuid('group.id.leadership_team');
         $resourceOId = UuidFactory::uuid('resource.id.openpgpjs');
         $user = $this->Users->get($userNId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userNId);
         $this->assertResourceIsSoftDeleted($resourceOId);
         $this->assertGroupIsSoftDeleted($groupLId);
@@ -157,7 +157,7 @@ class SoftDeleteTest extends AppTestCase
         $this->Permissions->save($permission);
 
         $user = $this->Users->get($userNId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userNId);
         $this->assertResourceIsSoftDeleted($resourceOId);
         $this->assertGroupIsSoftDeleted($groupLId);
@@ -179,7 +179,7 @@ class SoftDeleteTest extends AppTestCase
         $this->Permissions->save($permission);
 
         $user = $this->Users->get($userNId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userNId);
         $this->assertResourceIsSoftDeleted($resourceOId);
         $this->assertGroupIsSoftDeleted($groupLId);
@@ -209,7 +209,7 @@ class SoftDeleteTest extends AppTestCase
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
         $user = $this->Users->get($userEId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userEId);
         $this->assertGroupIsNotSoftDeleted($groupFId);
         $this->assertUserIsAdmin($groupFId, $userFId);
@@ -239,7 +239,7 @@ class SoftDeleteTest extends AppTestCase
         $groupUser->is_admin = true;
         $this->GroupsUsers->save($groupUser);
         $user = $this->Users->get($userOId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userOId);
         $this->assertGroupIsNotSoftDeleted($groupMId);
         $this->assertUserIsAdmin($groupMId, $userPId);
@@ -287,7 +287,7 @@ class SoftDeleteTest extends AppTestCase
         $this->GroupsUsers->save($groupUser);
 
         $user = $this->Users->get($userOId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userOId);
         $this->assertGroupIsNotSoftDeleted($groupMId);
         $this->assertResourceIsNotSoftDeleted($resourceLId);
@@ -318,7 +318,7 @@ class SoftDeleteTest extends AppTestCase
         $permission->type = Permission::OWNER;
         $this->Permissions->save($permission);
         $user = $this->Users->get($userUId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userUId);
         $this->assertGroupIsSoftDeleted($groupNId);
     }
@@ -330,7 +330,7 @@ class SoftDeleteTest extends AppTestCase
         $groupOId = UuidFactory::uuid('group.id.operations');
         $groupPId = UuidFactory::uuid('group.id.procurement');
         $user = $this->Users->get($userWId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userWId);
         $this->assertGroupIsSoftDeleted($groupOId);
         $this->assertGroupIsSoftDeleted($groupPId);
@@ -363,7 +363,7 @@ class SoftDeleteTest extends AppTestCase
         $this->GroupsUsers->save($groupUser);
 
         $user = $this->Users->get($userYId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userYId);
         $this->assertGroupIsNotSoftDeleted($groupHId);
         $this->assertResourceIsNotSoftDeleted($resourceSId);
@@ -420,7 +420,7 @@ class SoftDeleteTest extends AppTestCase
         $this->GroupsUsers->save($groupUser);
 
         $user = $this->Users->get($userOId);
-        $this->assertTrue($this->Users->softDelete($user));
+        $this->assertNotFalse($this->Users->softDelete($user));
         $this->assertUserIsSoftDeleted($userOId);
         $this->assertGroupIsNotSoftDeleted($groupMId);
         $this->assertResourceIsNotSoftDeleted($resourceLId);

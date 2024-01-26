@@ -253,4 +253,12 @@ class UserFactory extends CakephpBaseFactory
             'last_name' => $lastname,
         ]);
     }
+
+    /**
+     * @return $this
+     */
+    public function withValidGpgKey()
+    {
+        return $this->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey());
+    }
 }

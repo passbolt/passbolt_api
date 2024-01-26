@@ -31,6 +31,7 @@ class ResourcesUpdateController extends AppController
      * Resource Update action
      *
      * @param string $id The identifier of the resource to update.
+     * @param \App\Service\Resources\ResourcesUpdateService $resourcesUpdateService The service updating the resource.
      * @throws \Cake\Http\Exception\NotFoundException If the resource is soft deleted.
      * @throws \Cake\Http\Exception\NotFoundException If the user does not have access to the resource.
      * @throws \Cake\Http\Exception\BadRequestException If the resource id is not a valid uuid.
@@ -38,7 +39,7 @@ class ResourcesUpdateController extends AppController
      * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist.
      * @return void
      */
-    public function update(string $id): void
+    public function update(string $id, ResourcesUpdateService $resourcesUpdateService): void
     {
         $this->assertJson();
 
@@ -47,9 +48,8 @@ class ResourcesUpdateController extends AppController
         }
 
         $uac = $this->User->getAccessControl();
-        $resourceUpdateService = new ResourcesUpdateService();
         $data = $this->request->getData();
-        $resource = $resourceUpdateService->update($uac, $id, $data);
+        $resource = $resourcesUpdateService->update($uac, $id, $data);
 
         // Retrieve the updated resource.
         $options = [

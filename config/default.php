@@ -101,6 +101,7 @@ return [
                     'share' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_SHARE', true), FILTER_VALIDATE_BOOLEAN),
                     'update' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true), FILTER_VALIDATE_BOOLEAN),
+                    'expire' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_EXPIRE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'user' => [
                     // WARNING: disabling PASSBOLT_EMAIL_SEND_USER_CREATE and PASSBOLT_EMAIL_SEND_USER_RECOVER will prevent user from signing up.
@@ -242,6 +243,9 @@ return [
             ],
             'previewPassword' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_PREVIEW_PASSWORD_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'passwordExpiry' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_EXPIRY_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
             'resourceTypes' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
