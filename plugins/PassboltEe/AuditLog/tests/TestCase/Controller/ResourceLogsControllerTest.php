@@ -29,6 +29,7 @@ class ResourceLogsControllerTest extends LogIntegrationTestCase
     public function testAuditLogResourceLogsControllerViewByResourceEmpty()
     {
         $user = UserFactory::make()->user()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
         $this->logInAs($user);
         $this->getJson("/actionlog/resource/{$resource->id}.json?api-version=v2");
@@ -38,6 +39,7 @@ class ResourceLogsControllerTest extends LogIntegrationTestCase
 
     public function testAuditLogResourceLogsControllerViewByResourceUserDoesNotHavePermission()
     {
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withCreator(UserFactory::make()->user())->persist();
         $user = $resource->creator;
         $this->logInAs($user);

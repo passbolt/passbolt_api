@@ -252,6 +252,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
     public function testResourcesTagsAddController_Success_SlugWithDifferentCase()
     {
         $user = $this->logInAsUser();
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
         /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
         $resourceTag = ResourcesTagFactory::make(['resource_id' => $resource->id])

@@ -64,7 +64,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $this->postJson('/resources.json?api-version=2', $data);
         $this->assertSuccess();
         $this->assertEmailQueueCount(1);
-        $this->assetEmailLocale($frenchUser->username, $frenchLocale);
+        $this->assertEmailLocale($frenchUser->username, $frenchLocale);
     }
 
     public function testResourcesShare_Should_Send_Email_In_User_Locale()
@@ -78,6 +78,7 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $englishUser = UserFactory::make()->user()->withLocale($englishLocale)->persist();
         $frenchUser2 = UserFactory::make()->user()->withLocale($frenchLocale)->persist();
 
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withCreatorAndPermission($frenchUser)->persist();
 
         $data = [];
@@ -93,8 +94,8 @@ class ResourcesAddAndShareControllerTest extends AppIntegrationTestCase
         $this->assertResponseOk();
 
         $this->assertEmailQueueCount(3);
-        $this->assetEmailLocale($defaultUser->username, $englishLocale);
-        $this->assetEmailLocale($englishUser->username, $englishLocale);
-        $this->assetEmailLocale($frenchUser2->username, $frenchLocale);
+        $this->assertEmailLocale($defaultUser->username, $englishLocale);
+        $this->assertEmailLocale($englishUser->username, $englishLocale);
+        $this->assertEmailLocale($frenchUser2->username, $frenchLocale);
     }
 }

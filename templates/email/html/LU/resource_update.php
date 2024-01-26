@@ -15,6 +15,7 @@
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Routing\Router;
+
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
@@ -31,7 +32,7 @@ echo $this->element('Email/module/avatar',[
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
         'datetime' => $resource['modified'],
-        'text' => __('{0} updated the password {1}', Purifier::clean($user['profile']['first_name']), Purifier::clean($resource['name']))
+        'text' => $title,
     ])
 ]);
 
@@ -46,6 +47,7 @@ if ($showUri) {
 if ($showDescription && isset($resource['description'])) {
     $text .= __('Description: {0}', Purifier::clean($resource['description'])) . '<br/>';
 }
+
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);

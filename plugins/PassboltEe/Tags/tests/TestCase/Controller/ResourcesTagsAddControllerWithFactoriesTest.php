@@ -30,6 +30,7 @@ class ResourcesTagsAddControllerWithFactoriesTest extends TagPluginIntegrationTe
     {
         $users = [$user1, $user2] = UserFactory::make(2)->persist();
         GroupFactory::make()->withGroupsUsersFor($users)->persist();
+        /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
             ->withPermissionsFor([$user1])
             ->withPermissionsFor([$user2], Permission::READ)

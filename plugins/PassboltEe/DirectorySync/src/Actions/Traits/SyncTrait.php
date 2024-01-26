@@ -127,7 +127,8 @@ trait SyncTrait
             }
 
             try {
-                if (!$this->{self::ENTITY_TYPE}->softDelete($entity)) {
+                $model = $this->{self::ENTITY_TYPE};
+                if (!$model->softDelete($entity)) {
                     // The entity cannot be deleted (for example: it is the sole owner of shared passwords)
                     $this->handleNotPossibleDelete($entry);
                 } else {
