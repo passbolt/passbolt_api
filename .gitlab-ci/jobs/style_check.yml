@@ -2,11 +2,13 @@
   stage: unit-test
   variables:
     PHP_VERSION: "7.4"
+    COMPOSER_ALLOW_SUPERUSER: 1
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
   allow_failure: false
   script:
     - composer config --global process-timeout 2000
-    - composer install --dev --no-interaction
+    - composer install --no-interaction
+    - composer validate --check-lock --no-check-publish
     - composer cs-check
     - composer stan
     - composer psalm
@@ -20,3 +22,10 @@ static-analysis:
       when: on_success
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH != "master"'
       when: on_success
+
+static-analysis-js:
+  stage: unit-test
+  image: node:18
+  script:
+    - npm ci
+    - npm run lint

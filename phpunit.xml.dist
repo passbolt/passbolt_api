@@ -22,4 +22,7 @@
     <extensions>
         <extension class="\Cake\TestSuite\Fixture\PHPUnitExtension" />
     </extensions>
+    <listeners>
+        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
+    </listeners>
 </phpunit>

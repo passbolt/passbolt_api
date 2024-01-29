@@ -18,6 +18,9 @@ namespace App\Model\Traits\Permissions;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\PermissionsTable;
+use Cake\Database\Expression\IdentifierExpression;
+use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -332,7 +335,7 @@ trait PermissionsFindersTrait
     }
 
     /**
-     * Find access differences between a group and user.
+     * Find access differences between a group and a user.
      * Return only the accesses that are found in the group accesses but not in the user accesses, such as array_diff
      * will do.
      *
@@ -360,6 +363,71 @@ trait PermissionsFindersTrait
             ->where([
                 'aco_foreign_key NOT IN' => $remainAccessAcoForeignKeysQuery,
             ]);
+    }
+
+    /**
+     * Find access differences between a group and multiple users.
+     * Return only the accesses that are found in the group accesses but not in the user accesses, such as array_diff
+     * would do.
+     *
+     * @param string $acoType The aco type. By instance Resource or Folder.
+     * @param string $groupId The group identifier.
+     * @param string[] $usersIds The user identifier.
+     * @return \Cake\ORM\Query
+     */
+    public function findAcosAccessesDiffBetweenGroupAndUsers(string $acoType, string $groupId, array $usersIds): Query
+    {
+        // @todo to document
+
+        $directUsersAccessesQuery = $this->find()
+            ->select([
+                'user_id' => 'aro_foreign_key',
+                'resource_id' => 'aco_foreign_key',
+            ])
+            ->where([
+                'aco' => PermissionsTable::RESOURCE_ACO,
+                'aro' => PermissionsTable::USER_ARO,
+                'aro_foreign_key IN' => $usersIds,
+            ]);
+
+        $inheritedUsersAccessesExcludingGroupQuery = $this->find()
+            ->select([
+                'user_id' => 'groups_users.user_id',
+                'resource_id' => 'aco_foreign_key',
+            ])
+            ->leftJoin('groups_users', 'aro_foreign_key = group_id')
+            ->where([
+                'aco' => PermissionsTable::RESOURCE_ACO,
+                'aro' => PermissionsTable::GROUP_ARO,
+                'groups_users.user_id IN' => $usersIds,
+                'groups_users.group_id <>' => $groupId,
+            ]);
+
+        $groupUsersAccessesQuery = $this->find()
+            ->select([
+                'user_id' => 'groups_users.user_id',
+                'resource_id' => 'aco_foreign_key',
+            ])
+            ->leftJoin('groups_users', 'aro_foreign_key = group_id')
+            ->where([
+                'aco' => PermissionsTable::RESOURCE_ACO,
+                'aro' => PermissionsTable::GROUP_ARO,
+                'aro_foreign_key' => $groupId,
+            ]);
+
+        return $groupUsersAccessesQuery
+            ->leftJoin(['DirectUsersAccesses' => $directUsersAccessesQuery], [
+                'DirectUsersAccesses.resource_id' => new IdentifierExpression('Permissions.aco_foreign_key'),
+                'DirectUsersAccesses.user_id' => new IdentifierExpression('groups_users.user_id'),
+            ])
+            ->leftJoin(['InheritedUsersAccesses' => $inheritedUsersAccessesExcludingGroupQuery], [
+                'InheritedUsersAccesses.resource_id' => new IdentifierExpression('Permissions.aco_foreign_key'),
+                'InheritedUsersAccesses.user_id' => new IdentifierExpression('groups_users.user_id'),
+            ])
+            ->where(function (QueryExpression $exp) {
+                return $exp->isNull('DirectUsersAccesses.resource_id')
+                    ->isNull('InheritedUsersAccesses.resource_id');
+            });
     }
 
     /**

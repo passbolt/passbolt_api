@@ -20,7 +20,6 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
-use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Utility\UuidFactory;
@@ -32,7 +31,6 @@ use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;
 class TransfersUpdateControllerTest extends AppIntegrationTestCase
 {
     use AuthenticationTokenModelTrait;
-    use AvatarsModelTrait;
     use ProfilesModelTrait;
     use TransfersModelTrait;
     use UsersModelTrait;
@@ -92,7 +90,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
         $this->assertFalse(isset($this->_responseJsonBody->authentication_token));
         $this->assertUserAttributes($this->_responseJsonBody->user);
         $this->assertProfileAttributes($this->_responseJsonBody->user->profile);
-        $this->assertAvatarAttributes($this->_responseJsonBody->user->profile->avatar);
+        $this->assertObjectHasAttributes(['small', 'medium'], $this->_responseJsonBody->user->profile->avatar->url);
     }
 
     public function testMobileTransfersUpdateController_ErrorNoData()

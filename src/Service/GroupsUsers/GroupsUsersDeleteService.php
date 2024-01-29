@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Service\GroupsUsers;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\GroupsUser;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
@@ -65,21 +66,27 @@ class GroupsUsersDeleteService
      *
      * @param \App\Utility\UserAccessControl $uac The user at the origin of the operation
      * @param string $groupUserId The group user id to delete
-     * @return void
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \App\Error\Exception\ValidationException if it cannot find group user.
      * @throws \App\Error\Exception\ValidationException Cannot delete the last group manager.
      * @throws \Exception If something went wrong
      */
-    public function delete(UserAccessControl $uac, string $groupUserId): void
+    public function delete(UserAccessControl $uac, string $groupUserId): EntitiesChangesDto
     {
+        $entitiesChangesDto = new EntitiesChangesDto();
         $groupUser = $this->groupsUsersTable->get($groupUserId);
         $this->assertAtLeastOneGroupManager($groupUser);
 
-        $this->groupsUsersTable->getConnection()->transactional(function () use ($uac, $groupUser) {
+        $this->groupsUsersTable->getConnection()->transactional(function () use ($uac, $groupUser, $entitiesChangesDto) { //phpcs:ignore
             $this->groupsUsersTable->delete($groupUser);
-            $this->deleteLostAccessAssociatedData($groupUser);
+            $entitiesChangesDto->pushDeletedEntity($groupUser);
+            $deletedSecrets = $this->deleteLostAccessAssociatedSecrets($groupUser);
+            $entitiesChangesDto->pushDeletedEntities($deletedSecrets);
+            $this->deleteLostAccessAssociatedFavorites($groupUser);
             $this->dispatchGroupUserRemovedEvent($uac, $groupUser);
         });
+
+        return $entitiesChangesDto;
     }
 
     /**
@@ -105,29 +112,24 @@ class GroupsUsersDeleteService
     }
 
     /**
-     * Delete the associated data for the resources the user lost access after being removed from the group.
-     *
-     * @param \App\Model\Entity\GroupsUser $groupUser The group user to delete.
-     * @return void
-     */
-    private function deleteLostAccessAssociatedData(GroupsUser $groupUser): void
-    {
-        $this->deleteLostAccessAssociatedSecrets($groupUser);
-        $this->deleteLostAccessAssociatedFavorites($groupUser);
-    }
-
-    /**
      * Delete the secrets for the resources the user lost access after being removed from the group.
      *
      * @param \App\Model\Entity\GroupsUser $groupUser The group user to delete.
-     * @return void
+     * @return array<\App\Model\Entity\Secret>
      */
-    private function deleteLostAccessAssociatedSecrets(GroupsUser $groupUser): void
+    private function deleteLostAccessAssociatedSecrets(GroupsUser $groupUser): array
     {
-        $this->secretsTable->deleteAll([
+        $lostAccessSecretsConditions = [
             'user_id' => $groupUser->user_id,
             'resource_id IN' => $this->findLostAccessResourcesIdsQuery($groupUser),
-        ]);
+        ];
+        $lostAccessSecrets = $this->secretsTable->find()
+            ->select(['id', 'resource_id', 'user_id'])
+            ->where($lostAccessSecretsConditions)
+            ->all()->toArray();
+        $this->secretsTable->deleteMany($lostAccessSecrets);
+
+        return $lostAccessSecrets;
     }
 
     /**

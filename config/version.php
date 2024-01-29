@@ -2,7 +2,7 @@
 return [
     'passbolt' => [
         'version' => '4.4.2',
-        'name' => 'Is It Because I\'m Black?',
+        'name' => 'Is It Because I\'m Black',
     ],
     'php' => [
         'minVersion' => '7.4',

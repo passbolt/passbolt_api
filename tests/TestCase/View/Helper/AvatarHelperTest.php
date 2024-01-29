@@ -18,19 +18,18 @@ declare(strict_types=1);
 namespace App\Test\TestCase\View\Helper;
 
 use App\Service\Avatars\AvatarsConfigurationService;
-use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\AvatarsModelTrait;
+use App\Test\Factory\AvatarFactory;
+use App\Utility\UuidFactory;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\TestSuite\TestCase;
 
 /**
  * @covers \App\View\Helper\AvatarHelper
  */
-class AvatarHelperTest extends AppIntegrationTestCase
+class AvatarHelperTest extends TestCase
 {
-    use AvatarsModelTrait;
-
     /**
      * @var string
      */
@@ -40,10 +39,13 @@ class AvatarHelperTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->fullBaseUrl = Configure::readOrFail('App.fullBaseUrl');
+        $this->loadRoutes();
+        (new AvatarsConfigurationService())->loadConfiguration();
     }
 
     public function tearDown(): void
     {
+        parent::tearDown();
         unset($this->fullBaseUrl);
     }
 
@@ -72,8 +74,7 @@ class AvatarHelperTest extends AppIntegrationTestCase
 
     public function testGetExistingAvatarUrl()
     {
-        $this->loadRoutes();
-        $avatar = $this->createAvatar();
+        $avatar = AvatarFactory::make(['id' => UuidFactory::uuid()])->getEntity();
         $expectedUrl = $this->fullBaseUrl . '/avatars/view/' . $avatar->get('id') . '/' . AvatarsConfigurationService::FORMAT_SMALL . AvatarHelper::IMAGE_EXTENSION;
 //        // We are performing a unit test here. But the routes are loaded in the Middleware in CakePHP4
 //        // Therefore an application needs to be build, which is here made using a call to a dummy url (an avatar one)
@@ -102,10 +103,6 @@ class AvatarHelperTest extends AppIntegrationTestCase
     public function testDefaultAvatarUrlIsNotBrokenWhenAppBaseIsSet()
     {
         Configure::write('App.base', '/subdir');
-        /**
-         * `AvatarHelper::getAvatarUrl` depends on configuration that is set by the `AvatarsConfigurationService` class.
-         */
-        (new AvatarsConfigurationService())->loadConfiguration();
 
         $result = AvatarHelper::getAvatarUrl();
 
@@ -118,11 +115,7 @@ class AvatarHelperTest extends AppIntegrationTestCase
     public function testUserAvatarUrlWhenAppBaseIsSet()
     {
         Configure::write('App.base', '/subdir');
-        /**
-         * `AvatarHelper::getAvatarUrl` depends on configuration that is set by the `AvatarsConfigurationService` class.
-         */
-        (new AvatarsConfigurationService())->loadConfiguration();
-        $avatar = $this->createAvatar();
+        $avatar = AvatarFactory::make(['id' => UuidFactory::uuid()])->getEntity();
 
         $result = AvatarHelper::getAvatarUrl(['id' => $avatar->id]);
 

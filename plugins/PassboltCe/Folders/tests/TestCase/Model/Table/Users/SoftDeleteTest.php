@@ -61,7 +61,7 @@ class SoftDeleteTest extends FoldersTestCase
         [$folderA, $userAId] = $this->insertFixture_PersonalFolder();
         $user = $this->usersTable->get($userAId);
 
-        $this->assertTrue($this->usersTable->softDelete($user));
+        $this->assertNotFalse($this->usersTable->softDelete($user));
 
         // Assert the user is deleted as long as the folder and the folders relations
         $this->assertUserIsSoftDeleted($userAId);
@@ -115,7 +115,7 @@ class SoftDeleteTest extends FoldersTestCase
         [$folderA, $userAId, $userBId] = $this->insertFixture_NotSoleOwnerFolder_FolderSharedWithUser();
         $user = $this->usersTable->get($userAId);
         $result = $this->usersTable->softDelete($user);
-        $this->assertTrue($result);
+        $this->assertNotFalse($result);
 
         // Assert the user is soft deleted but the folder is not.
         $this->assertUserIsSoftDeleted($userAId);
@@ -142,7 +142,7 @@ class SoftDeleteTest extends FoldersTestCase
         [$folderA, $userAId, $userBId] = $this->insertFixture_NotOwnerFolder_FolderSharedWithUser();
         $user = $this->usersTable->get($userAId);
         $result = $this->usersTable->softDelete($user);
-        $this->assertTrue($result);
+        $this->assertNotFalse($result);
 
         // Assert the user is soft deleted but the folder is not.
         $this->assertUserIsSoftDeleted($userAId);
@@ -170,7 +170,7 @@ class SoftDeleteTest extends FoldersTestCase
         $user = $this->usersTable->get($userAId);
 
         $result = $this->usersTable->softDelete($user);
-        $this->assertTrue($result);
+        $this->assertNotFalse($result);
 
         // Assert the user is deleted as long as the folder and the folders relations
         $this->assertUserIsSoftDeleted($userAId);
@@ -240,7 +240,7 @@ class SoftDeleteTest extends FoldersTestCase
         $user = $this->usersTable->get($userAId);
 
         $result = $this->usersTable->softDelete($user);
-        $this->assertTrue($result);
+        $this->assertNotFalse($result);
 
         // Assert the user is deleted as long as the folder and the folders relations
         $this->assertUserIsSoftDeleted($userAId);

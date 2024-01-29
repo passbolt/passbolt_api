@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Utility;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
@@ -25,6 +26,8 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 
 class HealthchecksTest extends AppIntegrationTestCase
 {
+    use HealthcheckRequestTestTrait;
+
     public function tearDown(): void
     {
         parent::tearDown();
@@ -58,7 +61,7 @@ class HealthchecksTest extends AppIntegrationTestCase
 
     public function testHealthcheckCore()
     {
-        $check = Healthchecks::core();
+        $check = Healthchecks::core($this->getMockedHealthcheckStatusRequest());
         $attributes = ['cache', 'debugDisabled', 'salt', 'fullBaseUrl', 'validFullBaseUrl', 'fullBaseUrlReachable'];
         $this->assertArrayHasAttributes($attributes, $check['core']);
     }
@@ -132,7 +135,7 @@ class HealthchecksTest extends AppIntegrationTestCase
 
     public function testSsl()
     {
-        $check = Healthchecks::ssl();
+        $check = Healthchecks::ssl($this->getMockedHealthcheckStatusRequest());
         $attributes = ['peerValid', 'hostValid', 'notSelfSigned'];
         $this->assertArrayHasAttributes($attributes, $check['ssl']);
     }

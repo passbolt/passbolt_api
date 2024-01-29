@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\Factory;
 
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
@@ -57,5 +59,23 @@ class SecretAccessFactory extends CakephpBaseFactory
                 'created' => Chronos::now()->subMinutes($faker->randomNumber(8)),
             ];
         });
+    }
+
+    /**
+     * @param UserFactory $factory User Factory
+     * @return SecretAccessFactory
+     */
+    public function withUsers(UserFactory $factory)
+    {
+        return $this->with('Users', $factory);
+    }
+
+    /**
+     * @param ResourceFactory $factory Resource Factory
+     * @return SecretAccessFactory
+     */
+    public function withResources(ResourceFactory $factory)
+    {
+        return $this->with('Resources', $factory);
     }
 }

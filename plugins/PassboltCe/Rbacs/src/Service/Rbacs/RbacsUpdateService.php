@@ -22,6 +22,7 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Rbacs\Model\Dto\RbacsUpdateDtoCollection;
 use Passbolt\Rbacs\Model\Table\RbacsTable;
@@ -54,9 +55,20 @@ class RbacsUpdateService
         $updatedEntities = $this->patchEntities($uac, $this->getEntities($dtoCollection), $dtoCollection);
 
         try {
-            $this->rbacsTable->saveManyOrFail($updatedEntities, ['checkRules' => false]);
+            $this->rbacsTable->saveManyOrFail($updatedEntities);
+        } catch (PersistenceFailedException $exception) {
+            $buildRulesErrors = $exception->getEntity()->getErrors();
+
+            throw new CustomValidationException(
+                __('The RBAC settings could not be updated.'),
+                $buildRulesErrors
+            );
         } catch (\Exception $exception) {
-            throw new InternalErrorException(__('The RBAC settings could not be updated.', $exception));
+            throw new InternalErrorException(
+                __('The RBAC settings could not be updated.'),
+                null,
+                $exception
+            );
         }
 
         // Get updated entities
