@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 use App\Command\CommandBootstrap;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
+use App\Notification\Email\Redactor\Group\GroupUserAddRequestEmailRedactor;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -33,6 +34,9 @@ use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
+/**
+ * @covers \Passbolt\DirectorySync\Actions\GroupSyncAction
+ */
 class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 {
     use AssertDirectoryRelationsTrait;
@@ -44,9 +48,11 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->initAction();
+        // Enable email notifications
         $this->loadNotificationSettings();
-        $this->setEmailNotificationSetting('send.group.user.add', true);
+        $this->setEmailNotificationSetting('send.group.manager.requestAddUser', true);
         EventManager::instance()->on(new CoreEmailRedactorPool());
         (new EmailSubscriptionDispatcher())->collectSubscribedEmailRedactors();
         // Init CommandBootstrap to handle email notifications.
@@ -356,7 +362,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
-            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because he has not yet activated his account.',
+            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because they have not yet activated his account.',
         ];
         $this->assertReport($reports[1], $expectedUserGroupReport);
 
@@ -427,7 +433,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
-            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because he has not yet activated his account.',
+            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because they have not yet activated his account.',
         ];
         $this->assertReport($reports[2], $expectedUserGroupReport);
 
@@ -573,6 +579,26 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->assertEmailQueueCount(0);
     }
 
+    public function requestMembersAddToManagerProvider(): array
+    {
+        return [
+            [
+                'input' => false,
+                'expected' => [
+                    'subject' => 'Admin requested you to add members to Accounting',
+                    'headerText' => 'Admin requested you to add members to Accounting',
+                ],
+            ],
+            [
+                'input' => true,
+                'expected' => [
+                    'subject' => 'You have been requested to add members to Accounting',
+                    'headerText' => 'There was a change in the user directory',
+                ],
+            ],
+        ];
+    }
+
     /**
      * Scenario: a groupUser has been added to a group with passwords in ldap, not yet added in passbolt
      * Expected result: Send email notification to groupAdmins to add user.
@@ -580,12 +606,14 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
      * @group DirectorySync
      * @group DirectorySyncGroupUser
      * @group DirectorySyncGroupUserAdd
+     * @dataProvider requestMembersAddToManagerProvider
      */
-    public function testDirectorySyncGroupUser_Case11b_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords()
+    public function testDirectorySyncGroupUser_Case11b_Ok_Ok_Null_Null_Ok_Edited_Group_With_Passwords(bool $flag, array $expected)
     {
         // Since an email is sent in this test, it is necessary to load the EmailDigest plugin
         // in order to set the email's encryption to JSON
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
+        Configure::write(GroupUserAddRequestEmailRedactor::CONFIG_KEY_ANONYMISE_ADMINISTRATOR_IDENTITY, $flag);
 
         $defaultGroupAdmin = 'edith@passbolt.com';
         $this->setDefaultGroupAdminUser($defaultGroupAdmin);
@@ -622,11 +650,11 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         // Assert email notification
         $this->assertEmailIsInQueue([
             'email' => 'ada@passbolt.com',
-            'subject' => 'Admin requested you to add members to Accounting',
+            'subject' => $expected['subject'],
             'template' => 'GM/group_user_request',
         ]);
         $this->assertEmailQueueCount(1);
-        $this->assertEmailInBatchContains('requested you to add members to a group');
+        $this->assertEmailInBatchContains($expected['headerText']);
         $this->assertEmailInBatchContains('Frances Allen (Member)');
     }
 
@@ -668,7 +696,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
-            'message' => 'The user ruth@passbolt.com could not be added to the group Accounting because he has not yet activated his account.',
+            'message' => 'The user ruth@passbolt.com could not be added to the group Accounting because they have not yet activated his account.',
         ];
         $this->assertReport($reports[0], $expectedUserGroupReport);
 

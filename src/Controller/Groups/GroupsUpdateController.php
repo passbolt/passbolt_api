@@ -68,12 +68,13 @@ class GroupsUpdateController extends AppController
      * Group Update action.
      *
      * @param string $id The group identifier.
+     * @param \App\Service\Groups\GroupsUpdateService $groupsUpdateService Service to update the group associations.
      * @return void
      * @throws \Cake\Http\Exception\ForbiddenException If the user is not an admin
      * @throws \App\Error\Exception\ValidationException If an error occurred when patching or saving the group
      * @throws \Exception If an unexpected error occurred
      */
-    public function update(string $id)
+    public function update(string $id, GroupsUpdateService $groupsUpdateService)
     {
         $this->assertJson();
 
@@ -89,7 +90,6 @@ class GroupsUpdateController extends AppController
         $changes = Hash::get($data, 'groups_users', []);
         $secrets = Hash::get($data, 'secrets', []);
 
-        $groupsUpdateService = new GroupsUpdateService();
         $groupsUpdateService->update($uac, $id, $metaData, $changes, $secrets);
 
         // The v1 expect the updated group to be returned.

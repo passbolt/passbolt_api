@@ -35,23 +35,22 @@ $user = $body['user'];
 $userAgent = $body['user_agent'];
 /** @var string $clientIp */
 $clientIp = $body['ip'];
-$userFullName = Purifier::clean($user['profile']['first_name']) . ' ' . Purifier::clean($user['profile']['last_name']);
-$operatorFullName = Purifier::clean($operator['profile']['first_name']) . ' ' . Purifier::clean($operator['profile']['last_name']);
+$userFullName = Purifier::clean($user['profile']['first_name'] . ' ' . $user['profile']['last_name']);
+$operatorFullName = Purifier::clean($operator['profile']['first_name'] . ' ' . $operator['profile']['last_name']);
 
 echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($operator['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
         'datetime' => $user['modified'],
-        'text' => $user['id'] === $recipient['id'] ?
-            __('Your admin role has been revoked') :
-            __('{0}\'s admin role has been revoked', $userFullName),
+        'text' => $title,
     ]),
 ]);
 
-$text = __('{0} changed role of {1} to admin.', $operatorFullName, $userFullName);
 if ($user['id'] === $recipient['id']) {
-    $text = __('{0} changed your role to admin.', $operatorFullName);
+    $text = __('{0} changed your role to user.', $operatorFullName);
+} else {
+    $text = __('{0} changed the role of {1} to user.', $operatorFullName, $userFullName);
 }
 
 $text .= ' ';

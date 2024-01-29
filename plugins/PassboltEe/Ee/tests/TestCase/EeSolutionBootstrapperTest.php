@@ -23,6 +23,8 @@ use Cake\Core\Configure;
 use Cake\Core\PluginCollection;
 use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Ee\EeSolutionBootstrapper;
+use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
+use Passbolt\PasswordExpiryPolicies\PasswordExpiryPoliciesPlugin;
 use Passbolt\PasswordPoliciesUpdate\PasswordPoliciesUpdatePlugin;
 
 /**
@@ -45,6 +47,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/InFormIntegration',
         'Passbolt/Locale',
         'Passbolt/Export',
+        'Passbolt/PasswordExpiry',
         'Passbolt/ResourceTypes',
         'Passbolt/TotpResourceTypes',
         'Passbolt/RememberMe',
@@ -68,6 +71,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/PasswordPolicies',
         'Passbolt/PasswordPoliciesUpdate',
         'Passbolt/UserPassphrasePolicies',
+        'Passbolt/PasswordExpiryPolicies',
     ];
 
     public function testEeSolutionBootstrapper_Application_Bootstrap(): void
@@ -128,6 +132,8 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->enableFeaturePlugin('MfaPolicies');
         $this->enableFeaturePlugin('SsoRecover');
         $this->enableFeaturePlugin(PasswordPoliciesUpdatePlugin::class);
+        $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
+        $this->enableFeaturePlugin(PasswordExpiryPoliciesPlugin::class);
         // These plugins are enabled by default if not defined
         Configure::delete('passbolt.plugins.ee.enabled');
         Configure::delete('passbolt.plugins.multiFactorAuthentication.enabled');
@@ -135,10 +141,24 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         Configure::delete('passbolt.plugins.directorySync.enabled');
         Configure::delete('passbolt.plugins.folders.enabled');
 
+        return $this->getPlugins();
+    }
+
+    protected function getPlugins(): PluginCollection
+    {
         $this->app->setSolutionBootstrapper(new EeSolutionBootstrapper());
         $this->app->bootstrap();
         $this->app->pluginBootstrap();
 
         return $this->app->getPlugins();
+    }
+
+    public function testEeSolutionBootstrapper_Do_Not_Load_PasswordExpiryPolicies_If_PasswordExpiry_Not_Loaded(): void
+    {
+        $this->disableFeaturePlugin(PasswordExpiryPlugin::class);
+        $this->enableFeaturePlugin(PasswordExpiryPoliciesPlugin::class);
+        $plugins = $this->getPlugins();
+        $this->assertFalse($plugins->has('Passbolt/PasswordExpiry'));
+        $this->assertFalse($plugins->has('Passbolt/PasswordExpiryPolicies'));
     }
 }

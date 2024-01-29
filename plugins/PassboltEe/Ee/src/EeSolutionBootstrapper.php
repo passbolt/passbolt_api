@@ -19,6 +19,7 @@ namespace Passbolt\Ee;
 use App\Application;
 use App\BaseSolutionBootstrapper;
 use Cake\Core\Configure;
+use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 
 class EeSolutionBootstrapper extends BaseSolutionBootstrapper
@@ -53,6 +54,7 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
         $app->addPlugin('Passbolt/InFormIntegration', ['bootstrap' => true, 'routes' => false]);
         $app->addPlugin('Passbolt/Locale', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Export', ['bootstrap' => true, 'routes' => false]);
+        $this->addFeaturePluginIfEnabled($app, 'PasswordExpiry');
         $this->addFeaturePluginIfEnabled($app, 'ResourceTypes');
         $this->addFeaturePluginIfEnabled($app, 'TotpResourceTypes', ['bootstrap' => true, 'routes' => false]);
         $app->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
@@ -94,5 +96,8 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
         $this->addFeaturePluginIfEnabled($app, 'PasswordPolicies');
         $this->addFeaturePluginIfEnabled($app, 'PasswordPoliciesUpdate');
         $this->addFeaturePluginIfEnabled($app, 'UserPassphrasePolicies');
+        if ($this->isFeaturePluginEnabled(PasswordExpiryPlugin::class)) {
+            $this->addFeaturePluginIfEnabled($app, 'PasswordExpiryPolicies');
+        }
     }
 }

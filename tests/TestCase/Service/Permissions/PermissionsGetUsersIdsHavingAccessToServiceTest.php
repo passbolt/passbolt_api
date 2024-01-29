@@ -19,9 +19,10 @@ namespace App\Test\TestCase\Service\Permissions;
 
 use App\Model\Entity\Permission;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 
 /**
  * \App\Test\TestCase\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService Test Case
@@ -30,59 +31,37 @@ use Cake\ORM\TableRegistry;
  */
 class PermissionsGetUsersIdsHavingAccessToServiceTest extends AppTestCase
 {
-    /**
-     * @var \Passbolt\AccountSettings\Model\Table\PermissionsTable
-     */
-    public $permissionsTable;
-
-    /**
-     * @var ResourcesTable
-     */
-    public $resourcesTable;
-
-    /**
-     * @var PermissionsUpdatePermissionsServiceTest
-     */
-    public $service;
-
-    public $fixtures = [
-        'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
-        'app.Base/Users',
-    ];
+    public PermissionsGetUsersIdsHavingAccessToService $service;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        $this->resourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $this->service = new PermissionsGetUsersIdsHavingAccessToService();
     }
 
     public function testGetUsersIdsHavingAccessTo()
     {
-        [$resource1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_GetUsersIdsHavingAccessTo();
+        $allUsers = [$user1, $user2, $user3] = UserFactory::make(10)->persist();
+        ResourceFactory::make(10)->persist();
 
-        $result = $this->service->getUsersIdsHavingAccessTo($resource1->id);
+        // User 1 and 2 own permission by group permission
+        $group = GroupFactory::make()
+            ->withGroupsUsersFor([$user1, $user2,])
+            ->persist();
 
+        // User 1 and 3 own permission by user permission
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$user1, $user3])
+            ->withPermissionsFor([$group], Permission::READ)
+            ->withSecretsFor($allUsers)
+            ->persist();
+
+        $result = $this->service->getUsersIdsHavingAccessTo($resource->id);
+
+        // User should be retrieved only once
         $this->assertCount(3, $result);
-        $this->assertContains($userAId, $result);
-        $this->assertContains($userBId, $result);
-        $this->assertContains($userCId, $result);
-    }
-
-    private function insertFixture_GetUsersIdsHavingAccessTo()
-    {
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userBId = UuidFactory::uuid('user.id.betty');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $g1 = $this->addGroup(['name' => 'G1', 'groups_users' => [
-            ['user_id' => $userBId, 'is_admin' => true],
-            ['user_id' => $userCId, 'is_admin' => true],
-        ]]);
-        $forUsers = [$userAId => Permission::OWNER, $userBId => Permission::OWNER];
-        $forGroups = [$g1->id => Permission::OWNER];
-        $resource1 = $this->addResourceFor(['name' => 'R1'], $forUsers, $forGroups);
-
-        return [$resource1, $g1, $userAId, $userBId, $userCId];
+        $this->assertContains($user1->id, $result);
+        $this->assertContains($user2->id, $result);
+        $this->assertContains($user3->id, $result);
     }
 }

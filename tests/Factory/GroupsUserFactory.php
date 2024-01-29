@@ -22,6 +22,8 @@ use Faker\Generator;
 
 /**
  * GroupsUserFactory
+ *
+ * @method static \App\Model\Entity\GroupsUser firstOrFail($conditions = null)
  */
 class GroupsUserFactory extends CakephpBaseFactory
 {

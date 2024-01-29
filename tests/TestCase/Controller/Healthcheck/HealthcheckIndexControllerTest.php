@@ -17,13 +17,20 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Healthcheck;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
+use Cake\Http\Client;
 
 class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 {
+    use HealthcheckRequestTestTrait;
+
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
     public function testHealthcheckIndexOk(): void
     {
+        $this->mockService(Client::class, function () {
+            return $this->getMockedHealthcheckStatusRequest();
+        });
         $this->get('/healthcheck');
         $this->assertResponseContains('Passbolt API Status');
         $this->assertResponseOk();
@@ -31,7 +38,10 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckIndexJsonOk(): void
     {
-        $this->getJson('/healthcheck.json?api-version=v2');
+        $this->mockService(Client::class, function () {
+            return $this->getMockedHealthcheckStatusRequest();
+        });
+        $this->getJson('/healthcheck.json');
         $this->assertResponseSuccess();
         $attributes = [
             'ssl', 'application', 'gpg', 'core', 'configFile', 'environment', 'database', 'smtpSettings',
@@ -39,5 +49,19 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         foreach ($attributes as $attr) {
             $this->assertObjectHasAttribute($attr, $this->_responseJsonBody);
         }
+    }
+
+    /**
+     * Strangely, the status returned is OK, although the healthcheck failed
+     * Leaving the test as documentation
+     */
+    public function testHealthcheckIndex_Healthcheck_Not_Reachable(): void
+    {
+        $this->mockService(Client::class, function () {
+            return $this->getMockedHealthcheckStatusRequest(400);
+        });
+        $this->get('/healthcheck');
+        $this->assertResponseContains('Passbolt API Status');
+        $this->assertResponseOk();
     }
 }

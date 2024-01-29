@@ -19,10 +19,10 @@ namespace App\Test\TestCase\Service\Resources;
 
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
+use App\Service\Resources\PasswordExpiryDefaultValidationService;
 use App\Service\Resources\ResourcesAddService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
-use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -39,24 +39,28 @@ class ResourcesAddServiceStressTest extends TestCase
     use ResourcesModelTrait;
 
     /**
-     * @var User The user created once by testTruncateDirtyTables.
+     * @var UserAccessControl The user created once by testTruncateDirtyTables.
      */
-    private static $user;
+    private static $uac;
 
     /**
      * @var int The number of imports to perform. 300 or plus is a good value. Always set back to 0 when committing!!!.
      */
     private static $NIterations = 0;
 
-    public static function setUpBeforeClass(): void
-    {
-        self::$user = TableRegistry::getTableLocator()->get('Users')->find()->contain('Roles')->first();
-    }
+    private ResourcesAddService $service;
 
     public function setUp(): void
     {
         $this->skipIf(self::$NIterations < 1);
         parent::setUp();
+        $this->service = new ResourcesAddService(new PasswordExpiryDefaultValidationService());
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->service);
     }
 
     /**
@@ -68,7 +72,7 @@ class ResourcesAddServiceStressTest extends TestCase
         SnifferRegistry::get('test')->truncateDirtyTables();
         $this->assertTrue(true);
         ResourceTypeFactory::make()->default()->persist();
-        UserFactory::make()->user()->persist();
+        self::$uac = UserFactory::make()->user()->persistedUAC();
     }
 
     public function dataForStressTest(): array
@@ -91,9 +95,7 @@ class ResourcesAddServiceStressTest extends TestCase
     public function testResourceAddServiceSuccessStressTest(int $iter)
     {
         $data = $this->getDummyResourcesPostData();
-        $service = new ResourcesAddService();
-
-        $resource = $service->add(self::$user->id, $data);
+        $resource = $this->service->add(self::$uac, $data);
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);

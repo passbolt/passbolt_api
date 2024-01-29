@@ -112,6 +112,7 @@ return [
                     'share' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_SHARE', true), FILTER_VALIDATE_BOOLEAN),
                     'update' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
                     'delete' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_DELETE', true), FILTER_VALIDATE_BOOLEAN),
+                    'expire' => filter_var(env('PASSBOLT_EMAIL_SEND_PASSWORD_EXPIRE', true), FILTER_VALIDATE_BOOLEAN),
                 ],
                 'user' => [
                     // WARNING: disabling PASSBOLT_EMAIL_SEND_USER_CREATE and PASSBOLT_EMAIL_SEND_USER_RECOVER will prevent user from signing up.
@@ -164,7 +165,8 @@ return [
                     'manager' => [
                         // Notify managers when group membership changes.
                         'update' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_UPDATE', true), FILTER_VALIDATE_BOOLEAN),
-                    ]
+                        'requestAddUser' => filter_var(env('PASSBOLT_EMAIL_SEND_GROUP_MANAGER_REQUEST_ADD_USER', true), FILTER_VALIDATE_BOOLEAN),
+                    ],
                 ],
                 'folder' => [
                     'create' => filter_var(env('PASSBOLT_EMAIL_SEND_FOLDER_CREATE', false), FILTER_VALIDATE_BOOLEAN),
@@ -274,6 +276,12 @@ return [
             'previewPassword' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_PREVIEW_PASSWORD_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'passwordExpiry' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_EXPIRY_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
+            'passwordExpiryPolicies' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_EXPIRY_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
+            ],
             'resourceTypes' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_RESOURCE_TYPES_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
@@ -284,7 +292,7 @@ return [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_MOBILE_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
             'desktop' => [
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_DESKTOP_ENABLED', false), FILTER_VALIDATE_BOOLEAN)
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_DESKTOP_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
             'jwtAuthentication' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
@@ -462,6 +470,12 @@ return [
                 ],
                 'endpointsDisabled' => filter_var(env('PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED', false), FILTER_VALIDATE_BOOLEAN),
             ],
+            'email' => [
+                'anonymiseAdministratorIdentity' => filter_var(
+                    env('PASSBOLT_SECURITY_EMAIL_ANONYMISE_ADMINISTRATOR_IDENTITY', false),
+                    FILTER_VALIDATE_BOOLEAN
+                ),
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.
@@ -477,5 +491,8 @@ return [
     // Override the Cake ExceptionRenderer.
     'Error' => [
         'exceptionRenderer' => 'App\Error\AppExceptionRenderer',
-    ]
+        'skipLog' => [
+            'Authentication\Authenticator\UnauthenticatedException',
+        ],
+    ],
 ];

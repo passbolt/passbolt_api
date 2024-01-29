@@ -42,7 +42,7 @@ class MfaPoliciesSettingsGetControllerTest extends AppIntegrationTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        $this->disableFeaturePlugin('Passbolt/MfaPolicies');
+        $this->disableFeaturePlugin('MfaPolicies');
     }
 
     public function testMfaPoliciesSettingsGet_ErrorFeatureDisabled()

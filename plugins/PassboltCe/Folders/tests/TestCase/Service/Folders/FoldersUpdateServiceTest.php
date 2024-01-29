@@ -127,9 +127,9 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $this->service->update($uac, $folderA->id, compact('name'));
 
         $this->assertEmailQueueCount(2);
-        $this->assetEmailSubject('ada@passbolt.com', "You edited the folder $name");
+        $this->assertEmailSubject('ada@passbolt.com', "You edited the folder $name");
         $this->assertEmailInBatchContains('You edited a folder', 'ada@passbolt.com');
-        $this->assetEmailSubject('betty@passbolt.com', "Ada edited the folder $name");
+        $this->assertEmailSubject('betty@passbolt.com', "Ada edited the folder $name");
         $this->assertEmailInBatchContains('Ada edited a folder', 'betty@passbolt.com');
     }
 

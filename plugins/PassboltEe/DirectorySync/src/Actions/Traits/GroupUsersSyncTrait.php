@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Actions\Traits;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
+use App\Model\Entity\GroupsUser;
 use App\Model\Entity\Role;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
@@ -134,7 +135,7 @@ trait GroupUsersSyncTrait
 
                 continue;
             } elseif (!$u->active) {
-                $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $u->username, $group->name);//phpcs:ignore
+                $msg = __('The user {0} could not be added to the group {1} because they have not yet activated his account.', $u->username, $group->name);//phpcs:ignore
                 $this->addReportItem(new ActionReport(
                     $msg,
                     Alias::MODEL_GROUPS_USERS,
@@ -391,7 +392,13 @@ trait GroupUsersSyncTrait
             ];
 
             try {
-                $groupUser = $groupsUsersAddService->add($uac, $groupUserData);
+                /** @var \App\Model\Entity\GroupsUser|null $groupUser */
+                $groupUser = $groupsUsersAddService
+                    ->add($uac, $groupUserData)
+                    ->getAddedEntities(GroupsUser::class)[0] ?? null;
+                if (is_null($groupUser)) {
+                    throw new \Exception('A GroupUser entity should be present in the DTO');
+                }
                 $this->DirectoryRelations->createFromGroupUser($groupUser);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} was successfully added to the group {1}.', $user->username, $group->name),
@@ -407,7 +414,7 @@ trait GroupUsersSyncTrait
                 if (($isNotActive && $isDeleted) || $isDeleted) {
                     $msg = __('The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt.', $user->username, $group->name);//phpcs:ignore
                 } elseif ($isNotActive) {
-                    $msg = __('The user {0} could not be added to the group {1} because he has not yet activated his account.', $user->username, $group->name);//phpcs:ignore
+                    $msg = __('The user {0} could not be added to the group {1} because they have not yet activated his account.', $user->username, $group->name);//phpcs:ignore
                 } else {
                     $msg = __('The user {0} could not be added to the group {1} because of validation issues.', $user->username, $group->name);//phpcs:ignore
                 }
