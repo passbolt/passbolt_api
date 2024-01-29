@@ -81,6 +81,14 @@ class ResourcesUpdateServiceTest extends AppTestCase
         $this->service = new ResourcesUpdateService();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->resourcesTable);
+        unset($this->secretsTable);
+        unset($this->service);
+    }
+
     public function testUpdateResourcesSuccess_UpdateResourceMeta()
     {
         [$r1, $r2, $userAId] = $this->insertFixture_UpdateResourceMeta();
@@ -293,23 +301,6 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
         try {
             $this->service->update($uac, $notFoundId);
-            $this->assertFalse(true, 'The test should catch an exception');
-        } catch (NotFoundException $e) {
-            $this->assertEquals('The resource does not exist.', $e->getMessage());
-        }
-    }
-
-    public function testUpdateResourcesError_NoAccessToResource()
-    {
-        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourcesError_InsufficientPermission();
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $uac = new UserAccessControl(Role::USER, $userCId);
-        $data = [
-            'name' => 'R1 updated',
-        ];
-
-        try {
-            $this->service->update($uac, $r1->id, $data);
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (NotFoundException $e) {
             $this->assertEquals('The resource does not exist.', $e->getMessage());

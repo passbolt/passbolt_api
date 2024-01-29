@@ -23,6 +23,7 @@ use Cake\Core\PluginCollection;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 use Passbolt\Mobile\MobilePlugin;
+use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 
@@ -42,6 +43,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/InFormIntegration',
         'Passbolt/Locale',
         'Passbolt/Export',
+        'Passbolt/PasswordExpiry',
         'Passbolt/ResourceTypes',
         'Passbolt/TotpResourceTypes',
         'Passbolt/RememberMe',
@@ -110,6 +112,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
         $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
         $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+        $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
         // These two plugins are enabled by default if not defined
         Configure::delete('passbolt.plugins.multiFactorAuthentication.enabled');
         Configure::delete('passbolt.plugins.log.enabled');

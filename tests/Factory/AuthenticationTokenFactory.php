@@ -30,6 +30,7 @@ use Faker\Generator;
  * @method \App\Model\Entity\AuthenticationToken[] getEntity()
  * @method \App\Model\Entity\AuthenticationToken getEntities()
  * @method static \App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array $options = [])
+ * @method static \App\Model\Entity\AuthenticationToken firstOrFail($conditions = null)
  */
 class AuthenticationTokenFactory extends CakephpBaseFactory
 {

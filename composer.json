@@ -103,12 +103,13 @@
         "cakephp/bake": "^2.3.0",
         "phpunit/phpunit": "~9.5.2",
         "cakephp/cakephp-codesniffer": "^4.5",
-        "passbolt/passbolt-selenium-api": "^4.2",
+        "passbolt/passbolt-selenium-api": "^4.5",
         "passbolt/passbolt-test-data": "^4.4",
         "vierge-noire/cakephp-fixture-factories": "^v2.9.0",
         "cakephp/localized": "4.0.0",
         "vimeo/psalm": "^5.0.0",
-        "cakedc/cakephp-phpstan": "^2.0"
+        "cakedc/cakephp-phpstan": "^2.0",
+        "johnkary/phpunit-speedtrap": "^4.0"
     },
     "autoload": {
         "psr-4": {
@@ -128,6 +129,7 @@
             "Passbolt\\JwtAuthentication\\": "./plugins/PassboltCe/JwtAuthentication/src",
             "Passbolt\\Import\\": "./plugins/PassboltCe/Import/src",
             "Passbolt\\Export\\": "./plugins/PassboltCe/Export/src",
+            "Passbolt\\PasswordExpiry\\": "./plugins/PassboltCe/PasswordExpiry/src",
             "Passbolt\\ResourceTypes\\": "./plugins/PassboltCe/ResourceTypes/src",
             "Passbolt\\SmtpSettings\\": "./plugins/PassboltCe/SmtpSettings/src",
             "Passbolt\\MultiFactorAuthentication\\": "./plugins/PassboltCe/MultiFactorAuthentication/src",
@@ -153,6 +155,7 @@
             "Passbolt\\Mobile\\Test\\": "./plugins/PassboltCe/Mobile/tests",
             "Passbolt\\JwtAuthentication\\Test\\": "./plugins/PassboltCe/JwtAuthentication/tests",
             "Passbolt\\MultiFactorAuthentication\\Test\\": "./plugins/PassboltCe/MultiFactorAuthentication/tests",
+            "Passbolt\\PasswordExpiry\\Test\\": "./plugins/PassboltCe/PasswordExpiry/tests",
             "Passbolt\\SmtpSettings\\Test\\": "./plugins/PassboltCe/SmtpSettings/tests",
             "Passbolt\\SelfRegistration\\Test\\": "./plugins/PassboltCe/SelfRegistration/tests",
             "Passbolt\\ResourceTypes\\Test\\": "./plugins/PassboltCe/ResourceTypes/tests",
@@ -171,7 +174,7 @@
         "cs-check": "phpcs -d memory_limit=512M --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "cs-fix": "phpcbf -d memory_limit=512M --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
         "install-dev": [
-            "@composer install --dev",
+            "@composer install",
             "npm install",
             "./node_modules/.bin/grunt appjs-update",
             "./node_modules/.bin/grunt styleguide-update"

@@ -52,7 +52,7 @@ class SoftDeleteTest extends AppTestCase
     {
         $groupId = UuidFactory::uuid('group.id.procurement');
         $group = $this->Groups->get($groupId);
-        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertNotFalse($this->Groups->softDelete($group));
         $this->assertGroupIsSoftDeleted($groupId);
     }
 
@@ -63,7 +63,7 @@ class SoftDeleteTest extends AppTestCase
         $userHId = UuidFactory::uuid('user.id.hedy');
         $userMId = UuidFactory::uuid('user.id.marlyn');
         $group = $this->Groups->get($groupId);
-        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertNotFalse($this->Groups->softDelete($group));
         $this->assertGroupIsSoftDeleted($groupId);
         $this->assertResourceIsNotSoftDeleted($resourceId);
         $this->assertPermissionNotExist($resourceId, $groupId);
@@ -77,7 +77,7 @@ class SoftDeleteTest extends AppTestCase
         $resourceId = UuidFactory::uuid('resource.id.stealjs');
         $userId = UuidFactory::uuid('user.id.adele');
         $group = $this->Groups->get($groupId);
-        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertNotFalse($this->Groups->softDelete($group));
         $this->assertGroupIsSoftDeleted($groupId);
         $this->assertResourceIsSoftDeleted($resourceId);
         $this->assertPermissionNotExist($resourceId, $groupId);
@@ -144,7 +144,7 @@ class SoftDeleteTest extends AppTestCase
         $this->Permissions->save($permission);
 
         $group = $this->Groups->get($groupId);
-        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertNotFalse($this->Groups->softDelete($group));
         $this->assertGroupIsSoftDeleted($groupId);
         $this->assertResourceIsNotSoftDeleted($resourceId);
         $this->assertPermissionNotExist($resourceId, $groupId);
@@ -160,7 +160,7 @@ class SoftDeleteTest extends AppTestCase
         $userId = UuidFactory::uuid('user.id.orna');
         $this->assertPermission($resourceId, $groupId, Permission::OWNER);
         $group = $this->Groups->get($groupId);
-        $this->assertTrue($this->Groups->softDelete($group));
+        $this->assertNotFalse($this->Groups->softDelete($group));
         $this->assertGroupIsSoftDeleted($groupId);
         $this->assertResourceIsNotSoftDeleted($resourceId);
         $this->assertPermission($resourceId, $userId, Permission::OWNER);

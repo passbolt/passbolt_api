@@ -24,6 +24,8 @@ use App\Model\Table\PermissionsTable;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Database\Expression\IdentifierExpression;
+use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
@@ -356,6 +358,37 @@ trait ResourcesFindersTrait
         $query->where(['Resources.id IN' => $resourcesSharedWithGroupSubQuery]);
 
         return $query;
+    }
+
+    /**
+     * Find all resources that are not expired
+     *
+     * @param \Cake\ORM\Query $query Query to filter on
+     * @param array $options Array of parent ids
+     * @return \Cake\ORM\Query
+     */
+    public function findNotExpired(Query $query, array $options): Query
+    {
+        return $query->where(function () {
+            return $this->notExpiredQueryExpression();
+        });
+    }
+
+    /**
+     * Query expression to insert in a where clause in order to select resources
+     * that are not expired
+     *
+     * @return \Cake\Database\Expression\QueryExpression
+     */
+    public function notExpiredQueryExpression(): QueryExpression
+    {
+        $isNull = $this->find()->newExpr()->isNull('expired');
+        $isFuture = $this->find()->newExpr()->gt('expired', FrozenTime::now());
+
+        return $this->find()->newExpr()->or([
+            $isNull,
+            $isFuture,
+        ]);
     }
 
     /**

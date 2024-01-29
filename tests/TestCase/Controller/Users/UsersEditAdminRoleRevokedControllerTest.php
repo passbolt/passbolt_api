@@ -18,10 +18,12 @@ namespace App\Test\TestCase\Controller\Users;
 
 use App\Controller\Users\UsersEditController;
 use App\Model\Entity\Role;
+use App\Notification\Email\Redactor\User\UserAdminRoleRevokedEmailRedactor;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Utility\Purifier;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
@@ -48,10 +50,13 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditAdminRoleRevokedController_NotificationEnabled(): void
     {
-        $jane = UserFactory::make(['username' => 'jane@passbolt.test'])
-            ->admin()
-            ->with('Profiles', ['first_name' => 'Jane', 'last_name' => 'Doe'])
-            ->persist();
+        $jane = UserFactory::make([
+            'username' => 'jane@passbolt.test',
+            'profile' => [
+                'first_name' => 'Jane',
+                'last_name' => "O'Keefe",
+            ],
+        ])->admin()->persist();
         $john = UserFactory::make(['username' => 'john@passbolt.test'])->admin()->persist();
         $ada = UserFactory::make(['username' => 'ada@passbolt.test'])->admin()->persist();
         UserFactory::make()->user()->persist();
@@ -70,9 +75,10 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         // Email assertions
         $this->assertEventFired(UsersEditController::EVENT_USER_AFTER_UPDATE);
         $this->assertEmailQueueCount(2);
+        $userFullName = Purifier::clean($jane->profile->first_name . ' ' . $jane->profile->last_name);
         foreach ([$john, $ada] as $admin) {
             $this->assertEmailInBatchContains(
-                sprintf('%s\'s admin role has been revoked', $jane->profile->full_name),
+                sprintf('%s\'s admin role has been revoked', $userFullName),
                 $admin->username,
                 '',
                 false
@@ -92,7 +98,7 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         UserFactory::make()->user()->persist();
         $userRole = RoleFactory::find()->where(['name' => Role::USER])->firstOrFail();
         // Disable notification
-        Configure::write('passbolt.email.send.admin.user.adminRoleRevoked.admin', false);
+        Configure::write(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_EMAIL_ENABLED, false);
 
         // John(admin) downgrade Jane's role to User
         $this->logInAs($john);
@@ -113,12 +119,13 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
             ->admin()
             ->with('Profiles', ['first_name' => 'Jane', 'last_name' => 'Doe'])
             ->persist();
+        /** @var \App\Model\Entity\User $john */
         $john = UserFactory::make(['username' => 'john@passbolt.test'])->admin()->persist();
         $ada = UserFactory::make(['username' => 'ada@passbolt.test'])->admin()->persist();
         UserFactory::make()->user()->persist();
         $userRole = RoleFactory::find()->where(['name' => Role::USER])->firstOrFail();
         // Enable sending email to user
-        Configure::write('passbolt.email.send.admin.user.adminRoleRevoked.user', true);
+        Configure::write(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_SEND_USER_EMAIL, true);
 
         // John(admin) downgrade Jane's role to User
         $this->logInAs($john);
@@ -133,21 +140,25 @@ class UsersEditAdminRoleRevokedControllerTest extends AppIntegrationTestCase
         // Email assertions
         $this->assertEventFired(UsersEditController::EVENT_USER_AFTER_UPDATE);
         $this->assertEmailQueueCount(3);
-        $this->assertEmailInBatchContains('Your admin role has been revoked', $jane->username);
-        $this->assertEmailInBatchContains('You can no longer perform administration tasks.', $jane->username);
-        $this->assertEmailInBatchContains(
+        $this->assertEmailInBatchContains([
+            'Your admin role has been revoked',
+            'You can no longer perform administration tasks.',
+            $john->profile->full_name . ' changed your role to user.',
             Router::url('/app/users/view/' . $jane->id, true),
-            $jane->username
-        );
+        ], $jane->username);
+        $userFullName = Purifier::clean($jane->profile->first_name . ' ' . $jane->profile->last_name);
         foreach ([$john, $ada] as $admin) {
             $this->assertEmailInBatchContains(
-                sprintf('%s\'s admin role has been revoked', $jane->profile->full_name),
+                sprintf('%s\'s admin role has been revoked', $userFullName),
                 $admin->username,
                 '',
                 false
             );
             $this->assertEmailInBatchContains(
-                Router::url('/app/users/view/' . $jane->id, true),
+                [
+                    "{$john->profile->full_name} changed the role of {$userFullName} to user.",
+                    Router::url('/app/users/view/' . $jane->id, true),
+                ],
                 $admin->username
             );
         }

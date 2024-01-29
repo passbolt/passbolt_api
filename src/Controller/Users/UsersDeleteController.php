@@ -20,8 +20,10 @@ use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
+use App\Model\Entity\Secret;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
@@ -97,11 +99,14 @@ class UsersDeleteController extends AppController
      * User delete action
      *
      * @param string $id user uuid
-     * @throws \Exception if user cannot be deleted
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService Service to expire resources that were consumed by users who lost access to them.
      * @return void
+     * @throws \Exception if user cannot be deleted
      */
-    public function delete(string $id)
-    {
+    public function delete(
+        string $id,
+        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService
+    ) {
         $this->assertJson();
 
         $user = $this->_validateRequestData($id);
@@ -112,13 +117,16 @@ class UsersDeleteController extends AppController
             ->extract('group_id')
             ->toArray();
 
-        $this->GroupsUsers->getConnection()->transactional(function () use ($user) {
+        $this->GroupsUsers->getConnection()->transactional(function () use ($user, $resourcesExpireResourcesService) {
             $this->_transferGroupsManagers($user);
             $this->_transferContentOwners($user);
             $this->_validateDelete($user);
-            if (!$this->Users->softDelete($user, ['checkRules' => false])) {
+            $entitiesChanges = $this->Users->softDelete($user, ['checkRules' => false]);
+            if (!$entitiesChanges) {
                 throw new InternalErrorException('Could not delete the user, please try again later.');
             }
+            $deletedSecrets = $entitiesChanges->getDeletedEntities(Secret::class);
+            $resourcesExpireResourcesService->expireResourcesForSecrets($deletedSecrets);
         });
 
         $this->_notifyUsers($user, $groupIdsNotOnlyMember);

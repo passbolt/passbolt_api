@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Notification\Email\Redactor\Group;
 
 use App\Model\Entity\Group;
+use App\Model\Entity\GroupsUser;
 use App\Model\Entity\User;
 use App\Model\Table\GroupsTable;
 use App\Model\Table\UsersTable;
@@ -76,7 +77,9 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
             case GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME:
                 /** @var \App\Model\Entity\Group $group */
                 $group = $event->getData('group');
-                $addedGroupsUsers = $event->getData('addedGroupsUsers'); // the list of added groups users
+                /** @var \App\Model\Dto\EntitiesChangesDto $entitiesChanges */
+                $entitiesChanges = $event->getData('entitiesChanges');
+                $addedGroupsUsers = $entitiesChanges->getAddedEntities(GroupsUser::class);
                 $modifiedBy = $this->usersTable->findFirstForEmail($event->getData('userId'));
                 $emails = $this->createGroupUserAddedUpdateEmails($group, $addedGroupsUsers, $modifiedBy);
                 break;

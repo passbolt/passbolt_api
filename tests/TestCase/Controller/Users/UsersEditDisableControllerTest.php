@@ -20,8 +20,12 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Utility\Purifier;
 use Cake\I18n\FrozenTime;
 
+/**
+ * @covers \App\Controller\Users\UsersEditController
+ */
 class UsersEditDisableControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
@@ -74,14 +78,19 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
     public function testUsersEditDisableController_Success_Admin_Disable_User(): void
     {
         [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
-        $user = UserFactory::make()->user()->persist();
-        $userFullName = $user->profile->first_name . ' ' . $user->profile->last_name;
+        $user = UserFactory::make()
+            ->withProfileName('Helene', 'D\'Amore')
+            ->user()
+            ->persist();
         $this->logInAs($admin1);
+        $userFullName = Purifier::clean($user->profile->full_name);
+
         $data = [
             'id' => $user->id,
             'disabled' => FrozenTime::now(),
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
+
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody->disabled);
         $user = UserFactory::get($user->id);
@@ -93,14 +102,19 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
 
     public function testUsersEditDisableController_Success_Admin_Disable_Admin(): void
     {
-        [$admin1, $admin2, $user] = UserFactory::make(3)->admin()->persist();
-        $userFullName = $user->profile->first_name . ' ' . $user->profile->last_name;
+        [$admin1, $admin2, $user] = UserFactory::make(3)
+            ->withProfileName('Helene', 'D\'Amore')
+            ->admin()
+            ->persist();
         $this->logInAs($admin1);
+        $userFullName = Purifier::clean($user->profile->full_name);
+
         $data = [
             'id' => $user->id,
             'disabled' => FrozenTime::now(),
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
+
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody->disabled);
         $user = UserFactory::get($user->id);

@@ -18,10 +18,13 @@ namespace App\Command;
 
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks;
+use App\Utility\Healthchecks\CoreHealthchecks;
+use App\Utility\Healthchecks\SslHealthchecks;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Cake\Http\Client;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
@@ -73,6 +76,17 @@ class HealthcheckCommand extends PassboltCommand
      * @var \Cake\Console\Arguments
      */
     private $args;
+
+    private ?Client $client;
+
+    /**
+     * @param ?\Cake\Http\Client $client client requesting the healthcheck status
+     */
+    public function __construct(?Client $client)
+    {
+        parent::__construct();
+        $this->client = $client;
+    }
 
     /**
      * @inheritDoc
@@ -331,7 +345,7 @@ class HealthcheckCommand extends PassboltCommand
     public function assertCore($checks = null)
     {
         if (!isset($checks)) {
-            $checks = Healthchecks::core();
+            $checks = (new CoreHealthchecks($this->client))->all($checks);
         }
         $this->title(__('Core config'));
         $this->assert(
@@ -387,7 +401,7 @@ class HealthcheckCommand extends PassboltCommand
     public function assertSSL($checks = null)
     {
         if (!isset($checks)) {
-            $checks = Healthchecks::ssl();
+            $checks = (new SslHealthchecks($this->client))->all($checks);
         }
         $this->title(__('SSL Certificate'));
         $this->warning(
