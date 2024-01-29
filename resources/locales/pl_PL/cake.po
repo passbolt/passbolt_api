@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2023-11-05 23:13\n"
+"PO-Revision-Date: 2023-12-20 21:36\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Błąd"
 
 #: Error/error400.php:37
 msgid "The requested address {0} was not found on this server."
-msgstr ""
+msgstr "Nie znaleziono żądanego adresu {0} na tym serwerze."
 
 #: Error/error500.php:38
 msgid "An Internal Error Has Occurred"
@@ -43,23 +43,23 @@ msgstr "Wystąpił błąd wewnętrzny."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:286
 msgid "Missing or incorrect CSRF cookie type."
-msgstr ""
+msgstr "Brakujący lub nieprawidłowy typ ciasteczka CSRF."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:290
 msgid "Missing or invalid CSRF cookie."
-msgstr ""
+msgstr "Brakujące lub nieprawidłowe ciasteczko CSRF."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:311
 msgid "CSRF token from either the request body or request headers did not match or is missing."
-msgstr ""
+msgstr "Token CSRF z treści żądania lub nagłówków żądania nie pasuje lub go brakuje."
 
 #: Http/Response.php:1490
 msgid "The requested file contains `..` and will not be read."
-msgstr ""
+msgstr "Żądany plik zawiera `..` i nie zostanie odczytany."
 
 #: Http/Response.php:1498
 msgid "The requested file was not found"
-msgstr ""
+msgstr "Nie znaleziono żądanego pliku"
 
 #: I18n/Number.php:116
 msgid "{0,number,#,###.##} KB"
@@ -258,11 +258,11 @@ msgstr "Ta wartość nie istnieje"
 
 #: ORM/RulesChecker.php:224
 msgid "Cannot modify row: a constraint for the `{0}` association fails."
-msgstr ""
+msgstr "Nie można zmodyfikować wiersza: ograniczenie dla powiązania `{0}` nie powiodło się."
 
 #: ORM/RulesChecker.php:262
 msgid "The count does not match {0}{1}"
-msgstr ""
+msgstr "Liczba nie pasuje {0}{1}"
 
 #: Utility/Text.php:915
 msgid "and"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2023-10-27 11:15+0000\n"
-"PO-Revision-Date: 2023-11-05 23:12\n"
+"PO-Revision-Date: 2023-12-21 00:35\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -917,7 +917,7 @@ msgid "A role identifier is required."
 msgstr "Identyfikator roli jest wymagany."
 
 msgid "The disabled date should be a valid date."
-msgstr ""
+msgstr "Data dezaktywacji powinna być prawidłową datą."
 
 msgid "The profile should not be empty."
 msgstr "Profil nie powinien być pusty."
@@ -1100,10 +1100,10 @@ msgid "The send on user recover abort setting should be a boolean."
 msgstr "Ustawienie wysyłki po anulowaniu odzyskania użytkownika powinno być wartością logiczną."
 
 msgid "The send on user disabled setting should be a boolean."
-msgstr ""
+msgstr "Ustawienie wysyłki po dezaktywacji użytkownika powinno być wartością logiczną."
 
 msgid "The send on admin disabled setting should be a boolean."
-msgstr ""
+msgstr "Ustawienie wysyłki po dezaktywacji administratora powinno być wartością logiczną."
 
 msgid "The send on comment added setting should be a boolean."
 msgstr "Ustawienie wysyłki po dodaniu komentarza powinno być wartością logiczną."
@@ -2543,55 +2543,55 @@ msgid "The passphrase generator words is required."
 msgstr "Słowa generatora haseł dostępu są wymagane."
 
 msgid "The passphrase generator words should be between {0} and {1}."
-msgstr ""
+msgstr "Słowa generatora haseł dostępu powinny zawierać się pomiędzy {0} a {1}."
 
 msgid "The passphrase generator word separator is required."
-msgstr ""
+msgstr "Separator słów generatora haseł dostępu jest wymagany."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
-msgstr ""
+msgstr "Separator w generatorze haseł dostępu powinien być prawidłowym ciągiem UTF-8."
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr ""
+msgstr "Separator słów generatora haseł dostępu powinien mieć maksymalnie {0} znaków."
 
 msgid "The passphrase generator word case is required."
-msgstr ""
+msgstr "Wielkość liter generatora haseł dostępu jest wymagana."
 
 msgid "The passphrase generator word case should be one of the following: {0}."
-msgstr ""
+msgstr "Wielkość liter generatora haseł dostępu powinna być jedną z następujących: {0}."
 
 msgid "The password generator length should be between {0} and {1}."
-msgstr ""
+msgstr "Długość generatora haseł powinna mieścić się w zakresie od {0} do {1} znaków."
 
 msgid "The password generator length is required."
-msgstr ""
+msgstr "Długość generatora haseł jest wymagana."
 
 msgid "The password generator mask upper is required."
-msgstr ""
+msgstr "Maska generatora haseł dla wielkich liter jest wymagana."
 
 msgid "The password generator mask upper should be a boolean type."
-msgstr ""
+msgstr "Maska generatora haseł dla wielkich liter powinna być typem logicznym."
 
 msgid "The password generator mask lower is required."
-msgstr ""
+msgstr "Maska generatora haseł dla małych liter jest wymagana."
 
 msgid "The password generator mask lower should be a boolean type."
-msgstr ""
+msgstr "Maska generatora haseł dla małych liter powinna być typem logicznym."
 
 msgid "The password generator mask digit is required."
-msgstr ""
+msgstr "Cyfra dla maski generatora haseł jest wymagana."
 
 msgid "The password generator mask digit should be a boolean type."
-msgstr ""
+msgstr "Cyfra dla maski generatora haseł powinna być typem logicznym."
 
 msgid "The password generator mask parenthesis is required."
-msgstr ""
+msgstr "Nawias dla maski generatora haseł jest wymagany."
 
 msgid "The password generator mask parenthesis should be a boolean type."
-msgstr ""
+msgstr "Nawias dla maski generatora haseł powinien być typem logicznym."
 
 msgid "The password generator mask emoji is required."
-msgstr ""
+msgstr "Emoji dla maski generatora haseł jest wymagane."
 
 msgid "The password generator mask emoji should be a boolean type."
 msgstr "Emoji maski generatora haseł powinna być typem logicznym."
@@ -2627,10 +2627,10 @@ msgid "The password generator mask char5 should be a boolean type."
 msgstr "Maska char5 generatora haseł powinna być typem logicznym."
 
 msgid "The password generator exclude look alike chars is required."
-msgstr ""
+msgstr "Funkcja wykluczania podobnych znaków jest wymagana w generatorze haseł."
 
 msgid "The password generator exclude look alike chars should be a boolean type."
-msgstr ""
+msgstr "Funkcja wykluczania podobnych znaków powinna być typem logicznym."
 
 msgid "Record not found"
 msgstr "Nie znaleziono rekordu"
@@ -2669,46 +2669,46 @@ msgid "The foreign model should be one of the following: {0}."
 msgstr "Obcy model powinien być jednym z następujących: {0}."
 
 msgid "The foreign model name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Długość użytej nazwy zewnętrznego modelu powinna wynosić maksymalnie {0} znaków."
 
 msgid "A foreign model is required."
-msgstr ""
+msgstr "Obcy model jest wymagany."
 
 msgid "The foreign model should not be empty."
-msgstr ""
+msgstr "Zewnętrzny model nie powinien być pusty."
 
 msgid "The control function should be a valid UTF8 string."
-msgstr ""
+msgstr "Funkcja kontrolna powinna być prawidłowym ciągiem UTF-8."
 
 msgid "The control function name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Długość użytej nazwy funkcji kontrolnej powinna wynosić maksymalnie {0} znaków."
 
 msgid "The control function is not supported."
-msgstr ""
+msgstr "Ta funkcja kontrolna nie jest obsługiwana."
 
 msgid "A control function is required."
-msgstr ""
+msgstr "Funkcja kontrolna jest wymagana."
 
 msgid "The control function should not be empty."
-msgstr ""
+msgstr "Funkcja kontrolna nie powinna być pusta."
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
-msgstr ""
+msgstr "Identyfikator użytkownika, który stworzył Rbac, powinien być prawidłowym UUID."
 
 msgid "The identifier of the user who modified the Rbac should be a valid UUID."
-msgstr ""
+msgstr "Identyfikator użytkownika, który zmodyfikował Rbac, powinien być prawidłowym UUID."
 
 msgid "The identifier of the user who modified the Rbac should not be empty."
-msgstr ""
+msgstr "Identyfikator użytkownika, który zmodyfikował Rbac, nie powinien być pusty."
 
 msgid "An RBAC entry already exists for the given id."
-msgstr ""
+msgstr "Wpis do RBAC już istnieje dla podanego identyfikatora."
 
 msgid "An entry already exists for the given role and action ids."
-msgstr ""
+msgstr "Wpis już istnieje dla podanych identyfikatorów roli i działania."
 
 msgid "An action already exists for the given name."
-msgstr ""
+msgstr "Działanie już istnieje dla podanej nazwy."
 
 msgid "The RBAC settings could not be updated."
 msgstr "Nie udało się zaktualizować ustawień RBAC."
@@ -2720,7 +2720,7 @@ msgid "Some data not found."
 msgstr "Nie znaleziono niektórych danych."
 
 msgid "The UI actions data could not be validated."
-msgstr ""
+msgstr "Nie udało się zweryfikować danych akcji interfejsu użytkownika."
 
 msgid "5 minutes"
 msgstr "5 minut"
@@ -2936,7 +2936,7 @@ msgid "The authentication method is required."
 msgstr "Metoda uwierzytelnienia jest wymagana."
 
 msgid "The authentication method should be one of the following: {0}."
-msgstr ""
+msgstr "Metoda uwierzytelnienia powinna być jedną z następujących: {0}."
 
 msgid "The sender email should be a valid email address."
 msgstr "Adres e-mail nadawcy powinien być prawidłowym adresem e-mail."
@@ -3026,13 +3026,13 @@ msgid "That's it!"
 msgstr "Gotowe!"
 
 msgid "A driver name is required."
-msgstr ""
+msgstr "Nazwa sterownika jest wymagana."
 
 msgid "The driver name should not be empty."
-msgstr ""
+msgstr "Nazwa sterownika nie powinna być pusta."
 
 msgid "The database driver should be one of the following: {0}."
-msgstr ""
+msgstr "Baza danych sterownika powinna być jedną z następujących: {0}."
 
 msgid "The password should not contain quotes."
 msgstr "Hasło nie powinno zawierać apostrofów."
@@ -3050,10 +3050,10 @@ msgid "The database name should not contain dashes."
 msgstr "Nazwa bazy danych nie powinna zawierać myślników."
 
 msgid "The schema is required on PostgreSQL"
-msgstr ""
+msgstr "Schemat jest wymagany w PostgreSQL"
 
 msgid "The schema should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Diagram powinien być prawidłowym ciągiem BMP-UTF8."
 
 msgid "An OpenPGP public key is required."
 msgstr "Klucz publiczny OpenPGP jest wymagany."
@@ -3212,10 +3212,10 @@ msgid "Database name"
 msgstr "Nazwa bazy danych"
 
 msgid "schema"
-msgstr ""
+msgstr "diagram"
 
 msgid "Schema"
-msgstr ""
+msgstr "Diagram"
 
 msgid "Enter your SMTP server settings."
 msgstr "Wpisz ustawienia Twojego serwera SMTP."
@@ -3494,13 +3494,13 @@ msgid "login"
 msgstr "logowanie"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Administrator {0} ({1}) został usunięty z organizacji w passbolt."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr ""
+msgstr "Użytkownik {0} usunął Cię z organizacji w passbolt."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
-msgstr ""
+msgstr "Jeśli uważasz, że to działanie wygląda podejrzanie, skontaktuj się z administratorem, który wykonał tę operację."
 
 msgid "Account suspended"
 msgstr "Konto zawieszone"
@@ -3518,13 +3518,13 @@ msgid "Contact your admin"
 msgstr "Skontaktuj się z administratorem"
 
 msgid "{0} changed role of {1} to admin."
-msgstr ""
+msgstr "Użytkownik {0} mianował użytkownika {1} administratorem."
 
 msgid "{0} changed your role to admin."
-msgstr ""
+msgstr "Użytkownik {0} mianował Cię administratorem."
 
 msgid "{0} can no longer perform administration tasks."
-msgstr ""
+msgstr "Użytkownik {0} nie może już wykonywać zadań administratorskich."
 
 msgid "You"
 msgstr "Ty"
