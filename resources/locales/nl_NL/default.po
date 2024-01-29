@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2023-10-27 11:15+0000\n"
-"PO-Revision-Date: 2023-10-27 14:26\n"
+"PO-Revision-Date: 2023-12-04 10:27\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -65,19 +65,19 @@ msgid "Page not found."
 msgstr "Pagina niet gevonden."
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr ""
+msgstr "Gebruik de extensie .json in de URL of accepteer applicatie/json."
 
 msgid "The request data can not be empty."
-msgstr ""
+msgstr "De aanvraaggegevens moeten ingevuld worden."
 
 msgid "You are successfully logged in."
 msgstr "Je bent met succes aangemeld."
 
 msgid "You are successfully logged out."
-msgstr ""
+msgstr "Je bent met succes uitgelogd."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "De uitlogroute mag alleen met de POST-methode worden benaderd."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "De openbare OpenPGP-sleutelinformatie werd niet gevonden in de configuratie."
@@ -185,7 +185,7 @@ msgid "Access restricted to administrators."
 msgstr "Toegang beperkt tot beheerders."
 
 msgid "Access restricted to unauthenticated users."
-msgstr ""
+msgstr "Beperkte toegang voor ongeauthenticeerde gebruikers."
 
 msgid "The user should not be logged in."
 msgstr ""
@@ -350,7 +350,7 @@ msgid "You are not authorized to edit the role."
 msgstr "Je bent niet bevoegd om de functie te bewerken."
 
 msgid "Multiple has-access filters are not supported."
-msgstr ""
+msgstr "Meerdere 'heeft toegang'-filters worden niet ondersteund."
 
 msgid "This operation is not allowed for this user."
 msgstr "Deze bewerking is niet toegestaan voor deze gebruiker."
@@ -365,13 +365,13 @@ msgid "Only guests are allowed to register."
 msgstr "Alleen gasten mogen zich registreren."
 
 msgid "Registration is not opened to public."
-msgstr ""
+msgstr "Registratie is niet openbaar."
 
 msgid "Please contact your administrator."
 msgstr "Neem contact op met je beheerder."
 
 msgid "This is due to a security setting."
-msgstr ""
+msgstr "Dit komt door een beveiligingsinstelling."
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "De gebruikers-ID moet een geldige UUID zijn."

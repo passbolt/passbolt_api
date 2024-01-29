@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2023-10-27 11:15+0000\n"
-"PO-Revision-Date: 2023-11-03 00:54\n"
+"PO-Revision-Date: 2023-12-11 16:40\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -1235,7 +1235,7 @@ msgid "Validation success for group {0}"
 msgstr "Validierung erfolgreich für Gruppe {0}"
 
 msgid "Could not validate group user data."
-msgstr "Konnte die Gruppenbenutzer*innen-Daten nicht validieren."
+msgstr "Konnte die Gruppenbenutzer-Daten nicht validieren."
 
 msgid "Could not validate sub key data."
 msgstr "Sub-Key Data konnte nicht validiert werden."
@@ -1505,7 +1505,7 @@ msgid "Invalid key. No OpenPGP public key package found."
 msgstr "Ungültiger Schlüssel. Kein OpenPGP öffentliches Schlüssel-Paket gefunden."
 
 msgid "Invalid key. No user ID found."
-msgstr "Ungültiger Schlüssel. Keine Benutzer*innen-ID gefunden."
+msgstr "Ungültiger Schlüssel. Keine Benutzer-ID gefunden."
 
 msgid "Unsupported algorithm."
 msgstr "Nicht unterstützter Algorithmus."
@@ -3632,7 +3632,7 @@ msgid "{0} deleted the user {1}"
 msgstr "{0} hat Benutzer*in {1} gelöscht"
 
 msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt."
-msgstr "Benutzer*in {0} {1} ({2}) wurde in Passbolt aus Ihrer Organisation gelöscht."
+msgstr "Der:die Benutzer:in {0} {1} ({2}) wurde in Passbolt aus Ihrer Organisation gelöscht."
 
 msgid "This user was a member of the following group(s) you manage:"
 msgstr "Diese*r Benutzer* war Mitglied der folgenden Gruppe(n) die Sie verwalten:"
@@ -3650,7 +3650,7 @@ msgid "As member of the group you now have access to all the passwords that are 
 msgstr "Als Mitglied der Gruppe haben Sie nun Zugriff auf alle Passwörter, die mit dieser Gruppe geteilt sind."
 
 msgid "And as group manager you are also authorized to edit the members of the group."
-msgstr "Und als Gruppen-Manager*in sind Sie auch berechtigt, die Mitglieder der Gruppe zu bearbeiten."
+msgstr "Und als Gruppen-Manager:in sind Sie auch berechtigt, die Mitglieder der Gruppe zu bearbeiten."
 
 msgid "You are no longer a member of this group."
 msgstr "Sie sind nicht mehr Mitglied dieser Gruppe."
@@ -3659,10 +3659,10 @@ msgid "You are no longer authorized to access the passwords shared with this gro
 msgstr "Sie sind nicht mehr berechtigt, auf die mit dieser Gruppe geteilten Passwörter zuzugreifen."
 
 msgid "Please contact {0} or another group manager if this is a mistake."
-msgstr "Bitte kontaktieren Sie {0} oder eine*n andere*n Gruppen-Manager*in, falls dies ein Fehler ist."
+msgstr "Bitte kontaktieren Sie {0} oder eine:n andere:n Gruppen-Manager:in, falls dies ein Fehler ist."
 
 msgid "You are now a group manager of this group."
-msgstr "Sie sind jetzt ein*e Gruppen-Manager*in dieser Gruppe."
+msgstr "Sie sind jetzt Gruppen-Manager:in dieser Gruppe."
 
 msgid "As group manager you are now authorized to edit the members of this group."
 msgstr "Als Gruppen-Manager*in sind Sie nun berechtigt, die Mitglieder dieser Gruppe zu bearbeiten."
@@ -3698,7 +3698,7 @@ msgid "You have saved a new password"
 msgstr "Sie haben ein neues Passwort gespeichert"
 
 msgid "Username: {0}"
-msgstr "Benutzer*innennamen: {0}"
+msgstr "Benutzername: {0}"
 
 msgid "URL: {0}"
 msgstr "URL: {0}"
@@ -3746,7 +3746,7 @@ msgid "This user was invited by {0} {1}."
 msgstr "Benutzer*in wurde durch {0} {1} eingeladen."
 
 msgid "view users"
-msgstr "Benutzer*innen anzeigen"
+msgstr "Benutzer anzeigen"
 
 msgid "This email is an automatic notification sent by"
 msgstr "Diese E-Mail ist eine automatische Benachrichtigung gesendet von"
