@@ -1,0 +1,295 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2020-11-11 13:56+0100\n"
+"PO-Revision-Date: 2024-01-29 14:45\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/cake.po\n"
+"X-Crowdin-File-ID: 338\n"
+"Language: ru_RU\n"
+
+#: Error/error400.php:36
+#: Error/error500.php:40
+msgid "Error"
+msgstr "Ошибка"
+
+#: Error/error400.php:37
+msgid "The requested address {0} was not found on this server."
+msgstr "Запрошенный адрес {0} не найден на этом сервере."
+
+#: Error/error500.php:38
+msgid "An Internal Error Has Occurred"
+msgstr "Произошла внутренняя ошибка"
+
+#: Controller/Component/AuthComponent.php:462
+msgid "You are not authorized to access that location."
+msgstr "У вас нет прав для доступа к этому местоположению."
+
+#: Error/ExceptionRenderer.php:304
+msgid "Not Found"
+msgstr "Не найдено"
+
+#: Error/ExceptionRenderer.php:306
+msgid "An Internal Error Has Occurred."
+msgstr "Произошла внутренняя ошибка."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:286
+msgid "Missing or incorrect CSRF cookie type."
+msgstr "Отсутствует или неправильный тип cookie CSRF."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:290
+msgid "Missing or invalid CSRF cookie."
+msgstr "Отсутствует или неправильный CSRF cookie."
+
+#: Http/Middleware/CsrfProtectionMiddleware.php:311
+msgid "CSRF token from either the request body or request headers did not match or is missing."
+msgstr "CSRF токен из тела запроса или заголовка запроса не совпадают или отсутствуют."
+
+#: Http/Response.php:1490
+msgid "The requested file contains `..` and will not be read."
+msgstr "Запрашиваемый файл содержит `..` и не может быть прочитан."
+
+#: Http/Response.php:1498
+msgid "The requested file was not found"
+msgstr "Запрашиваемый файл не найден"
+
+#: I18n/Number.php:116
+msgid "{0,number,#,###.##} KB"
+msgstr "{0,number,#,###.##} КБ"
+
+#: I18n/Number.php:118
+msgid "{0,number,#,###.##} MB"
+msgstr "{0,number,#,###.##} МБ"
+
+#: I18n/Number.php:120
+msgid "{0,number,#,###.##} GB"
+msgstr "{0,number,#,###.##} ГБ"
+
+#: I18n/Number.php:122
+msgid "{0,number,#,###.##} TB"
+msgstr "{0,number,#,###.##} ТБ"
+
+#: I18n/Number.php:114
+msgid "{0,number,integer} Byte"
+msgid_plural "{0,number,integer} Bytes"
+msgstr[0] "{0,number,integer} Байт"
+msgstr[1] "{0,number,integer} Байт"
+msgstr[2] "{0,number,integer} Байт"
+msgstr[3] "{0,number,integer} Байт"
+
+#: I18n/RelativeTimeFormatter.php:86
+msgid "{0} from now"
+msgstr "{0} с этого момента"
+
+#: I18n/RelativeTimeFormatter.php:86
+msgid "{0} ago"
+msgstr "{0} назад"
+
+#: I18n/RelativeTimeFormatter.php:89
+msgid "{0} after"
+msgstr "{0} после"
+
+#: I18n/RelativeTimeFormatter.php:89
+msgid "{0} before"
+msgstr "{0} до"
+
+#: I18n/RelativeTimeFormatter.php:120
+msgid "just now"
+msgstr "только что"
+
+#: I18n/RelativeTimeFormatter.php:157
+msgid "about a second ago"
+msgstr "около секунды назад"
+
+#: I18n/RelativeTimeFormatter.php:158
+msgid "about a minute ago"
+msgstr "около минуты назад"
+
+#: I18n/RelativeTimeFormatter.php:159
+msgid "about an hour ago"
+msgstr "около часа назад"
+
+#: I18n/RelativeTimeFormatter.php:160
+#: I18n/RelativeTimeFormatter.php:370
+msgid "about a day ago"
+msgstr "около одного дня назад"
+
+#: I18n/RelativeTimeFormatter.php:161
+#: I18n/RelativeTimeFormatter.php:371
+msgid "about a week ago"
+msgstr "около недели назад"
+
+#: I18n/RelativeTimeFormatter.php:162
+#: I18n/RelativeTimeFormatter.php:372
+msgid "about a month ago"
+msgstr "около месяца назад"
+
+#: I18n/RelativeTimeFormatter.php:163
+#: I18n/RelativeTimeFormatter.php:373
+msgid "about a year ago"
+msgstr "около года назад"
+
+#: I18n/RelativeTimeFormatter.php:174
+msgid "in about a second"
+msgstr "приблизительно через секунду"
+
+#: I18n/RelativeTimeFormatter.php:175
+msgid "in about a minute"
+msgstr "приблизительно через минуту"
+
+#: I18n/RelativeTimeFormatter.php:176
+msgid "in about an hour"
+msgstr "приблизительно через час"
+
+#: I18n/RelativeTimeFormatter.php:177
+#: I18n/RelativeTimeFormatter.php:384
+msgid "in about a day"
+msgstr "приблизительно через день"
+
+#: I18n/RelativeTimeFormatter.php:178
+#: I18n/RelativeTimeFormatter.php:385
+msgid "in about a week"
+msgstr "приблизительно через неделю"
+
+#: I18n/RelativeTimeFormatter.php:179
+#: I18n/RelativeTimeFormatter.php:386
+msgid "in about a month"
+msgstr "приблизительно через месяц"
+
+#: I18n/RelativeTimeFormatter.php:180
+#: I18n/RelativeTimeFormatter.php:387
+msgid "in about a year"
+msgstr "приблизительно через год"
+
+#: I18n/RelativeTimeFormatter.php:342
+msgid "today"
+msgstr "сегодня"
+
+#: I18n/RelativeTimeFormatter.php:409
+msgid "%s ago"
+msgstr "%s назад"
+
+#: I18n/RelativeTimeFormatter.php:410
+msgid "on %s"
+msgstr "на %s"
+
+#: I18n/RelativeTimeFormatter.php:53
+#: I18n/RelativeTimeFormatter.php:132
+#: I18n/RelativeTimeFormatter.php:354
+msgid "{0} year"
+msgid_plural "{0} years"
+msgstr[0] "{0} год"
+msgstr[1] "{0} лет"
+msgstr[2] "{0} лет"
+msgstr[3] "{0} лет"
+
+#: I18n/RelativeTimeFormatter.php:57
+#: I18n/RelativeTimeFormatter.php:135
+#: I18n/RelativeTimeFormatter.php:357
+msgid "{0} month"
+msgid_plural "{0} months"
+msgstr[0] "{0} месяц"
+msgstr[1] "{0} месяцев"
+msgstr[2] "{0} месяцев"
+msgstr[3] "{0} месяцев"
+
+#: I18n/RelativeTimeFormatter.php:63
+#: I18n/RelativeTimeFormatter.php:138
+#: I18n/RelativeTimeFormatter.php:360
+msgid "{0} week"
+msgid_plural "{0} weeks"
+msgstr[0] "{0} неделя"
+msgstr[1] "{0} недель"
+msgstr[2] "{0} недель"
+msgstr[3] "{0} недель"
+
+#: I18n/RelativeTimeFormatter.php:65
+#: I18n/RelativeTimeFormatter.php:141
+#: I18n/RelativeTimeFormatter.php:363
+msgid "{0} day"
+msgid_plural "{0} days"
+msgstr[0] "{0} день"
+msgstr[1] "{0} дней"
+msgstr[2] "{0} дней"
+msgstr[3] "{0} дней"
+
+#: I18n/RelativeTimeFormatter.php:70
+#: I18n/RelativeTimeFormatter.php:144
+msgid "{0} hour"
+msgid_plural "{0} hours"
+msgstr[0] "{0} час"
+msgstr[1] "{0} часов"
+msgstr[2] "{0} часов"
+msgstr[3] "{0} часов"
+
+#: I18n/RelativeTimeFormatter.php:74
+#: I18n/RelativeTimeFormatter.php:147
+msgid "{0} minute"
+msgid_plural "{0} minutes"
+msgstr[0] "{0} минута"
+msgstr[1] "{0} минут"
+msgstr[2] "{0} минут"
+msgstr[3] "{0} минут"
+
+#: I18n/RelativeTimeFormatter.php:78
+#: I18n/RelativeTimeFormatter.php:150
+msgid "{0} second"
+msgid_plural "{0} seconds"
+msgstr[0] "{0} секунда"
+msgstr[1] "{0} секунд"
+msgstr[2] "{0} секунд"
+msgstr[3] "{0} секунд"
+
+#: ORM/RulesChecker.php:55
+msgid "This value is already in use"
+msgstr "Это значение уже используется"
+
+#: ORM/RulesChecker.php:102
+msgid "This value does not exist"
+msgstr "Это значение не существует"
+
+#: ORM/RulesChecker.php:224
+msgid "Cannot modify row: a constraint for the `{0}` association fails."
+msgstr "Невозможно изменить строку: ограничение для ассоциации `{0} завершается не удачей."
+
+#: ORM/RulesChecker.php:262
+msgid "The count does not match {0}{1}"
+msgstr "Количество не соответствует {0}{1}"
+
+#: Utility/Text.php:915
+msgid "and"
+msgstr "и"
+
+#: Validation/Validator.php:2500
+msgid "This field is required"
+msgstr "Это обязательное поле"
+
+#: Validation/Validator.php:2520
+#: View/Form/ArrayContext.php:249
+msgid "This field cannot be left empty"
+msgstr "Это поле не может быть пустыми"
+
+#: Validation/Validator.php:2672
+msgid "The provided value is invalid"
+msgstr "Указанное значение является недопустимым"
+
+#: View/Helper/FormHelper.php:981
+msgid "Edit {0}"
+msgstr "Изменить {0}"
+
+#: View/Helper/FormHelper.php:983
+msgid "New {0}"
+msgstr "Новая {0}"
+
+#: View/Helper/FormHelper.php:1890
+msgid "Submit"
+msgstr "Отправить"
+
