@@ -21,17 +21,20 @@ use App\Model\Table\RolesTable;
 use App\Model\Validation\EmailValidationRule;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use App\Utility\Healthchecks;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
+use Cake\Http\Client;
 use Cake\ORM\TableRegistry;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class HealthcheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use HealthcheckRequestTestTrait;
     use PassboltCommandTestTrait;
     use SelfRegistrationTestTrait;
 
@@ -83,8 +86,11 @@ class HealthcheckCommandTest extends AppTestCase
     /**
      * Basic test
      */
-    public function testHealthcheckCommand()
+    public function testHealthcheckCommand_All_Checks()
     {
+        $this->mockService(Client::class, function () {
+            return $this->getMockedHealthcheckStatusRequest(400);
+        });
         $this->exec('passbolt healthcheck -d test');
         $this->assertExitSuccess();
         $this->assertOutputContains('<warning>[WARN] SSL peer certificate does not validate</warning>');
@@ -145,7 +151,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->setSelfRegistrationSettingsData();
         Configure::write(EmailValidationRule::MX_CHECK_KEY, false);
         Configure::write('passbolt.js.build', 'test');
-        Configure::write('passbolt.email.send', 'false');
+        Configure::write('passbolt.email.send.comment.add', false);
 
         $this->exec('passbolt healthcheck -d test --application');
 

@@ -20,6 +20,8 @@ namespace App\Test\TestCase\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
+use App\Service\Resources\PasswordExpiryDefaultValidationService;
+use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesAddService;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
@@ -53,12 +55,21 @@ class ResourcesAddServiceTest extends TestCase
      */
     private $Secrets;
 
+    private ResourcesAddService $service;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         ResourceTypeFactory::make()->default()->persist();
+        $this->service = new ResourcesAddService(new PasswordExpiryDefaultValidationService());
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        unset($this->service);
     }
 
     public function dataForTestResourceAddSuccess(): array
@@ -97,10 +108,8 @@ class ResourcesAddServiceTest extends TestCase
      */
     public function testResourceAddServiceSuccess(array $data)
     {
-        $user = UserFactory::make()->user()->persist();
-        $service = new ResourcesAddService();
-
-        $resource = $service->add($user->id, $data);
+        $uac = UserFactory::make()->persistedUAC();
+        $resource = $this->service->add($uac, $data);
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
@@ -110,30 +119,22 @@ class ResourcesAddServiceTest extends TestCase
         $this->assertSame($data['description'], $resource->get('description'));
     }
 
-    public function testResourceAddServiceNoIdUser()
-    {
-        $this->expectException(ValidationException::class);
-        // This UAC does not have an id
-        (new ResourcesAddService())->add('', []);
-    }
-
     public function testResourceAddServiceNoUser()
     {
-        $user = UserFactory::make(['id' => UuidFactory::uuid()])->user()->getEntity();
+        $uac = UserFactory::make()->nonPersistedUAC();
         $this->expectException(ValidationException::class);
         // This UAC is not persisted
-        (new ResourcesAddService())->add($user->id, []);
+        $this->service->add($uac, []);
     }
 
     public function testResourceAddServiceInvalidResourceType()
     {
         $data = $this->getDummyResourcesPostData();
         $data['resource_type_id'] = 'invalid';
-        $user = UserFactory::make()->user()->persist();
-        $service = new ResourcesAddService();
+        $uac = UserFactory::make()->persistedUAC();
 
         $this->expectException(ValidationException::class);
-        $service->add($user->id, $data);
+        $this->service->add($uac, $data);
 
         $this->assertSame(0, $this->Resources->find()->count());
         $this->assertSame(0, $this->Secrets->find()->count());
@@ -145,11 +146,10 @@ class ResourcesAddServiceTest extends TestCase
             0 => ['data' => $this->getDummyGpgMessage()],
             1 => ['user_id' => UuidFactory::uuid(), 'data' => $this->getDummyGpgMessage()],
         ]]);
-        $user = UserFactory::make()->user()->persist();
-        $service = new ResourcesAddService();
+        $uac = UserFactory::make()->persistedUAC();
 
         $this->expectException(ValidationException::class);
-        $service->add($user->id, $data);
+        $this->service->add($uac, $data);
 
         $this->assertSame(0, $this->Resources->find()->count());
         $this->assertSame(0, $this->Secrets->find()->count());
@@ -158,11 +158,10 @@ class ResourcesAddServiceTest extends TestCase
     public function testResourceAddServiceSoftDeletedUser()
     {
         $data = $this->getDummyResourcesPostData();
-        $user = UserFactory::make()->user()->patchData(['deleted' => true])->persist();
-        $service = new ResourcesAddService();
+        $uac = UserFactory::make()->user()->deleted()->persistedUAC();
 
         $this->expectException(ValidationException::class);
-        $resource = $service->add($user->id, $data);
+        $resource = $this->service->add($uac, $data);
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
@@ -178,10 +177,9 @@ class ResourcesAddServiceTest extends TestCase
         $data['description'] = 'Foo description';
         $data['resource_type_id'] = ResourceTypesTable::getPasswordAndDescriptionTypeId();
 
-        $user = UserFactory::make()->user()->persist();
-        $service = new ResourcesAddService();
+        $uac = UserFactory::make()->user()->persistedUAC();
 
-        $resource = $service->add($user->id, $data);
+        $resource = $this->service->add($uac, $data);
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
@@ -191,5 +189,13 @@ class ResourcesAddServiceTest extends TestCase
 
         $this->assertSame(ResourceTypesTable::getPasswordAndDescriptionTypeId(), $resource->resource_type_id);
         $this->assertNull($resource->description);
+    }
+
+    public function testResourceAddService_With_Expiry_Date_Should_Not_Throw_Bad_Request_Exception_When_Password_Expiry_Plugin_Is_Not_Enabled()
+    {
+        $uac = UserFactory::make()->persistedUAC();
+        $this->expectExceptionMessage('Could not validate resource data.');
+        $this->expectException(ValidationException::class);
+        $this->service->add($uac, [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'foo']);
     }
 }

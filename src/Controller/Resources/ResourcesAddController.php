@@ -19,7 +19,6 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Service\Resources\ResourcesAddService;
-use Cake\Event\EventInterface;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -27,42 +26,20 @@ use Cake\Event\EventInterface;
 class ResourcesAddController extends AppController
 {
     /**
-     * @var \App\Service\Resources\ResourcesAddService
-     */
-    protected $resourcesAddService;
-
-    /**
-     * @var \App\Model\Table\ResourcesTable
-     */
-    protected $Resources;
-
-    /**
-     * @inheritDoc
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->Resources = $this->fetchTable('Resources');
-
-        $this->resourcesAddService = new ResourcesAddService();
-
-        $this->createAfterSaveEvent();
-    }
-
-    /**
      * Resource Add action
      *
+     * @param \App\Service\Resources\ResourcesAddService $resourcesAddService Service adding the resource
      * @return void
      * @throws \Exception
      * @throws \App\Error\Exception\ValidationException if the resource is not valid.
      * @throws \Cake\Http\Exception\ServiceUnavailableException if parallel requests lead to a table lock albeit multiple attempts.
      */
-    public function add()
+    public function add(ResourcesAddService $resourcesAddService)
     {
         $this->assertJson();
 
-        $resource = $this->resourcesAddService->add(
-            $this->User->id(),
+        $resource = $resourcesAddService->add(
+            $this->User->getAccessControl(),
             $this->getRequest()->getData()
         );
 
@@ -73,28 +50,10 @@ class ResourcesAddController extends AppController
                 'secret' => true, 'permission' => true,
             ],
         ];
-        $resource = $this->Resources->findView($this->User->id(), $resource->id, $options)->first();
+        /** @var \App\Model\Table\ResourcesTable $Resources */
+        $Resources = $this->fetchTable('Resources');
+        $resource = $Resources->findView($this->User->id(), $resource->id, $options)->first();
 
         $this->success(__('The resource has been added successfully.'), $resource);
-    }
-
-    /**
-     * Create the after save events on the Resources table.
-     *
-     * @return void
-     */
-    protected function createAfterSaveEvent(): void
-    {
-        $this->Resources->getEventManager()->on(
-            'Model.afterSave',
-            ['priority' => 1],
-            function (EventInterface $event, $resource) {
-                $this->resourcesAddService->afterSave(
-                    $resource,
-                    $this->User->getAccessControl(),
-                    $this->getRequest()->getData()
-                );
-            }
-        );
     }
 }

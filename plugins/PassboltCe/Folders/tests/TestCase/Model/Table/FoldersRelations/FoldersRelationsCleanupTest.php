@@ -212,6 +212,7 @@ class FoldersRelationsCleanupTest extends FoldersTestCase
         // - A folder at the root of multiple users trees
         // - A resource placed in a folder of a user tree
         $folderA = FolderFactory::make()->withPermissionsFor([$userAda, $userBetty])->withFoldersRelationsFor([$userAda, $userBetty])->persist();
+        /** @var \App\Model\Entity\Resource $resourceA */
         $resourceA = ResourceFactory::make()->withFoldersRelationsFor([$userAda], $folderA)->withPermissionsFor([$userAda])->persist();
 
         // The resources missing a folder relation:

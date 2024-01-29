@@ -20,8 +20,10 @@ use App\Command\InstallCommand;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Http\Client;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Faker\Factory;
@@ -30,6 +32,7 @@ use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTra
 class InstallCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use HealthcheckRequestTestTrait;
     use EmailNotificationSettingsTestTrait;
     use EmailQueueTrait;
     use PassboltCommandTestTrait;
@@ -47,6 +50,9 @@ class InstallCommandTest extends AppTestCase
         $this->emptyDirectory(CACHE . 'database' . DS);
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->loadNotificationSettings();
+        $this->mockService(Client::class, function () {
+            return $this->getMockedHealthcheckStatusRequest();
+        });
     }
 
     public function tearDown(): void

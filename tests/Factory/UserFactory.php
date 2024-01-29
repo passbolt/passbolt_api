@@ -240,4 +240,25 @@ class UserFactory extends CakephpBaseFactory
             'data' => null,
         ]);
     }
+
+    /**
+     * @param string $firstname Profile first name
+     * @param string $lastname Profile last name
+     * @return self
+     */
+    public function withProfileName(string $firstname, string $lastname): self
+    {
+        return $this->with('Profiles', [
+            'first_name' => $firstname,
+            'last_name' => $lastname,
+        ]);
+    }
+
+    /**
+     * @return $this
+     */
+    public function withValidGpgKey()
+    {
+        return $this->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey());
+    }
 }

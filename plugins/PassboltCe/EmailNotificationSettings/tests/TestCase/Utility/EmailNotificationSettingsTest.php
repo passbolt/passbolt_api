@@ -25,6 +25,8 @@ use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTra
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\Folders\FoldersPlugin;
 use Passbolt\Folders\Notification\NotificationSettings\FolderNotificationSettingsDefinition;
+use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
+use Passbolt\PasswordExpiryPolicies\PasswordExpiryPoliciesPlugin;
 
 /**
  * @covers \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings
@@ -43,6 +45,15 @@ class EmailNotificationSettingsTest extends AppTestCase
         $this->loadNotificationSettings();
         // Set default config
         Configure::write('passbolt.email', self::getDefaultEmailNotificationConfig());
+        // Enable folders and password expiry email notifications
+        $this->loadPlugins([
+            PasswordExpiryPlugin::class => [],
+        ]);
+        if (class_exists(PasswordExpiryPoliciesPlugin::class)) {
+            $this->loadPlugins([
+                PasswordExpiryPoliciesPlugin::class => [],
+            ]);
+        }
     }
 
     /**

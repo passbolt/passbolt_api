@@ -19,11 +19,10 @@ namespace App\Controller\Share;
 
 use App\Controller\AppController;
 use App\Model\Entity\Permission;
-use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Service\Resources\ResourcesShareService;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
@@ -35,8 +34,6 @@ use Cake\Validation\Validation;
  */
 class ShareController extends AppController
 {
-    public const SHARE_SUCCESS_EVENT_NAME = 'ShareController.share.success';
-
     /**
      * @var \App\Model\Table\ResourcesTable
      */
@@ -77,7 +74,7 @@ class ShareController extends AppController
         $this->_assertRequestParameters($resourceId);
         $data = $this->request->getData();
         $changes = Hash::get($data, 'permissions') ?? [];
-        $resourcesShareService = new ResourcesShareService();
+        $resourcesShareService = new ResourcesShareService(new ResourcesExpireResourcesFallbackServiceService());
         $dryRunResult = $resourcesShareService->shareDryRun($uac, $resourceId, $changes);
 
         $output = $this->_formatDryRunResult($dryRunResult['added'], $dryRunResult['deleted']);
@@ -88,6 +85,7 @@ class ShareController extends AppController
      * Share action
      *
      * @param string $resourceId The identifier of the resource to share
+     * @param \App\Service\Resources\ResourcesShareService $resourcesShareService Service to share resources
      * @throws \Cake\Http\Exception\BadRequestException if the resource id is not a uuid
      * @throws \Cake\Http\Exception\NotFoundException if the resource does not exist
      * @throws \Cake\Http\Exception\NotFoundException if the resource is soft deleted
@@ -97,7 +95,7 @@ class ShareController extends AppController
      * @return void
      * @throws \Exception If an expected error occurred
      */
-    public function share(string $resourceId): void
+    public function share(string $resourceId, ResourcesShareService $resourcesShareService): void
     {
         $this->assertJson();
 
@@ -107,10 +105,8 @@ class ShareController extends AppController
         $permissions = Hash::get($data, 'permissions') ?? [];
         $secrets = Hash::get($data, 'secrets') ?? [];
 
-        $resourcesShareService = new ResourcesShareService();
-        $resource = $resourcesShareService->share($uac, $resourceId, $permissions, $secrets);
+        $resourcesShareService->share($uac, $resourceId, $permissions, $secrets);
 
-        $this->_notifyUsers($resource, $data);
         $this->success(__('The operation was successful.'));
     }
 
@@ -188,22 +184,5 @@ class ShareController extends AppController
         }
 
         return $result;
-    }
-
-    /**
-     * Notify users
-     *
-     * @param \App\Model\Entity\Resource $resource affected resource
-     * @param array $data changes requested by resource owner
-     * @return void
-     */
-    protected function _notifyUsers(Resource $resource, array $data): void
-    {
-        $event = new Event(static::SHARE_SUCCESS_EVENT_NAME, $this, [
-            'resource' => $resource,
-            'changes' => $data,
-            'ownerId' => $this->User->id(),
-        ]);
-        $this->getEventManager()->dispatch($event);
     }
 }
