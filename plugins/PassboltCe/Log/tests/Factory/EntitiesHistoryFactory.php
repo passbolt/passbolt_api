@@ -17,10 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\Factory;
 
+use App\Test\Factory\ResourceFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
-use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Log\Model\Entity\EntityHistory;
 
 /**
@@ -64,7 +64,7 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ActionLogFactory $actionLogFactory ActionLog factory
+     * @param ?ActionLogFactory $actionLogFactory ActionLog factory
      * @return $this
      */
     public function withActionLog(?ActionLogFactory $actionLogFactory = null)
@@ -73,6 +73,7 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
+     * @param ?ResourceFactory $resourceFactory Resource factory
      * @return $this
      */
     public function withResource(?ResourceFactory $resourceFactory = null)
@@ -81,6 +82,7 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
+     * @param ?ResourceFactory $resourceFactory Resource factory
      * @return $this
      */
     public function withSecretAccessOnResource(?ResourceFactory $resourceFactory = null)

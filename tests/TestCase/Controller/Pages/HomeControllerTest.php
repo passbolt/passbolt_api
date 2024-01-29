@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Pages;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
 
 class HomeControllerTest extends AppIntegrationTestCase
 {
@@ -38,5 +39,24 @@ class HomeControllerTest extends AppIntegrationTestCase
         $this->get('/app/passwords');
         $this->assertResponseOk();
         $this->assertResponseContains('skeleton');
+    }
+
+    /**
+     * Make sure status code is 400 (not 5xx) when any set cookie name is invalid (contains special characters).
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testHome_InvalidCookieNameStatusCode(): void
+    {
+        $this->logInAsUser();
+        $this->enableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
+        // Set invalid cookie
+        $this->cookie('foo,_bar', 'test');
+
+        $this->get('/app/passwords');
+
+        $this->assertResponseCode(400);
+        $this->assertResponseContains('The cookie name `foo,_bar` contains invalid characters');
     }
 }

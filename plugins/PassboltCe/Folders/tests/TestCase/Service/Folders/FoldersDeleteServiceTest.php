@@ -138,9 +138,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
         $this->service->delete($uac, $folderA->id);
 
         $this->assertEmailQueueCount(2);
-        $this->assetEmailSubject('ada@passbolt.com', 'You deleted the folder A');
+        $this->assertEmailSubject('ada@passbolt.com', 'You deleted the folder A');
         $this->assertEmailInBatchContains('You deleted a folder', 'ada@passbolt.com');
-        $this->assetEmailSubject('betty@passbolt.com', 'Ada deleted the folder A');
+        $this->assertEmailSubject('betty@passbolt.com', 'Ada deleted the folder A');
         $this->assertEmailInBatchContains('Ada deleted a folder', 'betty@passbolt.com');
     }
 

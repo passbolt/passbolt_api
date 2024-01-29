@@ -11,6 +11,8 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.3.0
+ *
+ * @var \App\View\AppView $this
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
@@ -21,7 +23,7 @@ if (PHP_SAPI === 'cli') {
 $user = $body['user'];
 $operatorUsername = $body['operatorUsername'];
 
-echo $this->element('Email/module/avatar',[
+echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,

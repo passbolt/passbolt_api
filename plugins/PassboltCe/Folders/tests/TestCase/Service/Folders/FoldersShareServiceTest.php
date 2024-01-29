@@ -211,9 +211,9 @@ class FoldersShareServiceTest extends FoldersTestCase
         $this->service->share($uac, $folderA->id, $data);
 
         $this->assertEmailQueueCount(2);
-        $this->assetEmailSubject('betty@passbolt.com', 'Ada shared the folder A');
+        $this->assertEmailSubject('betty@passbolt.com', 'Ada shared the folder A');
         $this->assertEmailInBatchContains('Ada shared a folder with you', 'carol@passbolt.com');
-        $this->assetEmailSubject('carol@passbolt.com', 'Ada shared the folder A');
+        $this->assertEmailSubject('carol@passbolt.com', 'Ada shared the folder A');
         $this->assertEmailInBatchContains('Ada shared a folder with you', 'betty@passbolt.com');
     }
 

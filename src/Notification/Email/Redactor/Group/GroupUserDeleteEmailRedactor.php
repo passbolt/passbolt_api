@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Notification\Email\Redactor\Group;
 
 use App\Model\Entity\Group;
+use App\Model\Entity\GroupsUser;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
@@ -76,7 +77,8 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
         /** @var \App\Model\Entity\Group $group */
         $group = $event->getData('group');
-        $removedGroupsUsers = $event->getData('removedGroupsUsers');
+        $entitiesChanges = $event->getData('entitiesChanges');
+        $removedGroupsUsers = $entitiesChanges->getDeletedEntities(GroupsUser::class);
         $modifiedBy = $this->usersTable->findFirstForEmail($event->getData('userId'));
 
         $emails = $this->createGroupUserAddedUpdateEmails($group, $removedGroupsUsers, $modifiedBy);

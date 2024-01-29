@@ -17,13 +17,10 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Avatars;
 
-use App\Model\Table\AvatarsTable;
-use App\Test\Lib\Model\AvatarsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Laminas\Diactoros\UploadedFile;
 
 /**
@@ -31,9 +28,6 @@ use Laminas\Diactoros\UploadedFile;
  */
 class AvatarsValidationTest extends TestCase
 {
-    use AvatarsModelTrait;
-    use TruncateDirtyTables;
-
     /**
      * Test subject
      *
@@ -49,8 +43,7 @@ class AvatarsValidationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Avatars') ? [] : ['className' => AvatarsTable::class];
-        $this->Avatars = TableRegistry::getTableLocator()->get('Avatars', $config);
+        $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
     }
 
     /**
@@ -134,7 +127,7 @@ class AvatarsValidationTest extends TestCase
     public function testBuildRulesOnNonExistingProfile()
     {
         $data = [
-            'file' => $this->createUploadFile(),
+            'file' => $this->getMockBuilder(UploadedFile::class)->disableOriginalConstructor()->getMock(),
             'profile_id' => UuidFactory::uuid(),
         ];
         $avatar = $this->Avatars->newEntity($data);
