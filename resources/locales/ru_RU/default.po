@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-10-27 11:15+0000\n"
-"PO-Revision-Date: 2024-01-29 14:44\n"
+"POT-Creation-Date: 2024-01-30 05:39+0000\n"
+"PO-Revision-Date: 2024-01-30 07:46\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -898,9 +898,6 @@ msgstr "Сообщение не должно быть пустым."
 msgid "A secret already exists for the given user and resource."
 msgstr "Секрет уже существует для данного пользователя и ресурса."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Имя должно быть допустимой строкой BMP-UTF8."
-
 msgid "The user identifier by should be a valid UUID."
 msgstr "Идентификатор пользователя должен быть действительным UUID."
 
@@ -955,6 +952,9 @@ msgstr "Дата создания должна быть установлена �
 msgid "The key should not already be expired."
 msgstr "Срок действия ключа не должен быть истек."
 
+msgid "The date could not be parsed."
+msgstr ""
+
 msgid "The email should be a valid email address."
 msgstr "Электронная почта должна быть действительным адресом электронной почты."
 
@@ -976,6 +976,21 @@ msgstr "Статус удаления должен быть допустимым
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Идентификатор ключа должен быть строкой из 8 шестнадцатеричных символов."
 
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} обновил ваше членство в нескольких группах"
+
+msgid "{0} deleted several group memberships"
+msgstr ""
+
+msgid "You made changes on several resources"
+msgstr ""
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} внес изменения в несколько ресурсов"
+
+msgid "{0} shared several items with you"
+msgstr "{0} поделился с вами несколькими элементами"
+
 msgid "{0} just activated their account on passbolt"
 msgstr "{0} только что активировали свою учетную запись с помощью пароля"
 
@@ -993,6 +1008,9 @@ msgstr "{0} добавил вас в группу {1}"
 
 msgid "{0} requested you to add members to {1}"
 msgstr "{0} попросил вас добавить участников в {1}"
+
+msgid "You have been requested to add members to {0}"
+msgstr ""
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} удалил вас из группы {1}"
@@ -1014,6 +1032,9 @@ msgstr "Вы добавили пароль {0}"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} удалил пароль {1}"
+
+msgid "You edited the password {0}"
+msgstr ""
 
 msgid "{0} edited the password {1}"
 msgstr "{0} изменил пароль {1}"
@@ -1050,30 +1071,6 @@ msgstr "{0} был отключен"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Добро пожаловать в Passbolt, {0}!"
-
-msgid "{0} updated your memberships in several groups"
-msgstr "{0} обновил ваше членство в нескольких группах"
-
-msgid "Your membership in several groups changed in passbolt"
-msgstr "Ваше членство в нескольких группах изменилось в passbolt"
-
-msgid "{0} deleted several groups"
-msgstr "{0} удалил несколько групп"
-
-msgid "Several groups were deleted in passbolt"
-msgstr "Несколько групп были удалены в passbolt"
-
-msgid "{0} has made changes on several resources"
-msgstr "{0} внес изменения в несколько ресурсов"
-
-msgid "Multiple passwords have been changed in passbolt"
-msgstr "Несколько паролей были изменены в passbolt"
-
-msgid "{0} shared several items with you"
-msgstr "{0} поделился с вами несколькими элементами"
-
-msgid "Multiple passwords have been shared with you in passbolt"
-msgstr "Несколько паролей были переданы вам в passbolt"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Настройка темы очистки должна быть логическим значением."
@@ -1122,6 +1119,9 @@ msgstr "Параметр отправки обновленного пользо�
 
 msgid "The send on group manager updated setting should be a boolean."
 msgstr "Параметр отправки обновленного менеджера группы должен быть логическим."
+
+msgid "The send on group manager request add user should be a boolean."
+msgstr ""
 
 msgid "The send on password created setting should be a boolean."
 msgstr "Параметр отправки созданного пароля должен быть логическим."
@@ -1359,6 +1359,12 @@ msgstr "Успешная проверка для роли {0}"
 
 msgid "Could not validate secret data."
 msgstr "Не удалось проверить секретные данные."
+
+msgid "The group id should be a valid UUID."
+msgstr ""
+
+msgid "The users ids array should contain only valid UUIDs."
+msgstr ""
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "Ошибка проверки секрета {0}. {1}"
@@ -2506,6 +2512,72 @@ msgstr "Если вы не запрашивали это действие, об�
 msgid "Log in passbolt"
 msgstr "Войти"
 
+msgid "The automatic_expiry field must be true."
+msgstr ""
+
+msgid "The automatic_update field must be true."
+msgstr ""
+
+msgid "The value should be an array."
+msgstr "Значение должно быть массивом."
+
+msgid "{0} marked several passwords as expired"
+msgstr ""
+
+msgid "Some of your passwords expired"
+msgstr ""
+
+msgid "{0} marked the password {1} as expired"
+msgstr ""
+
+msgid "You edited the password expiry settings"
+msgstr ""
+
+msgid "{0} edited the password expiry settings"
+msgstr ""
+
+msgid "The send password expire setting should be a boolean."
+msgstr ""
+
+msgid "The password expiry setting does not exist."
+msgstr ""
+
+msgid "Could not validate the password expiry settings."
+msgstr ""
+
+msgid "The password expiry settings have been updated."
+msgstr ""
+
+msgid "View them in passbolt"
+msgstr ""
+
+msgid "{0} resources were affected."
+msgstr "Ресурсов {0} было затронуто."
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Было бы слишком много перечислять их здесь, но вы можете проверить их на passbolt."
+
+msgid "Change them in passbolt"
+msgstr ""
+
+msgid "You have been requested to change them"
+msgstr ""
+
+msgid "Access for users to your shared passwords have been revoked."
+msgstr ""
+
+msgid "These passwords are now marked as expired."
+msgstr ""
+
+msgid "Please rotate them to ensure continued security."
+msgstr ""
+
+msgid "Please rotate it to ensure continued security."
+msgstr ""
+
+msgid "Change it in passbolt "
+msgstr ""
+
 msgid "Could not retrieve the password policies."
 msgstr "Не удалось восстановить политики паролей."
 
@@ -2707,6 +2779,9 @@ msgstr "Запись RBAC уже существует для данного ид
 msgid "An entry already exists for the given role and action ids."
 msgstr "Запись уже существует для данной роли и идентификаторов действий."
 
+msgid "The control function is not allowed for this UI Action."
+msgstr ""
+
 msgid "An action already exists for the given name."
 msgstr "Действие уже существует для данного имени."
 
@@ -2778,6 +2853,9 @@ msgstr "Роль"
 
 msgid "No"
 msgstr "Нет"
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Имя должно быть допустимой строкой BMP-UTF8."
 
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "Слаг должен быть допустимой строкой BMP-UTF8."
@@ -3517,11 +3595,11 @@ msgstr "Другие пользователи все еще могут дели�
 msgid "Contact your admin"
 msgstr "Свяжитесь с вашим администратором"
 
-msgid "{0} changed role of {1} to admin."
-msgstr "{0} назначил {1} администратором."
+msgid "{0} changed your role to user."
+msgstr ""
 
-msgid "{0} changed your role to admin."
-msgstr "{0} назначил вас администратором."
+msgid "{0} changed the role of {1} to user."
+msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} больше не может выполнять административные функции."
@@ -3616,6 +3694,12 @@ msgstr "Вы только что создали свою учетную запи
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Вы только что открыли учетную запись в системе passbolt по адресу {0}."
 
+msgid "There was a change in the user directory."
+msgstr ""
+
+msgid "You have been requested to add members to a group."
+msgstr ""
+
 msgid "{0} requested you to add members to a group"
 msgstr "{0} попросил вас добавить участников в группу"
 
@@ -3676,9 +3760,6 @@ msgstr "Вы больше не являетесь администратором
 msgid "You are no longer authorized to edit the members of this group."
 msgstr "У вас больше нет прав на редактирование участников этой группы."
 
-msgid "Edited your membership in several groups"
-msgstr "Отредактировал ваше членство в нескольких группах"
-
 msgid "{0} group memberships were affected."
 msgstr "Затронуто членство в группах: {0}."
 
@@ -3687,9 +3768,6 @@ msgstr "Было бы слишком много перечислять их зд
 
 msgid "go to passbolt"
 msgstr "перейти к проходному болту"
-
-msgid "{0} deleted several group"
-msgstr "{0} удалил несколько групп"
 
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} удалили {1} группы, в которых вы состояли."
@@ -3708,21 +3786,6 @@ msgstr "Описание: {0}"
 
 msgid "{0} shared a password with you"
 msgstr "{0} поделился с вами паролем"
-
-msgid "{0} updated the password {1}"
-msgstr "{0} обновил пароль {1}"
-
-msgid "Edited multiple resources"
-msgstr "Отредактировано несколько ресурсов"
-
-msgid "{0} resources were affected."
-msgstr "Ресурсов {0} было затронуто."
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "Было бы слишком много перечислять их здесь, но вы можете проверить их на passbolt."
-
-msgid "view them in passbolt"
-msgstr "посмотреть их в passbolt"
 
 msgid "{0} shared passwords with you"
 msgstr "{0} поделился с вами паролями"

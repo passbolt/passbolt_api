@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-10-27 11:15+0000\n"
-"PO-Revision-Date: 2023-10-27 14:26\n"
+"POT-Creation-Date: 2024-01-30 05:39+0000\n"
+"PO-Revision-Date: 2024-01-30 07:46\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -898,9 +898,6 @@ msgstr "メッセージは空にできません。"
 msgid "A secret already exists for the given user and resource."
 msgstr "秘密はすでに、指定されたユーザーとリソースに存在します。"
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "名前は有効なBMP-UTF8文字列でなければなりません。"
-
 msgid "The user identifier by should be a valid UUID."
 msgstr "ユーザー識別子は有効なUUIDでなければなりません。"
 
@@ -955,6 +952,9 @@ msgstr "作成日は過去に設定する必要があります。"
 msgid "The key should not already be expired."
 msgstr "キーの有効期限はまだ切れていないはずです。"
 
+msgid "The date could not be parsed."
+msgstr ""
+
 msgid "The email should be a valid email address."
 msgstr "メールアドレスは有効なメールアドレスにしてください。"
 
@@ -976,6 +976,21 @@ msgstr ""
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "キー識別子は8文字の16進数でなければなりません。"
 
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} さんが複数のグループのあなたのメンバーシップを更新しました"
+
+msgid "{0} deleted several group memberships"
+msgstr ""
+
+msgid "You made changes on several resources"
+msgstr ""
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} さんが複数のリソースで変更を行いました"
+
+msgid "{0} shared several items with you"
+msgstr "{0} さんが複数の項目をあなたと共有しました"
+
 msgid "{0} just activated their account on passbolt"
 msgstr "{0}さんがパスボルトでアカウントを有効化したところです"
 
@@ -993,6 +1008,9 @@ msgstr "{0} さんがあなたをグループ {1} に追加しました"
 
 msgid "{0} requested you to add members to {1}"
 msgstr "{0} さんがあなたに、メンバーを{1} に追加するようにリクエストしました"
+
+msgid "You have been requested to add members to {0}"
+msgstr ""
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} さんがグループ {1} からあなたを削除しました"
@@ -1014,6 +1032,9 @@ msgstr "あなたはパスワード {0} を追加しました"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} さんがパスワード {1} を削除しました"
+
+msgid "You edited the password {0}"
+msgstr ""
 
 msgid "{0} edited the password {1}"
 msgstr "{0} さんがパスワード {1} を編集しました"
@@ -1050,30 +1071,6 @@ msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "パスボルトへようこそ、 {0} さん！"
-
-msgid "{0} updated your memberships in several groups"
-msgstr "{0} さんが複数のグループのあなたのメンバーシップを更新しました"
-
-msgid "Your membership in several groups changed in passbolt"
-msgstr "パスボルトで複数のグループのあなたのメンバーシップが変更されました"
-
-msgid "{0} deleted several groups"
-msgstr "{0} さんが複数のグループを削除しました"
-
-msgid "Several groups were deleted in passbolt"
-msgstr "パスボルトで複数のグループが削除されました"
-
-msgid "{0} has made changes on several resources"
-msgstr "{0} さんが複数のリソースで変更を行いました"
-
-msgid "Multiple passwords have been changed in passbolt"
-msgstr "パスボルトで複数のパスワードが変更されました"
-
-msgid "{0} shared several items with you"
-msgstr "{0} さんが複数の項目をあなたと共有しました"
-
-msgid "Multiple passwords have been shared with you in passbolt"
-msgstr "パスボルトで複数のパスワードがあなたと共有されました"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "件名の消去設定はブール値にする必要があります。"
@@ -1122,6 +1119,9 @@ msgstr "グループユーザー更新時に送信する設定はブール値で
 
 msgid "The send on group manager updated setting should be a boolean."
 msgstr "グループマネージャー更新時に送信する設定はブール値である必要があります。"
+
+msgid "The send on group manager request add user should be a boolean."
+msgstr ""
 
 msgid "The send on password created setting should be a boolean."
 msgstr "パスワード作成時に送信する設定はブール値でなければなりません。"
@@ -1359,6 +1359,12 @@ msgstr "ロール {0} の検証に成功しました"
 
 msgid "Could not validate secret data."
 msgstr "秘密データを検証できませんでした。"
+
+msgid "The group id should be a valid UUID."
+msgstr ""
+
+msgid "The users ids array should contain only valid UUIDs."
+msgstr ""
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "秘密 {0} の検証に失敗しました。 {1}"
@@ -2506,6 +2512,72 @@ msgstr "この操作をリクエストしていない場合は、管理者に問
 msgid "Log in passbolt"
 msgstr "パスボルトにログイン"
 
+msgid "The automatic_expiry field must be true."
+msgstr ""
+
+msgid "The automatic_update field must be true."
+msgstr ""
+
+msgid "The value should be an array."
+msgstr ""
+
+msgid "{0} marked several passwords as expired"
+msgstr ""
+
+msgid "Some of your passwords expired"
+msgstr ""
+
+msgid "{0} marked the password {1} as expired"
+msgstr ""
+
+msgid "You edited the password expiry settings"
+msgstr ""
+
+msgid "{0} edited the password expiry settings"
+msgstr ""
+
+msgid "The send password expire setting should be a boolean."
+msgstr ""
+
+msgid "The password expiry setting does not exist."
+msgstr ""
+
+msgid "Could not validate the password expiry settings."
+msgstr ""
+
+msgid "The password expiry settings have been updated."
+msgstr ""
+
+msgid "View them in passbolt"
+msgstr ""
+
+msgid "{0} resources were affected."
+msgstr "{0}個のリソースが影響を受けました。"
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "ここではご紹介しきれないほどですが、パスボルト上でご確認いただけます。"
+
+msgid "Change them in passbolt"
+msgstr ""
+
+msgid "You have been requested to change them"
+msgstr ""
+
+msgid "Access for users to your shared passwords have been revoked."
+msgstr ""
+
+msgid "These passwords are now marked as expired."
+msgstr ""
+
+msgid "Please rotate them to ensure continued security."
+msgstr ""
+
+msgid "Please rotate it to ensure continued security."
+msgstr ""
+
+msgid "Change it in passbolt "
+msgstr ""
+
 msgid "Could not retrieve the password policies."
 msgstr ""
 
@@ -2707,6 +2779,9 @@ msgstr ""
 msgid "An entry already exists for the given role and action ids."
 msgstr ""
 
+msgid "The control function is not allowed for this UI Action."
+msgstr ""
+
 msgid "An action already exists for the given name."
 msgstr ""
 
@@ -2778,6 +2853,9 @@ msgstr "ロール"
 
 msgid "No"
 msgstr "いいえ"
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "名前は有効なBMP-UTF8文字列でなければなりません。"
 
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "スラッグは有効なBMP-UTF8文字列である必要があります。"
@@ -3517,10 +3595,10 @@ msgstr ""
 msgid "Contact your admin"
 msgstr ""
 
-msgid "{0} changed role of {1} to admin."
+msgid "{0} changed your role to user."
 msgstr ""
 
-msgid "{0} changed your role to admin."
+msgid "{0} changed the role of {1} to user."
 msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
@@ -3616,6 +3694,12 @@ msgstr "パスボルトにアカウントを作成しました！"
 msgid "You just opened an account on passbolt at {0}."
 msgstr "{0} でパスボルトのアカウントを開設しました。"
 
+msgid "There was a change in the user directory."
+msgstr ""
+
+msgid "You have been requested to add members to a group."
+msgstr ""
+
 msgid "{0} requested you to add members to a group"
 msgstr "{0}さんがあなたに、グループにメンバーを追加するようにリクエストしました"
 
@@ -3676,9 +3760,6 @@ msgstr "あなたはもうこのグループのグループマネージャーで
 msgid "You are no longer authorized to edit the members of this group."
 msgstr "このグループのメンバーを編集する権限がなくなりました。"
 
-msgid "Edited your membership in several groups"
-msgstr "複数のグループのメンバーシップを編集しました"
-
 msgid "{0} group memberships were affected."
 msgstr "{0}個のグループメンバーシップが影響を受けました。"
 
@@ -3687,9 +3768,6 @@ msgstr "ここではご紹介しきれないほどですが、パスボルト上
 
 msgid "go to passbolt"
 msgstr "パスボルトに行く"
-
-msgid "{0} deleted several group"
-msgstr "{0} さんが複数のグループを削除しました"
 
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0}さんが、あなたがメンバーだった {1}個のグループを削除しました。"
@@ -3708,21 +3786,6 @@ msgstr "説明: {0}"
 
 msgid "{0} shared a password with you"
 msgstr "{0}さんがパスワードを共有しました"
-
-msgid "{0} updated the password {1}"
-msgstr "{0}さんがパスワード {1} を更新しました"
-
-msgid "Edited multiple resources"
-msgstr "複数のリソースを編集しました"
-
-msgid "{0} resources were affected."
-msgstr "{0}個のリソースが影響を受けました。"
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "ここではご紹介しきれないほどですが、パスボルト上でご確認いただけます。"
-
-msgid "view them in passbolt"
-msgstr "パスボルトで表示する"
 
 msgid "{0} shared passwords with you"
 msgstr "{0}さんがパスワードを共有しました"
