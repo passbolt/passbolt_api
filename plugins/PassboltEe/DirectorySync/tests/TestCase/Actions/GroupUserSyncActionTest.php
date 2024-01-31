@@ -362,7 +362,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
-            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because they have not yet activated his account.',
+            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because they have not yet activated their account.',
         ];
         $this->assertReport($reports[1], $expectedUserGroupReport);
 
@@ -433,7 +433,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
-            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because they have not yet activated his account.',
+            'message' => 'The user ruth@passbolt.com could not be added to the group newgroup because they have not yet activated their account.',
         ];
         $this->assertReport($reports[2], $expectedUserGroupReport);
 
@@ -696,7 +696,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
             'model' => Alias::MODEL_GROUPS_USERS,
             'status' => Alias::STATUS_IGNORE,
             'type' => Alias::MODEL_GROUPS,
-            'message' => 'The user ruth@passbolt.com could not be added to the group Accounting because they have not yet activated his account.',
+            'message' => 'The user ruth@passbolt.com could not be added to the group Accounting because they have not yet activated their account.',
         ];
         $this->assertReport($reports[0], $expectedUserGroupReport);
 
