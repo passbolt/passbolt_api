@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-10-27 15:02+0200\n"
-"PO-Revision-Date: 2024-01-26 09:16\n"
+"POT-Creation-Date: 2024-01-30 05:45+0000\n"
+"PO-Revision-Date: 2024-01-30 15:40\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -898,9 +898,6 @@ msgstr "Die Nachricht darf nicht leer sein."
 msgid "A secret already exists for the given user and resource."
 msgstr "Für den angegebenen Benutzer und die Ressource existiert bereits ein Geheimnis."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Der Name sollte eine gültige BMP-UTF8-Zeichenkette sein."
-
 msgid "The user identifier by should be a valid UUID."
 msgstr "Die Benutzerkennung muss eine gültige UUID sein."
 
@@ -955,6 +952,9 @@ msgstr "Das Erstellungsdatum muss in der Vergangenheit liegen."
 msgid "The key should not already be expired."
 msgstr "Der Schlüssel darf nicht abgelaufen sein."
 
+msgid "The date could not be parsed."
+msgstr ""
+
 msgid "The email should be a valid email address."
 msgstr "Die E-Mail muss eine gültige E-Mail-Adresse sein."
 
@@ -982,6 +982,21 @@ msgstr "Die angegebene IP ist ungültig."
 msgid "The provided user agent is invalid."
 msgstr "Der angegebene User-Agent ist ungültig."
 
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} hat Ihre Mitgliedschaften in mehreren Gruppen aktualisiert"
+
+msgid "{0} deleted several group memberships"
+msgstr ""
+
+msgid "You made changes on several resources"
+msgstr ""
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} hat an mehreren Ressourcen Änderungen vorgenommen"
+
+msgid "{0} shared several items with you"
+msgstr "{0} hat mehrere Elemente mit Ihnen geteilt"
+
 msgid "{0} just activated their account on passbolt"
 msgstr "{0} hat gerade ihr*sein Konto bei Passwort aktiviert"
 
@@ -999,6 +1014,9 @@ msgstr "{0} hat Sie zur Gruppe {1} hinzugefügt"
 
 msgid "{0} requested you to add members to {1}"
 msgstr "{0} hat Sie gebeten, Mitglieder zu {1} hinzuzufügen"
+
+msgid "You have been requested to add members to {0}"
+msgstr ""
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} hat Sie aus der Gruppe {1} entfernt"
@@ -1020,6 +1038,9 @@ msgstr "Sie haben das Passwort {0} hinzugefügt"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} hat das Passwort {1} gelöscht"
+
+msgid "You edited the password {0}"
+msgstr ""
 
 msgid "{0} edited the password {1}"
 msgstr "{0} hat das Passwort {1} bearbeitet"
@@ -1056,30 +1077,6 @@ msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Willkommen bei passbolt, {0}!"
-
-msgid "{0} updated your memberships in several groups"
-msgstr "{0} hat Ihre Mitgliedschaften in mehreren Gruppen aktualisiert"
-
-msgid "Your membership in several groups changed in passbolt"
-msgstr "Ihre Mitgliedschaft in mehreren Gruppen hat sich in Passbolt geändert"
-
-msgid "{0} deleted several groups"
-msgstr "{0} hat mehrere Gruppen gelöscht"
-
-msgid "Several groups were deleted in passbolt"
-msgstr "Mehrere Gruppen wurden in Passbolt gelöscht"
-
-msgid "{0} has made changes on several resources"
-msgstr "{0} hat an mehreren Ressourcen Änderungen vorgenommen"
-
-msgid "Multiple passwords have been changed in passbolt"
-msgstr "Mehrere Passwörter wurden in Passbolt geändert"
-
-msgid "{0} shared several items with you"
-msgstr "{0} hat mehrere Elemente mit Ihnen geteilt"
-
-msgid "Multiple passwords have been shared with you in passbolt"
-msgstr "Mehrere Passwörter wurden mit Ihnen in Passbolt geteilt"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Die Einstellung Purify-Subject sollte ein Boolean sein."
@@ -1128,6 +1125,9 @@ msgstr "Die Einstellung \"Senden bei Aktualisierung der Gruppen-Benutzer*innen\"
 
 msgid "The send on group manager updated setting should be a boolean."
 msgstr "Die Einstellung \"Senden bei Aktualisierung der Gruppenmanager*in\" sollte ein Boolean sein."
+
+msgid "The send on group manager request add user should be a boolean."
+msgstr ""
 
 msgid "The send on password created setting should be a boolean."
 msgstr "Die Einstellung \"Senden beim Anlegen eines neuen Passworts\" sollte ein Boolean sein."
@@ -1365,6 +1365,12 @@ msgstr "Validierung erfolgreich für Rolle {0}"
 
 msgid "Could not validate secret data."
 msgstr "Secret Daten konnten nicht validiert werden."
+
+msgid "The group id should be a valid UUID."
+msgstr ""
+
+msgid "The users ids array should contain only valid UUIDs."
+msgstr ""
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "Validierung fehlgeschlagen für Secret {0}. {1}"
@@ -2512,6 +2518,72 @@ msgstr "Bitte kontaktieren Sie Ihren Administrator, wenn Sie diese Aktion nicht 
 msgid "Log in passbolt"
 msgstr "Bei Passbolt eInloggen"
 
+msgid "The automatic_expiry field must be true."
+msgstr ""
+
+msgid "The automatic_update field must be true."
+msgstr ""
+
+msgid "The value should be an array."
+msgstr "Der Wert sollte ein Array sein."
+
+msgid "{0} marked several passwords as expired"
+msgstr ""
+
+msgid "Some of your passwords expired"
+msgstr ""
+
+msgid "{0} marked the password {1} as expired"
+msgstr ""
+
+msgid "You edited the password expiry settings"
+msgstr ""
+
+msgid "{0} edited the password expiry settings"
+msgstr ""
+
+msgid "The send password expire setting should be a boolean."
+msgstr ""
+
+msgid "The password expiry setting does not exist."
+msgstr ""
+
+msgid "Could not validate the password expiry settings."
+msgstr ""
+
+msgid "The password expiry settings have been updated."
+msgstr ""
+
+msgid "View them in passbolt"
+msgstr ""
+
+msgid "{0} resources were affected."
+msgstr "{0} Ressourcen sind betroffen."
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Es wäre zu viel, sie hier aufzulisten, aber Sie können sie in Passbolt überprüfen."
+
+msgid "Change them in passbolt"
+msgstr ""
+
+msgid "You have been requested to change them"
+msgstr ""
+
+msgid "Access for users to your shared passwords have been revoked."
+msgstr ""
+
+msgid "These passwords are now marked as expired."
+msgstr ""
+
+msgid "Please rotate them to ensure continued security."
+msgstr ""
+
+msgid "Please rotate it to ensure continued security."
+msgstr ""
+
+msgid "Change it in passbolt "
+msgstr ""
+
 msgid "Could not retrieve the password policies."
 msgstr "Konnte die Passwortrichtlinien nicht abrufen."
 
@@ -2549,10 +2621,10 @@ msgid "The passphrase generator words is required."
 msgstr "Die Passwortgenerator-Maske Wörter ist erforderlich."
 
 msgid "The passphrase generator words should be between {0} and {1}."
-msgstr ""
+msgstr "Der Anzahl von Wörter sollte zwischen {0} und {1} liegen."
 
 msgid "The passphrase generator word separator is required."
-msgstr ""
+msgstr "Der Wortzwischenraum ist erforderlich."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
 msgstr ""
@@ -2713,6 +2785,9 @@ msgstr "Für die angegebene ID existiert bereits ein RBAC-Eintrag."
 msgid "An entry already exists for the given role and action ids."
 msgstr "Es existiert bereits ein Eintrag für die angegebene Rolle und Aktion IDs."
 
+msgid "The control function is not allowed for this UI Action."
+msgstr ""
+
 msgid "An action already exists for the given name."
 msgstr "Für den angegebenen Namen existiert bereits eine Aktion."
 
@@ -2784,6 +2859,9 @@ msgstr "Rolle"
 
 msgid "No"
 msgstr "Nein"
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Der Name sollte eine gültige BMP-UTF8-Zeichenkette sein."
 
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "Der Slug sollte eine gültige BMP-UTF8-Zeichenkette sein."
@@ -3982,8 +4060,8 @@ msgstr "Nur Administratoren können Benutzer-Logs ansehen."
 msgid "The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt."
 msgstr "Der Benutzer {0} konnte nicht zur Gruppe {1} hinzugefügt werden, da sein Konto bereits in Passbolt gelöscht wurde."
 
-msgid "The user {0} could not be added to the group {1} because he has not yet activated his account."
-msgstr "Der Benutzer {0} konnte nicht zur Gruppe {1} hinzugefügt werden, da er sein Konto noch nicht aktiviert hat."
+msgid "The user {0} could not be added to the group {1} because they have not yet activated his account."
+msgstr ""
 
 msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
 msgstr "Der Benutzer {0} kann nicht automatisch zur Gruppe {1} hinzugefügt werden. Eine E-Mail-Anfrage wurde an den/die Gruppenverwalter gesendet, um dies manuell durchzuführen."
@@ -4474,9 +4552,6 @@ msgstr "Das \"angemeldet bleiben für einen Monat\"-Feld ist erforderlich."
 msgid "The remember me for a month should be a boolean type."
 msgstr "Das \"angemeldet bleiben für einen Monat\"-Feld sollte ein boolscher Typ sein."
 
-msgid "The value should be an array."
-msgstr "Der Wert sollte ein Array sein."
-
 msgid "You edited the MFA policy"
 msgstr "Sie haben die MFA-Richtlinie bearbeitet"
 
@@ -4494,6 +4569,45 @@ msgstr "Für einen Monat merken: {0}"
 
 msgid "view it in passbolt"
 msgstr "in Passbolt anzeigen"
+
+msgid "You have passwords requiring your attention"
+msgstr ""
+
+msgid "Some of your passwords are expired."
+msgstr ""
+
+msgid "Some of your passwords are expiring in {0} days."
+msgstr ""
+
+msgid "Some of your passwords are expired or expiring in {0} days."
+msgstr ""
+
+msgid "The send password about to expire setting should be a boolean."
+msgstr ""
+
+msgid "Password expiry is not activated."
+msgstr ""
+
+msgid "Password expiry email notifications are disabled."
+msgstr ""
+
+msgid "An array of arrays is expected."
+msgstr ""
+
+msgid "The expiry date is required."
+msgstr ""
+
+msgid "The identifier should be unique: {0}."
+msgstr ""
+
+msgid "You are not allowed to update these resources."
+msgstr ""
+
+msgid "You are not allowed to update this resource: {0}"
+msgstr ""
+
+msgid "The resource with ID {0} does not exist."
+msgstr ""
 
 msgid "You edited the password policy"
 msgstr "Sie haben die Passwortrichtlinie bearbeitet"
@@ -5089,10 +5203,10 @@ msgstr ""
 msgid "Contact your admin"
 msgstr ""
 
-msgid "{0} changed role of {1} to admin."
+msgid "{0} changed your role to user."
 msgstr ""
 
-msgid "{0} changed your role to admin."
+msgid "{0} changed the role of {1} to user."
 msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
@@ -5185,6 +5299,12 @@ msgstr "Sie haben soeben Ihren Zugang in Passbolt erstellt!"
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Sie haben soeben einen Zugang in Passbolt unter {0} angelegt."
 
+msgid "There was a change in the user directory."
+msgstr ""
+
+msgid "You have been requested to add members to a group."
+msgstr ""
+
 msgid "{0} requested you to add members to a group"
 msgstr "{0} bittet Sie, Mitglieder zu einer Gruppe hinzuzufügen"
 
@@ -5245,9 +5365,6 @@ msgstr "Sie sind kein*e Manager*in dieser Gruppe mehr."
 msgid "You are no longer authorized to edit the members of this group."
 msgstr "Sie sind nicht mehr berechtigt, die Mitglieder dieser Gruppe zu bearbeiten."
 
-msgid "Edited your membership in several groups"
-msgstr "Bearbeitete Deine Mitgliedschaft in mehreren Gruppen"
-
 msgid "{0} group memberships were affected."
 msgstr "{0} Gruppenmitgliedschaften waren betroffen."
 
@@ -5256,9 +5373,6 @@ msgstr "Es wäre zu viel, sie hier aufzuzählen, aber Sie können mehr Informati
 
 msgid "go to passbolt"
 msgstr "zu Passbolt"
-
-msgid "{0} deleted several group"
-msgstr "{0} hat mehrere Gruppen gelöscht"
 
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} hat {1} Gruppen gelöscht, in denen Sie Mitglied waren."
@@ -5277,21 +5391,6 @@ msgstr "Beschreibung: {0}"
 
 msgid "{0} shared a password with you"
 msgstr "{0} hat ein Passwort mit Ihnen geteilt"
-
-msgid "{0} updated the password {1}"
-msgstr "{0} hat das Passwort {1} aktualisiert"
-
-msgid "Edited multiple resources"
-msgstr "Hat mehrere Ressourcen bearbeitet"
-
-msgid "{0} resources were affected."
-msgstr "{0} Ressourcen sind betroffen."
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "Es wäre zu viel, sie hier aufzulisten, aber Sie können sie in Passbolt überprüfen."
-
-msgid "view them in passbolt"
-msgstr "in Passbolt anzeigen"
 
 msgid "{0} shared passwords with you"
 msgstr "{0} hat Passwörter mit Ihnen geteilt"
