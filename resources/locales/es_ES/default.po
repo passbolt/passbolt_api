@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-01-30 05:39+0000\n"
-"PO-Revision-Date: 2024-02-01 09:14\n"
+"PO-Revision-Date: 2024-02-01 11:19\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -3290,10 +3290,10 @@ msgid "Database name"
 msgstr "Nombre de la base de datos"
 
 msgid "schema"
-msgstr ""
+msgstr "esquema"
 
 msgid "Schema"
-msgstr ""
+msgstr "Esquema"
 
 msgid "Enter your SMTP server settings."
 msgstr "Introduzca la configuración de su servidor SMTP."
@@ -3581,19 +3581,19 @@ msgid "Feel free to get in touch with the administrator at the origin of the ope
 msgstr "No dude en ponerse en contacto con el administrador en el origen de la operación si cree que esta acción parece sospechosa."
 
 msgid "Account suspended"
-msgstr ""
+msgstr "Cuenta suspendida"
 
 msgid "Your account has been suspended."
-msgstr ""
+msgstr "Su cuenta ha sido suspendida."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "No puede iniciar sesión en Passbolt ni recibir notificaciones por correo electrónico."
 
 msgid "Other users can still share resources with you and add you to a group."
-msgstr ""
+msgstr "Otros usuarios todavía pueden compartir recursos con usted y añadirle a un grupo."
 
 msgid "Contact your admin"
-msgstr ""
+msgstr "Contacte a su administrador"
 
 msgid "{0} changed your role to user."
 msgstr "{0} ha cambiado su rol a usuario."
@@ -3626,19 +3626,19 @@ msgid "Please check with them first to confirm."
 msgstr "Por favor, compruebe primero con ellos para confirmar."
 
 msgid "User suspended"
-msgstr ""
+msgstr "Usuario suspendido"
 
 msgid "The user {0} has been suspended."
-msgstr ""
+msgstr "El usuario {0} ha sido suspendido."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Este usuario no podrá iniciar sesión en Passbolt ni recibir notificaciones por correo electrónico."
 
 msgid "Other users can share resources and add this user to a group."
-msgstr ""
+msgstr "Otros usuarios pueden compartir recursos y añadir este usuario a un grupo."
 
 msgid "Check user suspension"
-msgstr ""
+msgstr "Comprobar suspensión del usuario"
 
 msgid "Welcome to {0}!"
 msgstr "¡Bienvenido a {0}!"
