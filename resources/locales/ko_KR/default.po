@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-01-30 05:39+0000\n"
-"PO-Revision-Date: 2024-01-30 07:46\n"
+"PO-Revision-Date: 2024-02-01 06:16\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -953,7 +953,7 @@ msgid "The key should not already be expired."
 msgstr "키가 이미 만료되지 않아야 합니다."
 
 msgid "The date could not be parsed."
-msgstr ""
+msgstr "날짜를 읽을 수 없습니다."
 
 msgid "The email should be a valid email address."
 msgstr "이메일은 유효한 이메일 주소여야 합니다."
@@ -980,10 +980,10 @@ msgid "{0} updated your memberships in several groups"
 msgstr "{0} 이(가) 여러 그룹의 구성원 자격을 업데이트함"
 
 msgid "{0} deleted several group memberships"
-msgstr ""
+msgstr "{0} 이(가) 여러 그룹 구성원을 삭제함"
 
 msgid "You made changes on several resources"
-msgstr ""
+msgstr "여러 리소스를 변경함"
 
 msgid "{0} has made changes on several resources"
 msgstr "{0} 이(가) 여러 리소스를 수정함"
@@ -1010,7 +1010,7 @@ msgid "{0} requested you to add members to {1}"
 msgstr "{0} 이(가) {1} 에 구성원 추가를 요청함"
 
 msgid "You have been requested to add members to {0}"
-msgstr ""
+msgstr "{0} 에 구성원을 추가하도록 요청되었습니다"
 
 msgid "{0} removed you from the group {1}"
 msgstr "{1} 그룹에 {0} 에 의해 당신이 삭제됨"
@@ -1034,7 +1034,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} 에 의해 {1} 비밀번호가 삭제됨"
 
 msgid "You edited the password {0}"
-msgstr ""
+msgstr "{0} 암호를 수정함"
 
 msgid "{0} edited the password {1}"
 msgstr "{0} 에 의해 {1} 비밀번호가 수정됨"
@@ -1121,7 +1121,7 @@ msgid "The send on group manager updated setting should be a boolean."
 msgstr "그룹에 관리자 수정시 보내기 설정은 부울이어야 합니다."
 
 msgid "The send on group manager request add user should be a boolean."
-msgstr ""
+msgstr "그룹에 관리자 요청시 보내기 설정은 부울이어야 합니다."
 
 msgid "The send on password created setting should be a boolean."
 msgstr "비밀번호 생성시 보내기 설정은 부울이어야 합니다."
@@ -1361,10 +1361,10 @@ msgid "Could not validate secret data."
 msgstr "비밀번호 데이터를 검사할 수 없습니다."
 
 msgid "The group id should be a valid UUID."
-msgstr ""
+msgstr "그룹 id는 올바른 UUID여야 합니다."
 
 msgid "The users ids array should contain only valid UUIDs."
-msgstr ""
+msgstr "사용자 ID 배열은 올바른 UUID만 포함해야 합니다."
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "{0} 비밀번호에 대한 검증이 실패되었습니다. {1}"
@@ -2513,43 +2513,43 @@ msgid "Log in passbolt"
 msgstr "패스볼트 로그인"
 
 msgid "The automatic_expiry field must be true."
-msgstr ""
+msgstr "Automatic_expiry 필드가 true 여야 합니다."
 
 msgid "The automatic_update field must be true."
-msgstr ""
+msgstr "automatic_update 필드가 true 여야 합니다."
 
 msgid "The value should be an array."
 msgstr "값은 배열이어야 합니다."
 
 msgid "{0} marked several passwords as expired"
-msgstr ""
+msgstr "{0} 이(가) 여러 암호를 만료된 것으로 표시했습니다"
 
 msgid "Some of your passwords expired"
-msgstr ""
+msgstr "암호 중 일부가 만료되었습니다"
 
 msgid "{0} marked the password {1} as expired"
-msgstr ""
+msgstr "{0} 이(가) {1} 암호를 만료된 것으로 표시했습니다"
 
 msgid "You edited the password expiry settings"
-msgstr ""
+msgstr "암호 만료 설정을 수정했습니다"
 
 msgid "{0} edited the password expiry settings"
-msgstr ""
+msgstr "{0} 이(가) 암호 만료 설정을 수정했습니다"
 
 msgid "The send password expire setting should be a boolean."
-msgstr ""
+msgstr "암호 만료 보내기 설정은 부울이어야 합니다."
 
 msgid "The password expiry setting does not exist."
-msgstr ""
+msgstr "암호 만료 설정이 없습니다."
 
 msgid "Could not validate the password expiry settings."
-msgstr ""
+msgstr "암호 만료 설정의 유효성을 검사할 수 없습니다."
 
 msgid "The password expiry settings have been updated."
-msgstr ""
+msgstr "암호 만료 설정이 업데이트되었습니다."
 
 msgid "View them in passbolt"
-msgstr ""
+msgstr "패스볼트에서 보기"
 
 msgid "{0} resources were affected."
 msgstr "{0} 개의 리소스가 영향을 받았습니다."
@@ -2558,25 +2558,25 @@ msgid "It would be too much to list them here, but you can go check them on pass
 msgstr "여기에 나열하는 건 무리겠지만, 패스볼트로 확인하시면 됩니다."
 
 msgid "Change them in passbolt"
-msgstr ""
+msgstr "패스볼트에서 변경"
 
 msgid "You have been requested to change them"
-msgstr ""
+msgstr "변경 요청을 받았습니다"
 
 msgid "Access for users to your shared passwords have been revoked."
-msgstr ""
+msgstr "공유 암호에 대한 사용자의 접근이 취소되었습니다."
 
 msgid "These passwords are now marked as expired."
-msgstr ""
+msgstr "이 암호들은 이제 만료로 표시되었습니다."
 
 msgid "Please rotate them to ensure continued security."
-msgstr ""
+msgstr "지속적인 보안을 위해 순환해 주세요."
 
 msgid "Please rotate it to ensure continued security."
-msgstr ""
+msgstr "지속적인 보안을 위해 순환해 주세요."
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "패스볼트에서 변경 "
 
 msgid "Could not retrieve the password policies."
 msgstr "암호 정책을 검색할 수 없습니다."
@@ -2780,7 +2780,7 @@ msgid "An entry already exists for the given role and action ids."
 msgstr "지정된 역할 및 작업 ID에 대한 항목이 이미 있습니다."
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "이 UI 작업에는 제어 기능이 허용되지 않습니다."
 
 msgid "An action already exists for the given name."
 msgstr "지정된 이름에 대한 작업이 이미 있습니다."
@@ -3596,10 +3596,10 @@ msgid "Contact your admin"
 msgstr "관리자에게 연락"
 
 msgid "{0} changed your role to user."
-msgstr ""
+msgstr "{0} 이(가) 사용자로 역할을 변경했습니다."
 
 msgid "{0} changed the role of {1} to user."
-msgstr ""
+msgstr "{0} 이(가) {1} 의 역할을 사용자로 변경했습니다."
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "{0} 이(가) 더 이상 관리 작업을 수행할 수 없습니다."
@@ -3695,10 +3695,10 @@ msgid "You just opened an account on passbolt at {0}."
 msgstr "{0} 에서 패스볼트에 대한 계정을 방금 개설했습니다."
 
 msgid "There was a change in the user directory."
-msgstr ""
+msgstr "사용자 디렉토리에 변경 사항이 있습니다."
 
 msgid "You have been requested to add members to a group."
-msgstr ""
+msgstr "그룹에 구성원을 추가하도록 요청되었습니다."
 
 msgid "{0} requested you to add members to a group"
 msgstr "{0} 이(가) {1} 에 구성원 추가를 요청함"
