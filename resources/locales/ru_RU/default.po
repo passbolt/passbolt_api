@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-01-30 05:39+0000\n"
-"PO-Revision-Date: 2024-01-30 07:46\n"
+"PO-Revision-Date: 2024-02-07 09:09\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -980,10 +980,10 @@ msgid "{0} updated your memberships in several groups"
 msgstr "{0} обновил ваше членство в нескольких группах"
 
 msgid "{0} deleted several group memberships"
-msgstr ""
+msgstr "{0} удалил несколько членов группы"
 
 msgid "You made changes on several resources"
-msgstr ""
+msgstr "Вы внесли изменения на нескольких ресурсах"
 
 msgid "{0} has made changes on several resources"
 msgstr "{0} внес изменения в несколько ресурсов"
@@ -1010,7 +1010,7 @@ msgid "{0} requested you to add members to {1}"
 msgstr "{0} попросил вас добавить участников в {1}"
 
 msgid "You have been requested to add members to {0}"
-msgstr ""
+msgstr "Вас попросили добавить участников в {0}"
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} удалил вас из группы {1}"
@@ -1034,7 +1034,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} удалил пароль {1}"
 
 msgid "You edited the password {0}"
-msgstr ""
+msgstr "Вы изменили пароль {0}"
 
 msgid "{0} edited the password {1}"
 msgstr "{0} изменил пароль {1}"
@@ -3698,7 +3698,7 @@ msgid "There was a change in the user directory."
 msgstr ""
 
 msgid "You have been requested to add members to a group."
-msgstr ""
+msgstr "Вас попросили добавить участников в группу."
 
 msgid "{0} requested you to add members to a group"
 msgstr "{0} попросил вас добавить участников в группу"
