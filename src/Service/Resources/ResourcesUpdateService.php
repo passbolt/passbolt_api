@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
@@ -76,7 +77,7 @@ class ResourcesUpdateService
     }
 
     /**
-     * Update a resource for the current user.
+     * Update a resource for the logged-in user.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $id The resource to update
@@ -184,6 +185,9 @@ class ResourcesUpdateService
         if (array_key_exists('resource_type_id', $data)) {
             $meta['resource_type_id'] = $data['resource_type_id'];
         }
+        if (array_key_exists('expired', $data)) {
+            $meta['expired'] = $data['expired'];
+        }
 
         return $meta;
     }
@@ -227,6 +231,7 @@ class ResourcesUpdateService
             'modified' => true,
             'modified_by' => true,
             'resource_type_id' => true,
+            'expired' => true,
         ];
 
         return $this->Resources->patchEntity($resource, $data, ['accessibleFields' => $accessibleFields]);
@@ -259,6 +264,7 @@ class ResourcesUpdateService
      */
     private function updateResourceSecrets(UserAccessControl $uac, Resource $resource, array $data): array
     {
+        $secrets = [];
         $usersIdsHavingAccess = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($resource->id);
         sort($usersIdsHavingAccess);
         $usersIdsSecretsProvided = Hash::extract($data, '{n}.user_id');
@@ -271,9 +277,10 @@ class ResourcesUpdateService
         }
 
         try {
-            $secrets = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+            $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
+            /** @var \App\Model\Entity\Secret[] $secrets */
+            $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
         } catch (CustomValidationException $e) {
-            $secrets = [];
             $resource->setError('secrets', $e->getErrors());
             $this->handleValidationErrors($resource);
         }

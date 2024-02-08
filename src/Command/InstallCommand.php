@@ -19,11 +19,13 @@ namespace App\Command;
 use App\Model\Entity\Role;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks;
+use App\Utility\Healthchecks\CoreHealthchecks;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
+use Cake\Http\Client;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
@@ -33,6 +35,19 @@ class InstallCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;
     use FeaturePluginAwareTrait;
+
+    private ?Client $client;
+
+    /**
+     * The client passed in the constructor might be null when run using the selenium tests
+     *
+     * @param ?\Cake\Http\Client $client client requesting the healthcheck status
+     */
+    public function __construct(?Client $client = null)
+    {
+        parent::__construct();
+        $this->client = $client;
+    }
 
     /**
      * @inheritDoc
@@ -321,7 +336,7 @@ class InstallCommand extends PassboltCommand
             }
 
             // Check application url config
-            $checks = Healthchecks::core();
+            $checks = (new CoreHealthchecks($this->client))->all($checks);
             if (!$checks['core']['fullBaseUrl'] && !$checks['core']['validFullBaseUrl']) {
                 $msg = __('The fullBaseUrl is not set or not valid. {0}', $checks['core']['info']['fullBaseUrl']);
                 throw new CakeException($msg);

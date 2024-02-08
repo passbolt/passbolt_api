@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Service\Folders;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
@@ -113,14 +114,16 @@ class FoldersShareService
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $permissionsData) {
             $isPersonal = $this->foldersRelationsTable->isItemPersonal($folder->id);
-            $result = $this->updatePermissions($uac, $folder, $permissionsData);
+            $entitiesChanges = $this->updatePermissions($uac, $folder, $permissionsData);
+            $addedPermissions = $entitiesChanges->getAddedEntities(Permission::class);
+            $deletedPermissions = $entitiesChanges->getDeletedEntities(Permission::class);
             // If the folder was a personal folder. Then move the content that was self organized and for which the user
             // does not have sufficient permission onto it (<UPDATE) to move into a shared folder.
-            if ($isPersonal && !empty($result['added'])) {
+            if ($isPersonal && !empty($addedPermissions)) {
                 $this->moveSelfOrganizedContentWithInsufficientPermissionToRoot($uac, $folder);
             }
-            $this->postPermissionsRevoked($folder, $result['removed']);
-            $this->postPermissionsAdded($uac, $folder, $result['added']);
+            $this->postPermissionsRevoked($folder, $deletedPermissions);
+            $this->postPermissionsAdded($uac, $folder, $addedPermissions);
         });
 
         return $folder;
@@ -172,26 +175,23 @@ class FoldersShareService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param array $changes The list of permissions changes
-     * @return array
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \App\Error\Exception\ValidationException If the permissions didn't validate
      * @throws \Exception If something went wrong
      */
-    private function updatePermissions(UserAccessControl $uac, Folder $folder, array $changes): array
+    private function updatePermissions(UserAccessControl $uac, Folder $folder, array $changes): EntitiesChangesDto
     {
-        $result = [
-            'added' => [],
-            'removed' => [],
-        ];
+        $entitiesChanges = new EntitiesChangesDto();
 
         try {
-            $result = $this->permissionsUpdatePermissionsService
+            $entitiesChanges = $this->permissionsUpdatePermissionsService
                 ->updatePermissions($uac, PermissionsTable::FOLDER_ACO, $folder->id, $changes);
         } catch (CustomValidationException $e) {
             $folder->setError('permissions', $e->getErrors());
             $this->handleValidationErrors($folder);
         }
 
-        return $result;
+        return $entitiesChanges;
     }
 
     /**

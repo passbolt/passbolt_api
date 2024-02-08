@@ -1,0 +1,3825 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"POT-Creation-Date: 2024-01-30 05:39+0000\n"
+"PO-Revision-Date: 2024-02-07 10:18\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: Russian\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=((n%10==1 && n%100!=11) ? 0 : ((n%10 >= 2 && n%10 <=4 && (n%100 < 12 || n%100 > 14)) ? 1 : ((n%10 == 0 || (n%10 >= 5 && n%10 <=9)) || (n%100 >= 11 && n%100 <= 14)) ? 2 : 3));\n"
+"X-Crowdin-Project: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
+"X-Crowdin-Project-ID: 2\n"
+"X-Crowdin-Language: ru\n"
+"X-Crowdin-File: /[passbolt.passbolt-ce-api] release/resources/locales/en_UK/default.po\n"
+"X-Crowdin-File-ID: 212\n"
+"Language: ru_RU\n"
+
+msgid "You need to login to access this location."
+msgstr "Вам необходимо войти в систему, чтобы получить доступ к этому местоположению."
+
+msgid "The server verify token is missing or invalid."
+msgstr "Токен проверки сервера отсутствует или недействителен."
+
+msgid "Decryption failed."
+msgstr "Расшифровка не удалась."
+
+msgid "Failed to create token."
+msgstr "Не удалось создать токен."
+
+msgid "The user token result should be a valid UUID."
+msgstr "Результат токена пользователя должен быть действительным UUID."
+
+msgid "The user token result could not be found "
+msgstr "Не удалось найти результат токена пользователя"
+
+msgid "The OpenPGP server key defined in the config cannot be used to decrypt."
+msgstr "Ключ сервера OpenPGP, указанный в конфигурации, нельзя использовать для расшифровки."
+
+msgid "Could not import the user OpenPGP key."
+msgstr "Не удалось импортировать пользовательский ключ OpenPGP."
+
+msgid "Invalid verify token format, "
+msgstr "Неверный формат токена подтверждения,"
+
+msgid "sections are missing or using wrong delimiters."
+msgstr "разделы отсутствуют или используют неправильные разделители."
+
+msgid "the version numbers do not match."
+msgstr "номера версий не совпадают."
+
+msgid "wrong version number."
+msgstr "неверный номер версии."
+
+msgid "it is not a UUID."
+msgstr "это не UUID."
+
+msgid "wrong token data length."
+msgstr "неправильная длина данных токена."
+
+msgid "There is no user associated with this key."
+msgstr "Нет пользователя, связанного с этим ключом."
+
+msgid "Page not found."
+msgstr "Страница не найдена."
+
+msgid "Please use .json extension in URL or accept application/json."
+msgstr "Пожалуйста, используйте расширение .json в URL или используйте application/json."
+
+msgid "The request data can not be empty."
+msgstr "Данные запроса не должны быть пустыми."
+
+msgid "You are successfully logged in."
+msgstr "Вы успешно вошли в систему."
+
+msgid "You are successfully logged out."
+msgstr "Вы успешно вышли из системы."
+
+msgid "The logout route should only be accessed with POST method."
+msgstr "Маршрут выхода должен быть доступен только методом POST."
+
+msgid "The OpenPGP public key information was not found in config."
+msgstr "Информация об открытом ключе OpenPGP не найдена в config."
+
+msgid "The operation was successful."
+msgstr "Операция прошла успешно."
+
+msgid "The comment was successfully added."
+msgstr "Комментарий был успешно добавлен."
+
+msgid "The comment was deleted."
+msgstr "Комментарий был удален."
+
+msgid "The comment id is not valid."
+msgstr "Идентификатор комментария недействителен."
+
+msgid "The comment was successfully updated."
+msgstr "Комментарий был успешно обновлен."
+
+msgid "Invalid order. \"{0}\" is not in the list of allowed order."
+msgstr "Неверный заказ. \"{0}\" отсутствует в списке допустимых порядков."
+
+msgid "Invalid order. \"{0}\" is not a valid order."
+msgstr "Неверный заказ. \"{0}\" не является допустимым заказом."
+
+msgid "Invalid order. \"{0}\" is not a valid field."
+msgstr "Неверный заказ. \"{0}\" не является допустимым полем."
+
+msgid "Invalid pagination."
+msgstr "Неверная нумерация страниц."
+
+msgid "Invalid query string. The filter parameter should be an array."
+msgstr "Недопустимая строка запроса. Параметр фильтра должен быть массивом."
+
+msgid "Invalid query string. The contain parameter should be an array."
+msgstr "Недопустимая строка запроса. Содержащийся параметр должен быть массивом."
+
+msgid "Invalid filter."
+msgstr "Неверный фильтр."
+
+msgid "Invalid order."
+msgstr "Неверный заказ."
+
+msgid "Invalid contain."
+msgstr "Недопустимое содержание."
+
+msgid "No validation rule for filter {0}. Please create one."
+msgstr "Нет правила проверки для фильтра {0}. Пожалуйста, создайте его."
+
+msgid "Filter {0} is not valid."
+msgstr "Фильтр {0} недействителен."
+
+msgid "\"{0}\" is not a valid value for filter {1}."
+msgstr "\"{0}\" не является допустимым значением для фильтра {1}."
+
+msgid "\"{0}\" is not a valid search filter."
+msgstr "\"{0}\" не является допустимым поисковым фильтром."
+
+msgid "\"{0}\" is not a valid search filter. It is not a UTF8 string."
+msgstr "\"{0}\" не является допустимым поисковым фильтром. Это не строка UTF8."
+
+msgid "It should be between 1 and 64 char in length."
+msgstr "Длина должна быть от 1 до 64 символов."
+
+msgid "\"{0}\" is not a valid user filter."
+msgstr "\"{0}\" не является допустимым пользовательским фильтром."
+
+msgid "\"{0}\" is not a valid user id for filter {1}."
+msgstr "\"{0}\" не является допустимым идентификатором пользователя для фильтра {1}."
+
+msgid "\"{0}\" is not a valid group filter."
+msgstr "\"{0}\" не является допустимым групповым фильтром."
+
+msgid "\"{0}\" is not a valid parent filter."
+msgstr "\"{0}\" не является допустимым родительским фильтром."
+
+msgid "\"{0}\" is not a valid resource id for filter {1}."
+msgstr "\"{0}\" не является допустимым идентификатором ресурса для фильтра {1}."
+
+msgid "\"{0}\" is not a valid group id for filter {1}."
+msgstr "\"{0}\" не является допустимым идентификатором группы для фильтра {1}."
+
+msgid "\"{0}\" is not a valid parent id for filter {1}."
+msgstr "\"{0}\" не является допустимым родительским идентификатором для фильтра {1}."
+
+msgid "\"{0}\" is not a valid timestamp for filter {1}."
+msgstr "\"{0}\" не является допустимой отметкой времени для фильтра {1}."
+
+msgid "\"{0}\" is not a valid datetime for filter {1}."
+msgstr "\"{0}\" не является допустимой датой и временем для фильтра {1}."
+
+msgid "\"{0}\" is not a valid order."
+msgstr "\"{0}\" не является допустимым заказом."
+
+msgid "\"{0}\" is not in the list of allowed order."
+msgstr "\"{0}\" отсутствует в списке допустимых порядков."
+
+msgid "\"{0}\" is not a valid contain value."
+msgstr "\"{0}\" не является допустимым значением содержимого."
+
+msgid "undefined user agent"
+msgstr "неопределенный пользовательский агент"
+
+msgid "Access restricted to administrators."
+msgstr "Доступ ограничен администраторами."
+
+msgid "Access restricted to unauthenticated users."
+msgstr "Доступ ограничен для неавторизованных пользователей."
+
+msgid "The user should not be logged in."
+msgstr "Пользователь не должен быть авторизован."
+
+msgid "This feature is not supported by your version of passbolt."
+msgstr "Эта функция не поддерживается вашей версией passbolt."
+
+msgid "The resource identifier should be a valid UUID."
+msgstr "Идентификатор ресурса должен быть допустимым UUID."
+
+msgid "The resource was marked as favorite."
+msgstr "Ресурс был отмечен как избранный."
+
+msgid "The favorite id is not valid."
+msgstr "Идентификатор избранного недействителен."
+
+msgid "The favorite was deleted."
+msgstr "Избранное удалено."
+
+msgid "The OpenPGP key identifier should be a valid UUID."
+msgstr "Идентификатор ключа OpenPGP должен быть действительным UUID."
+
+msgid "The OpenPGP key does not exist."
+msgstr "Ключ OpenPGP не существует."
+
+msgid "The group has been added successfully."
+msgstr "Группа успешно добавлена."
+
+msgid "The group can be deleted."
+msgstr "Группу можно удалить."
+
+msgid "The group was deleted successfully."
+msgstr "Группа успешно удалена."
+
+msgid "You are not authorized to access that location."
+msgstr "У вас нет прав доступа к этому местоположению."
+
+msgid "The group identifier should be a valid UUID."
+msgstr "Идентификатор группы должен быть допустимым UUID."
+
+msgid "The group does not exist or has been already deleted."
+msgstr "Группа не существует или уже удалена."
+
+msgid "The group cannot be deleted."
+msgstr "Группа не может быть удалена."
+
+msgid "The permissions identifiers must be valid UUID."
+msgstr "Идентификаторы разрешений должны быть действительными UUID."
+
+msgid "The group id is not valid."
+msgstr "Идентификатор группы недействителен."
+
+msgid "The group does not exist."
+msgstr "Группа не существует."
+
+msgid "All checks ran successfully!"
+msgstr "Все проверки прошли успешно!"
+
+msgid "OK"
+msgstr "ХОРОШО"
+
+msgid "The identifier should be a valid UUID."
+msgstr "Идентификатор должен быть действительным UUID."
+
+msgid "The resource does not exist."
+msgstr "Ресурс не существует."
+
+msgid "The resource has been added successfully."
+msgstr "Ресурс успешно добавлен."
+
+msgid "The resource has been deleted successfully."
+msgstr "Ресурс успешно удален."
+
+msgid "You do not have the permission to delete this resource."
+msgstr "У вас нет разрешения на удаление этого ресурса."
+
+msgid "Could not delete the resource."
+msgstr "Не удалось удалить ресурс."
+
+msgid "The resource has been updated successfully."
+msgstr "Ресурс успешно обновлен."
+
+msgid "The secret does not exist."
+msgstr "Секрет не существует."
+
+msgid "Only guests are allowed to abort recovery process."
+msgstr "Только гостям разрешается прерывать процесс восстановления."
+
+msgid "An authentication token must be provided."
+msgstr "Должен быть предоставлен токен аутентификации."
+
+msgid "The recovery process was aborted."
+msgstr "Процесс восстановления был прерван."
+
+msgid "Only guests are allowed to complete setup."
+msgstr "Только гость может завершить настройку."
+
+msgid "The recovery was completed successfully."
+msgstr "Восстановление завершено успешно."
+
+msgid "Only guests are allowed to proceed with account recovery."
+msgstr "Только гости могут продолжить восстановление аккаунта."
+
+msgid "The setup was completed successfully."
+msgstr "Настройка завершена успешно."
+
+msgid "Only guests are allowed to start setup."
+msgstr "Только гость может начать установку."
+
+msgid "You are not authorized to share this resource."
+msgstr "У вас нет прав для совместного использования этого ресурса."
+
+msgid "Only administrators can add new users."
+msgstr "Только администраторы могут добавлять новых пользователей."
+
+msgid "The user was successfully added. This user now need to complete the setup."
+msgstr "Пользователь был успешно добавлен. Теперь этому пользователю необходимо завершить настройку."
+
+msgid "The user can be deleted."
+msgstr "Пользователь может быть удален."
+
+msgid "The user has been deleted successfully."
+msgstr "Пользователь успешно удален."
+
+msgid "The user identifier should be a valid UUID."
+msgstr "Идентификатор пользователя должен быть действительным UUID."
+
+msgid "You are not allowed to delete yourself."
+msgstr "Вы не можете удалить себя."
+
+msgid "The user does not exist or has been already deleted."
+msgstr "Пользователь не существует или уже удален."
+
+msgid "The user cannot be deleted."
+msgstr "Пользователь не может быть удален."
+
+msgid "The groups users identifiers must be valid UUID."
+msgstr "Идентификаторы пользователей групп должны быть действительными UUID."
+
+msgid "The user does not exist or has been deleted."
+msgstr "Пользователь не существует или был удален."
+
+msgid "Could not validate user data."
+msgstr "Не удалось проверить данные пользователя."
+
+msgid "Could not find the user data after save. Maybe it has been deleted in the meantime."
+msgstr "Не удалось найти данные пользователя после сохранения. Возможно, его удалили за это время."
+
+msgid "The user has been updated successfully."
+msgstr "Пользователь был успешно обновлен."
+
+msgid "Some user data should be provided."
+msgstr "Должны быть предоставлены некоторые пользовательские данные."
+
+msgid "Updating the OpenPGP key is not allowed."
+msgstr "Обновление ключа OpenPGP не допускается."
+
+msgid "Updating the groups is not allowed."
+msgstr "Обновление групп запрещено."
+
+msgid "You are not authorized to edit the role."
+msgstr "У вас нет прав на изменение роли."
+
+msgid "Multiple has-access filters are not supported."
+msgstr "Множественные фильтры доступа не поддерживаются."
+
+msgid "This operation is not allowed for this user."
+msgstr "Эта операция не разрешена для этого пользователя."
+
+msgid "Only guests are allowed to recover an account. Please logout first."
+msgstr "Только гостю разрешено восстанавливать учетную запись. Сначала выйдите из системы."
+
+msgid "Recovery process started, check your email."
+msgstr "Процесс восстановления запущен, проверьте почту."
+
+msgid "Only guests are allowed to register."
+msgstr "Только гость может зарегистрироваться."
+
+msgid "Registration is not opened to public."
+msgstr "Регистрация не открыта для публичного использования."
+
+msgid "Please contact your administrator."
+msgstr "Пожалуйста, свяжитесь с вашим администратором."
+
+msgid "This is due to a security setting."
+msgstr "Это объясняется настройкой безопасности."
+
+msgid "The user identifier should be a valid UUID or \"me\"."
+msgstr "Идентификатор пользователя должен быть действительным UUID или \"me\"."
+
+msgid "The user does not exist."
+msgstr "Пользователь не существует."
+
+msgid "No admin were found in the database."
+msgstr "В базе данных не было найдено ни одного администратора."
+
+msgid "Invalid expiry time {0}."
+msgstr "Некорректное время истечения {0}."
+
+msgid "The identifier should not be empty."
+msgstr "Идентификатор не должен быть пустым."
+
+msgid "The token should be a valid UUID."
+msgstr "Токен должен быть действительным UUID."
+
+msgid "A token is required."
+msgstr "Требуется токен."
+
+msgid "The token should not be empty."
+msgstr "Токен не должен быть пустым."
+
+msgid "The type should be one of the following: {0}."
+msgstr "Тип должен быть одним из следующих: {0}."
+
+msgid "A type is required."
+msgstr "Требуется тип."
+
+msgid "The type should not be empty."
+msgstr "Тип не должен быть пустым."
+
+msgid "A user identifier is required."
+msgstr "Требуется идентификатор пользователя."
+
+msgid "The user identifier should not be empty."
+msgstr "Идентификатор пользователя не должен быть пустым."
+
+msgid "The active status should be a valid boolean."
+msgstr "Активный статус должен быть допустимым логическим значением."
+
+msgid "An active status is required"
+msgstr "Требуется активный статус"
+
+msgid "It is not possible to create an authentication token for this user."
+msgstr "Невозможно создать токен аутентификации для этого пользователя."
+
+msgid "A file is required."
+msgstr "Требуется файл."
+
+msgid "The file should not be empty"
+msgstr "Файл не должен быть пустым"
+
+msgid "The file mime type should be one of the following: {0}."
+msgstr "Тип MIME файла должен быть одним из следующих: {0}."
+
+msgid "The file extension should be one of the following: {0}."
+msgstr "Расширение файла должно быть одним из следующих: {0}."
+
+msgid "The file is not valid, or exceeds max size of {0} bytes."
+msgstr "Файл недействителен или превышает максимальный размер {0} байт."
+
+msgid "Could not save the data in {0} format."
+msgstr "Не удалось сохранить данные в формате {0}."
+
+msgid "The parent comment identifier should be a valid UUID."
+msgstr "Идентификатор родительского комментария должен быть допустимым UUID."
+
+msgid "The commented object type should be one of the following: {0}."
+msgstr "Тип комментируемого объекта должен быть одним из следующих: {0}."
+
+msgid "The commented object type is required."
+msgstr "Требуется тип комментируемого объекта."
+
+msgid "The commented object type should not be empty."
+msgstr "Тип комментируемого объекта не должен быть пустым."
+
+msgid "The commented object identifier should be a valid UUID."
+msgstr "Идентификатор комментируемого объекта должен быть допустимым UUID."
+
+msgid "The commented object identifier is required."
+msgstr "Требуется идентификатор комментируемого объекта."
+
+msgid "The commented object identifier should not be empty."
+msgstr "Идентификатор комментируемого объекта не должен быть пустым."
+
+msgid "The content should be a valid UTF8 string."
+msgstr "Содержимое должно быть допустимой строкой UTF8."
+
+msgid "A content is required"
+msgstr "Требуется содержание"
+
+msgid "The content should not be empty"
+msgstr "Содержимое не должно быть пустым"
+
+msgid "The content length should be between {0} and {1} characters."
+msgstr "Длина содержимого должна быть между {0} и {1} символами."
+
+msgid "The identifier of the user who created the comment should be a valid UUID."
+msgstr "Идентификатор пользователя, создавшего комментарий, должен быть допустимым UUID."
+
+msgid "The identifier of the user who created the comment is required."
+msgstr "Требуется идентификатор пользователя, создавшего комментарий."
+
+msgid "The identifier of the user who created the comment should not be empty."
+msgstr "Необходимо указать идентификатор пользователя, создавшего комментарий."
+
+msgid "The identifier of the user who modified the comment should be a valid UUID."
+msgstr "Идентификатор пользователя, изменившего комментарий, должен быть допустимым UUID."
+
+msgid "The identifier of the user who modified the comment required."
+msgstr "Идентификатор пользователя, изменившего необходимый комментарий."
+
+msgid "The identifier of the user who modified the comment should not be empty."
+msgstr "Укажите идентификатор пользователя, изменившего комментарий."
+
+msgid "Access denied."
+msgstr "В доступе отказано."
+
+msgid "The parent comment does not exist."
+msgstr "Родительский комментарий не существует."
+
+msgid "The user cannot update this comment."
+msgstr "Пользователь не может обновить этот комментарий."
+
+msgid "The user cannot delete this comment."
+msgstr "Пользователь не может удалить этот комментарий."
+
+msgid "The commented object type does not exist."
+msgstr "Комментируемый тип объекта не существует."
+
+msgid "The favorite object type should be one of the following: {0}."
+msgstr "Тип избранного объекта должен быть одним из следующих: {0}."
+
+msgid "The favorite object type is required."
+msgstr "Требуется любимый тип объекта."
+
+msgid "The favorite object type should not be empty"
+msgstr "Укажите тип избранного объекта."
+
+msgid "The favorite object identifier should be a valid UUID."
+msgstr "Идентификатор любимого объекта должен быть действительным UUID."
+
+msgid "The favorite object identifier is required."
+msgstr "Требуется идентификатор любимого объекта."
+
+msgid "The favorite object identifier should not be empty."
+msgstr "Идентификатор любимого объекта не должен быть пустым."
+
+msgid "The resource is already marked as favorite."
+msgstr "Ресурс уже отмечен как избранный."
+
+msgid "The user cannot delete this favorite."
+msgstr "Пользователь не может удалить это избранное."
+
+msgid "The armored key should be a valid ASCII string."
+msgstr "Армированный ключ должен быть допустимой строкой ASCII."
+
+msgid "An armored key is required."
+msgstr "Требуется бронированный ключ."
+
+msgid "The armored key should not be empty."
+msgstr "Бронированный ключ не должен быть пустым."
+
+msgid "The fingerprint should be a valid ASCII string."
+msgstr "Отпечаток пальца должен быть допустимой строкой ASCII."
+
+msgid "A fingerprint is required"
+msgstr "Требуется отпечаток пальца"
+
+msgid "The fingerprint should not be empty"
+msgstr "Необходимо указать отпечаток пальца."
+
+msgid "A length is required."
+msgstr "Требуется длина."
+
+msgid "The identifier should be a valid BMP-UTF8 string."
+msgstr "Идентификатор должен быть допустимой строкой BMP-UTF8."
+
+msgid "The key identifier should be a valid ASCII string."
+msgstr "Идентификатор ключа должен быть допустимой строкой ASCII."
+
+msgid "A key identifier is required."
+msgstr "Требуется идентификатор ключа."
+
+msgid "The key identifier should not be empty."
+msgstr "Идентификатор ключа не должен быть пустым."
+
+msgid "The type should be a valid ASCII string."
+msgstr "Тип должен быть допустимой строкой ASCII."
+
+msgid "A type is required"
+msgstr "Укажите тип"
+
+msgid "The type should not be empty"
+msgstr "Тип не должен быть пустым"
+
+msgid "The expiry should be a valid date."
+msgstr "Срок действия должен быть действительной датой."
+
+msgid "The creation date should be a valid date."
+msgstr "Дата создания должна быть действительной датой."
+
+msgid "A creation date is required."
+msgstr "Дата создания обязательна."
+
+msgid "The creation date should not be empty."
+msgstr "Дата создания не должна быть пустой."
+
+msgid "The deleted status should be a valid boolean."
+msgstr "Статус удаления должен быть допустимым логическим значением."
+
+msgid "A deleted status is required"
+msgstr "Требуется удаленный статус"
+
+msgid "A user identifier is required"
+msgstr "Требуется идентификатор пользователя"
+
+msgid "The user identifier should not be empty"
+msgstr "Укажите идентификатор пользователя."
+
+msgid "You cannot reuse the server keys."
+msgstr "Вы не можете повторно использовать ключи сервера."
+
+msgid "A valid OpenPGP key must be provided."
+msgstr "Должен быть предоставлен действительный ключ OpenPGP."
+
+msgid "The OpenPGP armored key could not be parsed."
+msgstr "Не удалось разобрать бронированный ключ OpenPGP."
+
+msgid "The OpenPGP armored key could not be validated."
+msgstr "Не удалось проверить защищенный ключ OpenPGP."
+
+msgid "The name should be a valid UTF8 string."
+msgstr "Имя должно быть допустимой строкой UTF8."
+
+msgid "The name length should be maximum {0} characters."
+msgstr "Длина имени не должна превышать {0} символов."
+
+msgid "A name is required."
+msgstr "Требуется имя."
+
+msgid "The name should not be empty."
+msgstr "Имя не должно быть пустым."
+
+msgid "The identifier of the user who created the group should be a valid UUID."
+msgstr "Идентификатор пользователя, создавшего группу, должен быть допустимым UUID."
+
+msgid "The identifier of the user who created the group is required."
+msgstr "Требуется идентификатор пользователя, создавшего группу."
+
+msgid "The identifier of the user who created the group should not be empty."
+msgstr "Укажите идентификатор пользователя, создавшего группу."
+
+msgid "The identifier of the user who modified the group should be a valid UUID."
+msgstr "Идентификатор пользователя, изменившего группу, должен быть допустимым UUID."
+
+msgid "The identifier of the user who modified the group is required."
+msgstr "Требуется идентификатор пользователя, изменившего группу."
+
+msgid "The identifier of the user who modified the group should not be empty."
+msgstr "Идентификатор пользователя, который изменил группу, не должен быть пустым."
+
+msgid "The name is already used by another group."
+msgstr "Имя уже используется другой группой."
+
+msgid "A group manager should be provided."
+msgstr "Должен быть назначен менеджер группы."
+
+msgid "The group should not be soft deleted."
+msgstr "Группа не должна быть мягко удалена."
+
+msgid "The group should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "Группа не должна быть единоличным владельцем общего контента, передавать право собственности другим пользователям."
+
+msgid "Could not validate group data."
+msgstr "Не удалось проверить данные группы."
+
+msgid "Could not delete the group {0}, please try again later."
+msgstr "Не удалось удалить группу {0}. Повторите попытку позже."
+
+msgid "A group identifier is required."
+msgstr "Требуется идентификатор группы."
+
+msgid "The group identifier should not be empty."
+msgstr "Идентификатор группы не должен быть пустым."
+
+msgid "The group manager status should be a valid boolean."
+msgstr "Статус менеджера группы должен быть допустимым логическим значением."
+
+msgid "A group manager status is required."
+msgstr "Требуется статус менеджера группы."
+
+msgid "The group manager status should not be empty."
+msgstr "Статус менеджера группы не должен быть пустым."
+
+msgid "The user is already member of this group."
+msgstr "Пользователь уже является членом этой группы."
+
+msgid "The property length should be maximum {0} characters."
+msgstr "Длина свойства не должна превышать {0} символов."
+
+msgid "A property is required."
+msgstr "Требуется недвижимость."
+
+msgid "The property should not be empty."
+msgstr "Свойство не должно быть пустым."
+
+msgid "The property should be an alphabetical string and only dot is accepted as special characters."
+msgstr "Свойство должно быть буквенной строкой, и в качестве специальных символов допускается только точка."
+
+msgid "The property identifier should be a valid UUID."
+msgstr "Идентификатор свойства должен быть допустимым UUID."
+
+msgid "A property identifier is required."
+msgstr "Требуется идентификатор свойства."
+
+msgid "The property identifier should not be empty."
+msgstr "Идентификатор свойства не должен быть пустым."
+
+msgid "The value should be a valid UTF8 string."
+msgstr "Значение должно быть допустимой строкой UTF8."
+
+msgid "The value length should be maximum {0} characters."
+msgstr "Длина значения должна быть не более {0} символов."
+
+msgid "A value is required."
+msgstr "Требуется значение."
+
+msgid "The value should not be empty."
+msgstr "Значение не должно быть пустым."
+
+msgid "This property id is already in use."
+msgstr "Этот идентификатор свойства уже используется."
+
+msgid "Only admin can create or update organization settings."
+msgstr "Только администратор может создавать или обновлять настройки организации."
+
+msgid "This is not a valid setting."
+msgstr "Это недопустимая настройка."
+
+msgid "The type of the access control object should be one of the following: {0}."
+msgstr "Тип объекта управления доступом должен быть одним из следующих: {0}."
+
+msgid "The type of the access control object is required."
+msgstr "Укажите тип объекта контроля доступа."
+
+msgid "The type of the access control object should not be empty."
+msgstr "Тип объекта управления доступом не должен быть пустым."
+
+msgid "The identifier of the access control object should be a valid UUID."
+msgstr "Идентификатор объекта управления доступом должен быть допустимым UUID."
+
+msgid "The identifier of the access control object is required."
+msgstr "Требуется идентификатор объекта контроля доступа."
+
+msgid "The identifier of the access control object should not be empty."
+msgstr "Укажите идентификатор объекта контроля доступа."
+
+msgid "The access request object type should be one of the following: {0}."
+msgstr "Тип объекта запроса доступа должен быть одним из следующих: {0}."
+
+msgid "The type of the access request object is required."
+msgstr "Укажите тип объекта запроса доступа."
+
+msgid "The access request object type should not be empty."
+msgstr "Тип объекта запроса доступа не должен быть пустым."
+
+msgid "The identifier of the access request object should be a valid UUID."
+msgstr "Идентификатор объекта запроса доступа должен быть допустимым UUID."
+
+msgid "The identifier of the access request object is required."
+msgstr "Требуется идентификатор объекта запроса доступа."
+
+msgid "The identifier of the access request object should not be empty."
+msgstr "Идентификатор объекта запроса доступа не должен быть пустым."
+
+msgid "A permission already exists for the given access control object and access request object."
+msgstr "Разрешение уже существует для данного объекта управления доступом и объекта запроса доступа."
+
+msgid "The access control object does not exist."
+msgstr "Объект управления доступом не существует."
+
+msgid "The access request object does not exist."
+msgstr "Объект запроса доступа не существует."
+
+msgid "A first name is required."
+msgstr "Требуется имя."
+
+msgid "The first name should not be empty."
+msgstr "Имя не должно быть пустым."
+
+msgid "The first name should be a valid BMP-UTF8 string."
+msgstr "Имя должно быть допустимой строкой BMP-UTF8."
+
+msgid "The first name length should be maximum {0} characters."
+msgstr "Длина имени не должна превышать {0} символов."
+
+msgid "A last name is required."
+msgstr "Требуется фамилия."
+
+msgid "The last name should not be empty."
+msgstr "Фамилия не должна быть пустой."
+
+msgid "The last name should be a valid BMP-UTF8 string."
+msgstr "Фамилия должна быть допустимой строкой BMP-UTF8."
+
+msgid "The last name length should be maximum {0} characters."
+msgstr "Длина фамилии не должна превышать {0} символов."
+
+msgid "The username should be a valid UTF8 string."
+msgstr "Имя пользователя должно быть допустимой строкой UTF8."
+
+msgid "The username length should be maximum {0} characters."
+msgstr "Длина имени пользователя не должна превышать {0} символов."
+
+msgid "The uri should be a valid BMP-UTF8 string."
+msgstr "URI должен быть допустимой строкой BMP-UTF8."
+
+msgid "The uri length should be maximum {0} characters."
+msgstr "Длина uri должна быть не более {0} символов."
+
+msgid "The description should be a valid UTF8 string."
+msgstr "Описание должно быть допустимой строкой UTF8."
+
+msgid "The description length should be maximum {0} characters."
+msgstr "Длина описания не должна превышать {0} символов."
+
+msgid "The deleted status should not be empty"
+msgstr "Статус удален не должен быть пустым"
+
+msgid "The identifier of the user who created the resource should be a valid UUID."
+msgstr "Идентификатор пользователя, создавшего ресурс, должен быть допустимым UUID."
+
+msgid "The identifier of the user who created the resource is required."
+msgstr "Требуется идентификатор пользователя, создавшего ресурс."
+
+msgid "The identifier of the user who created the resource should not be empty."
+msgstr "Идентификатор пользователя, создавшего ресурс, не должен быть пустым."
+
+msgid "The identifier of the user who last modified the resource should be a valid UUID."
+msgstr "Идентификатор пользователя, который последним изменил ресурс, должен быть допустимым UUID."
+
+msgid "The identifier of the user who last modified the resource required."
+msgstr "Идентификатор пользователя, который последним изменил требуемый ресурс."
+
+msgid "The identifier of the user who last modified the resource should not be empty."
+msgstr "Идентификатор пользователя, который последним модифицировал ресурс, не должен быть пустым."
+
+msgid "The resource type identifier should be a valid UUID."
+msgstr "Идентификатор типа ресурса должен быть допустимым UUID."
+
+msgid "A resource type identifier is required."
+msgstr "Требуется идентификатор типа ресурса."
+
+msgid "The permissions are required."
+msgstr "Требуются разрешения."
+
+msgid "The permissions should not be empty."
+msgstr "Разрешения не должны быть пустыми."
+
+msgid "The permissions should contain only the permission of the owner."
+msgstr "Разрешения должны содержать только разрешение владельца."
+
+msgid "The owner secret is required."
+msgstr "Требуется секрет владельца."
+
+msgid "The secrets should not be empty."
+msgstr "Секреты не должны быть пустыми."
+
+msgid "The secrets should contain only the secret of the owner."
+msgstr "Секреты должны содержать только секрет владельца."
+
+msgid "The resource type does not exist."
+msgstr "Тип ресурса не существует."
+
+msgid "The permissions should contain the owner permission."
+msgstr "Разрешения должны содержать разрешение владельца."
+
+msgid "The secrets should contain the owner secret."
+msgstr "Секреты должны содержать секрет владельца."
+
+msgid "The secrets should contain the secrets of all the users having access to the resource."
+msgstr "Секреты должны содержать секреты всех пользователей, имеющих доступ к ресурсу."
+
+msgid "The permissions should contain at least the owner permission."
+msgstr "Разрешения должны содержать как минимум разрешение владельца."
+
+msgid "The resource should not be already soft deleted."
+msgstr "Ресурс не должен быть уже мягко удален."
+
+msgid "The user cannot delete this resource."
+msgstr "Пользователь не может удалить этот ресурс."
+
+msgid "The name should be a valid ASCII string."
+msgstr "Имя должно быть допустимой строкой ASCII."
+
+msgid "The description should be a valid BMP-UTF8 string."
+msgstr "Описание должно быть допустимой строкой BMP-UTF8."
+
+msgid "A role already exists for the given name."
+msgstr "Роль для данного имени уже существует."
+
+msgid "The role name should be from the list of allowed role names."
+msgstr "Имя роли должно быть из списка разрешенных имен ролей."
+
+msgid "The resource identifier is required."
+msgstr "Требуется идентификатор ресурса."
+
+msgid "The resource identifier should not be empty."
+msgstr "Идентификатор ресурса не должен быть пустым."
+
+msgid "The message should be a valid ASCII string."
+msgstr "Сообщение должно быть допустимой строкой ASCII."
+
+msgid "A message is required."
+msgstr "Требуется сообщение."
+
+msgid "The message should not be empty."
+msgstr "Сообщение не должно быть пустым."
+
+msgid "A secret already exists for the given user and resource."
+msgstr "Секрет уже существует для данного пользователя и ресурса."
+
+msgid "The user identifier by should be a valid UUID."
+msgstr "Идентификатор пользователя должен быть действительным UUID."
+
+msgid "A username is required."
+msgstr "Требуется имя пользователя."
+
+msgid "The username should be a valid email address."
+msgstr "Имя пользователя должно быть действительным адресом электронной почты."
+
+msgid "The role identifier should be a valid UUID."
+msgstr "Идентификатор роли должен быть допустимым UUID."
+
+msgid "A role identifier is required."
+msgstr "Требуется идентификатор роли."
+
+msgid "The disabled date should be a valid date."
+msgstr "Дата отключения должна быть корректной."
+
+msgid "The profile should not be empty."
+msgstr "Профиль не должен быть пустым."
+
+msgid "The username should not be empty."
+msgstr "Имя пользователя не должно быть пустым."
+
+msgid "The username length should be maximum 255 characters."
+msgstr "Длина имени пользователя должна быть не более 255 символов."
+
+msgid "The username is already in use."
+msgstr "Имя пользователя уже используется."
+
+msgid "The role identifier does not exist."
+msgstr "Идентификатор роли не существует."
+
+msgid "The user should not be sole owner of shared content, transfer the ownership to other users."
+msgstr "Пользователь не должен быть единственным владельцем общего контента, передавать право собственности другим пользователям."
+
+msgid "The user should not be sole group manager of group(s), transfer the management to other users."
+msgstr "Пользователь не должен быть единоличным менеджером группы (групп), передавать управление другим пользователям."
+
+msgid "Could not delete the user {0}, please try again later."
+msgstr "Не удалось удалить пользователя {0}. Повторите попытку позже."
+
+msgid "The armored key should be a valid ASCII-armored OpenPGP key."
+msgstr "Бронированный ключ должен быть действительным ключом OpenPGP в кодировке ASCII."
+
+msgid "The message should be a valid ASCII-armored OpenPGP message."
+msgstr "Сообщение должно быть допустимым сообщением OpenPGP в кодировке ASCII."
+
+msgid "The creation date should be set in the past."
+msgstr "Дата создания должна быть установлена ​​в прошлом."
+
+msgid "The key should not already be expired."
+msgstr "Срок действия ключа не должен быть истек."
+
+msgid "The date could not be parsed."
+msgstr "Не удалось обработать дату."
+
+msgid "The email should be a valid email address."
+msgstr "Электронная почта должна быть действительным адресом электронной почты."
+
+msgid "The regular expression should be a valid string."
+msgstr "Регулярное выражение должно быть допустимой строкой."
+
+msgid "The fingerprint does not match the one of the armored key."
+msgstr "Отпечаток пальца не совпадает с отпечатком бронированного ключа."
+
+msgid "The fingerprint should be a string of 40 hexadecimal characters."
+msgstr "Отпечаток должен быть строкой из 40 шестнадцатеричных символов."
+
+msgid "The type should be one of the following: RSA, ECC, ECDSA, DH."
+msgstr "Тип должен быть одним из следующих: RSA, DSA, ECC, ELGAMAL, ECDSA, DH."
+
+msgid "The delete status should be a valid boolean."
+msgstr "Статус удаления должен быть допустимым логическим значением."
+
+msgid "The key identifier should be a string of 8 hexadecimal characters."
+msgstr "Идентификатор ключа должен быть строкой из 8 шестнадцатеричных символов."
+
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} обновил ваше членство в нескольких группах"
+
+msgid "{0} deleted several group memberships"
+msgstr "{0} удалил несколько членов группы"
+
+msgid "You made changes on several resources"
+msgstr "Вы внесли изменения на нескольких ресурсах"
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} внес изменения в несколько ресурсов"
+
+msgid "{0} shared several items with you"
+msgstr "{0} поделился с вами несколькими элементами"
+
+msgid "{0} just activated their account on passbolt"
+msgstr "{0} только что активировали свою учетную запись с помощью пароля"
+
+msgid "{0} commented on {1}"
+msgstr "{0} прокомментировал {1}"
+
+msgid "{0} deleted the group {1}"
+msgstr "{0} удалил группу {1}"
+
+msgid "{0} updated the group {1}"
+msgstr "{0} обновил группу {1}"
+
+msgid "{0} added you to the group {1}"
+msgstr "{0} добавил вас в группу {1}"
+
+msgid "{0} requested you to add members to {1}"
+msgstr "{0} попросил вас добавить участников в {1}"
+
+msgid "You have been requested to add members to {0}"
+msgstr "Вас попросили добавить участников в {0}"
+
+msgid "{0} removed you from the group {1}"
+msgstr "{0} удалил вас из группы {1}"
+
+msgid "{0} updated your membership in the group {1}"
+msgstr "{0} обновил свое членство в группе {1}"
+
+msgid "{0} just completed the account recovery process"
+msgstr "{0} только что завершил процесс восстановления аккаунта"
+
+msgid "You just completed the account recovery process!"
+msgstr "Вы только что завершили процесс восстановления учетной записи!"
+
+msgid "Your account recovery, {0}!"
+msgstr "Восстановление вашей учетной записи, {0}!"
+
+msgid "You added the password {0}"
+msgstr "Вы добавили пароль {0}"
+
+msgid "{0} deleted the password {1}"
+msgstr "{0} удалил пароль {1}"
+
+msgid "You edited the password {0}"
+msgstr "Вы изменили пароль {0}"
+
+msgid "{0} edited the password {1}"
+msgstr "{0} изменил пароль {1}"
+
+msgid "{0} can not complete the account recovery process!"
+msgstr "{0} не может завершить процесс восстановления учетной записи!"
+
+msgid "{0} shared the password {1}"
+msgstr "{0} поделился паролем {1}"
+
+msgid "You deleted administrator {0}"
+msgstr "Вы удалили администратора {0}"
+
+msgid "{0} deleted your account"
+msgstr "{0} удалил вашу учетную запись"
+
+msgid "{0} deleted administrator {1}"
+msgstr "{0} удалил администратора {1}"
+
+msgid "Your account has been suspended"
+msgstr "Ваша учетная запись была отключена"
+
+msgid "Your admin role has been revoked"
+msgstr "Ваша роль администратора отозвана"
+
+msgid "{0}'s admin role has been revoked"
+msgstr "Роль администратора была отозвана у {0} "
+
+msgid "{0} deleted user {1}"
+msgstr "{0} удалил пользователя {1}"
+
+msgid "{0} has been suspended"
+msgstr "{0} был отключен"
+
+msgid "Welcome to passbolt, {0}!"
+msgstr "Добро пожаловать в Passbolt, {0}!"
+
+msgid "The purify subject setting should be a boolean."
+msgstr "Настройка темы очистки должна быть логическим значением."
+
+msgid "The show comment setting should be a boolean."
+msgstr "Параметр показа комментариев должен быть логическим."
+
+msgid "The show description setting should be a boolean."
+msgstr "Параметр описания показа должен быть логическим."
+
+msgid "The show secret setting should be a boolean."
+msgstr "Параметр show secret должен быть логическим."
+
+msgid "The show uri setting should be a boolean."
+msgstr "Параметр show uri должен быть логическим."
+
+msgid "The show username setting should be a boolean."
+msgstr "Параметр show username должен быть логическим."
+
+msgid "The send on user setup completed setting should be a boolean."
+msgstr "Параметр отправки после завершения настройки пользователя должен быть логическим."
+
+msgid "The send on user recover abort setting should be a boolean."
+msgstr "Параметр отмены отправки при восстановлении пользователя должен быть логическим."
+
+msgid "The send on user disabled setting should be a boolean."
+msgstr "Параметр отключения отправки должен быть логическим значением."
+
+msgid "The send on admin disabled setting should be a boolean."
+msgstr "Параметр отключения отправки администратором должен быть логическим значением."
+
+msgid "The send on comment added setting should be a boolean."
+msgstr "Параметр отправки добавленного комментария должен быть логическим."
+
+msgid "The send on group deleted setting should be a boolean."
+msgstr "Параметр отправки при удалении группы должен быть логическим."
+
+msgid "The send on group user added setting should be a boolean."
+msgstr "Параметр отправки добавленного пользователем группы должен быть логическим."
+
+msgid "The send on group user deleted setting should be a boolean."
+msgstr "Параметр отправки удаленного пользователя группы должен быть логическим."
+
+msgid "The send on group user updated setting should be a boolean."
+msgstr "Параметр отправки обновленного пользователя группы должен быть логическим."
+
+msgid "The send on group manager updated setting should be a boolean."
+msgstr "Параметр отправки обновленного менеджера группы должен быть логическим."
+
+msgid "The send on group manager request add user should be a boolean."
+msgstr "Отправляемый менеджеру группы запрос на добавление пользователя должен иметь логическое значение."
+
+msgid "The send on password created setting should be a boolean."
+msgstr "Параметр отправки созданного пароля должен быть логическим."
+
+msgid "The send on password shared setting should be a boolean."
+msgstr "Общий параметр отправки пароля должен быть логическим."
+
+msgid "The send on password updated setting should be a boolean."
+msgstr "Параметр отправки обновленного пароля должен быть логическим."
+
+msgid "The send on password deleted setting should be a boolean."
+msgstr "Параметр отправки удаленного пароля должен быть логическим."
+
+msgid "The send on user created setting should be a boolean."
+msgstr "Настройка отправки, созданная пользователем, должна быть логическим значением."
+
+msgid "The send on user recovered setting should be a boolean."
+msgstr "Параметр отправки после восстановления пользователем должен быть логическим."
+
+msgid "The token is expired."
+msgstr "Токен просрочен."
+
+msgid "The authentication token is not valid."
+msgstr "Маркер аутентификации недействителен."
+
+msgid "The authentication token could not be found."
+msgstr "Маркер аутентификации не найден."
+
+msgid "The token is already consumed."
+msgstr "Токен уже израсходован."
+
+msgid "Validation failed for authenticationToken {0}. {1}"
+msgstr "Ошибка проверки подлинностиToken {0}. {1}"
+
+msgid "Validation success for authenticationToken {0}"
+msgstr "Успешная проверка для authenticationToken {0}"
+
+msgid "Could not save the avatar in the {0} file."
+msgstr "Не удалось сохранить аватар в файле {0}."
+
+msgid "The avatar id is not valid."
+msgstr "Идентификатор аватара недействителен."
+
+msgid "Could not save the comment, please try again later."
+msgstr "Не удалось сохранить комментарий, повторите попытку позже."
+
+msgid "Could not validate comment data."
+msgstr "Не удалось проверить данные комментариев."
+
+msgid "The comment userId is not valid."
+msgstr "Комментарий Id пользователя недействителен."
+
+msgid "The comment does not exist."
+msgstr "Комментарий не существует."
+
+msgid "Could not delete comment."
+msgstr "Не удалось удалить комментарий."
+
+msgid "Validation failed for comment {0}. {1}"
+msgstr "Ошибка проверки комментария {0}. {1}"
+
+msgid "Validation success for comment {0}"
+msgstr "Проверка комментария {0} прошла успешно"
+
+msgid "You are not allowed to edit this comment."
+msgstr "Вы не можете редактировать этот комментарий."
+
+msgid "Could not find comments for the requested model."
+msgstr "Не удалось найти комментарии для запрошенной модели."
+
+msgid "This record is already marked as favorite."
+msgstr "Эта запись уже отмечена как избранная."
+
+msgid "Could not validate favorite data."
+msgstr "Не удалось проверить данные избранного."
+
+msgid "The favorite does not exist."
+msgstr "Любимого не существует."
+
+msgid "Could not delete favorite."
+msgstr "Не удалось удалить избранное."
+
+msgid "Validation failed for favorite {0}. {1}"
+msgstr "Ошибка проверки избранного {0}. {1}"
+
+msgid "Validation success for favorite {0}"
+msgstr "Успешная проверка для избранного {0}"
+
+msgid "Validation success for key {0}"
+msgstr "Успешная проверка ключа {0}"
+
+msgid "Validation failed for key {0}. {1}"
+msgstr "Ошибка проверки ключа {0}. {1}"
+
+msgid "Encryption success for key {0}"
+msgstr "Успешное шифрование ключа {0}"
+
+msgid "Failed to encrypt with key {0}. {1}"
+msgstr "Не удалось зашифровать с помощью ключа {0}. {1}"
+
+msgid "Key expired: {0}."
+msgstr "Срок действия ключа истек: {0}."
+
+msgid "Expiration date valid for key {0}."
+msgstr "Дата истечения срока действия ключа {0}."
+
+msgid "Validation failed for group {0}. {1}"
+msgstr "Ошибка проверки для группы {0}. {1}"
+
+msgid "Validation success for group {0}"
+msgstr "Успешная проверка для группы {0}"
+
+msgid "Could not validate group user data."
+msgstr "Не удалось проверить данные пользователя группы."
+
+msgid "Could not validate sub key data."
+msgstr "Не удалось проверить данные подключей."
+
+msgid "Public key sub key id could not be found."
+msgstr "Не удалось найти идентификатор вложенного ключа открытого ключа."
+
+msgid "Could not validate message data."
+msgstr "Не удалось проверить данные сообщения."
+
+msgid "Recipient information could not be found."
+msgstr "Не удалось найти информацию о получателе."
+
+msgid "The public key could not be parsed."
+msgstr "Открытый ключ не может быть проанализирован."
+
+msgid "The armored message must not contain an extra line before the end block."
+msgstr "Бронированное сообщение не должно содержать лишней строки перед конечным блоком."
+
+msgid "The message must contain an asymmetric packet."
+msgstr "Сообщение должно содержать асимметричный пакет."
+
+msgid "The message must contain a symmetric packet."
+msgstr "Сообщение должно содержать симметричный пакет."
+
+msgid "The message must contain only one recipient."
+msgstr "Сообщение должно содержать только одного получателя."
+
+msgid "Unknown key validation rule: {0}"
+msgstr "Неизвестное правило проверки ключа: {0}"
+
+msgid "The armored message could not be validated."
+msgstr "Бронированное сообщение не может быть подтверждено."
+
+msgid "The algorithm is invalid."
+msgstr "Алгоритм недействителен."
+
+msgid "The fingerprint id is invalid."
+msgstr "Идентификатор отпечатка пальца недействителен."
+
+msgid "The public key id is invalid."
+msgstr "Идентификатор открытого ключа недействителен."
+
+msgid "The key size is not valid."
+msgstr "Недопустимый размер ключа."
+
+msgid "The key size must match security recommendations."
+msgstr "Размер ключа должен соответствовать рекомендациям по безопасности."
+
+msgid "The key creation date must not be in the future."
+msgstr "Дата создания ключа не должна быть в будущем."
+
+msgid "The key must not be expired."
+msgstr "Ключ не должен быть просрочен."
+
+msgid "The key must not include an expiry date."
+msgstr "Ключ не должен содержать дату истечения срока действия."
+
+msgid "The key must be revoked."
+msgstr "Ключ должен быть отозван."
+
+msgid "The key must not be revoked."
+msgstr "Ключ не должен быть отозван."
+
+msgid "The armored key must not contain an extra line before the end block."
+msgstr "Бронированный ключ не должен содержать лишней строки перед конечным блоком."
+
+msgid "The armored key must not contain multiple keys."
+msgstr "Бронированный ключ не должен содержать несколько ключей."
+
+msgid "The public key could not be validated."
+msgstr "Не удалось проверить открытый ключ."
+
+msgid "Could not validate permission data."
+msgstr "Не удалось проверить данные разрешения."
+
+msgid "Validation failed for permission {0}. {1}"
+msgstr "Ошибка проверки разрешения {0}. {1}"
+
+msgid "Validation success for permission {0}"
+msgstr "Успешная проверка разрешения {0}"
+
+msgid "Could not validate permissions data."
+msgstr "Не удалось проверить данные разрешений."
+
+msgid "Validation failed for profile {0}. {1}"
+msgstr "Ошибка проверки профиля {0}. {1}"
+
+msgid "Validation success for profile {0}"
+msgstr "Успешная проверка профиля {0}"
+
+msgid "Could not validate resource data."
+msgstr "Не удалось проверить данные ресурса."
+
+msgid "An unexpected error occurred, please contact an administrator."
+msgstr "Произошла непредвиденная ошибка, пожалуйста, обратитесь к администратору."
+
+msgid "The server returned the following error:"
+msgstr "Сервер вернул следующую ошибку:"
+
+msgid "Validation failed for resource {0}. {1}"
+msgstr "Ошибка проверки ресурса {0}. {1}"
+
+msgid "Validation success for resource {0}"
+msgstr "Успешная проверка ресурса {0}"
+
+msgid "You are not allowed to update this resource."
+msgstr "Вам не разрешено обновлять этот ресурс."
+
+msgid "Additional resource types are not enabled on this server."
+msgstr "Дополнительные типы ресурсов не включены на этом сервере."
+
+msgid "There should be at least 4 roles"
+msgstr "Должно быть не менее 4 ролей"
+
+msgid "Validation failed for role {0}. {1}"
+msgstr "Ошибка проверки роли {0}. {1}"
+
+msgid "Validation success for role {0}"
+msgstr "Успешная проверка для роли {0}"
+
+msgid "Could not validate secret data."
+msgstr "Не удалось проверить секретные данные."
+
+msgid "The group id should be a valid UUID."
+msgstr "Идентификатор группы должен соответствовать корректному значению UUID."
+
+msgid "The users ids array should contain only valid UUIDs."
+msgstr "Массив идентификаторов пользователей должен содержать только корректные значения UUID."
+
+msgid "Validation failed for secret {0}. {1}"
+msgstr "Ошибка проверки секрета {0}. {1}"
+
+msgid "Validation success for secret {0}"
+msgstr "Успешная проверка секрета {0}"
+
+msgid "Could not validate secrets data."
+msgstr "Не удалось проверить данные секретов."
+
+msgid "The secrets of all the users having access to the resource are required."
+msgstr "Требуются секреты всех пользователей, имеющих доступ к ресурсу."
+
+msgid "An authentication token should be provided."
+msgstr "Должен быть предоставлен токен аутентификации."
+
+msgid "The authentication token should be a valid UUID."
+msgstr "Маркер аутентификации должен быть действительным UUID."
+
+msgid "An OpenPGP key must be provided."
+msgstr "Должен быть предоставлен ключ OpenPGP."
+
+msgid "The authentication token could not be saved."
+msgstr "Маркер аутентификации не может быть сохранен."
+
+msgid "The user does not exist, has not completed the setup or was deleted."
+msgstr "Пользователь не существует, не завершил настройку или был удален."
+
+msgid "Could not update the authentication token data."
+msgstr "Не удалось обновить данные токена аутентификации."
+
+msgid "The key provided does not belong to given user."
+msgstr "Предоставленный ключ не принадлежит данному пользователю."
+
+msgid "The user does not exist or is not active or is disabled."
+msgstr "Пользователь не существует, не активирован или был отключен."
+
+msgid "The OpenPGP key data is not valid."
+msgstr "Данные ключа OpenPGP недействительны."
+
+msgid "The OpenPGP key can not be used to encrypt."
+msgstr "Ключ OpenPGP нельзя использовать для шифрования."
+
+msgid "The user does not exist, is already active or has been deleted."
+msgstr "Пользователь не существует, уже активен или был удален."
+
+msgid "The user does not exist or is already active or is disabled."
+msgstr "Пользователь не существует или уже активен или был деактивирован."
+
+msgid "The user should not be a guest."
+msgstr "Пользователь не должен быть гостем."
+
+msgid "Account recovery case must be a string."
+msgstr "Случай восстановления учетной записи должен быть строкой."
+
+msgid "Account recovery reason not supported."
+msgstr "Причина восстановления учетной записи не поддерживается."
+
+msgid "Please provide a valid email address."
+msgstr "Пожалуйста, представьте действующий адрес электронной почты."
+
+msgid "This user does not exist or has been deleted."
+msgstr "Этот пользователь не существует или был удален."
+
+msgid "Please register and complete the setup first."
+msgstr "Сначала зарегистрируйтесь и завершите настройку."
+
+msgid "This user has been disabled."
+msgstr "Этот пользователь был отключен."
+
+msgid "The username {0} is a duplicate."
+msgstr "Следующее имя пользователя уже существует — {0}."
+
+msgid "Validation failed for user {0}. {1}"
+msgstr "Ошибка проверки для пользователя {0}. {1}"
+
+msgid "Validation success for user {0}"
+msgstr "Успешная проверка для пользователя {0}"
+
+msgid "The directory {0} cannot be deleted"
+msgstr "Каталог {0} не может быть удален"
+
+msgid "Database connection failed"
+msgstr "Ошибка подключения к базе данных"
+
+msgid "Could not connect to github repository"
+msgstr "Не удалось подключиться к репозиторию github"
+
+msgid "Could not read tag information on github repository"
+msgstr "Не удалось прочитать информацию о тегах в репозитории github."
+
+msgid "The key {0} cannot be used to encrypt."
+msgstr "Ключ {0} нельзя использовать для шифрования."
+
+msgid "The key {0} cannot be used to decrypt."
+msgstr "Ключ {0} нельзя использовать для расшифровки."
+
+msgid "Could not use key {0} for signing."
+msgstr "Не удалось использовать ключ {0} для подписи."
+
+msgid "Could not parse the OpenPGP public key."
+msgstr "Не удалось проанализировать открытый ключ OpenPGP."
+
+msgid "Could not import the OpenPGP key."
+msgstr "Не удалось импортировать ключ OpenPGP."
+
+msgid "Could not use the key to sign and encrypt."
+msgstr "Не удалось использовать ключ для подписи и шифрования."
+
+msgid "Could not use the key to encrypt."
+msgstr "Не удалось использовать ключ для шифрования."
+
+msgid "Expected {0} and got {1}."
+msgstr "Ожидал {0}, получил {1}."
+
+msgid "Decryption failed. Invalid signature."
+msgstr "Расшифровка не удалась. Неверная подпись."
+
+msgid "The message cannot be verified."
+msgstr "Сообщение не может быть проверено."
+
+msgid "Could not sign the text. "
+msgstr "Не удалось подписать текст."
+
+msgid "The OpenPGP server key defined in the config is not found in the file system."
+msgstr "Ключ сервера OpenPGP, определенный в конфигурации, не найден в файловой системе."
+
+msgid "The OpenPGP server key defined in the config cannot be opened."
+msgstr "Ключ сервера OpenPGP, определенный в конфигурации, не может быть открыт."
+
+msgid "The OpenPGP server key defined on file is not a valid private key."
+msgstr "Ключ сервера OpenPGP, указанный в файле, не является действительным закрытым ключом."
+
+msgid "There is an issue with the OpenPGP server key."
+msgstr "Возникла проблема с ключом сервера OpenPGP."
+
+msgid "The fingerprint does not match the one associated with the key on file."
+msgstr "Отпечаток пальца не совпадает с отпечатком, связанным с ключом в файле."
+
+msgid "No OpenPGP marker found."
+msgstr "Маркер OpenPGP не найден."
+
+msgid "Invalid key. No OpenPGP public key package found."
+msgstr "Неправильный ключ. Пакет открытого ключа OpenPGP не найден."
+
+msgid "Invalid key. No user ID found."
+msgstr "Неправильный ключ. Идентификатор пользователя не найден."
+
+msgid "Unsupported algorithm."
+msgstr "Неподдерживаемый алгоритм."
+
+msgid "Invalid key. No OpenPGP package found."
+msgstr "Неправильный ключ. Пакет OpenPGP не найден."
+
+msgid "This is not a valid OpenPGP armored marker."
+msgstr "Это не допустимый бронированный маркер OpenPGP."
+
+msgid "The key {0} was not found in the keyring"
+msgstr "Ключ {0} не найден в связке ключей"
+
+msgid "A value for the theme should be provided."
+msgstr "Необходимо указать значение темы."
+
+msgid "This is not a valid theme."
+msgstr "Это не актуальная тема."
+
+msgid "The setting type should be one of the following: {0}."
+msgstr "Тип параметра должен быть одним из следующих: {0}."
+
+msgid "A setting type is required."
+msgstr "Укажите тип настройки."
+
+msgid "The setting type should not be empty"
+msgstr "Укажите тип настройки."
+
+msgid "The setting value should be a valid UTF8 string."
+msgstr "Значение параметра должно быть допустимой строкой UTF8."
+
+msgid "The setting value length should be maximum {0} characters."
+msgstr "Длина значения параметра не должна превышать {0} символов."
+
+msgid "A value setting is required."
+msgstr "Требуется установка значения."
+
+msgid "The setting value should not be empty."
+msgstr "Значение параметра не должно быть пустым."
+
+msgid "The parameter {0} is not set."
+msgstr "Параметр {0} не задан."
+
+msgid "This theme is not supported."
+msgstr "Эта тема не поддерживается."
+
+msgid "You are not allowed to access this location."
+msgstr "У вас нет доступа к этому местоположению."
+
+msgid "This is not a valid Ajax/Json request."
+msgstr "Это недопустимый запрос Ajax/Json."
+
+msgid "The notification settings for the organization were updated."
+msgstr "Настройки уведомлений для организации были обновлены."
+
+msgid "The supplied email notification settings are not valid"
+msgstr "Предоставленные настройки уведомлений по электронной почте недействительны."
+
+msgid "The folder has been added successfully."
+msgstr "Папка успешно добавлена."
+
+msgid "The folder id is not valid."
+msgstr "Идентификатор папки недействителен."
+
+msgid "The folder has been deleted successfully."
+msgstr "Папка успешно удалена."
+
+msgid "The folder has been updated successfully."
+msgstr "Папка успешно обновлена."
+
+msgid "The object type should be one of the following: {0}."
+msgstr "Тип объекта должен быть одним из следующих: {0}."
+
+msgid "The object identifier should be a valid UUID."
+msgstr "Идентификатор объекта должен быть допустимым UUID."
+
+msgid "The object has been moved successfully."
+msgstr "Объект успешно перемещен."
+
+msgid "A folder parent identifier is required."
+msgstr "Требуется родительский идентификатор папки."
+
+msgid "The folder parent identifier should be a valid UUID."
+msgstr "Родительский идентификатор папки должен быть допустимым UUID."
+
+msgid "Could not validate move data."
+msgstr "Не удалось проверить данные перемещения."
+
+msgid "The folder identifier should be a valid UUID."
+msgstr "Идентификатор папки должен быть допустимым UUID."
+
+msgid "The folder identifier should not be empty."
+msgstr "Идентификатор папки не должен быть пустым."
+
+msgid "Could not validate folder history data."
+msgstr "Не удалось проверить данные истории папки."
+
+msgid "The child object type should be one of the following: {0}."
+msgstr "Тип дочернего объекта должен быть одним из следующих: {0}."
+
+msgid "A child object type is required."
+msgstr "Требуется дочерний тип объекта."
+
+msgid "The child object type cannot be empty."
+msgstr "Тип дочернего объекта не может быть пустым."
+
+msgid "The child object identifier should be a valid UUID."
+msgstr "Идентификатор дочернего объекта должен быть допустимым UUID."
+
+msgid "The child object identifier is required."
+msgstr "Требуется идентификатор дочернего объекта."
+
+msgid "The child object identifier should not be empty."
+msgstr "Идентификатор дочернего объекта не должен быть пустым."
+
+msgid "The user id should not be empty."
+msgstr "Идентификатор пользователя не должен быть пустым."
+
+msgid "Could not validate folders relations history data."
+msgstr "Не удалось проверить данные истории отношений папок."
+
+msgid "The child object type is required."
+msgstr "Требуется тип дочернего объекта."
+
+msgid "The child object type should not be empty."
+msgstr "Тип дочернего объекта не должен быть пустым."
+
+msgid "The child object identifier required."
+msgstr "Требуется идентификатор дочернего объекта."
+
+msgid "A folder relation already exists for the given child object and user."
+msgstr "Отношение папки уже существует для данного дочернего объекта и пользователя."
+
+msgid "The child object does not exist."
+msgstr "Дочерний объект не существует."
+
+msgid "The identifier of the user who created the folder should be a valid UUID."
+msgstr "Идентификатор пользователя, создавшего папку, должен быть допустимым UUID."
+
+msgid "The identifier of the user who created the folder is required."
+msgstr "Требуется идентификатор пользователя, создавшего папку."
+
+msgid "The identifier of the user who created the folder should not be empty."
+msgstr "Идентификатор пользователя, создавшего папку, не должен быть пустым."
+
+msgid "The identifier of the user who modified the folder should be a valid UUID."
+msgstr "Идентификатор пользователя, изменившего папку, должен быть допустимым UUID."
+
+msgid "The identifier of the user who modified the folder is required."
+msgstr "Требуется идентификатор пользователя, изменившего папку."
+
+msgid "The identifier of the user who modified the folder should not be empty."
+msgstr "Идентификатор пользователя, изменившего папку, не должен быть пустым."
+
+msgid "You added the folder {0}"
+msgstr "Вы добавили папку {0}"
+
+msgid "You deleted the folder {0}"
+msgstr "Вы удалили папку {0}"
+
+msgid "{0} deleted the folder {1}"
+msgstr "{0} удалил папку {1}"
+
+msgid "{0} shared the folder {1}"
+msgstr "{0} поделился папкой {1}"
+
+msgid "You edited the folder {0}"
+msgstr "Вы изменили папку {0}"
+
+msgid "{0} edited the folder {1}"
+msgstr "{0} изменил папку {1}"
+
+msgid "An email notification setting should be a boolean."
+msgstr "Параметр уведомления по электронной почте должен быть логическим."
+
+msgid "Could not validate folder data."
+msgstr "Не удалось проверить данные папки."
+
+msgid "The folder parent id should be a valid UUID."
+msgstr "Родительский идентификатор раздела должен быть допустимым UUID."
+
+msgid "The folder parent must exist."
+msgstr "Родительская папка должна существовать."
+
+msgid "You are not allowed to create content into the parent folder."
+msgstr "Вам не разрешено создавать содержимое в родительской папке."
+
+msgid "You are not allowed to delete this folder."
+msgstr "Вам не разрешено удалять эту папку."
+
+msgid "The folder does not exist."
+msgstr "Папка не существует."
+
+msgid "You cannot delete this resource"
+msgstr "Вы не можете удалить этот ресурс"
+
+msgid "You are not allowed to update the permissions of this folder."
+msgstr "Вам не разрешено обновлять права доступа к этой папке."
+
+msgid "You are not allowed to update this folder."
+msgstr "Вам не разрешено обновлять эту папку."
+
+msgid "Could not validate folder relation data."
+msgstr "Не удалось проверить данные о связях папок."
+
+msgid "The object to move does not exist."
+msgstr "Объект для перемещения не существует."
+
+msgid "You are not allowed to move this item out of its parent folder."
+msgstr "Вам не разрешено перемещать этот элемент из его родительской папки."
+
+msgid "You are not allowed to move this item."
+msgstr "Вам не разрешено перемещать этот элемент."
+
+msgid "You are not allowed to move an item in read only into the parent folder."
+msgstr "Вам не разрешено перемещать элемент только для чтения в родительскую папку."
+
+msgid "The folder parent does not exist."
+msgstr "Родительская папка не существует."
+
+msgid "You have created a new folder"
+msgstr "Вы создали новую папку"
+
+msgid "Name: {0}"
+msgstr "Имя: {0}"
+
+msgid "View it in passbolt"
+msgstr "Посмотреть в passbolt"
+
+msgid "You deleted a folder"
+msgstr "Вы удалили папку"
+
+msgid "{0} deleted a folder"
+msgstr "{0} удалил папку"
+
+msgid "log in passbolt"
+msgstr "войти в систему"
+
+msgid "{0} shared a folder with you"
+msgstr "{0} поделился с вами папкой"
+
+msgid "You edited a folder"
+msgstr "Вы изменили папку"
+
+msgid "{0} edited a folder"
+msgstr "{0} изменил папку"
+
+msgid "The user signature could not be verified."
+msgstr "Подпись пользователя не может быть проверена."
+
+msgid "The challenge cannot be decrypted."
+msgstr "Вызов не может быть расшифрован."
+
+msgid "The challenge is invalid. Deserialization failed."
+msgstr "Вызов недействителен. Десериализация не удалась."
+
+msgid "The challenge is invalid. Validation Failed."
+msgstr "Вызов недействителен. Проверка не удалась."
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr "Конфигурация отпечатка закрытого ключа сервера недоступна или неполная."
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr "Конфигурация парольной фразы закрытого ключа сервера недействительна."
+
+msgid "The user id is missing or invalid."
+msgstr "Идентификатор пользователя отсутствует или недействителен."
+
+msgid "The user OpenPGP key does not exist, or is invalid, or has been deleted."
+msgstr "Пользовательский ключ OpenPGP не существует, недействителен или был удален."
+
+msgid "The user challenge is missing or invalid."
+msgstr "Запрос пользователя отсутствует или недействителен."
+
+msgid "The version is invalid."
+msgstr "Версия недействительна."
+
+msgid "The domain is invalid."
+msgstr "Домен недействителен."
+
+msgid "The domain is invalid. Expected: {0} and got {1}"
+msgstr "Домен недействителен. Ожидается: {0} и получено {1}"
+
+msgid "The following file could not be read: {0}."
+msgstr "Не удалось прочитать следующий файл: {0}."
+
+msgid "The authentication was a success."
+msgstr "Аутентификация прошла успешно."
+
+msgid "The authentication failed."
+msgstr "Аутентификация не удалась."
+
+msgid "The credentials are missing."
+msgstr "Учетные данные отсутствуют."
+
+msgid "The user does not exist or is not active or has been deleted."
+msgstr "Пользователь не существует, или не активен, или был удален."
+
+msgid "The credentials are invalid."
+msgstr "Учетные данные недействительны."
+
+msgid "An internal error occurred."
+msgstr "Возникла внутренняя ошибка."
+
+msgid "Authentication security alert"
+msgstr "Предупреждение безопасности аутентификации"
+
+msgid "No active refresh token matching the request could be found."
+msgstr "Не удалось найти активный токен обновления, соответствующий запросу."
+
+msgid "The user is not activated or disabled."
+msgstr "Пользователь не активирован или отключен."
+
+msgid "The user is deleted."
+msgstr "Пользователь удален."
+
+msgid "The verify token is invalid."
+msgstr "Токен подтверждения недействителен."
+
+msgid "The route {0} is not permitted with JWT authentication."
+msgstr "Маршрут {0} не разрешен для аутентификации JWT."
+
+msgid "The key pair for JWT Authentication is not complete."
+msgstr "Пара ключей для аутентификации JWT не завершена."
+
+msgid "The JWT public key could not be read or is not valid."
+msgstr "Открытый ключ JWT не может быть прочитан или недействителен."
+
+msgid "The JWT private key should be at least {0} bytes long."
+msgstr "Закрытый ключ JWT должен иметь длину не менее {0} байт."
+
+msgid "The configuration {0} is not correctly set."
+msgstr "Конфигурация {0} задана неправильно."
+
+msgid "The refresh token should be a valid UUID."
+msgstr "Токен обновления должен быть допустимым UUID."
+
+msgid "The user ID should be a valid UUID."
+msgstr "Идентификатор пользователя должен быть действительным UUID."
+
+msgid "The refresh token provided was already used."
+msgstr "Предоставленный токен обновления уже использовался."
+
+msgid "Expired refresh token provided."
+msgstr "Предоставлен токен обновления с истекшим сроком действия."
+
+msgid "Invalid verify token expiry."
+msgstr "Неверный срок действия токена подтверждения."
+
+msgid "Attempt to access an expired verify token."
+msgstr "Попытка доступа к токену подтверждения с истекшим сроком действия."
+
+msgid "Invalid verify token format."
+msgstr "Неверный формат токена подтверждения."
+
+msgid "Invalid user ID format."
+msgstr "Недопустимый формат идентификатора пользователя."
+
+msgid "Verify token has been already used in the past."
+msgstr "Подтвердите, что токен уже использовался в прошлом."
+
+msgid "Security warning!"
+msgstr "Предупреждение безопасности!"
+
+msgid "An unknown user with IP: {0} attempted to identify as {1}."
+msgstr "Неизвестный пользователь с IP-адресом: {0} попытался идентифицировать себя как {1}."
+
+msgid "This is a potential security issue."
+msgstr "Это потенциальная проблема безопасности."
+
+msgid "Please investigate!"
+msgstr "Пожалуйста, исследуйте!"
+
+msgid "An unknown user with IP: {0}  attempted to steal your login data."
+msgstr "Неизвестный пользователь с IP-адресом: {0} попытался украсть ваши данные для входа."
+
+msgid "Please get in touch with one of your administrators."
+msgstr "Пожалуйста, свяжитесь с одним из ваших администраторов."
+
+msgid "This is not a valid locale."
+msgstr "Это недопустимая локаль."
+
+msgid "This is not a valid {0}."
+msgstr "Это недопустимый {0}."
+
+msgid "The strategy should extend the class: {0}"
+msgstr "Стратегия должна расширить класс: {0}"
+
+msgid "The action log identifier should be a valid UUID."
+msgstr "Идентификатор журнала действий должен быть допустимым UUID."
+
+msgid "The action log identifier should not be empty."
+msgstr "Идентификатор журнала действий не должен быть пустым."
+
+msgid "The action identifier should be a valid UUID."
+msgstr "Идентификатор действия должен быть действительным UUID."
+
+msgid "An action identifier is required."
+msgstr "Требуется идентификатор действия."
+
+msgid "The context should be a valid ASCII string."
+msgstr "Контекст должен быть допустимой строкой ASCII."
+
+msgid "The context length should be maximum {0} characters."
+msgstr "Длина контекста не должна превышать {0} символов."
+
+msgid "A context is required."
+msgstr "Требуется контекст."
+
+msgid "The status should be a valid boolean."
+msgstr "Статус должен быть допустимым логическим значением."
+
+msgid "A status is required."
+msgstr "Требуется статус."
+
+msgid "Could not validate action log data."
+msgstr "Не удалось проверить данные журнала действий."
+
+msgid "The date {0} should be after the date {1}."
+msgstr "Дата {0} должна быть позже даты {1}."
+
+msgid "The identifier should be not be empty."
+msgstr "Идентификатор не должен быть пустым."
+
+msgid "Could not validate action data."
+msgstr "Не удалось проверить данные действия."
+
+msgid "An action log identifier is required."
+msgstr "Требуется идентификатор журнала действий."
+
+msgid "The object type should be a valid ASCII string."
+msgstr "Тип объекта должен быть допустимой строкой ASCII."
+
+msgid "The object type length should be maximum {0} characters."
+msgstr "Длина типа объекта не должна превышать {0} символов."
+
+msgid "A object type is required."
+msgstr "Укажите тип объекта."
+
+msgid "The object type should not be empty."
+msgstr "Тип объекта не должен быть пустым."
+
+msgid "The object identifier should not be empty."
+msgstr "Идентификатор объекта не должен быть пустым."
+
+msgid "An object identifier is required."
+msgstr "Требуется идентификатор объекта."
+
+msgid "The operation type should be one of the following: {0}."
+msgstr "Тип операции должен быть одним из следующих: {0}."
+
+msgid "An operation type is required."
+msgstr "Требуется тип операции."
+
+msgid "The operation type should not be empty."
+msgstr "Тип операции не должен быть пустым."
+
+msgid "Could not validate entity history data."
+msgstr "Не удалось проверить данные истории сущности."
+
+msgid "An identifier is required."
+msgstr "Требуется идентификатор."
+
+msgid "The type must be one of the following: {0}."
+msgstr "Тип должен быть одним из следующих: {0}."
+
+msgid "The type is required."
+msgstr "Тип обязателен."
+
+msgid "Could not validate permission history data."
+msgstr "Не удалось проверить данные истории разрешений."
+
+msgid "A resource identifier is required."
+msgstr "Требуется идентификатор ресурса."
+
+msgid "The secret identifier should be a valid UUID."
+msgstr "Секретный идентификатор должен быть действительным UUID."
+
+msgid "A secret identifier is required."
+msgstr "Требуется секретный идентификатор."
+
+msgid "The secret identifier should not be empty."
+msgstr "Секретный идентификатор не должен быть пустым."
+
+msgid "Could not validate secret access data."
+msgstr "Не удалось проверить секретные данные доступа."
+
+msgid "Could not validate secret history data."
+msgstr "Не удалось проверить секретные данные истории."
+
+msgid "Information about the transfer is required."
+msgstr "Информация о переводе обязательна."
+
+msgid "The operation was successful"
+msgstr "Операция прошла успешно"
+
+msgid "The transfer id is not valid."
+msgstr "Идентификатор перевода недействителен."
+
+msgid "The authentication token should be a valid uuid."
+msgstr "Маркер аутентификации должен быть допустимым UUID."
+
+msgid "The authentication token is invalid."
+msgstr "Маркер аутентификации недействителен."
+
+msgid "The transfer id should be a uuid."
+msgstr "Идентификатор передачи должен быть UUID."
+
+msgid "The user id should be a uuid."
+msgstr "Идентификатор пользователя должен быть UUID."
+
+msgid "A user id is required"
+msgstr "Требуется идентификатор пользователя."
+
+msgid "The hash should be an ascii string."
+msgstr "Хэш должен быть строкой ascii."
+
+msgid "The hash should be {0} characters in length."
+msgstr "Хэш должен иметь длину {0} символов."
+
+msgid "The data transfer hash is required."
+msgstr "Требуется хеш передачи данных."
+
+msgid "The current page should be a non negative integer."
+msgstr "Текущая страница должна быть неотрицательным целым числом."
+
+msgid "The current page number is required"
+msgstr "Требуется текущий номер страницы"
+
+msgid "The current page number should be equal or inferior to the total number of pages."
+msgstr "Текущий номер страницы должен быть меньше или равен общему количеству страниц."
+
+msgid "The current page cannot be greater than {0}"
+msgstr "Текущая страница не может быть больше {0}"
+
+msgid "The total number of pages should be a non negative integer."
+msgstr "Общее количество страниц должно быть неотрицательным целым числом."
+
+msgid "The total number of pages is required."
+msgstr "Необходимо указать общее количество страниц."
+
+msgid "The total number of pages should be greater than 0."
+msgstr "Общее количество страниц должно быть больше 0."
+
+msgid "The total number of pages cannot be greater than {0}"
+msgstr "Общее количество страниц не может превышать {0}"
+
+msgid "The status should not be empty."
+msgstr "Статус не должен быть пустым."
+
+msgid "The status is required."
+msgstr "Статус обязателен."
+
+msgid "The status must be one of the following: {0}."
+msgstr "Статус должен быть одним из следующих: {0}."
+
+msgid "The user must be active."
+msgstr "Пользователь должен быть активен."
+
+msgid "Could not validate the transfer data."
+msgstr "Не удалось проверить данные передачи."
+
+msgid "The transfer could not be created."
+msgstr "Не удалось создать передачу."
+
+msgid "Could not update the transfer data."
+msgstr "Не удалось обновить данные передачи."
+
+msgid "The transfer could not be updated."
+msgstr "Не удалось обновить передачу."
+
+msgid "This operation is not allowed."
+msgstr "Эта операция не разрешена."
+
+msgid "Restarting a transfer is not allowed."
+msgstr "Перезапуск передачи не допускается."
+
+msgid "The operation is already over."
+msgstr "Операция уже закончилась."
+
+msgid "The current page does not match the total number of pages."
+msgstr "Текущая страница не соответствует общему количеству страниц."
+
+msgid "The authentication token is missing."
+msgstr "Маркер аутентификации отсутствует."
+
+msgid "The authentication token is not valid for this user."
+msgstr "Маркер аутентификации недействителен для этого пользователя."
+
+msgid "The authentication token type is invalid."
+msgstr "Недопустимый тип маркера аутентификации."
+
+msgid "The authentication token is not active."
+msgstr "Маркер аутентификации не активен."
+
+msgid "The authentication token is expired."
+msgstr "Срок действия маркера аутентификации истек."
+
+msgid "Unable to authenticate to Duo."
+msgstr "Не удалось авторизоваться в Duo."
+
+msgid "Unable to validate the Duo callback data."
+msgstr "Не удалось подтвердить обратные данные Duo."
+
+msgid "A Duo state cookie is required."
+msgstr "Требуется Cookie состояния Duo."
+
+msgid "The Duo state cookie value should be a string."
+msgstr "Значение Cookie состояния Duo должно быть строкой."
+
+msgid "The Duo state cookie should be a valid UUID."
+msgstr "Cookie состояния Duo должен быть действительным UUID."
+
+msgid "This entrypoint is not available anymore."
+msgstr "Эта точка входа больше недоступна."
+
+msgid "This authentication provider is not enabled for your organization."
+msgstr "Этот поставщик проверки подлинности не включен для вашей организации."
+
+msgid "This functionality is not available using AJAX/JSON."
+msgstr "Эта функция недоступна при использовании AJAX/JSON."
+
+msgid "This authentication provider is already setup. Disable it first"
+msgstr "Этот поставщик аутентификации уже настроен. Сначала отключите его"
+
+msgid "Multi Factor Authentication is configured!"
+msgstr "Многофакторная аутентификация настроена!"
+
+msgid "MFA authentication is required."
+msgstr "Требуется аутентификация MFA."
+
+msgid "The multi-factor authentication is not required."
+msgstr "Многофакторная аутентификация не требуется."
+
+msgid "No valid multi-factor authentication settings found for this provider."
+msgstr "Для этого поставщика не найдены действительные параметры многофакторной аутентификации."
+
+msgid "The multi-factor authentication was a success."
+msgstr "Многофакторная аутентификация прошла успешно."
+
+msgid "The multi factor authentication settings for the organization were updated."
+msgstr "Настройки многофакторной аутентификации для организации были обновлены."
+
+msgid "Please setup the TOTP application."
+msgstr "Пожалуйста, настройте приложение TOTP."
+
+msgid "Please provide the one-time password."
+msgstr "Укажите одноразовый пароль."
+
+msgid "You have been logged out due to too many failed attempts."
+msgstr "Вы вышли из системы из-за слишком большого числа неудачных попыток."
+
+msgid "The user id is not valid."
+msgstr "Идентификатор пользователя недействителен."
+
+msgid "No multi-factor authentication settings defined for the user."
+msgstr "Для пользователя не заданы параметры многофакторной аутентификации."
+
+msgid "The multi-factor authentication settings for the user were deleted."
+msgstr "Настройки многофакторной аутентификации для пользователя были удалены."
+
+msgid "Please setup the Yubikey settings."
+msgstr "Пожалуйста, настройте параметры Yubikey."
+
+msgid "A state is required."
+msgstr "Необходимо состояние."
+
+msgid "The state should be a valid BMP-UTF8 string."
+msgstr "Состояние должно быть действительной строкой BMP-UTF8."
+
+msgid "The state should not be empty."
+msgstr "Состояние не может быть пустым."
+
+msgid "A duo code is required."
+msgstr "Требуется код duo."
+
+msgid "The duo code state should be a valid BMP-UTF8 string."
+msgstr "Состояние duo кода должно быть действительной строкой BMP-UTF8."
+
+msgid "The duo code should not be empty."
+msgstr "Код duo не может быть пустым."
+
+msgid "The error description should be a valid BMP-UTF8 string."
+msgstr "Описание ошибки должно быть корректной строкой BMP-UTF8."
+
+msgid "The error description state should be a valid BMP-UTF8 string."
+msgstr "Состояние описания ошибки должно быть корректной строкой BMP-UTF8."
+
+msgid "Something went wrong when validating the one-time password."
+msgstr "Что-то пошло не так при проверке одноразового пароля."
+
+msgid "This OTP provision uri is not valid."
+msgstr "Этот uri предоставления одноразового пароля недействителен."
+
+msgid "An OTP is required."
+msgstr "Требуется одноразовый пароль."
+
+msgid "The OTP should not be empty."
+msgstr "OTP не должен быть пустым."
+
+msgid "This OTP is not valid."
+msgstr "Этот OTP недействителен."
+
+msgid "The OTP should be composed of numbers only."
+msgstr "OTP должен состоять только из цифр."
+
+msgid "The OTP should be at least {0} characters long."
+msgstr "OTP должен содержать не менее {0} символов."
+
+msgid "This yubikey is not associated with this user."
+msgstr "Этот юбикей не связан с этим пользователем."
+
+msgid "No Duo error provided"
+msgstr "Не указана ошибка Duo"
+
+msgid "No Duo error description provided"
+msgstr "Не указано описание ошибки Duo"
+
+msgid "Your multi-factor authentication settings were reset by you."
+msgstr "Ваши настройки многофакторной аутентификации были сброшены вами."
+
+msgid "Multi-factor authentication settings were reset."
+msgstr "Сброшены настройки многофакторной аутентификации."
+
+msgid "Your multi-factor authentication settings were reset by an administrator."
+msgstr "Ваши настройки многофакторной аутентификации были сброшены администратором."
+
+msgid "The token should reference an active Duo callback authentication token."
+msgstr "Токен должен ссылаться на активный токен аутентификации Duo callback."
+
+msgid "An authentication token state is required."
+msgstr "Требуется состояние токена аутентификации."
+
+msgid "The Duo state should match the authentication token state."
+msgstr "Состояние Duo должно соответствовать состоянию токена аутентификации."
+
+msgid "Could not enable Duo MFA provider."
+msgstr "Не удалось включить провайдер Duo MFA."
+
+msgid "Unable to verify Duo authentication."
+msgstr "Не удалось проверить подлинность Duo."
+
+msgid "Could not validate the Duo settings."
+msgstr "Не удалось подтвердить настройки Duo."
+
+msgid "Could not login using Duo MFA provider."
+msgstr "Не удалось войти с провайдером Duo MFA."
+
+msgid "Unable to connect to Duo services."
+msgstr "Не удается подключиться к сервисам Duo."
+
+msgid "Unable to verify Duo code against Duo service."
+msgstr "Не удалось проверить код Duo для сервиса Duo."
+
+msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
+msgstr "Конечная точка аутентификации duo не совпадает с именем хоста duo в настройках организации."
+
+msgid "The duo authentication subscriber does not match the operator username."
+msgstr "Подписчик аутентификации duo не совпадает с именем пользователя оператора."
+
+msgid "No configuration set for Duo client ID."
+msgstr "Для ID клиента Duo не задано настроек."
+
+msgid "No configuration set for Duo API hostname."
+msgstr "Нет настроек для имени хоста Duo API."
+
+msgid "No configuration set for Duo client secret."
+msgstr "Нет настроек для секретного ключа клиента Duo."
+
+msgid "This is not a valid Duo client secret."
+msgstr "Это недействительный секретный ключ Duo."
+
+msgid "This is not a valid Duo API hostname."
+msgstr "Это недопустимое имя хоста Duo."
+
+msgid "This is not a valid Duo client ID."
+msgstr "Это недействительный ID клиента Duo."
+
+msgid "Cannot verify Duo settings."
+msgstr "Не удается подтвердить параметры Duo."
+
+msgid "Could not validate Duo configuration"
+msgstr "Не удалось проверить конфигурацию Duo."
+
+msgid "The property {0} is visible by administrators only."
+msgstr "Свойство {0} видно только администраторам."
+
+msgid "The property {0} should be contained in order to filter by {1}."
+msgstr "Свойство {0} должно содержать для фильтрации по {1}."
+
+msgid "The MFA token provided does not exist or is inactive."
+msgstr "Предоставленный токен MFA не существует или неактивен."
+
+msgid "No MFA provider set."
+msgstr "Поставщик MFA не задан."
+
+msgid "MFA verification date is not set for this provider."
+msgstr "Дата проверки MFA не установлена ​​для этого провайдера."
+
+msgid "MFA setting OTP provisioning uri is not set."
+msgstr "Настройка MFA Не задан URI для подготовки OTP."
+
+msgid "MFA setting Yubikey Id is not set."
+msgstr "Настройка MFA Yubikey Id не задан."
+
+msgid "The multi-factor authentication settings data should not be empty."
+msgstr "Необходимо указать данные настроек многофакторной аутентификации."
+
+msgid "The multi-factor authentication providers list is missing."
+msgstr "Список поставщиков многофакторной аутентификации отсутствует."
+
+msgid "Unknown MFA provider: {0}."
+msgstr "Неизвестный поставщик MFA: {0}."
+
+msgid "Could not validate multi-factor authentication provider configuration."
+msgstr "Не удалось проверить конфигурацию поставщика многофакторной проверки подлинности."
+
+msgid "No configuration set for Yubikey OTP secret key."
+msgstr "Не задана конфигурация для секретного ключа Yubikey OTP."
+
+msgid "No configuration set for Yubikey OTP clientId."
+msgstr "Не задана конфигурация для Yubikey OTP clientId."
+
+msgid "Yubikey OTP clientId should be an integer."
+msgstr "ID клиента Yubikey OTP должен быть целым числом."
+
+msgid "Yubikey OTP secret key is not valid."
+msgstr "Секретный ключ Yubikey OTP недействителен."
+
+msgid "Could not validate Yubikey configuration."
+msgstr "Не удалось проверить конфигурацию Yubikey."
+
+msgid "Duo Multi Factor Authentication"
+msgstr "Многофакторная аутентификация Duo"
+
+msgid "Something went wrong."
+msgstr "Что-то пошло не так."
+
+msgid "Please try again later or contact your administrator."
+msgstr "Пожалуйста, повторите попытку позже или обратитесь к администратору."
+
+msgid "Logs"
+msgstr "Логи"
+
+msgid "Retry"
+msgstr "Повторить"
+
+msgid "Getting started with Duo"
+msgstr "Начало работы с Duo"
+
+msgid "How does it work?"
+msgstr "Как это работает?"
+
+msgid "You sign in to passbolt just like you normally do."
+msgstr "Вы входите в систему passbolt, как обычно."
+
+msgid "Use you 2FA device to authenticate."
+msgstr "Используйте ваше 2FA устройство для аутентификации."
+
+msgid "Follow the procedure to login."
+msgstr "Следуйте инструкции для входа."
+
+msgid "Cancel"
+msgstr "Отмена"
+
+msgid "Get started"
+msgstr "Начать"
+
+msgid "Requirements"
+msgstr "Требования"
+
+msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
+msgstr "Чтобы продолжить, вам нужно установить Duo мобильное приложение или иметь устройство для аутентификации, которое поддерживается Duo."
+
+msgid "For the list of supported devices, see:"
+msgstr "Для списка поддерживаемых устройств см. :"
+
+msgid "Duo authentication methods"
+msgstr "Методы аутентификации Duo"
+
+msgid "Learn more"
+msgstr "Узнать больше"
+
+msgid "Duo multi-factor authentication is enabled!"
+msgstr "Многофакторная аутентификация Duo включена!"
+
+msgid "When logging in you will be asked to perform Duo Authentication."
+msgstr "При входе в систему вам будет предложено выполнить аутентификацию Duo."
+
+msgid "Since"
+msgstr "С"
+
+msgid "Multi factor authentication verification"
+msgstr "Проверка многофакторной аутентификации"
+
+msgid "Multi Factor Authentication Required"
+msgstr "Необходима многофакторная аутентификация"
+
+msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
+msgstr "Требуется дополнительная аутентификация с помощью Duo. Вы будете перенаправлены на Duo для проверки."
+
+msgid "Multi factor authentication"
+msgstr "Многофакторная аутентификация"
+
+msgid "Sorry no multi factor authentication is enabled for this organization."
+msgstr "К сожалению, для этой организации не включена многофакторная аутентификация."
+
+msgid "Please contact your administrator to enable multi-factor authentication."
+msgstr "Обратитесь к администратору, чтобы включить многофакторную аутентификацию."
+
+msgid "Please select a provider"
+msgstr "Пожалуйста, выберите поставщика"
+
+msgid "Enabled"
+msgstr "Включено"
+
+msgid "Disabled"
+msgstr "Неполноценный"
+
+msgid "What is multi-factor authentication?"
+msgstr "Что такое многофакторная аутентификация?"
+
+msgid "Multi-factor authentication (MFA) is a method of confirming a user's identity that requires presenting two or more pieces of evidence (or factor)."
+msgstr "Многофакторная аутентификация (MFA) — это метод подтверждения личности пользователя, который требует предоставления двух или более доказательств (или фактора)."
+
+msgid "learn more"
+msgstr "учить больше"
+
+msgid "Time based One Time Password (TOTP)"
+msgstr "Одноразовый пароль на основе времени (TOTP)"
+
+msgid "Scan this bar code"
+msgstr "Отсканируйте этот штрих-код"
+
+msgid "Enter the six digit number as presented on your phone or tablet."
+msgstr "Введите шестизначный номер, представленный на вашем телефоне или планшете."
+
+msgid "To proceed you need to install an application that supports Time Based One Time Passwords (TOTP) on your phone or tablet such as:"
+msgstr "Чтобы продолжить, вам необходимо установить на свой телефон или планшет приложение, которое поддерживает одноразовые пароли на основе времени (TOTP), например:"
+
+msgid "or"
+msgstr "или же"
+
+msgid "Getting started with Time based One Time Password (TOTP)"
+msgstr "Начало работы с одноразовым паролем на основе времени (TOTP)"
+
+msgid "When using a new browser, you need an additional code from your phone."
+msgstr "При использовании нового браузера потребуется дополнительный код с телефона."
+
+msgid "Once you enter this code, you can log in."
+msgstr "После того, как вы введете этот код, вы сможете войти в систему."
+
+msgid "Time based One Time Password (TOTP) is enabled!"
+msgstr "Включен одноразовый пароль на основе времени (TOTP)!"
+
+msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
+msgstr "При входе с нового устройства вам нужно будет ввести уникальный код подтверждения, сгенерированный приложением на вашем мобильном телефоне."
+
+msgid "Remember this device for a month."
+msgstr "Запомни это устройство на месяц."
+
+msgid "Yubikey One Time Password"
+msgstr "Юбикей одноразовый пароль"
+
+msgid "Plug in the yubikey and put your finger on it."
+msgstr "Включите юбикей и приложите к нему палец."
+
+msgid "Yubikey One Time Password is enabled!"
+msgstr "Активирован одноразовый пароль Yubikey!"
+
+msgid "When logging in from a new device you will need a unique code generated by your yubikey."
+msgstr "При входе с нового устройства вам потребуется уникальный код, сгенерированный вашим yubikey."
+
+msgid "verify"
+msgstr "проверять"
+
+msgid "Sign-in with Duo"
+msgstr "Войти с помощью Duo"
+
+msgid "Or try with another provider"
+msgstr "Или попробуйте с другим провайдером"
+
+msgid "Manage providers"
+msgstr "Управление провайдерами"
+
+msgid "Turn off"
+msgstr "Выключить"
+
+msgid "Your multi-factor authentication is disabled."
+msgstr "Ваша многофакторная аутентификация отключена."
+
+msgid "Multi-factor authentication settings were reset for your account by an administrator."
+msgstr "Настройки многофакторной аутентификации были сброшены для вашей учетной записи администратором."
+
+msgid "Please contact your administrator if you didn't request this action."
+msgstr "Если вы не запрашивали это действие, обратитесь к администратору."
+
+msgid "Log in passbolt"
+msgstr "Войти"
+
+msgid "The automatic_expiry field must be true."
+msgstr "Поле automatic_expiry должно иметь значение true."
+
+msgid "The automatic_update field must be true."
+msgstr "Поле automatic_update должно иметь значение true."
+
+msgid "The value should be an array."
+msgstr "Значение должно быть массивом."
+
+msgid "{0} marked several passwords as expired"
+msgstr "{0} отметил несколько паролей как истекшие"
+
+msgid "Some of your passwords expired"
+msgstr "Срок действия некоторых ваших паролей истек"
+
+msgid "{0} marked the password {1} as expired"
+msgstr "{0} отметил пароль {1} как истекший"
+
+msgid "You edited the password expiry settings"
+msgstr "Вы отредактировали параметры истечения срока действия пароля"
+
+msgid "{0} edited the password expiry settings"
+msgstr "{0} отредактировал настройки срока действия пароля"
+
+msgid "The send password expire setting should be a boolean."
+msgstr "Параметр срока действия пароля для отправки должен иметь логическое значение."
+
+msgid "The password expiry setting does not exist."
+msgstr "Параметр истечения срока действия пароля не существует."
+
+msgid "Could not validate the password expiry settings."
+msgstr "Не удалось проверить настройки истечения срока действия пароля."
+
+msgid "The password expiry settings have been updated."
+msgstr "Настройки срока действия пароля были обновлены."
+
+msgid "View them in passbolt"
+msgstr "Посмотреть их в passbolt"
+
+msgid "{0} resources were affected."
+msgstr "Ресурсов {0} было затронуто."
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Было бы слишком много перечислять их здесь, но вы можете проверить их на passbolt."
+
+msgid "Change them in passbolt"
+msgstr "Изменить их в passbolt"
+
+msgid "You have been requested to change them"
+msgstr "Вам было предложено изменить их"
+
+msgid "Access for users to your shared passwords have been revoked."
+msgstr "Доступ пользователей к вашим общим паролям был отозван."
+
+msgid "These passwords are now marked as expired."
+msgstr "Эти пароли теперь отмечены как истекшие."
+
+msgid "Please rotate them to ensure continued security."
+msgstr "Пожалуйста, смените их для обеспечения постоянной безопасности."
+
+msgid "Please rotate it to ensure continued security."
+msgstr "Пожалуйста, смените его для обеспечения постоянной безопасности."
+
+msgid "Change it in passbolt "
+msgstr "Изменить его в passbolt "
+
+msgid "Could not retrieve the password policies."
+msgstr "Не удалось восстановить политики паролей."
+
+msgid "The default generator is required."
+msgstr "Необходимо указать генератор по умолчанию."
+
+msgid "The default generator should be one of the following: {0}."
+msgstr "Генератор по умолчанию должен быть одним из следующих вариантов: {0}."
+
+msgid "The external dictionary check is required."
+msgstr "Требуется проверка внешнего словаря."
+
+msgid "The external dictionary check should be a boolean."
+msgstr "Проверка внешнего словаря должна быть логическим типом."
+
+msgid "The password generator settings is required."
+msgstr "Необходимы настройки генератора паролей."
+
+msgid "The password generator settings should not be empty."
+msgstr "Настройки генератора паролей не должны быть пустыми."
+
+msgid "The password generator settings should have at least one mask selected."
+msgstr "В настройках генератора паролей должна быть выбрана хотя бы одна маска."
+
+msgid "The passphrase generator settings is required."
+msgstr "Необходимы настройки генератора парольных фраз."
+
+msgid "The passphrase generator settings should not be empty."
+msgstr "Параметры генератора парольной фразы не должны быть пустыми."
+
+msgid "Could not validate the password policies settings."
+msgstr "Не удалось проверить настройки политики паролей."
+
+msgid "The passphrase generator words is required."
+msgstr "Требуется генератор ключевой фразы."
+
+msgid "The passphrase generator words should be between {0} and {1}."
+msgstr "Количество слов парольной фразы должно быть между {0} и {1}."
+
+msgid "The passphrase generator word separator is required."
+msgstr "Требуется разделитель слов."
+
+msgid "The passphrase generator word separator should be a valid UTF8 string."
+msgstr "Разделитель слов генератора парольной фразы должен быть корректной строкой UTF8."
+
+msgid "The passphrase generator word separator should be maximum {0} characters."
+msgstr "Длина разделителя генератора парольной фразы должна быть не более {0} символов."
+
+msgid "The passphrase generator word case is required."
+msgstr "Требуется регистр парольной фразы."
+
+msgid "The passphrase generator word case should be one of the following: {0}."
+msgstr "Регистр слов парольной фразы должен быть одним из следующих: {0}."
+
+msgid "The password generator length should be between {0} and {1}."
+msgstr "Длина генерации паролей должна быть между {0} и {1}."
+
+msgid "The password generator length is required."
+msgstr "Введите длину генерируемого пароля."
+
+msgid "The password generator mask upper is required."
+msgstr "Необходимо указать маску заглавных букв."
+
+msgid "The password generator mask upper should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask lower is required."
+msgstr "Необходима маска нижнего регистра."
+
+msgid "The password generator mask lower should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask digit is required."
+msgstr "Маска генератора паролей должна содержать цифры."
+
+msgid "The password generator mask digit should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask parenthesis is required."
+msgstr "Требуется скобка для генерации паролей для маски."
+
+msgid "The password generator mask parenthesis should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask emoji is required."
+msgstr "Требуется значение маски эмодзи."
+
+msgid "The password generator mask emoji should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask char1 is required."
+msgstr "Требуется значение маски char1."
+
+msgid "The password generator mask char1 should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask char2 is required."
+msgstr "Требуется значение маски char2."
+
+msgid "The password generator mask char2 should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask char3 is required."
+msgstr "Требуется значение маски char3."
+
+msgid "The password generator mask char3 should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask char4 is required."
+msgstr "Требуется значение маски char4."
+
+msgid "The password generator mask char4 should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator mask char5 is required."
+msgstr "Требуется значение маски char5."
+
+msgid "The password generator mask char5 should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "The password generator exclude look alike chars is required."
+msgstr "Требуется исключить похожие внешне символы."
+
+msgid "The password generator exclude look alike chars should be a boolean type."
+msgstr "Значение маски должно быть логическим типом."
+
+msgid "Record not found"
+msgstr "Запись не найдена"
+
+msgid "The request data is empty."
+msgstr "Запрашиваемые данные отсутствуют."
+
+msgid "The request data is invalid: expected a collection."
+msgstr "Некорректные данные запроса: ожидается коллекция."
+
+msgid "The request data is invalid: invalid fields."
+msgstr "Недопустимые данные запроса: некорректные поля."
+
+msgid "The request data is invalid: id missing."
+msgstr "Некорректные данные запроса: отсутствует id."
+
+msgid "The request data is invalid: id invalid."
+msgstr "Недопустимые данные запроса: неверный идентификатор."
+
+msgid "The request data is invalid: control_function missing."
+msgstr "Некорректные данные запроса: control_function отсутствует."
+
+msgid "The request data is invalid: control_function invalid."
+msgstr "Некорректные данные запроса: control_function некорректен."
+
+msgid "The request data is invalid: ids must be unique."
+msgstr "Некорректные данные запроса: идентификаторы должны быть уникальными."
+
+msgid "An action identifier should be a valid UUID."
+msgstr "Идентификатор действия должен быть действительным UUID."
+
+msgid "The foreign model should be a valid ASCII string."
+msgstr "Внешняя модель должна быть допустимой строкой ASCII."
+
+msgid "The foreign model should be one of the following: {0}."
+msgstr "Внешняя модель должна быть одной из следующих: {0}."
+
+msgid "The foreign model name used length should be maximum {0} characters."
+msgstr "Длина используемого имени сторонней модели не должна превышать {0} символов."
+
+msgid "A foreign model is required."
+msgstr "Нужна внешняя модель."
+
+msgid "The foreign model should not be empty."
+msgstr "Внешняя модель не должна быть пустой."
+
+msgid "The control function should be a valid UTF8 string."
+msgstr "Функция управления должна быть допустимой строкой UTF8."
+
+msgid "The control function name used length should be maximum {0} characters."
+msgstr "Длина используемого имени функции управления не должна превышать {0} символов."
+
+msgid "The control function is not supported."
+msgstr "Функция управления не поддерживается."
+
+msgid "A control function is required."
+msgstr "Требуется функция управления."
+
+msgid "The control function should not be empty."
+msgstr "Функция управления не должна быть пустой."
+
+msgid "The identifier of the user who created the Rbac should be a valid UUID."
+msgstr "Идентификатор пользователя, который создал Rbac должен быть действительным UUID."
+
+msgid "The identifier of the user who modified the Rbac should be a valid UUID."
+msgstr "Идентификатор пользователя, который модифицировал Rbac должен быть действительным UUID."
+
+msgid "The identifier of the user who modified the Rbac should not be empty."
+msgstr "Идентификатор пользователя, который изменял Rbac не должен быть пустым."
+
+msgid "An RBAC entry already exists for the given id."
+msgstr "Запись RBAC уже существует для данного идентификатора."
+
+msgid "An entry already exists for the given role and action ids."
+msgstr "Запись уже существует для данной роли и идентификаторов действий."
+
+msgid "The control function is not allowed for this UI Action."
+msgstr "Функция управления для этого пользовательского интерфейса не допускается."
+
+msgid "An action already exists for the given name."
+msgstr "Действие уже существует для данного имени."
+
+msgid "The RBAC settings could not be updated."
+msgstr "Настройки RBAC не могут быть обновлены."
+
+msgid "No data found."
+msgstr "Данные не найдены."
+
+msgid "Some data not found."
+msgstr "Некоторые данные не найдены."
+
+msgid "The UI actions data could not be validated."
+msgstr "Не удалось проверить данные действий пользовательского интерфейса."
+
+msgid "5 minutes"
+msgstr "5 минут"
+
+msgid "15 minutes"
+msgstr "15 минут"
+
+msgid "30 minutes"
+msgstr "30 минут"
+
+msgid "1 hour"
+msgstr "1 час"
+
+msgid "until I log out"
+msgstr "пока я не выйду"
+
+msgid "Only administrators can view reports."
+msgstr "Только администраторы могут просматривать отчеты."
+
+msgid "The requested report `{0}` does not exist."
+msgstr "Запрошенный отчет `{0}` не существует."
+
+msgid "Description"
+msgstr "Описание"
+
+msgid "Passbolt report"
+msgstr "Отчет Passbolt"
+
+msgid "Report name"
+msgstr "Название отчета"
+
+msgid "Generated by"
+msgstr "Создано"
+
+msgid "Creation date"
+msgstr "Дата создания"
+
+msgid "All users have completed the setup."
+msgstr "Все пользователи завершили настройку."
+
+msgid "Name"
+msgstr "Имя"
+
+msgid "Username"
+msgstr "Имя пользователя"
+
+msgid "Created since"
+msgstr "Создано с"
+
+msgid "Setup completed"
+msgstr "Настройка завершена"
+
+msgid "Role"
+msgstr "Роль"
+
+msgid "No"
+msgstr "Нет"
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Имя должно быть допустимой строкой BMP-UTF8."
+
+msgid "The slug should be a valid BMP-UTF8 string."
+msgstr "Слаг должен быть допустимой строкой BMP-UTF8."
+
+msgid "A slug is required."
+msgstr "Требуется слизняк."
+
+msgid "The slug length should be maximum {0} characters."
+msgstr "Длина слага не должна превышать {0} символов."
+
+msgid "The slug should not be empty"
+msgstr "Слаг не должен быть пустым"
+
+msgid "The definition should be a valid BMP-UTF8 string."
+msgstr "Определение должно быть допустимой строкой BMP-UTF8."
+
+msgid "A definition is required."
+msgstr "Требуется определение."
+
+msgid "The definition should not be empty."
+msgstr "Определение не должно быть пустым."
+
+msgid "The message should be valid JSON message."
+msgstr "Сообщение должно быть действительным сообщением JSON."
+
+msgid "A resource type already exists with this slug."
+msgstr "Тип ресурса с этим слагом уже существует."
+
+msgid "A resource type already exists with this definition."
+msgstr "Тип ресурса с этим определением уже существует."
+
+msgid "The self registration setting id should be a valid UUID."
+msgstr "Идентификатор параметра саморегистрации должен быть действительным UUID."
+
+msgid "An email is required."
+msgstr "Необходимо указать адрес электронной почты."
+
+msgid "The provider should not be empty."
+msgstr "Провайдер не может быть пустым."
+
+msgid "The provider should be part of the supported list: {0}."
+msgstr "Поставщик должен быть в списке поддерживаемых: {0}."
+
+msgid "The data should not be empty."
+msgstr "Данные не должны быть пустыми."
+
+msgid "The list of allowed domains should not be empty."
+msgstr "Список разрешенных доменов не должен быть пустым."
+
+msgid "The list of allowed domains should be an array of strings."
+msgstr "Список разрешенных доменов должен быть массивом строк."
+
+msgid "The domain #{0} should be a valid domain."
+msgstr "Домен #{0} должен быть допустимым доменом."
+
+msgid "Allowed domains: {0}"
+msgstr "Разрешенные домены: {0}"
+
+msgid "{0} edited the self registration settings."
+msgstr "{0} изменил настройки саморегистрации."
+
+msgid "You edited the self registration settings."
+msgstr "Вы изменили настройки саморегистрации."
+
+msgid "{0} just created an account on passbolt!"
+msgstr "{0} только что создал учетную запись на passbolt!"
+
+msgid "The email is already registered."
+msgstr "Такой email уже зарегистрирован."
+
+msgid "The self registration plugin is not enabled."
+msgstr "Плагин саморегистрации не включен."
+
+msgid "The self registration data could not be validated."
+msgstr "Данные саморегистрации не могут быть проверены."
+
+msgid "The self registration is disabled."
+msgstr "Саморегистрация отключена."
+
+msgid "The domain is not supported for self-registration."
+msgstr "Домен не поддерживается для саморегистрации."
+
+msgid "Email domain safe list"
+msgstr "Список безопасных доменов электронной почты"
+
+msgid "Could not parse the self registration settings found in database."
+msgstr "Не удалось разобрать настройки саморегистрации, найденные в базе данных."
+
+msgid "Could not validate the self registration settings found in database."
+msgstr "Не удалось проверить настройки саморегистрации, найденные в базе данных."
+
+msgid "Could not validate the self registration settings."
+msgstr "Не удалось проверить настройки саморегистрации."
+
+msgid "{0} updated the self registration settings"
+msgstr "{0} изменил настройки саморегистрации"
+
+msgid "Status: {0}"
+msgstr "Статус: {0}"
+
+msgid "A sender name is required."
+msgstr "Требуется имя отправителя."
+
+msgid "The sender name should not be empty."
+msgstr "Имя отправителя не должно быть пустым."
+
+msgid "The sender name should be a valid BMP-UTF8 string."
+msgstr "Имя отправителя должно быть допустимой строкой BMP-UTF8."
+
+msgid "A sender email is required."
+msgstr "Электронная почта отправителя обязательна."
+
+msgid "The sender email should not be empty."
+msgstr "Адрес электронной почты отправителя не должен быть пустым."
+
+msgid "The sender email should be a valid BMP-UTF8 string."
+msgstr "Электронная почта отправителя должна быть действительной строкой BMP-UTF8."
+
+msgid "A host name is required."
+msgstr "Требуется имя хоста."
+
+msgid "The host name should not be empty."
+msgstr "Имя хоста не должно быть пустым."
+
+msgid "The host name should be a valid BMP-UTF8 string."
+msgstr "Имя хоста должно быть допустимой строкой BMP-UTF8."
+
+msgid "A TLS setting is required."
+msgstr "Требуется настройка TLS."
+
+msgid "The TLS setting should be \"true\" or NULL."
+msgstr "Параметр TLS должен быть \"true\" или NULL."
+
+msgid "A port number is required."
+msgstr "Требуется номер порта."
+
+msgid "The port number should be numeric."
+msgstr "Номер порта должен быть числовым."
+
+msgid "The port number should be between {0} and {1}."
+msgstr "Номер порта должен быть между {0} и {1}."
+
+msgid "The username should be a valid BMP-UTF8 string."
+msgstr "Имя пользователя должно быть допустимой строкой BMP-UTF8."
+
+msgid "A password is required."
+msgstr "Требуется пароль."
+
+msgid "The password should be a valid BMP-UTF8 string."
+msgstr "Пароль должен быть действительной строкой BMP-UTF8."
+
+msgid "The test email should be a valid email address."
+msgstr "Тестовый адрес электронной почты должен быть действительным адресом электронной почты."
+
+msgid "The authentication method is required."
+msgstr "Требуется способ аутентификации."
+
+msgid "The authentication method should be one of the following: {0}."
+msgstr "Метод аутентификации должен быть одним из следующих: {0}."
+
+msgid "The sender email should be a valid email address."
+msgstr "Электронная почта отправителя должна быть действительным адресом электронной почты."
+
+msgid "A test recipient is required."
+msgstr "Требуется получатель теста."
+
+msgid "SMTP settings endpoints disabled."
+msgstr "Конечные точки настроек SMTP отключены."
+
+msgid "The client should be a valid IP or a valid domain."
+msgstr "Клиент должен быть действительным IP или действительным доменом."
+
+msgid "Could not validate the smtp settings."
+msgstr "Не удалось проверить настройки smtp."
+
+msgid "Could not validate the smtp settings found in database."
+msgstr "Не удалось проверить настройки smtp, найденные в базе данных."
+
+msgid "The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database."
+msgstr "Ключ сервера OpenPGP не может быть использован для расшифровки настроек SMTP, хранящихся в базе данных."
+
+msgid "To fix this problem, you need to configure the SMTP server again."
+msgstr "Чтобы устранить эту проблему, вам необходимо снова настроить SMTP-сервер."
+
+msgid "not found"
+msgstr "не найдено"
+
+msgid "database"
+msgstr "база данных"
+
+msgid "env variables"
+msgstr "переменные среды"
+
+msgid "undefined"
+msgstr "неопределённый"
+
+msgid "Passbolt test email"
+msgstr "Тестовая электронная почта Passbolt"
+
+msgid "Congratulations!"
+msgstr "Поздравляем!"
+
+msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
+msgstr "Если вы получили это письмо, это означает, что ваша конфигурация smtp passbolt работает нормально."
+
+msgid "The data entered are not correct"
+msgstr "Введенные данные неверны"
+
+msgid "A connection could not be established with the credentials provided."
+msgstr "Не удалось установить соединение с предоставленными учетными данными."
+
+msgid "Please verify the settings."
+msgstr "Пожалуйста, проверьте настройки."
+
+msgid "The data entered are not correct: {0}"
+msgstr "Введены неверные данные: {0}"
+
+msgid "The session has expired. Please start the configuration again."
+msgstr "Сеанс истек. Пожалуйста, запустите настройку заново."
+
+msgid "System check"
+msgstr "Проверка системы"
+
+msgid "Subscription key"
+msgstr "Ключ подписки"
+
+msgid "Database"
+msgstr "База данных"
+
+msgid "Server keys"
+msgstr "Ключи сервера"
+
+msgid "Options"
+msgstr "Опции"
+
+msgid "Emails"
+msgstr "электронные письма"
+
+msgid "First user"
+msgstr "Первый пользователь"
+
+msgid "Installation"
+msgstr "Монтаж"
+
+msgid "That's it!"
+msgstr "Вот и все!"
+
+msgid "A driver name is required."
+msgstr "Введите имя драйвера."
+
+msgid "The driver name should not be empty."
+msgstr "Имя драйвера не должно быть пустым."
+
+msgid "The database driver should be one of the following: {0}."
+msgstr "Драйвер базы данных должен быть одним из следующих: {0}."
+
+msgid "The password should not contain quotes."
+msgstr "Пароль не должен содержать кавычек."
+
+msgid "A database name is required."
+msgstr "Требуется имя базы данных."
+
+msgid "The database name should not be empty."
+msgstr "Имя базы данных не должно быть пустым."
+
+msgid "The database name should be a valid BMP-UTF8 string."
+msgstr "Имя базы данных должно быть допустимой строкой BMP-UTF8."
+
+msgid "The database name should not contain dashes."
+msgstr "Имя базы данных не должно содержать дефисов."
+
+msgid "The schema is required on PostgreSQL"
+msgstr "Необходимо указать схему для PostgreSQL"
+
+msgid "The schema should be a valid BMP-UTF8 string."
+msgstr "Схема должна быть корректной строкой BMP-UTF8."
+
+msgid "An OpenPGP public key is required."
+msgstr "Требуется открытый ключ OpenPGP."
+
+msgid "The OpenPGP public key should not be empty."
+msgstr "Открытый ключ OpenPGP не должен быть пустым."
+
+msgid "The OpenPGP public key should be a valid ASCII string."
+msgstr "Открытый ключ OpenPGP должен быть допустимой строкой ASCII."
+
+msgid "The key is not a valid OpenPGP public key."
+msgstr "Ключ не является действительным открытым ключом OpenPGP."
+
+msgid "The OpenPGP public key should not have an expiry date."
+msgstr "Открытый ключ OpenPGP не должен иметь срока действия."
+
+msgid "The OpenPGP public key cannot be used to encrypt."
+msgstr "Открытый ключ OpenPGP нельзя использовать для шифрования."
+
+msgid "An OpenPGP private key is required."
+msgstr "Требуется закрытый ключ OpenPGP."
+
+msgid "The OpenPGP private key should not be empty."
+msgstr "Закрытый ключ OpenPGP не должен быть пустым."
+
+msgid "The OpenPGP private key should be a valid ASCII string."
+msgstr "Закрытый ключ OpenPGP должен быть допустимой строкой ASCII."
+
+msgid "The value is not a valid OpenPGP private key."
+msgstr "Значение не является допустимым закрытым ключом OpenPGP."
+
+msgid "The OpenPGP private key should not have an expiry date."
+msgstr "Закрытый ключ OpenPGP не должен иметь срока действия."
+
+msgid "The OpenPGP private key cannot be used to decrypt."
+msgstr "Закрытый ключ OpenPGP нельзя использовать для расшифровки."
+
+msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
+msgstr "Обратите внимание, что passbolt не поддерживает ключ OpenPGP, защищенный секретом."
+
+msgid "A fingerprint is required."
+msgstr "Требуется отпечаток пальца."
+
+msgid "The fingerprint should not be empty."
+msgstr "Отпечаток пальца не должен быть пустым."
+
+msgid "The fingerprint should be a valid alphanumeric string."
+msgstr "Отпечаток пальца должен быть допустимой буквенно-цифровой строкой."
+
+msgid "The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints."
+msgstr "Отпечаток пальца не соответствует отпечатку открытого и закрытого ключей OpenPGP."
+
+msgid "A full base url is required."
+msgstr "Требуется полный базовый URL."
+
+msgid "The full base url should not be empty"
+msgstr "Укажите полный базовый URL."
+
+msgid "The full base url should be a valid BMP-UTF8 string."
+msgstr "Полный базовый URL-адрес должен быть допустимой строкой BMP-UTF8."
+
+msgid "A force ssl status is required."
+msgstr "Требуется принудительный статус ssl."
+
+msgid "The force ssl setting should be a valid boolean."
+msgstr "Параметр force ssl должен быть допустимым логическим значением."
+
+msgid "The database schema does not match the one expected"
+msgstr "Схема базы данных не соответствует ожидаемой"
+
+msgid "The database cannot be installed"
+msgstr "База данных не может быть установлена"
+
+msgid "There was a problem creating the first user"
+msgstr "Не удалось создать первого пользователя"
+
+msgid "There was a problem creating the registration token"
+msgstr "Возникла проблема с созданием токена регистрации."
+
+msgid "The passbolt config is writable."
+msgstr "Конфигурация passbolt доступна для записи."
+
+msgid "The passbolt config is not writable."
+msgstr "Конфигурация passbolt недоступна для записи."
+
+msgid "Ensure the file "
+msgstr "Убедитесь, что файл"
+
+msgid "you can try:"
+msgstr "можешь попробовать:"
+
+msgid "The server OpenPGP public key file is writable."
+msgstr "Файл открытого ключа сервера OpenPGP доступен для записи."
+
+msgid "The server OpenPGP public key file is not writable."
+msgstr "Файл открытого ключа OpenPGP сервера недоступен для записи."
+
+msgid "Ensure the file {0} is writable by the webserver user."
+msgstr "Убедитесь, что файл {0} доступен для записи пользователю веб-сервера."
+
+msgid "The server OpenPGP private key file is writable."
+msgstr "Файл закрытого ключа сервера OpenPGP доступен для записи."
+
+msgid "The server OpenPGP private key file is not writable."
+msgstr "Файл закрытого ключа OpenPGP сервера недоступен для записи."
+
+msgid "Create your user account!"
+msgstr "Создайте свою учетную запись пользователя!"
+
+msgid "Admin user details"
+msgstr "Сведения о пользователе-администраторе"
+
+msgid "First name"
+msgstr "Имя"
+
+msgid "Last name"
+msgstr "Фамилия"
+
+msgid "mail@yourdomain.com"
+msgstr "почта@вашдомен.com"
+
+msgid "Next"
+msgstr "Следующий"
+
+msgid "Enter your database details."
+msgstr "Введите данные вашей базы данных."
+
+msgid "Database configuration"
+msgstr "Конфигурация базы данных"
+
+msgid "An existing database has been detected on your server. The connection details are pre-filled below."
+msgstr "На вашем сервере обнаружена существующая база данных. Детали подключения предварительно заполнены ниже."
+
+msgid "You can keep it as it is (default), or replace it with the details of another database."
+msgstr "Вы можете оставить его как есть (по умолчанию) или заменить его данными из другой базы данных."
+
+msgid "Database connection url"
+msgstr "URL-адрес подключения к базе данных"
+
+msgid "host name or ip address"
+msgstr "имя хоста или IP-адрес"
+
+msgid "username"
+msgstr "имя пользователя"
+
+msgid "password"
+msgstr "пароль"
+
+msgid "Password"
+msgstr "Пароль"
+
+msgid "database name"
+msgstr "имя базы данных"
+
+msgid "Database name"
+msgstr "Имя базы данных"
+
+msgid "schema"
+msgstr "схема"
+
+msgid "Schema"
+msgstr "Схема"
+
+msgid "Enter your SMTP server settings."
+msgstr "Введите настройки SMTP-сервера."
+
+msgid "Email configuration"
+msgstr "Конфигурация электронной почты"
+
+msgid "admin or company name"
+msgstr "админ или название компании"
+
+msgid "Sender name"
+msgstr "Имя отправителя"
+
+msgid "email@company.com"
+msgstr "электронная почта@company.com"
+
+msgid "Sender email"
+msgstr "Электронная почта отправителя"
+
+msgid "SMTP server configuration"
+msgstr "Конфигурация SMTP-сервера"
+
+msgid "SMTP host"
+msgstr "SMTP-хост"
+
+msgid "Use TLS?"
+msgstr "Использовать TLS?"
+
+msgid "port"
+msgstr "порт"
+
+msgid "Port"
+msgstr "Порт"
+
+msgid "Authentication method"
+msgstr "Метод аутентификации"
+
+msgid "client"
+msgstr "клиент"
+
+msgid "Client"
+msgstr "Клиент"
+
+msgid "Passbolt is not configured."
+msgstr "Passbolt не настроен."
+
+msgid "Passbolt is not configured yet!"
+msgstr "Passbolt еще не настроен!"
+
+msgid "If you see this page, it means that passbolt is present on your server but not configured. Click on \"Get Started\" to launch the configuration wizard."
+msgstr "Если вы видите эту страницу, это означает, что на вашем сервере присутствует пароль, но он не настроен. Нажмите «Начать», чтобы запустить мастер настройки."
+
+msgid "Get Started"
+msgstr "Начать"
+
+msgid "Create a new server OpenPGP key or {0} an existing one."
+msgstr "Создайте новый ключ OpenPGP сервера или {0} существующий."
+
+msgid "import"
+msgstr "импорт"
+
+msgid "Create a new OpenPGP key for your server"
+msgstr "Создайте новый ключ OpenPGP для вашего сервера"
+
+msgid "My company server name"
+msgstr "Имя сервера моей компании"
+
+msgid "Server Name"
+msgstr "Имя сервера"
+
+msgid "admin@your-server.com"
+msgstr "admin@ваш-сервер.com"
+
+msgid "Server Email"
+msgstr "Электронная почта сервера"
+
+msgid "add a comment (optional)"
+msgstr "добавить комментарий (необязательно)"
+
+msgid "Comment"
+msgstr "Комментарий"
+
+msgid "Import an existing key or {0} a new one."
+msgstr "Импортируйте существующий ключ или {0} новый."
+
+msgid "create"
+msgstr "Создайте"
+
+msgid "Copy paste the OpenPGP private key below"
+msgstr "Скопируйте и вставьте закрытый ключ OpenPGP ниже"
+
+msgid "Browse"
+msgstr "Просматривать"
+
+msgid "Or select a file from your computer"
+msgstr "Или выберите файл на своем компьютере"
+
+msgid "Some binary things are happening..."
+msgstr "Происходят какие-то бинарные вещи..."
+
+msgid "Passbolt Pro activation."
+msgstr "Активация Passbolt Pro."
+
+msgid "Copy paste your Passbolt Pro subscription key here"
+msgstr "Скопируйте и вставьте сюда ключ подписки Passbolt Pro."
+
+msgid "Choose your preferences."
+msgstr "Выберите свои предпочтения."
+
+msgid "Full Base Url"
+msgstr "Полный базовый URL"
+
+msgid "Full base url"
+msgstr "Полный базовый URL"
+
+msgid "This is the url where passbolt will be accessible. This url will be used for places where the passbolt url cannot be guessed automatically, such as links in emails. No trailing slash."
+msgstr "Это URL-адрес, по которому будет доступен passbolt. Этот URL-адрес будет использоваться для мест, где URL-адрес пароля не может быть угадан автоматически, например ссылки в электронных письмах. Без завершающей косой черты."
+
+msgid "Force SSL?"
+msgstr "Принудительно использовать SSL?"
+
+msgid "Forcing SSL means that passbolt will not accept connections coming from a non secure protocol. If SSL is forced, your server has to be configured for HTTPS. It is highly recommended that you do so."
+msgstr "Принудительное использование SSL означает, что passbolt не будет принимать соединения, исходящие из незащищенного протокола. Если SSL принудительно, ваш сервер должен быть настроен для HTTPS. Настоятельно рекомендуется сделать это."
+
+msgid "Welcome to Passbolt! Let's get started with the configuration."
+msgstr "Добро пожаловать в Passbolt! Давайте приступим к настройке."
+
+msgid "Nice one! Your environment is ready for passbolt."
+msgstr "Хороший! Ваша среда готова к проходному болту."
+
+msgid "Oops!! Passbolt cannot run yet on your server."
+msgstr "Ой!! Passbolt еще не может работать на вашем сервере."
+
+msgid "Environment is configured correctly."
+msgstr "Среда настроена правильно."
+
+msgid "URL rewriting is not properly configured on your server."
+msgstr "Перезапись URL неправильно настроена на вашем сервере."
+
+msgid "GPG is configured correctly."
+msgstr "GPG настроен правильно."
+
+msgid "GPG Configuration"
+msgstr "Конфигурация GPG"
+
+msgid "SSL"
+msgstr "SSL-сертификат"
+
+msgid "SSL access is enabled."
+msgstr "SSL-доступ включен."
+
+msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
+msgstr "SSL-доступ не включен. Вы все еще можете продолжить, но настоятельно рекомендуется настроить веб-сервер на использование HTTPS, прежде чем продолжить."
+
+msgid "Start configuration"
+msgstr "Начать настройку"
+
+msgid "The configuration is complete"
+msgstr "Конфигурация завершена"
+
+msgid "Success!"
+msgstr "Успех!"
+
+msgid "You have completed successfully the configuration procedure, congrats!"
+msgstr "Вы успешно завершили процедуру настройки, поздравляем!"
+
+msgid "You will soon be redirected to passbolt to complete your account setup."
+msgstr "Вскоре вы будете перенаправлены на страницу passbolt для завершения настройки учетной записи."
+
+msgid "You will soon be redirected to the login page."
+msgstr "Вскоре вы будете перенаправлены на страницу входа."
+
+msgid "next"
+msgstr "следующий"
+
+msgid "Click here if you can't wait"
+msgstr "Нажмите здесь, если вам не терпится"
+
+msgid "Errors details"
+msgstr "Сведения об ошибках"
+
+msgid "Installing"
+msgstr "Установка"
+
+msgid "Existing installation?"
+msgstr "Существующая установка?"
+
+msgid "If you want to use an existing passbolt database, the installer will take care of updating it to the current passbolt version while keeping your data."
+msgstr "Если вы хотите использовать существующую базу данных passbolt, установщик позаботится об ее обновлении до текущей версии passbolt, сохранив при этом ваши данные."
+
+msgid "As a precaution, do not forget to backup your database before you continue."
+msgstr "В качестве меры предосторожности не забудьте сделать резервную копию базы данных, прежде чем продолжить."
+
+msgid "Help"
+msgstr "Помощь"
+
+msgid "Need help? You can find more information on how to install passbolt in the official online help."
+msgstr "Нужна помощь? Дополнительную информацию о том, как установить passbolt, можно найти в официальной онлайн-справке."
+
+msgid "What subscription key?"
+msgstr "Какой ключ подписки?"
+
+msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
+msgstr "Ключ подписки — это файл, который был отправлен вам при покупке Passbolt Pro. Нам нужен ключ подписки, чтобы активировать Pro-функции passbolt."
+
+msgid "Send test email"
+msgstr "Отправить тестовое письмо"
+
+msgid "The test email has been sent successfully!"
+msgstr "Тестовое письмо успешно отправлено!"
+
+msgid "Email could not be sent:"
+msgstr "Email не может быть отправлено:"
+
+msgid "See trace"
+msgstr "Посмотреть трассировку"
+
+msgid "Your email address"
+msgstr "Ваша электронная почта"
+
+msgid "Why do I need a SMTP server?"
+msgstr "Зачем мне нужен SMTP-сервер?"
+
+msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
+msgstr "Passbolt нужен smtp-сервер для отправки электронных писем с приглашением после создания учетной записи и для отправки уведомлений по электронной почте."
+
+msgid "The requested address was not found on this server."
+msgstr "Запрошенный адрес не найден на этом сервере."
+
+msgid "Please double check the url."
+msgstr "Пожалуйста, дважды проверьте URL."
+
+msgid "Maybe the page was deleted or moved."
+msgstr "Возможно, страница была удалена или перемещена."
+
+msgid "Health checks"
+msgstr "Проверки здоровья"
+
+msgid "Passbolt API Status"
+msgstr "Статус Passbolt API"
+
+msgid "SSL access is not enabled."
+msgstr "SSL-доступ не включен."
+
+msgid "Group manager"
+msgstr "Менеджер группы"
+
+msgid "Member"
+msgstr "Член"
+
+msgid "Updated roles"
+msgstr "Обновленные роли"
+
+msgid "is now group manager"
+msgstr "теперь менеджер группы"
+
+msgid "is not anymore group manager"
+msgstr "больше не менеджер группы"
+
+msgid "Terms"
+msgstr "Условия"
+
+msgid "Privacy"
+msgstr "Конфиденциальность"
+
+msgid "Credits"
+msgstr "Кредиты"
+
+msgid "Versions"
+msgstr "Версии"
+
+msgid "home"
+msgstr "дом"
+
+msgid "login"
+msgstr "авторизоваться"
+
+msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
+msgstr "Администратор {0} ({1}) удалён из организации."
+
+msgid "{0} deleted you from the passbolt organisation."
+msgstr "{0} удалил вас из организации."
+
+msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
+msgstr "Свяжитесь с администратором, инициировавшим операцию, если вы считаете, что это выглядит подозрительно."
+
+msgid "Account suspended"
+msgstr "Аккаунт приостановлен"
+
+msgid "Your account has been suspended."
+msgstr "Ваша учетная запись была заблокирована."
+
+msgid "You are not able to sign in to passbolt and receive email notifications."
+msgstr "Вы не смогли войти в passbolt и не сможете получать уведомления по электронной почте."
+
+msgid "Other users can still share resources with you and add you to a group."
+msgstr "Другие пользователи все еще могут делиться с вами ресурсами и добавлять вас в группы."
+
+msgid "Contact your admin"
+msgstr "Свяжитесь с вашим администратором"
+
+msgid "{0} changed your role to user."
+msgstr "{0} изменил вашу роль на пользователя."
+
+msgid "{0} changed the role of {1} to user."
+msgstr "{0} изменил роль {1} на пользователя."
+
+msgid "{0} can no longer perform administration tasks."
+msgstr "{0} больше не может выполнять административные функции."
+
+msgid "You"
+msgstr "Вы"
+
+msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
+msgstr "{0} ({1}) только что завершил восстановление учетной записи. Не стесняйтесь связаться с этим пользователем, если вы считаете, что это действие выглядит подозрительно."
+
+msgid "View user in passbolt"
+msgstr "Просмотр пользователя в passbolt"
+
+msgid "{0} cannot complete the account recovery process!"
+msgstr "{0} не может завершить процесс восстановления учетной записи!"
+
+msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
+msgstr "Этот пользователь потерял свой закрытый ключ и/или парольную фразу и не может завершить процесс восстановления учетной записи."
+
+msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
+msgstr "К сожалению, им понадобится ваша помощь, чтобы удалить свою учетную запись и перезапустить ее с нуля."
+
+msgid "Please check with them first to confirm."
+msgstr "Пожалуйста, сначала свяжитесь с ними, чтобы подтвердить."
+
+msgid "User suspended"
+msgstr "Пользователь заблокирован"
+
+msgid "The user {0} has been suspended."
+msgstr "Пользователь {0} был заблокирован."
+
+msgid "This user will not be able to sign in to passbolt and receive email notifications."
+msgstr "Этот пользователь не сможет входить в passbolt и получать email уведомления."
+
+msgid "Other users can share resources and add this user to a group."
+msgstr "Другие пользователи могут делить ресурсами и добавляться этого пользователя в группу."
+
+msgid "Check user suspension"
+msgstr "Проверка приостановления пользователя"
+
+msgid "Welcome to {0}!"
+msgstr "Добро пожаловать в {0}!"
+
+msgid "{0} used the self registration feature to create an account on passbolt."
+msgstr "{0} использовал функцию саморегистрации для создания учетной записи на passbolt."
+
+msgid "You have initiated an account recovery!"
+msgstr "Вы инициировали восстановление аккаунта!"
+
+msgid "Welcome back!"
+msgstr "Добро пожаловать обратно!"
+
+msgid "You just requested to recover your passbolt account on this device."
+msgstr "Вы только что запросили восстановление своей учетной записи passbolt на этом устройстве."
+
+msgid "Make sure you have a backup of your secret key handy."
+msgstr "Убедитесь, что у вас есть резервная копия секретного ключа."
+
+msgid "Click on the link below to proceed."
+msgstr "Нажмите на ссылку ниже, чтобы продолжить."
+
+msgid "start recovery"
+msgstr "начать восстановление"
+
+msgid "You just completed an account recovery. Feel free to get in touch with an admin if you feel this action looks suspicious."
+msgstr "Вы только что завершили восстановление учетной записи. Не стесняйтесь связаться с администратором, если вы считаете, что это действие выглядит подозрительно."
+
+msgid "{0} just created an account for you on passbolt!"
+msgstr "{0} только что создал для вас аккаунт на passbolt!"
+
+msgid "Welcome {0}"
+msgstr "Добро пожаловать {0}"
+
+msgid "{0} just invited you to join passbolt at {1}"
+msgstr "{0} только что пригласил вас присоединиться к passbolt в {1}"
+
+msgid "Passbolt is an open source password manager."
+msgstr "Passbolt — менеджер паролей с открытым исходным кодом."
+
+msgid "It is designed to allow sharing credentials securely with your team!"
+msgstr "Он предназначен для безопасного обмена учетными данными с вашей командой!"
+
+msgid "Let's take the next five minutes to get you started!"
+msgstr "Давайте потратим следующие пять минут, чтобы вы начали!"
+
+msgid "get started"
+msgstr "начать"
+
+msgid "You just created your account on passbolt!"
+msgstr "Вы только что создали свою учетную запись на passbolt!"
+
+msgid "You just opened an account on passbolt at {0}."
+msgstr "Вы только что открыли учетную запись в системе passbolt по адресу {0}."
+
+msgid "There was a change in the user directory."
+msgstr "В каталоге пользователя были внесены изменения."
+
+msgid "You have been requested to add members to a group."
+msgstr "Вас попросили добавить участников в группу."
+
+msgid "{0} requested you to add members to a group"
+msgstr "{0} попросил вас добавить участников в группу"
+
+msgid "Group: {0}"
+msgstr "Группа: {0}"
+
+msgid "The following members should be added:"
+msgstr "Должны быть добавлены следующие члены:"
+
+msgid "Edit group members"
+msgstr "Изменить участников группы"
+
+msgid "{0} deleted the user {1}"
+msgstr "{0} удалил пользователя {1}"
+
+msgid "The user {0} {1} ({2}) is now deleted from your organisation in passbolt."
+msgstr "Пользователь {0} {1} ({2}) теперь удален из вашей организации в passbolt."
+
+msgid "This user was a member of the following group(s) you manage:"
+msgstr "Этот пользователь был членом следующих групп, которыми вы управляете:"
+
+msgid "{0} deleted a group"
+msgstr "{0} удалил группу"
+
+msgid "{0} deleted the group \"{1}\" you were a member of."
+msgstr "{0} удалил группу \"{1}\", членом которой вы были."
+
+msgid "All passwords that were shared only with this group were also deleted."
+msgstr "Все пароли, которыми делились только с этой группой, также были удалены."
+
+msgid "As member of the group you now have access to all the passwords that are shared with this group."
+msgstr "Как член группы у вас теперь есть доступ ко всем паролям, которые используются совместно с этой группой."
+
+msgid "And as group manager you are also authorized to edit the members of the group."
+msgstr "И как менеджер группы вы также имеете право редактировать членов группы."
+
+msgid "You are no longer a member of this group."
+msgstr "Вы больше не являетесь участником этой группы."
+
+msgid "You are no longer authorized to access the passwords shared with this group."
+msgstr "У вас больше нет прав на доступ к паролям, предоставленным этой группе."
+
+msgid "Please contact {0} or another group manager if this is a mistake."
+msgstr "Если это ошибка, свяжитесь с {0} или другим менеджером группы."
+
+msgid "You are now a group manager of this group."
+msgstr "Теперь вы являетесь администратором этой группы."
+
+msgid "As group manager you are now authorized to edit the members of this group."
+msgstr "Как менеджер группы вы теперь уполномочены редактировать членов этой группы."
+
+msgid "As member of the group you still have access to all the passwords that are shared with this group."
+msgstr "Как участник группы, вы по-прежнему имеете доступ ко всем паролям, которые используются совместно с этой группой."
+
+msgid "You are no longer a group manager of this group."
+msgstr "Вы больше не являетесь администратором этой группы."
+
+msgid "You are no longer authorized to edit the members of this group."
+msgstr "У вас больше нет прав на редактирование участников этой группы."
+
+msgid "{0} group memberships were affected."
+msgstr "Затронуто членство в группах: {0}."
+
+msgid "It would be too much to list them here, but you can get more information on passbolt."
+msgstr "Было бы слишком много перечислять их здесь, но вы можете получить больше информации о passbolt."
+
+msgid "go to passbolt"
+msgstr "перейти к проходному болту"
+
+msgid "{0} deleted {1} groups you were a member of."
+msgstr "{0} удалили {1} группы, в которых вы состояли."
+
+msgid "You have saved a new password"
+msgstr "Вы сохранили новый пароль"
+
+msgid "Username: {0}"
+msgstr "Имя пользователя: {0}"
+
+msgid "URL: {0}"
+msgstr "URL-адрес: {0}"
+
+msgid "Description: {0}"
+msgstr "Описание: {0}"
+
+msgid "{0} shared a password with you"
+msgstr "{0} поделился с вами паролем"
+
+msgid "{0} shared passwords with you"
+msgstr "{0} поделился с вами паролями"
+
+msgid "{0} resources were shared with you."
+msgstr "Вам предоставлен доступ к {0} ресурсам."
+
+msgid "{0} just activated their account on passbolt!"
+msgstr "{0} только что активировали свою учетную запись на passbolt!"
+
+msgid "The user is now active on passbolt and you can share passwords with them."
+msgstr "Пользователь теперь активен в passbolt, и вы можете поделиться с ним паролями."
+
+msgid "This user was invited by you {0}."
+msgstr "Этот пользователь был приглашен вами {0}."
+
+msgid "This user signed up themselves, since the public registration is enabled."
+msgstr "Этот пользователь зарегистрировался сам, так как включена публичная регистрация."
+
+msgid "This user was invited by {0} {1}."
+msgstr "Этот пользователь был приглашен {0} {1}."
+
+msgid "view users"
+msgstr "просмотреть пользователей"
+
+msgid "This email is an automatic notification sent by"
+msgstr "Это электронное письмо является автоматическим уведомлением, отправленным"
+
+msgid "You can disable these notifications by requesting an administrator to delete your account."
+msgstr "Вы можете отключить эти уведомления, попросив администратора удалить вашу учетную запись."
+
+msgid "The locale {0} is not valid or not supported."
+msgstr "Локаль {0} недействительна или не поддерживается."
+
+msgid "An Internal Error Has Occurred"
+msgstr "Произошла внутренняя ошибка"
+

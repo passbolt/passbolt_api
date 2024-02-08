@@ -16,10 +16,13 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
+use App\Model\Entity\Group;
+use App\Model\Entity\Permission;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
 use Cake\Chronos\Chronos;
+use Cake\I18n\FrozenTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -28,7 +31,9 @@ use Faker\Generator;
  *
  * @method \App\Model\Entity\Resource getEntity()
  * @method \App\Model\Entity\Resource[] getEntities()
- * @method \App\Model\Entity\Resource persist()
+ * @method \App\Model\Entity\Resource|\App\Model\Entity\Resource[] persist()
+ * @method static \App\Model\Entity\Resource firstOrFail($conditions = null)()
+ * @method static \App\Model\Entity\Resource get($primaryKey, array $options = [])
  */
 class ResourceFactory extends CakephpBaseFactory
 {
@@ -72,7 +77,7 @@ class ResourceFactory extends CakephpBaseFactory
      * @param mixed $permissionsType (Optional) The permission type, default OWNER
      * @return ResourceFactory
      */
-    public function withPermissionsFor(array $aros, $permissionsType = 15): ResourceFactory
+    public function withPermissionsFor(array $aros, $permissionsType = Permission::OWNER): ResourceFactory
     {
         foreach ($aros as $aro) {
             $aroType = $aro instanceof User ? PermissionsTable::USER_ARO : PermissionsTable::GROUP_ARO;
@@ -92,8 +97,15 @@ class ResourceFactory extends CakephpBaseFactory
     public function withSecretsFor(array $users): ResourceFactory
     {
         foreach ($users as $user) {
-            $secretData = ['user_id' => $user->id];
-            $this->with('Secrets', $secretData);
+            if ($user instanceof User) {
+                $secretData = ['user_id' => $user->id];
+                $this->with('Secrets', $secretData);
+            } elseif ($user instanceof Group) {
+                foreach ($user->groups_users as $groupUser) {
+                    $secretData = ['user_id' => $groupUser->user_id];
+                    $this->with('Secrets', $secretData);
+                }
+            }
         }
 
         return $this;
@@ -134,5 +146,13 @@ class ResourceFactory extends CakephpBaseFactory
                 'Permission',
                 PermissionFactory::make(compact('aco', 'aro_foreign_key'))
             );
+    }
+
+    /**
+     * @return $this
+     */
+    public function expired(?FrozenTime $expired = null)
+    {
+        return $this->setField('expired', $expired ?? FrozenTime::now()->subMinutes(1));
     }
 }

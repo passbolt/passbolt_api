@@ -96,24 +96,42 @@ trait UsersFindersTrait
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $resourceId The resource the users must have access.
-     * @throws \InvalidArgumentException if the ressourceId is not a valid uuid
      * @return \Cake\ORM\Query $query
+     * @throws \InvalidArgumentException if the ressourceId is not a valid uuid
      */
-    private function _filterQueryByResourceAccess(\Cake\ORM\Query $query, string $resourceId)
+    public function filterQueryByResourceAccess(Query $query, string $resourceId): Query
     {
         if (!Validation::uuid($resourceId)) {
             throw new InvalidArgumentException(__('The resource identifier should be a valid UUID.'));
         }
 
+        return $this->filterQueryByResourcesAccess($query, [$resourceId]);
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query Users query
+     * @param array|\Cake\ORM\Query $resourceIds Resource IDs the users should have access to
+     * @param array $permissionTypes array of permission type to filter along (OWNER, UPDATE or READ). If empty do not filter vy permission type
+     * @return \Cake\ORM\Query
+     */
+    public function filterQueryByResourcesAccess(Query $query, $resourceIds, array $permissionTypes = []): Query
+    {
+        if (is_array($resourceIds) && empty($resourceIds)) {
+            return $query;
+        }
         // The query requires a join with Permissions not constraint with the default condition added by the HasMany
         // relationship : Users.id = Permissions.aro_foreign_key.
         // The join will be used in relation to Groups as well, to find the users inherited permissions from Groups.
         // To do so, add an extra join.
+        $conditions = ['PermissionsFilterAccess.aco_foreign_key IN' => $resourceIds];
+        if (!empty($permissionTypes)) {
+            $conditions['PermissionsFilterAccess.type IN'] = $permissionTypes;
+        }
         $query->join([
             'table' => $this->getAssociation('Permissions')->getTable(),
             'alias' => 'PermissionsFilterAccess',
             'type' => 'INNER',
-            'conditions' => ['PermissionsFilterAccess.aco_foreign_key' => $resourceId],
+            'conditions' => $conditions,
         ]);
 
         // Subquery to retrieve the groups the user is member of.
@@ -177,8 +195,8 @@ trait UsersFindersTrait
      *
      * @param \Cake\ORM\Query $query The query to augment.
      * @param string $resourceId The resource to search potential users for.
-     * @throws \InvalidArgumentException if the resource id is not a valid uuid
      * @return \Cake\ORM\Query $query
+     * @throws \InvalidArgumentException if the resource id is not a valid uuid
      */
     private function _filterQueryByHasNotPermission(Query $query, string $resourceId)
     {
@@ -202,8 +220,8 @@ trait UsersFindersTrait
      *
      * @param string $role name
      * @param array $options filters
-     * @throws \InvalidArgumentException if no role is specified
      * @return \Cake\ORM\Query
+     * @throws \InvalidArgumentException if no role is specified
      */
     public function findIndex(string $role, ?array $options = [])
     {
@@ -279,7 +297,7 @@ trait UsersFindersTrait
 
         // If searching by resource access
         if (isset($options['filter']['has-access']) && count($options['filter']['has-access'])) {
-            $query = $this->_filterQueryByResourceAccess($query, $options['filter']['has-access'][0]);
+            $query = $this->filterQueryByResourceAccess($query, $options['filter']['has-access'][0]);
         }
 
         // If searching by resource the user do not have a direct permission for
@@ -300,9 +318,9 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @throws \InvalidArgumentException if the role name or user id are not valid
-     * @throws \Exception
      * @return \Cake\ORM\Query
+     * @throws \Exception
+     * @throws \InvalidArgumentException if the role name or user id are not valid
      */
     public function findView(string $userId, string $roleName)
     {
@@ -322,8 +340,8 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @throws \InvalidArgumentException if the role name or user id are not valid
      * @return \Cake\ORM\Query
+     * @throws \InvalidArgumentException if the role name or user id are not valid
      */
     public function findDelete(string $userId, string $roleName)
     {
@@ -342,8 +360,8 @@ trait UsersFindersTrait
      *
      * @param \Cake\ORM\Query $query a query instance
      * @param array $options options
-     * @throws \Exception if fingerprint id is not set
      * @return \Cake\ORM\Query
+     * @throws \Exception if fingerprint id is not set
      */
     public function findAuth(Query $query, array $options)
     {
@@ -366,8 +384,8 @@ trait UsersFindersTrait
      *
      * @param string $username email of user to retrieve
      * @param array $options options
-     * @throws \InvalidArgumentException if the username is not an email
      * @return \Cake\ORM\Query
+     * @throws \InvalidArgumentException if the username is not an email
      */
     public function findByUsername(string $username, ?array $options = [])
     {
@@ -391,8 +409,8 @@ trait UsersFindersTrait
      *
      * @param string $username username to query
      * @return \Cake\ORM\Query
-     * @see UsersTable::isUsernameCaseSensitive()
      * @throws \InvalidArgumentException if the username is not valid email
+     * @see UsersTable::isUsernameCaseSensitive()
      */
     public function findByUsernameCaseAware(string $username): Query
     {

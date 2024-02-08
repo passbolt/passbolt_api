@@ -42,7 +42,12 @@ class V320TransferFileStorageToAvatars extends AbstractMigration
         // This line is required for Postgres support.
         $this->getAdapter()->commitTransaction();
 
-        (new AvatarsTransferService($AvatarsTable, $FileStorageTable))->transfer();
+        try {
+            (new AvatarsTransferService($AvatarsTable, $FileStorageTable))->transfer();
+        } catch (\Throwable $e) {
+            Log::error('There was an error in V320TransferFileStorageToAvatars');
+            Log::error($e->getMessage());
+        }
     }
 
     public function down()

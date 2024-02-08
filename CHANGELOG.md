@@ -2,6 +2,130 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.5.0] - 2024-02-08
+### Added
+- PB-23913 As a user I can see my passwords marked as expired when users lose permissions on these
+- PB-23913 As an administrator I can activate the password expiry feature
+- PB-28923 As a user I want to be able to use passbolt in Russian
+- PB-21484 As an administrator I can define Microsoft 365 and Outlook providers in SMTP settings
+- PB-19652 As an administrator I can cleanup groups with no members with the cleanup command
+- PB-27707 As administrator, with RBAC I should be able to set “can see users workspace” to “Allow if group manager”
+- PB-28716 Desktop application flag is now enabled by default
+- PB-26203 Desktop app define the account kit exportation help page
+
+### Improved
+- PB-27616 Improve resources serialization performance on GET resources.json
+
+### Security
+- PB-29148 Bump selenium API plugin version to v4.5
+- PB-29005 Upgrades phpseclib/phpseclib to fix composer audit security vulnerability
+- PB-22336 As an admin I should be able to enable/disable request group managers to add users to groups emails separately (LDAP/AD)
+- PB-28871 Mitigate supply chain attack on PR and lint lock files
+- PB-28658 Mitigate supply chain attack on post npm install script
+
+### Fixed
+- PB-29200 Fixes the recover_user command (GITHUB #504)
+- PB-29164 Fix recent InstallCommand changes breaking selenium tests
+- PB-29132 Fix composer lock file not up-to-date message when installing dependencies
+- PB-29160 Fix failing static analysis job in CI
+- PB-29137 Fix failing in UsersEditDisableControllerTest file due to purifier
+- PB-29113 Fix a typo in the email sent when admins lose their admin role
+- PB-28130 Fix invalid cookie name should not trigger a 500
+- PB-29007 Fix constantly failing test in RbacsUpdateControllerTest file
+- PB-28991 Fix email queue entries not marked as sent
+
+### Maintenance
+- PB-28857 Require phpunit-speedtrap to track down slow tests
+- PB-25516 Remove --dev from .gitlab test options, it has not effect and will break with composer v3
+- PB-28844 Improves the methods testing email content
+- PB-28845 Skip unauthenticated exception from logging
+- PB-28653 Speed-up tests by mocking the client in healthcheck relevant tests
+
+## [4.5.0-rc.1] - 2024-02-01
+### Added
+- PB-23913 As a user I can see my passwords marked as expired when users lose permissions on these
+- PB-23913 As an administrator I can activate the password expiry feature
+- PB-28923 As a user I want to be able to use passbolt in Russian
+- PB-21484 As an administrator I can define Microsoft 365 and Outlook providers in SMTP settings
+- PB-19652 As an administrator I can cleanup groups with no members with the cleanup command
+- PB-27707 As administrator, with RBAC I should be able to set “can see users workspace” to “Allow if group manager”
+- PB-28716 Desktop application flag is now enabled by default
+- PB-26203 Desktop app define the account kit exportation help page
+
+### Improved
+- PB-27616 Improve resources serialization performance on GET resources.json
+
+### Security
+- PB-29148 Bump selenium API plugin version to v4.5
+- PB-29005 Upgrades phpseclib/phpseclib to fix composer audit security vulnerability
+- PB-22336 As an admin I should be able to enable/disable request group managers to add users to groups emails separately (LDAP/AD)
+- PB-28871 Mitigate supply chain attack on PR and lint lock files
+- PB-28658 Mitigate supply chain attack on post npm install script
+
+### Fixed
+- PB-29200 Fixes the recover_user command (GITHUB #504)
+- PB-29164 Fix recent InstallCommand changes breaking selenium tests
+- PB-29132 Fix composer lock file not up-to-date message when installing dependencies
+- PB-29160 Fix failing static analysis job in CI
+- PB-29137 Fix failing in UsersEditDisableControllerTest file due to purifier
+- PB-29113 Fix a typo in the email sent when admins lose their admin role
+- PB-28130 Fix invalid cookie name should not trigger a 500
+- PB-29007 Fix constantly failing test in RbacsUpdateControllerTest file
+- PB-28991 Fix email queue entries not marked as sent
+
+### Maintenance
+- PB-28857 Require phpunit-speedtrap to track down slow tests
+- PB-25516 Remove --dev from .gitlab test options, it has not effect and will break with composer v3
+- PB-28844 Improves the methods testing email content
+- PB-28845 Skip unauthenticated exception from logging
+- PB-28653 Speed-up tests by mocking the client in healthcheck relevant tests
+
+## [4.5.0-test.1] - 2024-01-29
+### Added
+- PB-23913 As a user I can see my passwords marked as expired after a user loses permissions
+- PB-23913 As an administrator I can activate the password expiry feature
+- PB-23913 As a user I can define the expiry date of a passwor
+- PB-23913 As an administrator I can define advanced password expiry settings
+- PB-28923 As a user I want to be able to use passbolt in Russian
+- PB-21484 Add support for Microsoft 365 and Outlook providers in SMTP settings
+- PB-19652 Add cleanup task to check for groups with no members
+- PB-27707 As administrator, with RBAC I should be able to set “can see users workspace” to ‘Allow if group manager’
+- PB-28716 Enable desktop application flag by default
+- PB-26203 Desktop app define the account kit exportation help page
+
+### Improved
+- PB-27835 As signed-in user configuring MFA TOTP I can see the TOTP secret so I can use it instead of the QR code
+- PB-27616 Improve resources serialization performance on GET resources.json
+- PB-28521 Add migration to alter gpgkeys.uid column length to 769
+
+### Security
+- PB-29148 Bump selenium API plugin version to v4.5
+- PB-27760 As administrator, I can hide the administrator identity behind LDAP triggered emails
+- PB-29005 Upgrades phpseclib/phpseclib to fix composer audit security vulnerability
+- PB-22336 As an admin I should be able to enable/disable request group managers to add users to groups emails separately (LDAP/AD)
+- PB-28871 Mitigate supply chain attack on PR and lint lock files
+- PB-28658 Mitigate supply chain attack on post npm install script
+
+### Fixed
+- PB-29200 Fixes the recover_user command (GITHUB #504)
+- PB-29164 Fix recent InstallCommand changes breaking selenium tests
+- PB-29132 Fix composer lock file not up-to-date message when installing dependencies
+- PB-29160 Fix failing static analysis job in CI
+- PB-29137 Fix failing in UsersEditDisableControllerTest file due to purifier
+- PB-27788 Correct gendered language on ldap sync ignore messages
+- PB-29113 Fix a typo in the email sent when admins lose their admin role
+- PB-28130 Fix invalid cookie name should not trigger a 500
+- PB-29007 Fix constantly failing test in RbacsUpdateControllerTest file
+- PB-28991 Fix email queue entries not marked as sent
+
+### Maintenance
+- PB-28636 Speed-up cloud tests by storing avatars on local storage
+- PB-28857 Require phpunit-speedtrap to track down slow tests
+- PB-25516 Remove --dev from .gitlab test options, it has not effect and will break with composer v3
+- PB-28844 Improves the methods testing email content
+- PB-28845 Skip unauthenticated exception from logging
+- PB-28653 Speed-up tests by mocking the client in healthcheck relevant tests
+
 ## [4.4.2] - 2023-11-29
 ### Improved
 - PB-27616 As a user I should see improved performances when retrieving resources on the GET resources.json entry point
