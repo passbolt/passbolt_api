@@ -296,7 +296,7 @@ class GpgAuthenticator extends SessionAuthenticator
         $this->_normalizeRequestData($request);
         $this->_initKeyring();
 
-        // Begin process by checking if the user exist and his key is valid
+        // Begin process by checking if the user exist and their key is valid
         $this->_user = $this->_identifyUserWithFingerprint();
         if ($this->_user === null) {
             $this->_missingUserError();
