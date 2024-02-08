@@ -1,16 +1,18 @@
 Release song: https://www.youtube.com/watch?v=HR1KH4zElcY
 
-Hey community members,
+Passbolt v4.5.0 named "Summer is Ending" brings a host of new features and improvements, all designed to make your password management experience more secure, efficient, and user-friendly.
 
-Prepare for an exciting update! 🥁
+At the heart of this release is the introduction of the Password Expiry feature, a much-anticipated functionality that allows administrators to enable the automatic expiry policy, enhancing security by ensuring that potentially passwords are rotated when someone loses access to resources, for example by leaving a group or the organization.
 
-Passbolt is thrilled to announce that the v4.5.0 Release Candidate is officially available for testing.
+Alongside, we're excited to introduce the Russian translation, making Passbolt more accessible to a wider audience.
 
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, please share and report any issues you come across.
+We've also expanded our SMTP settings to include Microsoft 365 and Outlook providers, responding to the community's feedback for more integration options. The section to help users install and configure the Windows desktop application feature is also now enabled by default.
 
-Enjoy the testing journey! ♥️
+Improvements in the performance of some important API endpoints and other security enhancements and bug fixes are also part of this release.
 
-## [4.5.0-rc.1] - 2024-02-01
+Thanks to everyone in our community for your ongoing support and contributions that made this release possible. Your feedback and involvement continue to shape Passbolt, enhancing our collective security and usability. Together, we're making password management better for everyone.
+
+## [4.5.0] - 2024-02-08
 ### Added
 - PB-23913 As a user I can see my passwords marked as expired when users lose permissions on these
 - PB-23913 As an administrator I can activate the password expiry feature
