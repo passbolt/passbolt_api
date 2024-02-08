@@ -1,16 +1,16 @@
 Release song: https://www.youtube.com/watch?v=HR1KH4zElcY
 
-Hey community members,
+Passbolt v4.5.0, named "Summer is Ending", introduces exclusive features for Pro users, alongside enhancements available to everyone. These updates are geared towards empowering teams with even more control and flexibility over their password management practices.
 
-Prepare for an exciting update! 🥁
+At the heart of this release is the introduction of the Password Expiry feature, a much-anticipated functionality that allows administrators to enable the automatic expiry policy, enhancing security by ensuring that potentially passwords are rotated when someone loses access to resources, for example by leaving a group or the organization.
 
-Passbolt is thrilled to announce that the v4.5.0 Release Candidate is officially available for testing.
+A standout feature of this release for Passbolt Pro Edition is the advanced Password Expiry settings. Administrators now have the ability to define comprehensive password expiry policies, ensuring that your team's password hygiene is not just compliant with industry standards but also customized to fit your organization's specific needs. This feature is complemented by the ability for users to mark passwords as expired and adjust expiry dates directly, providing both oversight and flexibility in managing sensitive information.
 
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, please share and report any issues you come across.
+In addition to the Pro-exclusive features, this release brings shared enhancements with Passbolt CE, such as the inclusion of Russian language support, integration with Microsoft 365 and Outlook for SMTP settings, and the activation of the desktop application feature by default for an improved user experience.
 
-Enjoy the testing journey! ♥️
+Thank you for your ongoing support. Your feedback and contributions continue to shape Passbolt, enhancing our collective security and usability. Together, we're making password management better for everyone.
 
-## [4.5.0-rc.1] - 2024-02-01
+## [4.5.0] - 2024-02-08
 ### Added
 - PB-23913 As a user I can define the expiry date of a password
 - PB-23913 As an administrator I can define advanced password expiry settings
