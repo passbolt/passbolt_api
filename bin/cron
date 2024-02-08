@@ -4,12 +4,6 @@
 
 set -euo pipefail
 
-DIGEST_ENABLED=${PASSBOLT_PLUGINS_EMAIL_DIGEST_ENABLED:-1}
-
 DIR=$(dirname "$(readlink -f "$0")")
 
-if [[ "$DIGEST_ENABLED" = 1 ]]; then
-    "$DIR"/cake passbolt email_digest send
-else
-    "$DIR"/cake EmailQueue.sender
-fi
+"$DIR"/cake passbolt email_digest send
