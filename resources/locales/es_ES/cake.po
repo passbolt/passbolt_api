@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2023-10-04 09:37\n"
+"PO-Revision-Date: 2024-02-01 11:19\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Error"
 
 #: Error/error400.php:37
 msgid "The requested address {0} was not found on this server."
-msgstr ""
+msgstr "La dirección solicitada {0} no se ha encontrado en este servidor."
 
 #: Error/error500.php:38
 msgid "An Internal Error Has Occurred"
@@ -35,7 +35,7 @@ msgstr "No estás autorizado a acceder a esa ubicación."
 
 #: Error/ExceptionRenderer.php:304
 msgid "Not Found"
-msgstr ""
+msgstr "No se ha encontrado"
 
 #: Error/ExceptionRenderer.php:306
 msgid "An Internal Error Has Occurred."
@@ -43,61 +43,61 @@ msgstr "Ha ocurrido un error interno."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:286
 msgid "Missing or incorrect CSRF cookie type."
-msgstr ""
+msgstr "Tipo de cookie CSRF incorrecta o no encontrada."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:290
 msgid "Missing or invalid CSRF cookie."
-msgstr ""
+msgstr "Cookie CSRF no válida o no encontrada."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:311
 msgid "CSRF token from either the request body or request headers did not match or is missing."
-msgstr ""
+msgstr "El token CSRF del cuerpo de la petición o de la cabecera de la petición no coincide o no se encuentra."
 
 #: Http/Response.php:1490
 msgid "The requested file contains `..` and will not be read."
-msgstr ""
+msgstr "El archivo solicitado contiene `..` y no será leído."
 
 #: Http/Response.php:1498
 msgid "The requested file was not found"
-msgstr ""
+msgstr "No se ha encontrado el archivo solicitado"
 
 #: I18n/Number.php:116
 msgid "{0,number,#,###.##} KB"
-msgstr ""
+msgstr "{0,number,#,###.##} KB"
 
 #: I18n/Number.php:118
 msgid "{0,number,#,###.##} MB"
-msgstr ""
+msgstr "{0,number,#,###.##} MB"
 
 #: I18n/Number.php:120
 msgid "{0,number,#,###.##} GB"
-msgstr ""
+msgstr "{0,number,#,###.##} GB"
 
 #: I18n/Number.php:122
 msgid "{0,number,#,###.##} TB"
-msgstr ""
+msgstr "{0,number,#,###.##} TB"
 
 #: I18n/Number.php:114
 msgid "{0,number,integer} Byte"
 msgid_plural "{0,number,integer} Bytes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0,number,integer} Byte"
+msgstr[1] "{0,number,integer} Bytes"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} from now"
-msgstr ""
+msgstr "{0} a partir de ahora"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} ago"
-msgstr ""
+msgstr "Hace {0}"
 
 #: I18n/RelativeTimeFormatter.php:89
 msgid "{0} after"
-msgstr ""
+msgstr "{0} después"
 
 #: I18n/RelativeTimeFormatter.php:89
 msgid "{0} before"
-msgstr ""
+msgstr "{0} antes"
 
 #: I18n/RelativeTimeFormatter.php:120
 msgid "just now"
@@ -105,173 +105,173 @@ msgstr "justo ahora"
 
 #: I18n/RelativeTimeFormatter.php:157
 msgid "about a second ago"
-msgstr ""
+msgstr "hace aproximadamente un segundo"
 
 #: I18n/RelativeTimeFormatter.php:158
 msgid "about a minute ago"
-msgstr ""
+msgstr "hace aproximadamente un minuto"
 
 #: I18n/RelativeTimeFormatter.php:159
 msgid "about an hour ago"
-msgstr ""
+msgstr "hace aproximadamente una hora"
 
 #: I18n/RelativeTimeFormatter.php:160
 #: I18n/RelativeTimeFormatter.php:370
 msgid "about a day ago"
-msgstr ""
+msgstr "hace aproximadamente un día"
 
 #: I18n/RelativeTimeFormatter.php:161
 #: I18n/RelativeTimeFormatter.php:371
 msgid "about a week ago"
-msgstr ""
+msgstr "hace aproximadamente una semana"
 
 #: I18n/RelativeTimeFormatter.php:162
 #: I18n/RelativeTimeFormatter.php:372
 msgid "about a month ago"
-msgstr ""
+msgstr "hace aproximadamente un mes"
 
 #: I18n/RelativeTimeFormatter.php:163
 #: I18n/RelativeTimeFormatter.php:373
 msgid "about a year ago"
-msgstr ""
+msgstr "hace aproximadamente un año"
 
 #: I18n/RelativeTimeFormatter.php:174
 msgid "in about a second"
-msgstr ""
+msgstr "en aproximadamente un segundo"
 
 #: I18n/RelativeTimeFormatter.php:175
 msgid "in about a minute"
-msgstr ""
+msgstr "en aproximadamente un minuto"
 
 #: I18n/RelativeTimeFormatter.php:176
 msgid "in about an hour"
-msgstr ""
+msgstr "en aproximadamente una hora"
 
 #: I18n/RelativeTimeFormatter.php:177
 #: I18n/RelativeTimeFormatter.php:384
 msgid "in about a day"
-msgstr ""
+msgstr "en aproximadamente un día"
 
 #: I18n/RelativeTimeFormatter.php:178
 #: I18n/RelativeTimeFormatter.php:385
 msgid "in about a week"
-msgstr ""
+msgstr "en aproximadamente una semana"
 
 #: I18n/RelativeTimeFormatter.php:179
 #: I18n/RelativeTimeFormatter.php:386
 msgid "in about a month"
-msgstr ""
+msgstr "en aproximadamente un mes"
 
 #: I18n/RelativeTimeFormatter.php:180
 #: I18n/RelativeTimeFormatter.php:387
 msgid "in about a year"
-msgstr ""
+msgstr "en aproximadamente un año"
 
 #: I18n/RelativeTimeFormatter.php:342
 msgid "today"
-msgstr ""
+msgstr "hoy"
 
 #: I18n/RelativeTimeFormatter.php:409
 msgid "%s ago"
-msgstr ""
+msgstr "Hace %s"
 
 #: I18n/RelativeTimeFormatter.php:410
 msgid "on %s"
-msgstr ""
+msgstr "en %s"
 
 #: I18n/RelativeTimeFormatter.php:53
 #: I18n/RelativeTimeFormatter.php:132
 #: I18n/RelativeTimeFormatter.php:354
 msgid "{0} year"
 msgid_plural "{0} years"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} año"
+msgstr[1] "{0} años"
 
 #: I18n/RelativeTimeFormatter.php:57
 #: I18n/RelativeTimeFormatter.php:135
 #: I18n/RelativeTimeFormatter.php:357
 msgid "{0} month"
 msgid_plural "{0} months"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} mes"
+msgstr[1] "{0} meses"
 
 #: I18n/RelativeTimeFormatter.php:63
 #: I18n/RelativeTimeFormatter.php:138
 #: I18n/RelativeTimeFormatter.php:360
 msgid "{0} week"
 msgid_plural "{0} weeks"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} semana"
+msgstr[1] "{0} semanas"
 
 #: I18n/RelativeTimeFormatter.php:65
 #: I18n/RelativeTimeFormatter.php:141
 #: I18n/RelativeTimeFormatter.php:363
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} día"
+msgstr[1] "{0} días"
 
 #: I18n/RelativeTimeFormatter.php:70
 #: I18n/RelativeTimeFormatter.php:144
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} hora"
+msgstr[1] "{0} horas"
 
 #: I18n/RelativeTimeFormatter.php:74
 #: I18n/RelativeTimeFormatter.php:147
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} minuto"
+msgstr[1] "{0} minutos"
 
 #: I18n/RelativeTimeFormatter.php:78
 #: I18n/RelativeTimeFormatter.php:150
 msgid "{0} second"
 msgid_plural "{0} seconds"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0} segundo"
+msgstr[1] "{0} segundos"
 
 #: ORM/RulesChecker.php:55
 msgid "This value is already in use"
-msgstr ""
+msgstr "Este valor ya está siendo usado"
 
 #: ORM/RulesChecker.php:102
 msgid "This value does not exist"
-msgstr ""
+msgstr "Este valor no existe"
 
 #: ORM/RulesChecker.php:224
 msgid "Cannot modify row: a constraint for the `{0}` association fails."
-msgstr ""
+msgstr "No se puede modificar la fila: falla una restricción para la asociación `{0}`."
 
 #: ORM/RulesChecker.php:262
 msgid "The count does not match {0}{1}"
-msgstr ""
+msgstr "El recuento no coincide con {0}{1}"
 
 #: Utility/Text.php:915
 msgid "and"
-msgstr ""
+msgstr "y"
 
 #: Validation/Validator.php:2500
 msgid "This field is required"
-msgstr ""
+msgstr "Se requiere este campo"
 
 #: Validation/Validator.php:2520
 #: View/Form/ArrayContext.php:249
 msgid "This field cannot be left empty"
-msgstr ""
+msgstr "Este campo no se puede dejar vacío"
 
 #: Validation/Validator.php:2672
 msgid "The provided value is invalid"
-msgstr ""
+msgstr "El valor proporcionado no es válido"
 
 #: View/Helper/FormHelper.php:981
 msgid "Edit {0}"
-msgstr ""
+msgstr "Editar {0}"
 
 #: View/Helper/FormHelper.php:983
 msgid "New {0}"
-msgstr ""
+msgstr "Nuevo {0}"
 
 #: View/Helper/FormHelper.php:1890
 msgid "Submit"

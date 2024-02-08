@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2023-10-27 11:15+0000\n"
-"PO-Revision-Date: 2023-10-27 14:26\n"
+"POT-Creation-Date: 2024-01-30 05:39+0000\n"
+"PO-Revision-Date: 2024-01-30 07:46\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -898,9 +898,6 @@ msgstr "Pranešimas neturi būti tuščias."
 msgid "A secret already exists for the given user and resource."
 msgstr "Tam tikro vartotojo ir šaltinio paslaptis jau yra."
 
-msgid "The name should be a valid BMP-UTF8 string."
-msgstr "Pavadinimas turi būti tinkama BMP-UTF8 eilutė."
-
 msgid "The user identifier by should be a valid UUID."
 msgstr "Vartotojo identifikatorius turi būti galiojantis UUID."
 
@@ -955,6 +952,9 @@ msgstr "Sukūrimo data turėtų būti nustatyta praeityje."
 msgid "The key should not already be expired."
 msgstr "Rakto galiojimo laikas neturi būti pasibaigęs."
 
+msgid "The date could not be parsed."
+msgstr ""
+
 msgid "The email should be a valid email address."
 msgstr "El. paštas turi būti galiojantis el. pašto adresas."
 
@@ -976,6 +976,21 @@ msgstr "Ištrynimo būsena turi būti tinkama loginė vertė."
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Pagrindinį identifikatorių turėtų sudaryti 8 šešioliktainiai simboliai."
 
+msgid "{0} updated your memberships in several groups"
+msgstr "{0} atnaujino jūsų narystes keliose grupėse"
+
+msgid "{0} deleted several group memberships"
+msgstr ""
+
+msgid "You made changes on several resources"
+msgstr ""
+
+msgid "{0} has made changes on several resources"
+msgstr "{0} atliko kelių išteklių pakeitimus"
+
+msgid "{0} shared several items with you"
+msgstr "{0} pasidalino su jumis keliais elementais"
+
 msgid "{0} just activated their account on passbolt"
 msgstr "{0} ką tik suaktyvino savo paskyrą naudodami „passbolt“"
 
@@ -993,6 +1008,9 @@ msgstr "{0} pridėjo jus prie grupės {1}"
 
 msgid "{0} requested you to add members to {1}"
 msgstr "{0} pridėjo jus prie grupės {1}"
+
+msgid "You have been requested to add members to {0}"
+msgstr ""
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} pašalino jus iš grupės {1}"
@@ -1014,6 +1032,9 @@ msgstr "Pridėjote slaptažodį {0}"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} ištrynė slaptažodį {1}"
+
+msgid "You edited the password {0}"
+msgstr ""
 
 msgid "{0} edited the password {1}"
 msgstr "{0} redagavo slaptažodį {1}"
@@ -1050,30 +1071,6 @@ msgstr ""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Sveiki atvykę į „passbolt“, {0}!"
-
-msgid "{0} updated your memberships in several groups"
-msgstr "{0} atnaujino jūsų narystes keliose grupėse"
-
-msgid "Your membership in several groups changed in passbolt"
-msgstr "Jūsų narystė keliose grupėse pasikeitė \"passbolt'e\""
-
-msgid "{0} deleted several groups"
-msgstr "{0} ištrynė kelias grupes"
-
-msgid "Several groups were deleted in passbolt"
-msgstr "Kelios grupės buvo ištrintos iš \"passbolt'o\""
-
-msgid "{0} has made changes on several resources"
-msgstr "{0} atliko kelių išteklių pakeitimus"
-
-msgid "Multiple passwords have been changed in passbolt"
-msgstr "„Passbolt“ buvo pakeisti keli slaptažodžiai"
-
-msgid "{0} shared several items with you"
-msgstr "{0} pasidalino su jumis keliais elementais"
-
-msgid "Multiple passwords have been shared with you in passbolt"
-msgstr "„Passbolt'e“ su jumis buvo pasidalinta keliais slaptažodžiais"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "Išvalymo subjekto nustatymas turėtų būti loginis."
@@ -1122,6 +1119,9 @@ msgstr "Nustatymas „Siųsti atnaujintą grupės naudotoją“ turėtų būti l
 
 msgid "The send on group manager updated setting should be a boolean."
 msgstr "Nustatymas „Siųsti atnaujintą grupės valdytoją“ turėtų būti loginis."
+
+msgid "The send on group manager request add user should be a boolean."
+msgstr ""
 
 msgid "The send on password created setting should be a boolean."
 msgstr "Nustatymas „Siųsti sukurtą slaptažodį“ turėtų būti loginis."
@@ -1359,6 +1359,12 @@ msgstr "Sėkmingas vaidmens {0} patvirtinimas"
 
 msgid "Could not validate secret data."
 msgstr "Nepavyko patvirtinti slaptų duomenų."
+
+msgid "The group id should be a valid UUID."
+msgstr ""
+
+msgid "The users ids array should contain only valid UUIDs."
+msgstr ""
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "Nepavyko patvirtinti slapto {0}. {1}"
@@ -2506,6 +2512,72 @@ msgstr "Jei neprašėte šio veiksmo, susisiekite su administratoriumi."
 msgid "Log in passbolt"
 msgstr "Prisijungti \"Passbolt\""
 
+msgid "The automatic_expiry field must be true."
+msgstr ""
+
+msgid "The automatic_update field must be true."
+msgstr ""
+
+msgid "The value should be an array."
+msgstr ""
+
+msgid "{0} marked several passwords as expired"
+msgstr ""
+
+msgid "Some of your passwords expired"
+msgstr ""
+
+msgid "{0} marked the password {1} as expired"
+msgstr ""
+
+msgid "You edited the password expiry settings"
+msgstr ""
+
+msgid "{0} edited the password expiry settings"
+msgstr ""
+
+msgid "The send password expire setting should be a boolean."
+msgstr ""
+
+msgid "The password expiry setting does not exist."
+msgstr ""
+
+msgid "Could not validate the password expiry settings."
+msgstr ""
+
+msgid "The password expiry settings have been updated."
+msgstr ""
+
+msgid "View them in passbolt"
+msgstr ""
+
+msgid "{0} resources were affected."
+msgstr "Buvo paveikti {0} ištekliai(-ių)."
+
+msgid "It would be too much to list them here, but you can go check them on passbolt."
+msgstr "Būtų per daug juos čia išvardyti, bet galite juos patikrinti \"passbolt'e\"."
+
+msgid "Change them in passbolt"
+msgstr ""
+
+msgid "You have been requested to change them"
+msgstr ""
+
+msgid "Access for users to your shared passwords have been revoked."
+msgstr ""
+
+msgid "These passwords are now marked as expired."
+msgstr ""
+
+msgid "Please rotate them to ensure continued security."
+msgstr ""
+
+msgid "Please rotate it to ensure continued security."
+msgstr ""
+
+msgid "Change it in passbolt "
+msgstr ""
+
 msgid "Could not retrieve the password policies."
 msgstr ""
 
@@ -2707,6 +2779,9 @@ msgstr ""
 msgid "An entry already exists for the given role and action ids."
 msgstr ""
 
+msgid "The control function is not allowed for this UI Action."
+msgstr ""
+
 msgid "An action already exists for the given name."
 msgstr ""
 
@@ -2778,6 +2853,9 @@ msgstr "Vaidmuo"
 
 msgid "No"
 msgstr "Ne"
+
+msgid "The name should be a valid BMP-UTF8 string."
+msgstr "Pavadinimas turi būti tinkama BMP-UTF8 eilutė."
 
 msgid "The slug should be a valid BMP-UTF8 string."
 msgstr "Etiketė turi būti tinkama BMP-UTF8 eilutė."
@@ -3517,10 +3595,10 @@ msgstr ""
 msgid "Contact your admin"
 msgstr ""
 
-msgid "{0} changed role of {1} to admin."
+msgid "{0} changed your role to user."
 msgstr ""
 
-msgid "{0} changed your role to admin."
+msgid "{0} changed the role of {1} to user."
 msgstr ""
 
 msgid "{0} can no longer perform administration tasks."
@@ -3616,6 +3694,12 @@ msgstr "Jūs ką tik sukūrėte savo paskyrą \"Passbolt\"!"
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Ką tik atidarėte paskyrą naudodamiesi \"Passbolt\" adresu {0}."
 
+msgid "There was a change in the user directory."
+msgstr ""
+
+msgid "You have been requested to add members to a group."
+msgstr ""
+
 msgid "{0} requested you to add members to a group"
 msgstr "{0} paprašė jūsų pridėti narių prie grupės"
 
@@ -3676,9 +3760,6 @@ msgstr "Jūs nebesate šios grupės valdytojas."
 msgid "You are no longer authorized to edit the members of this group."
 msgstr "Jūs nebeturite teisės redaguoti šios grupės narių."
 
-msgid "Edited your membership in several groups"
-msgstr "Redagavo jūsų narystę keliose grupėse"
-
 msgid "{0} group memberships were affected."
 msgstr "Buvo paveiktos {0} grupės narystės."
 
@@ -3687,9 +3768,6 @@ msgstr "Būtų per daug čia išvardyti, bet galite gauti daugiau informacijos \
 
 msgid "go to passbolt"
 msgstr "eiti į \"passbolt\""
-
-msgid "{0} deleted several group"
-msgstr "{0} ištrynė kelias grupes"
 
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} ištrynė {1} grupes(-ių), kurių narys buvote."
@@ -3708,21 +3786,6 @@ msgstr "Aprašymas: {0}"
 
 msgid "{0} shared a password with you"
 msgstr "{0} pasidalino slaptažodžiu su jumis "
-
-msgid "{0} updated the password {1}"
-msgstr "{0} atnaujino slaptažodį {1}"
-
-msgid "Edited multiple resources"
-msgstr "Redagavo kelis išteklius"
-
-msgid "{0} resources were affected."
-msgstr "Buvo paveikti {0} ištekliai(-ių)."
-
-msgid "It would be too much to list them here, but you can go check them on passbolt."
-msgstr "Būtų per daug juos čia išvardyti, bet galite juos patikrinti \"passbolt'e\"."
-
-msgid "view them in passbolt"
-msgstr "peržiūrėti juos „passbolt'e“."
 
 msgid "{0} shared passwords with you"
 msgstr "{0} pasidalino su jumis slaptažodžiais"
