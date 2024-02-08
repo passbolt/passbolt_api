@@ -53,6 +53,7 @@ class SubscriptionControllerTestCase extends AppIntegrationTestCase
      */
     public function tearDown(): void
     {
+        parent::tearDown();
         unset($this->Subscriptions);
     }
 

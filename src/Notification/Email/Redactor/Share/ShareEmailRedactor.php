@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace App\Notification\Email\Redactor\Share;
 
-use App\Controller\Share\ShareController;
 use App\Model\Entity\Resource;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
@@ -25,6 +24,7 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
+use App\Service\Resources\ResourcesShareService;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -59,7 +59,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents(): array
     {
         return [
-            ShareController::SHARE_SUCCESS_EVENT_NAME,
+            ResourcesShareService::SHARE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -72,12 +72,11 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
         $emailCollection = new EmailCollection();
 
         $resource = $event->getData('resource');
-        $changes = $event->getData('changes');
+        $secrets = $event->getData('secrets') ?? [];
         $ownerId = $event->getData('ownerId');
 
         // for now only handle the new share
         // e.g. we don't notify when permission changes or are removed
-        $secrets = $changes['secrets'] ?? [];
         $userIds = Hash::extract($secrets, '{n}.user_id');
         if (!empty($userIds)) {
             // Get the details of whoever did the changes
@@ -87,7 +86,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
             if (empty($users)) {
                 return $emailCollection;
             }
-            $secrets = Hash::combine($changes['secrets'], '{n}.user_id', '{n}.data');
+            $secrets = Hash::combine($secrets, '{n}.user_id', '{n}.data');
 
             foreach ($users as $user) {
                 $emailCollection->addEmail(

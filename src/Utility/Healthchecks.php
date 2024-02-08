@@ -20,14 +20,14 @@ use App\Model\Entity\Role;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Filesystem\DirectoryUtility;
+use App\Utility\Healthchecks\CoreHealthchecks;
 use App\Utility\Healthchecks\DatabaseHealthchecks;
 use App\Utility\Healthchecks\GpgHealthchecks;
 use App\Utility\Healthchecks\SslHealthchecks;
-use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
+use Cake\Http\Client;
 use Cake\ORM\TableRegistry;
-use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
@@ -51,15 +51,16 @@ class Healthchecks
     /**
      * Run all healthchecks
      *
+     * @param ?\Cake\Http\Client $client client used to query the healthcheck endpoint
      * @return array
      */
-    public static function all(): array
+    public static function all(?Client $client): array
     {
         $checks = [];
         $checks = Healthchecks::environment($checks);
         $checks = Healthchecks::configFiles($checks);
-        $checks = Healthchecks::core($checks);
-        $checks = Healthchecks::ssl($checks);
+        $checks = (new CoreHealthchecks($client))->all($checks);
+        $checks = (new SslHealthchecks($client))->all($checks);
         $checks = Healthchecks::database('default', $checks);
         $checks = Healthchecks::gpg($checks);
         $checks = Healthchecks::application($checks);
@@ -169,43 +170,13 @@ class Healthchecks
      * - salt: true if non default salt is used
      * - cipherSeed: true if non default cipherSeed is used
      *
+     * @param ?\Cake\Http\Client $client Client
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function core(?array $checks = []): array
+    public static function core(?Client $client = null, ?array $checks = []): array
     {
-        $settings = Cache::getConfig('_cake_core_');
-        $checks['core']['cache'] = !empty($settings);
-        $checks['core']['debugDisabled'] = (Configure::read('debug') === false);
-        $checks['core']['salt'] = (Configure::read('Security.salt') !== '__SALT__');
-        $checks['core']['fullBaseUrl'] = (Configure::read('App.fullBaseUrl') !== null);
-        $checks['core']['validFullBaseUrl'] = Validation::url(Configure::read('App.fullBaseUrl'), true);
-        $checks['core']['info']['fullBaseUrl'] = Configure::read('App.fullBaseUrl');
-
-        // Check if the URL is reachable
-        $checks['core']['fullBaseUrlReachable'] = false;
-        try {
-            $context = stream_context_create([
-                'http' => [
-                    'method' => 'GET',
-                ],
-                'ssl' => [
-                    'verify_peer' => false,
-                    'verify_peer_name' => false,
-                ],
-            ]);
-            $url = Router::url('/healthcheck/status.json', true);
-            $response = @file_get_contents($url, false, $context); // phpcs:ignore
-            if ($response !== false && !empty($response)) {
-                $json = json_decode($response);
-                if (isset($json->body)) {
-                    $checks['core']['fullBaseUrlReachable'] = ($json->body === 'OK');
-                }
-            }
-        } catch (CakeException $e) {
-        }
-
-        return $checks;
+        return (new CoreHealthchecks($client))->all($checks);
     }
 
     /**
@@ -303,12 +274,13 @@ class Healthchecks
      * - ssl.hostValid
      * - ssl.notSelfSigned
      *
+     * @param ?\Cake\Http\Client $client Client
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function ssl(?array $checks = []): array
+    public static function ssl(?Client $client = null, ?array $checks = []): array
     {
-        return SslHealthchecks::all($checks);
+        return (new SslHealthchecks($client))->all($checks);
     }
 
     /**

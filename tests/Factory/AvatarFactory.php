@@ -46,6 +46,7 @@ class AvatarFactory extends CakephpBaseFactory
             return [
                 // For performance's sake, we do not create an image here
                 'data' => $faker->text(),
+                'profile_id' => $faker->uuid(),
             ];
         });
     }

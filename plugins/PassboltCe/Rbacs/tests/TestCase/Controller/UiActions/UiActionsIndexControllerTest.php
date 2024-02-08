@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\Rbacs\Test\TestCase\Controller\UiActions;
 
+use Passbolt\Rbacs\Model\Entity\UiAction;
+use Passbolt\Rbacs\Service\UiActions\UiActionsInsertDefaultsService;
 use Passbolt\Rbacs\Test\Lib\RbacsIntegrationTestCase;
 
 /**
@@ -31,9 +33,20 @@ class UiActionsIndexControllerTest extends RbacsIntegrationTestCase
      */
     public function testUiActionsIndexController_Success(): void
     {
+        (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
         $this->logInAsAdmin();
+
         $this->getJson('/rbacs/uiactions.json');
+
         $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertNotEmpty($response);
+        $uiAction = $response[0];
+        $this->assertArrayHasAttributes(['id', 'name', 'allowed_control_functions'], $uiAction);
+        $this->assertEqualsCanonicalizing(
+            UiAction::CONTROL_FUNCTION_MAPPING[$uiAction['name']],
+            $uiAction['allowed_control_functions']
+        );
     }
 
     /**

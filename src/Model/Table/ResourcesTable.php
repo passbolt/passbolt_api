@@ -22,9 +22,11 @@ use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
+use App\Model\Validation\DateTime\IsParsableDateTimeValidationRule;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
 use Cake\Event\Event;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -172,6 +174,10 @@ class ResourcesTable extends Table
             ->allowEmptyString('deleted', __('The deleted status should not be empty'), false);
 
         $validator
+        ->allowEmptyDateTime('expired')
+        ->add('expired', 'expired', new IsParsableDateTimeValidationRule());
+
+        $validator
             ->uuid('created_by', __('The identifier of the user who created the resource should be a valid UUID.'))
             ->requirePresence(
                 'created_by',
@@ -278,6 +284,15 @@ class ResourcesTable extends Table
     {
         if (!$this->isDescriptionEmptyOnPasswordAndDescriptionResourceType($data)) {
             $data['description'] = null;
+        }
+        if (isset($data['expired']) && !empty($data['expired'])) {
+            // Parse the expired date into a time object
+            try {
+                $data['expired'] = FrozenTime::parse($data['expired']);
+            } catch (\Throwable $e) {
+                // If the expired date cannot be parsed, let the validation
+                // handle the fail
+            }
         }
     }
 

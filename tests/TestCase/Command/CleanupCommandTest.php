@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\CleanupCommand;
+use App\Test\Factory\GroupFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -75,5 +76,28 @@ class CleanupCommandTest extends AppTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('Cleanup shell');
         $this->assertOutputContains('(dry-run)');
+    }
+
+    /**
+     * Fix groups with no members
+     */
+    public function testCleanupCommandFixMode_GroupsWithNoMembers()
+    {
+        // Add group with no member
+        GroupFactory::make()->persist();
+        // Add group with member(s)
+        $userManager = UserFactory::make()->admin()->persist();
+        $groupWithMember = GroupFactory::make()->withGroupsManagersFor([$userManager])->persist();
+
+        $this->exec('passbolt cleanup');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Cleanup shell');
+        $this->assertOutputContains('(fix mode)');
+        // Make sure the group with member(s) not deleted
+        $groups = GroupFactory::find()->toArray();
+        $this->assertCount(1, $groups);
+        $this->assertSame($groupWithMember->get('id'), $groups[0]->get('id'));
+        $this->assertSame(1, UserFactory::find()->count());
     }
 }

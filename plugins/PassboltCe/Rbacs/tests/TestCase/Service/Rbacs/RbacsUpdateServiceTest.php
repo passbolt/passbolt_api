@@ -25,6 +25,7 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\NotFoundException;
 use Passbolt\Rbacs\Model\Dto\RbacsUpdateDtoCollection;
 use Passbolt\Rbacs\Model\Entity\Rbac;
+use Passbolt\Rbacs\Model\Entity\UiAction;
 use Passbolt\Rbacs\Service\Rbacs\RbacsUpdateService;
 use Passbolt\Rbacs\Test\Factory\RbacFactory;
 use Passbolt\Rbacs\Test\Factory\UiActionFactory;
@@ -41,7 +42,7 @@ class RbacsUpdateServiceTest extends RbacsTestCase
         RoleFactory::make()->admin()->persist();
         RoleFactory::make()->user()->persist();
 
-        $uiAction = UiActionFactory::make()->name('testUiAction')->persist();
+        $uiAction = UiActionFactory::make()->name(UiAction::NAME_RESOURCES_IMPORT)->persist();
 
         /** @var \Passbolt\Rbacs\Model\Entity\Rbac $rbac */
         $rbac = RbacFactory::make()->user()->setUiAction($uiAction)->persist();

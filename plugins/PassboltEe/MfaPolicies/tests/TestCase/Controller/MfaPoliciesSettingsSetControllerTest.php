@@ -237,7 +237,7 @@ class MfaPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertEventFired(MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED);
         $this->assertEmailQueueCount(1);
-        $this->assetEmailSubject($admin->username, 'You edited the MFA policy');
+        $this->assertEmailSubject($admin->username, 'You edited the MFA policy');
         $this->assertEmailIsInQueue([
             'email' => $admin->username,
             'template' => 'Passbolt/MfaPolicies.AD/settings_updated',
@@ -265,8 +265,8 @@ class MfaPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertEventFired(MfaPoliciesSetSettingsService::EVENT_SETTINGS_UPDATED);
         $this->assertEmailQueueCount(3);
-        $this->assetEmailSubject($admin->username, 'You edited the MFA policy');
-        $this->assetEmailSubject(
+        $this->assertEmailSubject($admin->username, 'You edited the MFA policy');
+        $this->assertEmailSubject(
             $john->username,
             "{$admin->profile->first_name} edited the MFA policy"
         );

@@ -21,6 +21,7 @@ use App\Model\Entity\Group;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Service\Groups\GroupsUpdateService;
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Utility\UserAccessControl;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
@@ -56,7 +57,10 @@ trait SyncUpdateTrait
     public function updateGroup(Group $existingGroup, array $data): void
     {
         $uac = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->get('id'));
-        $groupsUpdateService = new GroupsUpdateService();
+        // Password expiry is not active in LDAP as of now
+        $groupsUpdateService = new GroupsUpdateService(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
         $groupName = $this->getNameFromData($data);
         $changes = [
             'name' => $groupName,

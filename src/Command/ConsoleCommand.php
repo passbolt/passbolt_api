@@ -46,7 +46,7 @@ class ConsoleCommand extends Command
             $io->err('');
             $io->err('If you are using composer run');
             $io->err('');
-            $io->err('<info>$ php composer.phar require --dev psy/psysh</info>');
+            $io->err('<info>$ php composer.phar require psy/psysh</info>');
             $io->err('');
 
             return static::CODE_ERROR;

@@ -17,10 +17,13 @@ declare(strict_types=1);
 namespace App\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Group;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
+use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Groups\GroupsFindersTrait;
+use App\Service\Secrets\SecretsFindSecretsAccessibleViaGroupOnlyService;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -59,6 +62,7 @@ use Cake\Validation\Validator;
 class GroupsTable extends Table
 {
     use GroupsFindersTrait;
+    use TableCleanupTrait;
 
     public const GROUP_CREATE_SUCCESS_EVENT_NAME = 'Model.Groups.create.success';
 
@@ -291,12 +295,16 @@ class GroupsTable extends Table
      * Delete all UserGroups association entries
      * Delete all Permissions associated with this group
      *
+     * Using a service here would require vast refactoring in Active Directory.
+     * It is however recommended refactoring this method within a service.
+     *
      * @throws \InvalidArgumentException if $group is not a valid group entity
      * @param \App\Model\Entity\Group $group entity
      * @param array|null $options additional delete options such as ['checkRules' => true]
-     * @return bool status
+     * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
+     * @see PasswordExpiryOnDeleteGroupEventListener::expireResourcesOnDeletedGroup
      */
-    public function softDelete(Group $group, ?array $options = null): bool
+    public function softDelete(Group $group, ?array $options = null)
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {
@@ -307,6 +315,21 @@ class GroupsTable extends Table
                 return false;
             }
         }
+
+        $entitiesChanges = new EntitiesChangesDto();
+
+        // Delete the secrets group users will lose the access to.
+        $groupUsersIds = $this->GroupsUsers->findByGroupId($group->id)
+            ->select('user_id')->all()->extract('user_id')->toArray();
+        $secretsFindSecretsAccessibleViaGroupOnlyService = new SecretsFindSecretsAccessibleViaGroupOnlyService();
+        $secretsToDelete = $secretsFindSecretsAccessibleViaGroupOnlyService->find(
+            $group->id,
+            $groupUsersIds,
+            PermissionsTable::RESOURCE_ACO
+        )->select(['id', 'resource_id', 'user_id'])->all()->toArray();
+
+        $this->Permissions->Resources->Secrets->deleteMany($secretsToDelete);
+        $entitiesChanges->pushDeletedEntities($secretsToDelete);
 
         // find all the resources that only belongs to the group and mark them as deleted
         // Note: all resources that cannot be deleted should have been
@@ -345,10 +368,6 @@ class GroupsTable extends Table
         // Delete all the secrets that lost permissions in the process
         $this->Permissions->deleteAll(['aro_foreign_key' => $group->id]);
 
-        /** @var \App\Model\Table\SecretsTable $Secrets */
-        $Secrets = TableRegistry::getTableLocator()->get('Secrets');
-        $Secrets->cleanupHardDeletedPermissions();
-
         // Mark group as deleted
         $group->deleted = true;
         if (!$this->save($group, ['checkRules' => false, 'validate' => false])) {
@@ -356,6 +375,17 @@ class GroupsTable extends Table
             throw new InternalErrorException($msg);
         }
 
-        return true;
+        return $entitiesChanges;
+    }
+
+    /**
+     * Delete all groups records with no members(groups_users).
+     *
+     * @param bool $dryRun false
+     * @return int Number of affected records
+     */
+    public function cleanupWithNoMembers($dryRun = false)
+    {
+        return $this->cleanupHardDeleted('GroupsUsers', $dryRun);
     }
 }

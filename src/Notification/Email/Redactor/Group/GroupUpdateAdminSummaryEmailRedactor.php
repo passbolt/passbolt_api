@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Notification\Email\Redactor\Group;
 
 use App\Model\Entity\Group;
+use App\Model\Entity\GroupsUser;
 use App\Model\Entity\User;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
@@ -71,9 +72,10 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
 
         /** @var \App\Model\Entity\Group $group */
         $group = $event->getData('group');
-        $addedGroupsUsers = $event->getData('addedGroupsUsers');
-        $updatedGroupsUsers = $event->getData('updatedGroupsUsers');
-        $removedGroupsUsers = $event->getData('removedGroupsUsers');
+        $entitiesChanges = $event->getData('entitiesChanges');
+        $addedGroupsUsers = $entitiesChanges->getAddedEntities(GroupsUser::class);
+        $updatedGroupsUsers = $entitiesChanges->getAddedEntities(GroupsUser::class);
+        $removedGroupsUsers = $entitiesChanges->getAddedEntities(GroupsUser::class);
         $modifiedBy = $this->usersTable->findFirstForEmail($event->getData('userId'));
 
         if ((empty($addedGroupsUsers) && empty($updatedGroupsUsers) && empty($removedGroupsUsers))) {

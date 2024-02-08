@@ -19,6 +19,7 @@ namespace App\Service\Permissions;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UserAccessControl;
@@ -59,12 +60,7 @@ class PermissionsUpdatePermissionsService
      * @param string $aco The type of entity
      * @param string $acoForeignkey The target entity id
      * @param array|null $data The permissions to update
-     * @return array
-     * [
-     *   added => <array> List of added permissions
-     *   deleted => <array> List of deleted permissions
-     *   updated => <array> List of updated permissions
-     * ]
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \Exception If something unexpected occurred
      */
     public function updatePermissions(
@@ -72,10 +68,8 @@ class PermissionsUpdatePermissionsService
         string $aco,
         string $acoForeignkey,
         ?array $data = []
-    ): array {
-        $addedPermissions = [];
-        $updatedPermissions = [];
-        $deletedPermissions = [];
+    ): EntitiesChangesDto {
+        $entitiesChanges = new EntitiesChangesDto();
 
         foreach ($data as $rowIndex => $row) {
             $permissionId = Hash::get($row, 'id', null);
@@ -83,7 +77,7 @@ class PermissionsUpdatePermissionsService
             // A new permission is provided when no id is found in the raw data.
             if (is_null($permissionId)) {
                 $permission = $this->addPermission($uac, $rowIndex, $aco, $acoForeignkey, $row);
-                $addedPermissions[] = $permission;
+                $entitiesChanges->pushAddedEntity($permission);
             } else {
                 // If a property delete is found and set to true, then delete the permission.
                 // Otherwise update it.
@@ -91,21 +85,17 @@ class PermissionsUpdatePermissionsService
                 $delete = Hash::get($row, 'delete');
                 if ($delete) {
                     $permission = $this->deletePermission($permission);
-                    $deletedPermissions[] = $permission;
+                    $entitiesChanges->pushDeletedEntity($permission);
                 } else {
                     $permission = $this->updatePermission($uac, $rowIndex, $permission, $row);
-                    $updatedPermissions[] = $permission;
+                    $entitiesChanges->pushUpdatedEntity($permission);
                 }
             }
         }
 
         $this->assertAtLeastOneOwnerPermission($acoForeignkey);
 
-        return [
-            'added' => $addedPermissions,
-            'removed' => $deletedPermissions,
-            'updated' => $updatedPermissions,
-        ];
+        return $entitiesChanges;
     }
 
     /**

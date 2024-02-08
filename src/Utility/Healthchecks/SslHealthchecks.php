@@ -21,13 +21,23 @@ use Cake\Routing\Router;
 
 class SslHealthchecks
 {
+    private ?Client $client;
+
+    /**
+     * @param ?\Cake\Http\Client $client client used to query the healthcheck endpoint
+     */
+    public function __construct(?Client $client = null)
+    {
+        $this->client = $client;
+    }
+
     /**
      * Run all SSL healthchecks
      *
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function all(?array $checks = []): array
+    public function all(?array $checks = []): array
     {
         $checks['ssl'] = [
             'peerValid' => false,
@@ -41,9 +51,9 @@ class SslHealthchecks
         if (isset($reachable) && !$reachable) {
             return $checks;
         }
-        $checks = self::peerValid($checks);
-        $checks = self::hostValid($checks);
-        $checks = self::notSelfSigned($checks);
+        $checks = $this->peerValid($checks);
+        $checks = $this->hostValid($checks);
+        $checks = $this->notSelfSigned($checks);
 
         return $checks;
     }
@@ -54,11 +64,11 @@ class SslHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function peerValid(?array $checks = []): array
+    private function peerValid(?array $checks = []): array
     {
         $url = Router::url('/healthcheck/status.json', true);
         try {
-            $HttpSocket = new Client([
+            $HttpSocket = $this->client ?? new Client([
                 'ssl_verify_peer' => true,
                 'ssl_verify_host' => false,
                 'ssl_allow_self_signed' => true,
@@ -78,11 +88,11 @@ class SslHealthchecks
      * @param array|null $checks List of checks
      * @return array
      */
-    public static function hostValid(?array $checks = []): array
+    private function hostValid(?array $checks = []): array
     {
         $url = Router::url('/healthcheck/status.json', true);
         try {
-            $HttpSocket = new Client([
+            $HttpSocket = $this->client ?? new Client([
                 'ssl_verify_peer' => true,
                 'ssl_verify_host' => true,
                 'ssl_allow_self_signed' => true,
@@ -103,11 +113,11 @@ class SslHealthchecks
      * @psalm-suppress InvalidNullableReturnType false positive
      * @return array
      */
-    public static function notSelfSigned(?array $checks = []): array
+    private function notSelfSigned(?array $checks = []): array
     {
         $url = Router::url('/healthcheck/status.json', true);
         try {
-            $HttpSocket = new Client([
+            $HttpSocket = $this->client ?? new Client([
                 'ssl_verify_peer' => true,
                 'ssl_verify_host' => true,
                 'ssl_allow_self_signed' => false,

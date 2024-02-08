@@ -28,6 +28,7 @@ use Cake\ORM\Entity;
  * @property string|null $uri
  * @property string|null $description
  * @property bool $deleted
+ * @property \Cake\I18n\FrozenTime|null $expired
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by
@@ -69,6 +70,7 @@ class Resource extends Entity
         'uri' => false,
         'description' => false,
         'deleted' => false,
+        'expired' => false,
         'created' => false,
         'modified' => false,
         'created_by' => false,
@@ -82,4 +84,17 @@ class Resource extends Entity
         'secrets' => false,
         'resource_type_id' => false,
     ];
+
+    /**
+     * @return bool
+     */
+    public function isExpired(): bool
+    {
+        $expires = $this->expired;
+        if (is_null($expires)) {
+            return false;
+        }
+
+        return $expires->isPast();
+    }
 }

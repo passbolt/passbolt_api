@@ -85,7 +85,7 @@ class FixDirectorySyncLegacyFieldsMappingServiceTest extends AppTestCase
     {
         $dummySettings = $this->getDummyDirectorySyncSettings();
         // The settings should have been created before the migration to the v4.
-        OrganizationSettingFactory::make(['modified' => FrozenTime::now()->subYear()])
+        OrganizationSettingFactory::make(['modified' => FrozenTime::now()->subYears(1)])
             ->setPropertyAndValue(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY, json_encode($dummySettings))
             ->persist();
 
@@ -109,7 +109,7 @@ class FixDirectorySyncLegacyFieldsMappingServiceTest extends AppTestCase
         $dummySettings['fieldsMapping']['ad']['user']['username'] = 'userPrincipalName';
         // The settings should have been created before the migration to the v4.
         /** @var \App\Model\Entity\OrganizationSetting $directorySyncSetting */
-        OrganizationSettingFactory::make(['modified' => FrozenTime::now()->subYear()])
+        OrganizationSettingFactory::make(['modified' => FrozenTime::now()->subYears(1)])
             ->setPropertyAndValue(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY, json_encode($dummySettings))
             ->persist();
 
