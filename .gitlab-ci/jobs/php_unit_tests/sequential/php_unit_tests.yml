@@ -75,6 +75,7 @@
     # This is the development dummy fingerprint
     PASSBOLT_GPG_SERVER_KEY_FINGERPRINT: 2FC8945833C51946E937F9FED47B0811573EE67E
     PHPUNIT_COMMAND: vendor/bin/phpunit --log-junit unitreport.xml
+    COMPOSER_ALLOW_SUPERUSER: 1
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
   script:
     - cp config/app.default.php config/app.php
