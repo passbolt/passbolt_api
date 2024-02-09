@@ -50,6 +50,6 @@ class SsoAzureStage1Controller extends AbstractSsoController
 
         // Redirect to provider
         $url = $this->getSsoUrlWithCookie(new SsoAzureService($cookieService), $uac, SsoState::TYPE_SSO_GET_KEY);
-        $this->success(__('The operation was successful.'), $url);
+        $this->success(__('The operation was successful.'), $url->jsonSerialize());
     }
 }

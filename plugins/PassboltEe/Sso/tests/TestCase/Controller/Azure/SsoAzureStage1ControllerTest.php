@@ -25,6 +25,7 @@ use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
 
 /**
  * @property \Cake\Http\Response $_response
+ * @covers \Passbolt\Sso\Controller\Azure\SsoAzureStage1Controller
  */
 class SsoAzureStage1ControllerTest extends SsoIntegrationTestCase
 {
