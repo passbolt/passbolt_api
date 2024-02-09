@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Service;
 
+use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -69,6 +70,9 @@ class RequestLocaleParserService extends LocaleService
     protected function readUriLocale(): ?string
     {
         $locale = $this->request->getQueryParams()[self::QUERY_KEY] ?? '';
+        if (!is_string($locale)) {
+            throw new BadRequestException(__('The locale should be a string.'));
+        }
         if ($this->isValidLocale($locale)) {
             return $this->dasherizeLocale($locale);
         }

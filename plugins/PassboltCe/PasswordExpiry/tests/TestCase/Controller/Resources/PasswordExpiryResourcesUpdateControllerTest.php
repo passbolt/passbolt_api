@@ -102,7 +102,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEmailQueueCount($expectedEmails);
         $emailDataToOwner = [
             'email' => $ownerWithAccess->username,
-            'subject' => $operator->profile->full_name . ' marked the password ' . $resourceUpdated->name . ' as expired',
+            'subject' => h($operator->profile->full_name) . ' marked the password ' . $resourceUpdated->name . ' as expired',
         ];
         if (!$isResourceAlreadyExpired) {
             $this->assertEmailIsInQueue($emailDataToOwner);
