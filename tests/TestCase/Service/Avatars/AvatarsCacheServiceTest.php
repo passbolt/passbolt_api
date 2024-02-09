@@ -21,6 +21,7 @@ use App\Model\Entity\Avatar;
 use App\Service\Avatars\AvatarsCacheService;
 use App\Test\Lib\Model\AvatarsIntegrationTestTrait;
 use App\Utility\UuidFactory;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Laminas\Diactoros\Stream;
@@ -34,9 +35,12 @@ class AvatarsCacheServiceTest extends TestCase
 
     public AvatarsCacheService $avatarsCacheService;
 
+    public ?Table $Avatars = null;
+
     public function setUp(): void
     {
         parent::setUp();
+
         $this->Avatars = TableRegistry::getTableLocator()->get('Avatars');
         $this->avatarsCacheService = new AvatarsCacheService($this->filesystemAdapter);
     }
