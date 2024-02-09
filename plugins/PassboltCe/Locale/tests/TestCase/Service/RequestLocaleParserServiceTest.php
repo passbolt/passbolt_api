@@ -20,6 +20,7 @@ namespace Passbolt\Locale\Test\TestCase\Service;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use Authentication\Authenticator\Result;
+use Cake\Http\Exception\BadRequestException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\GetOrgLocaleService;
@@ -118,5 +119,15 @@ class RequestLocaleParserServiceTest extends TestCase
             $userLocale,
             $service->getLocale()
         );
+    }
+
+    public function testRequestLocaleParserServiceGetLocaleWithArrayLocaleFormatShouldThrow400(): void
+    {
+        $request = $this->createMock(ServerRequestInterface::class);
+        $request->method('getQueryParams')->willReturn([RequestLocaleParserService::QUERY_KEY => ['foo']]);
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The locale should be a string.');
+        (new RequestLocaleParserService($request))->getLocale();
     }
 }
