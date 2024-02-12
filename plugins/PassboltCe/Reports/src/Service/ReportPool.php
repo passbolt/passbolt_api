@@ -98,7 +98,7 @@ class ReportPool
     }
 
     /**
-     * Return a an array of callable to instantiate to get a report
+     * Returns an array of callable to instantiate to get a report
      * Each Report is created callable to avoid to instantiate a report collection when it will
      * not be used, but still maintain of a list of the report somewhere
      *
