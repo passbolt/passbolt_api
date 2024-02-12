@@ -64,7 +64,7 @@ class BaseSolutionBootstrapper
         $this->addFeaturePluginIfEnabled($app, 'TotpResourceTypes', ['bootstrap' => true, 'routes' => false]);
         $app->addPlugin('Passbolt/RememberMe', ['bootstrap' => true, 'routes' => false]);
         $app->addPlugin('Passbolt/EmailNotificationSettings', ['bootstrap' => true, 'routes' => true]);
-        $app->addPlugin('Passbolt/EmailDigest', ['bootstrap' => true, 'routes' => true]);
+        $this->addFeaturePluginIfEnabled($app, 'EmailDigest');
         $app->addPlugin('Passbolt/Reports', ['bootstrap' => true, 'routes' => true]);
         $this->addFeaturePluginIfEnabled($app, 'Mobile');
         $this->addFeaturePluginIfEnabled($app, 'SelfRegistration');
