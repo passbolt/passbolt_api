@@ -259,6 +259,9 @@ return [
             'desktop' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_DESKTOP_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'emailDigest' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_EMAIL_DIGEST_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
             'jwtAuthentication' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
