@@ -39,12 +39,12 @@ class ReportViewService
     }
 
     /**
-     * Build a object implementing ReportInterface for given slug
+     * Build a object implementing AbstractReport for given slug
      *
      * @param string $reportSlug Slug of the report
      * @param array|null $parameters The report parameters
      * @throws \ReflectionException
-     * @return \Passbolt\Reports\Utility\ReportInterface
+     * @return \Passbolt\Reports\Utility\AbstractReport
      */
     public function getReport(string $reportSlug, ?array $parameters = [])
     {
@@ -58,7 +58,7 @@ class ReportViewService
 
         $reflectionClass = new \ReflectionClass($reportClass);
 
-        /** @var \Passbolt\Reports\Utility\ReportInterface $report */
+        /** @var \Passbolt\Reports\Utility\AbstractReport $report */
         $report = $reflectionClass->newInstance(...$parameters);
 
         return $report;
