@@ -7,7 +7,7 @@
   "(tag)": "(label)",
   "{column.label}": "{column.label}",
   "{errors.get(key)}": "{errors.get(key)}",
-  "{this.creatorName} did not initiate this request.": "{this.creatorName} did not initiate this request.",
+  "{this.creatorName} did not initiate this request.": "{this.creatorName} heeft dit verzoek niet geïnitieerd.",
   "{this.state.warnings.get(key)}": "{this.state.warnings.get(key)}",
   "@your-domain.com": "@jouw-domein.com",
   "<0>{{activityCreatorName}}</0> accepted the account recovery policy": "<0>{{activityCreatorName}}</0> heeft het herstelbeleid voor het account geaccepteerd",

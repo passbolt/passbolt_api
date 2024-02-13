@@ -41,9 +41,11 @@ use App\ServiceProvider\ResourceServiceProvider;
 use App\ServiceProvider\SetupServiceProvider;
 use App\ServiceProvider\TestEmailServiceProvider;
 use App\ServiceProvider\UserServiceProvider;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use Authentication\AuthenticationServiceInterface;
 use Authentication\AuthenticationServiceProviderInterface;
 use Authentication\Middleware\AuthenticationMiddleware;
+use Cake\Console\CommandCollection;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Core\Exception\MissingPluginException;
@@ -57,6 +59,8 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
+use EmailQueue\Shell\SenderShell;
+use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
@@ -64,6 +68,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
 {
+    use FeaturePluginAwareTrait;
+
     /**
      * @var \App\BaseSolutionBootstrapper|null
      */
@@ -322,5 +328,20 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         }
 
         return $auth;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        parent::console($commands);
+
+        // If the email digest plugin is disabled, fallback on the sender shell
+        if (!$this->isFeaturePluginEnabled(EmailDigestPlugin::class)) {
+            $commands->add('passbolt email_digest send', SenderShell::class);
+        }
+
+        return $commands;
     }
 }

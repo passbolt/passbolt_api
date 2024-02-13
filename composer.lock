@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "11c134b8bc0976d0e4a6d6f722528049",
+    "content-hash": "a897d3f433e85c8fbe82e53202a0d464",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -62,16 +62,16 @@
         },
         {
             "name": "bcrowe/cakephp-api-pagination",
-            "version": "3.0.0",
+            "version": "3.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bcrowe/cakephp-api-pagination.git",
-                "reference": "c6fd911e0cabe6b50a0e78e9c657c0a17159a2f8"
+                "reference": "584c35af81f54e98986e18154800baf35e97060b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bcrowe/cakephp-api-pagination/zipball/c6fd911e0cabe6b50a0e78e9c657c0a17159a2f8",
-                "reference": "c6fd911e0cabe6b50a0e78e9c657c0a17159a2f8",
+                "url": "https://api.github.com/repos/bcrowe/cakephp-api-pagination/zipball/584c35af81f54e98986e18154800baf35e97060b",
+                "reference": "584c35af81f54e98986e18154800baf35e97060b",
                 "shasum": ""
             },
             "require": {
@@ -132,7 +132,7 @@
                 "cakephp4",
                 "pagination"
             ],
-            "time": "2023-07-12T22:49:34+00:00"
+            "time": "2024-01-13T16:14:01+00:00"
         },
         {
             "name": "beberlei/assert",
@@ -263,20 +263,20 @@
         },
         {
             "name": "cakephp/authentication",
-            "version": "2.9.0",
+            "version": "2.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/authentication.git",
-                "reference": "71cfa8ab1b3e34699400528714a3575c5778e27d"
+                "reference": "64964e5a503a7d2a5560dfabc1b5d4439f61cdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/authentication/zipball/71cfa8ab1b3e34699400528714a3575c5778e27d",
-                "reference": "71cfa8ab1b3e34699400528714a3575c5778e27d",
+                "url": "https://api.github.com/repos/cakephp/authentication/zipball/64964e5a503a7d2a5560dfabc1b5d4439f61cdae",
+                "reference": "64964e5a503a7d2a5560dfabc1b5d4439f61cdae",
                 "shasum": ""
             },
             "require": {
-                "cakephp/http": "^4.0",
+                "cakephp/http": "^4.4",
                 "laminas/laminas-diactoros": "^2.2.2",
                 "psr/http-client": "^1.0",
                 "psr/http-message": "^1.0",
@@ -284,9 +284,9 @@
                 "psr/http-server-middleware": "^1.0"
             },
             "require-dev": {
-                "cakephp/cakephp": "^4.0",
+                "cakephp/cakephp": "^4.4",
                 "cakephp/cakephp-codesniffer": "^4.0",
-                "firebase/php-jwt": "^5.5",
+                "firebase/php-jwt": "^6.2",
                 "phpunit/phpunit": "^8.5 || ^9.3"
             },
             "suggest": {
@@ -327,7 +327,7 @@
                 "issues": "https://github.com/cakephp/authentication/issues",
                 "source": "https://github.com/cakephp/authentication"
             },
-            "time": "2022-01-06T20:01:45+00:00"
+            "time": "2023-10-01T18:57:13+00:00"
         },
         {
             "name": "cakephp/cakephp",
@@ -521,7 +521,7 @@
             },
             "require-dev": {
                 "cakephp/bake": "^2.6.0",
-                "cakephp/cakephp": "^4.3.0",
+                "cakephp/cakephp": "^4.5.0",
                 "cakephp/cakephp-codesniffer": "^4.1",
                 "phpunit/phpunit": "^9.5.0"
             },
@@ -1320,19 +1320,20 @@
         },
         {
             "name": "donatj/phpuseragentparser",
-            "version": "v1.7.0",
+            "version": "v1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/donatj/PhpUserAgent.git",
-                "reference": "a35900b93530715f8669c10e49756adde5c8e6fc"
+                "reference": "b8c16fd6e963651c6d86f66cb782ce599d62418e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/donatj/PhpUserAgent/zipball/a35900b93530715f8669c10e49756adde5c8e6fc",
-                "reference": "a35900b93530715f8669c10e49756adde5c8e6fc",
+                "url": "https://api.github.com/repos/donatj/PhpUserAgent/zipball/b8c16fd6e963651c6d86f66cb782ce599d62418e",
+                "reference": "b8c16fd6e963651c6d86f66cb782ce599d62418e",
                 "shasum": ""
             },
             "require": {
+                "ext-ctype": "*",
                 "php": ">=5.4.0"
             },
             "require-dev": {
@@ -1373,7 +1374,7 @@
             ],
             "support": {
                 "issues": "https://github.com/donatj/PhpUserAgent/issues",
-                "source": "https://github.com/donatj/PhpUserAgent/tree/v1.7.0"
+                "source": "https://github.com/donatj/PhpUserAgent/tree/v1.8.0"
             },
             "funding": [
                 {
@@ -1383,31 +1384,36 @@
                 {
                     "url": "https://github.com/donatj",
                     "type": "github"
+                },
+                {
+                    "url": "https://ko-fi.com/donatj",
+                    "type": "ko_fi"
                 }
             ],
-            "time": "2022-08-06T15:41:58+00:00"
+            "time": "2023-10-27T05:22:44+00:00"
         },
         {
             "name": "duosecurity/duo_universal_php",
-            "version": "1.0.1",
+            "version": "1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/duosecurity/duo_universal_php.git",
-                "reference": "d7d9bd3bf996d16ff7f4af57b45ed5ca3144cd16"
+                "reference": "8734a47480d2d2f0539e8ee782675e052025d026"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/duosecurity/duo_universal_php/zipball/d7d9bd3bf996d16ff7f4af57b45ed5ca3144cd16",
-                "reference": "d7d9bd3bf996d16ff7f4af57b45ed5ca3144cd16",
+                "url": "https://api.github.com/repos/duosecurity/duo_universal_php/zipball/8734a47480d2d2f0539e8ee782675e052025d026",
+                "reference": "8734a47480d2d2f0539e8ee782675e052025d026",
                 "shasum": ""
             },
             "require": {
                 "ext-curl": "*",
+                "ext-json": "*",
                 "firebase/php-jwt": "^6.0",
                 "php": ">=7.3"
             },
             "require-dev": {
-                "phpunit/phpunit": "^8.0",
+                "phpunit/phpunit": "^9.0",
                 "squizlabs/php_codesniffer": "3.*"
             },
             "type": "library",
@@ -1422,22 +1428,22 @@
             "support": {
                 "email": "support@duosecurity.com",
                 "issues": "https://github.com/duosecurity/duo_universal_php/issues",
-                "source": "https://github.com/duosecurity/duo_universal_php/tree/1.0.1"
+                "source": "https://github.com/duosecurity/duo_universal_php/tree/1.0.2"
             },
-            "time": "2022-07-06T13:56:13+00:00"
+            "time": "2023-01-13T18:47:58+00:00"
         },
         {
             "name": "enygma/yubikey",
-            "version": "dev-master",
+            "version": "3.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/passbolt/yubikey.git",
-                "reference": "31802c4f5ef24df87c4710e5893bdf8ad73554be"
+                "url": "https://github.com/enygma/yubikey.git",
+                "reference": "26c194dc1751d3978388e109030aa76afeade7aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/yubikey/zipball/31802c4f5ef24df87c4710e5893bdf8ad73554be",
-                "reference": "31802c4f5ef24df87c4710e5893bdf8ad73554be",
+                "url": "https://api.github.com/repos/enygma/yubikey/zipball/26c194dc1751d3978388e109030aa76afeade7aa",
+                "reference": "26c194dc1751d3978388e109030aa76afeade7aa",
                 "shasum": ""
             },
             "require": {
@@ -1447,13 +1453,13 @@
                 "codeclimate/php-test-reporter": "dev-master",
                 "phpunit/phpunit": "4.3.2"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "psr-0": {
                     "Yubikey": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -1473,7 +1479,11 @@
                 "yubico",
                 "yubikey"
             ],
-            "time": "2023-01-09T16:41:59+00:00"
+            "support": {
+                "issues": "https://github.com/enygma/yubikey/issues",
+                "source": "https://github.com/enygma/yubikey/tree/3.5"
+            },
+            "time": "2023-11-29T16:57:14+00:00"
         },
         {
             "name": "firebase/php-jwt",
@@ -3403,7 +3413,7 @@
             "description": "Pure-PHP implementation of the OpenPGP Message Format (RFC 4880)",
             "support": {
                 "issues": "https://github.com/singpolyma/openpgp-php/issues",
-                "source": "https://github.com/singpolyma/openpgp-php/tree/0.6.0"
+                "source": "https://github.com/singpolyma/openpgp-php/tree/master"
             },
             "funding": [
                 {
@@ -5537,20 +5547,20 @@
         },
         {
             "name": "fakerphp/faker",
-            "version": "v1.20.0",
+            "version": "v1.23.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FakerPHP/Faker.git",
-                "reference": "37f751c67a5372d4e26353bd9384bc03744ec77b"
+                "reference": "bfb4fe148adbf78eff521199619b93a52ae3554b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/37f751c67a5372d4e26353bd9384bc03744ec77b",
-                "reference": "37f751c67a5372d4e26353bd9384bc03744ec77b",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/bfb4fe148adbf78eff521199619b93a52ae3554b",
+                "reference": "bfb4fe148adbf78eff521199619b93a52ae3554b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.1 || ^8.0",
+                "php": "^7.4 || ^8.0",
                 "psr/container": "^1.0 || ^2.0",
                 "symfony/deprecation-contracts": "^2.2 || ^3.0"
             },
@@ -5561,7 +5571,8 @@
                 "bamarni/composer-bin-plugin": "^1.4.1",
                 "doctrine/persistence": "^1.3 || ^2.0",
                 "ext-intl": "*",
-                "symfony/phpunit-bridge": "^4.4 || ^5.2"
+                "phpunit/phpunit": "^9.5.26",
+                "symfony/phpunit-bridge": "^5.4.16"
             },
             "suggest": {
                 "doctrine/orm": "Required to use Faker\\ORM\\Doctrine",
@@ -5571,11 +5582,6 @@
                 "ext-mbstring": "Required for multibyte Unicode string functionality."
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-main": "v1.20-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Faker\\": "src/Faker/"
@@ -5598,9 +5604,9 @@
             ],
             "support": {
                 "issues": "https://github.com/FakerPHP/Faker/issues",
-                "source": "https://github.com/FakerPHP/Faker/tree/v1.20.0"
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.23.1"
             },
-            "time": "2022-07-20T13:12:54+00:00"
+            "time": "2024-01-02T13:46:09+00:00"
         },
         {
             "name": "felixfbecker/advanced-json-rpc",
@@ -8184,12 +8190,12 @@
             "version": "3.7.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/squizlabs/PHP_CodeSniffer.git",
+                "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
                 "reference": "ed8e00df0a83aa96acf703f8c2979ff33341f879"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/squizlabs/PHP_CodeSniffer/zipball/ed8e00df0a83aa96acf703f8c2979ff33341f879",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/ed8e00df0a83aa96acf703f8c2979ff33341f879",
                 "reference": "ed8e00df0a83aa96acf703f8c2979ff33341f879",
                 "shasum": ""
             },
@@ -8234,6 +8240,20 @@
                 "source": "https://github.com/squizlabs/PHP_CodeSniffer",
                 "wiki": "https://github.com/squizlabs/PHP_CodeSniffer/wiki"
             },
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCSStandards",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                }
+            ],
             "time": "2023-02-22T23:07:41+00:00"
         },
         {
@@ -8525,21 +8545,21 @@
         },
         {
             "name": "vierge-noire/cakephp-fixture-factories",
-            "version": "v2.9.1",
+            "version": "v2.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierge-noire/cakephp-fixture-factories.git",
-                "reference": "f3d7fec2ba142ef8be6491affe1019abc7490c8b"
+                "reference": "9bb9ee5eb198877185a69dcdce3471dbb77c190d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/f3d7fec2ba142ef8be6491affe1019abc7490c8b",
-                "reference": "f3d7fec2ba142ef8be6491affe1019abc7490c8b",
+                "url": "https://api.github.com/repos/vierge-noire/cakephp-fixture-factories/zipball/9bb9ee5eb198877185a69dcdce3471dbb77c190d",
+                "reference": "9bb9ee5eb198877185a69dcdce3471dbb77c190d",
                 "shasum": ""
             },
             "require": {
                 "cakephp/orm": "^4.2",
-                "fakerphp/faker": "^1.15",
+                "fakerphp/faker": "^1.23",
                 "php": ">=7.2",
                 "vierge-noire/cakephp-test-suite-light": "^2.1"
             },
@@ -8582,9 +8602,9 @@
             ],
             "support": {
                 "issues": "https://github.com/vierge-noire/cakephp-fixture-factories/issues",
-                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.9.1"
+                "source": "https://github.com/vierge-noire/cakephp-fixture-factories/tree/v2.9.3"
             },
-            "time": "2023-07-14T14:41:57+00:00"
+            "time": "2024-02-09T08:58:59+00:00"
         },
         {
             "name": "vierge-noire/cakephp-test-suite-light",
@@ -8812,7 +8832,6 @@
         "cakephp/migrations": 20,
         "robmorgan/phinx": 20,
         "singpolyma/openpgp-php": 20,
-        "enygma/yubikey": 20,
         "psy/psysh": 0
     },
     "prefer-stable": true,

@@ -416,6 +416,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->assertCount(2, $folder->children_folders);
         foreach ($folder->children_folders as $childFolder) {
             $this->assertFolderAttributes($childFolder);
+            $this->assertObjectNotHasAttribute('_joinData', $childFolder);
         }
         $childrenFolderIds = Hash::extract($folder->children_folders, '{n}.id');
         $this->assertContains($resource1->id, $childrenFolderIds);

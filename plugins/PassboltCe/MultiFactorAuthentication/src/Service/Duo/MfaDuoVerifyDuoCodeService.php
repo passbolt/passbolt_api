@@ -103,10 +103,6 @@ class MfaDuoVerifyDuoCodeService
             throw new UnauthorizedException(__('Unable to verify Duo code against Duo service.'), null, $e);
         }
 
-        if (!is_array($duoAuthenticationData)) {
-            throw new InternalErrorException('Duo authentication details should be an array.');
-        }
-
         return $duoAuthenticationData;
     }
 
