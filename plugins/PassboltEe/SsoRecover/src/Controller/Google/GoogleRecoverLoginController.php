@@ -66,6 +66,6 @@ class GoogleRecoverLoginController extends AbstractSsoController
 
         $url = $this->getSsoUrlWithCookie(new SsoGoogleService($cookieService), $uac, SsoState::TYPE_SSO_RECOVER);
 
-        $this->success(__('The operation was successful.'), $url);
+        $this->success(__('The operation was successful.'), $url->jsonSerialize());
     }
 }

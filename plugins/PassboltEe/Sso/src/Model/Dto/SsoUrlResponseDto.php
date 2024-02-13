@@ -18,10 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Model\Dto;
 
 use InvalidArgumentException;
-use JsonSerializable;
 use Passbolt\Sso\Utility\UrlParser;
 
-class SsoUrlResponseDto implements JsonSerializable
+class SsoUrlResponseDto
 {
     public const HTTP_GET = 'GET';
     public const HTTP_POST = 'POST';

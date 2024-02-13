@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -296,8 +296,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     }
 
     /**
-     * Scenario: a groupuser that was already synced has been removed in ldap
-     * Expected result: remove group user in passbolt
+     * Scenario: a group user that was already synced has been removed in ldap
+     * Expected result: remove group user in passbolt and an email is sent to user notifying they have been removed from the group
      *
      * @group DirectorySync
      * @group DirectorySyncGroupUser
@@ -325,7 +325,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => UuidFactory::uuid('user.id.betty')]);
         $this->assertDirectoryRelationNotExist($relation->id);
-        $this->assertEmailQueueCount(0);
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains('removed you from the group');
     }
 
     /**
