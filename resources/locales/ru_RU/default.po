@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-01-30 05:45+0000\n"
-"PO-Revision-Date: 2024-02-08 07:25\n"
+"POT-Creation-Date: 2024-02-13 08:14+0000\n"
+"PO-Revision-Date: 2024-02-13 10:35\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -1902,6 +1902,9 @@ msgstr "Это недопустимая локаль."
 
 msgid "This is not a valid {0}."
 msgstr "Это недопустимый {0}."
+
+msgid "The locale should be a string."
+msgstr ""
 
 msgid "The strategy should extend the class: {0}"
 msgstr "Стратегия должна расширить класс: {0}"
@@ -4057,11 +4060,11 @@ msgstr "Контактные лица вашей организации для �
 msgid "Only administrators can view user logs."
 msgstr "Только администраторы могут просматривать журналы пользователей."
 
-msgid "The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt."
-msgstr "Пользователя {0} не удалось добавить в группу {1}, так как его учетная запись была ранее удалена в passbolt."
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr ""
 
-msgid "The user {0} could not be added to the group {1} because they have not yet activated his account."
-msgstr "Пользователя {0} не удалось добавить в группу {1}, так как он еще не активировал свою учетную запись."
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
+msgstr ""
 
 msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
 msgstr "Пользователь {0} не может быть автоматически добавлен в группу {1}. Менеджеру(ам) группы был отправлен запрос по электронной почте сделать это вручную."
