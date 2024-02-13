@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2024-01-30 05:45+0000\n"
+"POT-Creation-Date: 2024-02-13 08:14+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -1899,6 +1899,9 @@ msgid "This is not a valid locale."
 msgstr ""
 
 msgid "This is not a valid {0}."
+msgstr ""
+
+msgid "The locale should be a string."
 msgstr ""
 
 msgid "The strategy should extend the class: {0}"
@@ -4055,10 +4058,10 @@ msgstr ""
 msgid "Only administrators can view user logs."
 msgstr ""
 
-msgid "The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt."
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
 msgstr ""
 
-msgid "The user {0} could not be added to the group {1} because they have not yet activated his account."
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
 msgstr ""
 
 msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
