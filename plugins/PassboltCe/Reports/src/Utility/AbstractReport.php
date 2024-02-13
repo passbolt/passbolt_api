@@ -19,9 +19,8 @@ namespace Passbolt\Reports\Utility;
 use App\Model\Entity\User;
 use App\Model\Table\Dto\FindIndexOptions;
 use Cake\I18n\FrozenTime;
-use JsonSerializable;
 
-abstract class AbstractReport implements ReportInterface, JsonSerializable
+abstract class AbstractReport implements ReportInterface
 {
     /**
      * @var string $name report name

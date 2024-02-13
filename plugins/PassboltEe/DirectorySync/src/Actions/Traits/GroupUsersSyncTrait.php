@@ -20,6 +20,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
 use App\Model\Entity\GroupsUser;
 use App\Model\Entity\Role;
+use App\Service\Groups\GroupsUpdateService;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
 use App\Utility\UserAccessControl;
@@ -464,7 +465,7 @@ trait GroupUsersSyncTrait
             $groupUserToDelete = $this->GroupsUsers->findById($groupUserId)->contain(['Users'])->first();
             $username = $groupUserToDelete->get('user')->username;
             try {
-                $groupUserDeleteService->delete($uac, $groupUserToDelete->id);
+                $entitiesChanges = $groupUserDeleteService->delete($uac, $groupUserToDelete->id);
                 // Delete relation
                 $directoryRelation = $this->DirectoryRelations->get($groupUserId);
                 $this->DirectoryRelations->delete($directoryRelation);
@@ -476,6 +477,13 @@ trait GroupUsersSyncTrait
                     Alias::STATUS_SUCCESS,
                     $group
                 ));
+                // Notify users
+                $event = new Event(GroupsUpdateService::UPDATE_SUCCESS_EVENT_NAME, $this, [
+                    'group' => $group,
+                    'entitiesChanges' => $entitiesChanges,
+                    'userId' => $uac->getId(),
+                ]);
+                $this->GroupsUsers->Groups->getEventManager()->dispatch($event);
             } catch (ValidationException $exception) {
                 $errors = $exception->getEntity()->getErrors();
                 if (isset($errors['is_admin']['at_least_one_group_manager'])) {

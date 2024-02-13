@@ -36,7 +36,7 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
     public function testMfaDuoStartDuoAuthenticationService_Success()
     {
         $user = UserFactory::make()->persist();
-        $uac = new UserAccessControl(Role::USER, $user->id);
+        $uac = new UserAccessControl(Role::USER, $user->id, 'duo@test.test');
 
         $mock = DuoSdkClientMock::createDefault($this, $user);
         $service = new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP, $mock->getClient());
@@ -54,7 +54,7 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
     public function testMfaDuoStartDuoAuthenticationService_Success_WithRedirect()
     {
         $user = UserFactory::make()->persist();
-        $uac = new UserAccessControl(Role::USER, $user->id);
+        $uac = new UserAccessControl(Role::USER, $user->id, 'duo@test.test');
         $redirectPath = '/redirect/path';
         $duoSdkClientMock = DuoSdkClientMock::createDefault($this, $user)->getClient();
         $service = new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP, $duoSdkClientMock);

@@ -84,7 +84,7 @@ class LocaleServiceTest extends TestCase
         );
     }
 
-    public function dataProviderForTestLocaleServiceLocaleTranslateString_On_Existing_Locale_English_Default()
+    public function dataProviderForTestLocaleServiceLocaleTranslateString_On_Existing_Locale_English_Default(): array
     {
         return [
             ['fr-FR', 'Courriel envoyé de: admin@passbolt.com'],
@@ -96,7 +96,7 @@ class LocaleServiceTest extends TestCase
         ];
     }
 
-    public function dataProviderForTestLocaleServiceLocaleTranslateString_On_Existing_Locale_French_Default()
+    public function dataProviderForTestLocaleServiceLocaleTranslateString_On_Existing_Locale_French_Default(): array
     {
         return [
             ['fr-FR', 'Courriel envoyé de: admin@passbolt.com'],
