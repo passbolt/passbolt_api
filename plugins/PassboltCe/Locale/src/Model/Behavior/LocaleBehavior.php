@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Model\Behavior;
 
+use Cake\Collection\CollectionInterface;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;
@@ -95,16 +96,15 @@ class LocaleBehavior extends Behavior
      */
     public function formatResults(Query $query): Query
     {
-        return $query->formatResults(function (\Cake\Collection\CollectionInterface $results) {
+        return $query->formatResults(function (CollectionInterface $results) {
             return $results->map(function ($entity) {
                 if (is_null($entity->locale)) {
                     $locale = GetOrgLocaleService::getLocale();
                 } else {
                     $locale = $entity->locale->value;
                 }
-                $entity = $this->addLocalePropertyToEntity($entity, $locale);
 
-                return $entity;
+                return $this->addLocalePropertyToEntity($entity, $locale);
             });
         });
     }
