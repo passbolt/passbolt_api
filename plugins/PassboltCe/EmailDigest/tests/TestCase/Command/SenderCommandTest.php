@@ -30,6 +30,7 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\I18n;
 use Cake\Mailer\Mailer;
 use Cake\Network\Exception\SocketException;
+use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
@@ -261,5 +262,41 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->assertMailSubjectContainsAt(1, $subject);
         $this->assertMailContainsAt(1, $subject);
         $this->assertMailContainsAt(1, $nEmailsSent . ' group memberships were affected.');
+    }
+
+    /**
+     * If the email plugin is disabled, fall back on the legacy email queue command
+     */
+    public function testSenderCommandMultipleDigests_With_Plugin_Disabled()
+    {
+        $this->disableFeaturePlugin(EmailDigestPlugin::class);
+
+        $nEmailsSent = 15;
+
+        $operator = UserFactory::make()->withAvatar()->getEntity();
+        $recipient = 'john@test.test';
+        EmailQueueFactory::make($nEmailsSent)
+            ->setRecipient($recipient)
+            ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
+            ->setField('template_vars.body.user', $operator)
+            ->setField('template_vars.body.resource', [
+                // Dummy data to render email without any warnings
+                'id' => UuidFactory::uuid(),
+                'created' => 'now',
+                'name' => 'My pass',
+                'secrets' => [['data' => 'foo bar baz']],
+            ])
+            ->setField('template_vars.body.showUsername', false)
+            ->setField('template_vars.body.showUri', false)
+            ->setField('template_vars.body.showDescription', false)
+            ->setField('template_vars.body.showSecret', false)
+            ->persist();
+
+        $this->exec('passbolt email_digest send');
+        $this->assertExitSuccess();
+
+        $sentCount = EmailQueueFactory::find()->where(['sent' => true])->count();
+        $this->assertSame($nEmailsSent, $sentCount);
+        $this->assertMailCount($nEmailsSent);
     }
 }

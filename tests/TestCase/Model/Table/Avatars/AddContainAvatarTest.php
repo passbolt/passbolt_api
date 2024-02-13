@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Model\Table\Avatars;
 use App\Model\Table\AvatarsTable;
 use App\Test\Factory\UserFactory;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Table;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
@@ -31,9 +32,12 @@ class AddContainAvatarTest extends TestCase
     use LocatorAwareTrait;
     use TruncateDirtyTables;
 
+    private ?Table $Users = null;
+
     public function setUp(): void
     {
         parent::setUp();
+
         $this->Users = $this->fetchTable('Users');
         $this->loadRoutes();
     }

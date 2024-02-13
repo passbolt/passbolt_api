@@ -163,6 +163,6 @@ class PreviewCommandTest extends AppIntegrationTestCase
         $this->assertMailCount(0); // Make sure preview doesn't send emails
         $this->assertOutputContains('From: No reply <no-reply@test.test>');
         $this->assertOutputContains('To: john@test.test');
-        $this->assertOutputContains('Subject: ' . $operator->profile->full_name . ' has made changes on several resources');
+        $this->assertOutputContains('Subject: ' . h($operator->profile->full_name) . ' has made changes on several resources');
     }
 }
