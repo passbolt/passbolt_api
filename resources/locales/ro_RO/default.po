@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-01-30 05:39+0000\n"
-"PO-Revision-Date: 2024-01-30 07:46\n"
+"POT-Creation-Date: 2024-02-13 05:22+0000\n"
+"PO-Revision-Date: 2024-02-13 05:55\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -1896,6 +1896,9 @@ msgstr "Acesta nu este un locale valid."
 
 msgid "This is not a valid {0}."
 msgstr "Acesta nu este un {0} valid."
+
+msgid "The locale should be a string."
+msgstr ""
 
 msgid "The strategy should extend the class: {0}"
 msgstr ""
