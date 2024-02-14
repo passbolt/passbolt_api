@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-01-30 05:45+0000\n"
-"PO-Revision-Date: 2024-02-02 15:32\n"
+"POT-Creation-Date: 2024-02-13 08:14+0000\n"
+"PO-Revision-Date: 2024-02-13 10:35\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1902,6 +1902,9 @@ msgstr "Esta no es una configuración regional válida."
 
 msgid "This is not a valid {0}."
 msgstr "Esto no es válido {0}."
+
+msgid "The locale should be a string."
+msgstr "El idioma debe ser una cadena."
 
 msgid "The strategy should extend the class: {0}"
 msgstr "La estrategia debe extender la clase: {0}"
@@ -4057,10 +4060,10 @@ msgstr "Los contactos de recuperación de su organización han revisado y rechaz
 msgid "Only administrators can view user logs."
 msgstr "Solo los administradores pueden ver los registros de usuarios."
 
-msgid "The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt."
-msgstr "El usuario {0} no pudo ser añadido al grupo {1} porque su cuenta fue previamente eliminada en passbolt."
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr "El usuario {0} no pudo ser añadido al grupo {1} porque su cuenta fue previamente eliminada en Passbolt."
 
-msgid "The user {0} could not be added to the group {1} because they have not yet activated his account."
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
 msgstr "El usuario {0} no pudo ser añadido al grupo {1} porque aún no han activado su cuenta."
 
 msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
