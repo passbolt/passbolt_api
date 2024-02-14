@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-01-30 05:39+0000\n"
-"PO-Revision-Date: 2024-02-01 06:16\n"
+"POT-Creation-Date: 2024-02-13 05:22+0000\n"
+"PO-Revision-Date: 2024-02-14 00:53\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1896,6 +1896,9 @@ msgstr "올바르지 않은 로케일입니다."
 
 msgid "This is not a valid {0}."
 msgstr "올바른 {0} 이(가) 아닙니다."
+
+msgid "The locale should be a string."
+msgstr "로케일은 문자열이어야 합니다."
 
 msgid "The strategy should extend the class: {0}"
 msgstr "방법은 다음 클래스를 확장해야 합니다. {0}"

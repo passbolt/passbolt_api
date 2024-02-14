@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2024-01-30 05:39+0000\n"
+"POT-Creation-Date: 2024-02-13 05:22+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -1893,6 +1893,9 @@ msgid "This is not a valid locale."
 msgstr ""
 
 msgid "This is not a valid {0}."
+msgstr ""
+
+msgid "The locale should be a string."
 msgstr ""
 
 msgid "The strategy should extend the class: {0}"

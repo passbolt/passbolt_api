@@ -2,6 +2,40 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.5.2] - 2024-02-14
+### Fixed
+- PB-29621 As a user I should get a 400 if the locale passed in the URL is not a string
+- PB-28867 As a user I should see an improved performance when requesting the folder index endpoint
+
+### Improved
+- PB-28635 As an administrator I can disable the email digest without having to change the command sending the emails
+
+### Security
+- PB-29680 Bump dependency composer/composer to v2.7.0
+
+### Maintenance
+- PB-29109 Support PHP 8.3 for passbolt API
+- PB-29376 GITHUB-506 Bump dependency duosecurity/duo_universal_php to 1.0.2 (#506)
+- PB-29514 Fix password expiry test which randomly fails
+- PB-29625 Fix CI to support latest composer dependency version
+
+## [4.5.2-test.1] - 2024-02-13
+### Fixed
+- PB-29621 As a user I should get a 400 if the locale passed in the URL is not a string
+- PB-28867 Fix folder serialization performance
+
+### Improved
+- PB-28635 As a user I want to use one single command to send emails
+
+### Security
+- PB-29680 Bump dependency composer/composer to v2.7.0
+
+### Maintenance
+- PB-29109 Support PHP 8.3 for passbolt API
+- PB-29376 GITHUB-506 Bump dependency duosecurity/duo_universal_php to 1.0.2 (#506)
+- PB-29514 Fix password expiry test which randomly fails
+- PB-29625 Fix CI to support latest composer dependency version
+
 ## [4.5.0] - 2024-02-08
 ### Added
 - PB-23913 As a user I can see my passwords marked as expired when users lose permissions on these
