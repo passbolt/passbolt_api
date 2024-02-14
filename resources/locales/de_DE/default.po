@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-01-30 05:45+0000\n"
-"PO-Revision-Date: 2024-01-31 15:35\n"
+"POT-Creation-Date: 2024-02-13 08:14+0000\n"
+"PO-Revision-Date: 2024-02-13 10:35\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -1902,6 +1902,9 @@ msgstr "Dies ist kein gültiges Locale."
 
 msgid "This is not a valid {0}."
 msgstr "Dies ist kein gültiger {0}."
+
+msgid "The locale should be a string."
+msgstr ""
 
 msgid "The strategy should extend the class: {0}"
 msgstr "Die Strategie sollte die folgende Klasse erweitern: {0}"
@@ -4057,10 +4060,10 @@ msgstr "Ihre Organisations-Wiederherstellungs-Kontakte haben Ihre Anfrage zur Ko
 msgid "Only administrators can view user logs."
 msgstr "Nur Administratoren können Benutzer-Logs ansehen."
 
-msgid "The user {0} could not be added to the group {1} because his account was priorly deleted in passbolt."
-msgstr "Der Benutzer {0} konnte nicht zur Gruppe {1} hinzugefügt werden, da sein Konto bereits in Passbolt gelöscht wurde."
+msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
+msgstr ""
 
-msgid "The user {0} could not be added to the group {1} because they have not yet activated his account."
+msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
 msgstr ""
 
 msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."

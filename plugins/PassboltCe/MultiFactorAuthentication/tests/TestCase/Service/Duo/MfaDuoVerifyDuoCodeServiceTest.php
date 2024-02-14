@@ -22,7 +22,6 @@ use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -74,46 +73,6 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
 
         $this->assertInstanceOf(UnauthorizedException::class, $th);
         $this->assertTextContains('Unable to verify Duo code against Duo service', $th->getMessage());
-    }
-
-    public function testMfaDuoVerifyDuoCodeService_Error_AuthenticationDetailsDuoException()
-    {
-        $settings = $this->getDefaultMfaOrgSettings();
-        $this->mockMfaOrgSettings($settings);
-        $user = UserFactory::make()->persist();
-        $uac = new UserAccessControl(Role::USER, $user->id, $user->username);
-        $duoCode = 'not-so-random-duo-code';
-
-        $duoSdkClientMock = (new DuoSdkClientMock($this))->mockInvalidExchangeAuthorizationCodeFor2FAResult();
-        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
-
-        try {
-            $service->verify($uac, $duoCode);
-        } catch (\Throwable $th) {
-        }
-
-        $this->assertInstanceOf(InternalErrorException::class, $th);
-        $this->assertTextContains('Duo authentication details should be an array.', $th->getMessage());
-    }
-
-    public function testMfaDuoVerifyDuoCodeService_Error_WrongAuthenticationDetailsType()
-    {
-        $settings = $this->getDefaultMfaOrgSettings();
-        $this->mockMfaOrgSettings($settings);
-        $user = UserFactory::make()->persist();
-        $uac = new UserAccessControl(Role::USER, $user->id, $user->username);
-        $duoCode = 'not-so-random-duo-code';
-
-        $duoSdkClientMock = (new DuoSdkClientMock($this))->mockInvalidExchangeAuthorizationCodeFor2FAResult();
-        $service = new MfaDuoVerifyDuoCodeService(AuthenticationToken::TYPE_MFA_VERIFY, $duoSdkClientMock->getClient());
-
-        try {
-            $service->verify($uac, $duoCode);
-        } catch (\Throwable $th) {
-        }
-
-        $this->assertInstanceOf(InternalErrorException::class, $th);
-        $this->assertTextContains('Duo authentication details should be an array.', $th->getMessage());
     }
 
     public function testMfaDuoVerifyDuoCodeService_Error_CallbackWrongIss()

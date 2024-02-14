@@ -55,6 +55,6 @@ class SsoGoogleStage1DryRunController extends AbstractSsoController
             $uac,
             SsoState::TYPE_SSO_SET_SETTINGS
         );
-        $this->success(__('The operation was successful.'), $url);
+        $this->success(__('The operation was successful.'), $url->jsonSerialize());
     }
 }
