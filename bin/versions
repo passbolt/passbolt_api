@@ -15,4 +15,3 @@ oops uname -a
 grep -m1 "" <(oops php --version)
 oops mysql --version
 grep -m2 "" <(oops gpg --version)
-oops composer --version -n
