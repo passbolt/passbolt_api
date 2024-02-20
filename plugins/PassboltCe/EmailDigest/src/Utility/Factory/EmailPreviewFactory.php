@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\EmailDigest\Utility\Factory;
 
-use Cake\Core\Configure;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\Renderer;
 use Cake\ORM\Entity;
@@ -136,7 +135,7 @@ class EmailPreviewFactory
             ->setTemplate($template->getDigestTemplate())
             ->setEmailRecipient($digest->getRecipient())
             ->addTemplateVar($template->getOperatorVariableKey(), $digest->getOperator())
-            ->addTemplateVar('fullBaseUrl', Configure::read('App.fullBaseUrl'))
+            ->addTemplateVar('fullBaseUrl', $digest->getFullBaseUrl())
             ->addTemplateVar('subject', $subject)
             ->addTemplateVar('count', $digest->getEmailQueueCount());
     }
