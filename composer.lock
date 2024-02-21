@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a897d3f433e85c8fbe82e53202a0d464",
+    "content-hash": "5087bd5593b14a84b366db703236c53b",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -820,7 +820,7 @@
                 "seld/jsonlint": "^1.4",
                 "seld/phar-utils": "^1.2",
                 "seld/signal-handler": "^2.0",
-                "symfony/console": "^5.4.11 || ^6.0.11",
+                "symfony/console": "^5.4.11 || ^6.0.11 || ^7",
                 "symfony/filesystem": "^5.4 || ^6.0 || ^7",
                 "symfony/finder": "^5.4 || ^6.0 || ^7",
                 "symfony/polyfill-php73": "^1.24",
@@ -8849,6 +8849,7 @@
         "cakephp/migrations": 20,
         "robmorgan/phinx": 20,
         "singpolyma/openpgp-php": 20,
+        "lorenzo/cakephp-email-queue": 20,
         "psy/psysh": 0
     },
     "prefer-stable": true,
@@ -8868,5 +8869,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
