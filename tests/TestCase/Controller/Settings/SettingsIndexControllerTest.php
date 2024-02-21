@@ -42,6 +42,7 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->accountRecoveryRequestHelp->enabled));
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->healthcheck->enabled));
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->disableUser->enabled));
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->healthcheckUi->enabled));
     }
 
     public function testSettingsIndexController_SuccessAsAN(): void
