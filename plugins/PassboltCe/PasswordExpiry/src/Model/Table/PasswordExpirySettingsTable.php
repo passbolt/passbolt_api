@@ -35,10 +35,10 @@ use Cake\Validation\Validator;
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class PasswordExpirySettingsTable extends OrganizationSettingsTable

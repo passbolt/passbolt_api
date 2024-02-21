@@ -68,7 +68,7 @@ class HealthcheckIndexController extends AppController
      */
     private function __webChecks(): array
     {
-        $checks['ssl']['is'] = $this->request->is('ssl');
+        $checks['ssl']['is'] = $this->request->is('https');
 
         return $checks;
     }
