@@ -283,6 +283,9 @@ return [
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'healthcheckUi' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_HEALTHCHECK_UI_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+            ],
             'passwordPolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_PASSWORD_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
