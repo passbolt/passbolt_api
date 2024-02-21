@@ -19,7 +19,6 @@ namespace App\Notification\Email\Redactor;
 
 use App\Controller\Setup\SetupCompleteController;
 use App\Model\Entity\User;
-use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -34,7 +33,7 @@ use Passbolt\Log\Model\Entity\EntityHistory;
 use RuntimeException;
 
 /**
- * Send an email to the admins when an user completes the setup
+ * Send an email to the admins when a user completes the setup
  */
 class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
@@ -43,16 +42,10 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
     public const TEMPLATE = 'LU/user_setup_complete';
 
     /**
-     * @var \App\Model\Table\UsersTable
+     * Check if the log plugin is enabled
      */
-    private $usersTable;
-
-    /**
-     * @param \App\Model\Table\UsersTable|null $usersTable Users Table instance
-     */
-    public function __construct(?UsersTable $usersTable = null)
+    public function __construct()
     {
-        $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
         if (!Configure::read('passbolt.plugins.log.enabled')) {
             // Check if plugin log is enabled because this redactor uses on ActionLog tables
             throw new RuntimeException(sprintf('%s requires Passbolt/Log plugin', self::class));
@@ -86,8 +79,10 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
     {
         $emailCollection = new EmailCollection();
 
+        /** @var \App\Model\Table\UsersTable $UsersTable */
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
         /** @var \App\Model\Entity\User $userWhoCompletedSetup */
-        $userWhoCompletedSetup = $this->usersTable->loadInto(
+        $userWhoCompletedSetup = $UsersTable->loadInto(
         // Load additional associations needed for the email
             $userWhoCompletedSetup,
             [
@@ -117,9 +112,10 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
         }
 
         /** @var \App\Model\Entity\User[] $admins */
-        $admins = $this->usersTable->findAdmins()
+        $admins = $UsersTable->findAdmins()
             ->find('locale')
-            ->find('notDisabled');
+            ->find('notDisabled')
+            ->where(['Users.id !=' => $userWhoCompletedSetup->id]);
 
         // Create an email for every admin
         foreach ($admins as $admin) {
