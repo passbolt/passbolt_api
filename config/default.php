@@ -241,6 +241,12 @@ return [
             'import' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_IMPORT_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
+            'healthcheck' => [
+                'enabled' => true,
+                'security' => [
+                    'indexEndpointEnabled' => filter_var(env('PASSBOLT_PLUGINS_HEALTHCHECK_SECURITY_INDEX_ENDPOINT_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+                ]
+            ],
             'previewPassword' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_PREVIEW_PASSWORD_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
             ],
