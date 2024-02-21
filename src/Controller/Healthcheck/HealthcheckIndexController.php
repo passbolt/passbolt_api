@@ -20,16 +20,22 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Client;
 use Cake\Http\Exception\ForbiddenException;
 
 class HealthcheckIndexController extends AppController
 {
+    public const PASSBOLT_PLUGINS_HEALTHCHECK_SECURITY_INDEX_ENDPOINT_ENABLED =
+        'passbolt.plugins.healthcheck.security.indexEndpointEnabled';
+
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
+        $this->throwErrorIsEndpointIsDisabled();
+
         $this->Authentication->allowUnauthenticated(['index']);
 
         return parent::beforeFilter($event);
@@ -71,5 +77,16 @@ class HealthcheckIndexController extends AppController
         $checks['ssl']['is'] = $this->request->is('https');
 
         return $checks;
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Http\Exception\ForbiddenException if the endpoint is deactivated
+     */
+    private function throwErrorIsEndpointIsDisabled(): void
+    {
+        if (!Configure::read(self::PASSBOLT_PLUGINS_HEALTHCHECK_SECURITY_INDEX_ENDPOINT_ENABLED)) {
+            throw new ForbiddenException(__('Healthcheck security index endpoint disabled.'));
+        }
     }
 }

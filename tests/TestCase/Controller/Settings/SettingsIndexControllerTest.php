@@ -40,6 +40,7 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         // Assert some default plugin visibility
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->export->enabled));
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->accountRecoveryRequestHelp->enabled));
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->healthcheck->enabled));
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->disableUser->enabled));
     }
 
