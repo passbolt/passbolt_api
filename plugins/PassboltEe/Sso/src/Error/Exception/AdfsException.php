@@ -12,24 +12,19 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         4.6.0
  */
-namespace App\Test\Lib\Utility;
+namespace Passbolt\Sso\Error\Exception;
 
-use App\Application;
-use Cake\Event\EventManager;
-use Cake\Http\ControllerFactoryInterface;
-use Cake\Http\Response;
+use Cake\Log\Log;
 
-trait MiddlewareTestTrait
+class AdfsException extends OAuth2Exception
 {
-    private function mockHandler(?Response $response = null): Application
+    /**
+     * @return void
+     */
+    protected function logError(): void
     {
-        $response = $response ?? new Response();
-
-        $controllerFactoryStub = $this->getMockBuilder(ControllerFactoryInterface::class)->getMock();
-        $controllerFactoryStub->method('invoke')->willReturn($response);
-
-        return new Application(CONFIG, new EventManager(), $controllerFactoryStub);
+        Log::error('Unknown ADFS error: ' . $this->error);
     }
 }

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
@@ -17,12 +17,16 @@ declare(strict_types=1);
 
 namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
+use App\Model\Entity\OrganizationSetting;
 use App\Model\Entity\Role;
+use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\Utility\UserAccessControlTrait;
+use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
 use Passbolt\DirectorySync\Test\TestCase\Form\LdapConfigurationFormTest;
 use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
@@ -279,5 +283,33 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->assertTrue(isset($this->_responseJsonBody->groups));
         $this->assertEquals(5, count($this->_responseJsonBody->groups));
         $this->assertTrue(isset($this->_responseJsonBody->tree));
+    }
+
+    /**
+     * After server key rotation, the save directory sync settings works when encrypted password field is from older server key.
+     *
+     * @group DirectorySync
+     * @group DirectorySyncController
+     * @group DirectorySyncController_DirectorySettingsController
+     */
+    public function testDirectorySync_DirectorySettingsController_Update_SuccessDecryptionFailedScenario()
+    {
+        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $settings = LdapConfigurationForm::formatFormDataToOrgSettings($formData);
+        $settingsNamespace = OrganizationSetting::UUID_NAMESPACE . DirectoryOrgSettings::ORG_SETTINGS_PROPERTY;
+        OrganizationSettingFactory::make()
+            ->setPropertyAndValue($settingsNamespace, json_encode($settings))
+            ->persist();
+
+        $this->logInAsAdmin();
+        $this->postJson('/directorysync/settings.json?api-version=2', $formData);
+
+        $this->assertSuccess();
+        $directoryOrgSettingsCount = OrganizationSettingFactory::find()
+            ->where(['property_id' => UuidFactory::uuid($settingsNamespace)])
+            ->count();
+        $this->assertSame(1, $directoryOrgSettingsCount);
+        $directoryOrgSettings = DirectoryOrgSettings::get();
+        $this->assertTrue($directoryOrgSettings->isEnabled());
     }
 }

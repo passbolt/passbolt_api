@@ -47,6 +47,7 @@ class SsoSetting extends Entity
     public const PROVIDER_AZURE = 'azure';
     public const PROVIDER_GOOGLE = 'google';
     public const PROVIDER_OAUTH2 = 'oauth2';
+    public const PROVIDER_ADFS = 'adfs';
 
     /**
      * List of supported providers.
@@ -57,6 +58,7 @@ class SsoSetting extends Entity
         self::PROVIDER_AZURE,
         self::PROVIDER_GOOGLE,
         self::PROVIDER_OAUTH2,
+        self::PROVIDER_ADFS,
     ];
 
     /**
@@ -65,6 +67,11 @@ class SsoSetting extends Entity
     public const AZURE_EMAIL_CLAIM_ALIAS_EMAIL = 'email';
     public const AZURE_EMAIL_CLAIM_ALIAS_PREFERRED_USERNAME = 'preferred_username';
     public const AZURE_EMAIL_CLAIM_ALIAS_UPN = 'upn';
+
+    /**
+     * Available ADFS email claims.
+     */
+    public const ADFS_EMAIL_CLAIM_UPN = 'upn';
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

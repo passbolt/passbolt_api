@@ -44,10 +44,10 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AccountRecoveryPrivateKeyPasswordsTable extends Table

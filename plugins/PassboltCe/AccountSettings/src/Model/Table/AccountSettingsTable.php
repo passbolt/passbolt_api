@@ -42,10 +42,10 @@ use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEmptyEntity()
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountSettings\Model\Entity\AccountSetting>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountSettings\Model\Entity\AccountSetting>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountSettings\Model\Entity\AccountSetting>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountSettings\Model\Entity\AccountSetting>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AccountSettingsTable extends Table

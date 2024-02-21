@@ -334,8 +334,13 @@ return [
                     ),
                     // Generic provider is disabled by default
                     // As SSO provider domain is not known by the client, it is considered less safe
-                    SsoSetting::PROVIDER_OAUTH2 =>  filter_var(
+                    SsoSetting::PROVIDER_OAUTH2 => filter_var(
                         env('PASSBOLT_PLUGINS_SSO_PROVIDER_OAUHT2_ENABLED', false),
+                        FILTER_VALIDATE_BOOLEAN
+                    ),
+                    // Microsoft AD FS is disabled by default, because it's still in early stage and requires more rigorous testing
+                    SsoSetting::PROVIDER_ADFS => filter_var(
+                        env('PASSBOLT_PLUGINS_SSO_PROVIDER_ADFS_ENABLED', false),
                         FILTER_VALIDATE_BOOLEAN
                     ),
                 ],
@@ -478,6 +483,25 @@ return [
                     env('PASSBOLT_SECURITY_EMAIL_ANONYMISE_ADMINISTRATOR_IDENTITY', false),
                     FILTER_VALIDATE_BOOLEAN
                 ),
+            ],
+            'sso' => [
+                /**
+                 * Useful for OAuth 2.0 and AD FS providers when using self-signed certificate.
+                 *
+                 * Accepted values:
+                 * - `true` - Default. It will verify SSL certification and SSL certificate against the host name
+                 * - `false` - Disable SSL certification verification (not recommended).
+                 */
+                'sslVerify' => filter_var(
+                    env('PASSBOLT_SECURITY_SSO_SSL_VERIFY', true),
+                    FILTER_VALIDATE_BOOLEAN
+                ),
+                /**
+                 * Accepted values:
+                 * - `null` - Default. Uses built in cafile.
+                 * - `'/path/to/rootCA.crt'` (string) - Path to custom root CA certificate.
+                 */
+                'sslCafile' => env('PASSBOLT_SECURITY_SSO_SSL_CAFILE', null),
             ],
         ],
 

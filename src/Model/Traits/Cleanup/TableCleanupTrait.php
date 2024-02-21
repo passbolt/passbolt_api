@@ -35,7 +35,7 @@ trait TableCleanupTrait
     public function cleanupSoftDeleted(string $association, ?bool $dryRun = false, ?Query $query = null): int
     {
         if (!isset($query)) {
-            $query = $this->query()
+            $query = $this->selectQuery()
                 ->select(['id'])
                 ->leftJoinWith($association)
                 ->where([$this->getModelNameFromAssociation($association) . '.deleted' => true]);
@@ -62,7 +62,7 @@ trait TableCleanupTrait
     public function cleanupHardDeleted(string $association, ?bool $dryRun = false, ?Query $query = null): int
     {
         if (!isset($query)) {
-            $query = $this->query()
+            $query = $this->selectQuery()
                 ->select(['id'])
                 ->leftJoinWith($association)
                 ->whereNull($this->getModelNameFromAssociation($association) . '.id');
@@ -136,7 +136,7 @@ trait TableCleanupTrait
          */
 
         // Sub query that finds the duplicated tuples.
-        $duplicatedTuplesQuery = $this->query()
+        $duplicatedTuplesQuery = $this->selectQuery()
             ->select($combinedKey)
             ->group($combinedKey)
             ->having('count(*) > 1');
@@ -166,7 +166,7 @@ trait TableCleanupTrait
         }
 
         // Find all the rows corresponding to the identified duplicated tuples.
-        $duplicatedRowsQuery = $this->query()
+        $duplicatedRowsQuery = $this->selectQuery()
             ->select(array_merge(['id'], $combinedKey))
             ->join([
                 'table' => $duplicatedTuplesQuery,

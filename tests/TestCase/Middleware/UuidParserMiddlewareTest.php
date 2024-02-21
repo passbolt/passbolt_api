@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Middleware;
 
 use App\Middleware\UuidParserMiddleware;
-use App\Test\Lib\Utility\MiddlewareTestTrait;
+use App\Test\Lib\Http\TestRequestHandler;
 use App\Utility\UuidFactory;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
@@ -28,8 +28,6 @@ use Cake\TestSuite\TestCase;
  */
 class UuidParserMiddlewareTest extends TestCase
 {
-    use MiddlewareTestTrait;
-
     public function testUuidParserMiddleware_LowerUuids()
     {
         $uuid = UuidFactory::uuid();
@@ -39,7 +37,7 @@ class UuidParserMiddlewareTest extends TestCase
             ->withParam('query', [$UUID, 'bar']);
 
         $middleware = new UuidParserMiddleware();
-        $middleware->process($request, $this->mockHandler());
+        $middleware->process($request, new TestRequestHandler());
 
         $request = $middleware->getRequest();
         $this->assertSame($uuid, $request->getParam('pass')[0]);
@@ -62,7 +60,7 @@ class UuidParserMiddlewareTest extends TestCase
             ]);
 
         $middleware = new UuidParserMiddleware();
-        $middleware->process($request, $this->mockHandler());
+        $middleware->process($request, new TestRequestHandler());
 
         $request = $middleware->getRequest();
         $expectedQuery = [

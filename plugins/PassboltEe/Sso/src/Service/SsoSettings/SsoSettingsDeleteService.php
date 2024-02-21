@@ -60,8 +60,7 @@ class SsoSettingsDeleteService
         }
 
         try {
-            $ssoSettingsTable->query()
-                ->delete()
+            $ssoSettingsTable->deleteQuery()
                 ->where(['id' => $id])
                 ->execute();
         } catch (\Exception $exception) {
@@ -90,8 +89,7 @@ class SsoSettingsDeleteService
     {
         try {
             $ssoSettingsTable = TableRegistry::getTableLocator()->get('Passbolt/Sso.SsoSettings');
-            $ssoSettingsTable->query()
-                ->delete()
+            $ssoSettingsTable->deleteQuery()
                 ->where(['id <>' => $id])
                 ->execute();
         } catch (\Exception $exception) {

@@ -48,10 +48,10 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTree
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEmptyEntity()
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @method \Cake\ORM\Query findByForeignId(string $id)
  * @method \Cake\ORM\Query findById(string $id)
  * @method \Cake\ORM\Query findByUserId(string $userId)
@@ -248,7 +248,7 @@ class FoldersRelationsTable extends Table
      */
     private function cleanupSoftDeletedForeignId(string $modelName, ?bool $dryRun = false): int
     {
-        $query = $this->query()
+        $query = $this->selectQuery()
             ->select(['id'])
             ->leftJoinWith($modelName)
             ->where([
@@ -279,7 +279,7 @@ class FoldersRelationsTable extends Table
      */
     private function cleanupHardDeletedForeignId(string $modelName, $dryRun = false): int
     {
-        $query = $this->query()
+        $query = $this->selectQuery()
             ->select(['id'])
             ->leftJoinWith($modelName)
             ->whereNull($modelName . '.id')

@@ -125,6 +125,36 @@ $routes->plugin('Passbolt/Sso', ['path' => '/sso'], function (RouteBuilder $rout
     }
 
     /**
+     * Endpoints related to ADFS endpoint.
+     */
+    $adfs = SsoSetting::PROVIDER_ADFS;
+    if (Configure::read("passbolt.plugins.sso.providers.{$adfs}")) {
+        $routes
+            ->connect('/adfs/login/dry-run', [
+                'prefix' => 'Adfs',
+                'controller' => 'SsoAdfsStage1DryRun',
+                'action' => 'stage1DryRun',
+            ])
+            ->setMethods(['POST']);
+
+        $routes
+            ->connect('/adfs/login', [
+                'prefix' => 'Adfs',
+                'controller' => 'SsoAdfsStage1',
+                'action' => 'stage1',
+            ])
+            ->setMethods(['POST']);
+
+        $routes
+            ->connect('/adfs/redirect', [
+                'prefix' => 'Adfs',
+                'controller' => 'SsoAdfsStage2',
+                'action' => 'triage',
+            ])
+            ->setMethods(['GET', 'POST']); // POST requires session cookie to be set to sameSite=None, see app.php
+    }
+
+    /**
      * Common pages to all providers
      */
     // Login success

@@ -174,7 +174,7 @@ class TransfersTable extends Table
             ->toArray();
 
         if (count($transfers)) {
-            $this->query()
+            $this->updateQuery()
                 ->update()
                 ->set(['status' => Transfer::TRANSFER_STATUS_CANCEL])
                 ->where(['id in' => Hash::extract($transfers, '{n}.id')])

@@ -22,4 +22,8 @@ use Cake\I18n\FrozenTime;
 <span style="font-weight:bold;"><?= $title ?></span>
 <br>
 <span style=""><?= $text ?></span><br>
-<span style="color:#888888"><?= FrozenTime::parse($datetime)->nice(); ?></span><br>
+<span style="color:#888888">
+    <?php
+    echo FrozenTime::parse($datetime)->nice() . ' (' . date_default_timezone_get() . ')';
+    ?>
+</span><br>

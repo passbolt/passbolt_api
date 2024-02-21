@@ -43,10 +43,10 @@ use Cake\Validation\Validator;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEmptyEntity()
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class DirectoryIgnoreTable extends Table
 {
@@ -228,7 +228,7 @@ class DirectoryIgnoreTable extends Table
      */
     public function cleanupHardDeletedEntities(string $entityType, ?bool $dryRun = false): int
     {
-        $query = $this->query()
+        $query = $this->selectQuery()
             ->select(['id'])
             ->leftJoinWith($entityType)
             ->where(function ($exp, $q) use ($entityType) {
@@ -249,7 +249,7 @@ class DirectoryIgnoreTable extends Table
      */
     public function cleanupHardDeletedDirectoryEntries(?array $entryIds = null, ?bool $dryRun = false): int
     {
-        $query = $this->query()
+        $query = $this->selectQuery()
             ->select(['id']);
 
         $query = $query

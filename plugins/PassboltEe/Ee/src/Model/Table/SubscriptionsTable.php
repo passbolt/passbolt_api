@@ -41,10 +41,10 @@ use Passbolt\Ee\Model\Entity\Subscription;
  * @method \Passbolt\Ee\Model\Entity\Subscription[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Ee\Model\Entity\Subscription|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Ee\Model\Entity\Subscription saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Ee\Model\Entity\Subscription[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Ee\Model\Entity\Subscription[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Ee\Model\Entity\Subscription[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Ee\Model\Entity\Subscription[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Ee\Model\Entity\Subscription>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Ee\Model\Entity\Subscription>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Ee\Model\Entity\Subscription>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Ee\Model\Entity\Subscription>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class SubscriptionsTable extends OrganizationSettingsTable
 {

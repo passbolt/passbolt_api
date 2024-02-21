@@ -83,7 +83,11 @@ class DirectorySettingsController extends DirectoryController
         try {
             $form->execute($data);
         } catch (\Exception $e) {
-            throw new BadRequestException(__('Could not save the settings. {0}', $e->getMessage()));
+            throw new BadRequestException(
+                __('Could not save the settings. {0}', $e->getMessage()),
+                null,
+                $e
+            );
         }
 
         $uac = $this->User->getAccessControl();
@@ -114,7 +118,11 @@ class DirectorySettingsController extends DirectoryController
         try {
             $form->execute($data);
         } catch (\Exception $e) {
-            throw new BadRequestException('The settings provided are incorrect. ' . $e->getMessage());
+            throw new BadRequestException(
+                'The settings provided are incorrect. ' . $e->getMessage(),
+                null,
+                $e
+            );
         }
 
         try {

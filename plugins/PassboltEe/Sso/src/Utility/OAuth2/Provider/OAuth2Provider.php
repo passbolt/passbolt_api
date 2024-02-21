@@ -42,7 +42,10 @@ class OAuth2Provider extends AbstractOauth2Provider
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
+     * @throws \Passbolt\Sso\Error\Exception\OAuth2Exception When error and error description is present
+     * @throws \League\OAuth2\Client\Provider\Exception\IdentityProviderException When unknown error faced
      */
     protected function checkResponse(ResponseInterface $response, $data): void
     {

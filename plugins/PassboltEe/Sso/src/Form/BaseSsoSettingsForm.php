@@ -45,7 +45,7 @@ abstract class BaseSsoSettingsForm extends Form
 
         $validator
             ->requirePresence('data', __('Data is required.'))
-            ->isArray('data', __('Data must be an array of properties.'));
+            ->array('data', __('Data must be an array of properties.'));
 
         $validator->addNested('data', $this->getDataValidator());
 
