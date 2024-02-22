@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5087bd5593b14a84b366db703236c53b",
+    "content-hash": "e1503e29ce2b01ba38ef82c344f9a888",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3362,16 +3362,16 @@
         },
         {
             "name": "singpolyma/openpgp-php",
-            "version": "dev-master",
+            "version": "dev-feature/PB-26152_API-should-identify-openpgpjs-v510-revoked-key-as-revoked",
             "source": {
                 "type": "git",
-                "url": "https://github.com/singpolyma/openpgp-php.git",
-                "reference": "9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe"
+                "url": "https://github.com/passbolt/openpgp-php.git",
+                "reference": "92b56f36f15cb98c22e7b580ab97f9a4076850b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/singpolyma/openpgp-php/zipball/9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe",
-                "reference": "9920173e0e0b17a98a5b90fdd6d03db4ebadc8fe",
+                "url": "https://api.github.com/repos/passbolt/openpgp-php/zipball/92b56f36f15cb98c22e7b580ab97f9a4076850b2",
+                "reference": "92b56f36f15cb98c22e7b580ab97f9a4076850b2",
                 "shasum": ""
             },
             "require": {
@@ -3385,14 +3385,12 @@
                 "ext-mcrypt": "required if you use encryption cast5",
                 "ext-openssl": "required if you use encryption cast5"
             },
-            "default-branch": true,
             "type": "library",
             "autoload": {
                 "classmap": [
                     "lib/"
                 ]
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Unlicense"
             ],
@@ -3407,25 +3405,7 @@
                 }
             ],
             "description": "Pure-PHP implementation of the OpenPGP Message Format (RFC 4880)",
-            "support": {
-                "issues": "https://github.com/singpolyma/openpgp-php/issues",
-                "source": "https://github.com/singpolyma/openpgp-php/tree/master"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/singpolyma",
-                    "type": "github"
-                },
-                {
-                    "url": "https://liberapay.com/singpolyma",
-                    "type": "liberapay"
-                },
-                {
-                    "url": "https://www.patreon.com/singpolyma",
-                    "type": "patreon"
-                }
-            ],
-            "time": "2022-10-31T13:43:21+00:00"
+            "time": "2024-02-20T15:30:12+00:00"
         },
         {
             "name": "spomky-labs/otphp",
@@ -8869,5 +8849,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.1.0"
 }
