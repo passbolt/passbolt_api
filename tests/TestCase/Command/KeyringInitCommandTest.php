@@ -43,8 +43,15 @@ class KeyringInitCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        KeyringInitCommand::$isUserRoot = false;
         $this->key = Configure::read('passbolt.gpg.serverKey.private');
+        $this->mockProcessUserService('www-data');
+    }
+
+    public function tearDown(): void
+    {
+        KeyringInitCommand::$isUserRoot = null;
+
+        parent::tearDown();
     }
 
     /**
@@ -65,7 +72,7 @@ class KeyringInitCommandTest extends AppTestCase
      */
     public function testKeyringInitCommandAsRoot()
     {
-        $this->assertCommandCannotBeRunAsRootUser(KeyringInitCommand::class);
+        $this->assertCommandCannotBeRunAsRootUser('keyring_init');
     }
 
     /**

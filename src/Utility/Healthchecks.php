@@ -57,9 +57,9 @@ class Healthchecks
     public static function all(?Client $client): array
     {
         $checks = [];
-        $checks = Healthchecks::environment($checks);
-        $checks = Healthchecks::configFiles($checks);
-        $checks = (new CoreHealthchecks($client))->all($checks);
+//        $checks = Healthchecks::environment($checks);
+//        $checks = Healthchecks::configFiles($checks);
+//        $checks = (new CoreHealthchecks($client))->all($checks);
         $checks = (new SslHealthchecks($client))->all($checks);
         $checks = Healthchecks::database('default', $checks);
         $checks = Healthchecks::gpg($checks);
@@ -222,7 +222,7 @@ class Healthchecks
         $checks['environment']['info']['phpVersion'] = PHP_VERSION;
         $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
-        $checks['environment']['gnupg'] = extension_loaded('gnupg');
+        $checks['environment']['gnupg'] = extension_loaded('gnupg'); // Not specified in HealthcheckCommand::assertEnvironment
         $checks['environment']['intl'] = extension_loaded('intl');
         $checks['environment']['image'] = (extension_loaded('gd') || extension_loaded('imagick'));
         $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Model\Entity\Role;
+use App\Service\Command\ProcessUserService;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks;
 use App\Utility\Healthchecks\CoreHealthchecks;
@@ -39,14 +40,22 @@ class InstallCommand extends PassboltCommand
     private ?Client $client;
 
     /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
+
+    /**
      * The client passed in the constructor might be null when run using the selenium tests
      *
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
      * @param ?\Cake\Http\Client $client client requesting the healthcheck status
      */
-    public function __construct(?Client $client = null)
+    public function __construct(ProcessUserService $processUserService, ?Client $client = null)
     {
         parent::__construct();
+
         $this->client = $client;
+        $this->processUserService = $processUserService;
     }
 
     /**
@@ -110,7 +119,7 @@ class InstallCommand extends PassboltCommand
 
         // Root user is not allowed to execute this command.
         // This command needs to be executed with the same user as the webserver.
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         // Create a JWT key pair
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
@@ -314,7 +323,9 @@ class InstallCommand extends PassboltCommand
         $io->out(__('Import the server private key in the keyring'));
         $io->hr();
 
-        return $this->executeCommand(KeyringInitCommand::class, $this->formatOptions($args), $io);
+        $keyringInitCommand = new KeyringInitCommand($this->processUserService);
+
+        return $this->executeCommand($keyringInitCommand, $this->formatOptions($args), $io);
     }
 
     /**

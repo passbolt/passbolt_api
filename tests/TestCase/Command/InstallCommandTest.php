@@ -46,18 +46,19 @@ class InstallCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        InstallCommand::$isUserRoot = false;
         $this->emptyDirectory(CACHE . 'database' . DS);
         $this->enableFeaturePlugin('JwtAuthentication');
         $this->loadNotificationSettings();
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest();
         });
+        $this->mockProcessUserService('www-data');
     }
 
     public function tearDown(): void
     {
         parent::tearDown();
+        InstallCommand::$isUserRoot = null;
         $this->disableFeaturePlugin('JwtAuthentication');
     }
 
@@ -79,7 +80,7 @@ class InstallCommandTest extends AppTestCase
      */
     public function testInstallCommandAsRoot()
     {
-        $this->assertCommandCannotBeRunAsRootUser(InstallCommand::class);
+        $this->assertCommandCannotBeRunAsRootUser('install');
     }
 
     /**

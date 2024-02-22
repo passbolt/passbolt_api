@@ -45,8 +45,15 @@ class RegisterUserCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        RegisterUserCommand::$isUserRoot = false;
         $this->loadNotificationSettings();
+        $this->mockProcessUserService('www-data');
+    }
+
+    public function tearDown(): void
+    {
+        RegisterUserCommand::$isUserRoot = null;
+
+        parent::tearDown();
     }
 
     /**
@@ -67,7 +74,7 @@ class RegisterUserCommandTest extends AppTestCase
      */
     public function testRegisterUserCommandAsRoot()
     {
-        $this->assertCommandCannotBeRunAsRootUser(RegisterUserCommand::class);
+        $this->assertCommandCannotBeRunAsRootUser('register_user');
     }
 
     public function withAdmin(): array

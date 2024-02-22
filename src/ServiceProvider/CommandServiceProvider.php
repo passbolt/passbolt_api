@@ -19,6 +19,13 @@ namespace App\ServiceProvider;
 
 use App\Command\HealthcheckCommand;
 use App\Command\InstallCommand;
+use App\Command\KeyringInitCommand;
+use App\Command\MigrateCommand;
+use App\Command\MigratePostgresCommand;
+use App\Command\RecoverUserCommand;
+use App\Command\RegisterUserCommand;
+use App\Service\Command\ProcessUserService;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Cake\Http\Client;
@@ -26,8 +33,14 @@ use Cake\Http\Client;
 class CommandServiceProvider extends ServiceProvider
 {
     protected $provides = [
+        ProcessUserService::class,
         HealthcheckCommand::class,
         InstallCommand::class,
+        KeyringInitCommand::class,
+        MigrateCommand::class,
+        RecoverUserCommand::class,
+        MigratePostgresCommand::class,
+        RegisterUserCommand::class,
     ];
 
     /**
@@ -35,7 +48,18 @@ class CommandServiceProvider extends ServiceProvider
      */
     public function services(ContainerInterface $container): void
     {
-        $container->add(HealthcheckCommand::class)->addArgument(Client::class);
-        $container->add(InstallCommand::class)->addArgument(Client::class);
+        $container->add(ProcessUserService::class);
+
+        $container->add(HealthcheckCommand::class)->addArguments([
+            ProcessUserService::class,
+            Client::class,
+            HealthcheckServiceCollector::class,
+        ]);
+        $container->add(InstallCommand::class)->addArguments([ProcessUserService::class, Client::class]);
+        $container->add(KeyringInitCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(MigrateCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(RecoverUserCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(MigratePostgresCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(RegisterUserCommand::class)->addArgument(ProcessUserService::class);
     }
 }

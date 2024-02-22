@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Command\MigratePostgresCommand;
+use App\Service\Command\ProcessUserService;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -44,7 +45,8 @@ class MigratePostgresCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        MigratePostgresCommand::$isUserRoot = false;
+        MigratePostgresCommand::$isUserRoot = null;
+        $this->mockProcessUserService('www-data');
     }
 
     protected function countMigrations(): int
@@ -69,7 +71,7 @@ class MigratePostgresCommandTest extends AppTestCase
 
     public function testPostgresMigrateCommandAsRoot()
     {
-        $this->assertCommandCannotBeRunAsRootUser(MigratePostgresCommand::class);
+        $this->assertCommandCannotBeRunAsRootUser('migrate_postgres');
     }
 
     /**
@@ -96,7 +98,7 @@ class MigratePostgresCommandTest extends AppTestCase
      */
     public function testPostgresMigrateCommand_DeletePostgresRelevantMigrations()
     {
-        $cmd = new MigratePostgresCommand();
+        $cmd = new MigratePostgresCommand(new ProcessUserService());
         $connection = ConnectionManager::get('test');
         $count = $this->countMigrations();
         $cmd->deletePostgresRelevantMigrations($connection);

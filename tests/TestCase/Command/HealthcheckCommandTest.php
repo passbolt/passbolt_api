@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Command;
 use App\Command\HealthcheckCommand;
 use App\Model\Table\RolesTable;
 use App\Model\Validation\EmailValidationRule;
+use App\Service\Command\ProcessUserService;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
@@ -28,7 +29,9 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Client;
+use Cake\Http\TestSuite\HttpClientTrait;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class HealthcheckCommandTest extends AppTestCase
@@ -37,6 +40,7 @@ class HealthcheckCommandTest extends AppTestCase
     use HealthcheckRequestTestTrait;
     use PassboltCommandTestTrait;
     use SelfRegistrationTestTrait;
+    use HttpClientTrait;
 
     /**
      * setUp method
@@ -46,8 +50,16 @@ class HealthcheckCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
+
         $this->useCommandRunner();
-        HealthcheckCommand::$isUserRoot = false;
+        $this->mockService(ProcessUserService::class, function () {
+            $stub = $this->getMockBuilder(ProcessUserService::class)
+                ->onlyMethods(['getName'])
+                ->getMock();
+            $stub->method('getName')->willReturn('www-data');
+
+            return $stub;
+        });
     }
 
     /**
@@ -57,7 +69,9 @@ class HealthcheckCommandTest extends AppTestCase
     {
         parent::tearDown();
 
+        // Reset state
         TableRegistry::getTableLocator()->clear();
+        HealthcheckCommand::$isUserRoot = null;
     }
 
     /**
@@ -70,6 +84,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('Check the configuration of this installation and associated environment.');
         $this->assertOutputContains('cake passbolt healthcheck');
         // Ensure that all checks are displayed in the help
+        // TODO: Change it to use service collector
         foreach (HealthcheckCommand::ALL_HEALTH_CHECKS as $check) {
             $this->assertOutputContains($check);
         }
@@ -80,7 +95,7 @@ class HealthcheckCommandTest extends AppTestCase
      */
     public function testHealthcheckCommandRoot()
     {
-        $this->assertCommandCannotBeRunAsRootUser(HealthcheckCommand::class);
+        $this->assertCommandCannotBeRunAsRootUser('healthcheck');
     }
 
     /**
@@ -207,5 +222,25 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('tables found');
         $this->assertOutputContains('Some default content is present');
         $this->assertOutputContains('The database schema up to date.');
+    }
+
+    // Note: This will pass when OLD way is removed
+    public function testHealthcheckCommand_Core_Happy_Path()
+    {
+        $this->mockClientGet(
+            Router::url('/healthcheck/status.json', true),
+            $this->newClientResponse(200, [], json_encode(['body' => 'OK']))
+        );
+
+        $this->exec('passbolt healthcheck --core');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<success>[PASS]</success> Cache is working.');
+        $this->assertOutputContains('<error>[FAIL] Debug mode is on.</error>');
+        $this->assertOutputContains('<success>[PASS]</success> Unique value set for security.salt');
+        $this->assertOutputContains('<success>[PASS]</success> Full base url is set to https://passbolt.local');
+        $this->assertOutputContains('<success>[PASS]</success> App.fullBaseUrl validation OK.');
+        $this->assertOutputContains('<success>[PASS]</success> /healthcheck/status is reachable.');
+        $this->assertOutputContains('<error>[FAIL] 1 error(s) found. Hang in there!</error>');
     }
 }

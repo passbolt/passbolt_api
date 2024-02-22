@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Service\Command\ProcessUserService;
 use Cake\Command\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -62,7 +63,7 @@ class PassboltCommand extends Command
         CommandBootstrap::init();
 
         if (self::$isUserRoot === null) {
-            self::$isUserRoot = (PROCESS_USER === 'root');
+            self::$isUserRoot = ($this->processUserService->getName() === 'root');
         }
     }
 
@@ -241,14 +242,15 @@ class PassboltCommand extends Command
      * @param \Cake\Console\ConsoleIo $io IO object.
      * @return void
      */
-    protected function assertCurrentProcessUser(ConsoleIo $io)
+    protected function assertCurrentProcessUser(ConsoleIo $io, ProcessUserService $processUserService)
     {
         if (!$this->assertNotRoot($io)) {
             $this->error(__('aborting'), $io);
             $this->abort();
         }
 
-        if (!$this->isWebserverUser()) {
+        $isWebserverUser = in_array($processUserService->getName(), self::KNOWN_WEBSERVER_USERS);
+        if (!$isWebserverUser) {
             $io->out();
             $io->warning(__('Passbolt commands should only be executed as the web server user.'));
             $io->out();

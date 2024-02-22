@@ -16,10 +16,15 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Service\Command\ProcessUserService;
+use App\Service\Healthcheck\HealthcheckDomain;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks;
 use App\Utility\Healthchecks\CoreHealthchecks;
 use App\Utility\Healthchecks\SslHealthchecks;
+use Cake\Collection\Collection;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -36,9 +41,9 @@ class HealthcheckCommand extends PassboltCommand
     use FeaturePluginAwareTrait;
 
     public const ALL_HEALTH_CHECKS = [
-        'environment',
-        'configFiles',
-        'core',
+//        'environment',
+//        'configFiles',
+//        'core',
         'ssl',
         'database',
         'gpg',
@@ -77,15 +82,30 @@ class HealthcheckCommand extends PassboltCommand
      */
     private $args;
 
+    /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
+
     private ?Client $client;
 
+    private HealthcheckServiceCollector $healthcheckServiceCollector;
+
     /**
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service
      * @param ?\Cake\Http\Client $client client requesting the healthcheck status
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check service collector.
      */
-    public function __construct(?Client $client)
-    {
+    public function __construct(
+        ProcessUserService $processUserService,
+        ?Client $client,
+        HealthcheckServiceCollector $healthcheckServiceCollector
+    ) {
         parent::__construct();
+
+        $this->processUserService = $processUserService;
         $this->client = $client;
+        $this->healthcheckServiceCollector = $healthcheckServiceCollector;
     }
 
     /**
@@ -172,7 +192,7 @@ class HealthcheckCommand extends PassboltCommand
         $this->args = $args;
 
         // Root user is not allowed to execute this command.
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         $results = [];
 
@@ -182,7 +202,7 @@ class HealthcheckCommand extends PassboltCommand
             $this->_displayOptions[$option] = $args->getOption($option);
         }
 
-        // if user only want to run one check
+        // OLD - if user only want to run one check
         $paramChecks = [];
         $checks = self::ALL_HEALTH_CHECKS;
         foreach ($checks as $check) {
@@ -193,27 +213,97 @@ class HealthcheckCommand extends PassboltCommand
         if (count($paramChecks)) {
             $checks = $paramChecks;
         }
+        // NEW - if user only want to run one check
+        $paramChecks = [];
+        $healthcheckServices = $this->healthcheckServiceCollector->getServices();
+        foreach ($healthcheckServices as $healthcheckService) {
+            // TODO: Add $healthcheckService instanceof HealthcheckWithCliOptionInterface
+            if ($args->getOption($healthcheckService->cliOption())) {
+                $paramChecks[] = $healthcheckService;
+            }
+        }
+        if (count($paramChecks)) {
+            $healthcheckServices = $paramChecks;
+        }
 
-        // Run all the selected checks
+        // OLD - Run all the selected checks
         $io->out(' Healthcheck shell', 0);
         foreach ($checks as $check) {
             $io->out('.', 0); // Print a dot for each checks to show progress
             $results = array_merge(Healthchecks::{$check}(), $results);
         }
+        // NEW - Get services from collector and run checks
+        $resultCollection = new Collection([]);
+        foreach ($healthcheckServices as $healthcheckService) {
+            $result = $healthcheckService->check();
+
+            $resultCollection = $resultCollection->appendItem($result);
+        }
+
         // Remove all dots
         $io->out(str_repeat(chr(0x08), count($checks)) . str_repeat(' ', count($checks)), 0);
 
-        // Print results
         $io->out();
         $io->hr();
+
+        // OLD - Print results
         foreach ($checks as $check) {
             $fn = 'assert' . ucfirst($check);
             $this->{$fn}($results);
         }
+        // NEW - Print results
+        $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
+            return $result->domain();
+        });
+
+        foreach ($resultsGroupByDomain as $domain => $checkResults) {
+            $this->title(HealthcheckDomain::getTitle($domain));
+
+            foreach ($checkResults as $checkResult) {
+                $this->render($checkResult);
+            }
+        }
+
         $io->out();
         $this->summary();
 
         return $this->successCode();
+    }
+
+    /**
+     * Print result of given health check.
+     *
+     * @param \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckService Health check service.
+     * @return void
+     */
+    private function render(HealthcheckServiceInterface $healthcheckService): void
+    {
+        switch ($healthcheckService->level()) {
+            case 'error':
+                $this->assert(
+                    $healthcheckService->isPassed(),
+                    $healthcheckService->getSuccessMessage(),
+                    $healthcheckService->getFailureMessage(),
+                    $healthcheckService->getHelpMessage()
+                );
+                break;
+            case 'warning':
+                $this->warning(
+                    $healthcheckService->isPassed(),
+                    $healthcheckService->getSuccessMessage(),
+                    $healthcheckService->getFailureMessage(),
+                    $healthcheckService->getHelpMessage()
+                );
+                break;
+            case 'notice':
+                $this->notice(
+                    $healthcheckService->isPassed(),
+                    $healthcheckService->getSuccessMessage(),
+                    $healthcheckService->getFailureMessage(),
+                    $healthcheckService->getHelpMessage()
+                );
+                break;
+        }
     }
 
     /**
