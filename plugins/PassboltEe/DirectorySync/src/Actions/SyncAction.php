@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Actions;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Model\Table\UsersTable;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
@@ -81,6 +82,7 @@ abstract class SyncAction
     public DirectoryRelationsTable $DirectoryRelations;
 
     private DirectoryReportsTable $DirectoryReports;
+    protected ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
     /**
      * Store entities (users or groups) to ignore.
      *
@@ -154,13 +156,17 @@ abstract class SyncAction
     /**
      * SyncAction constructor.
      *
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService expire resource service
      * @param string|null $parentId parent id
      * @throws \Exception if no directory configuration is present
      */
-    public function __construct(?string $parentId = null)
-    {
+    public function __construct(
+        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService,
+        ?string $parentId = null
+    ) {
         $this->directoryOrgSettings = DirectoryOrgSettings::get();
         $this->directory = DirectoryFactory::get($this->directoryOrgSettings);
+        $this->resourcesExpireResourcesService = $resourcesExpireResourcesService;
 
         /** @phpstan-ignore-next-line */
         $this->DirectoryEntries = $this->fetchTable('Passbolt/DirectorySync.DirectoryEntries');

@@ -20,6 +20,7 @@ use App\Command\CommandBootstrap;
 use App\Notification\Email\EmailSubscriptionDispatcher;
 use App\Notification\Email\Redactor\CoreEmailRedactorPool;
 use App\Notification\Email\Redactor\Group\GroupUserAddRequestEmailRedactor;
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
@@ -73,7 +74,9 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
      */
     public function initAction()
     {
-        $this->action = new GroupSyncAction();
+        $this->action = new GroupSyncAction(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
         $this->action->getDirectory()->setGroups([]);
     }
 
@@ -562,7 +565,9 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
     public function testDirectorySyncGroupUser_Case11a_Ok_Ok_Null_Null_Ok_Edited_Group_No_Passwords_UpdateDisabled()
     {
         $this->disableSyncOperation('groups', 'update');
-        $this->action = new GroupSyncAction();
+        $this->action = new GroupSyncAction(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
         $this->action->getDirectory()->setGroups([]);
 
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'frances', 'lname' => 'frances', 'foreign_key' => UuidFactory::uuid('user.id.frances')]);

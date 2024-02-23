@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Controller;
 
 use App\Model\Entity\Role;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
@@ -43,7 +45,7 @@ class DirectorySyncController extends DirectoryController
      * @throws \Cake\Http\Exception\ForbiddenException if the controller is accessed by a non admin
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         if ($this->User->role() !== Role::ADMIN) {
             throw new ForbiddenException('Only administrators can access directory sync functionalities');
@@ -55,12 +57,13 @@ class DirectorySyncController extends DirectoryController
     /**
      * Synchronize entry point
      *
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $expireResourcesService expiry resource service
      * @return void
      */
-    public function synchronize()
+    public function synchronize(ResourcesExpireResourcesServiceInterface $expireResourcesService)
     {
         try {
-            $res = $this->_synchronize(false);
+            $res = $this->_synchronize($expireResourcesService, false);
         } catch (\Exception $e) {
             throw new InternalErrorException('The synchronization failed. ' . $e->getMessage(), 500, $e);
         }
@@ -70,12 +73,13 @@ class DirectorySyncController extends DirectoryController
     /**
      * Synchronization with dry run entry point
      *
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $expireResourcesService expire resource service
      * @return void
      */
-    public function dryRun()
+    public function dryRun(ResourcesExpireResourcesServiceInterface $expireResourcesService)
     {
         try {
-            $res = $this->_synchronize(true);
+            $res = $this->_synchronize($expireResourcesService, true);
         } catch (\Exception $e) {
             throw new InternalErrorException('The simulation failed. ' . $e->getMessage(), 500, $e);
         }
@@ -85,13 +89,16 @@ class DirectorySyncController extends DirectoryController
     /**
      * Main synchronization function
      *
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $expireResourcesService expire resource service
      * @param bool $dryRun whether it should run in dry run mode.
      * @return array reports list in array format
      */
-    protected function _synchronize(bool $dryRun = true)
-    {
+    protected function _synchronize(
+        ResourcesExpireResourcesServiceInterface $expireResourcesService,
+        bool $dryRun = true
+    ): array {
         $res = [];
-        $allSyncAction = new AllSyncAction();
+        $allSyncAction = new AllSyncAction($expireResourcesService);
         $reports = $allSyncAction->execute($dryRun);
         foreach ($reports as $type => $report) {
             $res[$type] = $report->toFormattedArray();

@@ -16,10 +16,25 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Actions;
 
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\ORM\TableRegistry;
 
 class AllSyncAction
 {
+    /**
+     * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
+     */
+    protected ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
+
+    /**
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $expireResourcesService expiry resource service
+     */
+    public function __construct(
+        ResourcesExpireResourcesServiceInterface $expireResourcesService
+    ) {
+        $this->resourcesExpireResourcesService = $expireResourcesService;
+    }
+
     /**
      * Synchronize users.
      *
@@ -27,7 +42,7 @@ class AllSyncAction
      */
     public function syncUsers()
     {
-        $userSyncAction = new UserSyncAction();
+        $userSyncAction = new UserSyncAction($this->resourcesExpireResourcesService);
         $reports = $userSyncAction->execute();
 
         return $reports;
@@ -40,7 +55,7 @@ class AllSyncAction
      */
     public function syncGroups()
     {
-        $groupSyncAction = new GroupSyncAction();
+        $groupSyncAction = new GroupSyncAction($this->resourcesExpireResourcesService);
         $reports = $groupSyncAction->execute();
 
         return $reports;

@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Command;
 
+use App\Service\Command\ProcessUserService;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -24,6 +26,24 @@ use Passbolt\DirectorySync\Actions\AllSyncAction;
 class AllCommand extends DirectorySyncCommand
 {
     use SyncCommandTrait;
+
+    /**
+     * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
+     */
+    protected ResourcesExpireResourcesServiceInterface $expireResourcesService;
+
+    /**
+     * @param \App\Service\Command\ProcessUserService $processUserService process user service
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $expireResourcesService expiry resource service
+     */
+    public function __construct(
+        ProcessUserService $processUserService,
+        ResourcesExpireResourcesServiceInterface $expireResourcesService
+    ) {
+        $this->expireResourcesService = $expireResourcesService;
+
+        parent::__construct($processUserService);
+    }
 
     /**
      * @inheritDoc
@@ -56,7 +76,7 @@ class AllCommand extends DirectorySyncCommand
         try {
             $this->model = 'Users';
             $dryRun = $args->getOption('dry-run') || !$args->getOption('persist');
-            $allSyncAction = new AllSyncAction();
+            $allSyncAction = new AllSyncAction($this->expireResourcesService);
             $reports = $allSyncAction->execute($dryRun);
         } catch (\Exception $exception) {
             $this->error($exception->getMessage(), $io);

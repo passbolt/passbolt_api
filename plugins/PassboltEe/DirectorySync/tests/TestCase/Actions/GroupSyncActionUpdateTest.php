@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
@@ -38,7 +39,9 @@ class GroupSyncActionUpdateTest extends DirectorySyncIntegrationTestCase
      */
     private function initAction(): void
     {
-        $this->action = new GroupSyncAction();
+        $this->action = new GroupSyncAction(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
         $this->action->getDirectory()->setGroups([]);
     }
 
