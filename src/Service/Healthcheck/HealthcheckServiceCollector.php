@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck;
 
+use Cake\Utility\Inflector;
+
 class HealthcheckServiceCollector
 {
     /**
@@ -43,5 +45,27 @@ class HealthcheckServiceCollector
     public function getServices(): array
     {
         return $this->services;
+    }
+
+    /**
+     * Returns title to show it to the user for this domain health check.
+     *
+     * @param string $domain Domain to get title from.
+     * @return string
+     */
+    public static function getTitleFromDomain(string $domain): string
+    {
+        $domainTitleMapping = [
+            'environment' => __('Environment'),
+            'configFiles' => __('Config files'),
+            'core' => __('Core config'),
+        ];
+
+        if (isset($domainTitleMapping[$domain])) {
+            return $domainTitleMapping[$domain];
+        }
+
+        // If mapping not found, change it to humanize form programmatically
+        return Inflector::humanize($domain);
     }
 }

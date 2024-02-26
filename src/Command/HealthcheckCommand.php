@@ -257,7 +257,7 @@ class HealthcheckCommand extends PassboltCommand
         });
 
         foreach ($resultsGroupByDomain as $domain => $checkResults) {
-            $this->title(HealthcheckDomain::getTitle($domain));
+            $this->title(HealthcheckServiceCollector::getTitleFromDomain($domain));
 
             foreach ($checkResults as $checkResult) {
                 $this->render($checkResult);
