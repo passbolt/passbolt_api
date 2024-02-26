@@ -72,10 +72,11 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
 
         /** @var \App\Model\Entity\Group $group */
         $group = $event->getData('group');
+        /** @var \App\Model\Dto\EntitiesChangesDto $entitiesChanges */
         $entitiesChanges = $event->getData('entitiesChanges');
         $addedGroupsUsers = $entitiesChanges->getAddedEntities(GroupsUser::class);
-        $updatedGroupsUsers = $entitiesChanges->getAddedEntities(GroupsUser::class);
-        $removedGroupsUsers = $entitiesChanges->getAddedEntities(GroupsUser::class);
+        $updatedGroupsUsers = $entitiesChanges->getUpdatedEntities(GroupsUser::class);
+        $removedGroupsUsers = $entitiesChanges->getDeletedEntities(GroupsUser::class);
         $modifiedBy = $this->usersTable->findFirstForEmail($event->getData('userId'));
 
         if ((empty($addedGroupsUsers) && empty($updatedGroupsUsers) && empty($removedGroupsUsers))) {

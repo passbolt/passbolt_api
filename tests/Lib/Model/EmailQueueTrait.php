@@ -170,7 +170,7 @@ trait EmailQueueTrait
      * @param bool $htmlSpecialChar Convert string to html special characters (useful when searching names)
      */
     protected function assertEmailInBatchNotContains(
-        string $string,
+        $string,
         $i = 0,
         string $message = '',
         bool $htmlSpecialChar = true
