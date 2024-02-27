@@ -43,7 +43,7 @@ class HealthcheckCommand extends PassboltCommand
 //        'environment',
 //        'configFiles',
 //        'core',
-        'ssl',
+//        'ssl',
         'database',
         'gpg',
 //        'application',

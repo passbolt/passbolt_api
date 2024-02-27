@@ -30,6 +30,7 @@ class HealthcheckServiceCollector
      * List of all available health check domains.
      */
     public const DOMAIN_APPLICATION = 'application';
+    public const DOMAIN_SSL = 'ssl';
 
     /**
      * List of all available levels for health check results.

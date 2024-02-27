@@ -45,6 +45,9 @@ use App\Service\Healthcheck\Environment\PcreHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\TmpFolderWritableHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\Ssl\HostValidSslHealthcheck;
+use App\Service\Healthcheck\Ssl\NotSelfSignedSslHealthcheck;
+use App\Service\Healthcheck\Ssl\PeerValidSslHealthcheck;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Cake\Http\Client;
@@ -109,7 +112,15 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(FullBaseUrlCoreHealthcheck::class);
         $container->add(ValidFullBaseUrlCoreHealthcheck::class);
         $container->add('fullBaseUrlReachableClient', Client::class);
-        $container->add(FullBaseUrlReachableCoreHealthcheck::class)->addArgument('fullBaseUrlReachableClient');
+        $container->addShared(FullBaseUrlReachableCoreHealthcheck::class)->addArgument('fullBaseUrlReachableClient');
+        // SSL health checks
+        $container->add('sslHealthcheckClient', Client::class);
+        $container->add(PeerValidSslHealthcheck::class)
+            ->addArguments([FullBaseUrlReachableCoreHealthcheck::class, 'sslHealthcheckClient']);
+        $container->add(HostValidSslHealthcheck::class)
+            ->addArguments([FullBaseUrlReachableCoreHealthcheck::class, 'sslHealthcheckClient']);
+        $container->add(NotSelfSignedSslHealthcheck::class)
+            ->addArguments([FullBaseUrlReachableCoreHealthcheck::class, 'sslHealthcheckClient']);
         // Application health checks
         $container->add(LatestVersionApplicationHealthcheck::class);
         $container->add(SslForceApplicationHealthcheck::class);
@@ -148,6 +159,9 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [FullBaseUrlCoreHealthcheck::class])
             ->addMethodCall('addService', [ValidFullBaseUrlCoreHealthcheck::class])
             ->addMethodCall('addService', [FullBaseUrlReachableCoreHealthcheck::class])
+            ->addMethodCall('addService', [PeerValidSslHealthcheck::class])
+            ->addMethodCall('addService', [HostValidSslHealthcheck::class])
+            ->addMethodCall('addService', [NotSelfSignedSslHealthcheck::class])
             ->addMethodCall('addService', [LatestVersionApplicationHealthcheck::class])
             ->addMethodCall('addService', [SslForceApplicationHealthcheck::class])
             ->addMethodCall('addService', [SslFullBaseUrlApplicationHealthcheck::class])

@@ -240,6 +240,7 @@ class PassboltCommand extends Command
      * Checks if user running the command is valid or not. If not, aborts or shows warning depending on severity.
      *
      * @param \Cake\Console\ConsoleIo $io IO object.
+     * @param \App\Service\Command\ProcessUserService $processUserService process user service
      * @return void
      */
     protected function assertCurrentProcessUser(ConsoleIo $io, ProcessUserService $processUserService)

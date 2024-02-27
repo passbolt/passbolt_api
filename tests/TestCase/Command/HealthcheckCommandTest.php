@@ -27,6 +27,7 @@ use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use App\Utility\Healthchecks;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
+use Cake\Core\Exception\CakeException;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
@@ -103,12 +104,20 @@ class HealthcheckCommandTest extends AppTestCase
      */
     public function testHealthcheckCommand_All_Checks()
     {
-        $this->mockService(Client::class, function () {
-            return $this->getMockedHealthcheckStatusRequest(400);
+        $clientStub = $this->getMockBuilder(Client::class)->onlyMethods(['get'])->getMock();
+        $clientStub->method('get')->willThrowException(new CakeException());
+        // Ensure that since the full base URL is not reachable, the SSL healthchecks to not query the call URl, as it is unnecessary
+        $clientStub->expects($this->once())->method('get');
+        $this->mockService('fullBaseUrlReachableClient', function () use ($clientStub) {
+            return $clientStub;
         });
+        $this->mockService('sslHealthcheckClient', function () use ($clientStub) {
+            return $clientStub;
+        });
+
         $this->exec('passbolt healthcheck -d test');
         $this->assertExitSuccess();
-        $this->assertOutputContains('<warning>[WARN] SSL peer certificate does not validate</warning>');
+        $this->assertOutputContains('<warning>[WARN] SSL peer certificate does not validate.</warning>');
         $this->assertOutputContains('<warning>[WARN] Hostname does not match when validating certificates.</warning>');
         // Since the tests run with debug on, here will always be at least one error in the healthcheck.
         $this->assertOutputContains('error(s) found. Hang in there!');

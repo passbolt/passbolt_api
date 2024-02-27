@@ -31,6 +31,8 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
      */
     private bool $status = false;
 
+    private bool $isHealthcheckEndpointUnreachable = false;
+
     /**
      * HTTP Client.
      *
@@ -47,10 +49,26 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
     }
 
     /**
+     * In case the full base URL was found as unreachable, the
+     * result is cached in this variable, to be accessible by other services
+     * and to avoid unnecessary redundant curls.
+     *
+     * @return bool
+     */
+    public function isHealthcheckEndpointUnreachable(): bool
+    {
+        return $this->isHealthcheckEndpointUnreachable;
+    }
+
+    /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
+        if ($this->isHealthcheckEndpointUnreachable()) {
+            return $this;
+        }
+
         try {
             $url = Router::url('/healthcheck/status.json', true);
 
@@ -65,6 +83,10 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
             }
         } catch (CakeException $e) {
             // Nothing to do here
+        } finally {
+            if ($this->status !== true) {
+                $this->isHealthcheckEndpointUnreachable = true;
+            }
         }
 
         return $this;
