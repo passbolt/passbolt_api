@@ -17,6 +17,17 @@ declare(strict_types=1);
 
 namespace App\ServiceProvider;
 
+use App\Service\Healthcheck\Application\EmailNotificationEnabledApplicationHealthcheck;
+use App\Service\Healthcheck\Application\HostAvailabilityCheckEnabledApplicationHealthcheck;
+use App\Service\Healthcheck\Application\JsProdApplicationHealthcheck;
+use App\Service\Healthcheck\Application\LatestVersionApplicationHealthcheck;
+use App\Service\Healthcheck\Application\RobotsIndexDisabledApplicationHealthcheck;
+use App\Service\Healthcheck\Application\SeleniumDisabledApplicationHealthcheck;
+use App\Service\Healthcheck\Application\SelfRegistrationPluginEnabledApplicationHealthcheck;
+use App\Service\Healthcheck\Application\SelfRegistrationProviderApplicationHealthcheck;
+use App\Service\Healthcheck\Application\SelfRegistrationPublicRemovedApplicationHealthcheck;
+use App\Service\Healthcheck\Application\SslForceApplicationHealthcheck;
+use App\Service\Healthcheck\Application\SslFullBaseUrlApplicationHealthcheck;
 use App\Service\Healthcheck\ConfigFiles\AppConfigFileHealthcheck;
 use App\Service\Healthcheck\ConfigFiles\PassboltConfigFileHealthcheck;
 use App\Service\Healthcheck\Core\CacheCoreHealthcheck;
@@ -37,6 +48,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Cake\Http\Client;
+use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckService;
 
 class HealthcheckServiceProvider extends ServiceProvider
 {
@@ -58,12 +70,22 @@ class HealthcheckServiceProvider extends ServiceProvider
         FullBaseUrlCoreHealthcheck::class,
         ValidFullBaseUrlCoreHealthcheck::class,
         FullBaseUrlReachableCoreHealthcheck::class,
+        LatestVersionApplicationHealthcheck::class,
+        SslForceApplicationHealthcheck::class,
+        SslFullBaseUrlApplicationHealthcheck::class,
+        SeleniumDisabledApplicationHealthcheck::class,
+        RobotsIndexDisabledApplicationHealthcheck::class,
+        SelfRegistrationHealthcheckService::class,
+        SelfRegistrationPluginEnabledApplicationHealthcheck::class,
+        SelfRegistrationProviderApplicationHealthcheck::class,
+        SelfRegistrationPublicRemovedApplicationHealthcheck::class,
+        HostAvailabilityCheckEnabledApplicationHealthcheck::class,
+        JsProdApplicationHealthcheck::class,
+        EmailNotificationEnabledApplicationHealthcheck::class,
     ];
 
     /**
-     * TODO: Domain wise service provider - separate this method into different provider files
-     *
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function services(ContainerInterface $container): void
     {
@@ -88,6 +110,25 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(ValidFullBaseUrlCoreHealthcheck::class);
         $container->add('fullBaseUrlReachableClient', Client::class);
         $container->add(FullBaseUrlReachableCoreHealthcheck::class)->addArgument('fullBaseUrlReachableClient');
+        // Application health checks
+        $container->add(LatestVersionApplicationHealthcheck::class);
+        $container->add(SslForceApplicationHealthcheck::class);
+        $container->add(SslFullBaseUrlApplicationHealthcheck::class);
+        $container->add(SeleniumDisabledApplicationHealthcheck::class);
+        $container->add(RobotsIndexDisabledApplicationHealthcheck::class);
+        $container->addShared(SelfRegistrationHealthcheckService::class);
+        $container
+            ->add(SelfRegistrationPluginEnabledApplicationHealthcheck::class)
+            ->addArgument(SelfRegistrationHealthcheckService::class);
+        $container
+            ->add(SelfRegistrationProviderApplicationHealthcheck::class)
+            ->addArgument(SelfRegistrationHealthcheckService::class);
+        $container
+            ->add(SelfRegistrationPublicRemovedApplicationHealthcheck::class)
+            ->addArgument(SelfRegistrationHealthcheckService::class);
+        $container->add(HostAvailabilityCheckEnabledApplicationHealthcheck::class);
+        $container->add(JsProdApplicationHealthcheck::class);
+        $container->add(EmailNotificationEnabledApplicationHealthcheck::class);
 
         // Append core health checks to service collector
         $container->add(HealthcheckServiceCollector::class)
@@ -106,6 +147,17 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [SaltCoreHealthcheck::class])
             ->addMethodCall('addService', [FullBaseUrlCoreHealthcheck::class])
             ->addMethodCall('addService', [ValidFullBaseUrlCoreHealthcheck::class])
-            ->addMethodCall('addService', [FullBaseUrlReachableCoreHealthcheck::class]);
+            ->addMethodCall('addService', [FullBaseUrlReachableCoreHealthcheck::class])
+            ->addMethodCall('addService', [LatestVersionApplicationHealthcheck::class])
+            ->addMethodCall('addService', [SslForceApplicationHealthcheck::class])
+            ->addMethodCall('addService', [SslFullBaseUrlApplicationHealthcheck::class])
+            ->addMethodCall('addService', [SeleniumDisabledApplicationHealthcheck::class])
+            ->addMethodCall('addService', [RobotsIndexDisabledApplicationHealthcheck::class])
+            ->addMethodCall('addService', [SelfRegistrationPluginEnabledApplicationHealthcheck::class])
+            ->addMethodCall('addService', [SelfRegistrationProviderApplicationHealthcheck::class])
+            ->addMethodCall('addService', [SelfRegistrationPublicRemovedApplicationHealthcheck::class])
+            ->addMethodCall('addService', [HostAvailabilityCheckEnabledApplicationHealthcheck::class])
+            ->addMethodCall('addService', [JsProdApplicationHealthcheck::class])
+            ->addMethodCall('addService', [EmailNotificationEnabledApplicationHealthcheck::class]);
     }
 }

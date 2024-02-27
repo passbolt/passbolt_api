@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\Command\ProcessUserService;
-use App\Service\Healthcheck\HealthcheckDomain;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
@@ -47,7 +46,7 @@ class HealthcheckCommand extends PassboltCommand
         'ssl',
         'database',
         'gpg',
-        'application',
+//        'application',
         'jwt',
         'smtpSettings',
     ];

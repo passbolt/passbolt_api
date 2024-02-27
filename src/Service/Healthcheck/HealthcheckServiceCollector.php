@@ -27,6 +27,18 @@ class HealthcheckServiceCollector
     private array $services = [];
 
     /**
+     * List of all available health check domains.
+     */
+    public const DOMAIN_APPLICATION = 'application';
+
+    /**
+     * List of all available levels for health check results.
+     */
+    public const LEVEL_ERROR = 'error';
+    public const LEVEL_WARNING = 'warning';
+    public const LEVEL_NOTICE = 'notice';
+
+    /**
      * Add a new service to the collector.
      *
      * @param \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckService Health check service.
@@ -59,6 +71,7 @@ class HealthcheckServiceCollector
             'environment' => __('Environment'),
             'configFiles' => __('Config files'),
             'core' => __('Core config'),
+            self::DOMAIN_APPLICATION => __('Application configuration'),
         ];
 
         if (isset($domainTitleMapping[$domain])) {
