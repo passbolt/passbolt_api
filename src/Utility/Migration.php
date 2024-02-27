@@ -26,11 +26,12 @@ class Migration
     /**
      * Check if the app or plugins need a database migration
      *
+     * @param string $datasource datasource
      * @return bool
      */
-    public static function needMigration()
+    public static function needMigration(string $datasource = 'default'): bool
     {
-        $Migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
+        $Migrations = new Migrations(['connection' => ConnectionManager::get($datasource)->configName()]);
         $migrations = $Migrations->status();
         foreach ($migrations as $i => $migration) {
             if ($migration['status'] === 'down') {

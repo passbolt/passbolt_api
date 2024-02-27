@@ -31,6 +31,8 @@ class HealthcheckServiceCollector
      */
     public const DOMAIN_APPLICATION = 'application';
     public const DOMAIN_SSL = 'ssl';
+    public const DOMAIN_SMTP_SETTINGS = 'smtpSettings';
+    public const DOMAIN_DATABASE = 'database';
 
     /**
      * List of all available levels for health check results.
@@ -72,7 +74,9 @@ class HealthcheckServiceCollector
             'environment' => __('Environment'),
             'configFiles' => __('Config files'),
             'core' => __('Core config'),
+            self::DOMAIN_SMTP_SETTINGS => __('SMTP settings'),
             self::DOMAIN_APPLICATION => __('Application configuration'),
+            self::DOMAIN_DATABASE => __('Database'),
         ];
 
         if (isset($domainTitleMapping[$domain])) {

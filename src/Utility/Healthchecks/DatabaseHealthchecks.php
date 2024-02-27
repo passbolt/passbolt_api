@@ -36,7 +36,7 @@ class DatabaseHealthchecks
         $checks = self::canConnect($datasource, $checks);
         $checks = self::supportedBackend($datasource, $checks);
         $checks = self::tableCount($datasource, $checks);
-        $checks = self::defaultContent($checks);
+        $checks = self::defaultContent($datasource, $checks);
 
         return $checks;
     }
@@ -119,7 +119,7 @@ class DatabaseHealthchecks
             $checks
         );
         try {
-            $connection = ConnectionManager::get('default');
+            $connection = ConnectionManager::get($datasource);
             $tables = $connection->getSchemaCollection()->listTables();
 
             if (count($tables) > 0) {
@@ -136,11 +136,13 @@ class DatabaseHealthchecks
      * Check if some default data is present
      * We only check the number of roles
      *
+     * @param string $datasource Datasource name
      * @param array|null $checks List of checks
      * @return array
      */
-    private static function defaultContent(?array $checks = []): array
+    private static function defaultContent(string $datasource, ?array $checks = []): array
     {
+        // TODO: run the query on the datasource provided in argument
         $checks['database']['defaultContent'] = false;
         try {
             $nRoles = TableRegistry::getTableLocator()

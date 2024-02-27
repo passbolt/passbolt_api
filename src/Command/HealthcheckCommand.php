@@ -44,11 +44,11 @@ class HealthcheckCommand extends PassboltCommand
 //        'configFiles',
 //        'core',
 //        'ssl',
-        'database',
+//        'database',
         'gpg',
 //        'application',
         'jwt',
-        'smtpSettings',
+//        'smtpSettings',
     ];
 
     /**

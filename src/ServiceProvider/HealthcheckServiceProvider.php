@@ -45,6 +45,7 @@ use App\Service\Healthcheck\Environment\PcreHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\TmpFolderWritableHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\SmtpSettings\PluginEnabledSmtpSettingsHealthcheck;
 use App\Service\Healthcheck\Ssl\HostValidSslHealthcheck;
 use App\Service\Healthcheck\Ssl\NotSelfSignedSslHealthcheck;
 use App\Service\Healthcheck\Ssl\PeerValidSslHealthcheck;
@@ -121,6 +122,8 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addArguments([FullBaseUrlReachableCoreHealthcheck::class, 'sslHealthcheckClient']);
         $container->add(NotSelfSignedSslHealthcheck::class)
             ->addArguments([FullBaseUrlReachableCoreHealthcheck::class, 'sslHealthcheckClient']);
+        // Smtp Settings default healthcheck
+        $container->add(PluginEnabledSmtpSettingsHealthcheck::class);
         // Application health checks
         $container->add(LatestVersionApplicationHealthcheck::class);
         $container->add(SslForceApplicationHealthcheck::class);
@@ -162,6 +165,7 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [PeerValidSslHealthcheck::class])
             ->addMethodCall('addService', [HostValidSslHealthcheck::class])
             ->addMethodCall('addService', [NotSelfSignedSslHealthcheck::class])
+            ->addMethodCall('addService', [PluginEnabledSmtpSettingsHealthcheck::class])
             ->addMethodCall('addService', [LatestVersionApplicationHealthcheck::class])
             ->addMethodCall('addService', [SslForceApplicationHealthcheck::class])
             ->addMethodCall('addService', [SslFullBaseUrlApplicationHealthcheck::class])
