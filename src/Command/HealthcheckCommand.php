@@ -19,6 +19,7 @@ namespace App\Command;
 use App\Service\Command\ProcessUserService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Healthcheck\HealthcheckWithOptionsInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks;
 use App\Utility\Healthchecks\CoreHealthchecks;
@@ -219,6 +220,10 @@ class HealthcheckCommand extends PassboltCommand
             // TODO: Add $healthcheckService instanceof HealthcheckWithCliOptionInterface
             if ($args->getOption($healthcheckService->cliOption())) {
                 $paramChecks[] = $healthcheckService;
+            }
+
+            if ($healthcheckService instanceof HealthcheckWithOptionsInterface) {
+                $healthcheckService->setOptions($this->args->getOptions());
             }
         }
         if (count($paramChecks)) {

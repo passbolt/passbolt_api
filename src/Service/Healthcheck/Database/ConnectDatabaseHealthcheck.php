@@ -19,8 +19,9 @@ namespace App\Service\Healthcheck\Database;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Healthcheck\HealthcheckWithOptionsInterface;
 
-class ConnectDatabaseHealthcheck implements HealthcheckServiceInterface
+class ConnectDatabaseHealthcheck implements HealthcheckServiceInterface, HealthcheckWithOptionsInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -30,11 +31,19 @@ class ConnectDatabaseHealthcheck implements HealthcheckServiceInterface
     private bool $status = false;
 
     /**
+     * @var array
+     */
+    private array $additionalOptions = [];
+
+    /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        // TODO: make the the datasource available here
+        $options = $this->getOptions();
+        $datasource = $options['datasource'];
+
+        // TODO: Do check here
 
         return $this;
     }
@@ -101,5 +110,21 @@ class ConnectDatabaseHealthcheck implements HealthcheckServiceInterface
     public function cliOption(): string
     {
         return 'configFiles';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setOptions(array $options): void
+    {
+        $this->additionalOptions = $options;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getOptions(): array
+    {
+        return $this->additionalOptions;
     }
 }
