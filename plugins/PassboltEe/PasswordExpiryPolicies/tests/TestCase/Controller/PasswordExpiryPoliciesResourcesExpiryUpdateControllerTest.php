@@ -105,7 +105,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
         ]);
         $this->assertEmailIsInQueue([
             'email' => $otherOwner->username,
-            'subject' => $user->profile->full_name . ' marked the password ' . $resourceShared->name . ' as expired',
+            'subject' => h($user->profile->full_name) . ' marked the password ' . $resourceShared->name . ' as expired',
             'template' => PasswordExpiryPasswordMarkedExpiredEmailRedactor::TEMPLATE,
         ]);
         $this->assertEmailQueueCount(4);
