@@ -68,8 +68,7 @@ class HealthcheckIndexController extends AppController
                 ->setTemplate('index');
             $this->success(__('All checks ran successfully!'), $checks);
         } else {
-            $this->set('checks', $checks);
-            $this->success(__('The operation was successful.'), compact('checks'));
+            $this->success(__('The operation was successful.'), $checks);
         }
     }
 
