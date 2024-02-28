@@ -58,7 +58,7 @@ class HealthcheckIndexController extends AppController
             }
         }
 
-        $checks = Healthchecks::all();
+        $checks = Healthchecks::all($client);
         $checks = array_merge($this->__webChecks(), $checks);
 
         if (!$this->request->is('json')) {
