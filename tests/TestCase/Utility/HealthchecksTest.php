@@ -88,6 +88,9 @@ class HealthchecksTest extends AppIntegrationTestCase
                     Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG),
                     '>='
                 ),
+                'info' => [
+                    'phpVersion' => PHP_VERSION,
+                ],
                 'pcre' => true,
                 'mbstring' => true,
                 'gnupg' => true,
