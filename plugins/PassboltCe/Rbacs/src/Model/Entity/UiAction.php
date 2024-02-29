@@ -51,6 +51,7 @@ class UiAction extends Entity
     public const NAME_USERS_VIEW_GROUPS = 'Users.viewGroups';
     public const NAME_MOBILE_TRANSFER = 'Mobile.transfer';
     public const NAME_DESKTOP_TRANSFER = 'Desktop.transfer';
+    public const NAME_FOLDERS_SHARE = 'Folders.share';
 
     /**
      * Mapping for name and control function.
@@ -132,6 +133,10 @@ class UiAction extends Entity
             Rbac::CONTROL_FUNCTION_DENY,
         ],
         self::NAME_DESKTOP_TRANSFER => [
+            Rbac::CONTROL_FUNCTION_ALLOW,
+            Rbac::CONTROL_FUNCTION_DENY,
+        ],
+        self::NAME_FOLDERS_SHARE => [
             Rbac::CONTROL_FUNCTION_ALLOW,
             Rbac::CONTROL_FUNCTION_DENY,
         ],
