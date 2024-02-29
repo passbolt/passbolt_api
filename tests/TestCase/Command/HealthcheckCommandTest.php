@@ -234,6 +234,7 @@ class HealthcheckCommandTest extends AppTestCase
     }
 
     // Note: This will pass when OLD way is removed
+
     public function testHealthcheckCommand_Core_Happy_Path()
     {
         $this->mockClientGet(
@@ -251,5 +252,29 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('<success>[PASS]</success> App.fullBaseUrl validation OK.');
         $this->assertOutputContains('<success>[PASS]</success> /healthcheck/status is reachable.');
         $this->assertOutputContains('<error>[FAIL] 1 error(s) found. Hang in there!</error>');
+    }
+
+    public function testHealthcheckCommand_Gpg_Happy_Path()
+    {
+        $this->exec('passbolt healthcheck --gpg');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<success>[PASS]</success> PHP GPG Module is installed and loaded.');
+        $this->assertOutputContains('<success>[PASS]</success> The environment variable GNUPGHOME is set to /root/.gnupg.');
+        $this->assertOutputContains('<error>[FAIL] Do not use the default OpenPGP key for the server.</error>');
+        $this->assertOutputContains('<success>[PASS]</success> The public key file is defined in /var/www/passbolt/config/passbolt.php and readable.');
+        $this->assertOutputContains('<success>[PASS]</success> The private key file is defined in /var/www/passbolt/config/passbolt.php and readable.');
+        $this->assertOutputContains('<success>[PASS]</success> The server key fingerprint matches the one defined in ');
+        $this->assertOutputContains('<success>[PASS]</success> The server public key defined in the ' . CONFIG . 'passbolt.php (or environment variables) is in the keyring.');
+        $this->assertOutputContains('<success>[PASS]</success> There is a valid email id defined for the server key.');
+    }
+
+    public function testHealthcheckCommand_Gpg_Failing_Path()
+    {
+        Configure::write('passbolt.gpg.serverKey.fingerprint', 'foo');
+        $this->exec('passbolt healthcheck --gpg');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<error>[FAIL] The server key fingerprint doesn\'t match the one defined in ');
     }
 }

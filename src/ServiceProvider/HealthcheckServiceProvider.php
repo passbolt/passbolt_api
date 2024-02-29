@@ -44,6 +44,14 @@ use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\PcreHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\TmpFolderWritableHealthcheck;
+use App\Service\Healthcheck\Gpg\GpgHomeVariableDefinedGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\GpgKeyNotDefaultGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\GpgPrivateKeyFingerprintMatchGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\GpgPrivateKeyReadableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\GpgPublicKeyEmailGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\GpgPublicKeyInKeyringGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\GpgPublicKeyReadableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\SmtpSettings\PluginEnabledSmtpSettingsHealthcheck;
 use App\Service\Healthcheck\Ssl\HostValidSslHealthcheck;
@@ -124,6 +132,15 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addArguments([FullBaseUrlReachableCoreHealthcheck::class, 'sslHealthcheckClient']);
         // Smtp Settings default healthcheck
         $container->add(PluginEnabledSmtpSettingsHealthcheck::class);
+        // Gpg health checks
+        $container->add(PhpGpgModuleInstalledGpgHealthcheck::class);
+        $container->add(GpgHomeVariableDefinedGpgHealthcheck::class);
+        $container->add(GpgKeyNotDefaultGpgHealthcheck::class);
+        $container->add(GpgPublicKeyReadableGpgHealthcheck::class);
+        $container->add(GpgPrivateKeyReadableGpgHealthcheck::class);
+        $container->add(GpgPrivateKeyFingerprintMatchGpgHealthcheck::class);
+        $container->add(GpgPublicKeyInKeyringGpgHealthcheck::class);
+        $container->add(GpgPublicKeyEmailGpgHealthcheck::class);
         // Application health checks
         $container->add(LatestVersionApplicationHealthcheck::class);
         $container->add(SslForceApplicationHealthcheck::class);
@@ -166,6 +183,14 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [HostValidSslHealthcheck::class])
             ->addMethodCall('addService', [NotSelfSignedSslHealthcheck::class])
             ->addMethodCall('addService', [PluginEnabledSmtpSettingsHealthcheck::class])
+            ->addMethodCall('addService', [PhpGpgModuleInstalledGpgHealthcheck::class])
+            ->addMethodCall('addService', [GpgHomeVariableDefinedGpgHealthcheck::class])
+            ->addMethodCall('addService', [GpgKeyNotDefaultGpgHealthcheck::class])
+            ->addMethodCall('addService', [GpgPublicKeyReadableGpgHealthcheck::class])
+            ->addMethodCall('addService', [GpgPrivateKeyReadableGpgHealthcheck::class])
+            ->addMethodCall('addService', [GpgPrivateKeyFingerprintMatchGpgHealthcheck::class])
+            ->addMethodCall('addService', [GpgPublicKeyInKeyringGpgHealthcheck::class])
+            ->addMethodCall('addService', [GpgPublicKeyEmailGpgHealthcheck::class])
             ->addMethodCall('addService', [LatestVersionApplicationHealthcheck::class])
             ->addMethodCall('addService', [SslForceApplicationHealthcheck::class])
             ->addMethodCall('addService', [SslFullBaseUrlApplicationHealthcheck::class])

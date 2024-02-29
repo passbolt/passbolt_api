@@ -33,6 +33,7 @@ class HealthcheckServiceCollector
     public const DOMAIN_SSL = 'ssl';
     public const DOMAIN_SMTP_SETTINGS = 'smtpSettings';
     public const DOMAIN_DATABASE = 'database';
+    public const DOMAIN_GPG = 'gpg';
 
     /**
      * List of all available levels for health check results.
@@ -77,6 +78,7 @@ class HealthcheckServiceCollector
             self::DOMAIN_SMTP_SETTINGS => __('SMTP settings'),
             self::DOMAIN_APPLICATION => __('Application configuration'),
             self::DOMAIN_DATABASE => __('Database'),
+            self::DOMAIN_GPG => __('GPG Configuration'),
         ];
 
         if (isset($domainTitleMapping[$domain])) {
