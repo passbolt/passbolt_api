@@ -36,6 +36,10 @@ use App\Service\Healthcheck\Core\FullBaseUrlCoreHealthcheck;
 use App\Service\Healthcheck\Core\FullBaseUrlReachableCoreHealthcheck;
 use App\Service\Healthcheck\Core\SaltCoreHealthcheck;
 use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
+use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
+use App\Service\Healthcheck\Database\DefaultContentDatabaseHealthcheck;
+use App\Service\Healthcheck\Database\SchemaUpToDateDatabaseHealthcheck;
+use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
 use App\Service\Healthcheck\Environment\ImageHealthcheck;
 use App\Service\Healthcheck\Environment\IntlHealthcheck;
 use App\Service\Healthcheck\Environment\LogFolderWritableHealthcheck;
@@ -160,6 +164,11 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(HostAvailabilityCheckEnabledApplicationHealthcheck::class);
         $container->add(JsProdApplicationHealthcheck::class);
         $container->add(EmailNotificationEnabledApplicationHealthcheck::class);
+        // Database health checks
+        $container->add(ConnectDatabaseHealthcheck::class);
+        $container->add(TablesCountDatabaseHealthcheck::class);
+        $container->add(DefaultContentDatabaseHealthcheck::class);
+        $container->add(SchemaUpToDateDatabaseHealthcheck::class);
 
         // Append core health checks to service collector
         $container->add(HealthcheckServiceCollector::class)
@@ -201,6 +210,10 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [SelfRegistrationPublicRemovedApplicationHealthcheck::class])
             ->addMethodCall('addService', [HostAvailabilityCheckEnabledApplicationHealthcheck::class])
             ->addMethodCall('addService', [JsProdApplicationHealthcheck::class])
-            ->addMethodCall('addService', [EmailNotificationEnabledApplicationHealthcheck::class]);
+            ->addMethodCall('addService', [EmailNotificationEnabledApplicationHealthcheck::class])
+            ->addMethodCall('addService', [ConnectDatabaseHealthcheck::class])
+            ->addMethodCall('addService', [TablesCountDatabaseHealthcheck::class])
+            ->addMethodCall('addService', [DefaultContentDatabaseHealthcheck::class])
+            ->addMethodCall('addService', [SchemaUpToDateDatabaseHealthcheck::class]);
     }
 }

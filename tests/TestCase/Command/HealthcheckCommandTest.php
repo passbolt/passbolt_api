@@ -206,10 +206,10 @@ class HealthcheckCommandTest extends AppTestCase
         $this->exec('passbolt healthcheck -d default --database');
 
         $this->assertExitSuccess();
-        $this->assertOutputContains('not able to connect to the database');
-        $this->assertOutputContains('No table found');
-        $this->assertOutputContains('No default content found');
-        $this->assertOutputContains('database schema is not up to date');
+        $this->assertOutputContains('<error>[FAIL] The application is not able to connect to the database.');
+        $this->assertOutputContains('<error>[FAIL] No table found.</error>');
+        $this->assertOutputContains('<error>[FAIL] No default content found.</error>');
+        $this->assertOutputContains('<error>[FAIL] The database schema is not up to date.</error>');
         $this->assertOutputContains('4 error(s) found. Hang in there');
         /**
          * Clean up: Drop connection created for testing and reinstate default alias to 'test'.
@@ -227,10 +227,10 @@ class HealthcheckCommandTest extends AppTestCase
         $this->exec('passbolt healthcheck --database');
         $this->assertExitSuccess();
 
-        $this->assertOutputContains('The application is able to connect to the database');
-        $this->assertOutputContains('tables found');
-        $this->assertOutputContains('Some default content is present');
-        $this->assertOutputContains('The database schema up to date.');
+        $this->assertOutputContains('<success>[PASS]</success> The application is able to connect to the database');
+        $this->assertOutputContains(' tables found.');
+        $this->assertOutputContains('<success>[PASS]</success> Some default content is present');
+        $this->assertOutputContains('<success>[PASS]</success> The database schema up to date.');
     }
 
     // Note: This will pass when OLD way is removed

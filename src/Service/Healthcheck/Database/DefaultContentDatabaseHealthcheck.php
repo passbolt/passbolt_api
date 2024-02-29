@@ -18,24 +18,24 @@ declare(strict_types=1);
 namespace App\Service\Healthcheck\Database;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use Cake\Database\Exception as DatabaseException;
 use Cake\Database\Exception\MissingConnectionException;
 use Cake\Datasource\ConnectionManager;
 
-class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
+class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
 {
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $datasource = $this->getDatasource();
         try {
-            /** @var \Cake\Database\Connection $connection */
-            $connection = ConnectionManager::get($datasource);
-            $connection->getDriver()->connect();
-            $this->status = true;
-        } catch (MissingConnectionException $connectionError) {
-            // Do nothing
+            $nRoles = ConnectionManager::get($this->getDatasource())
+                ->selectQuery('id')
+                ->from('roles')
+                ->rowCountAndClose();
+            $this->status = ($nRoles >= 3);
+        } catch (DatabaseException | MissingConnectionException | \PDOException $e) {
         }
 
         return $this;
@@ -46,7 +46,7 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
      */
     public function getSuccessMessage(): string
     {
-        return __('The application is able to connect to the database');
+        return __('Some default content is present.');
     }
 
     /**
@@ -54,7 +54,7 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
      */
     public function getFailureMessage(): string
     {
-        return __('The application is not able to connect to the database.');
+        return __('No default content found.');
     }
 
     /**
@@ -63,11 +63,8 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     public function getHelpMessage()
     {
         return [
-            __(
-                'Double check the host, database name, username and password in {0}.',
-                CONFIG . 'passbolt.php'
-            ),
-            __('Make sure the database exists and is accessible for the given database user.'),
+            __('Run the install script to install the database tables'),
+            'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER,
         ];
     }
 }
