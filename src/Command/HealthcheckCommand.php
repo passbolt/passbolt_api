@@ -48,7 +48,7 @@ class HealthcheckCommand extends PassboltCommand
 //        'database',
 //        'gpg',
 //        'application',
-        'jwt',
+//        'jwt',
 //        'smtpSettings',
     ];
 
