@@ -261,12 +261,22 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> PHP GPG Module is installed and loaded.');
         $this->assertOutputContains('<success>[PASS]</success> The environment variable GNUPGHOME is set to /root/.gnupg.');
+        $this->assertOutputContains('<success>[PASS]</success> The directory /root/.gnupg containing the keyring is writable by the webserver user.');
         $this->assertOutputContains('<error>[FAIL] Do not use the default OpenPGP key for the server.</error>');
         $this->assertOutputContains('<success>[PASS]</success> The public key file is defined in /var/www/passbolt/config/passbolt.php and readable.');
         $this->assertOutputContains('<success>[PASS]</success> The private key file is defined in /var/www/passbolt/config/passbolt.php and readable.');
         $this->assertOutputContains('<success>[PASS]</success> The server key fingerprint matches the one defined in ');
         $this->assertOutputContains('<success>[PASS]</success> The server public key defined in the ' . CONFIG . 'passbolt.php (or environment variables) is in the keyring.');
         $this->assertOutputContains('<success>[PASS]</success> There is a valid email id defined for the server key.');
+        $this->assertOutputContains('<success>[PASS]</success> The public key can be used to encrypt a message.');
+        $this->assertOutputContains('<success>[PASS]</success> The public key can be used to encrypt a message.');
+        $this->assertOutputContains('<success>[PASS]</success> The private key can be used to sign a message.');
+        $this->assertOutputContains('<success>[PASS]</success> The public and private keys can be used to encrypt and sign a message.');
+        $this->assertOutputContains('<success>[PASS]</success> The private key can be used to decrypt a message.');
+        $this->assertOutputContains('<success>[PASS]</success> The private key can be used to decrypt and verify a message.');
+        $this->assertOutputContains('<success>[PASS]</success> The public key can be used to verify a signature.');
+        $this->assertOutputContains('<success>[PASS]</success> The server public key format is Gopengpg compatible.');
+        $this->assertOutputContains('<success>[PASS]</success> The server private key format is Gopengpg compatible.');
     }
 
     public function testHealthcheckCommand_Gpg_Failing_Path()

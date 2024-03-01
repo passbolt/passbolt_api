@@ -21,9 +21,9 @@ use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener;
+use Passbolt\SmtpSettings\Service\Healthcheck\SettingsValidationSmtpSettingsHealthcheck;
 use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsEndpointsDisabledHealthcheck;
 use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsSettingsSourceHealthcheck;
-use Passbolt\SmtpSettings\Service\Healthcheck\SettingsValidationSmtpSettingsHealthcheck;
 
 class SmtpSettingsPlugin extends BasePlugin
 {

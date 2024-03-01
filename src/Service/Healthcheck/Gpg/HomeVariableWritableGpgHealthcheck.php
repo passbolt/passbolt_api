@@ -18,32 +18,29 @@ declare(strict_types=1);
 namespace App\Service\Healthcheck\Gpg;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Healthcheck\SkipHealthcheckInterface;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 
-class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
+class HomeVariableWritableGpgHealthcheck extends HomeVariableDefinedGpgHealthcheck implements SkipHealthcheckInterface
 {
-    protected string $gpgHome;
+    private bool $isSkipped = false;
 
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->gpgHome = $this->getGpgHome();
-        if (is_null($this->gpgHome)) {
+        // Check if the GPG Home variable is well-defined and file exists
+        parent::check();
+        if ($this->status === false) {
+            $this->markAsSkipped();
+
             return $this;
         }
 
-        switch (Configure::read('passbolt.gpg.backend')) {
-            case OpenPGPBackendFactory::GNUPG:
-                $this->status = file_exists($this->getGpgHome());
-                break;
-            case OpenPGPBackendFactory::HTTP:
-                $this->status = true;
-                break;
-            default:
-                break;
+        if (Configure::read('passbolt.gpg.backend') === OpenPGPBackendFactory::GNUPG) {
+            $this->status = is_writable($this->gpgHome);
         }
 
         return $this;
@@ -54,7 +51,7 @@ class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getSuccessMessage(): string
     {
-        return __('The environment variable GNUPGHOME is set to {0}.', $this->gpgHome);
+        return __('The directory {0} containing the keyring is writable by the webserver user.', $this->gpgHome);
     }
 
     /**
@@ -63,7 +60,7 @@ class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
     public function getFailureMessage(): string
     {
         return __(
-            'The environment variable GNUPGHOME is set to {0}, but the directory does not exist.',
+            'The directory {0} containing the keyring is not writable by the webserver user.',
             $this->gpgHome
         );
     }
@@ -74,12 +71,26 @@ class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
     public function getHelpMessage()
     {
         return [
-            __('Ensure the keyring location exists and is accessible by the webserver user.'),
+            __('Ensure the keyring location is accessible by the webserver user.'),
             __('you can try:'),
-            'sudo mkdir -p ' . $this->gpgHome,
             'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $this->gpgHome,
             'sudo chmod 700 ' . $this->gpgHome,
-            __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function markAsSkipped(): void
+    {
+        $this->isSkipped = true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isSkipped(): bool
+    {
+        return $this->isSkipped;
     }
 }

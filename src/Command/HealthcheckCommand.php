@@ -20,6 +20,7 @@ use App\Service\Command\ProcessUserService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\Healthcheck\HealthcheckWithOptionsInterface;
+use App\Service\Healthcheck\SkipHealthcheckInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Healthchecks;
 use App\Utility\Healthchecks\CoreHealthchecks;
@@ -240,8 +241,7 @@ class HealthcheckCommand extends PassboltCommand
         $resultCollection = new Collection([]);
         foreach ($healthcheckServices as $healthcheckService) {
             $result = $healthcheckService->check();
-
-            $resultCollection = $resultCollection->appendItem($result);
+            $resultCollection = $this->appendResult($resultCollection, $result);
         }
 
         // Remove all dots
@@ -272,6 +272,23 @@ class HealthcheckCommand extends PassboltCommand
         $this->summary();
 
         return $this->successCode();
+    }
+
+    /**
+     * @param \Cake\Collection\Collection $resultCollection result collection
+     * @param \App\Service\Healthcheck\HealthcheckServiceInterface $result healthcheck
+     * @return \Cake\Collection\Collection
+     */
+    private function appendResult(Collection $resultCollection, HealthcheckServiceInterface $result): Collection
+    {
+        $skipResult = $result instanceof SkipHealthcheckInterface && $result->isSkipped();
+
+        if (!$skipResult) {
+            /** @var \Cake\Collection\Collection $resultCollection */
+            $resultCollection = $resultCollection->appendItem($result);
+        }
+
+        return $resultCollection;
     }
 
     /**
