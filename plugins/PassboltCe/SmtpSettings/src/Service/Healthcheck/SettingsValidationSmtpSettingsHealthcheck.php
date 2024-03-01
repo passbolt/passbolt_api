@@ -23,7 +23,7 @@ use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 
-class SmtpSettingsSettingsValidationHealthcheck implements HealthcheckServiceInterface
+class SettingsValidationSmtpSettingsHealthcheck implements HealthcheckServiceInterface
 {
     /**
      * Status of this health check if it is passed or failed.

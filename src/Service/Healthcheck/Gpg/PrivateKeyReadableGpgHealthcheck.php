@@ -19,23 +19,14 @@ namespace App\Service\Healthcheck\Gpg;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
-class GpgKeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
+class PrivateKeyReadableGpgHealthcheck extends AbstractGpgHealthcheck
 {
-    protected bool $isGpgkeyDefined = false;
-
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $fingerprint = $this->getServerKeyFingerprint();
-        $this-> isGpgkeyDefined = !is_null($fingerprint);
-        if (!$this->isGpgkeyDefined) {
-            return $this;
-        }
-
-        $default = '2FC8945833C51946E937F9FED47B0811573EE67E';
-        $this->status = ($fingerprint !== $default);
+        $this->status = $this->isPrivateServerKeyReadable();
 
         return $this;
     }
@@ -45,7 +36,7 @@ class GpgKeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getSuccessMessage(): string
     {
-        return __('The server OpenPGP key is not the default one.');
+        return __('The private key file is defined in {0} and readable.', CONFIG . 'passbolt.php');
     }
 
     /**
@@ -53,11 +44,7 @@ class GpgKeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getFailureMessage(): string
     {
-        if ($this->isGpgkeyDefined) {
-            return __('Do not use the default OpenPGP key for the server.');
-        }
-
-        return __('The server OpenPGP key is not set.');
+        return __('The private key file is not defined in {0} or not readable.', CONFIG . 'passbolt.php');
     }
 
     /**
@@ -66,7 +53,9 @@ class GpgKeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
     public function getHelpMessage()
     {
         return [
-            __('Create a key, export it and add the fingerprint to {0}', CONFIG . 'passbolt.php'),
+            __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore
+            __('Ensure there is a private key armored block in the key file.'),
+            __('Ensure the private key defined in {0} exists and is accessible by the webserver user.', CONFIG . 'passbolt.php'),// phpcs:ignore
             __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
         ];
     }

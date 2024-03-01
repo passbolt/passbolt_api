@@ -23,7 +23,7 @@ use Cake\Core\PluginApplicationInterface;
 use Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener;
 use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsEndpointsDisabledHealthcheck;
 use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsSettingsSourceHealthcheck;
-use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsSettingsValidationHealthcheck;
+use Passbolt\SmtpSettings\Service\Healthcheck\SettingsValidationSmtpSettingsHealthcheck;
 
 class SmtpSettingsPlugin extends BasePlugin
 {
@@ -43,12 +43,12 @@ class SmtpSettingsPlugin extends BasePlugin
      */
     public function services(ContainerInterface $container): void
     {
-        $container->add(SmtpSettingsSettingsValidationHealthcheck::class);
+        $container->add(SettingsValidationSmtpSettingsHealthcheck::class);
         $container->add(SmtpSettingsSettingsSourceHealthcheck::class);
         $container->add(SmtpSettingsEndpointsDisabledHealthcheck::class);
         $container
             ->extend(HealthcheckServiceCollector::class)
-            ->addMethodCall('addService', [SmtpSettingsSettingsValidationHealthcheck::class])
+            ->addMethodCall('addService', [SettingsValidationSmtpSettingsHealthcheck::class])
             ->addMethodCall('addService', [SmtpSettingsSettingsSourceHealthcheck::class])
             ->addMethodCall('addService', [SmtpSettingsEndpointsDisabledHealthcheck::class]);
     }

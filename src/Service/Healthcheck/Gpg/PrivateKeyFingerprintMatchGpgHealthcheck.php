@@ -20,7 +20,7 @@ namespace App\Service\Healthcheck\Gpg;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 
-class GpgPublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
+class PrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
 {
     /**
      * @inheritDoc
@@ -28,15 +28,12 @@ class GpgPublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
     public function check(): HealthcheckServiceInterface
     {
         $fingerprint = $this->getServerKeyFingerprint();
-        if (!$this->getGpgHome() || $fingerprint === null) {
-            return $this;
+        if ($this->isPublicServerKeyReadable() && $this->isPrivateServerKeyReadable() && is_string($fingerprint)) {
+            $gpg = OpenPGPBackendFactory::get();
+            $privateKeyData = file_get_contents($this->getPrivateServerKey());
+            $privateKeyInfo = $gpg->getKeyInfo($privateKeyData);
+            $this->status = ($privateKeyInfo['fingerprint'] === $this->getServerKeyFingerprint());
         }
-        $gpg = OpenPGPBackendFactory::get();
-        if (!$gpg->isKeyInKeyring($fingerprint)) {
-            return $this;
-        }
-
-        $this->status = true;
 
         return $this;
     }
@@ -46,7 +43,7 @@ class GpgPublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getSuccessMessage(): string
     {
-        return __('The server public key defined in the {0} (or environment variables) is in the keyring.', CONFIG . 'passbolt.php');// phpcs:ignore
+        return __('The server key fingerprint matches the one defined in {0}.', CONFIG . 'passbolt.php');
     }
 
     /**
@@ -54,7 +51,7 @@ class GpgPublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getFailureMessage(): string
     {
-        return __('The server public key defined in the {0} (or environment variables) is not in the keyring', CONFIG . 'passbolt.php');// phpcs:ignore
+        return __('The server key fingerprint doesn\'t match the one defined in {0}.', CONFIG . 'passbolt.php');
     }
 
     /**
@@ -63,9 +60,10 @@ class GpgPublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
     public function getHelpMessage()
     {
         return [
-            __('Import the private server key in the keyring of the webserver user.'),
-            __('you can try:'),
-            'sudo su -s /bin/bash -c "gpg --home ' . $this->getGpgHome() . ' --import ' . $this->getPrivateServerKey() . '" ' . PROCESS_USER,// phpcs:ignore
+            __('Double check the key fingerprint, example: '),
+            'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $this->getGpgHome() . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',// phpcs:ignore
+            __('SERVER_KEY_EMAIL: The email you used when you generated the server key.'),
+            __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
         ];
     }
 }

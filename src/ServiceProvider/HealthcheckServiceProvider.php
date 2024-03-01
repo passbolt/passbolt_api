@@ -48,13 +48,13 @@ use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\PcreHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\TmpFolderWritableHealthcheck;
-use App\Service\Healthcheck\Gpg\GpgHomeVariableDefinedGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\GpgKeyNotDefaultGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\GpgPrivateKeyFingerprintMatchGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\GpgPrivateKeyReadableGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\GpgPublicKeyEmailGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\GpgPublicKeyInKeyringGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\GpgPublicKeyReadableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\KeyNotDefaultGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PrivateKeyFingerprintMatchGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PrivateKeyReadableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PublicKeyEmailGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PublicKeyInKeyringGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PublicKeyReadableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\Jwt\PluginEnabledJwtHealthcheck;
@@ -141,13 +141,13 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(PluginEnabledJwtHealthcheck::class);
         // Gpg health checks
         $container->add(PhpGpgModuleInstalledGpgHealthcheck::class);
-        $container->add(GpgHomeVariableDefinedGpgHealthcheck::class);
-        $container->add(GpgKeyNotDefaultGpgHealthcheck::class);
-        $container->add(GpgPublicKeyReadableGpgHealthcheck::class);
-        $container->add(GpgPrivateKeyReadableGpgHealthcheck::class);
-        $container->add(GpgPrivateKeyFingerprintMatchGpgHealthcheck::class);
-        $container->add(GpgPublicKeyInKeyringGpgHealthcheck::class);
-        $container->add(GpgPublicKeyEmailGpgHealthcheck::class);
+        $container->add(HomeVariableDefinedGpgHealthcheck::class);
+        $container->add(KeyNotDefaultGpgHealthcheck::class);
+        $container->add(PublicKeyReadableGpgHealthcheck::class);
+        $container->add(PrivateKeyReadableGpgHealthcheck::class);
+        $container->add(PrivateKeyFingerprintMatchGpgHealthcheck::class);
+        $container->add(PublicKeyInKeyringGpgHealthcheck::class);
+        $container->add(PublicKeyEmailGpgHealthcheck::class);
         // Application health checks
         $container->add(LatestVersionApplicationHealthcheck::class);
         $container->add(SslForceApplicationHealthcheck::class);
@@ -197,13 +197,13 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [PluginEnabledSmtpSettingsHealthcheck::class])
             ->addMethodCall('addService', [PluginEnabledJwtHealthcheck::class])
             ->addMethodCall('addService', [PhpGpgModuleInstalledGpgHealthcheck::class])
-            ->addMethodCall('addService', [GpgHomeVariableDefinedGpgHealthcheck::class])
-            ->addMethodCall('addService', [GpgKeyNotDefaultGpgHealthcheck::class])
-            ->addMethodCall('addService', [GpgPublicKeyReadableGpgHealthcheck::class])
-            ->addMethodCall('addService', [GpgPrivateKeyReadableGpgHealthcheck::class])
-            ->addMethodCall('addService', [GpgPrivateKeyFingerprintMatchGpgHealthcheck::class])
-            ->addMethodCall('addService', [GpgPublicKeyInKeyringGpgHealthcheck::class])
-            ->addMethodCall('addService', [GpgPublicKeyEmailGpgHealthcheck::class])
+            ->addMethodCall('addService', [HomeVariableDefinedGpgHealthcheck::class])
+            ->addMethodCall('addService', [KeyNotDefaultGpgHealthcheck::class])
+            ->addMethodCall('addService', [PublicKeyReadableGpgHealthcheck::class])
+            ->addMethodCall('addService', [PrivateKeyReadableGpgHealthcheck::class])
+            ->addMethodCall('addService', [PrivateKeyFingerprintMatchGpgHealthcheck::class])
+            ->addMethodCall('addService', [PublicKeyInKeyringGpgHealthcheck::class])
+            ->addMethodCall('addService', [PublicKeyEmailGpgHealthcheck::class])
             ->addMethodCall('addService', [LatestVersionApplicationHealthcheck::class])
             ->addMethodCall('addService', [SslForceApplicationHealthcheck::class])
             ->addMethodCall('addService', [SslFullBaseUrlApplicationHealthcheck::class])

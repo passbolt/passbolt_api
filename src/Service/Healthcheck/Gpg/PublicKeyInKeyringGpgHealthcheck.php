@@ -19,32 +19,24 @@ namespace App\Service\Healthcheck\Gpg;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\Core\Configure;
 
-class GpgHomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
+class PublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
 {
-    private string $gpgHome;
-
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->gpgHome = $this->getGpgHome();
-        if (is_null($this->gpgHome)) {
+        $fingerprint = $this->getServerKeyFingerprint();
+        if (!$this->getGpgHome() || $fingerprint === null) {
+            return $this;
+        }
+        $gpg = OpenPGPBackendFactory::get();
+        if (!$gpg->isKeyInKeyring($fingerprint)) {
             return $this;
         }
 
-        switch (Configure::read('passbolt.gpg.backend')) {
-            case OpenPGPBackendFactory::GNUPG:
-                $this->status = file_exists($this->getGpgHome());
-                break;
-            case OpenPGPBackendFactory::HTTP:
-                $this->status = true;
-                break;
-            default:
-                break;
-        }
+        $this->status = true;
 
         return $this;
     }
@@ -54,7 +46,7 @@ class GpgHomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getSuccessMessage(): string
     {
-        return __('The environment variable GNUPGHOME is set to {0}.', $this->gpgHome);
+        return __('The server public key defined in the {0} (or environment variables) is in the keyring.', CONFIG . 'passbolt.php');// phpcs:ignore
     }
 
     /**
@@ -62,10 +54,7 @@ class GpgHomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getFailureMessage(): string
     {
-        return __(
-            'The environment variable GNUPGHOME is set to {0}, but the directory does not exist.',
-            $this->gpgHome
-        );
+        return __('The server public key defined in the {0} (or environment variables) is not in the keyring', CONFIG . 'passbolt.php');// phpcs:ignore
     }
 
     /**
@@ -74,12 +63,9 @@ class GpgHomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
     public function getHelpMessage()
     {
         return [
-            __('Ensure the keyring location exists and is accessible by the webserver user.'),
+            __('Import the private server key in the keyring of the webserver user.'),
             __('you can try:'),
-            'sudo mkdir -p ' . $this->gpgHome,
-            'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $this->gpgHome,
-            'sudo chmod 700 ' . $this->gpgHome,
-            __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore
+            'sudo su -s /bin/bash -c "gpg --home ' . $this->getGpgHome() . ' --import ' . $this->getPrivateServerKey() . '" ' . PROCESS_USER,// phpcs:ignore
         ];
     }
 }

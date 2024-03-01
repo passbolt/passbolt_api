@@ -18,24 +18,15 @@ declare(strict_types=1);
 namespace App\Service\Healthcheck\Gpg;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Service\OpenPGP\PublicKeyValidationService;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 
-class GpgPublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
+class PublicKeyReadableGpgHealthcheck extends AbstractGpgHealthcheck
 {
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $fingerprint = $this->getServerKeyFingerprint();
-        if ($this->isPublicServerKeyReadable() && $this->isPrivateServerKeyReadable() && is_string($fingerprint)) {
-            $gpg = OpenPGPBackendFactory::get();
-            $publicKeyData = file_get_contents($this->getPublicServerKey());
-            $publicKeyInfo = $gpg->getPublicKeyInfo($publicKeyData);
-            $this->status = is_string($publicKeyInfo['uid']) &&
-                PublicKeyValidationService::uidContainValidEmail($publicKeyInfo['uid']);
-        }
+        $this->status = $this->isPublicServerKeyReadable();
 
         return $this;
     }
@@ -45,7 +36,7 @@ class GpgPublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getSuccessMessage(): string
     {
-        return __('There is a valid email id defined for the server key.');
+        return __('The public key file is defined in {0} and readable.', CONFIG . 'passbolt.php');
     }
 
     /**
@@ -53,7 +44,7 @@ class GpgPublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getFailureMessage(): string
     {
-        return __('The server key does not have a valid email id.');
+        return __('The public key file is not defined in {0} or not readable.', CONFIG . 'passbolt.php');
     }
 
     /**
@@ -61,6 +52,11 @@ class GpgPublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getHelpMessage()
     {
-        return 'Edit or generate another key with a valid email id.';
+        return [
+            __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore
+            __('Ensure there is a public key armored block in the key file.'),
+            __('Ensure the public key defined in {0} exists and is accessible by the webserver user.', CONFIG . 'passbolt.php'),// phpcs:ignore
+            __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
+        ];
     }
 }

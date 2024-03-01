@@ -18,22 +18,24 @@ declare(strict_types=1);
 namespace App\Service\Healthcheck\Gpg;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 
-class GpgPrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
+class KeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
 {
+    protected bool $isGpgkeyDefined = false;
+
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
         $fingerprint = $this->getServerKeyFingerprint();
-        if ($this->isPublicServerKeyReadable() && $this->isPrivateServerKeyReadable() && is_string($fingerprint)) {
-            $gpg = OpenPGPBackendFactory::get();
-            $privateKeyData = file_get_contents($this->getPrivateServerKey());
-            $privateKeyInfo = $gpg->getKeyInfo($privateKeyData);
-            $this->status = ($privateKeyInfo['fingerprint'] === $this->getServerKeyFingerprint());
+        $this-> isGpgkeyDefined = !is_null($fingerprint);
+        if (!$this->isGpgkeyDefined) {
+            return $this;
         }
+
+        $default = '2FC8945833C51946E937F9FED47B0811573EE67E';
+        $this->status = ($fingerprint !== $default);
 
         return $this;
     }
@@ -43,7 +45,7 @@ class GpgPrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getSuccessMessage(): string
     {
-        return __('The server key fingerprint matches the one defined in {0}.', CONFIG . 'passbolt.php');
+        return __('The server OpenPGP key is not the default one.');
     }
 
     /**
@@ -51,7 +53,11 @@ class GpgPrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getFailureMessage(): string
     {
-        return __('The server key fingerprint doesn\'t match the one defined in {0}.', CONFIG . 'passbolt.php');
+        if ($this->isGpgkeyDefined) {
+            return __('Do not use the default OpenPGP key for the server.');
+        }
+
+        return __('The server OpenPGP key is not set.');
     }
 
     /**
@@ -60,9 +66,7 @@ class GpgPrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
     public function getHelpMessage()
     {
         return [
-            __('Double check the key fingerprint, example: '),
-            'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $this->getGpgHome() . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',// phpcs:ignore
-            __('SERVER_KEY_EMAIL: The email you used when you generated the server key.'),
+            __('Create a key, export it and add the fingerprint to {0}', CONFIG . 'passbolt.php'),
             __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
         ];
     }

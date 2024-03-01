@@ -19,24 +19,24 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Service\Healthcheck;
 
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsSettingsValidationHealthcheck;
+use Passbolt\SmtpSettings\Service\Healthcheck\SettingsValidationSmtpSettingsHealthcheck;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 /**
  * @covers \Passbolt\SmtpSettings\Service\SmtpSettingsHealthcheckService
  */
-class SmtpSettingsSettingsValidationHealthcheckTest extends TestCase
+class SettingsValidationSmtpSettingsHealthcheckTest extends TestCase
 {
     use SmtpSettingsTestTrait;
     use TruncateDirtyTables;
 
-    protected SmtpSettingsSettingsValidationHealthcheck $service;
+    protected SettingsValidationSmtpSettingsHealthcheck $service;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new SmtpSettingsSettingsValidationHealthcheck($this->dummyPassboltFile);
+        $this->service = new SettingsValidationSmtpSettingsHealthcheck($this->dummyPassboltFile);
     }
 
     public function tearDown(): void
@@ -46,7 +46,7 @@ class SmtpSettingsSettingsValidationHealthcheckTest extends TestCase
         parent::tearDown();
     }
 
-    public function testSmtpSettingsSettingsValidationHealthcheck_Valid_DB()
+    public function testSettingsValidationSmtpSettings_Valid_DB()
     {
         $data = $this->getSmtpSettingsData();
         $this->encryptAndPersistSmtpSettings($data);
@@ -55,7 +55,7 @@ class SmtpSettingsSettingsValidationHealthcheckTest extends TestCase
         $this->assertTrue($this->service->isPassed());
     }
 
-    public function testSmtpSettingsSettingsValidationHealthcheck_Invalid_DB()
+    public function testSettingsValidationSmtpSettings_Invalid_DB()
     {
         $data = $this->getSmtpSettingsData('port', 0);
         $this->encryptAndPersistSmtpSettings($data);
@@ -68,7 +68,7 @@ class SmtpSettingsSettingsValidationHealthcheckTest extends TestCase
         );
     }
 
-    public function testSmtpSettingsSettingsValidationHealthcheck_Decryption_Error()
+    public function testSettingsValidationSmtpSettings_Decryption_Error()
     {
         // Invalid settings
         SmtpSettingFactory::make()->persist();
