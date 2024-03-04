@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Command\RegisterUserCommand;
 use App\Model\Entity\Role;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
@@ -47,13 +46,6 @@ class RegisterUserCommandTest extends AppTestCase
         $this->useCommandRunner();
         $this->loadNotificationSettings();
         $this->mockProcessUserService('www-data');
-    }
-
-    public function tearDown(): void
-    {
-        RegisterUserCommand::$isUserRoot = null;
-
-        parent::tearDown();
     }
 
     /**

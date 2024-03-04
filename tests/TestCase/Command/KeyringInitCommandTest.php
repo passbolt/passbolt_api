@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Command\KeyringInitCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -45,13 +44,6 @@ class KeyringInitCommandTest extends AppTestCase
         $this->useCommandRunner();
         $this->key = Configure::read('passbolt.gpg.serverKey.private');
         $this->mockProcessUserService('www-data');
-    }
-
-    public function tearDown(): void
-    {
-        KeyringInitCommand::$isUserRoot = null;
-
-        parent::tearDown();
     }
 
     /**

@@ -87,7 +87,7 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface
      */
     public function getFailureMessage(): string
     {
-        return __('SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue.');
+        return __('SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue.'); // phpcs:ignore
     }
 
     /**

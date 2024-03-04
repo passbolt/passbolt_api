@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
-use App\Command\HealthcheckCommand;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
@@ -28,6 +28,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
     use SmtpSettingsTestTrait;
+    use PassboltCommandTestTrait;
 
     /**
      * setUp method
@@ -38,7 +39,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        HealthcheckCommand::$isUserRoot = false;
+        $this->mockProcessUserService('www-data');
     }
 
     public function testHealthcheckCommand_SmtpSettings_Plugin_Disabled()

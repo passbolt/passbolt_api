@@ -45,7 +45,6 @@ class MigratePostgresCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        MigratePostgresCommand::$isUserRoot = null;
         $this->mockProcessUserService('www-data');
     }
 

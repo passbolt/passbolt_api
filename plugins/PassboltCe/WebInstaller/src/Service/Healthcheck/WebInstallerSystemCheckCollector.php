@@ -23,7 +23,7 @@ use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 
-class SystemCheckServiceCollector
+class WebInstallerSystemCheckCollector
 {
     private HealthcheckServiceCollector $healthcheckServiceCollector;
 
@@ -41,6 +41,16 @@ class SystemCheckServiceCollector
 
     private IsSslWebInstallerHealthcheck $isSslWebInstallerHealthcheck;
 
+    /**
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check collector.
+     * @param \App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck $phpGpgModuleInstalledGpgHealthcheck Health check service.
+     * @param \App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck $homeVariableDefinedGpgHealthcheck Health check service.
+     * @param \App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck $homeVariableWritableGpgHealthcheck Health check service.
+     * @param \Passbolt\WebInstaller\Service\Healthcheck\PassboltConfigWritableWebInstallerHealthcheck $configWritableWebInstallerHealthcheck Health check service.
+     * @param \Passbolt\WebInstaller\Service\Healthcheck\PublicKeyWritableWebInstallerHealthcheck $publicKeyWritableWebInstallerHealthcheck Health check service.
+     * @param \Passbolt\WebInstaller\Service\Healthcheck\PrivateKeyWritableWebInstallerHealthcheck $privateKeyWritableWebInstallerHealthcheck Health check service.
+     * @param \Passbolt\WebInstaller\Service\Healthcheck\IsSslWebInstallerHealthcheck $isSslWebInstallerHealthcheck Health check service.
+     */
     public function __construct(
         HealthcheckServiceCollector $healthcheckServiceCollector,
         // GPG specific checks

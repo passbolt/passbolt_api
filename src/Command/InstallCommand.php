@@ -195,7 +195,7 @@ class InstallCommand extends PassboltCommand
             ];
 
             $result = $this->executeCommand(
-                RegisterUserCommand::class,
+                RegisterUserCommand::class, // TODO: Fix this, breaks testInstallCommandNormalForceWithAdminData
                 $this->formatOptions($args, $options),
                 $io
             );

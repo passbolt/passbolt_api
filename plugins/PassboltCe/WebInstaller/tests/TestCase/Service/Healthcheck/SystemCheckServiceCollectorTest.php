@@ -39,10 +39,10 @@ use Passbolt\WebInstaller\Service\Healthcheck\IsSslWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PassboltConfigWritableWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PrivateKeyWritableWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PublicKeyWritableWebInstallerHealthcheck;
-use Passbolt\WebInstaller\Service\Healthcheck\SystemCheckServiceCollector;
+use Passbolt\WebInstaller\Service\Healthcheck\WebInstallerSystemCheckCollector;
 
 /**
- * @covers \Passbolt\WebInstaller\Service\Healthcheck\SystemCheckServiceCollector
+ * @covers \Passbolt\WebInstaller\Service\Healthcheck\WebInstallerSystemCheckCollector
  */
 class SystemCheckServiceCollectorTest extends AppTestCase
 {
@@ -87,7 +87,7 @@ class SystemCheckServiceCollectorTest extends AppTestCase
         $request = $this->getMockBuilder(ServerRequest::class)->getMock();
         $request->method('is')->willReturn(true);
 
-        $systemCheckServiceCollector = new SystemCheckServiceCollector(
+        $systemCheckServiceCollector = new WebInstallerSystemCheckCollector(
             $healthcheckServiceCollector,
             new PhpGpgModuleInstalledGpgHealthcheck(),
             new HomeVariableDefinedGpgHealthcheck(),

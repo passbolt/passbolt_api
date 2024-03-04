@@ -29,7 +29,7 @@ use Passbolt\WebInstaller\Service\Healthcheck\IsSslWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PassboltConfigWritableWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PrivateKeyWritableWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PublicKeyWritableWebInstallerHealthcheck;
-use Passbolt\WebInstaller\Service\Healthcheck\SystemCheckServiceCollector;
+use Passbolt\WebInstaller\Service\Healthcheck\WebInstallerSystemCheckCollector;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 
 class WebInstallerPlugin extends BasePlugin
@@ -59,7 +59,7 @@ class WebInstallerPlugin extends BasePlugin
         $container->add(PrivateKeyWritableWebInstallerHealthcheck::class);
         $container->add(IsSslWebInstallerHealthcheck::class)->addArgument(ServerRequest::class);
 
-        $container->add(SystemCheckServiceCollector::class)
+        $container->add(WebInstallerSystemCheckCollector::class)
             ->addArgument(HealthcheckServiceCollector::class)
             ->addArgument(PhpGpgModuleInstalledGpgHealthcheck::class)
             ->addArgument(HomeVariableDefinedGpgHealthcheck::class)

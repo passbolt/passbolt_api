@@ -18,17 +18,17 @@ namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Collection\Collection;
 use Cake\Routing\Router;
-use Passbolt\WebInstaller\Service\Healthcheck\SystemCheckServiceCollector;
+use Passbolt\WebInstaller\Service\Healthcheck\WebInstallerSystemCheckCollector;
 
 class SystemCheckController extends WebInstallerController
 {
     /**
      * Index
      *
-     * @param \Passbolt\WebInstaller\Service\Healthcheck\SystemCheckServiceCollector $systemCheckServiceCollector System check service collector.
+     * @param \Passbolt\WebInstaller\Service\Healthcheck\WebInstallerSystemCheckCollector $systemCheckServiceCollector System check service collector.
      * @return void
      */
-    public function index(SystemCheckServiceCollector $systemCheckServiceCollector)
+    public function index(WebInstallerSystemCheckCollector $systemCheckServiceCollector)
     {
         $healthcheckServices = $systemCheckServiceCollector->getServices();
 

@@ -16,8 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Test\TestCase\Command;
 
-use App\Command\HealthcheckCommand;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
@@ -25,6 +25,7 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 class JwtHealthcheckCommandTest extends AppTestCase
 {
     use ConsoleIntegrationTestTrait;
+    use PassboltCommandTestTrait;
 
     /**
      * setUp method
@@ -35,7 +36,7 @@ class JwtHealthcheckCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        HealthcheckCommand::$isUserRoot = false;
+        $this->mockProcessUserService('www-data');
     }
 
     public function testHealthcheckCommand_Jwt_Plugin_Disabled()

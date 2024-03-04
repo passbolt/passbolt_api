@@ -19,7 +19,6 @@ namespace App\Test\TestCase\Command;
 use App\Command\HealthcheckCommand;
 use App\Model\Table\RolesTable;
 use App\Model\Validation\EmailValidationRule;
-use App\Service\Command\ProcessUserService;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
@@ -53,14 +52,7 @@ class HealthcheckCommandTest extends AppTestCase
         parent::setUp();
 
         $this->useCommandRunner();
-        $this->mockService(ProcessUserService::class, function () {
-            $stub = $this->getMockBuilder(ProcessUserService::class)
-                ->onlyMethods(['getName'])
-                ->getMock();
-            $stub->method('getName')->willReturn('www-data');
-
-            return $stub;
-        });
+        $this->mockProcessUserService('www-data');
     }
 
     /**
@@ -72,7 +64,6 @@ class HealthcheckCommandTest extends AppTestCase
 
         // Reset state
         TableRegistry::getTableLocator()->clear();
-        HealthcheckCommand::$isUserRoot = null;
     }
 
     /**

@@ -29,11 +29,6 @@ use Cake\Core\Configure;
 class PassboltCommand extends Command
 {
     /**
-     * @var bool|null
-     */
-    public static $isUserRoot = null;
-
-    /**
      * The Passbolt welcome banner should be shown only once.
      * This is a memory cell to that aim.
      *
@@ -61,10 +56,6 @@ class PassboltCommand extends Command
         parent::initialize();
 
         CommandBootstrap::init();
-
-        if (self::$isUserRoot === null) {
-            self::$isUserRoot = ($this->processUserService->getName() === 'root');
-        }
     }
 
     /**
@@ -245,7 +236,7 @@ class PassboltCommand extends Command
      */
     protected function assertCurrentProcessUser(ConsoleIo $io, ProcessUserService $processUserService)
     {
-        if (!$this->assertNotRoot($io)) {
+        if (!$this->assertNotRoot($processUserService, $io)) {
             $this->error(__('aborting'), $io);
             $this->abort();
         }
@@ -271,12 +262,13 @@ class PassboltCommand extends Command
      * Some of the passbolt commands shouldn't be executed as root.
      * By instance it's the case of the healthcheck command that needs to be executed with the same user as your web server.
      *
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return bool true if user is root
      */
-    protected function assertNotRoot(ConsoleIo $io): bool
+    protected function assertNotRoot(ProcessUserService $processUserService, ConsoleIo $io): bool
     {
-        if (self::$isUserRoot) {
+        if ($processUserService->getName() === 'root') {
             $io->out();
             $this->error('Passbolt commands cannot be executed as root.', $io);
             $io->out();

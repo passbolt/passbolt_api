@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Command\InstallCommand;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
@@ -58,7 +57,6 @@ class InstallCommandTest extends AppTestCase
     public function tearDown(): void
     {
         parent::tearDown();
-        InstallCommand::$isUserRoot = null;
         $this->disableFeaturePlugin('JwtAuthentication');
     }
 
