@@ -194,8 +194,9 @@ class InstallCommand extends PassboltCommand
                 '--last-name', $args->getOption('admin-last-name'),
             ];
 
+            $registerUserCommand = new RegisterUserCommand($this->processUserService);
             $result = $this->executeCommand(
-                RegisterUserCommand::class, // TODO: Fix this, breaks testInstallCommandNormalForceWithAdminData
+                $registerUserCommand,
                 $this->formatOptions($args, $options),
                 $io
             );
