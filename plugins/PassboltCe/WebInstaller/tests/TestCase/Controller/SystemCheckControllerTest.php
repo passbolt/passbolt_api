@@ -18,6 +18,7 @@ namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
+use Cake\Http\ServerRequest;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
 
 class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
@@ -35,6 +36,10 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
      */
     public function testWebInstallerSystemCheckViewSuccess()
     {
+        $this->mockService(ServerRequest::class, function () {
+            return (new ServerRequest())->withEnv('HTTPS', 'on');
+        });
+
         $this->get('/install/system_check');
 
         $data = $this->_getBodyAsString();
@@ -74,6 +79,10 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
      */
     public function testWebInstallerSystemCheckViewSuccess_LicensePluginEnabled()
     {
+        $this->mockService(ServerRequest::class, function () {
+            return (new ServerRequest())->withEnv('HTTPS', 'on');
+        });
+
         $this->get('/install/system_check');
 
         $data = $this->_getBodyAsString();

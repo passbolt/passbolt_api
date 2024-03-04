@@ -16,57 +16,39 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use App\Utility\Healthchecks;
+use Cake\Collection\Collection;
 use Cake\Routing\Router;
-use Passbolt\WebInstaller\Utility\WebInstallerHealthchecks;
+use Passbolt\WebInstaller\Service\Healthcheck\SystemCheckServiceCollector;
 
 class SystemCheckController extends WebInstallerController
 {
     /**
      * Index
      *
+     * @param \Passbolt\WebInstaller\Service\Healthcheck\SystemCheckServiceCollector $systemCheckServiceCollector System check service collector.
      * @return void
      */
-    public function index()
+    public function index(SystemCheckServiceCollector $systemCheckServiceCollector)
     {
-        // TODO: Refactor this
-        $checks = Healthchecks::environment();
-        $gpgChecks = Healthchecks::gpg();
-        $webInstallerCheck = WebInstallerHealthchecks::all();
-        $checks = array_merge($checks, $gpgChecks, $webInstallerCheck);
-        $checks['ssl'] = ['is' => $this->request->is('ssl')];
-        $checks['system_ok'] = $this->_healthcheckIsOk($checks);
+        $healthcheckServices = $systemCheckServiceCollector->getServices();
+
+        $resultCollection = new Collection([]);
+        foreach ($healthcheckServices as $healthcheckService) {
+            $result = $healthcheckService->check();
+
+            $resultCollection = $resultCollection->appendItem($result);
+        }
+
+        $isSystemOk = $resultCollection->every(function ($healthcheckResult) {
+            /** @var \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckResult */
+            return $healthcheckResult->isPassed();
+        });
 
         $nextStepUrl = Router::url('/install/database', true);
         $this->webInstaller->setSettingsAndSave('initialized', true);
-        $this->set('data', $checks);
+        $this->set('resultCollection', $resultCollection);
+        $this->set('isSystemOk', $isSystemOk);
         $this->set('nextStepUrl', $nextStepUrl);
         $this->render('Pages/system_check');
-    }
-
-    /**
-     * Check if healthcheck values are good enough to continue installation.
-     *
-     * @param array $checks checks
-     * @return bool
-     */
-    protected function _healthcheckIsOk($checks)
-    {
-        // Do not block installation if this check fails
-        unset($checks['environment']['nextMinPhpVersion']);
-
-        $envCheckResults = array_values($checks['environment']);
-
-        $webInstallerChecksResults = array_values($checks['webInstaller']);
-        $gpgKeys = ['lib', 'gpgHome', 'gpgHomeWritable'];
-        $gpgChecks = [];
-        foreach ($gpgKeys as $gpgKey) {
-            $gpgChecks[$gpgKey] = $checks['gpg'][$gpgKey];
-        }
-        $gpgCheckResults = array_values($gpgChecks);
-        $allChecks = array_merge($envCheckResults, $gpgCheckResults, $webInstallerChecksResults);
-        sort($allChecks);
-
-        return $allChecks[0] ? true : false;
     }
 }

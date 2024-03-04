@@ -297,7 +297,7 @@ class HealthcheckCommand extends PassboltCommand
      * @param \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckService Health check service.
      * @return void
      */
-    private function render(HealthcheckServiceInterface $healthcheckService): void
+    public function render(HealthcheckServiceInterface $healthcheckService): void
     {
         switch ($healthcheckService->level()) {
             case 'error':

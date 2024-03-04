@@ -29,12 +29,14 @@ class HealthcheckServiceCollector
     /**
      * List of all available health check domains.
      */
+    public const DOMAIN_ENVIRONMENT = 'environment';
     public const DOMAIN_APPLICATION = 'application';
     public const DOMAIN_SSL = 'ssl';
     public const DOMAIN_SMTP_SETTINGS = 'smtpSettings';
     public const DOMAIN_DATABASE = 'database';
     public const DOMAIN_GPG = 'gpg';
     public const DOMAIN_JWT = 'jwt';
+    public const DOMAIN_WEB_INSTALLER = 'web_installer';
 
     /**
      * List of all available levels for health check results.

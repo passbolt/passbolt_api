@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 /**
  * @var \App\View\AppView $this
- * @var array $data
+ * @var bool $isSystemOk
  * @var string $nextStepUrl
+ * @var \Cake\Collection\Collection $resultCollection
  */
+
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Passbolt\WebInstaller\View\Helper\HealthcheckHtmlHelper;
 
-$healtcheck = new HealthcheckHtmlHelper();
+$healtcheckHelper = new HealthcheckHtmlHelper();
 ?>
 <?= $this->element('header', ['title' => __('Welcome to Passbolt Pro! Let\'s get started with the configuration.')]) ?>
 <div class="panel main ">
@@ -22,56 +25,42 @@ $healtcheck = new HealthcheckHtmlHelper();
             <div class="row">
                 <div class="col7">
                     <?php
-                    if ($data['system_ok']) :
-                        ?>
-                    <h2><?php echo __('Nice one! Your environment is ready for passbolt.'); ?></h2>
-                        <?php
+                    if ($isSystemOk) :
+                        echo '<h2>' . __('Nice one! Your environment is ready for passbolt.') . '</h2>';
                     else :
-                        ?>
-                    <h2><?php echo __('Oops!! Passbolt cannot run yet on your server.'); ?></h2>
-                        <?php
+                        echo '<h2>' . __('Oops!! Passbolt cannot run yet on your server.') . '</h2>';
                     endif;
                     ?>
+
                     <?= $this->Flash->render() ?>
+
                     <?php
-                    if (!$data['system_ok']) {
-                        $healtcheck->assertEnvironment($data);
-                    } elseif ($data['system_ok'] && !$data['environment']['nextMinPhpVersion']) {
-                        $healtcheck->assertEnvironment($data);
-                    } else {
+                    if ($isSystemOk) {
                         echo '<div class="message success">' . __('Environment is configured correctly.') . '</div>';
+                        echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
+                        echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
+                    } else {
+                        $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
+                            return $result->domain();
+                        });
+
+                        foreach ($resultsGroupByDomain as $domain => $checkResults) {
+                            echo '<h3>' . HealthcheckServiceCollector::getTitleFromDomain($domain) . '</h3>';
+
+                            foreach ($checkResults as $checkResult) {
+                                $healtcheckHelper->render($checkResult);
+                            }
+                        }
                     }
                     ?>
+
                     <!-- if the javascript does not load this message will be shown -->
                     <div id="url-rewriting-warning" class="message error">
                         <?php echo __('URL rewriting is not properly configured on your server.'); ?>
-                        <a target="_blank" rel="noopener noreferrer" href="http://book.cakephp.org/2.0/en/installation/url-rewriting.html">Learn more.</a>
+                        <a target="_blank" rel="noopener noreferrer" href="https://book.cakephp.org/4/en/installation.html#url-rewriting">Learn more.</a>
                     </div>
-
-                    <?php
-                    if ($data['system_ok']) {
-                        echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
-                    } else {
-                        echo '<h3>' . __('GPG Configuration') . '</h3>';
-                        $healtcheck->assertGpgEnv($data);
-                    }
-                    ?>
-
-                    <?php
-                    if (!$data['system_ok']) :
-                        ?>
-                    <h3><?php echo __('SSL'); ?></h3>
-                        <?php
-                    endif;
-                    ?>
-                    <?php
-                    if (isset($data['ssl']) && $data['ssl']['is'] === true) :
-                        echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
-                    else :
-                        echo '<div class="message warning">' . __('SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue.') . '</div>';
-                    endif;
-                    ?>
                 </div>
+
                 <div class="col5 last">
                     <?= $this->element('sidebar/help_box') ?>
                 </div>
@@ -79,7 +68,7 @@ $healtcheck = new HealthcheckHtmlHelper();
             <div class="row last">
                 <div class="input-wrapper">
                     <?php
-                    if (isset($data['system_ok']) && $data['system_ok'] === true) :
+                    if ($isSystemOk) :
                         ?>
                     <a href="<?= $nextStepUrl ?>" class="button primary next medium"><?= __('Start configuration') ?></a>
                     <?php else : ?>
