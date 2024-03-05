@@ -19,9 +19,10 @@ namespace Passbolt\WebInstaller\Service\Healthcheck;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Healthcheck\SkipHealthcheckInterface;
 use Cake\Http\ServerRequest;
 
-class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface
+class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipHealthcheckInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -30,14 +31,24 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface
      */
     private bool $status = false;
 
-    private ServerRequest $request;
+    private bool $isSkipped = false;
 
     /**
-     * @param \Cake\Http\ServerRequest $request Server request object.
+     * @var ?\Cake\Http\ServerRequest
      */
-    public function __construct(ServerRequest $request)
+    private ?ServerRequest $request;
+
+    /**
+     * @param \Cake\Http\ServerRequest|string $request Server request object.
+     */
+    public function __construct($request)
     {
-        $this->request = $request;
+        // Mark as skipped if run via command line
+        if ($request instanceof ServerRequest) {
+            $this->request = $request;
+        } else {
+            $this->markAsSkipped();
+        }
     }
 
     /**
@@ -45,6 +56,10 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface
      */
     public function check(): HealthcheckServiceInterface
     {
+        if ($this->isSkipped()) {
+            return $this;
+        }
+
         $this->status = $this->request->is('https');
 
         return $this;
@@ -106,5 +121,21 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface
     public function cliOption(): string
     {
         return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function markAsSkipped(): void
+    {
+        $this->isSkipped = true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isSkipped(): bool
+    {
+        return $this->isSkipped;
     }
 }

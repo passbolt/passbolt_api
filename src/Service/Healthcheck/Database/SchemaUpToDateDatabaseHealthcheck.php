@@ -19,6 +19,7 @@ namespace App\Service\Healthcheck\Database;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Migration;
+use Cake\Datasource\ConnectionManager;
 
 class SchemaUpToDateDatabaseHealthcheck extends AbstractDatabaseHealthcheck
 {
@@ -27,8 +28,12 @@ class SchemaUpToDateDatabaseHealthcheck extends AbstractDatabaseHealthcheck
      */
     public function check(): HealthcheckServiceInterface
     {
+        $datasource = $this->getDatasource();
         try {
-            $this->status = !Migration::needMigration($this->getDatasource());
+            /** @var \Cake\Database\Connection $connection */
+            $connection = ConnectionManager::get($datasource);
+            $connection->getDriver()->connect();
+            $this->status = !Migration::needMigration($datasource);
         } catch (\Exception $e) {
             // Do nothing
         }

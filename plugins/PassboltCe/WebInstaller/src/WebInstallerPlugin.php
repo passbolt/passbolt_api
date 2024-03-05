@@ -16,9 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller;
 
-use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
@@ -29,7 +26,6 @@ use Passbolt\WebInstaller\Service\Healthcheck\IsSslWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PassboltConfigWritableWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PrivateKeyWritableWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PublicKeyWritableWebInstallerHealthcheck;
-use Passbolt\WebInstaller\Service\Healthcheck\WebInstallerSystemCheckCollector;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 
 class WebInstallerPlugin extends BasePlugin
@@ -59,14 +55,11 @@ class WebInstallerPlugin extends BasePlugin
         $container->add(PrivateKeyWritableWebInstallerHealthcheck::class);
         $container->add(IsSslWebInstallerHealthcheck::class)->addArgument(ServerRequest::class);
 
-        $container->add(WebInstallerSystemCheckCollector::class)
-            ->addArgument(HealthcheckServiceCollector::class)
-            ->addArgument(PhpGpgModuleInstalledGpgHealthcheck::class)
-            ->addArgument(HomeVariableDefinedGpgHealthcheck::class)
-            ->addArgument(HomeVariableWritableGpgHealthcheck::class)
-            ->addArgument(PassboltConfigWritableWebInstallerHealthcheck::class)
-            ->addArgument(PublicKeyWritableWebInstallerHealthcheck::class)
-            ->addArgument(PrivateKeyWritableWebInstallerHealthcheck::class)
-            ->addArgument(IsSslWebInstallerHealthcheck::class);
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [PassboltConfigWritableWebInstallerHealthcheck::class])
+            ->addMethodCall('addService', [PublicKeyWritableWebInstallerHealthcheck::class])
+            ->addMethodCall('addService', [PrivateKeyWritableWebInstallerHealthcheck::class])
+            ->addMethodCall('addService', [IsSslWebInstallerHealthcheck::class]);
     }
 }

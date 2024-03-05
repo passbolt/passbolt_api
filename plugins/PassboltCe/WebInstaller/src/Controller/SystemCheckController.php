@@ -16,24 +16,28 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
+use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
+use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Collection\Collection;
 use Cake\Routing\Router;
-use Passbolt\WebInstaller\Service\Healthcheck\WebInstallerSystemCheckCollector;
 
 class SystemCheckController extends WebInstallerController
 {
     /**
      * Index
      *
-     * @param \Passbolt\WebInstaller\Service\Healthcheck\WebInstallerSystemCheckCollector $systemCheckServiceCollector System check service collector.
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector healthcheck service collector.
      * @return void
      */
-    public function index(WebInstallerSystemCheckCollector $systemCheckServiceCollector)
+    public function index(HealthcheckServiceCollector $healthcheckServiceCollector)
     {
-        $healthcheckServices = $systemCheckServiceCollector->getServices();
+        $systemCheckHealthcheckServices = $this->getSystemCheckHealthcheckServices($healthcheckServiceCollector);
 
         $resultCollection = new Collection([]);
-        foreach ($healthcheckServices as $healthcheckService) {
+        foreach ($systemCheckHealthcheckServices as $healthcheckService) {
             $result = $healthcheckService->check();
 
             $resultCollection = $resultCollection->appendItem($result);
@@ -50,5 +54,46 @@ class SystemCheckController extends WebInstallerController
         $this->set('isSystemOk', $isSystemOk);
         $this->set('nextStepUrl', $nextStepUrl);
         $this->render('Pages/system_check');
+    }
+
+    /**
+     * Filter all the healthcheck services to extract only the ones relevant here
+     *
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector healthcheck service collector
+     * @return array
+     */
+    private function getSystemCheckHealthcheckServices(HealthcheckServiceCollector $healthcheckServiceCollector): array
+    {
+        $domainsIncluded = [
+            HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
+            HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER,
+        ];
+        $servicesIncluded = [
+            PhpGpgModuleInstalledGpgHealthcheck::class,
+            HomeVariableDefinedGpgHealthcheck::class,
+            HomeVariableWritableGpgHealthcheck::class,
+        ];
+
+        $services = [];
+        /**
+         * Extract environment domain services but without NextMinPhpVersionHealthcheck
+         */
+        foreach ($healthcheckServiceCollector->getServices() as $healthcheckService) {
+            // Exclude this service
+            if ($healthcheckService instanceof NextMinPhpVersionHealthcheck) {
+                continue;
+            }
+            if (in_array($healthcheckService->domain(), $domainsIncluded)) {
+                $services[] = $healthcheckService;
+                continue;
+            }
+            foreach ($servicesIncluded as $serviceIncluded) {
+                if ($healthcheckService instanceof $serviceIncluded) {
+                    $services[] = $healthcheckService;
+                }
+            }
+        }
+
+        return $services;
     }
 }
