@@ -19,14 +19,20 @@ namespace App\Service\Healthcheck\Gpg;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
-class PrivateKeyReadableGpgHealthcheck extends AbstractGpgHealthcheck
+class PrivateKeyReadableAndParsableGpgHealthcheck extends AbstractGpgHealthcheck
 {
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = $this->isPrivateServerKeyReadable();
+        if (!$this->isPrivateServerKeyReadable()) {
+            return $this;
+        }
+
+        $privateKeyData = file_get_contents($this->getPrivateServerKey());
+        $blockStart = '-----BEGIN PGP PRIVATE KEY BLOCK-----';
+        $this->status = strpos($privateKeyData, $blockStart) === 0;
 
         return $this;
     }

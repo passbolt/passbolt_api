@@ -60,11 +60,11 @@ use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\KeyNotDefaultGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\PrivateKeyFingerprintMatchGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\PrivateKeyReadableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\FingerprintMatchGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PrivateKeyReadableAndParsableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PublicKeyEmailGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PublicKeyInKeyringGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\PublicKeyReadableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PublicKeyReadableAndParsableGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\Jwt\PluginEnabledJwtHealthcheck;
 use App\Service\Healthcheck\SmtpSettings\PluginEnabledSmtpSettingsHealthcheck;
@@ -153,9 +153,9 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(HomeVariableDefinedGpgHealthcheck::class);
         $container->add(HomeVariableWritableGpgHealthcheck::class);
         $container->add(KeyNotDefaultGpgHealthcheck::class);
-        $container->add(PublicKeyReadableGpgHealthcheck::class);
-        $container->add(PrivateKeyReadableGpgHealthcheck::class);
-        $container->add(PrivateKeyFingerprintMatchGpgHealthcheck::class);
+        $container->add(PublicKeyReadableAndParsableGpgHealthcheck::class);
+        $container->add(PrivateKeyReadableAndParsableGpgHealthcheck::class);
+        $container->add(FingerprintMatchGpgHealthcheck::class);
         $container->addShared(PublicKeyInKeyringGpgHealthcheck::class);
         $container->add(PublicKeyEmailGpgHealthcheck::class);
         $container->addShared(CanEncryptGpgHealthcheck::class)
@@ -226,9 +226,9 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [HomeVariableDefinedGpgHealthcheck::class])
             ->addMethodCall('addService', [HomeVariableWritableGpgHealthcheck::class])
             ->addMethodCall('addService', [KeyNotDefaultGpgHealthcheck::class])
-            ->addMethodCall('addService', [PublicKeyReadableGpgHealthcheck::class])
-            ->addMethodCall('addService', [PrivateKeyReadableGpgHealthcheck::class])
-            ->addMethodCall('addService', [PrivateKeyFingerprintMatchGpgHealthcheck::class])
+            ->addMethodCall('addService', [PublicKeyReadableAndParsableGpgHealthcheck::class])
+            ->addMethodCall('addService', [PrivateKeyReadableAndParsableGpgHealthcheck::class])
+            ->addMethodCall('addService', [FingerprintMatchGpgHealthcheck::class])
             ->addMethodCall('addService', [PublicKeyInKeyringGpgHealthcheck::class])
             ->addMethodCall('addService', [PublicKeyEmailGpgHealthcheck::class])
             ->addMethodCall('addService', [CanEncryptGpgHealthcheck::class])

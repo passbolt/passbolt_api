@@ -18,22 +18,21 @@ declare(strict_types=1);
 namespace App\Service\Healthcheck\Gpg;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 
-class PrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
+class PublicKeyReadableAndParsableGpgHealthcheck extends AbstractGpgHealthcheck
 {
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $fingerprint = $this->getServerKeyFingerprint();
-        if ($this->isPublicServerKeyReadable() && $this->isPrivateServerKeyReadable() && is_string($fingerprint)) {
-            $gpg = OpenPGPBackendFactory::get();
-            $privateKeyData = file_get_contents($this->getPrivateServerKey());
-            $privateKeyInfo = $gpg->getKeyInfo($privateKeyData);
-            $this->status = ($privateKeyInfo['fingerprint'] === $this->getServerKeyFingerprint());
+        if (!$this->isPublicServerKeyReadable()) {
+            return $this;
         }
+
+        $publicKeyData = file_get_contents($this->getPublicServerKey());
+        $blockStart = '-----BEGIN PGP PUBLIC KEY BLOCK-----';
+        $this->status = strpos($publicKeyData, $blockStart) === 0;
 
         return $this;
     }
@@ -43,7 +42,7 @@ class PrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getSuccessMessage(): string
     {
-        return __('The server key fingerprint matches the one defined in {0}.', CONFIG . 'passbolt.php');
+        return __('The public key file is defined in {0} and readable.', CONFIG . 'passbolt.php');
     }
 
     /**
@@ -51,7 +50,7 @@ class PrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
      */
     public function getFailureMessage(): string
     {
-        return __('The server key fingerprint doesn\'t match the one defined in {0}.', CONFIG . 'passbolt.php');
+        return __('The public key file is not defined in {0} or not readable.', CONFIG . 'passbolt.php');
     }
 
     /**
@@ -60,9 +59,9 @@ class PrivateKeyFingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
     public function getHelpMessage()
     {
         return [
-            __('Double check the key fingerprint, example: '),
-            'sudo su -s /bin/bash -c "gpg --list-keys --fingerprint --home ' . $this->getGpgHome() . '" ' . PROCESS_USER . ' | grep -i -B 2 \'SERVER_KEY_EMAIL\'',// phpcs:ignore
-            __('SERVER_KEY_EMAIL: The email you used when you generated the server key.'),
+            __('Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore
+            __('Ensure there is a public key armored block in the key file.'),
+            __('Ensure the public key defined in {0} exists and is accessible by the webserver user.', CONFIG . 'passbolt.php'),// phpcs:ignore
             __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
         ];
     }

@@ -21,7 +21,6 @@ use App\Model\Validation\EmailValidationRule;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Utility\Healthchecks;
-use App\Utility\Healthchecks\Healthcheck;
 use Cake\Core\Configure;
 use Cake\Http\Client;
 use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
