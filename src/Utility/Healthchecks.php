@@ -57,14 +57,14 @@ class Healthchecks
     public static function all(?Client $client): array
     {
         $checks = [];
-//        $checks = Healthchecks::environment($checks);
-//        $checks = Healthchecks::configFiles($checks);
-//        $checks = (new CoreHealthchecks($client))->all($checks);
-//        $checks = (new SslHealthchecks($client))->all($checks);
-//        $checks = Healthchecks::database('default', $checks);
+        $checks = Healthchecks::environment($checks);
+        $checks = Healthchecks::configFiles($checks);
+        $checks = (new CoreHealthchecks($client))->all($checks);
+        $checks = (new SslHealthchecks($client))->all($checks);
+        $checks = Healthchecks::database('default', $checks);
         $checks = Healthchecks::gpg($checks);
-//        $checks = Healthchecks::application($checks);
-//        $checks = Healthchecks::smtpSettings($checks);
+        $checks = Healthchecks::application($checks);
+        $checks = Healthchecks::smtpSettings($checks);
 
         return $checks;
     }

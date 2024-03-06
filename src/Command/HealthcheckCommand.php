@@ -231,12 +231,12 @@ class HealthcheckCommand extends PassboltCommand
             $healthcheckServices = $paramChecks;
         }
 
-        // OLD - Run all the selected checks
         $io->out(' Healthcheck shell', 0);
-        foreach ($checks as $check) {
-            $io->out('.', 0); // Print a dot for each checks to show progress
-            $results = array_merge(Healthchecks::{$check}(), $results);
-        }
+        // OLD - Run all the selected checks
+//        foreach ($checks as $check) {
+//            $io->out('.', 0); // Print a dot for each checks to show progress
+//            $results = array_merge(Healthchecks::{$check}(), $results);
+//        }
         // NEW - Get services from collector and run checks
         $resultCollection = new Collection([]);
         foreach ($healthcheckServices as $healthcheckService) {
