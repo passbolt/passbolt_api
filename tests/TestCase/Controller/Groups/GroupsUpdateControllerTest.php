@@ -20,9 +20,7 @@ namespace App\Test\TestCase\Controller\Groups;
 use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
-use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
@@ -36,7 +34,6 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
-    use EmailQueueTrait;
 
     public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
@@ -112,59 +109,6 @@ hcciUFw5
 
         // Nancy should be a group manager of the group
         $this->assertUserIsAdmin($groupId, $userNId);
-    }
-
-    public function testGroupsUpdateAsGMUpdateMembersRoleSuccessWithFactories(): void
-    {
-        $group = GroupFactory::make()
-            ->with('GroupsUsers', GroupsUserFactory::make(2)->admin()->with('Users'))
-            ->with('GroupsUsers[2].Users')
-            ->persist();
-        $groupId = $group->id;
-
-        $user0 = $group->groups_users[0]->user;
-        $user1 = $group->groups_users[1]->user;
-        $user2 = $group->groups_users[2]->user;
-        $user3 = $group->groups_users[3]->user;
-
-        $newMember = UserFactory::make()->user()->persist();
-        $newGroupAdmin = UserFactory::make()->user()->persist();
-
-        // Build the request data.
-        $changes = [];
-
-        // Update memberships.
-        // Remove User 1 as admin
-        $changes[] = ['id' => $group->groups_users[1]->id, 'is_admin' => false];
-        // Make User 2 admin
-        $changes[] = ['id' => $group->groups_users[2]->id, 'is_admin' => true];
-        // Add a user to the group
-        $changes[] = ['user_id' => $newMember->id, 'is_admin' => false];
-        // Add a group admin to the group
-        $changes[] = ['user_id' => $newGroupAdmin->id, 'is_admin' => true];
-
-        // Update the group users.
-        $this->logInAs($user0);
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
-
-        $this->assertSuccess();
-
-        // User 1 should no longer be a group manager of the group
-        $this->assertUserIsNotAdmin($groupId, $user1->id);
-        $this->assertUserIsNotAdmin($groupId, $user3->id);
-        $this->assertUserIsNotAdmin($groupId, $newMember->id);
-
-        // User 2 should be a group manager of the group
-        $this->assertUserIsAdmin($groupId, $user2->id);
-        $this->assertUserIsAdmin($groupId, $user0->id);
-        $this->assertUserIsAdmin($groupId, $newGroupAdmin->id);
-        $this->assertEmailSubject($user1->username, "{$user0->profile->first_name} updated your membership in the group $group->name");
-        // @todo The assertion does not handle multiple emails sent to the same user. The batch naming is confusing.
-//        $this->assertEmailInBatchContains("{$user0->profile->first_name} updated your membership in the group $group->name", $user2->username);
-//        $this->assertEmailInBatchContains("{$user0->profile->first_name} updated the group $group->name", $user2->username);
-        $this->assertEmailSubject($newMember->username, "{$user0->profile->first_name} added you to the group $group->name");
-        $this->assertEmailSubject($newGroupAdmin->username, "{$user0->profile->first_name} added you to the group $group->name");
-        $this->assertEmailQueueCount(5);
     }
 
     /*

@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2024-02-13 05:22+0000\n"
+"POT-Creation-Date: 2024-03-07 13:12+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -240,6 +240,9 @@ msgid "The group does not exist."
 msgstr ""
 
 msgid "All checks ran successfully!"
+msgstr ""
+
+msgid "Healthcheck security index endpoint disabled."
 msgstr ""
 
 msgid "OK"

@@ -52,6 +52,7 @@ class UiActionsInsertDefaultsService
         UiAction::NAME_USERS_VIEW_GROUPS,
         UiAction::NAME_MOBILE_TRANSFER,
         UiAction::NAME_DESKTOP_TRANSFER,
+        UiAction::NAME_FOLDERS_SHARE,
     ];
 
     /**

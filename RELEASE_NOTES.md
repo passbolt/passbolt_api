@@ -1,29 +1,37 @@
-Release song: https://youtu.be/53YYph6Edd0
+Release song: https://youtu.be/Ub0NtPOj7es?si=3IL4HKS4-g17uPal
 
-Passbolt is pleased to announce the immediate availability of version 4.5.2. This is a maintenance update that contains important fixes for both the API and browser extension, addressing issues reported by the community since version 4.5.0.
+Hey community members,
 
-Most notably this update fixes a problem that previously prevented the autofill feature from working with certain web applications.
+Prepare for an exciting update! 🥁
 
-Additionally, the release improves the process for importing TOTPs from kdbx files on Windows, ensuring better support for TOTPs across various Keepass clients, including Keepass, KeepassXC, and Macpass.
+Passbolt is thrilled to announce that the v4.6.0 Release Candidate is officially available for testing.
 
-Administrators would also be pleased to be able to host the API using PHP 8.3. While PHP 7.4 and PHP 8.0 are still supported on some distributions such as Debian, they will be discontinued soon and administrators are encouraged to upgrade to PHP 8.1 or higher and use the latest version of the passbolt API.
+The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps here. As always, your feedback is invaluable, please share and report any issues you come across.
 
-We would like to express our sincere thanks to the community members who brought issues to our attention and helped the team to make passbolt better.
+Enjoy the testing journey! ♥️
 
-## [4.5.2] - 2024-02-14
-### Fixed
-- PB-29621 As a user I should get a 400 if the locale passed in the URL is not a string
-- PB-29526 As an administrator I should be notified of group removal when the operation is performed by a users directory synchronization
-- PB-28867 As a user I should see an improved performance when requesting the folder index endpoint
+## [4.6.0-test.1] - 2024-03-07
+### Added
+- PB-24485 As an administrator I can view the API healthcheck in the administration section
+- PB-29396 As an administrator I can hide the share folder capability with a RBAC
+- PB-25463 As an administrator I can disable the healthcheck index endpoint with a flag
+- PB-29397 As an administrator I can disable the healthcheck administration panel with a flag
 
 ### Improved
-- PB-28635 As an administrator I can disable the email digest without having to change the command sending the emails
+- PB-29009 As an administrator completing my setup I should not receive a notification that I completed my setup
+- PB-26152 The API should identify openpgpjs v5.10 revoked key as revoked
+- PB-29437 As an administrator I can log internal errors with the complete trace in Json format
 
 ### Security
-- PB-29680 Bump dependency composer/composer to v2.7.0
+- PB-30155 Update phpseclib/phpseclib to fix composer security vulnerability
+
+### Fixed
+- PB-30019 As a user I should not get a 500 when editing a user with payload containing integers as fields
+- PB-29964 As an administrator disabling a user I should not get a 500 if the disabled date is not valid
+- PB-29970 As a group manager I should receive an accurate summary in my notifications on group permission changes
+- PB-29054 As an administrator I should not get an error when running the cleanup command and the users table does not exist
+- PB-28719 As an administrator sending emails the timezone displayed in the emails should be in the correct time zone
+- PB-30266 As an administrator sending emails with the email digest the message ID should be defined
 
 ### Maintenance
-- PB-29109 Support PHP 8.3 for passbolt API
-- PB-29376 GITHUB-506 Bump dependency duosecurity/duo_universal_php to 1.0.2 (#506)
-- PB-29514 Fix password expiry test which randomly fails
-- PB-29625 Fix CI to support latest composer dependency version
+- PB-28247 Update cakephp/cakephp to version 4.5

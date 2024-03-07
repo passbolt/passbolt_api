@@ -43,10 +43,10 @@ use Cake\Validation\Validator;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \App\Model\Entity\AuthenticationToken newEmptyEntity()
  * @method \App\Model\Entity\AuthenticationToken saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\AuthenticationToken[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\AuthenticationToken>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\AuthenticationToken>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\AuthenticationToken>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\AuthenticationToken>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class AuthenticationTokensTable extends Table
 {
@@ -405,7 +405,7 @@ class AuthenticationTokensTable extends Table
      */
     public function setActiveExpiredTokenToInactive(string $type): void
     {
-        $this->query()
+        $this->updateQuery()
             ->update()
             ->set(['active' => false])
             ->where([
