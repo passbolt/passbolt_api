@@ -105,6 +105,7 @@ class DatacheckCommandTest extends AppTestCase
         $duplicateInvalidUsernames = UserFactory::make(compact('username'), 2)->persist();
 
         $this->exec('passbolt datacheck');
+
         $this->assertOutputContains('[FAIL] Validation failed for user ' . $noValidEmail->id . '. {"username":{"email":"The username should be a valid email address."}}');
         $this->assertOutputContains('[FAIL] Validation failed for user ' . $duplicateUsernames[0]->id . '. {"username":{"uniqueUsername":"The username ' . $duplicateUsernames[0]->username . ' is a duplicate."}}');
         $this->assertOutputContains('[FAIL] Validation failed for user ' . $duplicateUsernames[1]->id . '. {"username":{"uniqueUsername":"The username ' . $duplicateUsernames[1]->username . ' is a duplicate."}}');

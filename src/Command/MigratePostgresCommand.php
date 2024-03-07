@@ -80,8 +80,7 @@ class MigratePostgresCommand extends PassboltCommand
      */
     public function deletePostgresRelevantMigrations(Connection $connection): void
     {
-        $connection->newQuery()
-            ->delete('phinxlog')
+        $connection->deleteQuery('phinxlog')
             ->where(['phinxlog.migration_name IN' => self::POSTGRES_RELEVANT_MIGRATIONS,])
             ->execute();
     }

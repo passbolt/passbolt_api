@@ -41,10 +41,10 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\OrganizationSetting[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \App\Model\Entity\OrganizationSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\OrganizationSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\OrganizationSetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\OrganizationSetting>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\OrganizationSetting>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\OrganizationSetting>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\OrganizationSetting>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class OrganizationSettingsTable extends Table

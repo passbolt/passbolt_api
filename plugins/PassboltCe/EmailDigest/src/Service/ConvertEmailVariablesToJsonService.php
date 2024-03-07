@@ -58,7 +58,7 @@ class ConvertEmailVariablesToJsonService
         $EmailQueueTable = TableRegistry::getTableLocator()->get('EmailQueue.EmailQueue');
 
         return $EmailQueueTable->getConnection()
-            ->newQuery()
+            ->selectQuery()
             ->select(['id', 'template_vars'])
             ->from($EmailQueueTable->getTable())
             ->where(['sent' => 0])

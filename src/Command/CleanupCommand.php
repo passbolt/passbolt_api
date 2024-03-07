@@ -20,6 +20,8 @@ namespace App\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Cake\Datasource\ConnectionManager;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -206,6 +208,14 @@ class CleanupCommand extends PassboltCommand
         }
         $io->hr();
 
+        try {
+            $this->assertDatabaseState();
+        } catch (InternalErrorException $e) {
+            $io->warning($e->getMessage());
+
+            return $this->successCode();
+        }
+
         $totalErrorCount = 0;
         foreach (self::$cleanups as $tableName => $tableCleanup) {
             $table = TableRegistry::getTableLocator()->get($tableName);
@@ -243,5 +253,30 @@ class CleanupCommand extends PassboltCommand
         }
 
         return $this->successCode();
+    }
+
+    /**
+     * Runs series of checks to make sure database is in valid state to run the cleanup command.
+     *
+     * @return void
+     * @throws \Cake\Http\Exception\InternalErrorException If database is not in valid state.
+     */
+    private function assertDatabaseState()
+    {
+        // Check 1. Users table exist in db
+        $listTables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
+        if (!in_array('users', $listTables)) {
+            throw new InternalErrorException(
+                __('Cleanup command cannot be executed on an instance having no users table.')
+            );
+        }
+
+        // Check 2. Atleast one active administrator is present
+        $admin = $this->Users->findFirstAdmin();
+        if (is_null($admin)) {
+            throw new InternalErrorException(
+                __('Cleanup command cannot be executed on an instance having no active administrator.')
+            );
+        }
     }
 }

@@ -21,7 +21,7 @@ use App\Middleware\UuidParserMiddleware;
 use App\Model\Entity\User;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\Utility\MiddlewareTestTrait;
+use App\Test\Lib\Http\TestRequestHandler;
 use App\Utility\UuidFactory;
 use Cake\Database\Driver\Mysql;
 use Cake\Http\ServerRequest;
@@ -32,7 +32,6 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 
 class LowerCaseUuidTypeTest extends TestCase
 {
-    use MiddlewareTestTrait;
     use TruncateDirtyTables;
 
     /**
@@ -50,7 +49,7 @@ class LowerCaseUuidTypeTest extends TestCase
     {
         (new UuidParserMiddleware())->process(
             new ServerRequest(),
-            $this->mockHandler()
+            new TestRequestHandler()
         );
         $uuid = UuidFactory::uuid();
         $UUID = strtoupper($uuid);

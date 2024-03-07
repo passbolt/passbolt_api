@@ -49,7 +49,7 @@ class MigratePostgresCommandTest extends AppTestCase
 
     protected function countMigrations(): int
     {
-        return (int)ConnectionManager::get('test')->newQuery()
+        return (int)ConnectionManager::get('test')->selectQuery()
             ->select('COUNT(*)')
             ->from('phinxlog')
             ->execute()

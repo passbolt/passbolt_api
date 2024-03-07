@@ -451,25 +451,18 @@ trait UsersFindersTrait
     protected function listDuplicateUsernamesCaseInsensitive(): Query
     {
         $subQueryOfLowerCasedUsernameDuplicates = $this
-            ->find('list', ['valueField' => 'lower_username'])
-            ->disableHydration()
-            ->select([
-                'lower_username' => 'LOWER(Users.username)',
-                'count' => $this->find()->func()->count('id'),
-            ])
+            ->find()
+            // MAX() here is just to make MySQL happy without that query breaks in MySQL(especially in 5.7)
+            ->select(['lower_username' => 'MAX(LOWER(Users.username))'])
             ->where(['deleted' => false])
             ->group('LOWER(Users.username)')
-            ->having(['count >' => 1]);
-
-        if ($subQueryOfLowerCasedUsernameDuplicates->count() === 0) {
-            return $subQueryOfLowerCasedUsernameDuplicates;
-        }
+            ->having('count(*) > 1');
 
         return $this->find('list', ['keyField' => 'id', 'valueField' => 'username'])
             ->disableHydration()
             ->select(['id', 'username'])
             ->where([
-                'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates->all()->toList(),
+                'LOWER(username) IN' => $subQueryOfLowerCasedUsernameDuplicates,
                 'deleted' => false,
             ])
             ->orderAsc('LOWER(username)');

@@ -103,6 +103,6 @@ class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddl
      */
     public function makeCsrfCookieSecureIfRequestIsSsl(ServerRequest $request): void
     {
-        $this->_config['secure'] = $request->is('ssl');
+        $this->_config['secure'] = $request->is('https');
     }
 }
