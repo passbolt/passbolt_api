@@ -325,7 +325,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.accounting'), 'user_id' => UuidFactory::uuid('user.id.betty')]);
         $this->assertDirectoryRelationNotExist($relation->id);
-        $this->assertEmailQueueCount(1);
+        $this->assertEmailQueueCount(2);
         $this->assertEmailInBatchContains('removed you from the group');
     }
 

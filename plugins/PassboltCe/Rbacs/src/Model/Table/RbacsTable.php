@@ -42,9 +42,9 @@ use Passbolt\Rbacs\Model\Rule\IsControlFunctionAllowedRule;
  * @property \Passbolt\Log\Model\Table\ActionsTable&\Cake\ORM\Association\HasOne $Action
  * @property \Passbolt\Rbacs\Model\Table\UiActionsTable&\Cake\ORM\Association\HasOne $UiAction
  * @method \Passbolt\Rbacs\Model\Entity\Rbac newEmptyEntity()
- * @method \Passbolt\Rbacs\Model\Entity\Rbac[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Rbacs\Model\Entity\Rbac[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Rbacs\Model\Entity\Rbac[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @method \Cake\ORM\Query findById(string $id)
  */
 class RbacsTable extends Table

@@ -36,10 +36,10 @@ use Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting;
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class MfaPoliciesSettingsTable extends OrganizationSettingsTable
@@ -67,7 +67,7 @@ class MfaPoliciesSettingsTable extends OrganizationSettingsTable
         $validator->remove('value');
 
         $validator->requirePresence('value', true, __('A value is required.'));
-        $validator->isArray('value', __('The value should be an array.'));
+        $validator->array('value', __('The value should be an array.'));
 
         return $validator;
     }

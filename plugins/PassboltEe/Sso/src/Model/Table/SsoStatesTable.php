@@ -45,10 +45,10 @@ use Passbolt\Sso\Model\Validation\IsValidTypeValidationRule;
  * @method \Passbolt\Sso\Model\Entity\SsoState[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoState|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoState saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Sso\Model\Entity\SsoState[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Sso\Model\Entity\SsoState[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Sso\Model\Entity\SsoState[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Sso\Model\Entity\SsoState[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Sso\Model\Entity\SsoState>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class SsoStatesTable extends Table

@@ -42,10 +42,10 @@ use Cake\Validation\Validator;
  * @method \Passbolt\Tags\Model\Entity\Tag findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Tags\Model\Entity\Tag newEmptyEntity()
  * @method \Passbolt\Tags\Model\Entity\Tag saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Tags\Model\Entity\Tag[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Tags\Model\Entity\Tag>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @method \Cake\ORM\Query findBySlug(string $slug)
  */
 class TagsTable extends Table
@@ -273,7 +273,7 @@ class TagsTable extends Table
         // LEFT JOIN resources_tags
         //   ON (tags.id = resources_tags.tag_id)
         //   WHERE resources_tags.tag_id IS NULL
-        $query = $this->query();
+        $query = $this->selectQuery();
         $query->select(['id', 'slug'])
             ->leftJoinWith('ResourcesTags')
             ->where(function ($exp, $q) {

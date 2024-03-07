@@ -103,6 +103,8 @@ class Healthchecks
         $checks['application']['sslForce'] = Configure::read('passbolt.ssl.force');
         $https = strpos(Configure::read('App.fullBaseUrl'), 'https') === 0;
         $checks['application']['sslFullBaseUrl'] = ($https !== false);
+        $checks['application']['configPath'] = CONFIG . 'passbolt.php';
+        $checks['application']['info']['currentVersion'] = Configure::read('passbolt.version');
         $checks['application']['seleniumDisabled'] = !Configure::read('passbolt.selenium.active');
         $checks['application']['registrationClosed'] = (new SelfRegistrationHealthcheckService())->getHealthcheck();
         $checks['application']['hostAvailabilityCheckEnabled'] = Configure::read(EmailValidationRule::MX_CHECK_KEY);
@@ -217,6 +219,7 @@ class Healthchecks
             Configure::read(self::PHP_NEXT_MIN_VERSION_CONFIG),
             '>='
         );
+        $checks['environment']['info']['phpVersion'] = PHP_VERSION;
         $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
         $checks['environment']['gnupg'] = extension_loaded('gnupg');

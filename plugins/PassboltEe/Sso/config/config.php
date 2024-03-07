@@ -6,6 +6,7 @@ return [
             'sso' => [
                 'version' => '1.0.0',
                 //'enabled' => true // see default.php
+                'debugEnabled' => filter_var(env('PASSBOLT_PLUGINS_SSO_DEBUG_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
                 'settingsVisibility' => [
                     'whiteListPublic' => [
                         'enabled',

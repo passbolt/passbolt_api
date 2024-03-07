@@ -134,7 +134,7 @@ class MfaPoliciesSettingsTableTest extends AppTestCase
 
         $this->assertNotEmpty($validationErrors);
         $this->assertArrayHasKey('value', $validationErrors);
-        $this->assertStringContainsString('should be an array', $validationErrors['value']['isArray']);
+        $this->assertStringContainsString('should be an array', $validationErrors['value']['array']);
     }
 
     public function testFind_Error_InvalidJsonValue(): void

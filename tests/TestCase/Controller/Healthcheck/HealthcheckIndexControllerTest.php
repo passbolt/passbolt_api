@@ -16,8 +16,10 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Healthcheck;
 
+use App\Controller\Healthcheck\HealthcheckIndexController;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
+use Cake\Core\Configure;
 use Cake\Http\Client;
 
 class HealthcheckIndexControllerTest extends AppIntegrationTestCase
@@ -63,5 +65,19 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $this->get('/healthcheck');
         $this->assertResponseContains('Passbolt API Status');
         $this->assertResponseOk();
+    }
+
+    /**
+     * Throw a forbidden error if the endpoint is disabled
+     */
+    public function testHealthcheckIndex_Healthcheck_Endpoint_Disabled(): void
+    {
+        Configure::write(
+            HealthcheckIndexController::PASSBOLT_PLUGINS_HEALTHCHECK_SECURITY_INDEX_ENDPOINT_ENABLED,
+            false
+        );
+        $this->logInAsAdmin();
+        $this->getJson('/healthcheck.json');
+        $this->assertForbiddenError('Healthcheck security index endpoint disabled.');
     }
 }

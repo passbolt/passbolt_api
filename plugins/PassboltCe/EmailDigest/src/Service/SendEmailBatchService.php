@@ -146,7 +146,7 @@ class SendEmailBatchService
             ->setTo($emailDigest->getEmailRecipient())
             ->setSubject($emailDigest->getSubject())
             ->setEmailFormat($emailDigest->getEmailFormat())
-            ->setMessageId(false)
+            ->setMessageId(true)
             ->setViewVars($emailDigest->getViewVars())
             ->setReturnPath($email->getFrom());
 

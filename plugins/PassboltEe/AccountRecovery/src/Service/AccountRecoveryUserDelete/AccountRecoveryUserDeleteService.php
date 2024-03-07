@@ -111,7 +111,7 @@ class AccountRecoveryUserDeleteService
         }
 
         // Update pending requests
-        $this->AccountRecoveryRequests->query()
+        $this->AccountRecoveryRequests->updateQuery()
             ->update()
             ->set([
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
@@ -127,7 +127,7 @@ class AccountRecoveryUserDeleteService
             ->execute();
 
         // Deactivate all previous active tokens
-        $this->AuthenticationTokens->query()
+        $this->AuthenticationTokens->updateQuery()
             ->update()
             ->set([
                 'active' => false,

@@ -33,10 +33,10 @@ use Passbolt\Rbacs\Model\Entity\UiAction;
  * @method \Passbolt\Rbacs\Model\Entity\UiAction[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\UiAction|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\UiAction saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Rbacs\Model\Entity\UiAction[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Rbacs\Model\Entity\UiAction[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Rbacs\Model\Entity\UiAction[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Rbacs\Model\Entity\UiAction[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Rbacs\Model\Entity\UiAction>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Rbacs\Model\Entity\UiAction>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Rbacs\Model\Entity\UiAction>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Rbacs\Model\Entity\UiAction>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class UiActionsTable extends Table
 {

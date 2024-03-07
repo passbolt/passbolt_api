@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Utility\OpenId;
 use App\Model\Validation\EmailValidationRule;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Log\Log;
 use Firebase\JWT\JWT;
 use League\OAuth2\Client\Token\AccessToken;
 use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
@@ -74,10 +75,22 @@ class BaseIdToken extends AccessToken
 
             $tokenClaims = (array)JWT::decode($this->idToken, $keys);
         } catch (\Exception $exception) {
+            if (Configure::read('passbolt.plugins.sso.debugEnabled')) {
+                Log::error('idToken => ' . json_encode($this->idToken));
+            }
+
             throw new BadRequestException(__('Unable to decode JWT token.'), 400, $exception);
         }
 
-        $this->assertTokenClaims($tokenClaims);
+        try {
+            $this->assertTokenClaims($tokenClaims);
+        } catch (BadRequestException $exception) {
+            if (Configure::read('passbolt.plugins.sso.debugEnabled')) {
+                Log::error('tokenClaims => ' . json_encode($tokenClaims));
+            }
+
+            throw $exception;
+        }
 
         $this->idTokenClaims = $tokenClaims;
     }
