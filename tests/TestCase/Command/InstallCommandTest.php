@@ -180,7 +180,7 @@ class InstallCommandTest extends AppTestCase
         $this->assertSame($firstName, $admin->profile->first_name);
         $this->assertSame($lastName, $admin->profile->last_name);
         $this->assertFalse($admin->get('active'));
-//         TODO: fix this line in the CI
-//        $this->assertEmailQueueCount(1);
+        $this->assertEmailQueueCount(1);
+        $this->assertEmailInBatchContains("Welcome to passbolt, $firstName!", $userName);
     }
 }

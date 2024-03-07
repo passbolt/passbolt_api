@@ -109,7 +109,12 @@ if (Configure::read('debug')) {
  * Set the default server timezone. Using UTC makes time calculations / conversions easier.
  * Check https://php.net/manual/en/timezones.php for list of valid timezone strings.
  */
-date_default_timezone_set(Configure::read('App.defaultTimezone', 'UTC'));
+$isValidTimezone = date_default_timezone_set(Configure::read('App.defaultTimezone', 'UTC'));
+if (!$isValidTimezone) {
+    // If timezone set by administrator is invalid then fallback to UTC
+    date_default_timezone_set('UTC');
+    // Error is logged further in this file because logger isn't ready yet.
+}
 
 /*
  * Configure the mbstring extension to use the correct encoding.
@@ -227,3 +232,13 @@ define('PASSBOLT_PRO', Configure::read('passbolt.edition') === 'pro');
  * Set email queue plugin serialization type to JSON.
  */
 Configure::write('EmailQueue.serialization_type', 'email_queue.json');
+
+/**
+ * Log various errors occurred during bootstrap process.
+ *
+ * Note: Make sure to do this after logger is set(`Log::setConfig(...)`).
+ */
+if (!$isValidTimezone) {
+    // Log the error
+    Log::error('Timezone set in `App.defaultTimezone` config is invalid');
+}

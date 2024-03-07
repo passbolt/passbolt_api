@@ -42,10 +42,10 @@ use Passbolt\Log\Model\Entity\PermissionHistory;
  * @method \Passbolt\Log\Model\Entity\PermissionHistory[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\PermissionHistory|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Log\Model\Entity\PermissionHistory saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\PermissionHistory[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\PermissionHistory>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\PermissionHistory>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\PermissionHistory>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\PermissionHistory>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class PermissionsHistoryTable extends Table
 {

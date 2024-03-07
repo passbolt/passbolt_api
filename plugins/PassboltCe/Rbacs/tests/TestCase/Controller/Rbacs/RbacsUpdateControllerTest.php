@@ -165,12 +165,18 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
     public function testRbacsUpdateController_Error_NotAllowedControlFunction(): void
     {
         $this->setupDefaultRbacs();
+        $uiActionSubQuery = UiActionFactory::find()->select(['id'])->where(['name' => UiAction::NAME_RESOURCES_IMPORT]);
+        /** @var \Passbolt\Rbacs\Model\Entity\Rbac $usersViewWorkspaceRbac */
+        $usersViewWorkspaceRbac = RbacFactory::find()->where([
+            'foreign_model' => Rbac::FOREIGN_MODEL_UI_ACTION,
+            'foreign_id' => $uiActionSubQuery,
+        ])->firstOrFail();
         $this->logInAsAdmin();
         $rbac = $this->findRbacFromUiActionName(UiAction::NAME_RESOURCES_IMPORT);
 
         $this->putJson('/rbacs.json', [
             [
-                'id' => $rbac->id,
+                'id' => $usersViewWorkspaceRbac->id,
                 'control_function' => Rbac::CONTROL_FUNCTION_ALLOW_IF_GROUP_MANAGER_IN_ONE_GROUP,
             ],
         ]);

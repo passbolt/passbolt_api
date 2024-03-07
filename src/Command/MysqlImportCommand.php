@@ -69,7 +69,7 @@ class MysqlImportCommand extends PassboltCommand
         try {
             $datasource = $args->getOption('datasource');
             $connection = ConnectionManager::get($datasource);
-            $connection->query($sql);
+            $connection->execute($sql);
         } catch (\Exception $e) {
             $this->error('Error: Something went wrong when importing the SQL file', $io);
             $this->error($e->getMessage(), $io);
