@@ -12,24 +12,28 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.1.0
+ * @since         4.6.0
  */
-namespace App\Test\Lib\Utility;
 
-use App\Application;
-use Cake\Event\EventManager;
-use Cake\Http\ControllerFactoryInterface;
-use Cake\Http\Response;
+use Cake\Log\Log;
+use Migrations\AbstractMigration;
+use Passbolt\Rbacs\Service\Rbacs\RbacsInsertDefaultsService;
 
-trait MiddlewareTestTrait
+class V460ShareFolderDefaultRbacsUiActions extends AbstractMigration
 {
-    private function mockHandler(?Response $response = null): Application
+    /**
+     * Up
+     *
+     * @throws \Exception if insertion fails
+     * @return void
+     */
+    public function up()
     {
-        $response = $response ?? new Response();
-
-        $controllerFactoryStub = $this->getMockBuilder(ControllerFactoryInterface::class)->getMock();
-        $controllerFactoryStub->method('invoke')->willReturn($response);
-
-        return new Application(CONFIG, new EventManager(), $controllerFactoryStub);
+        try {
+            (new RbacsInsertDefaultsService())->allowAllUiActionsForUsers();
+        } catch (\Throwable $e) {
+            Log::error('There was an error in V460ShareFolderDefaultRbacsUiActions');
+            Log::error($e->getMessage());
+        }
     }
 }

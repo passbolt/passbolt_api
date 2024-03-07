@@ -112,6 +112,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
         $this->service->sendNextEmailsBatch([$email]);
 
         $this->assertMailCount(1);
+        $this->assertIsString($this->getMailAt()->getMessageId());
         $this->assertMailSentToAt(0, [$email->get('email') => $email->get('email')]);
         $this->assertMailSubjectContainsAt(0, $subjectTranslated);
         $this->assertMailContainsAt(0, $subjectTranslated);
@@ -146,6 +147,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
 
         if ($withDigestTemplate) {
             $this->assertMailCount(1);
+            $this->assertIsString($this->getMailAt()->getMessageId());
             $this->assertMailSentToAt(0, [$recipient => $recipient]);
             $this->assertMailSubjectContainsAt(0, $operator->profile->full_name . ' a apporté des modifications à plusieurs ressources');
             $this->assertMailContainsAt(0, $subjectTranslated);
@@ -154,6 +156,7 @@ class SendEmailBatchServiceUnitTest extends TestCase
             $this->assertMailCount($nEmails);
             foreach ($emails as $i => $email) {
                 $this->assertMailSentToAt($i, [$recipient => $recipient]);
+                $this->assertIsString($this->getMailAt($i)->getMessageId());
                 $this->assertMailSubjectContainsAt($i, $subjectTranslated);
                 $this->assertMailContainsAt($i, $subjectTranslated);
                 $this->assertMailContainsAt($i, 'Nom: ' . $resourceDeleted->name);
