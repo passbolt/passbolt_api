@@ -4,7 +4,7 @@ Hey community members,
 
 Prepare for an exciting update! 🥁
 
-Passbolt is thrilled to announce that the v4.5.0 Release Candidate is officially available for testing.
+Passbolt is thrilled to announce that the v4.6.0 Release Candidate is officially available for testing.
 
 The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps here. As always, your feedback is invaluable, please share and report any issues you come across.
 
