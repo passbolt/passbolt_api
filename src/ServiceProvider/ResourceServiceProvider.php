@@ -32,8 +32,10 @@ class ResourceServiceProvider extends ServiceProvider
 {
     protected $provides = [
         PasswordExpiryValidationServiceInterface::class,
+        ResourcesExpireResourcesServiceInterface::class,
         ResourcesAddService::class,
         ResourcesUpdateService::class,
+        GroupsUpdateService::class,
         ResourcesShareService::class,
     ];
 
