@@ -38,6 +38,20 @@ class PasswordExpiryGroupsUpdateControllerTest extends AppIntegrationTestCase
         PasswordExpirySettingFactory::make()->persist();
     }
 
+    public function testPasswordExpiryGroupsUpdateController_Edit_On_Plugin_Disabled(): void
+    {
+        $this->disableFeaturePlugin(PasswordExpiryPlugin::class);
+        $owner = $this->logInAsUser();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$owner])
+            ->persist();
+        $groupId = $group->get('id');
+
+        // Update the group users.
+        $this->putJson("/groups/$groupId.json", ['groups_users' => []]);
+        $this->assertSuccess();
+    }
+
     /**
      * Given that a user is member of a group
      * And the user has accessed the secret of an associated resource
