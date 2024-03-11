@@ -26,7 +26,12 @@ trait MigrationsAwareTrait
      */
     public function isMigrationAlreadyRun(string $name): bool
     {
-        return $this->getQueryBuilder()
+        /** @var \Migrations\CakeAdapter $adapter */
+        $adapter = $this->getAdapter();
+
+        return $adapter
+            ->getCakeConnection()
+            ->selectQuery()
             ->select('*')
             ->from('phinxlog')
             ->where(['migration_name' => $name])
