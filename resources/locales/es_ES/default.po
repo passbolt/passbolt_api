@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-02-13 08:14+0000\n"
-"PO-Revision-Date: 2024-02-13 10:35\n"
+"POT-Creation-Date: 2024-03-07 13:23+0000\n"
+"PO-Revision-Date: 2024-03-08 14:20\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -243,6 +243,9 @@ msgstr "El grupo no existe."
 
 msgid "All checks ran successfully!"
 msgstr "¡Todas las comprobaciones se han ejecutado con éxito!"
+
+msgid "Healthcheck security index endpoint disabled."
+msgstr ""
 
 msgid "OK"
 msgstr "OK"
@@ -4702,6 +4705,15 @@ msgstr "Se requieren los datos."
 msgid "Data must be an array of properties."
 msgstr "Los datos deben ser un conjunto de propiedades."
 
+msgid "The email claim should not be empty."
+msgstr "El correo electrónico a reclamar no debe estar vacío."
+
+msgid "The email claim is too large."
+msgstr ""
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "El correo electrónico a reclamar debe ser uno de los siguientes: {0}."
+
 msgid "A URL is required."
 msgstr "Se requiere la URL."
 
@@ -4752,12 +4764,6 @@ msgstr "El indicador no debe estar vacío."
 
 msgid "The prompt should be one of the following: {0}."
 msgstr "El indicador debe ser uno de los siguientes: {0}."
-
-msgid "The email claim should not be empty."
-msgstr "El correo electrónico a reclamar no debe estar vacío."
-
-msgid "The email claim should be one of the following: {0}."
-msgstr "El correo electrónico a reclamar debe ser uno de los siguientes: {0}."
 
 msgid "The client id is too large."
 msgstr "El id del cliente es demasiado grande."
@@ -4900,11 +4906,23 @@ msgstr "El nombre de usuario no coincide."
 msgid "Invalid nonce."
 msgstr "Nonce no válido."
 
+msgid "Invalid provider. Expected AD FS."
+msgstr ""
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr ""
+
 msgid "No valid SSO settings found."
 msgstr "No se han encontrado ajustes SSO válidos."
 
 msgid "You must authenticate with Azure again."
 msgstr "Debe autenticarse con Azure de nuevo."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr ""
+
+msgid "Provided root CA file does not exist"
+msgstr ""
 
 msgid "The user id should be a valid UUID."
 msgstr "El identificador de usuario debe ser un UUID válido."
@@ -5002,6 +5020,9 @@ msgstr "No se pudo guardar el estado del SSO, el nonce no es válido."
 msgid "Could not save the SSO state, please try again later."
 msgstr "No se pudo guardar el estado del SSO. Por favor, inténtelo de nuevo más tarde."
 
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "La reclamación {0} no está presente, por favor contacte con su administrador."
+
 msgid "Cannot parse JWKS endpoint response."
 msgstr "No se ha podido analizar la respuesta del endpoint JWKS."
 
@@ -5016,9 +5037,6 @@ msgstr "Error al leer la clave pública del certificado: {0}"
 
 msgid "Failed to public key properties from certificate: {0}"
 msgstr "Error al publicar las propiedades de la clave del certificado: {0}"
-
-msgid "The {0} claim is not present, please contact your administrator."
-msgstr "La reclamación {0} no está presente, por favor contacte con su administrador."
 
 msgid "JWT token is missing."
 msgstr "No se ha encontrado el token JWT."
