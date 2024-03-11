@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-03-07 13:23+0000\n"
-"PO-Revision-Date: 2024-03-08 14:20\n"
+"PO-Revision-Date: 2024-03-11 16:54\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -245,7 +245,7 @@ msgid "All checks ran successfully!"
 msgstr "모든 검사가 성공적으로 실행되었습니다."
 
 msgid "Healthcheck security index endpoint disabled."
-msgstr ""
+msgstr "상태 확인 보안 인덱스 엔드포인티를 사용하지 않도록 설정했습니다."
 
 msgid "OK"
 msgstr "확인"
@@ -4709,7 +4709,7 @@ msgid "The email claim should not be empty."
 msgstr "이메일 클레임은 비워 둘 수 없습니다."
 
 msgid "The email claim is too large."
-msgstr ""
+msgstr "이메일 클레임이 너무 큽니다."
 
 msgid "The email claim should be one of the following: {0}."
 msgstr "이메일 클레임은 다음 중 하나여야 합니다: {0}."
@@ -4907,10 +4907,10 @@ msgid "Invalid nonce."
 msgstr "무효한 임시값."
 
 msgid "Invalid provider. Expected AD FS."
-msgstr ""
+msgstr "유효하지 않은 제공자. AD FS가 예상됩니다."
 
 msgid "Invalid provider data. Expected AD FS settings."
-msgstr ""
+msgstr "유효하지 않은 제공자 데이터. AD FS 설정이 예상됩니다."
 
 msgid "No valid SSO settings found."
 msgstr "올바르지 않은 SSO설정이 발견됨."
@@ -4919,10 +4919,10 @@ msgid "You must authenticate with Azure again."
 msgstr "Azure를 다시 인증해야 합니다."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
-msgstr ""
+msgstr "`passbolt.security.sso.sslCafile` 구성에서 제공된 값이 잘못되었습니다."
 
 msgid "Provided root CA file does not exist"
-msgstr ""
+msgstr "제공된 루트 CA 파일이 없습니다"
 
 msgid "The user id should be a valid UUID."
 msgstr "사용자 Id는 올바른 UUID여야 합니다."
