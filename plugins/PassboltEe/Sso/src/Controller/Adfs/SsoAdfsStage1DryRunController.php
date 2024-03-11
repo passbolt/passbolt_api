@@ -56,6 +56,6 @@ class SsoAdfsStage1DryRunController extends AbstractSsoController
             SsoState::TYPE_SSO_SET_SETTINGS
         );
 
-        $this->success(__('The operation was successful.'), $url);
+        $this->success(__('The operation was successful.'), $url->jsonSerialize());
     }
 }
