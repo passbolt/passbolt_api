@@ -105,4 +105,12 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface
     {
         return 'environment';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'nextMinPhpVersion';
+    }
 }

@@ -17,12 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Http\MiddlewareQueue;
-use Cake\Http\ServerRequest;
 use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
-use Passbolt\WebInstaller\Service\Healthcheck\IsSslWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PassboltConfigWritableWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PrivateKeyWritableWebInstallerHealthcheck;
 use Passbolt\WebInstaller\Service\Healthcheck\PublicKeyWritableWebInstallerHealthcheck;
@@ -53,13 +52,12 @@ class WebInstallerPlugin extends BasePlugin
         $container->add(PassboltConfigWritableWebInstallerHealthcheck::class);
         $container->add(PublicKeyWritableWebInstallerHealthcheck::class);
         $container->add(PrivateKeyWritableWebInstallerHealthcheck::class);
-        $container->add(IsSslWebInstallerHealthcheck::class)->addArgument(ServerRequest::class);
 
         $container
             ->extend(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [PassboltConfigWritableWebInstallerHealthcheck::class])
             ->addMethodCall('addService', [PublicKeyWritableWebInstallerHealthcheck::class])
             ->addMethodCall('addService', [PrivateKeyWritableWebInstallerHealthcheck::class])
-            ->addMethodCall('addService', [IsSslWebInstallerHealthcheck::class]);
+            ->addMethodCall('addService', [IsRequestHttpsSslHealthcheck::class]);
     }
 }

@@ -99,4 +99,12 @@ class ImageHealthcheck implements HealthcheckServiceInterface
     {
         return 'environment';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'image';
+    }
 }

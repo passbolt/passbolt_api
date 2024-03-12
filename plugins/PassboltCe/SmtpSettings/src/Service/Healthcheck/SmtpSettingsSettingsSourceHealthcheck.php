@@ -153,4 +153,12 @@ class SmtpSettingsSettingsSourceHealthcheck implements HealthcheckServiceInterfa
 
         return $map[$source] ?? null;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'isInDb';
+    }
 }

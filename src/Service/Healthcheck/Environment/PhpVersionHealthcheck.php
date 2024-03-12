@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Environment;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
@@ -49,8 +50,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface
      */
     public function domain(): string
     {
-        // TODO: Use a constant
-        return 'environment';
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -66,7 +66,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface
      */
     public function level(): string
     {
-        return 'error';
+        return HealthcheckServiceCollector::LEVEL_ERROR;
     }
 
     /**
@@ -104,5 +104,13 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface
     public function cliOption(): string
     {
         return 'environment';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'phpVersion';
     }
 }

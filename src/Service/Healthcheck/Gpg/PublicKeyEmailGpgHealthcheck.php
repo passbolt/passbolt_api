@@ -63,4 +63,12 @@ class PublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
     {
         return 'Edit or generate another key with a valid email id.';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'gpgKeyPublicEmail';
+    }
 }

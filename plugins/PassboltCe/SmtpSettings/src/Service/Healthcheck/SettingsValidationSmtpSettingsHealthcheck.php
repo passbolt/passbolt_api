@@ -129,4 +129,12 @@ class SettingsValidationSmtpSettingsHealthcheck implements HealthcheckServiceInt
     {
         return HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'errorMessage';
+    }
 }

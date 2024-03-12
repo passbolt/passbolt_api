@@ -46,4 +46,12 @@ class HostValidSslHealthcheck extends AbstractBaseSslHealthcheck
     {
         return __('Hostname does not match when validating certificates.');
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'hostValid';
+    }
 }

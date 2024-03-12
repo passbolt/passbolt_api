@@ -102,4 +102,12 @@ class HostAvailabilityCheckEnabledApplicationHealthcheck implements HealthcheckS
     {
         return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'hostAvailabilityCheckEnabled';
+    }
 }

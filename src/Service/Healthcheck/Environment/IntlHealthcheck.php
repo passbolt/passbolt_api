@@ -96,4 +96,12 @@ class IntlHealthcheck implements HealthcheckServiceInterface
     {
         return 'environment';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'intl';
+    }
 }

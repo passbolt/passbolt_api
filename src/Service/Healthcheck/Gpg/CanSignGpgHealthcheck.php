@@ -106,4 +106,12 @@ class CanSignGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHealth
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'canSign';
+    }
 }

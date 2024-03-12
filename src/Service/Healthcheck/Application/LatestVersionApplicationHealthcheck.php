@@ -138,4 +138,28 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
     {
         return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
+
+    /**
+     * @return bool
+     */
+    public function isExceptionThrown(): bool
+    {
+        return $this->exceptionThrown;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRemoteVersion(): string
+    {
+        return $this->remoteVersion;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'latestVersion';
+    }
 }

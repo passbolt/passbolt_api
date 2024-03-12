@@ -53,4 +53,12 @@ class NotSelfSignedSslHealthcheck extends AbstractBaseSslHealthcheck
     {
         return __('Using a self-signed certificate.');
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'notSelfSigned';
+    }
 }

@@ -111,4 +111,12 @@ class SelfRegistrationPluginEnabledApplicationHealthcheck implements Healthcheck
     {
         return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'registrationClosed.isSelfRegistrationPluginEnabled';
+    }
 }

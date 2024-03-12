@@ -117,4 +117,12 @@ class SelfRegistrationProviderApplicationHealthcheck implements HealthcheckServi
     {
         return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'registrationClosed.selfRegistrationProvider';
+    }
 }

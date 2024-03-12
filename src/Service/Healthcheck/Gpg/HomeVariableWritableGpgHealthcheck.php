@@ -93,4 +93,12 @@ class HomeVariableWritableGpgHealthcheck extends HomeVariableDefinedGpgHealthche
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'gpgHomeWritable';
+    }
 }

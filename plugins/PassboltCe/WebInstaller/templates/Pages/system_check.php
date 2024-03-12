@@ -11,7 +11,7 @@ declare(strict_types=1);
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Passbolt\WebInstaller\View\Helper\HealthcheckHtmlHelper;
 
-$healtcheckHelper = new HealthcheckHtmlHelper();
+$healthcheckHelper = new HealthcheckHtmlHelper();
 ?>
 <?= $this->element('header', ['title' => __('Welcome to Passbolt Pro! Let\'s get started with the configuration.')]) ?>
 <div class="panel main ">
@@ -48,7 +48,7 @@ $healtcheckHelper = new HealthcheckHtmlHelper();
                             echo '<h3>' . HealthcheckServiceCollector::getTitleFromDomain($domain) . '</h3>';
 
                             foreach ($checkResults as $checkResult) {
-                                $healtcheckHelper->render($checkResult);
+                                $healthcheckHelper->render($checkResult);
                             }
                         }
                     }

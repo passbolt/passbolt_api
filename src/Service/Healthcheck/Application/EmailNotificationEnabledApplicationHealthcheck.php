@@ -98,4 +98,12 @@ class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServi
     {
         return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'emailNotificationEnabled';
+    }
 }

@@ -15,14 +15,13 @@ declare(strict_types=1);
  * @since         4.6.0
  */
 
-namespace Passbolt\WebInstaller\Service\Healthcheck;
+namespace App\Service\Healthcheck\Database;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Service\Healthcheck\SkipHealthcheckInterface;
-use Cake\Http\ServerRequest;
+use App\Utility\Migration;
 
-class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipHealthcheckInterface
+class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -31,36 +30,16 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipH
      */
     private bool $status = false;
 
-    private bool $isSkipped = false;
-
-    /**
-     * @var ?\Cake\Http\ServerRequest
-     */
-    private ?ServerRequest $request;
-
-    /**
-     * @param \Cake\Http\ServerRequest|string $request Server request object.
-     */
-    public function __construct($request)
-    {
-        // Mark as skipped if run via command line
-        if ($request instanceof ServerRequest) {
-            $this->request = $request;
-        } else {
-            $this->markAsSkipped();
-        }
-    }
-
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        if ($this->isSkipped()) {
-            return $this;
+        try {
+            $this->status = !Migration::needMigration();
+        } catch (\Exception $e) {
+            // Do nothing
         }
-
-        $this->status = $this->request->is('https');
 
         return $this;
     }
@@ -70,7 +49,7 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipH
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
+        return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
 
     /**
@@ -86,7 +65,7 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipH
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_WARNING;
+        return HealthcheckServiceCollector::LEVEL_ERROR;
     }
 
     /**
@@ -94,7 +73,7 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipH
      */
     public function getSuccessMessage(): string
     {
-        return __('SSL access is enabled.');
+        return __('The database schema up to date.');
     }
 
     /**
@@ -102,7 +81,7 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipH
      */
     public function getFailureMessage(): string
     {
-        return __('SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue.'); // phpcs:ignore
+        return __('The database schema is not up to date.');
     }
 
     /**
@@ -110,7 +89,11 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipH
      */
     public function getHelpMessage()
     {
-        return null;
+        return [
+            __('Run the migration scripts:'),
+            'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake migrations migrate --no-lock" ' . PROCESS_USER,
+            __('See. https://www.passbolt.com/help/tech/update'),
+        ];
     }
 
     /**
@@ -120,22 +103,14 @@ class IsSslWebInstallerHealthcheck implements HealthcheckServiceInterface, SkipH
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
+        return 'application';
     }
 
     /**
      * @inheritDoc
      */
-    public function markAsSkipped(): void
+    public function getLegacyArrayKey(): string
     {
-        $this->isSkipped = true;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isSkipped(): bool
-    {
-        return $this->isSkipped;
+        return 'schema';
     }
 }

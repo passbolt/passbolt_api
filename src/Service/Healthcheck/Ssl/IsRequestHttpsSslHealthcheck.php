@@ -15,11 +15,14 @@ declare(strict_types=1);
  * @since         4.6.0
  */
 
-namespace App\Service\Healthcheck\Environment;
+namespace App\Service\Healthcheck\Ssl;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Healthcheck\SkipHealthcheckInterface;
+use Cake\Http\ServerRequest;
 
-class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
+class IsRequestHttpsSslHealthcheck implements HealthcheckServiceInterface, SkipHealthcheckInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -28,12 +31,36 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
      */
     private bool $status = false;
 
+    private bool $isSkipped = false;
+
+    /**
+     * @var ?\Cake\Http\ServerRequest
+     */
+    private ?ServerRequest $request;
+
+    /**
+     * @param \Cake\Http\ServerRequest|string $request Server request object.
+     */
+    public function __construct($request)
+    {
+        // Mark as skipped if run via command line
+        if ($request instanceof ServerRequest) {
+            $this->request = $request;
+        } else {
+            $this->markAsSkipped();
+        }
+    }
+
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = is_writable(LOGS);
+        if ($this->isSkipped()) {
+            return $this;
+        }
+
+        $this->status = $this->request->is('https');
 
         return $this;
     }
@@ -43,8 +70,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
      */
     public function domain(): string
     {
-        // TODO: Use a constant
-        return 'environment';
+        return HealthcheckServiceCollector::DOMAIN_SSL;
     }
 
     /**
@@ -60,7 +86,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
      */
     public function level(): string
     {
-        return 'error';
+        return HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -68,7 +94,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
      */
     public function getSuccessMessage(): string
     {
-        return __('The logs directory and its content are writable.');
+        return __('SSL access is enabled.');
     }
 
     /**
@@ -76,7 +102,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
      */
     public function getFailureMessage(): string
     {
-        return __('The logs directory and its content are not writable.');
+        return __('SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue.'); // phpcs:ignore
     }
 
     /**
@@ -84,13 +110,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
      */
     public function getHelpMessage()
     {
-        return [
-            __('Ensure the logs directory and its content are writable by the user the webserver user.'),
-            __('you can try:'),
-            'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'logs',
-            'sudo chmod 775 $(find ' . ROOT . 'logs -type d)',
-            'sudo chmod 664 $(find ' . ROOT . 'logs -type f)',
-        ];
+        return null;
     }
 
     /**
@@ -100,7 +120,23 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
      */
     public function cliOption(): string
     {
-        return 'environment';
+        return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function markAsSkipped(): void
+    {
+        $this->isSkipped = true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function isSkipped(): bool
+    {
+        return $this->isSkipped;
     }
 
     /**
@@ -108,6 +144,6 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface
      */
     public function getLegacyArrayKey(): string
     {
-        return 'logWritable';
+        return 'is';
     }
 }

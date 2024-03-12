@@ -97,4 +97,12 @@ class SslForceApplicationHealthcheck implements HealthcheckServiceInterface
     {
         return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'sslForce';
+    }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck;
 
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Inflector;
 
 class HealthcheckServiceCollector
@@ -30,6 +31,8 @@ class HealthcheckServiceCollector
      * List of all available health check domains.
      */
     public const DOMAIN_ENVIRONMENT = 'environment';
+    public const DOMAIN_CONFIG_FILE = 'config_file';
+    public const DOMAIN_CORE = 'core';
     public const DOMAIN_APPLICATION = 'application';
     public const DOMAIN_SSL = 'ssl';
     public const DOMAIN_SMTP_SETTINGS = 'smtpSettings';
@@ -75,14 +78,15 @@ class HealthcheckServiceCollector
     public static function getTitleFromDomain(string $domain): string
     {
         $domainTitleMapping = [
-            'environment' => __('Environment'),
-            'configFiles' => __('Config files'),
-            'core' => __('Core config'),
+            self::DOMAIN_ENVIRONMENT => __('Environment'),
+            self::DOMAIN_CONFIG_FILE => __('Config files'),
+            self::DOMAIN_CORE => __('Core config'),
             self::DOMAIN_SMTP_SETTINGS => __('SMTP settings'),
             self::DOMAIN_APPLICATION => __('Application configuration'),
             self::DOMAIN_DATABASE => __('Database'),
             self::DOMAIN_GPG => __('GPG Configuration'),
             self::DOMAIN_JWT => __('JWT Authentication'),
+            self::DOMAIN_SSL => __('SSL'),
         ];
 
         if (isset($domainTitleMapping[$domain])) {
@@ -91,5 +95,33 @@ class HealthcheckServiceCollector
 
         // If mapping not found, change it to humanize form programmatically
         return Inflector::humanize($domain);
+    }
+
+    /**
+     * Returns array key of the given domain.
+     *
+     * @param string $domain Domain to get title from.
+     * @return string
+     * @throws \Cake\Http\Exception\InternalErrorException When domain-legacy key mapping not found.
+     */
+    public static function getLegacyDomainKey(string $domain): string
+    {
+         $domainLegacyKeyMapping = [
+            self::DOMAIN_ENVIRONMENT => 'environment',
+            self::DOMAIN_CONFIG_FILE => 'configFile',
+            self::DOMAIN_CORE => 'core',
+            self::DOMAIN_SMTP_SETTINGS => 'smtpSettings',
+            self::DOMAIN_APPLICATION => 'application',
+            self::DOMAIN_DATABASE => 'database',
+            self::DOMAIN_GPG => 'gpg',
+            self::DOMAIN_JWT => 'jwt',
+            self::DOMAIN_SSL => 'ssl',
+         ];
+
+         if (!isset($domainLegacyKeyMapping[$domain])) {
+             throw new InternalErrorException(__('Legacy array key not found for "{0}" domain', $domain));
+         }
+
+         return $domainLegacyKeyMapping[$domain];
     }
 }

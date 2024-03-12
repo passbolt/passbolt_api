@@ -82,4 +82,12 @@ class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
             __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'gpgHome';
+    }
 }

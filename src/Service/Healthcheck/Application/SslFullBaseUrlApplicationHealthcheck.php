@@ -98,4 +98,12 @@ class SslFullBaseUrlApplicationHealthcheck implements HealthcheckServiceInterfac
     {
         return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'sslFullBaseUrl';
+    }
 }

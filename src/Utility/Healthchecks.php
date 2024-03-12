@@ -223,7 +223,7 @@ class Healthchecks
         $checks['environment']['info']['phpVersion'] = PHP_VERSION;
         $checks['environment']['pcre'] = Validation::alphaNumeric('passbolt');
         $checks['environment']['mbstring'] = extension_loaded('mbstring');
-        $checks['environment']['gnupg'] = extension_loaded('gnupg'); // Not specified in HealthcheckCommand::assertEnvironment
+        $checks['environment']['gnupg'] = extension_loaded('gnupg');
         $checks['environment']['intl'] = extension_loaded('intl');
         $checks['environment']['image'] = (extension_loaded('gd') || extension_loaded('imagick'));
         $checks['environment']['tmpWritable'] = self::_checkRecursiveDirectoryWritable(TMP);

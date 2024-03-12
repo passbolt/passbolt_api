@@ -68,4 +68,21 @@ class TablesCountDatabaseHealthcheck extends AbstractDatabaseHealthcheck
             'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER,
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'tablesCount';
+    }
+
+    /**
+     * @deprecated As of v4.7.0, just kept it here for BC.
+     * @return int
+     */
+    public function getTableCount(): int
+    {
+        return $this->tableCount;
+    }
 }

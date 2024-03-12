@@ -96,4 +96,12 @@ class MbstringHealthcheck implements HealthcheckServiceInterface
     {
         return 'environment';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'mbstring';
+    }
 }

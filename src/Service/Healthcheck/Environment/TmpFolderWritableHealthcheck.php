@@ -123,4 +123,12 @@ class TmpFolderWritableHealthcheck implements HealthcheckServiceInterface
     {
         return 'environment';
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'tmpWritable';
+    }
 }

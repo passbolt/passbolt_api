@@ -116,4 +116,12 @@ class PrivateKeyWritableWebInstallerHealthcheck implements HealthcheckServiceInt
     {
         return Configure::read('passbolt.gpg.serverKey.private');
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'privateKeyWritable';
+    }
 }

@@ -67,4 +67,12 @@ interface HealthcheckServiceInterface
      * @return string|array|null
      */
     public function getHelpMessage();
+
+    /**
+     * Returns the array key used when returning check result.
+     *
+     * @deprecated As of v4.7.0, this is mostly used to keep BC.
+     * @return string
+     */
+    public function getLegacyArrayKey(): string;
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Core;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Core\Configure;
 
@@ -44,8 +45,7 @@ class FullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface
      */
     public function domain(): string
     {
-        // TODO: Use a constant
-        return 'core';
+        return HealthcheckServiceCollector::DOMAIN_CORE;
     }
 
     /**
@@ -99,5 +99,13 @@ class FullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface
     public function cliOption(): string
     {
         return 'core';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'fullBaseUrl';
     }
 }

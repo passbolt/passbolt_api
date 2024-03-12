@@ -22,6 +22,8 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 
 class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
 {
+    private bool $isPrivateKeyInfoOK = false;
+
     /**
      * @inheritDoc
      */
@@ -32,12 +34,12 @@ class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
             $gpg = OpenPGPBackendFactory::get();
             $privateKeyData = file_get_contents($this->getPrivateServerKey());
             $privateKeyInfo = $gpg->getKeyInfo($privateKeyData);
-            $isPrivateKeyInfoOK = ($privateKeyInfo['fingerprint'] === $fingerprint);
+            $this->isPrivateKeyInfoOK = ($privateKeyInfo['fingerprint'] === $fingerprint);
             $publicKeyData = file_get_contents($this->getPublicServerKey());
             $publicKeyInfo = $gpg->getPublicKeyInfo($publicKeyData);
             $isPublicKeyInfoOK = ($publicKeyInfo['fingerprint'] === $fingerprint);
 
-            $this->status = $isPublicKeyInfoOK && $isPrivateKeyInfoOK;
+            $this->status = $isPublicKeyInfoOK && $this->isPrivateKeyInfoOK;
         }
 
         return $this;
@@ -70,5 +72,49 @@ class FingerprintMatchGpgHealthcheck extends AbstractGpgHealthcheck
             __('SERVER_KEY_EMAIL: The email you used when you generated the server key.'),
             __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
         ];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'gpgKeyPublicFingerprint';
+    }
+
+    /**
+     * @deprecated Just here to keep BC
+     * @return bool
+     */
+    public function isPrivateKeyInfoOK(): bool
+    {
+        return $this->isPrivateKeyInfoOK;
+    }
+
+    /**
+     * @deprecated Just here to keep BC
+     * @return bool
+     */
+    public function gpgKeyPublicReadable(): bool
+    {
+        return $this->isPublicServerKeyReadable();
+    }
+
+    /**
+     * @deprecated Just here to keep BC
+     * @return bool
+     */
+    public function gpgKeyPrivateReadable(): bool
+    {
+        return $this->isPublicServerKeyReadable();
+    }
+
+    /**
+     * @deprecated Just here to keep BC
+     * @return string|null
+     */
+    public function gpgHome(): ?string
+    {
+        return $this->getGpgHome();
     }
 }

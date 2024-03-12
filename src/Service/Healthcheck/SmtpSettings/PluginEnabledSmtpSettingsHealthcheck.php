@@ -99,4 +99,12 @@ class PluginEnabledSmtpSettingsHealthcheck implements HealthcheckServiceInterfac
     {
         return HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'isEnabled';
+    }
 }

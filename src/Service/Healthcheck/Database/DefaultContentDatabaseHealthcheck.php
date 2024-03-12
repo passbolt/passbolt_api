@@ -67,4 +67,12 @@ class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
             'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake passbolt install" ' . PROCESS_USER,
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'defaultContent';
+    }
 }

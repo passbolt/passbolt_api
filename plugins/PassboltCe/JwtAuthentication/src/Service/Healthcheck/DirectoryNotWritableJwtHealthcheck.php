@@ -105,4 +105,12 @@ class DirectoryNotWritableJwtHealthcheck implements HealthcheckServiceInterface
     {
         return HealthcheckServiceCollector::DOMAIN_JWT;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'jwtWritable';
+    }
 }

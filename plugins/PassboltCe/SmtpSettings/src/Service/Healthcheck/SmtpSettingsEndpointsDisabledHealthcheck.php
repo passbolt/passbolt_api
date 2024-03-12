@@ -104,4 +104,12 @@ class SmtpSettingsEndpointsDisabledHealthcheck implements HealthcheckServiceInte
     {
         return HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'areEndpointsDisabled';
+    }
 }

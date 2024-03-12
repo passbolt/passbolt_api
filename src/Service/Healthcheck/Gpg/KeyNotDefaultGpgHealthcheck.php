@@ -70,4 +70,12 @@ class KeyNotDefaultGpgHealthcheck extends AbstractGpgHealthcheck
             __('See. https://www.passbolt.com/help/tech/install#toc_gpg'),
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'gpgKeyNotDefault';
+    }
 }

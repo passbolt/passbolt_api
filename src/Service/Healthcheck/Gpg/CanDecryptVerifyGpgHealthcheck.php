@@ -104,4 +104,12 @@ class CanDecryptVerifyGpgHealthcheck extends AbstractGpgHealthcheck implements S
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'canDecryptVerify';
+    }
 }

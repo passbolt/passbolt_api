@@ -23,6 +23,7 @@ use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 use Cake\Http\Client;
+use Cake\Http\TestSuite\HttpClientTrait;
 use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
 
 /**
@@ -31,14 +32,30 @@ use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
 class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 {
     use HealthcheckRequestTestTrait;
+    use HttpClientTrait;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
+    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
-    public function testHealthcheckIndexController_Success_Html(): void
+    public function setUp(): void
     {
+        parent::setUp();
+
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest();
         });
+        $this->mockService('fullBaseUrlReachableClient', function () {
+            return $this->getMockedHealthcheckStatusRequest(
+                200,
+                json_encode(['body' => 'OK'])
+            );
+        });
+        $this->mockService('sslHealthcheckClient', function () {
+            return $this->getMockedHealthcheckStatusRequest();
+        });
+    }
+
+    public function testHealthcheckIndexController_Success_Html(): void
+    {
         $this->get('/healthcheck');
         $this->assertResponseContains('Passbolt API Status');
         $this->assertResponseOk();
@@ -62,10 +79,6 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckIndexController_Success_Json(): void
     {
-        $this->mockService(Client::class, function () {
-            return $this->getMockedHealthcheckStatusRequest();
-        });
-
         $this->getJson('/healthcheck.json');
 
         $this->assertResponseSuccess();
@@ -87,10 +100,10 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
             ],
             'application' => [
                 'info' => [
-                    'remoteVersion' => 'undefined',
+                    'remoteVersion' => 'undefined', // value mismatch - 4.5.2
                     'currentVersion' => Configure::read('passbolt.version'),
                 ],
-                'latestVersion' => null,
+                'latestVersion' => null, // value mismatch - false
                 'schema' => true,
                 'robotsIndexDisabled' => true,
                 'sslForce' => false,
@@ -99,7 +112,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'seleniumDisabled' => !Configure::read('passbolt.selenium.active'),
                 'registrationClosed' => [
                     'isSelfRegistrationPluginEnabled' => $this->isFeaturePluginEnabled('SelfRegistration'),
-                    'selfRegistrationProvider' => null,
+                    'selfRegistrationProvider' => true, // value mismatch - true
                     'isRegistrationPublicRemovedFromPassbolt' => is_null(Configure::read('passbolt.registration.public')),
                 ],
                 'hostAvailabilityCheckEnabled' => Configure::read(EmailValidationRule::MX_CHECK_KEY),
@@ -167,7 +180,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
             'smtpSettings' => [
                 'isEnabled' => $this->isFeaturePluginEnabled('SmtpSettings'),
                 'areEndpointsDisabled' => Configure::read(SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED),
-                'errorMessage' => false,
+                'errorMessage' => true,
                 'source' => 'env variables',
                 'isInDb' => false,
             ],

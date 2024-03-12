@@ -98,4 +98,12 @@ class RobotsIndexDisabledApplicationHealthcheck implements HealthcheckServiceInt
     {
         return HealthcheckServiceCollector::DOMAIN_APPLICATION;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'robotsIndexDisabled';
+    }
 }

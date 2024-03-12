@@ -95,4 +95,12 @@ class GopengpgPrivateKeyFormatGpgHealthcheck extends AbstractGpgHealthcheck impl
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'isPrivateServerKeyGopengpgCompatible';
+    }
 }

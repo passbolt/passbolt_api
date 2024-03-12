@@ -37,6 +37,7 @@ class JwtHealthcheckCommandTest extends AppTestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
+        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
     }
 
     public function testHealthcheckCommand_Jwt_Plugin_Disabled()

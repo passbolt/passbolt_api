@@ -102,4 +102,12 @@ class CanEncryptSignGpgHealthcheck extends AbstractGpgHealthcheck implements Ski
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'canEncryptSign';
+    }
 }

@@ -102,4 +102,12 @@ class CanDecryptGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHea
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'canDecrypt';
+    }
 }

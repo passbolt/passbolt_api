@@ -108,4 +108,12 @@ class ValidKeyPairJwtHealthcheck implements HealthcheckServiceInterface
     {
         return HealthcheckServiceCollector::DOMAIN_JWT;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'keyPairValid';
+    }
 }

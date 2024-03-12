@@ -68,4 +68,12 @@ class PublicKeyInKeyringGpgHealthcheck extends AbstractGpgHealthcheck
             'sudo su -s /bin/bash -c "gpg --home ' . $this->getGpgHome() . ' --import ' . $this->getPrivateServerKey() . '" ' . PROCESS_USER,// phpcs:ignore
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'gpgKeyPublicInKeyring';
+    }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\ConfigFiles;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
 class AppConfigFileHealthcheck implements HealthcheckServiceInterface
@@ -43,8 +44,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface
      */
     public function domain(): string
     {
-        // TODO: Use a constant
-        return 'configFiles';
+        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILE;
     }
 
     /**
@@ -95,5 +95,13 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface
     public function cliOption(): string
     {
         return 'configFiles';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'app';
     }
 }

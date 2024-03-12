@@ -95,4 +95,12 @@ class GopengpgPublicKeyFormatGpgHealthcheck extends AbstractGpgHealthcheck imple
     {
         return $this->isSkipped;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'isPublicServerKeyGopengpgCompatible';
+    }
 }

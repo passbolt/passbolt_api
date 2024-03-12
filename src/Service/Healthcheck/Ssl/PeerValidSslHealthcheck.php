@@ -46,4 +46,12 @@ class PeerValidSslHealthcheck extends AbstractBaseSslHealthcheck
     {
         return __('SSL peer certificate does not validate.');
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'peerValid';
+    }
 }

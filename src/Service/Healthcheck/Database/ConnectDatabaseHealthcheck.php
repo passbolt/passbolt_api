@@ -70,4 +70,31 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
             __('Make sure the database exists and is accessible for the given database user.'),
         ];
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'connect';
+    }
+
+    /**
+     * This method is only here because we don't have "datasource" access outside.
+     *
+     * @deprecated As of v4.7.0, will be removed in v5.
+     * @return bool
+     */
+    public function isSupportedBackend(): bool
+    {
+        $result = false;
+
+        $connection = ConnectionManager::get($this->getDatasource());
+        $config = $connection->config();
+        if (in_array($config['driver'], ['Cake\Database\Driver\Mysql', 'Cake\Database\Driver\Postgres'])) {
+            $result = true;
+        }
+
+        return $result;
+    }
 }

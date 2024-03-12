@@ -38,7 +38,7 @@ use App\Service\Healthcheck\Core\SaltCoreHealthcheck;
 use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
 use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\DefaultContentDatabaseHealthcheck;
-use App\Service\Healthcheck\Database\SchemaUpToDateDatabaseHealthcheck;
+use App\Service\Healthcheck\Database\SchemaUpToDateApplicationHealthcheck;
 use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
 use App\Service\Healthcheck\Environment\ImageHealthcheck;
 use App\Service\Healthcheck\Environment\IntlHealthcheck;
@@ -54,13 +54,13 @@ use App\Service\Healthcheck\Gpg\CanEncryptGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\CanEncryptSignGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\CanSignGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\CanVerifyGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\FingerprintMatchGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\GopengpgPrivateKeyFormatGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\GopengpgPublicKeyFormatGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\KeyNotDefaultGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
-use App\Service\Healthcheck\Gpg\FingerprintMatchGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PrivateKeyReadableAndParsableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PublicKeyEmailGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PublicKeyInKeyringGpgHealthcheck;
@@ -69,11 +69,13 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\Jwt\PluginEnabledJwtHealthcheck;
 use App\Service\Healthcheck\SmtpSettings\PluginEnabledSmtpSettingsHealthcheck;
 use App\Service\Healthcheck\Ssl\HostValidSslHealthcheck;
+use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
 use App\Service\Healthcheck\Ssl\NotSelfSignedSslHealthcheck;
 use App\Service\Healthcheck\Ssl\PeerValidSslHealthcheck;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Cake\Http\Client;
+use Cake\Http\ServerRequest;
 use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckService;
 
 class HealthcheckServiceProvider extends ServiceProvider
@@ -197,7 +199,7 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(ConnectDatabaseHealthcheck::class);
         $container->add(TablesCountDatabaseHealthcheck::class);
         $container->add(DefaultContentDatabaseHealthcheck::class);
-        $container->add(SchemaUpToDateDatabaseHealthcheck::class);
+        $container->add(SchemaUpToDateApplicationHealthcheck::class);
 
         // Append core health checks to service collector
         $container->add(HealthcheckServiceCollector::class)
@@ -253,6 +255,9 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [ConnectDatabaseHealthcheck::class])
             ->addMethodCall('addService', [TablesCountDatabaseHealthcheck::class])
             ->addMethodCall('addService', [DefaultContentDatabaseHealthcheck::class])
-            ->addMethodCall('addService', [SchemaUpToDateDatabaseHealthcheck::class]);
+            ->addMethodCall('addService', [SchemaUpToDateApplicationHealthcheck::class]);
+
+        // Required for Healthcheck endpoint
+        $container->add(IsRequestHttpsSslHealthcheck::class)->addArgument(ServerRequest::class);
     }
 }

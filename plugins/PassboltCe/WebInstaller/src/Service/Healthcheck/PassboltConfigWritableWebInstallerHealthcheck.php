@@ -106,4 +106,12 @@ class PassboltConfigWritableWebInstallerHealthcheck implements HealthcheckServic
     {
         return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'passboltConfigWritable';
+    }
 }

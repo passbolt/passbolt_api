@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\ConfigFiles;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
 class PassboltConfigFileHealthcheck implements HealthcheckServiceInterface
@@ -43,8 +44,7 @@ class PassboltConfigFileHealthcheck implements HealthcheckServiceInterface
      */
     public function domain(): string
     {
-        // TODO: Use a constant
-        return 'configFiles';
+        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILE;
     }
 
     /**
@@ -98,5 +98,13 @@ class PassboltConfigFileHealthcheck implements HealthcheckServiceInterface
     public function cliOption(): string
     {
         return 'configFiles';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'passbolt';
     }
 }

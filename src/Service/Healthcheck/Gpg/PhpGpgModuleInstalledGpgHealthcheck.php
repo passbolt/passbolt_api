@@ -62,4 +62,12 @@ class PhpGpgModuleInstalledGpgHealthcheck extends AbstractGpgHealthcheck
         return __('Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php') .
             __('Make sure to add extension=gnupg.so in php ini files for both php-cli and php.');
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getLegacyArrayKey(): string
+    {
+        return 'lib';
+    }
 }
