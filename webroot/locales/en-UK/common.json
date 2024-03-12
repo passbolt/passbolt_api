@@ -991,6 +991,7 @@
   "The group name already exists.": "The group name already exists.",
   "The group users field mapping cannot be empty": "The group users field mapping cannot be empty",
   "The group users field mapping cannot exceed 128 characters.": "The group users field mapping cannot exceed 128 characters.",
+  "The health check API endpoint has been disabled in the server configuration.": "The health check API endpoint has been disabled in the server configuration.",
   "The healthcheck has been successfully refreshed": "The healthcheck has been successfully refreshed",
   "The internationalization settings were updated.": "The internationalization settings were updated.",
   "The invitation is expired.": "The invitation is expired.",
