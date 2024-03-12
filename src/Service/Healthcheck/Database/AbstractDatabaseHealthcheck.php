@@ -17,11 +17,12 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Database;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\Healthcheck\HealthcheckWithOptionsInterface;
 
-abstract class AbstractDatabaseHealthcheck implements HealthcheckServiceInterface, HealthcheckWithOptionsInterface
+abstract class AbstractDatabaseHealthcheck implements HealthcheckServiceInterface, HealthcheckWithOptionsInterface, HealthcheckCliInterface // phpcs:ignore
 {
     /**
      * Status of this health check if it is passed or failed.

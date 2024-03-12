@@ -12,13 +12,12 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.6.0
+ * @since         4.7.0
  */
 
 namespace App\Service\Healthcheck\Database;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Database\Exception as DatabaseException;
 use Cake\Database\Exception\MissingConnectionException;
 use Cake\Datasource\ConnectionManager;
 
@@ -30,12 +29,13 @@ class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     public function check(): HealthcheckServiceInterface
     {
         try {
-            $nRoles = ConnectionManager::get($this->getDatasource())
-                ->selectQuery('id')
+            /** @var \Cake\Database\Connection $connection */
+            $connection = ConnectionManager::get($this->getDatasource());
+            $nRoles = $connection->selectQuery('id')
                 ->from('roles')
                 ->rowCountAndClose();
             $this->status = ($nRoles >= 3);
-        } catch (DatabaseException | MissingConnectionException | \PDOException $e) {
+        } catch (MissingConnectionException | \PDOException $e) {
         }
 
         return $this;

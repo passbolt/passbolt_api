@@ -17,11 +17,12 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\SmtpSettings;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
 
-class PluginEnabledSmtpSettingsHealthcheck implements HealthcheckServiceInterface
+class PluginEnabledSmtpSettingsHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     use FeaturePluginAwareTrait;
 

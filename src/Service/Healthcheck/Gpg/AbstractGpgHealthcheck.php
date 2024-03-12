@@ -17,12 +17,13 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Gpg;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 
-abstract class AbstractGpgHealthcheck implements HealthcheckServiceInterface
+abstract class AbstractGpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.

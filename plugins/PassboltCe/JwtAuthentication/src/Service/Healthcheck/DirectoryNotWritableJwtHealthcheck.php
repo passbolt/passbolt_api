@@ -17,13 +17,14 @@ declare(strict_types=1);
 
 namespace Passbolt\JwtAuthentication\Service\Healthcheck;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 
-class DirectoryNotWritableJwtHealthcheck implements HealthcheckServiceInterface
+class DirectoryNotWritableJwtHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.

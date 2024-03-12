@@ -17,11 +17,12 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Jwt;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
 
-class PluginEnabledJwtHealthcheck implements HealthcheckServiceInterface
+class PluginEnabledJwtHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     use FeaturePluginAwareTrait;
 

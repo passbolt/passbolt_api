@@ -17,11 +17,12 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Application;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Core\Configure;
 
-class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServiceInterface
+class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.

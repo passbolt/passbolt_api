@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace App\Service\Healthcheck\Database;
 
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Database\Exception as DatabaseException;
 use Cake\Database\Exception\MissingConnectionException;
 use Cake\Datasource\ConnectionManager;
 
@@ -36,7 +35,7 @@ class TablesCountDatabaseHealthcheck extends AbstractDatabaseHealthcheck
             $this->tableCount = count($connection->getSchemaCollection()->listTables());
 
             $this->status = $this->tableCount > 0;
-        } catch (DatabaseException | MissingConnectionException $connectionError) {
+        } catch (MissingConnectionException $connectionError) {
         }
 
         return $this;

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\Command\ProcessUserService;
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\Healthcheck\HealthcheckWithOptionsInterface;
@@ -40,18 +41,6 @@ class HealthcheckCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;
     use FeaturePluginAwareTrait;
-
-    public const ALL_HEALTH_CHECKS = [
-//        'environment',
-//        'configFiles',
-//        'core',
-//        'ssl',
-//        'database',
-//        'gpg',
-//        'application',
-//        'jwt',
-//        'smtpSettings',
-    ];
 
     /**
      * Total number of errors for that check
@@ -195,31 +184,20 @@ class HealthcheckCommand extends PassboltCommand
         // Root user is not allowed to execute this command.
         $this->assertCurrentProcessUser($io, $this->processUserService);
 
-        $results = [];
-
         // display options
         $displayOptions = array_keys($this->_displayOptions);
         foreach ($displayOptions as $option) {
             $this->_displayOptions[$option] = $args->getOption($option);
         }
 
-        // OLD - if user only want to run one check
-        $paramChecks = [];
-        $checks = self::ALL_HEALTH_CHECKS;
-        foreach ($checks as $check) {
-            if ($args->getOption($check)) {
-                $paramChecks[] = $check;
-            }
-        }
-        if (count($paramChecks)) {
-            $checks = $paramChecks;
-        }
-        // NEW - if user only want to run one check
+        // If user only want to run one check
         $paramChecks = [];
         $healthcheckServices = $this->healthcheckServiceCollector->getServices();
         foreach ($healthcheckServices as $healthcheckService) {
-            // TODO: Add $healthcheckService instanceof HealthcheckWithCliOptionInterface
-            if ($args->getOption($healthcheckService->cliOption())) {
+            if (
+                $healthcheckService instanceof HealthcheckCliInterface
+                && $args->getOption($healthcheckService->cliOption())
+            ) {
                 $paramChecks[] = $healthcheckService;
             }
 
@@ -232,34 +210,24 @@ class HealthcheckCommand extends PassboltCommand
         }
 
         $io->out(' Healthcheck shell', 0);
-        // OLD - Run all the selected checks
-//        foreach ($checks as $check) {
-//            $io->out('.', 0); // Print a dot for each checks to show progress
-//            $results = array_merge(Healthchecks::{$check}(), $results);
-//        }
-        // NEW - Get services from collector and run checks
+        // Get services from collector and run checks
         $resultCollection = new Collection([]);
         foreach ($healthcheckServices as $healthcheckService) {
+            $io->out('.', 0); // Print a dot for each checks to show progress
             $result = $healthcheckService->check();
             $resultCollection = $this->appendResult($resultCollection, $result);
         }
 
         // Remove all dots
-        $io->out(str_repeat(chr(0x08), count($checks)) . str_repeat(' ', count($checks)), 0);
+        $io->out(str_repeat(chr(0x08), $resultCollection->count()) . str_repeat(' ', $resultCollection->count()), 0);
 
         $io->out();
         $io->hr();
 
-        // OLD - Print results
-        foreach ($checks as $check) {
-            $fn = 'assert' . ucfirst($check);
-            $this->{$fn}($results);
-        }
-        // NEW - Print results
+        // Print results
         $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
             return $result->domain();
         });
-
         foreach ($resultsGroupByDomain as $domain => $checkResults) {
             $this->title(HealthcheckServiceCollector::getTitleFromDomain($domain));
 

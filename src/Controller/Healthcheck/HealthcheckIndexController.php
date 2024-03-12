@@ -105,19 +105,6 @@ class HealthcheckIndexController extends AppController
     }
 
     /**
-     * Check that need/can to be performed in web context only
-     *
-     * @access private
-     * @return array
-     */
-    private function __webChecks(): array
-    {
-        $checks['ssl']['is'] = $this->request->is('https');
-
-        return $checks;
-    }
-
-    /**
      * @return void
      * @throws \Cake\Http\Exception\ForbiddenException if the endpoint is deactivated
      */

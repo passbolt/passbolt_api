@@ -17,10 +17,11 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Environment;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Filesystem\DirectoryUtility;
 
-class TmpFolderWritableHealthcheck implements HealthcheckServiceInterface
+class TmpFolderWritableHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.

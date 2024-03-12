@@ -17,9 +17,10 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Environment;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
-class IntlHealthcheck implements HealthcheckServiceInterface
+class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.

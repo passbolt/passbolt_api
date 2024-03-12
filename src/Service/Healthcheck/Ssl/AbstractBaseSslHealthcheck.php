@@ -18,12 +18,13 @@ declare(strict_types=1);
 namespace App\Service\Healthcheck\Ssl;
 
 use App\Service\Healthcheck\Core\FullBaseUrlReachableCoreHealthcheck;
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Http\Client;
 use Cake\Routing\Router;
 
-abstract class AbstractBaseSslHealthcheck implements HealthcheckServiceInterface
+abstract class AbstractBaseSslHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     protected FullBaseUrlReachableCoreHealthcheck $fullBaseUrlReachableCoreHealthcheck;
 

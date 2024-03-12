@@ -17,12 +17,13 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Core;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Core\Configure;
 use Cake\Validation\Validation;
 
-class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface
+class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.

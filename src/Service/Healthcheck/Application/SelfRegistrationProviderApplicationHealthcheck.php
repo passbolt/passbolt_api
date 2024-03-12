@@ -17,11 +17,12 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck\Application;
 
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckService;
 
-class SelfRegistrationProviderApplicationHealthcheck implements HealthcheckServiceInterface
+class SelfRegistrationProviderApplicationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
