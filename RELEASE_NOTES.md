@@ -10,7 +10,7 @@ The best part? All you have to do is head to GitHub and dive in! Of course, you 
 
 Enjoy the testing journey! ♥️
 
-## [4.6.0-test.1] - 2024-03-07
+## [4.6.0-rc.1] - 2024-03-11
 ### Added
 - PB-24485 As an administrator I can view the API healthcheck in the administration section
 - PB-29396 As an administrator I can hide the share folder capability with a RBAC
