@@ -10,7 +10,7 @@ The best part? All you have to do is head to GitHub and dive in! Of course, you 
 
 Enjoy the testing journey! ♥️
 
-## [4.6.0-rc.1] - 2024-03-11
+## [4.6.0-rc.2] - 2024-03-13
 ### Added
 - PB-24485 As an administrator I can view the API healthcheck in the administration section
 - PB-29396 As an administrator I can hide the share folder capability with a RBAC
@@ -32,6 +32,7 @@ Enjoy the testing journey! ♥️
 - PB-29054 As an administrator I should not get an error when running the cleanup command and the users table does not exist
 - PB-28719 As an administrator sending emails the timezone displayed in the emails should be in the correct time zone
 - PB-30266 As an administrator sending emails with the email digest the message ID should be defined
+- PB-30182 Build the styleguide on version 4.6.1
 
 ### Maintenance
 - PB-28247 Update cakephp/cakephp to version 4.5
