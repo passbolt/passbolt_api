@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.0-rc.2] - 2024-03-13
+### Fixed
+- PB-30182 Build the styleguide on version 4.6.1
+
 ## [4.6.0-rc.1] - 2024-03-11
 ### Added
 - PB-24485 As an administrator I can view the API healthcheck in the administration section
