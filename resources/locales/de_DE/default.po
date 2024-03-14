@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-02-13 05:22+0000\n"
-"PO-Revision-Date: 2024-02-13 05:55\n"
+"POT-Creation-Date: 2024-03-07 13:12+0000\n"
+"PO-Revision-Date: 2024-03-13 08:36\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -243,6 +243,9 @@ msgstr "Die Gruppe existiert nicht."
 
 msgid "All checks ran successfully!"
 msgstr "Alle Prüfungen wurden erfolgreich ausgeführt!"
+
+msgid "Healthcheck security index endpoint disabled."
+msgstr "Endpunkt für Integritätsprüfungs-Sicherheitsindex deaktiviert."
 
 msgid "OK"
 msgstr "OK"
@@ -953,7 +956,7 @@ msgid "The key should not already be expired."
 msgstr "Der Schlüssel darf nicht abgelaufen sein."
 
 msgid "The date could not be parsed."
-msgstr ""
+msgstr "Das Datum konnte nicht geparst werden."
 
 msgid "The email should be a valid email address."
 msgstr "Die E-Mail muss eine gültige E-Mail-Adresse sein."
@@ -980,10 +983,10 @@ msgid "{0} updated your memberships in several groups"
 msgstr "{0} hat Ihre Mitgliedschaften in mehreren Gruppen aktualisiert"
 
 msgid "{0} deleted several group memberships"
-msgstr ""
+msgstr "{0} hat mehrere Gruppenmitgliedschaften gelöscht"
 
 msgid "You made changes on several resources"
-msgstr ""
+msgstr "Sie haben an mehreren Ressourcen Änderungen vorgenommen"
 
 msgid "{0} has made changes on several resources"
 msgstr "{0} hat an mehreren Ressourcen Änderungen vorgenommen"
@@ -1010,7 +1013,7 @@ msgid "{0} requested you to add members to {1}"
 msgstr "{0} hat Sie gebeten, Mitglieder zu {1} hinzuzufügen"
 
 msgid "You have been requested to add members to {0}"
-msgstr ""
+msgstr "Sie wurden gebeten, Mitglieder zu {0} hinzuzufügen"
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} hat Sie aus der Gruppe {1} entfernt"
@@ -1034,7 +1037,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} hat das Passwort {1} gelöscht"
 
 msgid "You edited the password {0}"
-msgstr ""
+msgstr "Sie haben das Passwort {0} bearbeitet"
 
 msgid "{0} edited the password {1}"
 msgstr "{0} hat das Passwort {1} bearbeitet"
@@ -1121,7 +1124,7 @@ msgid "The send on group manager updated setting should be a boolean."
 msgstr "Die Einstellung \"Senden bei Aktualisierung der Gruppenmanager*in\" sollte ein Boolean sein."
 
 msgid "The send on group manager request add user should be a boolean."
-msgstr ""
+msgstr "Die Einstellung \"Senden bei Gruppenmanageranforderung zum Hinzufügen eines Benutzers\" sollte ein Boolean sein."
 
 msgid "The send on password created setting should be a boolean."
 msgstr "Die Einstellung \"Senden beim Anlegen eines neuen Passworts\" sollte ein Boolean sein."
@@ -1361,10 +1364,10 @@ msgid "Could not validate secret data."
 msgstr "Secret Daten konnten nicht validiert werden."
 
 msgid "The group id should be a valid UUID."
-msgstr ""
+msgstr "Die Gruppen-ID sollte eine gültige UUID sein."
 
 msgid "The users ids array should contain only valid UUIDs."
-msgstr ""
+msgstr "Das Benutzer-ID-Array sollte nur gültige UUIDs enthalten."
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "Validierung fehlgeschlagen für Secret {0}. {1}"
@@ -1898,7 +1901,7 @@ msgid "This is not a valid {0}."
 msgstr "Dies ist kein gültiger {0}."
 
 msgid "The locale should be a string."
-msgstr ""
+msgstr "Das Gebietsschema sollte ein String sein."
 
 msgid "The strategy should extend the class: {0}"
 msgstr "Die Strategie sollte die folgende Klasse erweitern: {0}"
@@ -2516,40 +2519,40 @@ msgid "Log in passbolt"
 msgstr "Bei Passbolt eInloggen"
 
 msgid "The automatic_expiry field must be true."
-msgstr ""
+msgstr "Das Feld „automatic_expiry“ muss wahr sein."
 
 msgid "The automatic_update field must be true."
-msgstr ""
+msgstr "Das Feld „automatic_update“ muss wahr sein."
 
 msgid "The value should be an array."
 msgstr "Der Wert sollte ein Array sein."
 
 msgid "{0} marked several passwords as expired"
-msgstr ""
+msgstr "{0} hat mehrere Passwörter als abgelaufen markiert"
 
 msgid "Some of your passwords expired"
-msgstr ""
+msgstr "Einige Ihrer Passwörter sind abgelaufen"
 
 msgid "{0} marked the password {1} as expired"
-msgstr ""
+msgstr "{0} hat das Passwort {1} als abgelaufen markiert"
 
 msgid "You edited the password expiry settings"
-msgstr ""
+msgstr "Sie haben die Einstellungen für den Passwortablauf bearbeitet"
 
 msgid "{0} edited the password expiry settings"
-msgstr ""
+msgstr "{0} hat die Einstellungen für den Passwortablauf geändert"
 
 msgid "The send password expire setting should be a boolean."
-msgstr ""
+msgstr "Die Einstellung \"Senden bei Passwortablauf\" sollte ein Boolean sein."
 
 msgid "The password expiry setting does not exist."
-msgstr ""
+msgstr "Die Passwortablauf-Einstellung existiert nicht."
 
 msgid "Could not validate the password expiry settings."
-msgstr ""
+msgstr "Konnte die Einstellungen zum Passwortablauf nicht validieren."
 
 msgid "The password expiry settings have been updated."
-msgstr ""
+msgstr "Die Einstellungen zum Passwortablauf wurden aktualisiert."
 
 msgid "View them in passbolt"
 msgstr ""
