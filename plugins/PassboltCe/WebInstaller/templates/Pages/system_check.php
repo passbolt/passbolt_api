@@ -4,6 +4,7 @@ declare(strict_types=1);
 /**
  * @var \App\View\AppView $this
  * @var bool $isSystemOk
+ * @var bool $isNextMinPhpVersionPassed
  * @var string $nextStepUrl
  * @var \Cake\Collection\Collection $resultCollection
  */
@@ -12,6 +13,10 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Passbolt\WebInstaller\View\Helper\HealthcheckHtmlHelper;
 
 $healthcheckHelper = new HealthcheckHtmlHelper();
+
+$resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
+    return $result->domain();
+});
 ?>
 <?= $this->element('header', ['title' => __('Welcome to Passbolt Pro! Let\'s get started with the configuration.')]) ?>
 <div class="panel main ">
@@ -35,22 +40,27 @@ $healthcheckHelper = new HealthcheckHtmlHelper();
                     <?= $this->Flash->render() ?>
 
                     <?php
-                    if ($isSystemOk) {
-                        echo '<div class="message success">' . __('Environment is configured correctly.') . '</div>';
-                        echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
-                        echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
-                    } else {
-                        $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
-                            return $result->domain();
-                        });
-
+                    /**
+                     * Display environment domain results.
+                     */
+                    // We want display the warning when php version is less than next minimum PHP version we'll support.
+                    // That's why this complex condition :)
+                    if ((!$isSystemOk) || ($isSystemOk && !$isNextMinPhpVersionPassed)) {
                         foreach ($resultsGroupByDomain as $domain => $checkResults) {
+                            // Skip if not environment domain
+                            if ($domain !== HealthcheckServiceCollector::DOMAIN_ENVIRONMENT) {
+                                continue;
+                            }
+
                             echo '<h3>' . HealthcheckServiceCollector::getTitleFromDomain($domain) . '</h3>';
 
                             foreach ($checkResults as $checkResult) {
                                 $healthcheckHelper->render($checkResult);
                             }
                         }
+                    } else {
+                        // Environment is fine
+                        echo '<div class="message success">' . __('Environment is configured correctly.') . '</div>';
                     }
                     ?>
 
@@ -59,6 +69,29 @@ $healthcheckHelper = new HealthcheckHtmlHelper();
                         <?php echo __('URL rewriting is not properly configured on your server.'); ?>
                         <a target="_blank" rel="noopener noreferrer" href="https://book.cakephp.org/4/en/installation.html#url-rewriting">Learn more.</a>
                     </div>
+
+                    <?php
+                    /**
+                     * Display remaining domain results separately.
+                     */
+                    if ($isSystemOk) {
+                        echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
+                        echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
+                    } else {
+                        foreach ($resultsGroupByDomain as $domain => $checkResults) {
+                            // Skip if environment domain
+                            if ($domain === HealthcheckServiceCollector::DOMAIN_ENVIRONMENT) {
+                                continue;
+                            }
+
+                            echo '<h3>' . HealthcheckServiceCollector::getTitleFromDomain($domain) . '</h3>';
+
+                            foreach ($checkResults as $checkResult) {
+                                $healthcheckHelper->render($checkResult);
+                            }
+                        }
+                    }
+                    ?>
                 </div>
 
                 <div class="col5 last">

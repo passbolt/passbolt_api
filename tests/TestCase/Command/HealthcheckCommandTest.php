@@ -18,11 +18,11 @@ namespace App\Test\TestCase\Command;
 
 use App\Model\Table\RolesTable;
 use App\Model\Validation\EmailValidationRule;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
-use App\Utility\Healthchecks;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
@@ -71,14 +71,27 @@ class HealthcheckCommandTest extends AppTestCase
     public function testHealthcheckCommandHelp()
     {
         $this->exec('passbolt healthcheck -h');
+
         $this->assertExitSuccess();
         $this->assertOutputContains('Check the configuration of this installation and associated environment.');
         $this->assertOutputContains('cake passbolt healthcheck');
         // Ensure that all checks are displayed in the help
-        // TODO: Change it to use service collector
-//        foreach (HealthcheckCommand::ALL_HEALTH_CHECKS as $check) {
-//            $this->assertOutputContains($check);
-//        }
+        $cliDomains = [
+            HealthcheckServiceCollector::DOMAIN_APPLICATION,
+            HealthcheckServiceCollector::DOMAIN_CONFIG_FILE,
+            HealthcheckServiceCollector::DOMAIN_CORE,
+            HealthcheckServiceCollector::DOMAIN_DATABASE,
+            HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
+            HealthcheckServiceCollector::DOMAIN_GPG,
+            HealthcheckServiceCollector::DOMAIN_JWT,
+            HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS,
+            HealthcheckServiceCollector::DOMAIN_SSL,
+        ];
+        foreach ($cliDomains as $cliDomain) {
+            $this->assertOutputContains("--$cliDomain");
+        }
+        // Additional option for database domain
+        $this->assertOutputContains('--datasource');
     }
 
     /**
@@ -115,8 +128,8 @@ class HealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Environment_Unhappy_Path()
     {
-        Configure::write(Healthchecks::PHP_MIN_VERSION_CONFIG, '40');
-        Configure::write(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG, '50');
+        Configure::write(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG, '40');
+        Configure::write(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG, '50');
         $this->exec('passbolt healthcheck -d test --environment');
 
         $this->assertExitSuccess();
@@ -236,7 +249,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('<success>[PASS]</success> Cache is working.');
         $this->assertOutputContains('<error>[FAIL] Debug mode is on.</error>');
         $this->assertOutputContains('<success>[PASS]</success> Unique value set for security.salt');
-        $this->assertOutputContains('<success>[PASS]</success> Full base url is set to https://passbolt.local');
+        $this->assertOutputContains('<success>[PASS]</success> Full base url is set to ' . Configure::read('App.fullBaseUrl'));
         $this->assertOutputContains('<success>[PASS]</success> App.fullBaseUrl validation OK.');
         $this->assertOutputContains('<success>[PASS]</success> /healthcheck/status is reachable.');
         $this->assertOutputContains('<error>[FAIL] 1 error(s) found. Hang in there!</error>');
@@ -251,8 +264,8 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('<success>[PASS]</success> The environment variable GNUPGHOME is set to /root/.gnupg.');
         $this->assertOutputContains('<success>[PASS]</success> The directory /root/.gnupg containing the keyring is writable by the webserver user.');
         $this->assertOutputContains('<error>[FAIL] Do not use the default OpenPGP key for the server.</error>');
-        $this->assertOutputContains('<success>[PASS]</success> The public key file is defined in /var/www/passbolt/config/passbolt.php and readable.');
-        $this->assertOutputContains('<success>[PASS]</success> The private key file is defined in /var/www/passbolt/config/passbolt.php and readable.');
+        $this->assertOutputContains('<success>[PASS]</success> The public key file is defined in ' . CONFIG . 'passbolt.php and readable.');
+        $this->assertOutputContains('<success>[PASS]</success> The private key file is defined in ' . CONFIG . 'passbolt.php and readable.');
         $this->assertOutputContains('<success>[PASS]</success> The server key fingerprint matches the one defined in ');
         $this->assertOutputContains('<success>[PASS]</success> The server public key defined in the ' . CONFIG . 'passbolt.php (or environment variables) is in the keyring.');
         $this->assertOutputContains('<success>[PASS]</success> There is a valid email id defined for the server key.');

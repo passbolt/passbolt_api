@@ -20,7 +20,6 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 
 class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
@@ -39,7 +38,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckC
     {
         $this->status = version_compare(
             PHP_VERSION,
-            Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG),
+            Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG),
             '>='
         );
 
@@ -85,7 +84,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckC
     {
         return __(
             'PHP version is too low, passbolt need PHP {0} or higher.',
-            Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG)
+            Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG)
         );
     }
 
@@ -104,7 +103,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckC
      */
     public function cliOption(): string
     {
-        return 'environment';
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**

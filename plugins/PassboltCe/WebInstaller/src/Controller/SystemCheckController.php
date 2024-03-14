@@ -22,6 +22,7 @@ use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Collection\Collection;
+use Cake\Collection\CollectionInterface;
 use Cake\Routing\Router;
 
 class SystemCheckController extends WebInstallerController
@@ -44,13 +45,21 @@ class SystemCheckController extends WebInstallerController
         }
 
         $isSystemOk = $resultCollection->every(function ($healthcheckResult) {
+            // Do not block installation even if this check fails
+            if ($healthcheckResult instanceof NextMinPhpVersionHealthcheck) {
+                return true;
+            }
+
             /** @var \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckResult */
             return $healthcheckResult->isPassed();
         });
 
+        $isNextMinPhpVersionPassed = $this->isNextMinPhpVersionPassed($resultCollection);
+
         $nextStepUrl = Router::url('/install/database', true);
         $this->webInstaller->setSettingsAndSave('initialized', true);
         $this->set('resultCollection', $resultCollection);
+        $this->set('isNextMinPhpVersionPassed', $isNextMinPhpVersionPassed);
         $this->set('isSystemOk', $isSystemOk);
         $this->set('nextStepUrl', $nextStepUrl);
         $this->render('Pages/system_check');
@@ -75,14 +84,7 @@ class SystemCheckController extends WebInstallerController
         ];
 
         $services = [];
-        /**
-         * Extract environment domain services but without NextMinPhpVersionHealthcheck
-         */
         foreach ($healthcheckServiceCollector->getServices() as $healthcheckService) {
-            // Exclude this service
-            if ($healthcheckService instanceof NextMinPhpVersionHealthcheck) {
-                continue;
-            }
             if (in_array($healthcheckService->domain(), $domainsIncluded)) {
                 $services[] = $healthcheckService;
                 continue;
@@ -95,5 +97,24 @@ class SystemCheckController extends WebInstallerController
         }
 
         return $services;
+    }
+
+    /**
+     * @param \Cake\Collection\CollectionInterface $resultCollection Result collection.
+     * @return bool
+     */
+    private function isNextMinPhpVersionPassed(CollectionInterface $resultCollection): bool
+    {
+        $result = false;
+        /** @var \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckResult */
+        foreach ($resultCollection as $healthcheckResult) {
+            if ($healthcheckResult instanceof NextMinPhpVersionHealthcheck) {
+                $result = $healthcheckResult->isPassed();
+
+                break;
+            }
+        }
+
+        return $result;
     }
 }

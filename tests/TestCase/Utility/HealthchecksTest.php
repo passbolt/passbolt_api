@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Utility;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Utility\Healthchecks;
@@ -27,6 +28,13 @@ use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 class HealthchecksTest extends AppIntegrationTestCase
 {
     use HealthcheckRequestTestTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->markTestSkipped('Deprecated, will be removed.');
+    }
 
     public function tearDown(): void
     {
@@ -80,12 +88,12 @@ class HealthchecksTest extends AppIntegrationTestCase
             'environment' => [
                 'phpVersion' => (bool)version_compare(
                     PHP_VERSION,
-                    Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG),
+                    Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG),
                     '>='
                 ),
                 'nextMinPhpVersion' => (bool)version_compare(
                     PHP_VERSION,
-                    Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG),
+                    Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG),
                     '>='
                 ),
                 'info' => [

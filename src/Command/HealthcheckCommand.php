@@ -129,39 +129,39 @@ class HealthcheckCommand extends PassboltCommand
 
         // Checks
         $parser
-            ->addOption('environment', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, [
                 'help' => __d('cake_console', 'Run environment tests only.'),
                 'boolean' => true,
             ])
-            ->addOption('configFiles', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_CONFIG_FILE, [
                 'help' => __d('cake_console', 'Run configFiles tests only.'),
                 'boolean' => true,
             ])
-            ->addOption('core', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_CORE, [
                 'help' => __d('cake_console', 'Run core tests only.'),
                 'boolean' => true,
             ])
-            ->addOption('ssl', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_SSL, [
                 'help' => __d('cake_console', 'Run SSL tests only.'),
                 'boolean' => true,
             ])
-            ->addOption('database', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_DATABASE, [
                 'help' => __d('cake_console', 'Run database tests only.'),
                 'boolean' => true,
             ])
-            ->addOption('gpg', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_GPG, [
                 'help' => __d('cake_console', 'Run gpg tests only.'),
                 'boolean' => true,
             ])
-            ->addOption('application', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_APPLICATION, [
                 'help' => __d('cake_console', 'Run passbolt app tests only.'),
                 'boolean' => true,
             ])
-            ->addOption('jwt', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_JWT, [
                 'help' => __d('cake_console', 'Run passbolt JWT tests only.'),
                 'boolean' => true,
             ])
-            ->addOption('smtpSettings', [
+            ->addOption(HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS, [
                 'help' => __d('cake_console', 'Run SMTP Settings tests only.'),
                 'boolean' => true,
             ]);
@@ -310,9 +310,9 @@ class HealthcheckCommand extends PassboltCommand
         $this->assert(
             $checks['environment']['phpVersion'],
             __('PHP version {0}.', PHP_VERSION),
-            __('PHP version is too low, passbolt need PHP {0} or higher.', Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG)) // phpcs:ignore
+            __('PHP version is too low, passbolt need PHP {0} or higher.', Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG)) // phpcs:ignore
         );
-        $nextMinPhpVersion = Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG);
+        $nextMinPhpVersion = Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG);
         $this->warning(
             $checks['environment']['nextMinPhpVersion'],
             __('PHP version is {0} or above.', $nextMinPhpVersion),

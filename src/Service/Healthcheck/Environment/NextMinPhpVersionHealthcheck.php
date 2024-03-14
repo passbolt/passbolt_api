@@ -12,14 +12,14 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.6.0
+ * @since         4.7.0
  */
 
 namespace App\Service\Healthcheck\Environment;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 
 class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
@@ -38,7 +38,7 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
     {
         $this->status = version_compare(
             PHP_VERSION,
-            Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG),
+            Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG),
             '>='
         );
 
@@ -50,8 +50,7 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function domain(): string
     {
-        // TODO: Use a constant
-        return 'environment';
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -67,7 +66,7 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function level(): string
     {
-        return 'warning';
+        return HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -75,7 +74,10 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function getSuccessMessage(): string
     {
-        return __('PHP version is {0} or above.', Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG));
+        return __(
+            'PHP version is {0} or above.',
+            Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG)
+        );
     }
 
     /**
@@ -85,7 +87,7 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return __(
             'PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment.', // phpcs:ignore
-            Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG)
+            Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG)
         );
     }
 
@@ -104,7 +106,7 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
      */
     public function cliOption(): string
     {
-        return 'environment';
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**

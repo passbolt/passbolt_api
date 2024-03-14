@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
-use App\Utility\Healthchecks;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
@@ -45,8 +45,8 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
         $data = $this->_getBodyAsString();
 
         $this->assertResponseOk();
-        $minPhpVersion = Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG);
-        $nextMinPhpVersion = Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG);
+        $minPhpVersion = Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG);
+        $nextMinPhpVersion = Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG);
         if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
             $this->assertStringContainsString('PHP version is too low', $data);
         } elseif (
@@ -87,8 +87,8 @@ class SystemCheckControllerTest extends WebInstallerIntegrationTestCase
 
         $data = $this->_getBodyAsString();
         $this->assertResponseOk();
-        $minPhpVersion = Configure::read(Healthchecks::PHP_MIN_VERSION_CONFIG);
-        $nextMinPhpVersion = Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG);
+        $minPhpVersion = Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG);
+        $nextMinPhpVersion = Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG);
         if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
             $this->assertStringContainsString('PHP version is too low', $data);
         } elseif (version_compare(PHP_VERSION, $nextMinPhpVersion, '<=')) {

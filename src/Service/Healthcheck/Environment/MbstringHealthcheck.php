@@ -12,12 +12,13 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.6.0
+ * @since         4.7.0
  */
 
 namespace App\Service\Healthcheck\Environment;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
 class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
@@ -44,8 +45,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function domain(): string
     {
-        // TODO: Use a constant
-        return 'environment';
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -61,7 +61,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function level(): string
     {
-        return 'error';
+        return HealthcheckServiceCollector::LEVEL_ERROR;
     }
 
     /**
@@ -95,7 +95,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function cliOption(): string
     {
-        return 'environment';
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**

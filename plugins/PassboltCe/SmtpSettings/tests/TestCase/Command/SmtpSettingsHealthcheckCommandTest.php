@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
@@ -24,7 +24,7 @@ use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
-class SmtpSettingsHealthcheckCommandTest extends AppTestCase
+class SmtpSettingsHealthcheckCommandTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
     use SmtpSettingsTestTrait;

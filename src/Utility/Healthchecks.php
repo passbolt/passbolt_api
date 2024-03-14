@@ -18,6 +18,7 @@ namespace App\Utility;
 
 use App\Model\Entity\Role;
 use App\Model\Validation\EmailValidationRule;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\Filesystem\DirectoryUtility;
 use App\Utility\Healthchecks\CoreHealthchecks;
@@ -37,16 +38,6 @@ use Passbolt\SmtpSettings\Service\SmtpSettingsHealthcheckService;
 class Healthchecks
 {
     use FeaturePluginAwareTrait;
-
-    /**
-     * The minimum PHP version soon required. Healthcheck will warn if not satisfied yet.
-     */
-    public const PHP_NEXT_MIN_VERSION_CONFIG = 'php.nextMinVersion';
-
-    /**
-     * The minimum PHP version required. Healthcheck will fail if not satisfied yet.
-     */
-    public const PHP_MIN_VERSION_CONFIG = 'php.minVersion';
 
     /**
      * Run all healthchecks
@@ -212,12 +203,12 @@ class Healthchecks
     {
         $checks['environment']['phpVersion'] = version_compare(
             PHP_VERSION,
-            Configure::read(self::PHP_MIN_VERSION_CONFIG),
+            Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG),
             '>='
         );
         $checks['environment']['nextMinPhpVersion'] = version_compare(
             PHP_VERSION,
-            Configure::read(self::PHP_NEXT_MIN_VERSION_CONFIG),
+            Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG),
             '>='
         );
         $checks['environment']['info']['phpVersion'] = PHP_VERSION;

@@ -18,9 +18,9 @@ namespace App\Test\TestCase\Controller\Healthcheck;
 
 use App\Controller\Healthcheck\HealthcheckIndexController;
 use App\Model\Validation\EmailValidationRule;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
-use App\Utility\Healthchecks;
 use Cake\Core\Configure;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
@@ -152,7 +152,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'phpVersion' => true,
                 'nextMinPhpVersion' => version_compare(
                     PHP_VERSION,
-                    Configure::read(Healthchecks::PHP_NEXT_MIN_VERSION_CONFIG),
+                    Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG),
                     '>='
                 ),
                 'info' => ['phpVersion' => PHP_VERSION],

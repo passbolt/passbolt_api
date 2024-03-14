@@ -12,18 +12,19 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.6.0
+ * @since         4.7.0
  */
 
 namespace Passbolt\SmtpSettings\Service\Healthcheck;
 
 use App\Error\Exception\FormValidationException;
+use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 
-class SettingsValidationSmtpSettingsHealthcheck implements HealthcheckServiceInterface
+class SettingsValidationSmtpSettingsHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
