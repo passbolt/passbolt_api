@@ -38,10 +38,10 @@ use Passbolt\DirectorySync\Utility\Alias;
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryRelation>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class DirectoryRelationsTable extends Table

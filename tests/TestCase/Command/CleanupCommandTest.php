@@ -21,6 +21,7 @@ use App\Test\Factory\GroupFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Datasource\ConnectionManager;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Migrations\TestSuite\Migrator;
 
@@ -99,5 +100,31 @@ class CleanupCommandTest extends AppTestCase
         $this->assertCount(1, $groups);
         $this->assertSame($groupWithMember->get('id'), $groups[0]->get('id'));
         $this->assertSame(1, UserFactory::find()->count());
+    }
+
+    public function testCleanupCommand_NoActiveAdministrator()
+    {
+        $this->exec('passbolt cleanup');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Cleanup shell');
+        $this->assertOutputContains('(fix mode)');
+        $this->assertErrorContains('Cleanup command cannot be executed on an instance having no active administrator');
+    }
+
+    public function testCleanupCommand_UsersTableNotCreated()
+    {
+        $this->markTestSkipped('Dropping `users` table fails subsequent tests');
+
+        $connection = ConnectionManager::get('default');
+        $quotedTableName = $connection->getDriver()->quoteIdentifier('users');
+        $connection->query("DROP TABLE {$quotedTableName}");
+
+        $this->exec('passbolt cleanup');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('Cleanup shell');
+        $this->assertOutputContains('(fix mode)');
+        $this->assertErrorContains('Cleanup command cannot be executed on an instance having no users table');
     }
 }

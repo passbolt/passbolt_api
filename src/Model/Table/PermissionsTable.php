@@ -45,10 +45,10 @@ use Cake\Validation\Validator;
  * @property \Passbolt\Log\Model\Table\PermissionsHistoryTable&\Cake\ORM\Association\BelongsTo $PermissionsHistory
  * @method \App\Model\Entity\Permission newEmptyEntity()
  * @method \App\Model\Entity\Permission saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\Permission[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, int $type)
  * @method \Cake\ORM\Query findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
  * @method \Cake\ORM\Query findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
@@ -315,7 +315,7 @@ class PermissionsTable extends Table
      */
     public function cleanupSoftDeletedAro(string $modelName, $dryRun = false): int
     {
-        $query = $this->query()
+        $query = $this->selectQuery()
             ->select(['id'])
             ->leftJoinWith($modelName)
             ->where([
@@ -335,7 +335,7 @@ class PermissionsTable extends Table
      */
     public function cleanupHardDeletedAro(string $modelName, $dryRun = false): int
     {
-        $query = $this->query()
+        $query = $this->selectQuery()
             ->select(['id'])
             ->leftJoinWith($modelName)
             ->where(function ($exp, $q) use ($modelName) {
@@ -356,7 +356,7 @@ class PermissionsTable extends Table
      */
     public function cleanupSoftDeletedAco(string $modelName, $dryRun = false): int
     {
-        $query = $this->query()
+        $query = $this->selectQuery()
             ->select(['id'])
             ->leftJoinWith($modelName)
             ->where([
@@ -376,7 +376,7 @@ class PermissionsTable extends Table
      */
     public function cleanupHardDeletedAco(string $modelName, $dryRun = false): int
     {
-        $query = $this->query()
+        $query = $this->selectQuery()
             ->select(['id'])
             ->leftJoinWith($modelName)
             ->where(function ($exp, $q) use ($modelName) {

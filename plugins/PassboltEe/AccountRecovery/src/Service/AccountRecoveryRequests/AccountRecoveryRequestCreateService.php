@@ -173,7 +173,7 @@ class AccountRecoveryRequestCreateService
         }
 
         // Deactivate all previous active tokens
-        $this->AuthenticationTokens->query()
+        $this->AuthenticationTokens->updateQuery()
             ->update()
             ->set(['active' => false])
             ->where([

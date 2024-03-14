@@ -136,7 +136,7 @@ class LdapConfigurationForm extends Form
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->isArray('domains')
+            ->array('domains')
             ->hasAtLeast('domains', 1, __('Need at least one domain configuration.'))
             ->addNestedMany('domains', $this->getDomainValidator())
             ->add('domains', 'connection_names', [
@@ -264,7 +264,7 @@ class LdapConfigurationForm extends Form
         }
 
         $validator
-            ->isArray('fields_mapping', __('The fields mapping should be a valid array.'))
+            ->array('fields_mapping', __('The fields mapping should be a valid array.'))
             ->addNested('fields_mapping', $fieldsMappingValidator);
 
         $validator = $this->addForbiddenFieldsValidations($validator);
@@ -312,7 +312,7 @@ class LdapConfigurationForm extends Form
         $validator
             ->requirePresence('hosts', 'create', __('At least one host is required.'))
             ->hasAtLeast('hosts', 1, __('At least one host is required.'))
-            ->isArray('hosts', __('The hosts should be a valid array.'));
+            ->array('hosts', __('The hosts should be a valid array.'));
 
         $validator
             ->requirePresence('port', 'create', __('A port number is required.'))
@@ -377,7 +377,7 @@ class LdapConfigurationForm extends Form
 
         $typeValidator
             ->requirePresence($section, true, __('The map configuration for `{0}` fields is required.', [$section]))
-            ->isArray($section)
+            ->array($section)
             ->addNested($section, $sectionValidator);
 
         return $typeValidator;

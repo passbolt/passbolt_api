@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-02-13 08:14+0000\n"
-"PO-Revision-Date: 2024-02-13 10:35\n"
+"POT-Creation-Date: 2024-03-07 13:23+0000\n"
+"PO-Revision-Date: 2024-03-11 16:54\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -243,6 +243,9 @@ msgstr "그룹이 존재하지 않습니다."
 
 msgid "All checks ran successfully!"
 msgstr "모든 검사가 성공적으로 실행되었습니다."
+
+msgid "Healthcheck security index endpoint disabled."
+msgstr "상태 확인 보안 인덱스 엔드포인티를 사용하지 않도록 설정했습니다."
 
 msgid "OK"
 msgstr "확인"
@@ -1904,7 +1907,7 @@ msgid "This is not a valid {0}."
 msgstr "올바른 {0} 이(가) 아닙니다."
 
 msgid "The locale should be a string."
-msgstr ""
+msgstr "로케일은 문자열이어야 합니다."
 
 msgid "The strategy should extend the class: {0}"
 msgstr "방법은 다음 클래스를 확장해야 합니다. {0}"
@@ -4061,10 +4064,10 @@ msgid "Only administrators can view user logs."
 msgstr "관리자만 사용자 로그를 볼 수 있습니다."
 
 msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
-msgstr ""
+msgstr "사용자 {0} 은(는) 패스볼트에서 계정이 이전에 삭제되었기 때문에 그룹 {1} 에 추가할 수 없습니다."
 
 msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
-msgstr ""
+msgstr "{0} 사용자는 계정을 아직 활성화하지 않았기 때문에 {1} 그룹에 추가할 수 없습니다."
 
 msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
 msgstr "{0} 사용자를 {1} 그룹에 자동으로 추가할 수 없습니다. 그룹 관리자에게 이 작업을 수동으로 수행하도록 이메일 요청이 전송되었습니다."
@@ -4702,6 +4705,15 @@ msgstr "데이터가 필요합니다."
 msgid "Data must be an array of properties."
 msgstr "데이터는 속성의 배열이어야 합니다."
 
+msgid "The email claim should not be empty."
+msgstr "이메일 클레임은 비워 둘 수 없습니다."
+
+msgid "The email claim is too large."
+msgstr "이메일 클레임이 너무 큽니다."
+
+msgid "The email claim should be one of the following: {0}."
+msgstr "이메일 클레임은 다음 중 하나여야 합니다: {0}."
+
 msgid "A URL is required."
 msgstr "URL이 필요합니다."
 
@@ -4752,12 +4764,6 @@ msgstr "프롬프트는 비워 둘 수 없습니다."
 
 msgid "The prompt should be one of the following: {0}."
 msgstr "프롬프트는 다음 중 하나여야 합니다: {0}."
-
-msgid "The email claim should not be empty."
-msgstr "이메일 클레임은 비워 둘 수 없습니다."
-
-msgid "The email claim should be one of the following: {0}."
-msgstr "이메일 클레임은 다음 중 하나여야 합니다: {0}."
 
 msgid "The client id is too large."
 msgstr "클라이언트 ID가 너무 큽니다."
@@ -4900,11 +4906,23 @@ msgstr "사용자이름 불일치."
 msgid "Invalid nonce."
 msgstr "무효한 임시값."
 
+msgid "Invalid provider. Expected AD FS."
+msgstr "유효하지 않은 제공자. AD FS가 예상됩니다."
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr "유효하지 않은 제공자 데이터. AD FS 설정이 예상됩니다."
+
 msgid "No valid SSO settings found."
 msgstr "올바르지 않은 SSO설정이 발견됨."
 
 msgid "You must authenticate with Azure again."
 msgstr "Azure를 다시 인증해야 합니다."
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr "`passbolt.security.sso.sslCafile` 구성에서 제공된 값이 잘못되었습니다."
+
+msgid "Provided root CA file does not exist"
+msgstr "제공된 루트 CA 파일이 없습니다"
 
 msgid "The user id should be a valid UUID."
 msgstr "사용자 Id는 올바른 UUID여야 합니다."
@@ -5002,6 +5020,9 @@ msgstr "SSO 상태를 저장할 수 없습니다. 잘못된 임시값입니다."
 msgid "Could not save the SSO state, please try again later."
 msgstr "SSO 상태를 저장할 수 없습니다, 나중에 재시도 하세요."
 
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr "{0} 클레임이 없습니다. 관리자에게 문의하세요."
+
 msgid "Cannot parse JWKS endpoint response."
 msgstr "JWKS 엔드포인트 응답 구문을 분석할 수 없습니다"
 
@@ -5016,9 +5037,6 @@ msgstr "인증서에서 공개키 읽기 실패: {0}"
 
 msgid "Failed to public key properties from certificate: {0}"
 msgstr "인증서에서 키 속성 공개 실패: {0}"
-
-msgid "The {0} claim is not present, please contact your administrator."
-msgstr "{0} 클레임이 없습니다. 관리자에게 문의하세요."
 
 msgid "JWT token is missing."
 msgstr "JWT 토큰이 없습니다."

@@ -33,7 +33,7 @@ abstract class BaseLogsController extends AppController
     public $paginate = [
         'limit' => 5,
         'maxLimit' => 20,
-        'whiteList' => ['limit', 'page'],
+        'whitelist' => ['limit', 'page'],
         'sortableFields' => [
             'ActionLogs.created',
         ],

@@ -26,10 +26,10 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport newEmptyEntity()
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReport[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\DirectorySync\Model\Entity\DirectoryReport>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class DirectoryReportsTable extends Table
 {

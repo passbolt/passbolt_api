@@ -20,16 +20,22 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Utility\Healthchecks;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Client;
 use Cake\Http\Exception\ForbiddenException;
 
 class HealthcheckIndexController extends AppController
 {
+    public const PASSBOLT_PLUGINS_HEALTHCHECK_SECURITY_INDEX_ENDPOINT_ENABLED =
+        'passbolt.plugins.healthcheck.security.indexEndpointEnabled';
+
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
+        $this->throwErrorIsEndpointIsDisabled();
+
         $this->Authentication->allowUnauthenticated(['index']);
 
         return parent::beforeFilter($event);
@@ -51,13 +57,19 @@ class HealthcheckIndexController extends AppController
                 throw new ForbiddenException();
             }
         }
-        $this->viewBuilder()
-            ->setLayout('login')
-            ->setTemplatePath('Healthcheck')
-            ->setTemplate('index');
+
         $checks = Healthchecks::all($client);
         $checks = array_merge($this->__webChecks(), $checks);
-        $this->success(__('All checks ran successfully!'), $checks);
+
+        if (!$this->request->is('json')) {
+            $this->viewBuilder()
+                ->setLayout('login')
+                ->setTemplatePath('Healthcheck')
+                ->setTemplate('index');
+            $this->success(__('All checks ran successfully!'), $checks);
+        } else {
+            $this->success(__('The operation was successful.'), $checks);
+        }
     }
 
     /**
@@ -68,8 +80,19 @@ class HealthcheckIndexController extends AppController
      */
     private function __webChecks(): array
     {
-        $checks['ssl']['is'] = $this->request->is('ssl');
+        $checks['ssl']['is'] = $this->request->is('https');
 
         return $checks;
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Http\Exception\ForbiddenException if the endpoint is deactivated
+     */
+    private function throwErrorIsEndpointIsDisabled(): void
+    {
+        if (!Configure::read(self::PASSBOLT_PLUGINS_HEALTHCHECK_SECURITY_INDEX_ENDPOINT_ENABLED)) {
+            throw new ForbiddenException(__('Healthcheck security index endpoint disabled.'));
+        }
     }
 }

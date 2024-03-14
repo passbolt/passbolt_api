@@ -45,7 +45,7 @@ class OAuth2Exception extends CakeException
         $this->errorDescription = $errorDescription;
 
         if (!in_array($error, $this->allowedErrors())) {
-            Log::error('Unkown OAuth2 error:' . $error);
+            $this->logError();
         }
 
         parent::__construct($errorDescription, $code ?? 400, $previous);
@@ -86,5 +86,15 @@ class OAuth2Exception extends CakeException
             'request_uri_not_supported',
             'registration_not_supported',
         ];
+    }
+
+    /**
+     * OAuth2 based providers can override this method to change error message or logging behavior.
+     *
+     * @return void
+     */
+    protected function logError(): void
+    {
+        Log::error('Unknown OAuth2 error: ' . $this->error);
     }
 }

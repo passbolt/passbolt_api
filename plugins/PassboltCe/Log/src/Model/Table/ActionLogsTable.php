@@ -41,10 +41,10 @@ use Passbolt\Log\Model\Entity\ActionLog;
  * @method \Passbolt\Log\Model\Entity\ActionLog[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\ActionLog|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Log\Model\Entity\ActionLog saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Log\Model\Entity\ActionLog[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\ActionLog[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\ActionLog[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\Log\Model\Entity\ActionLog[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\ActionLog>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\ActionLog>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\ActionLog>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\Log\Model\Entity\ActionLog>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ActionLogsTable extends Table

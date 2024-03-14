@@ -36,10 +36,10 @@ use Cake\Validation\Validator;
  * @property \Cake\ORM\Table&\Cake\ORM\Association\HasMany $ControllerLogs
  * @method \App\Model\Entity\Role newEmptyEntity()
  * @method \App\Model\Entity\Role saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \App\Model\Entity\Role[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\Role>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\Role>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\Role>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\App\Model\Entity\Role>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  */
 class RolesTable extends Table
 {

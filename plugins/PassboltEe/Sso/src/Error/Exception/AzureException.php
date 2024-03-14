@@ -36,7 +36,7 @@ class AzureException extends OAuth2Exception
     public function __construct(string $error, string $errorDescription, ?int $code = null, ?Throwable $previous = null)
     {
         if (!in_array($error, $this->allowedErrors())) {
-            Log::error('Unkown Azure error:' . $error);
+            Log::error('Unknown Azure error: ' . $error);
         }
 
         parent::__construct($error, $errorDescription, $code, $previous);

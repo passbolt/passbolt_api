@@ -25,6 +25,9 @@ use Passbolt\Sso\Service\Providers\SsoActiveProvidersGetService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
 
+/**
+ * @covers \Passbolt\Sso\Controller\Settings\SsoSettingsCreateController
+ */
 class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
 {
     /**
@@ -84,7 +87,7 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
     {
         $this->logInAsAdmin();
         $data = [
-            'provider' => 'azure',
+            'provider' => SsoSetting::PROVIDER_AZURE,
             'data' => [
                 'url' => '🔥',
                 'client_id' => '🔥',
@@ -111,7 +114,7 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
     {
         $this->logInAsAdmin();
         $data = [
-            'provider' => 'azure',
+            'provider' => SsoSetting::PROVIDER_AZURE,
             'data' => [
                 'url' => 'https://login.microsoftonline.com',
                 'client_id' => UuidFactory::uuid(),
@@ -159,6 +162,35 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $body = $this->_responseJsonBody;
         $this->assertTrue(Validation::uuid($body->id));
         $this->assertEquals(SsoSetting::PROVIDER_GOOGLE, $body->provider);
+        $this->assertEquals((new SsoActiveProvidersGetService())->get(), $body->providers);
+        $this->assertEquals(SsoSetting::STATUS_DRAFT, $body->status);
+        $this->assertEquals($data['data'], (array)$body->data);
+    }
+
+    /**
+     * AD FS provider
+     */
+    public function testSsoSettingsCreateController_Success_ADFS(): void
+    {
+        $this->logInAsAdmin();
+        $data = [
+            'provider' => SsoSetting::PROVIDER_ADFS,
+            'data' => [
+                'url' => 'https://sso.passbolt.test',
+                'client_id' => UuidFactory::uuid(),
+                'client_secret' => UuidFactory::uuid(),
+                'openid_configuration_path' => '/.well-known/openid-configuration',
+                'scope' => 'openid email profile',
+                'email_claim' => SsoSetting::ADFS_EMAIL_CLAIM_UPN,
+            ],
+        ];
+
+        $this->postJson('/sso/settings.json', $data);
+
+        $this->assertSuccess();
+        $body = $this->_responseJsonBody;
+        $this->assertTrue(Validation::uuid($body->id));
+        $this->assertEquals(SsoSetting::PROVIDER_ADFS, $body->provider);
         $this->assertEquals((new SsoActiveProvidersGetService())->get(), $body->providers);
         $this->assertEquals(SsoSetting::STATUS_DRAFT, $body->status);
         $this->assertEquals($data['data'], (array)$body->data);

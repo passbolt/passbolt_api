@@ -11,11 +11,6 @@ parameters:
 			path: plugins/PassboltCe/EmailNotificationSettings/src/Utility/EmailNotificationSettings.php
 
 		-
-			message: "#^Unsafe access to private property Passbolt\\\\EmailNotificationSettings\\\\Utility\\\\EmailNotificationSettings\\:\\:\\$dbSettingsSource through static\\:\\:\\.$#"
-			count: 3
-			path: plugins/PassboltCe/EmailNotificationSettings/src/Utility/EmailNotificationSettings.php
-
-		-
 			message: "#^Unsafe access to private property Passbolt\\\\EmailNotificationSettings\\\\Utility\\\\EmailNotificationSettings\\:\\:\\$defaultSettingsSource through static\\:\\:\\.$#"
 			count: 4
 			path: plugins/PassboltCe/EmailNotificationSettings/src/Utility/EmailNotificationSettings.php

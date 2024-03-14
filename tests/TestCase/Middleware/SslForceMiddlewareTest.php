@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Middleware;
 
 use App\Middleware\SslForceMiddleware;
-use App\Test\Lib\Utility\MiddlewareTestTrait;
+use App\Test\Lib\Http\TestRequestHandler;
 use Cake\Core\Configure;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
@@ -29,8 +29,6 @@ use Laminas\Diactoros\Uri;
  */
 class SslForceMiddlewareTest extends TestCase
 {
-    use MiddlewareTestTrait;
-
     public function testSslForceMiddleware_HTTP_With_SSL_Force_should_redirect_to_https()
     {
         Configure::write(SslForceMiddleware::PASSBOLT_SSL_FORCE_CONFIG_NAME, true);
@@ -39,7 +37,7 @@ class SslForceMiddlewareTest extends TestCase
 
         $request = $request->withUri($uri);
         $middleware = new SslForceMiddleware();
-        $response = $middleware->process($request, $this->mockHandler());
+        $response = $middleware->process($request, new TestRequestHandler());
 
         $this->assertSame(['https://passbolt.test'], $response->getHeader('Location'));
         $this->assertSame(302, $response->getStatusCode());
@@ -53,7 +51,7 @@ class SslForceMiddlewareTest extends TestCase
 
         $request = $request->withUri($uri);
         $middleware = new SslForceMiddleware();
-        $response = $middleware->process($request, $this->mockHandler());
+        $response = $middleware->process($request, new TestRequestHandler());
 
         $this->assertFalse($response->hasHeader('Location'));
         $this->assertSame(200, $response->getStatusCode());
@@ -67,7 +65,7 @@ class SslForceMiddlewareTest extends TestCase
 
         $request = $request->withUri($uri);
         $middleware = new SslForceMiddleware();
-        $response = $middleware->process($request, $this->mockHandler());
+        $response = $middleware->process($request, new TestRequestHandler());
 
         $this->assertSame(['max-age=31536000; includeSubDomains'], $response->getHeader('strict-transport-security'));
     }

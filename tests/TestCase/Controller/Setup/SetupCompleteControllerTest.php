@@ -27,6 +27,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
+use Passbolt\Log\LogPlugin;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCase
 {
@@ -39,13 +40,12 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testSetupCompleteController_Success(): void
     {
-        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
-        Configure::write('passbolt.plugins.log.enabled', true);
+        $this->enableFeaturePlugin(LogPlugin::class);
         [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
         $t = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REGISTER)
-            ->with('Users', UserFactory::make()->inactive())
+            ->with('Users', UserFactory::make()->admin()->inactive())
             ->persist();
         $user = $t->user;
         $url = '/setup/complete/' . $user->id . '.json';
@@ -91,7 +91,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
             'subject' => $user->profile->first_name . ' just activated their account on passbolt',
         ]);
         $this->assertEmailQueueCount(2);
-        Configure::write('passbolt.plugins.log.enabled', $logEnabled);
     }
 
     /**

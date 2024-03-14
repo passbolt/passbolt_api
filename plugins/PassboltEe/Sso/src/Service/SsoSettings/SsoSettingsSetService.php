@@ -25,6 +25,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Sso\Form\BaseSsoSettingsForm;
+use Passbolt\Sso\Form\SsoSettingsAdfsDataForm;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Form\SsoSettingsGoogleDataForm;
 use Passbolt\Sso\Form\SsoSettingsOAuth2DataForm;
@@ -161,6 +162,8 @@ class SsoSettingsSetService
                 return new SsoSettingsGoogleDataForm();
             case SsoSetting::PROVIDER_OAUTH2:
                 return new SsoSettingsOAuth2DataForm();
+            case SsoSetting::PROVIDER_ADFS:
+                return new SsoSettingsAdfsDataForm();
             default:
                 throw new BadRequestException('Service provider not supported.');
         }

@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Test\Utility;
 use Cake\Core\Configure;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * IntegrationFixture
@@ -36,7 +37,7 @@ class TestDirectory implements DirectoryInterface
      * @throws \Exception if the scenario cannot be found
      * @return void
      */
-    public function __construct()
+    public function __construct(?DirectoryOrgSettings $settings = null)
     {
         $scenario = Configure::read('passbolt.plugins.directorySync.test');
         if (isset($scenario) && is_string($scenario)) {
@@ -49,7 +50,7 @@ class TestDirectory implements DirectoryInterface
             $this->users = [];
             $this->groups = [];
         }
-        $this->directoryResults = new DirectoryResults([]);
+        $this->directoryResults = new DirectoryResults([], $settings);
     }
 
     /**

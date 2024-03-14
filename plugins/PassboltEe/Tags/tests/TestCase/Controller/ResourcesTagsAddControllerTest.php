@@ -218,7 +218,7 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->assertEquals($results, []);
 
         $ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
-        $rt = $ResourcesTags->query()
+        $rt = $ResourcesTags->selectQuery()
             ->where([
                 'resource_id' => $resourceId,
                 'user_id' => UuidFactory::uuid('user.id.betty'),

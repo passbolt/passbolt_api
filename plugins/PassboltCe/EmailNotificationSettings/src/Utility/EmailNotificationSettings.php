@@ -64,6 +64,7 @@ class EmailNotificationSettings
         static::$configSettingsSource = null;
         static::$defaultSettingsSource = null;
         static::$settings = null;
+        self::$dbSettingsSource = null;
     }
 
     /**
@@ -176,11 +177,11 @@ class EmailNotificationSettings
      */
     protected static function getDbSettingsSource()
     {
-        if (!isset(static::$dbSettingsSource)) {
-            static::$dbSettingsSource = new DbEmailNotificationSettingsSource();
+        if (!isset(self::$dbSettingsSource)) {
+            self::$dbSettingsSource = new DbEmailNotificationSettingsSource();
         }
 
-        return static::$dbSettingsSource;
+        return self::$dbSettingsSource;
     }
 
     /**

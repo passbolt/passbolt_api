@@ -36,7 +36,7 @@ class DirectoryFactory
     public static function get(?DirectoryOrgSettings $settings = null)
     {
         if (Configure::read('passbolt.plugins.directorySync.test')) {
-            return new TestDirectory();
+            return new TestDirectory($settings);
         }
         if ($settings->isEnabled()) {
             return new LdapDirectory($settings);

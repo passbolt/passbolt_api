@@ -36,10 +36,10 @@ use Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting;
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class UserPassphrasePoliciesSettingsTable extends OrganizationSettingsTable

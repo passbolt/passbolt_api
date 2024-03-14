@@ -20,11 +20,14 @@ use App\Model\Entity\Role;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\AvatarsIntegrationTestTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 
 class UsersEditControllerTest extends AppIntegrationTestCase
 {
+    use AvatarsIntegrationTestTrait;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -240,5 +243,38 @@ class UsersEditControllerTest extends AppIntegrationTestCase
         ];
         $this->post('/users/' . $user->id, $data);
         $this->assertResponseCode(404);
+    }
+
+    public function dataWithNumericKeys(): array
+    {
+        return [
+            [[1 => 'foo']],
+            [['profile' => [1 => 'foo']]],
+            [['bar' => [1 => 'foo']]],
+        ];
+    }
+
+    /**
+     * @dataProvider dataWithNumericKeys
+     */
+    public function testUsersEditController_Numeric_Keys_In_Payload_Should_Not_Throw_A_500($data)
+    {
+        RoleFactory::make()->user()->persist();
+
+        $user = UserFactory::make()->user()->with('Profiles')->persist();
+        $this->logInAsAdmin();
+
+        $data = array_merge_recursive([
+            'id' => $user->id,
+            'profile' => [
+                'first_name' => 'first name edited',
+                'avatar' => [
+                    'file' => $this->createUploadFile(),
+                ],
+            ],
+        ], $data);
+
+        $this->postJson('/users/' . $user->id . '.json', $data);
+        $this->assertResponseOk();
     }
 }

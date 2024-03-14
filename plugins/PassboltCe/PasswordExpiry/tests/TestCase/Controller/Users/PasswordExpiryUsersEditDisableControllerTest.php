@@ -87,8 +87,18 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
         $this->assertFalse($resourcesSharedViaGroupNotViewed->isExpired());
 
         $this->assertEmailQueueCount(4);
-        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin1->username);
-        $this->assertEmailInBatchContains("The user {$userFullName} has been suspended.", $admin2->username);
+        $this->assertEmailInBatchContains(
+            "The user {$userFullName} has been suspended.",
+            h($admin1->username),
+            '',
+            false
+        );
+        $this->assertEmailInBatchContains(
+            "The user {$userFullName} has been suspended.",
+            h($admin2->username),
+            '',
+            false
+        );
         $emailContent = [
             'Some of your passwords expired',
             'Access for users to your shared passwords have been revoked.',

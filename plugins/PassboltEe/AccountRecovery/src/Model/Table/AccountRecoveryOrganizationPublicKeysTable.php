@@ -46,10 +46,10 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey newEmptyEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[]|\Cake\Datasource\ResultSetInterface|false saveMany(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[]|\Cake\Datasource\ResultSetInterface saveManyOrFail(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[]|\Cake\Datasource\ResultSetInterface|false deleteMany(iterable $entities, $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[]|\Cake\Datasource\ResultSetInterface deleteManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
+ * @method iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AccountRecoveryOrganizationPublicKeysTable extends Table
