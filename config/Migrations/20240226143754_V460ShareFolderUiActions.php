@@ -12,24 +12,28 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.13.0
+ * @since         4.6.0
  */
 
-namespace App\Log;
+use Cake\Log\Log;
+use Migrations\AbstractMigration;
+use Passbolt\Rbacs\Service\UiActions\UiActionsInsertDefaultsService;
 
-use Cake\Log\Log as CakeLog;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LoggerTrait;
-
-class DefaultLogger implements LoggerInterface
+class V460ShareFolderUiActions extends AbstractMigration
 {
-    use LoggerTrait;
-
     /**
-     * @inheritDoc
+     * Up
+     *
+     * @throws \Exception if insertion fails
+     * @return void
      */
-    public function log($level, $message, ?array $context = [])
+    public function up()
     {
-        CakeLog::write($level, $message, $context);
+        try {
+            (new UiActionsInsertDefaultsService())->insertDefaultsIfNotExist();
+        } catch (\Throwable $e) {
+            Log::error('There was an error in V460ShareFolderUiActions');
+            Log::error($e->getMessage());
+        }
     }
 }

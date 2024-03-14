@@ -62,7 +62,7 @@ class DatabaseHealthchecks
         try {
             /** @var \Cake\Database\Connection $connection */
             $connection = ConnectionManager::get($datasource);
-            $connection->connect();
+            $connection->getDriver()->connect();
             $checks['database']['connect'] = true;
         } catch (MissingConnectionException $connectionError) {
             $checks['database']['info']['connection'] = __('Database connection failed');
