@@ -1,16 +1,18 @@
 Release song: https://youtu.be/Ub0NtPOj7es?si=3IL4HKS4-g17uPal
 
-Hey community members,
+The Passbolt Pro 4.6.0 release "Purple Haze", brings a new SSO provider and improves administrative aspects and overall system health.
 
-Prepare for an exciting update! 🥁
+A major addition in this release is the Beta implementation of SSO AD FS (Active Directory Federation Services), enabling streamlined single sign-on capabilities for improved user access management.
 
-Passbolt is thrilled to announce that the v4.6.0 Release Candidate is officially available for testing.
+Furthermore, this version incorporates the Health Check feature within the Admin workspace, offering administrators a comprehensive tool for system health assessment, thereby enhancing the platform's maintainability and reliability.
 
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps here. As always, your feedback is invaluable, please share and report any issues you come across.
+Security measures have been bolstered through the update of phpseclib/phpseclib to mitigate known vulnerabilities, alongside improvements in error logging and SSO authentication configurations.
 
-Enjoy the testing journey! ♥️
+This release also focuses on refining the platform's infrastructure for enhanced performance. It lays the groundwork for future updates by optimizing data verification processes and reducing memory usage during web activities.
 
-## [4.6.0-rc.2] - 2024-03-13
+The update paves the way for a series of successive enhancements with the next releases.
+
+## [4.6.0] - 2024-03-14
 ### Added
 - PB-24485 As an administrator I can view the API healthcheck in the administration section
 - PB-29396 As an administrator I can hide the share folder capability with a RBAC
@@ -38,7 +40,6 @@ Enjoy the testing journey! ♥️
 - PB-28719 As an administrator sending emails the timezone displayed in the emails should be in the correct time zone
 - PB-30266 As an administrator sending emails with the email digest the message ID should be defined
 - PB-27709 As an administrator I should not get an error updating directory sync settings after a server key rotation
-- PB-30182 Build the styleguide on version 4.6.1
 
 ### Maintenance
 - PB-28247 Update cakephp/cakephp to version 4.5
