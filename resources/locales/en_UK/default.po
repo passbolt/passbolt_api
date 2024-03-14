@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2024-02-13 08:14+0000\n"
+"POT-Creation-Date: 2024-03-07 13:23+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -240,6 +240,9 @@ msgid "The group does not exist."
 msgstr ""
 
 msgid "All checks ran successfully!"
+msgstr ""
+
+msgid "Healthcheck security index endpoint disabled."
 msgstr ""
 
 msgid "OK"
@@ -4700,6 +4703,15 @@ msgstr ""
 msgid "Data must be an array of properties."
 msgstr ""
 
+msgid "The email claim should not be empty."
+msgstr ""
+
+msgid "The email claim is too large."
+msgstr ""
+
+msgid "The email claim should be one of the following: {0}."
+msgstr ""
+
 msgid "A URL is required."
 msgstr ""
 
@@ -4749,12 +4761,6 @@ msgid "The prompt should not be empty."
 msgstr ""
 
 msgid "The prompt should be one of the following: {0}."
-msgstr ""
-
-msgid "The email claim should not be empty."
-msgstr ""
-
-msgid "The email claim should be one of the following: {0}."
 msgstr ""
 
 msgid "The client id is too large."
@@ -4898,10 +4904,22 @@ msgstr ""
 msgid "Invalid nonce."
 msgstr ""
 
+msgid "Invalid provider. Expected AD FS."
+msgstr ""
+
+msgid "Invalid provider data. Expected AD FS settings."
+msgstr ""
+
 msgid "No valid SSO settings found."
 msgstr ""
 
 msgid "You must authenticate with Azure again."
+msgstr ""
+
+msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
+msgstr ""
+
+msgid "Provided root CA file does not exist"
 msgstr ""
 
 msgid "The user id should be a valid UUID."
@@ -5000,6 +5018,9 @@ msgstr ""
 msgid "Could not save the SSO state, please try again later."
 msgstr ""
 
+msgid "The {0} claim is not present, please contact your administrator."
+msgstr ""
+
 msgid "Cannot parse JWKS endpoint response."
 msgstr ""
 
@@ -5013,9 +5034,6 @@ msgid "Failed to read public key from certificate: {0}"
 msgstr ""
 
 msgid "Failed to public key properties from certificate: {0}"
-msgstr ""
-
-msgid "The {0} claim is not present, please contact your administrator."
 msgstr ""
 
 msgid "JWT token is missing."
