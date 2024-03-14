@@ -1,16 +1,13 @@
 Release song: https://youtu.be/Ub0NtPOj7es?si=3IL4HKS4-g17uPal
 
-Hey community members,
+The Passbolt Community Edition 4.6.0 release "Purple Haze", brings enhancements that focus primarily on the administrative aspect and overall system health.
 
-Prepare for an exciting update! 🥁
+This update introduces the Health Check feature within the Admin workspace, designed to offer administrators a comprehensive tool for system assessment and upkeep.
+In addition, this version addresses a range of minor bugs and delivers the awaited PHP 8.3 support.
 
-Passbolt is thrilled to announce that the v4.6.0 Release Candidate is officially available for testing.
+This version furthermore lays the foundations for successive performance gains by refining data verification processes and reducing memory usage, particularly when browsing. Expect more significant improvements with the next releases.
 
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps here. As always, your feedback is invaluable, please share and report any issues you come across.
-
-Enjoy the testing journey! ♥️
-
-## [4.6.0-rc.2] - 2024-03-13
+## [4.6.0] - 2024-03-14
 ### Added
 - PB-24485 As an administrator I can view the API healthcheck in the administration section
 - PB-29396 As an administrator I can hide the share folder capability with a RBAC
