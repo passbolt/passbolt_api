@@ -22,6 +22,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
 use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
@@ -82,6 +83,8 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $this->getJson('/healthcheck.json');
 
         $this->assertResponseSuccess();
+        $connection = ConnectionManager::get('default');
+        $tableCount = count($connection->getSchemaCollection()->listTables());
         $result = $this->getResponseBodyAsArray();
         $https = strpos(Configure::read('App.fullBaseUrl'), 'https') === 0;
         $expectedResponse = [
@@ -93,7 +96,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
             ],
             'database' => [
                 'tablesCount' => true,
-                'info' => ['tablesCount' => 32],
+                'info' => ['tablesCount' => $tableCount],
                 'connect' => true,
                 'supportedBackend' => true,
                 'defaultContent' => true,
