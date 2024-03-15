@@ -10,7 +10,7 @@ declare(strict_types=1);
  */
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
-use Passbolt\WebInstaller\View\Helper\HealthcheckHtmlHelper;
+use App\View\Helper\HealthcheckHtmlHelper;
 
 $healthcheckHelper = new HealthcheckHtmlHelper();
 

@@ -28,7 +28,6 @@ use App\Service\Command\ProcessUserService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
-use Cake\Http\Client;
 
 class CommandServiceProvider extends ServiceProvider
 {
@@ -52,10 +51,12 @@ class CommandServiceProvider extends ServiceProvider
 
         $container->add(HealthcheckCommand::class)->addArguments([
             ProcessUserService::class,
-            Client::class,
             HealthcheckServiceCollector::class,
         ]);
-        $container->add(InstallCommand::class)->addArguments([ProcessUserService::class, Client::class]);
+        $container->add(InstallCommand::class)->addArguments([
+            ProcessUserService::class,
+            HealthcheckServiceCollector::class,
+        ]);
         $container->add(KeyringInitCommand::class)->addArgument(ProcessUserService::class);
         $container->add(MigrateCommand::class)->addArgument(ProcessUserService::class);
         $container->add(RecoverUserCommand::class)->addArgument(ProcessUserService::class);

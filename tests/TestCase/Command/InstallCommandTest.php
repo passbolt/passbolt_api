@@ -22,11 +22,13 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
 use Cake\Http\Client;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Faker\Factory;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 
 class InstallCommandTest extends AppTestCase
 {
@@ -46,7 +48,7 @@ class InstallCommandTest extends AppTestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->emptyDirectory(CACHE . 'database' . DS);
-        $this->enableFeaturePlugin('JwtAuthentication');
+        $this->disableFeaturePlugin(JwtAuthenticationPlugin::class);
         $this->loadNotificationSettings();
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest();
@@ -145,6 +147,22 @@ class InstallCommandTest extends AppTestCase
     {
         $this->exec('passbolt install --force --no-admin --backup -q -d test');
         $this->assertExitSuccess();
+    }
+
+    public function testInstallCommandNormalNoForce_Will_Fail()
+    {
+        $this->exec('passbolt install -d test');
+        $this->assertExitError();
+        $this->assertOutputContains('<error>Some tables are already present in the database. A new installation would override existing data.</error>');
+        $this->assertOutputContains('<error>Please use --force to proceed anyway.</error>');
+    }
+
+    public function testInstallCommandForce_Will_Fail_If_BaseUrlIsNotValid()
+    {
+        Configure::write('App.fullBaseUrl', 'foo');
+        $this->exec('passbolt install --force -d test');
+        $this->assertExitError();
+        $this->assertOutputContains('<error>App.fullBaseUrl does not validate. foo.</error>');
     }
 
     /**

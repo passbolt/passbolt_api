@@ -68,6 +68,21 @@ class HealthcheckServiceCollector
     }
 
     /**
+     * @param string $serviceClassName class FQN to retrieve
+     * @return \App\Service\Healthcheck\HealthcheckServiceInterface|null
+     */
+    public function getService(string $serviceClassName): ?HealthcheckServiceInterface
+    {
+        foreach ($this->getServices() as $healthcheckService) {
+            if ($healthcheckService instanceof $serviceClassName) {
+                return $healthcheckService;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Returns all services available in this collector.
      *
      * @return \App\Service\Healthcheck\HealthcheckServiceInterface[]
@@ -75,6 +90,31 @@ class HealthcheckServiceCollector
     public function getServices(): array
     {
         return $this->services;
+    }
+
+    /**
+     * Convenient method to retrieve services filtered by domains and service names
+     *
+     * @param array $domainsIncluded retrieve the services of the given domain
+     * @param array $servicesIncluded retrieve the services of the given
+     * @return array
+     */
+    public function getServicesFiltered(array $domainsIncluded, array $servicesIncluded): array
+    {
+        $services = [];
+        foreach ($this->getServices() as $healthcheckService) {
+            if (in_array($healthcheckService->domain(), $domainsIncluded)) {
+                $services[] = $healthcheckService;
+                continue;
+            }
+            foreach ($servicesIncluded as $serviceIncluded) {
+                if ($healthcheckService instanceof $serviceIncluded) {
+                    $services[] = $healthcheckService;
+                }
+            }
+        }
+
+        return $services;
     }
 
     /**

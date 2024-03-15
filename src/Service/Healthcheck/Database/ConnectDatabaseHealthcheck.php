@@ -23,6 +23,13 @@ use Cake\Datasource\ConnectionManager;
 
 class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
 {
+    protected bool $isDriverSupported = false;
+
+    public const SUPPORTED_DRIVERS = [
+        'Cake\Database\Driver\Mysql',
+        'Cake\Database\Driver\Postgres',
+    ];
+
     /**
      * @inheritDoc
      */
@@ -32,6 +39,10 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
         try {
             /** @var \Cake\Database\Connection $connection */
             $connection = ConnectionManager::get($datasource);
+            $this->isDriverSupported = $this->isDriverSupported();
+            if (!$this->isDriverSupported) {
+                return $this;
+            }
             $connection->getDriver()->connect();
             $this->status = true;
         } catch (MissingConnectionException $connectionError) {
@@ -54,6 +65,10 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
      */
     public function getFailureMessage(): string
     {
+        if (!$this->isDriverSupported) {
+            return __('The driver defined in the database configuration is not supported.');
+        }
+
         return __('The application is not able to connect to the database.');
     }
 
@@ -63,6 +78,11 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     public function getHelpMessage()
     {
         return [
+            __(
+                'Ensure that the driver defined in {0} is one of the following: {1}.',
+                CONFIG . 'passbolt.php',
+                implode(', ', self::SUPPORTED_DRIVERS)
+            ),
             __(
                 'Double check the host, database name, username and password in {0}.',
                 CONFIG . 'passbolt.php'
@@ -82,16 +102,15 @@ class ConnectDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     /**
      * This method is only here because we don't have "datasource" access outside.
      *
-     * @deprecated As of v4.7.0, will be removed in v5.
      * @return bool
      */
-    public function isSupportedBackend(): bool
+    protected function isDriverSupported(): bool
     {
         $result = false;
 
         $connection = ConnectionManager::get($this->getDatasource());
         $config = $connection->config();
-        if (in_array($config['driver'], ['Cake\Database\Driver\Mysql', 'Cake\Database\Driver\Postgres'])) {
+        if (in_array($config['driver'], self::SUPPORTED_DRIVERS)) {
             $result = true;
         }
 

@@ -69,7 +69,7 @@ class SystemCheckController extends WebInstallerController
      * Filter all the healthcheck services to extract only the ones relevant here
      *
      * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector healthcheck service collector
-     * @return array
+     * @return \App\Service\Healthcheck\HealthcheckServiceInterface[]
      */
     private function getSystemCheckHealthcheckServices(HealthcheckServiceCollector $healthcheckServiceCollector): array
     {
@@ -83,20 +83,7 @@ class SystemCheckController extends WebInstallerController
             HomeVariableWritableGpgHealthcheck::class,
         ];
 
-        $services = [];
-        foreach ($healthcheckServiceCollector->getServices() as $healthcheckService) {
-            if (in_array($healthcheckService->domain(), $domainsIncluded)) {
-                $services[] = $healthcheckService;
-                continue;
-            }
-            foreach ($servicesIncluded as $serviceIncluded) {
-                if ($healthcheckService instanceof $serviceIncluded) {
-                    $services[] = $healthcheckService;
-                }
-            }
-        }
-
-        return $services;
+        return $healthcheckServiceCollector->getServicesFiltered($domainsIncluded, $servicesIncluded);
     }
 
     /**

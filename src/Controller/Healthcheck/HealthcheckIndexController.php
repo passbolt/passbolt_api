@@ -171,7 +171,7 @@ class HealthcheckIndexController extends AppController
                     $result[$domainKey]['info']['fullBaseUrl'] = Configure::read('App.fullBaseUrl');
                 } elseif ($checkResult instanceof ConnectDatabaseHealthcheck) {
                     // Database domain additional fields
-                    $result[$domainKey]['supportedBackend'] = $checkResult->isSupportedBackend();
+                    $result[$domainKey]['supportedBackend'] = $value;
                 } elseif ($checkResult instanceof TablesCountDatabaseHealthcheck) {
                     // Database domain info fields
                     $result[$domainKey]['info']['tablesCount'] = $checkResult->getTableCount();
