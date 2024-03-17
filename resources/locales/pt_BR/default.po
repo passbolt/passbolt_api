@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-03-07 13:12+0000\n"
-"PO-Revision-Date: 2024-03-07 13:51\n"
+"PO-Revision-Date: 2024-03-17 14:03\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -983,10 +983,10 @@ msgid "{0} updated your memberships in several groups"
 msgstr "{0} atualizou sua participação em diversos grupos"
 
 msgid "{0} deleted several group memberships"
-msgstr ""
+msgstr "{0} excluiu vários membros de grupo"
 
 msgid "You made changes on several resources"
-msgstr ""
+msgstr "Você fez mudanças em vários recursos"
 
 msgid "{0} has made changes on several resources"
 msgstr "{0} fez alterações em vários recursos"
@@ -1013,7 +1013,7 @@ msgid "{0} requested you to add members to {1}"
 msgstr "{0} solicitou que você adicione membros a {1}"
 
 msgid "You have been requested to add members to {0}"
-msgstr ""
+msgstr "Você foi solicitado a adicionar membros a {0}"
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} removeu você do grupo {1}"
@@ -1037,7 +1037,7 @@ msgid "{0} deleted the password {1}"
 msgstr "{0} excluiu a senha {1}"
 
 msgid "You edited the password {0}"
-msgstr ""
+msgstr "Você editou a senha {0}"
 
 msgid "{0} edited the password {1}"
 msgstr "{0} editou a senha {1}"
@@ -1049,22 +1049,22 @@ msgid "{0} shared the password {1}"
 msgstr "{0} compartilhou a senha {1}"
 
 msgid "You deleted administrator {0}"
-msgstr ""
+msgstr "Você excluiu o administrador {0}"
 
 msgid "{0} deleted your account"
-msgstr ""
+msgstr "{0} excluiu a sua conta"
 
 msgid "{0} deleted administrator {1}"
-msgstr ""
+msgstr "{0} excluiu o administrador {1}"
 
 msgid "Your account has been suspended"
 msgstr ""
 
 msgid "Your admin role has been revoked"
-msgstr ""
+msgstr "Sua função de administrador foi revogada"
 
 msgid "{0}'s admin role has been revoked"
-msgstr ""
+msgstr "{0} sua função de administrador foi revogada"
 
 msgid "{0} deleted user {1}"
 msgstr "{0} excluiu o usuário {1}"
@@ -1124,7 +1124,7 @@ msgid "The send on group manager updated setting should be a boolean."
 msgstr "A configuração de atualização do envio no gerente de grupo deve ser um booleano."
 
 msgid "The send on group manager request add user should be a boolean."
-msgstr ""
+msgstr "O envio de solicitação do gerente de grupo adicionar usuário deve ser um valor booleano."
 
 msgid "The send on password created setting should be a boolean."
 msgstr "A configuração enviar na senha criada deve ser um booleano."
@@ -1364,10 +1364,10 @@ msgid "Could not validate secret data."
 msgstr "Não foi possível validar dados secretos."
 
 msgid "The group id should be a valid UUID."
-msgstr ""
+msgstr "O identificador do grupo deve ser um UUID válido."
 
 msgid "The users ids array should contain only valid UUIDs."
-msgstr ""
+msgstr "A matriz de ID's de usuários deve conter apenas UUID's válidos."
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "Falha na validação do segredo {0}. {1}"
@@ -1439,7 +1439,7 @@ msgid "This user has been disabled."
 msgstr ""
 
 msgid "The username {0} is a duplicate."
-msgstr ""
+msgstr "O nome de usuário {0} é uma cópia."
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validação falhou para o usuário {0}. {1}"
@@ -1901,7 +1901,7 @@ msgid "This is not a valid {0}."
 msgstr "Este não é um {0} válido."
 
 msgid "The locale should be a string."
-msgstr ""
+msgstr "A localidade deve ser uma string."
 
 msgid "The strategy should extend the class: {0}"
 msgstr "A estratégia deve estender a classe {0}"
@@ -2519,22 +2519,22 @@ msgid "Log in passbolt"
 msgstr "Senha de login"
 
 msgid "The automatic_expiry field must be true."
-msgstr ""
+msgstr "O campo de expiração automático deve ser verdadeiro."
 
 msgid "The automatic_update field must be true."
-msgstr ""
+msgstr "O campo de atualização automática deve ser verdadeiro."
 
 msgid "The value should be an array."
 msgstr ""
 
 msgid "{0} marked several passwords as expired"
-msgstr ""
+msgstr "{0} marcou várias senhas como expiradas"
 
 msgid "Some of your passwords expired"
-msgstr ""
+msgstr "Algumas de suas senhas expiradas."
 
 msgid "{0} marked the password {1} as expired"
-msgstr ""
+msgstr "{0} marcou a senha {1} como expirada"
 
 msgid "You edited the password expiry settings"
 msgstr ""
@@ -2555,7 +2555,7 @@ msgid "The password expiry settings have been updated."
 msgstr ""
 
 msgid "View them in passbolt"
-msgstr ""
+msgstr "Visualize no passbolt"
 
 msgid "{0} resources were affected."
 msgstr "{0} recursos foram afetados."
@@ -2564,7 +2564,7 @@ msgid "It would be too much to list them here, but you can go check them on pass
 msgstr "Seria exagerado enumerá-los aqui, mas pode verificá-los de passagem."
 
 msgid "Change them in passbolt"
-msgstr ""
+msgstr "Altere no passbolt"
 
 msgid "You have been requested to change them"
 msgstr ""
@@ -2582,7 +2582,7 @@ msgid "Please rotate it to ensure continued security."
 msgstr ""
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "Altere isto no passbolt "
 
 msgid "Could not retrieve the password policies."
 msgstr "Não foi possível recuperar as políticas de senha."
