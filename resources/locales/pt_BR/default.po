@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-03-07 13:12+0000\n"
-"PO-Revision-Date: 2024-03-17 14:03\n"
+"PO-Revision-Date: 2024-03-17 15:03\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -245,7 +245,7 @@ msgid "All checks ran successfully!"
 msgstr "Todas as verificações foram executadas com sucesso!"
 
 msgid "Healthcheck security index endpoint disabled."
-msgstr ""
+msgstr "Endpoint do índice de segurança Healthcheck desativado."
 
 msgid "OK"
 msgstr "OK"
@@ -956,7 +956,7 @@ msgid "The key should not already be expired."
 msgstr "A chave não deve estar expirada."
 
 msgid "The date could not be parsed."
-msgstr ""
+msgstr "A data não pôde ser analisada."
 
 msgid "The email should be a valid email address."
 msgstr "O e-mail deve ser um endereço de e-mail válido."
@@ -2537,22 +2537,22 @@ msgid "{0} marked the password {1} as expired"
 msgstr "{0} marcou a senha {1} como expirada"
 
 msgid "You edited the password expiry settings"
-msgstr ""
+msgstr "Você editou as configurações de expiração da senha"
 
 msgid "{0} edited the password expiry settings"
-msgstr ""
+msgstr "{0} editou as configurações de expiração da senha"
 
 msgid "The send password expire setting should be a boolean."
-msgstr ""
+msgstr "O envio de configuração de expiração da senha deve ser booleana."
 
 msgid "The password expiry setting does not exist."
-msgstr ""
+msgstr "A configuração de expiração de senha não existe."
 
 msgid "Could not validate the password expiry settings."
-msgstr ""
+msgstr "Não é possível validar as configurações de política de senhas."
 
 msgid "The password expiry settings have been updated."
-msgstr ""
+msgstr "As configurações de expiração da senha foram atualizadas."
 
 msgid "View them in passbolt"
 msgstr "Visualize no passbolt"
@@ -2567,19 +2567,19 @@ msgid "Change them in passbolt"
 msgstr "Altere no passbolt"
 
 msgid "You have been requested to change them"
-msgstr ""
+msgstr "Você foi solicitado para alterá-los"
 
 msgid "Access for users to your shared passwords have been revoked."
-msgstr ""
+msgstr "O acesso dos usuários às suas senhas compartilhadas foi revogado."
 
 msgid "These passwords are now marked as expired."
-msgstr ""
+msgstr "Estas senhas agora estão marcadas como expiradas."
 
 msgid "Please rotate them to ensure continued security."
-msgstr ""
+msgstr "Por favor, rotacione para garantir segurança contínua."
 
 msgid "Please rotate it to ensure continued security."
-msgstr ""
+msgstr "Por favor, rotacione para garantir a segurança contínua."
 
 msgid "Change it in passbolt "
 msgstr "Altere isto no passbolt "
@@ -2786,7 +2786,7 @@ msgid "An entry already exists for the given role and action ids."
 msgstr "Já existe uma entrada para a função e IDs de ação fornecidos."
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "A função de controle não é permitida para esta ação de UI."
 
 msgid "An action already exists for the given name."
 msgstr "Uma ação já existe com o nome fornecido."
@@ -3578,13 +3578,13 @@ msgid "login"
 msgstr "login"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "O administrador {0} ({1}) foi removido da organização do passbolt."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr ""
+msgstr "{0} excluiu você da organização do passbolt."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
-msgstr ""
+msgstr "Sinta-se à vontade para entrar em contato com o administrador na origem da operação, se você achar que essa ação parece suspeita."
 
 msgid "Account suspended"
 msgstr ""
@@ -3602,13 +3602,13 @@ msgid "Contact your admin"
 msgstr ""
 
 msgid "{0} changed your role to user."
-msgstr ""
+msgstr "{0} mudou sua função para o usuário."
 
 msgid "{0} changed the role of {1} to user."
-msgstr ""
+msgstr "{0} alterou a função de {1} para o usuário."
 
 msgid "{0} can no longer perform administration tasks."
-msgstr ""
+msgstr "{0} não pode mais executar tarefas administrativas."
 
 msgid "You"
 msgstr "Você"
@@ -3701,10 +3701,10 @@ msgid "You just opened an account on passbolt at {0}."
 msgstr "Você acabou de abrir uma conta no passaporte em {0}."
 
 msgid "There was a change in the user directory."
-msgstr ""
+msgstr "Houve uma alteração no diretório de usuários."
 
 msgid "You have been requested to add members to a group."
-msgstr ""
+msgstr "Você foi solicitado a adicionar membros a um grupo."
 
 msgid "{0} requested you to add members to a group"
 msgstr "{0} solicitou que você adicione membros a um grupo"
