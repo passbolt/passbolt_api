@@ -82,7 +82,7 @@ class DatabaseConfiguration
         }
 
         try {
-            $connection->connect();
+            $connection->getDriver()->connect();
 
             return true;
         } catch (\Throwable $e) {
