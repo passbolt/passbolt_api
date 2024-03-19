@@ -164,7 +164,7 @@ $routes->scope('/healthcheck', function ($routes) {
     $routes->setExtensions(['json']);
 
     $routes->connect('/status', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckStatus', 'action' => 'status'])
-        ->setMethods(['GET']);
+        ->setMethods(['GET', 'HEAD']);
 
     $routes->connect('/', ['prefix' => 'Healthcheck', 'controller' => 'HealthcheckIndex', 'action' => 'index'])
         ->setMethods(['GET']);
