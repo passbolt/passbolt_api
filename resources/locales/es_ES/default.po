@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-03-07 13:23+0000\n"
-"PO-Revision-Date: 2024-03-08 14:20\n"
+"PO-Revision-Date: 2024-03-19 12:57\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -245,7 +245,7 @@ msgid "All checks ran successfully!"
 msgstr "¡Todas las comprobaciones se han ejecutado con éxito!"
 
 msgid "Healthcheck security index endpoint disabled."
-msgstr ""
+msgstr "Endpoint del índice de seguridad del chequeo de salud deshabilitado."
 
 msgid "OK"
 msgstr "OK"
@@ -4709,7 +4709,7 @@ msgid "The email claim should not be empty."
 msgstr "El correo electrónico a reclamar no debe estar vacío."
 
 msgid "The email claim is too large."
-msgstr ""
+msgstr "La solicitud de correo electrónico es demasiado grande."
 
 msgid "The email claim should be one of the following: {0}."
 msgstr "El correo electrónico a reclamar debe ser uno de los siguientes: {0}."
@@ -4907,10 +4907,10 @@ msgid "Invalid nonce."
 msgstr "Nonce no válido."
 
 msgid "Invalid provider. Expected AD FS."
-msgstr ""
+msgstr "Proveedor no válido. Se esperaba AD FS."
 
 msgid "Invalid provider data. Expected AD FS settings."
-msgstr ""
+msgstr "Datos del proveedor no válidos. Se esperaba la configuración AD FS."
 
 msgid "No valid SSO settings found."
 msgstr "No se han encontrado ajustes SSO válidos."
@@ -4919,10 +4919,10 @@ msgid "You must authenticate with Azure again."
 msgstr "Debe autenticarse con Azure de nuevo."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
-msgstr ""
+msgstr "Valor proporcionado en la configuración `passbolt.security.sso.sslCafile` no válido"
 
 msgid "Provided root CA file does not exist"
-msgstr ""
+msgstr "El archivo CA raíz proporcionado no existe"
 
 msgid "The user id should be a valid UUID."
 msgstr "El identificador de usuario debe ser un UUID válido."
