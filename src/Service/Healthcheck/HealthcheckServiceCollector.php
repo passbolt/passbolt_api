@@ -108,7 +108,7 @@ class HealthcheckServiceCollector
                 continue;
             }
             foreach ($servicesIncluded as $serviceIncluded) {
-                if ($healthcheckService instanceof $serviceIncluded) {
+                if (get_class($healthcheckService) === $serviceIncluded) {
                     $services[] = $healthcheckService;
                 }
             }

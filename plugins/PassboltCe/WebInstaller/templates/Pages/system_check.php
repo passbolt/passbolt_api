@@ -45,7 +45,7 @@ $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
                      */
                     // We want display the warning when php version is less than next minimum PHP version we'll support.
                     // That's why this complex condition :)
-                    if ((!$isSystemOk) || ($isSystemOk && !$isNextMinPhpVersionPassed)) {
+                    if (!$isSystemOk || ($isSystemOk && !$isNextMinPhpVersionPassed)) {
                         foreach ($resultsGroupByDomain as $domain => $checkResults) {
                             // Skip if not environment domain
                             if ($domain !== HealthcheckServiceCollector::DOMAIN_ENVIRONMENT) {
@@ -78,9 +78,13 @@ $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
                         echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
                         echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
                     } else {
+                        $skipDomains = [
+                            HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
+                            HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER,
+                        ];
                         foreach ($resultsGroupByDomain as $domain => $checkResults) {
                             // Skip if environment domain
-                            if ($domain === HealthcheckServiceCollector::DOMAIN_ENVIRONMENT) {
+                            if (in_array($domain, $skipDomains)) {
                                 continue;
                             }
 

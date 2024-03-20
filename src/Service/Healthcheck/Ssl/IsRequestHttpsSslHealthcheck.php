@@ -120,7 +120,7 @@ class IsRequestHttpsSslHealthcheck implements HealthcheckServiceInterface, SkipH
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
+        return HealthcheckServiceCollector::DOMAIN_SSL;
     }
 
     /**
