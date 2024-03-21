@@ -115,7 +115,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'seleniumDisabled' => !Configure::read('passbolt.selenium.active'),
                 'registrationClosed' => [
                     'isSelfRegistrationPluginEnabled' => $this->isFeaturePluginEnabled('SelfRegistration'),
-                    'selfRegistrationProvider' => true, // value mismatch - true
+                    'selfRegistrationProvider' => null,
                     'isRegistrationPublicRemovedFromPassbolt' => is_null(Configure::read('passbolt.registration.public')),
                 ],
                 'hostAvailabilityCheckEnabled' => Configure::read(EmailValidationRule::MX_CHECK_KEY),
@@ -183,7 +183,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
             'smtpSettings' => [
                 'isEnabled' => $this->isFeaturePluginEnabled('SmtpSettings'),
                 'areEndpointsDisabled' => Configure::read(SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED),
-                'errorMessage' => true,
+                'errorMessage' => false,
                 'source' => 'env variables',
                 'isInDb' => false,
             ],

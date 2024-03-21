@@ -19,19 +19,23 @@ namespace App\Controller\Healthcheck;
 use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Service\Healthcheck\Application\LatestVersionApplicationHealthcheck;
+use App\Service\Healthcheck\Application\SelfRegistrationProviderApplicationHealthcheck;
 use App\Service\Healthcheck\Core\FullBaseUrlCoreHealthcheck;
 use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\Gpg\FingerprintMatchGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\Ssl\HostValidSslHealthcheck;
 use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
+use App\Service\Healthcheck\Ssl\PeerValidSslHealthcheck;
 use Cake\Collection\Collection;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Utility\Hash;
+use Passbolt\SmtpSettings\Service\Healthcheck\SettingsValidationSmtpSettingsHealthcheck;
 use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsSettingsSourceHealthcheck;
 
 class HealthcheckIndexController extends AppController
@@ -182,6 +186,13 @@ class HealthcheckIndexController extends AppController
                 } elseif ($checkResult instanceof SmtpSettingsSettingsSourceHealthcheck) {
                     // SMTP settings additional fields
                     $result[$domainKey]['source'] = $checkResult->getSource();
+                } elseif ($checkResult instanceof SettingsValidationSmtpSettingsHealthcheck) {
+                    $value = false;
+                    if ($checkResult->getValidationError() !== '') {
+                        $value = $checkResult->getValidationError();
+                    }
+                } elseif ($checkResult instanceof SelfRegistrationProviderApplicationHealthcheck) {
+                    $value = $checkResult->getProvider();
                 } elseif ($checkResult instanceof FingerprintMatchGpgHealthcheck) {
                     // GPG additional fields
                     $result[$domainKey]['gpgKeyPublicReadable'] = $checkResult->gpgKeyPublicReadable();
@@ -195,6 +206,10 @@ class HealthcheckIndexController extends AppController
                 } elseif ($checkResult instanceof IsRequestHttpsSslHealthcheck) {
                     // We don't want to set this in JSON response
                     continue;
+                } elseif ($checkResult instanceof HostValidSslHealthcheck || $checkResult instanceof PeerValidSslHealthcheck) { // phpcs:ignore
+                    if (!empty($checkResult->getHelpMessage())) {
+                        $result[$domainKey]['info'] = $checkResult->getHelpMessage()[0];
+                    }
                 }
 
                 $result[$domainKey] = Hash::insert($result[$domainKey], $checkResult->getLegacyArrayKey(), $value);
