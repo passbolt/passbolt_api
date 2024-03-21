@@ -282,49 +282,6 @@ class HealthcheckCommand extends PassboltCommand
     }
 
     /**
-     * Warn GPG environment is in order
-     *
-     * @param array $checks existing results
-     * @return void
-     */
-    public function assertGpgEnv($checks = null)
-    {
-        $this->assert(
-            $checks['gpg']['lib'],
-            __('PHP GPG Module is installed and loaded.'),
-            __('PHP GPG Module is not installed or loaded.'),
-            __('Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php') .
-            __('Make sure to add extension=gnupg.so in php ini files for both php-cli and php.')
-        );
-        $this->assert(
-            $checks['gpg']['gpgHome'],
-            __('The environment variable GNUPGHOME is set to {0}.', $checks['gpg']['info']['gpgHome']),
-            __('The environment variable GNUPGHOME is set to {0}, but the directory does not exist.', $checks['gpg']['info']['gpgHome']),// phpcs:ignore
-            [
-                __('Ensure the keyring location exists and is accessible by the webserver user.'),
-                __('you can try:'),
-                'sudo mkdir -p ' . $checks['gpg']['info']['gpgHome'],
-                'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
-                'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
-                __('You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore
-            ]
-        );
-        if ($checks['gpg']['gpgHome']) {
-            $this->assert(
-                $checks['gpg']['gpgHomeWritable'],
-                __('The directory {0} containing the keyring is writable by the webserver user.', $checks['gpg']['info']['gpgHome']),// phpcs:ignore
-                __('The directory {0} containing the keyring is not writable by the webserver user.', $checks['gpg']['info']['gpgHome']),// phpcs:ignore
-                [
-                    __('Ensure the keyring location is accessible by the webserver user.'),
-                    __('you can try:'),
-                    'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . $checks['gpg']['info']['gpgHome'],
-                    'sudo chmod 700 ' . $checks['gpg']['info']['gpgHome'],
-                ]
-            );
-        }
-    }
-
-    /**
      * Display a success or error message depending on given condition
      *
      * @param bool $condition to check

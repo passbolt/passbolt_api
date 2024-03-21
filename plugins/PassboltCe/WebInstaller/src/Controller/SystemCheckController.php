@@ -21,6 +21,7 @@ use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
 use Cake\Collection\Collection;
 use Cake\Collection\CollectionInterface;
 use Cake\Routing\Router;
@@ -81,6 +82,7 @@ class SystemCheckController extends WebInstallerController
             PhpGpgModuleInstalledGpgHealthcheck::class,
             HomeVariableDefinedGpgHealthcheck::class,
             HomeVariableWritableGpgHealthcheck::class,
+            IsRequestHttpsSslHealthcheck::class,
         ];
 
         return $healthcheckServiceCollector->getServicesFiltered($domainsIncluded, $servicesIncluded);

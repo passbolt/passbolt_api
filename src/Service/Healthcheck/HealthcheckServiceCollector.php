@@ -108,7 +108,7 @@ class HealthcheckServiceCollector
                 continue;
             }
             foreach ($servicesIncluded as $serviceIncluded) {
-                if ($healthcheckService instanceof $serviceIncluded) {
+                if (get_class($healthcheckService) === $serviceIncluded) {
                     $services[] = $healthcheckService;
                 }
             }
@@ -134,7 +134,7 @@ class HealthcheckServiceCollector
             self::DOMAIN_DATABASE => __('Database'),
             self::DOMAIN_GPG => __('GPG Configuration'),
             self::DOMAIN_JWT => __('JWT Authentication'),
-            self::DOMAIN_SSL => __('SSL'),
+            self::DOMAIN_SSL => __('SSL Certificate'),
         ];
 
         if (isset($domainTitleMapping[$domain])) {

@@ -126,4 +126,12 @@ class SelfRegistrationProviderApplicationHealthcheck implements HealthcheckServi
     {
         return 'registrationClosed.selfRegistrationProvider';
     }
+
+    /**
+     * @return string|null
+     */
+    public function getProvider(): ?string
+    {
+        return $this->selfRegistrationProvider;
+    }
 }
