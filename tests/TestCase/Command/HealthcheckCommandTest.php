@@ -184,6 +184,7 @@ class HealthcheckCommandTest extends AppTestCase
 
         $this->assertExitSuccess();
         $this->assertOutputContains('This installation is not up to date. Currently using 1.0.0 and it should be 9.9.9.');
+        $this->assertOutputContains('<info>[HELP]</info> See https://www.passbolt.com/help/tech/update');
         $this->assertOutputContains('Passbolt is not configured to force SSL use.');
         $this->assertOutputContains('App.fullBaseUrl is not set to HTTPS.');
         $this->assertOutputContains('Selenium API endpoints are active.');
@@ -248,11 +249,27 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> Cache is working.');
         $this->assertOutputContains('<error>[FAIL] Debug mode is on.</error>');
+        $this->assertOutputContains('<info>[HELP]</info> Set debug to false in ' . CONFIG . 'passbolt.php');
         $this->assertOutputContains('<success>[PASS]</success> Unique value set for security.salt');
         $this->assertOutputContains('<success>[PASS]</success> Full base url is set to ' . Configure::read('App.fullBaseUrl'));
         $this->assertOutputContains('<success>[PASS]</success> App.fullBaseUrl validation OK.');
         $this->assertOutputContains('<success>[PASS]</success> /healthcheck/status is reachable.');
         $this->assertOutputContains('<error>[FAIL] 1 error(s) found. Hang in there!</error>');
+    }
+
+    public function testHealthcheckCommand_Core_Unhappy_Path()
+    {
+        $this->mockClientGet(
+            Router::url('/healthcheck/status.json', true),
+            $this->newClientResponse(404)
+        );
+
+        $this->exec('passbolt healthcheck --core');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<error>[FAIL] Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl</error>');
+        $this->assertOutputContains('<info>[HELP]</info> Check that the domain name is correct in ' . CONFIG . 'passbolt.php');
+        $this->assertOutputContains('<info>[HELP]</info> Check the network settings');
+        $this->assertOutputContains('<error>[FAIL] 2 error(s) found. Hang in there!</error>');
     }
 
     public function testHealthcheckCommand_Gpg_Happy_Path()

@@ -122,7 +122,7 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
      */
     public function getHelpMessage()
     {
-        $msg = __('See. https://www.passbolt.com/help/tech/update');
+        $msg = __('See https://www.passbolt.com/help/tech/update');
         if ($this->exceptionThrown) {
             $msg = __('Check the network configuration to allow this script to check for updates.');
         }

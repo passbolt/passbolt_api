@@ -93,7 +93,7 @@ class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterfac
         return [
             __('Run the migration scripts:'),
             'sudo su -s /bin/bash -c "' . ROOT . DS . 'bin/cake migrations migrate --no-lock" ' . PROCESS_USER,
-            __('See. https://www.passbolt.com/help/tech/update'),
+            __('See https://www.passbolt.com/help/tech/update'),
         ];
     }
 
