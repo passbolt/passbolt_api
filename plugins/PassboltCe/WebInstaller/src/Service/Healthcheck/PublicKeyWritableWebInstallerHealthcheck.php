@@ -17,26 +17,19 @@ declare(strict_types=1);
 
 namespace Passbolt\WebInstaller\Service\Healthcheck;
 
+use App\Service\Healthcheck\Gpg\AbstractGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Core\Configure;
 
-class PublicKeyWritableWebInstallerHealthcheck implements HealthcheckServiceInterface
+class PublicKeyWritableWebInstallerHealthcheck extends AbstractGpgHealthcheck
 {
-    /**
-     * Status of this health check if it is passed or failed.
-     *
-     * @var bool
-     */
-    private bool $status = false;
-
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $keyFolderWritable = is_writable(dirname($this->getPublicKeyPath()));
-        $publicKeyPath = $this->getPublicKeyPath();
+        $keyFolderWritable = is_writable(dirname($this->getPublicServerKey()));
+        $publicKeyPath = $this->getPublicServerKey();
         $this->status = file_exists($publicKeyPath) ? is_writable($publicKeyPath) : $keyFolderWritable;
 
         return $this;
@@ -47,23 +40,7 @@ class PublicKeyWritableWebInstallerHealthcheck implements HealthcheckServiceInte
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function isPassed(): bool
-    {
-        return $this->status;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function level(): string
-    {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -87,7 +64,7 @@ class PublicKeyWritableWebInstallerHealthcheck implements HealthcheckServiceInte
      */
     public function getHelpMessage()
     {
-        $publicKeyPath = $this->getPublicKeyPath();
+        $publicKeyPath = $this->getPublicServerKey();
 
         return [
             __('Ensure the file {0} is writable by the webserver user.', CONFIG . 'gpg' . DS . $publicKeyPath),
@@ -104,17 +81,7 @@ class PublicKeyWritableWebInstallerHealthcheck implements HealthcheckServiceInte
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
-    }
-
-    /**
-     * Returns public key path from the config.
-     *
-     * @return string
-     */
-    private function getPublicKeyPath(): string
-    {
-        return Configure::read('passbolt.gpg.serverKey.public');
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**

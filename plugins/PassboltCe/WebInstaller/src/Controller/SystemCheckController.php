@@ -56,10 +56,13 @@ class SystemCheckController extends WebInstallerController
         });
 
         $isNextMinPhpVersionPassed = $this->isNextMinPhpVersionPassed($resultCollection);
+        $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
+            return $result->domain();
+        });
 
         $nextStepUrl = Router::url('/install/database', true);
         $this->webInstaller->setSettingsAndSave('initialized', true);
-        $this->set('resultCollection', $resultCollection);
+        $this->set('resultsGroupByDomain', $resultsGroupByDomain);
         $this->set('isNextMinPhpVersionPassed', $isNextMinPhpVersionPassed);
         $this->set('isSystemOk', $isSystemOk);
         $this->set('nextStepUrl', $nextStepUrl);
@@ -76,7 +79,6 @@ class SystemCheckController extends WebInstallerController
     {
         $domainsIncluded = [
             HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
-            HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER,
         ];
         $servicesIncluded = [
             PhpGpgModuleInstalledGpgHealthcheck::class,

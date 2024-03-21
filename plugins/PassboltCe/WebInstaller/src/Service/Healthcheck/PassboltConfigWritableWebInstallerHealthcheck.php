@@ -49,7 +49,7 @@ class PassboltConfigWritableWebInstallerHealthcheck implements HealthcheckServic
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**
@@ -104,7 +104,7 @@ class PassboltConfigWritableWebInstallerHealthcheck implements HealthcheckServic
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER;
+        return HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
     }
 
     /**

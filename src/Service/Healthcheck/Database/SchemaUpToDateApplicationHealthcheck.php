@@ -20,7 +20,8 @@ namespace App\Service\Healthcheck\Database;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use App\Utility\Migration;
+use Cake\Datasource\ConnectionManager;
+use Migrations\Migrations;
 
 class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -37,12 +38,30 @@ class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterfac
     public function check(): HealthcheckServiceInterface
     {
         try {
-            $this->status = !Migration::needMigration();
+            $this->status = !$this->needMigration();
         } catch (\Exception $e) {
             // Do nothing
         }
 
         return $this;
+    }
+
+    /**
+     * Check if the app or plugins need a database migration
+     *
+     * @return bool
+     */
+    public function needMigration(): bool
+    {
+        $Migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
+        $migrations = $Migrations->status();
+        foreach ($migrations as $migration) {
+            if ($migration['status'] === 'down') {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -6,7 +6,7 @@ declare(strict_types=1);
  * @var bool $isSystemOk
  * @var bool $isNextMinPhpVersionPassed
  * @var string $nextStepUrl
- * @var \Cake\Collection\Collection $resultCollection
+ * @var \Cake\Collection\Collection $resultsGroupByDomain
  */
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
@@ -14,9 +14,6 @@ use App\View\Helper\HealthcheckHtmlHelper;
 
 $healthcheckHelper = new HealthcheckHtmlHelper();
 
-$resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
-    return $result->domain();
-});
 ?>
 <?= $this->element('header', ['title' => __('Welcome to Passbolt Pro! Let\'s get started with the configuration.')]) ?>
 <div class="panel main ">
@@ -78,13 +75,9 @@ $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
                         echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
                         echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
                     } else {
-                        $skipDomains = [
-                            HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
-                            HealthcheckServiceCollector::DOMAIN_WEB_INSTALLER,
-                        ];
                         foreach ($resultsGroupByDomain as $domain => $checkResults) {
                             // Skip if environment domain
-                            if (in_array($domain, $skipDomains)) {
+                            if ($domain === HealthcheckServiceCollector::DOMAIN_ENVIRONMENT) {
                                 continue;
                             }
 
