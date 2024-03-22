@@ -175,6 +175,24 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
     }
 
     /**
+     * Fail without 500 if gpg_auth is not an array
+     */
+    public function testAuthLoginController_Validate_Gpg_Auth(): void
+    {
+        $this->postJson('/auth/login.json', [
+            'data' => [
+                'gpg_auth' => 'foo',
+            ],
+        ]);
+
+        $this->assertResponseSuccess();
+        $msg = 'There is no user associated with this key. No key id set.';
+        $headers = $this->getHeaders();
+        $this->assertEquals($msg, $headers['X-GPGAuth-Debug']);
+        $this->assertEquals($headers['X-GPGAuth-Authenticated'], 'false');
+    }
+
+    /**
      * Check that GPGAuth headers are set everywhere
      */
     public function testAuthLoginController_GetHeadersPost(): void
