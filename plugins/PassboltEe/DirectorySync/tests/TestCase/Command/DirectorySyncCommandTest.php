@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Command;
 
-use Passbolt\DirectorySync\Command\DirectorySyncCommand;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
 
 /**
@@ -45,7 +44,7 @@ class DirectorySyncCommandTest extends DirectorySyncConsoleIntegrationTestCase
 
     public function testDirectorySyncCommandAsAdmin()
     {
-        DirectorySyncCommand::$isUserRoot = true;
+        $this->mockProcessUserService('root');
         $this->exec('directory_sync');
         $this->assertExitError();
     }

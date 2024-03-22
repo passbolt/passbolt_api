@@ -16,9 +16,36 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync;
 
+use App\Service\Command\ProcessUserService;
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
+use Passbolt\DirectorySync\Command\AllCommand;
+use Passbolt\DirectorySync\Command\DebugCommand;
+use Passbolt\DirectorySync\Command\DirectorySyncCommand;
+use Passbolt\DirectorySync\Command\GroupsCommand;
+use Passbolt\DirectorySync\Command\IgnoreCreateCommand;
+use Passbolt\DirectorySync\Command\IgnoreDeleteCommand;
+use Passbolt\DirectorySync\Command\IgnoreListCommand;
+use Passbolt\DirectorySync\Command\TestCommand;
+use Passbolt\DirectorySync\Command\UsersCommand;
 
 class DirectorySyncPlugin extends BasePlugin
 {
     public const PLUGIN_CONFIG_PATH = PLUGINS . 'PassboltEe' . DS . 'DirectorySync' . DS . 'config' . DS;
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(AllCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(DebugCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(DirectorySyncCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(GroupsCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(IgnoreCreateCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(IgnoreDeleteCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(IgnoreListCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(TestCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(UsersCommand::class)->addArgument(ProcessUserService::class);
+    }
 }

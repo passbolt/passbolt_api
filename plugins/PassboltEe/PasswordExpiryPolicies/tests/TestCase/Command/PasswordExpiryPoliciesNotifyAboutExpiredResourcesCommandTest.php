@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\PasswordExpiryPolicies\Test\TestCase\Command;
 
-use App\Command\HealthcheckCommand;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\PermissionFactory;
 use App\Test\Factory\ResourceFactory;
@@ -45,7 +44,6 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
         $this->markTestSkipped();
         parent::setUp();
         $this->useCommandRunner();
-        HealthcheckCommand::$isUserRoot = false;
     }
 
     /**
