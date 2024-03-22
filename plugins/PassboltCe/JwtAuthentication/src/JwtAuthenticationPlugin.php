@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication;
 
 use App\Middleware\CsrfProtectionMiddleware;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Authentication\Middleware\AuthenticationMiddleware;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
@@ -35,6 +36,8 @@ use Passbolt\JwtAuthentication\Middleware\JwtDestroySessionMiddleware;
 use Passbolt\JwtAuthentication\Middleware\JwtRouteFilterMiddleware;
 use Passbolt\JwtAuthentication\Notification\Email\Redactor\JwtAuthenticationEmailRedactorPool;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
+use Passbolt\JwtAuthentication\Service\Healthcheck\DirectoryNotWritableJwtHealthcheck;
+use Passbolt\JwtAuthentication\Service\Healthcheck\ValidKeyPairJwtHealthcheck;
 
 class JwtAuthenticationPlugin extends BasePlugin
 {
@@ -85,5 +88,12 @@ class JwtAuthenticationPlugin extends BasePlugin
     {
         $container->add(JwtArmoredChallengeInterface::class, JwtArmoredChallengeService::class);
         $container->add(JwksGetService::class);
+
+        $container->add(DirectoryNotWritableJwtHealthcheck::class);
+        $container->add(ValidKeyPairJwtHealthcheck::class);
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [DirectoryNotWritableJwtHealthcheck::class])
+            ->addMethodCall('addService', [ValidKeyPairJwtHealthcheck::class]);
     }
 }

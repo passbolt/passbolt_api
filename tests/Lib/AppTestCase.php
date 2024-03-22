@@ -74,7 +74,7 @@ abstract class AppTestCase extends TestCase
     }
 
     /**
-     * Tear dow
+     * Tear down
      */
     public function tearDown(): void
     {

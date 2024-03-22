@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Service\Command\ProcessUserService;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -32,6 +33,21 @@ class MigratePostgresCommand extends PassboltCommand
         'V340MigrateASCIIFieldsEncodingPro',
         'V350ConvertIdFieldsToUuidFields',
     ];
+
+    /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
+
+    /**
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     */
+    public function __construct(ProcessUserService $processUserService)
+    {
+        parent::__construct();
+
+        $this->processUserService = $processUserService;
+    }
 
     /**
      * @inheritDoc
@@ -54,7 +70,7 @@ class MigratePostgresCommand extends PassboltCommand
 
         // Root user is not allowed to execute this command.
         // This command needs to be executed with the same user as the webserver.
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         /** @var \Cake\Database\Connection $connection */
         $connection = ConnectionManager::get($args->getOption('datasource'));
