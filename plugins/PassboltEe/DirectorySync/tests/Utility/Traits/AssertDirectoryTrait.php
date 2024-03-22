@@ -17,14 +17,12 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
 use Cake\ORM\TableRegistry;
+use Passbolt\DirectorySync\Actions\SyncAction;
 use Passbolt\DirectorySync\Utility\Alias;
 
 trait AssertDirectoryTrait
 {
-    /**
-     * @var \Passbolt\DirectorySync\Actions\SyncAction
-     */
-    protected $action;
+    protected SyncAction $action;
 
     /**
      * @return void
