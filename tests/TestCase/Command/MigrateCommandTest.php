@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Command\MigrateCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -42,7 +41,7 @@ class MigrateCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        MigrateCommand::$isUserRoot = false;
+        $this->mockProcessUserService('www-data');
     }
 
     /**
@@ -63,7 +62,7 @@ class MigrateCommandTest extends AppTestCase
      */
     public function testMigrateCommandAsRoot()
     {
-        $this->assertCommandCannotBeRunAsRootUser(MigrateCommand::class);
+        $this->assertCommandCannotBeRunAsRootUser('migrate');
     }
 
     /**

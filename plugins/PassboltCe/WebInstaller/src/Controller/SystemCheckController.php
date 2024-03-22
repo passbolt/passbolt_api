@@ -16,56 +16,96 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Controller;
 
-use App\Utility\Healthchecks;
+use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
+use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
+use Cake\Collection\Collection;
+use Cake\Collection\CollectionInterface;
 use Cake\Routing\Router;
-use Passbolt\WebInstaller\Utility\WebInstallerHealthchecks;
 
 class SystemCheckController extends WebInstallerController
 {
     /**
      * Index
      *
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector healthcheck service collector.
      * @return void
      */
-    public function index()
+    public function index(HealthcheckServiceCollector $healthcheckServiceCollector)
     {
-        $checks = Healthchecks::environment();
-        $gpgChecks = Healthchecks::gpg();
-        $webInstallerCheck = WebInstallerHealthchecks::all();
-        $checks = array_merge($checks, $gpgChecks, $webInstallerCheck);
-        $checks['ssl'] = ['is' => $this->request->is('ssl')];
-        $checks['system_ok'] = $this->_healthcheckIsOk($checks);
+        $systemCheckHealthcheckServices = $this->getSystemCheckHealthcheckServices($healthcheckServiceCollector);
+
+        $resultCollection = new Collection([]);
+        foreach ($systemCheckHealthcheckServices as $healthcheckService) {
+            $result = $healthcheckService->check();
+
+            $resultCollection = $resultCollection->appendItem($result);
+        }
+
+        $isSystemOk = $resultCollection->every(function ($healthcheckResult) {
+            // Do not block installation even if this check fails
+            if ($healthcheckResult instanceof NextMinPhpVersionHealthcheck) {
+                return true;
+            }
+
+            /** @var \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckResult */
+            return $healthcheckResult->isPassed();
+        });
+
+        $isNextMinPhpVersionPassed = $this->isNextMinPhpVersionPassed($resultCollection);
+        $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
+            return $result->domain();
+        });
 
         $nextStepUrl = Router::url('/install/database', true);
         $this->webInstaller->setSettingsAndSave('initialized', true);
-        $this->set('data', $checks);
+        $this->set('resultsGroupByDomain', $resultsGroupByDomain);
+        $this->set('isNextMinPhpVersionPassed', $isNextMinPhpVersionPassed);
+        $this->set('isSystemOk', $isSystemOk);
         $this->set('nextStepUrl', $nextStepUrl);
         $this->render('Pages/system_check');
     }
 
     /**
-     * Check if healthcheck values are good enough to continue installation.
+     * Filter all the healthcheck services to extract only the ones relevant here
      *
-     * @param array $checks checks
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector healthcheck service collector
+     * @return \App\Service\Healthcheck\HealthcheckServiceInterface[]
+     */
+    private function getSystemCheckHealthcheckServices(HealthcheckServiceCollector $healthcheckServiceCollector): array
+    {
+        $domainsIncluded = [
+            HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
+        ];
+        $servicesIncluded = [
+            PhpGpgModuleInstalledGpgHealthcheck::class,
+            HomeVariableDefinedGpgHealthcheck::class,
+            HomeVariableWritableGpgHealthcheck::class,
+            IsRequestHttpsSslHealthcheck::class,
+        ];
+
+        return $healthcheckServiceCollector->getServicesFiltered($domainsIncluded, $servicesIncluded);
+    }
+
+    /**
+     * @param \Cake\Collection\CollectionInterface $resultCollection Result collection.
      * @return bool
      */
-    protected function _healthcheckIsOk($checks)
+    private function isNextMinPhpVersionPassed(CollectionInterface $resultCollection): bool
     {
-        // Do not block installation if this check fails
-        unset($checks['environment']['nextMinPhpVersion']);
+        $result = false;
+        /** @var \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckResult */
+        foreach ($resultCollection as $healthcheckResult) {
+            if ($healthcheckResult instanceof NextMinPhpVersionHealthcheck) {
+                $result = $healthcheckResult->isPassed();
 
-        $envCheckResults = array_values($checks['environment']);
-
-        $webInstallerChecksResults = array_values($checks['webInstaller']);
-        $gpgKeys = ['lib', 'gpgHome', 'gpgHomeWritable'];
-        $gpgChecks = [];
-        foreach ($gpgKeys as $gpgKey) {
-            $gpgChecks[$gpgKey] = $checks['gpg'][$gpgKey];
+                break;
+            }
         }
-        $gpgCheckResults = array_values($gpgChecks);
-        $allChecks = array_merge($envCheckResults, $gpgCheckResults, $webInstallerChecksResults);
-        sort($allChecks);
 
-        return $allChecks[0] ? true : false;
+        return $result;
     }
 }

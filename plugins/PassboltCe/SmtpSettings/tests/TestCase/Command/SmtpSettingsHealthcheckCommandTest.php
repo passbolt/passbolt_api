@@ -16,17 +16,19 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings\Test\TestCase\Command;
 
-use App\Command\HealthcheckCommand;
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
+use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
+use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
-class SmtpSettingsHealthcheckCommandTest extends AppTestCase
+class SmtpSettingsHealthcheckCommandTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
-    use PassboltCommandTestTrait;
     use SmtpSettingsTestTrait;
+    use PassboltCommandTestTrait;
 
     /**
      * setUp method
@@ -37,54 +39,46 @@ class SmtpSettingsHealthcheckCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        HealthcheckCommand::$isUserRoot = false;
+        $this->mockProcessUserService('www-data');
+    }
+
+    public function testHealthcheckCommand_SmtpSettings_Plugin_Disabled()
+    {
+        $this->disableFeaturePlugin(SmtpSettingsPlugin::class);
+        $this->exec('passbolt healthcheck --smtpSettings');
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<warning>[WARN] The SMTP Settings plugin is disabled.</warning>');
+        $this->assertOutputContains('<info>[HELP]</info> Enable the plugin in order to define SMTP settings in the database.');
+        $this->assertOutputContains('No error found. Nice one sparky!');
     }
 
     public function testHealthcheckCommand_SmtpSettings_Valid()
     {
+        Configure::write(
+            SmtpSettingsSecurityMiddleware::PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED,
+            true
+        );
         $this->setTransportConfig();
+        $data = $this->getSmtpSettingsData();
+        $this->encryptAndPersistSmtpSettings($data);
         $this->exec('passbolt healthcheck --smtpSettings');
         $this->assertExitSuccess();
-        if ($this->isFeaturePluginEnabled('SmtpSettings')) {
-            $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin is enabled.');
-            $this->assertOutputContains('<warning>[WARN] The SMTP Settings source is: ');
-        } else {
-            $this->assertOutputContains(' <warning>[WARN] The {0} plugin is disabled. Enable the plugin in order to define SMTP settings in the database.</warning>');
-        }
+        $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin is enabled.');
+        $this->assertOutputContains('<success>[PASS]</success> SMTP Settings coherent. You may send a test email to validate them.');
+        $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings source is: database.');
+        $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin endpoints are disabled.');
         $this->assertOutputContains('No error found. Nice one sparky!');
     }
 
     public function testHealthcheckCommand_SmtpSettings_Invalid()
     {
-        if ($this->isFeaturePluginEnabled('SmtpSettings')) {
-            $data = $this->getSmtpSettingsData('host', '');
-            $this->encryptAndPersistSmtpSettings($data);
-        }
-
+        $this->setTransportConfig('port', 0);
         $this->exec('passbolt healthcheck --smtpSettings');
         $this->assertExitSuccess();
-        if ($this->isFeaturePluginEnabled('SmtpSettings')) {
-            $validationErrorMessage = '<error>[FAIL] SMTP Setting errors: {"host":{"_empty":"The host name should not be empty."}}</error>';
-            $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin is enabled.');
-            $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings source is: database.');
-            $this->assertOutputContains($validationErrorMessage);
-            $this->assertOutputContains(' 1 error(s) found. Hang in there!');
-        } else {
-            $this->assertOutputContains(' <warning>[WARN] The {0} plugin is disabled. Enable the plugin in order to define SMTP settings in the database.</warning>');
-            $this->assertOutputContains('No error found. Nice one sparky!');
-        }
-    }
-
-    public function testHealthcheckCommand_SmtpSettings_Plugin_Deactivated()
-    {
-        $wasPluginEnabled = $this->isFeaturePluginEnabled('SmtpSettings');
-        $this->disableFeaturePlugin('SmtpSettings');
-        $this->exec('passbolt healthcheck --smtpSettings');
-        $this->assertExitSuccess();
-        $this->assertOutputContains(' <warning>[WARN] The SMTP Settings plugin is disabled. Enable the plugin in order to define SMTP settings in the database.</warning>');
-        $this->assertOutputContains('No error found. Nice one sparky!');
-        if ($wasPluginEnabled) {
-            $this->enableFeaturePlugin('SmtpSettings');
-        }
+        $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin is enabled.');
+        $this->assertOutputContains('<error>[FAIL] SMTP Setting errors: {"port":{"range":"The port number should be between 1 and 65535."}}</error>');
+        $this->assertOutputContains('<warning>[WARN] The SMTP Settings source is:');
+        $this->assertOutputContains('<warning>[WARN] The SMTP Settings plugin endpoints are enabled.');
+        $this->assertOutputContains('<info>[HELP]</info> It is recommended to disable the plugin endpoints.');
     }
 }

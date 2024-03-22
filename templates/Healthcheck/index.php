@@ -11,7 +11,11 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
+ *
+ * @var array $body
  */
+
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\View\Helper\HealthcheckHtmlHelper;
 use Cake\Core\Configure;
 
@@ -19,7 +23,7 @@ $this->assign('title',	__('Health checks'));
 $this->Html->css('themes/default/api_main.min.css?v=' . Configure::read('passbolt.version'), ['block' => 'css', 'fullBase' => true]);
 $this->assign('pageClass', 'status');
 
-$healthcheck = new HealthcheckHtmlHelper();
+$healthcheckHelper = new HealthcheckHtmlHelper();
 ?>
 
 <div class="grid grid-responsive-12">
@@ -27,27 +31,19 @@ $healthcheck = new HealthcheckHtmlHelper();
         <div class="col8">
             <h1><?php echo __('Passbolt API Status') ?></h1>
             <?php
-            $healthcheck->assertEnvironment($body);
+            foreach ($body as $domain => $checkResults) {
+                echo '<h3>' . HealthcheckServiceCollector::getTitleFromDomain($domain) . '</h3>';
+
+                foreach ($checkResults as $checkResult) {
+                    $healthcheckHelper->render($checkResult);
+                }
+            }
             ?>
             <!-- if the javascript does not load this message will be shown -->
             <div id="url-rewriting-warning" class="message error">
                 <?php echo __('URL rewriting is not properly configured on your server.'); ?>
                 <a target="_blank" rel="noopener noreferrer" href="http://book.cakephp.org/2.0/en/installation/url-rewriting.html">Learn more.</a>
             </div>
-            <?php
-            if ($body['ssl']):
-                echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
-            else:
-                echo '<div class="message error">' . __('SSL access is not enabled.') . '</div>';
-            endif;
-            ?>
-            <?php
-            $healthcheck->assertConfigFiles($body);
-            $healthcheck->assertCore($body);
-            $healthcheck->assertDatabase($body);
-            $healthcheck->assertGpg($body);
-            $healthcheck->assertApplication($body);
-            ?>
         </div>
         <div class="col4 last" style="margin-top:2.8em;">
             <div class="sidebar-help transparent">
