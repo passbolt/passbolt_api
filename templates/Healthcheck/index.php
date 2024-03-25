@@ -53,7 +53,7 @@ $healthcheck = new HealthcheckHtmlHelper();
             <div class="sidebar-help transparent">
                 <h3>What is this page?</h3>
                 <p>This page is available to help administrators diagnose if something is wrong with a passbolt installation and help keeping it secure.</p>
-                <p>It is also possible to perform a healt check using the command line tools as follow:</p>
+                <p>It is also possible to perform a health check using the command line tools as follow:</p>
                 <code>
         <pre>
 sudo su -s /bin/bash -c "./bin/cake passbolt \
