@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Actions;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Role;
+use App\Model\Entity\Secret;
 use App\Model\Table\UsersTable;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
@@ -83,6 +85,7 @@ abstract class SyncAction
 
     private DirectoryReportsTable $DirectoryReports;
     protected ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
+    protected EntitiesChangesDto $entitiesChangesDto;
     /**
      * Store entities (users or groups) to ignore.
      *
@@ -249,6 +252,7 @@ abstract class SyncAction
 
         $this->directoryData = $this->directory->{'get' . $modelType}();
         $this->formatDirectoryData();
+        $this->entitiesChangesDto = new EntitiesChangesDto();
     }
 
     /**
@@ -313,12 +317,13 @@ abstract class SyncAction
 
             try {
                 /** @psalm-suppress InvalidArgument */
-                if (!$this->getTable()->softDelete($entity)) {
+                $entitiesChanges = $this->getTable()->softDelete($entity);
+                if (!$entitiesChanges) {
                     // The entity cannot be deleted (for example: it is the sole owner of shared passwords)
                     $this->handleNotPossibleDelete($entry);
                 } else {
                     // Entity was deleted
-                    $this->handleSuccessfulDelete($entry);
+                    $this->handleSuccessfulDelete($entry, $entitiesChanges);
                 }
             } catch (InternalErrorException $exception) {
                 // The entity cannot be deleted (for example: database service is down)
@@ -434,9 +439,10 @@ abstract class SyncAction
      * Handle a successful delete.
      *
      * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
+     * @param \App\Model\Dto\EntitiesChangesDto $entitiesChangesDto entity changes
      * @return void
      */
-    protected function handleSuccessfulDelete(DirectoryEntry $entry): void
+    protected function handleSuccessfulDelete(DirectoryEntry $entry, EntitiesChangesDto $entitiesChangesDto): void
     {
         $entity = $entry->getAssociatedEntity();
         $this->DirectoryEntries->delete($entry);
@@ -451,6 +457,7 @@ abstract class SyncAction
             Alias::STATUS_SUCCESS,
             $entity
         ));
+        $this->entitiesChangesDto->merge($entitiesChangesDto);
     }
 
     /**
@@ -741,6 +748,8 @@ abstract class SyncAction
     {
         $this->report->status = DirectoryReport::STATUS_DONE;
         $this->DirectoryReports->save($this->report);
+        $deletedSecrets = $this->entitiesChangesDto->getDeletedEntities(Secret::class);
+        $this->resourcesExpireResourcesService->expireResourcesForSecrets($deletedSecrets);
     }
 
     /**

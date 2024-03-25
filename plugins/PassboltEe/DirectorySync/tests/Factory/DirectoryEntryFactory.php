@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.7.2
+ * @since         4.7.0
  */
 namespace Passbolt\DirectorySync\Test\Factory;
 
@@ -22,15 +22,16 @@ use App\Utility\UuidFactory;
 use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\DirectorySync\Utility\Alias;
 
 /**
- * DirectoryRelationFactory
+ * DirectoryEntryFactory
  *
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation|\Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] persist()
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation getEntity()
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] getEntities()()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|\Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] persist()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry getEntity()
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] getEntities()()
  */
-class DirectoryRelationFactory extends CakephpBaseFactory
+class DirectoryEntryFactory extends CakephpBaseFactory
 {
     /**
      * Defines the Table Registry used to generate entities with
@@ -39,7 +40,7 @@ class DirectoryRelationFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'Passbolt/DirectorySync.DirectoryRelations';
+        return 'Passbolt/DirectorySync.DirectoryEntries';
     }
 
     /**
@@ -52,38 +53,41 @@ class DirectoryRelationFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'parent_key' => UuidFactory::uuid(),
-                'child_key' => UuidFactory::uuid(),
+                'foreign_key' => UuidFactory::uuid(),
+                'directory_name' => $faker->word(),
+                'directory_created' => FrozenDate::now()->subDays($faker->randomNumber(1)),
+                'directory_modified' => FrozenDate::now()->subDays($faker->randomNumber(1)),
                 'created' => FrozenDate::now()->subDays($faker->randomNumber(1)),
+                'modified' => FrozenDate::now()->subDays($faker->randomNumber(1)),
             ];
         });
     }
 
-    public function setParentKey(string $parentKey)
-    {
-        return $this->setField('parent_key', $parentKey);
-    }
-
-    public function setChildKey(string $childKey)
-    {
-        return $this->setField('child_key', $childKey);
-    }
-
-    public function withGroup(?GroupFactory $groupFactory = null)
-    {
-        if (!isset($groupFactory)) {
-            $groupFactory = GroupFactory::make();
-        }
-
-        return $this->with('GroupDirectoryEntry', $groupFactory);
-    }
-
-    public function withUser(?UserFactory $userFactory = null)
+    /**
+     * @param UserFactory|null $userFactory user factory
+     * @return DirectoryEntryFactory
+     */
+    public function withUser(?UserFactory $userFactory = null): DirectoryEntryFactory
     {
         if (!isset($userFactory)) {
             $userFactory = UserFactory::make()->user();
         }
+        $this->with('Users', $userFactory);
 
-        return $this->with('UserDirectoryEntry', $userFactory);
+        return $this->setField('foreign_model', Alias::MODEL_USERS);
+    }
+
+    /**
+     * @param GroupFactory|null $groupFactory user factory
+     * @return DirectoryEntryFactory
+     */
+    public function withGroup(?GroupFactory $groupFactory = null): DirectoryEntryFactory
+    {
+        if (!isset($groupFactory)) {
+            $groupFactory = GroupFactory::make();
+        }
+        $this->with('Groups', $groupFactory);
+
+        return $this->setField('foreign_model', Alias::MODEL_GROUPS);
     }
 }
