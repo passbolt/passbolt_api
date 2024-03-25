@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-03-07 13:12+0000\n"
-"PO-Revision-Date: 2024-03-11 07:27\n"
+"PO-Revision-Date: 2024-03-25 06:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1073,7 +1073,7 @@ msgid "{0} has been suspended"
 msgstr "{0} 이(가) 중지되었습니다."
 
 msgid "Welcome to passbolt, {0}!"
-msgstr "패스볼트에 어서 오세요, {0}!"
+msgstr "패스볼트에 오신 것을 환영합니다, {0}!"
 
 msgid "The purify subject setting should be a boolean."
 msgstr "정화된 제목 설정은 부울이어야 합니다."
@@ -2477,7 +2477,7 @@ msgid "When logging in from a new device you will need to enter a unique verific
 msgstr "새 기기에서 로그인할 때 모바일의 앱에서 생성된 고유한 인증 코드를 입력해야 합니다."
 
 msgid "Remember this device for a month."
-msgstr "이 기기를 한달 동안 기억."
+msgstr "이 기기를 한달 동안 기억하기"
 
 msgid "Yubikey One Time Password"
 msgstr "Yubikey 일회성 암호"
