@@ -141,4 +141,24 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
         $this->assertTrue($user->isDisabled());
         $this->assertEmailQueueCount(0);
     }
+
+    public function testUsersEditDisableController_Success_EnableDisabledUser(): void
+    {
+        $user = UserFactory::make()->user()->disabled()->persist();
+        $this->logInAsAdmin();
+
+        $data = [
+            'id' => $user->id,
+            'disabled' => null,
+            'username' => $user->username,
+            'role_id' => $user->role_id,
+        ];
+        $this->postJson('/users/' . $user->id . '.json', $data);
+
+        $this->assertSuccess();
+        $this->assertNull($this->_responseJsonBody->disabled);
+        $user = UserFactory::get($user->id);
+        $this->assertFalse($user->isDisabled());
+        $this->assertEmailQueueCount(0);
+    }
 }
