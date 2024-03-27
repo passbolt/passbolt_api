@@ -163,22 +163,35 @@ class UsersEditController extends AppController
         if ($this->User->role() !== Role::ADMIN && (isset($data['role']) || isset($data['role_id']))) {
             throw new ForbiddenException(__('You are not authorized to edit the role.'));
         }
+
         // Sanitize data as the marshaller will throw a type error if the payload has integers as fields
         $sanitizedData = [];
-        if (isset($data['role_id'])) {
-            $sanitizedData['role_id'] = $data['role_id'];
-        }
-        if (isset($data['disabled'])) {
-            $sanitizedData['disabled'] = $data['disabled'];
-        }
-        if (isset($data['profile']['first_name'])) {
-            $sanitizedData['profile']['first_name'] = $data['profile']['first_name'];
-        }
-        if (isset($data['profile']['last_name'])) {
-            $sanitizedData['profile']['last_name'] = $data['profile']['last_name'];
-        }
-        if (isset($data['profile']['avatar'])) {
-            $sanitizedData['profile']['avatar'] = $data['profile']['avatar'];
+        $allowedKeys = [
+            'role_id',
+            'disabled',
+            'profile' => [
+                'first_name',
+                'last_name',
+                'avatar',
+            ],
+        ];
+
+        foreach ($allowedKeys as $allowedMainKey => $allowedKey) {
+            if (!is_array($allowedKey)) {
+                if (array_key_exists($allowedKey, $data)) {
+                    $sanitizedData[$allowedKey] = $data[$allowedKey];
+                }
+            } else {
+                foreach ($allowedKey as $allowedNestedKey) {
+                    if (!array_key_exists($allowedMainKey, $data)) {
+                        break;
+                    }
+
+                    if (array_key_exists($allowedNestedKey, $data[$allowedMainKey])) {
+                        $sanitizedData[$allowedMainKey][$allowedNestedKey] = $data[$allowedMainKey][$allowedNestedKey];
+                    }
+                }
+            }
         }
 
         return $sanitizedData;
