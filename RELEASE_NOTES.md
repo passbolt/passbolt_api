@@ -6,6 +6,6 @@ Most notably this update fixes a problem when an administrator is not able to re
 
 We would like to express our sincere thanks to the community members who brought issues to our attention and helped the team to make passbolt better.
 
-## [4.6.1-test.1] - 2024-03-26
+## [4.6.1] - 2024-03-27
 ### Fixed
 - PB-32354 As an admin, I can re-enable a suspended user (GITHUB #512)

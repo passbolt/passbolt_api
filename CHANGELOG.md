@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.1] - 2024-03-27
+### Fixed
+- PB-32354 As an admin, I can re-enable a suspended user (GITHUB #512)
+
 ## [4.6.1-test.1] - 2024-03-26
 ### Fixed
 - PB-32354 As an admin, I can re-enable a suspended user (GITHUB #512)
