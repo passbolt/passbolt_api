@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace App\Controller\Healthcheck;
 
 use App\Controller\AppController;
-use App\Model\Entity\Role;
 use App\Service\Healthcheck\Application\LatestVersionApplicationHealthcheck;
 use App\Service\Healthcheck\Application\SelfRegistrationProviderApplicationHealthcheck;
 use App\Service\Healthcheck\Core\FullBaseUrlCoreHealthcheck;
@@ -63,17 +62,13 @@ class HealthcheckIndexController extends AppController
      * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check service collector.
      * @param \App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck SSL enabled health check.
      * @return void
+     * @throws \Cake\Http\Exception\ForbiddenException if the requesting user is not an admin
      */
     public function index(
         HealthcheckServiceCollector $healthcheckServiceCollector,
         IsRequestHttpsSslHealthcheck $isRequestHttpsSslHealthcheck
     ) {
-        // Allow access only in debug mode or if logged in as admin
-        if (Configure::read('debug') == 0) {
-            if ($this->User->role() != Role::ADMIN) {
-                throw new ForbiddenException();
-            }
-        }
+        $this->User->assertIsAdmin();
 
         $allowedDomains = $this->getAllowedDomain();
         $healthcheckServices = [];

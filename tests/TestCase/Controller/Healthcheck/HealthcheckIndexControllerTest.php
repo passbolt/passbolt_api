@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Healthcheck;
 use App\Controller\Healthcheck\HealthcheckIndexController;
 use App\Model\Validation\EmailValidationRule;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use Cake\Core\Configure;
@@ -34,8 +35,6 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 {
     use HealthcheckRequestTestTrait;
     use HttpClientTrait;
-
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles'];
 
     public function setUp(): void
     {
@@ -55,8 +54,16 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         });
     }
 
+    public function testHealthcheckIndexController_No_Admin_Should_Throw_Exception(): void
+    {
+        $this->logInAsUser();
+        $this->getJson('/healthcheck.json');
+        $this->assertForbiddenError('Access restricted to administrators.');
+    }
+
     public function testHealthcheckIndexController_Success_Html(): void
     {
+        $this->logInAsAdmin();
         $this->get('/healthcheck');
         $this->assertResponseContains('Passbolt API Status');
         $this->assertResponseOk();
@@ -68,6 +75,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
      */
     public function testHealthcheckIndexController_ErrorNotReachable_Html(): void
     {
+        $this->logInAsAdmin();
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest(400);
         });
@@ -80,6 +88,8 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckIndexController_Success_Json(): void
     {
+        RoleFactory::make(3)->persist();
+        $this->logInAsAdmin();
         $this->getJson('/healthcheck.json');
 
         $this->assertResponseSuccess();
@@ -196,6 +206,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
      */
     public function testHealthcheckIndexController_ErrorEndpointDisabled_Json(): void
     {
+        $this->logInAsAdmin();
         Configure::write(
             HealthcheckIndexController::PASSBOLT_PLUGINS_HEALTHCHECK_SECURITY_INDEX_ENDPOINT_ENABLED,
             false
