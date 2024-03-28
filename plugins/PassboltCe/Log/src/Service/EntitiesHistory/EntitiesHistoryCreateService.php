@@ -13,16 +13,15 @@ declare(strict_types=1);
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  */
-namespace Passbolt\Log\Events\Traits;
+namespace Passbolt\Log\Service\EntitiesHistory;
 
 use App\Utility\UserAction;
-use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Passbolt\Log\Model\Entity\EntityHistory;
 
-trait EntitiesHistoryTrait
+class EntitiesHistoryCreateService
 {
     /**
      * @var array
@@ -167,79 +166,12 @@ trait EntitiesHistoryTrait
     ];
 
     /**
-     * Log entity history.
-     *
-     * @param \Cake\Event\Event $event the event
-     * @return void
-     */
-    public function logEntityHistory(Event $event)
-    {
-        if (
-            $event->getName() == 'Model.afterSave' ||
-            $event->getName() == 'Model.afterDelete' ||
-            $event->getName() == 'Model.afterRead'
-        ) {
-            $this->_logEntityHistory($event);
-        }
-    }
-
-    /**
-     * Entity associations initialize
-     * Initialize needed associations for the required core models on the fly.
-     * Example: we need to associate PermissionsHistory to Permissions in order to track the history.
-     *
-     * @param \Cake\Event\Event $event the event
-     * @return void
-     */
-    public function entityAssociationsInitialize(Event $event)
-    {
-        $table = $event->getSubject();
-        $modelName = $table->getAlias();
-
-        if ($modelName == 'Permissions') {
-            $table->belongsTo('Passbolt/Log.PermissionsHistory', [
-                'foreignKey' => 'foreign_key',
-            ]);
-        }
-        if ($modelName == 'Resources') {
-            $table->belongsTo('Passbolt/Log.EntitiesHistory', [
-                'foreignKey' => 'foreign_key',
-            ]);
-        }
-        if ($modelName == 'Secrets') {
-            $table->belongsTo('Passbolt/Log.SecretsHistory', [
-                'foreignKey' => 'foreign_key',
-            ]);
-            $table->hasMany('Passbolt/Log.SecretAccesses');
-        }
-        if ($modelName == 'SecretAccesses') {
-            $table->belongsTo('Passbolt/Log.EntitiesHistory', [
-                'foreignKey' => 'foreign_key',
-            ]);
-        }
-        if (Configure::read('passbolt.plugins.folders.enabled')) {
-            if ($modelName == 'Folders') {
-                $table->belongsTo('FoldersHistory', [
-                    'className' => 'Passbolt/Folders.FoldersHistory',
-                    'foreignKey' => 'foreign_key',
-                ]);
-            }
-            if ($modelName == 'FoldersRelations') {
-                $table->belongsTo('FoldersRelationsHistory', [
-                    'className' => 'Passbolt/Folders.FoldersRelationsHistory',
-                    'foreignKey' => 'foreign_key',
-                ]);
-            }
-        }
-    }
-
-    /**
      * Log entity history
      *
      * @param \Cake\Event\Event $event event
      * @return void
      */
-    private function _logEntityHistory(Event $event)
+    public function logEntityHistory(Event $event)
     {
         $table = $event->getSubject();
         $modelName = $table->getAlias();
@@ -377,7 +309,7 @@ trait EntitiesHistoryTrait
      * @param string $actionName action name
      * @return array|null
      */
-    public function getEntitiesHistoryConfig(string $actionName): ?array
+    private function getEntitiesHistoryConfig(string $actionName): ?array
     {
         if (isset($this->config[$actionName])) {
             return $this->config[$actionName];
