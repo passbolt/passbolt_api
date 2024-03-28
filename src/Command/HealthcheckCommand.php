@@ -114,43 +114,13 @@ class HealthcheckCommand extends PassboltCommand
             ]);
 
         // Checks
-        $parser
-            ->addOption(HealthcheckServiceCollector::DOMAIN_ENVIRONMENT, [
-                'help' => __d('cake_console', 'Run environment tests only.'),
-                'boolean' => true,
-            ])
-            ->addOption(HealthcheckServiceCollector::DOMAIN_CONFIG_FILE, [
-                'help' => __d('cake_console', 'Run configFiles tests only.'),
-                'boolean' => true,
-            ])
-            ->addOption(HealthcheckServiceCollector::DOMAIN_CORE, [
-                'help' => __d('cake_console', 'Run core tests only.'),
-                'boolean' => true,
-            ])
-            ->addOption(HealthcheckServiceCollector::DOMAIN_SSL, [
-                'help' => __d('cake_console', 'Run SSL tests only.'),
-                'boolean' => true,
-            ])
-            ->addOption(HealthcheckServiceCollector::DOMAIN_DATABASE, [
-                'help' => __d('cake_console', 'Run database tests only.'),
-                'boolean' => true,
-            ])
-            ->addOption(HealthcheckServiceCollector::DOMAIN_GPG, [
-                'help' => __d('cake_console', 'Run gpg tests only.'),
-                'boolean' => true,
-            ])
-            ->addOption(HealthcheckServiceCollector::DOMAIN_APPLICATION, [
-                'help' => __d('cake_console', 'Run passbolt app tests only.'),
-                'boolean' => true,
-            ])
-            ->addOption(HealthcheckServiceCollector::DOMAIN_JWT, [
-                'help' => __d('cake_console', 'Run passbolt JWT tests only.'),
-                'boolean' => true,
-            ])
-            ->addOption(HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS, [
-                'help' => __d('cake_console', 'Run SMTP Settings tests only.'),
+        $options = $this->healthcheckServiceCollector->getConsoleOptions();
+        foreach ($options as $option) {
+            $parser->addOption($option['domain'], [
+                'help' => $option['help_message'],
                 'boolean' => true,
             ]);
+        }
 
         $this->addDatasourceOption($parser);
 

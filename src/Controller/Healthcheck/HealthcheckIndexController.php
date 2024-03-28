@@ -75,12 +75,14 @@ class HealthcheckIndexController extends AppController
             }
         }
 
-        $allowedDomains = $this->getAllowedDomain();
+        $ignoreDomains = $this->getDomainsIgnore();
         $healthcheckServices = [];
         foreach ($healthcheckServiceCollector->getServices() as $healthcheckService) {
-            if (in_array($healthcheckService->domain(), $allowedDomains)) {
-                $healthcheckServices[] = $healthcheckService;
+            if (in_array($healthcheckService->domain(), $ignoreDomains)) {
+                continue;
             }
+
+            $healthcheckServices[] = $healthcheckService;
         }
         $healthcheckServices[] = $isRequestHttpsSslHealthcheck;
 
@@ -122,18 +124,9 @@ class HealthcheckIndexController extends AppController
     /**
      * @return array
      */
-    private function getAllowedDomain(): array
+    private function getDomainsIgnore(): array
     {
-        return [
-            HealthcheckServiceCollector::DOMAIN_SSL,
-            HealthcheckServiceCollector::DOMAIN_DATABASE,
-            HealthcheckServiceCollector::DOMAIN_APPLICATION,
-            HealthcheckServiceCollector::DOMAIN_GPG,
-            HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
-            HealthcheckServiceCollector::DOMAIN_CONFIG_FILE,
-            HealthcheckServiceCollector::DOMAIN_CORE,
-            HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS,
-        ];
+        return [HealthcheckServiceCollector::DOMAIN_JWT];
     }
 
     /**
