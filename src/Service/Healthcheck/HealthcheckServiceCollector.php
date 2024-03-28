@@ -56,6 +56,27 @@ class HealthcheckServiceCollector
     public const PHP_MIN_VERSION_CONFIG = 'php.minVersion';
 
     /**
+     * Additional console options.
+     *
+     * @var array
+     */
+    private array $additionalOptions = [];
+
+    /**
+     * Additional domain-title mappings.
+     *
+     * @var array
+     */
+    private static array $additionalDomainTitleMapping = [];
+
+    /**
+     * Additional domain legacy key mappings.
+     *
+     * @var array
+     */
+    private static array $additionalDomainLegacyKeyMapping = [];
+
+    /**
      * Add a new service to the collector.
      *
      * @param \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckService Health check service.
@@ -124,7 +145,32 @@ class HealthcheckServiceCollector
      */
     public static function getTitleFromDomain(string $domain): string
     {
-        $domainTitleMapping = [
+        $domainTitleMapping = self::getDomainTitleMapping();
+
+        if (isset($domainTitleMapping[$domain])) {
+            return $domainTitleMapping[$domain];
+        }
+
+        // If mapping not found, change it to humanize form programmatically
+        return Inflector::humanize($domain);
+    }
+
+    /**
+     * @param string $domain Health check domain.
+     * @param string $title Title string to map with domain.
+     * @return void
+     */
+    public static function addDomainTitleMapping(string $domain, string $title): void
+    {
+        self::$additionalDomainTitleMapping[] = [$domain => $title];
+    }
+
+    /**
+     * @return array
+     */
+    private static function getDomainTitleMapping(): array
+    {
+        $defaultTitleMapping = [
             self::DOMAIN_ENVIRONMENT => __('Environment'),
             self::DOMAIN_CONFIG_FILE => __('Config files'),
             self::DOMAIN_CORE => __('Core config'),
@@ -136,12 +182,7 @@ class HealthcheckServiceCollector
             self::DOMAIN_SSL => __('SSL Certificate'),
         ];
 
-        if (isset($domainTitleMapping[$domain])) {
-            return $domainTitleMapping[$domain];
-        }
-
-        // If mapping not found, change it to humanize form programmatically
-        return Inflector::humanize($domain);
+        return array_merge($defaultTitleMapping, self::$additionalDomainTitleMapping);
     }
 
     /**
@@ -153,7 +194,31 @@ class HealthcheckServiceCollector
      */
     public static function getLegacyDomainKey(string $domain): string
     {
-         $domainLegacyKeyMapping = [
+         $domainLegacyKeyMapping = self::getLegacyDomainKeyMapping();
+
+        if (!isset($domainLegacyKeyMapping[$domain])) {
+            throw new InternalErrorException(__('Legacy array key not found for "{0}" domain', $domain));
+        }
+
+         return $domainLegacyKeyMapping[$domain];
+    }
+
+    /**
+     * @param string $domain Health check domain.
+     * @param string $key Key for the domain.
+     * @return void
+     */
+    public static function addLegacyDomainKeyMapping(string $domain, string $key): void
+    {
+        self::$additionalDomainLegacyKeyMapping[$domain] = $key;
+    }
+
+    /**
+     * @return array
+     */
+    private static function getLegacyDomainKeyMapping(): array
+    {
+        $domainLegacyKeyMapping = [
             self::DOMAIN_ENVIRONMENT => 'environment',
             self::DOMAIN_CONFIG_FILE => 'configFile',
             self::DOMAIN_CORE => 'core',
@@ -163,12 +228,76 @@ class HealthcheckServiceCollector
             self::DOMAIN_GPG => 'gpg',
             self::DOMAIN_JWT => 'jwt',
             self::DOMAIN_SSL => 'ssl',
-         ];
+        ];
 
-         if (!isset($domainLegacyKeyMapping[$domain])) {
-             throw new InternalErrorException(__('Legacy array key not found for "{0}" domain', $domain));
-         }
+        return array_merge($domainLegacyKeyMapping, self::$additionalDomainLegacyKeyMapping);
+    }
 
-         return $domainLegacyKeyMapping[$domain];
+    /**
+     * Returns available console options.
+     *
+     * @return array
+     */
+    public function getConsoleOptions(): array
+    {
+        $defaultOptions = $this->getDefaultOptions();
+
+        return array_merge($defaultOptions, $this->additionalOptions);
+    }
+
+    /**
+     * Adds a console option to existing options.
+     *
+     * @param array $option Option array.
+     * @return void
+     */
+    public function addConsoleOption(array $option): void
+    {
+        $this->additionalOptions[] = $option;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDefaultOptions(): array
+    {
+        return [
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,
+                'help_message' => __d('cake_console', 'Run environment tests only.'),
+            ],
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_CONFIG_FILE,
+                'help_message' => __d('cake_console', 'Run configFiles tests only.'),
+            ],
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_CORE,
+                'help_message' => __d('cake_console', 'Run core tests only.'),
+            ],
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_SSL,
+                'help_message' => __d('cake_console', 'Run SSL tests only.'),
+            ],
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_DATABASE,
+                'help_message' => __d('cake_console', 'Run database tests only.'),
+            ],
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_GPG,
+                'help_message' => __d('cake_console', 'Run gpg tests only.'),
+            ],
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_APPLICATION,
+                'help_message' => __d('cake_console', 'Run passbolt app tests only.'),
+            ],
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_JWT,
+                'help_message' => __d('cake_console', 'Run passbolt JWT tests only.'),
+            ],
+            [
+                'domain' => HealthcheckServiceCollector::DOMAIN_SMTP_SETTINGS,
+                'help_message' => __d('cake_console', 'Run SMTP Settings tests only.'),
+            ],
+        ];
     }
 }
