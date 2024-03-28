@@ -16,15 +16,19 @@ declare(strict_types=1);
  */
 namespace Passbolt\Sso;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\Sso\Notification\Email\SsoSettingsRedactorPool;
+use Passbolt\Sso\Service\Healthcheck\SslHostVerificationSsoHealthcheck;
 
 class SsoPlugin extends BasePlugin
 {
     use FeaturePluginAwareTrait;
+
+    public const HEALTHCHECK_DOMAIN_SSO = 'sso';
 
     /**
      * @inheritDoc
@@ -53,5 +57,20 @@ class SsoPlugin extends BasePlugin
      */
     public function services(ContainerInterface $container): void
     {
+        // SSO Health checks
+        $container->add(SslHostVerificationSsoHealthcheck::class);
+        // Add SSO health check services to collector
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addConsoleOption', [
+                [
+                    'domain' => self::HEALTHCHECK_DOMAIN_SSO,
+                    'help_message' => __d('cake_console', 'Run SSO tests only.'),
+                ],
+            ])
+            ->addMethodCall('addService', [SslHostVerificationSsoHealthcheck::class]);
+
+        HealthcheckServiceCollector::addDomainTitleMapping(self::HEALTHCHECK_DOMAIN_SSO, __('SSO'));
+        HealthcheckServiceCollector::addLegacyDomainKeyMapping(self::HEALTHCHECK_DOMAIN_SSO, 'sso');
     }
 }
