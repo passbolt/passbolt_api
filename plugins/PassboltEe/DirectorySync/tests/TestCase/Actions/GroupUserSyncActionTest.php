@@ -288,7 +288,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         $this->mockDirectoryGroupData('freelancer');
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.ada')]);
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertTrue($reports->isEmpty());
         $this->assertGroupExist(UuidFactory::uuid('group.id.freelancer'), ['deleted' => false]);
         $this->assertGroupUserNotExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.ada')]);
         $this->assertDirectoryRelationNotExist($relation->id);
@@ -864,7 +864,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         ]);
         $this->mockDirectoryRelationGroupUser('freelancer', 'frances');
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertTrue($reports->isEmpty());
         $this->assertGroupUserExist(null, ['group_id' => UuidFactory::uuid('group.id.freelancer'), 'user_id' => UuidFactory::uuid('user.id.frances')]);
         $this->assertDirectoryRelationExist(null, [
             'parent_key' => UuidFactory::uuid('ldap.group.id.freelancer'),
@@ -894,7 +894,7 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
         ]);
         $this->mockDirectoryRelationGroupUser('freelancer', 'sofia');
         $reports = $this->action->execute();
-        $this->assertEmpty($reports);
+        $this->assertTrue($reports->isEmpty());
         $this->assertEmailQueueCount(0);
     }
 

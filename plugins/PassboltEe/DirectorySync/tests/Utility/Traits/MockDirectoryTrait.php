@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
+use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Utility\Alias;
 
 /**
@@ -32,8 +33,9 @@ trait MockDirectoryTrait
             'foreign_model' => $model,
             'created' => '2018-07-20 06:31:57',
         ];
-        $ignore = $this->action->DirectoryEntries->DirectoryIgnore->newEntity($entry, ['validate' => false]);
-        $save = $this->action->DirectoryEntries->DirectoryIgnore->save($ignore, ['checkRules' => false]);
+        $DirectoryIgnoreTable = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
+        $ignore = $DirectoryIgnoreTable->newEntity($entry, ['validate' => false]);
+        $save = $DirectoryIgnoreTable->save($ignore, ['checkRules' => false]);
         if (!$save) {
             throw new \InvalidArgumentException('Could not save directory sync ignore for mock');
         }

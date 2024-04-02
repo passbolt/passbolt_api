@@ -852,12 +852,6 @@
       <code>\Iterator</code>
     </MissingTemplateParam>
   </file>
-  <file src="plugins/PassboltEe/DirectorySync/src/Actions/Traits/GroupUsersSyncTrait.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$groupUser->created]]></code>
-      <code><![CDATA[$groupUser->user]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="plugins/PassboltEe/DirectorySync/src/Utility/DirectoryEntry/DirectoryEntry.php">
     <MissingTemplateParam>
       <code>ArrayAccess</code>
