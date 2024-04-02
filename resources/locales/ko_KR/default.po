@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-03-07 13:12+0000\n"
-"PO-Revision-Date: 2024-03-25 06:25\n"
+"PO-Revision-Date: 2024-04-02 00:29\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -3494,7 +3494,7 @@ msgid "As a precaution, do not forget to backup your database before you continu
 msgstr "예방 차원에서 계속하기 전 데이터베이스를 백업하는 것을 잊지 마세요."
 
 msgid "Help"
-msgstr "도움"
+msgstr "도움말"
 
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
 msgstr "도움이 필요하세요? 패스볼트 설치 방법에 대한 자세한 내용은 공식 온라인 도움말을 참조하세요."
