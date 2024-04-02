@@ -55,6 +55,7 @@ abstract class SyncAction
      * @var array|\Cake\Datasource\EntityInterface|mixed|null
      */
     protected $defaultAdmin;
+
     protected DirectoryOrgSettings $directoryOrgSettings;
     /**
      * @var \Passbolt\DirectorySync\Test\Utility\TestDirectory|\Passbolt\DirectorySync\Utility\LdapDirectory
@@ -64,13 +65,21 @@ abstract class SyncAction
      * @var array|mixed
      */
     protected $directoryData;
+
     private bool $dryRun = false;
+
     private ActionReportCollection $summary;
+
     private DirectoryReport $report;
+
     protected UsersTable $Users;
+
     public DirectoryEntriesTable $DirectoryEntries;
+
     private DirectoryIgnoreTable $DirectoryIgnore;
+
     public DirectoryRelationsTable $DirectoryRelations;
+
     private DirectoryReportsTable $DirectoryReports;
     /**
      * Store entities (users or groups) to ignore.

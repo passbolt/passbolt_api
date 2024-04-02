@@ -91,10 +91,10 @@ class GroupSyncAction extends SyncAction
      */
     protected function beforeExecute(): void
     {
+        parent::beforeExecute();
         $this->Groups = $this->getTable();
         /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
-        parent::beforeExecute();
         $this->defaultGroupAdmin = $this->getDefaultGroupAdmin();
         if (empty($this->defaultGroupAdmin)) {
             $this->defaultGroupAdmin = $this->defaultAdmin;
@@ -177,11 +177,11 @@ class GroupSyncAction extends SyncAction
      * Handle groupUsers that are deleted.
      *
      * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entries to be deleted.
-     * @return mixed
+     * @return void
      */
-    private function handleGroupUsersDeleted(DirectoryEntry $entry)
+    private function handleGroupUsersDeleted(DirectoryEntry $entry): void
     {
-        return $this->DirectoryRelations->deleteAll(['parent_key' => $entry->id]);
+        $this->DirectoryRelations->deleteAll(['parent_key' => $entry->id]);
     }
 
     /**
