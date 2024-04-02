@@ -19,20 +19,17 @@ namespace Passbolt\Sso\Test\Lib;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Psr7\Response;
 
-trait AdfsProviderTestTrait
+trait SsoProviderTestTrait
 {
     /**
-     * @param int $statusCode Status code.
-     * @param array $headers Headers.
-     * @param mixed $body Set response body.
+     * @param array $responsesQueue Response queue.
      * @return Client
      * @link https://docs.guzzlephp.org/en/stable/testing.html
      */
-    public function mockHttpClientResponse(int $statusCode, array $headers = [], $body = null): Client
+    public function mockHttpClientResponse(array $responsesQueue): Client
     {
-        $mockHandler = new MockHandler([new Response($statusCode, $headers, $body)]);
+        $mockHandler = new MockHandler($responsesQueue);
         $handlerStack = HandlerStack::create($mockHandler);
 
         return new Client(['handler' => $handlerStack]);
