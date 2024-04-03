@@ -78,7 +78,7 @@ class HealthcheckCommandTest extends AppTestCase
         // Ensure that all checks are displayed in the help
         $cliDomains = [
             HealthcheckServiceCollector::DOMAIN_APPLICATION,
-            HealthcheckServiceCollector::DOMAIN_CONFIG_FILE,
+            HealthcheckServiceCollector::DOMAIN_CONFIG_FILES,
             HealthcheckServiceCollector::DOMAIN_CORE,
             HealthcheckServiceCollector::DOMAIN_DATABASE,
             HealthcheckServiceCollector::DOMAIN_ENVIRONMENT,

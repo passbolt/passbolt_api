@@ -6,10 +6,10 @@ declare(strict_types=1);
  * @var bool $isSystemOk
  * @var bool $isNextMinPhpVersionPassed
  * @var string $nextStepUrl
- * @var \Cake\Collection\Collection $resultsGroupByDomain
+ * @var \Cake\Collection\Collection $environmentChecks
+ * @var \Cake\Collection\Collection $nonEnvironmentChecks
  */
 
-use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\View\Helper\HealthcheckHtmlHelper;
 
 $healthcheckHelper = new HealthcheckHtmlHelper();
@@ -43,13 +43,8 @@ $healthcheckHelper = new HealthcheckHtmlHelper();
                     // We want display the warning when php version is less than next minimum PHP version we'll support.
                     // That's why this complex condition :)
                     if (!$isSystemOk || ($isSystemOk && !$isNextMinPhpVersionPassed)) {
-                        foreach ($resultsGroupByDomain as $domain => $checkResults) {
-                            // Skip if not environment domain
-                            if ($domain !== HealthcheckServiceCollector::DOMAIN_ENVIRONMENT) {
-                                continue;
-                            }
-
-                            echo '<h3>' . HealthcheckServiceCollector::getTitleFromDomain($domain) . '</h3>';
+                        foreach ($environmentChecks as $domain => $checkResults) {
+                            echo '<h3>' . $domain . '</h3>';
 
                             foreach ($checkResults as $checkResult) {
                                 $healthcheckHelper->render($checkResult);
@@ -75,13 +70,8 @@ $healthcheckHelper = new HealthcheckHtmlHelper();
                         echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
                         echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
                     } else {
-                        foreach ($resultsGroupByDomain as $domain => $checkResults) {
-                            // Skip if environment domain
-                            if ($domain === HealthcheckServiceCollector::DOMAIN_ENVIRONMENT) {
-                                continue;
-                            }
-
-                            echo '<h3>' . HealthcheckServiceCollector::getTitleFromDomain($domain) . '</h3>';
+                        foreach ($nonEnvironmentChecks as $domain => $checkResults) {
+                            echo '<h3>' . $domain . '</h3>';
 
                             foreach ($checkResults as $checkResult) {
                                 $healthcheckHelper->render($checkResult);

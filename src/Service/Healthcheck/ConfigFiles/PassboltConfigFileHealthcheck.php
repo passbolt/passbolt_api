@@ -45,7 +45,7 @@ class PassboltConfigFileHealthcheck implements HealthcheckServiceInterface, Heal
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILE;
+        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILES;
     }
 
     /**
@@ -98,7 +98,7 @@ class PassboltConfigFileHealthcheck implements HealthcheckServiceInterface, Heal
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILE;
+        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILES;
     }
 
     /**

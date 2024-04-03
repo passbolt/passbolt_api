@@ -98,11 +98,16 @@ class HealthcheckIndexController extends AppController
         });
 
         if (!$this->request->is('json')) {
+            $body = [];
+            foreach ($resultsGroupByDomain as $domain => $checkResults) {
+                $key = $healthcheckServiceCollector->getTitleFromDomain($domain);
+                $body[$key] = $checkResults;
+            }
             $this->viewBuilder()
                 ->setLayout('login')
                 ->setTemplatePath('Healthcheck')
                 ->setTemplate('index');
-            $this->success(__('All checks ran successfully!'), $resultsGroupByDomain);
+            $this->success(__('All checks ran successfully!'), $body);
         } else {
             $healthcheckResult = $this->formatCollectionResponseAsPerLegacy($resultsGroupByDomain);
 
@@ -141,9 +146,10 @@ class HealthcheckIndexController extends AppController
         $result = [];
 
         /** @var \App\Service\Healthcheck\HealthcheckServiceInterface[] $checkResults */
-        foreach ($resultsGroupByDomain as $domain => $checkResults) {
-            $domainKey = HealthcheckServiceCollector::getLegacyDomainKey($domain);
-
+        foreach ($resultsGroupByDomain as $domainKey => $checkResults) {
+            if ($domainKey === HealthcheckServiceCollector::DOMAIN_CONFIG_FILES) {
+                $domainKey = 'configFile';
+            }
             $result[$domainKey] = [];
             foreach ($checkResults as $checkResult) {
                 $value = $checkResult->isPassed();
