@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Ee;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Setup\AbstractRecoverStartService;
 use App\Service\Setup\AbstractSetupStartService;
 use Cake\Console\CommandCollection;
@@ -25,6 +26,7 @@ use Passbolt\AccountRecovery\Service\Setup\SetupStartAccountRecoveryInfoService;
 use Passbolt\Ee\Command\SubscriptionCheckCommand;
 use Passbolt\Ee\Command\SubscriptionImportCommand;
 use Passbolt\Ee\Service\AccountRecoveryContinue\AccountRecoveryContinueAggregatorService;
+use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 use Passbolt\Ee\Service\Setup\EeRecoverStartService;
 use Passbolt\Ee\Service\Setup\EeSetupStartService;
 use Passbolt\UserPassphrasePolicies\Service\AccountRecovery\AccountRecoveryContinueUserPassphrasePoliciesService;
@@ -52,6 +54,10 @@ class EePlugin extends BasePlugin
      */
     public function services(ContainerInterface $container): void
     {
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->setConcrete(EeHealthcheckServiceCollector::class);
+
         $container->extend(AbstractSetupStartService::class)
             ->setConcrete(EeSetupStartService::class)
             ->addArguments([

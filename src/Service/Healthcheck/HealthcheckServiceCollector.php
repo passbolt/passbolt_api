@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace App\Service\Healthcheck;
 
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Inflector;
 
 class HealthcheckServiceCollector
@@ -25,13 +24,17 @@ class HealthcheckServiceCollector
     /**
      * @var \App\Service\Healthcheck\HealthcheckServiceInterface[]
      */
-    private array $services = [];
+    protected array $services = [];
+    /**
+     * @var string[]
+     */
+    protected array $domainTitles = [];
 
     /**
      * List of all available health check domains.
      */
     public const DOMAIN_ENVIRONMENT = 'environment';
-    public const DOMAIN_CONFIG_FILE = 'configFiles';
+    public const DOMAIN_CONFIG_FILES = 'configFiles';
     public const DOMAIN_CORE = 'core';
     public const DOMAIN_APPLICATION = 'application';
     public const DOMAIN_SSL = 'ssl';
@@ -122,19 +125,9 @@ class HealthcheckServiceCollector
      * @param string $domain Domain to get title from.
      * @return string
      */
-    public static function getTitleFromDomain(string $domain): string
+    public function getTitleFromDomain(string $domain): string
     {
-        $domainTitleMapping = [
-            self::DOMAIN_ENVIRONMENT => __('Environment'),
-            self::DOMAIN_CONFIG_FILE => __('Config files'),
-            self::DOMAIN_CORE => __('Core config'),
-            self::DOMAIN_SMTP_SETTINGS => __('SMTP settings'),
-            self::DOMAIN_APPLICATION => __('Application configuration'),
-            self::DOMAIN_DATABASE => __('Database'),
-            self::DOMAIN_GPG => __('GPG Configuration'),
-            self::DOMAIN_JWT => __('JWT Authentication'),
-            self::DOMAIN_SSL => __('SSL Certificate'),
-        ];
+        $domainTitleMapping = $this->getDomainTitleMapping();
 
         if (isset($domainTitleMapping[$domain])) {
             return $domainTitleMapping[$domain];
@@ -145,30 +138,35 @@ class HealthcheckServiceCollector
     }
 
     /**
-     * Returns array key of the given domain.
-     *
-     * @param string $domain Domain to get title from.
-     * @return string
-     * @throws \Cake\Http\Exception\InternalErrorException When domain-legacy key mapping not found.
+     * @return array
      */
-    public static function getLegacyDomainKey(string $domain): string
+    protected function getDomainTitleMapping(): array
     {
-         $domainLegacyKeyMapping = [
-            self::DOMAIN_ENVIRONMENT => 'environment',
-            self::DOMAIN_CONFIG_FILE => 'configFile',
-            self::DOMAIN_CORE => 'core',
-            self::DOMAIN_SMTP_SETTINGS => 'smtpSettings',
-            self::DOMAIN_APPLICATION => 'application',
-            self::DOMAIN_DATABASE => 'database',
-            self::DOMAIN_GPG => 'gpg',
-            self::DOMAIN_JWT => 'jwt',
-            self::DOMAIN_SSL => 'ssl',
-         ];
+        return [
+            self::DOMAIN_ENVIRONMENT => __('Environment'),
+            self::DOMAIN_CONFIG_FILES => __('Config files'),
+            self::DOMAIN_CORE => __('Core config'),
+            self::DOMAIN_SMTP_SETTINGS => __('SMTP settings'),
+            self::DOMAIN_APPLICATION => __('Application configuration'),
+            self::DOMAIN_DATABASE => __('Database'),
+            self::DOMAIN_GPG => __('GPG Configuration'),
+            self::DOMAIN_JWT => __('JWT Authentication'),
+            self::DOMAIN_SSL => __('SSL Certificate'),
+        ];
+    }
 
-         if (!isset($domainLegacyKeyMapping[$domain])) {
-             throw new InternalErrorException(__('Legacy array key not found for "{0}" domain', $domain));
-         }
+    /**
+     * @return array
+     */
+    public function getDomainsInCollectedServices(): array
+    {
+        $domains = [];
+        foreach ($this->services as $service) {
+            if (!in_array($service->domain(), $domains)) {
+                $domains[] = $service->domain();
+            }
+        }
 
-         return $domainLegacyKeyMapping[$domain];
+        return $domains;
     }
 }

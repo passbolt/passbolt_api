@@ -15,13 +15,15 @@ declare(strict_types=1);
  * @since         4.7.0
  */
 
-namespace App\Service\Healthcheck\ConfigFiles;
+namespace Passbolt\Sso\Service\Healthcheck;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use Cake\Core\Configure;
+use Passbolt\Sso\SsoPlugin;
 
-class AppConfigFileHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -35,7 +37,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = (file_exists(CONFIG . 'app.php'));
+        $this->status = Configure::read('passbolt.security.sso.sslVerify', false);
 
         return $this;
     }
@@ -45,7 +47,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILES;
+        return SsoPlugin::HEALTHCHECK_DOMAIN_SSO;
     }
 
     /**
@@ -61,7 +63,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function level(): string
     {
-        return 'error';
+        return HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -69,7 +71,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function getSuccessMessage(): string
     {
-        return __('The application config file is present');
+        return __('SSL certification validation for SSO instance is enabled.');
     }
 
     /**
@@ -77,7 +79,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function getFailureMessage(): string
     {
-        return __('The application config file is missing in {0}', CONFIG);
+        return __('SSL certification validation for SSO instance is disabled.');
     }
 
     /**
@@ -85,7 +87,12 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function getHelpMessage()
     {
-        return __('Copy {0} to {1}', CONFIG . 'app.default.php', CONFIG . 'app.php');
+        return [
+            __('Disabling the ssl verify check can lead to security attacks.'),
+            __('Attacker can alter the certificate and can perform man-in-the-middle attack.'),
+            __('To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true.'),
+            __('Or set passbolt.security.sso.sslVerify to true in {0}.', CONFIG . 'passbolt.php'),
+        ];
     }
 
     /**
@@ -95,7 +102,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILES;
+        return SsoPlugin::HEALTHCHECK_DOMAIN_SSO;
     }
 
     /**
@@ -103,6 +110,6 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function getLegacyArrayKey(): string
     {
-        return 'app';
+        return 'sslHostVerification';
     }
 }
