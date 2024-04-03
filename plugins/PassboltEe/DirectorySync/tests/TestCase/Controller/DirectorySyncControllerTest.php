@@ -24,24 +24,15 @@ use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
  */
 class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
 {
-    public $fixtures = [
-       'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
-       'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-       'app.Base/Favorites',
-    ];
-
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
+    public $fixtures = [];
 
     /**
      * @group DirectorySync
      * @group DirectorySyncController
      */
-    public function testDirectorySyncAsNonAdmin()
+    public function testDirectorySyncControllerAsNonAdmin()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->postJson('/directorysync/synchronize.json?api-version=2');
         $this->assertResponseError('Only administrators can access directory sync functionalities');
     }
@@ -50,10 +41,21 @@ class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
      * @group DirectorySync
      * @group DirectorySyncController
      */
-    public function testDirectorySyncAsAdmin()
+    public function testDirectorySyncControllerSimulateAsNonAdmin()
     {
-        $this->authenticateAs('admin');
-        $this->postJson('/directorysync/synchronize.json?api-version=2');
+        $this->logInAsUser();
+        $this->getJson('/directorysync/synchronize/dry-run.json?api-version=2');
+        $this->assertResponseError('Only administrators can access directory sync functionalities');
+    }
+
+    /**
+     * @group DirectorySync
+     * @group DirectorySyncController
+     */
+    public function testDirectorySyncControllerSimulateAsAdmin()
+    {
+        $this->logInAsAdmin();
+        $this->getJson('/directorysync/synchronize/dry-run.json?api-version=2');
         $this->assertSuccess();
     }
 
@@ -61,21 +63,10 @@ class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
      * @group DirectorySync
      * @group DirectorySyncController
      */
-    public function testDirectorySyncSimulateAsNonAdmin()
+    public function testDirectorySyncControllerAsAdmin()
     {
-        $this->authenticateAs('ada');
-        $this->getJson('/directorysync/synchronize/dry-run.json?api-version=2');
-        $this->assertResponseError('Only administrators can access directory sync functionalities');
-    }
-
-    /**
-     * @group DirectorySync
-     * @group DirectorySyncController
-     */
-    public function testDirectorySyncSimulateAsAdmin()
-    {
-        $this->authenticateAs('admin');
-        $this->getJson('/directorysync/synchronize/dry-run.json?api-version=2');
+        $this->logInAsAdmin();
+        $this->postJson('/directorysync/synchronize.json?api-version=2');
         $this->assertSuccess();
     }
 }

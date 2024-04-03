@@ -71,6 +71,8 @@ abstract class SyncAction
 
     private bool $dryRun = false;
 
+    private bool $isPartOfAllSync = false;
+
     private ActionReportCollection $summary;
 
     private DirectoryReport $report;
@@ -84,8 +86,11 @@ abstract class SyncAction
     public DirectoryRelationsTable $DirectoryRelations;
 
     private DirectoryReportsTable $DirectoryReports;
+
     protected ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
+
     protected EntitiesChangesDto $entitiesChangesDto;
+
     /**
      * Store entities (users or groups) to ignore.
      *
@@ -748,8 +753,10 @@ abstract class SyncAction
     {
         $this->report->status = DirectoryReport::STATUS_DONE;
         $this->DirectoryReports->save($this->report);
-        $deletedSecrets = $this->entitiesChangesDto->getDeletedEntities(Secret::class);
-        $this->resourcesExpireResourcesService->expireResourcesForSecrets($deletedSecrets);
+        if (!$this->isDryRun() && !$this->isPartOfAllSync()) {
+            $deletedSecrets = $this->entitiesChangesDto->getDeletedEntities(Secret::class);
+            $this->resourcesExpireResourcesService->expireResourcesForSecrets($deletedSecrets);
+        }
     }
 
     /**
@@ -815,11 +822,13 @@ abstract class SyncAction
      * Set Dryrun
      *
      * @param bool $dryRun dry run value
-     * @return void
+     * @return self
      */
-    public function setDryRun(bool $dryRun): void
+    public function setDryRun(bool $dryRun): self
     {
         $this->dryRun = $dryRun;
+
+        return $this;
     }
 
     /**
@@ -830,5 +839,34 @@ abstract class SyncAction
     protected function isDryRun(): bool
     {
         return $this->dryRun;
+    }
+
+    /**
+     * If the present action is part of a global sync, we will want to avoid
+     * certain actions (e.g. password expiry), that will be performed by the AllSyncAction class
+     *
+     * @return self
+     */
+    public function setAsPartOfAllSync(): self
+    {
+        $this->isPartOfAllSync = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isPartOfAllSync(): bool
+    {
+        return $this->isPartOfAllSync;
+    }
+
+    /**
+     * @return \App\Model\Dto\EntitiesChangesDto
+     */
+    public function getEntitiesChangesDto(): EntitiesChangesDto
+    {
+        return $this->entitiesChangesDto;
     }
 }
