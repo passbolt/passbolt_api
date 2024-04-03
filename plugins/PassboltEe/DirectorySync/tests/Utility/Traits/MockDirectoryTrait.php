@@ -166,11 +166,11 @@ trait MockDirectoryTrait
         }
         $created = $options['created'] ?? '2018-07-09 03:56:42.000000';
         $modified = $options['modified'] ?? '2018-07-09 03:56:42.000000';
-        $id = $options['id'] ?? 'ldap.group.id.' . strtolower($name);
+        $id = $options['id'] ?? UuidFactory::uuid('ldap.group.id.' . strtolower($name));
         $cn = $options['cn'] ?? $name;
         $dn = $options['dn'] ?? 'CN=' . ucfirst($cn) . ',OU=PassboltUsers,DC=passbolt,DC=local';
         $group = [
-            'id' => UuidFactory::uuid($id),
+            'id' => $id,
             'directory_name' => $dn,
             'directory_created' => new FrozenTime($created),
             'directory_modified' => new FrozenTime($modified),
@@ -264,7 +264,8 @@ trait MockDirectoryTrait
         $username = null,
         $created = null,
         $modified = null,
-        $caseSensitive = true
+        $caseSensitive = true,
+        ?string $id = null
     ) {
         $fname = $fname ?? '';
         $lname = $lname ?? '';

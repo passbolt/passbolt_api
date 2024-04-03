@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Command;
 
+use App\Service\Command\ProcessUserService;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -42,6 +44,24 @@ class UsersCommand extends DirectorySyncCommand
      * @var \App\Model\Table\AuthenticationTokensTable
      */
     protected $AuthenticationTokens;
+
+    /**
+     * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
+     */
+    protected ResourcesExpireResourcesServiceInterface $expireResourcesService;
+
+    /**
+     * @param \App\Service\Command\ProcessUserService $processUserService process user service
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $expireResourcesService expiry resource service
+     */
+    public function __construct(
+        ProcessUserService $processUserService,
+        ResourcesExpireResourcesServiceInterface $expireResourcesService
+    ) {
+        $this->expireResourcesService = $expireResourcesService;
+
+        parent::__construct($processUserService);
+    }
 
     /**
      * Initializes the Shell
@@ -89,7 +109,7 @@ class UsersCommand extends DirectorySyncCommand
         try {
             $dryRun = $args->getOption('dry-run') || !$args->getOption('persist');
 
-            $action = new UserSyncAction();
+            $action = new UserSyncAction($this->expireResourcesService);
             $action->setDryRun($dryRun);
             $reports = $action->execute();
             $this->displayReports($reports, 'Users', $io);

@@ -17,8 +17,11 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Actions;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Role;
+use App\Model\Entity\Secret;
 use App\Model\Table\UsersTable;
+use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
@@ -68,6 +71,8 @@ abstract class SyncAction
 
     private bool $dryRun = false;
 
+    private bool $isPartOfAllSync = false;
+
     private ActionReportCollection $summary;
 
     private DirectoryReport $report;
@@ -81,6 +86,11 @@ abstract class SyncAction
     public DirectoryRelationsTable $DirectoryRelations;
 
     private DirectoryReportsTable $DirectoryReports;
+
+    protected ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
+
+    protected EntitiesChangesDto $entitiesChangesDto;
+
     /**
      * Store entities (users or groups) to ignore.
      *
@@ -154,13 +164,17 @@ abstract class SyncAction
     /**
      * SyncAction constructor.
      *
+     * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService expire resource service
      * @param string|null $parentId parent id
      * @throws \Exception if no directory configuration is present
      */
-    public function __construct(?string $parentId = null)
-    {
+    public function __construct(
+        ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService,
+        ?string $parentId = null
+    ) {
         $this->directoryOrgSettings = DirectoryOrgSettings::get();
         $this->directory = DirectoryFactory::get($this->directoryOrgSettings);
+        $this->resourcesExpireResourcesService = $resourcesExpireResourcesService;
 
         /** @phpstan-ignore-next-line */
         $this->DirectoryEntries = $this->fetchTable('Passbolt/DirectorySync.DirectoryEntries');
@@ -243,6 +257,7 @@ abstract class SyncAction
 
         $this->directoryData = $this->directory->{'get' . $modelType}();
         $this->formatDirectoryData();
+        $this->entitiesChangesDto = new EntitiesChangesDto();
     }
 
     /**
@@ -307,12 +322,13 @@ abstract class SyncAction
 
             try {
                 /** @psalm-suppress InvalidArgument */
-                if (!$this->getTable()->softDelete($entity)) {
+                $entitiesChanges = $this->getTable()->softDelete($entity);
+                if (!$entitiesChanges) {
                     // The entity cannot be deleted (for example: it is the sole owner of shared passwords)
                     $this->handleNotPossibleDelete($entry);
                 } else {
                     // Entity was deleted
-                    $this->handleSuccessfulDelete($entry);
+                    $this->handleSuccessfulDelete($entry, $entitiesChanges);
                 }
             } catch (InternalErrorException $exception) {
                 // The entity cannot be deleted (for example: database service is down)
@@ -428,9 +444,10 @@ abstract class SyncAction
      * Handle a successful delete.
      *
      * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
+     * @param \App\Model\Dto\EntitiesChangesDto $entitiesChangesDto entity changes
      * @return void
      */
-    protected function handleSuccessfulDelete(DirectoryEntry $entry): void
+    protected function handleSuccessfulDelete(DirectoryEntry $entry, EntitiesChangesDto $entitiesChangesDto): void
     {
         $entity = $entry->getAssociatedEntity();
         $this->DirectoryEntries->delete($entry);
@@ -445,6 +462,7 @@ abstract class SyncAction
             Alias::STATUS_SUCCESS,
             $entity
         ));
+        $this->entitiesChangesDto->merge($entitiesChangesDto);
     }
 
     /**
@@ -735,6 +753,10 @@ abstract class SyncAction
     {
         $this->report->status = DirectoryReport::STATUS_DONE;
         $this->DirectoryReports->save($this->report);
+        if (!$this->isDryRun() && !$this->isPartOfAllSync()) {
+            $deletedSecrets = $this->entitiesChangesDto->getDeletedEntities(Secret::class);
+            $this->resourcesExpireResourcesService->expireResourcesForSecrets($deletedSecrets);
+        }
     }
 
     /**
@@ -800,11 +822,13 @@ abstract class SyncAction
      * Set Dryrun
      *
      * @param bool $dryRun dry run value
-     * @return void
+     * @return self
      */
-    public function setDryRun(bool $dryRun): void
+    public function setDryRun(bool $dryRun): self
     {
         $this->dryRun = $dryRun;
+
+        return $this;
     }
 
     /**
@@ -815,5 +839,34 @@ abstract class SyncAction
     protected function isDryRun(): bool
     {
         return $this->dryRun;
+    }
+
+    /**
+     * If the present action is part of a global sync, we will want to avoid
+     * certain actions (e.g. password expiry), that will be performed by the AllSyncAction class
+     *
+     * @return self
+     */
+    public function setAsPartOfAllSync(): self
+    {
+        $this->isPartOfAllSync = true;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isPartOfAllSync(): bool
+    {
+        return $this->isPartOfAllSync;
+    }
+
+    /**
+     * @return \App\Model\Dto\EntitiesChangesDto
+     */
+    public function getEntitiesChangesDto(): EntitiesChangesDto
+    {
+        return $this->entitiesChangesDto;
     }
 }

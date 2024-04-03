@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Actions;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Group;
 use App\Model\Entity\GroupsUser;
 use App\Model\Entity\Role;
@@ -167,9 +168,9 @@ class GroupSyncAction extends SyncAction
     /**
      * @inheritDoc
      */
-    protected function handleSuccessfulDelete(DirectoryEntry $entry): void
+    protected function handleSuccessfulDelete(DirectoryEntry $entry, EntitiesChangesDto $entitiesChangesDto): void
     {
-        parent::handleSuccessfulDelete($entry);
+        parent::handleSuccessfulDelete($entry, $entitiesChangesDto);
         $this->handleGroupUsersDeleted($entry);
     }
 
@@ -467,10 +468,10 @@ class GroupSyncAction extends SyncAction
             ];
 
             try {
+                $entitiesChangesDto = $groupsUsersAddService->add($uac, $groupUserData);
+                $this->entitiesChangesDto->merge($entitiesChangesDto);
                 /** @var \App\Model\Entity\GroupsUser|null $groupUser */
-                $groupUser = $groupsUsersAddService
-                        ->add($uac, $groupUserData)
-                        ->getAddedEntities(GroupsUser::class)[0] ?? null;
+                $groupUser = $entitiesChangesDto->getAddedEntities(GroupsUser::class)[0] ?? null;
                 if (is_null($groupUser)) {
                     throw new \Exception('A GroupUser entity should be present in the DTO');
                 }
@@ -597,6 +598,7 @@ class GroupSyncAction extends SyncAction
             $username = $groupUserToDelete->get('user')->username;
             try {
                 $entitiesChanges = $groupUserDeleteService->delete($uac, $groupUserToDelete->id);
+                $this->entitiesChangesDto->merge($entitiesChanges);
                 // Delete relation
                 $directoryRelation = $this->DirectoryRelations->get($groupUserId);
                 $this->DirectoryRelations->delete($directoryRelation);
@@ -727,7 +729,7 @@ class GroupSyncAction extends SyncAction
      * @param string $entryId entry id
      * @return array
      */
-    private function findDirectoryRelationsByEntryId(string $entryId)
+    private function findDirectoryRelationsByEntryId(string $entryId): array
     {
         // Retrieve existing relations.
         $directoryRelations = $this->DirectoryRelations
@@ -767,23 +769,22 @@ class GroupSyncAction extends SyncAction
     private function updateGroup(Group $existingGroup, array $data): void
     {
         $uac = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->get('id'));
-        // Password expiry is not active in LDAP as of now
-        $groupsUpdateService = new GroupsUpdateService(
-            new ResourcesExpireResourcesFallbackServiceService()
-        );
+        // Do not expire resources at this level. Instead, collect the entity changes and expire in the end.
+        $groupsUpdateService = new GroupsUpdateService(new ResourcesExpireResourcesFallbackServiceService());
         $groupName = $this->getNameFromData($data);
         $changes = [
             'name' => $groupName,
         ];
         try {
-            $entity = $groupsUpdateService->update($uac, $existingGroup->id, $changes);
+            $entitiesChangesDto = $groupsUpdateService->update($uac, $existingGroup->id, $changes);
+            $group = $entitiesChangesDto->getUpdatedEntities(Group::class)[0] ?? null;
             // Send report.
             $this->addReportItem(new ActionReport(
                 __('The group {0} has been successfully renamed to {1}.', $existingGroup->name, $groupName),
                 Alias::MODEL_GROUPS,
                 Alias::ACTION_UPDATE,
                 Alias::STATUS_SUCCESS,
-                $entity
+                $group
             ));
         } catch (\Exception $exception) {
             $error = new SyncError($existingGroup, $exception);
