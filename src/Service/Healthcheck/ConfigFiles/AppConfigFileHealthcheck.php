@@ -45,7 +45,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function domain(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILE;
+        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILES;
     }
 
     /**
@@ -95,7 +95,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
      */
     public function cliOption(): string
     {
-        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILE;
+        return HealthcheckServiceCollector::DOMAIN_CONFIG_FILES;
     }
 
     /**

@@ -21,6 +21,7 @@ use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
 use Cake\Collection\Collection;
 use Cake\Collection\CollectionInterface;
@@ -56,13 +57,25 @@ class SystemCheckController extends WebInstallerController
         });
 
         $isNextMinPhpVersionPassed = $this->isNextMinPhpVersionPassed($resultCollection);
-        $resultsGroupByDomain = $resultCollection->groupBy(function ($result) {
-            return $result->domain();
-        });
+        $environmentChecks = $resultCollection
+            ->filter(function (HealthcheckServiceInterface $result) {
+                return $result->domain() === HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+            })
+            ->groupBy(function ($result) {
+                return $result->domain();
+            });
+        $nonEnvironmentChecks = $resultCollection
+            ->filter(function (HealthcheckServiceInterface $result) {
+                return $result->domain() != HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+            })
+            ->groupBy(function ($result) {
+                return $result->domain();
+            });
 
         $nextStepUrl = Router::url('/install/database', true);
         $this->webInstaller->setSettingsAndSave('initialized', true);
-        $this->set('resultsGroupByDomain', $resultsGroupByDomain);
+        $this->set('environmentChecks', $environmentChecks);
+        $this->set('nonEnvironmentChecks', $nonEnvironmentChecks);
         $this->set('isNextMinPhpVersionPassed', $isNextMinPhpVersionPassed);
         $this->set('isSystemOk', $isSystemOk);
         $this->set('nextStepUrl', $nextStepUrl);

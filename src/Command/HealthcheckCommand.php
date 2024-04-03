@@ -114,10 +114,11 @@ class HealthcheckCommand extends PassboltCommand
             ]);
 
         // Checks
-        $options = $this->healthcheckServiceCollector->getConsoleOptions();
-        foreach ($options as $option) {
-            $parser->addOption($option['domain'], [
-                'help' => $option['help_message'],
+        $domains = $this->healthcheckServiceCollector->getDomainsInCollectedServices();
+        foreach ($domains as $domain) {
+            $domainReadable = $this->healthcheckServiceCollector->getTitleFromDomain($domain);
+            $parser->addOption($domain, [
+                'help' => __d('cake_console', 'Run {0} tests only.', $domainReadable),
                 'boolean' => true,
             ]);
         }
@@ -185,7 +186,7 @@ class HealthcheckCommand extends PassboltCommand
             return $result->domain();
         });
         foreach ($resultsGroupByDomain as $domain => $checkResults) {
-            $this->title(HealthcheckServiceCollector::getTitleFromDomain($domain));
+            $this->title($this->healthcheckServiceCollector->getTitleFromDomain($domain));
 
             foreach ($checkResults as $checkResult) {
                 $this->render($checkResult);

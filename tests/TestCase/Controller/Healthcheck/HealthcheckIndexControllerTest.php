@@ -83,6 +83,15 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $this->get('/healthcheck');
 
         $this->assertResponseContains('Passbolt API Status');
+        $this->assertResponseContains('Environment');
+        $this->assertResponseContains('Config files');
+        $this->assertResponseContains('Core config');
+        $this->assertResponseContains('SMTP settings');
+        $this->assertResponseContains('Application configuration');
+        $this->assertResponseContains('Database');
+        $this->assertResponseContains('GPG Configuration');
+        $this->assertResponseNotContains('JWT Authentication');
+        $this->assertResponseContains('SSL Certificate');
         $this->assertResponseOk();
     }
 
