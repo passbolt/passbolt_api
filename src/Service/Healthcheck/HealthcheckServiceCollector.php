@@ -155,6 +155,9 @@ class HealthcheckServiceCollector
         ];
     }
 
+    /**
+     * @return array
+     */
     public function getDomainsInCollectedServices(): array
     {
         $domains = [];
