@@ -62,15 +62,6 @@ class SsoPlugin extends BasePlugin
         // Add SSO health check services to collector
         $container
             ->extend(HealthcheckServiceCollector::class)
-            ->addMethodCall('addConsoleOption', [
-                [
-                    'domain' => self::HEALTHCHECK_DOMAIN_SSO,
-                    'help_message' => __d('cake_console', 'Run SSO tests only.'),
-                ],
-            ])
             ->addMethodCall('addService', [SslHostVerificationSsoHealthcheck::class]);
-
-        HealthcheckServiceCollector::addDomainTitleMapping(self::HEALTHCHECK_DOMAIN_SSO, __('SSO'));
-        HealthcheckServiceCollector::addLegacyDomainKeyMapping(self::HEALTHCHECK_DOMAIN_SSO, 'sso');
     }
 }
