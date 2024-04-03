@@ -17,10 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\DirectorySync\Controller;
 
-use App\Model\Entity\Role;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Event\EventInterface;
-use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
 
@@ -47,9 +45,7 @@ class DirectorySyncController extends DirectoryController
      */
     public function beforeFilter(EventInterface $event)
     {
-        if ($this->User->role() !== Role::ADMIN) {
-            throw new ForbiddenException('Only administrators can access directory sync functionalities');
-        }
+        $this->User->assertIsAdmin('Only administrators can access directory sync functionalities');
 
         return parent::beforeFilter($event);
     }

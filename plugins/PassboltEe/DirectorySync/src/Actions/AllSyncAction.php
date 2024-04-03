@@ -16,8 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Actions;
 
+use App\Model\Dto\EntitiesChangesDto;
+use App\Model\Entity\Secret;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\ORM\TableRegistry;
+use Passbolt\DirectorySync\Actions\Reports\ActionReportCollection;
 
 class AllSyncAction
 {
@@ -26,6 +29,8 @@ class AllSyncAction
      */
     protected ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService;
 
+    protected EntitiesChangesDto $entitiesChangesDto;
+
     /**
      * @param \App\Service\Resources\ResourcesExpireResourcesServiceInterface $expireResourcesService expiry resource service
      */
@@ -33,30 +38,46 @@ class AllSyncAction
         ResourcesExpireResourcesServiceInterface $expireResourcesService
     ) {
         $this->resourcesExpireResourcesService = $expireResourcesService;
+        $this->entitiesChangesDto = new EntitiesChangesDto();
     }
 
     /**
      * Synchronize users.
      *
+     * @param bool $dryRun is the sync action in dry run mode
      * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection reports collection
      */
-    public function syncUsers()
+    private function syncUsers(bool $dryRun): ActionReportCollection
     {
-        $userSyncAction = new UserSyncAction($this->resourcesExpireResourcesService);
-        $reports = $userSyncAction->execute();
+        $userSyncAction = (new UserSyncAction($this->resourcesExpireResourcesService))->setDryRun($dryRun);
 
-        return $reports;
+        return $this->executeSyncAction($userSyncAction);
     }
 
     /**
      * Synchronize groups.
      *
+     * @param bool $dryRun is the sync action in dry run mode
      * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection reports collection
      */
-    public function syncGroups()
+    private function syncGroups(bool $dryRun): ActionReportCollection
     {
-        $groupSyncAction = new GroupSyncAction($this->resourcesExpireResourcesService);
-        $reports = $groupSyncAction->execute();
+        $groupSyncAction = (new GroupSyncAction($this->resourcesExpireResourcesService))->setDryRun($dryRun);
+
+        return $this->executeSyncAction($groupSyncAction);
+    }
+
+    /**
+     * Synchronize users or groups
+     * Collect entity changes
+     *
+     * @param \Passbolt\DirectorySync\Actions\SyncAction $syncAction Sync action to execute
+     * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection
+     */
+    private function executeSyncAction(SyncAction $syncAction): ActionReportCollection
+    {
+        $reports = $syncAction->setAsPartOfAllSync()->execute();
+        $this->entitiesChangesDto->merge($syncAction->getEntitiesChangesDto());
 
         return $reports;
     }
@@ -64,18 +85,22 @@ class AllSyncAction
     /**
      * Synchronize all (users and groups).
      *
+     * @param bool $dryRun is the sync in dry run mode
      * @return array array reports collection for each item
      */
-    public function syncAll()
+    private function syncAll(bool $dryRun): array
     {
-        $userReports = $this->syncUsers();
-        $groupReports = $this->syncGroups();
-        $res = [
+        $userReports = $this->syncUsers($dryRun);
+        $groupReports = $this->syncGroups($dryRun);
+        if (!$dryRun) {
+            $deletedSecrets = $this->entitiesChangesDto->getDeletedEntities(Secret::class);
+            $this->resourcesExpireResourcesService->expireResourcesForSecrets($deletedSecrets);
+        }
+
+        return [
             'users' => $userReports,
             'groups' => $groupReports,
         ];
-
-        return $res;
     }
 
     /**
@@ -84,19 +109,19 @@ class AllSyncAction
      * @param bool $dryRun whether to do it in dry run mode.
      * @return array reports collection.
      */
-    public function execute(?bool $dryRun = false)
+    public function execute(?bool $dryRun = false): array
     {
         $Users = TableRegistry::getTableLocator()->get('Users');
         $reports = [];
         if ($dryRun) {
             $conn = $Users->getConnection();
             $conn->begin();
-            $conn->transactional(function () use (&$reports) {
-                $reports = $this->syncAll();
+            $conn->transactional(function () use (&$reports, $dryRun) {
+                $reports = $this->syncAll($dryRun);
             });
             $conn->rollback();
         } else {
-            $reports = $this->syncAll();
+            $reports = $this->syncAll($dryRun);
         }
 
         return $reports;
