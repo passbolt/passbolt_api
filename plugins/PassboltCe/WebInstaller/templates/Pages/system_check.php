@@ -5,9 +5,10 @@ declare(strict_types=1);
  * @var \App\View\AppView $this
  * @var bool $isSystemOk
  * @var bool $isNextMinPhpVersionPassed
+ * @var bool $isRequestHttps
  * @var string $nextStepUrl
  * @var \Cake\Collection\Collection $environmentChecks
- * @var \Cake\Collection\Collection $nonEnvironmentChecks
+ * @var \Cake\Collection\Collection $gpgChecks
  */
 
 use App\View\Helper\HealthcheckHtmlHelper;
@@ -43,12 +44,9 @@ $healthcheckHelper = new HealthcheckHtmlHelper();
                     // We want display the warning when php version is less than next minimum PHP version we'll support.
                     // That's why this complex condition :)
                     if (!$isSystemOk || ($isSystemOk && !$isNextMinPhpVersionPassed)) {
-                        foreach ($environmentChecks as $domain => $checkResults) {
-                            echo '<h3>' . $domain . '</h3>';
-
-                            foreach ($checkResults as $checkResult) {
-                                $healthcheckHelper->render($checkResult);
-                            }
+                        echo '<h3>Environment</h3>';
+                        foreach ($environmentChecks as $checkResult) {
+                            $healthcheckHelper->render($checkResult);
                         }
                     } else {
                         // Environment is fine
@@ -64,20 +62,31 @@ $healthcheckHelper = new HealthcheckHtmlHelper();
 
                     <?php
                     /**
-                     * Display remaining domain results separately.
+                     * Display GPG results.
                      */
                     if ($isSystemOk) {
                         echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
-                        echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
                     } else {
-                        foreach ($nonEnvironmentChecks as $domain => $checkResults) {
-                            echo '<h3>' . $domain . '</h3>';
-
-                            foreach ($checkResults as $checkResult) {
-                                $healthcheckHelper->render($checkResult);
-                            }
+                        echo '<h3>' . __('GPG Configuration') . '</h3>';
+                        foreach ($gpgChecks as $domain => $checkResult) {
+                            $healthcheckHelper->render($checkResult);
                         }
                     }
+                    ?>
+
+                    <?php
+                    if (!$isSystemOk) :
+                        ?>
+                        <h3><?php echo __('SSL'); ?></h3>
+                    <?php
+                    endif;
+                    ?>
+                    <?php
+                    if ($isRequestHttps) :
+                        echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
+                    else :
+                        echo '<div class="message warning">' . __('SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue.') . '</div>';
+                    endif;
                     ?>
                 </div>
 

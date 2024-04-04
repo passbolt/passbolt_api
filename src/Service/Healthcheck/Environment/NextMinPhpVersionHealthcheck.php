@@ -25,6 +25,11 @@ use Cake\Core\Configure;
 class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
+     * Configuration constants.
+     */
+    public const PHP_NEXT_MIN_VERSION_CONFIG = 'php.nextMinVersion';
+
+    /**
      * Status of this health check if it is passed or failed.
      *
      * @var bool
@@ -38,7 +43,7 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
     {
         $this->status = version_compare(
             PHP_VERSION,
-            Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG),
+            Configure::read(self::PHP_NEXT_MIN_VERSION_CONFIG),
             '>='
         );
 
@@ -76,7 +81,7 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return __(
             'PHP version is {0} or above.',
-            Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG)
+            Configure::read(self::PHP_NEXT_MIN_VERSION_CONFIG)
         );
     }
 
@@ -87,7 +92,7 @@ class NextMinPhpVersionHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return __(
             'PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment.', // phpcs:ignore
-            Configure::read(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG)
+            Configure::read(self::PHP_NEXT_MIN_VERSION_CONFIG)
         );
     }
 
