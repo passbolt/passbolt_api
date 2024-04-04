@@ -15,7 +15,6 @@
  * @var array $body
  */
 
-use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\View\Helper\HealthcheckHtmlHelper;
 use Cake\Core\Configure;
 
@@ -32,7 +31,7 @@ $healthcheckHelper = new HealthcheckHtmlHelper();
             <h1><?php echo __('Passbolt API Status') ?></h1>
             <?php
             foreach ($body as $domain => $checkResults) {
-                echo '<h3>' . HealthcheckServiceCollector::getTitleFromDomain($domain) . '</h3>';
+                echo '<h3>' . $domain . '</h3>';
 
                 foreach ($checkResults as $checkResult) {
                     $healthcheckHelper->render($checkResult);
