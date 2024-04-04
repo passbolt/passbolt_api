@@ -49,6 +49,7 @@ class SsoHealthcheckIndexControllerTest extends SsoIntegrationTestCase
 
     public function testSsoHealthcheckIndexController_Success_Json(): void
     {
+        $this->logInAsAdmin();
         $this->getJson('/healthcheck.json');
 
         $this->assertResponseSuccess();
