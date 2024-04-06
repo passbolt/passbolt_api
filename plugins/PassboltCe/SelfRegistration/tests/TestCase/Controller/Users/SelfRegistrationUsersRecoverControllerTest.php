@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Test\TestCase\Controller\Users;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 /**
@@ -25,6 +26,12 @@ use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 class SelfRegistrationUsersRecoverControllerTest extends AppIntegrationTestCase
 {
     use SelfRegistrationTestTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+    }
 
     public function testSelfRegistrationUsersRecoverController_SelfRegistrationOpen_UserNotFound_Domain_Not_Supported()
     {

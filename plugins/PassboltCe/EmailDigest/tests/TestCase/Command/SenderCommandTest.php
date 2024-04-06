@@ -58,6 +58,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->loadRoutes();
         $this->setDummyFrenchTranslator();
         (new AvatarsConfigurationService())->loadConfiguration();
+        $this->enableFeaturePlugin(EmailDigestPlugin::class);
     }
 
     /**

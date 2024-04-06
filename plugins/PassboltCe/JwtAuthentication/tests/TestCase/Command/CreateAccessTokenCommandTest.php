@@ -22,6 +22,7 @@ use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 
 /**
  * @uses \Passbolt\JwtAuthentication\Command\CreateAccessTokenCommand
@@ -41,13 +42,7 @@ class CreateAccessTokenCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        $this->enableFeaturePlugin('JwtAuthentication');
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
+        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
     }
 
     /**

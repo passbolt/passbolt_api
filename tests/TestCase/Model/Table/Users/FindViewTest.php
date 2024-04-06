@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table\Users;
 
-use App\Model\Table\UsersTable;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
@@ -33,13 +32,13 @@ class FindViewTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $config = TableRegistry::getTableLocator()->exists('Users') ? [] : ['className' => UsersTable::class];
-        $this->Users = TableRegistry::getTableLocator()->get('Users', $config);
+        $this->Users = TableRegistry::getTableLocator()->get('Users');
         RoleFactory::make()->guest()->persist();
     }
 
     public function tearDown(): void
     {
+        parent::tearDown();
         unset($this->Users);
     }
 

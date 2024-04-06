@@ -41,7 +41,6 @@ class MfaRateLimiterServiceTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-
         $this->enableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
         $this->service = new MfaRateLimiterService();
     }
@@ -51,9 +50,7 @@ class MfaRateLimiterServiceTest extends AppTestCase
      */
     public function tearDown(): void
     {
-        $this->disableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
         unset($this->service);
-
         parent::tearDown();
     }
 

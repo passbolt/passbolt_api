@@ -26,10 +26,17 @@ use Cake\Core\Configure;
 use Cake\I18n\FrozenDate;
 use Cake\Routing\Router;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 
 class UsersRecoverControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+    }
 
     public function testUsersRecoverController_Get_Redirect(): void
     {
