@@ -22,32 +22,11 @@ use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
 class SsoRecoverIntegrationTestCase extends SsoIntegrationTestCase
 {
     /**
-     * @var bool $pluginEnabled
-     */
-    protected $pluginEnabled;
-
-    /**
      * @inheritDoc
      */
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->pluginEnabled = $this->isFeaturePluginEnabled('SsoRecover');
-        if (!$this->pluginEnabled) {
-            $this->enableFeaturePlugin('SsoRecover');
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        if (!$this->pluginEnabled) {
-            $this->disableFeaturePlugin('SsoRecover');
-        }
+        $this->enableFeaturePlugin('SsoRecover');
     }
 }

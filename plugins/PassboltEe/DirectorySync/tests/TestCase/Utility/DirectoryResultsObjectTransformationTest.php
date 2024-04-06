@@ -27,11 +27,6 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationTestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     /**
      * Assert that entry ids are generated on the fly if not provided by the directory.
      *

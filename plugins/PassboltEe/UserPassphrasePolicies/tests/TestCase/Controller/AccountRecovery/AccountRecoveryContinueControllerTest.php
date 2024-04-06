@@ -53,17 +53,6 @@ class AccountRecoveryContinueControllerTest extends AppIntegrationTestCase
         $this->enableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        $this->disableFeaturePlugin(AccountRecoveryPlugin::class);
-        $this->disableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
-
-        parent::tearDown();
-    }
-
     public function testAccountRecoveryContinueController_Success_WithUserPassphrasePoliciesEnabledSourceDefault()
     {
         [$user, $token] = $this->persistAccountRecoveryData();

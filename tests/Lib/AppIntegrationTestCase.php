@@ -88,6 +88,7 @@ abstract class AppIntegrationTestCase extends TestCase
             $this->disableFeaturePlugin(ucfirst($plugin));
         }
         $this->disableFeaturePlugin('Log');
+        $this->disableFeaturePlugin('Tags');
         $this->disableFeaturePlugin('Folders');
         $this->disableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
 

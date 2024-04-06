@@ -19,6 +19,7 @@ namespace Passbolt\PasswordPoliciesUpdate\Test\TestCase\Controller\PasswordPolic
 
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\PasswordPolicies\Model\Dto\PasswordPoliciesSettingsDto;
+use Passbolt\PasswordPolicies\PasswordPoliciesPlugin;
 use Passbolt\PasswordPolicies\Test\Lib\Controller\PasswordPoliciesModelTrait;
 use Passbolt\PasswordPoliciesUpdate\PasswordPoliciesUpdatePlugin;
 use Passbolt\PasswordPoliciesUpdate\Test\Factory\PasswordPoliciesSettingFactory;
@@ -37,17 +38,8 @@ class PasswordPoliciesSettingsGetControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
 
+        $this->enableFeaturePlugin(PasswordPoliciesPlugin::class);
         $this->enableFeaturePlugin(PasswordPoliciesUpdatePlugin::class);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        $this->disableFeaturePlugin(PasswordPoliciesUpdatePlugin::class);
-
-        parent::tearDown();
     }
 
     public function testPasswordPoliciesSettingsGetController_SuccessDefaultSettings()

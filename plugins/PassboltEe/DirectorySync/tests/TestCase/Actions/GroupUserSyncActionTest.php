@@ -62,8 +62,8 @@ class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         $this->unloadNotificationSettings();
+        parent::tearDown();
     }
 
     /**

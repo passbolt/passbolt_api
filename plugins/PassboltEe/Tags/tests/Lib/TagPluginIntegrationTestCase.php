@@ -37,10 +37,4 @@ abstract class TagPluginIntegrationTestCase extends AppIntegrationTestCase
         parent::setUp();
         Configure::write('passbolt.plugins.tags.enabled', true);
     }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        Configure::write('passbolt.plugins.tags.enabled', false);
-    }
 }

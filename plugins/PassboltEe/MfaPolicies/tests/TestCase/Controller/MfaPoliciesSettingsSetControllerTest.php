@@ -55,16 +55,6 @@ class MfaPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         EventManager::instance()->setEventList(new EventList());
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-
-        $this->disableFeaturePlugin('MfaPolicies');
-    }
-
     public function testMfaPoliciesSettingsSet_Error_FeatureDisabled()
     {
         $this->disableFeaturePlugin('MfaPolicies');

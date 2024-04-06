@@ -40,16 +40,6 @@ class SsoHealthcheckCommandTest extends AppTestCase
         $this->enableFeaturePlugin(SsoPlugin::class);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        $this->disableFeaturePlugin(SsoPlugin::class);
-
-        parent::tearDown();
-    }
-
     public function testSsoHealthcheckCommand_Help(): void
     {
         $this->exec('passbolt healthcheck -h');

@@ -47,17 +47,6 @@ class PasswordPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         $this->mockUserIp();
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        $this->disableFeaturePlugin(PasswordPoliciesUpdatePlugin::class);
-        $this->disableFeaturePlugin(PasswordPoliciesPlugin::class);
-
-        parent::tearDown();
-    }
-
     private function getDummyPasswordPoliciesSettings(): array
     {
         return [

@@ -21,30 +21,11 @@ use App\Test\Lib\AppTestCase;
 class SsoTestCase extends AppTestCase
 {
     /**
-     * @var bool $pluginEnabled cache of original value in config
-     */
-    protected $pluginEnabled;
-
-    /**
      * @inheritDoc
      */
     public function setUp(): void
     {
         parent::setUp();
-        $this->pluginEnabled = $this->isFeaturePluginEnabled('Sso');
-        if (!$this->pluginEnabled) {
-            $this->enableFeaturePlugin('Sso');
-        }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        if (!$this->pluginEnabled) {
-            $this->disableFeaturePlugin('Sso');
-        }
+        $this->enableFeaturePlugin('Sso');
     }
 }
