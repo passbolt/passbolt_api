@@ -30,26 +30,6 @@ class FoldersIndexControllerPaginationTest extends FoldersIntegrationTestCase
     use FoldersRelationsModelTrait;
     use PaginationTestTrait;
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-    }
-
     public function dataProviderForSortingDirection(): array
     {
         return [

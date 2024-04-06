@@ -29,7 +29,6 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
      */
     public function testAuthIsAuthenticatedController_Success_LoggedIn(): void
     {
-        $isLogEnabled = $this->isFeaturePluginEnabled('Log');
         $this->enableFeaturePlugin('Log');
 
         $this->logInAsUser();
@@ -39,9 +38,6 @@ class AuthIsAuthenticatedControllerTest extends AppIntegrationTestCase
         $this->assertTextContains('success', $this->_responseJsonHeader->status);
 
         $this->assertSame(0, ActionLogFactory::count());
-        if (!$isLogEnabled) {
-            $this->disableFeaturePlugin('Log');
-        }
     }
 
     public function testAuthIsAuthenticatedController_Error_NotLoggedIn(): void

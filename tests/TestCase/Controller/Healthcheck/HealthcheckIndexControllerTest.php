@@ -27,6 +27,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
 use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
+use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 
 /**
  * @covers \App\Controller\Healthcheck\HealthcheckIndexController
@@ -97,6 +98,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
 
     public function testHealthcheckIndexController_Success_Json(): void
     {
+        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
         RoleFactory::make(3)->persist();
         $this->logInAsAdmin();
         $this->getJson('/healthcheck.json');

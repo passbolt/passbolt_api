@@ -47,12 +47,6 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
         $this->enableFeaturePlugin('JwtAuthentication');
     }
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
-    }
-
     /**
      * Regression test
      * POST /auth/login with correct data should return 200 even when MFA is required

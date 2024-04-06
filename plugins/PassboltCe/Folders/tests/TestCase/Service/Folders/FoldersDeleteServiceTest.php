@@ -104,8 +104,8 @@ class FoldersDeleteServiceTest extends FoldersTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         $this->unloadNotificationSettings();
+        parent::tearDown();
     }
 
     /* COMMON & VALIDATION */

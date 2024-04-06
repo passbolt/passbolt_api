@@ -24,6 +24,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\I18n\FrozenTime;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
+use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 
 class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCase
@@ -37,12 +38,12 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
         // Mock user agent and IP
         $this->mockUserAgent('PHPUnit');
         $this->mockUserIp();
+        $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
+        PasswordExpirySettingFactory::make()->persist();
     }
 
     public function testPasswordExpiryUsersEditDisableController_Success_Admin_Disable_User(): void
     {
-        PasswordExpirySettingFactory::make()->persist();
-
         [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
         [$userToDisable, $ownerWithResourceShared1, $ownerWithGroupShared1] = UserFactory::make(3)->user()->persist();
         [$resourceSharedViewed, $resourceSharedNotViewed] = ResourceFactory::make(2)

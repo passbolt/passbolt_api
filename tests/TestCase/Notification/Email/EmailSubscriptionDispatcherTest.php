@@ -63,6 +63,7 @@ class EmailSubscriptionDispatcherTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->eventManagerMock = $this->createMock(EventManager::class);
         $this->emailSubscriptionManagerMock = $this->createMock(EmailSubscriptionManager::class);
         $this->emailSenderMock = $this->createMock(EmailSender::class);
@@ -74,8 +75,6 @@ class EmailSubscriptionDispatcherTest extends TestCase
             $this->emailSenderMock,
             $this->loggerMock
         );
-
-        parent::setUp();
     }
 
     public function testEmailSubscriptionDispatcherCanBeInvokedAsEventListener()

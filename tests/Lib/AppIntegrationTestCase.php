@@ -48,6 +48,7 @@ use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
@@ -82,10 +83,13 @@ abstract class AppIntegrationTestCase extends TestCase
         $this->loadRoutes();
 
         // Disable feature plugins listed in default.php
-        $this->disableFeaturePlugin('Tags');
-        $this->disableFeaturePlugin('MultiFactorAuthentication');
+        $plugins = array_keys(Configure::read('passbolt.plugins'));
+        foreach ($plugins as $plugin) {
+            $this->disableFeaturePlugin(ucfirst($plugin));
+        }
         $this->disableFeaturePlugin('Log');
         $this->disableFeaturePlugin('Folders');
+        $this->disableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
 
         Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);
         // Disable SSL Force since all requests in tests are made on http

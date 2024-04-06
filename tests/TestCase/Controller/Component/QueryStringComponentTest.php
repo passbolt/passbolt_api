@@ -41,10 +41,10 @@ class QueryStringComponentTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->registryMock = $this->createMock(ComponentRegistry::class);
 
         $this->sut = new QueryStringComponent($this->registryMock);
-        parent::setUp();
     }
 
     public function testQueryStringComponent_ValidateFiltersError_NoValidationRuleDefined(): void
