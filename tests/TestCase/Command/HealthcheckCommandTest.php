@@ -18,6 +18,8 @@ namespace App\Test\TestCase\Command;
 
 use App\Model\Table\RolesTable;
 use App\Model\Validation\EmailValidationRule;
+use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
+use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppTestCase;
@@ -128,8 +130,8 @@ class HealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Environment_Unhappy_Path()
     {
-        Configure::write(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG, '40');
-        Configure::write(HealthcheckServiceCollector::PHP_NEXT_MIN_VERSION_CONFIG, '50');
+        Configure::write(PhpVersionHealthcheck::PHP_MIN_VERSION_CONFIG, '40');
+        Configure::write(NextMinPhpVersionHealthcheck::PHP_NEXT_MIN_VERSION_CONFIG, '50');
         $this->exec('passbolt healthcheck -d test --environment');
 
         $this->assertExitSuccess();

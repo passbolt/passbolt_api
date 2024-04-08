@@ -40,45 +40,40 @@ class SystemCheckController extends WebInstallerController
         $systemCheckHealthcheckServices = $this->getSystemCheckHealthcheckServices($healthcheckServiceCollector);
 
         $resultCollection = new Collection([]);
+        $isSystemOk = true;
+        $isRequestHttps = false;
         foreach ($systemCheckHealthcheckServices as $healthcheckService) {
             $result = $healthcheckService->check();
 
             $resultCollection = $resultCollection->appendItem($result);
+            if ($healthcheckService instanceof NextMinPhpVersionHealthcheck) {
+                continue;
+            }
+            if ($healthcheckService instanceof IsRequestHttpsSslHealthcheck) {
+                $isRequestHttps = $result->isPassed();
+                continue;
+            }
+            $isSystemOk = $isSystemOk && $result->isPassed();
         }
 
-        $isSystemOk = $resultCollection->every(function ($healthcheckResult) {
-            // Do not block installation even if this check fails
-            if ($healthcheckResult instanceof NextMinPhpVersionHealthcheck) {
-                return true;
-            }
-
-            /** @var \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckResult */
-            return $healthcheckResult->isPassed();
-        });
-
         $isNextMinPhpVersionPassed = $this->isNextMinPhpVersionPassed($resultCollection);
-        $environmentChecks = $resultCollection
-            ->filter(function (HealthcheckServiceInterface $result) {
-                return $result->domain() === HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
-            })
-            ->groupBy(function ($result) {
-                return $result->domain();
-            });
-        $nonEnvironmentChecks = $resultCollection
-            ->filter(function (HealthcheckServiceInterface $result) {
-                return $result->domain() != HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
-            })
-            ->groupBy(function ($result) {
-                return $result->domain();
-            });
+        $environmentChecks = $resultCollection->filter(function (HealthcheckServiceInterface $result) {
+            return $result->domain() === HealthcheckServiceCollector::DOMAIN_ENVIRONMENT;
+        });
+        $gpgChecks = $resultCollection->filter(function (HealthcheckServiceInterface $result) {
+            return $result->domain() === HealthcheckServiceCollector::DOMAIN_GPG;
+        });
 
         $nextStepUrl = Router::url('/install/database', true);
         $this->webInstaller->setSettingsAndSave('initialized', true);
-        $this->set('environmentChecks', $environmentChecks);
-        $this->set('nonEnvironmentChecks', $nonEnvironmentChecks);
-        $this->set('isNextMinPhpVersionPassed', $isNextMinPhpVersionPassed);
-        $this->set('isSystemOk', $isSystemOk);
-        $this->set('nextStepUrl', $nextStepUrl);
+        $this->set(compact(
+            'environmentChecks',
+            'gpgChecks',
+            'isNextMinPhpVersionPassed',
+            'isSystemOk',
+            'isRequestHttps',
+            'nextStepUrl'
+        ));
         $this->render('Pages/system_check');
     }
 

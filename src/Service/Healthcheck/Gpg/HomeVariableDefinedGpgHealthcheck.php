@@ -23,7 +23,7 @@ use Cake\Core\Configure;
 
 class HomeVariableDefinedGpgHealthcheck extends AbstractGpgHealthcheck
 {
-    protected string $gpgHome;
+    protected ?string $gpgHome;
 
     /**
      * @inheritDoc

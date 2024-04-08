@@ -51,14 +51,6 @@ class HealthcheckServiceCollector
     public const LEVEL_NOTICE = 'notice';
 
     /**
-     * Configuration constants.
-     */
-    // The minimum PHP version soon required. Healthcheck will warn if not satisfied yet.
-    public const PHP_NEXT_MIN_VERSION_CONFIG = 'php.nextMinVersion';
-    // The minimum PHP version required. Healthcheck will fail if not satisfied yet.
-    public const PHP_MIN_VERSION_CONFIG = 'php.minVersion';
-
-    /**
      * Add a new service to the collector.
      *
      * @param \App\Service\Healthcheck\HealthcheckServiceInterface $healthcheckService Health check service.
