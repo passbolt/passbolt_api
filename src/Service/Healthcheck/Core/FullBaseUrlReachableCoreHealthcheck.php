@@ -20,7 +20,6 @@ namespace App\Service\Healthcheck\Core;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Cake\Core\Exception\CakeException;
 use Cake\Http\Client;
 use Cake\Routing\Router;
 
@@ -83,7 +82,7 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
             if (isset($response['body'])) {
                 $this->status = ($response['body'] === 'OK');
             }
-        } catch (CakeException $e) {
+        } catch (\Throwable $e) {
             // Nothing to do here
         } finally {
             if ($this->status !== true) {
