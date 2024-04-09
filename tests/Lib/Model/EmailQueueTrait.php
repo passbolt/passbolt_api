@@ -205,6 +205,7 @@ trait EmailQueueTrait
         $viewBuilder = new ViewBuilder();
         $viewBuilder->setVar('title', $email->get('subject'));
         $viewBuilder->setVar('body', $email->get('template_vars')['body']);
+        $viewBuilder->setVar('fullBaseUrl', $email->get('template_vars')['fullBaseUrl']);
 
         return $viewBuilder
             ->setLayout('default')

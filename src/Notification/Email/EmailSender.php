@@ -117,12 +117,16 @@ class EmailSender
     }
 
     /**
+     * Set the full base URL at the body level for the email content
+     * and at the higher level for the layout
+     *
      * @param \App\Notification\Email\Email $email Email to send
      * @return \App\Notification\Email\Email
      */
     private function addFullBaseUrlToEmail(Email $email): Email
     {
         return $email->withData(array_merge_recursive($email->getData(), [
+            'fullBaseUrl' => $this->appFullBaseUrl,
             'body' => [
                 'fullBaseUrl' => $this->appFullBaseUrl,
             ],
