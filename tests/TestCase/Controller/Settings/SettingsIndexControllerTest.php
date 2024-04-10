@@ -25,6 +25,12 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
     public function testSettingsIndexController_SuccessAsLU(): void
     {
+        // Enable all plugins. This test is important as, it also tests the complete
+        // integration of the plugins
+        $plugins = array_keys(Configure::read('passbolt.plugins'));
+        foreach ($plugins as $plugin) {
+            $this->enableFeaturePlugin(ucfirst($plugin));
+        }
         $this->logInAsUser();
         $this->getJson('/settings.json');
         $this->assertSuccess();
@@ -43,6 +49,12 @@ class SettingsIndexControllerTest extends AppIntegrationTestCase
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->healthcheck->enabled));
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->disableUser->enabled));
         $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->healthcheckUi->enabled));
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->log->enabled));
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->multiFactorAuthentication->enabled));
+        $this->assertTrue(isset($this->_responseJsonBody->passbolt->plugins->folders->enabled));
+        foreach ($plugins as $plugin) {
+            $this->assertTrue($this->_responseJsonBody->passbolt->plugins->{$plugin}->enabled);
+        }
     }
 
     public function testSettingsIndexController_SuccessAsAN(): void

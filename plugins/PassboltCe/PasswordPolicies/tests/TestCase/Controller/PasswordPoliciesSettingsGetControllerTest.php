@@ -29,6 +29,12 @@ class PasswordPoliciesSettingsGetControllerTest extends AppIntegrationTestCase
 {
     use PasswordPoliciesModelTrait;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(PasswordPoliciesPlugin::class);
+    }
+
     public function testPasswordPoliciesSettingsGetController_ErrorUnauthenticated()
     {
         $this->getJson('/password-policies/settings.json');

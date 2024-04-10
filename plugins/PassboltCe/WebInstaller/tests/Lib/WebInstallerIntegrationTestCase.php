@@ -40,7 +40,6 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         if ($this->_recover) {
             if ($this->_configured !== null) {
                 Configure::write('passbolt.webInstaller.configured', $this->_configured);
@@ -51,6 +50,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
         if ($this->isWebInstallerFriendly()) {
             $this->restoreTestConnection();
         }
+        parent::tearDown();
     }
 
     public function mockPassboltIsNotconfigured()

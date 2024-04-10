@@ -31,10 +31,4 @@ abstract class FoldersTestCase extends AppTestCase
             'Passbolt/Locale' => [],
         ]);
     }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('Folders');
-    }
 }

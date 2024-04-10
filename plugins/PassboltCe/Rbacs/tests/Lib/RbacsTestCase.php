@@ -26,10 +26,4 @@ abstract class RbacsTestCase extends AppTestCase
         parent::setUp();
         $this->enableFeaturePlugin(RbacsPlugin::class);
     }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin(RbacsPlugin::class);
-    }
 }

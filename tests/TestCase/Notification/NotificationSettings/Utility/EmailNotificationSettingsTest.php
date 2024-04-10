@@ -63,12 +63,6 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             ->on(new CoreNotificationSettingsDefinition());
     }
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        EmailNotificationSettings::flushCache();
-    }
-
     /**
      * @group notification
      * @group notificationSettings

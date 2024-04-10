@@ -24,6 +24,7 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\I18n\FrozenDate;
 use Cake\I18n\FrozenTime;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
+use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -31,11 +32,17 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
 
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
+        PasswordExpirySettingFactory::make()->persist();
+    }
+
     public function testPasswordExpiryResourcesUpdateController_Update_Expiry_Date_In_Future(): void
     {
         RoleFactory::make()->guest()->persist();
         ResourceTypeFactory::make()->default()->persist();
-        PasswordExpirySettingFactory::make()->persist();
 
         $operator = UserFactory::make()->user()->persist();
 
@@ -70,7 +77,6 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
     {
         RoleFactory::make()->guest()->persist();
         ResourceTypeFactory::make()->default()->persist();
-        PasswordExpirySettingFactory::make()->persist();
 
         if ($isResourceAlreadyExpired) {
             $expiryDate = FrozenTime::yesterday();

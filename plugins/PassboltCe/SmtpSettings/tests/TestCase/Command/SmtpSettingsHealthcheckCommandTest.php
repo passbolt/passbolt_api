@@ -40,6 +40,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppIntegrationTestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
+        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
     }
 
     public function testHealthcheckCommand_SmtpSettings_Plugin_Disabled()
