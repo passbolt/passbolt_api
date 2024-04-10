@@ -155,6 +155,7 @@ class PreviewCommandTest extends AppIntegrationTestCase
             ->setRecipient($recipient)
             ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
             ->setField('template_vars.body.user', $operator)
+            ->setField('template_vars.locale', 'en-UK')
             ->persist();
 
         $this->exec('passbolt email_digest preview');
