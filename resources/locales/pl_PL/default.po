@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-03-07 13:23+0000\n"
-"PO-Revision-Date: 2024-03-08 14:20\n"
+"POT-Creation-Date: 2024-04-11 09:47+0000\n"
+"PO-Revision-Date: 2024-04-11 17:18\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -5148,6 +5148,9 @@ msgstr "Tylko administratorzy mogą tworzyć lub aktualizować ustawienia polity
 
 msgid "The user passphrase policy settings has been updated by {0}."
 msgstr "Ustawienia polityki haseł dostępu zostały zaktualizowane przez użytkownika {0}."
+
+msgid "Error"
+msgstr "Błąd"
 
 msgid "The requested address was not found on this server."
 msgstr "Nie znaleziono żądanego adresu na tym serwerze."
