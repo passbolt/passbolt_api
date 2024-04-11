@@ -52,6 +52,14 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.password.expire';
+    }
+
+    /**
      * @param \Cake\Event\Event $event Event
      * @return \App\Notification\Email\EmailCollection
      */

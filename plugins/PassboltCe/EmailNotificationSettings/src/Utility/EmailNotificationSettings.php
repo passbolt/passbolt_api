@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\EmailNotificationSettings\Utility;
 
 use App\Utility\UserAccessControl;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Hash;
@@ -32,27 +31,13 @@ class EmailNotificationSettings
 {
     public const NAMESPACE = 'emailNotification';
 
-    /**
-     * The settings.
-     *
-     * @var array|null
-     */
-    private static $settings;
+    private static ?array $settings = null;
 
-    /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource|null
-     */
-    private static $configSettingsSource = null;
+    private static ?ConfigEmailNotificationSettingsSource $configSettingsSource = null;
 
-    /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource|null
-     */
-    private static $dbSettingsSource = null;
+    private static ?DbEmailNotificationSettingsSource $dbSettingsSource = null;
 
-    /**
-     * @var \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource|null
-     */
-    private static $defaultSettingsSource = null;
+    private static ?DefaultEmailNotificationSettingsSource $defaultSettingsSource = null;
 
     /**
      * Flush the cache version of the settings.
@@ -74,7 +59,7 @@ class EmailNotificationSettings
      * 2. configuration file
      * 3. the defaults in this function
      *
-     * @param string $key (optional) Key to lookup. If not provided, return all the settings.
+     * @param ?string $key (optional) Key to lookup. If not provided, return all the settings.
      * @return mixed
      */
     public static function get(?string $key = null)
@@ -100,7 +85,7 @@ class EmailNotificationSettings
      *
      * @return array
      */
-    protected static function getSettings()
+    protected static function getSettings(): array
     {
         $settings = static::getSettingsFromConfig();
         $settings['sources'] = [
@@ -108,13 +93,14 @@ class EmailNotificationSettings
             'file' => static::isDefaultSettingsAreOverridden(),
         ];
 
-        if (static::getDbSettingsSource()->isAvailable()) {
-            try {
-                $dbSettings = static::getSettingsFromDb();
-                $settings['sources']['database'] = true;
-                $settings = array_replace_recursive($settings, $dbSettings);
-            } catch (RecordNotFoundException $exception) {
-            }
+        try {
+            $dbSettings = static::getSettingsFromDb();
+            $settings['sources']['database'] = true;
+            $settings = array_replace_recursive($settings, $dbSettings);
+        } catch (InternalErrorException $exception) {
+            // If the settings are not valid, throw exception
+            throw $exception;
+        } catch (\Throwable $exception) {
         }
 
         return $settings;
@@ -125,7 +111,7 @@ class EmailNotificationSettings
      *
      * @return array
      */
-    protected static function getSettingsFromConfig()
+    protected static function getSettingsFromConfig(): array
     {
         return static::sanitizeSettings(static::getConfigSettingsSource()->read());
     }
@@ -151,7 +137,7 @@ class EmailNotificationSettings
     /**
      * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ConfigEmailNotificationSettingsSource
      */
-    protected static function getConfigSettingsSource()
+    protected static function getConfigSettingsSource(): ConfigEmailNotificationSettingsSource
     {
         if (!isset(static::$configSettingsSource)) {
             static::$configSettingsSource = new ConfigEmailNotificationSettingsSource();
@@ -167,7 +153,7 @@ class EmailNotificationSettings
      * @throws \Cake\Datasource\Exception\RecordNotFoundException If a matching DB config doesn't exist
      * @throws \Cake\Http\Exception\InternalErrorException If the DB config is not valid json string
      */
-    protected static function getSettingsFromDb()
+    protected static function getSettingsFromDb(): array
     {
         return static::sanitizeSettings(static::getDbSettingsSource()->read());
     }
@@ -175,7 +161,7 @@ class EmailNotificationSettings
     /**
      * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource
      */
-    protected static function getDbSettingsSource()
+    protected static function getDbSettingsSource(): DbEmailNotificationSettingsSource
     {
         if (!isset(self::$dbSettingsSource)) {
             self::$dbSettingsSource = new DbEmailNotificationSettingsSource();
@@ -189,7 +175,7 @@ class EmailNotificationSettings
      *
      * @return array
      */
-    protected static function getSettingsFromDefault()
+    protected static function getSettingsFromDefault(): array
     {
         return static::getDefaultSettingsSource()->read();
     }
@@ -197,7 +183,7 @@ class EmailNotificationSettings
     /**
      * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource
      */
-    protected static function getDefaultSettingsSource()
+    protected static function getDefaultSettingsSource(): DefaultEmailNotificationSettingsSource
     {
         if (!isset(static::$defaultSettingsSource)) {
             static::$defaultSettingsSource = DefaultEmailNotificationSettingsSource::fromCakeForm(
@@ -232,7 +218,7 @@ class EmailNotificationSettings
      * @param bool $force Force saving even if the key is invalid/not yet registered (useful for testing purposes)
      * @return void
      */
-    public static function save(array $configs, UserAccessControl $accessControl, bool $force = false)
+    public static function save(array $configs, UserAccessControl $accessControl, bool $force = false): void
     {
         // strip all non notification keys
         if ($force === false) {
@@ -253,7 +239,7 @@ class EmailNotificationSettings
      * @param string $key The key to check.
      * @return bool
      */
-    public static function isConfigKeyValid(string $key)
+    public static function isConfigKeyValid(string $key): bool
     {
         return Hash::check(static::getSettingsFromDefault(), static::underscoreToDottedFormat($key));
     }
@@ -264,7 +250,7 @@ class EmailNotificationSettings
      * @param string $key Key to normalize
      * @return string
      */
-    public static function underscoreToDottedFormat(string $key)
+    public static function underscoreToDottedFormat(string $key): string
     {
         return str_replace('_', '.', $key);
     }

@@ -64,7 +64,6 @@ use EmailQueue\Shell\SenderShell;
 use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
-use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
@@ -203,12 +202,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function initEmails()
     {
-        // Gather
-        if (WebInstallerMiddleware::isConfigured()) {
-            $this->getEventManager()
-                ->on(new CoreEmailRedactorPool())
-                ->on(new CoreNotificationSettingsDefinition());
-        }
+        $this->getEventManager()
+            ->on(new CoreEmailRedactorPool())
+            ->on(new CoreNotificationSettingsDefinition());
     }
 
     /**

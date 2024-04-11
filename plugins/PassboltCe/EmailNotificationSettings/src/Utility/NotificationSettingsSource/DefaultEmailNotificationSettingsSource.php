@@ -66,7 +66,7 @@ class DefaultEmailNotificationSettingsSource implements ReadableEmailNotificatio
     /**
      * @return array
      */
-    public function read()
+    public function read(): array
     {
         $defaultSettings = [];
         $fieldsList = $this->schema->fields();

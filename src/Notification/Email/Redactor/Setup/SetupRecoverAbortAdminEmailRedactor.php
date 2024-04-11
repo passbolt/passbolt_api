@@ -51,6 +51,14 @@ class SetupRecoverAbortAdminEmailRedactor implements SubscribedEmailRedactorInte
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.admin.user.recover.abort';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */
