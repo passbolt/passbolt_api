@@ -67,6 +67,14 @@ class AccountRecoveryResponseApprovedUserEmailRedactor implements SubscribedEmai
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.accountRecovery.response.user.approved';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */

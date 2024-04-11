@@ -66,6 +66,14 @@ class AccountRecoveryRequestCreatedUserEmailRedactor implements SubscribedEmailR
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.accountRecovery.request.user';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */
