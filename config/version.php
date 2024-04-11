@@ -1,8 +1,8 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '4.6.1',
-        'name' => 'Reptillia',
+        'version' => '4.6.2-test.1',
+        'name' => 'The Clash - London Calling',
     ],
     'php' => [
         'minVersion' => '7.4',
