@@ -4,6 +4,6 @@ Passbolt is pleased to announce the immediate availability of version v4.6.2. Th
 
 We would like to express our appreciation to the community for their assistance in making Passbolt more secure. Further details about the issues will be shared in a separate communication.
 
-## [4.6.2-test.2] - 2024-04-11
+## [4.6.2] - 2024-04-11
 ### Security
 - PB-32932 Fix error template title
