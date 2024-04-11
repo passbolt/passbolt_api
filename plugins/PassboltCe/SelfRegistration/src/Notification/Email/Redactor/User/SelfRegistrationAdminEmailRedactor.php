@@ -48,6 +48,14 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.admin.user.register.complete';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User register event
      * @return \App\Notification\Email\EmailCollection
      */
