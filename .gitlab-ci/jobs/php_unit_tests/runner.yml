@@ -16,7 +16,8 @@
     KUBERNETES_SERVICE_CPU_REQUEST: 1
     KUBERNETES_SERVICE_MEMORY_REQUEST: 3Gi
   services:
-    - $CI_REGISTRY/dind:latest
+    - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:26.0.0-dind
+      alias: docker
   allow_failure: true
   script:
     - apt-get update
@@ -39,7 +40,7 @@
   image: $CI_REGISTRY_IMAGE_TEST:8.1
   timeout: 10m
   variables:
-    DOCKER_HOST: tcp://localhost:2376/
+    DOCKER_HOST: tcp://docker:2376/
     DOCKER_TLS_CERTDIR: "/certs"
     DOCKER_TLS_VERIFY: 1
     DOCKER_CERT_PATH: "$DOCKER_TLS_CERTDIR/client"
@@ -54,7 +55,8 @@
 
     COMPOSER_ALLOW_SUPERUSER: 1
   services:
-    - $CI_REGISTRY_USER/dind:latest
+    - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:26.0.0-dind
+      alias: docker
   script:
     - apt-get update
     - apt-get install -y ca-certificates curl gnupg lsb-release
@@ -75,6 +77,6 @@
     - when: manual
 
 include:
-  - local: '/.gitlab-ci/jobs/php_unit_tests/php_74.yml'
-  - local: '/.gitlab-ci/jobs/php_unit_tests/php_81.yml'
-  - local: '/.gitlab-ci/jobs/php_unit_tests/php_82.yml'
+  - local: "/.gitlab-ci/jobs/php_unit_tests/php_74.yml"
+  - local: "/.gitlab-ci/jobs/php_unit_tests/php_81.yml"
+  - local: "/.gitlab-ci/jobs/php_unit_tests/php_82.yml"
