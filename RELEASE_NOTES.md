@@ -1,11 +1,9 @@
-Release song: https://youtu.be/EfK-WX2pa8c?si=i5U2i5n2_S288dow
+Release song: https://youtu.be/3WOZwwRH6XU?si=jvTiezg7eEEpEh-S
 
-Passbolt is pleased to announce the immediate availability of version 4.6.2. This is a security update that contains an important vulnerability fix for the API.
+Passbolt is pleased to announce the immediate availability of version v4.6.2. This version is a targeted security release of both the API of the browser extension focusing on fixing security issues reported by security researchers.
 
-Most notably this update fixes reflective HTML injection vulnerability in the error page.
+We would like to express our appreciation to the community for their assistance in making Passbolt more secure. Further details about the issues will be shared in a separate communication.
 
-We would like to express our sincere thanks to the community members who brought issues to our attention and helped the team to make passbolt better.
-
-## [4.6.2-test.1] - 2024-04-11
+## [4.6.2-test.2] - 2024-04-11
 ### Security
-- PB-32932 Fix reflective HTML injection vulnerability
+- PB-32932 Fix error template title
