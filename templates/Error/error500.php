@@ -1,10 +1,14 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var string $message
+ */
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
 
 $this->layout = 'error';
 $this->assign('pageClass', 'error-500');
-$this->assign('title', $message);
+$this->assign('title', __('Error'));
 ?>
 <div class="grid">
     <div class="row">
