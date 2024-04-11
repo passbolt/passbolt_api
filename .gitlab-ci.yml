@@ -7,10 +7,10 @@ default:
       - api_failure
       - stale_schedule
 
-image: alpine:latest
+image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/alpine:latest
 
 variables:
-  DOCKER_HOST: tcp://localhost:2375
+  DOCKER_HOST: tcp://docker:2375
   DOCKER_DRIVER: overlay2
   DOCKER_TLS_CERTDIR: ""
 
@@ -31,6 +31,11 @@ include:
   - local: ".gitlab-ci/jobs/help_site_notes.yml"
 
 code_quality:
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:20.10.12-dind
+  services:
+    - name: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/docker:20.10.12-dind
+      alias: docker
+      command: ["--tls=false", "--host=tcp://0.0.0.0:2375"]
   stage: unit-test
 
 workflow:

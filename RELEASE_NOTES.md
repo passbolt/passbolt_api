@@ -1,11 +1,9 @@
-Release song: https://www.youtube.com/watch?v=b8-tXG8KrWs
+Release song: https://youtu.be/3WOZwwRH6XU?si=jvTiezg7eEEpEh-S
 
-Passbolt is pleased to announce the immediate availability of version 4.6.1. This is a maintenance update that contains an important fix for the API, addressing the issue reported by the community since version 4.6.0.
+Passbolt is pleased to announce the immediate availability of version v4.6.2. This version is a targeted security release of both the API and the browser extension focusing on fixing security issues reported by security researchers.
 
-Most notably this update fixes a problem when an administrator is not able to re-enable a suspended user.
+We would like to express our appreciation to the community for their assistance in making Passbolt more secure. Further details about the issues will be shared in a separate communication.
 
-We would like to express our sincere thanks to the community members who brought issues to our attention and helped the team to make passbolt better.
-
-## [4.6.1] - 2024-03-27
-### Fixed
-- PB-32354 As an admin, I can re-enable a suspended user (GITHUB #512)
+## [4.6.2] - 2024-04-11
+### Security
+- PB-32932 Fix error template title

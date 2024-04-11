@@ -1,6 +1,6 @@
 .kitchen-test-runtime:
   extends: .rules
-  image: registry.gitlab.com/passbolt/passbolt-ci-docker-images/ruby:latest
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/ruby:latest
   stage: package-test-runtime
   script:
     - apt update && apt install rsync -y

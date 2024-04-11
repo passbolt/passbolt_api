@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2024-03-07 13:23+0000\n"
+"POT-Creation-Date: 2024-04-11 09:47+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -5145,6 +5145,9 @@ msgid "Only administrators are allowed to create/update user passphrase policies
 msgstr ""
 
 msgid "The user passphrase policy settings has been updated by {0}."
+msgstr ""
+
+msgid "Error"
 msgstr ""
 
 msgid "The requested address was not found on this server."
