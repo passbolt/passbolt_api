@@ -239,6 +239,7 @@ class GroupsDeleteController extends AppController
         if (Configure::read('passbolt.plugins.folders.enabled')) {
             $foldersIdsBlockingDelete = $this->Permissions
                 ->findSharedAcosByAroIsSoleOwner(PermissionsTable::FOLDER_ACO, $group->id)
+                ->all()
                 ->extract('aco_foreign_key')
                 ->toArray();
             $contentIdBlockingDelete = array_merge($contentIdBlockingDelete, $foldersIdsBlockingDelete);

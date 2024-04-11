@@ -40,6 +40,7 @@ class GnupgTest extends OpenPGPBackendTest
         if ($settings != $this->originalErrorSettings) {
             ini_set('error_reporting', $this->originalErrorSettings);
         }
+        parent::tearDown();
     }
 
     /**

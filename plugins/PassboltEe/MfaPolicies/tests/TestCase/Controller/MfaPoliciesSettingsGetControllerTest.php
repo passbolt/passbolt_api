@@ -36,15 +36,6 @@ class MfaPoliciesSettingsGetControllerTest extends AppIntegrationTestCase
         $this->enableFeaturePlugin('MfaPolicies');
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('MfaPolicies');
-    }
-
     public function testMfaPoliciesSettingsGet_ErrorFeatureDisabled()
     {
         $this->disableFeaturePlugin('MfaPolicies');

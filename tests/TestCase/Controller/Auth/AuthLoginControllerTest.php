@@ -54,12 +54,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->gpgSetup(); // add ada's keys
     }
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
-    }
-
     /**
      * Check that calling url without JSON extension throws a 404
      */
@@ -147,7 +141,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginController_GetHeaders(): void
     {
-        $isLogEnabled = $this->isFeaturePluginEnabled('Log');
         $this->enableFeaturePlugin('Log');
 
         $this->get('/auth/login');
@@ -159,9 +152,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertHeader('X-GPGAuth-Logout-URL', '/auth/logout');
 
         $this->assertSame(0, ActionLogFactory::count());
-        if (!$isLogEnabled) {
-            $this->disableFeaturePlugin('Log');
-        }
     }
 
     /**

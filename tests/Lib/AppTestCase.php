@@ -37,6 +37,7 @@ use CakephpFixtureFactories\ORM\FactoryTableRegistry;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
 
 abstract class AppTestCase extends TestCase
 {
@@ -65,11 +66,14 @@ abstract class AppTestCase extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->disableFeaturePlugin('Tags');
-        Configure::write('passbolt.plugins.multiFactorAuthentication.enabled', false);
-        Configure::write('passbolt.plugins.log.enabled', false);
-        Configure::write('passbolt.plugins.folders.enabled', false);
-        $this->disableFeaturePlugin('AccountRecovery');
+        // Disable feature plugins listed in default.php
+        $plugins = array_keys(Configure::read('passbolt.plugins'));
+        foreach ($plugins as $plugin) {
+            $this->disableFeaturePlugin(ucfirst($plugin));
+        }
+        $this->disableFeaturePlugin('Log');
+        $this->disableFeaturePlugin('Folders');
+        $this->disableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
         $this->loadRoutes();
     }
 

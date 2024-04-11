@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Test\Utility;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 
 abstract class JwtAuthenticationIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -28,16 +29,7 @@ abstract class JwtAuthenticationIntegrationTestCase extends AppIntegrationTestCa
     public function setUp(): void
     {
         parent::setUp();
-        $this->enableFeaturePlugin('JwtAuthentication');
+        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
         $this->disableCsrfToken();
-    }
-
-    /**
-     * Tear down
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
     }
 }

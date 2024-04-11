@@ -41,8 +41,8 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         $this->unloadNotificationSettings();
+        parent::tearDown();
     }
 
     /**

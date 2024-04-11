@@ -42,8 +42,8 @@ class ShareNotificationTest extends ShareControllerTest
 
     public function tearDown(): void
     {
-        parent::tearDown();
         $this->unloadNotificationSettings();
+        parent::tearDown();
     }
 
     public function testShareNotificationSuccess(): void

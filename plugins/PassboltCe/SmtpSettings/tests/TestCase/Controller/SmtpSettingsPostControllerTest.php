@@ -18,12 +18,19 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
 
 class SmtpSettingsPostControllerTest extends AppIntegrationTestCase
 {
     use SmtpSettingsTestTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
+    }
 
     public function testSmtpSettingsPostController_Success()
     {

@@ -24,6 +24,7 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Test\Lib\Utility\EmailTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\I18n;
+use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\EmailDigest\Service\SendEmailBatchService;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
@@ -45,6 +46,7 @@ class SendEmailBatchServiceCreateResourceChangesDigestTest extends AppIntegratio
         $this->useCommandRunner();
         $this->service = new SendEmailBatchService();
         $this->setEmailNotificationsSetting('password.create', true);
+        $this->enableFeaturePlugin(EmailDigestPlugin::class);
     }
 
     public function tearDown(): void

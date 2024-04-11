@@ -18,9 +18,16 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Controller\Settings;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 
 class SmtpSettingsSettingsIndexControllerTest extends AppIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
+    }
+
     public function testSmtpSettingsSettingsIndexControllerTest()
     {
         $url = '/settings.json?api-version=2';

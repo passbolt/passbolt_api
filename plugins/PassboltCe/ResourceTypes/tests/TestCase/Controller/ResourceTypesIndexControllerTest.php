@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
 use Passbolt\ResourceTypes\Test\Scenario\ResourceTypesScenario;
 
@@ -27,6 +28,12 @@ use Passbolt\ResourceTypes\Test\Scenario\ResourceTypesScenario;
 class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
 {
     use ResourceTypesModelTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(ResourceTypesPlugin::class);
+    }
 
     public function testResourceTypesIndex_Success()
     {

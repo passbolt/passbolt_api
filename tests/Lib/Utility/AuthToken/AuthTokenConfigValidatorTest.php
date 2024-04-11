@@ -15,8 +15,8 @@ class AuthTokenConfigValidatorTest extends TestCase
 
     public function setUp(): void
     {
-        $this->sut = new AuthTokenExpiryConfigValidator();
         parent::setUp();
+        $this->sut = new AuthTokenExpiryConfigValidator();
     }
 
     /**

@@ -28,6 +28,7 @@ use Cake\Http\ServerRequest;
 use Passbolt\MultiFactorAuthentication\Event\ClearMfaCookieOnSetupAndRecover;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
@@ -108,6 +109,7 @@ class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
      */
     public function testClearMfaCookieOnSetupAndRecover_UsersRegisterGetSuccess()
     {
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
         $this->setSelfRegistrationSettingsData();
         $this->get('/users/register');
         $this->assertResponseOk();
@@ -119,6 +121,7 @@ class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
      */
     public function testClearMfaCookieOnSetupAndRecover_UsersRegisterPostSuccess()
     {
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
         $this->setSelfRegistrationSettingsData();
         RoleFactory::make()->user()->persist();
         $data = [

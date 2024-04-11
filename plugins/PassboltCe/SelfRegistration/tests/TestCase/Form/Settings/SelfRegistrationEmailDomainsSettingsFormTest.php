@@ -40,7 +40,6 @@ class SelfRegistrationEmailDomainsSettingsFormTest extends TestCase
     {
         parent::tearDown();
         unset($this->form);
-        Configure::write(EmailValidationRule::MX_CHECK_KEY, false);
     }
 
     public function testSelfRegistrationEmailDomainsSettingsForm_With_Valid_Provider_And_Data_Valid_Should_Succeed()

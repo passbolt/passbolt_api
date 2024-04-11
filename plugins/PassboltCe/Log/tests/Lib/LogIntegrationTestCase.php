@@ -18,7 +18,6 @@ namespace Passbolt\Log\Test\Lib;
 
 use App\Model\Entity\User;
 use App\Test\Lib\AppIntegrationTestCase;
-use App\Utility\UserAction;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
@@ -74,9 +73,6 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         parent::setUp();
         Configure::write('passbolt.plugins.log.enabled', true);
 
-        UserAction::destroy();
-        TableRegistry::getTableLocator()->clear();
-
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
@@ -105,13 +101,6 @@ abstract class LogIntegrationTestCase extends AppIntegrationTestCase
         $this->enableFeaturePlugin('JwtAuthentication');
 
         $this->Actions->clearCache();
-    }
-
-    public function tearDown(): void
-    {
-        // Remove dynamically added associations
-        TableRegistry::getTableLocator()->clear();
-        $this->disableFeaturePlugin('JwtAuthentication');
     }
 
     public function dataProviderForLoginType(): array

@@ -31,6 +31,7 @@ use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class HealthcheckCommandTest extends AppTestCase
@@ -149,6 +150,7 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write(EmailValidationRule::MX_CHECK_KEY, true);
         Configure::write('passbolt.js.build', 'production');
         Configure::write('passbolt.email.send', '');
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
 
         $this->exec('passbolt healthcheck -d test --application');
 
@@ -175,6 +177,7 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('passbolt.selenium.active', true);
         Configure::write('passbolt.meta.robots', '');
         Configure::write('passbolt.registration.public', true);
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
         $this->setSelfRegistrationSettingsData();
         Configure::write(EmailValidationRule::MX_CHECK_KEY, false);
         Configure::write('passbolt.js.build', 'test');

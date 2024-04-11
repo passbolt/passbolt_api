@@ -37,8 +37,8 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         GetOrgLocaleService::clearOrganisationLocale();
+        parent::tearDown();
     }
 
     public function dataForTestEmailLocaleServiceGetLocale(): array

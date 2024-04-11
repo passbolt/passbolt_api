@@ -19,25 +19,19 @@ namespace Passbolt\Sso\Test\Lib;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
-use App\Test\Lib\Utility\ErrorIntegrationTestTrait;
-use App\Test\Lib\Utility\JsonRequestTrait;
-use App\Test\Lib\Utility\LoginTestTrait;
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
-use Cake\TestSuite\IntegrationTestTrait;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsSetService;
+use Passbolt\Sso\SsoPlugin;
 
-class SsoIntegrationTestCase extends SsoTestCase
+class SsoIntegrationTestCase extends AppIntegrationTestCase
 {
-    use IntegrationTestTrait;
-    use JsonRequestTrait;
-    use LoginTestTrait;
-    use ErrorIntegrationTestTrait;
     use MockAzureResourceOwnerTrait;
 
     public const IP_ADDRESS = '127.0.0.1';
@@ -66,19 +60,7 @@ class SsoIntegrationTestCase extends SsoTestCase
         foreach ($this->disabledSsoProviders as $provider) {
             Configure::write("passbolt.plugins.sso.providers.{$provider}", true);
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        // Reset
-        foreach ($this->disabledSsoProviders as $provider) {
-            Configure::write("passbolt.plugins.sso.providers.{$provider}", false);
-        }
-
-        parent::tearDown();
+        $this->enableFeaturePlugin(SsoPlugin::class);
     }
 
     /**

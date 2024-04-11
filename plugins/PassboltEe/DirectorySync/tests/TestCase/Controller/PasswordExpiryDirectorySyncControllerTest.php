@@ -24,6 +24,7 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\DirectorySync\Test\Factory\DirectoryEntryFactory;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
+use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 
 /**
@@ -41,6 +42,7 @@ class PasswordExpiryDirectorySyncControllerTest extends DirectorySyncIntegration
      */
     public function testPasswordExpiryDirectorySyncController_Remove_Permission_From_User_Delete_And_Group_Removal()
     {
+        $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
         PasswordExpirySettingFactory::make()->persist();
         [$owner, $userInGroupToDelete] = UserFactory::make(2)->persist();
 

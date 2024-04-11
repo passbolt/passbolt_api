@@ -29,7 +29,6 @@ use Cake\ORM\TableRegistry;
 use Faker\Factory;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
-use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 
 class InstallCommandTest extends AppTestCase
 {
@@ -50,7 +49,6 @@ class InstallCommandTest extends AppTestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->emptyDirectory(CACHE . 'database' . DS);
-        $this->disableFeaturePlugin(JwtAuthenticationPlugin::class);
         $this->persistValidSubscription();
         $this->setUpPathAndPublicSubscriptionKey();
         $this->loadNotificationSettings();
@@ -58,12 +56,6 @@ class InstallCommandTest extends AppTestCase
             return $this->getMockedHealthcheckStatusRequest();
         });
         $this->mockProcessUserService('www-data');
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
     }
 
     /**
