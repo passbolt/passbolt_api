@@ -25,6 +25,7 @@ class EeHealthcheckServiceCollector extends HealthcheckServiceCollector
      * List of all EE specific available health check domains.
      */
     public const DOMAIN_SSO = 'sso';
+    public const DOMAIN_DIRECTORY_SYNC = 'directorySync';
 
     /**
      * @return array
@@ -33,6 +34,7 @@ class EeHealthcheckServiceCollector extends HealthcheckServiceCollector
     {
         $defaultTitleMapping = [
             self::DOMAIN_SSO => __('SSO'),
+            self::DOMAIN_DIRECTORY_SYNC => __('Directory Sync'),
         ];
 
         return array_merge(parent::getDomainTitleMapping(), $defaultTitleMapping);

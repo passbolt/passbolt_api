@@ -15,15 +15,16 @@ declare(strict_types=1);
  * @since         4.7.0
  */
 
-namespace Passbolt\Sso\Service\Healthcheck;
+namespace Passbolt\DirectorySync\Service\Healthcheck;
 
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Core\Configure;
+use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
 use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 
-class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class DirectorySyncEndpointsDisabledHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -37,7 +38,7 @@ class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, 
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = Configure::read('passbolt.security.sso.sslVerify', false);
+        $this->status = Configure::read(DirectorySyncEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY, false);
 
         return $this;
     }
@@ -47,7 +48,7 @@ class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, 
      */
     public function domain(): string
     {
-        return EeHealthcheckServiceCollector::DOMAIN_SSO;
+        return EeHealthcheckServiceCollector::DOMAIN_DIRECTORY_SYNC;
     }
 
     /**
@@ -71,7 +72,7 @@ class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, 
      */
     public function getSuccessMessage(): string
     {
-        return __('SSL certification validation for SSO instance is enabled.');
+        return __('The endpoints for updating the users directory configurations are disabled.');
     }
 
     /**
@@ -79,7 +80,7 @@ class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, 
      */
     public function getFailureMessage(): string
     {
-        return __('SSL certification validation for SSO instance is disabled.');
+        return __('The endpoints for updating the users directory configurations are enabled.');
     }
 
     /**
@@ -88,10 +89,13 @@ class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, 
     public function getHelpMessage()
     {
         return [
-            __('Disabling the ssl verify check can lead to security attacks.'),
-            __('Attacker can alter the certificate and can perform man-in-the-middle attack.'),
-            __('To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true.'),
-            __('Or set passbolt.security.sso.sslVerify to true in {0}.', CONFIG . 'passbolt.php'),
+            __('It is recommended to disable endpoints for updating the users directory configurations.'),
+            __('Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true.'),
+            __(
+                'Or set {0} to true in {1}.',
+                DirectorySyncEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY,
+                CONFIG . 'passbolt.php'
+            ),
         ];
     }
 
@@ -102,7 +106,7 @@ class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, 
      */
     public function cliOption(): string
     {
-        return EeHealthcheckServiceCollector::DOMAIN_SSO;
+        return EeHealthcheckServiceCollector::DOMAIN_DIRECTORY_SYNC;
     }
 
     /**
@@ -110,6 +114,6 @@ class SslHostVerificationSsoHealthcheck implements HealthcheckServiceInterface, 
      */
     public function getLegacyArrayKey(): string
     {
-        return 'sslHostVerification';
+        return 'endpointsDisabled';
     }
 }

@@ -28,8 +28,6 @@ class SsoPlugin extends BasePlugin
 {
     use FeaturePluginAwareTrait;
 
-    public const HEALTHCHECK_DOMAIN_SSO = 'sso';
-
     /**
      * @inheritDoc
      */
