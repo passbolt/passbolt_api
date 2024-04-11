@@ -4,7 +4,7 @@ help_site_notes:
     GPG_KEY_PATH: "/tmp/gpg-key"
     GPG_PASSPHRASE: $HELP_SITE_GPG_KEY_PASS
     GPG_KEY_GRIP: $HELP_SITE_GPG_KEYGRIP
-  image: debian
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/debian:bookworm
   script: |
     source .gitlab-ci/scripts/lib/version-check.sh
     if is_release_candidate "$tag" || is_testing_candidate "$tag"; then
