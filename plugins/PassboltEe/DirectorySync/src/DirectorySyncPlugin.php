@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync;
 
 use App\Service\Command\ProcessUserService;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
@@ -29,6 +30,7 @@ use Passbolt\DirectorySync\Command\IgnoreDeleteCommand;
 use Passbolt\DirectorySync\Command\IgnoreListCommand;
 use Passbolt\DirectorySync\Command\TestCommand;
 use Passbolt\DirectorySync\Command\UsersCommand;
+use Passbolt\DirectorySync\Service\Healthcheck\DirectorySyncEndpointsDisabledHealthcheck;
 
 class DirectorySyncPlugin extends BasePlugin
 {
@@ -51,5 +53,12 @@ class DirectorySyncPlugin extends BasePlugin
         $container->add(TestCommand::class)->addArgument(ProcessUserService::class);
         $container->add(UsersCommand::class)
             ->addArguments([ProcessUserService::class, ResourcesExpireResourcesServiceInterface::class]);
+
+        // Directory sync health checks
+        $container->add(DirectorySyncEndpointsDisabledHealthcheck::class);
+        // Add directory sync health check services to collector
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [DirectorySyncEndpointsDisabledHealthcheck::class]);
     }
 }

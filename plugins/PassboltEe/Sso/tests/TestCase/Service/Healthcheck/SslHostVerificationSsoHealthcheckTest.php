@@ -19,8 +19,8 @@ namespace Passbolt\Sso\Test\TestCase\Service\Healthcheck;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Core\Configure;
+use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 use Passbolt\Sso\Service\Healthcheck\SslHostVerificationSsoHealthcheck;
-use Passbolt\Sso\SsoPlugin;
 use Passbolt\Sso\Test\Lib\SsoTestCase;
 
 /**
@@ -57,8 +57,8 @@ class SslHostVerificationSsoHealthcheckTest extends SsoTestCase
 
         $this->assertTrue($result->isPassed());
         // Make sure other metadata info are correct
-        $this->assertSame(SsoPlugin::HEALTHCHECK_DOMAIN_SSO, $result->domain());
-        $this->assertSame(SsoPlugin::HEALTHCHECK_DOMAIN_SSO, $result->cliOption());
+        $this->assertSame(EeHealthcheckServiceCollector::DOMAIN_SSO, $result->domain());
+        $this->assertSame(EeHealthcheckServiceCollector::DOMAIN_SSO, $result->cliOption());
         $this->assertSame(HealthcheckServiceCollector::LEVEL_WARNING, $result->level());
         $this->assertStringContainsString('SSL certification validation for SSO instance is enabled', $result->getSuccessMessage());
         $this->assertStringContainsString('SSL certification validation for SSO instance is disabled', $result->getFailureMessage());
