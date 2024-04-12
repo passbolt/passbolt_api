@@ -5,14 +5,14 @@
 php8.1-postgres11:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-11-alpine"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:11-alpine"
   extends:
     - .test-template-parallel-scheduled
 
 php8.1-postgres12:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-12-alpine"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:12-alpine"
   extends:
     - .test-template-parallel-scheduled
 
@@ -21,7 +21,7 @@ php8.1-postgres12:
 php8.1-postgres13:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-13-alpine"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:13-alpine"
   extends:
     - .test-template-parallel
 
@@ -30,7 +30,7 @@ php8.1-postgres13:
 php8.1-postgres14:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/postgres-14-alpine"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/postgres:14-alpine"
   extends:
     - .test-template-parallel
 
@@ -41,7 +41,7 @@ php8.1-postgres14:
 php8.1-mariadb10.3:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.3"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.3"
   extends:
     - .test-template-parallel-scheduled
 
@@ -50,7 +50,7 @@ php8.1-mariadb10.3:
 php8.1-mariadb10.5:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.5"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.5"
   extends:
     - .test-template-parallel
 
@@ -59,7 +59,7 @@ php8.1-mariadb10.5:
 php8.1-mariadb10.6:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mariadb-10.6"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.6"
   extends:
     - .test-template-parallel
 
@@ -70,7 +70,7 @@ php8.1-mariadb10.6:
 php8.1-mysql5.7:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-5.7"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mysql:5.7"
   extends:
     - .test-template-parallel-scheduled
 
@@ -80,6 +80,6 @@ php8.1-mysql5.7:
 php8.1-mysql8:
   variables:
     PHP_VERSION: "8.1"
-    DATABASE_ENGINE_VERSION: "$CI_REGISTRY/mysql-8.0"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mysql:8.0"
   extends:
     - .test-template-parallel

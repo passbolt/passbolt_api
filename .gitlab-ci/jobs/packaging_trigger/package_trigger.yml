@@ -3,7 +3,7 @@ packaging-trigger:
   variables:
     PACKAGING_TRIGGER_BRANCH: "main"
     DOWNSTREAM_PROJECT_ID: "$PACKAGING_PROJECT_ID"
-  image: debian:bullseye-slim
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/debian:bookworm-slim
   script:
     - apt update && apt install -y curl
     - bash .gitlab-ci/scripts/bin/packaging-trigger.sh "$CI_COMMIT_TAG" "$PACKAGING_TRIGGER_BRANCH"
