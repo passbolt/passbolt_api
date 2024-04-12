@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.6.2] - 2024-04-11
+### Security
+- PB-32932 Fix error template title
+
+## [4.6.2-test.2] - 2024-04-11
+### Security
+- PB-32932 Fix error template title
+
 ## [4.6.1] - 2024-03-27
 ### Fixed
 - PB-32354 As an admin, I can re-enable a suspended user (GITHUB #512)

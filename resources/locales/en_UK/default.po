@@ -5,7 +5,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PROJECT VERSION\n"
-"POT-Creation-Date: 2024-03-07 13:12+0000\n"
+"POT-Creation-Date: 2024-04-11 09:45+0000\n"
 "PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
@@ -3522,6 +3522,9 @@ msgid "Why do I need a SMTP server?"
 msgstr ""
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
+msgstr ""
+
+msgid "Error"
 msgstr ""
 
 msgid "The requested address was not found on this server."

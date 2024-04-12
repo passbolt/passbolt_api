@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-03-07 13:12+0000\n"
-"PO-Revision-Date: 2024-03-17 15:03\n"
+"POT-Creation-Date: 2024-04-11 09:45+0000\n"
+"PO-Revision-Date: 2024-04-11 12:56\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Portuguese, Brazilian\n"
 "MIME-Version: 1.0\n"
@@ -3525,6 +3525,9 @@ msgstr "Por que preciso de um servidor SMTP?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "O Passbolt precisa de um servidor SMTP para enviar e-mails de convite após a criação de uma conta e enviar notificações por e-mail."
+
+msgid "Error"
+msgstr "Erro"
 
 msgid "The requested address was not found on this server."
 msgstr "O endereço solicitado não foi encontrado neste servidor."

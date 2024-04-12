@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-03-07 13:12+0000\n"
-"PO-Revision-Date: 2024-03-07 13:51\n"
+"POT-Creation-Date: 2024-04-11 09:45+0000\n"
+"PO-Revision-Date: 2024-04-11 12:57\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -3525,6 +3525,9 @@ msgstr "Kodėl man reikia SMTP serverio?"
 
 msgid "Passbolt needs an smtp server in order to send invitation emails after an account creation and to send email notifications."
 msgstr "„Passbolt“ reikalingas smtp serveris, kad sukūrus paskyrą būtų išsiųsti kvietimai ir el. pašto pranešimai."
+
+msgid "Error"
+msgstr "Klaida"
 
 msgid "The requested address was not found on this server."
 msgstr "Prašomas adresas šiame serveryje nerastas."
