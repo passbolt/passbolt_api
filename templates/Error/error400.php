@@ -1,9 +1,13 @@
 <?php
+/**
+ * @var \App\View\AppView $this
+ * @var string $message
+ */
 use Cake\Core\Configure;
 use Cake\Error\Debugger;
 
 $this->layout = 'error';
-$this->assign('title', $message);
+$this->assign('title', __('Error'));
 $this->assign('pageClass', 'error-404');
 ?>
 <div class="grid">
@@ -31,5 +35,5 @@ $this->assign('pageClass', 'error-404');
         <?= $this->element('auto_table_warning') ?>
         <?php if (extension_loaded('xdebug')): xdebug_print_function_stack(); endif; ?>
     </div>
-<?php endif;?>
+<?php endif; ?>
 </div>

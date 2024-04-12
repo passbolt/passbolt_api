@@ -25,7 +25,7 @@ static-analysis:
 
 static-analysis-js:
   stage: unit-test
-  image: node:18
+  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/node:18
   script:
     - npm ci
     - npm run lint
