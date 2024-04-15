@@ -39,7 +39,6 @@ class SecretsViewControllerTest extends AppIntegrationTestCase
         $this->assertSecretAttributes($this->_responseJsonBody);
     }
 
-
     public function testSecretsViewController_Error_NotAuthenticated(): void
     {
         $admin = UserFactory::make()->admin()->persist();
@@ -78,9 +77,12 @@ class SecretsViewControllerTest extends AppIntegrationTestCase
      */
     public function testSecretsViewController_Error_NotJson(): void
     {
-        $this->authenticateAs('dame');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
-        $this->get("/secrets/resource/$resourceId");
+        $user = UserFactory::make()->persist();
+        $resourceId = ResourceFactory::make()->withCreatorAndPermission($user)->persist()->get('id');
+        $this->logInAs($user);
+
+        $this->get("/secrets/resource/{$resourceId}");
+
         $this->assertResponseCode(404);
     }
 }
