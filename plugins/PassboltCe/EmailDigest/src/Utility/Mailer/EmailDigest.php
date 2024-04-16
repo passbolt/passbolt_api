@@ -41,6 +41,7 @@ class EmailDigest implements EmailDigestInterface
     private string $content;
     private string $recipient;
     private string $subject;
+    private string $fullBaseUrl;
     /**
      * @var string|null Template to use to compose the email
      */
@@ -152,6 +153,7 @@ class EmailDigest implements EmailDigestInterface
     public function setSubject(string $subject): self
     {
         $this->subject = $subject;
+        $this->addLayoutVar('title', $subject);
 
         return $this;
     }
@@ -204,5 +206,24 @@ class EmailDigest implements EmailDigestInterface
         $this->layoutVars[$name] = $value;
 
         return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function setFullBaseUrl(string $fullBaseUrl): self
+    {
+        $this->fullBaseUrl = $fullBaseUrl;
+        $this->addLayoutVar('fullBaseUrl', $fullBaseUrl);
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getFullBaseUrl(): string
+    {
+        return $this->fullBaseUrl;
     }
 }

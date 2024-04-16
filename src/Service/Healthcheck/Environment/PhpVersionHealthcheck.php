@@ -24,6 +24,9 @@ use Cake\Core\Configure;
 
 class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
+    // The minimum PHP version required. Healthcheck will fail if not satisfied yet.
+    public const PHP_MIN_VERSION_CONFIG = 'php.minVersion';
+
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -38,7 +41,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckC
     {
         $this->status = version_compare(
             PHP_VERSION,
-            Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG),
+            Configure::read(self::PHP_MIN_VERSION_CONFIG),
             '>='
         );
 
@@ -84,7 +87,7 @@ class PhpVersionHealthcheck implements HealthcheckServiceInterface, HealthcheckC
     {
         return __(
             'PHP version is too low, passbolt need PHP {0} or higher.',
-            Configure::read(HealthcheckServiceCollector::PHP_MIN_VERSION_CONFIG)
+            Configure::read(self::PHP_MIN_VERSION_CONFIG)
         );
     }
 
