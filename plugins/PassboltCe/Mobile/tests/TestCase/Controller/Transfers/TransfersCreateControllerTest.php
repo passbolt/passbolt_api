@@ -38,12 +38,6 @@ class TransfersCreateControllerTest extends AppIntegrationTestCase
         $this->enableFeaturePlugin('mobile');
     }
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('mobile');
-    }
-
     public function testMobileTransfersCreateController_Success()
     {
         $data = [

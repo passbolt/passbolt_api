@@ -20,6 +20,7 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Controller;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\EmailTestTrait;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
+use Passbolt\SmtpSettings\SmtpSettingsPlugin;
 use Passbolt\SmtpSettings\Test\Factory\SmtpSettingFactory;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsIntegrationTestTrait;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
@@ -32,6 +33,12 @@ class SmtpSettingsEmailControllerTest extends AppIntegrationTestCase
     use EmailTestTrait;
     use SmtpSettingsIntegrationTestTrait;
     use SmtpSettingsTestTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SmtpSettingsPlugin::class);
+    }
 
     public function testSmtpSettingsEmailController_Success()
     {

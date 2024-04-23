@@ -45,6 +45,7 @@ class RequestLocaleParserServiceTest extends TestCase
     {
         GetOrgLocaleService::clearOrganisationLocale();
         $this->removeFooSystemLocale();
+        parent::tearDown();
     }
 
     public function dataForTestRequestLocaleParserServiceGetLocale(): array

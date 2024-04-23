@@ -16,18 +16,30 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Utility;
 
+use App\Service\Command\ProcessUserService;
+
 trait PassboltCommandTestTrait
 {
-    public function assertCommandCannotBeRunAsRootUser(string $commandClassName)
+    public function assertCommandCannotBeRunAsRootUser(string $commandName)
     {
-        /** @var \App\Command\PassboltCommand $cmd */
-        $cmd = new $commandClassName(null);
+        $this->mockProcessUserService('root');
 
-        $cmd::$isUserRoot = true;
-        $this->exec($cmd::defaultName());
+        $this->exec('passbolt ' . $commandName);
+
         $this->assertOutputContains('Passbolt commands cannot be executed as root.');
         $this->assertExitError();
-        $cmd::$isUserRoot = false;
+    }
+
+    public function mockProcessUserService(string $username): void
+    {
+        $this->mockService(ProcessUserService::class, function () use ($username) {
+            $stub = $this->getMockBuilder(ProcessUserService::class)
+                ->onlyMethods(['getName'])
+                ->getMock();
+            $stub->method('getName')->willReturn($username);
+
+            return $stub;
+        });
     }
 
     /**

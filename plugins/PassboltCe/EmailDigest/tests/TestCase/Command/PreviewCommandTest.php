@@ -27,6 +27,7 @@ use Cake\Core\Configure;
 use Cake\I18n\I18n;
 use Cake\Mailer\Mailer;
 use Passbolt\EmailDigest\Command\PreviewCommand;
+use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\EmailDigest\Test\Lib\EmailDigestMockTestTrait;
 use Passbolt\Locale\Test\Lib\DummyTranslationTestTrait;
@@ -53,6 +54,7 @@ class PreviewCommandTest extends AppIntegrationTestCase
         $this->loadRoutes();
         $this->setDummyFrenchTranslator();
         (new AvatarsConfigurationService())->loadConfiguration();
+        $this->enableFeaturePlugin(EmailDigestPlugin::class);
     }
 
     /**
@@ -155,6 +157,7 @@ class PreviewCommandTest extends AppIntegrationTestCase
             ->setRecipient($recipient)
             ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
             ->setField('template_vars.body.user', $operator)
+            ->setField('template_vars.locale', 'en-UK')
             ->persist();
 
         $this->exec('passbolt email_digest preview');

@@ -27,6 +27,8 @@ use Faker\Generator;
  * @method \App\Model\Entity\Group|\App\Model\Entity\Group[] persist()
  * @method \App\Model\Entity\Group getEntity()
  * @method \App\Model\Entity\Group[] getEntities()
+ * @method static \App\Model\Entity\Group get($primaryKey, array $options = [])
+ * @method static \App\Model\Entity\Group firstOrFail($conditions = null)
  */
 class GroupFactory extends CakephpBaseFactory
 {

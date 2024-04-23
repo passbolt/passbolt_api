@@ -18,6 +18,7 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Authenticator;
 
 use App\Middleware\ContainerInjectorMiddleware;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Authentication\Authenticator\Result;
@@ -35,9 +36,11 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
+use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 
 class GpgJwtAuthenticatorTest extends TestCase
 {
+    use FeaturePluginAwareTrait;
     use GpgAdaSetupTrait;
     use TruncateDirtyTables;
 
@@ -53,6 +56,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         OpenPGPBackendFactory::reset();
         $this->sut = new GpgJwtAuthenticator(new TokenIdentifier());
         EventManager::instance()->setEventList(new EventList());
+        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_NoData()
@@ -60,7 +64,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $this->gpgSetup();
         $request = new ServerRequest();
         $result = $this->sut->authenticate($request);
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_InvalidUserId()
@@ -69,7 +73,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = new ServerRequest();
         $request = $request->withData('user_id', 'nope');
         $result = $this->sut->authenticate($request);
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_NotFoundUser()
@@ -78,7 +82,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = new ServerRequest();
         $request = $request->withData('user_id', UuidFactory::uuid());
         $result = $this->sut->authenticate($request);
-        $this->assertEquals($result->getStatus(), Result::FAILURE_IDENTITY_NOT_FOUND);
+        $this->assertEquals(Result::FAILURE_IDENTITY_NOT_FOUND, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_NoChallenge()
@@ -87,7 +91,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = new ServerRequest();
         $request = $request->withData('user_id', UuidFactory::uuid('user.id.ada'));
         $result = $this->sut->authenticate($request);
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_NotOpenPGPChallenge()
@@ -99,7 +103,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = $request->withData('challenge', 'nope');
         $result = $this->sut->authenticate($request);
 
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_WrongSignatureChallenge()
@@ -115,7 +119,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_WrongChallengeFormat()
@@ -131,7 +135,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_WrongVersion()
@@ -153,7 +157,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_WrongDomain()
@@ -175,7 +179,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_ExpiredToken()
@@ -197,7 +201,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateError_WrongVerifyToken()
@@ -219,7 +223,7 @@ class GpgJwtAuthenticatorTest extends TestCase
         $request = $request->withData('challenge', $msg);
         $result = $this->sut->authenticate($request);
 
-        $this->assertEquals($result->getStatus(), Result::FAILURE_CREDENTIALS_INVALID);
+        $this->assertEquals(Result::FAILURE_CREDENTIALS_INVALID, $result->getStatus());
     }
 
     public function testGpgJwtAuthenticatorAuthenticateSuccess()

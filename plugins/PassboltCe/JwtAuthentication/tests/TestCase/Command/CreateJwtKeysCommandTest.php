@@ -19,6 +19,7 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Command;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 
 /**
  * @uses \Passbolt\JwtAuthentication\Command\CreateJwtKeysCommand
@@ -37,13 +38,7 @@ class CreateJwtKeysCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        $this->enableFeaturePlugin('JwtAuthentication');
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
+        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
     }
 
     /**

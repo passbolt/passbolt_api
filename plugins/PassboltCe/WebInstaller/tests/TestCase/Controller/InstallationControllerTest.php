@@ -21,7 +21,6 @@ use App\Test\Factory\UserFactory;
 use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
@@ -40,7 +39,6 @@ class InstallationControllerTest extends WebInstallerIntegrationTestCase
     public function tearDown(): void
     {
         $this->restoreConfiguration();
-        TableRegistry::getTableLocator()->clear();
         parent::tearDown();
     }
 

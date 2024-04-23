@@ -90,7 +90,8 @@ class EmailPreviewFactory
             ->addEmailData($emailQueueEntity)
             ->setSubject($emailQueueEntity->get('subject'))
             ->setEmailIds([$emailQueueEntity->id])
-            ->setEmailRecipient($emailQueueEntity->get('email'));
+            ->setEmailRecipient($emailQueueEntity->get('email'))
+            ->setFullBaseUrl($emailQueueEntity->get('template_vars')['body']['fullBaseUrl'] ?? '/');
     }
 
     /**
@@ -103,15 +104,14 @@ class EmailPreviewFactory
     {
         $subject = $digest->getTemplate()->getTranslatedSubject($digest);
 
-        $emailDigest = new EmailDigest();
+        $emailDigest = (new EmailDigest())
+            ->setSubject($subject)
+            ->setEmailRecipient($digest->getRecipient())
+            ->setEmailIds($digest->getEmailQueueIds())
+            ->setFullBaseUrl($digest->getFullBaseUrl());
         foreach ($digest->getEmailQueues() as $emailQueueEntity) {
-            $emailDigest
-                ->addEmailData($emailQueueEntity)
-                ->setSubject($subject)
-                ->setEmailRecipient($emailQueueEntity->get('email'));
+            $emailDigest->addEmailData($emailQueueEntity);
         }
-
-        $emailDigest->setEmailIds($digest->getEmailQueueIds());
 
         return $emailDigest;
     }
@@ -131,6 +131,7 @@ class EmailPreviewFactory
             ->addEmailData($digest->getFirstEmailQueue())
             ->setEmailIds($digest->getEmailQueueIds())
             ->setSubject($subject)
+            ->setFullBaseUrl($digest->getFullBaseUrl())
             ->addLayoutVar(LocaleEmailQueueListener::VIEW_VAR_KEY, $digest->getLocale())
             ->setTemplate($template->getDigestTemplate())
             ->setEmailRecipient($digest->getRecipient())
@@ -206,7 +207,7 @@ class EmailPreviewFactory
     }
 
     /**
-     * Map an instance of EmailDigest to an instance of Email, so it can be send.
+     * Map an instance of EmailDigest to an instance of Email, so it can be sent.
      *
      * @param \Cake\Mailer\Mailer $email An instance of Email
      * @param \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface $emailDigest An instance of EmailDigest

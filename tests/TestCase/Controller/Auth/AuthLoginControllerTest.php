@@ -54,12 +54,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->gpgSetup(); // add ada's keys
     }
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
-    }
-
     /**
      * Check that calling url without JSON extension throws a 404
      */
@@ -147,7 +141,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginController_GetHeaders(): void
     {
-        $isLogEnabled = $this->isFeaturePluginEnabled('Log');
         $this->enableFeaturePlugin('Log');
 
         $this->get('/auth/login');
@@ -159,9 +152,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertHeader('X-GPGAuth-Logout-URL', '/auth/logout');
 
         $this->assertSame(0, ActionLogFactory::count());
-        if (!$isLogEnabled) {
-            $this->disableFeaturePlugin('Log');
-        }
     }
 
     /**
@@ -172,6 +162,24 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->getJson('/auth/login.json');
         $this->assertResponseError('Page not found.');
         $this->assertResponseCode(404);
+    }
+
+    /**
+     * Fail without 500 if gpg_auth is not an array
+     */
+    public function testAuthLoginController_Validate_Gpg_Auth(): void
+    {
+        $this->postJson('/auth/login.json', [
+            'data' => [
+                'gpg_auth' => 'foo',
+            ],
+        ]);
+
+        $this->assertResponseSuccess();
+        $msg = 'There is no user associated with this key. No key id set.';
+        $headers = $this->getHeaders();
+        $this->assertEquals($msg, $headers['X-GPGAuth-Debug']);
+        $this->assertEquals($headers['X-GPGAuth-Authenticated'], 'false');
     }
 
     /**

@@ -71,7 +71,7 @@ class PasswordExpirySettingsTable extends OrganizationSettingsTable
         $validator->remove('value');
 
         $validator->requirePresence('value', true, __('A value is required.'));
-        $validator->isArray('value', __('The value should be an array.'));
+        $validator->array('value', __('The value should be an array.'));
 
         return $validator;
     }

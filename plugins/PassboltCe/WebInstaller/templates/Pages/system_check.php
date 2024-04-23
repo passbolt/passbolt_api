@@ -3,12 +3,18 @@ declare(strict_types=1);
 
 /**
  * @var \App\View\AppView $this
- * @var array $data
+ * @var bool $isSystemOk
+ * @var bool $isNextMinPhpVersionPassed
+ * @var bool $isRequestHttps
  * @var string $nextStepUrl
+ * @var \Cake\Collection\Collection $environmentChecks
+ * @var \Cake\Collection\Collection $gpgChecks
  */
-use Passbolt\WebInstaller\View\Helper\HealthcheckHtmlHelper;
 
-$healtcheck = new HealthcheckHtmlHelper();
+use App\View\Helper\HealthcheckHtmlHelper;
+
+$healthcheckHelper = new HealthcheckHtmlHelper();
+
 ?>
 <?= $this->element('header', ['title' => __('Welcome to Passbolt! Let\'s get started with the configuration.')]) ?>
 <div class="panel main ">
@@ -22,56 +28,68 @@ $healtcheck = new HealthcheckHtmlHelper();
             <div class="row">
                 <div class="col7">
                     <?php
-                    if ($data['system_ok']) :
-                        ?>
-                    <h2><?php echo __('Nice one! Your environment is ready for passbolt.'); ?></h2>
-                        <?php
+                    if ($isSystemOk) :
+                        echo '<h2>' . __('Nice one! Your environment is ready for passbolt.') . '</h2>';
                     else :
-                        ?>
-                    <h2><?php echo __('Oops!! Passbolt cannot run yet on your server.'); ?></h2>
-                        <?php
+                        echo '<h2>' . __('Oops!! Passbolt cannot run yet on your server.') . '</h2>';
                     endif;
                     ?>
+
                     <?= $this->Flash->render() ?>
+
                     <?php
-                    if (!$data['system_ok']) {
-                        $healtcheck->assertEnvironment($data);
-                    } elseif ($data['system_ok'] && !$data['environment']['nextMinPhpVersion']) {
-                        $healtcheck->assertEnvironment($data);
+                    /**
+                     * Display environment domain results.
+                     */
+                    // We want display the warning when php version is less than next minimum PHP version we'll support.
+                    // That's why this complex condition :)
+                    if (!$isSystemOk || ($isSystemOk && !$isNextMinPhpVersionPassed)) {
+                        echo '<h3>Environment</h3>';
+                        foreach ($environmentChecks as $checkResult) {
+                            $healthcheckHelper->render($checkResult);
+                        }
                     } else {
+                        // Environment is fine
                         echo '<div class="message success">' . __('Environment is configured correctly.') . '</div>';
                     }
                     ?>
+
                     <!-- if the javascript does not load this message will be shown -->
                     <div id="url-rewriting-warning" class="message error">
                         <?php echo __('URL rewriting is not properly configured on your server.'); ?>
-                        <a target="_blank" rel="noopener noreferrer" href="http://book.cakephp.org/2.0/en/installation/url-rewriting.html">Learn more.</a>
+                        <a target="_blank" rel="noopener noreferrer" href="https://book.cakephp.org/4/en/installation.html#url-rewriting">Learn more.</a>
                     </div>
 
                     <?php
-                    if ($data['system_ok']) {
+                    /**
+                     * Display GPG results.
+                     */
+                    if ($isSystemOk) {
                         echo '<div class="message success">' . __('GPG is configured correctly.') . '</div>';
                     } else {
                         echo '<h3>' . __('GPG Configuration') . '</h3>';
-                        $healtcheck->assertGpgEnv($data);
+                        foreach ($gpgChecks as $domain => $checkResult) {
+                            $healthcheckHelper->render($checkResult);
+                        }
                     }
                     ?>
 
                     <?php
-                    if (!$data['system_ok']) :
+                    if (!$isSystemOk) :
                         ?>
-                    <h3><?php echo __('SSL'); ?></h3>
-                        <?php
+                        <h3><?php echo __('SSL'); ?></h3>
+                    <?php
                     endif;
                     ?>
                     <?php
-                    if (isset($data['ssl']) && $data['ssl']['is'] === true) :
+                    if ($isRequestHttps) :
                         echo '<div class="message success">' . __('SSL access is enabled.') . '</div>';
                     else :
                         echo '<div class="message warning">' . __('SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue.') . '</div>';
                     endif;
                     ?>
                 </div>
+
                 <div class="col5 last">
                     <?= $this->element('sidebar/help_box') ?>
                 </div>
@@ -79,7 +97,7 @@ $healtcheck = new HealthcheckHtmlHelper();
             <div class="row last">
                 <div class="input-wrapper">
                     <?php
-                    if (isset($data['system_ok']) && $data['system_ok'] === true) :
+                    if ($isSystemOk) :
                         ?>
                     <a href="<?= $nextStepUrl ?>" class="button primary next medium"><?= __('Start configuration') ?></a>
                     <?php else : ?>

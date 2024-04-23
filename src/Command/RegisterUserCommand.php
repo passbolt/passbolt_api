@@ -19,6 +19,7 @@ namespace App\Command;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Service\Command\ProcessUserService;
 use App\Utility\UserAccessControl;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -51,6 +52,21 @@ class RegisterUserCommand extends PassboltCommand
      * @var \App\Model\Table\AuthenticationTokensTable
      */
     protected $AuthenticationTokens;
+
+    /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
+
+    /**
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     */
+    public function __construct(ProcessUserService $processUserService)
+    {
+        parent::__construct();
+
+        $this->processUserService = $processUserService;
+    }
 
     /**
      * Initializes the Shell
@@ -112,7 +128,7 @@ class RegisterUserCommand extends PassboltCommand
         parent::execute($args, $io);
 
         // Root user is not allowed to execute this command.
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         // Who is creating the user?
         // use the oldest admin or temporary non existing one

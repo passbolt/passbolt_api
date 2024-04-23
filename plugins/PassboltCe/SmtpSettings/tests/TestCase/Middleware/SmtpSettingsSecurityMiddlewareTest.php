@@ -34,12 +34,6 @@ class SmtpSettingsSecurityMiddlewareTest extends TestCase
         $this->disableSmtpSettingsEndpoints();
     }
 
-    public function tearDown(): void
-    {
-        $this->enableSmtpSettingsEndpoints();
-        parent::tearDown();
-    }
-
     public function testSmtpSettingsSecurityMiddlewareTest_Should_Be_Forbidden_If_Security_Enabled()
     {
         $this->expectException(ForbiddenException::class);

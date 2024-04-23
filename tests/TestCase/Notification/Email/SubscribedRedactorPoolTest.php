@@ -39,6 +39,7 @@ class SubscribedRedactorPoolTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->subscribedRedactorsMock = [$this->createMock(SubscribedEmailRedactorInterface::class)];
 
         $this->sut = new class ($this->subscribedRedactorsMock) extends AbstractSubscribedEmailRedactorPool
@@ -58,7 +59,6 @@ class SubscribedRedactorPoolTest extends TestCase
                 return $this->subscribedRedactors;
             }
         };
-        parent::setUp();
     }
 
     public function testThatIsSubscribedToCollectSubscribedEmailRedactorEvent()
