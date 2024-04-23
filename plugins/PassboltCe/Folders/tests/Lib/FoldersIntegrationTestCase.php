@@ -25,10 +25,4 @@ abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
         parent::setUp();
         $this->enableFeaturePlugin('Folders');
     }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('Folders');
-    }
 }

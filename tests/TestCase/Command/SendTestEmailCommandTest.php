@@ -34,15 +34,22 @@ class SendTestEmailCommandTest extends AppTestCase
     use SmtpSettingsIntegrationTestTrait;
 
     /**
-     * setUp method
-     *
-     * @return void
+     * @inheritDoc
      */
     public function setUp(): void
     {
         parent::setUp();
+
         $this->useCommandRunner();
-        $config = [
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tearDown(): void
+    {
+        // Reset state
+        $defaultConfig = [
             'className' => DebugTransport::class,
             'host' => 'unreachable_host.dev',
             'port' => 123,
@@ -53,7 +60,9 @@ class SendTestEmailCommandTest extends AppTestCase
             'tls' => true,
         ];
         TransportFactory::drop('default');
-        TransportFactory::setConfig('default', $config);
+        TransportFactory::setConfig('default', $defaultConfig);
+
+        parent::tearDown();
     }
 
     /**

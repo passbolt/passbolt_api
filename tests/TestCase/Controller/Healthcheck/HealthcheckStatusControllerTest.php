@@ -18,6 +18,9 @@ namespace App\Test\TestCase\Controller\Healthcheck;
 
 use App\Test\Lib\AppIntegrationTestCase;
 
+/**
+ * @covers \App\Controller\Healthcheck\HealthcheckStatusController
+ */
 class HealthcheckStatusControllerTest extends AppIntegrationTestCase
 {
     public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
@@ -33,7 +36,17 @@ class HealthcheckStatusControllerTest extends AppIntegrationTestCase
     {
         $this->getJson('/healthcheck/status.json');
         $this->assertResponseSuccess();
-        $this->assertEquals($this->_responseJson->header->message, 'OK');
-        $this->assertEquals($this->_responseJson->body, 'OK');
+        $this->assertSame('OK', $this->_responseJson->header->message);
+        $this->assertSame('OK', $this->_responseJson->body);
+    }
+
+    public function testHealthcheckStatusHeadOk(): void
+    {
+        $this->head('/healthcheck/status.json');
+
+        $this->assertResponseSuccess();
+        $body = json_decode($this->_getBodyAsString(), true);
+        $this->assertSame('OK', $body['header']['message']);
+        $this->assertSame('OK', $body['body']);
     }
 }

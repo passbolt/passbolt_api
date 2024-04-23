@@ -31,6 +31,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
+use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
 
@@ -66,6 +67,7 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->Users = $this->fetchTable('Users');
         $this->ActionLogs = $this->fetchTable('Passbolt/Log.ActionLogs');
         $this->enableFeaturePlugin('Log');
+        $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
         RoleFactory::make()->guest()->persist();
         EventManager::instance()->setEventList(new EventList());
         TypeFactory::map('uuid', UuidType::class);

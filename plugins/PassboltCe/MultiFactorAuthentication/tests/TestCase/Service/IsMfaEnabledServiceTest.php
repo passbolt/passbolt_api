@@ -50,6 +50,7 @@ class IsMfaEnabledServiceTest extends TestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         $this->mfaOrgSettingsMock = $this->createMock(MfaOrgSettings::class);
         $this->getMfaAccountSettingsServiceMock = $this->createMock(GetMfaAccountSettingsService::class);
         $this->mfaOrgSettingsGetServiceMock = $this->createMock(MfaOrgSettingsGetService::class);
@@ -58,8 +59,6 @@ class IsMfaEnabledServiceTest extends TestCase
             $this->mfaOrgSettingsGetServiceMock,
             $this->getMfaAccountSettingsServiceMock
         );
-
-        parent::setUp();
     }
 
     public function testThatIsEnabledForUserReturnFalseWhenOrgIsNotEnabled()
