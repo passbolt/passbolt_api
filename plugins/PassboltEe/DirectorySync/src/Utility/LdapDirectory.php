@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Utility\Hash;
 use LdapRecord\Configuration\DomainConfiguration;
@@ -149,7 +151,11 @@ class LdapDirectory implements DirectoryInterface
         $ldap = new Ldap();
         if (Hash::get($ldapSettings, 'use_sasl', false)) {
             $ldap = new LdapSasl(Hash::get($ldapSettings, 'sasl_options', []));
+        } elseif (Hash::get($ldapSettings, 'use_ssl', false) || Hash::get($ldapSettings, 'use_tls', false)) {
+            // Check for custom SSL/TLS certificate options
+            $ldapSettings['options'] = $this->getCustomOptions();
         }
+
         $connection = new Connection($ldapSettings, $ldap);
         if (Hash::get($ldapSettings, 'lazy_bind', false) !== true) {
             try {
@@ -165,6 +171,50 @@ class LdapDirectory implements DirectoryInterface
         }
 
         return $connection;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getCustomOptions(): array
+    {
+        if (!Configure::read('passbolt.plugins.directorySync.security.sslCustomOptions.enabled', false)) {
+            // No options
+            return [];
+        }
+
+        $configSslVerifyPeer = Configure::read('passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer');
+
+        if ($configSslVerifyPeer === false) {
+            // By pass verification - discouraged
+            return [\LDAP_OPT_X_TLS_REQUIRE_CERT => \LDAP_OPT_X_TLS_NEVER];
+        }
+
+        $configSslCadir = Configure::read('passbolt.plugins.directorySync.security.sslCustomOptions.cadir');
+        $configSslCafile = Configure::read('passbolt.plugins.directorySync.security.sslCustomOptions.cafile');
+
+        if (is_null($configSslCadir) || is_null($configSslCafile)) {
+            // SSL certificates config is not set
+            return [];
+        }
+
+        if (!is_string($configSslCadir)) {
+            throw new BadRequestException(__(
+                'The {0} configuration should be a valid string',
+                'passbolt.plugins.directorySync.security.sslCustomOptions.cadir'
+            ));
+        } elseif (!is_string($configSslCafile)) {
+            throw new BadRequestException(__(
+                'The {0} configuration should be a valid string',
+                'passbolt.plugins.directorySync.security.sslCustomOptions.cafile'
+            ));
+        }
+
+        return [
+            \LDAP_OPT_X_TLS_REQUIRE_CERT => \LDAP_OPT_X_TLS_HARD,
+            \LDAP_OPT_X_TLS_CACERTDIR => $configSslCadir,
+            \LDAP_OPT_X_TLS_CACERTFILE => $configSslCafile,
+        ];
     }
 
     /**
