@@ -90,6 +90,7 @@ class UserCollection
      */
     public function transformOffset(string $offset): string
     {
-        return Configure::read('passbolt.plugins.directorySync.caseSensitiveFilters') ? $offset : strtolower($offset);
+        return Configure::read('passbolt.plugins.directorySync.caseSensitiveFilters') ?
+            $offset : mb_strtolower($offset);
     }
 }
