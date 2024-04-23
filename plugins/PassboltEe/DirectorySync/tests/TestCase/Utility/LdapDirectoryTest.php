@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
@@ -25,9 +25,7 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 
 /**
- * LdapDirectoryTest class
- *
- * @package Passbolt\DirectorySync\Test\TestCase\Utility
+ * @covers \Passbolt\DirectorySync\Utility\LdapDirectory
  */
 class LdapDirectoryTest extends AppTestCase
 {
