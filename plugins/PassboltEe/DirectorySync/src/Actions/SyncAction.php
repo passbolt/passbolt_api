@@ -289,7 +289,7 @@ abstract class SyncAction
      */
     private function processEntriesToDelete(): void
     {
-        if (!$this->directoryOrgSettings->isSyncOperationEnabled(strtolower($this->getEntityType()), 'delete')) {
+        if (!$this->directoryOrgSettings->isSyncOperationEnabled($this->getEntityType(), 'delete')) {
             return;
         }
 
@@ -352,7 +352,7 @@ abstract class SyncAction
             $this->addReportItem(new ActionReport(
                 __(
                     'The passbolt {0} {1} was not deleted because it is marked as to be ignored.',
-                    Inflector::singularize(strtolower($this->getEntityType())),
+                    $this->getSingularLoweredEntityType(),
                     $this->getEntityName($entity)
                 ),
                 $this->getEntityType(),
@@ -377,7 +377,7 @@ abstract class SyncAction
             $this->addReportItem(new ActionReport(
                 __(
                     'The directory {0} {1} was not deleted because it is ignored.',
-                    Inflector::singularize(strtolower($this->getEntityType())),
+                    $this->getSingularLoweredEntityType(),
                     $this->getEntityName($entity)
                 ),
                 $this->getEntityType(),
@@ -402,7 +402,7 @@ abstract class SyncAction
             $this->addReportItem(new ActionReport(
                 __(
                     'The directory {0} {1} was already deleted in passbolt.',
-                    Inflector::singularize(strtolower($this->getEntityType())),
+                    $this->getSingularLoweredEntityType(),
                     $this->getEntityName($entity)
                 ),
                 $this->getEntityType(),
@@ -431,7 +431,7 @@ abstract class SyncAction
         } else {
             $msg = __(
                 'The {0} {1} could not be deleted because they are the only manager of one or more groups.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getEntityName($entity)
             );
         }
@@ -454,7 +454,7 @@ abstract class SyncAction
         $this->addReportItem(new ActionReport(
             __(
                 'The {0} {1} was successfully deleted.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getEntityName($entity)
             ),
             $this->getEntityType(),
@@ -479,7 +479,7 @@ abstract class SyncAction
         $this->addReportItem(new ActionReport(
             __(
                 'The {0} {1} could not be deleted because of an internal error. Please try again later.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getEntityName($entity)
             ),
             $this->getEntityType(),
@@ -497,7 +497,7 @@ abstract class SyncAction
     private function processEntriesToCreate()
     {
         $isSyncOperationOnCreateEnabled = $this->directoryOrgSettings
-            ->isSyncOperationEnabled(strtolower($this->getEntityType()), 'create');
+            ->isSyncOperationEnabled($this->getEntityType(), 'create');
 
         foreach ($this->directoryData as $data) {
             // Find and patch (in case directory_name has changed), or create directory entries.
@@ -567,14 +567,14 @@ abstract class SyncAction
         if ($ignoreEntity) {
             $msg = __(
                 'The {0} {1} was not synced because the passbolt {0} is marked as to be ignored.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getEntityName($existingEntity)
             );
             $reportData = $this->DirectoryIgnore->get($existingEntity->id);
         } else {
             $msg = __(
                 'The {0} {1} was not synced because the directory {0} is marked as to be ignored.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getNameFromData($data)
             );
             $reportData = $this->DirectoryIgnore->get($entry->id);
@@ -600,7 +600,7 @@ abstract class SyncAction
             $status = Alias::STATUS_SUCCESS;
             $msg = __(
                 'The {0} {1} was successfully added to passbolt.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getNameFromData($data)
             );
         } catch (ValidationException $exception) {
@@ -608,7 +608,7 @@ abstract class SyncAction
             $reportData = new SyncError($entry, $exception);
             $msg = __(
                 'The {0} {1} could not be added because of data validation issues.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getNameFromData($data)
             );
         } catch (InternalErrorException $exception) {
@@ -616,7 +616,7 @@ abstract class SyncAction
             $reportData = new SyncError($entry, $exception);
             $msg = __(
                 'The {0} {1} could not be added because of an internal error. Please try again later.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getNameFromData($data)
             );
         }
@@ -646,7 +646,7 @@ abstract class SyncAction
             $reportData = new SyncError($entry, null);
             $msg = __(
                 'The previously deleted {0} {1} was not re-added to passbolt.',
-                Inflector::singularize(strtolower($this->getEntityType())),
+                $this->getSingularLoweredEntityType(),
                 $this->getEntityName($existingEntity)
             );
         } else {
@@ -657,21 +657,21 @@ abstract class SyncAction
                 $status = Alias::STATUS_SUCCESS;
                 $msg = __(
                     'The previously deleted {0} {1} was re-added to passbolt.',
-                    Inflector::singularize(strtolower($this->getEntityType())),
+                    $this->getSingularLoweredEntityType(),
                     $this->getEntityName($existingEntity)
                 );
             } catch (ValidationException $exception) {
                 $reportData = new SyncError($entry, $exception);
                 $msg = __(
                     'The deleted {0} {1} could not be re-added to passbolt because of validation errors.',
-                    Inflector::singularize(strtolower($this->getEntityType())),
+                    $this->getSingularLoweredEntityType(),
                     $this->getEntityName($existingEntity)
                 );
             } catch (InternalErrorException $exception) {
                 $reportData = new SyncError($entry, $exception);
                 $msg = __(
                     'The deleted {0} {1} could not be re-added to passbolt because of an internal error.',
-                    Inflector::singularize(strtolower($this->getEntityType())),
+                    $this->getSingularLoweredEntityType(),
                     $this->getEntityName($existingEntity)
                 );
             }
@@ -701,7 +701,7 @@ abstract class SyncAction
                 $this->addReportItem(new ActionReport(
                     __(
                         'The {0} {1} was mapped with an existing {0} in passbolt.',
-                        Inflector::singularize(strtolower($this->getEntityType())),
+                        $this->getSingularLoweredEntityType(),
                         $this->getEntityName($existingEntity)
                     ),
                     $this->getEntityType(),
@@ -714,7 +714,7 @@ abstract class SyncAction
                 // Later on, we'll introduce a mechanism to fix this manually.
                 $msg = __(
                     'The {0} {1} could not be mapped with an existing {0} in passbolt because it was created after.',
-                    Inflector::singularize(strtolower($this->getEntityType())),
+                    $this->getSingularLoweredEntityType(),
                     $this->getEntityName($existingEntity)
                 );
                 $reportData = new SyncError($entry, new \Exception($msg));
@@ -730,7 +730,7 @@ abstract class SyncAction
             }
         }
 
-        if ($this->directoryOrgSettings->isSyncOperationEnabled(strtolower($this->getEntityType()), 'update')) {
+        if ($this->directoryOrgSettings->isSyncOperationEnabled($this->getEntityType(), 'update')) {
             $this->handleUpdate($data, $existingEntity);
         }
     }
@@ -860,6 +860,16 @@ abstract class SyncAction
     protected function isPartOfAllSync(): bool
     {
         return $this->isPartOfAllSync;
+    }
+
+    /**
+     * Convenient method to display the entity type in a readable manner, e.g. in error messages
+     *
+     * @return string
+     */
+    private function getSingularLoweredEntityType(): string
+    {
+        return Inflector::singularize(strtolower($this->getEntityType()));
     }
 
     /**

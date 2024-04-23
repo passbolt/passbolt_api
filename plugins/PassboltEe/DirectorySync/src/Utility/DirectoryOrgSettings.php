@@ -317,8 +317,10 @@ class DirectoryOrgSettings
      * @param string $operation The type of operation
      * @return bool
      */
-    public function isSyncOperationEnabled($objectType, $operation): bool
+    public function isSyncOperationEnabled(string $objectType, string $operation): bool
     {
+        $objectType = strtolower($objectType);
+
         return Hash::get($this->settings, "jobs.$objectType.$operation", false);
     }
 

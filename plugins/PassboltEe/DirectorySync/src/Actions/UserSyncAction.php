@@ -106,8 +106,8 @@ class UserSyncAction extends SyncAction
         $lastName = $data['user']['profile']['last_name'] ?? null;
         if (
             !$firstName || !$lastName ||
-            (strtolower($firstName) === strtolower($existingUser->profile->first_name) &&
-                strtolower($lastName) === strtolower($existingUser->profile->last_name))
+            (mb_strtolower($firstName) === mb_strtolower($existingUser->profile->first_name) &&
+                mb_strtolower($lastName) === mb_strtolower($existingUser->profile->last_name))
         ) {
             return;
         }

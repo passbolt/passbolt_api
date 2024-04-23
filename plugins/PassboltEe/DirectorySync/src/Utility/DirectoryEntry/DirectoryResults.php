@@ -750,7 +750,7 @@ class DirectoryResults
     public function lookupGroupByGroupName(string $name): ?GroupEntry
     {
         foreach ($this->groups as $group) {
-            if (strtolower($group['group']['name']) === strtolower($name)) {
+            if (mb_strtolower($group['group']['name']) === mb_strtolower($name)) {
                 return $group;
             }
         }

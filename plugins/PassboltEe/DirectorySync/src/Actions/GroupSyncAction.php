@@ -234,7 +234,7 @@ class GroupSyncAction extends SyncAction
     private function handleUpdateGroup(array $data, Group $existingGroup): void
     {
         $groupName = $this->getNameFromData($data);
-        if ($groupName === 'undefined' || strtolower($groupName) === strtolower($existingGroup->name)) {
+        if ($groupName === 'undefined' || mb_strtolower($groupName) === mb_strtolower($existingGroup->name)) {
             return;
         }
         $this->updateGroup($existingGroup, $data);
@@ -675,7 +675,7 @@ class GroupSyncAction extends SyncAction
         if (!Configure::read('passbolt.plugins.directorySync.caseSensitiveFilters')) {
             // Do work to make query check case-insensitive
             foreach ($groupsUsersDn as $k => $value) {
-                $groupsUsersDn[$k] = strtolower($value);
+                $groupsUsersDn[$k] = mb_strtolower($value);
             }
 
             $whereDirectoryNameColumn = 'LOWER(directory_name)';
