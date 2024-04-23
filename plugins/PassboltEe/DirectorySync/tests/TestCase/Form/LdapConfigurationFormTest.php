@@ -38,7 +38,7 @@ class LdapConfigurationFormTest extends AppTestCase
      * @param bool $addSecondDomain
      * @return array
      */
-    public static function getDummyFormData(bool $addSecondDomain = false)
+    public static function getDummyFormData(bool $addSecondDomain = false): array
     {
         $defaultConfigSettings = DirectoryOrgSettings::getDefaultSettings();
 
@@ -75,6 +75,9 @@ class LdapConfigurationFormTest extends AppTestCase
             'sync_groups_delete' => false,
             'sync_groups_update' => true,
             'fields_mapping' => $defaultConfigSettings['fieldsMapping'],
+            'field_fallbacks' => [
+                'ad' => ['username' => ''],
+            ],
         ];
         if ($addSecondDomain) {
             $settings['domains']['org_domain_2'] = [
@@ -748,5 +751,79 @@ class LdapConfigurationFormTest extends AppTestCase
         $result = $form->validate($ldapSettings);
 
         $this->assertTrue($result);
+    }
+
+    /**
+     * To keep BC with old Bext.
+     *
+     * @return void
+     */
+    public function testDirectoryLdapConfigurationForm_Success_FieldFallbacksIsOptional(): void
+    {
+        $ldapSettings = self::getDummyFormData();
+        unset($ldapSettings['field_fallbacks']);
+
+        $form = new LdapConfigurationForm();
+        $result = $form->validate($ldapSettings);
+
+        $this->assertTrue($result);
+    }
+
+    /**
+     * Data provider for testDirectoryLdapConfigurationForm_Error_FieldFallbacks()
+     *
+     * @return array
+     */
+    public function fieldFallbacksDataProvider(): array
+    {
+        return [
+            [
+                'value' => 1,
+                'errorRule' => 'array',
+            ],
+            [
+                'value' => '',
+                'errorRule' => '_empty',
+            ],
+            [
+                'value' => [],
+                'errorRule' => '_empty',
+            ],
+            [
+                'value' => ['ad' => ''], // invalid type, should be an array
+                'errorRule' => 'ad.array',
+            ],
+            [
+                'value' => ['ad' => ['username' => 'password']], // forbidden field for ad
+                'errorRule' => 'ad.username.forbiddenField',
+            ],
+            [
+                'value' => ['openldap' => ['username' => 'unixUserPassword']], // forbidden field for openldap
+                'errorRule' => 'openldap.username.forbiddenField',
+            ],
+            [
+                'value' => ['foo' => ['username' => '']], // invalid ldap type
+                'errorRule' => 'invalidDirectoryType',
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider fieldFallbacksDataProvider
+     * @param mixed $value Value to set into the field.
+     * @param string $errorRulePath Error rule path from errors array.
+     * @return void
+     */
+    public function testDirectoryLdapConfigurationForm_Error_FieldFallbacks($value, string $errorRulePath): void
+    {
+        $ldapSettings = self::getDummyFormData();
+        $ldapSettings['field_fallbacks'] = $value;
+
+        $form = new LdapConfigurationForm();
+        $result = $form->validate($ldapSettings);
+
+        $this->assertFalse($result);
+        $errors = $form->getErrors();
+        $this->assertTrue(Hash::check($errors, "field_fallbacks.{$errorRulePath}"));
     }
 }

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
 use App\Utility\UuidFactory;
+use Cake\Utility\Hash;
 use LdapRecord\Models\Collection;
 use LdapRecord\Models\Entry;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
@@ -49,6 +50,13 @@ class DirectoryResults
      * @var array
      */
     private $mappingRules;
+
+    /**
+     * Fallback fields
+     *
+     * @var array|null
+     */
+    private $fieldFallbacks;
 
     /**
      * Directory settings
@@ -88,12 +96,17 @@ class DirectoryResults
      *
      * @param array $mappingRules mapping rules
      * @param \Passbolt\DirectorySync\Utility\DirectoryOrgSettings $settings settings. If null, will retrieve settings through standard way.
+     * @param array|null $fieldFallbacks Fallback values for fields
      * @return void
      */
-    public function __construct(array $mappingRules, ?DirectoryOrgSettings $settings = null)
-    {
+    public function __construct(
+        array $mappingRules,
+        ?DirectoryOrgSettings $settings = null,
+        ?array $fieldFallbacks = null
+    ) {
         $this->mappingRules = $mappingRules;
         $this->directorySettings = $settings ?? DirectoryOrgSettings::get();
+        $this->fieldFallbacks = $fieldFallbacks;
         $this->ldapUsers = [];
         $this->ldapGroups = [];
         $this->userCollection = new UserCollection();
@@ -347,12 +360,16 @@ class DirectoryResults
                 /** @var string $directoryType */
                 $directoryType = $ldapUser->getFirstAttribute('directoryType');
                 $mappingRules = $this->mappingRules[$directoryType] ?? null;
+                $fallbackFields = null;
+                if (is_array($this->fieldFallbacks)) {
+                    $fallbackFields = Hash::get($this->fieldFallbacks, $directoryType);
+                }
                 if (!$mappingRules) {
                     throw new \RuntimeException(
                         __('Mapping rules could not be found for directory type: {0}', $directoryType)
                     );
                 }
-                $userEntry = UserEntry::fromLdapObject($ldapUser, $mappingRules);
+                $userEntry = UserEntry::fromLdapObject($ldapUser, $mappingRules, $fallbackFields);
                 if (!empty($ldapUser->getDn())) {
                     $this->userCollection->add($ldapUser->getDn(), $userEntry);
                 } else {

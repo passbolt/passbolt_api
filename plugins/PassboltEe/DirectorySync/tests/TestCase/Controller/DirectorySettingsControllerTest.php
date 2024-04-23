@@ -88,6 +88,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $settings = $this->_responseJsonBody;
         $this->assertNotEmpty($settings);
         $this->assertEquals($settings->source, 'db');
+        $this->assertObjectHasAttribute('field_fallbacks', $settings);
     }
 
     /**
@@ -125,6 +126,12 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
 
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertTrue($directoryOrgSettings->isEnabled());
+        // Check for fallback fields
+        $directoryOrgSettingsArray = $directoryOrgSettings->toArray();
+        $this->assertArrayHasKey('fieldFallbacks', $directoryOrgSettingsArray);
+        $this->assertEqualsCanonicalizing([
+            'ad' => ['username' => ''],
+        ], $directoryOrgSettingsArray['fieldFallbacks']);
     }
 
     /**
@@ -218,11 +225,13 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
 
         // Enable the directory integration
         $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData['field_fallbacks']['ad']['username'] = 'userPrincipalName';
+
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
+
         $this->assertSuccess();
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertTrue($directoryOrgSettings->isEnabled());
-
         // Disable the directory integration
         $this->deleteJson('/directorysync/settings.json?api-version=2');
         $this->assertSuccess();
@@ -231,6 +240,12 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertFalse($directoryOrgSettings->isEnabled());
+        // Check for fallback fields
+        $directoryOrgSettingsArray = $directoryOrgSettings->toArray();
+        $this->assertArrayHasKey('fieldFallbacks', $directoryOrgSettingsArray);
+        $this->assertEqualsCanonicalizing([
+            'ad' => ['username' => 'userPrincipalName'],
+        ], $directoryOrgSettingsArray['fieldFallbacks']);
     }
 
     /**

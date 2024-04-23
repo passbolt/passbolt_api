@@ -270,6 +270,21 @@ class DirectoryOrgSettings
     }
 
     /**
+     * Get fields fallback.
+     *
+     * @param string|null $type Directory type
+     * @return array|null
+     */
+    public function getFieldFallbacks(?string $type = null): ?array
+    {
+        if ($type === null) {
+            return Hash::get($this->settings, 'fieldFallbacks');
+        }
+
+        return Hash::get($this->settings, "fieldFallbacks.{$type}");
+    }
+
+    /**
      * Get the ldap configuration
      *
      * @return array
