@@ -48,6 +48,11 @@ class LdapDirectory implements DirectoryInterface
     private $mappingRules;
 
     /**
+     * @var array
+     */
+    private $fieldFallbacks;
+
+    /**
      * @var string[]|null
      */
     private $directoryTypes;
@@ -125,7 +130,13 @@ class LdapDirectory implements DirectoryInterface
     public function initializeMapping(): void
     {
         $this->mappingRules = $this->getMappingRules();
-        $this->directoryResults = new DirectoryResults($this->mappingRules, $this->directorySettings);
+        $this->fieldFallbacks = $this->getFieldFallbacks();
+
+        $this->directoryResults = new DirectoryResults(
+            $this->mappingRules,
+            $this->directorySettings,
+            $this->fieldFallbacks
+        );
     }
 
     /**
@@ -227,15 +238,33 @@ class LdapDirectory implements DirectoryInterface
     public function getMappingRules(): ?array
     {
         $type = $this->getDirectoryType();
-        if ($type !== static::TYPE_AD && $type !== static::TYPE_OPENLDAP) {
+        if (!in_array($type, LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)) {
+                throw new \Exception(__(
+                    'The directory type should be one of the following: {0}.',
+                    implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)
+                ));
+        }
+
+        return $this->directorySettings->getFieldsMapping();
+    }
+
+    /**
+     * Get field fallbacks.
+     *
+     * @return array|null
+     * @throws \Exception If the directory type is not supported.
+     */
+    public function getFieldFallbacks(): ?array
+    {
+        $type = $this->getDirectoryType();
+        if (!in_array($type, LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)) {
             throw new \Exception(__(
                 'The directory type should be one of the following: {0}.',
                 implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)
             ));
         }
-        $mapping = $this->directorySettings->getFieldsMapping();
 
-        return $mapping;
+        return $this->directorySettings->getFieldFallbacks();
     }
 
     /**

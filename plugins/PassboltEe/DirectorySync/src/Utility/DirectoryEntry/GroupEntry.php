@@ -52,10 +52,11 @@ class GroupEntry extends DirectoryEntry
      *
      * @param \LdapRecord\Models\Entry $ldapObject ldap object.
      * @param array $mappingRules mapping rules
+     * @param array|null $fallbackFields Fallback fields.
      * @return $this directory entry
      * @throws \Exception
      */
-    public function buildFromLdapObject(Entry $ldapObject, array $mappingRules)
+    public function buildFromLdapObject(Entry $ldapObject, array $mappingRules, ?array $fallbackFields = null)
     {
         parent::buildFromLdapObject($ldapObject, $mappingRules);
         $this->group = [
@@ -76,11 +77,15 @@ class GroupEntry extends DirectoryEntry
      *
      * @param \LdapRecord\Models\Entry $ldapObject ldap object.
      * @param array $mappingRules mapping rules.
+     * @param array|null $fallbackFields Fallback fields.
      * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry group entry
      * @throws \Exception
      */
-    public static function fromLdapObject(Entry $ldapObject, array $mappingRules): GroupEntry
-    {
+    public static function fromLdapObject(
+        Entry $ldapObject,
+        array $mappingRules,
+        ?array $fallbackFields = null
+    ): GroupEntry {
         $groupEntry = new GroupEntry([]);
         $groupEntry->buildFromLdapObject($ldapObject, $mappingRules);
 

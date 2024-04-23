@@ -93,6 +93,7 @@ class LdapConfigurationForm extends Form
         'sync_groups_delete' => 'jobs.groups.delete',
         'sync_groups_update' => 'jobs.groups.update',
         'fields_mapping' => 'fieldsMapping',
+        'field_fallbacks' => 'fieldFallbacks',
     ];
 
     /**
@@ -266,6 +267,8 @@ class LdapConfigurationForm extends Form
         $validator
             ->array('fields_mapping', __('The fields mapping should be a valid array.'))
             ->addNested('fields_mapping', $fieldsMappingValidator);
+
+        $validator = $this->addFieldFallbacksValidations($validator);
 
         $validator = $this->addForbiddenFieldsValidations($validator);
 
@@ -443,6 +446,72 @@ class LdapConfigurationForm extends Form
     }
 
     /**
+     * @param \Cake\Validation\Validator $validator Validator object.
+     * @return \Cake\Validation\Validator
+     */
+    private function addFieldFallbacksValidations(Validator $validator): Validator
+    {
+        $validator
+            ->array('field_fallbacks', __('The field fallbacks should be a valid array.'))
+            ->notEmptyArray('field_fallbacks', __('The field fallbacks should not be empty.'))
+            ->add('field_fallbacks', 'invalidDirectoryType', [
+                'rule' => function ($value, $context) {
+                    if (!is_array($value)) {
+                        return true;
+                    }
+
+                    $types = array_keys($value);
+
+                    foreach ($types as $type) {
+                        if (!is_string($type)) {
+                            continue;
+                        }
+
+                        return in_array($type, static::SUPPORTED_DIRECTORY_TYPE);
+                    }
+
+                    return true;
+                },
+                'message' => __(
+                    'The field fallbacks keys should be one of the following: {0}.',
+                    implode(', ', static::SUPPORTED_DIRECTORY_TYPE)
+                ),
+            ]);
+
+        $forbiddenFieldsActive = Configure::read('passbolt.security.directorySync.forbiddenFields.active');
+
+        $fields = ['username'];
+        $fieldsValidator = new Validator();
+        foreach ($fields as $field) {
+            $fieldsValidator
+                ->allowEmptyString($field)
+                ->scalar($field)
+                ->utf8($field, __('The fallback field value should be a valid BMP-UTF8 string.'))
+                ->maxLength($field, 128, __('The fallback field value length should be maximum {0} characters.', 128));
+
+            if ($forbiddenFieldsActive) {
+                $fieldsValidator->add($field, ['forbiddenField' => [
+                    'rule' => [$this, 'isFieldNameAllowed'],
+                    'message' => __('The fallback field value should not be from forbidden fields.'),
+                ]]);
+            }
+        }
+
+        $allowedDirectoryTypes = static::SUPPORTED_DIRECTORY_TYPE;
+        $directoryTypeValidator = new Validator();
+        foreach ($allowedDirectoryTypes as $directoryType) {
+            $directoryTypeValidator
+                ->array($directoryType, __('The directory type in fallback fields should be a valid array.'));
+
+            $directoryTypeValidator->addNested($directoryType, $fieldsValidator);
+        }
+
+        $validator->addNested('field_fallbacks', $directoryTypeValidator);
+
+        return $validator;
+    }
+
+    /**
      * Check if an admin user exists.
      *
      * @param string $userId The user id
@@ -573,6 +642,7 @@ class LdapConfigurationForm extends Form
     {
         $data = [];
         $fieldsMapping = Hash::get($settings, 'fieldsMapping', []);
+        $fieldFallbacks = Hash::get($settings, 'fieldFallbacks', []);
         $domains = Hash::get($settings, 'ldap.domains', []);
         $settings = Hash::flatten($settings);
         if (empty($settings)) {
@@ -610,6 +680,7 @@ class LdapConfigurationForm extends Form
         }
 
         $settings['fieldsMapping'] = $fieldsMapping;
+        $settings['fieldFallbacks'] = $fieldFallbacks;
 
         foreach (self::$configurationMapping as $prop => $propVal) {
             if (isset($settings[$propVal])) {

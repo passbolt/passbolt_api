@@ -74,6 +74,13 @@ abstract class DirectoryEntry implements ArrayAccess
     private $mappingRules = null;
 
     /**
+     * Fallback fields.
+     *
+     * @var array|null
+     */
+    private $fallbackFields = null;
+
+    /**
      * Validation errors.
      *
      * @var array
@@ -163,7 +170,13 @@ abstract class DirectoryEntry implements ArrayAccess
      */
     public function getFieldValue(string $fieldName, bool $first = true)
     {
-        return self::getLdapObjectFieldValue($this->ldapObject, $fieldName, $this->mappingRules, $first);
+        return self::getLdapObjectFieldValue(
+            $this->ldapObject,
+            $fieldName,
+            $this->mappingRules,
+            $first,
+            $this->fallbackFields
+        );
     }
 
     /**
@@ -173,14 +186,16 @@ abstract class DirectoryEntry implements ArrayAccess
      * @param string $fieldName field name.
      * @param array $mappingRules mapping rules.
      * @param bool $first Returns first attribute found
+     * @param array|null $fallbackFields Fallback fields
      * @return mixed field
      * @throws \Exception
      */
-    public static function getLdapObjectFieldValue(
+    private static function getLdapObjectFieldValue(
         Entry $ldapObject,
         string $fieldName,
         array $mappingRules,
-        bool $first = true
+        bool $first = true,
+        ?array $fallbackFields = null
     ) {
         /** @var string $type */
         $type = $ldapObject->getFirstAttribute('objectType');
@@ -190,6 +205,25 @@ abstract class DirectoryEntry implements ArrayAccess
         }
 
         $fieldEquivalent = $mappingRules[$fieldName];
+
+        $value = $first ?
+            $ldapObject->getFirstAttribute(ucfirst($fieldEquivalent)) :
+            $ldapObject->getAttribute(ucfirst($fieldEquivalent));
+
+        if (!is_null($value)) {
+            return $value;
+        }
+
+        // Use fallback field's value, if present
+        if (
+            is_null($fallbackFields)
+            || !array_key_exists($fieldName, $fallbackFields)
+            || empty($fallbackFields[$fieldName])
+        ) {
+            return null;
+        }
+
+        $fieldEquivalent = $fallbackFields[$fieldName];
 
         return $first ?
             $ldapObject->getFirstAttribute(ucfirst($fieldEquivalent)) :
@@ -220,13 +254,15 @@ abstract class DirectoryEntry implements ArrayAccess
      *
      * @param \LdapRecord\Models\Entry $ldapObject ldap object
      * @param array $mappingRules mapping rules
+     * @param array|null $fallbackFields Fallback fields.
      * @return $this
      * @throws \Exception
      */
-    public function buildFromLdapObject(Entry $ldapObject, array $mappingRules)
+    public function buildFromLdapObject(Entry $ldapObject, array $mappingRules, ?array $fallbackFields = null)
     {
         $this->ldapObject = $ldapObject;
         $this->mappingRules = $mappingRules;
+        $this->fallbackFields = $fallbackFields;
 
         $this->id = $this->getFieldValue('id');
         $this->dn = $ldapObject->getDn();
@@ -385,7 +421,8 @@ abstract class DirectoryEntry implements ArrayAccess
      *
      * @param \LdapRecord\Models\Entry $ldapObject ldap object.
      * @param array $mappingRules mapping rules.
+     * @param array|null $fallbackFields Fallback fields.
      * @return mixed DirectoryEntry
      */
-    abstract public static function fromLdapObject(Entry $ldapObject, array $mappingRules);
+    abstract public static function fromLdapObject(Entry $ldapObject, array $mappingRules, ?array $fallbackFields = null); // phpcs:ignore
 }
