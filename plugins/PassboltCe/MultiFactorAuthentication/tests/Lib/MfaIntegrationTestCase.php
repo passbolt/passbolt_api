@@ -46,13 +46,6 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
         MfaSettings::clear();
     }
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('MultiFactorAuthentication');
-        $this->disableFeaturePlugin('JwtAuthentication');
-    }
-
     /**
      * @param UserAccessControl $uac UAC
      * @param string|null $provider provider

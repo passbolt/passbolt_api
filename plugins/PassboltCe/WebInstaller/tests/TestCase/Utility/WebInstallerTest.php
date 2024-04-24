@@ -43,8 +43,8 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         $this->restoreConfiguration();
+        parent::tearDown();
     }
 
     public function testWebInstallerUtilityInitDatabaseConnectionSuccess()

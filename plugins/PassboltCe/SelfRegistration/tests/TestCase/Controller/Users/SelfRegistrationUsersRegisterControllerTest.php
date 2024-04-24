@@ -21,6 +21,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\ORM\TableRegistry;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 /**
@@ -30,6 +31,12 @@ class SelfRegistrationUsersRegisterControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+    }
 
     public function testSelfRegistrationUsersRegisterController_SelfRegistrationClosed()
     {

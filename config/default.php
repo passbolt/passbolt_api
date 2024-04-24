@@ -289,7 +289,13 @@ return [
             ],
             'smtpSettings' => [
                 // A typo is here covered for backward compatibility
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN)
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN),
+                'security' => [
+                    'sslVerifyPeer' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_SECURITY_SSL_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
+                    'sslVerifyPeerName' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_SECURITY_SSL_VERIFY_PEER_NAME', true), FILTER_VALIDATE_BOOLEAN),
+                    'sslAllowSelfSigned' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_SECURITY_SSL_ALLOW_SELF_SIGNED', false), FILTER_VALIDATE_BOOLEAN),
+                    'sslCafile' => env('PASSBOLT_PLUGINS_SMTP_SETTINGS_SECURITY_SSL_CAFILE', null),
+                ],
             ],
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)

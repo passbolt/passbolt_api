@@ -1,8 +1,8 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '4.6.2',
-        'name' => 'One Nation Under A Groove',
+        'version' => '4.7.0-test.1',
+        'name' => 'TBD',
     ],
     'php' => [
         'minVersion' => '7.4',

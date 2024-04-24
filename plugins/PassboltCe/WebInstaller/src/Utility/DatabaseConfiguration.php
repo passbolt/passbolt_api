@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Utility;
 
-use App\Utility\Healthchecks;
 use Cake\Core\Exception\CakeException;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
@@ -82,7 +81,7 @@ class DatabaseConfiguration
         }
 
         try {
-            $connection->connect();
+            $connection->getDriver()->connect();
 
             return true;
         } catch (\Throwable $e) {
@@ -111,11 +110,49 @@ class DatabaseConfiguration
     public static function validateSchema()
     {
         $tables = self::getTables();
-        $expectedTables = Healthchecks::getSchemaTables(1);
+        $expectedTables = self::getSchemaTables(1);
         foreach ($expectedTables as $expectedTable) {
             if (!in_array($expectedTable, $tables)) {
                 throw new CakeException(__('The database schema does not match the one expected'));
             }
         }
+    }
+
+    /**
+     * Get schema tables list. (per version number).
+     *
+     * @param int $version passbolt major version number.
+     * @return array
+     */
+    public static function getSchemaTables(int $version = 2): array
+    {
+        // List of tables for passbolt v1.
+        $tables = [
+            'authentication_tokens',
+            'avatars',
+            'comments',
+            'email_queue',
+            'favorites',
+            'gpgkeys',
+            'groups',
+            'groups_users',
+            'permissions',
+            'profiles',
+            'resources',
+            'roles',
+            'secrets',
+            'users',
+        ];
+
+        // Extra tables for passbolt v2.
+        if ($version == 2) {
+            $tables = array_merge($tables, [
+                //'burzum_file_storage_phinxlog', // dropped in v2.8
+                //'email_queue_phinxlog',
+                'phinxlog',
+            ]);
+        }
+
+        return $tables;
     }
 }

@@ -433,18 +433,19 @@ class SendEmailBatchServiceUnitTest extends TestCase
     public function testSendEmailBatchServiceUnitTest_On_Multiple_Full_Base_Url()
     {
         $recipient = 'test@passbolt.com';
-        $subject = 'Some subject';
+        $fullBaseUrl1 = 'passbolt.local/orga-1';
+        $fullBaseUrl2 = 'passbolt.local/orga-2';
         $operator = UserFactory::make()->withAvatarNull()->getEntity();
         $emails1 = ResourceDeleteEmailQueueFactory::make(2)
             ->setRecipient($recipient)
             ->setOperator($operator)
-            ->setFullBaseUrl('foo')
+            ->setFullBaseUrl($fullBaseUrl1)
             ->getEntities();
 
         $emails2 = ResourceDeleteEmailQueueFactory::make(2)
             ->setRecipient($recipient)
             ->setOperator($operator)
-            ->setFullBaseUrl('bar')
+            ->setFullBaseUrl($fullBaseUrl2)
             ->getEntities();
 
         $allEmails = array_merge($emails1, $emails2);
@@ -452,5 +453,9 @@ class SendEmailBatchServiceUnitTest extends TestCase
         $this->service->sendNextEmailsBatch($allEmails);
 
         $this->assertMailCount(2);
+        $this->assertMailContainsAt(0, $fullBaseUrl1);
+        $this->assertMailContainsAt(0, $fullBaseUrl1 . '/img/logo/logo.png');
+        $this->assertMailContainsAt(1, $fullBaseUrl2);
+        $this->assertMailContainsAt(1, $fullBaseUrl2 . '/img/logo/logo.png');
     }
 }

@@ -35,8 +35,8 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 
     public function setUp(): void
     {
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         parent::setUp();
+        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
     public function testResourcesDeleteController_Success(): void

@@ -30,8 +30,8 @@ class DatabaseControllerTest extends WebInstallerIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         $this->restoreTestConnection();
+        parent::tearDown();
     }
 
     public function testDatabaseControllerViewSuccess()

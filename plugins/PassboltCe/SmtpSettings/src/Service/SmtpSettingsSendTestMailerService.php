@@ -73,6 +73,12 @@ class SmtpSettingsSendTestMailerService
             'client' => $smtpSettings['client'],
         ];
 
+        // Merge SSL Options if present in config
+        $sslOptions = (new SmtpSettingsSslOptionsGetService())->get();
+        if (!empty($sslOptions)) {
+            $config['context'] = ['ssl' => $sslOptions];
+        }
+
         if ($this->isRunningOnTestEnvironment()) {
             $debugTransport = TransportFactory::get('default');
         } else {

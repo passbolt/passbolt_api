@@ -60,11 +60,6 @@ class SetupStartController extends AppController
             $this->success(__('The operation was successful.'), $data);
         } else {
             $this->set('title', Configure::read('passbolt.meta.description'));
-
-            $this->viewBuilder()
-                ->setTemplatePath('/Setup')
-                ->setLayout('default')
-                ->setTemplate('start');
         }
     }
 }

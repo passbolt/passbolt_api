@@ -20,11 +20,18 @@ namespace Passbolt\SelfRegistration\Test\TestCase\Controller;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class SelfRegistrationDeleteSettingsControllerTest extends AppIntegrationTestCase
 {
     use SelfRegistrationTestTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+    }
 
     public function testSelfRegistrationDeleteSettingsControllerTest_Success()
     {

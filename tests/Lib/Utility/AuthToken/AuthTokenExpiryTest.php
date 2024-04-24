@@ -31,9 +31,8 @@ class AuthTokenExpiryTest extends TestCase
 
     public function setUp(): void
     {
-        $this->sut = new AuthTokenExpiry();
-
         parent::setUp();
+        $this->sut = new AuthTokenExpiry();
     }
 
     public function testAuthTokenExpiry_GetExpirationForInvalidTokenTypeThrowAnException()

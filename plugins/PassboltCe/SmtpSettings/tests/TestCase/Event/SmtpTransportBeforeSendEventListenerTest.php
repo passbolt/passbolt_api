@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Test\TestCase\Event;
 
 use App\Mailer\Transport\SmtpTransport;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Mailer\Message;
 use Cake\TestSuite\TestCase;
@@ -112,5 +113,81 @@ class SmtpTransportBeforeSendEventListenerTest extends TestCase
         $this->assertSame($from, $message->getFrom());
         $this->assertSame($from, $message->getSender());
         $this->assertSame($from, $message->getReturnPath());
+    }
+
+    /**
+     * @return array
+     */
+    public function smtpSettingsContextSslOptionsDataProvider(): array
+    {
+        return [
+            [
+                [
+                    'sslVerifyPeer' => false,
+                    'sslVerifyPeerName' => false,
+                    'sslAllowSelfSigned' => true,
+                ],
+            ],
+            [
+                [
+                    'sslVerifyPeer' => true,
+                    'sslVerifyPeerName' => true,
+                    'sslAllowSelfSigned' => true,
+                    'sslCafile' => '/path/to/rootCA.crt',
+                ],
+            ],
+            [
+                [],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider smtpSettingsContextSslOptionsDataProvider
+     */
+    public function testSmtpTransportSendEventListener_ContextSslOptionsAreMerged_NoDBConfig(array $options): void
+    {
+        $configInFile = $this->getSmtpSettingsData();
+        $subject = new SmtpTransport($configInFile);
+        $event = new Event('foo', $subject, ['tls' => false]);
+        Configure::write('passbolt.plugins.smtpSettings.security', $options);
+
+        $this->listener->initializeTransport($event);
+
+        $result = $subject->getConfig();
+        $this->assertFalse($result['tls']);
+        if (!empty($options)) {
+            // Assert context.ssl data is properly set
+            $this->assertArrayHasKey('context', $result);
+            $this->assertEqualsCanonicalizing($options, $result['context']['ssl']);
+        } else {
+            $this->assertArrayNotHasKey('context', $result);
+        }
+    }
+
+    /**
+     * @dataProvider smtpSettingsContextSslOptionsDataProvider
+     */
+    public function testSmtpTransportSendEventListener_ContextSslOptionsAreMerged_WithConfigInDB(array $options): void
+    {
+        $config = $this->getSmtpSettingsData();
+        $config['port'] = 1025;
+        $config['tls'] = false;
+        $this->encryptAndPersistSmtpSettings($config);
+        $subject = new SmtpTransport($config);
+        $event = new Event('foo', $subject, []);
+        Configure::write('passbolt.plugins.smtpSettings.security', $options);
+
+        $this->listener->initializeTransport($event);
+
+        $result = $subject->getConfig();
+        $this->assertNull($result['tls']);
+        if (!empty($options)) {
+            // Assert context.ssl data is properly set
+            $this->assertArrayHasKey('context', $result);
+            $this->assertEqualsCanonicalizing($options, $result['context']['ssl']);
+        } else {
+            $this->assertArrayNotHasKey('context', $result);
+        }
     }
 }
