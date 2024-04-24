@@ -194,4 +194,52 @@ class UserEntryTest extends DirectorySyncIntegrationTestCase
         $this->assertFalse($userEntry->validate());
         $this->assertNotEmpty($userEntry->errors()['email']);
     }
+
+    public function testUserEntry_BuildFromLdapObject_UsernameFallbackFieldsSet_Success()
+    {
+        $ldapObject = $this->_getSampleLdapObject([
+            'mail' => null,
+            'upn' => 'john.doe@passbolt.com',
+        ]);
+        $fieldFallbacks = ['username' => 'upn'];
+
+        $userEntry = new UserEntry();
+        $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules, $fieldFallbacks);
+
+        $this->assertFalse($userEntry->hasErrors());
+        $result = $userEntry->toArray();
+        $this->assertSame('john.doe@passbolt.com', $result['user']['username']);
+    }
+
+    public function testUserEntry_BuildFromLdapObject_UsernameFallbackFieldsEmpty_Error()
+    {
+        $ldapObject = $this->_getSampleLdapObject([
+            'mail' => null,
+            'upn' => 'john.doe@passbolt.com',
+        ]);
+        $fieldFallbacks = ['username' => '']; // blank fallback field - will be ignored
+
+        $userEntry = new UserEntry();
+        $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules, $fieldFallbacks);
+
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['email']);
+    }
+
+    public function testUserEntry_BuildFromLdapObject_UsernameFallbackFieldsNotSet_Error()
+    {
+        $ldapObject = $this->_getSampleLdapObject([
+            'mail' => null,
+            'upn' => 'john.doe@passbolt.com',
+        ]);
+        $fieldFallbacks = ['foo' => 'bar']; // garbage fields
+
+        $userEntry = new UserEntry();
+        $userEntry->buildFromLdapObject($ldapObject, $this->mappingRules, $fieldFallbacks);
+
+        $this->assertTrue($userEntry->hasErrors());
+        $this->assertFalse($userEntry->validate());
+        $this->assertNotEmpty($userEntry->errors()['email']);
+    }
 }

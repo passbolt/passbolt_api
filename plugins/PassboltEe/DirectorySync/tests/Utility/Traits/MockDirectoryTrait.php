@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Test\Utility\Traits;
 
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
+use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Utility\Alias;
 
 /**
@@ -32,8 +33,9 @@ trait MockDirectoryTrait
             'foreign_model' => $model,
             'created' => '2018-07-20 06:31:57',
         ];
-        $ignore = $this->action->DirectoryEntries->DirectoryIgnore->newEntity($entry, ['validate' => false]);
-        $save = $this->action->DirectoryEntries->DirectoryIgnore->save($ignore, ['checkRules' => false]);
+        $DirectoryIgnoreTable = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryIgnore');
+        $ignore = $DirectoryIgnoreTable->newEntity($entry, ['validate' => false]);
+        $save = $DirectoryIgnoreTable->save($ignore, ['checkRules' => false]);
         if (!$save) {
             throw new \InvalidArgumentException('Could not save directory sync ignore for mock');
         }
@@ -164,11 +166,11 @@ trait MockDirectoryTrait
         }
         $created = $options['created'] ?? '2018-07-09 03:56:42.000000';
         $modified = $options['modified'] ?? '2018-07-09 03:56:42.000000';
-        $id = $options['id'] ?? 'ldap.group.id.' . strtolower($name);
+        $id = $options['id'] ?? UuidFactory::uuid('ldap.group.id.' . strtolower($name));
         $cn = $options['cn'] ?? $name;
         $dn = $options['dn'] ?? 'CN=' . ucfirst($cn) . ',OU=PassboltUsers,DC=passbolt,DC=local';
         $group = [
-            'id' => UuidFactory::uuid($id),
+            'id' => $id,
             'directory_name' => $dn,
             'directory_created' => new FrozenTime($created),
             'directory_modified' => new FrozenTime($modified),
@@ -262,7 +264,8 @@ trait MockDirectoryTrait
         $username = null,
         $created = null,
         $modified = null,
-        $caseSensitive = true
+        $caseSensitive = true,
+        ?string $id = null
     ) {
         $fname = $fname ?? '';
         $lname = $lname ?? '';

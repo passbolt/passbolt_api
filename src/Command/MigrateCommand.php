@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Service\Command\ProcessUserService;
 use Cake\Command\CacheClearallCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -27,6 +28,21 @@ use Cake\Console\ConsoleOptionParser;
 class MigrateCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;
+
+    /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
+
+    /**
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     */
+    public function __construct(ProcessUserService $processUserService)
+    {
+        parent::__construct();
+
+        $this->processUserService = $processUserService;
+    }
 
     /**
      * @inheritDoc
@@ -60,7 +76,7 @@ class MigrateCommand extends PassboltCommand
 
         // Root user is not allowed to execute this command.
         // This command needs to be executed with the same user as the webserver.
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         // Backup
         if ($this->backup($args, $io)) {

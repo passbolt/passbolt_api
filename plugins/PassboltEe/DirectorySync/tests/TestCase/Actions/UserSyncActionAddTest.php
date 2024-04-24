@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
@@ -31,7 +32,9 @@ class UserSyncActionAddTest extends DirectorySyncIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->action = new UserSyncAction();
+        $this->action = new UserSyncAction(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
         $this->action->getDirectory()->setUsers([]);
     }
 

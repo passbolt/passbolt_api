@@ -22,6 +22,7 @@ use Cake\Routing\Router;
  *
  *  Modify the demo, inline it, then this one!
  */
+$fullBaseUrl = $fullBaseUrl ?? Router::fullBaseUrl();
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -160,7 +161,7 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
                                                     <table align="Left" border="0" cellpadding="0" cellspacing="0" width="160" class="flexibleContainer" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                         <tr>
                                                             <td align="Left" valign="top" class="imageContent" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;padding-bottom: 0px;">
-                                                                <img src="<?php echo Router::url('/img/logo/logo.png',true);?>" width="160" class="flexibleImage" style="max-width: 160px;border: 0;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;height: auto;">
+                                                                <img src="<?php echo $fullBaseUrl . '/img/logo/logo.png'?>" width="160" class="flexibleImage" style="max-width: 160px;border: 0;outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;height: auto;">
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -249,7 +250,7 @@ http://templates.mailchimp.com/development/css/outlook-conditional-css
                                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-collapse: collapse;mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;">
                                                         <tr>
                                                             <td valign="top" class="textContentLast" style="mso-table-lspace: 0pt;mso-table-rspace: 0pt;-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #404040;font-family: Helvetica;font-size: 12px;line-height: 125%;text-align: center;padding-bottom: 20px;">
-                                                                <?= __('This email is an automatic notification sent by'); ?> <a href="<?php echo Router::url('/',true) ?>" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #888888;text-decoration: underline;"><?php echo Router::url('/',true) ?></a>.
+                                                                <?= __('This email is an automatic notification sent by'); ?> <a href="<?php echo $fullBaseUrl ?>" style="-ms-text-size-adjust: 100%;-webkit-text-size-adjust: 100%;color: #888888;text-decoration: underline;"><?php echo $fullBaseUrl ?></a>.
                                                                 <?= __('You can disable these notifications by requesting an administrator to delete your account.'); ?>
                                                             </td>
                                                         </tr>

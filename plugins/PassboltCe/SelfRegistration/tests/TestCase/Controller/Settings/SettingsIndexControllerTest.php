@@ -18,9 +18,16 @@ declare(strict_types=1);
 namespace Passbolt\SelfRegistration\Test\TestCase\Controller\Settings;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+    }
+
     public function testSettingsIndexController_publicPluginSettings()
     {
         $url = '/settings.json?api-version=2';

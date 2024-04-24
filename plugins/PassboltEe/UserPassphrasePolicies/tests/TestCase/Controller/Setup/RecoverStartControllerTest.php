@@ -43,17 +43,6 @@ class RecoverStartControllerTest extends AppIntegrationTestCase
         $this->enableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        $this->disableFeaturePlugin(AccountRecoveryPlugin::class);
-        $this->disableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
-
-        parent::tearDown();
-    }
-
     public function testRecoverStartWithUserPassphrasePolicies_Success_DefaultValues()
     {
         $this->disableFeaturePlugin(AccountRecoveryPlugin::class);

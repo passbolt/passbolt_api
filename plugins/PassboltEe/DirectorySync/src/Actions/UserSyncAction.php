@@ -16,65 +16,166 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Actions;
 
-use Passbolt\DirectorySync\Actions\Traits\GroupUsersSyncTrait;
-use Passbolt\DirectorySync\Actions\Traits\SyncAddTrait;
-use Passbolt\DirectorySync\Actions\Traits\SyncDeleteTrait;
-use Passbolt\DirectorySync\Actions\Traits\SyncTrait;
-use Passbolt\DirectorySync\Actions\Traits\SyncUpdateTrait;
+use App\Error\Exception\ValidationException;
+use App\Model\Entity\Role;
+use App\Model\Entity\User;
+use App\Utility\UserAccessControl;
+use Cake\ORM\Entity;
+use Cake\ORM\Table;
+use Cake\ORM\TableRegistry;
+use Passbolt\DirectorySync\Actions\Reports\ActionReport;
+use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\Alias;
+use Passbolt\DirectorySync\Utility\SyncError;
 
 class UserSyncAction extends SyncAction
 {
-    use GroupUsersSyncTrait;
-    use SyncUpdateTrait;
-    use SyncAddTrait;
-    use SyncDeleteTrait;
-    use SyncTrait;
-
     /**
-     * @var string entityType
+     * @inheritDoc
      */
-    public const ENTITY_TYPE = Alias::MODEL_USERS;
-
-    /**
-     * Things to do after the constructor and before the sync job
-     *
-     * @return void
-     */
-    public function beforeExecute()
+    protected function getEntityType(): string
     {
-        parent::beforeExecute();
-        $this->initialize(self::ENTITY_TYPE);
+        return Alias::MODEL_USERS;
     }
 
     /**
      * @inheritDoc
      */
-    protected function _execute()
+    protected function getEntityName(Entity $entity): string
     {
-        $this->beforeExecute();
-        $this->processEntriesToDelete();
-        $this->processEntriesToCreate();
-        $this->afterExecute();
+        return $entity->get('username');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getNameFromData(array $data): string
+    {
+        return $data['user']['username'] ?? 'undefined';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getEntityFromData(array $data): ?Entity
+    {
+        return $this->getUserFromData($data['user']['username'] ?? '');
     }
 
     /**
      * Get user from data.
      *
      * @param string $username username
-     * @return array|\Cake\Datasource\EntityInterface|null
+     * @return ?\App\Model\Entity\User
      */
-    protected function getUserFromData(string $username)
+    private function getUserFromData(string $username): ?User
     {
+        /** @var \App\Model\Entity\User|null $existingUser */
         $existingUser = $this->Users
             ->findByUsernameCaseAware($username)
             ->select(['id', 'username', 'active', 'deleted', 'created', 'modified'])
             ->order(['Users.modified' => 'DESC'])
             ->first();
-        if (!isset($existingUser) || empty($existingUser)) {
-            $existingUser = null;
-        }
 
         return $existingUser;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function createEntity(array $data, DirectoryEntry $entry): Entity
+    {
+        $accessControl = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->get('id'));
+        $entity = $this->Users->register($data['user'], $accessControl);
+        $this->DirectoryEntries->updateForeignKey($entry, $entity->id);
+
+        return $entity;
+    }
+
+    /**
+     * @param array $data data
+     * @param \App\Model\Entity\User $existingEntity existing entity
+     * @return void
+     * @psalm-suppress MoreSpecificImplementedParamType
+     */
+    protected function handleUpdate(array $data, Entity $existingEntity): void
+    {
+        /** @var \App\Model\Entity\User $existingUser */
+        $existingUser = $this->Users->get($existingEntity->id, ['contain' => ['Profiles']]);
+        $firstName = $data['user']['profile']['first_name'] ?? null;
+        $lastName = $data['user']['profile']['last_name'] ?? null;
+        if (
+            !$firstName || !$lastName ||
+            (mb_strtolower($firstName) === mb_strtolower($existingUser->profile->first_name) &&
+                mb_strtolower($lastName) === mb_strtolower($existingUser->profile->last_name))
+        ) {
+            return;
+        }
+        //Extracting only first and last name to avoid modifying other fields
+        $updatedData = [
+            'profile' => [
+                'first_name' => $firstName,
+                'last_name' => $lastName,
+            ],
+        ];
+        $this->updateUser($existingUser, $updatedData);
+    }
+
+    /**
+     * Update user
+     *
+     * @param \App\Model\Entity\User $existingUser User
+     * @param array $data data
+     * @return void
+     */
+    private function updateUser(User $existingUser, array $data): void
+    {
+        try {
+            $user = $this->Users->editEntity($existingUser, $data, new UserAccessControl(Role::ADMIN));
+            $result = $this->Users->save($user, ['checkrules' => false]);
+
+            if (!$result) {
+                if ($user->hasErrors()) {
+                    $msg = __('Could not validate user data.');
+                    throw new ValidationException($msg, $user, $this->Users);
+                }
+                throw new \Exception('User could not be updated.');
+            }
+            // Send report.
+            $this->addReportItem(new ActionReport(
+                __(
+                    'The user {0} full name has been successfully updated to {1} {2}.',
+                    $existingUser->username,
+                    $user->profile->first_name,
+                    $user->profile->last_name
+                ),
+                Alias::MODEL_USERS,
+                Alias::ACTION_UPDATE,
+                Alias::STATUS_SUCCESS,
+                $user
+            ));
+        } catch (\Exception $exception) {
+            $error = new SyncError($existingUser, $exception);
+            $this->addReportItem(new ActionReport(
+                __(
+                    'The user {0} full name could not be updated to {1} {2}.',
+                    $existingUser->username,
+                    $data['profile']['first_name'],
+                    $data['profile']['last_name']
+                ),
+                Alias::MODEL_USERS,
+                Alias::ACTION_UPDATE,
+                Alias::STATUS_ERROR,
+                $error
+            ));
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getTable(): Table
+    {
+        return TableRegistry::getTableLocator()->get('Users');
     }
 }

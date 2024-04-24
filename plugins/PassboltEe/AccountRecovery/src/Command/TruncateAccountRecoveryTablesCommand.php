@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Command;
 use App\Command\PassboltCommand;
 use App\Model\Validation\EmailValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
+use App\Service\Command\ProcessUserService;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -38,6 +39,20 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
         'account_recovery_responses',
         'account_recovery_user_settings',
     ];
+
+    /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
+
+    /**
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     */
+    public function __construct(ProcessUserService $processUserService)
+    {
+        parent::__construct();
+        $this->processUserService = $processUserService;
+    }
 
     /**
      * @inheritDoc
@@ -76,7 +91,7 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
     {
         parent::execute($args, $io);
         // Root user is not allowed to execute this command.
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         $isInteractiveModeOn = !$args->getOption('no-verify');
         if ($isInteractiveModeOn) {

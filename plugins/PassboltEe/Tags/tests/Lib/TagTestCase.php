@@ -39,15 +39,4 @@ abstract class TagTestCase extends AppTestCase
         $this->enableFeaturePlugin('Tags');
         $this->loadPlugins(['Passbolt/Tags' => []]);
     }
-
-    /**
-     * tearDown method
-     *
-     * @return void
-     */
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('Tags');
-    }
 }

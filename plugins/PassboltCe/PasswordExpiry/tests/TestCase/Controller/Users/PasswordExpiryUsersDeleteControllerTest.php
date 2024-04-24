@@ -23,6 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
+use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 
 class PasswordExpiryUsersDeleteControllerTest extends AppIntegrationTestCase
@@ -33,12 +34,12 @@ class PasswordExpiryUsersDeleteControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
         RoleFactory::make()->guest()->persist();
+        PasswordExpirySettingFactory::make()->persist();
+        $this->enableFeaturePlugin(PasswordExpiryPlugin::class);
     }
 
     public function testPasswordExpiryUsersDeleteController_Success_Expire_Resources(): void
     {
-        PasswordExpirySettingFactory::make()->persist();
-
         [$owner, $userToDelete] = UserFactory::make(2)->user()->persist();
 
         [$resourceSharedViewed, $resourceSharedNotViewed] = ResourceFactory::make(2)

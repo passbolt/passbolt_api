@@ -21,12 +21,19 @@ use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class SelfRegistrationSetSettingsControllerTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+    }
 
     public function testSelfRegistrationSetSettingsControllerTest_Success()
     {

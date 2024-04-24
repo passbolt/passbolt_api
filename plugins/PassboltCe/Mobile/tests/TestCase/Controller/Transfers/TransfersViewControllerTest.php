@@ -35,12 +35,6 @@ class TransfersViewControllerTest extends AppIntegrationTestCase
         $this->enableFeaturePlugin('mobile');
     }
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('mobile');
-    }
-
     public function testMobileTransfersViewController_Success()
     {
         $user = $this->logInAsUser();

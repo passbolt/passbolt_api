@@ -16,13 +16,13 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Command\InstallCommand;
 use App\Model\Entity\Role;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\Core\Configure;
 use Cake\Http\Client;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -48,21 +48,14 @@ class InstallCommandTest extends AppTestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        InstallCommand::$isUserRoot = false;
         $this->emptyDirectory(CACHE . 'database' . DS);
-        $this->enableFeaturePlugin('JwtAuthentication');
         $this->persistValidSubscription();
         $this->setUpPathAndPublicSubscriptionKey();
         $this->loadNotificationSettings();
         $this->mockService(Client::class, function () {
             return $this->getMockedHealthcheckStatusRequest();
         });
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
+        $this->mockProcessUserService('www-data');
     }
 
     /**
@@ -83,7 +76,7 @@ class InstallCommandTest extends AppTestCase
      */
     public function testInstallCommandAsRoot()
     {
-        $this->assertCommandCannotBeRunAsRootUser(InstallCommand::class);
+        $this->assertCommandCannotBeRunAsRootUser('install');
     }
 
     /**
@@ -150,6 +143,22 @@ class InstallCommandTest extends AppTestCase
     {
         $this->exec('passbolt install --force --no-admin --backup -q -d test');
         $this->assertExitSuccess();
+    }
+
+    public function testInstallCommandNormalNoForce_Will_Fail()
+    {
+        $this->exec('passbolt install -d test');
+        $this->assertExitError();
+        $this->assertOutputContains('<error>Some tables are already present in the database. A new installation would override existing data.</error>');
+        $this->assertOutputContains('<error>Please use --force to proceed anyway.</error>');
+    }
+
+    public function testInstallCommandForce_Will_Fail_If_BaseUrlIsNotValid()
+    {
+        Configure::write('App.fullBaseUrl', 'foo');
+        $this->exec('passbolt install --force -d test');
+        $this->assertExitError();
+        $this->assertOutputContains('<error>App.fullBaseUrl does not validate. foo.</error>');
     }
 
     /**

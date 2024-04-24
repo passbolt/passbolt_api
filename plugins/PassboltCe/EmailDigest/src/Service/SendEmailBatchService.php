@@ -71,8 +71,6 @@ class SendEmailBatchService
      */
     private function sendDigest(EmailDigestInterface $emailDigest): void
     {
-        $emailDigest->addLayoutVar('title', $emailDigest->getSubject());
-
         $email = $this->mapEmailDigestToMailerEmail(new Mailer('default'), $emailDigest);
 
         try {

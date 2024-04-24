@@ -17,12 +17,12 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Test\TestCase\Command;
 
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\AccountRecovery\AccountRecoveryPlugin;
-use Passbolt\AccountRecovery\Command\TruncateAccountRecoveryTablesCommand;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryPrivateKeyFactory;
@@ -38,6 +38,7 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
     use FeaturePluginAwareTrait;
+    use PassboltCommandTestTrait;
     use TruncateDirtyTables;
 
     /**
@@ -49,8 +50,8 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        TruncateAccountRecoveryTablesCommand::$isUserRoot = false;
         $this->enableFeaturePlugin(AccountRecoveryPlugin::class);
+        $this->mockProcessUserService('www-data');
     }
 
     /**

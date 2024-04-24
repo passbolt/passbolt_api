@@ -113,7 +113,7 @@ class GroupsUpdateService
      *   ],
      *   ...
      * ]
-     * @return \App\Model\Entity\Group
+     * @return \App\Model\Dto\EntitiesChangesDto
      * @throws \Exception If an unexpected error occurred.
      */
     public function update(
@@ -122,14 +122,15 @@ class GroupsUpdateService
         array $metaData,
         ?array $changes = [],
         ?array $secrets = []
-    ): Group {
+    ): EntitiesChangesDto {
         $group = $this->groupGetService->getNotDeletedOrFail($groupId);
         $this->assertChanges($group, $changes);
-
+        $entitiesChangesDto = new EntitiesChangesDto();
         $this->groupsTable->getConnection()->transactional(
-            function () use ($uac, $group, $metaData, $changes, $secrets) {
+            function () use ($uac, $group, $metaData, $changes, $secrets, $entitiesChangesDto) {
                 $this->updateMetaData($uac, $group, $metaData);
-                $entitiesChangesDto = $this->addGroupsUsers($uac, $group, $changes, $secrets);
+                $entitiesChangesDto->pushUpdatedEntity($group);
+                $entitiesChangesDto->merge($this->addGroupsUsers($uac, $group, $changes, $secrets));
                 $entitiesChangesDto->merge($this->updateGroupsUsers($uac, $group, $changes));
                 $entitiesChangesDto->merge($this->deleteGroupsUsers($uac, $group, $changes));
                 $this->resourcesExpireResourcesService->expireResourcesForSecrets(
@@ -139,7 +140,7 @@ class GroupsUpdateService
             }
         );
 
-        return $group;
+        return $entitiesChangesDto;
     }
 
     /**
