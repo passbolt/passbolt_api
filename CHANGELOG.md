@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.7.0-test.1] - 2024-04-23
+## [4.7.0-test.1] - 2024-04-24
 ### Added
 - PB-33035 As an administrator I can configure directory sync to use Custom SSL certificate
 - PB-29222 As an administrator I want to know if SSL verification of SSO integration is not the default
