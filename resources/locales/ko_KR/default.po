@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-04-26 07:14\n"
+"PO-Revision-Date: 2024-04-26 08:17\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1253,22 +1253,22 @@ msgid "Host availability checking is disabled."
 msgstr "호스트 가용성 확인이 비활성화되었습니다."
 
 msgid "Make sure this instance is not publicly available on the internet."
-msgstr ""
+msgstr "이 인스턴스가 인터넷에서 공개적으로 사용 가능하지 않은지 확인하세요."
 
 msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
-msgstr ""
+msgstr "또는 PASSBOLT_EMAIL_VALIDATE_MX 환경 변수를 true로 설정합니다."
 
 msgid "Or set passbolt.email.validate.mx to true in {0}."
-msgstr ""
+msgstr "또는 {0}에서 passbolt.email.validate.mx 을 true로 설정합니다."
 
 msgid "Serving the compiled version of the javascript app."
-msgstr ""
+msgstr "자바스크립트 앱의 컴파일된 버전을 제공합니다."
 
 msgid "Using non-compiled Javascript. Passbolt will be slower."
-msgstr ""
+msgstr "컴파일되지 않은 자바스크립트를 사용하면 패스볼트 속도가 느려집니다."
 
 msgid "Set passbolt.js.build to production in {0}"
-msgstr ""
+msgstr "{0}에서 passbolt.js.build를 프로덕션으로 설정"
 
 msgid "undefined"
 msgstr "미정"
@@ -1280,7 +1280,7 @@ msgid "Could not read tag information on github repository"
 msgstr "github 리포지토리에 태그 정보를 읽을 수 없습니다."
 
 msgid "Using latest passbolt version ({0})."
-msgstr ""
+msgstr "최신 패스볼트 버전({0})을 사용."
 
 msgid "Could connect to passbolt repository to check versions."
 msgstr ""
