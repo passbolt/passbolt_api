@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-04-24 14:20\n"
+"PO-Revision-Date: 2024-04-26 16:44\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1241,16 +1241,16 @@ msgid "Could not validate group user data."
 msgstr "No se pudo validar los datos del grupo de usuarios."
 
 msgid "All email notifications will be sent."
-msgstr ""
+msgstr "Se enviarán todas las notificaciones de correo electrónico."
 
 msgid "Some email notifications are disabled by the administrator."
-msgstr ""
+msgstr "Algunas notificaciones de correo electrónico están desactivadas por el administrador."
 
 msgid "Host availability will be checked."
-msgstr ""
+msgstr "Se comprobará la disponibilidad del host."
 
 msgid "Host availability checking is disabled."
-msgstr ""
+msgstr "La comprobación de disponibilidad del host está desactivada."
 
 msgid "Make sure this instance is not publicly available on the internet."
 msgstr ""
@@ -1367,37 +1367,37 @@ msgid "The application config file is missing in {0}"
 msgstr ""
 
 msgid "Copy {0} to {1}"
-msgstr ""
+msgstr "Copiar {0} a {1}"
 
 msgid "The passbolt config file is present"
-msgstr ""
+msgstr "El archivo de configuración de Passbolt está presente"
 
 msgid "The passbolt config file is missing in {0}"
-msgstr ""
+msgstr "Falta el archivo de configuración de Passbolt en {0}"
 
 msgid "The passbolt config file is not required if passbolt is configured with environment variables"
-msgstr ""
+msgstr "El archivo de configuración de Passbolt no es necesario si Passbolt está configurado con variables de entorno"
 
 msgid "Cache is working."
-msgstr ""
+msgstr "La caché está funcionando."
 
 msgid "Cache is NOT working."
-msgstr ""
+msgstr "La caché NO está funcionando."
 
 msgid "Check the settings in {0}"
-msgstr ""
+msgstr "Compruebe la configuración en {0}"
 
 msgid "Debug mode is off."
-msgstr ""
+msgstr "Modo de depuración desactivado."
 
 msgid "Debug mode is on."
-msgstr ""
+msgstr "Modo de depuración activado."
 
 msgid "Set debug to false in {0}"
 msgstr ""
 
 msgid "Full base url is set to {0}"
-msgstr ""
+msgstr "La URL base completa se ha establecido a {0}"
 
 msgid "Full base url is not set. The application is using: {0}."
 msgstr ""
@@ -1472,58 +1472,58 @@ msgid "Run the migration scripts:"
 msgstr ""
 
 msgid "{0} tables found."
-msgstr ""
+msgstr "{0} tablas encontradas."
 
 msgid "No table found."
-msgstr ""
+msgstr "No se han encontrado tablas."
 
 msgid "GD or Imagick extension is installed."
-msgstr ""
+msgstr "La extensión GD o Imagick está instalada."
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr ""
+msgstr "Debe habilitar las extensiones GD o Imagick para usar Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "Vea https://secure.php.net/manual/es/book.image.php"
 
 msgid "See. https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "Vea https://secure.php.net/manual/es/book.imagick.php"
 
 msgid "Intl extension is installed."
-msgstr ""
+msgstr "La extensión Intl está instalada."
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr ""
+msgstr "Debe habilitar la extensión Intl para usar Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "Vea https://secure.php.net/manual/es/book.intl.php"
 
 msgid "The logs directory and its content are writable."
-msgstr ""
+msgstr "El directorio de logs y su contenido tienen permisos de escritura."
 
 msgid "The logs directory and its content are not writable."
-msgstr ""
+msgstr "El directorio de logs y su contenido no tienen permisos de escritura."
 
 msgid "Ensure the logs directory and its content are writable by the user the webserver user."
-msgstr ""
+msgstr "Asegúrese de que el usuario del servidor web tiene permisos de escritura en el directorio de registros y su contenido."
 
 msgid "you can try:"
 msgstr "puedes probar:"
 
 msgid "Mbstring extension is installed."
-msgstr ""
+msgstr "La extensión Mbstring está instalada."
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr ""
+msgstr "Debe habilitar la extensión Mbstring para usar Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "Vea https://secure.php.net/manual/es/book.mbstring.php"
 
 msgid "PHP version is {0} or above."
-msgstr ""
+msgstr "La versión de PHP es {0} o superior."
 
 msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
-msgstr ""
+msgstr "Las versiones de PHP menores que {0} pronto dejarán de ser compatibles con Passbolt, así que considere actualizar su sistema operativo o entorno PHP."
 
 msgid "PCRE compiled with unicode support."
 msgstr ""
@@ -1535,10 +1535,10 @@ msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties
 msgstr ""
 
 msgid "PHP version {0}."
-msgstr ""
+msgstr "Versión de PHP {0}."
 
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr ""
+msgstr "La versión de PHP es demasiado baja, Passbolt necesita PHP {0} o superior."
 
 msgid "The temporary directory and its content are writable and not executable."
 msgstr ""
