@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.0-test.2] - 2024-04-26
+### Fixed
+- PB-33084 New release with fixed release pipes
+
 ## [4.7.0-test.1] - 2024-04-24
 ### Added
 - PB-30330 Add HTTP HEAD method support to /healthcheck/status.json to support more uptime monitoring tools (GITHUB #507)
