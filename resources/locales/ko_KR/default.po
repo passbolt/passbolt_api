@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-04-27 06:14\n"
+"PO-Revision-Date: 2024-04-27 07:12\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -755,7 +755,7 @@ msgid "The identifier of the access request object should not be empty."
 msgstr "접근 요청 개체 식별자는 비워 둘 수 없습니다."
 
 msgid "A permission already exists for the given access control object and access request object."
-msgstr "지정된 접근 제어 개체 및 액세스 요청 개체에 대한 사용 권한이 이미 있습니다."
+msgstr "지정된 접근 제어 개체 및 접근 요청 개체에 대한 사용 권한이 이미 있습니다."
 
 msgid "The access control object does not exist."
 msgstr "접근 제어 개체가 없습니다."
@@ -1295,7 +1295,7 @@ msgid "It is not possible check if your version is up to date."
 msgstr "버전이 최신인지 확인할 수 없습니다."
 
 msgid "See https://www.passbolt.com/help/tech/update"
-msgstr "https://www.passbolt.com/help/tech/update를 참조하세요."
+msgstr "https://www.passbolt.com/help/tech/update 를 참조하세요."
 
 msgid "Check the network configuration to allow this script to check for updates."
 msgstr "이 스크립트가 업데이트를 확인할 수 있도록 네트워크 구성을 확인하세요."
@@ -1358,370 +1358,370 @@ msgid "App.fullBaseUrl is not set to HTTPS."
 msgstr "App.fullBaseUrl이 HTTPS로 설정되지 않았습니다."
 
 msgid "Check App.fullBaseUrl url scheme in {0}."
-msgstr ""
+msgstr "{0}에서 App.fullBaseUrl url 스킴을 확인하세요."
 
 msgid "The application config file is present"
-msgstr ""
+msgstr "애플리케이션 구성 파일이 존재합니다."
 
 msgid "The application config file is missing in {0}"
-msgstr ""
+msgstr "{0} 에 애플리케이션 구성 파일이 없습니다."
 
 msgid "Copy {0} to {1}"
-msgstr ""
+msgstr "{0} 을(를) {1} 에 복사"
 
 msgid "The passbolt config file is present"
-msgstr ""
+msgstr "패스볼트 구성 파일이 존재합니다."
 
 msgid "The passbolt config file is missing in {0}"
-msgstr ""
+msgstr "{0} 에 패스볼트 구성 파일이 없습니다."
 
 msgid "The passbolt config file is not required if passbolt is configured with environment variables"
-msgstr ""
+msgstr "패스볼트가 환경 변수로 구성된 경우 패스볼트 구성 파일이 필요하지 않습니다."
 
 msgid "Cache is working."
-msgstr ""
+msgstr "캐시가 작동 중입니다."
 
 msgid "Cache is NOT working."
-msgstr ""
+msgstr "캐시가 작동 중이지 않습니다."
 
 msgid "Check the settings in {0}"
-msgstr ""
+msgstr "{0} 의 설정을 확인하세요."
 
 msgid "Debug mode is off."
-msgstr ""
+msgstr "디버그 모드가 꺼져 있습니다."
 
 msgid "Debug mode is on."
-msgstr ""
+msgstr "디버그 모드가 켜져 있습니다."
 
 msgid "Set debug to false in {0}"
-msgstr ""
+msgstr "{0} 에서 디버그를 false로 설정"
 
 msgid "Full base url is set to {0}"
-msgstr ""
+msgstr "전체 기본 url이 {0} (으)로 설정됨"
 
 msgid "Full base url is not set. The application is using: {0}."
-msgstr ""
+msgstr "전체 기본 url이 설정되지 않았습니다. 애플리케이션이 {0} 을(를) 사용하고 있습니다."
 
 msgid "Edit App.fullBaseUrl in {0}"
-msgstr ""
+msgstr "{0}에서 App.fullBaseUrl을 편집하세요."
 
 msgid "/healthcheck/status is reachable."
-msgstr ""
+msgstr "/healthcheck/status에 접근할 수 있습니다."
 
 msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
-msgstr ""
+msgstr "App.fullBaseUrl에 지정된 URL로 /healthcheck/status에 도달할 수 없습니다."
 
 msgid "Check that the domain name is correct in {0}"
-msgstr ""
+msgstr "{0} 의 도메인 이름이 올바른지 확인하세요."
 
 msgid "Check the network settings"
-msgstr ""
+msgstr "네트워크 설정을 확인하세요"
 
 msgid "Unique value set for security.salt"
-msgstr ""
+msgstr "security.salt에 대해 고유한 값이 설정되었습니다."
 
 msgid "Default value found for security.salt"
-msgstr ""
+msgstr "security.salt에 대한 기본값이 발견되었습니다."
 
 msgid "Edit the security.salt in {0}"
-msgstr ""
+msgstr "{0}에서 security.salt를 편집하세요."
 
 msgid "App.fullBaseUrl validation OK."
-msgstr ""
+msgstr "App.fullBaseUrl 유효성 검사가 완료되었습니다."
 
 msgid "App.fullBaseUrl does not validate. {0}."
-msgstr ""
+msgstr "App.fullBaseUrl이 유효성을 검사하지 않습니다. {0}."
 
 msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
-msgstr ""
+msgstr "http://www.ietf.org/rfc/rfc1035.txt의 섹션 2.3.1에 정의된 대로 유효한 도메인 이름을 선택하세요."
 
 msgid "The application is able to connect to the database"
-msgstr ""
+msgstr "애플리케이션이 데이터베이스에 연결할 수 있습니다."
 
 msgid "The driver defined in the database configuration is not supported."
-msgstr ""
+msgstr "데이터베이스 구성에 정의된 드라이버가 지원되지 않습니다."
 
 msgid "The application is not able to connect to the database."
-msgstr ""
+msgstr "애플리케이션이 데이터베이스에 연결할 수 없습니다."
 
 msgid "Ensure that the driver defined in {0} is one of the following: {1}."
-msgstr ""
+msgstr "{0} 에 정의된 드라이버가 다음 중 하나인지 확인하세요: {1}."
 
 msgid "Double check the host, database name, username and password in {0}."
-msgstr ""
+msgstr "{0} 에서 호스트, 데이터베이스 이름, 사용자 이름 및 비밀번호를 다시 확인하세요."
 
 msgid "Make sure the database exists and is accessible for the given database user."
-msgstr ""
+msgstr "데이터베이스가 존재하고 지정된 데이터베이스 사용자가 접근할 수 있는지 확인하십시오."
 
 msgid "Some default content is present."
-msgstr ""
+msgstr "일부 기본 콘텐츠가 있습니다."
 
 msgid "No default content found."
-msgstr ""
+msgstr "기본 콘텐츠를 찾을 수 없습니다."
 
 msgid "Run the install script to install the database tables"
-msgstr ""
+msgstr "설치 스크립트를 실행하여 데이터베이스 테이블을 설치하세요"
 
 msgid "The database schema up to date."
-msgstr ""
+msgstr "데이터베이스 스키마가 최신 상태입니다."
 
 msgid "The database schema is not up to date."
-msgstr ""
+msgstr "데이터베이스 스키마가 최신 상태가 아닙니다."
 
 msgid "Run the migration scripts:"
-msgstr ""
+msgstr "마이그레이션 스크립트를 실행하세요:"
 
 msgid "{0} tables found."
-msgstr ""
+msgstr "{0} 테이블이 발견됨."
 
 msgid "No table found."
-msgstr ""
+msgstr "테이블을 찾을 수 없습니다."
 
 msgid "GD or Imagick extension is installed."
-msgstr ""
+msgstr "GD 또는 Imagick 확장 프로그램이 설치되어 있습니다."
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr ""
+msgstr "패스볼트를 사용하려면 gd 또는 imagick 확장을 활성화해야 합니다."
 
 msgid "See. https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "https://secure.php.net/manual/en/book.image.php 를 참조하세요."
 
 msgid "See. https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "https://secure.php.net/manual/en/book.imagick.php 를 참조하세요."
 
 msgid "Intl extension is installed."
-msgstr ""
+msgstr "intl 확장이 설치되었습니다."
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr ""
+msgstr "패스볼트를 사용하려면 intl 확장을 활성화해야 합니다."
 
 msgid "See. https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "https://secure.php.net/manual/en/book.intl.php 를 참조하세요."
 
 msgid "The logs directory and its content are writable."
-msgstr ""
+msgstr "로그 디렉터리와 해당 콘텐츠는 쓰기 가능합니다."
 
 msgid "The logs directory and its content are not writable."
-msgstr ""
+msgstr "로그 디렉터리와 해당 콘텐츠는 쓰기 가능지 않습니다."
 
 msgid "Ensure the logs directory and its content are writable by the user the webserver user."
-msgstr ""
+msgstr "웹 서버 사용자가 로그 디렉터리와 해당 내용을 쓸 수 있는지 확인하세요."
 
 msgid "you can try:"
 msgstr "시도해볼 것:"
 
 msgid "Mbstring extension is installed."
-msgstr ""
+msgstr "mbstring 확장이 설치되었습니다."
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr ""
+msgstr "패스볼트를 사용하려면 mbstring 확장을 활성화해야 합니다."
 
 msgid "See. https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "https://secure.php.net/manual/en/book.mbstring.php 를 참조하세요."
 
 msgid "PHP version is {0} or above."
-msgstr ""
+msgstr "PHP 버전은 {0} 이상입니다."
 
 msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
-msgstr ""
+msgstr "{0} 미만의 PHP 버전은 곧 패스볼트에서 지원되지 않으므로 운영 체제나 PHP 환경을 업그레이드하는 것이 좋습니다."
 
 msgid "PCRE compiled with unicode support."
-msgstr ""
+msgstr "유니코드 지원으로 컴파일된 PCRE."
 
 msgid "PCRE has not been compiled with Unicode support."
-msgstr ""
+msgstr "PCRE는 유니코드 지원으로 컴파일되지 않았습니다."
 
 msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
-msgstr ""
+msgstr "구성 시 --enable-unicode-properties 를 추가하여 유니코드 지원으로 PCRE를 다시 컴파일하십시오."
 
 msgid "PHP version {0}."
-msgstr ""
+msgstr "PHP 버전 {0}."
 
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr ""
+msgstr "PHP 버전이 너무 낮습니다. 패스볼트는 PHP {0} 이상이 필요합니다."
 
 msgid "The temporary directory and its content are writable and not executable."
-msgstr ""
+msgstr "임시 디렉터리와 해당 콘텐츠는 쓰기 가능하지만 실행 가능하지 않습니다."
 
 msgid "The temporary directory and its content are not writable, or are executable."
-msgstr ""
+msgstr "임시 디렉터리와 해당 콘텐츠는 쓸 수 없거나 실행 가능합니다."
 
 msgid "Ensure the temporary directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "웹 서버 사용자가 임시 디렉토리와 해당 컨텐츠를 쓸 수 있는지 확인하십시오."
 
 msgid "The private key can be used to decrypt a message."
-msgstr ""
+msgstr "개인 키를 사용하여 메시지를 해독할 수 있습니다."
 
 msgid "The private key cannot be used to decrypt a message"
-msgstr ""
+msgstr "개인 키는 메시지를 해독하는 데 사용할 수 없습니다."
 
 msgid "The private key can be used to decrypt and verify a message."
-msgstr ""
+msgstr "개인 키는 메시지를 해독하고 확인하는 데 사용될 수 있습니다."
 
 msgid "The private key cannot be used to decrypt and verify a message"
-msgstr ""
+msgstr "개인 키는 메시지를 해독하고 확인하는 데 사용할 수 없습니다."
 
 msgid "The public key can be used to encrypt a message."
-msgstr ""
+msgstr "공개 키를 사용하여 메시지를 해독할 수 있습니다."
 
 msgid "The public key cannot be used to encrypt a message"
-msgstr ""
+msgstr "공개 키는 메시지를 해독하는 데 사용할 수 없습니다."
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr ""
+msgstr "서버 개인 키가 유효한지, 암호가 없는지 확인하세요."
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "웹 서버 사용자의 키링에 있는 개인 서버 키를 가져왔는지 확인하세요."
 
 msgid "The public and private keys can be used to encrypt and sign a message."
-msgstr ""
+msgstr "공개 키와 개인 키를 사용하여 메시지를 암호화하고 서명할 수 있습니다."
 
 msgid "The public and private keys cannot be used to encrypt and sign a message"
-msgstr ""
+msgstr "공개 키와 개인 키는 메시지를 암호화하고 서명하는 데 사용할 수 없습니다."
 
 msgid "The private key can be used to sign a message."
-msgstr ""
+msgstr "개인 키를 사용하여 메시지에 서명할 수 있습니다."
 
 msgid "The private key cannot be used to sign a message"
-msgstr ""
+msgstr "개인 키를 사용하여 메시지에 서명할 수 없습니다."
 
 msgid "The public key can be used to verify a signature."
-msgstr ""
+msgstr "공개 키를 사용하여 서명을 확인할 수 있습니다."
 
 msgid "The public key cannot be used to verify a signature."
-msgstr ""
+msgstr "공개 키는 서명을 확인하는 데 사용할 수 없습니다."
 
 msgid "The server key fingerprint matches the one defined in {0}."
-msgstr ""
+msgstr "서버 키 지문이 {0} 에 정의된 지문과 일치합니다."
 
 msgid "The server key fingerprint doesn't match the one defined in {0}."
-msgstr ""
+msgstr "서버 키 지문이 {0} 에 정의된 지문과 일치하지 않습니다."
 
 msgid "Double check the key fingerprint, example: "
-msgstr ""
+msgstr "키 지문을 다시 확인하세요. 예: "
 
 msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
-msgstr ""
+msgstr "SERVER_KEY_EMAIL: 서버 키를 생성할 때 사용한 이메일입니다."
 
 msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
-msgstr ""
+msgstr "https://www.passbolt.com/help/tech/install#toc_gpg 를 참고하세요."
 
 msgid "The server private key format is Gopengpg compatible."
-msgstr ""
+msgstr "서버 개인 키 형식은 Gopengpg와 호환됩니다."
 
 msgid "The server private key format is not Gopengpg compatible."
-msgstr ""
+msgstr "서버 개인 키 형식은 Gopengpg와 호환되지 않습니다."
 
 msgid "The server public key format is Gopengpg compatible."
-msgstr ""
+msgstr "서버 공개 키 형식은 Gopengpg와 호환됩니다."
 
 msgid "The server public key format is not Gopengpg compatible."
-msgstr ""
+msgstr "서버 공개 키 형식은 Gopengpg와 호환되지 않습니다."
 
 msgid "The environment variable GNUPGHOME is set to {0}."
-msgstr ""
+msgstr "환경 변수 GNUPGOME이 {0} (으)로 설정되었습니다."
 
 msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
-msgstr ""
+msgstr "환경 변수 GNUPGHOME이 {0} 으로 설정되었지만 디렉터리가 존재하지 않습니다."
 
 msgid "Ensure the keyring location exists and is accessible by the webserver user."
-msgstr ""
+msgstr "키링 위치가 존재하고 웹 서버 사용자가 접근할 수 있는지 확인하세요."
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr ""
+msgstr "{0} 에서 GPG.env.setenv 및 GPG.env.home 변수를 편집하여 키링 위치를 변경할 수 있습니다."
 
 msgid "The directory {0} containing the keyring is writable by the webserver user."
-msgstr ""
+msgstr "키링이 포함된 {0} 디렉터리는 웹 서버 사용자가 쓸 수 있습니다."
 
 msgid "The directory {0} containing the keyring is not writable by the webserver user."
-msgstr ""
+msgstr "키링이 포함된 {0} 디렉터리는 웹 서버 사용자가 쓸 수 없습니다."
 
 msgid "Ensure the keyring location is accessible by the webserver user."
-msgstr ""
+msgstr "웹 서버 사용자가 키링 위치에 접근할 수 있는지 확인하세요."
 
 msgid "The server OpenPGP key is not the default one."
-msgstr ""
+msgstr "서버 OpenPGP 키는 기본 키가 아닙니다."
 
 msgid "Do not use the default OpenPGP key for the server."
-msgstr ""
+msgstr "서버에 기본 OpenPGP 키를 사용하지 마십시오."
 
 msgid "The server OpenPGP key is not set."
-msgstr ""
+msgstr "서버 OpenPGP 키가 설정되지 않았습니다."
 
 msgid "Create a key, export it and add the fingerprint to {0}"
-msgstr ""
+msgstr "키를 생성 및 내보내기를 하고 {0} 에 지문을 추가하세요."
 
 msgid "PHP GPG Module is installed and loaded."
-msgstr ""
+msgstr "PHP GPG 모듈이 설치되고 로드됩니다."
 
 msgid "PHP GPG Module is not installed or loaded."
-msgstr ""
+msgstr "PHP GPG 모듈이 설치되지 않았거나 로드되지 않았습니다."
 
 msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
-msgstr ""
+msgstr "php-gnupg를 설치하세요. http://php.net/manual/en/gnupg.installation.php 를 참고하세요."
 
 msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
-msgstr ""
+msgstr "php-cli와 php 모두에 대해 php ini 파일에 Extension=gnupg.so를 추가해야 합니다."
 
 msgid "The private key file is defined in {0} and readable."
-msgstr ""
+msgstr "개인 키 파일은 {0} 에 정의되어 있으며 읽을 수 있습니다."
 
 msgid "The private key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "개인 키 파일이 {0} 에 정의되지 않았거나 읽을 수 없습니다."
 
 msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
-msgstr ""
+msgstr "개인 키 파일이 {0} 의 passbolt.gpg.serverKey.private 변수로 정의되었는지 확인하세요."
 
 msgid "Ensure there is a private key armored block in the key file."
-msgstr ""
+msgstr "키 파일에 개인 키 강화 블록이 있는지 확인하세요."
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "{0} 에 정의된 개인 키가 있고 웹 서버 사용자가 접근할 수 있는지 확인합니다."
 
 msgid "There is a valid email id defined for the server key."
-msgstr ""
+msgstr "서버 키에 대해 정의된 유효한 이메일 id가 있습니다."
 
 msgid "The server key does not have a valid email id."
-msgstr ""
+msgstr "서버 키에 유효한 이메일 id가 없습니다."
 
 msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr ""
+msgstr "{0} (또는 환경 변수)에 정의된 서버 공개 키가 키링에 있습니다."
 
 msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr ""
+msgstr "{0} (또는 환경 변수)에 정의된 서버 공개 키가 키링에 없습니다."
 
 msgid "Import the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "웹 서버 사용자의 키링에 있는 개인 서버 키를 가져옵니다."
 
 msgid "The public key file is defined in {0} and readable."
-msgstr ""
+msgstr "공개 키 파일은 {0} 에 정의되어 있으며 읽을 수 있습니다."
 
 msgid "The public key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "공개 키 파일이 {0} 에 정의되지 않았거나 읽을 수 없습니다."
 
 msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
-msgstr ""
+msgstr "공개 키 파일이 {0} 의 passbolt.gpg.serverKey.public 변수로 정의되었는지 확인하세요."
 
 msgid "Ensure there is a public key armored block in the key file."
-msgstr ""
+msgstr "키 파일에 공개 키 강화 블록이 있는지 확인하세요."
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "{0} 에 정의된 공개 키가 있고 웹 서버 사용자가 접근할 수 있는지 확인합니다."
 
 msgid "Environment"
-msgstr ""
+msgstr "환경"
 
 msgid "Config files"
-msgstr ""
+msgstr "구성 파일"
 
 msgid "Core config"
-msgstr ""
+msgstr "코어 구성"
 
 msgid "SMTP settings"
-msgstr ""
+msgstr "SMTP 설정"
 
 msgid "Application configuration"
-msgstr ""
+msgstr "어플리케이션 구성"
 
 msgid "Database"
 msgstr "데이타베이스"
@@ -1730,28 +1730,28 @@ msgid "GPG Configuration"
 msgstr "GPG 구성"
 
 msgid "JWT Authentication"
-msgstr ""
+msgstr "JWT 인증"
 
 msgid "SSL Certificate"
-msgstr ""
+msgstr "SSL 인증서"
 
 msgid "The {0} plugin is enabled."
-msgstr ""
+msgstr "{0} 플러그인이 활성화되었습니다."
 
 msgid "The {0} plugin is disabled."
-msgstr ""
+msgstr "{0} 플러그인이 비활성화되었습니다."
 
 msgid "Set the environment variable {0} to true"
-msgstr ""
+msgstr "환경 변수 {0} 을(를) true로 설정하세요."
 
 msgid "Enable the plugin in order to define SMTP settings in the database."
-msgstr ""
+msgstr "데이터베이스에서 SMTP 설정을 정의하려면 플러그인을 활성화하세요."
 
 msgid "Hostname is matching in SSL certificate."
-msgstr ""
+msgstr "호스트이름이 SSL 인증서와 일치합니다."
 
 msgid "Hostname does not match when validating certificates."
-msgstr ""
+msgstr "인증서 유효성을 검사할 때 호스트이름이 일치하지 않습니다."
 
 msgid "SSL access is enabled."
 msgstr "SSL 접근이 활성화되었습니다."
@@ -1760,16 +1760,16 @@ msgid "SSL access is not enabled. You can still proceed, but it is highly recomm
 msgstr "SSL 접근을 사용할 수 없습니다. 계속 진행할 수 있지만 계속하기 전에 HTTPS를 사용하도록 웹 서버를 구성하는 것이 좋습니다."
 
 msgid "Not using a self-signed certificate."
-msgstr ""
+msgstr "자체 서명된 인증서를 사용하지 않습니다."
 
 msgid "Using a self-signed certificate."
-msgstr ""
+msgstr "자체 서명된 인증서를 사용합니다."
 
 msgid "SSL peer certificate validates."
-msgstr ""
+msgstr "SSL 피어 인증서가 검증됩니다."
 
 msgid "SSL peer certificate does not validate."
-msgstr ""
+msgstr "SSL 피어 인증서가 검증되지 않습니다."
 
 msgid "Could not validate sub key data."
 msgstr "하위 키 데이터를 검사할 수 없습니다."
@@ -2372,19 +2372,19 @@ msgid "The configuration {0} is not correctly set."
 msgstr "구성 {0} 이(가) 올바르게 설정되지 않았습니다."
 
 msgid "The {0} directory is not writable."
-msgstr ""
+msgstr "{0} 디렉토리는 쓸 수 없습니다."
 
 msgid "The {0} directory should not be writable."
-msgstr ""
+msgstr "{0} 디렉토리는 쓰기 가능하지 않아야 합니다."
 
 msgid "A valid JWT key pair was found."
-msgstr ""
+msgstr "유효한 JWT 키 쌍을 찾았습니다."
 
 msgid "A valid JWT key pair is missing."
-msgstr ""
+msgstr "유효한 JWT 키 쌍이 없습니다."
 
 msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
-msgstr ""
+msgstr "JWT 키 만들기 스크립트를 실행하여 유효한 JWT 비밀 키와 공개 키 쌍을 만듭니다."
 
 msgid "The refresh token should be a valid UUID."
 msgstr "리프레쉬 토큰은 유효한 UUID여야 합니다."
@@ -3308,7 +3308,7 @@ msgid "The control function should not be empty."
 msgstr "제어 기능은 비워둘 수 없습니다."
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
-msgstr "역할 기반 액세스 제어를 생성한 사용자의 식별자는 유효한 UUID여야 합니다."
+msgstr "역할 기반 접근 제어를 생성한 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "The identifier of the user who modified the Rbac should be a valid UUID."
 msgstr "역할 기반 접근 제어를 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
@@ -3572,34 +3572,34 @@ msgid "The client should be a valid IP or a valid domain."
 msgstr "클라이언트는 올바른 IP 또는 도메인이어야 합니다."
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
-msgstr ""
+msgstr "SMTP 설정이 일관됩니다. 이를 확인하기 위해 테스트 이메일을 보낼 수 있습니다."
 
 msgid "SMTP Setting errors: {0}"
-msgstr ""
+msgstr "SMTP 설정 오류: {0}"
 
 msgid "The {0} plugin endpoints are disabled."
-msgstr ""
+msgstr "{0} 플러그인 엔드포인트가 비활성화되었습니다."
 
 msgid "The {0} plugin endpoints are enabled."
-msgstr ""
+msgstr "{0} 플러그인 엔드포인트가 활성화되었습니다."
 
 msgid "It is recommended to disable the plugin endpoints."
-msgstr ""
+msgstr "플러그인 엔드포인트를 비활성화하는 것이 좋습니다."
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED 환경 변수를 true로 설정합니다."
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
-msgstr ""
+msgstr "또는 {0} 에서 passbolt.security.smtpSettings.endpointsDisabled를 true로 설정하세요."
 
 msgid "not found"
 msgstr "찾을 수 없음"
 
 msgid "The SMTP Settings source is: {0}."
-msgstr ""
+msgstr "SMTP 설정 소스는 {0} 입니다."
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
-msgstr ""
+msgstr "관리 섹션을 통해 데이터베이스에서 SMTP 설정을 지정하는 것이 좋습니다."
 
 msgid "database"
 msgstr "데이타베이스"
