@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-04-26 09:17\n"
+"PO-Revision-Date: 2024-04-27 06:14\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -1334,28 +1334,28 @@ msgid "The self registration provider is: {0}."
 msgstr "자체 등록 제공자 : {0}."
 
 msgid "The deprecated self registration public setting was not found in {0}."
-msgstr ""
+msgstr "더 이상 사용되지 않는 자체 등록 공개 설정을 {0} 에서 찾을 수 없습니다."
 
 msgid "The deprecated self registration public setting was found in {0}."
-msgstr ""
+msgstr "더 이상 사용되지 않는 자체 등록 공개 설정이 {0} 에서 발견되었습니다."
 
 msgid "You may remove the \"passbolt.registration.public\" setting."
-msgstr ""
+msgstr "\"passbolt.registration.public\" 설정을 제거할 수 있습니다."
 
 msgid "Passbolt is configured to force SSL use."
-msgstr ""
+msgstr "패스볼트가 SSL을 강제로 사용하도록 구성되어 있습니다."
 
 msgid "Passbolt is not configured to force SSL use."
-msgstr ""
+msgstr "패스볼트가 SSL을 강제로 사용하도록 구성되지 않았습니다."
 
 msgid "Set passbolt.ssl.force to true in {0}."
-msgstr ""
+msgstr "{0}에서 passbolt.ssl.force를 true로 설정합니다."
 
 msgid "App.fullBaseUrl is set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl이 HTTPS로 설정되었습니다."
 
 msgid "App.fullBaseUrl is not set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl이 HTTPS로 설정되지 않았습니다."
 
 msgid "Check App.fullBaseUrl url scheme in {0}."
 msgstr ""
