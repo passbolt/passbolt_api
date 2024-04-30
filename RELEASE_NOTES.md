@@ -1,16 +1,10 @@
 Release song: https://youtu.be/3L4YrGaR8E4
 
-Hey community members,
+Passbolt Community Edition v4.7 is a maintenance release that resolves multiple issues identified by the community. Furthermore, this release supports the commitment to improving customization options and integration features, making it easier for organizations to tailor the system to their specific needs.
 
-Prepare for an exciting update! 🥁
+A key enhancement in this release is the ability to use custom SSL certificates for SMTP server connections. This long-awaited feature is particularly beneficial for organizations operating in air-gapped environments or those using their own root CAs, enabling passbolt to more securely integrate with internal tools.
 
-Passbolt is thrilled to announce that the v4.7.0 Release Candidate is officially available for testing.
-
-The best part? All you have to do is head to GitHub and dive in! Of course, you have to make sure to follow the steps [here](https://community.passbolt.com/t/passbolt-beta-testing-how-to/7894). As always, your feedback is invaluable, please share and report any issues you come across.
-
-Enjoy the testing journey! ♥️
-
-## [4.7.0-rc.1] - 2024-04-26
+## [4.7.0] - 2024-04-30
 ### Added
 - PB-30330 Add HTTP HEAD method support to /healthcheck/status.json to support more uptime monitoring tools (GITHUB #507)
 - PB-26156 As an administrator I can configure SMTP to use TLS with a self-signed cert on my mail server (GITHUB #498)

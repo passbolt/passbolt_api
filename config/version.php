@@ -1,7 +1,7 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '4.7.0-rc.1',
+        'version' => '4.7.0',
         'name' => 'Bulls On Parade',
     ],
     'php' => [
