@@ -54,16 +54,6 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         EventManager::instance()->setEventList(new EventList());
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        $this->disableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
-
-        parent::tearDown();
-    }
-
     public function testUserPassphrasePoliciesSetSettingsController_Error_PluginDisabled()
     {
         $this->disableErrorHandlerMiddleware();

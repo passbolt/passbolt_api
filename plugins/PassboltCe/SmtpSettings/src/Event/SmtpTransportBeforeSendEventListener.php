@@ -20,6 +20,7 @@ use App\Mailer\Transport\SmtpTransport;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
+use Passbolt\SmtpSettings\Service\SmtpSettingsSslOptionsGetService;
 
 class SmtpTransportBeforeSendEventListener implements EventListenerInterface
 {
@@ -61,24 +62,32 @@ class SmtpTransportBeforeSendEventListener implements EventListenerInterface
      */
     public function initializeTransport(EventInterface $event): void
     {
-        $this->configInDB = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-        if (is_null($this->configInDB)) {
-            return;
-        }
         /** @var \App\Mailer\Transport\SmtpTransport $transport */
         $transport = $event->getSubject();
         $defaultConfig = $event->getData();
-        $configToMerge = [
-            'className' => self::class,
-            'sender_name' => $this->configInDB['sender_name'],
-            'sender_email' => $this->configInDB['sender_email'],
-            'host' => $this->configInDB['host'],
-            'port' => $this->configInDB['port'],
-            'tls' => $this->configInDB['tls'] ?? null,
-            'client' => $this->configInDB['client'],
-            'username' => $this->configInDB['username'],
-            'password' => $this->configInDB['password'],
-        ];
+        $configToMerge = [];
+
+        $this->configInDB = (new SmtpSettingsGetSettingsInDbService())->getSettings();
+        if (!is_null($this->configInDB)) {
+            $configToMerge = [
+                'className' => self::class,
+                'sender_name' => $this->configInDB['sender_name'],
+                'sender_email' => $this->configInDB['sender_email'],
+                'host' => $this->configInDB['host'],
+                'port' => $this->configInDB['port'],
+                'tls' => $this->configInDB['tls'] ?? null,
+                'client' => $this->configInDB['client'],
+                'username' => $this->configInDB['username'],
+                'password' => $this->configInDB['password'],
+            ];
+        }
+
+        // Merge SSL Options if present in config
+        $sslOptions = (new SmtpSettingsSslOptionsGetService())->get();
+        if (!empty($sslOptions)) {
+            $configToMerge['context'] = ['ssl' => $sslOptions];
+        }
+
         $transport->setConfig(array_merge($defaultConfig, $configToMerge));
     }
 

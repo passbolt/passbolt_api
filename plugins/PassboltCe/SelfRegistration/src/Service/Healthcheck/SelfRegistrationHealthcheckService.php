@@ -29,6 +29,13 @@ class SelfRegistrationHealthcheckService
     use FeaturePluginAwareTrait;
 
     /**
+     * Used for caching self registration settings.
+     *
+     * @var array|null
+     */
+    private ?array $selfRegistrationSettings = null;
+
+    /**
      * @return array
      */
     public function getHealthcheck(): array
@@ -62,7 +69,12 @@ class SelfRegistrationHealthcheckService
         }
 
         try {
-            $settings = (new SelfRegistrationGetSettingsService())->getSettings();
+            if (is_null($this->selfRegistrationSettings)) {
+                $settings = (new SelfRegistrationGetSettingsService())->getSettings();
+                $this->selfRegistrationSettings = $settings;
+            } else {
+                $settings = $this->selfRegistrationSettings;
+            }
         } catch (FormValidationException | MissingConnectionException | InternalErrorException $e) {
             return null;
         }

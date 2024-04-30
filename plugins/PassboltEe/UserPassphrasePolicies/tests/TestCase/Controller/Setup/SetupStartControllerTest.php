@@ -40,17 +40,6 @@ class SetupStartControllerTest extends AppIntegrationTestCase
     }
 
     /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        $this->disableFeaturePlugin(AccountRecoveryPlugin::class);
-        $this->disableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
-
-        parent::tearDown();
-    }
-
-    /**
      * @group Requests
      * @group setup
      * @group setupStart

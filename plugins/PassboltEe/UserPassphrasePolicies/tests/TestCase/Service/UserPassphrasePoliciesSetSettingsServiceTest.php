@@ -61,8 +61,6 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
     public function tearDown(): void
     {
         unset($this->service);
-        $this->disableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
-
         parent::tearDown();
     }
 

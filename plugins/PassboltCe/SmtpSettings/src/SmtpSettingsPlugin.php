@@ -16,9 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\SmtpSettings;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener;
+use Passbolt\SmtpSettings\Service\Healthcheck\SettingsValidationSmtpSettingsHealthcheck;
+use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsEndpointsDisabledHealthcheck;
+use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsSettingsSourceHealthcheck;
 
 class SmtpSettingsPlugin extends BasePlugin
 {
@@ -31,5 +36,20 @@ class SmtpSettingsPlugin extends BasePlugin
 
         // Before sending an email, apply the SMTP settings found in DB (or fallback on file).
         $app->getEventManager()->on(new SmtpTransportBeforeSendEventListener());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(SettingsValidationSmtpSettingsHealthcheck::class);
+        $container->add(SmtpSettingsSettingsSourceHealthcheck::class);
+        $container->add(SmtpSettingsEndpointsDisabledHealthcheck::class);
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [SettingsValidationSmtpSettingsHealthcheck::class])
+            ->addMethodCall('addService', [SmtpSettingsSettingsSourceHealthcheck::class])
+            ->addMethodCall('addService', [SmtpSettingsEndpointsDisabledHealthcheck::class]);
     }
 }

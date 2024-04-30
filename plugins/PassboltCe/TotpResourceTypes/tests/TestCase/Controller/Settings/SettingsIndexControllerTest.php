@@ -18,9 +18,18 @@ declare(strict_types=1);
 namespace Passbolt\TotpResourceTypes\Test\TestCase\Controller\Settings;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\ResourceTypes\ResourceTypesPlugin;
+use Passbolt\TotpResourceTypes\TotpResourceTypesPlugin;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(TotpResourceTypesPlugin::class);
+        $this->enableFeaturePlugin(ResourceTypesPlugin::class);
+    }
+
     public function testSettingsIndexController_SuccessAsLU()
     {
         $this->logInAsUser();

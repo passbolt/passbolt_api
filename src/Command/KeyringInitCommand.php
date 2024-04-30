@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Command;
 
+use App\Service\Command\ProcessUserService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -25,6 +26,21 @@ use Cake\Core\Exception\CakeException;
 
 class KeyringInitCommand extends PassboltCommand
 {
+    /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
+
+    /**
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     */
+    public function __construct(ProcessUserService $processUserService)
+    {
+        parent::__construct();
+
+        $this->processUserService = $processUserService;
+    }
+
     /**
      * @inheritDoc
      */
@@ -43,7 +59,7 @@ class KeyringInitCommand extends PassboltCommand
         parent::execute($args, $io);
 
         // Root user is not allowed to execute this command.
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         try {
             $filePath = Configure::read('passbolt.gpg.serverKey.private');

@@ -27,6 +27,7 @@ use Passbolt\DirectorySync\Test\Utility\Traits\AssertReportTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\DirectoryOrgSettingsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -60,7 +61,7 @@ abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
     /**
      * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
      */
-    public $directoryOrgSettings;
+    public DirectoryOrgSettings $directoryOrgSettings;
 
     public function setUp(): void
     {

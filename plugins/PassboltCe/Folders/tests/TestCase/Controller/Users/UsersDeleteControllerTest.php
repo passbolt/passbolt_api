@@ -51,16 +51,6 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
         UsersFixture::class,
     ];
 
-    /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-    }
-
     public function testFoldersUsersDeleteSuccess_PersonalFolder()
     {
         [$folderA, $userAId] = $this->insertFixture_PersonalFolder();

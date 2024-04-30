@@ -16,13 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\Utility;
 
-use App\Command\PassboltCommand;
 use App\Test\Lib\AppTestCase;
+use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Passbolt\DirectorySync\Test\Utility\Traits\DirectoryOrgSettingsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 abstract class DirectorySyncConsoleIntegrationTestCase extends AppTestCase
 {
@@ -30,8 +31,9 @@ abstract class DirectorySyncConsoleIntegrationTestCase extends AppTestCase
     use DirectoryOrgSettingsTrait;
     use MockDirectoryTrait;
     use UserAccessControlTrait;
+    use PassboltCommandTestTrait;
 
-    public $directoryOrgSettings;
+    public DirectoryOrgSettings $directoryOrgSettings;
 
     public function setUp(): void
     {
@@ -40,6 +42,6 @@ abstract class DirectorySyncConsoleIntegrationTestCase extends AppTestCase
         Configure::write('passbolt.plugins.directorySync.test', true);
         $this->enableDirectoryIntegration();
         $this->useCommandRunner();
-        PassboltCommand::$isUserRoot = false;
+        $this->mockProcessUserService('www-data');
     }
 }

@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use Cake\Core\Configure;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
@@ -33,8 +34,12 @@ class DirectoryResultsTest extends DirectorySyncIntegrationTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.directorySync.test', 'Nested');
-        $this->userSyncAction = new UserSyncAction();
-        $this->groupSyncAction = new GroupSyncAction();
+        $this->userSyncAction = new UserSyncAction(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
+        $this->groupSyncAction = new GroupSyncAction(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
 
         // Load directory results with data.
         /** @var \Passbolt\DirectorySync\Test\Utility\TestDirectory $usersDirectory */

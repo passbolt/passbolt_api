@@ -40,8 +40,8 @@ class AccountRecoveryEmailRedactorTest extends AppIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         Configure::delete('passbolt.webInstaller.configured');
+        parent::tearDown();
     }
 
     public function testAccountRecoveryEmailRedactor()

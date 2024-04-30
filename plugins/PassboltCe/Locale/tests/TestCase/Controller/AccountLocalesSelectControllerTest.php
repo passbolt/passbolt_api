@@ -43,8 +43,8 @@ class AccountLocalesSelectControllerTest extends AppIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         GetOrgLocaleService::clearOrganisationLocale();
+        parent::tearDown();
     }
 
     public function testAccountLocalesSelectAsGuestFails()

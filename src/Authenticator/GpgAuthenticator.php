@@ -470,7 +470,7 @@ class GpgAuthenticator extends SessionAuthenticator
         if (isset($data['data'])) {
             $data = $data['data'];
         }
-        if (isset($data['gpg_auth'])) {
+        if (isset($data['gpg_auth']) && is_array($data['gpg_auth'])) {
             $this->_data = $data['gpg_auth'];
         } else {
             $this->_data = null;

@@ -17,9 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\ServiceProvider;
 
+use App\Service\Command\ProcessUserService;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Cake\Http\ServerRequest;
+use Passbolt\AccountRecovery\Command\TruncateAccountRecoveryTablesCommand;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetServiceInterface;  //phpcs:ignore
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicySetService;
@@ -39,6 +41,7 @@ class AccountRecoveryOrganizationPolicyServiceProvider extends ServiceProvider
     protected $provides = [
         AccountRecoveryOrganizationPolicySetServiceInterface::class,
         AccountRecoveryOrganizationPolicyGetServiceInterface::class,
+        TruncateAccountRecoveryTablesCommand::class,
     ];
 
     /**
@@ -58,5 +61,7 @@ class AccountRecoveryOrganizationPolicyServiceProvider extends ServiceProvider
                 AccountRecoveryOrganizationPolicyGetService::class
             )
             ->addArgument(ServerRequest::class);
+
+        $container->add(TruncateAccountRecoveryTablesCommand::class)->addArgument(ProcessUserService::class);
     }
 }

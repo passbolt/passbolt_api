@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
+use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Utility\UuidFactory;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
@@ -37,7 +38,9 @@ class UserSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
      */
     protected function initAction()
     {
-        $this->action = new UserSyncAction();
+        $this->action = new UserSyncAction(
+            new ResourcesExpireResourcesFallbackServiceService()
+        );
         $this->action->getDirectory()->setGroups([]);
     }
 

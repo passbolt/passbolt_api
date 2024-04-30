@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Command;
 
 use App\Command\PassboltCommand;
+use App\Service\Command\ProcessUserService;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -29,6 +30,20 @@ class DirectorySyncCommand extends PassboltCommand
      * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
      */
     public $directoryOrgSettings;
+
+    /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
+
+    /**
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     */
+    public function __construct(ProcessUserService $processUserService)
+    {
+        parent::__construct();
+        $this->processUserService = $processUserService;
+    }
 
     /**
      * All the plugins commands extend the present command.
@@ -52,7 +67,7 @@ class DirectorySyncCommand extends PassboltCommand
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         $isLdapLoaded = extension_loaded('ldap');
         if (!$isLdapLoaded) {

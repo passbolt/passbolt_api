@@ -16,10 +16,10 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Command\RegisterUserCommand;
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenDate;
@@ -31,6 +31,7 @@ class RecoverUserCommandTest extends TestCase
 {
     use ConsoleIntegrationTestTrait;
     use TruncateDirtyTables;
+    use PassboltCommandTestTrait;
 
     /**
      * setUp method
@@ -41,7 +42,7 @@ class RecoverUserCommandTest extends TestCase
     {
         parent::setUp();
         $this->useCommandRunner();
-        RegisterUserCommand::$isUserRoot = false;
+        $this->mockProcessUserService('www-data');
     }
 
     public function testRecoverUserCommandHelp()

@@ -36,16 +36,6 @@ class UserPassphrasePoliciesGetSettingsControllerTest extends AppIntegrationTest
         $this->enableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function tearDown(): void
-    {
-        $this->disableFeaturePlugin(UserPassphrasePoliciesPlugin::class);
-
-        parent::tearDown();
-    }
-
     public function testUserPassphrasePoliciesGetSettingsController_ErrorUnauthenticated()
     {
         $this->getJson('/user-passphrase-policies/settings.json');

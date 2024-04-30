@@ -35,10 +35,10 @@ trait HealthcheckRequestTestTrait
      * @param int $code response code
      * @return Client
      */
-    public function getMockedHealthcheckStatusRequest(int $code = 200): Client
+    public function getMockedHealthcheckStatusRequest(int $code = 200, string $body = ''): Client
     {
         $client = new Client();
-        $response = (new Response())->withStatus($code);
+        $response = (new Response([], $body))->withStatus($code);
         $url = Router::url('/healthcheck/status.json', true);
         $client::addMockResponse('GET', $url, $response);
 

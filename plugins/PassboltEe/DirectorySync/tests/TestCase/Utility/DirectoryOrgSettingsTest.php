@@ -74,6 +74,9 @@ class DirectoryOrgSettingsTest extends AppTestCase
                     ],
                 ],
             ],
+            'fieldFallbacks' => [
+                'ad' => ['username' => ''],
+            ],
         ];
         if ($addSecondDomain) {
             $settings['ldap']['org_domain2'] = [

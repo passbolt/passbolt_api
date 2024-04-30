@@ -141,31 +141,6 @@ parameters:
 			path: plugins/PassboltEe/AuditLog/src/Utility/ActionLogResultsParser.php
 
 		-
-			message: "#^If condition is always true\\.$#"
-			count: 5
-			path: plugins/PassboltEe/DirectorySync/src/Actions/GroupSyncAction.php
-
-		-
-			message: "#^Right side of && is always true\\.$#"
-			count: 2
-			path: plugins/PassboltEe/DirectorySync/src/Actions/GroupSyncAction.php
-
-		-
-			message: "#^Unreachable statement \\- code above always terminates\\.$#"
-			count: 3
-			path: plugins/PassboltEe/DirectorySync/src/Actions/GroupSyncAction.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 5
-			path: plugins/PassboltEe/DirectorySync/src/Actions/UserSyncAction.php
-
-		-
-			message: "#^Right side of && is always false\\.$#"
-			count: 2
-			path: plugins/PassboltEe/DirectorySync/src/Actions/UserSyncAction.php
-
-		-
 			message: "#^Dead catch \\- App\\\\Error\\\\Exception\\\\ValidationException is never thrown in the try block\\.$#"
 			count: 1
 			path: plugins/PassboltEe/DirectorySync/src/Controller/DirectoryIgnoreController.php
@@ -309,8 +284,3 @@ parameters:
 			message: "#^Unreachable statement \\- code above always terminates\\.$#"
 			count: 1
 			path: src/Service/Resources/ResourcesAddService.php
-
-		-
-			message: "#^Caught class Cake\\\\Database\\\\Exception not found\\.$#"
-			count: 2
-			path: src/Utility/Healthchecks/DatabaseHealthchecks.php

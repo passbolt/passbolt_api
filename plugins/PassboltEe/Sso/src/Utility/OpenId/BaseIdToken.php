@@ -110,17 +110,21 @@ class BaseIdToken extends AccessToken
         }
 
         if (
-            !isset($tokenClaims['aud']) || !is_string($tokenClaims['aud']) ||
-            $this->provider->getClientId() != $tokenClaims['aud']
+            !isset($tokenClaims['aud'])
+            || !is_string($tokenClaims['aud'])
+            || $this->provider->getClientId() != $tokenClaims['aud']
         ) {
             throw new BadRequestException('The aud (client id) parameter is invalid');
         }
 
-        if (
-            !isset($tokenClaims['iss']) || !is_string($tokenClaims['iss']) ||
-            $tokenClaims['iss'] != $this->provider->getOpenIdBaseUri()
-        ) {
+        if (!isset($tokenClaims['iss']) || !is_string($tokenClaims['iss'])) {
             throw new BadRequestException('The iss (issuer) parameter is invalid.');
+        }
+
+        $openIdBaseUri = rtrim($this->provider->getOpenIdBaseUri(), '/');
+        $iss = rtrim($tokenClaims['iss'], '/');
+        if ($iss != $openIdBaseUri) {
+            throw new BadRequestException('The iss (issuer) parameter does not match.');
         }
 
         if (!isset($tokenClaims['email']) || !EmailValidationRule::check($tokenClaims['email'])) {

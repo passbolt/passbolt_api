@@ -20,13 +20,13 @@ namespace App\Test\TestCase\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
-use App\Service\Resources\PasswordExpiryDefaultValidationService;
 use App\Service\Resources\PasswordExpiryValidationServiceInterface;
 use App\Service\Resources\ResourcesAddService;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
+use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
@@ -42,6 +42,7 @@ use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
  */
 class ResourcesAddServiceTest extends TestCase
 {
+    use FeaturePluginAwareTrait;
     use ResourcesModelTrait;
     use TruncateDirtyTables;
 
@@ -63,7 +64,7 @@ class ResourcesAddServiceTest extends TestCase
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         ResourceTypeFactory::make()->default()->persist();
-        $this->service = new ResourcesAddService(new PasswordExpiryDefaultValidationService());
+        $this->service = new ResourcesAddService();
     }
 
     public function tearDown(): void

@@ -270,6 +270,21 @@ class DirectoryOrgSettings
     }
 
     /**
+     * Get fields fallback.
+     *
+     * @param string|null $type Directory type
+     * @return array|null
+     */
+    public function getFieldFallbacks(?string $type = null): ?array
+    {
+        if ($type === null) {
+            return Hash::get($this->settings, 'fieldFallbacks');
+        }
+
+        return Hash::get($this->settings, "fieldFallbacks.{$type}");
+    }
+
+    /**
      * Get the ldap configuration
      *
      * @return array
@@ -302,8 +317,10 @@ class DirectoryOrgSettings
      * @param string $operation The type of operation
      * @return bool
      */
-    public function isSyncOperationEnabled($objectType, $operation): bool
+    public function isSyncOperationEnabled(string $objectType, string $operation): bool
     {
+        $objectType = strtolower($objectType);
+
         return Hash::get($this->settings, "jobs.$objectType.$operation", false);
     }
 

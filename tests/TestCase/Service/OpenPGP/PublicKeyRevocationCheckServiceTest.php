@@ -22,16 +22,6 @@ use Cake\Core\Configure;
 
 class PublicKeyRevocationCheckServiceTest extends AppTestCase
 {
-    /**
-     * Tear dow
-     */
-    public function tearDown(): void
-    {
-        // Revert the gpg config to its default.
-        Configure::write('passbolt.gpg.security.acceptRevokedKeyUnhashedIssuerSubPacket', true);
-        parent::tearDown();
-    }
-
     public function testPublicKeyRevocationCheckService_Check_Success()
     {
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key');

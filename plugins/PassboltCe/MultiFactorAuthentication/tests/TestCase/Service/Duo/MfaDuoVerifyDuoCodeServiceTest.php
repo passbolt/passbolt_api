@@ -34,12 +34,6 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
     use TruncateDirtyTables;
     use MfaOrgSettingsTestTrait;
 
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        Configure::write(MfaDuoVerifyDuoCodeService::PASSBOLT_SECURITY_MFA_DUO_VERIFY_SUBSCRIBER, false);
-    }
-
     public function testMfaDuoVerifyDuoCodeService_Success()
     {
         $settings = $this->getDefaultMfaOrgSettings();

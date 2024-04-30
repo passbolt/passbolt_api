@@ -275,7 +275,7 @@ class DirectoryEntriesTable extends Table
      * that are not in the directory anymore
      *
      * @param string $model name
-     * @param array $directoryIds directory ids list
+     * @param ?array $directoryIds directory ids list
      * @return mixed
      */
     public function lookupEntriesForDeletion(string $model, ?array $directoryIds = null)

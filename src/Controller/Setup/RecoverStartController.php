@@ -67,7 +67,6 @@ class RecoverStartController extends AppController
             $this->success(__('The operation was successful.'), $data);
         } else {
             $this->set('title', Configure::read('passbolt.meta.description'));
-            $infoService->setTemplate($this->viewBuilder());
         }
     }
 }

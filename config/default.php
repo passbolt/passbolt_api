@@ -327,7 +327,13 @@ return [
             ],
             'smtpSettings' => [
                 // A typo is here covered for backward compatibility
-                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN)
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_ENABLED', env('PASSBOLT_PLUGINS_SMTP_SETTINGS', true)), FILTER_VALIDATE_BOOLEAN),
+                'security' => [
+                    'sslVerifyPeer' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_SECURITY_SSL_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
+                    'sslVerifyPeerName' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_SECURITY_SSL_VERIFY_PEER_NAME', true), FILTER_VALIDATE_BOOLEAN),
+                    'sslAllowSelfSigned' => filter_var(env('PASSBOLT_PLUGINS_SMTP_SETTINGS_SECURITY_SSL_ALLOW_SELF_SIGNED', false), FILTER_VALIDATE_BOOLEAN),
+                    'sslCafile' => env('PASSBOLT_PLUGINS_SMTP_SETTINGS_SECURITY_SSL_CAFILE', null),
+                ],
             ],
             'selfRegistration' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_SELF_REGISTRATION_ENABLED', true), FILTER_VALIDATE_BOOLEAN)
@@ -364,6 +370,20 @@ return [
             ],
             'directorySync' => [
                 'caseSensitiveFilters' => filter_var(env('PASSBOLT_PLUGINS_DIRECTORY_SYNC_CASE_SENSITIVE_FILTERS', false), FILTER_VALIDATE_BOOLEAN),
+                'security' => [
+                    // This config is part of beta support for this feature, and will be removed or changed in the future.
+                    'sslCustomOptions' => [
+                        // False by default to keep BC with existing installations.
+                        'enabled' => filter_var(env('PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+                        // LDAP_OPT_X_TLS_REQUIRE_CERT - false=LDAP_OPT_X_TLS_NEVER, true=not set.
+                        // Setting this to `false` is discouraged and can open up multiple attack vectors.
+                        'verifyPeer' => filter_var(env('PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER', true), FILTER_VALIDATE_BOOLEAN),
+                        // LDAP_OPT_X_TLS_CACERTDIR
+                        'cadir' => env('PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_CADIR', null),
+                        // LDAP_OPT_X_TLS_CACERTFILE
+                        'cafile' => env('PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_CAFILE', null),
+                    ],
+                ],
             ],
             'healthcheckUi' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_HEALTHCHECK_UI_ENABLED', true), FILTER_VALIDATE_BOOLEAN),

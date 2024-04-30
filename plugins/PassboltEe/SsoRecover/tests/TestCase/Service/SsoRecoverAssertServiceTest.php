@@ -20,6 +20,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
@@ -52,6 +53,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
         parent::setUp();
 
         $this->service = new SsoRecoverAssertService();
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
     }
 
     /**

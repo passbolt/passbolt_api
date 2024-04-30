@@ -20,26 +20,13 @@ use App\Test\Lib\AppTestCase;
 
 class AccountRecoveryTestCase extends AppTestCase
 {
-    protected $pluginEnabled;
-
     /**
      * Setup.
      */
     public function setUp(): void
     {
         parent::setUp();
-        $this->pluginEnabled = $this->isFeaturePluginEnabled('AccountRecovery');
-        if (!$this->pluginEnabled) {
-            $this->enableFeaturePlugin('AccountRecovery');
-        }
-    }
-
-    public function tearDown(): void
-    {
-        parent::tearDown();
-        if (!$this->pluginEnabled) {
-            $this->disableFeaturePlugin('AccountRecovery');
-        }
+        $this->enableFeaturePlugin('AccountRecovery');
     }
 
     /**

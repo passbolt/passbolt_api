@@ -19,8 +19,9 @@ namespace Passbolt\Sso\Test\TestCase\Utility\Adfs\Provider;
 
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use GuzzleHttp\Psr7\Response;
 use Passbolt\Sso\Model\Entity\SsoSetting;
-use Passbolt\Sso\Test\Lib\AdfsProviderTestTrait;
+use Passbolt\Sso\Test\Lib\SsoProviderTestTrait;
 use Passbolt\Sso\Utility\Adfs\Provider\AdfsProvider;
 use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
 
@@ -29,7 +30,7 @@ use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
  */
 class AdfsProviderTest extends TestCase
 {
-    use AdfsProviderTestTrait;
+    use SsoProviderTestTrait;
 
     private AdfsProvider $adfsProvider;
 
@@ -58,11 +59,14 @@ class AdfsProviderTest extends TestCase
     public function testSsoAdfsProvider_getBaseAuthorizationUrl(): void
     {
         // Mock HTTP client
-        $httpClientMock = $this->mockHttpClientResponse(200, [], json_encode([
-            'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
-            'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
-            'token_endpoint' => 'http://adfs.passbolt.test/token',
-        ]));
+        $responseQueue = [
+            new Response(200, [], json_encode([
+                'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
+                'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
+                'token_endpoint' => 'http://adfs.passbolt.test/token',
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
         $this->adfsProvider->setHttpClient($httpClientMock);
 
         $url = $this->adfsProvider->getBaseAuthorizationUrl();
@@ -73,11 +77,14 @@ class AdfsProviderTest extends TestCase
     public function testSsoAdfsProvider_getBaseAccessTokenUrl(): void
     {
         // Mock HTTP client
-        $httpClientMock = $this->mockHttpClientResponse(200, [], json_encode([
-            'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
-            'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
-            'token_endpoint' => 'http://adfs.passbolt.test/token',
-        ]));
+        $responseQueue = [
+            new Response(200, [], json_encode([
+                'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
+                'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
+                'token_endpoint' => 'http://adfs.passbolt.test/token',
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
         $this->adfsProvider->setHttpClient($httpClientMock);
 
         $url = $this->adfsProvider->getBaseAccessTokenUrl([]);
@@ -87,11 +94,14 @@ class AdfsProviderTest extends TestCase
 
     public function testSsoAdfsProvider_getOpenIdBaseUri(): void
     {
-        $httpClientMock = $this->mockHttpClientResponse(200, [], json_encode([
-            'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
-            'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
-            'token_endpoint' => 'http://adfs.passbolt.test/token',
-        ]));
+        $responseQueue = [
+            new Response(200, [], json_encode([
+                'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
+                'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
+                'token_endpoint' => 'http://adfs.passbolt.test/token',
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
         $this->adfsProvider->setHttpClient($httpClientMock);
 
         $url = $this->adfsProvider->getOpenIdBaseUri();
@@ -101,11 +111,14 @@ class AdfsProviderTest extends TestCase
 
     public function testSsoAdfsProvider_getOpenIdConfigurationUri(): void
     {
-        $httpClientMock = $this->mockHttpClientResponse(200, [], json_encode([
-            'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
-            'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
-            'token_endpoint' => 'http://adfs.passbolt.test/token',
-        ]));
+        $responseQueue = [
+            new Response(200, [], json_encode([
+                'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
+                'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
+                'token_endpoint' => 'http://adfs.passbolt.test/token',
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
         $this->adfsProvider->setHttpClient($httpClientMock);
 
         $url = $this->adfsProvider->getOpenIdConfigurationUri();
@@ -115,11 +128,14 @@ class AdfsProviderTest extends TestCase
 
     public function testSsoAdfsProvider_getClientId(): void
     {
-        $httpClientMock = $this->mockHttpClientResponse(200, [], json_encode([
-            'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
-            'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
-            'token_endpoint' => 'http://adfs.passbolt.test/token',
-        ]));
+        $responseQueue = [
+            new Response(200, [], json_encode([
+                'jwks_uri' => 'http://adfs.passbolt.test/jwks/uri',
+                'authorization_endpoint' => 'http://adfs.passbolt.test/authorize',
+                'token_endpoint' => 'http://adfs.passbolt.test/token',
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
         $this->adfsProvider->setHttpClient($httpClientMock);
 
         $clientId = $this->adfsProvider->getClientId();
