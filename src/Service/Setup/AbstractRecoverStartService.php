@@ -17,8 +17,6 @@ declare(strict_types=1);
 
 namespace App\Service\Setup;
 
-use Cake\View\ViewBuilder;
-
 abstract class AbstractRecoverStartService
 {
     /**
@@ -40,18 +38,6 @@ abstract class AbstractRecoverStartService
         }
 
         return $result;
-    }
-
-    /**
-     * @param \Cake\View\ViewBuilder $viewBuilder View builder
-     * @return void
-     */
-    public function setTemplate(ViewBuilder $viewBuilder): void
-    {
-        $viewBuilder
-            ->setTemplatePath('/Setup')
-            ->setLayout('default')
-            ->setTemplate('recoverStart');
     }
 
     /**

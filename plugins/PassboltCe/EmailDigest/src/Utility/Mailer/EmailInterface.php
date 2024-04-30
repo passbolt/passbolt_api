@@ -100,4 +100,19 @@ interface EmailInterface
      * @return self
      */
     public function setEmailIds(array $emailIds): self;
+
+    /**
+     * Sets the full base URL for this digest
+     *
+     * @param string $fullBaseUrl full base url
+     * @return self
+     */
+    public function setFullBaseUrl(string $fullBaseUrl): self;
+
+    /**
+     * Gets the full base URL for this digest
+     *
+     * @return string
+     */
+    public function getFullBaseUrl(): string;
 }

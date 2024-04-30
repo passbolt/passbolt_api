@@ -92,8 +92,8 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         $this->unloadNotificationSettings();
+        parent::tearDown();
     }
 
     public function testUpdateFolderSuccess_UpdateFolderMeta()

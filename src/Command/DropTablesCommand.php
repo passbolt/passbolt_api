@@ -45,7 +45,7 @@ class DropTablesCommand extends PassboltCommand
 
         $datasource = $args->getOption('datasource');
         $connection = ConnectionManager::get($datasource);
-        $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
+        $tables = ConnectionManager::get($datasource)->getSchemaCollection()->listTables();
         foreach ($tables as $table) {
             $io->out(__('Dropping table ' . $table));
             $quotedTableName = $connection->getDriver()->quoteIdentifier($table);

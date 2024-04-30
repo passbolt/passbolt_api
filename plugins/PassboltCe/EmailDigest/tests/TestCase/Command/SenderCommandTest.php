@@ -58,6 +58,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->loadRoutes();
         $this->setDummyFrenchTranslator();
         (new AvatarsConfigurationService())->loadConfiguration();
+        $this->enableFeaturePlugin(EmailDigestPlugin::class);
     }
 
     /**
@@ -230,6 +231,7 @@ class SenderCommandTest extends AppIntegrationTestCase
             ->setRecipient($recipient)
             ->setTemplate(ResourceCreateEmailRedactor::TEMPLATE)
             ->setField('template_vars.body.user', $user)
+            ->setField('template_vars.locale', 'en-UK')
             ->persist();
 
         EmailQueueFactory::make($nEmailsSent)
@@ -237,6 +239,7 @@ class SenderCommandTest extends AppIntegrationTestCase
             ->setTemplate(GroupUserAddEmailRedactor::TEMPLATE)
             ->setField('template_vars.body.admin', $admin)
             ->setField('template_vars.body.user', $user)
+            ->setField('template_vars.locale', 'en-UK')
             ->persist();
 
         // Upgrade priority of this template to ensure that the emails are sent in this order

@@ -27,6 +27,7 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\GetUserLocaleService;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 /**
@@ -46,6 +47,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     {
         parent::setUp();
 
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
         $this->setSelfRegistrationSettingsData();
     }
 

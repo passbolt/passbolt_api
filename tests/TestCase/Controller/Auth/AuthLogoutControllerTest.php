@@ -24,13 +24,10 @@ use Laminas\Diactoros\Response\RedirectResponse;
 
 class AuthLogoutControllerTest extends AppIntegrationTestCase
 {
-    /**
-     * Tear down
-     */
-    public function tearDown(): void
+    public function setUp(): void
     {
-        parent::tearDown();
-        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, false);
+        parent::setUp();
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
     }
 
     /**
@@ -81,7 +78,6 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
 
     public function testAuthLogoutController_Success_GetMethod_Json_SignedIn(): void
     {
-        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
         $this->get('/auth/logout.json');
         $this->assertNoRedirect();
         $this->assertResponseContains('You are successfully logged out.');
@@ -89,7 +85,6 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
 
     public function testAuthLogoutController_Success_GetMethod_Json_NotSignedIn(): void
     {
-        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
         $this->logInAsUser();
         $this->get('/auth/logout.json');
         $this->assertResponseContains('You are successfully logged out.');
@@ -98,7 +93,6 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
 
     public function testAuthLogoutController_Success_GetMethod_NotJson(): void
     {
-        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, true);
         $this->get('/auth/logout');
         $this->assertRedirect('/auth/login');
     }
@@ -111,6 +105,7 @@ class AuthLogoutControllerTest extends AppIntegrationTestCase
 
     public function testAuthLogoutController_Error_GetMethod_GetLogoutEndpointDisabled()
     {
+        Configure::write(AuthLogoutController::GET_LOGOUT_ENDPOINT_ENABLED_CONFIG, false);
         $this->get('/auth/logout');
         $this->assertResponseError('The logout route should only be accessed with POST method.');
 

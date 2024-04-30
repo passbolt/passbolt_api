@@ -29,6 +29,7 @@ use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
+use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
@@ -66,12 +67,11 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
-        $this->disableFeaturePlugin('JwtAuthentication');
         $this->restoreEmailNotificationsSettings();
         unset($this->Resources);
         unset($this->Permissions);
         unset($this->Resources);
+        parent::tearDown();
     }
 
     public function testResourcesAddController_Success(): void
@@ -223,6 +223,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
      */
     public function testResourcesAddController_Error_Validation(string $caseLabel, array $case)
     {
+        $this->enableFeaturePlugin(ResourceTypesPlugin::class);
         $this->logInAsUser();
         $this->postJson('/resources.json', $case['data']);
         $this->assertError(400, 'Could not validate resource data');

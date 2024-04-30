@@ -21,6 +21,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 
 class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
@@ -35,9 +36,10 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
 
     public function setUp(): void
     {
+        parent::setUp();
         // The setup/recover requires a supported user agent.
         $_ENV['HTTP_USER_AGENT'] = 'Firefox';
-        parent::setUp();
+        $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
     }
 
     public function tearDown(): void

@@ -37,6 +37,7 @@ use App\Service\Avatars\AvatarsConfigurationService;
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Service\Cookie\DefaultSecureCookieService;
 use App\ServiceProvider\CommandServiceProvider;
+use App\ServiceProvider\HealthcheckServiceProvider;
 use App\ServiceProvider\ResourceServiceProvider;
 use App\ServiceProvider\SetupServiceProvider;
 use App\ServiceProvider\TestEmailServiceProvider;
@@ -297,6 +298,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (PHP_SAPI === 'cli') {
             $container->addServiceProvider(new CommandServiceProvider());
         }
+        $container->addServiceProvider(new HealthcheckServiceProvider());
     }
 
     /**

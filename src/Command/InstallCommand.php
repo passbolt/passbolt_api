@@ -17,17 +17,28 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Model\Entity\Role;
+use App\Service\Command\ProcessUserService;
+use App\Service\Healthcheck\ConfigFiles\AppConfigFileHealthcheck;
+use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
+use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
+use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
+use App\Service\Healthcheck\Gpg\FingerprintMatchGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\KeyNotDefaultGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PrivateKeyReadableAndParsableGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PublicKeyEmailGpgHealthcheck;
+use App\Service\Healthcheck\Gpg\PublicKeyReadableAndParsableGpgHealthcheck;
+use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Healthcheck\HealthcheckWithOptionsInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
-use App\Utility\Healthchecks;
-use App\Utility\Healthchecks\CoreHealthchecks;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
-use Cake\Http\Client;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtAbstractService;
+use Passbolt\JwtAuthentication\JwtAuthenticationPlugin;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use PassboltTestData\Command\InsertCommand;
 
@@ -36,17 +47,27 @@ class InstallCommand extends PassboltCommand
     use DatabaseAwareCommandTrait;
     use FeaturePluginAwareTrait;
 
-    private ?Client $client;
+    private HealthcheckServiceCollector $healthcheckServiceCollector;
+
+    /**
+     * @var \App\Service\Command\ProcessUserService
+     */
+    protected ProcessUserService $processUserService;
 
     /**
      * The client passed in the constructor might be null when run using the selenium tests
      *
-     * @param ?\Cake\Http\Client $client client requesting the healthcheck status
+     * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check service collector.
      */
-    public function __construct(?Client $client = null)
-    {
+    public function __construct(
+        ProcessUserService $processUserService,
+        HealthcheckServiceCollector $healthcheckServiceCollector
+    ) {
         parent::__construct();
-        $this->client = $client;
+
+        $this->processUserService = $processUserService;
+        $this->healthcheckServiceCollector = $healthcheckServiceCollector;
     }
 
     /**
@@ -110,7 +131,7 @@ class InstallCommand extends PassboltCommand
 
         // Root user is not allowed to execute this command.
         // This command needs to be executed with the same user as the webserver.
-        $this->assertCurrentProcessUser($io);
+        $this->assertCurrentProcessUser($io, $this->processUserService);
 
         // Create a JWT key pair
         if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
@@ -127,7 +148,6 @@ class InstallCommand extends PassboltCommand
         if ($args->getOption('quick')) {
             return $this->quickInstall($args, $io);
         }
-
         // Normal mode
         if (!$this->healthchecks($args, $io)) {
             return $this->errorCode();
@@ -185,8 +205,9 @@ class InstallCommand extends PassboltCommand
                 '--last-name', $args->getOption('admin-last-name'),
             ];
 
+            $registerUserCommand = new RegisterUserCommand($this->processUserService);
             $result = $this->executeCommand(
-                RegisterUserCommand::class,
+                $registerUserCommand,
                 $this->formatOptions($args, $options),
                 $io
             );
@@ -314,7 +335,41 @@ class InstallCommand extends PassboltCommand
         $io->out(__('Import the server private key in the keyring'));
         $io->hr();
 
-        return $this->executeCommand(KeyringInitCommand::class, $this->formatOptions($args), $io);
+        $keyringInitCommand = new KeyringInitCommand($this->processUserService);
+
+        return $this->executeCommand($keyringInitCommand, $this->formatOptions($args), $io);
+    }
+
+    /**
+     * @return \App\Service\Healthcheck\HealthcheckServiceInterface[]
+     */
+    protected function getInstallCheckHealthcheckServices(): array
+    {
+        $domainsIncluded = [];
+        if ($this->isFeaturePluginEnabled(JwtAuthenticationPlugin::class)) {
+            $domainsIncluded = [
+                HealthcheckServiceCollector::DOMAIN_JWT,
+            ];
+        }
+
+        $servicesIncluded = [
+            AppConfigFileHealthcheck::class,
+            ValidFullBaseUrlCoreHealthcheck::class,
+            PublicKeyReadableAndParsableGpgHealthcheck::class,
+            PrivateKeyReadableAndParsableGpgHealthcheck::class,
+            HomeVariableDefinedGpgHealthcheck::class,
+            HomeVariableWritableGpgHealthcheck::class,
+            FingerprintMatchGpgHealthcheck::class,
+            PublicKeyEmailGpgHealthcheck::class,
+        ];
+
+        // In production don't accept default GPG server key
+        if (!Configure::read('debug')) {
+            $servicesIncluded[] = KeyNotDefaultGpgHealthcheck::class;
+        }
+        $servicesIncluded[] = ConnectDatabaseHealthcheck::class;
+
+        return $this->healthcheckServiceCollector->getServicesFiltered($domainsIncluded, $servicesIncluded);
     }
 
     /**
@@ -328,61 +383,17 @@ class InstallCommand extends PassboltCommand
     {
         $io->nl();
         $io->out(__('Running baseline checks, please wait...'));
+        $healthcheckServices = $this->getInstallCheckHealthcheckServices();
         try {
-            // Make sure the baseline config files are present
-            $checks = Healthchecks::configFiles();
-            if (!$checks['configFile']['app']) {
-                throw new CakeException(__('The application config file is missing in {0}.', CONFIG));
-            }
-
-            // Check application url config
-            $checks = (new CoreHealthchecks($this->client))->all($checks);
-            if (!$checks['core']['fullBaseUrl'] && !$checks['core']['validFullBaseUrl']) {
-                $msg = __('The fullBaseUrl is not set or not valid. {0}', $checks['core']['info']['fullBaseUrl']);
-                throw new CakeException($msg);
-            }
-
-            // Check that a GPG configuration id is provided
-            $checks = Healthchecks::gpg();
-            if (!$checks['gpg']['gpgKey'] || !$checks['gpg']['gpgKeyPublic'] || !$checks['gpg']['gpgKeyPrivate']) {
-                throw new CakeException(__('The GnuPG config for the server is not available or incomplete'));
-            }
-            // Check if keyring is present and writable
-            if (!$checks['gpg']['gpgHome']) {
-                throw new CakeException(__('The OpenPGP keyring location is not set.'));
-            }
-            if (!$checks['gpg']['gpgHomeWritable']) {
-                throw new CakeException(__('The OpenPGP keyring location is not writable.'));
-            }
-
-            // In production don't accept default GPG server key
-            if (!Configure::read('debug')) {
-                if (!$checks['gpg']['gpgKeyNotDefault']) {
-                    $msg = __('Default GnuPG server key cannot be used in production.');
-                    $msg .= ' ' . __('Please change the values of passbolt.gpg.server in config/passbolt.php.');
-                    $msg .= ' ' . __('If you do not have yet a server key, please generate one.');
-                    $msg .= ' ' . __('Take a look at the install documentation for more information.');
-                    throw new CakeException($msg);
+            foreach ($healthcheckServices as $healthcheckService) {
+                if ($healthcheckService instanceof HealthcheckWithOptionsInterface) {
+                    $healthcheckService->setOptions($args->getOptions());
                 }
-            }
 
-            // Check that there is a public and private key found at the given path
-            if (!$checks['gpg']['gpgKeyPublicReadable']) {
-                $msg = 'No public key found at the given path {0}';
-                throw new CakeException(__($msg, Configure::read('GPG.serverKey.public')));
-            }
-            if (!$checks['gpg']['gpgKeyPrivateReadable']) {
-                $msg = 'No private key found at the given path {0}';
-                throw new CakeException(__($msg, Configure::read('GPG.serverKey.private')));
-            }
-
-            // Check that the public and private key match the fingerprint
-            if (!$checks['gpg']['gpgKeyPrivateFingerprint'] || !$checks['gpg']['gpgKeyPublicFingerprint']) {
-                $msg = __('The server key fingerprint does not match the fingerprint mentioned in config/passbolt.php');
-                throw new CakeException($msg);
-            }
-            if (!$checks['gpg']['gpgKeyPublicEmail']) {
-                throw new CakeException(__('The server public key should have an email id.'));
+                $healthcheckService->check();
+                if (!$healthcheckService->isPassed()) {
+                    throw new CakeException($healthcheckService->getFailureMessage());
+                }
             }
         } catch (CakeException $e) {
             $this->error($e->getMessage(), $io);
@@ -391,43 +402,17 @@ class InstallCommand extends PassboltCommand
             return false;
         }
 
-        // Database checks
-        $checks = Healthchecks::database($args->getOption('datasource'));
-        if (!$checks['database']['connect'] || !$checks['database']['supportedBackend']) {
-            $this->error(__('There are some issues with the database configuration.'), $io);
-            $this->error(__('Please run ./bin/cake passbolt healthcheck for more information and help.'), $io);
-
-            return false;
-        }
-        if ($checks['database']['tablesCount']) {
-            if (!$args->getOption('force')) {
+        // If force is false, and database is populated, warn
+        if (!$args->getOption('force')) {
+            /** @var \App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck $tableCountCheck */
+            $tableCountCheck = $this->healthcheckServiceCollector
+                ->getService(TablesCountDatabaseHealthcheck::class);
+            $tableCountCheck->check();
+            if ($tableCountCheck->isPassed()) {
                 $msg = __('Some tables are already present in the database.') . ' ';
                 $msg .= __('A new installation would override existing data.');
                 $this->error($msg, $io);
                 $this->error(__('Please use --force to proceed anyway.'), $io);
-
-                return false;
-            }
-        }
-
-        // JWT checks
-        if ($this->isFeaturePluginEnabled('JwtAuthentication')) {
-            $jwtKeyPairService = new JwtKeyPairService();
-            $checks = Healthchecks::jwt($jwtKeyPairService);
-            if ($checks['jwt']['keyPairValid'] !== true) {
-                $fixCmd = $jwtKeyPairService->getCreateJwtKeysCommand();
-
-                $this->error('The JWT key pair is not valid, or cannot be found.', $io);
-                $this->error('Please run ' . $fixCmd . ' to create a valid pair.', $io);
-
-                return false;
-            }
-
-            if ($checks['jwt']['jwtWritable'] !== true) {
-                $folder = JwtAbstractService::JWT_CONFIG_DIR;
-                $fixCmd = "sudo chmod 775 $(find $folder -type d)";
-                $this->error("The directory {$folder} is not writable.", $io);
-                $this->error('You can try ' . $fixCmd, $io);
 
                 return false;
             }
