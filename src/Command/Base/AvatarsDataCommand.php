@@ -29,9 +29,10 @@ class AvatarsDataCommand extends DataCommand
     {
         return $io->out(__('Will not perform anything for the moment as Avatars are highly optional.'));
 
-        $this->loadModel('Avatars');
-        $this->loadModel('Users');
-        $users = $this->Users->find()
+        $avatarsTable = $this->fetchTable('Avatars');
+        $usersTable = $this->fetchTable('Users');
+
+        $users = $usersTable->find()
             ->contain('Profiles')
             ->all();
         $count = 0;
@@ -52,8 +53,8 @@ class AvatarsDataCommand extends DataCommand
                     'foreign_key' => $user->profile->id,
                 ];
 
-                $entity = $this->Avatars->newEntity($data, ['validate' => false]);
-                $avatar = $this->Avatars->save($entity, ['checkRules' => false]);
+                $entity = $avatarsTable->newEntity($data, ['validate' => false]);
+                $avatar = $avatarsTable->save($entity, ['checkRules' => false]);
                 if (!$avatar) {
                     $io->out('Error inserting data for entity "' . $this->entityName);
                 } else {

@@ -118,8 +118,8 @@ class SecretsDataCommand extends DataCommand
         // As a default key can be shared among user, the encryption will require the key fingerprint.
         // As the key meta data are already stored in db, get the meta data from the db and avoid performance issue
         // by avoiding any gpg extra parsing.
-        $this->loadModel('Gpgkeys');
-        $gpgkey = $this->Gpgkeys->find('all')
+        $gpgkeysTable = $this->fetchTable('Gpgkeys');
+        $gpgkey = $gpgkeysTable->find('all')
             ->where(['user_id' => $user->id])
             ->first();
         $keyFingerprint = $gpgkey['fingerprint'];
@@ -148,12 +148,12 @@ class SecretsDataCommand extends DataCommand
 
         $secrets = [];
 
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
+        $usersTable = $this->fetchTable('Users');
+        $resourcesTable = $this->fetchTable('Resources');
 
-        $users = $this->Users->findIndex(Role::USER);
+        $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
-            $resources = $this->Resources->findIndex($user->id);
+            $resources = $resourcesTable->findIndex($user->id);
             foreach ($resources as $resource) {
                 $password = $this->_getPassword($resource->id);
                 $armoredPassword = $this->_encrypt($password, $user);

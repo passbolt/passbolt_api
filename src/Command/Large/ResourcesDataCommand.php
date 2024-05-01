@@ -39,11 +39,11 @@ class ResourcesDataCommand extends DataCommand
 
     public function getResourcesScenarioForEachUser()
     {
-        $this->loadModel('Users');
+        $usersTable = $this->fetchTable('Users');
 
         // Resources by person
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_foreach_user');
-        $users = $this->Users->findIndex(Role::USER);
+        $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
             for ($i = 0; $i < $max; $i++) {
                 $userId = $user->id;

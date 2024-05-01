@@ -29,9 +29,10 @@ class GroupsUsersDataCommand extends DataCommand
      */
     protected function getGroupsUsersSettings()
     {
+        $usersTable = $this->fetchTable('Users');
         // all users in one group
         $data['all_users']['managers'] = ['admin'];
-        $users = $this->Users->find()->where(['deleted' => 0, 'active' => 1])->all();
+        $users = $usersTable->find()->where(['deleted' => 0, 'active' => 1])->all();
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.users');
         for ($i = 0; $i < $max; $i++) {
             $data['all_users']['users'][] = "user_$i";
@@ -47,7 +48,6 @@ class GroupsUsersDataCommand extends DataCommand
      */
     public function getData()
     {
-        $this->loadModel('Users');
         $groupsUsers = [];
         $settings = $this->getGroupsUsersSettings();
 

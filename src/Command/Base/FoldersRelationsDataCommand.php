@@ -34,8 +34,6 @@ class FoldersRelationsDataCommand extends DataCommand
      */
     public function getData()
     {
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
         $foldersRelations = $this->_getData();
 
         // Additional metadata

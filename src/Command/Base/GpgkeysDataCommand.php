@@ -31,7 +31,9 @@ class GpgkeysDataCommand extends DataCommand
      */
     public function getGpgkeyPath(string $userId): string
     {
-        $user = $this->loadModel('Users')->find('all')
+        $usersTable = $this->fetchTable('Users');
+        $user = $usersTable
+            ->find('all')
             ->contain(['Profiles'])
             ->where(['Users.id' => $userId])
             ->first();
@@ -91,7 +93,8 @@ class GpgkeysDataCommand extends DataCommand
      */
     public function getData()
     {
-        $users = $this->loadModel('Users')->find('all');
+        $usersTable = $this->fetchTable('Users');
+        $users = $usersTable->find('all');
         $Gpg = OpenPGPBackendFactory::get();
         $keys = [];
         // users to skip, like if they have not completed the setup for example
