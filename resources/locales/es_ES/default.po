@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-04-11 09:45+0000\n"
-"PO-Revision-Date: 2024-04-11 12:56\n"
+"POT-Creation-Date: 2024-04-24 04:35+0000\n"
+"PO-Revision-Date: 2024-04-26 16:44\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1240,6 +1240,537 @@ msgstr "Validación correcta para el grupo {0}"
 msgid "Could not validate group user data."
 msgstr "No se pudo validar los datos del grupo de usuarios."
 
+msgid "All email notifications will be sent."
+msgstr "Se enviarán todas las notificaciones de correo electrónico."
+
+msgid "Some email notifications are disabled by the administrator."
+msgstr "Algunas notificaciones de correo electrónico están desactivadas por el administrador."
+
+msgid "Host availability will be checked."
+msgstr "Se comprobará la disponibilidad del host."
+
+msgid "Host availability checking is disabled."
+msgstr "La comprobación de disponibilidad del host está desactivada."
+
+msgid "Make sure this instance is not publicly available on the internet."
+msgstr ""
+
+msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
+msgstr ""
+
+msgid "Or set passbolt.email.validate.mx to true in {0}."
+msgstr ""
+
+msgid "Serving the compiled version of the javascript app."
+msgstr ""
+
+msgid "Using non-compiled Javascript. Passbolt will be slower."
+msgstr ""
+
+msgid "Set passbolt.js.build to production in {0}"
+msgstr ""
+
+msgid "undefined"
+msgstr "sin definir"
+
+msgid "Could not connect to github repository"
+msgstr "No se pudo conectar al repositorio github"
+
+msgid "Could not read tag information on github repository"
+msgstr "No se pudo leer la información de etiquetas en el repositorio github"
+
+msgid "Using latest passbolt version ({0})."
+msgstr ""
+
+msgid "Could connect to passbolt repository to check versions."
+msgstr ""
+
+msgid "This installation is not up to date. Currently using {0} and it should be {1}."
+msgstr ""
+
+msgid "Could not connect to passbolt repository to check versions"
+msgstr ""
+
+msgid "It is not possible check if your version is up to date."
+msgstr ""
+
+msgid "See https://www.passbolt.com/help/tech/update"
+msgstr ""
+
+msgid "Check the network configuration to allow this script to check for updates."
+msgstr ""
+
+msgid "Search engine robots are told not to index content."
+msgstr ""
+
+msgid "Search engine robots are not told not to index content."
+msgstr ""
+
+msgid "Set passbolt.meta.robots to false in {0}."
+msgstr ""
+
+msgid "Selenium API endpoints are disabled."
+msgstr ""
+
+msgid "Selenium API endpoints are active. This setting should be used for testing only."
+msgstr ""
+
+msgid "Set passbolt.selenium.active to false in {0}."
+msgstr ""
+
+msgid "The Self Registration plugin is enabled."
+msgstr ""
+
+msgid "The Self Registration plugin is disabled."
+msgstr ""
+
+msgid "Enable the plugin in order to define self registration settings."
+msgstr ""
+
+msgid "Registration is closed, only administrators can add users."
+msgstr ""
+
+msgid "The self registration provider is: {0}."
+msgstr ""
+
+msgid "The deprecated self registration public setting was not found in {0}."
+msgstr ""
+
+msgid "The deprecated self registration public setting was found in {0}."
+msgstr ""
+
+msgid "You may remove the \"passbolt.registration.public\" setting."
+msgstr ""
+
+msgid "Passbolt is configured to force SSL use."
+msgstr ""
+
+msgid "Passbolt is not configured to force SSL use."
+msgstr ""
+
+msgid "Set passbolt.ssl.force to true in {0}."
+msgstr ""
+
+msgid "App.fullBaseUrl is set to HTTPS."
+msgstr ""
+
+msgid "App.fullBaseUrl is not set to HTTPS."
+msgstr ""
+
+msgid "Check App.fullBaseUrl url scheme in {0}."
+msgstr ""
+
+msgid "The application config file is present"
+msgstr ""
+
+msgid "The application config file is missing in {0}"
+msgstr ""
+
+msgid "Copy {0} to {1}"
+msgstr "Copiar {0} a {1}"
+
+msgid "The passbolt config file is present"
+msgstr "El archivo de configuración de Passbolt está presente"
+
+msgid "The passbolt config file is missing in {0}"
+msgstr "Falta el archivo de configuración de Passbolt en {0}"
+
+msgid "The passbolt config file is not required if passbolt is configured with environment variables"
+msgstr "El archivo de configuración de Passbolt no es necesario si Passbolt está configurado con variables de entorno"
+
+msgid "Cache is working."
+msgstr "La caché está funcionando."
+
+msgid "Cache is NOT working."
+msgstr "La caché NO está funcionando."
+
+msgid "Check the settings in {0}"
+msgstr "Compruebe la configuración en {0}"
+
+msgid "Debug mode is off."
+msgstr "Modo de depuración desactivado."
+
+msgid "Debug mode is on."
+msgstr "Modo de depuración activado."
+
+msgid "Set debug to false in {0}"
+msgstr ""
+
+msgid "Full base url is set to {0}"
+msgstr "La URL base completa se ha establecido a {0}"
+
+msgid "Full base url is not set. The application is using: {0}."
+msgstr ""
+
+msgid "Edit App.fullBaseUrl in {0}"
+msgstr ""
+
+msgid "/healthcheck/status is reachable."
+msgstr ""
+
+msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
+msgstr ""
+
+msgid "Check that the domain name is correct in {0}"
+msgstr ""
+
+msgid "Check the network settings"
+msgstr ""
+
+msgid "Unique value set for security.salt"
+msgstr ""
+
+msgid "Default value found for security.salt"
+msgstr ""
+
+msgid "Edit the security.salt in {0}"
+msgstr ""
+
+msgid "App.fullBaseUrl validation OK."
+msgstr ""
+
+msgid "App.fullBaseUrl does not validate. {0}."
+msgstr ""
+
+msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
+msgstr ""
+
+msgid "The application is able to connect to the database"
+msgstr ""
+
+msgid "The driver defined in the database configuration is not supported."
+msgstr ""
+
+msgid "The application is not able to connect to the database."
+msgstr ""
+
+msgid "Ensure that the driver defined in {0} is one of the following: {1}."
+msgstr ""
+
+msgid "Double check the host, database name, username and password in {0}."
+msgstr ""
+
+msgid "Make sure the database exists and is accessible for the given database user."
+msgstr ""
+
+msgid "Some default content is present."
+msgstr ""
+
+msgid "No default content found."
+msgstr ""
+
+msgid "Run the install script to install the database tables"
+msgstr ""
+
+msgid "The database schema up to date."
+msgstr ""
+
+msgid "The database schema is not up to date."
+msgstr ""
+
+msgid "Run the migration scripts:"
+msgstr ""
+
+msgid "{0} tables found."
+msgstr "{0} tablas encontradas."
+
+msgid "No table found."
+msgstr "No se han encontrado tablas."
+
+msgid "GD or Imagick extension is installed."
+msgstr "La extensión GD o Imagick está instalada."
+
+msgid "You must enable the gd or imagick extensions to use Passbolt."
+msgstr "Debe habilitar las extensiones GD o Imagick para usar Passbolt."
+
+msgid "See. https://secure.php.net/manual/en/book.image.php"
+msgstr "Vea https://secure.php.net/manual/es/book.image.php"
+
+msgid "See. https://secure.php.net/manual/en/book.imagick.php"
+msgstr "Vea https://secure.php.net/manual/es/book.imagick.php"
+
+msgid "Intl extension is installed."
+msgstr "La extensión Intl está instalada."
+
+msgid "You must enable the intl extension to use Passbolt."
+msgstr "Debe habilitar la extensión Intl para usar Passbolt."
+
+msgid "See. https://secure.php.net/manual/en/book.intl.php"
+msgstr "Vea https://secure.php.net/manual/es/book.intl.php"
+
+msgid "The logs directory and its content are writable."
+msgstr "El directorio de logs y su contenido tienen permisos de escritura."
+
+msgid "The logs directory and its content are not writable."
+msgstr "El directorio de logs y su contenido no tienen permisos de escritura."
+
+msgid "Ensure the logs directory and its content are writable by the user the webserver user."
+msgstr "Asegúrese de que el usuario del servidor web tiene permisos de escritura en el directorio de registros y su contenido."
+
+msgid "you can try:"
+msgstr "puedes probar:"
+
+msgid "Mbstring extension is installed."
+msgstr "La extensión Mbstring está instalada."
+
+msgid "You must enable the mbstring extension to use Passbolt."
+msgstr "Debe habilitar la extensión Mbstring para usar Passbolt."
+
+msgid "See. https://secure.php.net/manual/en/book.mbstring.php"
+msgstr "Vea https://secure.php.net/manual/es/book.mbstring.php"
+
+msgid "PHP version is {0} or above."
+msgstr "La versión de PHP es {0} o superior."
+
+msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
+msgstr "Las versiones de PHP menores que {0} pronto dejarán de ser compatibles con Passbolt, así que considere actualizar su sistema operativo o entorno PHP."
+
+msgid "PCRE compiled with unicode support."
+msgstr ""
+
+msgid "PCRE has not been compiled with Unicode support."
+msgstr ""
+
+msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
+msgstr ""
+
+msgid "PHP version {0}."
+msgstr "Versión de PHP {0}."
+
+msgid "PHP version is too low, passbolt need PHP {0} or higher."
+msgstr "La versión de PHP es demasiado baja, Passbolt necesita PHP {0} o superior."
+
+msgid "The temporary directory and its content are writable and not executable."
+msgstr ""
+
+msgid "The temporary directory and its content are not writable, or are executable."
+msgstr ""
+
+msgid "Ensure the temporary directory and its content are writable by the webserver user."
+msgstr ""
+
+msgid "The private key can be used to decrypt a message."
+msgstr ""
+
+msgid "The private key cannot be used to decrypt a message"
+msgstr ""
+
+msgid "The private key can be used to decrypt and verify a message."
+msgstr ""
+
+msgid "The private key cannot be used to decrypt and verify a message"
+msgstr ""
+
+msgid "The public key can be used to encrypt a message."
+msgstr ""
+
+msgid "The public key cannot be used to encrypt a message"
+msgstr ""
+
+msgid "Make sure that the server private key is valid and that there is no passphrase."
+msgstr ""
+
+msgid "Make sure you imported the private server key in the keyring of the webserver user."
+msgstr ""
+
+msgid "The public and private keys can be used to encrypt and sign a message."
+msgstr ""
+
+msgid "The public and private keys cannot be used to encrypt and sign a message"
+msgstr ""
+
+msgid "The private key can be used to sign a message."
+msgstr ""
+
+msgid "The private key cannot be used to sign a message"
+msgstr ""
+
+msgid "The public key can be used to verify a signature."
+msgstr ""
+
+msgid "The public key cannot be used to verify a signature."
+msgstr ""
+
+msgid "The server key fingerprint matches the one defined in {0}."
+msgstr ""
+
+msgid "The server key fingerprint doesn't match the one defined in {0}."
+msgstr ""
+
+msgid "Double check the key fingerprint, example: "
+msgstr ""
+
+msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
+msgstr ""
+
+msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
+msgstr ""
+
+msgid "The server private key format is Gopengpg compatible."
+msgstr ""
+
+msgid "The server private key format is not Gopengpg compatible."
+msgstr ""
+
+msgid "The server public key format is Gopengpg compatible."
+msgstr ""
+
+msgid "The server public key format is not Gopengpg compatible."
+msgstr ""
+
+msgid "The environment variable GNUPGHOME is set to {0}."
+msgstr ""
+
+msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
+msgstr ""
+
+msgid "Ensure the keyring location exists and is accessible by the webserver user."
+msgstr ""
+
+msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
+msgstr ""
+
+msgid "The directory {0} containing the keyring is writable by the webserver user."
+msgstr ""
+
+msgid "The directory {0} containing the keyring is not writable by the webserver user."
+msgstr ""
+
+msgid "Ensure the keyring location is accessible by the webserver user."
+msgstr ""
+
+msgid "The server OpenPGP key is not the default one."
+msgstr ""
+
+msgid "Do not use the default OpenPGP key for the server."
+msgstr ""
+
+msgid "The server OpenPGP key is not set."
+msgstr ""
+
+msgid "Create a key, export it and add the fingerprint to {0}"
+msgstr ""
+
+msgid "PHP GPG Module is installed and loaded."
+msgstr ""
+
+msgid "PHP GPG Module is not installed or loaded."
+msgstr ""
+
+msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
+msgstr ""
+
+msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
+msgstr ""
+
+msgid "The private key file is defined in {0} and readable."
+msgstr ""
+
+msgid "The private key file is not defined in {0} or not readable."
+msgstr ""
+
+msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
+msgstr ""
+
+msgid "Ensure there is a private key armored block in the key file."
+msgstr ""
+
+msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
+msgstr ""
+
+msgid "There is a valid email id defined for the server key."
+msgstr ""
+
+msgid "The server key does not have a valid email id."
+msgstr ""
+
+msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
+msgstr ""
+
+msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
+msgstr ""
+
+msgid "Import the private server key in the keyring of the webserver user."
+msgstr ""
+
+msgid "The public key file is defined in {0} and readable."
+msgstr ""
+
+msgid "The public key file is not defined in {0} or not readable."
+msgstr ""
+
+msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
+msgstr ""
+
+msgid "Ensure there is a public key armored block in the key file."
+msgstr ""
+
+msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
+msgstr ""
+
+msgid "Environment"
+msgstr ""
+
+msgid "Config files"
+msgstr ""
+
+msgid "Core config"
+msgstr ""
+
+msgid "SMTP settings"
+msgstr ""
+
+msgid "Application configuration"
+msgstr ""
+
+msgid "Database"
+msgstr "Base de datos"
+
+msgid "GPG Configuration"
+msgstr "Configuración GPG"
+
+msgid "JWT Authentication"
+msgstr ""
+
+msgid "SSL Certificate"
+msgstr ""
+
+msgid "The {0} plugin is enabled."
+msgstr ""
+
+msgid "The {0} plugin is disabled."
+msgstr ""
+
+msgid "Set the environment variable {0} to true"
+msgstr ""
+
+msgid "Enable the plugin in order to define SMTP settings in the database."
+msgstr ""
+
+msgid "Hostname is matching in SSL certificate."
+msgstr ""
+
+msgid "Hostname does not match when validating certificates."
+msgstr ""
+
+msgid "SSL access is enabled."
+msgstr "El acceso SSL está habilitado."
+
+msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
+msgstr "El acceso SSL no está habilitado. Todavía puede continuar, pero es altamente recomendable que configure su servidor web para que use HTTPS antes de continuar."
+
+msgid "Not using a self-signed certificate."
+msgstr ""
+
+msgid "Using a self-signed certificate."
+msgstr ""
+
+msgid "SSL peer certificate validates."
+msgstr ""
+
+msgid "SSL peer certificate does not validate."
+msgstr ""
+
 msgid "Could not validate sub key data."
 msgstr "No se pudieron validar los datos de la sub-clave."
 
@@ -1449,15 +1980,6 @@ msgstr "Validación correcta para el usuario {0}"
 
 msgid "The directory {0} cannot be deleted"
 msgstr "No se puede eliminar el directorio {0}"
-
-msgid "Database connection failed"
-msgstr "La conexión con la base de datos ha fallado"
-
-msgid "Could not connect to github repository"
-msgstr "No se pudo conectar al repositorio github"
-
-msgid "Could not read tag information on github repository"
-msgstr "No se pudo leer la información de etiquetas en el repositorio github"
 
 msgid "The key {0} cannot be used to encrypt."
 msgstr "La clave {0} no se puede usar para encriptar."
@@ -1848,6 +2370,21 @@ msgstr "La clave privada JWT debe tener al menos {0} bytes de longitud."
 
 msgid "The configuration {0} is not correctly set."
 msgstr "La configuración {0} no está establecida correctamente."
+
+msgid "The {0} directory is not writable."
+msgstr ""
+
+msgid "The {0} directory should not be writable."
+msgstr ""
+
+msgid "A valid JWT key pair was found."
+msgstr ""
+
+msgid "A valid JWT key pair is missing."
+msgstr ""
+
+msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
+msgstr ""
 
 msgid "The refresh token should be a valid UUID."
 msgstr "El token de actualización debe ser un UUID válido."
@@ -3034,6 +3571,42 @@ msgstr "Endpoints de configuración SMTP desactivados."
 msgid "The client should be a valid IP or a valid domain."
 msgstr "El cliente debe ser una IP válida o un dominio válido."
 
+msgid "SMTP Settings coherent. You may send a test email to validate them."
+msgstr ""
+
+msgid "SMTP Setting errors: {0}"
+msgstr ""
+
+msgid "The {0} plugin endpoints are disabled."
+msgstr ""
+
+msgid "The {0} plugin endpoints are enabled."
+msgstr ""
+
+msgid "It is recommended to disable the plugin endpoints."
+msgstr ""
+
+msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
+msgstr ""
+
+msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
+msgstr ""
+
+msgid "not found"
+msgstr "no se ha encontrado"
+
+msgid "The SMTP Settings source is: {0}."
+msgstr ""
+
+msgid "It is recommended to set the SMTP Settings in the database through the administration section."
+msgstr ""
+
+msgid "database"
+msgstr "base de datos"
+
+msgid "env variables"
+msgstr "variables de entorno"
+
 msgid "Could not validate the smtp settings."
 msgstr "No se ha podido validar la configuración SMTP."
 
@@ -3045,18 +3618,6 @@ msgstr "No se puede usar la clave OpenPGP del servidor para descifrar la configu
 
 msgid "To fix this problem, you need to configure the SMTP server again."
 msgstr "Para solucionar este problema, necesita configurar el servidor SMTP de nuevo."
-
-msgid "not found"
-msgstr "no se ha encontrado"
-
-msgid "database"
-msgstr "base de datos"
-
-msgid "env variables"
-msgstr "variables de entorno"
-
-msgid "undefined"
-msgstr "sin definir"
 
 msgid "Passbolt test email"
 msgstr "Correo electrónico de prueba de Passbolt"
@@ -3087,9 +3648,6 @@ msgstr "Comprobación del sistema"
 
 msgid "Subscription key"
 msgstr "Clave de suscripción"
-
-msgid "Database"
-msgstr "Base de datos"
 
 msgid "Server keys"
 msgstr "Claves del servidor"
@@ -3205,6 +3763,30 @@ msgstr "Se requiere un estado ssl forzado."
 msgid "The force ssl setting should be a valid boolean."
 msgstr "La configuración de forzar ssl debe ser un booleano válido."
 
+msgid "The passbolt config is writable."
+msgstr "Se puede escribir en la configuración de passbolt."
+
+msgid "The passbolt config is not writable."
+msgstr "No se puede escribir en la configuración de passbolt."
+
+msgid "Ensure the file "
+msgstr "Asegúrese de que el archivo "
+
+msgid "The server OpenPGP private key file is writable."
+msgstr "El archivo de clave privada OpenPGP del servidor tiene permisos de escritura."
+
+msgid "The server OpenPGP private key file is not writable."
+msgstr "El archivo de clave privada OpenPGP del servidor no tiene permisos de escritura."
+
+msgid "Ensure the file {0} is writable by the webserver user."
+msgstr "Asegúrese de que el archivo {0} tiene permisos de escritura para el usuario del servidor web."
+
+msgid "The server OpenPGP public key file is writable."
+msgstr "El archivo de clave pública OpenPGP del servidor tiene permisos de escritura."
+
+msgid "The server OpenPGP public key file is not writable."
+msgstr "El archivo de clave pública OpenPGP del servidor no tiene permisos de escritura."
+
 msgid "The database schema does not match the one expected"
 msgstr "El esquema de base de datos no coincide con el esperado"
 
@@ -3216,33 +3798,6 @@ msgstr "Hubo un problema al crear el primer usuario"
 
 msgid "There was a problem creating the registration token"
 msgstr "Hubo un problema al crear el token de registro"
-
-msgid "The passbolt config is writable."
-msgstr "Se puede escribir en la configuración de passbolt."
-
-msgid "The passbolt config is not writable."
-msgstr "No se puede escribir en la configuración de passbolt."
-
-msgid "Ensure the file "
-msgstr "Asegúrese de que el archivo "
-
-msgid "you can try:"
-msgstr "puedes probar:"
-
-msgid "The server OpenPGP public key file is writable."
-msgstr "El archivo de clave pública OpenPGP del servidor tiene permisos de escritura."
-
-msgid "The server OpenPGP public key file is not writable."
-msgstr "El archivo de clave pública OpenPGP del servidor no tiene permisos de escritura."
-
-msgid "Ensure the file {0} is writable by the webserver user."
-msgstr "Asegúrese de que el archivo {0} tiene permisos de escritura para el usuario del servidor web."
-
-msgid "The server OpenPGP private key file is writable."
-msgstr "El archivo de clave privada OpenPGP del servidor tiene permisos de escritura."
-
-msgid "The server OpenPGP private key file is not writable."
-msgstr "El archivo de clave privada OpenPGP del servidor no tiene permisos de escritura."
 
 msgid "Create your user account!"
 msgstr "¡Crea tu cuenta de usuario!"
@@ -3442,17 +3997,8 @@ msgstr "La reescritura de URL no está correctamente configurada en tu servidor.
 msgid "GPG is configured correctly."
 msgstr "GPG está configurado correctamente."
 
-msgid "GPG Configuration"
-msgstr "Configuración GPG"
-
 msgid "SSL"
 msgstr "SSL"
-
-msgid "SSL access is enabled."
-msgstr "El acceso SSL está habilitado."
-
-msgid "SSL access is not enabled. You can still proceed, but it is highly recommended that you configure your web server to use HTTPS before you continue."
-msgstr "El acceso SSL no está habilitado. Todavía puede continuar, pero es altamente recomendable que configure su servidor web para que use HTTPS antes de continuar."
 
 msgid "Start configuration"
 msgstr "Iniciar configuración"
@@ -3543,9 +4089,6 @@ msgstr "Comprobaciones de salud"
 
 msgid "Passbolt API Status"
 msgstr "Passbolt API Status"
-
-msgid "SSL access is not enabled."
-msgstr "El acceso SSL no está habilitado."
 
 msgid "Group manager"
 msgstr "Administrador de grupo"
