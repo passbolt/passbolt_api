@@ -18,6 +18,7 @@ use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use PassboltTestData\Lib\DataCommand;
+use PassboltTestData\Service\GetGpgkeyPathService;
 
 class SecretsDataCommand extends DataCommand
 {
@@ -111,8 +112,7 @@ class SecretsDataCommand extends DataCommand
     protected function _encrypt($text, $user): string
     {
         // Retrieve the user key file.
-        $GpgkeyCommand = new GpgkeysDataCommand();
-        $gpgkeyPath = $GpgkeyCommand->getGpgkeyPath($user->id);
+        $gpgkeyPath = (new GetGpgkeyPathService())->get($user->id);
 
         // Retrieve the key info.
         // As a default key can be shared among user, the encryption will require the key fingerprint.

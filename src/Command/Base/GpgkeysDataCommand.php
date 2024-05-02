@@ -18,40 +18,11 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use PassboltTestData\Lib\DataCommand;
 use Passbolt\WebInstaller\Utility\Gpg as WebinstallerGpg;
+use PassboltTestData\Service\GetGpgkeyPathService;
 
 class GpgkeysDataCommand extends DataCommand
 {
     public $entityName = 'Gpgkeys';
-
-    /**
-     * Get path of the key for the given user.
-     *
-     * @param string $userId uuid
-     * @return string filename
-     */
-    public function getGpgkeyPath(string $userId): string
-    {
-        $usersTable = $this->fetchTable('Users');
-        $user = $usersTable
-            ->find('all')
-            ->contain(['Profiles'])
-            ->where(['Users.id' => $userId])
-            ->first();
-        $prefix = $user->username;
-        $uprefix = explode('@', $prefix);
-        $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_public.key';
-
-        if (!file_exists($keyFileName)) {
-            $keyFileName = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . 'passbolt_dummy_key.asc';
-            // Generate a new key.
-            // This code can be useful when we need to generate keys.
-            // By definition a gpg key should be unique and a owned by only one user.
-            // $privateKeyPath = PASSBOLT_TEST_DATA_GPGKEY_PATH . DS . $uprefix[0] . '_private.key';
-            // $this->generateKey($user, $keyFileName, $privateKeyPath);
-        }
-
-        return $keyFileName;
-    }
 
     /**
      * Generate and export a user key.
@@ -81,9 +52,9 @@ class GpgkeysDataCommand extends DataCommand
      */
     protected function _getUserKey($userId)
     {
-        $key = file_get_contents($this->getGpgkeyPath($userId));
+        $gpgkeyPath = (new GetGpgkeyPathService())->get($userId);
 
-        return $key;
+        return file_get_contents($gpgkeyPath);
     }
 
     /**

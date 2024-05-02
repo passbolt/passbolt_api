@@ -20,6 +20,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
 use PassboltTestData\Lib\DataCommand;
+use PassboltTestData\Service\GetGpgkeyPathService;
 
 class SecretsDataCommand extends DataCommand
 {
@@ -97,9 +98,7 @@ class SecretsDataCommand extends DataCommand
         // Import the user public key.
         if (!isset($keyImported[$keyFingerprint])) {
             // Retrieve the user key file.
-            $GpgkeyTask = $this->Tasks->load('PassboltTestData.Base/GpgkeysData');
-            $GpgkeyTask->params = $this->params;
-            $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($user->id);
+            $gpgkeyPath = (new GetGpgkeyPathService())->get($user->id);
 
             exec('gpg --import ' . $gpgkeyPath . ' > /dev/null 2>&1');
             $keyImported[$keyFingerprint] = true;
