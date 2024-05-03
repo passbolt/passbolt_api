@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-05-03 19:48\n"
+"PO-Revision-Date: 2024-05-03 20:48\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -956,7 +956,7 @@ msgid "The key should not already be expired."
 msgstr "Klucz nie może być już nieważny."
 
 msgid "The date could not be parsed."
-msgstr ""
+msgstr "Nie udało się sparsować danych."
 
 msgid "The email should be a valid email address."
 msgstr "E-mail powinien być prawidłowym adresem e-mail."
@@ -983,7 +983,7 @@ msgid "{0} updated your memberships in several groups"
 msgstr "Użytkownik {0} zaktualizował Twoje członkostwo w kilku grupach"
 
 msgid "{0} deleted several group memberships"
-msgstr ""
+msgstr "Użytkownik {0} usunął kilka członkostw grupowych"
 
 msgid "You made changes on several resources"
 msgstr ""
@@ -1241,19 +1241,19 @@ msgid "Could not validate group user data."
 msgstr "Nie udało się zweryfikować danych użytkownika grupy."
 
 msgid "All email notifications will be sent."
-msgstr ""
+msgstr "Wszystkie powiadomienia e-mail zostaną wysłane."
 
 msgid "Some email notifications are disabled by the administrator."
-msgstr ""
+msgstr "Niektóre powiadomienia e-mail są wyłączone przez administratora."
 
 msgid "Host availability will be checked."
-msgstr ""
+msgstr "Dostępność hosta zostanie sprawdzona."
 
 msgid "Host availability checking is disabled."
-msgstr ""
+msgstr "Sprawdzanie dostępności hosta jest wyłączone."
 
 msgid "Make sure this instance is not publicly available on the internet."
-msgstr ""
+msgstr "Upewnij się, że ta instancja nie jest publicznie dostępna w Internecie."
 
 msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
 msgstr ""
@@ -1280,7 +1280,7 @@ msgid "Could not read tag information on github repository"
 msgstr "Nie udało się odczytać informacji o tagu w repozytorium github"
 
 msgid "Using latest passbolt version ({0})."
-msgstr ""
+msgstr "Używasz najnowszej wersji passbolt ({0})."
 
 msgid "Could connect to passbolt repository to check versions."
 msgstr ""
@@ -1292,19 +1292,19 @@ msgid "Could not connect to passbolt repository to check versions"
 msgstr ""
 
 msgid "It is not possible check if your version is up to date."
-msgstr ""
+msgstr "Nie można sprawdzić, czy Twoja wersja jest aktualna."
 
 msgid "See https://www.passbolt.com/help/tech/update"
-msgstr ""
+msgstr "Sprawdź https://www.passbolt.com/help/tech/update"
 
 msgid "Check the network configuration to allow this script to check for updates."
-msgstr ""
+msgstr "Sprawdź konfigurację sieci, aby umożliwić temu skryptowi sprawdzanie aktualizacji."
 
 msgid "Search engine robots are told not to index content."
-msgstr ""
+msgstr "Roboty wyszukiwarek mają nie indeksować treści."
 
 msgid "Search engine robots are not told not to index content."
-msgstr ""
+msgstr "Roboty wyszukiwarek nie mają nie indeksować treści."
 
 msgid "Set passbolt.meta.robots to false in {0}."
 msgstr ""
@@ -1352,13 +1352,13 @@ msgid "Set passbolt.ssl.force to true in {0}."
 msgstr ""
 
 msgid "App.fullBaseUrl is set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl jest ustawiony na HTTPS."
 
 msgid "App.fullBaseUrl is not set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl nie jest ustawiony na HTTPS."
 
 msgid "Check App.fullBaseUrl url scheme in {0}."
-msgstr ""
+msgstr "Sprawdź schemat adresu URL dla App.fullBaseUrl w {0}."
 
 msgid "The application config file is present"
 msgstr ""
@@ -1367,7 +1367,7 @@ msgid "The application config file is missing in {0}"
 msgstr ""
 
 msgid "Copy {0} to {1}"
-msgstr ""
+msgstr "Skopiuj {0} do {1}"
 
 msgid "The passbolt config file is present"
 msgstr ""
@@ -1379,19 +1379,19 @@ msgid "The passbolt config file is not required if passbolt is configured with e
 msgstr ""
 
 msgid "Cache is working."
-msgstr ""
+msgstr "Pamięć podręczna działa."
 
 msgid "Cache is NOT working."
-msgstr ""
+msgstr "Pamięć podręczna NIE działa."
 
 msgid "Check the settings in {0}"
-msgstr ""
+msgstr "Sprawdź ustawienia w {0}"
 
 msgid "Debug mode is off."
-msgstr ""
+msgstr "Tryb debugowania jest wyłączony."
 
 msgid "Debug mode is on."
-msgstr ""
+msgstr "Tryb debugowania jest włączony."
 
 msgid "Set debug to false in {0}"
 msgstr ""
@@ -1403,7 +1403,7 @@ msgid "Full base url is not set. The application is using: {0}."
 msgstr ""
 
 msgid "Edit App.fullBaseUrl in {0}"
-msgstr ""
+msgstr "Edytuj App.fullBaseUrl w {0}"
 
 msgid "/healthcheck/status is reachable."
 msgstr ""
@@ -1412,25 +1412,25 @@ msgid "Could not reach the /healthcheck/status with the url specified in App.ful
 msgstr ""
 
 msgid "Check that the domain name is correct in {0}"
-msgstr ""
+msgstr "Sprawdź, czy nazwa domeny jest poprawna w {0}"
 
 msgid "Check the network settings"
-msgstr ""
+msgstr "Sprawdź ustawienia sieci"
 
 msgid "Unique value set for security.salt"
-msgstr ""
+msgstr "Unikalna wartość ustawiona dla security.salt"
 
 msgid "Default value found for security.salt"
-msgstr ""
+msgstr "Znaleziono domyślną wartość dla security.salt"
 
 msgid "Edit the security.salt in {0}"
-msgstr ""
+msgstr "Edytuj security.salt w {0}"
 
 msgid "App.fullBaseUrl validation OK."
-msgstr ""
+msgstr "Test poprawności App.fullBaseUrl zakończony pomyślnie."
 
 msgid "App.fullBaseUrl does not validate. {0}."
-msgstr ""
+msgstr "App.fullBaseUrl nie przechodzi testu poprawności. {0}."
 
 msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
 msgstr ""
@@ -1457,10 +1457,10 @@ msgid "Some default content is present."
 msgstr ""
 
 msgid "No default content found."
-msgstr ""
+msgstr "Nie znaleziono domyślnych treści."
 
 msgid "Run the install script to install the database tables"
-msgstr ""
+msgstr "Uruchom skrypt instalacyjny, aby zainstalować tabele bazy danych"
 
 msgid "The database schema up to date."
 msgstr ""
@@ -1472,10 +1472,10 @@ msgid "Run the migration scripts:"
 msgstr ""
 
 msgid "{0} tables found."
-msgstr ""
+msgstr "Znalezione tabele: {0}"
 
 msgid "No table found."
-msgstr ""
+msgstr "Nie znaleziono tabeli."
 
 msgid "GD or Imagick extension is installed."
 msgstr ""
@@ -1484,19 +1484,19 @@ msgid "You must enable the gd or imagick extensions to use Passbolt."
 msgstr ""
 
 msgid "See. https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "Sprawdź https://secure.php.net/manual/en/book.image.php"
 
 msgid "See. https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "Sprawdź https://secure.php.net/manual/en/book.imagick.php"
 
 msgid "Intl extension is installed."
-msgstr ""
+msgstr "Rozszerzenie Intl jest zainstalowane."
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr ""
+msgstr "Musisz włączyć rozszerzenie intl, aby korzystać z Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "Sprawdź https://secure.php.net/manual/pl/book.intl.php"
 
 msgid "The logs directory and its content are writable."
 msgstr ""
@@ -1511,10 +1511,10 @@ msgid "you can try:"
 msgstr "możesz spróbować:"
 
 msgid "Mbstring extension is installed."
-msgstr ""
+msgstr "Rozszerzenie mbstring jest zainstalowane."
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr ""
+msgstr "Musisz włączyć rozszerzenie mbstring, aby korzystać z Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.mbstring.php"
 msgstr ""
@@ -1535,10 +1535,10 @@ msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties
 msgstr ""
 
 msgid "PHP version {0}."
-msgstr ""
+msgstr "Wersja PHP {0}."
 
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr ""
+msgstr "Wersja PHP jest za stara, passbolt potrzebuje wersji PHP {0} lub wyższej."
 
 msgid "The temporary directory and its content are writable and not executable."
 msgstr ""
@@ -1550,46 +1550,46 @@ msgid "Ensure the temporary directory and its content are writable by the webser
 msgstr ""
 
 msgid "The private key can be used to decrypt a message."
-msgstr ""
+msgstr "Klucz prywatny może być użyty do odszyfrowania wiadomości."
 
 msgid "The private key cannot be used to decrypt a message"
-msgstr ""
+msgstr "Klucz prywatny nie może być użyty do odszyfrowania wiadomości"
 
 msgid "The private key can be used to decrypt and verify a message."
-msgstr ""
+msgstr "Klucz prywatny może być użyty do odszyfrowania i zweryfikowania wiadomości."
 
 msgid "The private key cannot be used to decrypt and verify a message"
-msgstr ""
+msgstr "Klucz prywatny nie może być użyty do odszyfrowania i zweryfikowania wiadomości"
 
 msgid "The public key can be used to encrypt a message."
-msgstr ""
+msgstr "Klucz prywatny może być użyty do zaszyfrowania wiadomości."
 
 msgid "The public key cannot be used to encrypt a message"
-msgstr ""
+msgstr "Klucz prywatny nie może być użyty do zaszyfrowania wiadomości"
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr ""
+msgstr "Upewnij się, że klucz prywatny serwera jest prawidłowy i że nie ma hasła dostępu."
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "Upewnij się, że zaimportowałeś klucz prywatny serwera do pęku kluczy użytkownika serwera web."
 
 msgid "The public and private keys can be used to encrypt and sign a message."
-msgstr ""
+msgstr "Publiczne i prywatne klucze nie mogą być użyte do zaszyfrowania i podpisania wiadomości."
 
 msgid "The public and private keys cannot be used to encrypt and sign a message"
-msgstr ""
+msgstr "Publiczne i prywatne klucze nie mogą być użyte do zaszyfrowania i podpisania wiadomości"
 
 msgid "The private key can be used to sign a message."
-msgstr ""
+msgstr "Klucz prywatny może być użyty do podpisania wiadomości."
 
 msgid "The private key cannot be used to sign a message"
-msgstr ""
+msgstr "Klucz prywatny nie może być użyty do podpisania wiadomości"
 
 msgid "The public key can be used to verify a signature."
-msgstr ""
+msgstr "Klucz publiczny może być użyty do zweryfikowania podpisu."
 
 msgid "The public key cannot be used to verify a signature."
-msgstr ""
+msgstr "Klucz publiczny nie może być użyty do zweryfikowania podpisu."
 
 msgid "The server key fingerprint matches the one defined in {0}."
 msgstr ""
@@ -2378,10 +2378,10 @@ msgid "The {0} directory should not be writable."
 msgstr ""
 
 msgid "A valid JWT key pair was found."
-msgstr ""
+msgstr "Znaleziono prawidłową parę kluczy JWT."
 
 msgid "A valid JWT key pair is missing."
-msgstr ""
+msgstr "Brakuje prawidłowej pary kluczy JWT."
 
 msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
 msgstr ""
@@ -3068,7 +3068,7 @@ msgid "{0} marked several passwords as expired"
 msgstr ""
 
 msgid "Some of your passwords expired"
-msgstr ""
+msgstr "Niektóre twoje hasła wygasły"
 
 msgid "{0} marked the password {1} as expired"
 msgstr ""
@@ -3086,13 +3086,13 @@ msgid "The password expiry setting does not exist."
 msgstr ""
 
 msgid "Could not validate the password expiry settings."
-msgstr ""
+msgstr "Nie udało się zweryfikować ustawień ważności haseł."
 
 msgid "The password expiry settings have been updated."
-msgstr ""
+msgstr "Ustawienia ważności haseł zostały zaktualizowane."
 
 msgid "View them in passbolt"
-msgstr ""
+msgstr "Sprawdź je w passbolt"
 
 msgid "{0} resources were affected."
 msgstr "Naruszone zasoby: {0}"
@@ -3101,25 +3101,25 @@ msgid "It would be too much to list them here, but you can go check them on pass
 msgstr "Nie damy rady ich tu wszystkich zmieścić, ale możesz je sprawdzić bezpośrednio w passbolt."
 
 msgid "Change them in passbolt"
-msgstr ""
+msgstr "Sprawdź je w passbolt"
 
 msgid "You have been requested to change them"
-msgstr ""
+msgstr "Poproszono cię o ich zmianę"
 
 msgid "Access for users to your shared passwords have been revoked."
 msgstr ""
 
 msgid "These passwords are now marked as expired."
-msgstr ""
+msgstr "Te hasła są teraz oznaczone jako nieważne."
 
 msgid "Please rotate them to ensure continued security."
-msgstr ""
+msgstr "Podmień je, aby zapewnić sobie ciągłość zabezpieczeń."
 
 msgid "Please rotate it to ensure continued security."
-msgstr ""
+msgstr "Podmień je, aby zapewnić sobie ciągłość zabezpieczeń."
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "Zmień je w passbolt "
 
 msgid "Could not retrieve the password policies."
 msgstr "Nie udało się odzyskać polityk haseł."
@@ -3575,7 +3575,7 @@ msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr ""
 
 msgid "SMTP Setting errors: {0}"
-msgstr ""
+msgstr "Błędy ustawień SMTP: {0}"
 
 msgid "The {0} plugin endpoints are disabled."
 msgstr ""
@@ -4148,10 +4148,10 @@ msgid "Contact your admin"
 msgstr "Skontaktuj się z administratorem"
 
 msgid "{0} changed your role to user."
-msgstr ""
+msgstr "Użytkownik {0} zmienił Twoją rolę na rolę użytkownika."
 
 msgid "{0} changed the role of {1} to user."
-msgstr ""
+msgstr "Użytkownik {0} mianował/a użytkownika {1} użytkownikiem."
 
 msgid "{0} can no longer perform administration tasks."
 msgstr "Użytkownik {0} nie może już wykonywać zadań administratorskich."
@@ -4247,7 +4247,7 @@ msgid "You just opened an account on passbolt at {0}."
 msgstr "Twoje konto w passbolt zostało założone w dniu {0}."
 
 msgid "There was a change in the user directory."
-msgstr ""
+msgstr "Nastąpiła zmiana w katalogu użytkowników."
 
 msgid "You have been requested to add members to a group."
 msgstr ""
