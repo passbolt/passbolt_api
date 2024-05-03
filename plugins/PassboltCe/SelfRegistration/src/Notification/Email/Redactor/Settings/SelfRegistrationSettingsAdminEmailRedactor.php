@@ -49,6 +49,14 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @param \Cake\Event\Event $event User register event
      * @return \App\Notification\Email\EmailCollection
      * @todo [COULD] make another email for clarity when the settings are disabled.

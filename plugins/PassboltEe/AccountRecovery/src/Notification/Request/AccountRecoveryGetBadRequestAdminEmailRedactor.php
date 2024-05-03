@@ -68,6 +68,14 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.accountRecovery.request.guessing';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */

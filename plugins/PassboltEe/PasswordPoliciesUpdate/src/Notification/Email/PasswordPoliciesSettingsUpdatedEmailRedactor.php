@@ -53,6 +53,14 @@ class PasswordPoliciesSettingsUpdatedEmailRedactor implements SubscribedEmailRed
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @param \Cake\Event\Event $event Event
      * @return \App\Notification\Email\EmailCollection
      */

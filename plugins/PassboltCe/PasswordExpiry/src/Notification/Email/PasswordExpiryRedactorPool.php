@@ -29,10 +29,8 @@ class PasswordExpiryRedactorPool extends AbstractSubscribedEmailRedactorPool
     public function getSubscribedRedactors(): array
     {
         $redactors[] = new PasswordExpirySettingsUpdatedEmailRedactor();
-        if ($this->isRedactorEnabled('send.password.expire')) {
-            $redactors[] = new PasswordExpiryExpiredResourcesEmailRedactor();
-            $redactors[] = new PasswordExpiryPasswordMarkedExpiredEmailRedactor();
-        }
+        $redactors[] = new PasswordExpiryExpiredResourcesEmailRedactor();
+        $redactors[] = new PasswordExpiryPasswordMarkedExpiredEmailRedactor();
 
         return $redactors;
     }

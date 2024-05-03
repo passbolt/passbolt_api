@@ -72,6 +72,14 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.group.manager.requestAddUser';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */
