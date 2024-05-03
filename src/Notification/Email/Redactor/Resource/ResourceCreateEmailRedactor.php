@@ -55,6 +55,14 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.password.create';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */
