@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-04-24 14:20\n"
+"PO-Revision-Date: 2024-05-03 19:48\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -1709,19 +1709,19 @@ msgid "Ensure the public key defined in {0} exists and is accessible by the webs
 msgstr ""
 
 msgid "Environment"
-msgstr ""
+msgstr "Środowisko"
 
 msgid "Config files"
-msgstr ""
+msgstr "Pliki konfiguracyjne"
 
 msgid "Core config"
 msgstr ""
 
 msgid "SMTP settings"
-msgstr ""
+msgstr "Ustawienia SMTP"
 
 msgid "Application configuration"
-msgstr ""
+msgstr "Konfiguracja aplikacji"
 
 msgid "Database"
 msgstr "Baza danych"
@@ -1730,19 +1730,19 @@ msgid "GPG Configuration"
 msgstr "Konfiguracja GPG"
 
 msgid "JWT Authentication"
-msgstr ""
+msgstr "Uwierzytelnianie JWT"
 
 msgid "SSL Certificate"
-msgstr ""
+msgstr "Certyfikat SSL"
 
 msgid "The {0} plugin is enabled."
-msgstr ""
+msgstr "Wtyczka {0} jest włączona."
 
 msgid "The {0} plugin is disabled."
-msgstr ""
+msgstr "Wtyczka {0} jest wyłączona."
 
 msgid "Set the environment variable {0} to true"
-msgstr ""
+msgstr "Ustaw zmienną środowiskową {0} na wartość true"
 
 msgid "Enable the plugin in order to define SMTP settings in the database."
 msgstr ""
