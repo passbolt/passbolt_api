@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\EmailNotificationSettings\Utility;
 
 use App\Utility\UserAccessControl;
+use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Hash;
@@ -97,10 +98,7 @@ class EmailNotificationSettings
             $dbSettings = static::getSettingsFromDb();
             $settings['sources']['database'] = true;
             $settings = array_replace_recursive($settings, $dbSettings);
-        } catch (InternalErrorException $exception) {
-            // If the settings are not valid, throw exception
-            throw $exception;
-        } catch (\Throwable $exception) {
+        } catch (RecordNotFoundException $exception) {
         }
 
         return $settings;
