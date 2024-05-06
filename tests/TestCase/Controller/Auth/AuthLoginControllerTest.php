@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Controller\Auth;
 
+use App\Model\Entity\AuthenticationToken;
+use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
@@ -25,6 +27,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Passbolt\Log\LogPlugin;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 
 class AuthLoginControllerTest extends AppIntegrationTestCase
@@ -68,6 +71,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testRecoverAuthLoginController_Error_UserLoginAsDeletedUser(): void
     {
+        $this->enableFeaturePlugin(LogPlugin::class);
         UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->user()
@@ -81,8 +85,13 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
                 ],
             ],
         ]);
-        $msg = 'There is no user associated with this key. User not found.';
-        $this->assertHeader('X-GPGAuth-Debug', $msg);
+
+        $this->assertHeader('X-GPGAuth-Debug', 'There is no user associated with this key. User not found.');
+        $this->assertResponseCode(400);
+        // Check status is correct in action logs
+        $actions = ActionLogFactory::find()->where(['action_id' => UuidFactory::uuid('AuthLogin.loginPost')])->toArray();
+        $this->assertCount(1, $actions);
+        $this->assertSame(0, $actions[0]['status']);
     }
 
     /**
@@ -141,7 +150,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
      */
     public function testAuthLoginController_GetHeaders(): void
     {
-        $this->enableFeaturePlugin('Log');
+        $this->enableFeaturePlugin(LogPlugin::class);
 
         $this->get('/auth/login');
         $this->assertResponseOk();
@@ -164,22 +173,25 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertResponseCode(404);
     }
 
-    /**
-     * Fail without 500 if gpg_auth is not an array
-     */
     public function testAuthLoginController_Validate_Gpg_Auth(): void
     {
+        $this->enableFeaturePlugin(LogPlugin::class);
+
         $this->postJson('/auth/login.json', [
             'data' => [
                 'gpg_auth' => 'foo',
             ],
         ]);
 
-        $this->assertResponseSuccess();
+        $this->assertResponseCode(400);
         $msg = 'There is no user associated with this key. No key id set.';
         $headers = $this->getHeaders();
         $this->assertEquals($msg, $headers['X-GPGAuth-Debug']);
         $this->assertEquals($headers['X-GPGAuth-Authenticated'], 'false');
+        // Check status is correct in action logs
+        $actions = ActionLogFactory::find()->where(['action_id' => UuidFactory::uuid('AuthLogin.loginPost')])->toArray();
+        $this->assertCount(1, $actions);
+        $this->assertSame(0, $actions[0]['status']);
     }
 
     /**
@@ -228,6 +240,7 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
                     ],
                 ],
             ]);
+
             $headers = $this->getHeaders();
             $this->assertTrue(isset($headers['X-GPGAuth-Authenticated']), 'Authentication headers should be set for keyid:"' . $keyid . '"');
             $this->assertEquals($headers['X-GPGAuth-Authenticated'], 'false', 'The user should not be authenticated at that point');
@@ -426,6 +439,60 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         // Authentication token should be disabled at that stage
         $isValid = $AuthToken->isValid($uuid, $user->id);
         $this->assertFalse($isValid, 'There should not be a valid auth token');
+    }
+
+    public function testAuthLoginController_Stage2_Success(): void
+    {
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $authenticationToken = AuthenticationTokenFactory::make(['user_id' => $user->id])
+            ->type(AuthenticationToken::TYPE_LOGIN)
+            ->active()
+            ->persist();
+        $token = 'gpgauthv1.3.0|36|' . $authenticationToken->get('token') . '|gpgauthv1.3.0';
+
+        $this->postJson('/auth/login.json', [
+            'data' => [
+                'gpg_auth' => [
+                    'keyid' => $this->adaKeyId,
+                    'user_token_result' => $token,
+                ],
+            ],
+        ]);
+
+        $this->assertSuccess();
+        $headers = $this->getHeaders();
+        $this->assertSame('true', $headers['X-GPGAuth-Authenticated']);
+        $this->assertSame('complete', $headers['X-GPGAuth-Progress']);
+    }
+
+    public function testAuthLoginController_Stage2_ErrorInvalidUserToken(): void
+    {
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $token = 'gpgauthv1.3.0|36|foo';
+
+        $this->postJson('/auth/login.json', [
+            'data' => [
+                'gpg_auth' => [
+                    'keyid' => $this->adaKeyId,
+                    'user_token_result' => $token,
+                ],
+            ],
+        ]);
+
+        $this->assertSame(400, $this->_response->getStatusCode());
+        $headers = $this->getHeaders();
+        $this->assertSame('false', $headers['X-GPGAuth-Authenticated']);
+        $this->assertSame('stage2', $headers['X-GPGAuth-Progress']);
+        $this->assertTextContains('true', $headers['X-GPGAuth-Error']);
+        $this->assertTextContains('The user token result should be a valid UUID', $headers['X-GPGAuth-Debug']);
     }
 
     // ====== UTILITIES =========================================================
