@@ -40,15 +40,15 @@ class ResourcesTagsDataCommand extends DataCommand
     {
         $resourcesTags = [];
 
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
-        $this->loadModel('Tags');
+        $usersTable = $this->fetchTable('Users');
+        $resourcesTable = $this->fetchTable('Resources');
+        $tagsTable = $this->fetchTable('Tags');
 
-        $users = $this->Users->findIndex(Role::USER);
+        $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
-            $tags = $this->Tags->find()->where(['slug LIKE' => "{$user->username}%"])->all();
+            $tags = $tagsTable->find()->where(['slug LIKE' => "{$user->username}%"])->all();
             $options['order']['Resources.modified'] = true;
-            $resources = $this->Resources->findIndex($user->id, $options);
+            $resources = $resourcesTable->findIndex($user->id, $options);
             foreach ($resources as $resource) {
                 foreach ($tags as $tag) {
                     $resourcesTags[] = [
@@ -69,12 +69,11 @@ class ResourcesTagsDataCommand extends DataCommand
     {
         $resourcesTags = [];
 
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
-        $this->loadModel('Tags');
+        $resourcesTable = $this->fetchTable('Resources');
+        $tagsTable = $this->fetchTable('Tags');
 
-        $tags = $this->Tags->find()->where(['is_shared' => true])->all();
-        $resources = $this->Resources->find()->all();
+        $tags = $tagsTable->find()->where(['is_shared' => true])->all();
+        $resources = $resourcesTable->find()->all();
         foreach ($resources as $resource) {
             foreach ($tags as $tag) {
                 $resourcesTags[] = [

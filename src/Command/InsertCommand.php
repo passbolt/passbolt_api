@@ -69,8 +69,11 @@ class InsertCommand extends PassboltCommand
                     $command->afterExecute();
                 }
             } catch (\Exception $exception) {
-                var_dump($exception->getMessage());
-                $io->error(__('Could not load task {0}, skipping.', get_class($command)));
+                $message = __('Could not load command {0}, skipping.', get_class($command));
+                $message .= ' ';
+                $message .= __('Reason: {0}', $exception->getMessage());
+
+                $io->error($message);
             }
         }
 

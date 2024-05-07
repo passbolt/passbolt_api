@@ -16,8 +16,11 @@ namespace PassboltTestData\Command\Large;
 
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
+use Cake\Console\Arguments;
+use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
 use PassboltTestData\Lib\DataCommand;
+use PassboltTestData\Service\GetGpgkeyPathService;
 
 class SecretsDataCommand extends DataCommand
 {
@@ -27,21 +30,20 @@ class SecretsDataCommand extends DataCommand
     /**
      * @inheritDoc
      */
-    public function execute()
+    public function execute(Arguments $args, ConsoleIo $io): ?int
     {
-        $this->loadModel('Gpgkeys');
-        $this->loadModel('Secrets');
+        $gpgkeysTable = $this->fetchTable('Gpgkeys');
 
         // Retrieve the key info.
         // As a default key can be shared among user, the encryption will require the key fingerprint.
         // As the key meta data are already stored in db, get the meta data from the db and avoid performance issue
         // by avoiding any gpg extra parsing.
-        $gpgkeys = $this->Gpgkeys->find()->all();
+        $gpgkeys = $gpgkeysTable->find()->all();
         foreach ($gpgkeys as $gpgkey) {
             $this->gpgkeys[$gpgkey->user_id] = $gpgkey->fingerprint;
         }
 
-        return parent::execute();
+        return parent::execute($args, $io);
     }
 
     /**
@@ -57,12 +59,12 @@ class SecretsDataCommand extends DataCommand
 
         $secrets = [];
 
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
+        $usersTable = $this->fetchTable('Users');
+        $resourcesTable = $this->fetchTable('Resources');
 
-        $users = $this->Users->findIndex(Role::USER);
+        $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
-            $resources = $this->Resources->findIndex($user->id);
+            $resources = $resourcesTable->findIndex($user->id);
             foreach ($resources as $resource) {
                 $armoredPassword = $this->_encrypt('dummy password', $user);
                 $secrets[] = [
@@ -96,9 +98,7 @@ class SecretsDataCommand extends DataCommand
         // Import the user public key.
         if (!isset($keyImported[$keyFingerprint])) {
             // Retrieve the user key file.
-            $GpgkeyTask = $this->Tasks->load('PassboltTestData.Base/GpgkeysData');
-            $GpgkeyTask->params = $this->params;
-            $gpgkeyPath = $GpgkeyTask->getGpgkeyPath($user->id);
+            $gpgkeyPath = (new GetGpgkeyPathService())->get($user->id);
 
             exec('gpg --import ' . $gpgkeyPath . ' > /dev/null 2>&1');
             $keyImported[$keyFingerprint] = true;

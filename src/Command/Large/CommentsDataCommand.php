@@ -31,13 +31,13 @@ class CommentsDataCommand extends DataCommand
     {
         $comments = [];
 
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
+        $usersTable = $this->fetchTable('Users');
+        $resourcesTable = $this->fetchTable('Resources');
 
-        $users = $this->Users->findIndex(Role::USER);
+        $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
             $options['order']['Resources.modified'] = true;
-            $resources = $this->Resources->findIndex($user->id, $options);
+            $resources = $resourcesTable->findIndex($user->id, $options);
             foreach ($resources as $resource) {
                 $comments[] = [
                     'id' => UuidFactory::uuid(),

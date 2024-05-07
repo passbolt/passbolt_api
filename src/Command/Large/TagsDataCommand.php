@@ -40,10 +40,10 @@ class TagsDataCommand extends DataCommand
     public function getTagsScenarioForPersonalTags()
     {
         $tags = [];
-        $this->loadModel('Users');
+        $usersTable = $this->fetchTable('Users');
 
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.tags_personal');
-        $users = $this->Users->findIndex(Role::USER);
+        $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
             for ($i = 0; $i < $max; $i++) {
                 $tags[] = [

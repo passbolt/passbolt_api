@@ -70,8 +70,7 @@ abstract class DataCommand extends PassboltCommand
             throw new Exception('Entity name not defined');
         }
 
-        $this->loadModel($this->entityName);
-        $this->Table = $this->{$this->entityName};
+        $this->Table = $this->fetchTable($this->entityName);
 
         // Truncate the table.
         if ($this->_truncate) {

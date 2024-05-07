@@ -18,6 +18,7 @@ use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use PassboltTestData\Lib\DataCommand;
+use PassboltTestData\Service\GetGpgkeyPathService;
 
 class SecretsDataCommand extends DataCommand
 {
@@ -111,15 +112,14 @@ class SecretsDataCommand extends DataCommand
     protected function _encrypt($text, $user): string
     {
         // Retrieve the user key file.
-        $GpgkeyCommand = new GpgkeysDataCommand();
-        $gpgkeyPath = $GpgkeyCommand->getGpgkeyPath($user->id);
+        $gpgkeyPath = (new GetGpgkeyPathService())->get($user->id);
 
         // Retrieve the key info.
         // As a default key can be shared among user, the encryption will require the key fingerprint.
         // As the key meta data are already stored in db, get the meta data from the db and avoid performance issue
         // by avoiding any gpg extra parsing.
-        $this->loadModel('Gpgkeys');
-        $gpgkey = $this->Gpgkeys->find('all')
+        $gpgkeysTable = $this->fetchTable('Gpgkeys');
+        $gpgkey = $gpgkeysTable->find('all')
             ->where(['user_id' => $user->id])
             ->first();
         $keyFingerprint = $gpgkey['fingerprint'];
@@ -148,12 +148,12 @@ class SecretsDataCommand extends DataCommand
 
         $secrets = [];
 
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
+        $usersTable = $this->fetchTable('Users');
+        $resourcesTable = $this->fetchTable('Resources');
 
-        $users = $this->Users->findIndex(Role::USER);
+        $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
-            $resources = $this->Resources->findIndex($user->id);
+            $resources = $resourcesTable->findIndex($user->id);
             foreach ($resources as $resource) {
                 $password = $this->_getPassword($resource->id);
                 $armoredPassword = $this->_encrypt($password, $user);

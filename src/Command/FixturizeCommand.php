@@ -84,7 +84,7 @@ class FixturizeCommand extends PassboltCommand
      */
     protected function fixturizeTask(DataCommand $command, ConsoleIo $io)
     {
-        $Model = $this->loadModel($command->entityName);
+        $Model = $this->fetchTable($command->entityName);
         $tableName = $Model->getTable();
         $fixtureName = $command->entityName;
 

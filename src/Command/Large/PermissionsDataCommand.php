@@ -40,12 +40,11 @@ class PermissionsDataCommand extends DataCommand
 
     private function getPermissionsScenarioForEachUser()
     {
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
+        $usersTable = $this->fetchTable('Users');
         $permissions = [];
 
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_foreach_user');
-        $users = $this->Users->findIndex(Role::USER);
+        $users = $usersTable->findIndex(Role::USER);
         foreach ($users as $user) {
             for ($i = 0; $i < $max; $i++) {
                 $aroId = $user->id;
@@ -70,8 +69,6 @@ class PermissionsDataCommand extends DataCommand
 
     private function getPermissionsScenarioForGroupAllUsers()
     {
-        $this->loadModel('Users');
-        $this->loadModel('Resources');
         $permissions = [];
 
         $max = Configure::read('PassboltTestData.scenarios.large.install.count.resources_for_group_all_users');
