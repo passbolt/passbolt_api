@@ -150,6 +150,10 @@ class PassboltCommand extends Command
             'help' => __d('cake_console', 'Show application logs.'),
         ]);
 
+        $parser->addArgument('show_queued_emails', [
+            'help' => __d('cake_console', 'Shows records from email_queue table.'),
+        ]);
+
         $parser->addArgument('version', [
             'help' => __d('cake_console', 'Provide version number'),
         ]);
