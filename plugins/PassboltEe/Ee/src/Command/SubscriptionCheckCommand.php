@@ -28,17 +28,15 @@ use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundExceptio
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionSignatureException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionValidationException;
 use Passbolt\Ee\Model\Dto\SubscriptionKeyDto;
-use Passbolt\Ee\Service\SubscriptionKeyGetService;
+use Passbolt\Ee\Model\Table\SubscriptionsTable;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyGetService;
 
 /**
  * Subscription Check shell command.
  */
 class SubscriptionCheckCommand extends PassboltCommand
 {
-    /**
-     * @var \Passbolt\Ee\Model\Table\SubscriptionsTable
-     */
-    protected $Subscriptions;
+    protected SubscriptionsTable $Subscriptions;
 
     /**
      * @inheritDoc
@@ -119,10 +117,8 @@ class SubscriptionCheckCommand extends PassboltCommand
         /** @var \App\Model\Table\UsersTable $users */
         $users = $this->fetchTable('Users');
 
-        $io->nl();
         $io->out(__('Thanks for choosing Passbolt Pro'));
         $io->out(__('Below are your subscription key details'));
-        $io->nl();
 
         // Customer id output.
         $customerIdStr = __('<error>Not Available</error>');
@@ -178,10 +174,8 @@ class SubscriptionCheckCommand extends PassboltCommand
      */
     protected function displayValidFooter(ConsoleIo $io)
     {
-        $io->nl();
         $io->out(__('For any question / feedback / subscription renewal,'));
         $io->out(__('kindly contact us at <info>sales@passbolt.com</info>'));
-        $io->nl();
     }
 
     /**
@@ -192,9 +186,7 @@ class SubscriptionCheckCommand extends PassboltCommand
      */
     protected function displayErrorFooter(ConsoleIo $io)
     {
-        $io->nl();
         $this->error(__('It looks like you could use some help.'), $io);
         $this->error(__('We are here for you. You can contact us at sales@passbolt.com'), $io);
-        $io->nl();
     }
 }

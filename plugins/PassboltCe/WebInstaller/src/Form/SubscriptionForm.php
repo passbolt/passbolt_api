@@ -19,14 +19,14 @@ namespace Passbolt\WebInstaller\Form;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
-use Passbolt\Ee\Service\SubscriptionKeyValidateService;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyValidateService;
 
 class SubscriptionForm extends Form
 {
     /**
-     * @var string
+     * @var ?string
      */
-    private $_lastError;
+    private ?string $_lastError;
 
     /**
      * License key schema.
@@ -84,9 +84,9 @@ class SubscriptionForm extends Form
     /**
      * Get last error details.
      *
-     * @return string|null
+     * @return ?string
      */
-    public function getLastErrorDetails()
+    public function getLastErrorDetails(): ?string
     {
         return $this->_lastError;
     }
