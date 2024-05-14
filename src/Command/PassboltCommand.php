@@ -198,7 +198,7 @@ class PassboltCommand extends Command
      * @param array $options Options to append.
      * @return array
      */
-    protected function formatOptions(Arguments $args, array $options = []): array
+    public function formatOptions(Arguments $args, array $options = []): array
     {
         if ($args->getOption('quiet') && !in_array('-q', $options)) {
             $options[] = '-q';
@@ -214,7 +214,7 @@ class PassboltCommand extends Command
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function error(string $msg, ConsoleIo $io): void
+    public function error(string $msg, ConsoleIo $io): void
     {
         $io->out('<error>' . $msg . '</error>');
     }
