@@ -78,7 +78,7 @@ class ShowQueuedEmailsCommandTest extends AppTestCase
 
     public function testShowQueuedEmailsCommand_Success(): void
     {
-        EmailQueueFactory::make(15)->persist();
+        EmailQueueFactory::make(['created' => Chronos::now()], 15)->persist();
         $oldEmail = EmailQueueFactory::make(['created' => Chronos::now()->subYears(30)])->persist();
 
         $this->exec('passbolt show_queued_emails');
@@ -90,8 +90,8 @@ class ShowQueuedEmailsCommandTest extends AppTestCase
 
     public function testShowQueuedEmailsCommand_Success_LimitOption(): void
     {
-        $emails = EmailQueueFactory::make(2)->persist();
-        $oldEmails = EmailQueueFactory::make(['created' => Chronos::now()->subYears(27)], 2)->persist();
+        $emails = EmailQueueFactory::make(['created' => Chronos::now()], 2)->persist();
+        $oldEmails = EmailQueueFactory::make(['created' => Chronos::now()->subYears(35)], 2)->persist();
 
         $this->exec('passbolt show_queued_emails --limit=2');
 
