@@ -469,14 +469,26 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
         $this->assertSame('complete', $headers['X-GPGAuth-Progress']);
     }
 
-    public function testAuthLoginController_Stage2_ErrorInvalidUserToken(): void
+    public function invalidUserTokenProvider(): array
     {
-        $user = UserFactory::make()
+        return [
+            ['gpgauthv1.3.0|36|foo'],
+            [['foo' => 'bar']],
+            [[]],
+            [true],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidUserTokenProvider
+     */
+    public function testAuthLoginController_Stage2_ErrorInvalidUserToken($token): void
+    {
+        UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->user()
             ->active()
             ->persist();
-        $token = 'gpgauthv1.3.0|36|foo';
 
         $this->postJson('/auth/login.json', [
             'data' => [
