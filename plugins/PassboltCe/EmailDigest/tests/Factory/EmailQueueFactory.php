@@ -55,7 +55,7 @@ class EmailQueueFactory extends CakephpBaseFactory
 
             return [
                 'email' => $email,
-                'subject' => $faker->sentence(),
+                'subject' => $faker->sentence(3),
                 'config' => 'default',
                 'template' => 'test_email',
                 'layout' => 'default',
