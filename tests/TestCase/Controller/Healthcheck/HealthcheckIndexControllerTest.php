@@ -207,6 +207,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'errorMessage' => false,
                 'source' => 'env variables',
                 'isInDb' => false,
+                'customSslOptions' => true,
             ],
         ];
         $this->assertArrayEqualsCanonicalizing($expectedResponse, $result);
