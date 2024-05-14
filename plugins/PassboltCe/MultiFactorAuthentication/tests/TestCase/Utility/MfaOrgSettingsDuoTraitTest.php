@@ -34,6 +34,8 @@ class MfaOrgSettingsDuoTraitTest extends MfaIntegrationTestCase
         'providers' => [
             MfaSettings::PROVIDER_DUO => true,
         ],
+        // SEC-5652 Note to security researchers: these are not leaked credentials
+        // They look valid as they should pass validation, but are fake
         MfaSettings::PROVIDER_DUO => [
             'clientId' => 'UICPIC93F14RWR5F55SJ',
             'clientSecret' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',
