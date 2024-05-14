@@ -21,7 +21,6 @@ use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
-use Passbolt\Ee\Service\Subscriptions\EeSubscriptionCheckInCommandService;
 
 /**
  * Subscription Check shell command.
@@ -57,8 +56,7 @@ class SubscriptionCheckCommand extends PassboltCommand
     {
         parent::execute($args, $io);
 
-        $service = new EeSubscriptionCheckInCommandService();
-        $isSubscriptionValid = $service->check($this, $args, $io);
+        $isSubscriptionValid = $this->subscriptionCheckInCommandService->check($this, $args, $io);
 
         if (!$isSubscriptionValid) {
             return $this->errorCode();

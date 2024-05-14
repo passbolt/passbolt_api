@@ -24,7 +24,7 @@ use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyValidateService;
 class SubscriptionForm extends Form
 {
     /**
-     * @var ?string
+     * @var string|null
      */
     private ?string $_lastError;
 
