@@ -16,17 +16,16 @@ declare(strict_types=1);
  */
 namespace Passbolt\Log\Test\TestCase\Command;
 
+use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\I18n\FrozenDate;
-use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\Log\LogPlugin;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 
-class ActionLogsPurgeCommandTest extends TestCase
+class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
 {
     use ConsoleIntegrationTestTrait;
-    use TruncateDirtyTables;
     use PassboltCommandTestTrait;
 
     /**
@@ -39,6 +38,7 @@ class ActionLogsPurgeCommandTest extends TestCase
         parent::setUp();
         $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
+        $this->enableFeaturePlugin(LogPlugin::class);
     }
 
     public function testActionLogsPurgeCommandHelp()
