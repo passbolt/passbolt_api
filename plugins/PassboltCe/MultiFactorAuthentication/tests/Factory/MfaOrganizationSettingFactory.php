@@ -124,6 +124,8 @@ class MfaOrganizationSettingFactory extends OrganizationSettingFactory
         ?string $clientId = null,
         ?string $clientSecret = null
     ) {
+        // SEC-5652 Note to security researchers: these are not leaked credentials
+        // They look valid as they should pass validation, but are fake
         return [
             MfaOrgSettings::DUO_CLIENT_ID => $clientId ?? 'DICPIC33F13IWF1FR52J',
             MfaOrgSettings::DUO_CLIENT_SECRET => $clientSecret ?? '7TkYNgK8AGAuv3KW12qhsJLeIc1mJjHDHC1siNYX',

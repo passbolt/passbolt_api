@@ -286,11 +286,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
         $container->add(SelfRegistrationDryRunServiceInterface::class, SelfRegistrationDefaultDryRunService::class);
         $container->add(AbstractSecureCookieService::class, DefaultSecureCookieService::class);
+        $container->add(Client::class);
         $container->addServiceProvider(new TestEmailServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new ResourceServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
-        $container->add(Client::class)->setConcrete(null);
         if (PHP_SAPI === 'cli') {
             $container->addServiceProvider(new CommandServiceProvider());
         }
