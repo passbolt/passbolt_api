@@ -418,10 +418,10 @@ trait ResourcesFindersTrait
         return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot) {
             $conditions = [];
             if (!empty($parentIds)) {
-                $conditions[] = ['folder_parent_id IN' => $parentIds];
+                $conditions[] = $q->expr()->in('FoldersRelations.folder_parent_id', $parentIds);
             }
             if ($includeRoot === true) {
-                $conditions[] = ['folder_parent_id IS NULL'];
+                $conditions[] = $q->expr()->isNull('FoldersRelations.folder_parent_id');
             }
 
             return $q->where(['OR' => $conditions]);

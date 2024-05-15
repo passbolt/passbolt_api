@@ -79,13 +79,15 @@ trait FoldersFindersTrait
                     ->select(['Permissions.id']);
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
-            });
+            })
+            ->group('Permission.id');
         }
 
         // If contains children_folders.
         if (isset($options['contain']['children_folders'])) {
             $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
-                return $q->where(['user_id' => $userId])
+                return $q->where(['FoldersRelations.user_id' => $userId])
+                    ->group('FoldersRelations.id')
                     ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
         }
@@ -93,7 +95,8 @@ trait FoldersFindersTrait
         // If contains children_resources.
         if (isset($options['contain']['children_resources'])) {
             $query->contain('ChildrenResources', function (Query $q) use ($userId) {
-                return $q->where(['user_id' => $userId])
+                return $q->where(['FoldersRelations.user_id' => $userId])
+                    ->group('FoldersRelations.id')
                     ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
         }
@@ -158,12 +161,10 @@ trait FoldersFindersTrait
      * @param array $options options
      * @return \Cake\ORM\Query
      */
-    public function findView(string $userId, string $folderId, ?array $options = [])
+    public function findView(string $userId, string $folderId, ?array $options = []): Query
     {
-        $query = $this->findIndex($userId, $options)
+        return $this->findIndex($userId, $options)
             ->where(['Folders.id' => $folderId]);
-
-        return $query;
     }
 
     /**
@@ -248,10 +249,10 @@ trait FoldersFindersTrait
         return $query->innerJoinWith('ChildrenFolders', function (Query $q) use ($parentIds, $includeRoot) {
             $conditions = [];
             if (!empty($parentIds)) {
-                $conditions[] = ['folder_parent_id IN' => $parentIds];
+                $conditions[] = $q->expr()->in('FoldersRelations.folder_parent_id', $parentIds);
             }
             if ($includeRoot === true) {
-                $conditions[] = ['folder_parent_id IS NULL'];
+                $conditions[] = $q->expr()->isNull('FoldersRelations.folder_parent_id');
             }
 
             return $q->where(['OR' => $conditions]);

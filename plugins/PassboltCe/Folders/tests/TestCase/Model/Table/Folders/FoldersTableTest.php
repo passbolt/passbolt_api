@@ -173,9 +173,9 @@ class FoldersTableTest extends FoldersTestCase
         $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
 
         $folderA = $this->Folders->findView($userAId, $folderA->id)->first();
-        $this->assertEquals(true, $folderA->get('personal'));
+        $this->assertTrue($folderA->get('personal'));
         $folderB = $this->Folders->findView($userAId, $folderB->id)->first();
-        $this->assertEquals(false, $folderB->get('personal'));
+        $this->assertFalse($folderB->get('personal'));
     }
 
     /* FINDER TESTS */
