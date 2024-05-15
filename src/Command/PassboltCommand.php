@@ -22,7 +22,6 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
-use Passbolt\Ee\Command\SubscriptionCheckCommand;
 
 /**
  * Passbolt command.
@@ -199,7 +198,7 @@ class PassboltCommand extends Command
      * @param array $options Options to append.
      * @return array
      */
-    protected function formatOptions(Arguments $args, array $options = []): array
+    public function formatOptions(Arguments $args, array $options = []): array
     {
         if ($args->getOption('quiet') && !in_array('-q', $options)) {
             $options[] = '-q';
@@ -215,7 +214,7 @@ class PassboltCommand extends Command
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function error(string $msg, ConsoleIo $io): void
+    public function error(string $msg, ConsoleIo $io): void
     {
         $io->out('<error>' . $msg . '</error>');
     }
@@ -367,28 +366,5 @@ class PassboltCommand extends Command
             $io->error('This command is available in debug mode only.');
             $this->abort();
         }
-    }
-
-    /**
-     * Check that license is valid.
-     * Dispatch to plugin Passbolt/license.subscription_check
-     *
-     * @param \Cake\Console\Arguments $args The command arguments.
-     * @param \Cake\Console\ConsoleIo $io Console IO.
-     * @return bool status
-     */
-    protected function subscriptionCheck(Arguments $args, ConsoleIo $io): bool
-    {
-        if (Configure::read('passbolt.plugins.ee')) {
-            $code = $this->executeCommand(
-                SubscriptionCheckCommand::class,
-                $this->formatOptions($args),
-                $io
-            );
-
-            return $code === self::CODE_SUCCESS;
-        }
-
-        return true;
     }
 }

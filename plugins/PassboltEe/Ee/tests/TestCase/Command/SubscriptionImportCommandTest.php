@@ -23,7 +23,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Model\Entity\Subscription;
-use Passbolt\Ee\Service\SubscriptionKeyGetService;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyGetService;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
 /**

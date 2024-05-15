@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.1.0
  */
-namespace Passbolt\Ee\Service;
+namespace Passbolt\Ee\Service\Subscriptions;
 
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\ForbiddenException;
@@ -27,12 +27,12 @@ class SubscriptionKeySaveService
     /**
      * @var \Passbolt\Ee\Model\Table\SubscriptionsTable $SubscriptionsTable
      */
-    protected $SubscriptionsTable;
+    protected SubscriptionsTable $SubscriptionsTable;
 
     /**
-     * @var \Passbolt\Ee\Service\SubscriptionKeyValidateService $SubscriptionKeyValidateService
+     * @var \Passbolt\Ee\Service\Subscriptions\SubscriptionKeyValidateService $SubscriptionKeyValidateService
      */
-    protected $SubscriptionKeyValidateService;
+    protected SubscriptionKeyValidateService $SubscriptionKeyValidateService;
 
     /**
      * SubscriptionKeyGetService constructor.
