@@ -20,7 +20,7 @@ use Cake\Event\Event;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
-use Psr\Log\LoggerInterface;
+use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Psr\Log\NullLogger;
 use Throwable;
 
@@ -43,12 +43,12 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     /**
      * @var \App\Notification\Email\EmailSubscriptionManager
      */
-    private $emailSubscriptionManager;
+    private EmailSubscriptionManager $emailSubscriptionManager;
 
     /**
      * @var \App\Notification\Email\EmailSender
      */
-    private $emailSender;
+    private EmailSender $emailSender;
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -56,21 +56,14 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     private $logger;
 
     /**
-     * @param \Cake\Event\EventManager|null $eventManager Event Manager Instance
-     * @param \App\Notification\Email\EmailSubscriptionManager|null $emailSubscriptionManager instance
-     * @param \App\Notification\Email\EmailSender|null $emailSender EmailSender Instance
-     * @param \Psr\Log\LoggerInterface|null $logger Logger Instance
+     * The constructor
      */
-    public function __construct(
-        ?EventManager $eventManager = null,
-        ?EmailSubscriptionManager $emailSubscriptionManager = null,
-        ?EmailSender $emailSender = null,
-        ?LoggerInterface $logger = null
-    ) {
-        $this->setEventManager($eventManager ?? EventManager::instance());
-        $this->emailSubscriptionManager = $emailSubscriptionManager ?? new EmailSubscriptionManager();
-        $this->emailSender = $emailSender ?? new EmailSender();
-        $this->logger = $logger ?? new NullLogger();
+    public function __construct()
+    {
+        $this->setEventManager(EventManager::instance());
+        $this->emailSubscriptionManager = new EmailSubscriptionManager();
+        $this->emailSender = new EmailSender();
+        $this->logger = new NullLogger();
     }
 
     /**
@@ -111,12 +104,29 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     }
 
     /**
+     * Check if the email redactor should send emails, based on its settings
+     * If the path is null, we consider that this redactor cannot be configured, it is always enabled.
+     *
+     * @param \App\Notification\Email\SubscribedEmailRedactorInterface $emailRedactor email redactor
+     * @return bool
+     */
+    private function isRedactorActive(SubscribedEmailRedactorInterface $emailRedactor): bool
+    {
+        $settingPath = $emailRedactor->getNotificationSettingPath();
+
+        return is_null($settingPath) || EmailNotificationSettings::get($settingPath);
+    }
+
+    /**
      * @param \Cake\Event\Event $event Event object to dispatch
      * @return void
      */
     public function dispatch(Event $event)
     {
         foreach ($this->emailSubscriptionManager->getSubscriptionsForEvent($event) as $emailRedactor) {
+            if (!$this->isRedactorActive($emailRedactor)) {
+                continue;
+            }
             $emailCollection = $emailRedactor->onSubscribedEvent($event);
 
             if ($emailCollection->getEmails()) {

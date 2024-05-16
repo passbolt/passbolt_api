@@ -52,6 +52,14 @@ class SubscribedEmailRedactorTraitTest extends TestCase
                 ];
             }
 
+            /**
+             * @inheritDoc
+             */
+            public function getNotificationSettingPath(): ?string
+            {
+                return null;
+            }
+
             public function onSubscribedEvent(Event $event): EmailCollection
             {
                 return new EmailCollection();

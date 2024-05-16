@@ -86,11 +86,22 @@ class AuthLoginController extends AppController
         } else {
             $errors = $result->getErrors();
             $message = $errors['X-GPGAuth-Debug'] ?? 'The authentication failed.';
-            if ($result->getStatus() === Result::FAILURE_OTHER) {
-                throw new InternalErrorException($message);
-            }
 
-            $this->error($message);
+            switch ($result->getStatus()) {
+                case Result::FAILURE_CREDENTIALS_MISSING:
+                    // We return 200 because it's partial success and BExt relies on this status code
+                    // Changing this would mean breaking compatibility. Be careful!
+                    $this->error($message, null, 200);
+                    break;
+                case Result::FAILURE_IDENTITY_NOT_FOUND:
+                    $this->error($message);
+                    break;
+                case Result::FAILURE_CREDENTIALS_INVALID:
+                    $this->error($message);
+                    break;
+                case Result::FAILURE_OTHER:
+                    throw new InternalErrorException($message);
+            }
         }
     }
 }

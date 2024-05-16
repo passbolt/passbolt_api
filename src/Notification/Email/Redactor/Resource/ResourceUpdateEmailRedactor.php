@@ -66,6 +66,14 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.password.update';
+    }
+
+    /**
      * @param \Cake\Event\Event $event Resource update event
      * @return \App\Notification\Email\EmailCollection
      */

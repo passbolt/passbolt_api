@@ -53,6 +53,14 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @param \App\Model\Entity\User $user user who got their settings deleted
      * @param \App\Utility\UserAccessControl $uac of user who deleted the settings
      * @return \App\Notification\Email\Email

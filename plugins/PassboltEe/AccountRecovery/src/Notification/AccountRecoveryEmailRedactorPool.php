@@ -36,41 +36,16 @@ class AccountRecoveryEmailRedactorPool extends AbstractSubscribedEmailRedactorPo
      */
     public function getSubscribedRedactors(): array
     {
-        $redactors = [];
-
-        if ($this->isRedactorEnabled('send.accountRecovery.request.user')) {
-            $redactors[] = new AccountRecoveryRequestCreatedUserEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.accountRecovery.request.admin')) {
-            $redactors[] = new AccountRecoveryRequestCreatedAdminEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.accountRecovery.response.user.approved')) {
-            $redactors[] = new AccountRecoveryResponseApprovedUserEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.accountRecovery.response.user.rejected')) {
-            $redactors[] = new AccountRecoveryResponseRejectedUserEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.accountRecovery.response.created.admin')) {
-            $redactors[] = new AccountRecoveryResponseCreatedAdminEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.accountRecovery.response.created.allAdmins')) {
-            $redactors[] = new AccountRecoveryResponseCreatedAllAdminsEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.accountRecovery.request.guessing')) {
-            $redactors[] = new AccountRecoveryGetBadRequestAdminEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.accountRecovery.policy.update')) {
-            $redactors[] = new AccountRecoveryOrganizationPolicyEnableEmailRedactor();
-            $redactors[] = new AccountRecoveryOrganizationPolicyDisableEmailRedactor();
-            $redactors[] = new AccountRecoveryOrganizationPolicyUpdateEmailRedactor();
-        }
+        $redactors[] = new AccountRecoveryRequestCreatedUserEmailRedactor();
+        $redactors[] = new AccountRecoveryRequestCreatedAdminEmailRedactor();
+        $redactors[] = new AccountRecoveryResponseApprovedUserEmailRedactor();
+        $redactors[] = new AccountRecoveryResponseRejectedUserEmailRedactor();
+        $redactors[] = new AccountRecoveryResponseCreatedAdminEmailRedactor();
+        $redactors[] = new AccountRecoveryResponseCreatedAllAdminsEmailRedactor();
+        $redactors[] = new AccountRecoveryGetBadRequestAdminEmailRedactor();
+        $redactors[] = new AccountRecoveryOrganizationPolicyEnableEmailRedactor();
+        $redactors[] = new AccountRecoveryOrganizationPolicyDisableEmailRedactor();
+        $redactors[] = new AccountRecoveryOrganizationPolicyUpdateEmailRedactor();
 
         return $redactors;
     }

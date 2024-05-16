@@ -14,9 +14,10 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.1.0
  */
-namespace Passbolt\Ee\Service;
+namespace Passbolt\Ee\Service\Subscriptions;
 
 use App\Model\Entity\Role;
+use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionException;
@@ -32,7 +33,7 @@ class SubscriptionKeyImportService
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @param string $fileName filename to import

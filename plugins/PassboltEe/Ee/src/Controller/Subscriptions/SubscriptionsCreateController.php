@@ -23,7 +23,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionSignatureException;
-use Passbolt\Ee\Service\SubscriptionKeySaveService;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeySaveService;
 
 /**
  * Class SubscriptionsCreateController

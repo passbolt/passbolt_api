@@ -74,6 +74,14 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return null;
+    }
+
+    /**
      * @param \Cake\Event\Event $event User register event
      * @return \App\Notification\Email\EmailCollection
      */

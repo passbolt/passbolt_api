@@ -20,7 +20,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\Ee\Service\SubscriptionKeyGetService;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyGetService;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
 /**

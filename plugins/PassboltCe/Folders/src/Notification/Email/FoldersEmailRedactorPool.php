@@ -28,23 +28,10 @@ class FoldersEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
      */
     public function getSubscribedRedactors(): array
     {
-        $redactors = [];
-
-        if ($this->isRedactorEnabled('send.folder.create')) {
-            $redactors[] = new CreateFolderEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.folder.update')) {
-            $redactors[] = new UpdateFolderEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.folder.delete')) {
-            $redactors[] = new DeleteFolderEmailRedactor();
-        }
-
-        if ($this->isRedactorEnabled('send.folder.share')) {
-            $redactors[] = new ShareFolderEmailRedactor();
-        }
+        $redactors[] = new CreateFolderEmailRedactor();
+        $redactors[] = new UpdateFolderEmailRedactor();
+        $redactors[] = new DeleteFolderEmailRedactor();
+        $redactors[] = new ShareFolderEmailRedactor();
 
         return $redactors;
     }
