@@ -24,20 +24,11 @@ use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairExce
 
 class JwtKeyPairService
 {
-    /**
-     * @var \Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService
-     */
-    protected $secretService;
+    protected JwtTokenCreateService $secretService;
 
-    /**
-     * @var \Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService
-     */
-    protected $publicService;
+    protected JwksGetService $publicService;
 
-    /**
-     * @var int Key length
-     */
-    protected $keyLength = JwtTokenCreateService::JWT_KEY_LENGTH;
+    protected int $keyLength = JwtTokenCreateService::JWT_KEY_LENGTH;
 
     /**
      * CreateJwtKeysService constructor.
@@ -124,11 +115,7 @@ class JwtKeyPairService
                 throw new \Exception(__('The JWT public key could not be read or is not valid.'));
             }
             $publicKey = file_get_contents($this->publicService->getKeyPath());
-            $details = openssl_pkey_get_details(
-                openssl_pkey_get_public($publicKey)
-            );
-
-            $secretKeySize = $details['bits'] ?? 0;
+            $secretKeySize = $this->publicService->getSecretKeySize();
 
             if ($secretKeySize === 0) {
                 throw new \Exception(__('The JWT public key could not be read or is not valid.'));

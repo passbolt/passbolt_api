@@ -32,10 +32,7 @@ class SelfRegistrationEmailRedactorPool extends AbstractSubscribedEmailRedactorP
 
         // This setting cannot be deactivated
         $redactors[] = new SelfRegistrationSettingsAdminEmailRedactor();
-
-        if ($this->isRedactorEnabled('send.admin.user.register.complete')) {
-            $redactors[] = new SelfRegistrationAdminEmailRedactor();
-        }
+        $redactors[] = new SelfRegistrationAdminEmailRedactor();
 
         return $redactors;
     }

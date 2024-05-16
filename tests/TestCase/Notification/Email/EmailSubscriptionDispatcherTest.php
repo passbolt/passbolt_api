@@ -17,263 +17,76 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Notification\Email;
 
-use App\Model\Entity\User;
-use App\Notification\Email\CollectSubscribedEmailRedactorEvent;
 use App\Notification\Email\Email;
-use App\Notification\Email\EmailCollection;
-use App\Notification\Email\EmailSender;
 use App\Notification\Email\EmailSubscriptionDispatcher;
-use App\Notification\Email\EmailSubscriptionManager;
-use App\Notification\Email\SubscribedEmailRedactorInterface;
+use App\Notification\NotificationSettings\CoreNotificationSettingsDefinition;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
 use Cake\TestSuite\TestCase;
-use Exception;
-use Psr\Log\LoggerInterface;
+use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 
 class EmailSubscriptionDispatcherTest extends TestCase
 {
+    use EmailQueueTrait;
+    use EmailNotificationSettingsTestTrait;
     use SubscribedEmailRedactorMockTrait;
+    use TruncateDirtyTables;
 
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|EmailSender
-     */
-    private $emailSenderMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|EventManager
-     */
-    private $eventManagerMock;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|EmailSubscriptionManager
-     */
-    private $emailSubscriptionManagerMock;
-
-    /**
-     * @var EmailSubscriptionDispatcher
-     */
-    private $sut;
-
-    /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|LoggerInterface
-     */
-    private $loggerMock;
+    private EmailSubscriptionDispatcher $sut;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->eventManagerMock = $this->createMock(EventManager::class);
-        $this->emailSubscriptionManagerMock = $this->createMock(EmailSubscriptionManager::class);
-        $this->emailSenderMock = $this->createMock(EmailSender::class);
-        $this->loggerMock = $this->createMock(LoggerInterface::class);
+        $this->sut = new EmailSubscriptionDispatcher();
+    }
 
-        $this->sut = new EmailSubscriptionDispatcher(
-            $this->eventManagerMock,
-            $this->emailSubscriptionManagerMock,
-            $this->emailSenderMock,
-            $this->loggerMock
+    public function testEmailSubscriptionDispatcher()
+    {
+        $event = 'foo';
+        $settingActivated = 'send.comment.add';
+        $this->setEmailNotificationSetting($settingActivated, true);
+        $settingDeactivated = 'show.comment';
+        $userEnabled = UserFactory::make()->getEntity();
+        $userEnabled->disabled = null;
+        $userDisabled = UserFactory::make()->disabled()->getEntity();
+        $redactorAlwaysActive = $this->createSubscribedRedactor(
+            [$event],
+            new Email($userEnabled, 'redactorAlwaysActive', [], 'test')
         );
-    }
+        $redactorAlwaysRecipientDisabled = $this->createSubscribedRedactor(
+            [$event],
+            new Email($userDisabled, 'redactorAlwaysRecipientDisabled', [], 'test')
+        );
+        $redactorOnSettingActivated = $this->createSubscribedRedactor(
+            [$event],
+            new Email($userEnabled, 'redactorOnSettingActivated', [], 'test'),
+            $settingActivated
+        );
+        $redactorOnSettingDeactivated = $this->createSubscribedRedactor(
+            [$event],
+            new Email($userEnabled, 'redactorOnSettingDeactivated', [], 'test'),
+            $settingDeactivated
+        );
 
-    public function testEmailSubscriptionDispatcherCanBeInvokedAsEventListener()
-    {
-        $this->emailSubscriptionManagerMock->expects($this->once())
-            ->method('getSubscribedEvents')
-            ->willReturn([]);
+        EventManager::instance()
+            ->on($redactorAlwaysActive)
+            ->on($redactorAlwaysRecipientDisabled)
+            ->on($redactorOnSettingActivated)
+            ->on($redactorOnSettingDeactivated)
+            ->on(new CoreNotificationSettingsDefinition());
 
-        $this->assertTrue(is_array($this->sut->implementedEvents()));
-        $this->assertTrue(is_callable($this->sut));
+        $this->sut->collectSubscribedEmailRedactors();
+        $this->sut->dispatch(new Event($event));
 
-        $this->emailSubscriptionManagerMock->expects($this->once())
-            ->method('getSubscriptionsForEvent')
-            ->willReturn([]);
-
-        call_user_func($this->sut, new Event('event'));
-    }
-
-    /**
-     * @dataProvider provideSubscribedRedactors
-     * @param array $subscribedRedactors
-     * @param array $subscribedRedactorEmails
-     */
-    public function testEmailSubscriptionDispatcherCreateAndSendEmailForEachRedactorSubscribedOnEvent(
-        array $subscribedRedactors,
-        array $subscribedRedactorEmails
-    ) {
-        $eventName = 'test_event';
-        $event = new Event($eventName);
-
-        $this->emailSubscriptionManagerMock->expects($this->once())
-            ->method('getSubscriptionsForEvent')
-            ->with($event)
-            ->willReturn($subscribedRedactors);
-
-        $this->emailSenderMock->expects($this->exactly(count($subscribedRedactors)))
-            ->method('sendEmail')
-            ->withConsecutive(
-                [$this->equalTo($subscribedRedactorEmails[0])],
-                [$this->equalTo($subscribedRedactorEmails[1])],
-            );
-
-        $this->sut->dispatch($event);
-    }
-
-    public function testCollectDispatchCollectEvent()
-    {
-        $this->eventManagerMock->expects($this->once())
-            ->method('dispatch')
-            ->with(CollectSubscribedEmailRedactorEvent::create($this->emailSubscriptionManagerMock));
-
-        $this->eventManagerMock->expects($this->once())
-            ->method('on')
-            ->with($this->sut);
-
-        $this->assertEquals($this->sut, $this->sut->collectSubscribedEmailRedactors());
-    }
-
-    public function testEmailSubscriptionDispatcherDoesNotSendEmailIfCollectionIsEmpty()
-    {
-        $eventName = 'test_event';
-        $event = new Event($eventName);
-        $subscribedRedactorMock = $this->createMock(SubscribedEmailRedactorInterface::class);
-        $subscribedRedactors = [$subscribedRedactorMock];
-
-        $subscribedRedactorMock->expects($this->once())
-            ->method('onSubscribedEvent')
-            ->willReturn(new EmailCollection());
-
-        $this->emailSubscriptionManagerMock->expects($this->once())
-            ->method('getSubscriptionsForEvent')
-            ->with($event)
-            ->willReturn($subscribedRedactors);
-
-        $this->emailSenderMock->expects($this->never())
-            ->method('sendEmail');
-
-        $this->sut->dispatch($event);
-    }
-
-    public function testEmailSubscriptionDispatcherSendEmailForEachEmailInCollection()
-    {
-        $eventName = 'test_event';
-        $event = new Event($eventName);
-        $subscribedRedactorMock = $this->createMock(SubscribedEmailRedactorInterface::class);
-        $subscribedRedactors = [$subscribedRedactorMock];
-        $emails = [
-            new Email(UserFactory::make()->willDisable()->getEntity(), 'test', ['test'], 'test'),
-            new Email(UserFactory::make()->willDisable()->getEntity(), 'test', ['test'], 'test'),
-        ];
-
-        $subscribedRedactorMock->expects($this->once())
-            ->method('onSubscribedEvent')
-            ->willReturn(new EmailCollection($emails));
-
-        $this->emailSubscriptionManagerMock->expects($this->once())
-            ->method('getSubscriptionsForEvent')
-            ->with($event)
-            ->willReturn($subscribedRedactors);
-
-        $this->emailSenderMock->expects($this->exactly(2))
-            ->method('sendEmail')
-            ->withConsecutive(
-                [$this->equalTo($emails[0])],
-                [$this->equalTo($emails[1])],
-            );
-
-        $this->sut->dispatch($event);
-    }
-
-    public function testEmailSubscriptionDispatcherSendEmailSkippedForDisabledRecipients()
-    {
-        $event = new Event('test_event');
-        $subscribedRedactorMock = $this->createMock(SubscribedEmailRedactorInterface::class);
-        $subscribedRedactors = [$subscribedRedactorMock];
-        $enabledUser = UserFactory::make()->willDisable()->getEntity();
-        $userWithDisabledToNull = new User(['username' => 'Foo', 'disabled' => null]);
-        $disabledUser = UserFactory::make()->disabled()->getEntity();
-        $userWithNoDisabledFieldProvided = new User(['username' => 'Foo']);
-        $emails = [
-            new Email($enabledUser, 'test', ['test'], 'test'),
-            new Email($userWithDisabledToNull, 'test', ['test'], 'test'),
-            new Email($disabledUser, 'test', ['test'], 'test'),
-            new Email($userWithNoDisabledFieldProvided, 'test', ['test'], 'test'),
-        ];
-
-        $subscribedRedactorMock->expects($this->once())
-            ->method('onSubscribedEvent')
-            ->willReturn(new EmailCollection($emails));
-
-        $this->emailSubscriptionManagerMock->expects($this->once())
-            ->method('getSubscriptionsForEvent')
-            ->with($event)
-            ->willReturn($subscribedRedactors);
-
-        $this->emailSenderMock->expects($this->exactly(2))
-            ->method('sendEmail')
-            ->withConsecutive(
-                [$this->equalTo($emails[0])],
-                [$this->equalTo($emails[1])],
-            );
-
-        $this->sut->dispatch($event);
-    }
-
-    public function testEmailSubscriptionDispatcherCatchEmailQueueExceptionAndLogError()
-    {
-        $eventName = 'test_event';
-        $event = new Event($eventName);
-        $subscribedRedactorMock = $this->createMock(SubscribedEmailRedactorInterface::class);
-        $subscribedRedactors = [$subscribedRedactorMock];
-        $emails = [
-            new Email(UserFactory::make()->willDisable()->getEntity(), 'test', ['test'], 'test'),
-            new Email(UserFactory::make()->willDisable()->getEntity(), 'test', ['test'], 'test'),
-        ];
-        $exception = new Exception();
-        $emailCollection = new EmailCollection($emails);
-
-        $subscribedRedactorMock->expects($this->once())
-            ->method('onSubscribedEvent')
-            ->willReturn($emailCollection);
-
-        $this->emailSubscriptionManagerMock->expects($this->once())
-            ->method('getSubscriptionsForEvent')
-            ->with($event)
-            ->willReturn($subscribedRedactors);
-
-        $this->emailSenderMock->expects($this->exactly(2))
-            ->method('sendEmail')
-            ->willThrowException($exception);
-
-        $this->loggerMock->expects($this->exactly(2))
-            ->method('alert')
-            ->with(
-                sprintf('EmailSubscriptionDispatcher failed to send email on event `%s`', $eventName),
-                ['emailCollection' => $emailCollection, 'exception' => $exception]
-            );
-
-        $this->sut->dispatch($event);
-    }
-
-    /**
-     * @return array
-     */
-    public function provideSubscribedRedactors(): array
-    {
-        $emails = [
-            new Email(UserFactory::make()->willDisable()->getEntity(), 'test_subject', [], 'test_template'),
-            new Email(UserFactory::make()->willDisable()->getEntity(), 'test_subject2', ['some_test_data'], 'test_template2'),
-        ];
-
-        return [
-            [
-                [
-                    $this->createSubscribedRedactor(['event_name'], $emails[0]),
-                    $this->createSubscribedRedactor(['event_name'], $emails[1]),
-                ],
-                $emails,
-            ],
-        ];
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailIsInQueue([
+            'subject' => 'redactorAlwaysActive',
+        ]);
+        $this->assertEmailIsInQueue([
+            'subject' => 'redactorOnSettingActivated',
+        ]);
     }
 }

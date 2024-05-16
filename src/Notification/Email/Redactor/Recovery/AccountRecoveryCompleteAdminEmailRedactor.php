@@ -47,6 +47,14 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.admin.user.recover.complete';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */

@@ -26,6 +26,8 @@ use App\Command\RecoverUserCommand;
 use App\Command\RegisterUserCommand;
 use App\Service\Command\ProcessUserService;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
+use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
+use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 
@@ -33,6 +35,7 @@ class CommandServiceProvider extends ServiceProvider
 {
     protected $provides = [
         ProcessUserService::class,
+        SubscriptionCheckInCommandServiceInterface::class,
         HealthcheckCommand::class,
         InstallCommand::class,
         KeyringInitCommand::class,
@@ -48,6 +51,10 @@ class CommandServiceProvider extends ServiceProvider
     public function services(ContainerInterface $container): void
     {
         $container->add(ProcessUserService::class);
+        $container->add(
+            SubscriptionCheckInCommandServiceInterface::class,
+            DefaultSubscriptionCheckInCommandService::class
+        );
 
         $container->add(HealthcheckCommand::class)->addArguments([
             ProcessUserService::class,
@@ -55,10 +62,14 @@ class CommandServiceProvider extends ServiceProvider
         ]);
         $container->add(InstallCommand::class)->addArguments([
             ProcessUserService::class,
+            SubscriptionCheckInCommandServiceInterface::class,
             HealthcheckServiceCollector::class,
         ]);
         $container->add(KeyringInitCommand::class)->addArgument(ProcessUserService::class);
-        $container->add(MigrateCommand::class)->addArgument(ProcessUserService::class);
+        $container->add(MigrateCommand::class)->addArguments([
+            ProcessUserService::class,
+            SubscriptionCheckInCommandServiceInterface::class,
+        ]);
         $container->add(RecoverUserCommand::class)->addArgument(ProcessUserService::class);
         $container->add(MigratePostgresCommand::class)->addArgument(ProcessUserService::class);
         $container->add(RegisterUserCommand::class)->addArgument(ProcessUserService::class);
