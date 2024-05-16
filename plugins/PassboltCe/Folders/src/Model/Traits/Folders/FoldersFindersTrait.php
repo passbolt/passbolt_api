@@ -65,16 +65,13 @@ trait FoldersFindersTrait
         }
 
         // If contains the user permission, retrieve the highest permission the user has for each folder.
-        // In the meantime filter only the resources the user has access, the permissions table will be joined
+        // In the meantime filter only the folder the user has access, the permissions table will be joined
         // to the folders table with an INNER join, see the hasOne definition.
         if (isset($options['contain']['permission'])) {
             $query->contain('Permission', function (Query $q) use ($userId) {
-                $subQueryOptions = ['checkGroupsUsers' => true];
+                $acoForeignKey = new IdentifierExpression('Folders.id');
                 $permissionIdSubQuery = $this->Permissions
-                    ->findAllByAro(PermissionsTable::FOLDER_ACO, $userId, $subQueryOptions)
-                    ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Folders.id')])
-                    ->orderDesc('Permissions.type')
-                    ->limit(1)
+                    ->findHighestByAcoAndAro(PermissionsTable::FOLDER_ACO, $acoForeignKey, $userId)
                     ->select(['Permissions.id']);
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
@@ -181,14 +178,15 @@ trait FoldersFindersTrait
         $subQueryOptions = [
             'checkGroupsUsers' => true,
         ];
-        $resourcesFilterByPermissionTypeSubQuery = $this->Permissions
+        $folderPermissions = $this->Permissions
             ->findAllByAro(PermissionsTable::FOLDER_ACO, $userId, $subQueryOptions)
-            ->select(['Permissions.aco_foreign_key'])
-            ->distinct();
+            ->select(['Permissions.id'])
+            ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Folders.id')])
+            ->limit(1);
 
-        $query->where(['Folders.id IN' => $resourcesFilterByPermissionTypeSubQuery]);
-
-        return $query;
+        return $query->innerJoin(['FolderPermissions' => 'permissions'], [
+            'FolderPermissions.id' => $folderPermissions,
+        ]);
     }
 
     /**
