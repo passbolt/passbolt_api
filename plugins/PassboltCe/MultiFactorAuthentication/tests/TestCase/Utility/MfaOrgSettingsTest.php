@@ -311,6 +311,8 @@ class MfaOrgSettingsTest extends MfaIntegrationTestCase
     {
         $duoSettings = new MfaOrgSettingsDuoService(
             [
+                // SEC-5652 Note to security researchers: these are not leaked credentials
+                // They look valid as they should pass validation, but are fake
                 MfaSettings::PROVIDER_DUO => [
                     MfaOrgSettings::DUO_CLIENT_ID => 'DICPIC33F13IWF1FR52J',
                     MfaOrgSettings::DUO_API_HOSTNAME => 'api-42e9f2fe.duosecurity.com',

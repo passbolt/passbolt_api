@@ -54,4 +54,14 @@ interface SubscribedEmailRedactorInterface extends EventListenerInterface
      * @return \App\Notification\Email\EmailCollection
      */
     public function onSubscribedEvent(Event $event): EmailCollection;
+
+    /**
+     * Gets the path of the email notification setting of this redactor
+     * If enabled in email settings, the redactor is active
+     * If disabled in the email settings, the redactor is inactive
+     * If the path is null, the redactor cannot be deactivated and is always active
+     *
+     * @return ?string
+     */
+    public function getNotificationSettingPath(): ?string;
 }

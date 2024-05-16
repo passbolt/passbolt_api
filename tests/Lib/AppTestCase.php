@@ -31,6 +31,7 @@ use App\Test\Lib\Utility\ErrorTestTrait;
 use App\Test\Lib\Utility\ObjectTrait;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\UserAction;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 use CakephpFixtureFactories\ORM\FactoryTableRegistry;
@@ -86,6 +87,7 @@ abstract class AppTestCase extends TestCase
         EmailNotificationSettings::flushCache();
         $this->clearPlugins();
         FactoryTableRegistry::getTableLocator()->clear();
+        UserAction::destroy();
 
         parent::tearDown();
     }

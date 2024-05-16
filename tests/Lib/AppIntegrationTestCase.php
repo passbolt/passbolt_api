@@ -49,6 +49,7 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
 use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 abstract class AppIntegrationTestCase extends TestCase
 {
@@ -106,6 +107,7 @@ abstract class AppIntegrationTestCase extends TestCase
         DigestTemplateRegistry::clearInstance();
         EmailNotificationSettings::flushCache();
         $this->clearPlugins();
+        MfaSettings::clear();
         parent::tearDown();
     }
 

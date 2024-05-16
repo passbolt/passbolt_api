@@ -63,6 +63,14 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.group.manager.update';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */

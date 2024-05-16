@@ -72,6 +72,7 @@ use App\Service\Healthcheck\Ssl\HostValidSslHealthcheck;
 use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
 use App\Service\Healthcheck\Ssl\NotSelfSignedSslHealthcheck;
 use App\Service\Healthcheck\Ssl\PeerValidSslHealthcheck;
+use App\Service\Network\SocketService;
 use Cake\Core\ContainerInterface;
 use Cake\Core\ServiceProvider;
 use Cake\Http\Client;
@@ -177,7 +178,10 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(GopengpgPrivateKeyFormatGpgHealthcheck::class)
             ->addArgument(PublicKeyInKeyringGpgHealthcheck::class);
         // Application health checks
-        $container->add(LatestVersionApplicationHealthcheck::class);
+        $container->add(SocketService::class);
+        $container->add(LatestVersionApplicationHealthcheck::class)
+            ->addArgument(Client::class)
+            ->addArgument(SocketService::class);
         $container->add(SslForceApplicationHealthcheck::class);
         $container->add(SslFullBaseUrlApplicationHealthcheck::class);
         $container->add(SeleniumDisabledApplicationHealthcheck::class);

@@ -52,6 +52,14 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.password.delete';
+    }
+
+    /**
      * Return the list of events to which the redactor is subscribed and when it must create emails to be sent.
      *
      * @return array
