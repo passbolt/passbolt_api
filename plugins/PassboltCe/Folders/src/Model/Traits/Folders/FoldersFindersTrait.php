@@ -64,10 +64,9 @@ trait FoldersFindersTrait
             $this->filterQueryByParentIds($query, $options['filter']['has-parent']);
         }
 
-        // Filter on folders the user has access
-        $query = $this->_filterQueryByPermissions($query, $userId);
-
-        // If contains the user permission.
+        // If contains the user permission, retrieve the highest permission the user has for each folder.
+        // In the meantime filter only the resources the user has access, the permissions table will be joined
+        // to the folders table with an INNER join, see the hasOne definition.
         if (isset($options['contain']['permission'])) {
             $query->contain('Permission', function (Query $q) use ($userId) {
                 $subQueryOptions = ['checkGroupsUsers' => true];
@@ -81,6 +80,9 @@ trait FoldersFindersTrait
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
             })
             ->group('Permission.id');
+        } else {
+            // Filter on folders the user has access
+            $query = $this->_filterQueryByPermissions($query, $userId);
         }
 
         // If contains children_folders.
