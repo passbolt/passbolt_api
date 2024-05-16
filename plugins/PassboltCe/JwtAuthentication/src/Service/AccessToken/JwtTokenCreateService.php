@@ -31,10 +31,7 @@ class JwtTokenCreateService extends JwtAbstractService
     public const JWT_KEY_LENGTH = 4096;
     public const JWT_EXPIRY_CONFIG_KEY = 'passbolt.auth.token.access_token.expiry';
 
-    /**
-     * @var string
-     */
-    protected $keyPath = self::JWT_SECRET_KEY_PATH;
+    protected string $keyPath = self::JWT_SECRET_KEY_PATH;
 
     /**
      * @param string $userId The id of the user successfully logging in.

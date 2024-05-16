@@ -22,6 +22,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use App\Utility\Purifier;
 use Cake\I18n\FrozenTime;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
@@ -45,7 +46,9 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
     public function testPasswordExpiryUsersEditDisableController_Success_Admin_Disable_User(): void
     {
         [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
-        [$userToDisable, $ownerWithResourceShared1, $ownerWithGroupShared1] = UserFactory::make(3)->user()->persist();
+        /** @var \App\Model\Entity\User $userToDisable */
+        $userToDisable = UserFactory::make(['profile' => ['last_name' => 'O\'Conner']])->user()->persist();
+        [$ownerWithResourceShared1, $ownerWithGroupShared1] = UserFactory::make(2)->user()->persist();
         [$resourceSharedViewed, $resourceSharedNotViewed] = ResourceFactory::make(2)
             ->withPermissionsFor([$userToDisable, $ownerWithResourceShared1])
             ->withSecretsFor([$userToDisable, $ownerWithResourceShared1])
@@ -88,15 +91,16 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
         $this->assertFalse($resourcesSharedViaGroupNotViewed->isExpired());
 
         $this->assertEmailQueueCount(4);
+        $userFullName = h(Purifier::clean($userFullName));
         $this->assertEmailInBatchContains(
             "The user {$userFullName} has been suspended.",
-            h($admin1->username),
+            $admin1->username,
             '',
             false
         );
         $this->assertEmailInBatchContains(
             "The user {$userFullName} has been suspended.",
-            h($admin2->username),
+            $admin2->username,
             '',
             false
         );
