@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.1.0
  */
-namespace Passbolt\Ee\Service;
+namespace Passbolt\Ee\Service\Subscriptions;
 
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\ForbiddenException;
@@ -22,6 +22,7 @@ use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Ee\Model\Dto\SubscriptionKeyDto;
+use Passbolt\Ee\Model\Table\SubscriptionsTable;
 
 /**
  * Class SubscriptionKeyGetService
@@ -34,13 +35,13 @@ class SubscriptionKeyGetService
     public const SUBSCRIPTION_FILE = CONFIG . 'subscription_key.txt';
 
     /**
-     * @var \Passbolt\Ee\Service\SubscriptionKeyValidateService $SubscriptionValidateService
+     * @var \Passbolt\Ee\Service\Subscriptions\SubscriptionKeyValidateService $SubscriptionValidateService
      */
-    protected $SubscriptionValidateService;
+    protected SubscriptionKeyValidateService $SubscriptionValidateService;
     /**
      * @var \Passbolt\Ee\Model\Table\SubscriptionsTable
      */
-    protected $Subscriptions;
+    protected SubscriptionsTable $Subscriptions;
 
     /**
      * SubscriptionKeyGetService constructor.

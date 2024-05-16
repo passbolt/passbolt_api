@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         3.1.0
  */
-namespace Passbolt\Ee\Service;
+namespace Passbolt\Ee\Service\Subscriptions;
 
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionSignatureException;
@@ -30,14 +30,14 @@ class SubscriptionKeyValidateService
      *
      * @var \Passbolt\Ee\Form\SubscriptionKeyAsciiForm
      */
-    protected $subscriptionKeyAsciiForm;
+    protected SubscriptionKeyAsciiForm $subscriptionKeyAsciiForm;
 
     /**
      * The subscription form details
      *
      * @var \Passbolt\Ee\Form\SubscriptionKeyDtoForm
      */
-    protected $subscriptionKeyDtoForm;
+    protected SubscriptionKeyDtoForm $subscriptionKeyDtoForm;
 
     /**
      * SubscriptionKey constructor.

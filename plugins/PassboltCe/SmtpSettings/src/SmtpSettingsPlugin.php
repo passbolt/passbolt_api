@@ -21,6 +21,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\SmtpSettings\Event\SmtpTransportBeforeSendEventListener;
+use Passbolt\SmtpSettings\Service\Healthcheck\CustomSslOptionsSmtpSettingsHealthcheck;
 use Passbolt\SmtpSettings\Service\Healthcheck\SettingsValidationSmtpSettingsHealthcheck;
 use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsEndpointsDisabledHealthcheck;
 use Passbolt\SmtpSettings\Service\Healthcheck\SmtpSettingsSettingsSourceHealthcheck;
@@ -46,10 +47,12 @@ class SmtpSettingsPlugin extends BasePlugin
         $container->add(SettingsValidationSmtpSettingsHealthcheck::class);
         $container->add(SmtpSettingsSettingsSourceHealthcheck::class);
         $container->add(SmtpSettingsEndpointsDisabledHealthcheck::class);
+        $container->add(CustomSslOptionsSmtpSettingsHealthcheck::class);
         $container
             ->extend(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [SettingsValidationSmtpSettingsHealthcheck::class])
             ->addMethodCall('addService', [SmtpSettingsSettingsSourceHealthcheck::class])
-            ->addMethodCall('addService', [SmtpSettingsEndpointsDisabledHealthcheck::class]);
+            ->addMethodCall('addService', [SmtpSettingsEndpointsDisabledHealthcheck::class])
+            ->addMethodCall('addService', [CustomSslOptionsSmtpSettingsHealthcheck::class]);
     }
 }

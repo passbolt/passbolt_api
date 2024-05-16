@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Command;
 
 use App\Service\Command\ProcessUserService;
+use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use Cake\Command\CacheClearallCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -29,19 +30,22 @@ class MigrateCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;
 
-    /**
-     * @var \App\Service\Command\ProcessUserService
-     */
     protected ProcessUserService $processUserService;
+
+    protected SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService;
 
     /**
      * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     * @param \App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService Service checking the subscription validity.
      */
-    public function __construct(ProcessUserService $processUserService)
-    {
+    public function __construct(
+        ProcessUserService $processUserService,
+        SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService
+    ) {
         parent::__construct();
 
         $this->processUserService = $processUserService;
+        $this->subscriptionCheckInCommandService = $subscriptionCheckInCommandService;
     }
 
     /**
@@ -86,9 +90,7 @@ class MigrateCommand extends PassboltCommand
         }
 
         // Normal mode
-        if (!$this->subscriptionCheck($args, $io)) {
-            return $this->errorCode();
-        }
+        $this->subscriptionCheckInCommandService->check($this, $args, $io);
 
         // Migration task
         $io->out(' ' . __('Running migration scripts.'));

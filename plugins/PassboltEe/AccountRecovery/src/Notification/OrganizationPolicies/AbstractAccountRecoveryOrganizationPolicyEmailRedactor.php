@@ -50,6 +50,14 @@ abstract class AbstractAccountRecoveryOrganizationPolicyEmailRedactor implements
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.accountRecovery.policy.update';
+    }
+
+    /**
      * @param \App\Model\Entity\User $admin Admin receiving the mail
      * @param \App\Model\Entity\User $user User making the action
      * @param \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy Account recovery request initiated by the user

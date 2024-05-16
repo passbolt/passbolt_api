@@ -33,7 +33,7 @@ class EmailSubscriptionManager
     /**
      * @var array
      */
-    private $subscriptions = [];
+    private array $subscriptions = [];
 
     /**
      * @param \App\Notification\Email\SubscribedEmailRedactorInterface $subscribedEmailRedactor Email Redactor
@@ -52,7 +52,7 @@ class EmailSubscriptionManager
      * @param \Cake\Event\Event $event Event object
      * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
-    public function getSubscriptionsForEvent(Event $event)
+    public function getSubscriptionsForEvent(Event $event): array
     {
         return $this->subscriptions[$event->getName()] ?? [];
     }

@@ -64,7 +64,6 @@ use EmailQueue\Shell\SenderShell;
 use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
-use Passbolt\WebInstaller\Middleware\WebInstallerMiddleware;
 use Psr\Http\Message\ServerRequestInterface;
 
 class Application extends BaseApplication implements AuthenticationServiceProviderInterface
@@ -203,12 +202,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      */
     public function initEmails()
     {
-        // Gather
-        if (WebInstallerMiddleware::isConfigured()) {
-            $this->getEventManager()
-                ->on(new CoreEmailRedactorPool())
-                ->on(new CoreNotificationSettingsDefinition());
-        }
+        $this->getEventManager()
+            ->on(new CoreEmailRedactorPool())
+            ->on(new CoreNotificationSettingsDefinition());
     }
 
     /**
@@ -290,11 +286,11 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $container->add(SessionIdentificationServiceInterface::class, SessionIdentificationService::class);
         $container->add(SelfRegistrationDryRunServiceInterface::class, SelfRegistrationDefaultDryRunService::class);
         $container->add(AbstractSecureCookieService::class, DefaultSecureCookieService::class);
+        $container->add(Client::class);
         $container->addServiceProvider(new TestEmailServiceProvider());
         $container->addServiceProvider(new SetupServiceProvider());
         $container->addServiceProvider(new ResourceServiceProvider());
         $container->addServiceProvider(new UserServiceProvider());
-        $container->add(Client::class)->setConcrete(null);
         if (PHP_SAPI === 'cli') {
             $container->addServiceProvider(new CommandServiceProvider());
         }

@@ -48,6 +48,14 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.password.aboutToExpire';
+    }
+
+    /**
      * @param \Cake\Event\Event $event Event
      * @return \App\Notification\Email\EmailCollection
      */
