@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Command;
 
 use App\Model\Entity\Role;
+use App\Service\Subscriptions\DefaultSubscriptionCheckInCommandService;
+use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
@@ -143,6 +145,9 @@ class InstallCommandTest extends AppTestCase
 
     public function testInstallCommandNormalNoForce_Will_Fail()
     {
+        $this->mockService(SubscriptionCheckInCommandServiceInterface::class, function () {
+            return new DefaultSubscriptionCheckInCommandService();
+        });
         $this->exec('passbolt install -d test');
         $this->assertExitError();
         $this->assertOutputContains('<error>Some tables are already present in the database. A new installation would override existing data.</error>');
@@ -151,6 +156,9 @@ class InstallCommandTest extends AppTestCase
 
     public function testInstallCommandForce_Will_Fail_If_BaseUrlIsNotValid()
     {
+        $this->mockService(SubscriptionCheckInCommandServiceInterface::class, function () {
+            return new DefaultSubscriptionCheckInCommandService();
+        });
         Configure::write('App.fullBaseUrl', 'foo');
         $this->exec('passbolt install --force -d test');
         $this->assertExitError();

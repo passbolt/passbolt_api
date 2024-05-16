@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e1503e29ce2b01ba38ef82c344f9a888",
+    "content-hash": "44be8bfbf90b6efc7be940cc4a97f095",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -6160,20 +6160,20 @@
         },
         {
             "name": "passbolt/passbolt-test-data",
-            "version": "4.4.0",
+            "version": "4.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/passbolt-test-data",
-                "reference": "cc1e4e665c84677ac6ee46f0d9ea597e3793f632"
+                "reference": "b290d06a00fdeaae9270f9fdb28c4ce90c8288c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/cc1e4e665c84677ac6ee46f0d9ea597e3793f632",
-                "reference": "cc1e4e665c84677ac6ee46f0d9ea597e3793f632",
+                "url": "https://api.github.com/repos/passbolt/passbolt-test-data/zipball/b290d06a00fdeaae9270f9fdb28c4ce90c8288c6",
+                "reference": "b290d06a00fdeaae9270f9fdb28c4ce90c8288c6",
                 "shasum": ""
             },
             "require": {
-                "cakephp/cakephp": "^4.0",
+                "cakephp/cakephp": "^4.3",
                 "ext-json": "*"
             },
             "require-dev": {
@@ -6211,7 +6211,7 @@
                 "help": "https://www.passbolt.com/help",
                 "source": "https://github.com/passbolt/passbolt"
             },
-            "time": "2023-11-02T14:20:48+00:00"
+            "time": "2024-05-07T08:55:35+00:00"
         },
         {
             "name": "phar-io/manifest",

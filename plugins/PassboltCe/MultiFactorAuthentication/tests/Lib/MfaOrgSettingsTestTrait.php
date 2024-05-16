@@ -64,6 +64,8 @@ trait MfaOrgSettingsTestTrait
      */
     public function getDefaultDuoV2OrgSettings(): array
     {
+        // SEC-5652 Note to security researchers: these are not leaked credentials
+        // They look valid as they should pass validation, but are fake
         return [
             'salt' => 'pG2y71Uu0wx3PsnWvtGom2CK9AGouV5oW84VHtwQ',
             'integrationKey' => 'UICPIC93F14RWR5F55SJ',
@@ -79,6 +81,8 @@ trait MfaOrgSettingsTestTrait
      */
     public function getDefaultDuoV4OrgSettings(): array
     {
+        // SEC-5652 Note to security researchers: these are not leaked credentials
+        // They look valid as they should pass validation, but are fake
         return [
             'clientId' => 'UICPIC93F14RWR5F55SJ',
             'clientSecret' => '8tkYNgi8aGAqa3KW1eqhsJLfjc1nJnHDYC1siNYX',

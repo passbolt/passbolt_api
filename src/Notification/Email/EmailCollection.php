@@ -28,7 +28,7 @@ class EmailCollection
     /**
      * @var \App\Notification\Email\Email[]
      */
-    private $emails = [];
+    private array $emails = [];
 
     /**
      * @param \App\Notification\Email\Email[] $emails A list of emails
@@ -60,7 +60,7 @@ class EmailCollection
     /**
      * @return \App\Notification\Email\Email[]
      */
-    public function getEmails()
+    public function getEmails(): array
     {
         return $this->emails;
     }
