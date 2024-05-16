@@ -55,6 +55,7 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
         $result = $this->service->get();
 
         $this->assertSame([], $result);
+        $this->assertTrue($this->service->isDefault());
     }
 
     public function testSmtpSettingsSslOptionsGetService_Overridden_DefaultValues()
@@ -70,6 +71,7 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
         $result = $this->service->get();
 
         $this->assertSame([], $result);
+        $this->assertTrue($this->service->isDefault());
     }
 
     public function testSmtpSettingsSslOptionsGetService_Overridden_SpecificKeys()
@@ -87,6 +89,7 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
             'verify_peer_name' => false,
             'allow_self_signed' => false,
         ], $result);
+        $this->assertFalse($this->service->isDefault());
     }
 
     public function testSmtpSettingsSslOptionsGetService_Overridden_CAFile()
@@ -102,6 +105,7 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
             'allow_self_signed' => true,
             'cafile' => '/path/to/cafile.crt',
         ], $result);
+        $this->assertFalse($this->service->isDefault());
     }
 
     public function testSmtpSettingsSslOptionsGetService_Overridden_AllValues()
@@ -121,5 +125,22 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
             'allow_self_signed' => true,
             'cafile' => '/etc/ssl/certs/mailpit/cert.pem',
         ], $result);
+        $this->assertFalse($this->service->isDefault());
+    }
+
+    public function testSmtpSettingsSslOptionsGetService_IsDefault_True()
+    {
+        $result = $this->service->isDefault();
+
+        $this->assertTrue($result);
+    }
+
+    public function testSmtpSettingsSslOptionsGetService_IsDefault_False()
+    {
+        Configure::write('passbolt.plugins.smtpSettings.security', ['sslVerifyPeer' => false]);
+
+        $result = $this->service->isDefault();
+
+        $this->assertFalse($result);
     }
 }

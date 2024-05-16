@@ -23,10 +23,7 @@ abstract class JwtAbstractService
     public const USER_ACCESS_TOKEN_KEY = 'access_token';
     public const JWT_CONFIG_DIR = CONFIG . 'jwt' . DS;
 
-    /**
-     * @var string
-     */
-    protected $keyPath;
+    protected string $keyPath;
 
     /**
      * @param string $path Path to the secret/private key file
