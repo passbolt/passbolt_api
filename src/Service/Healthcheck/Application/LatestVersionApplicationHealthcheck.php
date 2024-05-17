@@ -166,7 +166,7 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
         if ($this->exceptionThrown) {
             $msg = __('Could not connect to passbolt repository to check versions.');
             $msg .= ' ';
-            $msg .= __('It is not possible check if your version is up to date.');
+            $msg .= __('It is not possible to check if your version is up-to-date.');
         }
 
         return $msg;
