@@ -92,6 +92,10 @@ class PassboltCommand extends Command
             'help' => __d('cake_console', 'Identify and fix database relational integrity issues.'),
         ]);
 
+        $parser->addArgument('datacheck', [
+            'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
+        ]);
+
         $parser->addArgument('drop_tables', [
             'help' => __d('cake_console', 'Drop all the tables. Dangerous but useful for a full reinstall.'),
         ]);
@@ -119,7 +123,9 @@ class PassboltCommand extends Command
         ]);
 
         $parser->addArgument('mysql_export', [
-            'help' => __d('cake_console', 'Utility to export mysql database backups.'),
+            'help' =>
+                __d('cake_console', 'Utility to export mysql database backups.') . ' ' .
+                __d('cake_console', 'Deprecated, use instead sql_export.'),
         ]);
 
         $parser->addArgument('mysql_import', [
@@ -142,16 +148,16 @@ class PassboltCommand extends Command
             'help' => __d('cake_console', 'Try to send a test email and display debug information.'),
         ]);
 
-        $parser->addArgument('datacheck', [
-            'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
-        ]);
-
         $parser->addArgument('show_logs_path', [
             'help' => __d('cake_console', 'Show application logs.'),
         ]);
 
         $parser->addArgument('show_queued_emails', [
             'help' => __d('cake_console', 'Shows records from email_queue table.'),
+        ]);
+
+        $parser->addArgument('sql_export', [
+            'help' => __d('cake_console', 'Utility to export sql database backups.'),
         ]);
 
         $parser->addArgument('version', [

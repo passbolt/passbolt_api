@@ -123,7 +123,7 @@ class MigrateCommand extends PassboltCommand
     protected function backup(Arguments $args, ConsoleIo $io): bool
     {
         if ($args->getOption('backup')) {
-            $result = $this->executeCommand(MysqlExportCommand::class, $this->formatOptions($args, ['--force']), $io);
+            $result = $this->executeCommand(SqlExportCommand::class, $this->formatOptions($args, ['--force']), $io);
 
             return $result === self::CODE_SUCCESS;
         }
