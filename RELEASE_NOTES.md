@@ -1,28 +1,23 @@
-Release song: https://youtu.be/3L4YrGaR8E4
+Release song: https://youtu.be/hbe3CQamF8k
 
-Passbolt Community Edition v4.7 is a maintenance release that resolves multiple issues identified by the community. Furthermore, this release supports the commitment to improving customization options and integration features, making it easier for organizations to tailor the system to their specific needs.
+Passbolt is pleased to announce that the v4.8.0 Release Candidate is officially available for testing.
+This maintenance release aims to publish the first version of the Manifest v3 browser extension for Chrome and adds tools for administrators to help them maintain their instances.
+As always, your feedback is invaluable, so please share and report any issues you come across.
 
-A key enhancement in this release is the ability to use custom SSL certificates for SMTP server connections. This long-awaited feature is particularly beneficial for organizations operating in air-gapped environments or those using their own root CAs, enabling passbolt to more securely integrate with internal tools.
-
-## [4.7.0] - 2024-04-30
+## [4.8.0-rc.1] - 2024-05-17
 ### Added
-- PB-30330 Add HTTP HEAD method support to /healthcheck/status.json to support more uptime monitoring tools (GITHUB #507)
-- PB-26156 As an administrator I can configure SMTP to use TLS with a self-signed cert on my mail server (GITHUB #498)
+- PB-33071 As an administrator I can purge the action logs table with a dedicated command
+- PB-33231 As an administrator I want to know if a custom certificate is in use for SMTP
+- PB-32579 As an administrator I can view email_queue records via passbolt command
 
-### Security
-- PB-30255 As an authenticated user I cannot access to the healthcheck endpoint when debug is on
+### Improved
+- PB-32888 As an admin I should not get a time-out on health checks on air-gapped network
+- PB-32983 Access email settings only when emails are sent
 
 ### Fixed
-- PB-30379 As an authenticating user I should not get a 500 if the gpg_auth is not an array
-- PB-32889 As an administrator I should not get an exception when running core healthcheck and the host cannot be resolved
-- PB-32928 As user I should see the accurate URL in the email footer when passbolt runs on multiple instances
-- PB-32566 As a user setting up my account I should not get an unexpected 500
-- PB-32903 Fix deprecation error on password expiry settings validation
+- PB-33451 Fix 500 error on authentication when nonce is not a string
+- PB-33073 As a user logging in, invalid login operation should not be logged as success in the audit logs
+- PB-33234 The application should not throw an error if the JWT public key is not parsable
 
 ### Maintenance
-- PB-29983 Refactor health check code domain for better maintenance
-- PB-30394 Moves code in ActionLogsModelListener into a dedicated service
-- PB-32881 Disable by default all plugins in integration tests
-- PB-32978 Use dependency proxy to reduce docker pull limit
-- PB-22605 Refactor ShareSearchControllerTest, SecretViewControllerTest and GroupsDeleteControllerTest with fixture factories
-- PB-32594 Add tests for SecretCreateService
+- PB-30314 Bump passbolt/passbolt-test-data to v4.8
