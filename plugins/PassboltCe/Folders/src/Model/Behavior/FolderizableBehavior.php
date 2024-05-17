@@ -138,7 +138,7 @@ class FolderizableBehavior extends Behavior
             return $q->select([
                 'folder_parent_id' => 'FolderParentId.folder_parent_id',
             ]);
-        });
+        })->group('FolderParentId.folder_parent_id');
 
         $this->table()->hasOne('CountFolderRelations')
             ->setClassName('Passbolt/Folders.FoldersRelations')
@@ -153,11 +153,7 @@ class FolderizableBehavior extends Behavior
             return $q->select(compact('personal'));
         });
 
-        return $query
-            ->group([
-                $this->table()->aliasField('id'),
-                'FolderParentId.folder_parent_id',
-            ]);
+        return $query->group($this->table()->aliasField('id'));
     }
 
     /**

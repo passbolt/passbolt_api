@@ -114,7 +114,7 @@ trait ResourcesFindersTrait
                     ->select(['Permissions.id']);
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
-            });
+            })->group('Permission.id');
         } else {
             // If not already filtered by the contains on Permission, then filter only the resources the user has access.
             $query = $this->_filterQueryByPermissions($query, $userId);
@@ -129,19 +129,19 @@ trait ResourcesFindersTrait
 
         // If contains creator.
         if (isset($options['contain']['creator'])) {
-            $query->contain('Creator');
+            $query->contain('Creator')->group('Creator.id');
         }
 
         // If contains modifier.
         if (isset($options['contain']['modifier'])) {
-            $query->contain('Modifier');
+            $query->contain('Modifier')->group('Modifier.id');
         }
 
         // If contains favorite.
         if (isset($options['contain']['favorite'])) {
             $query->contain('Favorites', function ($q) use ($userId) {
                 return $q->where(['Favorites.user_id' => $userId]);
-            });
+            })->group('Favorites.id');
         }
 
         // Retrieve the permission and the details of a user attach to it if any
