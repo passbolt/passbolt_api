@@ -21,6 +21,7 @@ use App\Model\Table\AvatarsTable;
 use App\Model\Table\PermissionsTable;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
@@ -99,9 +100,13 @@ trait PermissionsFindersTrait
      *   bool $checkGroupsUsers Check also for the groups the aro is member of
      * ]
      * @return \Cake\ORM\Query
+     * @throws \Cake\Http\Exception\BadRequestException if the aro foreign key is not a valid UUID
      */
     public function findAllByAro(string $acoType, string $aroForeignKey, ?array $options = []): Query
     {
+        if (!Validation::uuid($aroForeignKey)) {
+            throw new BadRequestException(__('The identifier should be a valid UUID.'));
+        }
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
 
         // Retrieve also the permissions for the groups a user is member of.
