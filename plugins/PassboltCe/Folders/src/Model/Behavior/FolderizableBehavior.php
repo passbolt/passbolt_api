@@ -146,7 +146,7 @@ class FolderizableBehavior extends Behavior
         $foreignId = new IdentifierExpression($this->table()->aliasField("id"));
         $countSubQuery = $this->foldersRelationsTable->find();
         $countSubQuery->select([
-            "count_usage" => $countSubQuery->func()->count('FoldersRelations.id')
+            "count_usage" => $countSubQuery->func()->count('*')
         ])->where([["FoldersRelations.foreign_id" => $foreignId]]);
         $query->selectAlso(["count_usage" => $countSubQuery]);
 
