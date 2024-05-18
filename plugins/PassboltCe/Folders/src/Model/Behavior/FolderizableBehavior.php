@@ -153,7 +153,7 @@ class FolderizableBehavior extends Behavior
         return $query->formatResults(function (CollectionInterface $results){
             return $results->map(function ($entity) {
                 $entity = $this->addPersonalStatusProperty($entity, $entity["count_usage"] === 1);
-
+                unset($entity["count_usage"]);
                 return $entity;
             });
         });
