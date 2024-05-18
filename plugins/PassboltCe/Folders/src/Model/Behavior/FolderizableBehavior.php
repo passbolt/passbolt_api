@@ -18,7 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Model\Behavior;
 
 use App\Model\Event\TableFindIndexBefore;
+use Cake\Collection\CollectionInterface;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
@@ -138,22 +140,23 @@ class FolderizableBehavior extends Behavior
             return $q->select([
                 'folder_parent_id' => 'FolderParentId.folder_parent_id',
             ]);
-        })->group('FolderParentId.folder_parent_id');
-
-        $this->table()->hasOne('CountFolderRelations')
-            ->setClassName('Passbolt/Folders.FoldersRelations')
-            ->setForeignKey('foreign_id');
-        $query->contain('CountFolderRelations', function (Query $q) {
-            $personal = $q->expr()->case()
-                ->when($q->expr()->eq('COUNT(CountFolderRelations.id)', 1, 'integer'))
-                ->then($q->newExpr('TRUE'), 'boolean')
-                ->when($q->expr()->gt('COUNT(CountFolderRelations.id)', 1, 'integer'))
-                ->then($q->expr('FALSE'), 'boolean');
-
-            return $q->select(compact('personal'));
         });
 
-        return $query->group($this->table()->aliasField('id'));
+        // Get the alias of the current table
+        $foreignId = new IdentifierExpression($this->table()->aliasField("id"));
+        $countSubQuery = $this->foldersRelationsTable->find();
+        $countSubQuery->select([
+            "count_usage" => $countSubQuery->func()->count('FoldersRelations.id')
+        ])->where([["FoldersRelations.foreign_id" => $foreignId]]);
+        $query->selectAlso(["count_usage" => $countSubQuery]);
+
+        return $query->formatResults(function (CollectionInterface $results){
+            return $results->map(function ($entity) {
+                $entity = $this->addPersonalStatusProperty($entity, $entity["count_usage"] === 1);
+
+                return $entity;
+            });
+        });
     }
 
     /**

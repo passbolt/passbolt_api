@@ -41,8 +41,6 @@ trait PermissionsFindersTrait
     {
         return $this->findAllByAro($acoType, $aroForeignKey, ['checkGroupsUsers' => true])
             ->where(['Permissions.aco_foreign_key' => $acoForeignKey])
-            ->group('Permissions.type')
-            ->group('Permissions.id')
             ->orderDesc('Permissions.type')
             ->limit(1);
     }

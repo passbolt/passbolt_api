@@ -75,8 +75,7 @@ trait FoldersFindersTrait
                     ->select(['Permissions.id']);
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
-            })
-            ->group('Permission.id');
+            });
         } else {
             // Filter on folders the user has access
             $query = $this->_filterQueryByPermissions($query, $userId);
@@ -86,7 +85,6 @@ trait FoldersFindersTrait
         if (isset($options['contain']['children_folders'])) {
             $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
                 return $q->where(['FoldersRelations.user_id' => $userId])
-                    ->group('FoldersRelations.id')
                     ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
         }
@@ -95,7 +93,6 @@ trait FoldersFindersTrait
         if (isset($options['contain']['children_resources'])) {
             $query->contain('ChildrenResources', function (Query $q) use ($userId) {
                 return $q->where(['FoldersRelations.user_id' => $userId])
-                    ->group('FoldersRelations.id')
                     ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
             });
         }
