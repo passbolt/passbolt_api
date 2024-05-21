@@ -59,7 +59,7 @@ class LatestVersionApplicationHealthcheckTest extends TestCase
 
         $this->assertFalse($service->isPassed());
         $this->assertSame('undefined', $service->getRemoteVersion());
-        $expectedFailureMessage = 'Could not connect to passbolt repository to check versions. It is not possible check if your version is up to date.';
+        $expectedFailureMessage = 'Could not connect to passbolt repository to check versions. It is not possible to check if your version is up-to-date.';
         $this->assertSame($expectedFailureMessage, $service->getFailureMessage());
     }
 }
