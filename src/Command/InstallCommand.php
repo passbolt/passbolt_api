@@ -31,6 +31,7 @@ use App\Service\Healthcheck\Gpg\PublicKeyEmailGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PublicKeyReadableAndParsableGpgHealthcheck;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckWithOptionsInterface;
+use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
@@ -49,24 +50,26 @@ class InstallCommand extends PassboltCommand
 
     private HealthcheckServiceCollector $healthcheckServiceCollector;
 
-    /**
-     * @var \App\Service\Command\ProcessUserService
-     */
     protected ProcessUserService $processUserService;
+
+    protected SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService;
 
     /**
      * The client passed in the constructor might be null when run using the selenium tests
      *
      * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
+     * @param \App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService Service checking the subscription validity.
      * @param \App\Service\Healthcheck\HealthcheckServiceCollector $healthcheckServiceCollector Health check service collector.
      */
     public function __construct(
         ProcessUserService $processUserService,
+        SubscriptionCheckInCommandServiceInterface $subscriptionCheckInCommandService,
         HealthcheckServiceCollector $healthcheckServiceCollector
     ) {
         parent::__construct();
 
         $this->processUserService = $processUserService;
+        $this->subscriptionCheckInCommandService = $subscriptionCheckInCommandService;
         $this->healthcheckServiceCollector = $healthcheckServiceCollector;
     }
 
@@ -149,6 +152,8 @@ class InstallCommand extends PassboltCommand
             return $this->quickInstall($args, $io);
         }
         // Normal mode
+        $this->subscriptionCheckInCommandService->check($this, $args, $io);
+
         if (!$this->healthchecks($args, $io)) {
             return $this->errorCode();
         }

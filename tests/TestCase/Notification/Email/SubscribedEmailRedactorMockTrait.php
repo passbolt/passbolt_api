@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Notification\Email;
 
-use App\Notification\Email\CollectSubscribedEmailRedactorEvent;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -26,26 +25,26 @@ use Cake\Event\Event;
 
 trait SubscribedEmailRedactorMockTrait
 {
-    private function createSubscribedRedactor(array $subscribedEvents, Email $email)
-    {
-        return new class ($subscribedEvents, $email) implements SubscribedEmailRedactorInterface
+    private function createSubscribedRedactor(
+        array $subscribedEvents,
+        Email $email,
+        ?string $notificationSettingPath = null
+    ): SubscribedEmailRedactorInterface {
+        return new class ($subscribedEvents, $email, $notificationSettingPath) implements SubscribedEmailRedactorInterface
         {
             use SubscribedEmailRedactorTrait;
 
-            /**
-             * @var string
-             */
-            private $subscribedEvents;
+            private array $subscribedEvents;
 
-            /**
-             * @var Email
-             */
-            private $email;
+            private Email $email;
 
-            public function __construct(array $subscribedEvents, Email $email)
+            private ?string $notificationSettingPath;
+
+            public function __construct(array $subscribedEvents, Email $email, ?string $notificationSettingPath)
             {
                 $this->subscribedEvents = $subscribedEvents;
                 $this->email = $email;
+                $this->notificationSettingPath = $notificationSettingPath;
             }
 
             public function onSubscribedEvent(Event $event): EmailCollection
@@ -53,18 +52,17 @@ trait SubscribedEmailRedactorMockTrait
                 return new EmailCollection([$this->email]);
             }
 
+            /**
+             * @inheritDoc
+             */
+            public function getNotificationSettingPath(): ?string
+            {
+                return $this->notificationSettingPath;
+            }
+
             public function getSubscribedEvents(): array
             {
                 return $this->subscribedEvents;
-            }
-
-            public function subscribe(CollectSubscribedEmailRedactorEvent $event)
-            {
-            }
-
-            public function implementedEvents(): array
-            {
-                return [];
             }
         };
     }

@@ -108,4 +108,12 @@ class SelfRegistrationUserEmailRedactor implements SubscribedEmailRedactorInterf
             static::EMAIL_TEMPLATE
         );
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.user.create';
+    }
 }

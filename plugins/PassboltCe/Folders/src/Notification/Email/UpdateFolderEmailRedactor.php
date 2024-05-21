@@ -72,6 +72,14 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.folder.update';
+    }
+
+    /**
      * @param \Cake\Event\Event $event Event
      * @return \App\Notification\Email\EmailCollection
      */

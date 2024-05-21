@@ -63,6 +63,14 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.admin.user.setup.completed';
+    }
+
+    /**
      * @param \Cake\Event\Event $event Event Instance
      * @return \App\Notification\Email\EmailCollection
      */

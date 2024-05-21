@@ -109,4 +109,12 @@ class UserRegisterEmailRedactor implements SubscribedEmailRedactorInterface
             static::TEMPLATE_REGISTER_ADMIN
         );
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.user.create';
+    }
 }
