@@ -89,6 +89,7 @@ abstract class AppIntegrationTestCase extends TestCase
             $this->disableFeaturePlugin(ucfirst($plugin));
         }
         $this->disableFeaturePlugin('Log');
+        $this->disableFeaturePlugin('Folders');
         $this->disableFeaturePlugin(MultiFactorAuthenticationPlugin::class);
 
         Configure::write(CsrfProtectionMiddleware::PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG, true);

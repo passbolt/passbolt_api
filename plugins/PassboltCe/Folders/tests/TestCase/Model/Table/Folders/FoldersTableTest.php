@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Test\TestCase\Model\Table\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
@@ -165,17 +166,21 @@ class FoldersTableTest extends FoldersTestCase
         $userBId = UuidFactory::uuid('user.id.betty');
 
         // Insert fixtures.
-        // Ada has access to folder A, B as OWNER
+        // Ada has access to folder A, B, C as OWNER
         // Betty has access to folder B as OWNER
         // A (Ada:O)
         // B (Ada:O)
+        // C does not have any folder relation
         $folderA = $this->addFolderFor(['name' => 'A'], [$userAId => Permission::OWNER]);
         $folderB = $this->addFolderFor(['name' => 'B'], [$userAId => Permission::OWNER, $userBId => Permission::OWNER]);
+        $folderC = FolderFactory::make()->withPermissionsFor([UserFactory::make(['id' => $userAId])->getEntity()])->persist();
 
         $folderA = $this->Folders->findView($userAId, $folderA->id)->first();
         $this->assertTrue($folderA->get('personal'));
         $folderB = $this->Folders->findView($userAId, $folderB->id)->first();
         $this->assertFalse($folderB->get('personal'));
+        $folderC = $this->Folders->findView($userAId, $folderC->get('id'))->first();
+        $this->assertNull($folderC->get('personal'));
     }
 
     /* FINDER TESTS */

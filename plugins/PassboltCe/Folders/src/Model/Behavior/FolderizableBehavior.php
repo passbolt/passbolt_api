@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Model\Behavior;
 
 use App\Model\Event\TableFindIndexBefore;
-use Cake\Collection\CollectionInterface;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\EntityInterface;
@@ -143,20 +142,24 @@ class FolderizableBehavior extends Behavior
         });
 
         // Get the alias of the current table
-        $foreignId = new IdentifierExpression($this->table()->aliasField("id"));
-        $countSubQuery = $this->foldersRelationsTable->find();
+        $foreignId = new IdentifierExpression($this->table()->aliasField('id'));
+        // Count the number of folder relations for each entry (resource or folder, depending on the table being queried)
+        // If the entry has only one folder relation, it is then known as personal. The personal property is set to 1.
+        // If it has more than one folder relation, it is not personal, the property is set to 0
+        // Else, the property is NULL
+        $countSubQuery = $this->foldersRelationsTable->selectQuery();
+        $personal = $query->expr()->case()
+            ->when($query->expr()->eq('COUNT(*)', 1, 'integer'))
+            ->then($query->newExpr('TRUE'), 'boolean')
+            ->when($query->expr()->gt('COUNT(*)', 1, 'integer'))
+            ->then($query->expr('FALSE'), 'boolean');
         $countSubQuery->select([
-            "count_usage" => $countSubQuery->func()->count('*')
-        ])->where([["FoldersRelations.foreign_id" => $foreignId]]);
-        $query->selectAlso(["count_usage" => $countSubQuery]);
+            'personal' => $personal,
+        ])->where(['FoldersRelations.foreign_id' => $foreignId]);
+        $selectTypeMap = $query->getSelectTypeMap();
+        $selectTypeMap->addDefaults([self::PERSONAL_PROPERTY => 'boolean']);
 
-        return $query->formatResults(function (CollectionInterface $results){
-            return $results->map(function ($entity) {
-                $entity = $this->addPersonalStatusProperty($entity, $entity["count_usage"] === 1);
-                unset($entity["count_usage"]);
-                return $entity;
-            });
-        });
+        return $query->selectAlso([self::PERSONAL_PROPERTY => $countSubQuery]);
     }
 
     /**

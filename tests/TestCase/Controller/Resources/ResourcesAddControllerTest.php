@@ -28,6 +28,7 @@ use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Folders\FoldersPlugin;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -56,6 +57,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->enableFeaturePlugin(FoldersPlugin::class);
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
