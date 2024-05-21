@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         3.0.0
  */
 
-namespace Passbolt\Ee\Test\TestCase\Service;
+namespace Passbolt\Ee\Test\TestCase\Service\Subscriptions;
 
 use App\Test\Factory\UserFactory;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -23,7 +23,7 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionException;
 use Passbolt\Ee\Model\Entity\Subscription;
-use Passbolt\Ee\Service\SubscriptionKeyImportService;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyImportService;
 use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 
 /**
@@ -37,10 +37,7 @@ class SubscriptionKeyImportServiceTest extends TestCase
     use LocatorAwareTrait;
     use TruncateDirtyTables;
 
-    /**
-     * @var SubscriptionKeyImportService
-     */
-    public $service;
+    public SubscriptionKeyImportService $service;
 
     /**
      * @var \Passbolt\Ee\Model\Table\SubscriptionsTable

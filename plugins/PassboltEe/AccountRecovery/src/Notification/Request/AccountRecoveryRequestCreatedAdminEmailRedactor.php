@@ -68,6 +68,14 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.accountRecovery.request.admin';
+    }
+
+    /**
      * @param \Cake\Event\Event $event User delete event
      * @return \App\Notification\Email\EmailCollection
      */

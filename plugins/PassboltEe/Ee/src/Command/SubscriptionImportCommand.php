@@ -21,18 +21,16 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionException;
-use Passbolt\Ee\Service\SubscriptionKeyGetService;
-use Passbolt\Ee\Service\SubscriptionKeyImportService;
+use Passbolt\Ee\Model\Table\SubscriptionsTable;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyGetService;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyImportService;
 
 /**
  * Subscription Check shell command.
  */
 class SubscriptionImportCommand extends PassboltCommand
 {
-    /**
-     * @var \Passbolt\Ee\Model\Table\SubscriptionsTable
-     */
-    protected $Subscriptions;
+    protected SubscriptionsTable $Subscriptions;
 
     /**
      * @inheritDoc

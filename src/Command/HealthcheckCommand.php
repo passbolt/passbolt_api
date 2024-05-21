@@ -225,7 +225,7 @@ class HealthcheckCommand extends PassboltCommand
     public function render(HealthcheckServiceInterface $healthcheckService): void
     {
         switch ($healthcheckService->level()) {
-            case 'error':
+            case HealthcheckServiceCollector::LEVEL_ERROR:
                 $this->assert(
                     $healthcheckService->isPassed(),
                     $healthcheckService->getSuccessMessage(),
@@ -233,7 +233,7 @@ class HealthcheckCommand extends PassboltCommand
                     $healthcheckService->getHelpMessage()
                 );
                 break;
-            case 'warning':
+            case HealthcheckServiceCollector::LEVEL_WARNING:
                 $this->warning(
                     $healthcheckService->isPassed(),
                     $healthcheckService->getSuccessMessage(),
@@ -241,7 +241,7 @@ class HealthcheckCommand extends PassboltCommand
                     $healthcheckService->getHelpMessage()
                 );
                 break;
-            case 'notice':
+            case HealthcheckServiceCollector::LEVEL_NOTICE:
                 $this->notice(
                     $healthcheckService->isPassed(),
                     $healthcheckService->getSuccessMessage(),

@@ -22,7 +22,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
-use Passbolt\Ee\Service\SubscriptionKeyGetService;
+use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyGetService;
 
 /**
  * Class DummySubscriptionTrait

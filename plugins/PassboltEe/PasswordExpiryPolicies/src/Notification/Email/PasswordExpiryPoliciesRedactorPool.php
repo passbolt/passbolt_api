@@ -26,13 +26,7 @@ class PasswordExpiryPoliciesRedactorPool extends AbstractSubscribedEmailRedactor
      */
     public function getSubscribedRedactors(): array
     {
-        $redactors = [];
-        $isCronNotificationEnabled =
-            $this->isRedactorEnabled('send.password.aboutToExpire') ||
-            $this->isRedactorEnabled('send.password.expire');
-        if ($isCronNotificationEnabled) {
-            $redactors[] = new PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor();
-        }
+        $redactors[] = new PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor();
 
         return $redactors;
     }

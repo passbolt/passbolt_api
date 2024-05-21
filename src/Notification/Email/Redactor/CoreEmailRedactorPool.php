@@ -47,68 +47,29 @@ class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
     /**
      * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
      */
-    public function getSubscribedRedactors()
+    public function getSubscribedRedactors(): array
     {
-        $redactors = [];
-
-        if ($this->isRedactorEnabled('send.user.create')) {
-            $redactors[] = new UserRegisterEmailRedactor();
-            $redactors[] = new SelfRegistrationUserEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.comment.add')) {
-            $redactors[] = new CommentAddEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.user.recover')) {
-            $redactors[] = new AccountRecoveryEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.user.recoverComplete')) {
-            $redactors[] = new AccountRecoveryCompleteUserEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.admin.user.recover.abort')) {
-            $redactors[] = new SetupRecoverAbortAdminEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.admin.user.recover.complete')) {
-            $redactors[] = new AccountRecoveryCompleteAdminEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.admin.user.disable.user')) {
-            $redactors[] = new UserDisableEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.admin.user.disable.admin')) {
-            $redactors[] = new AdminDisableEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.password.share')) {
-            $redactors[] = new ShareEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.password.create')) {
-            $redactors[] = new ResourceCreateEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.password.update')) {
-            $redactors[] = new ResourceUpdateEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.password.delete')) {
-            $redactors[] = new ResourceDeleteEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.group.user.add')) {
-            $redactors[] = new GroupUserAddEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.group.delete')) {
-            $redactors[] = new GroupDeleteEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.group.user.update')) {
-            $redactors[] = new GroupUserUpdateEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.group.user.delete')) {
-            $redactors[] = new UserDeleteEmailRedactor();
-            $redactors[] = new GroupUserDeleteEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.group.manager.update')) {
-            $redactors[] = new GroupUpdateAdminSummaryEmailRedactor();
-        }
-        if ($this->isRedactorEnabled('send.group.manager.requestAddUser')) {
-            $redactors[] = new GroupUserAddRequestEmailRedactor();
-        }
-        $logEnabled = Configure::read('passbolt.plugins.log.enabled');
-        if ($this->isRedactorEnabled('send.admin.user.setup.completed') && $logEnabled) {
+        $redactors[] = new UserRegisterEmailRedactor();
+        $redactors[] = new SelfRegistrationUserEmailRedactor();
+        $redactors[] = new CommentAddEmailRedactor();
+        $redactors[] = new AccountRecoveryEmailRedactor();
+        $redactors[] = new AccountRecoveryCompleteUserEmailRedactor();
+        $redactors[] = new SetupRecoverAbortAdminEmailRedactor();
+        $redactors[] = new AccountRecoveryCompleteAdminEmailRedactor();
+        $redactors[] = new UserDisableEmailRedactor();
+        $redactors[] = new AdminDisableEmailRedactor();
+        $redactors[] = new ShareEmailRedactor();
+        $redactors[] = new ResourceCreateEmailRedactor();
+        $redactors[] = new ResourceUpdateEmailRedactor();
+        $redactors[] = new ResourceDeleteEmailRedactor();
+        $redactors[] = new GroupUserAddEmailRedactor();
+        $redactors[] = new GroupDeleteEmailRedactor();
+        $redactors[] = new GroupUserUpdateEmailRedactor();
+        $redactors[] = new UserDeleteEmailRedactor();
+        $redactors[] = new GroupUserDeleteEmailRedactor();
+        $redactors[] = new GroupUpdateAdminSummaryEmailRedactor();
+        $redactors[] = new GroupUserAddRequestEmailRedactor();
+        if (Configure::read('passbolt.plugins.log.enabled')) {
             $redactors[] = new AdminUserSetupCompleteEmailRedactor();
         }
         if (Configure::read(UserAdminRoleRevokedEmailRedactor::CONFIG_KEY_EMAIL_ENABLED)) {

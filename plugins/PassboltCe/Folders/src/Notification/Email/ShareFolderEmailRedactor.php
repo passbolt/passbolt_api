@@ -64,6 +64,14 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.folder.share';
+    }
+
+    /**
      * @param \Cake\Event\Event $event Event
      * @return \App\Notification\Email\EmailCollection
      */

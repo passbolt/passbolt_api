@@ -21,6 +21,13 @@ use Cake\Core\Configure;
 class SmtpSettingsSslOptionsGetService
 {
     /**
+     * Is configuration options are default or not.
+     *
+     * @var bool|null
+     */
+    private ?bool $default = null;
+
+    /**
      * Returns empty array if values set are defaults as settings those again won't have any effect.
      * Otherwise, returns set configurations mapped as PHP SSL context options format (https://www.php.net/manual/en/context.ssl.php#refsect1-context.ssl-options).
      *
@@ -28,13 +35,37 @@ class SmtpSettingsSslOptionsGetService
      */
     public function get(): array
     {
-        $configSslOptions = Configure::read('passbolt.plugins.smtpSettings.security', []);
+        $configSslOptions = $this->getConfigOptions();
 
-        if ($this->isDefault($configSslOptions)) {
+        if ($this->checkDefaultOptions($configSslOptions)) {
             return [];
         }
 
         return $this->getMappedOptions($configSslOptions);
+    }
+
+    /**
+     * Returns `true` if SSL options set in configuration are default, `false` otherwise.
+     *
+     * @return bool|null
+     */
+    public function isDefault(): ?bool
+    {
+        if (is_null($this->default)) {
+            $configSslOptions = $this->getConfigOptions();
+
+            $this->checkDefaultOptions($configSslOptions);
+        }
+
+        return $this->default;
+    }
+
+    /**
+     * @return array
+     */
+    private function getConfigOptions(): array
+    {
+        return Configure::read('passbolt.plugins.smtpSettings.security', []);
     }
 
     /**
@@ -43,9 +74,11 @@ class SmtpSettingsSslOptionsGetService
      * @param array $configOptions SSL options set in configuration.
      * @return bool
      */
-    private function isDefault(array $configOptions): bool
+    private function checkDefaultOptions(array $configOptions): bool
     {
         if (count($configOptions) !== 4) {
+            $this->default = false;
+
             return false;
         }
 
@@ -58,7 +91,9 @@ class SmtpSettingsSslOptionsGetService
 
         $result = $this->getMappedOptions($configOptions);
 
-        return empty(array_diff_assoc($defaults, $result));
+        $this->default = empty(array_diff_assoc($defaults, $result));
+
+        return $this->default;
     }
 
     /**

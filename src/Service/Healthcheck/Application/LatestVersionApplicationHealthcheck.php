@@ -20,6 +20,7 @@ namespace App\Service\Healthcheck\Application;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\Network\SocketService;
 use Cake\Core\Configure;
 use Cake\Http\Client;
 
@@ -43,6 +44,20 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
      * @var bool
      */
     private bool $exceptionThrown = false;
+
+    private Client $client;
+
+    private SocketService $socketService;
+
+    /**
+     * @param \Cake\Http\Client $client Client.
+     * @param \App\Service\Network\SocketService $socketService Socket service.
+     */
+    public function __construct(Client $client, SocketService $socketService)
+    {
+        $this->client = $client;
+        $this->socketService = $socketService;
+    }
 
     /**
      * @inheritDoc
@@ -77,21 +92,19 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
     /**
      * Return the current master version according to the official passbolt repository
      *
-     * @throws \Exception if the github repository is not reachable
+     * @throws \Cake\Network\Exception\SocketException If the github repository is not reachable
      * @throws \Exception if the tag information cannot be retrieved
      * @return string tag name such as 'v1.0.1'
      */
     private function getLatestTagName(): string
     {
+        // Make sure github is reachable
+        $this->socketService->canConnect(['host' => 'github.com', 'port' => 443, 'timeout' => 30]);
+
         $remoteTagName = Configure::read('passbolt.remote.version');
         if (is_null($remoteTagName)) {
-            $url = 'https://api.github.com/repos/passbolt/passbolt_api/releases/latest';
-            try {
-                $HttpSocket = new Client();
-                $results = $HttpSocket->get($url);
-            } catch (\Exception $e) {
-                throw new \Exception(__('Could not connect to github repository'));
-            }
+            $results = $this->client->get('https://api.github.com/repos/passbolt/passbolt_api/releases/latest');
+
             $tags = json_decode($results->getStringBody(), true);
             if (!isset($tags['tag_name'])) {
                 throw new \Exception(__('Could not read tag information on github repository'));
@@ -151,9 +164,9 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
             $this->remoteVersion
         );
         if ($this->exceptionThrown) {
-            $msg = __('Could not connect to passbolt repository to check versions');
+            $msg = __('Could not connect to passbolt repository to check versions.');
             $msg .= ' ';
-            $msg .= __('It is not possible check if your version is up to date.');
+            $msg .= __('It is not possible to check if your version is up-to-date.');
         }
 
         return $msg;

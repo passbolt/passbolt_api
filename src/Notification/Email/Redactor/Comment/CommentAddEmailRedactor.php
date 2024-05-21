@@ -137,4 +137,12 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
 
         return new Email($recipient, $subject, $data, self::TEMPLATE);
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function getNotificationSettingPath(): ?string
+    {
+        return 'send.comment.add';
+    }
 }
