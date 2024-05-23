@@ -221,7 +221,7 @@ seq-php8.1-mysql8:
 seq-php8.2-mariadb10.3:
   variables:
     PHP_VERSION: "8.2"
-    DATABASE_ENGINE_VERSION: '${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb-10.3'
+    DATABASE_ENGINE_VERSION: '${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:10.3'
   extends:
     - .mysql-template
     - .test-template
