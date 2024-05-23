@@ -21,6 +21,7 @@ use App\Model\Table\PermissionsTable;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -31,6 +32,16 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 class FindAllByAroTest extends TestCase
 {
     use TruncateDirtyTables;
+
+    public function testFindAllByAro_No_UUID_Should_Throw_An_Exception()
+    {
+        /** @var PermissionsTable $table */
+        $table = TableRegistry::getTableLocator()->get('Permissions');
+
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The identifier should be a valid UUID.');
+        $table->findAllByAro(PermissionsTable::RESOURCE_ACO, 'foo');
+    }
 
     public function testFindAllByAro_NoDirectOrInherited()
     {
