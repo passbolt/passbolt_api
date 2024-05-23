@@ -86,6 +86,7 @@ class FoldersTable extends Table
         $this->hasOne('Permission', [
             'className' => 'Permissions',
             'foreignKey' => 'aco_foreign_key',
+            'joinType' => 'INNER',
         ]);
         $this->hasMany('Permissions', [
             'foreignKey' => 'aco_foreign_key',

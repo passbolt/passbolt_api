@@ -21,6 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PaginationTestTrait;
+use Passbolt\Folders\FoldersPlugin;
 
 class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
 {
@@ -35,6 +36,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
     {
         parent::setUp();
         $this->defaultSortField = 'Resources.name';
+        $this->enableFeaturePlugin(FoldersPlugin::class);
     }
 
     /**

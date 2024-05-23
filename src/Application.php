@@ -19,6 +19,7 @@ namespace App;
 use App\Authenticator\SessionAuthenticationService;
 use App\Authenticator\SessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Command\SqlExportCommand;
 use App\Middleware\ApiVersionMiddleware;
 use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
@@ -339,6 +340,9 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         if (!$this->isFeaturePluginEnabled(EmailDigestPlugin::class)) {
             $commands->add('passbolt email_digest send', SenderShell::class);
         }
+
+        // Alias sql_export to mysql_export, this is to keep BC
+        $commands->add('passbolt mysql_export', SqlExportCommand::class);
 
         return $commands;
     }
