@@ -18,8 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Model\Behavior;
 
 use App\Model\Event\TableFindIndexBefore;
-use Cake\Collection\CollectionInterface;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
@@ -128,89 +128,38 @@ class FolderizableBehavior extends Behavior
      */
     public function formatResults(Query $query, string $userId): Query
     {
-        return $query->formatResults(function (CollectionInterface $results) use ($userId) {
-            $itemsIds = $results->extract('id')->toArray();
-            $itemsFolderParentIdsHash = $this->getItemsFolderParentIdHash($itemsIds, $userId);
-            $itemsUsageHash = $this->getItemsUsageHash($itemsIds);
-
-            // The entity passed may be an entity interface, or an array if the hydration has been disabled
-            return $results->map(function ($entity) use ($itemsFolderParentIdsHash, $itemsUsageHash) {
-                $entityId = $entity['id'];
-                if (array_key_exists($entityId, $itemsFolderParentIdsHash)) {
-                    $folderParentId = $itemsFolderParentIdsHash[$entityId];
-                    $entity = $this->addFolderParentIdProperty($entity, $folderParentId);
-                }
-                if (array_key_exists($entityId, $itemsUsageHash)) {
-                    $isPersonal = $itemsUsageHash[$entityId] === 1;
-                    $entity = $this->addPersonalStatusProperty($entity, $isPersonal);
-                }
-
-                return $entity;
-            });
+        $this->table()->hasOne('FolderParentId')
+            ->setClassName('Passbolt/Folders.FoldersRelations')
+            ->setForeignKey('foreign_id')
+            ->setConditions([
+                'FolderParentId.user_id' => $userId,
+                $query->expr()->isNotNull('FolderParentId.folder_parent_id'),
+            ]);
+        $query->contain('FolderParentId', function (Query $q) {
+            return $q->select([
+                'folder_parent_id' => 'FolderParentId.folder_parent_id',
+            ]);
         });
-    }
 
-    /**
-     * Retrieve the folder parent ids of a list of items
-     *
-     * @param array $itemsIds The target item ids
-     * @param string $userId The target user id
-     * @return array
-     * [
-     *   ITEM_ID => FOLDER_PARENT_ID,
-     *   ...
-     * ]
-     */
-    private function getItemsFolderParentIdHash(array $itemsIds, string $userId)
-    {
-        $hash = [];
+        // Get the alias of the current table
+        $foreignId = new IdentifierExpression($this->table()->aliasField('id'));
+        // Count the number of folder relations for each entry (resource or folder, depending on the table being queried)
+        // If the entry has only one folder relation, it is then known as personal. The personal property is set to 1.
+        // If it has more than one folder relation, it is not personal, the property is set to 0
+        // Else, the property is NULL
+        $countSubQuery = $this->foldersRelationsTable->selectQuery();
+        $personal = $query->expr()->case()
+            ->when($query->expr()->eq('COUNT(*)', 1, 'integer'))
+            ->then($query->newExpr('TRUE'), 'boolean')
+            ->when($query->expr()->gt('COUNT(*)', 1, 'integer'))
+            ->then($query->expr('FALSE'), 'boolean');
+        $countSubQuery->select([
+            'personal' => $personal,
+        ])->where(['FoldersRelations.foreign_id' => $foreignId]);
+        $selectTypeMap = $query->getSelectTypeMap();
+        $selectTypeMap->addDefaults([self::PERSONAL_PROPERTY => 'boolean']);
 
-        if (!empty($itemsIds)) {
-            $hash = $this->foldersRelationsTable->find()
-                ->where([
-                    'foreign_id IN' => $itemsIds,
-                    'user_id' => $userId,
-                ])
-                ->select(['foreign_id', 'folder_parent_id'])
-                ->disableHydration()
-                ->all()
-                ->combine('foreign_id', 'folder_parent_id')
-                ->toArray();
-        }
-
-        return $hash;
-    }
-
-    /**
-     * Retrieve the usage of a list of items
-     *
-     * @param array $itemsIds The target item ids
-     * @return array
-     * [
-     *   ITEM_ID => integer,
-     *   ...
-     * ]
-     */
-    private function getItemsUsageHash(array $itemsIds)
-    {
-        $hash = [];
-
-        if (!empty($itemsIds)) {
-            $itemsPersonalStatusQuery = $this->foldersRelationsTable->find();
-
-            $hash = $itemsPersonalStatusQuery->where(['foreign_id IN' => $itemsIds])
-                ->select([
-                    'foreign_id',
-                    'count' => $itemsPersonalStatusQuery->func()->count('*'),
-                ])
-                ->group('foreign_id')
-                ->disableHydration()
-                ->all()
-                ->combine('foreign_id', 'count')
-                ->toArray();
-        }
-
-        return $hash;
+        return $query->selectAlso([self::PERSONAL_PROPERTY => $countSubQuery]);
     }
 
     /**

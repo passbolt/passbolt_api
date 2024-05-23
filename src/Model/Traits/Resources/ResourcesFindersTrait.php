@@ -108,12 +108,9 @@ trait ResourcesFindersTrait
         // to the resources table with an INNER join, see the hasOne definition.
         if (isset($options['contain']['permission'])) {
             $query->contain('Permission', function (Query $q) use ($userId) {
-                $subQueryOptions = ['checkGroupsUsers' => true];
+                $acoForeignKey = new IdentifierExpression('Resources.id');
                 $permissionIdSubQuery = $this->Permissions
-                    ->findAllByAro(PermissionsTable::RESOURCE_ACO, $userId, $subQueryOptions)
-                    ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Resources.id')])
-                    ->orderDesc('Permissions.type')
-                    ->limit(1)
+                    ->findHighestByAcoAndAro(PermissionsTable::RESOURCE_ACO, $acoForeignKey, $userId)
                     ->select(['Permissions.id']);
 
                 return $q->where(['Permission.id' => $permissionIdSubQuery]);
@@ -292,14 +289,15 @@ trait ResourcesFindersTrait
         $subQueryOptions = [
             'checkGroupsUsers' => true,
         ];
-        $resourcesFilterByPermissionTypeSubQuery = $this->Permissions
+        $resourcePermissions = $this->Permissions
             ->findAllByAro(PermissionsTable::RESOURCE_ACO, $userId, $subQueryOptions)
-            ->select(['Permissions.aco_foreign_key'])
-            ->distinct();
+            ->select(['Permissions.id'])
+            ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Resources.id')])
+            ->limit(1);
 
-        $query->where(['Resources.id IN' => $resourcesFilterByPermissionTypeSubQuery]);
-
-        return $query;
+        return $query->innerJoin(['ResourcePermissions' => 'permissions'], [
+            'ResourcePermissions.id' => $resourcePermissions,
+        ]);
     }
 
     /**
@@ -418,10 +416,10 @@ trait ResourcesFindersTrait
         return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot) {
             $conditions = [];
             if (!empty($parentIds)) {
-                $conditions[] = ['folder_parent_id IN' => $parentIds];
+                $conditions[] = $q->expr()->in('FoldersRelations.folder_parent_id', $parentIds);
             }
             if ($includeRoot === true) {
-                $conditions[] = ['folder_parent_id IS NULL'];
+                $conditions[] = $q->expr()->isNull('FoldersRelations.folder_parent_id');
             }
 
             return $q->where(['OR' => $conditions]);
