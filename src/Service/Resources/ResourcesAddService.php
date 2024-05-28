@@ -124,7 +124,7 @@ class ResourcesAddService
         ]];
 
         // If no secrets given, the model will throw a validation error, no need to take care of it here.
-        if (isset($data['secrets'])) {
+        if (isset($data['secrets']) && is_array($data['secrets'])) {
             $data['secrets'][0]['user_id'] = $userId;
         }
 
