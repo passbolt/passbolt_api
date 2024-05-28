@@ -27,6 +27,7 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
@@ -98,7 +99,9 @@ trait ResourcesFindersTrait
 
         // If plugin tag is present and request contains tags
         if (Configure::read('passbolt.plugins.tags.enabled')) {
-            $query = \Passbolt\Tags\Model\Table\TagsTable::decorateForeignFind($query, $options, $userId);
+            /** @var \Passbolt\Tags\Model\Table\TagsTable $TagsTable */
+            $TagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
+            $TagsTable->decorateForeignFind($query, $options, $userId);
         }
 
         if (Configure::read('passbolt.plugins.folders')) {
