@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Controller;
 
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Event\Event;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
@@ -33,6 +34,13 @@ use Passbolt\SsoRecover\Service\SsoRecoverAssertService;
 abstract class AbstractSso2Stage2Controller extends AbstractSsoController
 {
     use FeaturePluginAwareTrait;
+
+    public const EVENT_USER_LOGIN_SUCCESS = 'Sso.UserLogin.Success';
+
+    /**
+     * Event name when resource owner verification throws an error.
+     */
+    public const EVENT_PROVIDER_ERROR_RESOURCE_OWNER = 'Sso.Service.ProviderErrorResourceOwner';
 
     /**
      * @inheritDoc
@@ -66,6 +74,8 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
      */
     public function triage(AbstractSecureCookieService $cookieService): void
     {
+        $this->registerSsoStage2Listeners();
+
         if ($this->getRequest()->is('get')) {
             // Get state from cookie and URL to prevent CSRF
             $state = $this->getStateFromUrlAndCookie();
@@ -102,6 +112,14 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
     }
 
     /**
+     * @return void
+     */
+    protected function registerSsoStage2Listeners(): void
+    {
+        // Override this method in provider specific controller to register listeners.
+    }
+
+    /**
      * @param \App\Service\Cookie\AbstractSecureCookieService $cookieService Cookie service
      * @param \Passbolt\Sso\Model\Entity\SsoState $ssoState SSO state.
      * @param string $code jwt
@@ -122,15 +140,31 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
 
         switch ($ssoState->type) {
             case SsoState::TYPE_SSO_GET_KEY:
-                $uac = $service->assertStateCodeAndGetUac(
-                    $ssoState,
-                    $code,
-                    $this->User->ip(),
-                    $this->User->userAgent()
-                );
+                try {
+                    $uac = $service->assertStateCodeAndGetUac(
+                        $ssoState,
+                        $code,
+                        $this->User->ip(),
+                        $this->User->userAgent()
+                    );
+                } catch (\Exception $e) {
+                    $event = new Event(self::EVENT_PROVIDER_ERROR_RESOURCE_OWNER, $this, ['exception' => $e]);
+                    $this->getEventManager()->dispatch($event);
+                    // To map 500(internal error/provider specific exceptions) to 4xx exception
+                    if (isset($event->getResult()['customException'])) {
+                        $e = $event->getResult()['customException'];
+                    }
+
+                    throw $e;
+                }
+
                 // Create SSO auth token for next step, e.g. get keys
                 $ssoAuthToken = $service->createAuthTokenToGetKey($uac, $service->getSettings()->id);
                 $successUrl = Router::url("/sso/login/success?token={$ssoAuthToken->token}", true);
+
+                // Triggers a successful user login event
+                $event = new Event(self::EVENT_USER_LOGIN_SUCCESS, $this, ['ssoService' => $service]);
+                $this->getEventManager()->dispatch($event);
                 break;
             case SsoState::TYPE_SSO_RECOVER:
                 if (!$this->isFeaturePluginEnabled('SsoRecover')) {

@@ -22,6 +22,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Passbolt\Sso\Notification\Email\SsoSettingsRedactorPool;
+use Passbolt\Sso\Notification\Email\SsoStage2RedactorPool;
 use Passbolt\Sso\Service\Healthcheck\SslHostVerificationSsoHealthcheck;
 
 class SsoPlugin extends BasePlugin
@@ -47,7 +48,10 @@ class SsoPlugin extends BasePlugin
     public function registerListeners(PluginApplicationInterface $app): void
     {
         // Register email redactors
-        $app->getEventManager()->on(new SsoSettingsRedactorPool());
+        $app
+            ->getEventManager()
+            ->on(new SsoSettingsRedactorPool())
+            ->on(new SsoStage2RedactorPool());
     }
 
     /**

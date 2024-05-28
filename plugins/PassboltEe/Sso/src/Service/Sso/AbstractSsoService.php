@@ -22,6 +22,7 @@ use App\Model\Validation\EmailValidationRule;
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Service\Users\UserGetService;
 use App\Utility\ExtendedUserAccessControl;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -39,6 +40,8 @@ use Passbolt\Sso\Utility\OpenId\SsoResourceOwnerInterface;
 
 abstract class AbstractSsoService
 {
+    use EventDispatcherTrait;
+
     /**
      * @var \App\Service\Cookie\AbstractSecureCookieService $cookieService used to generate cookies
      */

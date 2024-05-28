@@ -19,9 +19,11 @@ namespace Passbolt\Sso\Controller\Azure;
 
 use App\Service\Cookie\AbstractSecureCookieService;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Event\EventManager;
 use Passbolt\Sso\Controller\AbstractSso2Stage2Controller;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
+use Passbolt\Sso\Notification\Email\SsoStage2RedactorPool;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
 use Passbolt\Sso\Service\Sso\Azure\SsoAzureService;
 
@@ -45,5 +47,13 @@ class SsoAzureStage2Controller extends AbstractSso2Stage2Controller
     protected function getProviderName(): string
     {
         return SsoSetting::PROVIDER_AZURE;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function registerSsoStage2Listeners(): void
+    {
+        EventManager::instance()->on(new SsoStage2RedactorPool());
     }
 }
