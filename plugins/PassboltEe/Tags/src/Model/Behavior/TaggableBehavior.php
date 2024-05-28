@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Tags\Model\Behavior;
 
+use App\ORM\Association\BelongsToManyWithoutJunctionProperty;
 use Cake\ORM\Behavior;
 
 /**
@@ -39,5 +40,13 @@ class TaggableBehavior extends Behavior
         $this->table()->hasMany('ResourcesTags', [
             'className' => 'Passbolt/Tags.ResourcesTags',
         ]);
+
+        $this->table()
+            ->associations()
+            ->load(BelongsToManyWithoutJunctionProperty::class, 'TagsWithoutJunctionProperty', [
+                'through' => 'Passbolt/Tags.ResourcesTags',
+                'className' => 'Passbolt/Tags.Tags',
+                'propertyName' => 'tags',
+            ])->setSource($this->table());
     }
 }

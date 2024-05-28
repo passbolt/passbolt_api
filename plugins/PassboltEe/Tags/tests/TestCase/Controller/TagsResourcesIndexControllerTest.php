@@ -33,9 +33,10 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
     public function testTagsResourcesIndexControllerContainSuccess()
     {
         $this->authenticateAs('ada');
+        // Sort tags in alphabetical order
         $expected = [
-            'apache' => ['alpha', '#echo', '#bravo', 'fox-trot'],
-            'april' => ['alpha', '#bravo'],
+            'apache' => ['#bravo', '#echo', 'alpha', 'fox-trot'],
+            'april' => ['#bravo', 'alpha'],
             'bower' => [],
             'cakephp' => ['#charlie'],
             'chai' => ['alpha', 'hotel'],
@@ -45,10 +46,13 @@ class TagsResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $this->getJson('/resources.json?api-version=2&contain[tag]=1');
         $this->assertSuccess();
 
-        $response = json_decode($this->_getBodyAsString());
-        foreach ($response->body as $i => $resource) {
-            if (isset($expected[$resource->name])) {
-                foreach ($resource->tags as $j => $tag) {
+        $resources = (array)json_decode($this->_getBodyAsString())->body;
+        foreach ($resources as $resource) {
+            $expectedTags = $expected[$resource->name] ?? null;
+            if (isset($expectedTags)) {
+                $this->assertSame(count($expectedTags), count($resource->tags));
+                foreach ($resource->tags as $i => $tag) {
+                    $this->assertSame($expectedTags[$i], $tag->slug);
                     $this->assertTrue(is_bool($tag->is_shared));
                     $this->assertTrue(Validation::uuid($tag->id));
                     $this->assertTrue(in_array($tag->slug, $expected[$resource->name]));
