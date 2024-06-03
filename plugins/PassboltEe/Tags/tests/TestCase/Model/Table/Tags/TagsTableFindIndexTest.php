@@ -106,6 +106,17 @@ class TagsTableFindIndexTest extends TagTestCase
         $this->assertEquals($tag->id, $result[0]->id);
     }
 
+    public function testTagsTableFindIndex_ResourceWithOwnedTag_Deleted()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->deleted()->persist();
+        TagFactory::make()->isPersonalFor($resource, $user)->persist();
+
+        $result = $this->tagsTable->findIndex($user->id)->all()->toArray();
+        $this->assertCount(0, $result);
+    }
+
     public function testTagsTableFindIndex_ResourceWithSharedTag()
     {
         /** @var \App\Model\Entity\User $user */
