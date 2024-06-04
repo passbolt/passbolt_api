@@ -136,9 +136,6 @@ class ResourcesAddServiceTest extends TestCase
 
         $this->expectException(ValidationException::class);
         $this->service->add($uac, $data);
-
-        $this->assertSame(0, $this->Resources->find()->count());
-        $this->assertSame(0, $this->Secrets->find()->count());
     }
 
     public function testResourceAddServiceTooManySecrets()
@@ -150,10 +147,18 @@ class ResourcesAddServiceTest extends TestCase
         $uac = UserFactory::make()->persistedUAC();
 
         $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Could not validate resource data.');
         $this->service->add($uac, $data);
+    }
 
-        $this->assertSame(0, $this->Resources->find()->count());
-        $this->assertSame(0, $this->Secrets->find()->count());
+    public function testResourceAddService_Secret_Is_A_String()
+    {
+        $data = $this->getDummyResourcesPostData(['secrets' => $this->getDummyGpgMessage()]);
+        $uac = UserFactory::make()->persistedUAC();
+
+        $this->expectException(ValidationException::class);
+        $this->expectExceptionMessage('Could not validate resource data.');
+        $this->service->add($uac, $data);
     }
 
     public function testResourceAddServiceSoftDeletedUser()
@@ -167,8 +172,8 @@ class ResourcesAddServiceTest extends TestCase
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
 
-        $this->assertSame(0, $this->Resources->find()->count());
-        $this->assertSame(0, $this->Secrets->find()->count());
+        $this->assertSame(0, ResourceFactory::count());
+        $this->assertSame(0, SecretFactory::count());
     }
 
     public function testResourceAddService_With_Password_And_Description_Type()
@@ -185,8 +190,8 @@ class ResourcesAddServiceTest extends TestCase
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
 
-        $this->assertSame(1, $this->Resources->find()->count());
-        $this->assertSame(1, $this->Secrets->find()->count());
+        $this->assertSame(1, ResourceFactory::count());
+        $this->assertSame(1, SecretFactory::count());
 
         $this->assertSame(ResourceTypesTable::getPasswordAndDescriptionTypeId(), $resource->resource_type_id);
         $this->assertNull($resource->description);

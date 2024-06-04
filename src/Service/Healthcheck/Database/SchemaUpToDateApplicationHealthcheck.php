@@ -93,7 +93,7 @@ class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterfac
      */
     public function getSuccessMessage(): string
     {
-        return __('The database schema up to date.');
+        return __('The database schema is up to date.');
     }
 
     /**

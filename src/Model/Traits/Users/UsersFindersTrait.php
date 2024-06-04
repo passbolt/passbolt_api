@@ -621,36 +621,19 @@ trait UsersFindersTrait
         // Retrieve the last logged in date for each user, based on the action_logs table.
         $loginActionId = UuidFactory::uuid('AuthLogin.loginPost');
         $subQuery = $this->ActionLogs->find();
-        $subQuery->select([
-                'user_id' => 'user_id',
-                'last_logged_in' => $subQuery->func()->max(new IdentifierExpression('ActionLogs.created')),
-            ])
+        $subQuery
+            ->select(['last_logged_in' => $subQuery->func()->max(new IdentifierExpression('ActionLogs.created'))])
             ->where([
                  'ActionLogs.action_id' => $loginActionId,
                  'ActionLogs.status' => 1,
+                 'ActionLogs.user_id' => new IdentifierExpression('Users.id'),
             ])
-            ->group('user_id');
+            ->limit(1);
 
-        // Left join the last logged in query to the given query.
-        $query = $query->select(['last_logged_in' => 'JoinedUsersLastLoggedIn.last_logged_in'])
-            ->enableAutoFields() // Autofields are disabled when a select is made manually on a query, reestablish it.
-            ->join([
-                'table' => $subQuery,
-                'alias' => 'JoinedUsersLastLoggedIn',
-                'type' => 'LEFT',
-                'conditions' => [
-                    'Users.id' => new IdentifierExpression('JoinedUsersLastLoggedIn.user_id'),
-                ],
-            ]);
+        $selectTypeMap = $query->getSelectTypeMap();
+        $selectTypeMap->addDefaults(['last_logged_in' => 'datetime']);
 
-        // The last logged in date should be formatted as other dates (FrozenTime).
-        $query->decorateResults(function ($row) {
-            if (!is_null($row['last_logged_in'])) {
-                $row['last_logged_in'] = new FrozenTime($row['last_logged_in']);
-            }
-
-            return $row;
-        });
+        $query->selectAlso(['last_logged_in' => $subQuery]);
 
         return $query;
     }
