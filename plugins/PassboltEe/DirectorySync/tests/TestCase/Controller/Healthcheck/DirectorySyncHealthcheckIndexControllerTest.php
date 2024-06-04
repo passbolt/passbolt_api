@@ -49,7 +49,7 @@ class DirectorySyncHealthcheckIndexControllerTest extends DirectorySyncIntegrati
         });
     }
 
-    public function testDirectorySyncHealthcheckIndexController_EndpointsDisabled(): void
+    public function testDirectorySyncHealthcheckIndexController_Success(): void
     {
         $this->logInAsAdmin();
 
@@ -58,12 +58,17 @@ class DirectorySyncHealthcheckIndexControllerTest extends DirectorySyncIntegrati
         $this->assertResponseSuccess();
         $result = $this->getResponseBodyAsArray();
         $this->assertArrayHasKey('directorySync', $result);
-        $this->assertArrayEqualsCanonicalizing(['endpointsDisabled' => false], $result['directorySync']);
+        $this->assertArrayEqualsCanonicalizing(
+            ['endpointsDisabled' => false, 'sslVerifyPeer' => true],
+            $result['directorySync']
+        );
     }
 
-    public function testDirectorySyncHealthcheckIndexController_EndpointsEnabled(): void
+    public function testDirectorySyncHealthcheckIndexController_Fail(): void
     {
         Configure::write(DirectorySyncEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY, true);
+        Configure::write('passbolt.plugins.directorySync.security.sslCustomOptions.enabled', true);
+        Configure::write('passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer', false);
         $this->logInAsAdmin();
 
         $this->getJson('/healthcheck.json');
@@ -71,6 +76,9 @@ class DirectorySyncHealthcheckIndexControllerTest extends DirectorySyncIntegrati
         $this->assertResponseSuccess();
         $result = $this->getResponseBodyAsArray();
         $this->assertArrayHasKey('directorySync', $result);
-        $this->assertArrayEqualsCanonicalizing(['endpointsDisabled' => true], $result['directorySync']);
+        $this->assertArrayEqualsCanonicalizing(
+            ['endpointsDisabled' => true, 'sslVerifyPeer' => false],
+            $result['directorySync']
+        );
     }
 }
