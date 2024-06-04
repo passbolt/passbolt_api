@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "44be8bfbf90b6efc7be940cc4a97f095",
+    "content-hash": "bdaf1b04f1333b6e84742977d2dffc67",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -1435,16 +1435,16 @@
         },
         {
             "name": "enygma/yubikey",
-            "version": "3.5",
+            "version": "3.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/enygma/yubikey.git",
-                "reference": "26c194dc1751d3978388e109030aa76afeade7aa"
+                "reference": "fefe6a075e0b7a89a28ef259a5115f56bcff4fa9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/enygma/yubikey/zipball/26c194dc1751d3978388e109030aa76afeade7aa",
-                "reference": "26c194dc1751d3978388e109030aa76afeade7aa",
+                "url": "https://api.github.com/repos/enygma/yubikey/zipball/fefe6a075e0b7a89a28ef259a5115f56bcff4fa9",
+                "reference": "fefe6a075e0b7a89a28ef259a5115f56bcff4fa9",
                 "shasum": ""
             },
             "require": {
@@ -1482,9 +1482,9 @@
             ],
             "support": {
                 "issues": "https://github.com/enygma/yubikey/issues",
-                "source": "https://github.com/enygma/yubikey/tree/3.5"
+                "source": "https://github.com/enygma/yubikey/tree/3.7"
             },
-            "time": "2023-11-29T16:57:14+00:00"
+            "time": "2024-06-04T13:16:05+00:00"
         },
         {
             "name": "firebase/php-jwt",
