@@ -19,6 +19,7 @@ namespace Passbolt\SmtpSettings\Test\TestCase\Service;
 
 use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSslOptionsGetService;
 
 /**
@@ -126,6 +127,64 @@ class SmtpSettingsSslOptionsGetServiceTest extends AppTestCase
             'cafile' => '/etc/ssl/certs/mailpit/cert.pem',
         ], $result);
         $this->assertFalse($this->service->isDefault());
+    }
+
+    public function invalidConfigValuesProvider()
+    {
+        return [
+            [
+                'data' => [
+                    'sslVerifyPeer' => 'foo',
+                    'sslVerifyPeerName' => 123,
+                    'sslAllowSelfSigned' => [],
+                    'sslCafile' => true,
+                ],
+                'expectedErrorMessages' => [
+                    'The sslVerifyPeer configuration should be a boolean.',
+                    'The sslVerifyPeerName configuration should be a boolean.',
+                    'The sslAllowSelfSigned configuration should be a boolean.',
+                    'The sslCafile configuration should be NULL or string.',
+                ],
+            ],
+            [
+                'data' => [
+                    'sslVerifyPeer' => true,
+                    'sslVerifyPeerName' => true,
+                    'sslAllowSelfSigned' => false,
+                    'sslCafile' => [['foo' => 'bar']],
+                ],
+                'expectedErrorMessages' => [
+                    'The sslCafile configuration should be NULL or string.',
+                ],
+            ],
+            [
+                'data' => [
+                    'sslVerifyPeer' => 90.82,
+                    'sslVerifyPeerName' => 'admin\'--\' AND 1=1;',
+                    'sslAllowSelfSigned' => true,
+                    'sslCafile' => '/path/to/cafile.crt',
+                ],
+                'expectedErrorMessages' => [
+                    'The sslVerifyPeer configuration should be a boolean.',
+                    'The sslVerifyPeerName configuration should be a boolean.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidConfigValuesProvider
+     */
+    public function testSmtpSettingsSslOptionsGetService_BadConfigValues(array $badConfigValues, array $expectedErrorMessages)
+    {
+        Configure::write('passbolt.plugins.smtpSettings.security', $badConfigValues);
+
+        $this->expectException(BadRequestException::class);
+        $defaultExceptionMsg = 'Invalid `passbolt.plugins.smtpSettings.security` configuration values.' . ' ';
+        $defaultExceptionMsg .= 'Errors: ' . implode('; ', $expectedErrorMessages);
+        $this->expectExceptionMessage($defaultExceptionMsg);
+
+        $this->service->get();
     }
 
     public function testSmtpSettingsSslOptionsGetService_IsDefault_True()
