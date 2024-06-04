@@ -21,6 +21,7 @@ use App\Model\Traits\Query\CaseSensitiveCompareValueTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\Query;
@@ -106,18 +107,30 @@ class TagsTable extends Table
      */
     public function findIndex(string $userId)
     {
-        return $this->find()
-            ->innerJoinWith('ResourcesTags', function (Query $q) use ($userId) {
-                return $q->where([
-                    'ResourcesTags.resource_id IN' => $this->Resources->findIndex($userId)->select('Resources.id'),
-                    'OR' => [
-                        'ResourcesTags.user_id' => $userId,
-                        $q->newExpr()->isNull('ResourcesTags.user_id'),
-                    ],
-                ]);
-            })
-            ->order($this->aliasField('slug'))
-            ->distinct();
+        $query = $this->find()
+             ->order($this->aliasField('slug'))
+             ->distinct();
+
+        // We here rebuild the associations manually to help CakePHP
+        // The filtering by permissions should be done after the
+        // joins on resources is written in the query
+         $query
+             ->innerJoin(['ResourcesTags' => 'resources_tags'], [
+                 'ResourcesTags.tag_id' => new IdentifierExpression('Tags.id'),
+             ])
+             ->innerJoin(['Resources' => 'resources'], [
+                'Resources.id' => new IdentifierExpression('ResourcesTags.resource_id'),
+                 'Resources.deleted <' => 1,
+             ])
+             ->where([
+                 'OR' => [
+                     'ResourcesTags.user_id' => $userId,
+                     $query->newExpr()->isNull('ResourcesTags.user_id'),
+                 ],
+             ]);
+         $this->Resources->filterResourcesByPermissions($query, $userId);
+
+        return $query;
     }
 
     /**
