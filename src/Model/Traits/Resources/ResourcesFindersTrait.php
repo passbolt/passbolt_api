@@ -83,7 +83,7 @@ trait ResourcesFindersTrait
 
         // Filter on resources owned by me.
         if (isset($options['filter']['is-owned-by-me'])) {
-            $query = $this->_filterQueryIsOwnedByUser($query, $userId);
+            $this->_filterQueryIsOwnedByUser($query, $userId);
         }
 
         // Filter on resource shared with me.
@@ -117,7 +117,7 @@ trait ResourcesFindersTrait
             });
         } else {
             // If not already filtered by the contains on Permission, then filter only the resources the user has access.
-            $query = $this->_filterQueryByPermissions($query, $userId);
+            $this->filterResourcesByPermissions($query, $userId);
         }
 
         // If contains Secrets.
@@ -281,10 +281,10 @@ trait ResourcesFindersTrait
      *
      * @param \Cake\ORM\Query $query The query to filter.
      * @param string $userId The user to check the permissions for.
-     * @return \Cake\ORM\Query
+     * @return void
      * @throws \InvalidArgumentException if the user id is not a uuid
      */
-    private function _filterQueryByPermissions(Query $query, string $userId)
+    public function filterResourcesByPermissions(Query $query, string $userId): void
     {
         $subQueryOptions = [
             'checkGroupsUsers' => true,
@@ -295,7 +295,7 @@ trait ResourcesFindersTrait
             ->where(['Permissions.aco_foreign_key' => new IdentifierExpression('Resources.id')])
             ->limit(1);
 
-        return $query->innerJoin(['ResourcePermissions' => 'permissions'], [
+        $query->innerJoin(['ResourcePermissions' => 'permissions'], [
             'ResourcePermissions.id' => $resourcePermissions,
         ]);
     }
