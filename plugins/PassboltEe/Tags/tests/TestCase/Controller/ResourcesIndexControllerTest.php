@@ -36,6 +36,8 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
         /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
         TagFactory::make()->isPersonalFor($resource, $user)->persist();
+        // Persist another tag, that should be ignored
+        TagFactory::make()->persist();
 
         $this->getJson('/resources.json?contain[tag]=1');
         $this->assertSuccess();
