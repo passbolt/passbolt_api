@@ -83,7 +83,7 @@ class SsoProviderErrorCacheServiceTest extends SsoTestCase
         $this->assertSame($defaultCacheConfig['className'], $cacheConfig['className']);
         $this->assertSame('+1 day', $cacheConfig['duration']);
         if (isset($defaultCacheConfig['prefix'])) {
-            $this->assertSame($defaultCacheConfig['prefix'] . '_' . 'sso_provider_error_', $cacheConfig['prefix']);
+            $this->assertSame($defaultCacheConfig['prefix'] . '_sso_', $cacheConfig['prefix']);
         } else {
             $this->assertSame('sso_', $cacheConfig['prefix']);
         }
