@@ -43,5 +43,6 @@ class ResourcesIndexControllerTest extends TagPluginIntegrationTestCase
         $this->assertSuccess();
         $tags = $this->_responseJsonBody[0]->tags;
         $this->assertSame(1, count($tags));
+        $this->assertFalse($this->_responseJsonBody[0]->tags[0]->is_shared);
     }
 }
