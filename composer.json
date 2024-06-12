@@ -79,7 +79,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-curl": "*",
-        "composer/composer": "^2.7.0",
+        "composer/composer": "^2.7.7",
         "cakephp/cakephp": "^4.5",
         "cakephp/chronos": "2.4.*",
         "longwave/laminas-diactoros": "^2.14.1",
