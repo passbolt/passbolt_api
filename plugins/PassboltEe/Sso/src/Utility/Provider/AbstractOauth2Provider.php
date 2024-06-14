@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Utility\Provider;
 
+use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Validation\Validation;
@@ -268,6 +269,38 @@ abstract class AbstractOauth2Provider extends AbstractProvider
             throw new InternalErrorException(__('Invalid JWKS endpoint response. Keys missing.'));
         }
 
-        return JWK::parseKeySet($response);
+        $defaultAlg = Configure::read('passbolt.plugins.sso.security.jwks.defaultAlg');
+        $this->assertJwkDefaultAlg($defaultAlg);
+
+        return JWK::parseKeySet($response, $defaultAlg);
+    }
+
+    /**
+     * @param mixed $defaultAlg Value to assert.
+     * @return void
+     * @throws \Cake\Http\Exception\InternalErrorException When configuration value is invalid.
+     */
+    private function assertJwkDefaultAlg($defaultAlg): void
+    {
+        if (!is_null($defaultAlg) && !is_string($defaultAlg)) {
+            throw new InternalErrorException(__(
+                'The {0} configuration value should be a string or NULL.',
+                'passbolt.plugins.sso.security.jwks.defaultAlg'
+            ));
+        }
+
+        /**
+         * "alg" (Algorithm) Header Parameter Values for JWS.
+         *
+         * @link https://datatracker.ietf.org/doc/html/rfc7518#section-3
+         */
+        $allowedAlgValues = ['HS256', 'HS384', 'HS512', 'RS256', 'RS384', 'RS512', 'ES384', 'ES256'];
+        if (is_string($defaultAlg) && !in_array($defaultAlg, $allowedAlgValues)) {
+            throw new InternalErrorException(__(
+                'The {0} configuration value should be one of the following: {1}.',
+                'passbolt.plugins.sso.security.jwks.defaultAlg',
+                implode(', ', $allowedAlgValues)
+            ));
+        }
     }
 }
