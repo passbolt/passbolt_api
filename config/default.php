@@ -361,6 +361,9 @@ return [
                         FILTER_VALIDATE_BOOLEAN
                     ),
                 ],
+                'security' => [
+                    'jwks' => ['defaultAlg' => env('PASSBOLT_PLUGINS_SSO_SECURITY_JWKS_DEFAULT_ALG', null)],
+                ],
             ],
             'mfaPolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_MFA_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
