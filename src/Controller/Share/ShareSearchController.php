@@ -53,8 +53,16 @@ class ShareSearchController extends AppController
         // Build the find options.
         $whitelist = [
             'filter' => ['search'],
+            'contain' => ['groups_users', 'gpgkey', 'role'],
         ];
         $options = $this->QueryString->get($whitelist);
+
+        if (!empty($options['contain'])) {
+            // By default, disable all the contains and only set what is requested.
+            $containDefault = ['groups_users' => false, 'gpgkey' => false, 'role' => false];
+
+            $options['contain'] = array_merge($containDefault, $options['contain']);
+        }
 
         $groups = $this->_searchGroups($options);
         $users = $this->_searchUsers($options);
