@@ -135,13 +135,10 @@ trait UsersFindersTrait
         ]);
 
         // Subquery to retrieve the groups the user is member of.
-        $groupsSubquery = $this->Groups->find()
-            ->innerJoinWith('GroupsUsers')
-            ->select('Groups.id')
-            ->where([
-                'Groups.deleted' => false,
-                'GroupsUsers.user_id' => new IdentifierExpression('Users.id'),
-            ]);
+        $groupIdsSubquery = $this->Groups->GroupsUsers
+            ->find()
+            ->select('group_id')
+            ->where(['user_id' => new IdentifierExpression('Users.id')]);
 
         // Use distinct to avoid duplicate as it can happen that a user is member of two groups which
         // both have a permission for the same resource
@@ -151,7 +148,7 @@ trait UsersFindersTrait
             ->where(
                 ['OR' => [
                     ['PermissionsFilterAccess.aro_foreign_key' => new IdentifierExpression('Users.id')],
-                    ['PermissionsFilterAccess.aro_foreign_key IN' => $groupsSubquery],
+                    ['PermissionsFilterAccess.aro_foreign_key IN' => $groupIdsSubquery],
                 ]]
             );
     }
