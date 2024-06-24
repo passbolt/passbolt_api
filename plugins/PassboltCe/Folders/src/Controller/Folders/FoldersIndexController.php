@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
 use Cake\Utility\Hash;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 /**
  * @property \Passbolt\Folders\Model\Table\FoldersTable $Folders
@@ -79,8 +80,10 @@ class FoldersIndexController extends AppController
 
         $folders = $this->Folders->findIndex($this->User->id(), $options);
         $folders->disableHydration();
-        $folders = $this->paginate($folders)->toArray();
-        $folders = $this->removeJoinDataFromResults($folders, $options);
+        $this->paginate($folders);
+        $folders = $folders->all();
+        $folders = FolderizableBehavior::unsetPersonalPropertyIfNullOnResultSet($folders);
+        $folders = $this->removeJoinDataFromResults($folders->toArray(), $options);
 
         $this->success(__('The operation was successful.'), $folders);
     }

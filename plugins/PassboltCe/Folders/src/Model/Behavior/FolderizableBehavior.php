@@ -18,9 +18,13 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Model\Behavior;
 
 use App\Model\Event\TableFindIndexBefore;
+use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Collection\CollectionInterface;
+use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
@@ -34,6 +38,7 @@ use UnexpectedValueException;
  */
 class FolderizableBehavior extends Behavior
 {
+    use FeaturePluginAwareTrait;
     use InstanceConfigTrait;
 
     /**
@@ -154,12 +159,41 @@ class FolderizableBehavior extends Behavior
             ->when($query->expr()->gt('COUNT(*)', 1, 'integer'))
             ->then($query->expr('FALSE'), 'boolean');
         $countSubQuery->select([
-            'personal' => $personal,
+            self::PERSONAL_PROPERTY => $personal,
         ])->where(['FoldersRelations.foreign_id' => $foreignId]);
         $selectTypeMap = $query->getSelectTypeMap();
         $selectTypeMap->addDefaults([self::PERSONAL_PROPERTY => 'boolean']);
 
         return $query->selectAlso([self::PERSONAL_PROPERTY => $countSubQuery]);
+    }
+
+    /**
+     * @param array $entity entity on which the personal property should be unset if null
+     * @return array
+     * @deprecated in v4.10 remove this method once the null value is allowed for the field personal. As of now, this is not supported by the browser extension.
+     */
+    public static function unsetPersonalPropertyIfNull(array $entity): array
+    {
+        if (!Configure::read('passbolt.plugins.folders.enabled')) {
+            return $entity;
+        }
+        if (array_key_exists(self::PERSONAL_PROPERTY, $entity) && is_null($entity[self::PERSONAL_PROPERTY])) {
+            unset($entity[self::PERSONAL_PROPERTY]);
+        }
+
+        return $entity;
+    }
+
+    /**
+     * @param \Cake\Datasource\ResultSetInterface $entities Entities on which the personal property should be unset if null
+     * @return \Cake\Collection\CollectionInterface
+     * @deprecated in v4.10 remove this method once the null value is allowed for the field personal. As of now, this is not supported by the browser extension.
+     */
+    public static function unsetPersonalPropertyIfNullOnResultSet(ResultSetInterface $entities): CollectionInterface
+    {
+        return $entities->map(function ($row) {
+            return self::unsetPersonalPropertyIfNull($row);
+        });
     }
 
     /**

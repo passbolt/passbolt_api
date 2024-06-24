@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
 use Cake\Utility\Hash;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\Folders\FoldersCreateService;
 
 class FoldersCreateController extends AppController
@@ -53,6 +54,7 @@ class FoldersCreateController extends AppController
         ];
         $options = $this->QueryString->get($whitelist);
         $folder = $folderCreateService->foldersTable->findView($this->User->id(), $folder->id, $options)->first();
+        $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
 
         $this->success(__('The folder has been added successfully.'), $folder);
     }

@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 
 class FoldersUpdateController extends AppController
@@ -61,6 +62,7 @@ class FoldersUpdateController extends AppController
         ];
         $options = $this->QueryString->get($whitelist);
         $folder = $foldersUpdateService->foldersTable->findView($this->User->id(), $folder->id, $options)->first();
+        $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
 
         $this->success(__('The folder has been updated successfully.'), $folder);
     }
