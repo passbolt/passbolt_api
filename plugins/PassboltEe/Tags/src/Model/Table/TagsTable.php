@@ -18,9 +18,9 @@ namespace Passbolt\Tags\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Traits\Query\CaseSensitiveCompareValueTrait;
+use App\ORM\Association\PassboltBelongsToMany;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
-use Cake\Collection\CollectionInterface;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Exception\ForbiddenException;
@@ -156,16 +156,14 @@ class TagsTable extends Table
      * @param string $userId The user identifier to decorate for
      * @return \Cake\ORM\Query
      */
-    public static function decorateForeignFind(Query $query, array $options, string $userId)
+    public function decorateForeignFind(Query $query, array $options, string $userId): Query
     {
         if (isset($options['contain']['all_tags'])) {
             $query->contain('Tags', function (Query $q) {
                 return $q->order(['slug']);
             });
-        }
-
-        // Display the user tags for a given resource
-        if (isset($options['contain']['tag'])) {
+        } elseif (isset($options['contain']['tag'])) {
+            // Display the user tags for a given resource
             $query->contain('Tags', function (Query $q) use ($userId) {
                 return $q
                     ->order(['slug'])
@@ -176,17 +174,9 @@ class TagsTable extends Table
                                 ->isNull('ResourcesTags.user_id');
                         });
                     });
-            });
-            // Remove join data
-            $query->formatResults(function (CollectionInterface $results) {
-                return $results->map(function ($row) {
-                    foreach ($row['tags'] as $i => $tag) {
-                        unset($row['tags'][$i]['_joinData']);
-                    }
-
-                    return $row;
-                });
-            });
+            })
+                // Exclude _joinData from the result set. This strategy performs better than formatResults or map.
+                ->applyOptions([PassboltBelongsToMany::QUERY_OPTION_EXCLUDE_JUNCTION_PROPERTY => true]);
         }
 
         // Filter resources by tags
