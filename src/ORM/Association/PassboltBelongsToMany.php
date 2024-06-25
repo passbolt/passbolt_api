@@ -17,21 +17,39 @@ declare(strict_types=1);
 namespace App\ORM\Association;
 
 use Cake\ORM\Association\BelongsToMany;
+use Cake\Utility\Hash;
 use Closure;
 
 /**
- * This class extends the CakePHP belongs to many class,
- * but in addition removes the _joinData from the result
- * returned. This spares an iteration on the complete result set.
+ * This class extends the CakePHP belongs to many class and add to it additional behavior required by passbolt.
+ *
+ * For performance reason, eagerLoader can take care of removing any _joinData from the result returned. This spares an
+ * iteration on the complete result set as well as having to treat the resulting data.
+ *
+ * Add the following option to the ORM query to remove any _jointData from the returned result.
+ *
+ *   $query->applyOptions(["excludeJunctionProperty" => true]);
  */
-class BelongsToManyWithoutJunctionProperty extends BelongsToMany
+class PassboltBelongsToMany extends BelongsToMany
 {
+    /**
+     * @var string Option used to exclude junction property from query result set.
+     */
+    public const QUERY_OPTION_EXCLUDE_JUNCTION_PROPERTY = 'excludeJunctionProperty';
+
     /**
      * @inheritDoc
      */
     public function eagerLoader(array $options): Closure
     {
         $closure = parent::eagerLoader($options);
+
+        /** @var \Cake\ORM\Query $query */
+        $query = $options['query'];
+        $excludeJunctionProperty = Hash::get($query->getOptions(), self::QUERY_OPTION_EXCLUDE_JUNCTION_PROPERTY, false);
+        if (!$excludeJunctionProperty) {
+            return $closure;
+        }
 
         return function ($row) use ($closure) {
             $row = $closure($row);
