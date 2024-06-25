@@ -17,13 +17,13 @@ declare(strict_types=1);
 
 namespace Passbolt\MultiFactorAuthentication\Service\Query;
 
-use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
-use Cake\Collection\CollectionInterface;
+use Cake\Database\Expression\IdentifierExpression;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Query;
-use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
+use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
+use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class IsMfaEnabledQueryService
 {
@@ -48,11 +48,13 @@ class IsMfaEnabledQueryService
                 __('The property {0} is visible by administrators only.', self::IS_MFA_ENABLED_PROPERTY)
             );
         }
-        if ($queryContainsIsMfaEnabled) {
+
+        $isMfaEnabledFilter = $options['filter'][self::IS_MFA_ENABLED_FILTER_NAME] ?? null;
+        if (!is_null($isMfaEnabledFilter)) {
+            $this->filterByMfaEnabled($query, $isMfaEnabledFilter, $queryContainsIsMfaEnabled);
+        } elseif ($queryContainsIsMfaEnabled) {
             $this->addIsMfaEnabledPropertyToQuery($query);
         }
-
-        $this->applyIsMfaEnabledFilterToResults($query, $options);
     }
 
     /**
@@ -73,6 +75,43 @@ class IsMfaEnabledQueryService
     }
 
     /**
+     * @param \Cake\ORM\Query $query Query
+     * @param bool $isMfaEnabledFilter filter users by mfa enable if true, and mfa disabled if false
+     * @param bool $containIsMfaEnabledProperty if true, append the is_mfa_enabled field to the query result
+     * @return void
+     */
+    private function filterByMfaEnabled(Query $query, bool $isMfaEnabledFilter, bool $containIsMfaEnabledProperty): void
+    {
+        $query->leftJoinWith('MfaSettings');
+
+        if ($containIsMfaEnabledProperty) {
+            $query->selectAlso([self::IS_MFA_ENABLED_PROPERTY => (int)$isMfaEnabledFilter]);
+        }
+
+        $mfaOrgSettings = MfaOrgSettings::get();
+        if ($isMfaEnabledFilter) {
+            $or = [];
+            foreach ($mfaOrgSettings->getEnabledProviders() as $provider) {
+                $or[] = $query->newExpr()->like('MfaSettings.value', '%"' . $provider . '"%"' . $provider . '"%');
+            }
+            $query->where(['OR' => $or]);
+        } else {
+            $notLike = [];
+            foreach ($mfaOrgSettings->getEnabledProviders() as $provider) {
+                $notLike[] =
+                    $query->newExpr()->notLike('MfaSettings.value', '%"' . $provider . '"%"' . $provider . '"%');
+            }
+            $query->where(['OR' => [
+                $notLike,
+                $query->newExpr()->isNull('MfaSettings.id'),
+            ]]);
+        }
+
+        $selectTypeMap = $query->getSelectTypeMap();
+        $selectTypeMap->addDefaults([self::IS_MFA_ENABLED_PROPERTY => 'boolean']);
+    }
+
+    /**
      * @param array $options Query Options
      * @return bool
      */
@@ -84,46 +123,6 @@ class IsMfaEnabledQueryService
     }
 
     /**
-     * @param \App\Model\Entity\User $user User
-     * @param \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings $mfaOrgSettings MfaOrgSettings
-     * @return bool
-     * @throws \Exception
-     */
-    private function isEnabledForUser(User $user, MfaOrgSettings $mfaOrgSettings): bool
-    {
-        $userMfaSetting = $this->getSettingsForUser($user);
-        if (is_null($userMfaSetting)) {
-            return false;
-        }
-
-        $providersEnabledForOrgAndUser = array_intersect(
-            $mfaOrgSettings->getEnabledProviders(),
-            $this->getSettingsForUser($user)->getEnabledProviders()
-        );
-
-        return count($providersEnabledForOrgAndUser) > 0;
-    }
-
-    /**
-     * @param \App\Model\Entity\User $user User to get MfaSettings
-     * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings|null
-     * @throws \Exception
-     */
-    private function getSettingsForUser(User $user): ?MfaAccountSettings
-    {
-        /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $mfaSettings */
-        $mfaSettings = $user->get(self::MFA_SETTINGS_PROPERTY) ?? null;
-        if (empty($mfaSettings)) {
-            return null;
-        }
-
-        return new MfaAccountSettings(
-            new UserAccessControl($user->role->name, $user->id),
-            json_decode($mfaSettings->value, true)
-        );
-    }
-
-    /**
      * @param \Cake\ORM\Query $query Query
      * @return void
      */
@@ -131,46 +130,26 @@ class IsMfaEnabledQueryService
     {
         $mfaOrgSettings = MfaOrgSettings::get();
         if ($mfaOrgSettings->isEnabled()) {
-            $query->contain('MfaSettings');
+            $isMfaEnabledSubQuery = TableRegistry::getTableLocator()
+                ->get('Passbolt/AccountSettings.AccountSettings')
+                ->subquery();
+            $or = [];
+            foreach ($mfaOrgSettings->getEnabledProviders() as $provider) {
+                $or[] = $query->newExpr()->like('AccountSettings.value', '%"' . $provider . '"%"' . $provider . '"%');
+            }
+            $isMfaEnabledSubQuery
+                ->select('count(*)')
+                ->where([
+                    'AccountSettings.property' => MfaSettings::MFA,
+                    'AccountSettings.user_id' => new IdentifierExpression('Users.id'),
+                    'OR' => $or,
+                ]);
+        } else {
+            $isMfaEnabledSubQuery = 0;
         }
 
-        $query->formatResults(function (CollectionInterface $results) use ($mfaOrgSettings) {
-            return $results->map(function (User $user) use ($mfaOrgSettings) {
-                $user->setHidden([self::MFA_SETTINGS_PROPERTY], true);
-                $user->setVirtual([self::IS_MFA_ENABLED_PROPERTY], true);
-                $user->set(self::IS_MFA_ENABLED_PROPERTY, $this->isEnabledForUser($user, $mfaOrgSettings));
-
-                return $user;
-            });
-        });
-    }
-
-    /**
-     * @param \Cake\ORM\Query $query Query
-     * @param array $options Query Options
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException if the filter is applied and is_mfa_enabled not contained
-     */
-    private function applyIsMfaEnabledFilterToResults(Query $query, array $options): void
-    {
-        $isMfaEnabledFilter = $options['filter'][self::IS_MFA_ENABLED_FILTER_NAME] ?? null;
-
-        if ($isMfaEnabledFilter === null) {
-            return;
-        }
-
-        if (!$this->queryContainsIsMfaEnabled($options)) {
-            throw new BadRequestException(__(
-                'The property {0} should be contained in order to filter by {1}.',
-                self::IS_MFA_ENABLED_PROPERTY,
-                self::IS_MFA_ENABLED_FILTER_NAME
-            ));
-        }
-
-        $query->formatResults(function (CollectionInterface $results) use ($isMfaEnabledFilter) {
-            return $results->filter(function (User $user) use ($isMfaEnabledFilter) {
-                return $user->get(self::IS_MFA_ENABLED_PROPERTY) === $isMfaEnabledFilter;
-            });
-        });
+        $query->selectAlso([self::IS_MFA_ENABLED_PROPERTY => $isMfaEnabledSubQuery]);
+        $selectTypeMap = $query->getSelectTypeMap();
+        $selectTypeMap->addDefaults([self::IS_MFA_ENABLED_PROPERTY => 'boolean']);
     }
 }
