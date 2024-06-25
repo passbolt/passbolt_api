@@ -18,6 +18,7 @@ namespace Passbolt\Tags\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Traits\Query\CaseSensitiveCompareValueTrait;
+use App\ORM\Association\PassboltBelongsToMany;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Database\Expression\IdentifierExpression;
@@ -163,7 +164,7 @@ class TagsTable extends Table
             });
         } elseif (isset($options['contain']['tag'])) {
             // Display the user tags for a given resource
-            $query->contain('TagsWithoutJunctionProperty', function (Query $q) use ($userId) {
+            $query->contain('Tags', function (Query $q) use ($userId) {
                 return $q
                     ->order(['slug'])
                     ->where(function (QueryExpression $where) use ($userId) {
@@ -173,7 +174,9 @@ class TagsTable extends Table
                                 ->isNull('ResourcesTags.user_id');
                         });
                     });
-            });
+            })
+                // Exclude _joinData from the result set. This strategy performs better than formatResults or map.
+                ->applyOptions([PassboltBelongsToMany::QUERY_OPTION_EXCLUDE_JUNCTION_PROPERTY => true]);
         }
 
         // Filter resources by tags
