@@ -29,14 +29,14 @@ use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
 use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\LdapConfigurationTestUtility;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
  * @uses \Passbolt\DirectorySync\Controller\DirectorySettingsController
  */
-class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
+class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     use UserAccessControlTrait;
 

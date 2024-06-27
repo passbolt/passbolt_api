@@ -20,6 +20,9 @@ use App\Model\Entity\Role;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
+/**
+ * @deprecated inserting data with productive code in the test is bad practice. Use fixture factories instead.
+ */
 trait DirectoryOrgSettingsTrait
 {
     /**

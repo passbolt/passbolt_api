@@ -18,10 +18,10 @@ namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry;
 
-class GroupEntryTest extends DirectorySyncIntegrationTestCase
+class GroupEntryTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     public $mappingRules;
 

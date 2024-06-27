@@ -21,12 +21,12 @@ use Cake\Core\Configure;
 use Cake\Http\Client;
 use Cake\Http\TestSuite\HttpClientTrait;
 use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 
 /**
  * @covers \App\Controller\Healthcheck\HealthcheckIndexController
  */
-class DirectorySyncHealthcheckIndexControllerTest extends DirectorySyncIntegrationTestCase
+class DirectorySyncHealthcheckIndexControllerTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     use HealthcheckRequestTestTrait;
     use HttpClientTrait;

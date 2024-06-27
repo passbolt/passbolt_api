@@ -22,7 +22,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Passbolt\DirectorySync\Test\Factory\DirectoryEntryFactory;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
@@ -30,7 +30,7 @@ use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 /**
  * @uses \Passbolt\DirectorySync\Controller\DirectorySyncController
  */
-class PasswordExpiryDirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
+class PasswordExpiryDirectorySyncControllerTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     use EmailQueueTrait;
 

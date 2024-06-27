@@ -18,11 +18,11 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 
-class GroupSyncActionUpdateTest extends DirectorySyncIntegrationTestCase
+class GroupSyncActionUpdateTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     use AssertGroupsTrait;
 
