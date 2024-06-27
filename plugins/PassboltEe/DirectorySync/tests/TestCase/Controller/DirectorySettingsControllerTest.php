@@ -28,9 +28,9 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
-use Passbolt\DirectorySync\Test\TestCase\Form\LdapConfigurationFormTest;
 use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\LdapConfigurationTestUtility;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
@@ -115,7 +115,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertFalse($directoryOrgSettings->isEnabled());
 
-        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData = LdapConfigurationTestUtility::getDummyFormData();
         $this->authenticateAs('admin');
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
         $this->assertSuccess();
@@ -145,7 +145,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertFalse($directoryOrgSettings->isEnabled());
 
-        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData = LdapConfigurationTestUtility::getDummyFormData();
         $formData['domains']['org_domain']['username'] = '';
         $formData['domains']['org_domain']['password'] = '';
         $this->authenticateAs('admin');
@@ -173,7 +173,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySync_DirectorySettingsController_Update_InvalidSettings()
     {
-        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData = LdapConfigurationTestUtility::getDummyFormData();
         $formData['domains']['org_domain']['domain_name'] = '';
         $this->authenticateAs('admin');
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
@@ -207,7 +207,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->logInAsAdmin();
         Configure::write(DirectorySyncEndpointsSecurityMiddleware::SECURITY_CONFIG_KEY, true);
 
-        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData = LdapConfigurationTestUtility::getDummyFormData();
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
 
         $this->assertForbiddenError('Directory sync settings endpoints are disabled');
@@ -224,7 +224,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $this->authenticateAs('admin');
 
         // Enable the directory integration
-        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData = LdapConfigurationTestUtility::getDummyFormData();
         $formData['field_fallbacks']['ad']['username'] = 'userPrincipalName';
 
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
@@ -269,7 +269,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySync_DirectorySettingsController_Test_InvalidSettings()
     {
-        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData = LdapConfigurationTestUtility::getDummyFormData();
         $formData['domains']['org_domain']['domain_name'] = '';
         $this->authenticateAs('admin');
         $this->postJson('/directorysync/settings/test.json?api-version=2', $formData);
@@ -289,7 +289,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertFalse($directoryOrgSettings->isEnabled());
 
-        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData = LdapConfigurationTestUtility::getDummyFormData();
         $this->authenticateAs('admin');
         $this->postJson('/directorysync/settings/test.json?api-version=2', $formData);
         $this->assertSuccess();
@@ -309,7 +309,7 @@ class DirectorySettingsControllerTest extends DirectorySyncIntegrationTestCase
      */
     public function testDirectorySync_DirectorySettingsController_Update_SuccessDecryptionFailedScenario()
     {
-        $formData = LdapConfigurationFormTest::getDummyFormData();
+        $formData = LdapConfigurationTestUtility::getDummyFormData();
         $settings = LdapConfigurationForm::formatFormDataToOrgSettings($formData);
         $settingsNamespace = OrganizationSetting::UUID_NAMESPACE . DirectoryOrgSettings::ORG_SETTINGS_PROPERTY;
         OrganizationSettingFactory::make()
