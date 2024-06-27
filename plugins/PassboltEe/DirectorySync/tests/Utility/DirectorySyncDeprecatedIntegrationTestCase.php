@@ -29,7 +29,10 @@ use Passbolt\DirectorySync\Test\Utility\Traits\MockDirectoryTrait;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
-abstract class DirectorySyncIntegrationTestCase extends AppIntegrationTestCase
+/**
+ * @deprecated this class is deprecated as it uses static fixtures and insert LDAP organization settings using productive code, which is bad practice
+ */
+abstract class DirectorySyncDeprecatedIntegrationTestCase extends AppIntegrationTestCase
 {
     use AssertDirectoryTrait;
     use AssertReportTrait;

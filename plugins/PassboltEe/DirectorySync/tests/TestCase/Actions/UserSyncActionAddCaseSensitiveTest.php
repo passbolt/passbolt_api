@@ -22,9 +22,9 @@ use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 
-class UserSyncActionAddCaseSensitiveTest extends DirectorySyncIntegrationTestCase
+class UserSyncActionAddCaseSensitiveTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     /**
      * @var array No fixtures in this test case, using factories

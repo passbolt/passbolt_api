@@ -18,9 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
 use App\Utility\UuidFactory;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 
-class DirectoryIgnoreAddControllerTest extends DirectorySyncIntegrationTestCase
+class DirectoryIgnoreAddControllerTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',

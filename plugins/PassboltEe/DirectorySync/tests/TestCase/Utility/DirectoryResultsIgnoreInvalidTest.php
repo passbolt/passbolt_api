@@ -20,11 +20,11 @@ use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use Cake\Core\Configure;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 
-class DirectoryResultsIgnoreInvalidTest extends DirectorySyncIntegrationTestCase
+class DirectoryResultsIgnoreInvalidTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     public $userSyncAction;
     public $groupSyncAction;

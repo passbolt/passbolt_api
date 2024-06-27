@@ -19,9 +19,9 @@ namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 
-class DirectoryIgnoreDeleteControllerTest extends DirectorySyncIntegrationTestCase
+class DirectoryIgnoreDeleteControllerTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     public $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
