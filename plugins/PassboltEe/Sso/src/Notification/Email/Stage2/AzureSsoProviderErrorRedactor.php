@@ -78,6 +78,8 @@ class AzureSsoProviderErrorRedactor implements SubscribedEmailRedactorInterface
             return $emailCollection;
         }
 
+        $this->setCustomException($event, $exception);
+
         $cachePresent = (new SsoProviderErrorCacheService())->read('login_error_admin_notification_performed');
         if ($cachePresent !== null) {
             // Do not send email if cache is present, this is to not spam administrators
@@ -101,11 +103,6 @@ class AzureSsoProviderErrorRedactor implements SubscribedEmailRedactorInterface
         foreach ($recipients as $recipient) {
             $emailCollection->addEmail($this->createEmail($recipient, $exception));
         }
-
-        $msg = __('Single sign-on failed.') . ' ' . __('Provider error: "{0}"', $exception->getMessage());
-        $event->setResult([
-            'customException' => new BadRequestException($msg, 400, $exception),
-        ]);
 
         // Do not forget to write cache upon successful email sent
         (new SsoProviderErrorCacheService())->write('login_error_admin_notification_performed', '1');
@@ -140,5 +137,21 @@ class AzureSsoProviderErrorRedactor implements SubscribedEmailRedactorInterface
             ],
             self::TEMPLATE
         );
+    }
+
+    /**
+     * Sets a custom exception data in the result of event object.
+     *
+     * @param \Cake\Event\Event $event Event.
+     * @param \Passbolt\Sso\Error\Exception\AzureException $exception Exception data.
+     * @return void
+     */
+    private function setCustomException(Event $event, AzureException $exception): void
+    {
+        $msg = __('Single sign-on failed.') . ' ' . __('Provider error: "{0}"', $exception->getMessage());
+
+        $event->setResult([
+            'customException' => new BadRequestException($msg, 400, $exception),
+        ]);
     }
 }
