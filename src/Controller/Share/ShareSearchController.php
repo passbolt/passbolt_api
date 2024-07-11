@@ -39,6 +39,11 @@ class ShareSearchController extends AppController
     protected $Groups;
 
     /**
+     * Limits the query results to this number.
+     */
+    private const LIMIT = 25;
+
+    /**
      * Share search potential user or group to share with
      *
      * @return void
@@ -64,8 +69,10 @@ class ShareSearchController extends AppController
             $options['contain'] = array_merge($containDefault, $options['contain']);
         }
 
-        $groups = $this->_searchGroups($options);
-        $users = $this->_searchUsers($options);
+        // Paginating two different models is non-convention, we set a limit here to improve performance.
+        // This is a quick win but in future will be refactored properly to implement pagination of some sort.
+        $groups = $this->_searchGroups($options)->limit(self::LIMIT);
+        $users = $this->_searchUsers($options)->limit(self::LIMIT);
 
         $aros = $users->all()->append($groups);
         $output = $this->_formatResult($aros);
