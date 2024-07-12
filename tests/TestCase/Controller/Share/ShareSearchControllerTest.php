@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Controller\Share;
 use App\Model\Entity\Permission;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
@@ -198,6 +199,23 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         foreach ($expected['keysAbsent'] as $key) {
             $this->assertFalse(Hash::check($resultArray, "{n}.$key"));
         }
+    }
+
+    public function testShareSearchController_Success_Limit(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        UserFactory::make(50)->user()->persist();
+        $user = UserFactory::make()->user()->persist();
+        GroupFactory::make(55)->withGroupsManagersFor([$user])->persist();
+        $this->loginAs($user);
+
+        $queryParams = http_build_query(['api-version' => 2, 'search' => 'a']);
+        $this->getJson("/share/search-aros.json?{$queryParams}");
+
+        $response = $this->getResponseBodyAsArray();
+        $this->assertNotEmpty($response);
+        // This is the maximum number of results we'll get because of hard-coded limit (25) specified in the controller.
+        $this->assertCount(50, $response);
     }
 
     public function testShareSearchController_Error_NotAuthenticated(): void
