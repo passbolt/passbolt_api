@@ -73,7 +73,7 @@ class UserSyncAction extends SyncAction
         /** @var \App\Model\Entity\User|null $existingUser */
         $existingUser = $this->Users
             ->findByUsernameCaseAware($username)
-            ->select(['id', 'username', 'active', 'deleted', 'created', 'modified'])
+            ->select(['id', 'username', 'active', 'deleted', 'created', 'modified', 'disabled'])
             ->order(['Users.modified' => 'DESC'])
             ->first();
 
@@ -172,10 +172,38 @@ class UserSyncAction extends SyncAction
     }
 
     /**
-     * @inheritDoc
+     * @return \App\Model\Table\UsersTable
      */
     protected function getTable(): Table
     {
         return TableRegistry::getTableLocator()->get('Users');
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function deleteOrDisableEntity(Entity $entity)
+    {
+        if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
+            return $this->getTable()->disableUser($entity);
+        }
+
+        // By default, deleted users get soft deleted (same as groups)
+        return parent::deleteOrDisableEntity($entity);
+    }
+
+    /**
+     * Users can be soft-deleted, or considered as deleted when disabled
+     *
+     * @param \App\Model\Entity\User|\App\Model\Entity\Group $entity group or user to sync
+     * @return bool
+     */
+    protected function isDeletedOrDisabled(Entity $entity): bool
+    {
+        if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
+            return $entity->isDisabled() || parent::isDeletedOrDisabled($entity);
+        }
+
+        return parent::isDeletedOrDisabled($entity);
     }
 }

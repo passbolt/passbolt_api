@@ -314,15 +314,14 @@ abstract class SyncAction
                 continue;
             }
 
-            // The entity was already hard or soft deleted
-            if (!isset($entity) || $entity->deleted) {
+            // The entity was already hard or soft deleted or disabled
+            if (!isset($entity) || $this->isDeletedOrDisabled($entity)) {
                 $this->handleDeletedEntry($entry);
                 continue;
             }
 
             try {
-                /** @psalm-suppress InvalidArgument */
-                $entitiesChanges = $this->getTable()->softDelete($entity);
+                $entitiesChanges = $this->deleteOrDisableEntity($entity);
                 if (!$entitiesChanges) {
                     // The entity cannot be deleted (for example: it is the sole owner of shared passwords)
                     $this->handleNotPossibleDelete($entry);
@@ -394,17 +393,29 @@ abstract class SyncAction
      * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return void
      */
-    private function handleDeletedEntry(DirectoryEntry $entry)
+    private function handleDeletedEntry(DirectoryEntry $entry): void
     {
         $entity = $entry->getAssociatedEntity();
         $this->DirectoryEntries->delete($entry);
-        if (isset($entity) && $entity->deleted) {
+        if (!isset($entity)) {
+            return;
+        }
+        if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
+            $msg = __(
+                'The directory {0} {1} was already suspended in passbolt.',
+                $this->getSingularLoweredEntityType(),
+                $this->getEntityName($entity)
+            );
+        } else {
+            $msg = __(
+                'The directory {0} {1} was already deleted in passbolt.',
+                $this->getSingularLoweredEntityType(),
+                $this->getEntityName($entity)
+            );
+        }
+        if ($this->isDeletedOrDisabled($entity)) {
             $this->addReportItem(new ActionReport(
-                __(
-                    'The directory {0} {1} was already deleted in passbolt.',
-                    $this->getSingularLoweredEntityType(),
-                    $this->getEntityName($entity)
-                ),
+                $msg,
                 $this->getEntityType(),
                 Alias::ACTION_DELETE,
                 Alias::STATUS_SYNC,
@@ -450,13 +461,22 @@ abstract class SyncAction
     protected function handleSuccessfulDelete(DirectoryEntry $entry, EntitiesChangesDto $entitiesChangesDto): void
     {
         $entity = $entry->getAssociatedEntity();
-        $this->DirectoryEntries->delete($entry);
-        $this->addReportItem(new ActionReport(
-            __(
+        if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
+            $msg = __(
+                'The {0} {1} was successfully suspended.',
+                $this->getSingularLoweredEntityType(),
+                $this->getEntityName($entity)
+            );
+        } else {
+            $msg = __(
                 'The {0} {1} was successfully deleted.',
                 $this->getSingularLoweredEntityType(),
                 $this->getEntityName($entity)
-            ),
+            );
+        }
+        $this->DirectoryEntries->delete($entry);
+        $this->addReportItem(new ActionReport(
+            $msg,
             $this->getEntityType(),
             Alias::ACTION_DELETE,
             Alias::STATUS_SUCCESS,
@@ -475,13 +495,22 @@ abstract class SyncAction
     private function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception)
     {
         $entity = $entry->getAssociatedEntity();
-        $data = new SyncError($entry, $exception);
-        $this->addReportItem(new ActionReport(
-            __(
+        if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
+            $msg = __(
+                'The {0} {1} could not be suspended because of an internal error. Please try again later.',
+                $this->getSingularLoweredEntityType(),
+                $this->getEntityName($entity)
+            );
+        } else {
+            $msg = __(
                 'The {0} {1} could not be deleted because of an internal error. Please try again later.',
                 $this->getSingularLoweredEntityType(),
                 $this->getEntityName($entity)
-            ),
+            );
+        }
+        $data = new SyncError($entry, $exception);
+        $this->addReportItem(new ActionReport(
+            $msg,
             $this->getEntityType(),
             Alias::ACTION_DELETE,
             Alias::STATUS_ERROR,
@@ -531,8 +560,8 @@ abstract class SyncAction
                 continue;
             }
 
-            // If the entity exist but is already deleted
-            if ($existingEntity->deleted) {
+            // If the entity exist but is already deleted or disabled
+            if ($this->isDeletedOrDisabled($existingEntity)) {
                 if ($isSyncOperationOnCreateEnabled) {
                     $this->handleAddDeleted($data, $entry, $existingEntity);
                 }
@@ -637,20 +666,43 @@ abstract class SyncAction
      */
     protected function handleAddDeleted(array $data, DirectoryEntry $entry, Entity $existingEntity): ?Entity
     {
-        // if the entity was created in ldap and then deleted in passbolt
+        // if the entity was created in ldap and then deleted/disabled in passbolt
         // do not try to recreate
         $status = Alias::STATUS_ERROR;
         $entity = null;
+        $existingEntityIsDisabledAndNotDeleted = $this->isDeletedOrDisabled($existingEntity) &&
+            !$existingEntity->isDeleted();
         if ($data['directory_created']->lessThan($existingEntity->get('modified'))) {
             $this->DirectoryEntries->updateForeignKey($entry, null);
             $reportData = new SyncError($entry, null);
+            if ($existingEntityIsDisabledAndNotDeleted) {
+                $msg = __(
+                    'The previously suspended {0} {1} was not unsuspended.',
+                    $this->getSingularLoweredEntityType(),
+                    $this->getEntityName($existingEntity)
+                );
+            } else {
+                $msg = __(
+                    'The previously deleted {0} {1} was not re-added to passbolt.',
+                    $this->getSingularLoweredEntityType(),
+                    $this->getEntityName($existingEntity)
+                );
+            }
+        } elseif ($existingEntityIsDisabledAndNotDeleted) {
+            // if the entity was disabled and re-created in ldap, re-enable user
+            $this->getTable()->updateAll([
+                'disabled' => null,
+                'modified' => FrozenTime::now(),
+            ], ['id' => $existingEntity->id]);
+            $reportData = $this->getTable()->get($existingEntity->id);
+            $status = Alias::STATUS_SUCCESS;
             $msg = __(
-                'The previously deleted {0} {1} was not re-added to passbolt.',
+                'The previously suspended {0} {1} was unsuspended.',
                 $this->getSingularLoweredEntityType(),
                 $this->getEntityName($existingEntity)
             );
         } else {
-            // if the entity was delete in passbolt and then created in ldap
+            // if the entity was deleted in passbolt and then created in ldap
             // try to recreate
             try {
                 $reportData = $entity = $this->createEntity($data, $entry);
@@ -786,7 +838,7 @@ abstract class SyncAction
      *
      * @return \Passbolt\DirectorySync\Actions\Reports\ActionReportCollection
      */
-    private function getSummary(): ActionReportCollection
+    public function getSummary(): ActionReportCollection
     {
         return $this->summary;
     }
@@ -878,5 +930,31 @@ abstract class SyncAction
     public function getEntitiesChangesDto(): EntitiesChangesDto
     {
         return $this->entitiesChangesDto;
+    }
+
+    /**
+     * Per default, user and groups are soft deleted when handling the entry deletion.
+     * It is possible to change the behavior for users in the organization settings, in order
+     * to disable the users instead of deleting them.
+     * This way, the associated resources, permissions, secrets
+     * are not deleted and can be easily recovered in the future in case of error in the sync.
+     *
+     * @param \App\Model\Entity\Group|\App\Model\Entity\User $entity group or user to delete or disable
+     * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
+     */
+    protected function deleteOrDisableEntity(Entity $entity)
+    {
+        return $this->getTable()->softDelete($entity);
+    }
+
+    /**
+     * Users can be soft-deleted, or considered as deleted when disabled
+     *
+     * @param \App\Model\Entity\User|\App\Model\Entity\Group $entity group or user to sync
+     * @return bool
+     */
+    protected function isDeletedOrDisabled(Entity $entity): bool
+    {
+        return $entity->isDeleted();
     }
 }
