@@ -20,6 +20,7 @@ namespace Passbolt\SmtpSettings\Service\Healthcheck;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use Cake\Http\Exception\BadRequestException;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSslOptionsGetService;
 
 class CustomSslOptionsSmtpSettingsHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
@@ -42,13 +43,20 @@ class CustomSslOptionsSmtpSettingsHealthcheck implements HealthcheckServiceInter
     public function check(): HealthcheckServiceInterface
     {
         $service = new SmtpSettingsSslOptionsGetService();
-        $this->sslOptions = $service->get();
-        $default = $service->isDefault();
 
-        if ($default) {
-            $this->status = true;
+        try {
+            $this->sslOptions = $service->get();
+            $default = $service->isDefault();
 
-            return $this;
+            if ($default) {
+                $this->status = true;
+
+                return $this;
+            }
+        } catch (BadRequestException $e) {
+            // Fail when config values are invalid
+            $this->status = false;
+            $this->sslOptions = [];
         }
 
         return $this;
@@ -77,8 +85,10 @@ class CustomSslOptionsSmtpSettingsHealthcheck implements HealthcheckServiceInter
     {
         $level = HealthcheckServiceCollector::LEVEL_WARNING;
 
-        if (!$this->status && !$this->isSslVerificationDisabled($this->sslOptions)) {
+        if (!$this->status && !empty($this->sslOptions) && !$this->isSslVerificationDisabled($this->sslOptions)) {
             $level = HealthcheckServiceCollector::LEVEL_NOTICE;
+        } elseif (!$this->status && empty($this->sslOptions)) {
+            $level = HealthcheckServiceCollector::LEVEL_ERROR;
         }
 
         return $level;
@@ -98,7 +108,9 @@ class CustomSslOptionsSmtpSettingsHealthcheck implements HealthcheckServiceInter
     public function getFailureMessage(): string
     {
         $failureMessage = __('Custom SSL certificate options for SMTP server is in use.');
-        if ($this->isSslVerificationDisabled($this->sslOptions)) {
+        if (empty($this->sslOptions)) {
+            $failureMessage = __('Custom SSL configuration options set are invalid.');
+        } elseif ($this->isSslVerificationDisabled($this->sslOptions)) {
             $failureMessage = __('SSL certification validation for SMTP server is disabled.');
         }
 

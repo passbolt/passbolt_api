@@ -19,6 +19,7 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Service\Resources\ResourcesAddService;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -53,6 +54,7 @@ class ResourcesAddController extends AppController
         /** @var \App\Model\Table\ResourcesTable $Resources */
         $Resources = $this->fetchTable('Resources');
         $resource = $Resources->findView($this->User->id(), $resource->id, $options)->first();
+        $resource = FolderizableBehavior::unsetPersonalPropertyIfNull($resource->toArray());
 
         $this->success(__('The resource has been added successfully.'), $resource);
     }

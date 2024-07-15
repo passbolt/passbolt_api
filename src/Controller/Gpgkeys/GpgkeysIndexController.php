@@ -55,7 +55,7 @@ class GpgkeysIndexController extends AppController
     {
         $this->assertJson();
 
-        $whitelist = ['filter' => ['modified-after', 'is-deleted']];
+        $whitelist = ['filter' => ['modified-after', 'is-deleted', 'has-users']];
         $options = $this->QueryString->get($whitelist);
         $gpgkeys = $this->Gpgkeys->find('index', $options);
         $this->paginate($gpgkeys);

@@ -18,10 +18,12 @@ declare(strict_types=1);
 namespace App\Controller\Resources;
 
 use App\Controller\AppController;
+use App\Database\Type\ISOFormatDateTimeType;
+use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
 use Cake\Utility\Hash;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 /**
  * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
@@ -84,9 +86,13 @@ class ResourcesIndexController extends AppController
         }
         $options = $this->QueryString->get($whitelist);
 
-        // Retrieve the resources.
+        // Performance improvement: map query result datetime properties to string.
+        ISOFormatDateTimeType::mapDatetimeTypesToMe();
         $resources = $this->Resources->findIndex($this->User->id(), $options)->disableHydration();
         $this->paginate($resources);
+        $resources = $resources->all();
+        $resources = FolderizableBehavior::unsetPersonalPropertyIfNullOnResultSet($resources);
+        ISOFormatDateTimeType::remapDatetimeTypesToDefault();
         $this->_logSecretAccesses($resources, $options);
         $this->success(__('The operation was successful.'), $resources);
     }
@@ -94,11 +100,11 @@ class ResourcesIndexController extends AppController
     /**
      * Log secrets accesses in secretAccesses table.
      *
-     * @param \Cake\ORM\Query $resources resources
+     * @param \Cake\Collection\CollectionInterface $resources resources
      * @param array $queryOptions The query options
      * @return void
      */
-    protected function _logSecretAccesses(Query $resources, array $queryOptions)
+    protected function _logSecretAccesses(CollectionInterface $resources, array $queryOptions)
     {
         $containSecret = (bool)Hash::get($queryOptions, 'contain.secret');
         if (!$containSecret) {
