@@ -182,6 +182,10 @@ class GpgkeysTable extends Table
 
         $query->where(['deleted' => $options['filter']['is-deleted'] ?? false]);
 
+        if (isset($options['filter']['has-users']) && is_array($options['filter']['has-users'])) {
+            $query->where(['user_id IN' => $options['filter']['has-users']]);
+        }
+
         return $query;
     }
 

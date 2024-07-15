@@ -19,6 +19,10 @@ namespace Passbolt\Sso\Test\TestCase\Controller\Azure;
 
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
+use Passbolt\Sso\Controller\AbstractSso2Stage2Controller;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
 use Passbolt\Sso\Test\Factory\SsoStateFactory;
@@ -26,6 +30,16 @@ use Passbolt\Sso\Test\Lib\SsoIntegrationTestCase;
 
 class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
 {
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        EventManager::instance()->setEventList(new EventList());
+    }
+
     public function testSsoAzureStage2Controller_Success(): void
     {
         // Requires mocking AzureService - not implemented
@@ -108,6 +122,25 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
         $this->assertResponseContains('The code is required in URL parameters.');
         $this->assertResponseContains('/js/app/api-feedback.js');
         $this->assertResponseContains('id="api-error-details"');
+    }
+
+    public function testSsoAzureStage2Controller_User_EventProviderErrorWhenAssertingResourceOwner(): void
+    {
+        Configure::write('passbolt.security.userIp', false);
+        Configure::write('passbolt.security.userAgent', false);
+        $user = UserFactory::make()->active()->persist();
+        $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        $ssoState = SsoStateFactory::make()
+            ->withTypeSsoGetKey()
+            ->userId($user->get('id'))
+            ->ssoSettingsId($settings->get('id'))
+            ->persist();
+        $this->cookie('passbolt_sso_state', $ssoState->state);
+
+        $this->get('/sso/azure/redirect?state=' . $ssoState->state . '&code=' . UuidFactory::uuid());
+
+        $this->assertEventFired(AbstractSso2Stage2Controller::EVENT_PROVIDER_ERROR_RESOURCE_OWNER);
+        // More assertions can be added once we are able to mock AzureSsoService
     }
 
     // ADMIN TESTS
@@ -211,6 +244,7 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
         $this->disableFeaturePlugin('SsoRecover');
         $settings = SsoSettingsFactory::make()->azure()->active()->persist();
         $admin = UserFactory::make()->admin()->active()->persist();
+        /** @var \Passbolt\Sso\Model\Entity\SsoState $ssoState */
         $ssoState = SsoStateFactory::make()
             ->withTypeSsoRecover()
             ->userId($admin->id)

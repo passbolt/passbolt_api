@@ -106,7 +106,7 @@ class SubscriptionKeyGetService
             if (file_exists(self::SUBSCRIPTION_FILE)) {
                 Log::warning('The subscription key file exists but is not readable.');
             } else {
-                Log::warning('The subscription key could not be found under config/subscription_key.txt');
+                Log::warning('The subscription key could not be found under ' . CONFIG . 'subscription_key.txt');
             }
         }
 

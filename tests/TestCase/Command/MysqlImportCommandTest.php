@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\TestCase\Command;
 
-use App\Command\MysqlExportCommand;
+use App\Command\SqlExportCommand;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
@@ -60,7 +60,7 @@ class MysqlImportCommandTest extends AppTestCase
     public function testMysqlImportCommandOnDump()
     {
         // Create a file with a simple sql command
-        $dir = MysqlExportCommand::CACHE_DATABASE_DIRECTORY;
+        $dir = SqlExportCommand::CACHE_DATABASE_DIRECTORY;
         $fileName = 'dummy_dump.sql';
         $cmd = "
             INSERT INTO avatars (id, profile_id, created, modified)
@@ -89,7 +89,7 @@ class MysqlImportCommandTest extends AppTestCase
     public function testMysqlImportCommandWrongDataSource()
     {
         // Create a file with a simple sql command
-        $dir = MysqlExportCommand::CACHE_DATABASE_DIRECTORY;
+        $dir = SqlExportCommand::CACHE_DATABASE_DIRECTORY;
         $fileName = 'dummy_dump.sql';
         $sql = 'THIS IS NOT SQL, AND WILL THROW AN ERROR!!!';
         file_put_contents($dir . DS . $fileName, $sql);

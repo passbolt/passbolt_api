@@ -17,6 +17,9 @@ declare(strict_types=1);
 namespace Passbolt\SmtpSettings\Service;
 
 use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Utility\Hash;
+use Passbolt\SmtpSettings\Form\CustomSslOptionsForm;
 
 class SmtpSettingsSslOptionsGetService
 {
@@ -32,6 +35,7 @@ class SmtpSettingsSslOptionsGetService
      * Otherwise, returns set configurations mapped as PHP SSL context options format (https://www.php.net/manual/en/context.ssl.php#refsect1-context.ssl-options).
      *
      * @return array
+     * @throws \Cake\Http\Exception\BadRequestException When configuration validation fails.
      */
     public function get(): array
     {
@@ -48,6 +52,7 @@ class SmtpSettingsSslOptionsGetService
      * Returns `true` if SSL options set in configuration are default, `false` otherwise.
      *
      * @return bool|null
+     * @throws \Cake\Http\Exception\BadRequestException When configuration validation fails.
      */
     public function isDefault(): ?bool
     {
@@ -62,10 +67,23 @@ class SmtpSettingsSslOptionsGetService
 
     /**
      * @return array
+     * @thows BadRequestException Any configuration value set is not of valid type.
      */
     private function getConfigOptions(): array
     {
-        return Configure::read('passbolt.plugins.smtpSettings.security', []);
+        $values = Configure::read('passbolt.plugins.smtpSettings.security', []);
+
+        $form = new CustomSslOptionsForm();
+        $valid = $form->validate($values);
+        if (!$valid) {
+            $errors = Hash::flatten($form->getErrors());
+            $errorMessage = __('Invalid `passbolt.plugins.smtpSettings.security` configuration values.');
+            $errorMessage .= ' ' . __('Errors: ') . implode('; ', $errors);
+
+            throw new BadRequestException($errorMessage);
+        }
+
+        return $values;
     }
 
     /**

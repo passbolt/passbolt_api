@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 /**
  * @property \Passbolt\Folders\Model\Table\FoldersTable $Folders
@@ -63,6 +64,7 @@ class FoldersViewController extends AppController
         $options = $this->QueryString->get($whitelist);
 
         $folder = $foldersTable->findView($this->User->id(), $id, $options)->first();
+        $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
 
         if (empty($folder)) {
             throw new NotFoundException('The folder does not exist.');

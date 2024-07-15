@@ -20,6 +20,7 @@ namespace App\Test\TestCase\Controller\Resources;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\FoldersPlugin;
 
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
@@ -36,6 +37,7 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
+        $this->enableFeaturePlugin(FoldersPlugin::class);
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 

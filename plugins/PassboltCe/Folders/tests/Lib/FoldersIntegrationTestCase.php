@@ -17,12 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\Lib;
 
 use App\Test\Lib\AppIntegrationTestCase;
+use Passbolt\Folders\FoldersPlugin;
 
 abstract class FoldersIntegrationTestCase extends AppIntegrationTestCase
 {
     public function setUp(): void
     {
         parent::setUp();
-        $this->enableFeaturePlugin('Folders');
+        $this->enableFeaturePlugin(FoldersPlugin::class);
     }
 }

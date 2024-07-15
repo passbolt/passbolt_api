@@ -22,6 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 
 /**
  * ResourcesUpdateController Class
@@ -64,6 +65,7 @@ class ResourcesUpdateController extends AppController
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
         $output = $resourcesTable->findView($this->User->id(), $resource->id, $options)->first();
+        $output = FolderizableBehavior::unsetPersonalPropertyIfNull($output->toArray());
 
         $this->success(__('The resource has been updated successfully.'), $output);
     }

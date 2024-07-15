@@ -17,12 +17,12 @@ declare(strict_types=1);
 
 namespace Passbolt\DirectorySync\Test\TestCase\Controller;
 
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 
 /**
  * @uses \Passbolt\DirectorySync\Controller\DirectorySyncController
  */
-class DirectorySyncControllerTest extends DirectorySyncIntegrationTestCase
+class DirectorySyncControllerTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     public $fixtures = [];
 

@@ -28,7 +28,7 @@ use Cake\Event\EventManager;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryRelationsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupsTrait;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertGroupUsersTrait;
@@ -38,7 +38,7 @@ use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTra
 /**
  * @covers \Passbolt\DirectorySync\Actions\GroupSyncAction
  */
-class GroupUserSyncActionTest extends DirectorySyncIntegrationTestCase
+class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     use AssertDirectoryRelationsTrait;
     use AssertGroupsTrait;

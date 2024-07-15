@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Tags\Model\Behavior;
 
+use App\ORM\Association\PassboltBelongsToMany;
 use Cake\ORM\Behavior;
 
 /**
@@ -32,10 +33,14 @@ class TaggableBehavior extends Behavior
     {
         parent::initialize($config);
 
-        $this->table()->belongsToMany('Tags', [
-            'through' => 'Passbolt/Tags.ResourcesTags',
-            'className' => 'Passbolt/Tags.Tags',
-        ]);
+        $this->table()
+            ->associations()
+            ->load(PassboltBelongsToMany::class, 'Tags', [
+                'through' => 'Passbolt/Tags.ResourcesTags',
+                'className' => 'Passbolt/Tags.Tags',
+                'propertyName' => 'tags',
+            ])->setSource($this->table());
+
         $this->table()->hasMany('ResourcesTags', [
             'className' => 'Passbolt/Tags.ResourcesTags',
         ]);
