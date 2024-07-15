@@ -16,7 +16,6 @@ declare(strict_types=1);
 namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
-use App\Model\Entity\Secret;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
@@ -134,12 +133,12 @@ class SecretAccessesTable extends Table
      * Create a new SecretAccess from a secret entity
      *
      * @param \App\Utility\UserAccessControl $uac user access control object
-     * @param \App\Model\Entity\Secret $secret the secret entity
+     * @param \App\Model\Entity\Secret|array $secret the secret entity
      * @return bool|\Cake\Datasource\EntityInterface|false|mixed
      */
-    public function createFromSecretEntity(UserAccessControl $uac, Secret $secret)
+    public function createFromSecretEntity(UserAccessControl $uac, $secret)
     {
-        return $this->createFromSecretDetails($uac, $secret->resource_id, $secret->id);
+        return $this->createFromSecretDetails($uac, $secret['resource_id'], $secret['id']);
     }
 
     /**

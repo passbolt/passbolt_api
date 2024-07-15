@@ -135,13 +135,10 @@ trait UsersFindersTrait
         ]);
 
         // Subquery to retrieve the groups the user is member of.
-        $groupsSubquery = $this->Groups->find()
-            ->innerJoinWith('GroupsUsers')
-            ->select('Groups.id')
-            ->where([
-                'Groups.deleted' => false,
-                'GroupsUsers.user_id' => new IdentifierExpression('Users.id'),
-            ]);
+        $groupIdsSubquery = $this->Groups->GroupsUsers
+            ->find()
+            ->select('group_id')
+            ->where(['user_id' => new IdentifierExpression('Users.id')]);
 
         // Use distinct to avoid duplicate as it can happen that a user is member of two groups which
         // both have a permission for the same resource
@@ -151,7 +148,7 @@ trait UsersFindersTrait
             ->where(
                 ['OR' => [
                     ['PermissionsFilterAccess.aro_foreign_key' => new IdentifierExpression('Users.id')],
-                    ['PermissionsFilterAccess.aro_foreign_key IN' => $groupsSubquery],
+                    ['PermissionsFilterAccess.aro_foreign_key IN' => $groupIdsSubquery],
                 ]]
             );
     }
@@ -621,36 +618,19 @@ trait UsersFindersTrait
         // Retrieve the last logged in date for each user, based on the action_logs table.
         $loginActionId = UuidFactory::uuid('AuthLogin.loginPost');
         $subQuery = $this->ActionLogs->find();
-        $subQuery->select([
-                'user_id' => 'user_id',
-                'last_logged_in' => $subQuery->func()->max(new IdentifierExpression('ActionLogs.created')),
-            ])
+        $subQuery
+            ->select(['last_logged_in' => $subQuery->func()->max(new IdentifierExpression('ActionLogs.created'))])
             ->where([
                  'ActionLogs.action_id' => $loginActionId,
                  'ActionLogs.status' => 1,
+                 'ActionLogs.user_id' => new IdentifierExpression('Users.id'),
             ])
-            ->group('user_id');
+            ->limit(1);
 
-        // Left join the last logged in query to the given query.
-        $query = $query->select(['last_logged_in' => 'JoinedUsersLastLoggedIn.last_logged_in'])
-            ->enableAutoFields() // Autofields are disabled when a select is made manually on a query, reestablish it.
-            ->join([
-                'table' => $subQuery,
-                'alias' => 'JoinedUsersLastLoggedIn',
-                'type' => 'LEFT',
-                'conditions' => [
-                    'Users.id' => new IdentifierExpression('JoinedUsersLastLoggedIn.user_id'),
-                ],
-            ]);
+        $selectTypeMap = $query->getSelectTypeMap();
+        $selectTypeMap->addDefaults(['last_logged_in' => 'datetime']);
 
-        // The last logged in date should be formatted as other dates (FrozenTime).
-        $query->decorateResults(function ($row) {
-            if (!is_null($row['last_logged_in'])) {
-                $row['last_logged_in'] = new FrozenTime($row['last_logged_in']);
-            }
-
-            return $row;
-        });
+        $query->selectAlso(['last_logged_in' => $subQuery]);
 
         return $query;
     }

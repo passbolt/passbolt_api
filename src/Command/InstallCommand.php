@@ -287,7 +287,7 @@ class InstallCommand extends PassboltCommand
             $this->keyringInit($args, $io);
             $options = $this->formatOptions($args, ['--clear-previous']);
 
-            return $this->executeCommand(MysqlExportCommand::class, $options, $io) === self::CODE_SUCCESS;
+            return $this->executeCommand(SqlExportCommand::class, $options, $io) === self::CODE_SUCCESS;
         }
 
         return true;

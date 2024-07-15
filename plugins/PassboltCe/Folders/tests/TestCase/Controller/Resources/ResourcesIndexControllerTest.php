@@ -7,10 +7,11 @@ use App\Model\Entity\Permission;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Test\Lib\Utility\FixtureProviderTrait;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Closure;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
@@ -39,17 +40,6 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers',
         'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Permissions',
     ];
-
-    /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-    }
 
     /**
      * @param string $folderParentId Folder parent id
@@ -185,7 +175,7 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
      * @param array $expectedFolderChildrenIds
      * @return void
      */
-    public function testFoldersIndexFilterHasParentSuccess(Closure $fixture, $hasParentFilterId, array $expectedFolderChildrenIds)
+    public function testResourcesIndexController_FilterHasParentSuccess(Closure $fixture, $hasParentFilterId, array $expectedFolderChildrenIds)
     {
         $this->executeFixture($fixture);
 
@@ -207,5 +197,17 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
         foreach ($expectedFolderChildrenIds as $expectedFolderChildrenId) {
             $this->assertContains($expectedFolderChildrenId, $resultFolderIds, 'Expected children is missing for the given parent folder.');
         }
+    }
+
+    public function testResourcesIndexController_Personal_Should_Be_Unset_If_Null()
+    {
+        $user = $this->logInAsUser();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        ResourceFactory::find()->all();
+        $this->getJson('/resources.json');
+
+        $result = (array)$this->_responseJsonBody[0];
+        $this->assertArrayHasKey('id', $result);
+        $this->assertArrayNotHasKey(FolderizableBehavior::PERSONAL_PROPERTY, $result);
     }
 }

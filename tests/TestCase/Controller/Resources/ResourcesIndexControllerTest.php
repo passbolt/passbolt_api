@@ -23,6 +23,7 @@ use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\Utility\Hash;
+use Passbolt\Folders\FoldersPlugin;
 use PassboltTestData\Lib\PermissionMatrix;
 
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
@@ -33,6 +34,12 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions',
     ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(FoldersPlugin::class);
+    }
 
     public function testResourcesIndexController_Success(): void
     {
