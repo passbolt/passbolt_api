@@ -689,7 +689,7 @@ abstract class SyncAction
                 );
             }
         } elseif ($existingEntityIsDisabledAndNotDeleted) {
-            // if the entity was disabled and re-created in ldap, re-enable user
+            // Case when entity was suspended because it was deleted in ldap previously, now it is created again with same DN in ldap so we enable (un-suspend) it
             $this->getTable()->updateAll([
                 'disabled' => null,
                 'modified' => FrozenTime::now(),
