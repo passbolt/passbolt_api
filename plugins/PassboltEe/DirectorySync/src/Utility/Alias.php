@@ -33,4 +33,13 @@ class Alias
     public const ACTION_DELETE = 'delete';
     public const ACTION_UPDATE = 'update';
     public const ACTION_SYNC = 'update';
+
+    public const DELETE_USER_BEHAVIOR_PROPERTY = 'delete_user_behavior';
+    public const DELETE_USER_BEHAVIOR_MAPPING_KEY = 'deleteUserBehavior';
+    public const DELETE_USER_BEHAVIOR_DELETE = 'delete';
+    public const DELETE_USER_BEHAVIOR_DISABLE = 'disable';
+    public const DELETE_USER_BEHAVIOR_VALID_VALUES = [
+        self::DELETE_USER_BEHAVIOR_DELETE,
+        self::DELETE_USER_BEHAVIOR_DISABLE,
+    ];
 }

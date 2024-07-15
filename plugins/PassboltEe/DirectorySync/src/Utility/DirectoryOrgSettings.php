@@ -85,9 +85,9 @@ class DirectoryOrgSettings
     /**
      * Get Directory Organization Settings
      *
-     * @return \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
+     * @return self
      */
-    public static function get()
+    public static function get(): DirectoryOrgSettings
     {
         try {
             $settings = self::loadSettingsFromDatabase();
@@ -103,7 +103,7 @@ class DirectoryOrgSettings
      *
      * @return array
      */
-    private static function loadSettingsFromDatabase()
+    private static function loadSettingsFromDatabase(): array
     {
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
@@ -129,7 +129,7 @@ class DirectoryOrgSettings
      *
      * @return array
      */
-    private static function loadSettingsFromFile()
+    private static function loadSettingsFromFile(): array
     {
         $path = CONFIG . DS . 'ldap.php';
         if (!\file_exists($path)) {
@@ -148,7 +148,7 @@ class DirectoryOrgSettings
      *
      * @return array
      */
-    public static function getDefaultSettings()
+    public static function getDefaultSettings(): array
     {
         $path = DirectorySyncPlugin::PLUGIN_CONFIG_PATH . 'config.php';
         if (!\file_exists($path)) {
@@ -165,7 +165,7 @@ class DirectoryOrgSettings
      * @param \App\Utility\UserAccessControl $uac user access control
      * @return void
      */
-    public static function disable($uac)
+    public static function disable(UserAccessControl $uac): void
     {
         /** @var \App\Model\Table\OrganizationSettingsTable $OrganizationSettings */
         $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
@@ -522,5 +522,18 @@ class DirectoryOrgSettings
     public function getPassword(string $domain = 'org_domain'): string
     {
         return Hash::get($this->settings, "ldap.domains.$domain.password", '');
+    }
+
+    /**
+     * Check if the behavior when deleting users is to disable them, instead of deleting them.
+     * By default, users get deleted (not disabled).
+     *
+     * @return bool
+     */
+    public function isDeleteUserBehaviorDisable(): bool
+    {
+        $setting = Hash::get($this->settings, Alias::DELETE_USER_BEHAVIOR_MAPPING_KEY);
+
+        return $setting === Alias::DELETE_USER_BEHAVIOR_DISABLE;
     }
 }

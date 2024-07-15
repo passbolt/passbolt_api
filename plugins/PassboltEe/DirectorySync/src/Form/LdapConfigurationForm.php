@@ -25,6 +25,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
@@ -62,7 +63,7 @@ class LdapConfigurationForm extends Form
      *
      * @var array
      */
-    private static $configurationMapping = [
+    private static array $configurationMapping = [
         'enabled' => 'enabled',
         'source' => 'source',
         'directory_type' => 'ldap.domains.{DOMAIN}.ldap_type',
@@ -94,6 +95,7 @@ class LdapConfigurationForm extends Form
         'sync_groups_update' => 'jobs.groups.update',
         'fields_mapping' => 'fieldsMapping',
         'field_fallbacks' => 'fieldFallbacks',
+        Alias::DELETE_USER_BEHAVIOR_PROPERTY => Alias::DELETE_USER_BEHAVIOR_MAPPING_KEY,
     ];
 
     /**
@@ -102,7 +104,7 @@ class LdapConfigurationForm extends Form
      * @param \Cake\Form\Schema $schema shchema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('enabled', 'boolean')
@@ -125,7 +127,8 @@ class LdapConfigurationForm extends Form
             ->addField('sync_users_delete', 'boolean')
             ->addField('sync_groups_create', 'boolean')
             ->addField('sync_groups_delete', 'boolean')
-            ->addField('sync_groups_update', 'boolean');
+            ->addField('sync_groups_update', 'boolean')
+            ->addField(Alias::DELETE_USER_BEHAVIOR_PROPERTY, 'string');
     }
 
     /**
@@ -253,6 +256,8 @@ class LdapConfigurationForm extends Form
         $validator
             ->allowEmptyString('sync_groups_update')
             ->boolean('sync_groups_update', __('The sync of updated groups setting should be a boolean.'));
+
+        $validator->inList(Alias::DELETE_USER_BEHAVIOR_PROPERTY, Alias::DELETE_USER_BEHAVIOR_VALID_VALUES);
 
         $defaultSettings = DirectoryOrgSettings::getDefaultSettings();
         $fieldsMappingValidator = new Validator();
@@ -587,7 +592,7 @@ class LdapConfigurationForm extends Form
      * @param array|null $data The form data
      * @return array $settings The org settings data
      */
-    public static function formatFormDataToOrgSettings(?array $data = [])
+    public static function formatFormDataToOrgSettings(?array $data = []): array
     {
         $settings = [];
         if ($data === null || count($data) === 0) {
@@ -627,9 +632,7 @@ class LdapConfigurationForm extends Form
             }
         }
 
-        $settings = Hash::expand($settings);
-
-        return $settings;
+        return Hash::expand($settings);
     }
 
     /**
@@ -638,7 +641,7 @@ class LdapConfigurationForm extends Form
      * @param array|null $settings The organization settings
      * @return array LdapConfigurationForm data
      */
-    public static function formatOrgSettingsToFormData(?array $settings = [])
+    public static function formatOrgSettingsToFormData(?array $settings = []): array
     {
         $data = [];
         $fieldsMapping = Hash::get($settings, 'fieldsMapping', []);
