@@ -1,8 +1,8 @@
 Release song: TBD
 
-Passbolt v4.9.0-test.1
+Passbolt v4.9.0-test.2
 
-## [4.9.0-test.1] - 2024-07-15
+## [4.9.0-test.2] - 2024-07-17
 ### Added
 - PB-33690 Improves response times by adding an index to gpgkeys.user_id column
 - PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
