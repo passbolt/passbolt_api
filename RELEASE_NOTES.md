@@ -1,8 +1,8 @@
 Release song: TBD
 
-Passbolt v4.9.0-test.1
+Passbolt v4.9.0-test.2
 
-## [4.9.0-test.1] - 2024-07-15
+## [4.9.0-test.2] - 2024-07-17
 ### Added
 - PB-33828 As an administrator I can define the deletion behaviour of users to suspended instead of deleted
 - PB-33014 As an administrator I want to know if TLS/SSL verification is disabled when connecting to LDAP server
