@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-07-18 11:38\n"
+"PO-Revision-Date: 2024-07-18 12:41\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid "Could not import the user OpenPGP key."
 msgstr "No se ha podido importar la clave OpenPGP de usuario."
 
 msgid "Invalid verify token type."
-msgstr ""
+msgstr "Tipo de token de verificación no válido."
 
 msgid "Invalid verify token format, "
 msgstr "Formato de token de verificación no válido, "
@@ -1298,7 +1298,7 @@ msgid "Could not connect to passbolt repository to check versions."
 msgstr "No se pudo conectar al repositorio de Passbolt para comprobar las versiones."
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "No es posible comprobar si su versión está actualizada."
 
 msgid "See https://www.passbolt.com/help/tech/update"
 msgstr "Vea https://www.passbolt.com/help/tech/update"
@@ -1469,7 +1469,7 @@ msgid "Run the install script to install the database tables"
 msgstr "Ejecute el script de instalación para instalar las tablas de la base de datos"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "El esquema de base de datos está actualizado."
 
 msgid "The database schema is not up to date."
 msgstr "El esquema de la base de datos no está actualizado."
@@ -2366,10 +2366,10 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "La ruta {0} no está permitida con autenticación JWT."
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "La clave pública JWT no se pudo extraer."
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "No se han podido leer los detalles de la clave pública JWT."
 
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "El par de claves para la autenticación JWT no está completo."
@@ -3065,10 +3065,10 @@ msgid "Log in passbolt"
 msgstr "Iniciar sesión passbolt"
 
 msgid "The automatic_expiry field must be true."
-msgstr "El campo automatic_expiry debe ser true."
+msgstr "El campo \"Expiración automática\" debe ser verdadero."
 
 msgid "The automatic_update field must be true."
-msgstr "El campo automatic_update debe ser true."
+msgstr "El campo \"Actualización automática\" debe ser verdadero."
 
 msgid "The value should be an array."
 msgstr "El valor debe ser una matriz."
@@ -3509,16 +3509,16 @@ msgid "Status: {0}"
 msgstr "Estado: {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
-msgstr ""
+msgstr "La configuración de sslVerifyPeer debe ser un booleano."
 
 msgid "The sslVerifyPeerName configuration should be a boolean."
-msgstr ""
+msgstr "La configuración de sslVerifyPeerName debe ser un booleano."
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr ""
+msgstr "La configuración de sslAllowSelfSigned debe ser un booleano."
 
 msgid "The sslCafile configuration should be NULL or string."
-msgstr ""
+msgstr "La configuración de sslCafile debe ser NULL o una cadena de texto."
 
 msgid "A sender name is required."
 msgstr "Se requiere un nombre de remitente."
@@ -3593,16 +3593,16 @@ msgid "The client should be a valid IP or a valid domain."
 msgstr "El cliente debe ser una IP válida o un dominio válido."
 
 msgid "No custom SSL configuration for SMTP server."
-msgstr ""
+msgstr "Ninguna configuración SSL personalizada para el servidor SMTP."
 
 msgid "Custom SSL certificate options for SMTP server is in use."
-msgstr ""
+msgstr "Las opciones personalizadas de certificado SSL para el servidor SMTP están en uso."
 
 msgid "Custom SSL configuration options set are invalid."
-msgstr ""
+msgstr "Las opciones de configuración SSL personalizadas no son válidas."
 
 msgid "SSL certification validation for SMTP server is disabled."
-msgstr ""
+msgstr "La validación de la certificación SSL para el servidor SMTP está desactivada."
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr "Configuración SMTP coherente. Puede enviar un correo electrónico de prueba para validarlos."
@@ -3662,7 +3662,7 @@ msgid "If you receive this email, it means that your passbolt smtp configuration
 msgstr "Si recibe este correo electrónico, significa que su configuración smtp de passbolt funciona bien."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
-msgstr ""
+msgstr "Valores de configuración `passbolt.plugins.smtpSettings.security` no válidos."
 
 msgid "Errors: "
 msgstr "Errores: "
@@ -4670,7 +4670,7 @@ msgid "The user {0} cannot be added to the group {1} automatically. An email req
 msgstr "El usuario {0} no puede ser agregado al grupo {1} automáticamente. Se ha enviado una solicitud de correo electrónico al/los administrador(es) del grupo para hacerlo manualmente."
 
 msgid "The user {0} was not removed from the group {1} because they were or are being suspended."
-msgstr ""
+msgstr "El usuario {0} no fue eliminado del grupo {1} porque estaba o está siendo suspendido."
 
 msgid "The user {0} was successfully removed from the group {1}."
 msgstr "El usuario {0} fue eliminado con éxito del grupo {1}."
@@ -4700,7 +4700,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "El directorio {0} {1} no se ha eliminado porque ha sido ignorado."
 
 msgid "The directory {0} {1} was already suspended in passbolt."
-msgstr ""
+msgstr "El directorio {0} {1} ya ha sido suspendido en Passbolt."
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "El directorio {0} {1} ya ha sido eliminado en passbolt."
@@ -4712,13 +4712,13 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "Los {0} {1} no se pudieron eliminar porque son los únicos administradores de uno o más grupos."
 
 msgid "The {0} {1} was successfully suspended."
-msgstr ""
+msgstr "El {0} {1} fue suspendido correctamente."
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "El {0} {1} se eliminó correctamente."
 
 msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
-msgstr ""
+msgstr "El {0} {1} no se pudo suspender debido a un error interno. Inténtelo de nuevo más tarde."
 
 msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
 msgstr "El {0} {1} no se pudo eliminar debido a un error interno. Inténtalo de nuevo más tarde."
@@ -4739,13 +4739,13 @@ msgid "The {0} {1} could not be added because of an internal error. Please try a
 msgstr "No se pudo agregar {0} {1} debido a un error interno. Por favor, inténtelo de nuevo más tarde."
 
 msgid "The previously suspended {0} {1} was not unsuspended."
-msgstr ""
+msgstr "El {0} {1} previamente suspendido no ha sido activado."
 
 msgid "The previously deleted {0} {1} was not re-added to passbolt."
 msgstr "El {0} {1} previamente eliminado no se volvió a agregar a passbolt."
 
 msgid "The previously suspended {0} {1} was unsuspended."
-msgstr ""
+msgstr "El {0} {1} previamente suspendido ha sido activado."
 
 msgid "The previously deleted {0} {1} was re-added to passbolt."
 msgstr "El {0} {1} previamente eliminado se volvió a agregar a passbolt."
@@ -5075,10 +5075,10 @@ msgid "Or set {0} to true in {1}."
 msgstr "O establezca {0} a true en {1}."
 
 msgid "SSL certification verification for LDAP server is enabled."
-msgstr ""
+msgstr "La verificación de la certificación SSL para el servidor LDAP está activada."
 
 msgid "SSL certification verification for LDAP server is disabled."
-msgstr ""
+msgstr "La verificación de la certificación SSL para el servidor LDAP está desactivada."
 
 msgid "Disabling the ssl verify check can lead to security attacks."
 msgstr "Desactivar la comprobación de verificación del SSL puede llevar a ataques de seguridad."
@@ -5087,7 +5087,7 @@ msgid "Attacker can alter the certificate and can perform man-in-the-middle atta
 msgstr "El atacante puede alterar el certificado y realizar un ataque de hombre en el medio (mitm)."
 
 msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
-msgstr ""
+msgstr "Para solucionar esto, puede configurar la variable de entorno PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER a true."
 
 msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
 msgstr "O establezca passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer a true en {0}."
@@ -5186,55 +5186,55 @@ msgid "Directory Sync"
 msgstr "Sincronización de directorio"
 
 msgid "Subscription key format error."
-msgstr ""
+msgstr "Error en el formato de la clave de suscripción."
 
 msgid "Subscription key signature error."
-msgstr ""
+msgstr "Error en la firma de la clave de suscripción."
 
 msgid "Subscription key validation error."
-msgstr ""
+msgstr "Error al validar la clave de suscripción."
 
 msgid "It looks like you could use some help."
-msgstr ""
+msgstr "Parece que podría usar algo de ayuda."
 
 msgid "We are here for you. You can contact us at sales@passbolt.com"
-msgstr ""
+msgstr "Estamos aquí para usted. Puede contactar con nosotros en sales@passbolt.com"
 
 msgid "Thanks for choosing Passbolt Pro"
-msgstr ""
+msgstr "Gracias por elegir Passbolt Pro"
 
 msgid "Below are your subscription key details"
-msgstr ""
+msgstr "A continuación se muestran los detalles de su clave de suscripción"
 
 msgid "<error>Not Available</error>"
-msgstr ""
+msgstr "<error>No disponible</error>"
 
 msgid "Customer id:\t{0}"
-msgstr ""
+msgstr "ID del cliente:\t{0}"
 
 msgid "<error>{0} (currently: {1}) - Exceeded</error>"
-msgstr ""
+msgstr "<error>{0} (actualmente: {1}) - Excedido</error>"
 
 msgid "<info>{0} (currently: {1})</info>"
-msgstr ""
+msgstr "<info>{0} (actualmente: {1})</info>"
 
 msgid "Users limit:\t{0}"
-msgstr ""
+msgstr "Límite de usuarios:\t{0}"
 
 msgid "Valid from:\t<info>{0}</info>"
-msgstr ""
+msgstr "Válido desde:\t<info>{0}</info>"
 
 msgid "Expires on:\t<error>{0} (expired)</error>"
-msgstr ""
+msgstr "Caduca el:\t<error>{0} (expirado)</error>"
 
 msgid "Expires on:\t<info>{0} (in {1} days)</info>"
-msgstr ""
+msgstr "Caduca el:\t<info>{0} (en {1} días)</info>"
 
 msgid "For any question / feedback / subscription renewal,"
-msgstr ""
+msgstr "Para cualquier pregunta / comentario / renovación de suscripción,"
 
 msgid "kindly contact us at <info>sales@passbolt.com</info>"
-msgstr ""
+msgstr "por favor contáctenos en <info>sales@passbolt.com</info>"
 
 msgid "Only administrators can view the subscription details."
 msgstr "Solo los administradores pueden ver los detalles de la suscripción."
@@ -5600,7 +5600,7 @@ msgid "{0} deleted the SSO setting"
 msgstr "{0} ha eliminado la configuración del SSO"
 
 msgid "Users are unable to log in via Azure SSO"
-msgstr ""
+msgstr "Los usuarios no pueden iniciar sesión a través del SSO de Azure"
 
 msgid "Single sign-on failed."
 msgstr "El inicio de sesión único ha fallado."
@@ -5609,7 +5609,7 @@ msgid "Provider error: \"{0}\""
 msgstr "Error del proveedor: \"{0}\""
 
 msgid "Azure SSO secret expiry date is near"
-msgstr ""
+msgstr "La fecha de caducidad del secreto del SSO de Azure está cerca"
 
 msgid "SSL certification validation for SSO instance is enabled."
 msgstr "La validación del certificado SSL para la instancia SSO está activada."
@@ -5774,43 +5774,43 @@ msgid "Unable to decode JWT token."
 msgstr "No se ha podido decodificar el token JWT."
 
 msgid "The {0} configuration value should be a string or NULL."
-msgstr ""
+msgstr "El valor de configuración de {0} debe ser una cadena de texto o NULL."
 
 msgid "The {0} configuration value should be one of the following: {1}."
-msgstr ""
+msgstr "El valor de configuración de {0} debe ser uno de los siguientes: {1}."
 
 msgid "Single-sign on was a success"
 msgstr "El inicio de sesión único fue un éxito"
 
 msgid "Users are unable to log in via Azure SSO."
-msgstr ""
+msgstr "Los usuarios no pueden iniciar sesión a través del SSO de Azure."
 
 msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
-msgstr ""
+msgstr "Esto puede ocurrir cuando el secreto del cliente de Azure AD ha caducado, o la configuración del SSO (credenciales del cliente) no es válida."
 
 msgid "See Azure error response below:"
-msgstr ""
+msgstr "Vea la respuesta de error de Azure a continuación:"
 
 msgid "Error: {0}"
-msgstr ""
+msgstr "Error: {0}"
 
 msgid "Error description: {0}"
-msgstr ""
+msgstr "Descripción del error: {0}"
 
 msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
-msgstr ""
+msgstr "Para solucionar esto, usted como administrador tiene que actualizar las credenciales del SSO de Azure."
 
 msgid "Update it in passbolt"
-msgstr ""
+msgstr "Actualizarlo en Passbolt"
 
 msgid "The client secret expiry date of your Azure AD instance is {0}."
-msgstr ""
+msgstr "La fecha de caducidad del secreto del cliente de su instancia de Azure AD es {0}."
 
 msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
-msgstr ""
+msgstr "Tenga en cuenta que los usuarios de Passbolt no podrán iniciar sesión a través del SSO de Azure después de la fecha de caducidad del cliente."
 
 msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
-msgstr ""
+msgstr "Le aconsejamos que solucione esto en el lado de Azure y actualice los últimos detalles en Passbolt."
 
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
 msgstr "El proveedor del SSO {0} ha sido probado y activado con éxito por {1}. "
