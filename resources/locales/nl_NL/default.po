@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-04-24 14:20\n"
+"POT-Creation-Date: 2024-07-17 04:36+0000\n"
+"PO-Revision-Date: 2024-07-18 11:45\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,9 @@ msgstr "De OpenPGP-serversleutel zoals gedefinieerd in de configuratie kan niet 
 
 msgid "Could not import the user OpenPGP key."
 msgstr "De OpenPGP-sleutel van de gebruiker kon niet geïmporteerd worden."
+
+msgid "Invalid verify token type."
+msgstr ""
 
 msgid "Invalid verify token format, "
 msgstr "Formaat verificatietoken is ongeldig, "
@@ -1273,9 +1276,6 @@ msgstr ""
 msgid "undefined"
 msgstr "ongedefinieerd"
 
-msgid "Could not connect to github repository"
-msgstr "Kan geen verbinding maken met het GitHub-depot"
-
 msgid "Could not read tag information on github repository"
 msgstr "De labelinformatie op het GitHub-depot kon niet gelezen worden"
 
@@ -1288,10 +1288,10 @@ msgstr ""
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
 msgstr ""
 
-msgid "Could not connect to passbolt repository to check versions"
+msgid "Could not connect to passbolt repository to check versions."
 msgstr ""
 
-msgid "It is not possible check if your version is up to date."
+msgid "It is not possible to check if your version is up-to-date."
 msgstr ""
 
 msgid "See https://www.passbolt.com/help/tech/update"
@@ -1462,7 +1462,7 @@ msgstr ""
 msgid "Run the install script to install the database tables"
 msgstr ""
 
-msgid "The database schema up to date."
+msgid "The database schema is up to date."
 msgstr ""
 
 msgid "The database schema is not up to date."
@@ -2359,6 +2359,12 @@ msgstr "Het verificatietoken is ongeldig."
 msgid "The route {0} is not permitted with JWT authentication."
 msgstr "De route {0} is niet toegestaan met JWT-authenticatie."
 
+msgid "The JWT public key could not be extracted."
+msgstr ""
+
+msgid "The JWT public key details could not be read."
+msgstr ""
+
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "Het sleutelpaar voor JWT-authenticatie is niet compleet."
 
@@ -2840,9 +2846,6 @@ msgid "Could not validate Duo configuration"
 msgstr "De Duo-configuratie kon niet worden gevalideerd"
 
 msgid "The property {0} is visible by administrators only."
-msgstr ""
-
-msgid "The property {0} should be contained in order to filter by {1}."
 msgstr ""
 
 msgid "The MFA token provided does not exist or is inactive."
@@ -3499,6 +3502,18 @@ msgstr ""
 msgid "Status: {0}"
 msgstr ""
 
+msgid "The sslVerifyPeer configuration should be a boolean."
+msgstr ""
+
+msgid "The sslVerifyPeerName configuration should be a boolean."
+msgstr ""
+
+msgid "The sslAllowSelfSigned configuration should be a boolean."
+msgstr ""
+
+msgid "The sslCafile configuration should be NULL or string."
+msgstr ""
+
 msgid "A sender name is required."
 msgstr "De naam van een afzender is vereist."
 
@@ -3571,6 +3586,18 @@ msgstr ""
 msgid "The client should be a valid IP or a valid domain."
 msgstr ""
 
+msgid "No custom SSL configuration for SMTP server."
+msgstr ""
+
+msgid "Custom SSL certificate options for SMTP server is in use."
+msgstr ""
+
+msgid "Custom SSL configuration options set are invalid."
+msgstr ""
+
+msgid "SSL certification validation for SMTP server is disabled."
+msgstr ""
+
 msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr ""
 
@@ -3627,6 +3654,12 @@ msgstr "Gefeliciteerd!"
 
 msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
 msgstr "Als je deze e-mail ontvangt, betekent dit dat de Passbolt SMTP-configuratie naar behoren werkt."
+
+msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
+msgstr ""
+
+msgid "Errors: "
+msgstr "Foutmeldingen: "
 
 msgid "The data entered are not correct"
 msgstr "De ingevoerde gegevens zijn niet juist"
