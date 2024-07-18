@@ -1,6 +1,8 @@
-Release song: TBD
+Release song: https://youtu.be/zUzd9KyIDrM?si=bPS9Qu1t351eZEHH
 
-Passbolt v4.9.0-test.2
+Passbolt is pleased to announce that the v4.9.0 Release Candidate is officially available for testing.
+This maintenance release aims to improve performance, notably 40% improvements of the resources & users endpoints. In addition, the directory sync plugin now supports disabling the user instead of deleting them. On the browser extension side, the grid now shows the folder location and a much-awaited feature on the ability to search folders.
+As always, your feedback is invaluable, so please share and report any issues you come across.
 
 ## [4.9.0-test.2] - 2024-07-17
 ### Added
