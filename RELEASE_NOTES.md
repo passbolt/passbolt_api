@@ -1,8 +1,10 @@
-Release song: TBD
+Release song: https://youtu.be/zUzd9KyIDrM?si=bPS9Qu1t351eZEHH
 
-Passbolt v4.9.0-test.2
+Passbolt is pleased to announce that the v4.9.0 Release Candidate is officially available for testing.
+This maintenance release aims to improve performance, notably 40% improvements of the resources & users endpoints. On the browser extension side, the grid now shows the folder location and a much-awaited feature on the ability to search folders.
+As always, your feedback is invaluable, so please share and report any issues you come across.
 
-## [4.9.0-test.2] - 2024-07-17
+## [4.9.0-rc.1] - 2024-07-18
 ### Added
 - PB-33690 Improves response times by adding an index to gpgkeys.user_id column
 - PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
