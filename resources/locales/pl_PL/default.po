@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-07-18 11:41\n"
+"PO-Revision-Date: 2024-07-18 18:19\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -5186,31 +5186,31 @@ msgid "Directory Sync"
 msgstr "Synchronizacja katalogu"
 
 msgid "Subscription key format error."
-msgstr ""
+msgstr "Błąd formatu klucza subskrypcji."
 
 msgid "Subscription key signature error."
-msgstr ""
+msgstr "Błąd podpisu klucza subskrypcji."
 
 msgid "Subscription key validation error."
-msgstr ""
+msgstr "Błąd walidacji klucza subskrypcji."
 
 msgid "It looks like you could use some help."
-msgstr ""
+msgstr "Chyba przydałaby Ci się pomoc."
 
 msgid "We are here for you. You can contact us at sales@passbolt.com"
-msgstr ""
+msgstr "Wyciągniemy pomocną dłoń. Napisz do nas na adres sales@passbolt.com"
 
 msgid "Thanks for choosing Passbolt Pro"
-msgstr ""
+msgstr "Dziękujemy za skorzystanie z Passbolt Pro"
 
 msgid "Below are your subscription key details"
-msgstr ""
+msgstr "Poniżej znajdziesz szczegóły klucza subskrypcji"
 
 msgid "<error>Not Available</error>"
-msgstr ""
+msgstr "<error>Niedostępne</error>"
 
 msgid "Customer id:\t{0}"
-msgstr ""
+msgstr "Id klienta: {0}"
 
 msgid "<error>{0} (currently: {1}) - Exceeded</error>"
 msgstr ""
