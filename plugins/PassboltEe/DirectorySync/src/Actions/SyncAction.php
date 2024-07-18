@@ -694,6 +694,7 @@ abstract class SyncAction
                 'disabled' => null,
                 'modified' => FrozenTime::now(),
             ], ['id' => $existingEntity->id]);
+            $this->DirectoryEntries->updateForeignKey($entry, $existingEntity->id);
             $reportData = $this->getTable()->get($existingEntity->id);
             $status = Alias::STATUS_SUCCESS;
             $msg = __(
