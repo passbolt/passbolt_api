@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-05-02 04:25\n"
+"POT-Creation-Date: 2024-07-17 04:36+0000\n"
+"PO-Revision-Date: 2024-07-18 11:45\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,9 @@ msgstr "구성에서 정의한 OpenPGP 서버 키를 사용하여 복호화할 �
 
 msgid "Could not import the user OpenPGP key."
 msgstr "사용자 OpenPGP 키를 가져올 수 없습니다."
+
+msgid "Invalid verify token type."
+msgstr ""
 
 msgid "Invalid verify token format, "
 msgstr "토큰 형식이 확인이 잘못되었습니다, "
@@ -1034,7 +1037,7 @@ msgid "You added the password {0}"
 msgstr "{0} 암호가 추가되었습니다"
 
 msgid "{0} deleted the password {1}"
-msgstr "{0} 에 의해 {1} 비밀번호가 삭제됨"
+msgstr "{0} 에 의해 {1} 암호가 삭제됨"
 
 msgid "You edited the password {0}"
 msgstr "{0} 암호를 수정함"
@@ -1046,7 +1049,7 @@ msgid "{0} can not complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다."
 
 msgid "{0} shared the password {1}"
-msgstr "{0} 에 의해 {1} 비밀번호가 공유됨"
+msgstr "{0} 에 의해 {1} 암호가 공유됨"
 
 msgid "You deleted administrator {0}"
 msgstr "관리자 {0} 이(가) 삭제됨"
@@ -1127,16 +1130,16 @@ msgid "The send on group manager request add user should be a boolean."
 msgstr "그룹에 관리자 요청시 보내기 설정은 부울이어야 합니다."
 
 msgid "The send on password created setting should be a boolean."
-msgstr "비밀번호 생성시 보내기 설정은 부울이어야 합니다."
+msgstr "암호 생성 시 보내기 설정은 참 또는 거짓이어야 합니다."
 
 msgid "The send on password shared setting should be a boolean."
-msgstr "비밀번호 공유시 보내기 설정은 부울이어야 합니다."
+msgstr "암호 공유 시 보내기 설정은 참 또는 거짓이어야 합니다."
 
 msgid "The send on password updated setting should be a boolean."
-msgstr "비밀번호 수정시 보내기 설정은 부울이어야 합니다."
+msgstr "암호 수정 시 보내기 설정은 참 또는 거짓이어야 합니다."
 
 msgid "The send on password deleted setting should be a boolean."
-msgstr "비밀번호 삭제시 보내기 설정은 부울이어야 합니다."
+msgstr "암호 삭제 시 보내기 설정은 참 또는 거짓이어야 합니다."
 
 msgid "The send on user created setting should be a boolean."
 msgstr "사용자 생성시 보내기 설정은 부울이어야 합니다."
@@ -1273,9 +1276,6 @@ msgstr "{0}에서 passbolt.js.build를 프로덕션으로 설정"
 msgid "undefined"
 msgstr "미정"
 
-msgid "Could not connect to github repository"
-msgstr "github 리포지토리에 연결할 수 없습니다."
-
 msgid "Could not read tag information on github repository"
 msgstr "github 리포지토리에 태그 정보를 읽을 수 없습니다."
 
@@ -1288,11 +1288,11 @@ msgstr "버전을 확인하기 위해 패스볼트 저장소에 연결할 수 �
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
 msgstr "이 설치는 최신 상태가 아닙니다. 현재 {0}을(를) 사용하고 있으며 {1}이어야 합니다."
 
-msgid "Could not connect to passbolt repository to check versions"
-msgstr "버전을 확인하기 위해 패스볼트 저장소에 연결할 수 없습니다"
+msgid "Could not connect to passbolt repository to check versions."
+msgstr "버전을 확인하기 위해 패스볼트 저장소에 연결할 수 없습니다."
 
-msgid "It is not possible check if your version is up to date."
-msgstr "버전이 최신인지 확인할 수 없습니다."
+msgid "It is not possible to check if your version is up-to-date."
+msgstr ""
 
 msgid "See https://www.passbolt.com/help/tech/update"
 msgstr "https://www.passbolt.com/help/tech/update 를 참조하세요."
@@ -1448,7 +1448,7 @@ msgid "Ensure that the driver defined in {0} is one of the following: {1}."
 msgstr "{0} 에 정의된 드라이버가 다음 중 하나인지 확인하세요: {1}."
 
 msgid "Double check the host, database name, username and password in {0}."
-msgstr "{0} 에서 호스트, 데이터베이스 이름, 사용자 이름 및 비밀번호를 다시 확인하세요."
+msgstr "{0} 에서 호스트, 데이터베이스 이름, 사용자 이름 및 암호를 다시 확인하세요."
 
 msgid "Make sure the database exists and is accessible for the given database user."
 msgstr "데이터베이스가 존재하고 지정된 데이터베이스 사용자가 접근할 수 있는지 확인하십시오."
@@ -1462,8 +1462,8 @@ msgstr "기본 콘텐츠를 찾을 수 없습니다."
 msgid "Run the install script to install the database tables"
 msgstr "설치 스크립트를 실행하여 데이터베이스 테이블을 설치하세요"
 
-msgid "The database schema up to date."
-msgstr "데이터베이스 스키마가 최신 상태입니다."
+msgid "The database schema is up to date."
+msgstr ""
 
 msgid "The database schema is not up to date."
 msgstr "데이터베이스 스키마가 최신 상태가 아닙니다."
@@ -1568,7 +1568,7 @@ msgid "The public key cannot be used to encrypt a message"
 msgstr "공개 키는 메시지를 해독하는 데 사용할 수 없습니다."
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr "서버 개인 키가 유효한지, 암호가 없는지 확인하세요."
+msgstr "서버 개인 키가 유효한지, 패스프레이즈가 없는지 확인하세요."
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
 msgstr "웹 서버 사용자의 키링에 있는 개인 서버 키를 가져왔는지 확인하세요."
@@ -2359,6 +2359,12 @@ msgstr "확인 토큰이 잘못되었습니다"
 msgid "The route {0} is not permitted with JWT authentication."
 msgstr "경로 {0} 이(가) JWT 인증에 허용되지 않습니다."
 
+msgid "The JWT public key could not be extracted."
+msgstr ""
+
+msgid "The JWT public key details could not be read."
+msgstr ""
+
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "JWT 인증 키 쌍이 완전하지 않습니다."
 
@@ -2842,9 +2848,6 @@ msgstr "Duo 구성을 검사할 수 없습니다."
 msgid "The property {0} is visible by administrators only."
 msgstr "{0} 속성은 관리자만 볼 수 있습니다."
 
-msgid "The property {0} should be contained in order to filter by {1}."
-msgstr "{1} 을(를) 기준으로 필터링하려면 {0} 속성이 포함되어야 합니다."
-
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "제공된 다단계인증 토큰이 없거나 비활성 상태입니다."
 
@@ -3050,7 +3053,7 @@ msgid "Multi-factor authentication settings were reset for your account by an ad
 msgstr "관리자가 다단계 인증 설정을 재설정했습니다."
 
 msgid "Please contact your administrator if you didn't request this action."
-msgstr "이 작업을 요청하지 않은 경우 관리자에게 문의하십시오."
+msgstr "이 작업을 요청하지 않은 경우 관리자에게 문의하세요."
 
 msgid "Log in passbolt"
 msgstr "패스볼트 로그인"
@@ -3080,7 +3083,7 @@ msgid "{0} edited the password expiry settings"
 msgstr "{0} 이(가) 암호 만료 설정을 수정했습니다"
 
 msgid "The send password expire setting should be a boolean."
-msgstr "암호 만료 보내기 설정은 부울이어야 합니다."
+msgstr "암호 만료 보내기 설정은 참 또는 거짓이어야 합니다."
 
 msgid "The password expiry setting does not exist."
 msgstr "암호 만료 설정이 없습니다."
@@ -3499,6 +3502,18 @@ msgstr "{0} 이(가) 자체 등록 설정을 업데이트했습니다"
 msgid "Status: {0}"
 msgstr "상태: {0}"
 
+msgid "The sslVerifyPeer configuration should be a boolean."
+msgstr ""
+
+msgid "The sslVerifyPeerName configuration should be a boolean."
+msgstr ""
+
+msgid "The sslAllowSelfSigned configuration should be a boolean."
+msgstr ""
+
+msgid "The sslCafile configuration should be NULL or string."
+msgstr ""
+
 msgid "A sender name is required."
 msgstr "보내는 사람 이름이 필요합니다."
 
@@ -3571,6 +3586,18 @@ msgstr "SMTP 설정 엔드포인트를 사용할 수 없습니다."
 msgid "The client should be a valid IP or a valid domain."
 msgstr "클라이언트는 올바른 IP 또는 도메인이어야 합니다."
 
+msgid "No custom SSL configuration for SMTP server."
+msgstr ""
+
+msgid "Custom SSL certificate options for SMTP server is in use."
+msgstr ""
+
+msgid "Custom SSL configuration options set are invalid."
+msgstr ""
+
+msgid "SSL certification validation for SMTP server is disabled."
+msgstr ""
+
 msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr "SMTP 설정이 일관됩니다. 이를 확인하기 위해 테스트 이메일을 보낼 수 있습니다."
 
@@ -3627,6 +3654,12 @@ msgstr "축하합니다!"
 
 msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
 msgstr "이 이메일을 수신하면 패스볼트 smtp 구성이 올바르게 작동 중임을 의미합니다."
+
+msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
+msgstr ""
+
+msgid "Errors: "
+msgstr "오류: "
 
 msgid "The data entered are not correct"
 msgstr "입력한 데이터가 올바르지 않습니다"
@@ -4169,7 +4202,7 @@ msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
-msgstr "이 사용자는 개인키 및(또는) 암호를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
+msgstr "이 사용자는 개인키 및(또는) 패스프레이즈를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
 
 msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
 msgstr "안타깝게도 계정을 삭제하고 처음부터 다시 시작하려면 귀하의 도움이 필요합니다."
@@ -4367,7 +4400,7 @@ msgid "This email is an automatic notification sent by"
 msgstr "이 이메일은 다음에서 자동으로 발송되는 알림입니다."
 
 msgid "You can disable these notifications by requesting an administrator to delete your account."
-msgstr "관리자에게 계정 삭제를 요청하여 이러한 알림을 비활성화할 수 있습니다."
+msgstr "이 알림을 비활성화하려면 관리자에게 계정 삭제 요청을 하세요."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "{0} 로케일이 잘못되었거나 지원되지 않습니다."
