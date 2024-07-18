@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-07-18 18:19\n"
+"PO-Revision-Date: 2024-07-18 19:26\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -5213,28 +5213,28 @@ msgid "Customer id:\t{0}"
 msgstr "Id klienta: {0}"
 
 msgid "<error>{0} (currently: {1}) - Exceeded</error>"
-msgstr ""
+msgstr "<error>{0} (obecnie: {1}) - Przekroczono</error>"
 
 msgid "<info>{0} (currently: {1})</info>"
-msgstr ""
+msgstr "<info>{0} (obecnie: {1})</info>"
 
 msgid "Users limit:\t{0}"
-msgstr ""
+msgstr "Limit użytkowników:\t{0}"
 
 msgid "Valid from:\t<info>{0}</info>"
-msgstr ""
+msgstr "Ważne od:\t<info>{0}</info>"
 
 msgid "Expires on:\t<error>{0} (expired)</error>"
-msgstr ""
+msgstr "Wygasa:\t<error>{0} (wygasły)</error>"
 
 msgid "Expires on:\t<info>{0} (in {1} days)</info>"
-msgstr ""
+msgstr "Wygasa:\t<info>{0} (w {1} dni)</info>"
 
 msgid "For any question / feedback / subscription renewal,"
-msgstr ""
+msgstr "Jeśli chcesz o coś zapytać / wysłać opinię / odnowić subskrypcję,"
 
 msgid "kindly contact us at <info>sales@passbolt.com</info>"
-msgstr ""
+msgstr "skontaktuj się z nami pod adresem <info>sales@passbolt.com</info>"
 
 msgid "Only administrators can view the subscription details."
 msgstr "Tylko administratorzy mogą przeglądać szczegóły subskrypcji."
@@ -5297,7 +5297,7 @@ msgid "Some of your passwords are expiring in {0} days."
 msgstr "Niektóre twoje hasła wygasają za {0} dni."
 
 msgid "Some of your passwords are expired or expiring in {0} days."
-msgstr ""
+msgstr "Niektóre twoje hasła są nieważne lub wygasają za {0} dni."
 
 msgid "The send password about to expire setting should be a boolean."
 msgstr "Ustawienie wysyłki po zbliżającym się terminie wygaszenia hasła powinno być wartością logiczną."
@@ -5792,7 +5792,7 @@ msgid "See Azure error response below:"
 msgstr ""
 
 msgid "Error: {0}"
-msgstr ""
+msgstr "Błąd: {0}"
 
 msgid "Error description: {0}"
 msgstr ""
