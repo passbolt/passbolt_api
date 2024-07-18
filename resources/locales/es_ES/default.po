@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-18 11:45\n"
+"PO-Revision-Date: 2024-07-18 12:42\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -3509,10 +3509,10 @@ msgid "The sslVerifyPeerName configuration should be a boolean."
 msgstr "La configuración de sslVerifyPeerName debe ser un booleano."
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr "La configuración sslAllowSelfSigned debe ser un booleano."
+msgstr "La configuración de sslAllowSelfSigned debe ser un booleano."
 
 msgid "The sslCafile configuration should be NULL or string."
-msgstr ""
+msgstr "La configuración de sslCafile debe ser NULL o una cadena de texto."
 
 msgid "A sender name is required."
 msgstr "Se requiere un nombre de remitente."
@@ -3596,7 +3596,7 @@ msgid "Custom SSL configuration options set are invalid."
 msgstr "Las opciones de configuración SSL personalizadas no son válidas."
 
 msgid "SSL certification validation for SMTP server is disabled."
-msgstr ""
+msgstr "La validación de la certificación SSL para el servidor SMTP está desactivada."
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr "Configuración SMTP coherente. Puede enviar un correo electrónico de prueba para validarlos."
@@ -3656,7 +3656,7 @@ msgid "If you receive this email, it means that your passbolt smtp configuration
 msgstr "Si recibe este correo electrónico, significa que su configuración smtp de passbolt funciona bien."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
-msgstr ""
+msgstr "Valores de configuración `passbolt.plugins.smtpSettings.security` no válidos."
 
 msgid "Errors: "
 msgstr "Errores: "
