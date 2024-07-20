@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-18 11:45\n"
+"PO-Revision-Date: 2024-07-20 21:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid "Could not import the user OpenPGP key."
 msgstr "Nie udało się importować klucza użytkownika OpenPGP."
 
 msgid "Invalid verify token type."
-msgstr ""
+msgstr "Nieprawidłowy typ tokenu weryfikacyjnego."
 
 msgid "Invalid verify token format, "
 msgstr "Nieprawidłowy format tokenu weryfikującego, "
@@ -1292,7 +1292,7 @@ msgid "Could not connect to passbolt repository to check versions."
 msgstr "Nie udało się połączyć z repozytorium passbolt w celu sprawdzenia wersji."
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "Nie można sprawdzić, czy Twoja wersja jest aktualna."
 
 msgid "See https://www.passbolt.com/help/tech/update"
 msgstr "Sprawdź https://www.passbolt.com/help/tech/update"
@@ -1463,7 +1463,7 @@ msgid "Run the install script to install the database tables"
 msgstr "Uruchom skrypt instalacyjny, aby zainstalować tabele bazy danych"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "Schemat bazy danych jest aktualny."
 
 msgid "The database schema is not up to date."
 msgstr "Schemat bazy danych nie jest aktualny."
@@ -1526,13 +1526,13 @@ msgid "PHP version less than {0} will soon be not supported by passbolt, so cons
 msgstr "Wersja PHP starsza niż {0} wkrótce nie będzie obsługiwana przez passbolt, więc pomyśl o zakutalizowaniu systemu operacyjnego lub środowiska PHP."
 
 msgid "PCRE compiled with unicode support."
-msgstr ""
+msgstr "PCRE skompilowany z obsługą unicode."
 
 msgid "PCRE has not been compiled with Unicode support."
-msgstr ""
+msgstr "PCRE nie został skompilowany z obsługą Unicode."
 
 msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
-msgstr ""
+msgstr "Przekompiluj PCRE z obsługą Unicode, dodając --enable-unicode-properties podczas konfiguracji."
 
 msgid "PHP version {0}."
 msgstr "Wersja PHP {0}."
@@ -1673,13 +1673,13 @@ msgid "Ensure the private key file is defined by the variable passbolt.gpg.serve
 msgstr ""
 
 msgid "Ensure there is a private key armored block in the key file."
-msgstr ""
+msgstr "Upewnij się, że w pliku klucza jest blok opancerzony przez klucz prywatny."
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
 msgstr "Upewnij się, że prywatny klucz zdefiniowany w {0} istnieje, i że użytkownicy serwera WWW mają do niego dostęp."
 
 msgid "There is a valid email id defined for the server key."
-msgstr ""
+msgstr "Istnieje poprawny identyfikator adresu e-mail dla klucza serwera."
 
 msgid "The server key does not have a valid email id."
 msgstr "Klucz serwera nie posiada prawidłowego identyfikatora e-maila."
@@ -1703,7 +1703,7 @@ msgid "Ensure the public key file is defined by the variable passbolt.gpg.server
 msgstr ""
 
 msgid "Ensure there is a public key armored block in the key file."
-msgstr ""
+msgstr "Upewnij się, że w pliku klucza jest blok opancerzony przez klucz publiczny."
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
 msgstr "Upewnij się, że publiczny klucz zdefiniowany w {0} istnieje, i że użytkownicy serwera WWW mają do niego dostęp."
@@ -2360,10 +2360,10 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "Ścieżka {0} jest niedozwolona w ramach uwierzytelniania JWT."
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "Nie udało się wyodrębnić publicznego klucza JWT."
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "Nie udało się odczytać szczegółów publicznego klucza JWT."
 
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "Para kluczy dla uwierzytelnienia JWT jest niekompletna."
@@ -2444,7 +2444,7 @@ msgid "This is not a valid {0}."
 msgstr "To nie jest prawidłowe {0}."
 
 msgid "The locale should be a string."
-msgstr ""
+msgstr "Ustawienie regionalne powinno być ciągiem."
 
 msgid "The strategy should extend the class: {0}"
 msgstr "Strategia powinna rozszerzyć klasę: {0}"
@@ -3503,13 +3503,13 @@ msgid "Status: {0}"
 msgstr "Status: {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
-msgstr ""
+msgstr "Konfiguracja sslVerifyPeer powinna być wartością logiczną."
 
 msgid "The sslVerifyPeerName configuration should be a boolean."
-msgstr ""
+msgstr "Konfiguracja sslVerifyPeerName powinna być wartością logiczną."
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr ""
+msgstr "Konfiguracja sslAllowSelfSigned powinna być wartością logiczną."
 
 msgid "The sslCafile configuration should be NULL or string."
 msgstr ""
@@ -3614,7 +3614,7 @@ msgid "It is recommended to disable the plugin endpoints."
 msgstr ""
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "Ustaw zmienną środowiskową PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED na wartość true."
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
 msgstr ""
@@ -4283,7 +4283,7 @@ msgid "There was a change in the user directory."
 msgstr "Nastąpiła zmiana w katalogu użytkowników."
 
 msgid "You have been requested to add members to a group."
-msgstr ""
+msgstr "Poproszono Cię o dodanie członków do grupy."
 
 msgid "{0} requested you to add members to a group"
 msgstr "Użytkownik {0} poprosił Cię o dodanie członków do grupy"
@@ -4403,7 +4403,7 @@ msgid "You can disable these notifications by requesting an administrator to del
 msgstr "Możesz wyłączyć te powiadomiena, prosząc administratora o usunięcie Twojego konta."
 
 msgid "The locale {0} is not valid or not supported."
-msgstr "Lokalizacja [{0}] jest nieprawidłowa lub nie jest obsługiwana."
+msgstr "Ustawienie regionalne {0} jest nieprawidłowe lub nie jest obsługiwane."
 
 msgid "An Internal Error Has Occurred"
 msgstr "Wystąpił błąd wewnętrzny"
