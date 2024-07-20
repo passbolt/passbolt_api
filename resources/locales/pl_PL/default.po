@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-20 21:24\n"
+"PO-Revision-Date: 2024-07-20 22:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -1748,10 +1748,10 @@ msgid "Enable the plugin in order to define SMTP settings in the database."
 msgstr ""
 
 msgid "Hostname is matching in SSL certificate."
-msgstr ""
+msgstr "Nazwa hosta pasuje do certyfikatu SSL."
 
 msgid "Hostname does not match when validating certificates."
-msgstr ""
+msgstr "Nazwa hosta nie pasuje do certyfikatu SSL."
 
 msgid "SSL access is enabled."
 msgstr "Dostęp SSL jest włączony."
@@ -1766,10 +1766,10 @@ msgid "Using a self-signed certificate."
 msgstr ""
 
 msgid "SSL peer certificate validates."
-msgstr ""
+msgstr "Równorzędny certyfikat SSL przechodzi weryfikację."
 
 msgid "SSL peer certificate does not validate."
-msgstr ""
+msgstr "Równorzędny certyfikat SSL nie przechodzi weryfikacji."
 
 msgid "Could not validate sub key data."
 msgstr "Nie udało się zweryfikować danych podklucza."
@@ -3587,16 +3587,16 @@ msgid "The client should be a valid IP or a valid domain."
 msgstr "Klient powinien być prawidłowym adresem IP lub prawidłową domeną."
 
 msgid "No custom SSL configuration for SMTP server."
-msgstr ""
+msgstr "Brak niestandardowej konfiguracji SSL dla serwera SMTP."
 
 msgid "Custom SSL certificate options for SMTP server is in use."
-msgstr ""
+msgstr "Niestandardowe opcje konfiguracji SSL dla serwera SMTP są w użyciu."
 
 msgid "Custom SSL configuration options set are invalid."
-msgstr ""
+msgstr "Ustawione niestandardowe opcje konfiguracji SSL są nieprawidłowe."
 
 msgid "SSL certification validation for SMTP server is disabled."
-msgstr ""
+msgstr "Walidacja certyfikacji SSL dla serwera SMTP jest wyłączona."
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr ""
@@ -3611,7 +3611,7 @@ msgid "The {0} plugin endpoints are enabled."
 msgstr ""
 
 msgid "It is recommended to disable the plugin endpoints."
-msgstr ""
+msgstr "Zalecamy wyłączyć endpointy wtyczki."
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
 msgstr "Ustaw zmienną środowiskową PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED na wartość true."
@@ -3656,7 +3656,7 @@ msgid "If you receive this email, it means that your passbolt smtp configuration
 msgstr "Jeśli przysłaliśmy Ci tę wiadomość, to znaczy, że Twoja konfiguracja SMTP dla passbolt działa bez zarzutu."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
-msgstr ""
+msgstr "Nieprawidłowe wartości konfiguracji `passbolt.plugins.smtpSettings.security`."
 
 msgid "Errors: "
 msgstr "Błędy: "
