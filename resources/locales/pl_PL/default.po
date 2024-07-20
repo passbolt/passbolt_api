@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-07-20 19:24\n"
+"PO-Revision-Date: 2024-07-20 20:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -5303,10 +5303,10 @@ msgid "The send password about to expire setting should be a boolean."
 msgstr "Ustawienie wysyłki po zbliżającym się terminie wygaszenia hasła powinno być wartością logiczną."
 
 msgid "Password expiry is not activated."
-msgstr ""
+msgstr "Wygasanie hasła nie zostało aktywowane."
 
 msgid "Password expiry email notifications are disabled."
-msgstr ""
+msgstr "Powiadomienia e-mail o wygasaniu hasła są wyłączone."
 
 msgid "An array of arrays is expected."
 msgstr "Oczekujemy szeregu różnych szeregów."
@@ -5600,7 +5600,7 @@ msgid "{0} deleted the SSO setting"
 msgstr "Użytkownik {0} usunął ustawienia SSO"
 
 msgid "Users are unable to log in via Azure SSO"
-msgstr ""
+msgstr "Użytkownicy nie mogą zalogować się przez Azure SSO"
 
 msgid "Single sign-on failed."
 msgstr "Pojedyncze logowanie nie powiodło się."
@@ -5609,13 +5609,13 @@ msgid "Provider error: \"{0}\""
 msgstr "Błąd dostawcy: \"{0}\""
 
 msgid "Azure SSO secret expiry date is near"
-msgstr ""
+msgstr "Zbliża się data wygaśnięcia sekretu Azure SSO"
 
 msgid "SSL certification validation for SSO instance is enabled."
-msgstr ""
+msgstr "Weryfikacja certyfikacji SSL dla instancji SSO jest włączona."
 
 msgid "SSL certification validation for SSO instance is disabled."
-msgstr ""
+msgstr "Weryfikacja certyfikacji SSL dla instancji SSO jest wyłączona."
 
 msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
 msgstr "Aby to naprawić, możesz ustawić zmienną środowiskową PASSBOLT_SECURITY_SSL_VERIFY na wartość true."
@@ -5774,10 +5774,10 @@ msgid "Unable to decode JWT token."
 msgstr "Nie można zdekodować tokena JWT."
 
 msgid "The {0} configuration value should be a string or NULL."
-msgstr ""
+msgstr "Wartość konfiguracji {0} powinna być ciągiem znaków lub NULL."
 
 msgid "The {0} configuration value should be one of the following: {1}."
-msgstr ""
+msgstr "Wartość konfiguracji {0} powinna być jednym z następujących: {1}."
 
 msgid "Single-sign on was a success"
 msgstr "Pojedyncze logowanie powiodło się"
@@ -5786,31 +5786,31 @@ msgid "Users are unable to log in via Azure SSO."
 msgstr "Użytkownicy nie mogą zalogować się przez Azure SSO."
 
 msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
-msgstr ""
+msgstr "Może się to zdarzyć, gdy sekret klienta Azure AD wygasł lub konfiguracje SSO (dane logowania klienta) są nieprawidłowe."
 
 msgid "See Azure error response below:"
-msgstr ""
+msgstr "Sprawdź poniższą odpowiedź na błąd Azure:"
 
 msgid "Error: {0}"
 msgstr "Błąd: {0}"
 
 msgid "Error description: {0}"
-msgstr ""
+msgstr "Opis błędu: {0}"
 
 msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
-msgstr ""
+msgstr "Aby to naprawić, musisz jako administrator zaktualizować dane uwierzytelniające Azure SSO."
 
 msgid "Update it in passbolt"
-msgstr ""
+msgstr "Zaktualizuj je w passbolt"
 
 msgid "The client secret expiry date of your Azure AD instance is {0}."
-msgstr ""
+msgstr "Data ważności sekretu klienta Twojej instancji Azure AD to {0}."
 
 msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
-msgstr ""
+msgstr "Pamiętaj, że użytkownicy passbolta nie będą mogli zalogować się przez Azure SSO po dacie wygaśnięcia klienta."
 
 msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
-msgstr ""
+msgstr "Zalecamy to naprawić po stronie Azure i zaktualizować najnowsze szczegóły w passbolt."
 
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
 msgstr "Dostawca SSO {0} został pomyślnie przetestowany i aktywowany przez {1}. "
