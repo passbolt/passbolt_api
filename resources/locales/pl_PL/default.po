@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-21 16:24\n"
+"PO-Revision-Date: 2024-07-21 17:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -1628,7 +1628,7 @@ msgid "Ensure the keyring location exists and is accessible by the webserver use
 msgstr "Upewnij się, że lokalizacja pęku kluczy istnieje i użytkownicy serwera WWW mają do niej wstęp."
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr ""
+msgstr "Możesz zmienić lokalizację pęku kluczy poprzez edycję zmiennych GPG.env.setenv i GPG.env.home w {0}."
 
 msgid "The directory {0} containing the keyring is writable by the webserver user."
 msgstr "Katalog {0} zawierający pęk kluczy umożliwia zapisywanie użytkownikom serwera WWW."
@@ -1661,7 +1661,7 @@ msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
 msgstr "Zainstaluj php-gnupg, zobacz http://php.net/manual/en/gnupg.installation.php"
 
 msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
-msgstr ""
+msgstr "Pamiętaj o dodaniu extension=gnupg.so w plikach ini php zarówno dla php-cli, jak i php."
 
 msgid "The private key file is defined in {0} and readable."
 msgstr "Plik prywatnego klucza serwera jest zdefiniowany w {0} i można go odczytać."
@@ -1670,7 +1670,7 @@ msgid "The private key file is not defined in {0} or not readable."
 msgstr "Plik prywatnego klucza serwera nie jest zdefiniowany w {0} lub nie można go odczytać."
 
 msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
-msgstr ""
+msgstr "Upewnij się, że plik klucza prywatnego jest zdefiniowany przez zmienną passbolt.gpg.serverKey.private w {0}."
 
 msgid "Ensure there is a private key armored block in the key file."
 msgstr "Upewnij się, że w pliku klucza jest blok opancerzony przez klucz prywatny."
@@ -1685,22 +1685,22 @@ msgid "The server key does not have a valid email id."
 msgstr "Klucz serwera nie posiada prawidłowego identyfikatora e-maila."
 
 msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr ""
+msgstr "Klucz publiczny serwera zdefiniowany w {0} (lub zmiennych środowiskowych) znajduje się w pęku kluczy."
 
 msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr ""
+msgstr "Klucz publiczny serwera zdefiniowany w {0} (lub zmiennych środowiskowych) nie znajduje się w pęku kluczy"
 
 msgid "Import the private server key in the keyring of the webserver user."
 msgstr "Zaimportuj prywatny klucz serwera do pęku kluczy użytkownika serwera WWW."
 
 msgid "The public key file is defined in {0} and readable."
-msgstr ""
+msgstr "Plik klucza publicznego jest zdefiniowany w {0} i można go odczytać."
 
 msgid "The public key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Plik klucza publicznego nie jest zdefiniowany w {0} lub nie można go odczytać."
 
 msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
-msgstr ""
+msgstr "Upewnij się, że plik klucza publicznego jest zdefiniowany przez zmienną passbolt.gpg.serverKey.public w {0}."
 
 msgid "Ensure there is a public key armored block in the key file."
 msgstr "Upewnij się, że w pliku klucza jest blok opancerzony przez klucz publiczny."
@@ -1745,7 +1745,7 @@ msgid "Set the environment variable {0} to true"
 msgstr "Ustaw zmienną środowiskową {0} na wartość true"
 
 msgid "Enable the plugin in order to define SMTP settings in the database."
-msgstr ""
+msgstr "Włącz wtyczkę, aby zdefiniować ustawienia SMTP w bazie danych."
 
 msgid "Hostname is matching in SSL certificate."
 msgstr "Nazwa hosta pasuje do certyfikatu SSL."
@@ -1760,10 +1760,10 @@ msgid "SSL access is not enabled. You can still proceed, but it is highly recomm
 msgstr "Nie włączono dostępu do SSL. Możesz działać dalej, ale najpierw zalecamy skonfigurować Twój serwer WWW pod obsługę protokołu HTTPS."
 
 msgid "Not using a self-signed certificate."
-msgstr ""
+msgstr "Nie używasz samodzielnie podpisanego certyfikatu."
 
 msgid "Using a self-signed certificate."
-msgstr ""
+msgstr "Używasz samodzielnie podpisanego certyfikatu."
 
 msgid "SSL peer certificate validates."
 msgstr "Równorzędny certyfikat SSL przechodzi weryfikację."
@@ -2390,7 +2390,7 @@ msgid "A valid JWT key pair is missing."
 msgstr "Brakuje prawidłowej pary kluczy JWT."
 
 msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
-msgstr ""
+msgstr "Uruchom skrypt stworzenia kluczy JWT, aby stworzyć prawidłową parę klucza publicznego i sekretu JWT:"
 
 msgid "The refresh token should be a valid UUID."
 msgstr "Token odświeżania powinien być prawidłowym UUID."
@@ -3326,7 +3326,7 @@ msgid "An entry already exists for the given role and action ids."
 msgstr "Wpis już istnieje dla podanych identyfikatorów roli i działania."
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "Funkcja kontrolna nie jest dozwolona dla tej akcji interfejsu."
 
 msgid "An action already exists for the given name."
 msgstr "Działanie już istnieje dla podanej nazwy."
@@ -3512,7 +3512,7 @@ msgid "The sslAllowSelfSigned configuration should be a boolean."
 msgstr "Konfiguracja sslAllowSelfSigned powinna być wartością logiczną."
 
 msgid "The sslCafile configuration should be NULL or string."
-msgstr ""
+msgstr "Konfiguracja sslCafile powinna być wartością NULL lub ciągiem."
 
 msgid "A sender name is required."
 msgstr "Nazwa nadawcy jest wymagana."
@@ -3599,16 +3599,16 @@ msgid "SSL certification validation for SMTP server is disabled."
 msgstr "Walidacja certyfikacji SSL dla serwera SMTP jest wyłączona."
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
-msgstr ""
+msgstr "Ustawienia SMTP spójne. Możesz wysłać testowego e-maila, aby je zweryfikować."
 
 msgid "SMTP Setting errors: {0}"
 msgstr "Błędy ustawień SMTP: {0}"
 
 msgid "The {0} plugin endpoints are disabled."
-msgstr ""
+msgstr "Endpointy wtyczki {0} są wyłączone."
 
 msgid "The {0} plugin endpoints are enabled."
-msgstr ""
+msgstr "Endpointy wtyczki {0} są włączone."
 
 msgid "It is recommended to disable the plugin endpoints."
 msgstr "Zalecamy wyłączyć endpointy wtyczki."
@@ -3617,7 +3617,7 @@ msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment va
 msgstr "Ustaw zmienną środowiskową PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED na wartość true."
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
-msgstr ""
+msgstr "Lub ustaw passbolt.security.smtpSettings.endpointsDisabled na wartość true w {0}."
 
 msgid "not found"
 msgstr "nie znaleziono"
@@ -3626,7 +3626,7 @@ msgid "The SMTP Settings source is: {0}."
 msgstr "Źródłem ustawień SMTP jest: {0}."
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
-msgstr ""
+msgstr "Zalecamy skonfiguorwać ustawienia SMTP w bazie danych przez sekcję administracyjną."
 
 msgid "database"
 msgstr "baza danych"
