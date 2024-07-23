@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-18 11:45\n"
+"PO-Revision-Date: 2024-07-23 02:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid "Could not import the user OpenPGP key."
 msgstr "사용자 OpenPGP 키를 가져올 수 없습니다."
 
 msgid "Invalid verify token type."
-msgstr ""
+msgstr "확인 토큰 유형이 잘못되었습니다."
 
 msgid "Invalid verify token format, "
 msgstr "토큰 형식이 확인이 잘못되었습니다, "
@@ -1292,7 +1292,7 @@ msgid "Could not connect to passbolt repository to check versions."
 msgstr "버전을 확인하기 위해 패스볼트 저장소에 연결할 수 없습니다."
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "버전이 최신인지 확인할 수 없습니다."
 
 msgid "See https://www.passbolt.com/help/tech/update"
 msgstr "https://www.passbolt.com/help/tech/update 를 참조하세요."
@@ -1463,7 +1463,7 @@ msgid "Run the install script to install the database tables"
 msgstr "설치 스크립트를 실행하여 데이터베이스 테이블을 설치하세요"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "데이터베이스 스키마가 최신 상태입니다."
 
 msgid "The database schema is not up to date."
 msgstr "데이터베이스 스키마가 최신 상태가 아닙니다."
@@ -2360,10 +2360,10 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "경로 {0} 이(가) JWT 인증에 허용되지 않습니다."
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "JWT 공개 키를 추출할 수 없습니다."
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "JWT 공개 키 세부정보를 읽을 수 없습니다."
 
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "JWT 인증 키 쌍이 완전하지 않습니다."
@@ -3503,13 +3503,13 @@ msgid "Status: {0}"
 msgstr "상태: {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
-msgstr ""
+msgstr "sslVerifyPeer 구성은 부울이어야 합니다."
 
 msgid "The sslVerifyPeerName configuration should be a boolean."
-msgstr ""
+msgstr "sslVerifyPeerName 구성은 부울이어야 합니다."
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr ""
+msgstr "sslAllowSelfSigned 구성은 부울이어야 합니다."
 
 msgid "The sslCafile configuration should be NULL or string."
 msgstr ""
