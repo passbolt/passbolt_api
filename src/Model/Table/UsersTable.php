@@ -30,6 +30,7 @@ use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -580,5 +581,27 @@ class UsersTable extends Table
         }
 
         return $user;
+    }
+
+    /**
+     * @param \App\Model\Entity\User $user user to disable
+     * @return \App\Model\Dto\EntitiesChangesDto
+     */
+    public function disableUser(User $user): EntitiesChangesDto
+    {
+        $entitiesChanges = new EntitiesChangesDto();
+        $Secrets = TableRegistry::getTableLocator()->get('Secrets');
+        $secretsToConsiderAsDeleted = $Secrets->find()
+            ->select(['id', 'user_id', 'resource_id'])
+            ->where(['user_id' => $user->id])
+            ->all()->toArray();
+        $entitiesChanges->pushDeletedEntities($secretsToConsiderAsDeleted);
+
+        $this->updateAll([
+            'disabled' => FrozenTime::now(),
+            'modified' => FrozenTime::now(),
+            ], ['id' => $user->id]);
+
+        return $entitiesChanges;
     }
 }

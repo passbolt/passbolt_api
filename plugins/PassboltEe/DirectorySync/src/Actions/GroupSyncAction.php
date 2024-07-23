@@ -596,6 +596,24 @@ class GroupSyncAction extends SyncAction
             /** @var \App\Model\Entity\GroupsUser|null $groupUserToDelete */
             $groupUserToDelete = $this->GroupsUsers->findById($groupUserId)->contain(['Users'])->first();
             $username = $groupUserToDelete->get('user')->username;
+
+            // If the users are disabled (and not deleted), we maintain the groups_users relation
+            if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
+                // Send report.
+                $this->addReportItem(new ActionReport(
+                    __(
+                        'The user {0} was not removed from the group {1} because they were or are being suspended.',
+                        $username,
+                        $group->name
+                    ),
+                    Alias::MODEL_GROUPS_USERS,
+                    Alias::ACTION_DELETE,
+                    Alias::STATUS_IGNORE,
+                    $group
+                ));
+                continue;
+            }
+
             try {
                 $entitiesChanges = $groupUserDeleteService->delete($uac, $groupUserToDelete->id);
                 $this->entitiesChangesDto->merge($entitiesChanges);
@@ -799,7 +817,7 @@ class GroupSyncAction extends SyncAction
     }
 
     /**
-     * @inheritDoc
+     * @return \App\Model\Table\GroupsTable
      */
     protected function getTable(): Table
     {

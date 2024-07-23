@@ -23,7 +23,9 @@ use App\Test\Lib\Utility\UserAccessControlTrait;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Multi\MfaTotpDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpUserOnlyScenario;
+use Passbolt\MultiFactorAuthentication\Test\Scenario\Yubikey\MfaYubikeyOrganizationOnlyScenario;
 
 class UsersIndexControllerTest extends MfaIntegrationTestCase
 {
@@ -101,7 +103,7 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
         RoleFactory::make()->guest()->persist();
         $admin = $this->logInAsAdmin();
         $userWithMfa = UserFactory::make()->user()->persist();
-        $this->loadFixtureScenario(MfaDuoScenario::class, $userWithMfa);
+        $this->loadFixtureScenario(MfaTotpDuoScenario::class, $userWithMfa);
 
         $this->getJson('/users.json?filter[is-mfa-enabled]=1&contain[is_mfa_enabled]=1');
         $this->assertSuccess();
@@ -123,11 +125,18 @@ class UsersIndexControllerTest extends MfaIntegrationTestCase
     /**
      * @return void
      */
-    public function testMfaUsersIndex_Is_Mfa_Enabled_Filter_Without_Contain_Should_Throw_Bad_Request()
+    public function testMfaUsersIndex_Is_Mfa_Enabled_Filter_Without_Contain_Should_Not_Throw_Exception()
     {
         RoleFactory::make()->guest()->persist();
-        $this->logInAsAdmin();
-        $this->getJson('/users.json?filter[is-mfa-enabled]=1');
-        $this->assertBadRequestError('The property is_mfa_enabled should be contained in order to filter by is-mfa-enabled.');
+        $admin = $this->logInAsAdmin();
+        $this->loadFixtureScenario(MfaYubikeyOrganizationOnlyScenario::class);
+
+        $this->getJson('/users.json?filter[is-mfa-enabled]=0');
+        $this->assertSuccess();
+        $responseJsonBody = (array)$this->_responseJsonBody;
+        $this->assertSame(1, count($responseJsonBody));
+        $userInResponse = array_pop($responseJsonBody);
+        $this->assertFalse(isset($userInResponse->is_mfa_enabled));
+        $this->assertSame($admin->get('id'), $userInResponse->id);
     }
 }

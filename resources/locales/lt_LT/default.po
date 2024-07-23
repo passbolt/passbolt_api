@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-04-24 04:41+0000\n"
-"PO-Revision-Date: 2024-04-25 11:59\n"
+"POT-Creation-Date: 2024-07-17 04:40+0000\n"
+"PO-Revision-Date: 2024-07-18 11:38\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Lithuanian\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,9 @@ msgstr "Konfigūracijoje apibrėžtas „OpenPGP“ serverio raktas negali būti
 
 msgid "Could not import the user OpenPGP key."
 msgstr "Nepavyko importuoti vartotojo „OpenPGP“ rakto."
+
+msgid "Invalid verify token type."
+msgstr ""
 
 msgid "Invalid verify token format, "
 msgstr "Neteisingas patvirtinimo prieigos rakto formatas,"
@@ -1279,9 +1282,6 @@ msgstr ""
 msgid "undefined"
 msgstr "neapibrėžtas"
 
-msgid "Could not connect to github repository"
-msgstr "Nepavyko prisijungti prie „github“ saugyklos"
-
 msgid "Could not read tag information on github repository"
 msgstr "Nepavyko nuskaityti žymos informacijos github.com saugykloje"
 
@@ -1294,10 +1294,10 @@ msgstr ""
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
 msgstr ""
 
-msgid "Could not connect to passbolt repository to check versions"
+msgid "Could not connect to passbolt repository to check versions."
 msgstr ""
 
-msgid "It is not possible check if your version is up to date."
+msgid "It is not possible to check if your version is up-to-date."
 msgstr ""
 
 msgid "See https://www.passbolt.com/help/tech/update"
@@ -1468,7 +1468,7 @@ msgstr ""
 msgid "Run the install script to install the database tables"
 msgstr ""
 
-msgid "The database schema up to date."
+msgid "The database schema is up to date."
 msgstr ""
 
 msgid "The database schema is not up to date."
@@ -2365,6 +2365,12 @@ msgstr "Patvirtinimo prieigos raktas neteisingas."
 msgid "The route {0} is not permitted with JWT authentication."
 msgstr "Kelias {0} neleidžiamas naudojant JWT autentifikavimą."
 
+msgid "The JWT public key could not be extracted."
+msgstr ""
+
+msgid "The JWT public key details could not be read."
+msgstr ""
+
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "JWT autentifikavimo raktų pora nėra baigta."
 
@@ -2846,9 +2852,6 @@ msgid "Could not validate Duo configuration"
 msgstr "Nepavyko patvirtinti „Duo“ konfigūracijos"
 
 msgid "The property {0} is visible by administrators only."
-msgstr ""
-
-msgid "The property {0} should be contained in order to filter by {1}."
 msgstr ""
 
 msgid "The MFA token provided does not exist or is inactive."
@@ -3505,6 +3508,18 @@ msgstr "{0} atnaujino savarankiškos registracijos nustatymus"
 msgid "Status: {0}"
 msgstr "Būsena: {0}"
 
+msgid "The sslVerifyPeer configuration should be a boolean."
+msgstr ""
+
+msgid "The sslVerifyPeerName configuration should be a boolean."
+msgstr ""
+
+msgid "The sslAllowSelfSigned configuration should be a boolean."
+msgstr ""
+
+msgid "The sslCafile configuration should be NULL or string."
+msgstr ""
+
 msgid "A sender name is required."
 msgstr "Būtina nurodyti siuntėjo vardą."
 
@@ -3577,6 +3592,18 @@ msgstr "SMTP nustatymų galiniai taškai išjungti.\n"
 msgid "The client should be a valid IP or a valid domain."
 msgstr "Klientas turi būti galiojantis IP arba galiojantis domenas."
 
+msgid "No custom SSL configuration for SMTP server."
+msgstr ""
+
+msgid "Custom SSL certificate options for SMTP server is in use."
+msgstr ""
+
+msgid "Custom SSL configuration options set are invalid."
+msgstr ""
+
+msgid "SSL certification validation for SMTP server is disabled."
+msgstr ""
+
 msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr ""
 
@@ -3633,6 +3660,12 @@ msgstr "Sveikinimai!"
 
 msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
 msgstr "Jei gavote šį el. laišką, tai reiškia, kad jūsų \"passbolt\" smtp konfigūracija veikia gerai."
+
+msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
+msgstr ""
+
+msgid "Errors: "
+msgstr "Klaidos: "
 
 msgid "The data entered are not correct"
 msgstr "Įvesti duomenys neteisingi"
@@ -4636,6 +4669,9 @@ msgstr "Naudotojo {0} nepavyko pridėti prie grupės {1} dėl vidinės klaidos."
 msgid "The user {0} cannot be added to the group {1} automatically. An email request was sent to the group manager(s) to do it manually."
 msgstr "Naudotojo {0} negalima automatiškai pridėti prie grupės {1}. Grupės vadovui (-ams) buvo išsiųstas prašymas tai padaryti rankiniu būdu."
 
+msgid "The user {0} was not removed from the group {1} because they were or are being suspended."
+msgstr ""
+
 msgid "The user {0} was successfully removed from the group {1}."
 msgstr "Naudotojas {0} sėkmingai pašalintas iš grupės {1}."
 
@@ -4663,6 +4699,9 @@ msgstr "Slaptažodis {0} {1} nebuvo ištrintas, nes pažymėtas kaip ignoruojama
 msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "Katalogas {0} {1} nebuvo ištrintas, nes jo nepaisoma."
 
+msgid "The directory {0} {1} was already suspended in passbolt."
+msgstr ""
+
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "Katalogas {0} {1} jau buvo ištrintas \"passbolt'e\"."
 
@@ -4672,8 +4711,14 @@ msgstr "Naudotojo {0} nepavyko ištrinti, nes jis yra vienintelis vieno ar daugi
 msgid "The {0} {1} could not be deleted because they are the only manager of one or more groups."
 msgstr "{0} {1} nepavyko ištrinti, nes jie yra vieninteliai vienos ar kelių grupių valdytojai."
 
+msgid "The {0} {1} was successfully suspended."
+msgstr ""
+
 msgid "The {0} {1} was successfully deleted."
 msgstr "{0} {1} sėkmingai ištrinta."
+
+msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
+msgstr ""
 
 msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
 msgstr "{0} {1} nepavyko ištrinti dėl vidinės klaidos. Pabandykite dar kartą vėliau."
@@ -4693,8 +4738,14 @@ msgstr "Nepavyko pridėti {0} {1} dėl duomenų tikrinimo problemų."
 msgid "The {0} {1} could not be added because of an internal error. Please try again later."
 msgstr "{0} {1} nepavyko pridėti dėl vidinės klaidos. Pabandykite dar kartą vėliau."
 
+msgid "The previously suspended {0} {1} was not unsuspended."
+msgstr ""
+
 msgid "The previously deleted {0} {1} was not re-added to passbolt."
 msgstr "Anksčiau ištrintas {0} {1} nebuvo iš naujo pridėtas prie slaptažodžio."
+
+msgid "The previously suspended {0} {1} was unsuspended."
+msgstr ""
 
 msgid "The previously deleted {0} {1} was re-added to passbolt."
 msgstr "Anksčiau ištrintas {0} {1} buvo iš naujo pridėtas prie slaptažodžio."
@@ -5023,6 +5074,24 @@ msgstr ""
 msgid "Or set {0} to true in {1}."
 msgstr ""
 
+msgid "SSL certification verification for LDAP server is enabled."
+msgstr ""
+
+msgid "SSL certification verification for LDAP server is disabled."
+msgstr ""
+
+msgid "Disabling the ssl verify check can lead to security attacks."
+msgstr ""
+
+msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
+msgstr ""
+
+msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
+msgstr ""
+
+msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
+msgstr ""
+
 msgid "A mapping rule for username attribute could not be found for directory type: {0}"
 msgstr ""
 
@@ -5114,6 +5183,57 @@ msgid "SSO"
 msgstr ""
 
 msgid "Directory Sync"
+msgstr ""
+
+msgid "Subscription key format error."
+msgstr ""
+
+msgid "Subscription key signature error."
+msgstr ""
+
+msgid "Subscription key validation error."
+msgstr ""
+
+msgid "It looks like you could use some help."
+msgstr ""
+
+msgid "We are here for you. You can contact us at sales@passbolt.com"
+msgstr ""
+
+msgid "Thanks for choosing Passbolt Pro"
+msgstr ""
+
+msgid "Below are your subscription key details"
+msgstr ""
+
+msgid "<error>Not Available</error>"
+msgstr ""
+
+msgid "Customer id:\t{0}"
+msgstr ""
+
+msgid "<error>{0} (currently: {1}) - Exceeded</error>"
+msgstr ""
+
+msgid "<info>{0} (currently: {1})</info>"
+msgstr ""
+
+msgid "Users limit:\t{0}"
+msgstr ""
+
+msgid "Valid from:\t<info>{0}</info>"
+msgstr ""
+
+msgid "Expires on:\t<error>{0} (expired)</error>"
+msgstr ""
+
+msgid "Expires on:\t<info>{0} (in {1} days)</info>"
+msgstr ""
+
+msgid "For any question / feedback / subscription renewal,"
+msgstr ""
+
+msgid "kindly contact us at <info>sales@passbolt.com</info>"
 msgstr ""
 
 msgid "Only administrators can view the subscription details."
@@ -5479,16 +5599,22 @@ msgstr ""
 msgid "{0} deleted the SSO setting"
 msgstr ""
 
+msgid "Users are unable to log in via Azure SSO"
+msgstr ""
+
+msgid "Single sign-on failed."
+msgstr "Vienkartinis prisijungimas nepavyko."
+
+msgid "Provider error: \"{0}\""
+msgstr "Teikėjo klaida: „{0}“\n"
+
+msgid "Azure SSO secret expiry date is near"
+msgstr ""
+
 msgid "SSL certification validation for SSO instance is enabled."
 msgstr ""
 
 msgid "SSL certification validation for SSO instance is disabled."
-msgstr ""
-
-msgid "Disabling the ssl verify check can lead to security attacks."
-msgstr ""
-
-msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
 msgstr ""
 
 msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
@@ -5499,12 +5625,6 @@ msgstr ""
 
 msgid "The user is missing for the SSO state."
 msgstr ""
-
-msgid "Single sign-on failed."
-msgstr "Vienkartinis prisijungimas nepavyko."
-
-msgid "Provider error: \"{0}\""
-msgstr "Teikėjo klaida: „{0}“\n"
 
 msgid "Email not provided by provider."
 msgstr "El. pašto adresas nepateiktas teikėjo.\n"
@@ -5653,7 +5773,43 @@ msgstr ""
 msgid "Unable to decode JWT token."
 msgstr ""
 
+msgid "The {0} configuration value should be a string or NULL."
+msgstr ""
+
+msgid "The {0} configuration value should be one of the following: {1}."
+msgstr ""
+
 msgid "Single-sign on was a success"
+msgstr ""
+
+msgid "Users are unable to log in via Azure SSO."
+msgstr ""
+
+msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
+msgstr ""
+
+msgid "See Azure error response below:"
+msgstr ""
+
+msgid "Error: {0}"
+msgstr ""
+
+msgid "Error description: {0}"
+msgstr ""
+
+msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
+msgstr ""
+
+msgid "Update it in passbolt"
+msgstr ""
+
+msgid "The client secret expiry date of your Azure AD instance is {0}."
+msgstr ""
+
+msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
+msgstr ""
+
+msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
 msgstr ""
 
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "

@@ -31,6 +31,7 @@ use Passbolt\DirectorySync\Command\IgnoreListCommand;
 use Passbolt\DirectorySync\Command\TestCommand;
 use Passbolt\DirectorySync\Command\UsersCommand;
 use Passbolt\DirectorySync\Service\Healthcheck\DirectorySyncEndpointsDisabledHealthcheck;
+use Passbolt\DirectorySync\Service\Healthcheck\SslVerifyPeerDirectorySyncHealthcheck;
 
 class DirectorySyncPlugin extends BasePlugin
 {
@@ -56,9 +57,11 @@ class DirectorySyncPlugin extends BasePlugin
 
         // Directory sync health checks
         $container->add(DirectorySyncEndpointsDisabledHealthcheck::class);
+        $container->add(SslVerifyPeerDirectorySyncHealthcheck::class);
         // Add directory sync health check services to collector
         $container
             ->extend(HealthcheckServiceCollector::class)
-            ->addMethodCall('addService', [DirectorySyncEndpointsDisabledHealthcheck::class]);
+            ->addMethodCall('addService', [DirectorySyncEndpointsDisabledHealthcheck::class])
+            ->addMethodCall('addService', [SslVerifyPeerDirectorySyncHealthcheck::class]);
     }
 }

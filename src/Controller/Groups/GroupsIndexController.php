@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
+use App\Database\Type\ISOFormatDateTimeType;
 
 /**
  * GroupsIndexController Class
@@ -53,8 +54,10 @@ class GroupsIndexController extends AppController
             $options['my_user_id'] = $this->User->id();
         }
 
-        // Retrieve the groups.
-        $groups = $groupsTable->findIndex($options);
+        // Performance improvement: map query result datetime properties to string.
+        ISOFormatDateTimeType::mapDatetimeTypesToMe();
+        $groups = $groupsTable->findIndex($options)->all();
+        ISOFormatDateTimeType::remapDatetimeTypesToDefault();
         $this->success(__('The operation was successful.'), $groups);
     }
 }

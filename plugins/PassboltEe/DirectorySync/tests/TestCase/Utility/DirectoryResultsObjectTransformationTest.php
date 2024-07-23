@@ -20,12 +20,12 @@ use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use LdapRecord\Models\Collection;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
-class DirectoryResultsObjectTransformationTest extends DirectorySyncIntegrationTestCase
+class DirectoryResultsObjectTransformationTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     /**
      * Assert that entry ids are generated on the fly if not provided by the directory.

@@ -18,6 +18,7 @@ namespace App\Controller\Users;
 
 use App\Controller\AppController;
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
+use App\Database\Type\ISOFormatDateTimeType;
 use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
@@ -92,6 +93,8 @@ class UsersIndexController extends AppController
 
         /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get('Users');
+        // Performance improvement: map query result datetime properties to string.
+        ISOFormatDateTimeType::mapDatetimeTypesToMe();
         $users = $Users->findIndex($this->User->role(), $computedFindIndexOptions);
 
         if ($this->isFeaturePluginEnabled('MultiFactorAuthentication')) {
@@ -103,6 +106,7 @@ class UsersIndexController extends AppController
         }
 
         $this->paginate($users);
+        ISOFormatDateTimeType::remapDatetimeTypesToDefault();
         $this->success(__('The operation was successful.'), $users);
     }
 

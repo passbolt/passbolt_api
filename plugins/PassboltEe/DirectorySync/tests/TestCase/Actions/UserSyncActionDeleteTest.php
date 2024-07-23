@@ -19,11 +19,11 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Utility\UuidFactory;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 
-class UserSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
+class UserSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     use AssertUsersTrait;
 

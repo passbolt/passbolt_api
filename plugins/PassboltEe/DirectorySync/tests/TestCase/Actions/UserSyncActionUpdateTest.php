@@ -19,11 +19,11 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use Cake\I18n\FrozenTime;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
 use Passbolt\DirectorySync\Utility\Alias;
 
-class UserSyncActionUpdateTest extends DirectorySyncIntegrationTestCase
+class UserSyncActionUpdateTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     use AssertUsersTrait;
 

@@ -20,14 +20,14 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Factory\DirectoryEntryFactory;
-use Passbolt\DirectorySync\Test\Utility\DirectorySyncIntegrationTestCase;
+use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryValidationService;
 use Passbolt\PasswordExpiry\Service\Settings\PasswordExpiryGetSettingsService;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 
-class PasswordExpiryUserSyncActionDeleteTest extends DirectorySyncIntegrationTestCase
+class PasswordExpiryUserSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
     public $fixtures = [];
 

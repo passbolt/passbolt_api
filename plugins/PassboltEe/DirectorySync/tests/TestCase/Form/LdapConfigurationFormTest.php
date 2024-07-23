@@ -25,6 +25,7 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
+use Passbolt\DirectorySync\Test\Utility\LdapConfigurationTestUtility;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 class LdapConfigurationFormTest extends AppTestCase
@@ -32,74 +33,9 @@ class LdapConfigurationFormTest extends AppTestCase
     use EventDispatcherTrait;
     use FormatValidationTrait;
 
-    /**
-     * Get dummy test settings data
-     *
-     * @param bool $addSecondDomain
-     * @return array
-     */
-    public static function getDummyFormData(bool $addSecondDomain = false): array
-    {
-        $defaultConfigSettings = DirectoryOrgSettings::getDefaultSettings();
-
-        $settings = [
-            'enabled' => true,
-            'domains' => [
-                'org_domain' => [
-                    'directory_type' => 'ad',
-                    'hosts' => ['127.0.0.1'],
-                    'domain_name' => 'ldap.passbolt.local',
-                    'authentication_type' => 'basic',
-                    'connection_type' => 'tls',
-                    'host' => 'my host',
-                    'port' => 999,
-                    'username' => 'root',
-                    'password' => 'password',
-                    'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
-                ],
-            ],
-            'user_path' => 'my user_path',
-            'group_custom_filters' => 'group-custom-filters',
-            'user_custom_filters' => 'user-custom-filters',
-            'group_object_class' => 'my group_object_class',
-            'user_object_class' => 'my user_object_class',
-            'use_email_prefix_suffix' => true,
-            'email_prefix' => 'uid',
-            'email_suffix' => '@passbolt.com',
-            'default_user' => UserFactory::make()->admin()->persist()->get('id'),
-            'default_group_admin_user' => UserFactory::make()->user()->persist()->get('id'),
-            'sync_users_create' => true,
-            'sync_users_delete' => false,
-            'sync_users_update' => true,
-            'sync_groups_create' => true,
-            'sync_groups_delete' => false,
-            'sync_groups_update' => true,
-            'fields_mapping' => $defaultConfigSettings['fieldsMapping'],
-            'field_fallbacks' => [
-                'ad' => ['username' => ''],
-            ],
-        ];
-        if ($addSecondDomain) {
-            $settings['domains']['org_domain_2'] = [
-                'directory_type' => 'ad',
-                'hosts' => ['127.0.0.1'],
-                'domain_name' => 'ldap2.passbolt.local',
-                'authentication_type' => 'basic',
-                'connection_type' => 'tls',
-                'host' => 'my host',
-                'port' => 999,
-                'username' => 'root',
-                'password' => 'password',
-                'base_dn' => 'OU=PassboltUsers,DC=passbolt,DC=local',
-            ];
-        }
-
-        return $settings;
-    }
-
     public function testDirectoryLdapConfigurationFormValidateError_DirectoryType()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'required' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -110,7 +46,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_DomainName()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'required' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -121,7 +57,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_Username()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowEmpty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -131,7 +67,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_Password()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowEmpty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -141,7 +77,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_BaseDn()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowEmpty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -151,7 +87,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_Hosts()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'required' => self::getRequirePresenceTestCases(),
         ];
@@ -161,7 +97,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_Port()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'required' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -172,7 +108,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_ConnectionType()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'required' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -185,7 +121,7 @@ class LdapConfigurationFormTest extends AppTestCase
     {
         $userId = UserFactory::make()->user()->persist()->get('id');
         $adminId = UserFactory::make()->admin()->persist()->get('id');
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'required' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -213,7 +149,7 @@ class LdapConfigurationFormTest extends AppTestCase
         $activeUserId = UserFactory::make()->user()->persist()->get('id');
         $inactiveUserId = UserFactory::make()->inactive()->user()->persist()->get('id');
 
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'required' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -249,12 +185,12 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function testDirectoryLdapConfigurationFormValidateError_FieldsMapping(string $dataPath, $data, array $expectedErrors)
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $ldapSettings = Hash::insert($ldapSettings, $dataPath, $data);
         $form = new LdapConfigurationForm();
-        static::assertFalse($form->validate($ldapSettings));
+        $this->assertFalse($form->validate($ldapSettings));
         $errors = $form->getErrors();
-        static::assertSame($expectedErrors, $errors['fields_mapping']);
+        $this->assertSame($expectedErrors, $errors['fields_mapping']);
     }
 
     /**
@@ -264,7 +200,7 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function provideTestDirectoryLdapConfigurationFormValidateError_FieldsMapping(): array
     {
-        $dummySettingsData = self::getDummyFormData();
+        $dummySettingsData = LdapConfigurationTestUtility::getDummyFormData();
 
         return [
             [
@@ -375,7 +311,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_GroupObjectClass()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(128),
@@ -386,7 +322,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_UserObjectClass()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(128),
@@ -397,7 +333,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_GroupPath()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -407,7 +343,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_UserPath()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -417,7 +353,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_GroupCustomFilters()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -428,7 +364,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_UserCustomFilters()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -439,7 +375,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_UseEmailPrefixSuffix()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getBooleanTestCases(),
@@ -449,7 +385,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_EmailPrefix()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -459,7 +395,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_EmailSuffix()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'utf8' => self::getUtf8TestCases(),
@@ -469,7 +405,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_SyncUsersCreate()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'boolean' => self::getBooleanTestCases(),
@@ -479,7 +415,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_SyncUsersDelete()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'boolean' => self::getBooleanTestCases(),
@@ -489,7 +425,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_SyncUsersUpdate()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'boolean' => self::getBooleanTestCases(),
@@ -499,7 +435,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_SyncGroupsCreate()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'boolean' => self::getBooleanTestCases(),
@@ -509,7 +445,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_SyncGroupsDelete()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'boolean' => self::getBooleanTestCases(),
@@ -519,7 +455,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationFormValidateError_SyncGroupsUpdate()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $testCases = [
             'allowempty' => self::getAllowEmptyTestCases(),
             'boolean' => self::getBooleanTestCases(),
@@ -529,7 +465,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryFormatFormDataToOrgSettings()
     {
-        $data = self::getDummyFormData();
+        $data = LdapConfigurationTestUtility::getDummyFormData();
         $config = LdapConfigurationForm::formatFormDataToOrgSettings($data);
 
         $this->assertEquals(Hash::get($config, 'ldap.domains.org_domain.ldap_type'), 'ad');
@@ -567,7 +503,7 @@ class LdapConfigurationFormTest extends AppTestCase
         $directoryOrgSettings = new DirectoryOrgSettings($settings);
         $directoryOrgSettings->save($uac);
 
-        $data = self::getDummyFormData();
+        $data = LdapConfigurationTestUtility::getDummyFormData();
         unset($data['domains']['org_domain']['password']);
         $config = LdapConfigurationForm::formatFormDataToOrgSettings($data);
 
@@ -604,7 +540,7 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function testDirectoryFormatFormDataToOrgSettings_withSasl()
     {
-        $data = self::getDummyFormData();
+        $data = LdapConfigurationTestUtility::getDummyFormData();
         $data['domains']['org_domain']['authentication_type'] = LdapConfigurationForm::AUTHENTICATION_TYPE_SASL;
         $config = LdapConfigurationForm::formatFormDataToOrgSettings($data);
         $this->assertSame(1, Hash::get($config, 'ldap.domains.org_domain.use_sasl'));
@@ -632,9 +568,9 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function testDirectoryLdapConfigurationFormMultiDomain()
     {
-        $ldapSettings = self::getDummyFormData(true);
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData(true);
         $form = new LdapConfigurationForm();
-        static::assertTrue($form->validate($ldapSettings));
+        $this->assertTrue($form->validate($ldapSettings));
     }
 
     /**
@@ -644,12 +580,12 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function testDirectoryLdapConfigurationFormValidateError_MultiDomainRequired()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $ldapSettings = Hash::insert($ldapSettings, 'domains', []);
         $form = new LdapConfigurationForm();
-        static::assertFalse($form->validate($ldapSettings));
+        $this->assertFalse($form->validate($ldapSettings));
         $errors = $form->getErrors();
-        static::assertSame([
+        $this->assertSame([
             'hasAtLeast' => 'Need at least one domain configuration.',
         ], $errors['domains']);
     }
@@ -661,7 +597,7 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function testDirectoryLdapConfigurationFormValidateError_DomainName_MultiDomain()
     {
-        $ldapSettings = self::getDummyFormData(true);
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData(true);
         $testCases = [
             'required' => self::getRequirePresenceTestCases(),
             'notEmpty' => self::getNotEmptyTestCases(),
@@ -677,21 +613,21 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function testDirectoryLdapConfigurationFormValidateError_MultiDomain_InvalidConnectionName()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $domainData = Hash::get($ldapSettings, 'domains.org_domain');
         unset($ldapSettings['domains']['org_domain']);
         $ldapSettings['domains']['org.domain'] = $domainData;
         $form = new LdapConfigurationForm();
-        static::assertFalse($form->validate($ldapSettings));
+        $this->assertFalse($form->validate($ldapSettings));
         $errors = $form->getErrors();
-        static::assertSame([
+        $this->assertSame([
             'connection_names' => 'The connection name `org.domain` should not contain dots',
         ], $errors['domains']);
     }
 
     public function testDirectoryLdapConfiguration_Fields_Mapping_Is_Not_Required()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         unset($ldapSettings['fields_mapping']);
         $form = new LdapConfigurationForm();
         $this->assertTrue($form->validate($ldapSettings));
@@ -699,7 +635,7 @@ class LdapConfigurationFormTest extends AppTestCase
 
     public function testDirectoryLdapConfigurationForm_ThrowsValidationForbiddenFieldsActive()
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         // Inject sensitive field names
         $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.username', 'userPassword');
         $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.id', 'uniqueUserPassword');
@@ -735,7 +671,7 @@ class LdapConfigurationFormTest extends AppTestCase
     public function testDirectoryLdapConfigurationForm_NotThrowValidationForbiddenFieldsWhenInactive()
     {
         Configure::write('passbolt.security.directorySync.forbiddenFields.active', false);
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         // Inject sensitive field names
         $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.username', 'userPassword');
         $ldapSettings = Hash::insert($ldapSettings, 'fields_mapping.ad.user.id', 'uniqueUserPassword');
@@ -760,7 +696,7 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function testDirectoryLdapConfigurationForm_Success_FieldFallbacksIsOptional(): void
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         unset($ldapSettings['field_fallbacks']);
 
         $form = new LdapConfigurationForm();
@@ -816,7 +752,7 @@ class LdapConfigurationFormTest extends AppTestCase
      */
     public function testDirectoryLdapConfigurationForm_Error_FieldFallbacks($value, string $errorRulePath): void
     {
-        $ldapSettings = self::getDummyFormData();
+        $ldapSettings = LdapConfigurationTestUtility::getDummyFormData();
         $ldapSettings['field_fallbacks'] = $value;
 
         $form = new LdapConfigurationForm();
