@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-18 11:45\n"
+"PO-Revision-Date: 2024-07-23 13:58\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -1586,25 +1586,25 @@ msgid "The private key cannot be used to sign a message"
 msgstr "Der private Schlüssel kann nicht verwendet werden, um eine Nachricht zu signieren"
 
 msgid "The public key can be used to verify a signature."
-msgstr ""
+msgstr "Der öffentliche Schlüssel kann verwendet werden, um eine Signatur zu überprüfen."
 
 msgid "The public key cannot be used to verify a signature."
-msgstr ""
+msgstr "Der öffentliche Schlüssel kann nicht verwendet werden, um eine Signatur zu überprüfen."
 
 msgid "The server key fingerprint matches the one defined in {0}."
-msgstr ""
+msgstr "Der Server-Schlüssel stimmt mit dem in {0} definierten Fingerabdruck überein."
 
 msgid "The server key fingerprint doesn't match the one defined in {0}."
-msgstr ""
+msgstr "Der Server-Schlüssel-Fingerabdruck entspricht nicht dem in {0} definierten Fingerabdruck."
 
 msgid "Double check the key fingerprint, example: "
-msgstr ""
+msgstr "Überprüfen Sie den Fingerabdruck, Beispiel: "
 
 msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
-msgstr ""
+msgstr "SERVER_KEY_EMAIL: Die E-Mail, die Sie beim Generieren des Serverschlüssels verwendet haben."
 
 msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
-msgstr ""
+msgstr "Siehe https://www.passbolt.com/help/tech/install#toc_gpg"
 
 msgid "The server private key format is Gopengpg compatible."
 msgstr ""
