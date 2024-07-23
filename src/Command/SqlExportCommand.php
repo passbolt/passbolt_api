@@ -26,7 +26,7 @@ use Cake\Database\DriverInterface;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\MissingDatasourceConfigException;
 
-class MysqlExportCommand extends PassboltCommand
+class SqlExportCommand extends PassboltCommand
 {
     use DatabaseAwareCommandTrait;
 
@@ -40,7 +40,7 @@ class MysqlExportCommand extends PassboltCommand
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Utility to export mysql database backups.'));
+        $parser->setDescription(__('Utility to export SQL database backups.'));
 
         $this
             ->addDatasourceOption($parser, false)
@@ -124,9 +124,18 @@ class MysqlExportCommand extends PassboltCommand
     {
         $io->info('Saving backup file: ' . $dir . $file);
 
-        if ($connection->getDriver() instanceof Mysql) {
-            $status = $this->mysqlDump($connection->config(), $dir, $file);
-        } elseif ($connection->getDriver() instanceof Postgres) {
+        $driver = $connection->getDriver();
+        if ($driver instanceof Mysql) {
+            // mariadb-dump command was introduced in v10.4.6, before that it doesn't exist
+            // @see https://mariadb.com/kb/en/mariadb-dump/
+            $isMariadbDump = ($driver->isMariaDb() && version_compare($driver->version(), '10.4.6', '>='));
+
+            if (!$isMariadbDump) {
+                $status = $this->mysqlDump($connection->config(), $dir, $file);
+            } else {
+                $status = $this->mariaDbDump($connection->config(), $dir, $file);
+            }
+        } elseif ($driver instanceof Postgres) {
             $status = $this->postgresDump($connection->config(), $dir, $file);
         } else {
             $this->error('Sorry only MySQL and PostgreSQL are supported at the moment', $io);
@@ -158,6 +167,27 @@ class MysqlExportCommand extends PassboltCommand
     {
         // Build the dump command.
         $cmd = 'mysqldump -h' . escapeshellarg($config['host']) . ' -u' . escapeshellarg($config['username']);
+        if (!empty($config['password'])) {
+            $cmd .= ' -p' . escapeshellarg($config['password']);
+        }
+        $cmd .= ' ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
+        exec($cmd, $output, $status);
+
+        return $status;
+    }
+
+    /**
+     * Mariadb dump.
+     *
+     * @param array $config Database configuration.
+     * @param string $dir Target directory.
+     * @param string $file Target file.
+     * @return int
+     */
+    protected function mariaDbDump(array $config, string $dir, string $file): int
+    {
+        // Build the dump command.
+        $cmd = 'mariadb-dump -h' . escapeshellarg($config['host']) . ' -u' . escapeshellarg($config['username']);
         if (!empty($config['password'])) {
             $cmd .= ' -p' . escapeshellarg($config['password']);
         }

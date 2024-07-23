@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-04-24 04:35+0000\n"
-"PO-Revision-Date: 2024-04-24 14:20\n"
+"POT-Creation-Date: 2024-07-17 04:36+0000\n"
+"PO-Revision-Date: 2024-07-18 11:45\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Russian\n"
 "MIME-Version: 1.0\n"
@@ -39,6 +39,9 @@ msgstr "Ключ сервера OpenPGP, указанный в конфигур�
 
 msgid "Could not import the user OpenPGP key."
 msgstr "Не удалось импортировать пользовательский ключ OpenPGP."
+
+msgid "Invalid verify token type."
+msgstr ""
 
 msgid "Invalid verify token format, "
 msgstr "Неверный формат токена подтверждения,"
@@ -1273,9 +1276,6 @@ msgstr ""
 msgid "undefined"
 msgstr "неопределённый"
 
-msgid "Could not connect to github repository"
-msgstr "Не удалось подключиться к репозиторию github"
-
 msgid "Could not read tag information on github repository"
 msgstr "Не удалось прочитать информацию о тегах в репозитории github."
 
@@ -1288,10 +1288,10 @@ msgstr ""
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
 msgstr ""
 
-msgid "Could not connect to passbolt repository to check versions"
+msgid "Could not connect to passbolt repository to check versions."
 msgstr ""
 
-msgid "It is not possible check if your version is up to date."
+msgid "It is not possible to check if your version is up-to-date."
 msgstr ""
 
 msgid "See https://www.passbolt.com/help/tech/update"
@@ -1462,7 +1462,7 @@ msgstr ""
 msgid "Run the install script to install the database tables"
 msgstr ""
 
-msgid "The database schema up to date."
+msgid "The database schema is up to date."
 msgstr ""
 
 msgid "The database schema is not up to date."
@@ -2359,6 +2359,12 @@ msgstr "Токен подтверждения недействителен."
 msgid "The route {0} is not permitted with JWT authentication."
 msgstr "Маршрут {0} не разрешен для аутентификации JWT."
 
+msgid "The JWT public key could not be extracted."
+msgstr ""
+
+msgid "The JWT public key details could not be read."
+msgstr ""
+
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "Пара ключей для аутентификации JWT не завершена."
 
@@ -2841,9 +2847,6 @@ msgstr "Не удалось проверить конфигурацию Duo."
 
 msgid "The property {0} is visible by administrators only."
 msgstr "Свойство {0} видно только администраторам."
-
-msgid "The property {0} should be contained in order to filter by {1}."
-msgstr "Свойство {0} должно содержать для фильтрации по {1}."
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "Предоставленный токен MFA не существует или неактивен."
@@ -3499,6 +3502,18 @@ msgstr "{0} изменил настройки саморегистрации"
 msgid "Status: {0}"
 msgstr "Статус: {0}"
 
+msgid "The sslVerifyPeer configuration should be a boolean."
+msgstr ""
+
+msgid "The sslVerifyPeerName configuration should be a boolean."
+msgstr ""
+
+msgid "The sslAllowSelfSigned configuration should be a boolean."
+msgstr ""
+
+msgid "The sslCafile configuration should be NULL or string."
+msgstr ""
+
 msgid "A sender name is required."
 msgstr "Требуется имя отправителя."
 
@@ -3571,6 +3586,18 @@ msgstr "Конечные точки настроек SMTP отключены."
 msgid "The client should be a valid IP or a valid domain."
 msgstr "Клиент должен быть действительным IP или действительным доменом."
 
+msgid "No custom SSL configuration for SMTP server."
+msgstr ""
+
+msgid "Custom SSL certificate options for SMTP server is in use."
+msgstr ""
+
+msgid "Custom SSL configuration options set are invalid."
+msgstr ""
+
+msgid "SSL certification validation for SMTP server is disabled."
+msgstr ""
+
 msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr ""
 
@@ -3627,6 +3654,12 @@ msgstr "Поздравляем!"
 
 msgid "If you receive this email, it means that your passbolt smtp configuration is working fine."
 msgstr "Если вы получили это письмо, это означает, что ваша конфигурация smtp passbolt работает нормально."
+
+msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
+msgstr ""
+
+msgid "Errors: "
+msgstr "Ошибка: "
 
 msgid "The data entered are not correct"
 msgstr "Введенные данные неверны"

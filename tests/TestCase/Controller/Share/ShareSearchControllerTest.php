@@ -20,12 +20,16 @@ namespace App\Test\TestCase\Controller\Share;
 use App\Model\Entity\Permission;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
+/**
+ * @covers \App\Controller\Share\ShareSearchController
+ */
 class ShareSearchControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
@@ -117,6 +121,101 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertNotEmpty($aros);
         $this->assertCount(1, $aros);
         $this->assertEquals($groupId, $aros[0]->id);
+    }
+
+    /**
+     * Provider for testShareSearchController_Success_ContainWhitelist()
+     *
+     * @return array
+     */
+    public function containWhitelistProvider(): array
+    {
+        return [
+            [
+                // Case-1: Empty contain, by default all existing contains will be present
+                'contain' => [],
+                'expected' => [
+                    'keysPresent' => ['gpgkey', 'groups_users', 'role', 'profile'],
+                    'keysAbsent' => [],
+                ],
+            ],
+            [
+                // Case-2: Disable specific contain
+                'contain' => ['gpgkey' => 0],
+                'expected' => [
+                    'keysPresent' => ['profile'],
+                    'keysAbsent' => ['gpgkey', 'groups_users', 'role'],
+                ],
+            ],
+            [
+                // Case-3: Enable + disable specific contains from whitelist
+                'contain' => ['groups_users' => 1, 'gpgkey' => 0],
+                'expected' => [
+                    'keysPresent' => ['groups_users', 'profile'],
+                    'keysAbsent' => ['gpgkey', 'role'],
+                ],
+            ],
+            [
+                // Case-4: `profile` always included because it is required for "search" query param
+                'contain' => ['profile' => 0],
+                'expected' => [
+                    'keysPresent' => ['gpgkey', 'groups_users', 'role', 'profile'],
+                    'keysAbsent' => [],
+                ],
+            ],
+            [
+                // Case-5: All contains by default false if any contain is provided
+                'contain' => ['gpgkey' => 1],
+                'expected' => [
+                    'keysPresent' => ['gpgkey', 'profile'],
+                    'keysAbsent' => ['role', 'groups_users'],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider containWhitelistProvider
+     */
+    public function testShareSearchController_Success_ContainWhitelist(array $contain, array $expected): void
+    {
+        UserFactory::make()->guest()->with('Gpgkeys')->persist();
+        $user = UserFactory::make()->user()->with('Gpgkeys')->persist();
+        $this->loginAs($user);
+        $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
+        $group->get('id');
+        $group->get('name');
+        ResourceFactory::make()->withPermissionsFor([$user])->persist()->get('id');
+
+        $queryParams = http_build_query(['contain' => $contain, 'api-version' => 2]);
+        $this->getJson("/share/search-aros.json?{$queryParams}");
+
+        $resultArray = $this->getResponseBodyAsArray();
+        $this->assertNotEmpty($resultArray);
+        $this->assertCount(2, $resultArray);
+        foreach ($expected['keysPresent'] as $key) {
+            $this->assertTrue(Hash::check($resultArray, "{n}.$key"));
+        }
+        foreach ($expected['keysAbsent'] as $key) {
+            $this->assertFalse(Hash::check($resultArray, "{n}.$key"));
+        }
+    }
+
+    public function testShareSearchController_Success_Limit(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        UserFactory::make(50)->user()->persist();
+        $user = UserFactory::make()->user()->persist();
+        GroupFactory::make(55)->withGroupsManagersFor([$user])->persist();
+        $this->loginAs($user);
+
+        $queryParams = http_build_query(['api-version' => 2, 'search' => 'a']);
+        $this->getJson("/share/search-aros.json?{$queryParams}");
+
+        $response = $this->getResponseBodyAsArray();
+        $this->assertNotEmpty($response);
+        // This is the maximum number of results we'll get because of hard-coded limit (25) specified in the controller.
+        $this->assertCount(50, $response);
     }
 
     public function testShareSearchController_Error_NotAuthenticated(): void

@@ -22,6 +22,7 @@ use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\FoldersPlugin;
 
 class ResourcesViewControllerTest extends AppIntegrationTestCase
 {
@@ -32,6 +33,12 @@ class ResourcesViewControllerTest extends AppIntegrationTestCase
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
         'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions',
     ];
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->enableFeaturePlugin(FoldersPlugin::class);
+    }
 
     public function testResourcesViewController_Success(): void
     {
