@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-07-18 11:38\n"
+"PO-Revision-Date: 2024-07-23 03:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid "Could not import the user OpenPGP key."
 msgstr "사용자 OpenPGP 키를 가져올 수 없습니다."
 
 msgid "Invalid verify token type."
-msgstr ""
+msgstr "확인 토큰 유형이 잘못되었습니다."
 
 msgid "Invalid verify token format, "
 msgstr "토큰 형식이 확인이 잘못되었습니다, "
@@ -1298,7 +1298,7 @@ msgid "Could not connect to passbolt repository to check versions."
 msgstr "버전을 확인하기 위해 패스볼트 저장소에 연결할 수 없습니다."
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "버전이 최신인지 확인할 수 없습니다."
 
 msgid "See https://www.passbolt.com/help/tech/update"
 msgstr "https://www.passbolt.com/help/tech/update 를 참조하세요."
@@ -1469,7 +1469,7 @@ msgid "Run the install script to install the database tables"
 msgstr "설치 스크립트를 실행하여 데이터베이스 테이블을 설치하세요"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "데이터베이스 스키마가 최신 상태입니다."
 
 msgid "The database schema is not up to date."
 msgstr "데이터베이스 스키마가 최신 상태가 아닙니다."
@@ -2366,10 +2366,10 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "경로 {0} 이(가) JWT 인증에 허용되지 않습니다."
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "JWT 공개 키를 추출할 수 없습니다."
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "JWT 공개 키 세부정보를 읽을 수 없습니다."
 
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "JWT 인증 키 쌍이 완전하지 않습니다."
@@ -3509,16 +3509,16 @@ msgid "Status: {0}"
 msgstr "상태: {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
-msgstr ""
+msgstr "sslVerifyPeer 구성은 부울이어야 합니다."
 
 msgid "The sslVerifyPeerName configuration should be a boolean."
-msgstr ""
+msgstr "sslVerifyPeerName 구성은 부울이어야 합니다."
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr ""
+msgstr "sslAllowSelfSigned 구성은 부울이어야 합니다."
 
 msgid "The sslCafile configuration should be NULL or string."
-msgstr ""
+msgstr "sslCafile 구성은 NULL 또는 문자열이어야 합니다."
 
 msgid "A sender name is required."
 msgstr "보내는 사람 이름이 필요합니다."
@@ -3593,16 +3593,16 @@ msgid "The client should be a valid IP or a valid domain."
 msgstr "클라이언트는 올바른 IP 또는 도메인이어야 합니다."
 
 msgid "No custom SSL configuration for SMTP server."
-msgstr ""
+msgstr "SMTP 서버에 대한 사용자 정의 SSL 구성이 없습니다."
 
 msgid "Custom SSL certificate options for SMTP server is in use."
-msgstr ""
+msgstr "SMTP 서버에 대한 사용자 정의 SSL 인증서 옵션이 사용 중입니다."
 
 msgid "Custom SSL configuration options set are invalid."
-msgstr ""
+msgstr "사용자 정의 SSL 구성 옵션 설정이 잘못되었습니다."
 
 msgid "SSL certification validation for SMTP server is disabled."
-msgstr ""
+msgstr "SMTP 서버에 대한 SSL 인증 확인이 비활성화되었습니다."
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
 msgstr "SMTP 설정이 일관됩니다. 이를 확인하기 위해 테스트 이메일을 보낼 수 있습니다."
@@ -3662,7 +3662,7 @@ msgid "If you receive this email, it means that your passbolt smtp configuration
 msgstr "이 이메일을 수신하면 패스볼트 smtp 구성이 올바르게 작동 중임을 의미합니다."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
-msgstr ""
+msgstr "'passbolt.plugins.smtpSettings.security' 구성 값이 잘못되었습니다."
 
 msgid "Errors: "
 msgstr "오류: "
@@ -4670,7 +4670,7 @@ msgid "The user {0} cannot be added to the group {1} automatically. An email req
 msgstr "{0} 사용자를 {1} 그룹에 자동으로 추가할 수 없습니다. 그룹 관리자에게 이 작업을 수동으로 수행하도록 이메일 요청이 전송되었습니다."
 
 msgid "The user {0} was not removed from the group {1} because they were or are being suspended."
-msgstr ""
+msgstr "사용자 {0}은(는) 일시중지되었거나 일시중지 중이므로 {1} 그룹에서 제거되지 않았습니다."
 
 msgid "The user {0} was successfully removed from the group {1}."
 msgstr "사용자 {0} 이(가) {1} 그룹에서 제거되었습니다."
@@ -4700,7 +4700,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "{0} {1} 디렉토리가 무시되어 삭제되지 않았습니다."
 
 msgid "The directory {0} {1} was already suspended in passbolt."
-msgstr ""
+msgstr "{0} {1} 디렉터리가 이미 패스볼트에서 일시중지되었습니다."
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "{0} {1} 디렉토리가 패스볼트에서 이미 삭제되었습니다."
@@ -4712,13 +4712,13 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "{0} {1} 은(는) 하나 이상의 그룹의 유일한 관리자이기 때문에 삭제할 수 없습니다."
 
 msgid "The {0} {1} was successfully suspended."
-msgstr ""
+msgstr "{0} {1}이(가) 성공적으로 일시중지되었습니다."
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "{0} {1} 이(가) 삭제되었습니다."
 
 msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
-msgstr ""
+msgstr "내부 오류로 인해 {0} {1}을(를) 일시중지할 수 없습니다. 나중에 다시 시도 해주세요."
 
 msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
 msgstr "{0} {1} 이(가) 내부 오류로 인해 삭제할 수 없습니다. 나중에 다시 시도하세요."
@@ -4739,13 +4739,13 @@ msgid "The {0} {1} could not be added because of an internal error. Please try a
 msgstr "내부 오류로 인해 {0} {1} 을(를) 추가할 수 없습니다. 나중에 다시 시도해 주세요."
 
 msgid "The previously suspended {0} {1} was not unsuspended."
-msgstr ""
+msgstr "이전에 일시중지된 {0} {1}이(가) 일시중지 해제되지 않았습니다."
 
 msgid "The previously deleted {0} {1} was not re-added to passbolt."
 msgstr "이전에 삭제한 {0} {1} 이(가) 패스볼트에 다시 추가되지 않았습니다."
 
 msgid "The previously suspended {0} {1} was unsuspended."
-msgstr ""
+msgstr "이전에 일시중지된 {0} {1}이(가) 일시중지 해제되었습니다."
 
 msgid "The previously deleted {0} {1} was re-added to passbolt."
 msgstr "이전에 삭제한 {0} {1} 이(가) 패스볼트에 다시 추가되었습니다."
@@ -5075,10 +5075,10 @@ msgid "Or set {0} to true in {1}."
 msgstr "또는 {1} 에서 {0} 을(를) true로 설정하세요."
 
 msgid "SSL certification verification for LDAP server is enabled."
-msgstr ""
+msgstr "LDAP 서버에 대한 SSL 인증 확인이 활성화되었습니다."
 
 msgid "SSL certification verification for LDAP server is disabled."
-msgstr ""
+msgstr "LDAP 서버에 대한 SSL 인증 확인이 비활성화되었습니다."
 
 msgid "Disabling the ssl verify check can lead to security attacks."
 msgstr "SSL 확인 확인을 비활성화하면 보안 공격이 발생할 수 있습니다."
@@ -5087,7 +5087,7 @@ msgid "Attacker can alter the certificate and can perform man-in-the-middle atta
 msgstr "공격자는 인증서를 변경하고 중간자 공격을 수행할 수 있습니다."
 
 msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
-msgstr ""
+msgstr "이 문제를 해결하려면 PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER 환경 변수를 true로 설정하면 됩니다."
 
 msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
 msgstr "또는 {0}에서 passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer를 true로 설정합니다."
@@ -5186,55 +5186,55 @@ msgid "Directory Sync"
 msgstr "디렉터리 싱크"
 
 msgid "Subscription key format error."
-msgstr ""
+msgstr "구독 키 형식 오류."
 
 msgid "Subscription key signature error."
-msgstr ""
+msgstr "구독 키 서명 오류."
 
 msgid "Subscription key validation error."
-msgstr ""
+msgstr "구독 키 검증 오류."
 
 msgid "It looks like you could use some help."
-msgstr ""
+msgstr "도움이 좀 필요할 것 같네요."
 
 msgid "We are here for you. You can contact us at sales@passbolt.com"
-msgstr ""
+msgstr "저희가 도와드리겠습니다. sales@passbolt.com으로 연락해 주세요."
 
 msgid "Thanks for choosing Passbolt Pro"
-msgstr ""
+msgstr "패스볼트 프로를 선택해주셔서 감사합니다."
 
 msgid "Below are your subscription key details"
-msgstr ""
+msgstr "다음은 구독 키 세부정보입니다."
 
 msgid "<error>Not Available</error>"
-msgstr ""
+msgstr "<error>사용할수 없음</error>"
 
 msgid "Customer id:\t{0}"
-msgstr ""
+msgstr "고객 id: {0}"
 
 msgid "<error>{0} (currently: {1}) - Exceeded</error>"
-msgstr ""
+msgstr "<error>{0} (현재: {1}) - 초과</error>"
 
 msgid "<info>{0} (currently: {1})</info>"
-msgstr ""
+msgstr "<info>{0} (현재: {1})</info>"
 
 msgid "Users limit:\t{0}"
-msgstr ""
+msgstr "사용자 제한:\t{0}"
 
 msgid "Valid from:\t<info>{0}</info>"
-msgstr ""
+msgstr "유효 기간: <info>{0}</info>"
 
 msgid "Expires on:\t<error>{0} (expired)</error>"
-msgstr ""
+msgstr "만료일: <error>{0} (만료됨)</error>"
 
 msgid "Expires on:\t<info>{0} (in {1} days)</info>"
-msgstr ""
+msgstr "만료 날짜: <info>{0} ({1} 일 후)</info>"
 
 msgid "For any question / feedback / subscription renewal,"
-msgstr ""
+msgstr "질문 / 피드백 / 구독 갱신에 대한 문의사항은,"
 
 msgid "kindly contact us at <info>sales@passbolt.com</info>"
-msgstr ""
+msgstr "<info>sales@passbolt.com</info>으로 문의해 주세요."
 
 msgid "Only administrators can view the subscription details."
 msgstr "관리자만 구독 상세 정보를 볼 수 있습니다."
@@ -5600,7 +5600,7 @@ msgid "{0} deleted the SSO setting"
 msgstr "{0}이(가) SSO 설정을 삭제했습니다"
 
 msgid "Users are unable to log in via Azure SSO"
-msgstr ""
+msgstr "사용자가 Azure SSO를 통해 로그인할 수 없습니다."
 
 msgid "Single sign-on failed."
 msgstr "싱글사인온이 실패됨."
@@ -5609,7 +5609,7 @@ msgid "Provider error: \"{0}\""
 msgstr "공급자 오류: \"{0}\""
 
 msgid "Azure SSO secret expiry date is near"
-msgstr ""
+msgstr "Azure SSO 비밀 만료 날짜가 임박했습니다."
 
 msgid "SSL certification validation for SSO instance is enabled."
 msgstr "SSO 인스턴스에 대한 SSL 인증 검증이 활성화되었습니다."
@@ -5774,43 +5774,43 @@ msgid "Unable to decode JWT token."
 msgstr "JWT 토큰을 디코딩 할수 없습니다."
 
 msgid "The {0} configuration value should be a string or NULL."
-msgstr ""
+msgstr "{0} 구성 값은 문자열이거나 NULL이어야 합니다."
 
 msgid "The {0} configuration value should be one of the following: {1}."
-msgstr ""
+msgstr "{0} 구성 값은 다음 중 하나여야 합니다: {1}."
 
 msgid "Single-sign on was a success"
 msgstr "싱글 사인온 성공"
 
 msgid "Users are unable to log in via Azure SSO."
-msgstr ""
+msgstr "사용자가 Azure SSO를 통해 로그인할 수 없습니다."
 
 msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
-msgstr ""
+msgstr "이는 Azure AD의 클라이언트 암호가 만료되었거나 SSO 구성(클라이언트 자격 증명)이 유효하지 않은 경우 발생할 수 있습니다."
 
 msgid "See Azure error response below:"
-msgstr ""
+msgstr "아래 Azure 오류 응답 참조하세요:"
 
 msgid "Error: {0}"
-msgstr ""
+msgstr "오류: {0}"
 
 msgid "Error description: {0}"
-msgstr ""
+msgstr "오류 설명: {0}"
 
 msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
-msgstr ""
+msgstr "이 문제를 해결하려면 관리자로서 Azure SSO 자격 증명을 업데이트해야 합니다."
 
 msgid "Update it in passbolt"
-msgstr ""
+msgstr "패스볼트에서 업데이트"
 
 msgid "The client secret expiry date of your Azure AD instance is {0}."
-msgstr ""
+msgstr "Azure AD 인스턴스의 클라이언트 암호 만료 날짜는 {0} 입니다."
 
 msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
-msgstr ""
+msgstr "패스볼트 사용자는 클라이언트 만료 날짜 이후 Azure SSO를 통해 로그인할 수 없습니다."
 
 msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
-msgstr ""
+msgstr "Azure 측에서 이 문제를 해결하고 암호에서 최신 세부 정보를 업데이트하는 것이 좋습니다."
 
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
 msgstr "SSO 공급자 {0}이(가) {1}에 의해 테스트되고 활성화되었습니다. "
