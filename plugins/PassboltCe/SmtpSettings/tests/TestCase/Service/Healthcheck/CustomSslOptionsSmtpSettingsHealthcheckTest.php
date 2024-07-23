@@ -89,4 +89,15 @@ class CustomSslOptionsSmtpSettingsHealthcheckTest extends TestCase
         $this->assertSame(HealthcheckServiceCollector::LEVEL_WARNING, $this->service->level());
         $this->assertTextContains('SSL certification validation for SMTP server is disabled', $this->service->getFailureMessage());
     }
+
+    public function testCustomSslOptionsSmtpSettingsHealthcheck_Fail_InvalidConfigValues(): void
+    {
+        Configure::write('passbolt.plugins.smtpSettings.security', ['sslVerifyPeer' => ['foo' => 'bar']]);
+
+        $this->service->check();
+
+        $this->assertFalse($this->service->isPassed());
+        $this->assertSame(HealthcheckServiceCollector::LEVEL_ERROR, $this->service->level());
+        $this->assertTextContains('Custom SSL configuration options set are invalid', $this->service->getFailureMessage());
+    }
 }

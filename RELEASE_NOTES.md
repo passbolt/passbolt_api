@@ -1,42 +1,31 @@
-Release song: https://youtu.be/hbe3CQamF8k
+Release song: https://youtu.be/zUzd9KyIDrM?si=bPS9Qu1t351eZEHH
 
-Passbolt v4.8.0 is a maintenance release focusing on the migration of the browser extension to the latest MV3
-architecture and adding tools for administrators to help them manage their instance.
+Passbolt v4.9.0 is a significant update that addresses long-standing user requests and enhances performance. In this release, a highly requested feature was introduced where the passwords workspace now displays the location of resources. This addition provides extra meta information to help users efficiently identify passwords and where they are located. Additionally, the search functionality has been improved to use resource locations as meta information. Users can now retrieve a resource by using the names of its parent folders, which can greatly simplify the process of finding passwords depending on your organisation's classification system.
 
-This release marks the introduction of the first version of the MV3 extension for Chrome. The transition to MV3 has been
-in progress since last year, with changes rolled out progressively until now. The base code between MV2 and MV3 is
-nearly identical, and both extensions will continue to be maintained in parallel. A detailed blog post explaining our
-migration process will be coming soon.
+The team has also focused on various performance improvements to meet the growing needs of organisations managing an increasing number of passwords. These enhancements also prepare the way for the upcoming v5.0.0, which will support more content types and include an additional encryption layer. Both the API and the browser extension have been optimised, resulting in a 50% improvement in retrieving and treating collections of resources, according to our benchmarks.
 
-A new feature allowing administrators to purge audit logs from the command line was added. This will help reclaim database
-space for logs that are no longer relevant, improving the performance of long-running instances while keeping necessary
-logs for forensic and audit activities.
-
-A new command has also been added to help administrators debug issues with their SMTP server. Email functionality is
-crucial for Passbolt, and diagnosing connection problems is not always straightforward. This new command aims to simplify
-the process when connecting to a new SMTP server as well as understand errors that could occur on existing integration.
-
-As passbolt moves towards supporting more content types this year, significant work has been done to enhance performance
-across the entire stack, from the database to the API and the browser extension. This release includes some of these
-improvements, with more enhancements on the way in the next coming release v4.9.0.
-
-We hope these updates enhance your experience with Passbolt. Your feedback is always valuable to us.
-
-
-## [4.8.0] - 2024-05-21
+## [4.9.0] - 2024-07-23
 ### Added
-- PB-33071 As an administrator I can purge the action logs table with a dedicated command
-- PB-33231 As an administrator I want to know if a custom certificate is in use for SMTP
-- PB-32579 As an administrator I can view email_queue records via passbolt command
-
-### Improved
-- PB-32888 As an admin I should not get a time-out on health checks on air-gapped network
-- PB-32983 Access email settings only when emails are sent
+- PB-33690 Improves response times by adding an index to gpgkeys.user_id column
+- PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
+- PB-33936 Adds a has-users filter to gpgkeys.json index endpoint
+- PB-33813 Adds a fixed limit to the search-aros.json endpoint
 
 ### Fixed
-- PB-33451 Fix 500 error on authentication when nonce is not a string
-- PB-33073 As a user logging in, invalid login operation should not be logged as success in the audit logs
-- PB-33234 The application should not throw an error if the JWT public key is not parsable
+- PB-33616 As a user creating a resource I should get a validation error if the secret is a string and not an array
+- PB-33664 Fix missing "is" in the database schema up to date sentence (GITHUB #517)
+
+### Improved
+- PB-33429 As a user I should retrieve resources and folders parent folders in a single query
+- PB-33826 Improves the performance of resources.json by improving the datetime fields processing
+- PB-24995 Improves last_logged_in property query performance to reduce response time of users.json endpoint
+- PB-33653 Improves is_mfa_enabled property query performance to reduce response time of users.json endpoint
+- PB-33702 Improves has-access filter performance on users.json
+- PB-32591 Validate passbolt.plugins.smtpSettings.security configuration values before passing it to SMTP server
+- PB-33214 Update sql export / improve mysql backup command compatibility with mariadb-dump
 
 ### Maintenance
-- PB-30314 Bump passbolt/passbolt-test-data to v4.8
+- PB-33692 Bump enygma/yubikey to v3.8
+
+### Security
+- PB-33747 Fix command injections vulnerabilities in composer/composer package

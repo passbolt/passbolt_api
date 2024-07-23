@@ -15,6 +15,8 @@
   "{{count}} group has been found._other": "{{count}} groups have been found.",
   "{{count}} group has been synchronized._one": "{{count}} group has been synchronized.",
   "{{count}} group has been synchronized._other": "{{count}} groups have been synchronized.",
+  "{{count}} group member_one": "One group member",
+  "{{count}} group member_other": "{{count}} group members",
   "{{count}} group will be synchronized._one": "{{count}} group will be synchronized.",
   "{{count}} group will be synchronized._other": "{{count}} groups will be synchronized.",
   "{{count}} password has been imported successfully._one": "{{count}} password has been imported successfully.",

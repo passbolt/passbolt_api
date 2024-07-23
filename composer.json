@@ -79,7 +79,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-curl": "*",
-        "composer/composer": "^2.7.0",
+        "composer/composer": "^2.7.7",
         "cakephp/cakephp": "^4.5",
         "cakephp/chronos": "2.4.*",
         "longwave/laminas-diactoros": "^2.14.1",
@@ -98,7 +98,7 @@
         "firebase/php-jwt": "^6.2.0",
         "spomky-labs/otphp": "^10.0.0",
         "bacon/bacon-qr-code": "^2.0.7",
-        "enygma/yubikey": "^3.5",
+        "enygma/yubikey": "^3.8",
         "duosecurity/duo_universal_php": "^1.0.2"
     },
     "require-dev": {
