@@ -1,14 +1,8 @@
 Release song: https://youtu.be/zUzd9KyIDrM?si=bPS9Qu1t351eZEHH
 
-Passbolt v4.9.0 is a significant update that addresses long-standing user requests, enhances performance, and adds a new administrative tool to manage your LDAP/AD integration with confidence.
+Passbolt v4.9.0-test.5
 
-In this release, a highly requested feature was introduced where the passwords workspace now displays the location of resources. This addition provides extra meta information to help users efficiently identify passwords and where they are located. Additionally, the search functionality has been improved to use resource locations as meta information. Users can now retrieve a resource by using the names of its parent folders, which can greatly simplify the process of finding passwords depending on your organisation's classification system.
-
-The team has also focused on various performance improvements to meet the growing needs of organisations managing an increasing number of passwords. These enhancements also prepare the way for the upcoming v5.0.0, which will support more content types and include an additional encryption layer. Both the API and the browser extension have been optimised, resulting in a 50% improvement in retrieving and treating collections of resources, according to our benchmarks.
-
-Moreover, administrators managing their users with LDAP will benefit from a new feature designed to protect against unforeseen deletion of users. This new option allows administrators to choose a suspend strategy, which locks a user's access to Passbolt without deleting any material, providing an extra layer of security.
-
-## [4.9.0] - 2024-07-23
+## [4.9.0-test.5] - 2024-07-24
 ### Added
 - PB-33690 Improves response times by adding an index to gpgkeys.user_id column
 - PB-33639 Adds additional contain parameters to share/search-aros.json for enhanced performance
