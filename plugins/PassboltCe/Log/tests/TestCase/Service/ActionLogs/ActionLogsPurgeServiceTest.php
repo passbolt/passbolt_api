@@ -17,17 +17,17 @@ declare(strict_types=1);
 
 namespace Passbolt\Log\Test\TestCase\Service\ActionLogs;
 
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCase;
 use Cake\I18n\FrozenDate;
-use Cake\TestSuite\TestCase;
-use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Log\Service\ActionLogs\ActionLogsPurgeService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Factory\EntitiesHistoryFactory;
+use Passbolt\Log\Test\Factory\SecretAccessFactory;
 
-class ActionLogsPurgeServiceTest extends TestCase
+class ActionLogsPurgeServiceTest extends AppTestCase
 {
-    use TruncateDirtyTables;
-
     public function dataForTest(): array
     {
         return [
@@ -89,5 +89,52 @@ class ActionLogsPurgeServiceTest extends TestCase
             $this->assertSame($totalCountToIgnore, ActionLogFactory::count());
         }
         $this->assertSame($entitiesHistoryCount, EntitiesHistoryFactory::count());
+    }
+
+    public function testActionLogsPurgeService_SecretAccess()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $resource = ResourceFactory::make()
+            ->withCreatorAndPermission($user)
+            ->withSecretsFor([$user])
+            ->persist();
+        SecretAccessFactory::make(['user_id' => $user->get('id')])
+            ->withResources(ResourceFactory::make($resource))
+            ->persist();
+        // before retention days
+        [$toBeDeletedActionLog1, $toBeDeletedActionLog2] = ActionLogFactory::make(2)
+            ->setActionId('ResourcesView.view')
+            ->userId($user->get('id'))
+            ->created(FrozenDate::now()->subMonths(6))
+            ->persist();
+        // after retention days
+        $notToBeDeletedActionLog = ActionLogFactory::make(1)
+            ->setActionId('ResourcesView.view')
+            ->userId($user->get('id'))
+            ->created(FrozenDate::now())
+            ->persist();
+        // Create entity histories related to action logs
+        EntitiesHistoryFactory::make()
+            ->withActionLog(ActionLogFactory::make($toBeDeletedActionLog1))
+            ->withResource(ResourceFactory::make($resource))
+            ->create()
+            ->persist();
+        EntitiesHistoryFactory::make()
+            ->withActionLog(ActionLogFactory::make($toBeDeletedActionLog2))
+            ->withResource(ResourceFactory::make($resource))
+            ->create()
+            ->persist();
+        EntitiesHistoryFactory::make()
+            ->withActionLog(ActionLogFactory::make($notToBeDeletedActionLog))
+            ->withResource(ResourceFactory::make($resource))
+            ->create()
+            ->persist();
+
+        $service = new ActionLogsPurgeService();
+        $result = $service->purge(5);
+
+        // Make sure no entries are deleted from action logs, because resource contains entities history.
+        $this->assertSame(0, $result);
+        $this->assertSame(3, ActionLogFactory::count());
     }
 }

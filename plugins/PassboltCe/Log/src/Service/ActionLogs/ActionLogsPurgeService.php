@@ -26,12 +26,7 @@ use Passbolt\Log\Model\Entity\ActionLog;
 class ActionLogsPurgeService
 {
     /**
-     * Purge action logs
-     * We cannot delete with IN on a subquery for MySQL
-     * However this approach works for Postgres and MariaDB
-     *
-     * Therefore, in case of a PDOException thrown by MySQL,
-     * we use a less performant approach with NOT IN on entity histories
+     * Purge action logs.
      *
      * @param int $retentionInDays retention in days
      * @return int
@@ -39,6 +34,11 @@ class ActionLogsPurgeService
     public function purge(int $retentionInDays): int
     {
         $ActionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+
+        /**
+         * We cannot delete with `IN` clause with a subquery for MySQL. However, the approach works for Postgres and MariaDB.
+         * Therefore, in case of a PDOException thrown by MySQL, we use a less performant approach with NOT IN on entity histories.
+         */
         try {
             return $ActionLogsTable->deleteAll([
                 'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id'),
