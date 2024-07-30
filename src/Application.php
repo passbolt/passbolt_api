@@ -19,6 +19,7 @@ namespace App;
 use App\Authenticator\SessionAuthenticationService;
 use App\Authenticator\SessionIdentificationService;
 use App\Authenticator\SessionIdentificationServiceInterface;
+use App\Command\PassboltBuildCommandsListener;
 use App\Command\SqlExportCommand;
 use App\Middleware\ApiVersionMiddleware;
 use App\Middleware\ContainerInjectorMiddleware;
@@ -163,7 +164,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
         $this->getSolutionBootstrapper()->addFeaturePlugins($this);
 
         if (PHP_SAPI === 'cli') {
-            $this->addCliPlugins();
+            $this->addCliDevelopmentPlugins();
         }
 
         $this->initEmails();
@@ -201,7 +202,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
      *
      * @return void
      */
-    public function initEmails()
+    public function initEmails(): void
     {
         $this->getEventManager()
             ->on(new CoreEmailRedactorPool())
@@ -258,17 +259,20 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     }
 
     /**
-     * Add plugins relevant in CLI mode
+     * Add plugins relevant in CLI development mode
      * - Bake
      * - Migrations
      *
      * @return $this
      */
-    protected function addCliPlugins()
+    protected function addCliDevelopmentPlugins()
     {
+        if (!Configure::read('debug')) {
+            return $this;
+        }
         try {
-            Application::addPlugin('Bake');
             $this
+                ->addPlugin('Bake')
                 ->addPlugin('CakephpFixtureFactories')
                 ->addPlugin('IdeHelper');
         } catch (MissingPluginException $e) {
@@ -335,6 +339,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     public function console(CommandCollection $commands): CommandCollection
     {
         parent::console($commands);
+        $this->getEventManager()->on(new PassboltBuildCommandsListener());
 
         // If the email digest plugin is disabled, fallback on the sender shell
         if (!$this->isFeaturePluginEnabled(EmailDigestPlugin::class)) {
