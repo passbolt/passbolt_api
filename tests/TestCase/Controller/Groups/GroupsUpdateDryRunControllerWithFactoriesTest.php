@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.9.0
+ * @since         4.10.0
  */
 
 namespace App\Test\TestCase\Controller\Groups;
@@ -27,6 +27,9 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
+/**
+ * @covers \App\Controller\Groups\GroupsUpdateController
+ */
 class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCase
 {
     /**
@@ -46,7 +49,7 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
     }
 
-    /*
+    /**
      * Tested scenarios :
      *
      * - Update membership type of users
@@ -72,108 +75,80 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
      *   => expected result: only the secrets the user does not have already access through another source should be
      *      requested for encryption
      */
-
     public function testGroupsUpdateDryRunController_Success_AsGroupManager(): void
     {
         // Define actors of this tests
-        [$userJ, $userN, $userK, $userL] = UserFactory::make(4)->persist();
+        [$jean, $nancy, $kathleen, $lynne] = UserFactory::make(4)->persist();
         $group = GroupFactory::make()
-            ->withGroupsManagersFor([$userJ])
-            ->withGroupsUsersFor([$userN, $userK, $userL])
+            ->withGroupsManagersFor([$jean])
+            ->withGroupsUsersFor([$nancy, $kathleen, $lynne])
             ->persist();
-        [$userA, $userC, $userF] = UserFactory::make(3)->persist();
+        [$ada, $carol, $frances] = UserFactory::make(3)->persist();
 
-        [$resourceC, $resourceF, $resourceG] = ResourceFactory::make(3)->withPermissionsFor([$group, $userC], Permission::UPDATE)
-            ->withSecretsFor([$group, $userC])
+        [$resourceC, $resourceF, $resourceG] = ResourceFactory::make(3)->withPermissionsFor([$group, $carol], Permission::UPDATE)
+            ->withSecretsFor([$group, $carol])
             ->persist();
         PermissionFactory::make()
             ->acoResource($resourceC)
-            ->aroUser($userL)
+            ->aroUser($lynne)
             ->typeOwner()
             ->persist();
-
         // Ids
-        $groupId = $group->id;
-        $groupUserJId = $group->groups_users[0]->id;
-        $groupUserNId = $group->groups_users[1]->id;
-        $groupUserKId = $group->groups_users[2]->id;
-        $groupUserLId = $group->groups_users[3]->id;
+        $groupId = $group->get('id');
+        $groupUserIdJean = $group->groups_users[0]->id;
+        $groupUserIdNancy = $group->groups_users[1]->id;
+        $groupUserIdKathleen = $group->groups_users[2]->id;
+        $groupUserIdLynne = $group->groups_users[3]->id;
+        // Build the request data
+        $changes = [
+            // Update memberships
+            ['id' => $groupUserIdJean, 'is_admin' => false], // Remove Jean as admin
+            ['id' => $groupUserIdNancy, 'is_admin' => true], // Make Nancy admin
+            // Remove users from the group
+            ['id' => $groupUserIdKathleen, 'delete' => true], // Remove Kathleen who has access to the group resources only because of her membership
+            ['id' => $groupUserIdLynne, 'delete' => true], // Remove Lynne who has direct access to the resource chai.
+            // Add users
+            ['user_id' => $frances->id], // Add a user who do not have access to the group resources before adding it to the group
+            ['user_id' => $carol->id], // Carol has the same access as the group (No secret need to be encrypted for the user)
+            ['user_id' => $ada->id], // Ada already has access to few resources the group has access : resourceC, resourceG, resourceF
+        ];
+        // Log in with Jean (group manager)
+        $this->logInAs($jean);
 
-        // Retrieve the resources the group has access.
-        $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
-        $groupHasAccess = Hash::extract($resources, '{n}.id');
-
-        // Build the request data.
-        $changes = [];
-
-        // Update memberships.
-        // Remove userJ as admin
-        $changes[] = ['id' => $groupUserJId, 'is_admin' => false];
-        // Make userN admin
-        $changes[] = ['id' => $groupUserNId, 'is_admin' => true];
-
-        // Remove users from the group
-        // Remove userK who has access to the group resources only because of her membership.
-        $changes[] = ['id' => $groupUserKId, 'delete' => true];
-
-        // Remove a user who has its own access to the same resource the group has.
-        // Remove userL who has direct access to the resource chai.
-        $changes[] = ['id' => $groupUserLId, 'delete' => true];
-
-        // Add a user who has not access to the group resources before adding it to the group.
-        // Add userF.
-        $changes[] = ['user_id' => $userF->id];
-
-        // Add a user who already has access to all the resources the group has access.
-        // userC has the same access as the group Freelancer.
-        // No secret need to be encrypted for the user.
-        $changes[] = ['user_id' => $userC->id];
-
-        // Add a user who already has access to some of the resources the group has access.
-        // Ada already has access to few resources the group has access : resourceC, resourceG, resourceF
-        // Expect the secrets userA had no access to be encrypted.
-        $changes[] = ['user_id' => $userA->id];
-
-        // Update the group users.
-        $this->logInAs($userJ);
-        $this->putJson("/groups/$groupId/dry-run.json", ['groups_users' => $changes]);
+        // Update the group users
+        $this->putJson("/groups/{$groupId}/dry-run.json", ['groups_users' => $changes]);
 
         $this->assertSuccess();
         $result = $this->getResponseBodyAsArray();
-        $this->assertNotEmpty($result);
-
-        // Extract from the result the secrets to add and the secrets of the current users that will be used to encrypt
-        // the secret of the new users.
         $this->assertNotEmpty($result['dry-run']);
         $this->assertNotEmpty($result['dry-run']['SecretsNeeded']);
+        // Extract from the result the secrets to add and the secrets of the current users that will be used to encrypt the secret of the new users.
         $secretsToAdd = $result['dry-run']['SecretsNeeded'];
         $this->assertNotEmpty($result['dry-run']['Secrets']);
         $secretsToEncrypt = $result['dry-run']['Secrets'];
-
         // Assert that all the secrets that need to be added are in the result.
         $expectedSecretsToAdd = [];
-
-        // Membership of userJ and userN are changed. Nothing expected.
-        // userK should not have anymore access to the group resources. Nothing expected.
-        // userL should not have anymore access to the group resources (except resourceC). Nothing expected.
-        // userF should have access to the group resources.
+        // Membership of Jean and Nancy are changed. Nothing expected.
+        // Kathleen should not have anymore access to the group resources. Nothing expected.
+        // Lynne should not have anymore access to the group resources (except resourceC). Nothing expected.
+        // Frances should have access to the group resources.
+        $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
+        $groupHasAccess = Hash::extract($resources, '{n}.id');
         foreach ($groupHasAccess as $resourceId) {
-            $expectedSecretsToAdd[] = ['resource_id' => $resourceId, 'user_id' => $userF->id];
+            $expectedSecretsToAdd[] = ['resource_id' => $resourceId, 'user_id' => $frances->id];
         }
-        // userC already have access to the resources, nothing expected.
-        // userA should have access to the group resources.
+        // Carol already have access to the resources, nothing expected.
+        // Ada should have access to the group resources.
         $userHasNotAccess = [$resourceC->id, $resourceF->id, $resourceG->id];
         foreach ($userHasNotAccess as $resourceId) {
-            $expectedSecretsToAdd[] = ['resource_id' => $resourceId, 'user_id' => $userA->id];
+            $expectedSecretsToAdd[] = ['resource_id' => $resourceId, 'user_id' => $ada->id];
         }
-
         // Assert the added secrets are as expected.
         $this->assertCount(count($expectedSecretsToAdd), $secretsToAdd);
         foreach ($expectedSecretsToAdd as $secret) {
             $extract = Hash::extract($secretsToAdd, "{n}.Secret[user_id={$secret['user_id']}][resource_id={$secret['resource_id']}]");
             $this->assertNotEmpty($extract);
         }
-
         // Assert that all the secrets that will be used to encrypt the secret to add are in the result.
         $expectedSecretsToEncryptIds = Hash::extract($secretsToAdd, '{n}.Secret.resource_id');
         $expectedSecretsToEncryptIds = array_unique($expectedSecretsToEncryptIds);
@@ -196,7 +171,7 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
 
         // Update the group name.
         $this->logInAsAdmin();
-        $this->putJson("/groups/$groupId/dry-run.json", $data);
+        $this->putJson("/groups/{$groupId}/dry-run.json", $data);
         $this->assertSuccess();
 
         // No secrets should be requested nor source secrets given.
@@ -210,7 +185,7 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
     {
         $this->logInAsAdmin();
         $groupId = 'invalid-id';
-        $this->putJson("/groups/$groupId/dry-run.json");
+        $this->putJson("/groups/{$groupId}/dry-run.json");
         $this->assertError(400, 'The group id is not valid.');
     }
 
@@ -218,7 +193,7 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
     {
         $this->logInAsAdmin();
         $groupId = UuidFactory::uuid();
-        $this->putJson("/groups/$groupId/dry-run.json");
+        $this->putJson("/groups/{$groupId}/dry-run.json");
         $this->assertError(404, 'The group does not exist.');
     }
 
@@ -226,7 +201,7 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
     {
         $this->logInAsAdmin();
         $groupId = GroupFactory::make()->deleted()->persist()->id;
-        $this->putJson("/groups/$groupId/dry-run.json");
+        $this->putJson("/groups/{$groupId}/dry-run.json");
         $this->assertError(404, 'The group does not exist.');
     }
 
@@ -234,15 +209,15 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
     {
         $groupId = GroupFactory::make()->persist()->id;
         $this->logInAsUser();
-        $this->putJson("/groups/$groupId/dry-run.json");
+        $this->putJson("/groups/{$groupId}/dry-run.json");
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
     public function testGroupsUpdateDryRunController_Error_NotAuthenticated(): void
     {
-        $groupId = GroupFactory::make()->persist()->id;
+        $groupId = GroupFactory::make()->persist()->get('id');
         $postData = [];
-        $this->putJson("/groups/$groupId/dry-run.json", $postData);
+        $this->putJson("/groups/{$groupId}/dry-run.json", $postData);
         $this->assertAuthenticationError();
     }
 
@@ -251,7 +226,7 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
         $this->disableCsrfToken();
         $this->logInAsAdmin();
         $groupId = GroupFactory::make()->persist()->id;
-        $this->put("/groups/$groupId/dry-run.json");
+        $this->put("/groups/{$groupId}/dry-run.json");
         $this->assertResponseCode(403);
     }
 
@@ -263,7 +238,7 @@ class GroupsUpdateDryRunControllerWithFactoriesTest extends AppIntegrationTestCa
         ];
 
         $this->logInAsAdmin();
-        $this->put("/groups/$groupId/dry-run", $data);
+        $this->put("/groups/{$groupId}/dry-run", $data);
         $this->assertResponseCode(404);
     }
 }
