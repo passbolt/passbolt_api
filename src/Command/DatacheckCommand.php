@@ -47,13 +47,23 @@ class DatacheckCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Re-validate the data of this installation.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
+
         // Display options
-        $parser->setDescription(__('Re-validate the data of this installation.'))
+        $parser
             ->addOption('hide-success-details', [
-            'help' => __d('cake_console', 'Hide passing checks details.'),
-            'boolean' => true,
+                'help' => __d('cake_console', 'Hide passing checks details.'),
+                'boolean' => true,
             ])
             ->addOption('hide-error-details', [
                 'help' => __d('cake_console', 'Hide passing checks details.'),

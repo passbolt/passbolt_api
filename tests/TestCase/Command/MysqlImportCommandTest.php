@@ -47,7 +47,7 @@ class MysqlImportCommandTest extends AppTestCase
     {
         $this->exec('passbolt mysql_import -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Utility to import a mysql database backups.');
+        $this->assertOutputContains('Utility to import mysql database backups.');
         $this->assertOutputContains('cake passbolt mysql_import');
     }
 

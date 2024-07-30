@@ -87,10 +87,19 @@ class RegisterUserCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Register a new user.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
+
         $parser
-            ->setDescription(__('Register a new user.'))
             ->addOption('interactive', [
                 'short' => 'i',
                 'boolean' => true,
