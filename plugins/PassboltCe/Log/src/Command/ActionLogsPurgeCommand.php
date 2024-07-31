@@ -85,6 +85,11 @@ class ActionLogsPurgeCommand extends PassboltCommand
         $this->assertCurrentProcessUser($io, $this->processUserService);
 
         $retentionInDays = (int)$args->getOption('retention-in-days');
+        if ($retentionInDays < 1) {
+            $this->error(__('Retention in days option must be greater than zero.'), $io);
+
+            return $this->errorCode();
+        }
         $dryRun = $args->getOption('dry-run');
         if ($dryRun) {
             $this->getDryRun($retentionInDays, $io);

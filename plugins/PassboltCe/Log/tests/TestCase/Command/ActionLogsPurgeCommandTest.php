@@ -99,4 +99,18 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
         $this->assertOutputContains('3'); // count for total
         $this->assertExitSuccess();
     }
+
+    public function testActionLogsPurgeCommand_NegativeValueInRetentionDaysOption()
+    {
+        $action = 'AuthLogin.loginGet';
+        [$actionToRetain] = ActionLogFactory::make([
+            ['created' => FrozenDate::now()->subDays(10)],
+            ['created' => FrozenDate::now()],
+        ])->setActionId($action)->persist();
+
+        $this->exec('passbolt action_logs_purge -r -10');
+
+        $this->assertExitError();
+        $this->assertOutputContains('Retention in days option must be greater than zero');
+    }
 }
