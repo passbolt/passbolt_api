@@ -100,10 +100,10 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
         $this->assertExitSuccess();
     }
 
-    public function testActionLogsPurgeCommand_NegativeValueInRetentionDaysOption()
+    public function testActionLogsPurgeCommand_NegativeValueInRetentionDaysOption(): void
     {
         $action = 'AuthLogin.loginGet';
-        [$actionToRetain] = ActionLogFactory::make([
+        ActionLogFactory::make([
             ['created' => FrozenDate::now()->subDays(10)],
             ['created' => FrozenDate::now()],
         ])->setActionId($action)->persist();
@@ -112,5 +112,30 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
 
         $this->assertExitError();
         $this->assertOutputContains('Retention in days option must be greater than zero');
+    }
+
+    public function testActionLogsPurgeCommand_LimitOption_Success(): void
+    {
+        $action = 'AuthLogin.loginGet';
+        ActionLogFactory::make(['created' => FrozenDate::now()->subDays(4)], 5)->setActionId($action)->persist();
+        ActionLogFactory::make(['created' => FrozenDate::now()], 2)->setActionId($action)->persist();
+
+        $this->exec('passbolt action_logs_purge -r 2 -l 3');
+
+        $this->assertExitSuccess();
+        $this->assertOutputContains('<success>3 action logs entries were deleted.</success>');
+        $this->assertSame(4, ActionLogFactory::count());
+    }
+
+    public function testActionLogsPurgeCommand_LimitOption_Error(): void
+    {
+        $action = 'AuthLogin.loginGet';
+        ActionLogFactory::make(['created' => FrozenDate::now()->subDays(4)])->setActionId($action)->persist();
+        ActionLogFactory::make(['created' => FrozenDate::now()])->setActionId($action)->persist();
+
+        $this->exec('passbolt action_logs_purge -r 2 -l -5');
+
+        $this->assertExitError();
+        $this->assertOutputContains('<error>Limit option must be greater than zero.</error>');
     }
 }

@@ -84,7 +84,7 @@ class ActionLogsPurgeServiceTest extends AppTestCase
             $this->assertSame($expectedCount, $result->all()->count());
             $this->assertSame($totalCountToDelete + $totalCountToIgnore, ActionLogFactory::count());
         } else {
-            $result = $service->purge($retentionPeriodInDays);
+            $result = $service->purge($retentionPeriodInDays, 1000);
             $this->assertSame($result, $totalCountToDelete);
             $this->assertSame($totalCountToIgnore, ActionLogFactory::count());
         }
@@ -131,7 +131,7 @@ class ActionLogsPurgeServiceTest extends AppTestCase
             ->persist();
 
         $service = new ActionLogsPurgeService();
-        $result = $service->purge(5);
+        $result = $service->purge(5, 100);
 
         // Make sure no entries are deleted from action logs, because resource contains entities history.
         $this->assertSame(0, $result);

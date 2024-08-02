@@ -29,9 +29,10 @@ class ActionLogsPurgeService
      * Purge action logs.
      *
      * @param int $retentionInDays retention in days
+     * @param int $limit Maximum number of rows to purge.
      * @return int
      */
-    public function purge(int $retentionInDays): int
+    public function purge(int $retentionInDays, int $limit): int
     {
         $ActionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
 
@@ -41,7 +42,7 @@ class ActionLogsPurgeService
          */
         try {
             return $ActionLogsTable->deleteAll([
-                'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id'),
+                'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id')->limit($limit),
             ]);
         } catch (\PDOException $exception) {
             $createdBefore = FrozenDate::now()->subDays($retentionInDays);
@@ -56,6 +57,7 @@ class ActionLogsPurgeService
                     'ActionLogs.id NOT IN' => $entitiesHistory,
                     'ActionLogs.created < ' => $createdBefore,
                 ])
+                ->epilog("LIMIT {$limit}")
                 ->execute()
                 ->rowCount();
         }
