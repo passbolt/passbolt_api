@@ -53,6 +53,5 @@ class PassboltCommandTest extends AppTestCase
         $this->assertOutputContains('The Passbolt CLI');
         $this->assertOutputContains('console.');
         $this->assertOutputContains('cake passbolt');
-        $this->assertOutputContains('cake passbolt');
     }
 }
