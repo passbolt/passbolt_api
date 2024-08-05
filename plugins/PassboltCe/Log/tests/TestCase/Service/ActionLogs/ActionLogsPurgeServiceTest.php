@@ -20,7 +20,9 @@ namespace Passbolt\Log\Test\TestCase\Service\ActionLogs;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenDate;
+use Passbolt\Log\Service\ActionLogs\ActionLogsCreateService;
 use Passbolt\Log\Service\ActionLogs\ActionLogsPurgeService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Factory\EntitiesHistoryFactory;
@@ -84,7 +86,7 @@ class ActionLogsPurgeServiceTest extends AppTestCase
             $this->assertSame($expectedCount, $result->all()->count());
             $this->assertSame($totalCountToDelete + $totalCountToIgnore, ActionLogFactory::count());
         } else {
-            $result = $service->purge($retentionPeriodInDays);
+            $result = $service->purge($retentionPeriodInDays, 1000);
             $this->assertSame($result, $totalCountToDelete);
             $this->assertSame($totalCountToIgnore, ActionLogFactory::count());
         }
@@ -131,10 +133,17 @@ class ActionLogsPurgeServiceTest extends AppTestCase
             ->persist();
 
         $service = new ActionLogsPurgeService();
-        $result = $service->purge(5);
+        $result = $service->purge(5, 100);
 
         // Make sure no entries are deleted from action logs, because resource contains entities history.
         $this->assertSame(0, $result);
         $this->assertSame(3, ActionLogFactory::count());
+    }
+
+    public function testActionLogsPurgeService_Get_Action_List()
+    {
+        Configure::write(ActionLogsCreateService::LOG_CONFIG_BLACKLIST_CONFIG_KEY, ['foo']);
+        $actionList = (new ActionLogsPurgeService())->getActionList();
+        $this->assertContains('foo', $actionList);
     }
 }
