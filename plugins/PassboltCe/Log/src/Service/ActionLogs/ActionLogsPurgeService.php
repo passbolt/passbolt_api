@@ -18,6 +18,7 @@ namespace Passbolt\Log\Service\ActionLogs;
 
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenDate;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -133,7 +134,9 @@ class ActionLogsPurgeService
      */
     public function getActionList(): array
     {
-        return [
+        $blacklistedActions = Configure::read(ActionLogsCreateService::LOG_CONFIG_BLACKLIST_CONFIG_KEY, []);
+
+        return array_merge($blacklistedActions, [
             'shell',
             'AccountRecoveryOrganizationPoliciesGet.get',
             'AccountSettingsIndex.index',
@@ -175,6 +178,6 @@ class ActionLogsPurgeService
             'UserLogs.viewByResource',
             'UsersIndex.index',
             'UsersView.view',
-        ];
+        ]);
     }
 }
