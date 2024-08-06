@@ -178,6 +178,10 @@ class ActionLogsPurgeService
             'UserLogs.viewByResource',
             'UsersIndex.index',
             'UsersView.view',
+            'MfaVerifyAjaxError.get',
+            'MfaPoliciesSettingsGet.get',
+            'MfaSetupSelectProvider.get',
+            'AccountRecoveryOrganizationPoliciesGet.get',
         ]);
     }
 }
