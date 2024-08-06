@@ -20,7 +20,6 @@ use App\Service\Command\ProcessUserService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
-use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 
@@ -44,11 +43,9 @@ class KeyringInitCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
-    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    public static function getCommandDescription(): string
     {
-        $parser->setDescription(__('GnuPG Keyring init shell for the passbolt application.'));
-
-        return $parser;
+        return __('GnuPG Keyring init shell for the passbolt application.');
     }
 
     /**

@@ -50,9 +50,17 @@ class SendTestEmailCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Try to send a test email and display debug information.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Debug Email shell for the passbolt application.'));
+        $parser = parent::buildOptionParser($parser);
 
         $parser->addOption('recipient', [
             'short' => 'r',

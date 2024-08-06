@@ -38,9 +38,18 @@ class SqlExportCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Utility to export SQL database backups.') .
+            ' ' . __('Replaces the deprecated mysql_export command.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Utility to export SQL database backups.'));
+        $parser = parent::buildOptionParser($parser);
 
         $this
             ->addDatasourceOption($parser, false)

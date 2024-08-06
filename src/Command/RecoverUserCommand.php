@@ -48,10 +48,19 @@ class RecoverUserCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Get an existing account recovery token, or create a new one.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
+
         $parser
-            ->setDescription(__('Get an existing account recovery token, or create a new one.'))
             ->addOption('username', [
                 'short' => 'u',
                 'required' => true,
