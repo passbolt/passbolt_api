@@ -22,6 +22,7 @@ use App\Model\Entity\User;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\Dto\FindIndexOptions;
+use App\Model\Traits\Query\CaseInsensitiveSearchQueryTrait;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
@@ -40,6 +41,8 @@ use InvalidArgumentException;
  */
 trait UsersFindersTrait
 {
+    use CaseInsensitiveSearchQueryTrait;
+
     /**
      * Filter a Groups query by groups users.
      *
@@ -172,13 +175,11 @@ trait UsersFindersTrait
      */
     private function _filterQueryBySearch(Query $query, string $search)
     {
-        $search = '%' . $search . '%';
-
-        return $query->where(['OR' => [
-            ['Users.username LIKE' => $search],
-            ['Profiles.first_name LIKE' => $search],
-            ['Profiles.last_name LIKE' => $search],
-        ]]);
+        return $this->searchCaseInsensitiveOnMultipleFields($query, [
+            'Users.username',
+            'Profiles.first_name',
+            'Profiles.last_name',
+        ], $search);
     }
 
     /**

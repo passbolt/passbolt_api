@@ -265,6 +265,7 @@ class FoldersTableTest extends FoldersTestCase
             'SpecialName', // Ending Partial Match,
             'Folder', // Starting Partial Match,
             'WithSpecial', // Middle Partial Match
+            'folderwithspecialname', // Lower case
         ];
 
         foreach ($matchingNames as $matchingName) {
