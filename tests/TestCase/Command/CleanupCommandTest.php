@@ -50,7 +50,7 @@ class CleanupCommandTest extends AppTestCase
     {
         $this->exec('passbolt cleanup -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Cleanup and fix issues in database.');
+        $this->assertOutputContains('Identify and fix database relational integrity issues.');
         $this->assertOutputContains('cake passbolt cleanup');
     }
 

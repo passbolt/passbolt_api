@@ -51,10 +51,19 @@ class MigrateCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Run database migrations.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
+
         $parser
-            ->setDescription(__('Migration shell for the Passbolt application.'))
             ->addOption('backup', [
                 'help' => 'Make a database backup to be used in case something goes wrong.',
                 'boolean' => true,
