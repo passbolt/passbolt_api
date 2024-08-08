@@ -128,45 +128,4 @@ class GroupsViewControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('my_group_user', $this->_responseJsonBody);
         $this->assertGroupUserAttributes($this->_responseJsonBody->my_group_user);
     }
-
-    public function testGroupsViewErrorNotAuthenticated(): void
-    {
-        $this->getJson('/groups.json');
-        $this->assertAuthenticationError();
-    }
-
-    public function testGroupsViewErrorNotValidId(): void
-    {
-        $this->authenticateAs('ada');
-        $groupId = 'invalid-id';
-        $this->getJson("/groups/$groupId.json");
-        $this->assertError(400, 'The group id is not valid.');
-    }
-
-    public function testGroupsViewErrorNotFound(): void
-    {
-        $this->authenticateAs('ada');
-        $groupId = UuidFactory::uuid('not-found');
-        $this->getJson("/groups/$groupId.json");
-        $this->assertError(404, 'The group does not exist.');
-    }
-
-    public function testGroupsViewErrorDeletedGroup(): void
-    {
-        $this->authenticateAs('ada');
-        $groupId = UuidFactory::uuid('group.id.deleted');
-        $this->getJson("/groups/$groupId.json");
-        $this->assertError(404, 'The group does not exist.');
-    }
-
-    /**
-     * Check that calling url without JSON extension throws a 404
-     */
-    public function testGroupsViewController_Error_NotJson(): void
-    {
-        $this->authenticateAs('ada');
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $this->get("/groups/$groupId");
-        $this->assertResponseCode(404);
-    }
 }

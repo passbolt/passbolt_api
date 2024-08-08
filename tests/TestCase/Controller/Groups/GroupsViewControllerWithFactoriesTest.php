@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.9.0
+ * @since         4.10.0
  */
 
 namespace App\Test\TestCase\Controller\Groups;
@@ -24,6 +24,9 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
 
+/**
+ * @covers \App\Controller\Groups\GroupsViewController
+ */
 class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
@@ -31,15 +34,15 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
 
     public function testGroupsViewController_Success(): void
     {
-        $this->logInAsUser();
         $groupId = GroupFactory::make()->persist()->id;
+
+        $this->logInAsUser();
         $this->getJson("/groups/$groupId.json");
+
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
-
-        // Expected content.
+        // Expected content
         $this->assertGroupAttributes($this->_responseJsonBody);
-
         // Not expected content.
         $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody);
         $this->assertObjectNotHasAttribute('users', $this->_responseJsonBody);
@@ -48,7 +51,6 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
 
     public function testGroupsViewController_Success_DeprecatedContain(): void
     {
-        $this->logInAsUser();
         $urlParameter = 'contain[modifier]=1';
         $urlParameter .= '&contain[modifier.profile]=1';
         $urlParameter .= '&contain[user]=1';
@@ -61,10 +63,12 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
             ->with('Modifier')
             ->persist();
         $groupId = $group->id;
-        $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
+
+        $this->logInAsUser();
+        $this->getJson("/groups/{$groupId}.json?{$urlParameter}&api-version=2");
+
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
-
         // Expected content.
         $this->assertGroupAttributes($this->_responseJsonBody);
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
@@ -81,9 +85,11 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('my_group_user', $this->_responseJsonBody);
         $this->assertNull($this->_responseJsonBody->my_group_user);
 
-        // Check that the my_group_user attribute is not null for a group the user is member of
+        /**
+         * Check that the my_group_user attribute is not null for a group the user is member of
+         */
         $this->logInAs($user);
-        $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
+        $this->getJson("/groups/{$groupId}.json?{$urlParameter}&api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
         $this->assertObjectHasAttribute('my_group_user', $this->_responseJsonBody);
@@ -92,12 +98,11 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
 
     public function testGroupsViewController_Success_InUseContain(): void
     {
-        $this->logInAsUser();
         $urlParameter = 'contain[modifier]=1';
         $urlParameter .= '&contain[modifier.profile]=1';
-        $urlParameter .= '&contain[user]=1';
-        $urlParameter .= '&contain[group_user]=1';
-        $urlParameter .= '&contain[group_user.user.profile]=1';
+        $urlParameter .= '&contain[users]=1';
+        $urlParameter .= '&contain[groups_users]=1';
+        $urlParameter .= '&contain[groups_users.user.profile]=1';
         $urlParameter .= '&contain[my_group_user]=1';
         $user = UserFactory::make()->user()->persist();
         $group = GroupFactory::make()
@@ -105,11 +110,13 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
             ->with('Modifier')
             ->persist();
         $groupId = $group->id;
-        $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
+
+        $this->logInAsUser();
+        $this->getJson("/groups/{$groupId}.json?{$urlParameter}&api-version=2");
+
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
-
-        // Expected content.
+        // Expected content
         $this->assertGroupAttributes($this->_responseJsonBody);
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody);
         $this->assertUserAttributes($this->_responseJsonBody->modifier);
@@ -125,9 +132,11 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('my_group_user', $this->_responseJsonBody);
         $this->assertNull($this->_responseJsonBody->my_group_user);
 
-        // Check that the my_group_user attribute is not null for a group the user is member of
+        /**
+         * Check that the my_group_user attribute is not null for a group the user is member of
+         */
         $this->logInAs($user);
-        $this->getJson("/groups/$groupId.json?$urlParameter&api-version=2");
+        $this->getJson("/groups/{$groupId}.json?{$urlParameter}&api-version=2");
         $this->assertSuccess();
         $this->assertNotNull($this->_responseJsonBody);
         $this->assertObjectHasAttribute('my_group_user', $this->_responseJsonBody);
@@ -144,7 +153,7 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
     {
         $this->logInAsUser();
         $groupId = 'invalid-id';
-        $this->getJson("/groups/$groupId.json");
+        $this->getJson("/groups/{$groupId}.json");
         $this->assertError(400, 'The group id is not valid.');
     }
 
@@ -152,7 +161,7 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
     {
         $this->logInAsUser();
         $groupId = UuidFactory::uuid();
-        $this->getJson("/groups/$groupId.json");
+        $this->getJson("/groups/{$groupId}.json");
         $this->assertError(404, 'The group does not exist.');
     }
 
@@ -160,7 +169,7 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
     {
         $this->logInAsUser();
         $groupId = GroupFactory::make()->deleted()->persist()->id;
-        $this->getJson("/groups/$groupId.json");
+        $this->getJson("/groups/{$groupId}.json");
         $this->assertError(404, 'The group does not exist.');
     }
 
@@ -168,7 +177,7 @@ class GroupsViewControllerWithFactoriesTest extends AppIntegrationTestCase
     {
         $this->logInAsUser();
         $groupId = GroupFactory::make()->persist()->id;
-        $this->get("/groups/$groupId");
+        $this->get("/groups/{$groupId}");
         $this->assertResponseCode(404);
     }
 }
