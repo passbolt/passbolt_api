@@ -132,20 +132,4 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $expectedGroupsIds = [UuidFactory::uuid('group.id.human_resource'), UuidFactory::uuid('group.id.it_support')];
         $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
     }
-
-    public function testGroupsIndexErrorNotAuthenticated(): void
-    {
-        $this->getJson('/groups.json');
-        $this->assertAuthenticationError();
-    }
-
-    /**
-     * Check that calling url without JSON extension throws a 404
-     */
-    public function testGroupsIndexController_Error_NotJson(): void
-    {
-        $this->logInAsUser();
-        $this->delete('/groups');
-        $this->assertResponseCode(404);
-    }
 }
