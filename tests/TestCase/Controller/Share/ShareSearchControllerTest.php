@@ -84,25 +84,45 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $this->assertFalse(array_search($deletedGroupId, $arosIds));
     }
 
-    public function testShareSearchController_Success_SearchUserWang(): void
+    public function testShareSearchController_Success_SearchUsername(): void
     {
         $user = UserFactory::make()->user()->persist();
         $this->loginAs($user);
 
         $searchedUser = UserFactory::make()->user()->persist();
-        $useless = UserFactory::make()->guest()->persist();
+        RoleFactory::make()->guest()->persist();
         $searchedUserId = $searchedUser->get('id');
         $searchedUserEmail = $searchedUser->get('username');
 
         $resourceId = ResourceFactory::make()->withPermissionsFor([$user], Permission::OWNER)->withPermissionsFor([$searchedUser], Permission::READ)->persist()->get('id');
 
-        $filterParams = "filter[search]=$searchedUserEmail";
+        $filterParams = 'filter[search]=' . strtoupper($searchedUserEmail);
 
-        $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams&api-version=2");
+        $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams");
         $aros = $this->_responseJsonBody;
         $this->assertNotEmpty($aros);
         $this->assertCount(1, $aros);
         $this->assertEquals($searchedUserId, $aros[0]->id);
+    }
+
+    public function testShareSearchController_Success_Search_Profile(): void
+    {
+        RoleFactory::make()->guest()->persist();
+        $user = $this->logInAsUser();
+        UserFactory::make()->withProfileName('Jjjjjohn', 'Doe')->user()->persist();
+        UserFactory::make()->withProfileName('Sam', 'jJJJJim')->user()->persist();
+        // Insert some noise
+        UserFactory::make(5)->persist();
+
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user])->persist()->get('id');
+
+        $filterParams = 'filter[search]=jJj';
+
+        $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams");
+        $this->assertResponseSuccess();
+        $aros = $this->_responseJsonBody;
+        $this->assertNotEmpty($aros);
+        $this->assertCount(2, $aros);
     }
 
     public function testShareSearchController_Success_SearchGroupCreative(): void
@@ -114,9 +134,9 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $groupId = $group->get('id');
         $groupName = $group->get('name');
         $resourceId = ResourceFactory::make()->withPermissionsFor([$user], Permission::OWNER)->persist()->get('id');
-        $filterParams = "filter[search]=$groupName";
+        $filterParams = 'filter[search]=' . strtoupper($groupName);
 
-        $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams&api-version=2");
+        $this->getJson("/share/search-users/resource/$resourceId.json?$filterParams");
         $aros = $this->_responseJsonBody;
         $this->assertNotEmpty($aros);
         $this->assertCount(1, $aros);

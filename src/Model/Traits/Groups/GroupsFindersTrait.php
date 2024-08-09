@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Model\Traits\Groups;
 
+use App\Model\Traits\Query\CaseInsensitiveSearchQueryTrait;
 use App\Utility\UuidFactory;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\ORM\Query;
@@ -24,6 +25,8 @@ use Cake\Validation\Validation;
 
 trait GroupsFindersTrait
 {
+    use CaseInsensitiveSearchQueryTrait;
+
     /**
      * Filter a Groups query by groups that don't have permission for a resource.
      *
@@ -65,11 +68,9 @@ trait GroupsFindersTrait
      * @param string $search The string to search.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryBySearch(Query $query, string $search)
+    private function _filterQueryBySearch(Query $query, string $search): Query
     {
-        $search = '%' . $search . '%';
-
-        return $query->where(['Groups.name LIKE' => $search]);
+        return $this->searchCaseInsensitiveOnField($query, 'Groups.name', $search);
     }
 
     /**

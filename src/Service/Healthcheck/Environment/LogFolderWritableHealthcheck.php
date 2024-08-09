@@ -86,7 +86,7 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
     public function getHelpMessage()
     {
         return [
-            __('Ensure the logs directory and its content are writable by the user the webserver user.'),
+            __('Ensure the logs directory and its content are writable by the webserver user.'),
             __('you can try:'),
             'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'logs',
             'sudo chmod 775 $(find ' . ROOT . 'logs -type d)',
