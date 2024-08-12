@@ -51,7 +51,7 @@ class MigrateCommandTest extends AppTestCase
     {
         $this->exec('passbolt migrate -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Migration shell for the Passbolt application.');
+        $this->assertOutputContains('Run database migrations.');
         $this->assertOutputContains('cake passbolt migrate');
     }
 

@@ -179,14 +179,23 @@ class CleanupCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Identify and fix database relational integrity issues.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Cleanup and fix issues in database.'))
-            ->addOption('dry-run', [
-                'help' => 'Don\'t fix only display report',
-                'default' => 'true',
-                'boolean' => true,
-            ]);
+        $parser = parent::buildOptionParser($parser);
+
+        $parser->addOption('dry-run', [
+            'help' => 'Don\'t fix only display report',
+            'default' => 'true',
+            'boolean' => true,
+        ]);
 
         return $parser;
     }
