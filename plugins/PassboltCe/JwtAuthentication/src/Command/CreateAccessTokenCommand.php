@@ -47,10 +47,18 @@ class CreateAccessTokenCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Create a JSON Web Token.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
         $parser
-            ->setDescription(__('Create a JSON Web Token.'))
             ->addOption('username', [
                 'help' => 'The username to create a user for.',
                 'short' => 'u',
