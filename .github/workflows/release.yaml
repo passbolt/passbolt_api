@@ -9,9 +9,11 @@ jobs:
     build:
         name: Create release
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
         steps:
-            - uses: actions/checkout@v3
-            - env:
-                  GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-              name: Create Release
+            - uses: actions/checkout@v4
+            - name: Create Release
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               run: gh release create "${GITHUB_REF#refs/*/}" -t "$(grep name config/version.php | awk -F "'" '{print $4}')" --notes-file RELEASE_NOTES.md

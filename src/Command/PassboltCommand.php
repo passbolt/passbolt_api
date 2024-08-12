@@ -19,15 +19,20 @@ namespace App\Command;
 use App\Service\Command\ProcessUserService;
 use Cake\Command\Command;
 use Cake\Console\Arguments;
+use Cake\Console\BaseCommand;
+use Cake\Console\CommandCollection;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Cake\Event\EventDispatcherTrait;
 
 /**
  * Passbolt command.
  */
-class PassboltCommand extends Command
+class PassboltCommand extends Command implements PassboltCommandInterface
 {
+    use EventDispatcherTrait;
+
     /**
      * The Passbolt welcome banner should be shown only once.
      * This is a memory cell to that aim.
@@ -47,6 +52,18 @@ class PassboltCommand extends Command
         'apache',
         'http',
     ];
+
+    private ?CommandCollection $passboltCommandCollection;
+
+    /**
+     * @param \Cake\Console\CommandCollection|null $passboltCommandCollection Collection of commands used to display the list of passbolt commands
+     * @see PassboltBuildCommandsListener
+     */
+    public function __construct(?CommandCollection $passboltCommandCollection = null)
+    {
+        parent::__construct();
+        $this->passboltCommandCollection = $passboltCommandCollection;
+    }
 
     /**
      * @inheritDoc
@@ -76,6 +93,14 @@ class PassboltCommand extends Command
     }
 
     /**
+     * @inheritDoc
+     */
+    public static function getCommandDescription(): string
+    {
+        return __('The Passbolt CLI offers an access to the passbolt API directly from the console.');
+    }
+
+    /**
      * Hook method for defining this command's option parser.
      *
      * @see https://book.cakephp.org/4/en/console-commands/commands.html#defining-arguments-and-options
@@ -84,85 +109,29 @@ class PassboltCommand extends Command
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(
-            __('The Passbolt CLI offers an access to the passbolt API directly from the console.')
-        );
+        $parser->setDescription($this->getCommandDescription());
 
-        $parser->addArgument('cleanup', [
-            'help' => __d('cake_console', 'Identify and fix database relational integrity issues.'),
-        ]);
-
-        $parser->addArgument('datacheck', [
-            'help' => __d('cake_console', 'Revalidate the data of the passbolt installation.'),
-        ]);
-
-        $parser->addArgument('drop_tables', [
-            'help' => __d('cake_console', 'Drop all the tables. Dangerous but useful for a full reinstall.'),
-        ]);
-
-        $parser->addArgument('healthcheck', [
-            'help' => __d('cake_console', 'Run a healthcheck for this passbolt instance.'),
-        ]);
-
-        $parser->addArgument('install', [
-            'help' => __d('cake_console', 'Installation shell for the passbolt application.'),
-        ]);
-
-        $parser->addArgument('keyring_init', [
-            'help' => __d('cake_console', 'Init the GnuPG keyring.'),
-        ]);
-
-        if (Configure::read('passbolt.plugins.license')) {
-            $parser->addArgument('license_check', [
-                'help' => __d('cake_console', 'Check the license.'),
-            ]);
+        if (!isset($this->passboltCommandCollection)) {
+            return $parser;
         }
 
-        $parser->addArgument('migrate', [
-            'help' => __d('cake_console', 'Run database migrations.'),
-        ]);
-
-        $parser->addArgument('mysql_export', [
-            'help' =>
-                __d('cake_console', 'Utility to export mysql database backups.') . ' ' .
-                __d('cake_console', 'Deprecated, use instead sql_export.'),
-        ]);
-
-        $parser->addArgument('mysql_import', [
-            'help' => __d('cake_console', 'Utility to import mysql database backups.'),
-        ]);
-
-        $parser->addArgument('purge_email_queue', [
-            'help' => __d('cake_console', 'Purge email queue table content.'),
-        ]);
-
-        $parser->addArgument('recover_user', [
-            'help' => __d('cake_console', 'Get an existing account recovery token, or create a new one.'),
-        ]);
-
-        $parser->addArgument('register_user', [
-            'help' => __d('cake_console', 'Register a new user.'),
-        ]);
-
-        $parser->addArgument('send_test_email', [
-            'help' => __d('cake_console', 'Try to send a test email and display debug information.'),
-        ]);
-
-        $parser->addArgument('show_logs_path', [
-            'help' => __d('cake_console', 'Show application logs.'),
-        ]);
-
-        $parser->addArgument('show_queued_emails', [
-            'help' => __d('cake_console', 'Shows records from email_queue table.'),
-        ]);
-
-        $parser->addArgument('sql_export', [
-            'help' => __d('cake_console', 'Utility to export sql database backups.'),
-        ]);
-
-        $parser->addArgument('version', [
-            'help' => __d('cake_console', 'Provide version number'),
-        ]);
+        // Append the help message as options of all the passbolt commands
+        foreach ($this->passboltCommandCollection as $name => $commandFQN) {
+            if (is_a($commandFQN, PassboltCommandInterface::class, true)) {
+                /** @var \App\Command\PassboltCommandInterface $commandFQN */
+                $help = $commandFQN::getCommandDescription();
+            } elseif (is_a($commandFQN, BaseCommand::class, true)) {
+                /** @var \Cake\Console\BaseCommand $command */
+                $command = new $commandFQN();
+                $parser = $command->getOptionParser();
+                $help = $parser->getDescription();
+            } else {
+                continue;
+            }
+            $parser->addArgument($name, [
+                'help' => $help,
+            ]);
+        }
 
         return $parser;
     }
@@ -372,5 +341,13 @@ class PassboltCommand extends Command
             $io->error('This command is available in debug mode only.');
             $this->abort();
         }
+    }
+
+    /**
+     * @return \Cake\Console\CommandCollection|null
+     */
+    public function getPassboltCommandCollection(): ?CommandCollection
+    {
+        return $this->passboltCommandCollection;
     }
 }

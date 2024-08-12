@@ -19,18 +19,15 @@ namespace App\Command;
 use App\Service\EmailQueue\PurgeEmailQueueService;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
-use Cake\Console\ConsoleOptionParser;
 
 class PurgeEmailQueueCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
-    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    public static function getCommandDescription(): string
     {
-        $parser->setDescription(__('Purge email queue content. Remove sent emails and unsent emails with 3 retries.'));
-
-        return $parser;
+        return __('Purge email queue content. Remove sent emails and unsent emails with 3 retries.');
     }
 
     /**

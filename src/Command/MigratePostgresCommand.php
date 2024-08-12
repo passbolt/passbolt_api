@@ -52,9 +52,17 @@ class MigratePostgresCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Re-runs the migrations required by Postgres.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Re-runs the migrations required by Postgres.'));
+        $parser = parent::buildOptionParser($parser);
 
         $this->addDatasourceOption($parser);
 
