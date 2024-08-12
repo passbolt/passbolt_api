@@ -28,10 +28,19 @@ class CreateJwtKeysCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Create a JWT key pair.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
+
         $parser
-            ->setDescription(__('Create a JWT key pair.'))
             ->addOption('force', [
                 'help' => 'Override the key files if found.',
                 'default' => 'false',

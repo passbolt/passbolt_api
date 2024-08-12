@@ -30,10 +30,18 @@ class SenderCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Sends a batch of queued emails as emails digests.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
         $parser
-            ->setDescription(__('Sends a batch of queued emails as emails digests.'))
             ->addOption('limit', [
                 'short' => 'l',
                 'help' => __('How many emails should be sent in this batch?'),

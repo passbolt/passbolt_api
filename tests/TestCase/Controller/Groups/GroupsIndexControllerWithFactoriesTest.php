@@ -12,59 +12,63 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         4.10.0
  */
 
 namespace App\Test\TestCase\Controller\Groups;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
-use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
 
-class GroupsIndexControllerTest extends AppIntegrationTestCase
+/**
+ * @covers \App\Controller\Groups\GroupsIndexController
+ */
+class GroupsIndexControllerWithFactoriesTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
 
-    public $fixtures = [
-        'app.Base/Users',
-        'app.Base/Profiles',
-        'app.Base/Roles',
-        'app.Base/Groups',
-        'app.Base/GroupsUsers',
-        'app.Base/Permissions',
-    ];
-
-    public function testGroupsIndexSuccess(): void
+    public function testGroupsIndexController_Success(): void
     {
-        $this->authenticateAs('ada');
-        $this->getJson('/groups.json');
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
+        GroupFactory::make(3)->persist();
+        $this->logInAsUser();
 
+        $this->getJson('/groups.json');
+
+        $this->assertSuccess();
+        $this->assertCount(3, $this->_responseJsonBody);
         // Expected content.
         $this->assertGroupAttributes($this->_responseJsonBody[0]);
-        // Not expected content.
+        // Make sure these keys are not present in the response
         $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('users', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('groups_users', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('my_group_user', $this->_responseJsonBody[0]);
     }
 
-    public function testGroupsIndexContainSuccess(): void
+    public function testGroupsIndexController_Success_WithContain(): void
     {
-        $this->authenticateAs('hedy');
+        $user = UserFactory::make()->user()->persist();
+        $groupA = GroupFactory::make()->persist();
+        $groupB = GroupFactory::make()
+            ->withGroupsUsersFor([$user])
+            ->with('Modifier')
+            ->persist();
+        $this->logInAs($user);
+
         $urlParameter = 'contain[modifier]=1';
         $urlParameter .= '&contain[modifier.profile]=1';
         $urlParameter .= '&contain[user]=1';
         $urlParameter .= '&contain[group_user]=1';
         $urlParameter .= '&contain[my_group_user]=1';
-        $this->getJson("/groups.json?$urlParameter&api-version=2");
-        $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
+        $this->getJson("/groups.json?{$urlParameter}&api-version=2");
 
+        $this->assertSuccess();
+        $this->assertCount(2, $this->_responseJsonBody);
         // Expected content.
         $this->assertGroupAttributes($this->_responseJsonBody[0]);
         $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody[0]);
@@ -75,61 +79,87 @@ class GroupsIndexControllerTest extends AppIntegrationTestCase
         $this->assertUserAttributes($this->_responseJsonBody[0]->users[0]);
         $this->assertObjectHasAttribute('groups_users', $this->_responseJsonBody[0]);
         $this->assertGroupUserAttributes($this->_responseJsonBody[0]->groups_users[0]);
-
-        // A group Hedy is not member
-        $groupAId = UuidFactory::uuid('group.id.accounting');
+        // A group user is not a member
+        $groupAId = $groupA->id;
         $groupA = array_reduce($this->_responseJsonBody, function ($carry, $item) use ($groupAId) {
             if ($item->id == $groupAId) {
                 $carry = $item;
             }
 
             return $carry;
-        }, null);
+        });
         $this->assertNull($groupA->my_group_user);
-
-        // A group Hedy is member
-        $groupBId = UuidFactory::uuid('group.id.board');
+        // A group user is a member
+        $groupBId = $groupB->id;
         $groupB = array_reduce($this->_responseJsonBody, function ($carry, $item) use ($groupBId) {
             if ($item->id == $groupBId) {
                 $carry = $item;
             }
 
             return $carry;
-        }, null);
+        });
         $this->assertObjectHasAttribute('my_group_user', $groupB);
         $this->assertGroupUserAttributes($groupB->my_group_user);
     }
 
-    public function testGroupsIndexFilterHasUsersSuccess(): void
+    public function testGroupsIndexController_Success_FilterHasUsers(): void
     {
-        $this->authenticateAs('ada');
-        $urlParameter = 'filter[has-users]=' . UuidFactory::uuid('user.id.irene');
-        $this->getJson("/groups.json?$urlParameter&api-version=2");
+        $user = UserFactory::make()->user()->persist();
+        [$groupA, $groupB, $groupC] = GroupFactory::make(3)->withGroupsManagersFor([$user])->persist();
+        $this->logInAsUser();
+
+        $urlParameter = 'filter[has-users]=' . $user->id;
+        $this->getJson("/groups.json?{$urlParameter}&api-version=2");
+
         $this->assertSuccess();
         $this->assertCount(3, $this->_responseJsonBody);
         $groupsIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $expectedGroupsIds = [UuidFactory::uuid('group.id.creative'), UuidFactory::uuid('group.id.developer'), UuidFactory::uuid('group.id.ergonom')];
-        $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
+        $expectedGroupsIds = [$groupA->id, $groupB->id, $groupC->id];
+        $this->assertEqualsCanonicalizing($expectedGroupsIds, $groupsIds);
     }
 
-    public function testGroupsIndexFilterHasUsers_UpperCase(): void
+    public function testGroupsIndexController_Success_FilterHasUsers_UpperCase(): void
     {
-        $this->authenticateAs('ada');
-        $urlParameter = 'filter[has-users]=' . strtoupper(UuidFactory::uuid('user.id.irene'));
-        $this->getJson("/groups.json?$urlParameter&api-version=2");
+        $user = UserFactory::make()->user()->persist();
+        GroupFactory::make(3)->withGroupsManagersFor([$user])->persist();
+        $this->logInAsUser();
+
+        $urlParameter = 'filter[has-users]=' . strtoupper($user->id);
+        $this->getJson("/groups.json?{$urlParameter}&api-version=2");
+
         $this->assertSuccess();
         $this->assertCount(3, $this->_responseJsonBody);
     }
 
-    public function testGroupsIndexFilterHasManagersSuccess(): void
+    public function testGroupsIndexController_Success_FilterHasManagers(): void
     {
-        $this->authenticateAs('ada');
-        $urlParameter = 'filter[has-managers]=' . UuidFactory::uuid('user.id.ping');
+        $user = UserFactory::make()->user()->persist();
+        [$groupA, $groupB] = GroupFactory::make(2)->withGroupsManagersFor([$user])->persist();
+        $this->logInAsUser();
+
+        $urlParameter = 'filter[has-managers]=' . $user->id;
         $this->getJson("/groups.json?$urlParameter&api-version=2");
+
         $this->assertSuccess();
         $this->assertCount(2, $this->_responseJsonBody);
         $groupsIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $expectedGroupsIds = [UuidFactory::uuid('group.id.human_resource'), UuidFactory::uuid('group.id.it_support')];
-        $this->assertEquals(0, count(array_diff($expectedGroupsIds, $groupsIds)));
+        $expectedGroupsIds = [$groupA->id, $groupB->id];
+        $this->assertEqualsCanonicalizing($expectedGroupsIds, $groupsIds);
+    }
+
+    public function testGroupIndexController_Error_NotAuthenticated(): void
+    {
+        $this->getJson('/groups.json');
+        $this->assertAuthenticationError();
+    }
+
+    /**
+     * Check that calling url without JSON extension throws a 404
+     */
+    public function testGroupIndexController_Error_NotJson(): void
+    {
+        $this->logInAsUser();
+        $this->delete('/groups');
+        $this->assertResponseCode(404);
     }
 }
