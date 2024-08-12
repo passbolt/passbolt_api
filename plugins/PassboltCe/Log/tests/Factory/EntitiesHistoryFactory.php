@@ -57,7 +57,6 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
                 'foreign_model' => $faker->word(),
                 'foreign_key' => $faker->uuid(),
                 'crud' => $faker->randomLetter(),
-                'status' => $faker->boolean(),
                 'created' => Chronos::now()->subMinutes($faker->randomNumber(8)),
             ];
         });

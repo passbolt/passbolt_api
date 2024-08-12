@@ -35,9 +35,17 @@ class AvatarTransferCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Diagnose errors in the transfer of avatars.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Diagnose errors in the transfer of avatars.'));
+        $parser = parent::buildOptionParser($parser);
 
         $this->addDatasourceOption($parser);
 

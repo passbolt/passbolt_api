@@ -21,7 +21,6 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Passbolt\Ee\Error\Exception\Subscriptions\SubscriptionException;
-use Passbolt\Ee\Model\Table\SubscriptionsTable;
 use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyGetService;
 use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyImportService;
 
@@ -30,15 +29,12 @@ use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyImportService;
  */
 class SubscriptionImportCommand extends PassboltCommand
 {
-    protected SubscriptionsTable $Subscriptions;
-
     /**
      * @inheritDoc
      */
-    public function initialize(): void
+    public static function getCommandDescription(): string
     {
-        parent::initialize();
-        $this->Subscriptions = $this->fetchTable('Passbolt/Ee.Subscriptions');
+        return __('Import a subscription key file.');
     }
 
     /**
@@ -46,7 +42,7 @@ class SubscriptionImportCommand extends PassboltCommand
      */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Import a subscription key file.'));
+        $parser = parent::buildOptionParser($parser);
 
         $parser->addOption('file', [
             'short' => 'f',

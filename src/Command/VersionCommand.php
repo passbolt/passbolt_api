@@ -18,7 +18,6 @@ namespace App\Command;
 
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
-use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 
 class VersionCommand extends PassboltCommand
@@ -26,11 +25,9 @@ class VersionCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
-    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    public static function getCommandDescription(): string
     {
-        $parser->setDescription(__('Print version number for the passbolt application.'));
-
-        return $parser;
+        return __('Print version number for the passbolt application.');
     }
 
     /**

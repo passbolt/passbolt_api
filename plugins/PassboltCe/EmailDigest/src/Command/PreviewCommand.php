@@ -36,10 +36,18 @@ class PreviewCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Preview a batch of queued emails as emails digests.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
         $parser
-            ->setDescription(__('Preview a batch of queued emails as emails digests.'))
             ->addOption('limit', [
                 'short' => 'l',
                 'help' => __('How many emails should be in this batch?'),

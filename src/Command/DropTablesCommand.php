@@ -28,9 +28,18 @@ class DropTablesCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Drop all the tables. Dangerous but useful for a full reinstall.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Drop all the tables. Dangerous but useful for a full reinstall.'));
+        $parser = parent::buildOptionParser($parser);
+
         $this->addDatasourceOption($parser, false);
 
         return $parser;

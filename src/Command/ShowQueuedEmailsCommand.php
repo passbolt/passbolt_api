@@ -28,9 +28,17 @@ class ShowQueuedEmailsCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Shows records from email_queue table.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
-        $parser->setDescription(__('Shows records from email_queue table.'));
+        $parser = parent::buildOptionParser($parser);
 
         $parser->addOption('limit', [
             'short' => 'l',
