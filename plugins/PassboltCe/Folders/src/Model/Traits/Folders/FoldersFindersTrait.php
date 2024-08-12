@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Model\Traits\Folders;
 
 use App\Model\Table\AvatarsTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Traits\Query\CaseInsensitiveSearchQueryTrait;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
@@ -34,6 +35,8 @@ use Passbolt\Folders\Model\Entity\Folder;
  */
 trait FoldersFindersTrait
 {
+    use CaseInsensitiveSearchQueryTrait;
+
     /**
      * Build the query that fetches data for folders index
      *
@@ -206,17 +209,16 @@ trait FoldersFindersTrait
      * $query = $Folders->find();
      * $Groups->_filterQueryBySearch($query, 'creative');
      *
-     * Should filter all the groups with a name containing creative.
+     * Should filter all the folders with a name containing creative.
+     * Search should be case-insensitive
      *
      * @param \Cake\ORM\Query $query Query to filter
      * @param string $name Name to filter
      * @return \Cake\ORM\Query
      */
-    public function filterQueryBySearch(Query $query, string $name)
+    public function filterQueryBySearch(Query $query, string $name): Query
     {
-        return $query->where([
-            ['Folders.name LIKE' => '%' . $name . '%'],
-        ]);
+        return $this->searchCaseInsensitiveOnField($query, 'Folders.name', $name);
     }
 
     /**
