@@ -1,8 +1,16 @@
-Release song: TBD
+Release song: https://www.youtube.com/watch?v=W8PTWqE2SVw
 
-Passbolt v4.9.1-test.1
+Passbolt is pleased to announce the immediate availability of version v4.9.1.
 
-## [4.9.1-test.1] - 2024-08-12
+Passbolt v4.9.1 is a maintenance update that fixes issues reported by the community.
+Among other fixes, this version addresses a compatibility issue with the PostgreSQL database, where users encountered
+difficulties sharing passwords with users or groups when different cases were involved in their names.
+
+Additionally, system administrator tools have been improved to better handle the purge of action logs on large datasets.
+
+We would like to express our appreciation to the community for their assistance in improving Passbolt!
+
+## [4.9.1] - 2024-08-13
 ### Fixed
 - PB-34220 As a user I can search by users and groups case insensitively on PostgreSQL
 
