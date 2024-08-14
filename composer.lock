@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8b66b3180f5904b6e88d9a2c14a7b0e7",
+    "content-hash": "992a3097957020fa973c1a3f4b0db12e",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -3362,16 +3362,16 @@
         },
         {
             "name": "singpolyma/openpgp-php",
-            "version": "dev-feature/PB-26152_API-should-identify-openpgpjs-v510-revoked-key-as-revoked",
+            "version": "0.7.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/passbolt/openpgp-php.git",
-                "reference": "92b56f36f15cb98c22e7b580ab97f9a4076850b2"
+                "url": "https://github.com/singpolyma/openpgp-php.git",
+                "reference": "b55996c1942bf676d4531c9b4c0ed226f7fe2b60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/openpgp-php/zipball/92b56f36f15cb98c22e7b580ab97f9a4076850b2",
-                "reference": "92b56f36f15cb98c22e7b580ab97f9a4076850b2",
+                "url": "https://api.github.com/repos/singpolyma/openpgp-php/zipball/b55996c1942bf676d4531c9b4c0ed226f7fe2b60",
+                "reference": "b55996c1942bf676d4531c9b4c0ed226f7fe2b60",
                 "shasum": ""
             },
             "require": {
@@ -3391,6 +3391,7 @@
                     "lib/"
                 ]
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "Unlicense"
             ],
@@ -3405,7 +3406,25 @@
                 }
             ],
             "description": "Pure-PHP implementation of the OpenPGP Message Format (RFC 4880)",
-            "time": "2024-02-20T15:30:12+00:00"
+            "support": {
+                "issues": "https://github.com/singpolyma/openpgp-php/issues",
+                "source": "https://github.com/singpolyma/openpgp-php/tree/0.7.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/singpolyma",
+                    "type": "github"
+                },
+                {
+                    "url": "https://liberapay.com/singpolyma",
+                    "type": "liberapay"
+                },
+                {
+                    "url": "https://www.patreon.com/singpolyma",
+                    "type": "patreon"
+                }
+            ],
+            "time": "2024-08-12T19:00:23+00:00"
         },
         {
             "name": "spomky-labs/otphp",
@@ -8810,7 +8829,6 @@
     "stability-flags": {
         "cakephp/migrations": 20,
         "robmorgan/phinx": 20,
-        "singpolyma/openpgp-php": 20,
         "lorenzo/cakephp-email-queue": 20,
         "psy/psysh": 0
     },
