@@ -20,7 +20,6 @@ use App\Command\PassboltCommand;
 use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
-use Cake\Console\ConsoleOptionParser;
 
 /**
  * Subscription Check shell command.
@@ -42,11 +41,9 @@ class SubscriptionCheckCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
-    public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
+    public static function getCommandDescription(): string
     {
-        $parser->setDescription(__('Check the subscription.'));
-
-        return $parser;
+        return __('Check the subscription.');
     }
 
     /**

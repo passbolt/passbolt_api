@@ -87,11 +87,20 @@ class HealthcheckCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Check the configuration of this installation and associated environment.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
+
         // Display options
         $parser
-            ->setDescription(__('Check the configuration of this installation and associated environment.'))
             ->addOption('hide-pass', [
                 'help' => __d('cake_console', 'Hide passing checks.'),
                 'boolean' => true,

@@ -25,6 +25,7 @@ use Cake\ORM\TableRegistry;
 class ActionLogsCreateService
 {
     public const MODEL_ACTION_LOGS_AFTER_SAVE = 'model_action_logs_after_save';
+    public const LOG_CONFIG_BLACKLIST_CONFIG_KEY = 'passbolt.plugins.log.config.blackList';
 
     /**
      * Create a new action_log from a userAction.
@@ -62,7 +63,7 @@ class ActionLogsCreateService
      */
     private function isActionBlackListed(UserAction $userAction): bool
     {
-        $blackList = Configure::read('passbolt.plugins.log.config.blackList', []);
+        $blackList = Configure::read(self::LOG_CONFIG_BLACKLIST_CONFIG_KEY, []);
 
         return in_array($userAction->getActionName(), $blackList);
     }

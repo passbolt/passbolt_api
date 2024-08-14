@@ -31,6 +31,8 @@ class ActionLogsPurgeCommand extends PassboltCommand
     protected ProcessUserService $processUserService;
     protected ActionLogsPurgeService $purgeService;
 
+    public const DEFAULT_LIMIT = 100_000; // 100k
+
     /**
      * @param \App\Service\Command\ProcessUserService $processUserService Process user service.
      */
@@ -64,6 +66,12 @@ class ActionLogsPurgeCommand extends PassboltCommand
                 'default' => false,
                 'help' => __('Dry run mode.'),
             ])
+            ->addOption('limit', [
+                'short' => 'l',
+                'required' => true,
+                'default' => self::DEFAULT_LIMIT,
+                'help' => __('Maximum number of rows to purge.'),
+            ])
             ->addOption('verbose', [
                 'short' => 'v',
                 'boolean' => true,
@@ -84,15 +92,50 @@ class ActionLogsPurgeCommand extends PassboltCommand
         // Root user is not allowed to execute this command.
         $this->assertCurrentProcessUser($io, $this->processUserService);
 
+        $this->validateOptions($args, $io);
+
         $retentionInDays = (int)$args->getOption('retention-in-days');
+        $limit = (int)$args->getOption('limit');
         $dryRun = $args->getOption('dry-run');
         if ($dryRun) {
             $this->getDryRun($retentionInDays, $io);
         } else {
-            $this->purge($retentionInDays, $io);
+            $this->purge($retentionInDays, $limit, $io);
         }
 
         return $this->successCode();
+    }
+
+    /**
+     * Validates user provided arguments/options data.
+     *
+     * @param \Cake\Console\Arguments $args Argument object.
+     * @param \Cake\Console\ConsoleIo $io I/O object.
+     * @return void
+     */
+    private function validateOptions(Arguments $args, ConsoleIo $io): void
+    {
+        $errors = [];
+
+        $retentionInDays = (int)$args->getOption('retention-in-days');
+        if ($retentionInDays < 1) {
+            $errors[] = __('Retention in days option must be greater than zero.');
+        }
+
+        $limit = (int)$args->getOption('limit');
+        if ($limit < 1) {
+            $errors[] = __('Limit option must be greater than zero.');
+        }
+
+        if (empty($errors)) {
+            // No errors, data is good to use
+            return;
+        }
+
+        foreach ($errors as $error) {
+            $this->error($error, $io);
+        }
+        $this->abort();
     }
 
     /**
@@ -113,12 +156,13 @@ class ActionLogsPurgeCommand extends PassboltCommand
 
     /**
      * @param int $retentionInDays retention in days
+     * @param int $limit Maximum number of rows to purge.
      * @param \Cake\Console\ConsoleIo $io Console IO
      * @return void
      */
-    private function purge(int $retentionInDays, ConsoleIo $io): void
+    private function purge(int $retentionInDays, int $limit, ConsoleIo $io): void
     {
-        $nEntriesDeleted = $this->purgeService->purge($retentionInDays);
+        $nEntriesDeleted = $this->purgeService->purge($retentionInDays, $limit);
         $io->success(__('{0} action logs entries were deleted.', $nEntriesDeleted));
     }
 }

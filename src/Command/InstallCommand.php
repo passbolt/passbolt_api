@@ -76,10 +76,19 @@ class InstallCommand extends PassboltCommand
     /**
      * @inheritDoc
      */
+    public static function getCommandDescription(): string
+    {
+        return __('Installation shell for the passbolt application.');
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function buildOptionParser(ConsoleOptionParser $parser): ConsoleOptionParser
     {
+        $parser = parent::buildOptionParser($parser);
+
         $parser
-            ->setDescription(__('Installation shell for the passbolt application.'))
             ->addOption('quick', [
                 'help' => 'Use a database dump if any to speed things up.',
                 'boolean' => true,
