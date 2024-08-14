@@ -72,7 +72,7 @@ class SendTestEmailCommandTest extends AppTestCase
     {
         $this->exec('passbolt send_test_email -h');
         $this->assertExitSuccess();
-        $this->assertOutputContains('Debug Email shell for the passbolt application.');
+        $this->assertOutputContains('Try to send a test email and display debug information.');
         $this->assertOutputContains('cake passbolt send_test_email');
     }
 

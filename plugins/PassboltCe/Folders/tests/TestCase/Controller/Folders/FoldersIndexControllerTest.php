@@ -32,7 +32,6 @@ use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Model\PermissionsModelTrait;
 use App\Utility\UuidFactory;
-use Cake\Core\Configure;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
@@ -62,57 +61,6 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         SecretsFixture::class,
         GroupsFixture::class,
     ];
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-    }
-
-    private function insertFixtureCase1()
-    {
-        // Ada has access to folder Lovelace and Something as a OWNER
-        // Lovelace (Ada:O)   Something (Ada:O)
-        $userId = UuidFactory::uuid('user.id.ada');
-        $folderA = $this->addFolderFor(['name' => 'Lovelace'], [$userId => Permission::OWNER]);
-        $this->addFolderFor(['name' => 'Something', 'folder_parent_id' => $folderA->id], [$userId => Permission::OWNER]);
-    }
-
-    /**
-     * @return void
-     */
-    public function testFoldersIndexFilterBySearchSuccess()
-    {
-        $this->insertFixtureCase1();
-
-        $this->authenticateAs('ada');
-
-        $this->getJson('/folders.json?api-version=2&filter[search]=Love');
-        $this->assertSuccess();
-        $this->assertEquals(count($this->_responseJsonBody), 1);
-        $this->assertEquals($this->_responseJsonBody[0]->name, 'Lovelace');
-        $this->assertNotContains('Something', $this->_responseJsonBody);
-
-        $this->getJson('/folders.json?api-version=2&filter[search]=ovela');
-        $this->assertSuccess();
-        $this->assertEquals(count($this->_responseJsonBody), 1);
-        $this->assertEquals($this->_responseJsonBody[0]->name, 'Lovelace');
-        $this->assertNotContains('Something', $this->_responseJsonBody);
-
-        $this->getJson('/folders.json?api-version=2&filter[search]=ace');
-        $this->assertSuccess();
-        $this->assertEquals(count($this->_responseJsonBody), 1);
-        $this->assertEquals($this->_responseJsonBody[0]->name, 'Lovelace');
-        $this->assertNotContains('Something', $this->_responseJsonBody);
-
-        $this->getJson('/folders.json?api-version=2&filter[search]=Lovelace');
-        $this->assertSuccess();
-        $this->assertEquals(count($this->_responseJsonBody), 1);
-        $this->assertEquals($this->_responseJsonBody[0]->name, 'Lovelace');
-        $this->assertNotContains('Something', $this->_responseJsonBody);
-
-        $this->assertSuccess();
-    }
 
     private function insertFixtureCase2()
     {

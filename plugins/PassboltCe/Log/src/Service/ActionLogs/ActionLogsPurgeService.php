@@ -18,6 +18,7 @@ namespace Passbolt\Log\Service\ActionLogs;
 
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
+use Cake\Core\Configure;
 use Cake\I18n\FrozenDate;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
@@ -26,22 +27,23 @@ use Passbolt\Log\Model\Entity\ActionLog;
 class ActionLogsPurgeService
 {
     /**
-     * Purge action logs
-     * We cannot delete with IN on a subquery for MySQL
-     * However this approach works for Postgres and MariaDB
-     *
-     * Therefore, in case of a PDOException thrown by MySQL,
-     * we use a less performant approach with NOT IN on entity histories
+     * Purge action logs.
      *
      * @param int $retentionInDays retention in days
+     * @param int $limit Maximum number of rows to purge.
      * @return int
      */
-    public function purge(int $retentionInDays): int
+    public function purge(int $retentionInDays, int $limit): int
     {
         $ActionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
+
+        /**
+         * We cannot delete with `IN` clause with a subquery for MySQL. However, the approach works for Postgres and MariaDB.
+         * Therefore, in case of a PDOException thrown by MySQL, we use a less performant approach with NOT IN on entity histories.
+         */
         try {
             return $ActionLogsTable->deleteAll([
-                'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id'),
+                'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id')->limit($limit),
             ]);
         } catch (\PDOException $exception) {
             $createdBefore = FrozenDate::now()->subDays($retentionInDays);
@@ -56,6 +58,7 @@ class ActionLogsPurgeService
                     'ActionLogs.id NOT IN' => $entitiesHistory,
                     'ActionLogs.created < ' => $createdBefore,
                 ])
+                ->epilog("LIMIT {$limit}")
                 ->execute()
                 ->rowCount();
         }
@@ -131,7 +134,9 @@ class ActionLogsPurgeService
      */
     public function getActionList(): array
     {
-        return [
+        $blacklistedActions = Configure::read(ActionLogsCreateService::LOG_CONFIG_BLACKLIST_CONFIG_KEY, []);
+
+        return array_merge($blacklistedActions, [
             'shell',
             'AccountRecoveryOrganizationPoliciesGet.get',
             'AccountSettingsIndex.index',
@@ -173,6 +178,10 @@ class ActionLogsPurgeService
             'UserLogs.viewByResource',
             'UsersIndex.index',
             'UsersView.view',
-        ];
+            'MfaVerifyAjaxError.get',
+            'MfaPoliciesSettingsGet.get',
+            'MfaSetupSelectProvider.get',
+            'AccountRecoveryOrganizationPoliciesGet.get',
+        ]);
     }
 }

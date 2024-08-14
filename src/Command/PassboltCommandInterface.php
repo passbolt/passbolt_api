@@ -12,32 +12,19 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         4.10.0
  */
 namespace App\Command;
 
-use Cake\Console\Arguments;
-use Cake\Console\ConsoleIo;
-
-class ShowLogsPathCommand extends PassboltCommand
+/**
+ * Passbolt command.
+ */
+interface PassboltCommandInterface
 {
     /**
-     * @inheritDoc
+     * Method to specify the description of the command
+     *
+     * @return string
      */
-    public static function getCommandDescription(): string
-    {
-        return __('Shows error logs path for the current environment.');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    public function execute(Arguments $args, ConsoleIo $io): ?int
-    {
-        parent::execute($args, $io);
-
-        $io->success(LOGS . 'error.log');
-
-        return $this->successCode();
-    }
+    public static function getCommandDescription(): string;
 }
