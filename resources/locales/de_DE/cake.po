@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2023-09-29 10:25\n"
+"PO-Revision-Date: 2024-08-19 18:45\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Fehler"
 
 #: Error/error400.php:37
 msgid "The requested address {0} was not found on this server."
-msgstr ""
+msgstr "Die angeforderte Adresse {0} wurde auf diesem Server nicht gefunden."
 
 #: Error/error500.php:38
 msgid "An Internal Error Has Occurred"
@@ -35,7 +35,7 @@ msgstr "Sie sind nicht berechtigt, auf diese Seite zuzugreifen."
 
 #: Error/ExceptionRenderer.php:304
 msgid "Not Found"
-msgstr ""
+msgstr "Nicht gefunden"
 
 #: Error/ExceptionRenderer.php:306
 msgid "An Internal Error Has Occurred."
@@ -43,45 +43,45 @@ msgstr "Ein interner Fehler ist aufgetreten."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:286
 msgid "Missing or incorrect CSRF cookie type."
-msgstr ""
+msgstr "Fehlender oder falscher CSRF Cookie Typ."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:290
 msgid "Missing or invalid CSRF cookie."
-msgstr ""
+msgstr "Fehlendes oder ungültiges CSRF-Cookie."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:311
 msgid "CSRF token from either the request body or request headers did not match or is missing."
-msgstr ""
+msgstr "CSRF-Token aus dem Request-Body oder Request-Header stimmen nicht überein oder fehlen."
 
 #: Http/Response.php:1490
 msgid "The requested file contains `..` and will not be read."
-msgstr ""
+msgstr "Die angeforderte Datei enthält `..` und wird nicht gelesen."
 
 #: Http/Response.php:1498
 msgid "The requested file was not found"
-msgstr ""
+msgstr "Die angeforderte Datei wurde nicht gefunden"
 
 #: I18n/Number.php:116
 msgid "{0,number,#,###.##} KB"
-msgstr ""
+msgstr "{0,number,#,###.##} KB"
 
 #: I18n/Number.php:118
 msgid "{0,number,#,###.##} MB"
-msgstr ""
+msgstr "{0,number,#,###.##} MB"
 
 #: I18n/Number.php:120
 msgid "{0,number,#,###.##} GB"
-msgstr ""
+msgstr "{0,number,#,###.##} GB"
 
 #: I18n/Number.php:122
 msgid "{0,number,#,###.##} TB"
-msgstr ""
+msgstr "{0,number,#,###.##} TB"
 
 #: I18n/Number.php:114
 msgid "{0,number,integer} Byte"
 msgid_plural "{0,number,integer} Bytes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "{0,number,integer} Byte"
+msgstr[1] "{0,number,integer} Bytes"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} from now"
@@ -93,11 +93,11 @@ msgstr "Vor {0}"
 
 #: I18n/RelativeTimeFormatter.php:89
 msgid "{0} after"
-msgstr ""
+msgstr "{0} nach"
 
 #: I18n/RelativeTimeFormatter.php:89
 msgid "{0} before"
-msgstr ""
+msgstr "{0} vorher"
 
 #: I18n/RelativeTimeFormatter.php:120
 msgid "just now"
@@ -177,14 +177,14 @@ msgstr "vor %s"
 
 #: I18n/RelativeTimeFormatter.php:410
 msgid "on %s"
-msgstr ""
+msgstr "auf %s"
 
 #: I18n/RelativeTimeFormatter.php:53
 #: I18n/RelativeTimeFormatter.php:132
 #: I18n/RelativeTimeFormatter.php:354
 msgid "{0} year"
 msgid_plural "{0} years"
-msgstr[0] ""
+msgstr[0] "{0} Jahr"
 msgstr[1] "{0} Jahre"
 
 #: I18n/RelativeTimeFormatter.php:57
@@ -192,7 +192,7 @@ msgstr[1] "{0} Jahre"
 #: I18n/RelativeTimeFormatter.php:357
 msgid "{0} month"
 msgid_plural "{0} months"
-msgstr[0] ""
+msgstr[0] "{0} Monat"
 msgstr[1] "{0} Monate"
 
 #: I18n/RelativeTimeFormatter.php:63
@@ -200,7 +200,7 @@ msgstr[1] "{0} Monate"
 #: I18n/RelativeTimeFormatter.php:360
 msgid "{0} week"
 msgid_plural "{0} weeks"
-msgstr[0] ""
+msgstr[0] "{0} Woche"
 msgstr[1] "{0} Wochen"
 
 #: I18n/RelativeTimeFormatter.php:65
@@ -208,28 +208,28 @@ msgstr[1] "{0} Wochen"
 #: I18n/RelativeTimeFormatter.php:363
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] ""
+msgstr[0] "{0} Tag"
 msgstr[1] "{0} Tage"
 
 #: I18n/RelativeTimeFormatter.php:70
 #: I18n/RelativeTimeFormatter.php:144
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] ""
+msgstr[0] "{0} Stunde"
 msgstr[1] "{0} Stunden"
 
 #: I18n/RelativeTimeFormatter.php:74
 #: I18n/RelativeTimeFormatter.php:147
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] ""
+msgstr[0] "{0} Minute"
 msgstr[1] "{0} Minuten"
 
 #: I18n/RelativeTimeFormatter.php:78
 #: I18n/RelativeTimeFormatter.php:150
 msgid "{0} second"
 msgid_plural "{0} seconds"
-msgstr[0] ""
+msgstr[0] "{0} Sekunde"
 msgstr[1] "{0} Sekunden"
 
 #: ORM/RulesChecker.php:55
@@ -242,36 +242,36 @@ msgstr "Dieser Wert ist nicht vorhanden"
 
 #: ORM/RulesChecker.php:224
 msgid "Cannot modify row: a constraint for the `{0}` association fails."
-msgstr ""
+msgstr "Kann Zeile nicht ändern: Eine Einschränkung für die `{0}` Verbindung schlägt fehl."
 
 #: ORM/RulesChecker.php:262
 msgid "The count does not match {0}{1}"
-msgstr ""
+msgstr "Die Anzahl entspricht nicht {0}{1}"
 
 #: Utility/Text.php:915
 msgid "and"
-msgstr ""
+msgstr "und"
 
 #: Validation/Validator.php:2500
 msgid "This field is required"
-msgstr ""
+msgstr "Dieses Feld ist erforderlich"
 
 #: Validation/Validator.php:2520
 #: View/Form/ArrayContext.php:249
 msgid "This field cannot be left empty"
-msgstr ""
+msgstr "Das Feld darf nicht leer sein"
 
 #: Validation/Validator.php:2672
 msgid "The provided value is invalid"
-msgstr ""
+msgstr "Der angegebene Status ist ungültig"
 
 #: View/Helper/FormHelper.php:981
 msgid "Edit {0}"
-msgstr ""
+msgstr "Bearbeite {0}"
 
 #: View/Helper/FormHelper.php:983
 msgid "New {0}"
-msgstr ""
+msgstr "Neu {0}"
 
 #: View/Helper/FormHelper.php:1890
 msgid "Submit"
