@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-23 13:58\n"
+"PO-Revision-Date: 2024-08-19 16:46\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -3248,7 +3248,7 @@ msgid "The password generator exclude look alike chars is required."
 msgstr ""
 
 msgid "The password generator exclude look alike chars should be a boolean type."
-msgstr ""
+msgstr "Der Kennwortgenerator, der ähnliche Zeichen ausschließt, sollte vom Typ boolean sein."
 
 msgid "Record not found"
 msgstr "Eintrag nicht gefunden"
@@ -3287,7 +3287,7 @@ msgid "The foreign model should be one of the following: {0}."
 msgstr "Das fremde Modell sollte eines der folgenden sein: {0}."
 
 msgid "The foreign model name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Die Länge des verwendeten Fremdmodellnamens sollte maximal {0} Zeichen betragen."
 
 msgid "A foreign model is required."
 msgstr "Ein fremdes Modell ist erforderlich."
@@ -3299,7 +3299,7 @@ msgid "The control function should be a valid UTF8 string."
 msgstr "Die Kontrollfunktion sollte ein gültiger UTF-8-String sein."
 
 msgid "The control function name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Die Länge des verwendeten Steuerfunktionsnamens sollte maximal {0} Zeichen betragen."
 
 msgid "The control function is not supported."
 msgstr "Die Kontrollfunktion wird nicht unterstützt."
@@ -3326,7 +3326,7 @@ msgid "An entry already exists for the given role and action ids."
 msgstr "Es existiert bereits ein Eintrag für die angegebene Rolle und Aktion IDs."
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "Die Steuerfunktion ist für diese UI-Aktion nicht zulässig."
 
 msgid "An action already exists for the given name."
 msgstr "Für den angegebenen Namen existiert bereits eine Aktion."
@@ -3599,25 +3599,25 @@ msgid "SSL certification validation for SMTP server is disabled."
 msgstr ""
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
-msgstr ""
+msgstr "Kohärente SMTP-Einstellungen. Sie können eine Test-E-Mail senden, um sie zu validieren."
 
 msgid "SMTP Setting errors: {0}"
-msgstr ""
+msgstr "SMTP-Einstellungsfehler: {0}"
 
 msgid "The {0} plugin endpoints are disabled."
-msgstr ""
+msgstr "Die {0}-Plugin-Endpunkte sind deaktiviert."
 
 msgid "The {0} plugin endpoints are enabled."
-msgstr ""
+msgstr "Die {0}-Plugin-Endpunkte sind aktiviert."
 
 msgid "It is recommended to disable the plugin endpoints."
-msgstr ""
+msgstr "Es wird empfohlen, die Plugin-Endpunkte zu deaktivieren."
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "Setzen Sie die Umgebungsvariable PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED auf true."
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
-msgstr ""
+msgstr "Oder setzen Sie passbolt.security.smtpSettings.endpointsDisabled in {0} auf true."
 
 msgid "not found"
 msgstr "nicht gefunden"
@@ -3626,7 +3626,7 @@ msgid "The SMTP Settings source is: {0}."
 msgstr "Die Quelle der SMTP-Einstellungen ist: {0}."
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
-msgstr ""
+msgstr "Es wird empfohlen, die SMTP-Einstellungen in der Datenbank über den Administrationsbereich festzulegen."
 
 msgid "database"
 msgstr "datenbank"
@@ -4157,13 +4157,13 @@ msgid "login"
 msgstr "Anmelden"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Der Administrator {0} ({1}) ist nun aus der Passbolt-Organisation gelöscht."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr ""
+msgstr "hat Sie aus der Passbolt-Organisation gelöscht."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
-msgstr ""
+msgstr "Wenn Sie den Eindruck haben, dass diese Aktion verdächtig erscheint, wenden Sie sich bitte an den Administrator am Ursprungsort des Vorgangs."
 
 msgid "Account suspended"
 msgstr "Konto gesperrt"
