@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2023-11-08 21:05\n"
+"PO-Revision-Date: 2024-08-19 14:07\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -85,19 +85,19 @@ msgstr[1] "{0,number,integer} Octets"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} from now"
-msgstr ""
+msgstr "Dans {0}"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} ago"
-msgstr ""
+msgstr "Il y a {0}"
 
 #: I18n/RelativeTimeFormatter.php:89
 msgid "{0} after"
-msgstr ""
+msgstr "{0} après"
 
 #: I18n/RelativeTimeFormatter.php:89
 msgid "{0} before"
-msgstr ""
+msgstr "{0} avant"
 
 #: I18n/RelativeTimeFormatter.php:120
 msgid "just now"
@@ -173,11 +173,11 @@ msgstr "aujourd'hui"
 
 #: I18n/RelativeTimeFormatter.php:409
 msgid "%s ago"
-msgstr ""
+msgstr "Il y a %s"
 
 #: I18n/RelativeTimeFormatter.php:410
 msgid "on %s"
-msgstr ""
+msgstr "le %s"
 
 #: I18n/RelativeTimeFormatter.php:53
 #: I18n/RelativeTimeFormatter.php:132
@@ -246,7 +246,7 @@ msgstr "Impossible de modifier la ligne : une contrainte pour l'association `{0}
 
 #: ORM/RulesChecker.php:262
 msgid "The count does not match {0}{1}"
-msgstr ""
+msgstr "Le nombre correspond pas à {0}{1}"
 
 #: Utility/Text.php:915
 msgid "and"
@@ -271,7 +271,7 @@ msgstr "Modifier {0}"
 
 #: View/Helper/FormHelper.php:983
 msgid "New {0}"
-msgstr ""
+msgstr "Nouveau {0}"
 
 #: View/Helper/FormHelper.php:1890
 msgid "Submit"
