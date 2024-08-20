@@ -40,6 +40,9 @@ return [
         // Edition.
         'edition' => 'ce',
         'featurePluginAdder' => \App\BaseSolutionBootstrapper::class,
+        'v5' => [
+            'enabled' => filter_var(env('PASSBOLT_V5_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+        ],
 
         // Authentication & Authorisation.
         'auth' => [
