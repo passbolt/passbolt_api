@@ -45,11 +45,11 @@ class V4100AddMetadataFieldsToFolders extends AbstractMigration
                 'after' => 'name',
                 'null' => true,
             ])
-            ->addColumn('metadata_key_id', 'char', [
+            ->addColumn('metadata_key_id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => true,
                 'after' => 'metadata',
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci',
             ])
             ->addColumn('metadata_key_type', 'string', [

@@ -39,22 +39,22 @@ class V4100CreateMetadataPrivateKeys extends AbstractMigration
     {
         $this
             ->table('metadata_private_keys', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'char', [
+            ->addColumn('id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci',
             ])
-            ->addColumn('metadata_key_id', 'char', [
+            ->addColumn('metadata_key_id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table
             ])
-            ->addColumn('user_id', 'char', [
+            ->addColumn('user_id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => true,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table
             ])
             ->addColumn('data', 'text', [

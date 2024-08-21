@@ -39,16 +39,16 @@ class V4100CreateMetadataSessionKeys extends AbstractMigration
     {
         $this
             ->table('metadata_session_keys', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'char', [
+            ->addColumn('id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci',
             ])
-            ->addColumn('user_id', 'char', [
+            ->addColumn('user_id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table (i.e. users)
             ])
             ->addColumn('data', 'text', [
