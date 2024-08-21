@@ -44,10 +44,10 @@ class V4100AddMetadataFieldsToTags extends AbstractMigration
                 'limit' => MysqlAdapter::TEXT_MEDIUM,
                 'null' => true,
             ])
-            ->addColumn('metadata_key_id', 'char', [
+            ->addColumn('metadata_key_id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => true,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci',
             ])
             ->addColumn('metadata_key_type', 'string', [

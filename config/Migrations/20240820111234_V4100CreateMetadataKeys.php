@@ -38,10 +38,10 @@ class V4100CreateMetadataKeys extends AbstractMigration
     {
         $this
             ->table('metadata_keys', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'char', [
+            ->addColumn('id', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci',
             ])
             ->addColumn('fingerprint', 'string', [
@@ -68,16 +68,16 @@ class V4100CreateMetadataKeys extends AbstractMigration
                 'limit' => null,
                 'null' => true,
             ])
-            ->addColumn('created_by', 'char', [
+            ->addColumn('created_by', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table (i.e. users)
             ])
-            ->addColumn('modified_by', 'char', [
+            ->addColumn('modified_by', 'uuid', [
                 'default' => null,
-                'limit' => 36,
                 'null' => false,
+                'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table (i.e. users)
             ])
             ->addIndex(['created_by'])
