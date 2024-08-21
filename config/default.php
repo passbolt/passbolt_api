@@ -42,6 +42,9 @@ return [
         // Edition.
         'edition' => 'pro',
         'featurePluginAdder' => \Passbolt\Ee\EeSolutionBootstrapper::class,
+        'v5' => [
+            'enabled' => filter_var(env('PASSBOLT_V5_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+        ],
 
         // Authentication & Authorisation.
         'auth' => [
