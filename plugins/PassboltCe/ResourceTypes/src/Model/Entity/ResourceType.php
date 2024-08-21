@@ -40,6 +40,11 @@ class ResourceType extends Entity
     // TODO: Move this to TotpResourceType entity
     public const SLUG_STANDALONE_TOTP = 'totp';
     public const SLUG_PASSWORD_DESCRIPTION_TOTP = 'password-description-totp';
+    // v5 slugs
+    public const SLUG_V5_PASSWORD_STRING = 'v5-password-string';
+    public const SLUG_V5_DEFAULT = 'v5-default';
+    public const SLUG_V5_TOTP_STANDALONE = 'v5-totp-standalone';
+    public const SLUG_V5_DEFAULT_WITH_TOTP = 'v5-default-with-totp';
 
     protected $_accessible = [
         'name' => false,
