@@ -12,40 +12,37 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.6.0
+ * @since         4.10.0
  */
 
-namespace App\Model\Rule;
+namespace Passbolt\Metadata\Model\Rule;
 
+use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
-use Cake\Log\Log;
-use Cake\ORM\TableRegistry;
 
-class IsNotUserKeyFingerprintRule
+class IsNotUserFingerprintRule
 {
     /**
-     * Check if an entity that has the fingerprint property set does not
-     * reuse the same fingerprint from the gpgkey table
+     * Check if fingerprint is unique across all the existing users.
      *
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
-        // if entity does not contain fingerprint rule fails
+        // If no entity fingerprint provided the rule will fail
         $fingerprint = $entity->get('fingerprint');
         if (!isset($fingerprint) || !is_string($fingerprint)) {
             return false;
         }
 
-        $gpgKeysTable = TableRegistry::getTableLocator()->get('Gpgkeys');
-        try {
-            return !$gpgKeysTable->exists(['fingerprint' => $fingerprint, 'deleted' => false]);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-
+        // If no server fingerprint provided the rule will fail
+        $fingerprintServer = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        if (!isset($fingerprintServer) || !is_string($fingerprintServer)) {
             return false;
         }
+
+        return !($fingerprintServer === $fingerprint);
     }
 }
