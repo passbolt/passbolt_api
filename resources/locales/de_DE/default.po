@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-08-22 00:54\n"
+"PO-Revision-Date: 2024-08-22 01:56\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -3257,10 +3257,10 @@ msgid "The request data is empty."
 msgstr "Die Abfragedaten sind leer."
 
 msgid "The request data is invalid: expected a collection."
-msgstr "Die Anforderungsdaten sind ungültig: Eine Sammlung wurde erwartet."
+msgstr "Die Anforderungsdaten sind ungültig: Eine Collection wurde erwartet."
 
 msgid "The request data is invalid: invalid fields."
-msgstr "Die Anfragedaten sind ungültig: Ungültige Felder."
+msgstr "Die Anfragedaten sind ungültig: ungültige Felder."
 
 msgid "The request data is invalid: id missing."
 msgstr "Die Anfragedaten sind ungültig: id fehlt."
@@ -3485,7 +3485,7 @@ msgid "The domain is not supported for self-registration."
 msgstr "Die Domain wird für die Selbstregistrierung nicht unterstützt."
 
 msgid "Email domain safe list"
-msgstr "E-Mail-Domain Whitelist"
+msgstr "Sichere E-Mail-Domain Liste"
 
 msgid "Could not parse the self registration settings found in database."
 msgstr "Konnte die in der Datenbank gefundenen Selbstregistrierungseinstellungen nicht analysieren."
@@ -4172,13 +4172,13 @@ msgid "Your account has been suspended."
 msgstr "Ihr Konto wurde gesperrt."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr "Sie sind nicht in der Lage, sich bei Passbolt anzumelden und E-Mail-Benachrichtigungen zu erhalten."
+msgstr "Sie sind nicht befugt, sich bei Passbolt anzumelden und E-Mail-Benachrichtigungen zu erhalten."
 
 msgid "Other users can still share resources with you and add you to a group."
 msgstr "Andere Benutzer können weiterhin Ressourcen mit Ihnen teilen und Sie zu einer Gruppe hinzufügen."
 
 msgid "Contact your admin"
-msgstr "Kontaktiere deinen Admin"
+msgstr "Administrator kontaktieren"
 
 msgid "{0} changed your role to user."
 msgstr "{0} hat Ihre Rolle zu Benutzer geändert."
@@ -4223,7 +4223,7 @@ msgid "Other users can share resources and add this user to a group."
 msgstr "Andere Benutzer können Ressourcen teilen und diesen Benutzer zu einer Gruppe hinzufügen."
 
 msgid "Check user suspension"
-msgstr "Überprüfe Benutzer-Suspendierung"
+msgstr "Benutzer-Suspendierung überprüfen"
 
 msgid "Welcome to {0}!"
 msgstr "Willkommen bei {0}!"
