@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2024-08-19 18:45\n"
+"PO-Revision-Date: 2024-08-22 02:54\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -177,7 +177,7 @@ msgstr "vor %s"
 
 #: I18n/RelativeTimeFormatter.php:410
 msgid "on %s"
-msgstr "auf %s"
+msgstr "am %s"
 
 #: I18n/RelativeTimeFormatter.php:53
 #: I18n/RelativeTimeFormatter.php:132
@@ -234,7 +234,7 @@ msgstr[1] "{0} Sekunden"
 
 #: ORM/RulesChecker.php:55
 msgid "This value is already in use"
-msgstr "Dieser Wert ist bereits in Verwendung"
+msgstr "Dieser Status wird bereits verwendet"
 
 #: ORM/RulesChecker.php:102
 msgid "This value does not exist"
