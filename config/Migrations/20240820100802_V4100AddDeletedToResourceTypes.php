@@ -20,14 +20,6 @@ use Migrations\AbstractMigration;
 class V4100AddDeletedToResourceTypes extends AbstractMigration
 {
     /**
-     * @inheritDoc
-     */
-    public function shouldExecute(): bool
-    {
-        return Configure::read('passbolt.v5.enabled');
-    }
-
-    /**
      * Up Method.
      *
      * @link https://book.cakephp.org/phinx/0/en/migrations.html#the-up-method

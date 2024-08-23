@@ -20,14 +20,6 @@ use Migrations\AbstractMigration;
 class V4100CreateMetadataKeys extends AbstractMigration
 {
     /**
-     * @inheritDoc
-     */
-    public function shouldExecute(): bool
-    {
-        return Configure::read('passbolt.v5.enabled');
-    }
-
-    /**
      * Change Method.
      *
      * More information on this method is available here:
