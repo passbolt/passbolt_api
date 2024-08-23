@@ -20,14 +20,6 @@ use Migrations\AbstractMigration;
 class V4100CreateMetadataKeys extends AbstractMigration
 {
     /**
-     * @inheritDoc
-     */
-    public function shouldExecute(): bool
-    {
-        return Configure::read('passbolt.v5.enabled');
-    }
-
-    /**
      * Change Method.
      *
      * More information on this method is available here:
@@ -82,8 +74,6 @@ class V4100CreateMetadataKeys extends AbstractMigration
             ])
             ->addIndex(['created_by'])
             ->addIndex(['modified_by'])
-            ->addForeignKey('created_by', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
-            ->addForeignKey('modified_by', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
             ->create();
     }
 }
