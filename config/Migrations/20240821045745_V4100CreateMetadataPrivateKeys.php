@@ -66,8 +66,6 @@ class V4100CreateMetadataPrivateKeys extends AbstractMigration
             ])
             ->addIndex(['metadata_key_id'])
             ->addIndex(['user_id'])
-            ->addForeignKey('metadata_key_id', 'metadata_keys', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
-            ->addForeignKey('user_id', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
             ->create();
     }
 }

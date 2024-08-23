@@ -64,7 +64,6 @@ class V4100CreateMetadataSessionKeys extends AbstractMigration
                 'null' => true,
             ])
             ->addIndex(['user_id'])
-            ->addForeignKey('user_id', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
             ->create();
     }
 }

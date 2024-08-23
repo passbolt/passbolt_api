@@ -74,8 +74,6 @@ class V4100CreateMetadataKeys extends AbstractMigration
             ])
             ->addIndex(['created_by'])
             ->addIndex(['modified_by'])
-            ->addForeignKey('created_by', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
-            ->addForeignKey('modified_by', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
             ->create();
     }
 }
