@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
@@ -13,15 +14,22 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-use Cake\Routing\RouteBuilder;
+namespace Passbolt\Metadata\Controller;
 
-/** @var \Cake\Routing\RouteBuilder $routes */
-$routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBuilder $routes) {
-    $routes->setExtensions(['json']);
+use App\Controller\AppController;
+use Passbolt\Metadata\Service\MetadataSettingsGetService;
 
-    $routes->connect('/settings', ['controller' => 'MetadataSettingsGet', 'action' => 'get'])
-        ->setMethods(['GET']);
-
-    $routes->connect('/settings', ['controller' => 'MetadataSettingsPost', 'action' => 'post'])
-        ->setMethods(['PUT', 'POST']);
-});
+class MetadataSettingsGetController extends AppController
+{
+    /**
+     * MetadataSettings GET action
+     *
+     * @return void
+     */
+    public function get()
+    {
+        $this->assertJson();
+        $settings = (new MetadataSettingsGetService())->getSettings();
+        $this->success(__('The operation was successful.'), $settings->toArray());
+    }
+}
