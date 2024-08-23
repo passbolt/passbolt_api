@@ -18,21 +18,21 @@ namespace Passbolt\Metadata\Test\TestCase\Model\Table;
 
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
-use Migrations\TestSuite\Migrator;
+use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 
 /**
  * @covers \Passbolt\Metadata\Model\Table\MetadataKeysTable
  */
-class MetadataKeysTableTest extends AppTestCase
+class MetadataKeysTableTest extends AppTestCaseV5
 {
     use FormatValidationTrait;
 
@@ -50,9 +50,8 @@ class MetadataKeysTableTest extends AppTestCase
     {
         parent::setUp();
 
+        $this->enableFeaturePlugin(MetadataPlugin::class);
         $this->MetadataKeys = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys');
-        Configure::write('passbolt.v5.enabled', true);
-        (new Migrator())->run();
     }
 
     /**
@@ -61,7 +60,6 @@ class MetadataKeysTableTest extends AppTestCase
     public function tearDown(): void
     {
         unset($this->MetadataKeys);
-        Configure::write('passbolt.v5.enabled', false);
 
         parent::tearDown();
     }
