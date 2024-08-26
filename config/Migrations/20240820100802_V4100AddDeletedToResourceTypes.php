@@ -32,6 +32,7 @@ class V4100AddDeletedToResourceTypes extends AbstractMigration
             ->addColumn('deleted', 'datetime', [
                 'default' => null,
                 'null' => true,
+                'after' => 'definition',
             ])
             ->update();
     }
