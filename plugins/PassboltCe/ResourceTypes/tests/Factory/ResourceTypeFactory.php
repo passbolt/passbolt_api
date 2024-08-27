@@ -55,6 +55,7 @@ class ResourceTypeFactory extends CakephpBaseFactory
                 'slug' => $faker->slug(3),
                 'name' => $faker->words(3, true),
                 'description' => $faker->text(64),
+                'definition' => json_encode([]),
                 'created' => FrozenDate::now()->subDays($faker->randomNumber(4)),
                 'modified' => FrozenDate::now()->subDays($faker->randomNumber(4)),
             ];
@@ -69,5 +70,14 @@ class ResourceTypeFactory extends CakephpBaseFactory
     public function passwordAndDescription(): self
     {
         return $this->patchData(['id' => ResourceTypesTable::getPasswordAndDescriptionTypeId()]);
+    }
+
+    public function deleted(?FrozenDate $deleted = null): self
+    {
+        if (is_null($deleted)) {
+            $deleted = FrozenDate::yesterday();
+        }
+
+        return $this->setField('deleted', $deleted);
     }
 }
