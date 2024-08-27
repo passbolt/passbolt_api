@@ -279,7 +279,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
      * @return void
      * @uses \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable::buildRules()
      */
-    public function testMetadataPrivateKeysTable_BuildRules_DataIsEncryptedByCorrectKey(): void
+    public function testMetadataPrivateKeysTable_BuildRules_DataIsEncryptedForTheCorrectKey(): void
     {
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())

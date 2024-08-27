@@ -124,7 +124,7 @@ class MetadataPrivateKeysTable extends Table
 
         $rules->add(new IsValidEncryptedMetadataPrivateKey(), 'isValidEncryptedMetadataPrivateKey', [
             'errorField' => 'data',
-            'message' => __('The data is not valid. Please make sure it is encrypted with the correct key.'),
+            'message' => __('The data is not valid. Please make sure it is encrypted for the correct key.'),
         ]);
 
         return $rules;

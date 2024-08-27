@@ -17,7 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Model\Rule;
 
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Error\Exception\CustomValidationException;
+use App\Service\OpenPGP\MessageRecipientValidationService;
+use App\Service\OpenPGP\MessageValidationService;
+use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -34,54 +37,50 @@ class IsValidEncryptedMetadataPrivateKey
     public function __invoke(EntityInterface $entity, array $options): bool
     {
         $userId = $entity->get('user_id');
-
         try {
-            [$fingerprint, $armoredKey] = $this->getKeyDetails($userId);
+            $armoredKey = $this->getArmoredKey($userId);
         } catch (RecordNotFoundException $e) {
             return false;
         }
 
-        if (!is_string($fingerprint)) {
+        if (!is_string($armoredKey)) {
             return false;
         }
 
-        $gpg = OpenPGPBackendFactory::get();
         try {
-            $gpg->importKeyIntoKeyring($armoredKey);
-            $gpg->setVerifyKeyFromFingerprint($fingerprint);
-            $gpg->verify($entity->get('data'));
+            $rules = MessageValidationService::getAsymmetricMessageRules();
+            $msgInfo = MessageValidationService::parseAndValidateMessage($entity->get('data'), $rules);
+        } catch (CustomValidationException $exception) {
+            Log::error('The message must contain an asymmetric packet. Error: ' . $exception->getMessage());
 
-            return true;
-        } catch (\Exception $exception) {
-            Log::error('IsValidEncryptedMetadataPrivateKey: ' . $exception->getMessage());
-            // consider it fail
+            return false;
         }
 
-        return false;
+        $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+        if (!MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo)) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * @param string|null $userId User identifier.
-     * @return array
+     * @return string|false|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When user is not found.
      */
-    private function getKeyDetails(?string $userId): array
+    private function getArmoredKey(?string $userId)
     {
         if (is_null($userId)) {
-            $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
             $armoredKey = file_get_contents(Configure::read('passbolt.gpg.serverKey.public'));
         } else {
             $usersTable = TableRegistry::getTableLocator()->get('Users');
             /** @var \App\Model\Entity\User $user */
-            $user = $usersTable->find()
-                ->where(['Users.id' => $userId])
-                ->contain(['Gpgkeys'])
-                ->firstOrFail();
-
-            $fingerprint = $user->gpgkey->fingerprint;
+            $user = $usersTable->find()->where(['Users.id' => $userId])->contain(['Gpgkeys'])->firstOrFail();
+            /** @var string|null $armoredKey */
             $armoredKey = $user->gpgkey->armored_key;
         }
 
-        return [$fingerprint, $armoredKey];
+        return $armoredKey;
     }
 }
