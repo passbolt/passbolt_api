@@ -12,40 +12,36 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         3.6.0
+ * @since         4.10.0
  */
 
-namespace App\Model\Rule;
+namespace Passbolt\Metadata\Model\Rule;
 
+use App\Model\Rule\User\IsActiveUserRule;
 use Cake\Datasource\EntityInterface;
-use Cake\Log\Log;
-use Cake\ORM\TableRegistry;
 
-class IsNotUserKeyFingerprintRule
+class UserIsActiveAndNotDeletedIfPresent
 {
     /**
-     * Check if an entity that has the fingerprint property set does not
-     * reuse the same fingerprint from the gpgkey table
-     *
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
-        // if entity does not contain fingerprint rule fails
-        $fingerprint = $entity->get('fingerprint');
-        if (!isset($fingerprint) || !is_string($fingerprint)) {
+        $userId = $entity->get('user_id');
+        // Only apply rule if user id is present
+        if (is_null($userId)) {
+            return true;
+        }
+        // only string is allowed
+        if (!is_string($userId)) {
             return false;
         }
 
-        $gpgKeysTable = TableRegistry::getTableLocator()->get('Gpgkeys');
-        try {
-            return !$gpgKeysTable->exists(['fingerprint' => $fingerprint, 'deleted' => false]);
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
+        /** @var callable $rule */
+        $rule = new IsActiveUserRule();
 
-            return false;
-        }
+        return $rule($entity, $options);
     }
 }
