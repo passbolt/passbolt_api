@@ -40,7 +40,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return array
      */
-    public function getServerKeyInfo(): array
+    public function getMetadataServerKeyInfo(): array
     {
         return [
             'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'server_public.key'), // ecc, curve25519
@@ -50,8 +50,37 @@ trait GpgMetadataKeysTestTrait
     }
 
     /**
+     * Returns info related to Metadata shared key.
+     *
+     * @return array
+     */
+    public function getSharedKeyInfo(): array
+    {
+        return [
+            // Alg: ecc, curve25519
+            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'shared_public.key'),
+            'fingerprint' => 'BF06A5F8615F6DEDC687AA72CCE0BADF53537AA7',
+            'email' => 'shared@passbolt.test',
+        ];
+    }
+
+    /**
+     * Returns info related to Metadata shared key.
+     *
+     * @return array
+     */
+    public function getExpiredKeyInfo(): array
+    {
+        return [
+            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'expired_public.key'),
+            'fingerprint' => '7997026C7DE2B04044C98604A98D5FCDBFC94281',
+            'email' => 'expired_key@passbolt.test',
+        ];
+    }
+
+    /**
      * Message encrypted with Maki (maki@passbolt.com) and Server Key - two recipients.
-     * (signed with server/unsecure public key)
+     * (signed with server public key - unsecure.key)
      *
      * @return false|string
      */

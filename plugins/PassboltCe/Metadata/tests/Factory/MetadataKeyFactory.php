@@ -23,6 +23,7 @@ use Cake\Chronos\Chronos;
 use Cake\I18n\FrozenTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
  * Metadata key factory.
@@ -34,6 +35,7 @@ use Faker\Generator;
 class MetadataKeyFactory extends CakephpBaseFactory
 {
     use ArmoredKeyFactoryTrait;
+    use GpgMetadataKeysTestTrait;
 
     /**
      * Defines the Table Registry used to generate entities with
@@ -77,20 +79,6 @@ class MetadataKeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * Set the armored key and fingerprint as found in config
-     *
-     * @return $this
-     */
-    public function validFingerprint()
-    {
-        return $this->patchData([
-            // Alg: ecc, curve25519, user: shared@passbolt.test
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'shared_public.key'),
-            'fingerprint' => 'BF06A5F8615F6DEDC687AA72CCE0BADF53537AA7',
-        ]);
-    }
-
-    /**
      * Set the armored key and fingerprint to a valid openpgp key
      *
      * @return $this
@@ -105,10 +93,11 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     public function withMakiKey()
     {
-        // TODO: replace this with GpgMetadataKeysTestTrait::getMakiKeyInfo
+        $keyInfo = $this->getMakiKeyInfo();
+
         return $this->patchData([
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key'), // ecc, curve25519
-            'fingerprint' => '3EED5E73EA34C95198A904067B28D501637D5102',
+            'armored_key' => $keyInfo['armored_key'],
+            'fingerprint' => $keyInfo['fingerprint'],
         ]);
     }
 
@@ -117,9 +106,11 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     public function withExpiredKey()
     {
+        $keyInfo = $this->getExpiredKeyInfo();
+
         return $this->patchData([
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'expired_public.key'),
-            'fingerprint' => '7997026C7DE2B04044C98604A98D5FCDBFC94281',
+            'armored_key' => $keyInfo['armored_key'],
+            'fingerprint' => $keyInfo['fingerprint'],
         ]);
     }
 
@@ -147,12 +138,29 @@ class MetadataKeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * Returns valid OpenPGP public key.
+     * Returns key information to use for metadata key tests.
      *
-     * @return false|string
+     * @return string[]
      */
-    public static function getValidPublicKey()
+    public static function getDummyKeyInfo(): array
     {
-        return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key');
+        return [
+            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+xjMEZs7I7BYJKwYBBAHaRw8BAQdAXPnuKJwjOYF/cNRZSGCX/ftwHDfiLWTc
+PQE0dMglp7/NN01ldGFkYXRhIFNlcnZlciBLZXkgPG1ldGFkYXRhX3NlcnZl
+cl9rZXlAcGFzc2JvbHQudGVzdD7CjAQQFgoAPgWCZs7I7AQLCQcICZB5WxWo
+41ot9AMVCAoEFgACAQIZAQKbAwIeARYhBN5tDBSCnh2xswxonnlbFajjWi30
+AACKNAD/d8kCyHxZ2SFJ3YmkKfQwhoy7BSr8oOUt8DwUVtX05moBAMh7y2Hd
+8YWNAt2y5VKor70p9Aigd4qOAqowhNlibOwLzjgEZs7I7BIKKwYBBAGXVQEF
+AQEHQL3ZD0EgxabScRBLIfrb+0SU8jkbILrsEfNYQcRX4LM0AwEIB8J4BBgW
+CgAqBYJmzsjsCZB5WxWo41ot9AKbDBYhBN5tDBSCnh2xswxonnlbFajjWi30
+AADm+wD/UoI/iQYbjTVt1YvvgHVWROtFHpJlmIHtfeNkVG420KABAOH1/krs
+8lq98P8ujYtxzHFy1BMGgYaA7rBTQ9IS49oH
+=VVZV
+-----END PGP PUBLIC KEY BLOCK-----
+',
+            'fingerprint' => 'DE6D0C14829E1DB1B30C689E795B15A8E35A2DF4',
+        ];
     }
 }

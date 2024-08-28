@@ -40,7 +40,7 @@ class MetadataKeyCreateController extends AppController
             throw new FormValidationException(__('Could not validate the metadata key data.'), $form);
         }
 
-        $dto = MetadataKeyDto::fromRequestData($form->getData());
+        $dto = MetadataKeyDto::fromArray($form->getData());
         $uac = $this->User->getAccessControl();
         $metadataKey = (new MetadataKeyCreateService())->create($uac, $dto);
 

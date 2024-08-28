@@ -39,10 +39,6 @@ class MetadataKeyDto
         $this->fingerprint = $fingerprint;
         $this->armoredKey = $armoredKey;
         $this->metadataPrivateKeys = $metadataPrivateKeys;
-
-//        foreach ($metadataPrivateKeys as $metadataPrivateKey) {
-//            $this->metadataPrivateKeys[] = MetadataPrivateKeyDto::fromArray($metadataPrivateKey);
-//        }
     }
 
     /**
@@ -61,7 +57,7 @@ class MetadataKeyDto
      * @param array $data Data to transform into DTO.
      * @return self
      */
-    public static function fromRequestData(array $data): self
+    public static function fromArray(array $data): self
     {
         return new self($data['fingerprint'], $data['armored_key'], $data['metadata_private_keys']);
     }

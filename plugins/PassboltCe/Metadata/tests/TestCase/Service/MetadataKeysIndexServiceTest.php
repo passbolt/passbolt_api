@@ -68,7 +68,7 @@ class MetadataKeysIndexServiceTest extends AppTestCaseV5
         $result = $this->service->get($userId);
         $this->assertNotEmpty($result->toArray());
         $this->assertCount(1, $result->toArray());
-        // assert contain is not there
+        // assert that contain is not there
         $this->assertArrayNotHasKey('metadata_private_keys', $result->toArray()[0]);
     }
 

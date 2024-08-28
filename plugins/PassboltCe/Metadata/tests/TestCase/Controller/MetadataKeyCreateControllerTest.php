@@ -52,9 +52,10 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         $this->logInAs($user);
 
+        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
         $this->postJson('/metadata/keys.json', [
-            'armored_key' => MetadataKeyFactory::getValidPublicKey(),
-            'fingerprint' => 'DE6D0C14829E1DB1B30C689E795B15A8E35A2DF4',
+            'armored_key' => $dummyKey['armored_key'],
+            'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
@@ -83,9 +84,8 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $metadataKeys = MetadataKeyFactory::find()->all()->toArray();
         $this->assertCount(1, $metadataKeys);
         $metadataKey = $metadataKeys[0];
-        $this->assertSame('DE6D0C14829E1DB1B30C689E795B15A8E35A2DF4', $metadataKey['fingerprint']);
-        $this->assertSame(MetadataKeyFactory::getValidPublicKey(), $metadataKey['armored_key']);
-        $this->assertSame(MetadataKeyFactory::getValidPublicKey(), $metadataKey['armored_key']);
+        $this->assertSame($dummyKey['fingerprint'], $metadataKey['fingerprint']);
+        $this->assertSame($dummyKey['armored_key'], $metadataKey['armored_key']);
         $this->assertSame($user->get('id'), $metadataKey['created_by']);
         $this->assertSame($user->get('id'), $metadataKey['modified_by']);
         $this->assertNull($metadataKey['deleted']);
@@ -116,6 +116,8 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function invalidRequestDataProvider(): array
     {
+        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
+
         return [
             [
                  'request data' => [
@@ -132,15 +134,15 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             ],
             [
                 'request data' => [
-                    'armored_key' => MetadataKeyFactory::getValidPublicKey(),
-                    'fingerprint' => 'BF06A5F8615F6DEDC687AA72CCE0BADF53537AA7',
+                    'armored_key' => $dummyKey['armored_key'],
+                    'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => 'foo', // invalid
                 ],
                 'expected errors paths' => ['metadata_private_keys.array', 'metadata_private_keys.hasAtLeast'],
             ],
             [
                 'request data' => [
-                    'armored_key' => MetadataKeyFactory::getValidPublicKey(),
+                    'armored_key' => $dummyKey['armored_key'],
                     'fingerprint' => 1000,
                     'metadata_private_keys' => [
                         [

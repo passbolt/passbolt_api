@@ -70,10 +70,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $uac = $this->makeUac($user);
+        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
 
-        $dto = MetadataKeyDto::fromRequestData([
-            'armored_key' => MetadataKeyFactory::getValidPublicKey(),
-            'fingerprint' => 'DE6D0C14829E1DB1B30C689E795B15A8E35A2DF4', // any random valid fingerprint
+        $dto = MetadataKeyDto::fromArray([
+            'armored_key' => $dummyKey['armored_key'],
+            'fingerprint' => $dummyKey['fingerprint'], // any random valid fingerprint
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
@@ -102,12 +103,12 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('The metadata key could not be saved');
 
-        $dto = MetadataKeyDto::fromRequestData([
+        $dto = MetadataKeyDto::fromArray([
             'armored_key' => 'bar-foo',
             'fingerprint' => '🔥🔥🔥',
             'metadata_private_keys' => [
                 [
-                    'user_id' => 'foo-bar', // server key
+                    'user_id' => 'foo-bar',
                     'data' => 'some data',
                 ],
                 [
@@ -129,10 +130,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ->deleted()
             ->persist();
         $uac = $this->makeUac($user);
+        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
 
-        $dto = MetadataKeyDto::fromRequestData([
-            'armored_key' => MetadataKeyFactory::getValidPublicKey(),
-            'fingerprint' => 'DE6D0C14829E1DB1B30C689E795B15A8E35A2DF4',
+        $dto = MetadataKeyDto::fromArray([
+            'armored_key' => $dummyKey['armored_key'],
+            'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key

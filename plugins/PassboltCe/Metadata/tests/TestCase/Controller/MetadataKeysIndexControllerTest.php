@@ -72,7 +72,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertCount(1, $response[0]['metadata_private_keys']);
         $this->assertEqualsCanonicalizing([
             [
-                'metadata_key_id' => $metadataKey->get('id'), // todo remove?
+                'metadata_key_id' => $metadataKey->get('id'),
                 'user_id' => $user->get('id'),
                 'data' => $metadataPrivateKey->get('data'),
             ],
