@@ -34,12 +34,14 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 class ResourcesUpdateService
 {
     use EventDispatcherTrait;
     use LocatorAwareTrait;
+    use Version5AwareValidationTrait;
 
     public const UPDATE_SUCCESS_EVENT_NAME = 'ResourcesUpdateController.update.success';
 
@@ -81,25 +83,25 @@ class ResourcesUpdateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $id The resource to update
-     * @param array|null $data The resource data
-     * @throws \Exception If an unexpected error occurred
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto The resource DTO
      * @return Resource
+     * @throws \Exception If an unexpected error occurred
      */
-    public function update(UserAccessControl $uac, string $id, ?array $data = []): Resource
+    public function update(UserAccessControl $uac, string $id, MetadataResourceDto $resourceDto): Resource
     {
         $resource = $this->getResource($uac, $id);
-        $meta = $this->extractDataResourceMeta($data);
+        $meta = $this->extractDataResourceMeta($resourceDto);
         $meta = $this->presetOrAssertResourceType($meta);
 
-        $secrets = Hash::get($data, 'secrets', []);
+        $secrets = Hash::get($resourceDto->toArray(), 'secrets', []);
 
         if (empty($meta) && empty($secrets)) {
             return $resource;
         }
 
         $this->Resources->getConnection()->transactional(
-            function () use (&$resource, $uac, $meta, $secrets) {
-                $this->updateResourceMeta($uac, $resource, $meta);
+            function () use (&$resource, $uac, $meta, $secrets, $resourceDto) {
+                $this->updateResourceMeta($uac, $resource, $meta, $resourceDto->isV5());
 
                 $updatedSecrets = [];
                 if (!empty($secrets)) {
@@ -163,24 +165,18 @@ class ResourcesUpdateService
     /**
      * Extract the resource meta data from the request data
      *
-     * @param array $data The request data
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto The request data
      * @return array
      */
-    private function extractDataResourceMeta(array $data): array
+    private function extractDataResourceMeta(MetadataResourceDto $resourceDto): array
     {
         $meta = [];
 
-        if (array_key_exists('name', $data)) {
-            $meta['name'] = $data['name'];
-        }
-        if (array_key_exists('username', $data)) {
-            $meta['username'] = $data['username'];
-        }
-        if (array_key_exists('uri', $data)) {
-            $meta['uri'] = $data['uri'];
-        }
-        if (array_key_exists('description', $data)) {
-            $meta['description'] = $data['description'];
+        $data = $resourceDto->toArray();
+        foreach ($resourceDto->getMetadataProps() as $metadataProp) {
+            if (array_key_exists($metadataProp, $data)) {
+                $meta[$metadataProp] = $data[$metadataProp];
+            }
         }
         if (array_key_exists('resource_type_id', $data)) {
             $meta['resource_type_id'] = $data['resource_type_id'];
@@ -198,11 +194,12 @@ class ResourcesUpdateService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The resource to update
      * @param array $data The request data
+     * @param bool $isDataV5 Is the data passed a v5 format resource
      * @return void
      */
-    private function updateResourceMeta(UserAccessControl $uac, Resource $resource, array $data): void
+    private function updateResourceMeta(UserAccessControl $uac, Resource $resource, array $data, bool $isDataV5): void
     {
-        $this->patchEntity($uac, $resource, $data);
+        $this->patchEntity($uac, $resource, $data, $isDataV5);
         $this->handleValidationErrors($resource);
         $this->Resources->save($resource);
         $this->handleValidationErrors($resource);
@@ -214,16 +211,17 @@ class ResourcesUpdateService
      * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
      * @param \App\Model\Entity\Resource $resource The resource entity to update
      * @param array $data The resource data.
+     * @param bool $isDataV5 Is the data passed a v5 format resource
      * @return Resource
      */
-    private function patchEntity(UserAccessControl $uac, Resource $resource, array $data): Resource
+    private function patchEntity(UserAccessControl $uac, Resource $resource, array $data, bool $isDataV5): Resource
     {
         $data['modified_by'] = $uac->getId();
         // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
         // when a user updates only the secret.
         $data['modified'] = new FrozenTime();
 
-        $accessibleFields = [
+        $baseAccessibleFields = [
             'name' => true,
             'username' => true,
             'uri' => true,
@@ -234,7 +232,11 @@ class ResourcesUpdateService
             'expired' => true,
         ];
 
-        return $this->Resources->patchEntity($resource, $data, ['accessibleFields' => $accessibleFields]);
+        return $this->Resources->patchEntity(
+            $resource,
+            $data,
+            $this->getValidationOptions($baseAccessibleFields, $isDataV5)
+        );
     }
 
     /**

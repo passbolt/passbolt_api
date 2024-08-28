@@ -301,6 +301,23 @@ class ResourcesTable extends Table
     }
 
     /**
+     * Rule checker for v5 properties
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRulesV5(RulesChecker $rules): RulesChecker
+    {
+        $rules->add(new IsNotSoftDeletedRule(), 'resource_type_is_not_soft_deleted', [
+            'table' => 'Passbolt/ResourceTypes.ResourceTypes',
+            'errorField' => 'resource_type_id',
+            'message' => __('The resource type should not be deleted.'),
+        ]);
+
+        return $rules;
+    }
+
+    /**
      * @param \Cake\Event\Event $event event
      * @param \ArrayObject $data data
      * @param \ArrayObject $options options
