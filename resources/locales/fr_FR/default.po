@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-08-28 12:28\n"
+"PO-Revision-Date: 2024-08-28 13:29\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1415,16 +1415,16 @@ msgid "Check that the domain name is correct in {0}"
 msgstr ""
 
 msgid "Check the network settings"
-msgstr ""
+msgstr "Vérifiez les paramètres réseau"
 
 msgid "Unique value set for security.salt"
-msgstr ""
+msgstr "Valeur unique définie pour security.salt"
 
 msgid "Default value found for security.salt"
-msgstr ""
+msgstr "Valeur par défaut trouvée pour security.salt"
 
 msgid "Edit the security.salt in {0}"
-msgstr ""
+msgstr "Modifier le fichier security.salt dans {0}"
 
 msgid "App.fullBaseUrl validation OK."
 msgstr ""
@@ -1433,55 +1433,55 @@ msgid "App.fullBaseUrl does not validate. {0}."
 msgstr ""
 
 msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
-msgstr ""
+msgstr "Sélectionnez un nom de domaine valide tel que défini par la section 2.3.1 de http://www.ietf.org/rfc/rfc1035.txt"
 
 msgid "The application is able to connect to the database"
-msgstr ""
+msgstr "L'application est capable de se connecter à la base de données"
 
 msgid "The driver defined in the database configuration is not supported."
-msgstr ""
+msgstr "Le pilote défini dans la configuration de la base de données n'est pas pris en charge."
 
 msgid "The application is not able to connect to the database."
-msgstr ""
+msgstr "L'application n'est pas capable de se connecter à la base de données."
 
 msgid "Ensure that the driver defined in {0} is one of the following: {1}."
-msgstr ""
+msgstr "Assurez-vous que le pilote défini dans {0} est l'un des suivants : {1}."
 
 msgid "Double check the host, database name, username and password in {0}."
-msgstr ""
+msgstr "Vérifiez à nouveau l'hôte, le nom de la base de données, le nom d'utilisateur et le mot de passe dans {0}."
 
 msgid "Make sure the database exists and is accessible for the given database user."
 msgstr ""
 
 msgid "Some default content is present."
-msgstr ""
+msgstr "Du contenu par défaut est présent."
 
 msgid "No default content found."
-msgstr ""
+msgstr "Aucun contenu par défaut n'a été trouvé."
 
 msgid "Run the install script to install the database tables"
-msgstr ""
+msgstr "Exécutez le script d'installation pour installer les tables de la base de données"
 
 msgid "The database schema is up to date."
 msgstr ""
 
 msgid "The database schema is not up to date."
-msgstr ""
+msgstr "Le schéma de la base de données n'est pas à jour."
 
 msgid "Run the migration scripts:"
-msgstr ""
+msgstr "Exécuter les scripts de migration :"
 
 msgid "{0} tables found."
-msgstr ""
+msgstr "{0} tables trouvées."
 
 msgid "No table found."
-msgstr ""
+msgstr "Aucune table trouvée."
 
 msgid "GD or Imagick extension is installed."
-msgstr ""
+msgstr "L'extension GD ou Imagick est installée."
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr ""
+msgstr "Vous devez activer les extensions Gd ou Imagick pour utiliser Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.image.php"
 msgstr ""
@@ -1490,61 +1490,61 @@ msgid "See. https://secure.php.net/manual/en/book.imagick.php"
 msgstr ""
 
 msgid "Intl extension is installed."
-msgstr ""
+msgstr "L'extension Intl est installée."
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr ""
+msgstr "Vous devez activer l'extension intl pour utiliser Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.intl.php"
 msgstr ""
 
 msgid "The logs directory and its content are writable."
-msgstr ""
+msgstr "Le répertoire des logs et son contenu sont accessibles en écriture."
 
 msgid "The logs directory and its content are not writable."
-msgstr ""
+msgstr "Le répertoire des logs et son contenu ne sont pas accessibles en écriture."
 
 msgid "Ensure the logs directory and its content are writable by the user the webserver user."
-msgstr ""
+msgstr "Assurez-vous que le répertoire des logs et son contenu sont accessibles en écriture par l'utilisateur du serveur web."
 
 msgid "you can try:"
 msgstr "vous pouvez essayer :"
 
 msgid "Mbstring extension is installed."
-msgstr ""
+msgstr "L'extension Mbstring est installée."
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr ""
+msgstr "Vous devez activer l'extension mbstring pour utiliser Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.mbstring.php"
 msgstr ""
 
 msgid "PHP version is {0} or above."
-msgstr ""
+msgstr "La version de PHP est {0} ou supérieure."
 
 msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
-msgstr ""
+msgstr "La version de PHP inférieure à {0} ne sera bientôt plus supportée par Passbolt. Envisagez de mettre à jour votre système d'exploitation ou votre environnement PHP."
 
 msgid "PCRE compiled with unicode support."
-msgstr ""
+msgstr "PCRE compilé avec le support Unicode."
 
 msgid "PCRE has not been compiled with Unicode support."
-msgstr ""
+msgstr "PCRE n'a pas été compilé avec le support Unicode."
 
 msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
-msgstr ""
+msgstr "Recompiler PCRE avec le support Unicode en ajoutant --enable-unicode-properties lors de la configuration."
 
 msgid "PHP version {0}."
-msgstr ""
+msgstr "Version PHP {0}."
 
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr ""
+msgstr "La version de PHP est trop basse, Passbolt a besoin de PHP {0} ou supérieur."
 
 msgid "The temporary directory and its content are writable and not executable."
-msgstr ""
+msgstr "Le répertoire temporaire et son contenu sont accessibles en écriture et non exécutables."
 
 msgid "The temporary directory and its content are not writable, or are executable."
-msgstr ""
+msgstr "Le répertoire temporaire et son contenu ne sont pas accessibles en écriture ou sont exécutables."
 
 msgid "Ensure the temporary directory and its content are writable by the webserver user."
 msgstr ""
@@ -1652,10 +1652,10 @@ msgid "Create a key, export it and add the fingerprint to {0}"
 msgstr ""
 
 msgid "PHP GPG Module is installed and loaded."
-msgstr ""
+msgstr "Le module PHP GPG est installé et chargé."
 
 msgid "PHP GPG Module is not installed or loaded."
-msgstr ""
+msgstr "Le module PHP GPG n'est pas installé ou chargé."
 
 msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
 msgstr ""
@@ -1664,13 +1664,13 @@ msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and
 msgstr ""
 
 msgid "The private key file is defined in {0} and readable."
-msgstr ""
+msgstr "Le fichier de clé privée est défini dans {0} et lisible."
 
 msgid "The private key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Le fichier de clé privée n'est pas défini dans {0} ou n'est pas lisible."
 
 msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
-msgstr ""
+msgstr "Assurez-vous que le fichier de clé privée est défini par la variable passbolt.gpg.serverKey.private dans {0}."
 
 msgid "Ensure there is a private key armored block in the key file."
 msgstr ""
@@ -1697,7 +1697,7 @@ msgid "The public key file is defined in {0} and readable."
 msgstr ""
 
 msgid "The public key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Le fichier de clé publique n'est pas défini dans {0} ou n'est pas lisible."
 
 msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
 msgstr ""
@@ -1709,19 +1709,19 @@ msgid "Ensure the public key defined in {0} exists and is accessible by the webs
 msgstr ""
 
 msgid "Environment"
-msgstr ""
+msgstr "Environnement"
 
 msgid "Config files"
-msgstr ""
+msgstr "Fichiers de configuration"
 
 msgid "Core config"
-msgstr ""
+msgstr "Configuration du noyau"
 
 msgid "SMTP settings"
-msgstr ""
+msgstr "Paramètres SMTP"
 
 msgid "Application configuration"
-msgstr ""
+msgstr "Configuration de l'application"
 
 msgid "Database"
 msgstr "Base de données"
@@ -1730,28 +1730,28 @@ msgid "GPG Configuration"
 msgstr "Configuration GPG"
 
 msgid "JWT Authentication"
-msgstr ""
+msgstr "Authentification JWT"
 
 msgid "SSL Certificate"
-msgstr ""
+msgstr "Certificat SSL"
 
 msgid "The {0} plugin is enabled."
-msgstr ""
+msgstr "Le plugin {0} est activé."
 
 msgid "The {0} plugin is disabled."
-msgstr ""
+msgstr "Le plugin {0} est désactivé."
 
 msgid "Set the environment variable {0} to true"
-msgstr ""
+msgstr "Définir la variable d'environnement {0} à true"
 
 msgid "Enable the plugin in order to define SMTP settings in the database."
-msgstr ""
+msgstr "Activez le plugin afin de définir les paramètres SMTP dans la base de données."
 
 msgid "Hostname is matching in SSL certificate."
-msgstr ""
+msgstr "Le nom d'hôte correspond au certificat SSL."
 
 msgid "Hostname does not match when validating certificates."
-msgstr ""
+msgstr "Le nom d'hôte ne correspond pas lors de la validation des certificats."
 
 msgid "SSL access is enabled."
 msgstr "L'accès SSL est activé."
@@ -1898,7 +1898,7 @@ msgid "The group id should be a valid UUID."
 msgstr "L'identifiant du groupe doit être un UUID valide."
 
 msgid "The users ids array should contain only valid UUIDs."
-msgstr ""
+msgstr "Le tableau des identifiants des utilisateurs doit contenir uniquement des UUID valides."
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "Échec de validation du secret {0}. {1}"
@@ -1970,7 +1970,7 @@ msgid "This user has been disabled."
 msgstr ""
 
 msgid "The username {0} is a duplicate."
-msgstr ""
+msgstr "Le nom d'utilisateur {0} est un doublon."
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Échec de validation de l'utilisateur {0}. {1}"
@@ -2378,19 +2378,19 @@ msgid "The configuration {0} is not correctly set."
 msgstr "La configuration {0} n'est pas correctement définie."
 
 msgid "The {0} directory is not writable."
-msgstr ""
+msgstr "Le répertoire {0} n'est pas accessible en écriture."
 
 msgid "The {0} directory should not be writable."
-msgstr ""
+msgstr "Le répertoire {0} ne doit pas être accessible en écriture."
 
 msgid "A valid JWT key pair was found."
-msgstr ""
+msgstr "Une paire de clés JWT valide a été trouvée."
 
 msgid "A valid JWT key pair is missing."
-msgstr ""
+msgstr "Il manque une paire de clés JWT valide."
 
 msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
-msgstr ""
+msgstr "Exécutez le script de création de clés JWT pour créer une paire de clés JWT secrète et publique valide :"
 
 msgid "The refresh token should be a valid UUID."
 msgstr "Le jeton de rafraîchissement doit être un UUID valide."
@@ -2834,19 +2834,19 @@ msgid "This is not a valid Duo client secret."
 msgstr "Ce n'est pas une clé secrète Duo valide."
 
 msgid "This is not a valid Duo API hostname."
-msgstr ""
+msgstr "Ceci n'est pas un nom d'hôte valide de l'API Duo."
 
 msgid "This is not a valid Duo client ID."
-msgstr ""
+msgstr "Ceci n'est pas un ID de client Duo valide."
 
 msgid "Cannot verify Duo settings."
-msgstr ""
+msgstr "Impossible de vérifier les paramètres Duo."
 
 msgid "Could not validate Duo configuration"
 msgstr "Impossible de valider la configuration Duo"
 
 msgid "The property {0} is visible by administrators only."
-msgstr ""
+msgstr "La propriété {0} n'est visible que par les administrateurs."
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "Le jeton MFA fourni n'existe pas ou est inactif."
@@ -2891,7 +2891,7 @@ msgid "Could not validate Yubikey configuration."
 msgstr "Impossible de valider la configuration Yubikey."
 
 msgid "Duo Multi Factor Authentication"
-msgstr ""
+msgstr "Authentification multi-facteurs Duo"
 
 msgid "Something went wrong."
 msgstr "Une erreur s'est produite."
@@ -2906,7 +2906,7 @@ msgid "Retry"
 msgstr "Réessayer"
 
 msgid "Getting started with Duo"
-msgstr ""
+msgstr "Commencer avec Duo"
 
 msgid "How does it work?"
 msgstr "Comment ça marche ?"
@@ -3143,19 +3143,19 @@ msgid "The password generator settings is required."
 msgstr ""
 
 msgid "The password generator settings should not be empty."
-msgstr ""
+msgstr "Les paramètres du générateur de mots de passe ne doivent pas être vides."
 
 msgid "The password generator settings should have at least one mask selected."
 msgstr ""
 
 msgid "The passphrase generator settings is required."
-msgstr ""
+msgstr "Les paramètres du générateur de phrase de passe sont nécessaires."
 
 msgid "The passphrase generator settings should not be empty."
-msgstr ""
+msgstr "Les paramètres du générateur de phrase de passe ne doivent pas être vides."
 
 msgid "Could not validate the password policies settings."
-msgstr ""
+msgstr "Impossible de valider les paramètres de la politique de mot de passe."
 
 msgid "The passphrase generator words is required."
 msgstr ""
@@ -3251,7 +3251,7 @@ msgid "The password generator exclude look alike chars should be a boolean type.
 msgstr ""
 
 msgid "Record not found"
-msgstr ""
+msgstr "Enregistrement introuvable"
 
 msgid "The request data is empty."
 msgstr ""
@@ -3311,37 +3311,37 @@ msgid "The control function should not be empty."
 msgstr ""
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant de l'utilisateur qui a créé le Rbac doit être un UUID valide."
 
 msgid "The identifier of the user who modified the Rbac should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant de l'utilisateur qui a modifié le Rbac doit être un UUID valide."
 
 msgid "The identifier of the user who modified the Rbac should not be empty."
-msgstr ""
+msgstr "L'identifiant de l'utilisateur qui a modifié le Rbac ne doit pas être vide."
 
 msgid "An RBAC entry already exists for the given id."
-msgstr ""
+msgstr "Une entrée RBAC existe déjà pour cet identifiant."
 
 msgid "An entry already exists for the given role and action ids."
 msgstr ""
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "La fonction de contrôle n'est pas autorisée pour cette action de l'interface utilisateur."
 
 msgid "An action already exists for the given name."
-msgstr ""
+msgstr "Une action existe déjà pour ce nom."
 
 msgid "The RBAC settings could not be updated."
-msgstr ""
+msgstr "Les paramètres RBAC n’ont pas pu être mis à jour."
 
 msgid "No data found."
-msgstr ""
+msgstr "Aucune donnée trouvée."
 
 msgid "Some data not found."
-msgstr ""
+msgstr "Certaines données sont introuvables."
 
 msgid "The UI actions data could not be validated."
-msgstr ""
+msgstr "Les données des actions de l'interface utilisateur n'ont pas pu être validées."
 
 msgid "5 minutes"
 msgstr "5 minutes"
@@ -3455,10 +3455,10 @@ msgid "The list of allowed domains should be an array of strings."
 msgstr ""
 
 msgid "The domain #{0} should be a valid domain."
-msgstr ""
+msgstr "Le domaine #{0} doit être un domaine valide."
 
 msgid "Allowed domains: {0}"
-msgstr ""
+msgstr "Domaines autorisés : {0}"
 
 msgid "{0} edited the self registration settings."
 msgstr ""
@@ -3470,7 +3470,7 @@ msgid "{0} just created an account on passbolt!"
 msgstr ""
 
 msgid "The email is already registered."
-msgstr ""
+msgstr "Cette adresse e-mail est déjà enregistrée."
 
 msgid "The self registration plugin is not enabled."
 msgstr ""
@@ -3500,7 +3500,7 @@ msgid "{0} updated the self registration settings"
 msgstr ""
 
 msgid "Status: {0}"
-msgstr ""
+msgstr "Statut : {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
 msgstr ""
@@ -3584,7 +3584,7 @@ msgid "SMTP settings endpoints disabled."
 msgstr ""
 
 msgid "The client should be a valid IP or a valid domain."
-msgstr ""
+msgstr "Le client doit être une adresse IP valide ou un domaine valide."
 
 msgid "No custom SSL configuration for SMTP server."
 msgstr ""
@@ -3599,10 +3599,10 @@ msgid "SSL certification validation for SMTP server is disabled."
 msgstr ""
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
-msgstr ""
+msgstr "Paramètres SMTP cohérents. Vous pouvez envoyer un e-mail de test pour les valider."
 
 msgid "SMTP Setting errors: {0}"
-msgstr ""
+msgstr "Erreur de configuration SMTP : {0}"
 
 msgid "The {0} plugin endpoints are disabled."
 msgstr ""
@@ -3614,7 +3614,7 @@ msgid "It is recommended to disable the plugin endpoints."
 msgstr ""
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "Définissez la variable d'environnement PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED à true."
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
 msgstr ""
@@ -3626,7 +3626,7 @@ msgid "The SMTP Settings source is: {0}."
 msgstr ""
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
-msgstr ""
+msgstr "Il est recommandé de définir les paramètres SMTP dans la base de données par la section d'administration."
 
 msgid "database"
 msgstr "base de données"
@@ -3659,7 +3659,7 @@ msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
 msgstr ""
 
 msgid "Errors: "
-msgstr "Erreurs: "
+msgstr "Erreurs : "
 
 msgid "The data entered are not correct"
 msgstr "Les données saisies sont incorrectes"
@@ -3701,10 +3701,10 @@ msgid "That's it!"
 msgstr "Voilà!"
 
 msgid "A driver name is required."
-msgstr ""
+msgstr "Un nom de pilote est requis."
 
 msgid "The driver name should not be empty."
-msgstr ""
+msgstr "Le nom du pilote ne doit pas être vide."
 
 msgid "The database driver should be one of the following: {0}."
 msgstr ""
@@ -4157,7 +4157,7 @@ msgid "login"
 msgstr "connexion"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "L'administrateur {0} ({1}) est maintenant supprimé de l'instance Passbolt."
 
 msgid "{0} deleted you from the passbolt organisation."
 msgstr ""
