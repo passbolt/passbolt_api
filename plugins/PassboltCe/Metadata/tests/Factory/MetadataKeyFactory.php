@@ -55,10 +55,12 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        $this->setDefaultData(function (Generator $faker) {
+        $dummyData = self::getDummyKeyInfo();
+
+        $this->setDefaultData(function (Generator $faker) use ($dummyData) {
             return [
-                'fingerprint' => $faker->shuffle('ABCDE12345ABCDE12345ABCDE12345ABCDE12345'), // 40 character random upper case
-                'armored_key' => $faker->text(),
+                'fingerprint' => $dummyData['fingerprint'],
+                'armored_key' => $dummyData['armored_key'],
                 'created' => Chronos::now()->subDays($faker->randomNumber(3)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(3)),
                 'deleted' => null,
