@@ -221,4 +221,11 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->get('/resources');
         $this->assertResponseCode(404);
     }
+
+    public function testResourcesIndexController_InvalidFilterSharedWithGroup(): void
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json?filter[is-shared-with-group]=1');
+        $this->assertBadRequestError('Invalid filter');
+    }
 }

@@ -553,12 +553,12 @@ class QueryStringComponent extends Component
      * - Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
      * - No Bueno: 'no-bueno'
      *
-     * @param string $groupId uuid
+     * @param mixed $groupId Value to check.
      * @param string $filterName name of filters
      * @throw CakeException if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterGroup(string $groupId, string $filterName): bool
+    public static function validateFilterGroup($groupId, string $filterName): bool
     {
         if (!Validation::uuid($groupId)) {
             throw new CakeException(
