@@ -38,7 +38,6 @@ use Cake\Validation\Validator;
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[] patchEntities(iterable $entities, array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Passbolt\Metadata\Model\Entity\MetadataKey saveOrFail(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[]|iterable<mixed, \Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[]|iterable<mixed, \Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[]|iterable<mixed, \Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
@@ -65,6 +64,7 @@ class MetadataKeysTable extends Table
 
         $this->hasMany('MetadataPrivateKeys', [
             'foreignKey' => 'metadata_key_id',
+            'className' => 'Passbolt/Metadata.MetadataPrivateKeys',
         ]);
 
         $this->hasOne('Creator', [

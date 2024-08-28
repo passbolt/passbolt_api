@@ -84,7 +84,8 @@ class MetadataKeyFactory extends CakephpBaseFactory
     public function validFingerprint()
     {
         return $this->patchData([
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'shared_public.key'), // ecc, curve25519
+            // Alg: ecc, curve25519, user: shared@passbolt.test
+            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'shared_public.key'),
             'fingerprint' => 'BF06A5F8615F6DEDC687AA72CCE0BADF53537AA7',
         ]);
     }
@@ -104,6 +105,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     public function withMakiKey()
     {
+        // TODO: replace this with GpgMetadataKeysTestTrait::getMakiKeyInfo
         return $this->patchData([
             'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key'), // ecc, curve25519
             'fingerprint' => '3EED5E73EA34C95198A904067B28D501637D5102',
@@ -142,5 +144,15 @@ class MetadataKeyFactory extends CakephpBaseFactory
         }
 
         return $this->with('Creator', $user)->setField('created_by', $user->get('id'));
+    }
+
+    /**
+     * Returns valid OpenPGP public key.
+     *
+     * @return false|string
+     */
+    public static function getValidPublicKey()
+    {
+        return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key');
     }
 }

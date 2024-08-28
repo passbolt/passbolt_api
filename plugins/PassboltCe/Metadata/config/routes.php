@@ -27,4 +27,7 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
 
     $routes->connect('/keys', ['controller' => 'MetadataKeysIndex', 'action' => 'index'])
         ->setMethods(['GET']);
+
+    $routes->connect('/keys', ['controller' => 'MetadataKeyCreate', 'action' => 'create'])
+        ->setMethods(['PUT', 'POST']);
 });
