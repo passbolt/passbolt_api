@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-23 13:58\n"
+"PO-Revision-Date: 2024-08-22 01:56\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -41,7 +41,7 @@ msgid "Could not import the user OpenPGP key."
 msgstr "Der Benutzer OpenPGP-Schlüssel konnte nicht importiert werden."
 
 msgid "Invalid verify token type."
-msgstr ""
+msgstr "Ungültiges Bestätigungs-Token-Format."
 
 msgid "Invalid verify token format, "
 msgstr "Ungültiges Bestätigungs-Token-Format, "
@@ -920,7 +920,7 @@ msgid "A role identifier is required."
 msgstr "Ein Rollenbezeichner ist erforderlich."
 
 msgid "The disabled date should be a valid date."
-msgstr ""
+msgstr "Das Erstellungsdatum muss ein gültiges Datum sein."
 
 msgid "The profile should not be empty."
 msgstr "Das Profil darf nicht leer sein."
@@ -1103,10 +1103,10 @@ msgid "The send on user recover abort setting should be a boolean."
 msgstr "Die Einstellung \"Senden, wenn eine Kontowiederherstellung abgebrochen wurde\" sollte ein Boolean sein."
 
 msgid "The send on user disabled setting should be a boolean."
-msgstr ""
+msgstr "Die Einstellung „Senden beim Benutzer deaktiviert“ sollte ein boolescher Wert sein."
 
 msgid "The send on admin disabled setting should be a boolean."
-msgstr ""
+msgstr "Die Einstellung „Senden an Administrator deaktiviert“ sollte ein boolescher Wert sein."
 
 msgid "The send on comment added setting should be a boolean."
 msgstr "Die Einstellung \"Senden bei neuem Kommentar\" sollte ein Boolean sein."
@@ -1292,7 +1292,7 @@ msgid "Could not connect to passbolt repository to check versions."
 msgstr "Konnte sich nicht mit dem passbolt Repository verbinden, um Versionen zu überprüfen."
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "Es ist nicht möglich zu überprüfen, ob Ihre Version aktuell ist."
 
 msgid "See https://www.passbolt.com/help/tech/update"
 msgstr "Siehe https://www.passbolt.com/help/tech/update"
@@ -1463,7 +1463,7 @@ msgid "Run the install script to install the database tables"
 msgstr "Führen Sie das Installationsskript aus, um die Datenbanktabellen zu installieren"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "Das Datenbankschema ist aktuell."
 
 msgid "The database schema is not up to date."
 msgstr "Das Datenbankschema ist nicht aktuell."
@@ -1517,7 +1517,7 @@ msgid "You must enable the mbstring extension to use Passbolt."
 msgstr "Sie müssen die mbstring Erweiterung aktivieren, um Passbolt zu verwenden."
 
 msgid "See. https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "Siehe https://secure.php.net/manual/en/book.mbstring.php"
 
 msgid "PHP version is {0} or above."
 msgstr "PHP-Version ist {0} oder höher."
@@ -1607,106 +1607,106 @@ msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
 msgstr "Siehe https://www.passbolt.com/help/tech/install#toc_gpg"
 
 msgid "The server private key format is Gopengpg compatible."
-msgstr ""
+msgstr "Das private Schlüsselformat des Servers ist Gopengpg kompatibel."
 
 msgid "The server private key format is not Gopengpg compatible."
-msgstr ""
+msgstr "Das private Schlüsselformat des Servers ist Gopengpg kompatibel."
 
 msgid "The server public key format is Gopengpg compatible."
-msgstr ""
+msgstr "Das private Schlüsselformat des Servers ist Gopengpg kompatibel."
 
 msgid "The server public key format is not Gopengpg compatible."
-msgstr ""
+msgstr "Das private Schlüsselformat des Servers ist Gopengpg kompatibel."
 
 msgid "The environment variable GNUPGHOME is set to {0}."
-msgstr ""
+msgstr "Die Umgebungsvariable GNUPGHOME ist auf {0} gesetzt."
 
 msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
-msgstr ""
+msgstr "Die Umgebungsvariable GNUPGHOME ist auf {0} gesetzt, aber das Verzeichnis existiert nicht."
 
 msgid "Ensure the keyring location exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Stellen Sie sicher, dass der Schlüsselanhänger existiert und für den Benutzer des Webservers zugänglich ist."
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr ""
+msgstr "Du kannst die Position des Schlüsselrings ändern, indem du die Variablen GPG.env.setenv und GPG.env.home in {0} editierst."
 
 msgid "The directory {0} containing the keyring is writable by the webserver user."
-msgstr ""
+msgstr "Das Verzeichnis {0} mit dem Schlüsselring ist vom Benutzer des Webservers beschreibbar."
 
 msgid "The directory {0} containing the keyring is not writable by the webserver user."
-msgstr ""
+msgstr "Das Verzeichnis {0} mit dem Schlüsselring ist vom Benutzer des Webservers beschreibbar."
 
 msgid "Ensure the keyring location is accessible by the webserver user."
-msgstr ""
+msgstr "Stellen Sie sicher, dass der Schlüsselanhänger existiert und für den Benutzer des Webservers zugänglich ist."
 
 msgid "The server OpenPGP key is not the default one."
-msgstr ""
+msgstr "Der OpenPGP-Schlüssel ist nicht der Standardschlüssel."
 
 msgid "Do not use the default OpenPGP key for the server."
-msgstr ""
+msgstr "Verwenden Sie nicht den Standard-OpenPGP-Schlüssel für den Server."
 
 msgid "The server OpenPGP key is not set."
-msgstr ""
+msgstr "Der OpenPGP-Schlüssel ist nicht der Standardschlüssel."
 
 msgid "Create a key, export it and add the fingerprint to {0}"
-msgstr ""
+msgstr "Erstelle einen Schlüssel, exportiere ihn und füge den Fingerabdruck zu {0} hinzu"
 
 msgid "PHP GPG Module is installed and loaded."
-msgstr ""
+msgstr "PHP GPG Module ist installiert und geladen."
 
 msgid "PHP GPG Module is not installed or loaded."
-msgstr ""
+msgstr "PHP GPG Module ist installiert und geladen."
 
 msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
-msgstr ""
+msgstr "Installiere php-gnupg, siehe: http://php.net/manual/de/gnupg.installation.php"
 
 msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
-msgstr ""
+msgstr "Vergewissern Sie sich, dass Extension=gnupg.so in php ini Dateien sowohl für php-cli als auch für PHP hinzugefügt wird."
 
 msgid "The private key file is defined in {0} and readable."
-msgstr ""
+msgstr "Vergewissern Sie sich, dass Extension=gnupg.so in php ini Dateien sowohl für php-cli als auch für PHP hinzugefügt wird."
 
 msgid "The private key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Vergewissern Sie sich, dass Extension=gnupg.so in php ini Dateien sowohl für php-cli als auch für PHP hinzugefügt wird."
 
 msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
-msgstr ""
+msgstr "Vergewissern Sie sich, dass Extension=gnupg.so in php ini Dateien sowohl für php-cli als auch für PHP hinzugefügt wird."
 
 msgid "Ensure there is a private key armored block in the key file."
-msgstr ""
+msgstr "Stellen Sie sicher, dass es einen privaten Schlüssel gepanzerten Block in der Schlüsseldatei gibt."
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Stellen Sie sicher, dass der in {0} definierte private Schlüssel vorhanden ist und für den Webserverbenutzer zugänglich ist."
 
 msgid "There is a valid email id defined for the server key."
-msgstr ""
+msgstr "Stellen Sie sicher, dass der Schlüsselanhänger existiert und für den Benutzer des Webservers zugänglich ist."
 
 msgid "The server key does not have a valid email id."
-msgstr ""
+msgstr "Stellen Sie sicher, dass der Schlüsselanhänger existiert und für den Benutzer des Webservers zugänglich ist."
 
 msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr ""
+msgstr "Der öffentliche Server-Schlüssel, der in der {0} (oder Umgebungsvariablen) definiert ist, ist im Schlüsselring."
 
 msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr ""
+msgstr "Der öffentliche Server-Schlüssel, der in der {0} (oder Umgebungsvariablen) definiert ist, ist nicht im Schlüsselring"
 
 msgid "Import the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "Stellen Sie sicher, dass Sie den privaten Server-Schlüssel im Schlüsselring des Webserver-Benutzers importiert haben."
 
 msgid "The public key file is defined in {0} and readable."
-msgstr ""
+msgstr "Vergewissern Sie sich, dass Extension=gnupg.so in php ini Dateien sowohl für php-cli als auch für PHP hinzugefügt wird."
 
 msgid "The public key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Die öffentliche Schlüsseldatei ist in {0} nicht definiert oder nicht lesbar."
 
 msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
-msgstr ""
+msgstr "Stellen Sie sicher, dass die öffentliche Schlüsseldatei durch die Variable passbolt.gpg.serverKey.public in {0} definiert ist."
 
 msgid "Ensure there is a public key armored block in the key file."
-msgstr ""
+msgstr "Vergewissern Sie sich, dass Extension=gnupg.so in php ini Dateien sowohl für php-cli als auch für PHP hinzugefügt wird."
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Stellen Sie sicher, dass der in {0} definierte öffentliche Schlüssel vorhanden ist und für den Webserverbenutzer zugänglich ist."
 
 msgid "Environment"
 msgstr "Umgebung"
@@ -1751,7 +1751,7 @@ msgid "Hostname is matching in SSL certificate."
 msgstr "Hostname stimmt im SSL-Zertifikat überein."
 
 msgid "Hostname does not match when validating certificates."
-msgstr ""
+msgstr "Der Hostname stimmt bei der Validierung von Zertifikaten nicht überein."
 
 msgid "SSL access is enabled."
 msgstr "SSL-Zugriff ist aktiviert."
@@ -1760,16 +1760,16 @@ msgid "SSL access is not enabled. You can still proceed, but it is highly recomm
 msgstr "SSL-Zugriff ist nicht aktiviert. Sie können trotzdem fortfahren, aber es wird dringend empfohlen, dass Sie Ihren Webserver so konfigurieren, dass er HTTPS verwendet, bevor Sie fortfahren."
 
 msgid "Not using a self-signed certificate."
-msgstr ""
+msgstr "Kein selbstsigniertes Zertifikat verwenden."
 
 msgid "Using a self-signed certificate."
-msgstr ""
+msgstr "Verwendung eines selbstsignierten Zertifikats."
 
 msgid "SSL peer certificate validates."
-msgstr ""
+msgstr "Das SSL-Peer-Zertifikat wird nicht validiert"
 
 msgid "SSL peer certificate does not validate."
-msgstr ""
+msgstr "Das SSL-Peer-Zertifikat wird nicht validiert."
 
 msgid "Could not validate sub key data."
 msgstr "Sub-Key Data konnte nicht validiert werden."
@@ -1934,7 +1934,7 @@ msgid "The key provided does not belong to given user."
 msgstr "Der eingegebene Schlüssel gehört nicht zum angegebenen Benutzer."
 
 msgid "The user does not exist or is not active or is disabled."
-msgstr ""
+msgstr "Der Benutzer existiert nicht oder ist nicht aktiv oder deaktiviert."
 
 msgid "The OpenPGP key data is not valid."
 msgstr "Die OpenPGP-Schlüsseldaten sind ungültig."
@@ -1946,7 +1946,7 @@ msgid "The user does not exist, is already active or has been deleted."
 msgstr "Benutzer existiert nicht, ist bereits aktiv oder wurde gelöscht."
 
 msgid "The user does not exist or is already active or is disabled."
-msgstr ""
+msgstr "Der Benutzer existiert nicht oder ist bereits aktiv oder deaktiviert."
 
 msgid "The user should not be a guest."
 msgstr "Der Benutzer sollte kein Gast sein."
@@ -2360,10 +2360,10 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "Die Route {0} ist mit JWT-Authentifizierung nicht zulässig."
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "Der öffentliche JWT-Schlüssel konnte nicht extrahiert werden."
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "Die Details des öffentlichen JWT-Schlüssels konnten nicht gelesen werden."
 
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "Das Schlüsselpaar für JWT Authentifizierung ist nicht vollständig."
@@ -2390,7 +2390,7 @@ msgid "A valid JWT key pair is missing."
 msgstr "Ein gültiges JWT-Schlüsselpaar fehlt."
 
 msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
-msgstr ""
+msgstr "Führen Sie das Skript zum Erstellen von JWT-Schlüsseln aus, um ein gültiges JWT-Geheimnis und ein öffentliches Schlüsselpaar zu erstellen:"
 
 msgid "The refresh token should be a valid UUID."
 msgstr "Das Aktualisierungstoken sollte eine gültige UUID sein."
@@ -2900,7 +2900,7 @@ msgid "Please try again later or contact your administrator."
 msgstr "Bitte versuchen Sie es später erneut oder kontaktieren Sie Ihren Administrator."
 
 msgid "Logs"
-msgstr "Protokollen"
+msgstr "Logs"
 
 msgid "Retry"
 msgstr "Wiederholen"
@@ -3107,19 +3107,19 @@ msgid "Change them in passbolt"
 msgstr "In passbolt ändern"
 
 msgid "You have been requested to change them"
-msgstr ""
+msgstr "Sie wurden aufgefordert, diese zu ändern"
 
 msgid "Access for users to your shared passwords have been revoked."
-msgstr ""
+msgstr "Der Zugriff für Benutzer auf Ihre freigegebenen Passwörter wurde widerrufen."
 
 msgid "These passwords are now marked as expired."
-msgstr ""
+msgstr "Diese Passwörter sind jetzt als abgelaufen markiert."
 
 msgid "Please rotate them to ensure continued security."
-msgstr ""
+msgstr "Bitte drehen Sie sie, um weiterhin Sicherheit zu gewährleisten."
 
 msgid "Please rotate it to ensure continued security."
-msgstr ""
+msgstr "Bitte drehen Sie es, um weiterhin Sicherheit zu gewährleisten."
 
 msgid "Change it in passbolt "
 msgstr "In passbolt ändern "
@@ -3167,88 +3167,88 @@ msgid "The passphrase generator word separator is required."
 msgstr "Der Wortzwischenraum ist erforderlich."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
-msgstr ""
+msgstr "Das Worttrennzeichen des Passphrase-Generators sollte eine gültige UTF8-Zeichenfolge sein."
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr ""
+msgstr "Das Worttrennzeichen des Passphrase-Generators sollte maximal {0} Zeichen lang sein."
 
 msgid "The passphrase generator word case is required."
 msgstr "Die Passwortgenerator-Maske Wortfall ist erforderlich."
 
 msgid "The passphrase generator word case should be one of the following: {0}."
-msgstr ""
+msgstr "Die Groß-/Kleinschreibung des Passwortgenerators sollte eine der folgenden sein: {0}."
 
 msgid "The password generator length should be between {0} and {1}."
-msgstr ""
+msgstr "Die Länge des Passwortgenerators sollte zwischen {0} und {1} liegen."
 
 msgid "The password generator length is required."
-msgstr ""
+msgstr "Die Länge des Passwortgenerators ist erforderlich."
 
 msgid "The password generator mask upper is required."
 msgstr "Die Passwortgenerator-Maske Grossbuchstaben ist erforderlich."
 
 msgid "The password generator mask upper should be a boolean type."
-msgstr ""
+msgstr "Die obere Maske des Passwortgenerators sollte vom Typ boolean sein."
 
 msgid "The password generator mask lower is required."
 msgstr "Die Passwortgeneratormaske Kleinbuchstaben ist erforderlich."
 
 msgid "The password generator mask lower should be a boolean type."
-msgstr ""
+msgstr "Die untere Maske des Passwortgenerators sollte vom Typ boolean sein."
 
 msgid "The password generator mask digit is required."
 msgstr "Die Passwortgenerator-Maske Ziffer ist erforderlich."
 
 msgid "The password generator mask digit should be a boolean type."
-msgstr ""
+msgstr "Die Ziffer der Passwortgenerator-Maske sollte ein boolescher Typ sein."
 
 msgid "The password generator mask parenthesis is required."
 msgstr "Die Passwortgenerator-Maske Klammern ist erforderlich."
 
 msgid "The password generator mask parenthesis should be a boolean type."
-msgstr ""
+msgstr "Der Kennwortgenerator, der ähnliche Zeichen ausschließt, sollte vom Typ boolean sein."
 
 msgid "The password generator mask emoji is required."
 msgstr "Die Passwortgenerator-Maske Emoji ist erforderlich."
 
 msgid "The password generator mask emoji should be a boolean type."
-msgstr ""
+msgstr "Die PasswortgeneratorMaske Emoji sollte vom Typ boolean sein."
 
 msgid "The password generator mask char1 is required."
 msgstr "Die Passwort-Generator-Maske char1 ist erforderlich."
 
 msgid "The password generator mask char1 should be a boolean type."
-msgstr ""
+msgstr "Die Passwortgeneratormaske char1sollte vom Typ boolean sein."
 
 msgid "The password generator mask char2 is required."
-msgstr "Die Passwortgenerator-Maske char1 ist erforderlich."
+msgstr "Die Passwortgenerator-Maske char2 ist erforderlich."
 
 msgid "The password generator mask char2 should be a boolean type."
-msgstr ""
+msgstr "Die Passwortgeneratormaske char2 sollte vom Typ boolean sein."
 
 msgid "The password generator mask char3 is required."
 msgstr "Die Passwortgenerator-Maske char3 ist erforderlich."
 
 msgid "The password generator mask char3 should be a boolean type."
-msgstr ""
+msgstr "Die Passwortgeneratormaske char3 sollte vom Typ boolean sein."
 
 msgid "The password generator mask char4 is required."
 msgstr "Die Passwortgenerator-Maske char4 ist erforderlich."
 
 msgid "The password generator mask char4 should be a boolean type."
-msgstr ""
+msgstr "Die Passwortgeneratormaske char4 sollte vom Typ boolean sein."
 
 msgid "The password generator mask char5 is required."
 msgstr "Die Passwortgenerator-Maske char5 ist erforderlich."
 
 msgid "The password generator mask char5 should be a boolean type."
-msgstr ""
+msgstr "Die Passwortgeneratormaske char5 sollte vom Typ boolean sein."
 
 msgid "The password generator exclude look alike chars is required."
-msgstr ""
+msgstr "Der Passwortgenerator zum Ausschließen ähnlicher Zeichen ist erforderlich."
 
 msgid "The password generator exclude look alike chars should be a boolean type."
-msgstr ""
+msgstr "Der Kennwortgenerator, der ähnliche Zeichen ausschließt, sollte vom Typ boolean sein."
 
 msgid "Record not found"
 msgstr "Eintrag nicht gefunden"
@@ -3257,10 +3257,10 @@ msgid "The request data is empty."
 msgstr "Die Abfragedaten sind leer."
 
 msgid "The request data is invalid: expected a collection."
-msgstr "Die Anforderungsdaten sind ungültig: Eine Sammlung wurde erwartet."
+msgstr "Die Anforderungsdaten sind ungültig: Eine Collection wurde erwartet."
 
 msgid "The request data is invalid: invalid fields."
-msgstr "Die Anfragedaten sind ungültig: Ungültige Felder."
+msgstr "Die Anfragedaten sind ungültig: ungültige Felder."
 
 msgid "The request data is invalid: id missing."
 msgstr "Die Anfragedaten sind ungültig: id fehlt."
@@ -3287,7 +3287,7 @@ msgid "The foreign model should be one of the following: {0}."
 msgstr "Das fremde Modell sollte eines der folgenden sein: {0}."
 
 msgid "The foreign model name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Die Länge des verwendeten Fremdmodellnamens sollte maximal {0} Zeichen betragen."
 
 msgid "A foreign model is required."
 msgstr "Ein fremdes Modell ist erforderlich."
@@ -3299,7 +3299,7 @@ msgid "The control function should be a valid UTF8 string."
 msgstr "Die Kontrollfunktion sollte ein gültiger UTF-8-String sein."
 
 msgid "The control function name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Die Länge des verwendeten Steuerfunktionsnamens sollte maximal {0} Zeichen betragen."
 
 msgid "The control function is not supported."
 msgstr "Die Kontrollfunktion wird nicht unterstützt."
@@ -3326,7 +3326,7 @@ msgid "An entry already exists for the given role and action ids."
 msgstr "Es existiert bereits ein Eintrag für die angegebene Rolle und Aktion IDs."
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "Die Steuerfunktion ist für diese UI-Aktion nicht zulässig."
 
 msgid "An action already exists for the given name."
 msgstr "Für den angegebenen Namen existiert bereits eine Aktion."
@@ -3485,7 +3485,7 @@ msgid "The domain is not supported for self-registration."
 msgstr "Die Domain wird für die Selbstregistrierung nicht unterstützt."
 
 msgid "Email domain safe list"
-msgstr "E-Mail-Domain Whitelist"
+msgstr "Sichere E-Mail-Domain Liste"
 
 msgid "Could not parse the self registration settings found in database."
 msgstr "Konnte die in der Datenbank gefundenen Selbstregistrierungseinstellungen nicht analysieren."
@@ -3503,16 +3503,16 @@ msgid "Status: {0}"
 msgstr "Status: {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
-msgstr ""
+msgstr "Die SSL-Verify-Peer-Konfiguration sollte ein boolescher Wert sein."
 
 msgid "The sslVerifyPeerName configuration should be a boolean."
-msgstr ""
+msgstr "Die Konfiguration des SSL-Peer-Namens überprüfen. Es sollte ein boolescher Wert sein."
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr ""
+msgstr "Die Konfiguration „SSL Allow Self Signed“ sollte ein boolescher Wert sein."
 
 msgid "The sslCafile configuration should be NULL or string."
-msgstr ""
+msgstr "Die ssl-Cafile-Konfiguration sollte NULL oder eine Zeichenfolge sein."
 
 msgid "A sender name is required."
 msgstr "Ein Absendername ist erforderlich."
@@ -3569,10 +3569,10 @@ msgid "The test email should be a valid email address."
 msgstr "Die Absender E-Mail sollte eine gültige E-Mail-Adresse sein."
 
 msgid "The authentication method is required."
-msgstr ""
+msgstr "Die Authentifizierungsmethode ist erforderlich."
 
 msgid "The authentication method should be one of the following: {0}."
-msgstr ""
+msgstr "Die Authentifizierungsmethode sollte eine der folgenden sein: {0}."
 
 msgid "The sender email should be a valid email address."
 msgstr "Die Absender E-Mail sollte eine gültige E-Mail-Adresse sein."
@@ -3587,37 +3587,37 @@ msgid "The client should be a valid IP or a valid domain."
 msgstr "Der Client sollte eine gültige IP oder Domain sein."
 
 msgid "No custom SSL configuration for SMTP server."
-msgstr ""
+msgstr "Keine benutzerdefinierte SSL-Konfiguration für den SMTP-Server."
 
 msgid "Custom SSL certificate options for SMTP server is in use."
-msgstr ""
+msgstr "Benutzerdefinierte SSL-Zertifikatsoptionen für SMTP-Server werden verwendet."
 
 msgid "Custom SSL configuration options set are invalid."
-msgstr ""
+msgstr "Benutzerdefinierte SSL-Konfigurationsoptionen sind ungültig."
 
 msgid "SSL certification validation for SMTP server is disabled."
-msgstr ""
+msgstr "SSL-Zertifizierung für SMTP-Server ist deaktiviert."
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
-msgstr ""
+msgstr "Kohärente SMTP-Einstellungen. Sie können eine Test-E-Mail senden, um sie zu validieren."
 
 msgid "SMTP Setting errors: {0}"
-msgstr ""
+msgstr "SMTP-Einstellungsfehler: {0}"
 
 msgid "The {0} plugin endpoints are disabled."
-msgstr ""
+msgstr "Die {0}-Plugin-Endpunkte sind deaktiviert."
 
 msgid "The {0} plugin endpoints are enabled."
-msgstr ""
+msgstr "Die {0}-Plugin-Endpunkte sind aktiviert."
 
 msgid "It is recommended to disable the plugin endpoints."
-msgstr ""
+msgstr "Es wird empfohlen, die Plugin-Endpunkte zu deaktivieren."
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "Setzen Sie die Umgebungsvariable PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED auf true."
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
-msgstr ""
+msgstr "Oder setzen Sie passbolt.security.smtpSettings.endpointsDisabled in {0} auf true."
 
 msgid "not found"
 msgstr "nicht gefunden"
@@ -3626,7 +3626,7 @@ msgid "The SMTP Settings source is: {0}."
 msgstr "Die Quelle der SMTP-Einstellungen ist: {0}."
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
-msgstr ""
+msgstr "Es wird empfohlen, die SMTP-Einstellungen in der Datenbank über den Administrationsbereich festzulegen."
 
 msgid "database"
 msgstr "datenbank"
@@ -3656,7 +3656,7 @@ msgid "If you receive this email, it means that your passbolt smtp configuration
 msgstr "Wenn Sie diese E-Mail erhalten, funktionieren Ihre Passbolt SMTP-Konfigurationen fehlerfrei."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
-msgstr ""
+msgstr "Ungültige `passbolt.plugins.smtpSettings.security` Konfigurationswerte."
 
 msgid "Errors: "
 msgstr "Fehler: "
@@ -3725,10 +3725,10 @@ msgid "The database name should not contain dashes."
 msgstr "Der Datenbankname darf keine Bindestriche enthalten."
 
 msgid "The schema is required on PostgreSQL"
-msgstr ""
+msgstr "Das Schema wird auf PostgreSQL benötigt"
 
 msgid "The schema should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Der Status sollte ein gültiger BMP-UTF8-String sein."
 
 msgid "An OpenPGP public key is required."
 msgstr "Ein öffentlicher OpenPGP Schlüssel ist erforderlich."
@@ -4157,13 +4157,13 @@ msgid "login"
 msgstr "Anmelden"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Der Administrator {0} ({1}) ist nun aus der Passbolt-Organisation gelöscht."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr ""
+msgstr "hat Sie aus der Passbolt-Organisation gelöscht."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
-msgstr ""
+msgstr "Wenn Sie den Eindruck haben, dass diese Aktion verdächtig erscheint, wenden Sie sich bitte an den Administrator am Ursprungsort des Vorgangs."
 
 msgid "Account suspended"
 msgstr "Konto gesperrt"
@@ -4172,13 +4172,13 @@ msgid "Your account has been suspended."
 msgstr "Ihr Konto wurde gesperrt."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Sie sind nicht befugt, sich bei Passbolt anzumelden und E-Mail-Benachrichtigungen zu erhalten."
 
 msgid "Other users can still share resources with you and add you to a group."
-msgstr ""
+msgstr "Andere Benutzer können weiterhin Ressourcen mit Ihnen teilen und Sie zu einer Gruppe hinzufügen."
 
 msgid "Contact your admin"
-msgstr ""
+msgstr "Administrator kontaktieren"
 
 msgid "{0} changed your role to user."
 msgstr "{0} hat Ihre Rolle zu Benutzer geändert."
@@ -4217,13 +4217,13 @@ msgid "The user {0} has been suspended."
 msgstr "Der Benutzer {0} wurde gesperrt."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Sie sind nicht in der Lage, sich bei Passbolt anzumelden und E-Mail-Benachrichtigungen zu erhalten."
 
 msgid "Other users can share resources and add this user to a group."
-msgstr ""
+msgstr "Andere Benutzer können Ressourcen teilen und diesen Benutzer zu einer Gruppe hinzufügen."
 
 msgid "Check user suspension"
-msgstr ""
+msgstr "Benutzer-Suspendierung überprüfen"
 
 msgid "Welcome to {0}!"
 msgstr "Willkommen bei {0}!"
