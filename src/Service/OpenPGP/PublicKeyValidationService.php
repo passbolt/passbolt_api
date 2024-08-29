@@ -351,7 +351,7 @@ class PublicKeyValidationService
      */
     public static function getPublicKeyInfo(string $armoredKey): array
     {
-        $key = md5($armoredKey);
+        $key = hash('sha256', $armoredKey);
 
         if (array_key_exists($key, self::$publicKeyInfo) && !empty(self::$publicKeyInfo[$key])) {
             return self::$publicKeyInfo[$key];
