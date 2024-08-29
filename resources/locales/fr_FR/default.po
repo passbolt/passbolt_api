@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-08-28 13:29\n"
+"PO-Revision-Date: 2024-08-28 15:24\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -191,7 +191,7 @@ msgid "Access restricted to unauthenticated users."
 msgstr "Accès restreint aux utilisateurs non authentifiés."
 
 msgid "The user should not be logged in."
-msgstr ""
+msgstr "L'utilisateur ne doit pas être connecté."
 
 msgid "This feature is not supported by your version of passbolt."
 msgstr "Cette fonctionnalité n'est pas supportée par votre version de passbolt."
@@ -389,7 +389,7 @@ msgid "No admin were found in the database."
 msgstr "Aucun administrateur n'a été trouvé dans la base de données."
 
 msgid "Invalid expiry time {0}."
-msgstr ""
+msgstr "Délai d'expiration invalide {0}."
 
 msgid "The identifier should not be empty."
 msgstr "L'identifiant ne doit pas être vide."
@@ -983,10 +983,10 @@ msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "L'identifiant de la clé doit être une chaîne de 8 caractères hexadécimaux."
 
 msgid "The provided IP is invalid."
-msgstr ""
+msgstr "L'adresse IP fournie n'est pas valide."
 
 msgid "The provided user agent is invalid."
-msgstr ""
+msgstr "L'agent utilisateur fourni n'est pas valide."
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} a mis à jour vos adhésions à plusieurs groupes"
@@ -1067,7 +1067,7 @@ msgid "{0} deleted administrator {1}"
 msgstr "{0} a supprimé l'administrateur {1}"
 
 msgid "Your account has been suspended"
-msgstr ""
+msgstr "Votre compte a été suspendu"
 
 msgid "Your admin role has been revoked"
 msgstr "Votre rôle d'administrateur a été révoqué"
@@ -1079,7 +1079,7 @@ msgid "{0} deleted user {1}"
 msgstr "{0} a supprimé l'utilisateur {1}"
 
 msgid "{0} has been suspended"
-msgstr ""
+msgstr "{0} a été suspendu"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Bienvenue sur passbolt, {0}!"
@@ -1295,10 +1295,10 @@ msgid "This installation is not up to date. Currently using {0} and it should be
 msgstr "Cette installation n'est pas à jour. Version actuelle {0} et elle devrait être {1}."
 
 msgid "Could not connect to passbolt repository to check versions."
-msgstr ""
+msgstr "Impossible de se connecter au dépôt passbolt pour vérifier les versions."
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "Il n'est pas possible de vérifier si votre version est à jour."
 
 msgid "See https://www.passbolt.com/help/tech/update"
 msgstr "Voir https://www.passbolt.com/help/tech/update"
@@ -1403,13 +1403,13 @@ msgid "Set debug to false in {0}"
 msgstr ""
 
 msgid "Full base url is set to {0}"
-msgstr ""
+msgstr "L'URL de base complète est définie à {0}"
 
 msgid "Full base url is not set. The application is using: {0}."
-msgstr ""
+msgstr "L'URL de base complète n'est pas définie. L'application utilise : {0}."
 
 msgid "Edit App.fullBaseUrl in {0}"
-msgstr ""
+msgstr "Modifier App.fullBaseUrl dans {0}"
 
 msgid "/healthcheck/status is reachable."
 msgstr ""
@@ -1418,7 +1418,7 @@ msgid "Could not reach the /healthcheck/status with the url specified in App.ful
 msgstr ""
 
 msgid "Check that the domain name is correct in {0}"
-msgstr ""
+msgstr "Vérifiez que le nom de domaine est correct dans {0}"
 
 msgid "Check the network settings"
 msgstr "Vérifiez les paramètres réseau"
@@ -1457,7 +1457,7 @@ msgid "Double check the host, database name, username and password in {0}."
 msgstr "Vérifiez à nouveau l'hôte, le nom de la base de données, le nom d'utilisateur et le mot de passe dans {0}."
 
 msgid "Make sure the database exists and is accessible for the given database user."
-msgstr ""
+msgstr "Assurez-vous que la base de données existe et est accessible à l'utilisateur de la base de données indiqué."
 
 msgid "Some default content is present."
 msgstr "Du contenu par défaut est présent."
@@ -1469,7 +1469,7 @@ msgid "Run the install script to install the database tables"
 msgstr "Exécutez le script d'installation pour installer les tables de la base de données"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "Le schéma de la base de données est à jour."
 
 msgid "The database schema is not up to date."
 msgstr "Le schéma de la base de données n'est pas à jour."
@@ -1490,10 +1490,10 @@ msgid "You must enable the gd or imagick extensions to use Passbolt."
 msgstr "Vous devez activer les extensions Gd ou Imagick pour utiliser Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "Voir https://secure.php.net/manual/en/book.image.php"
 
 msgid "See. https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "Voir https://secure.php.net/manual/en/book.imagick.php"
 
 msgid "Intl extension is installed."
 msgstr "L'extension Intl est installée."
@@ -1502,7 +1502,7 @@ msgid "You must enable the intl extension to use Passbolt."
 msgstr "Vous devez activer l'extension intl pour utiliser Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "Voir https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory and its content are writable."
 msgstr "Le répertoire des logs et son contenu sont accessibles en écriture."
@@ -1523,7 +1523,7 @@ msgid "You must enable the mbstring extension to use Passbolt."
 msgstr "Vous devez activer l'extension mbstring pour utiliser Passbolt."
 
 msgid "See. https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "Voir https://secure.php.net/manual/en/book.mbstring.php"
 
 msgid "PHP version is {0} or above."
 msgstr "La version de PHP est {0} ou supérieure."
@@ -1553,109 +1553,109 @@ msgid "The temporary directory and its content are not writable, or are executab
 msgstr "Le répertoire temporaire et son contenu ne sont pas accessibles en écriture ou sont exécutables."
 
 msgid "Ensure the temporary directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "Assurez-vous que le répertoire temporaire et son contenu sont accessibles en écriture par l'utilisateur du serveur web."
 
 msgid "The private key can be used to decrypt a message."
-msgstr ""
+msgstr "La clé privée peut être utilisée pour déchiffrer un message."
 
 msgid "The private key cannot be used to decrypt a message"
-msgstr ""
+msgstr "La clé privée ne peut pas être utilisée pour déchiffrer un message"
 
 msgid "The private key can be used to decrypt and verify a message."
-msgstr ""
+msgstr "La clé privée peut être utilisée pour déchiffrer et vérifier un message."
 
 msgid "The private key cannot be used to decrypt and verify a message"
-msgstr ""
+msgstr "La clé privée ne peut pas être utilisée pour déchiffrer et vérifier un message"
 
 msgid "The public key can be used to encrypt a message."
-msgstr ""
+msgstr "La clé publique peut être utilisée pour chiffrer un message."
 
 msgid "The public key cannot be used to encrypt a message"
-msgstr ""
+msgstr "La clé publique ne peut pas être utilisée pour chiffrer un message"
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr ""
+msgstr "Assurez-vous que la clé privée du serveur est valide et qu'il n'y a pas de phrase de passe."
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "Assurez-vous d'avoir importé la clé privée du serveur dans le trousseau de l'utilisateur du serveur Web."
 
 msgid "The public and private keys can be used to encrypt and sign a message."
-msgstr ""
+msgstr "Les clés publiques et privées peuvent être utilisées pour chiffrer et signer un message."
 
 msgid "The public and private keys cannot be used to encrypt and sign a message"
-msgstr ""
+msgstr "Les clés publiques et privées ne peuvent pas être utilisées pour chiffrer et signer un message"
 
 msgid "The private key can be used to sign a message."
-msgstr ""
+msgstr "La clé privée peut être utilisée pour signer un message."
 
 msgid "The private key cannot be used to sign a message"
-msgstr ""
+msgstr "La clé privée ne peut pas être utilisée pour signer un message"
 
 msgid "The public key can be used to verify a signature."
-msgstr ""
+msgstr "La clé publique peut être utilisée pour vérifier une signature."
 
 msgid "The public key cannot be used to verify a signature."
-msgstr ""
+msgstr "La clé publique ne peut pas être utilisée pour vérifier une signature."
 
 msgid "The server key fingerprint matches the one defined in {0}."
-msgstr ""
+msgstr "L'empreinte du serveur de clé correspond à celle définie dans {0}."
 
 msgid "The server key fingerprint doesn't match the one defined in {0}."
-msgstr ""
+msgstr "L'empreinte du serveur de clé ne correspond pas à celle définie dans {0}."
 
 msgid "Double check the key fingerprint, example: "
-msgstr ""
+msgstr "Vérifiez deux fois l'empreinte de la clé, par exemple : "
 
 msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
-msgstr ""
+msgstr "SERVER_KEY_EMAIL : L'e-mail que vous avez utilisé lorsque vous avez généré la clé du serveur."
 
 msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
-msgstr ""
+msgstr "Voir https://www.passbolt.com/help/tech/install#toc_gpg"
 
 msgid "The server private key format is Gopengpg compatible."
-msgstr ""
+msgstr "Le format de la clé privée du serveur est compatible Gopengpg."
 
 msgid "The server private key format is not Gopengpg compatible."
-msgstr ""
+msgstr "Le format de la clé privée du serveur n'est pas compatible Gopengpg."
 
 msgid "The server public key format is Gopengpg compatible."
-msgstr ""
+msgstr "Le format de la clé publique du serveur est compatible avec Gopengpg."
 
 msgid "The server public key format is not Gopengpg compatible."
-msgstr ""
+msgstr "Le format de la clé publique du serveur n'est pas compatible avec Gopengp."
 
 msgid "The environment variable GNUPGHOME is set to {0}."
-msgstr ""
+msgstr "La variable d'environnement GNUPGHOME est définie à {0}."
 
 msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
-msgstr ""
+msgstr "La variable d'environnement GNUPGHOME est définie à {0}, mais le répertoire n'existe pas."
 
 msgid "Ensure the keyring location exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Assurez-vous que l'emplacement du trousseau existe et est accessible par l'utilisateur du serveur web."
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr ""
+msgstr "Vous pouvez modifier l'emplacement du porte-clés en modifiant les variables GPG.env.setenv et GPG.env.home dans {0}."
 
 msgid "The directory {0} containing the keyring is writable by the webserver user."
-msgstr ""
+msgstr "Le répertoire {0} contenant le trousseau est accessible en écriture par l'utilisateur du serveur web."
 
 msgid "The directory {0} containing the keyring is not writable by the webserver user."
-msgstr ""
+msgstr "Le répertoire {0} contenant le trousseau de clés n'est pas accessible en écriture par l'utilisateur du serveur web."
 
 msgid "Ensure the keyring location is accessible by the webserver user."
-msgstr ""
+msgstr "Assurez-vous que l'emplacement du trousseau est accessible par l'utilisateur du serveur web."
 
 msgid "The server OpenPGP key is not the default one."
-msgstr ""
+msgstr "La clé OpenPGP du serveur n'est pas celle par défaut."
 
 msgid "Do not use the default OpenPGP key for the server."
-msgstr ""
+msgstr "N'utilisez pas la clé OpenPGP par défaut pour le serveur."
 
 msgid "The server OpenPGP key is not set."
-msgstr ""
+msgstr "La clé OpenPGP du serveur n'est pas définie."
 
 msgid "Create a key, export it and add the fingerprint to {0}"
-msgstr ""
+msgstr "Créez une clé, exportez-la et ajoutez l'empreinte à {0}"
 
 msgid "PHP GPG Module is installed and loaded."
 msgstr "Le module PHP GPG est installé et chargé."
@@ -1871,7 +1871,7 @@ msgid "Could not validate resource data."
 msgstr "Impossible de valider les données de la ressource."
 
 msgid "An unexpected error occurred, please contact an administrator."
-msgstr ""
+msgstr "Une erreur inattendue est survenue, veuillez contacter un administrateur."
 
 msgid "The server returned the following error:"
 msgstr "Le serveur a retourné l'erreur suivante:"
@@ -1940,7 +1940,7 @@ msgid "The key provided does not belong to given user."
 msgstr "La clé fournie n'appartient pas à l'utilisateur donné."
 
 msgid "The user does not exist or is not active or is disabled."
-msgstr ""
+msgstr "L'utilisateur n'existe pas, n'est pas actif ou est désactivé."
 
 msgid "The OpenPGP key data is not valid."
 msgstr "Les données de la clé OpenPGP ne sont pas valides."
@@ -1973,7 +1973,7 @@ msgid "Please register and complete the setup first."
 msgstr "Veuillez d'abord vous inscrire et terminer la configuration."
 
 msgid "This user has been disabled."
-msgstr ""
+msgstr "Cet utilisateur a été désactivé."
 
 msgid "The username {0} is a duplicate."
 msgstr "Le nom d'utilisateur {0} est un doublon."
@@ -2222,7 +2222,7 @@ msgid "Could not validate folder data."
 msgstr "Impossible de valider les données du dossier."
 
 msgid "The folder parent id should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant du dossier parent doit être un UUID valide."
 
 msgid "The folder parent must exist."
 msgstr "Le dossier parent doit exister."
@@ -2354,7 +2354,7 @@ msgid "No active refresh token matching the request could be found."
 msgstr "Aucun jeton de rafraîchissement actif correspondant à la requête n'a pu être trouvé."
 
 msgid "The user is not activated or disabled."
-msgstr ""
+msgstr "L'utilisateur n'est ni activé ni désactivé."
 
 msgid "The user is deleted."
 msgstr "L'utilisateur est supprimé."
@@ -2366,10 +2366,10 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "La route {0} n'est pas autorisée avec l'authentification JWT."
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "La clé publique JWT ne peut pas être extraite."
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "Les détails de la clé publique JWT n'ont pas pu être lus."
 
 msgid "The key pair for JWT Authentication is not complete."
 msgstr "La paire de clés pour l'authentification JWT n'est pas complète."
@@ -3131,22 +3131,22 @@ msgid "Change it in passbolt "
 msgstr ""
 
 msgid "Could not retrieve the password policies."
-msgstr ""
+msgstr "Impossible de récupérer les politiques de mots de passe."
 
 msgid "The default generator is required."
-msgstr ""
+msgstr "Le générateur par défaut est nécessaire."
 
 msgid "The default generator should be one of the following: {0}."
-msgstr ""
+msgstr "Le générateur par défaut doit être l'un des suivants : {0}."
 
 msgid "The external dictionary check is required."
-msgstr ""
+msgstr "La vérification du dictionnaire externe est nécessaire."
 
 msgid "The external dictionary check should be a boolean."
 msgstr ""
 
 msgid "The password generator settings is required."
-msgstr ""
+msgstr "Les paramètres du générateur de mots de passe sont nécessaires."
 
 msgid "The password generator settings should not be empty."
 msgstr "Les paramètres du générateur de mots de passe ne doivent pas être vides."
@@ -3446,7 +3446,7 @@ msgid "An email is required."
 msgstr "Un e-mail est requis."
 
 msgid "The provider should not be empty."
-msgstr ""
+msgstr "Le fournisseur ne doit pas être vide."
 
 msgid "The provider should be part of the supported list: {0}."
 msgstr ""
@@ -3455,7 +3455,7 @@ msgid "The data should not be empty."
 msgstr "Les données ne doivent pas être vides."
 
 msgid "The list of allowed domains should not be empty."
-msgstr ""
+msgstr "La liste des domaines autorisés ne doit pas être vide."
 
 msgid "The list of allowed domains should be an array of strings."
 msgstr ""
@@ -3467,25 +3467,25 @@ msgid "Allowed domains: {0}"
 msgstr "Domaines autorisés : {0}"
 
 msgid "{0} edited the self registration settings."
-msgstr ""
+msgstr "{0} a modifié les paramètres d'auto-inscription."
 
 msgid "You edited the self registration settings."
-msgstr ""
+msgstr "Vous avez modifié les paramètres de l'auto-inscription."
 
 msgid "{0} just created an account on passbolt!"
-msgstr ""
+msgstr "{0} vient de créer un compte sur passbolt !"
 
 msgid "The email is already registered."
 msgstr "Cette adresse e-mail est déjà enregistrée."
 
 msgid "The self registration plugin is not enabled."
-msgstr ""
+msgstr "Le plugin d'auto-inscription n'est pas activé."
 
 msgid "The self registration data could not be validated."
-msgstr ""
+msgstr "Les données d'auto-inscription n'ont pas pu être validées."
 
 msgid "The self registration is disabled."
-msgstr ""
+msgstr "L'auto-inscription est désactivée."
 
 msgid "The domain is not supported for self-registration."
 msgstr ""
@@ -3494,16 +3494,16 @@ msgid "Email domain safe list"
 msgstr "Liste de domaines de messagerie autorisés"
 
 msgid "Could not parse the self registration settings found in database."
-msgstr ""
+msgstr "Impossible d'analyser les paramètres d'auto-inscription trouvés dans la base de données."
 
 msgid "Could not validate the self registration settings found in database."
-msgstr ""
+msgstr "Impossible de valider les paramètres d'auto-inscription trouvés dans la base de données."
 
 msgid "Could not validate the self registration settings."
-msgstr ""
+msgstr "Impossible de valider les paramètres d'auto-inscription."
 
 msgid "{0} updated the self registration settings"
-msgstr ""
+msgstr "{0} a mis à jour les paramètres d'auto-inscription"
 
 msgid "Status: {0}"
 msgstr "Statut : {0}"
@@ -3575,10 +3575,10 @@ msgid "The test email should be a valid email address."
 msgstr "L'email de test doit être une adresse email valide."
 
 msgid "The authentication method is required."
-msgstr ""
+msgstr "La méthode d'authentification est obligatoire."
 
 msgid "The authentication method should be one of the following: {0}."
-msgstr ""
+msgstr "La méthode d'authentification doit être l'une des méthodes suivantes : {0}."
 
 msgid "The sender email should be a valid email address."
 msgstr "L'email de l'expéditeur doit être une adresse e-mail valide."
@@ -3593,7 +3593,7 @@ msgid "The client should be a valid IP or a valid domain."
 msgstr "Le client doit être une adresse IP valide ou un domaine valide."
 
 msgid "No custom SSL configuration for SMTP server."
-msgstr ""
+msgstr "Aucune configuration SSL personnalisée pour le serveur SMTP."
 
 msgid "Custom SSL certificate options for SMTP server is in use."
 msgstr ""
@@ -3629,7 +3629,7 @@ msgid "not found"
 msgstr "non trouvé"
 
 msgid "The SMTP Settings source is: {0}."
-msgstr ""
+msgstr "La source des paramètres SMTP est : {0}."
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
 msgstr "Il est recommandé de définir les paramètres SMTP dans la base de données par la section d'administration."
@@ -3713,7 +3713,7 @@ msgid "The driver name should not be empty."
 msgstr "Le nom du pilote ne doit pas être vide."
 
 msgid "The database driver should be one of the following: {0}."
-msgstr ""
+msgstr "Le pilote de la base de données doit être l'un des suivants : {0}."
 
 msgid "The password should not contain quotes."
 msgstr "Le mot de passe ne doit pas contenir de guillemets."
@@ -3731,10 +3731,10 @@ msgid "The database name should not contain dashes."
 msgstr "Le nom de la base de données ne doit pas contenir de tirets."
 
 msgid "The schema is required on PostgreSQL"
-msgstr ""
+msgstr "Le schéma est requis pour PostgreSQL"
 
 msgid "The schema should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Le schéma doit être une chaîne BMP-UTF8 valide."
 
 msgid "An OpenPGP public key is required."
 msgstr "Une clé publique OpenPGP est requise."
@@ -4610,13 +4610,13 @@ msgid "You have set the status of the account recovery request initiated by {0} 
 msgstr "Vous avez défini l'état de la demande de récupération de compte initiée par {0} ({1}) à {2}."
 
 msgid "{0} ({1}) has updated a recovery request to {2}."
-msgstr ""
+msgstr "{0} ({1}) a mis à jour une demande de récupération à {2}."
 
 msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
 msgstr "{0} ({1}) a défini l'état de la demande initiée par {2} ({3}) à {4}."
 
 msgid "{0} ({1}) has approved your recovery request."
-msgstr ""
+msgstr "{0} ({1}) a approuvé votre demande de récupération."
 
 msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
 msgstr "Les contacts de récupération de votre organisation ont examiné et approuvé votre demande de récupération de compte."
@@ -4688,10 +4688,10 @@ msgid "The user {0} was successfully synced with the group {1}."
 msgstr "L'utilisateur {0} a été synchronisé avec le groupe {1} avec succès."
 
 msgid "The group {0} has been successfully renamed to {1}."
-msgstr ""
+msgstr "Le groupe {0} a été renommé avec succès en {1}."
 
 msgid "The group {0} could not be renamed to {1}."
-msgstr ""
+msgstr "Le groupe {0} n'a pas pu être renommé en {1}."
 
 msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
 msgstr "Le passbolt {0} {1} n'a pas été supprimé parce qu'il est marqué comme étant ignoré."
@@ -4700,7 +4700,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "Le répertoire {0} {1} n'a pas été supprimé parce qu'il est ignoré."
 
 msgid "The directory {0} {1} was already suspended in passbolt."
-msgstr ""
+msgstr "Le répertoire {0} {1} a déjà été suspendu dans passbolt."
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "Le répertoire {0} {1} a déjà été supprimé dans Passbolt."
@@ -4712,13 +4712,13 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "Le {0} {1} n'a pas pu être supprimé parce qu'il est le seul gestionnaire d'un ou plusieurs groupes."
 
 msgid "The {0} {1} was successfully suspended."
-msgstr ""
+msgstr "Le {0} {1} a été suspendu avec succès."
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "Le {0} {1} a été supprimé avec succès."
 
 msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
-msgstr ""
+msgstr "L' {0} {1} n'a pas pu être suspendu en raison d'une erreur interne. Veuillez réessayer plus tard."
 
 msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
 msgstr "Le {0} {1} n'a pas pu être supprimé en raison d'une erreur interne. Veuillez réessayer plus tard."
@@ -4739,13 +4739,13 @@ msgid "The {0} {1} could not be added because of an internal error. Please try a
 msgstr "Le {0} {1} n'a pas pu être ajouté en raison d'une erreur interne. Veuillez réessayer plus tard."
 
 msgid "The previously suspended {0} {1} was not unsuspended."
-msgstr ""
+msgstr "L' {0} {1} précédemment suspendu n'a pas été suspendu."
 
 msgid "The previously deleted {0} {1} was not re-added to passbolt."
 msgstr "Le {0} {1} précédemment supprimé n'a pas été ré-ajouté à passbolt."
 
 msgid "The previously suspended {0} {1} was unsuspended."
-msgstr ""
+msgstr "La {0} {1} précédemment suspendue a été dé-suspendu."
 
 msgid "The previously deleted {0} {1} was re-added to passbolt."
 msgstr "Le {0} {1} précédemment supprimé a été ré-ajouté à passbolt."
@@ -4763,10 +4763,10 @@ msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because 
 msgstr "Le {0} {1} n'a pas pu être associé avec un {0} existant dans Passbolt car il a été créé après."
 
 msgid "The user {0} full name has been successfully updated to {1} {2}."
-msgstr ""
+msgstr "Le nom complet de l'utilisateur {0} a été correctement mis à jour en {1} {2}."
 
 msgid "The user {0} full name could not be updated to {1} {2}."
-msgstr ""
+msgstr "Le nom complet de l'utilisateur {0} n'a pas pu être mis à jour en {1} {2}."
 
 msgid "The record model is not valid."
 msgstr "Le modèle d'enregistrement n'est pas valide."
@@ -4811,13 +4811,13 @@ msgid "The simulation was done successfully."
 msgstr "La simulation a été effectuée avec succès."
 
 msgid "Need at least one domain configuration."
-msgstr ""
+msgstr "Vous avez besoin d'au moins une configuration de domaine."
 
 msgid "The connection name `{0}` should not contain dots"
-msgstr ""
+msgstr "Le nom de connexion `{0}` ne doit pas contenir de points"
 
 msgid "Invalid connection name"
-msgstr ""
+msgstr "Nom de connexion invalide"
 
 msgid "The identifier of the default admin user is required."
 msgstr "L'identifiant de l'utilisateur admin par défaut est requis."
@@ -4853,10 +4853,10 @@ msgid "The user path should be a valid BMP-UTF8 string."
 msgstr "Le chemin utilisateur doit être une chaîne BMP-UTF8 valide."
 
 msgid "The group custom filter should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Le filtre personnalisé du groupe doit être une chaîne BMP-UTF8 valide."
 
 msgid "The user custom filter should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Le filtre personnalisé de l'utilisateur doit être une chaîne BMP-UTF8 valide."
 
 msgid "The email prefix/suffix setting should be a valid boolean."
 msgstr "Le réglage d'e-mail préfixe/suffixe doit être un booléen."
@@ -4880,7 +4880,7 @@ msgid "The sync of created users setting should be a boolean."
 msgstr "Le réglage de synchronisation des utilisateur créés doit être un booléen."
 
 msgid "The sync of updated users setting should be a boolean."
-msgstr ""
+msgstr "La synchronisation des paramètres des utilisateurs mis à jour doit être un booléen."
 
 msgid "The sync of deleted users setting should be a boolean."
 msgstr "Le paramètre de \"synchronisation des utilisateurs supprimés\" doit être un booléen."
@@ -4919,7 +4919,7 @@ msgid "The base DN should be a valid BMP-UTF8 string."
 msgstr "La base DN doit être une chaîne BMP-UTF8 valide."
 
 msgid "At least one host is required."
-msgstr ""
+msgstr "Au moins un hôte est requis."
 
 msgid "The hosts should be a valid array."
 msgstr ""
@@ -4940,13 +4940,13 @@ msgid "The connection type should be one of the following: {0}."
 msgstr "Le type de connexion doit être l'un des suivants : {0}."
 
 msgid "An authentication type is required."
-msgstr ""
+msgstr "Un type d'authentification est nécessaire."
 
 msgid "The authentication type should not be empty."
-msgstr ""
+msgstr "Le type d'authentification ne doit pas être vide."
 
 msgid "The authentication type should be one of the following: {0}."
-msgstr ""
+msgstr "Le type d'authentification doit être l'un des éléments suivants : {0}."
 
 msgid "The map for this field is required."
 msgstr ""
@@ -5054,10 +5054,10 @@ msgid "The child identifier is required."
 msgstr "L'identifiant enfant est requis."
 
 msgid "Directory Settings are invalid. Please check your config and try again."
-msgstr ""
+msgstr "Les paramètres de répertoire sont invalides. Veuillez vérifier votre configuration et réessayer."
 
 msgid "New directory settings could not be saved."
-msgstr ""
+msgstr "Les nouveaux paramètres de répertoire n'ont pas pu être enregistrés."
 
 msgid "The endpoints for updating the users directory configurations are disabled."
 msgstr ""
@@ -5069,28 +5069,28 @@ msgid "It is recommended to disable endpoints for updating the users directory c
 msgstr ""
 
 msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "Définissez la variable d'environnement PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED à true."
 
 msgid "Or set {0} to true in {1}."
 msgstr ""
 
 msgid "SSL certification verification for LDAP server is enabled."
-msgstr ""
+msgstr "La vérification de certification SSL pour le serveur LDAP est activée."
 
 msgid "SSL certification verification for LDAP server is disabled."
-msgstr ""
+msgstr "La vérification de certification SSL pour le serveur LDAP est désactivée."
 
 msgid "Disabling the ssl verify check can lead to security attacks."
 msgstr ""
 
 msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
-msgstr ""
+msgstr "Un attaquant peut modifier le certificat et effectuer une attaque de type man-in-the-middle."
 
 msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
-msgstr ""
+msgstr "Pour corriger cela, vous pouvez définir la variable d'environnement PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER à true."
 
 msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
-msgstr ""
+msgstr "Ou définissez passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer sur true dans {0}."
 
 msgid "A mapping rule for username attribute could not be found for directory type: {0}"
 msgstr ""
@@ -5111,13 +5111,13 @@ msgid "The {0} configuration should be a valid string"
 msgstr ""
 
 msgid "Invalid directory type for domain: {0}"
-msgstr ""
+msgstr "Type de répertoire invalide pour le domaine : {0}"
 
 msgid "Directory type could not be found for domain: {0}"
-msgstr ""
+msgstr "Le type de répertoire n'a pas pu être trouvé pour le domaine : {0}"
 
 msgid "LDAP Object class could not be found: {0}"
-msgstr ""
+msgstr "La classe d'objet LDAP n'a pas pu être trouvée : {0}"
 
 msgid "Subscription key data is required."
 msgstr "Les données de la clé de souscription sont requises."
@@ -5180,10 +5180,10 @@ msgid "The subscription key format is not valid."
 msgstr "Le format de la clé d'abonnement n'est pas valide."
 
 msgid "SSO"
-msgstr ""
+msgstr "SSO"
 
 msgid "Directory Sync"
-msgstr ""
+msgstr "Synchronisation des répertoires"
 
 msgid "Subscription key format error."
 msgstr ""
@@ -5195,46 +5195,46 @@ msgid "Subscription key validation error."
 msgstr ""
 
 msgid "It looks like you could use some help."
-msgstr ""
+msgstr "On dirait que vous avez besoin d'aide."
 
 msgid "We are here for you. You can contact us at sales@passbolt.com"
-msgstr ""
+msgstr "Nous sommes là pour vous. Vous pouvez nous contacter à sales@passbolt.com"
 
 msgid "Thanks for choosing Passbolt Pro"
-msgstr ""
+msgstr "Merci d’avoir choisi Passbolt Pro"
 
 msgid "Below are your subscription key details"
-msgstr ""
+msgstr "Vous trouverez ci-dessous les détails de votre abonnement"
 
 msgid "<error>Not Available</error>"
-msgstr ""
+msgstr "<error>Indisponible</error>"
 
 msgid "Customer id:\t{0}"
 msgstr ""
 
 msgid "<error>{0} (currently: {1}) - Exceeded</error>"
-msgstr ""
+msgstr "<error>{0} (actuellement : {1}) - Dépassé</error>"
 
 msgid "<info>{0} (currently: {1})</info>"
-msgstr ""
+msgstr "<info>{0} (actuellement : {1})</info>"
 
 msgid "Users limit:\t{0}"
 msgstr ""
 
 msgid "Valid from:\t<info>{0}</info>"
-msgstr ""
+msgstr "Valide à partir de :\t<info>{0}</info>"
 
 msgid "Expires on:\t<error>{0} (expired)</error>"
-msgstr ""
+msgstr "Expire le :\t<error>{0} (expiré)</error>"
 
 msgid "Expires on:\t<info>{0} (in {1} days)</info>"
-msgstr ""
+msgstr "Expire le :\t<info>{0} (dans {1} jours)</info>"
 
 msgid "For any question / feedback / subscription renewal,"
-msgstr ""
+msgstr "Pour toute question / retour d'expérience / renouvellement d'abonnement,"
 
 msgid "kindly contact us at <info>sales@passbolt.com</info>"
-msgstr ""
+msgstr "veuillez nous contacter à <info>sales@passbolt.com</info>"
 
 msgid "Only administrators can view the subscription details."
 msgstr "Seuls les administrateurs peuvent voir les détails de souscription."
@@ -5252,34 +5252,34 @@ msgid "Only administrators can update the subscription details."
 msgstr "Seuls les administrateurs peuvent mettre à jour les détails de la souscription."
 
 msgid "Only administrators are allowed to create/update MFA policies settings."
-msgstr ""
+msgstr "Seuls les administrateurs sont autorisés à créer/mettre à jour les paramètres de la politique MFA."
 
 msgid "Could not validate the MFA policies settings."
-msgstr ""
+msgstr "Impossible de valider les paramètres de la politique MFA."
 
 msgid "The policy field is required."
 msgstr ""
 
 msgid "The type of the policy should be one of the following: {0}."
-msgstr ""
+msgstr "Impossible de valider les paramètres de la politique MFA"
 
 msgid "The remember me for a month field is required."
-msgstr ""
+msgstr "Le champ de rappel pour un mois est obligatoire."
 
 msgid "The remember me for a month should be a boolean type."
 msgstr ""
 
 msgid "You edited the MFA policy"
-msgstr ""
+msgstr "Vous avez modifié la politique MFA"
 
 msgid "{0} edited the MFA policy"
-msgstr ""
+msgstr "{0} a modifié la politique MFA"
 
 msgid "The MFA policy has been updated, the new configuration is as follow:"
-msgstr ""
+msgstr "La politique MFA a été mise à jour, la nouvelle configuration est la suivante :"
 
 msgid "Policy: {0}"
-msgstr ""
+msgstr "Politique : {0}"
 
 msgid "Remember me for a month: {0}"
 msgstr ""
@@ -5288,70 +5288,70 @@ msgid "view it in passbolt"
 msgstr "le voir dans Passbolt"
 
 msgid "You have passwords requiring your attention"
-msgstr ""
+msgstr "Vous avez des mots de passe qui nécessitent votre attention"
 
 msgid "Some of your passwords are expired."
-msgstr ""
+msgstr "Certains de vos mots de passe sont expirés."
 
 msgid "Some of your passwords are expiring in {0} days."
-msgstr ""
+msgstr "Certains de vos mots de passe expirent dans {0} jours."
 
 msgid "Some of your passwords are expired or expiring in {0} days."
-msgstr ""
+msgstr "Certains de vos mots de passe sont expirés ou expirent dans {0} jours."
 
 msgid "The send password about to expire setting should be a boolean."
 msgstr ""
 
 msgid "Password expiry is not activated."
-msgstr ""
+msgstr "L'expiration du mot de passe n'est pas activée."
 
 msgid "Password expiry email notifications are disabled."
-msgstr ""
+msgstr "Les notifications par e-mail d'expiration du mot de passe sont désactivées."
 
 msgid "An array of arrays is expected."
 msgstr ""
 
 msgid "The expiry date is required."
-msgstr ""
+msgstr "La date d'expiration est obligatoire."
 
 msgid "The identifier should be unique: {0}."
-msgstr ""
+msgstr "L'identifiant doit être unique : {0}."
 
 msgid "You are not allowed to update these resources."
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à mettre à jour ces ressources."
 
 msgid "You are not allowed to update this resource: {0}"
-msgstr ""
+msgstr "Vous n'êtes pas autorisé à mettre à jour cette ressource : {0}"
 
 msgid "The resource with ID {0} does not exist."
-msgstr ""
+msgstr "La ressource avec l'ID {0} n'existe pas."
 
 msgid "You edited the password policy"
-msgstr ""
+msgstr "Vous avez modifié la politique de mot de passe"
 
 msgid "{0} edited the password policy"
-msgstr ""
+msgstr "{0} a modifié la politique de mot de passe"
 
 msgid "Only administrators are allowed to create/update password policies settings."
-msgstr ""
+msgstr "Seuls les administrateurs sont autorisés à créer/mettre à jour les paramètres de la politique de mot de passe."
 
 msgid "The password policy settings has been updated by {0}."
-msgstr ""
+msgstr "Les paramètres de politique de mot de passe ont été mis à jour par {0}."
 
 msgid "you"
 msgstr "vous"
 
 msgid "SsoRecover plugin is disabled."
-msgstr ""
+msgstr "Le plugin SsoRecover est désactivé."
 
 msgid "The SSO state type is invalid."
-msgstr ""
+msgstr "Le type d'état SSO n'est pas valide."
 
 msgid "CSRF issue. The state in URL and Cookies do not match."
-msgstr ""
+msgstr "Problème CSRF. L'état dans l'URL et les cookies ne correspondent pas."
 
 msgid "CSRF issue. The state in request data does not match with cookie value."
-msgstr ""
+msgstr "Problème CSRF. L'état dans les données de la requête ne correspond pas à la valeur du cookie."
 
 msgid "The state is required in cookie."
 msgstr ""
@@ -5378,16 +5378,16 @@ msgid "The user does not exist or is not active."
 msgstr "L'utilisateur n'existe pas ou n'est pas actif."
 
 msgid "The SSO setting does not exist."
-msgstr ""
+msgstr "Le paramètre SSO n'existe pas."
 
 msgid "Information about the key is required."
-msgstr ""
+msgstr "Des informations sur la clé sont nécessaires."
 
 msgid "The SSO key id should be a uuid."
-msgstr ""
+msgstr "L'identifiant de la clé SSO doit être un uid."
 
 msgid "The key could not be found"
-msgstr ""
+msgstr "La clé n'a pas pu être trouvée"
 
 msgid "The SSO setting id should be a uuid."
 msgstr ""
@@ -5405,10 +5405,10 @@ msgid "Ajax/Json request not supported."
 msgstr ""
 
 msgid "A provider is required."
-msgstr ""
+msgstr "Un fournisseur est obligatoire."
 
 msgid "The provider is not supported."
-msgstr ""
+msgstr "Ce fournisseur n'est pas pris en charge."
 
 msgid "Data is required."
 msgstr ""
@@ -5426,13 +5426,13 @@ msgid "The email claim should be one of the following: {0}."
 msgstr ""
 
 msgid "A URL is required."
-msgstr ""
+msgstr "Une URL est nécessaire."
 
 msgid "The URL should not be empty."
-msgstr ""
+msgstr "L’URL ne doit pas être vide."
 
 msgid "The URL is not supported."
-msgstr ""
+msgstr "L'URL n'est pas prise en charge."
 
 msgid "A tenant id is required."
 msgstr ""
@@ -5444,58 +5444,58 @@ msgid "The tenant id should be a valid UUID."
 msgstr ""
 
 msgid "A client id is required."
-msgstr ""
+msgstr "Un identifiant client est nécessaire."
 
 msgid "The client id should not be empty."
-msgstr ""
+msgstr "L'identifiant du client ne doit pas être vide."
 
 msgid "The client id should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant du client doit être un UUID valide."
 
 msgid "A client secret is required."
-msgstr ""
+msgstr "La clé secrète du client est nécessaire."
 
 msgid "The client secret should not be empty."
-msgstr ""
+msgstr "La clé secrète du client ne doit pas être vide."
 
 msgid "The client secret should be a valid string."
-msgstr ""
+msgstr "La clé secrète du client doit être une chaîne valide."
 
 msgid "The client secret is too large."
-msgstr ""
+msgstr "La clé secrète du client est trop longue."
 
 msgid "A client secret expiry is required."
-msgstr ""
+msgstr "Une date d'expiration de la clé secrète du client est nécessaire."
 
 msgid "The expiry should not be empty."
-msgstr ""
+msgstr "La date d'expiration ne doit pas être vide."
 
 msgid "The prompt should not be empty."
-msgstr ""
+msgstr "L'invite ne doit pas être vide."
 
 msgid "The prompt should be one of the following: {0}."
-msgstr ""
+msgstr "L'invite devrait être l'une des suivantes : {0}."
 
 msgid "The client id is too large."
-msgstr ""
+msgstr "L'identifiant client est trop long."
 
 msgid "A base URL is required."
-msgstr ""
+msgstr "Une URL de base est nécessaire."
 
 msgid "The base URL should not be empty."
-msgstr ""
+msgstr "L'URL de base ne doit pas être vide."
 
 msgid "The base URL is too large."
-msgstr ""
+msgstr "L'URL de base est trop longue."
 
 msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Le chemin de configuration OpenID doit être une chaîne BMP-UTF8 valide."
 
 msgid "The OpenID configuration path is too large."
-msgstr ""
+msgstr "Le chemin de configuration OpenID est trop long."
 
 msgid "The client id should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "L'identifiant client doit être une chaîne BMP-UTF8 valide."
 
 msgid "The scope should be a valid string."
 msgstr ""
@@ -5507,16 +5507,16 @@ msgid "The user is not active."
 msgstr "L'utilisateur n'est pas actif."
 
 msgid "The data should be a valid ASCII string."
-msgstr ""
+msgstr "Les données doivent être une chaîne ASCII valide."
 
 msgid "The status length is not supported."
-msgstr ""
+msgstr "La longueur du statut n'est pas prise en charge."
 
 msgid "The status is not supported."
-msgstr ""
+msgstr "Le statut n'est pas pris en charge."
 
 msgid "The nonce should be a valid ASCII string."
-msgstr ""
+msgstr "."
 
 msgid "The nonce length should be minimum {0} characters."
 msgstr ""
@@ -5543,10 +5543,10 @@ msgid "The state length should be maximum {0} characters."
 msgstr ""
 
 msgid "The SSO settings identifier should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant des paramètres SSO doit être un UUID valide."
 
 msgid "The SSO settings identifier should not be empty."
-msgstr ""
+msgstr "L'identifiant de configuration SSO ne doit pas être vide."
 
 msgid "The user agent should be a valid ASCII string."
 msgstr ""
@@ -5564,10 +5564,10 @@ msgid "The IP length should be maximum {0} characters."
 msgstr ""
 
 msgid "An IP is required."
-msgstr ""
+msgstr "Une adresse IP est nécessaire."
 
 msgid "The IP should not be empty."
-msgstr ""
+msgstr "L'adresse IP ne doit pas être vide."
 
 msgid "This nonce is already in use."
 msgstr ""
@@ -5585,7 +5585,7 @@ msgid "The provided nonce is invalid."
 msgstr ""
 
 msgid "The URL should start with https://"
-msgstr ""
+msgstr "L'URL doit commencer par https://"
 
 msgid "The provided state is invalid."
 msgstr ""
@@ -5594,10 +5594,10 @@ msgid "The type of the SSO state is invalid."
 msgstr ""
 
 msgid "{0} activated the SSO setting"
-msgstr ""
+msgstr "{0} a activé les paramètres SSO"
 
 msgid "{0} deleted the SSO setting"
-msgstr ""
+msgstr "{0} a supprimé les paramètres SSO"
 
 msgid "Users are unable to log in via Azure SSO"
 msgstr ""
@@ -5969,10 +5969,10 @@ msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation
 msgstr "L'administrateur {0} ({1}) est maintenant supprimé de l'instance Passbolt."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr ""
+msgstr "{0} vous a supprimé de l'instance Passbolt."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
-msgstr ""
+msgstr "N'hésitez pas à contacter l'administrateur à l'origine de l'opération si vous pensez que cette action semble suspecte."
 
 msgid "Account suspended"
 msgstr ""
@@ -5990,13 +5990,13 @@ msgid "Contact your admin"
 msgstr ""
 
 msgid "{0} changed your role to user."
-msgstr ""
+msgstr "{0} a modifié votre rôle pour devenir utilisateur."
 
 msgid "{0} changed the role of {1} to user."
-msgstr ""
+msgstr "{0} a changé le rôle de {1} pour devenir utilisateur."
 
 msgid "{0} can no longer perform administration tasks."
-msgstr ""
+msgstr "{0} ne peut plus effectuer de tâches d'administration."
 
 msgid "You"
 msgstr "Vous"
@@ -6035,10 +6035,10 @@ msgid "Check user suspension"
 msgstr ""
 
 msgid "Welcome to {0}!"
-msgstr ""
+msgstr "Bienvenue {0} !"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr ""
+msgstr "{0} a utilisé la fonction d'auto-inscription pour créer un compte sur passbolt."
 
 msgid "Welcome back!"
 msgstr "Bienvenue à nouveau!"
@@ -6086,10 +6086,10 @@ msgid "You just opened an account on passbolt at {0}."
 msgstr "Vous venez d'ouvrir un compte sur passbolt à l'adresse {0}."
 
 msgid "There was a change in the user directory."
-msgstr ""
+msgstr "Il y a eu un changement dans le répertoire des utilisateurs."
 
 msgid "You have been requested to add members to a group."
-msgstr ""
+msgstr "Vous avez été invité à ajouter des membres à un groupe."
 
 msgid "{0} requested you to add members to a group"
 msgstr "{0} vous a demandé d'ajouter des membres à un groupe"
