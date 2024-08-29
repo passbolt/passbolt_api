@@ -23,7 +23,7 @@ use Cake\Log\Log;
 /**
  * Same as built-in `_isUnique` rule but checks for soft delete field as well.
  */
-class IsUniqueRule
+class IsUniqueIfNotSoftDeletedRule
 {
     /**
      * Performs the check

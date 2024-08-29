@@ -21,16 +21,18 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Validation\PassboltValidationRule;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Log\Log;
-use Cake\Utility\Hash;
 
-class IsArmoredKeyNotExpiredRule extends PassboltValidationRule
+/**
+ * @see PublicKeyValidationService::getStrictRules() For validation rules (checks for expired, valid alg, etc.)
+ */
+class IsPublicKeyValidStrictRule extends PassboltValidationRule
 {
     /**
      * @inheritDoc
      */
     public function defaultErrorMessage($value, $context): string
     {
-        return __('The armored key should be expired.');
+        return __('The armored key is not valid.');
     }
 
     /**
@@ -43,14 +45,11 @@ class IsArmoredKeyNotExpiredRule extends PassboltValidationRule
         }
 
         try {
-            PublicKeyValidationService::parseAndValidatePublicKey($value, [PublicKeyValidationService::IS_NOT_EXPIRED_RULE]); // phpcs:ignore
+            PublicKeyValidationService::parseAndValidatePublicKey($value, PublicKeyValidationService::getStrictRules());
 
-            // If key is parsed that means it's not expired
             return true;
         } catch (CustomValidationException $e) {
-            return !Hash::check($e->getErrors(), 'armored_key.isNotExpiredRule');
-        } catch (\Exception $e) {
-            Log::error('IsArmoredKeyNotExpiredRule: ' . $e->getMessage());
+            Log::error('IsPublicKeyValidStrictRule: Errors: ' . json_encode($e->getErrors()));
         }
 
         return false;
