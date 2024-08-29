@@ -49,10 +49,6 @@ class IsValidEncryptedMetadataPrivateKey
 
         try {
             $rules = MessageValidationService::getAsymmetricMessageRules();
-            // Remove hasExactlyOneRecipient rule, because we would have multiple recipient in this case
-            $rules = array_filter($rules, function ($rule) {
-                return $rule !== MessageValidationService::HAS_EXACTLY_ONE_RECIPIENT;
-            });
             $msgInfo = MessageValidationService::parseAndValidateMessage($entity->get('data'), $rules);
         } catch (CustomValidationException $exception) {
             Log::error('The message must contain an asymmetric packet. Error: ' . $exception->getMessage());

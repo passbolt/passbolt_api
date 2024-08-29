@@ -59,11 +59,11 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
-                    'data' => $this->getEncryptedMessageForMakiAndServerKey(),
+                    'data' => $this->getEncryptedMessageForServerKey(),
                 ],
                 [
                     'user_id' => $user['id'],
-                    'data' => $this->getEncryptedMessageForMakiAndServerKey(),
+                    'data' => $this->getEncryptedMessageForMaki(),
                 ],
             ],
         ]);
@@ -139,6 +139,14 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                     'metadata_private_keys' => 'foo', // invalid
                 ],
                 'expected errors paths' => ['metadata_private_keys.array', 'metadata_private_keys.hasAtLeast'],
+            ],
+            [
+                'request data' => [
+                    'armored_key' => $dummyKey['armored_key'],
+                    'fingerprint' => $dummyKey['fingerprint'],
+                    'metadata_private_keys' => [], // empty metadata private keys
+                ],
+                'expected errors paths' => ['metadata_private_keys.hasAtLeast'],
             ],
             [
                 'request data' => [

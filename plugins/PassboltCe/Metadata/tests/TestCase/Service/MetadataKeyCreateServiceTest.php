@@ -21,6 +21,8 @@ use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
+use App\Utility\UuidFactory;
+use Cake\Utility\Hash;
 use Passbolt\Metadata\Model\Dto\MetadataKeyDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\MetadataKeyCreateService;
@@ -78,11 +80,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
-                    'data' => $this->getEncryptedMessageForMakiAndServerKey(),
+                    'data' => $this->getEncryptedMessageForServerKey(),
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMessageForMakiAndServerKey(),
+                    'data' => $this->getEncryptedMessageForMaki(),
                 ],
             ],
         ]);
@@ -95,29 +97,157 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $this->assertCount(2, $metadataPrivateKeys);
     }
 
-    public function testMetadataKeyCreateService_Error_Validation(): void
+    public function invalidMetadataKeyDataProvider(): array
+    {
+        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
+        $makiKey = $this->getMakiKeyInfo();
+        $expiredKey = $this->getExpiredKeyInfo();
+        $msgForServer = $this->getEncryptedMessageForServerKey();
+        $invalidAlgKey = $this->getInvalidAlgKeyInfo();
+
+        return [
+            [
+                'data (invalid types)' => [
+                    'armored_key' => 'bar-foo',
+                    'fingerprint' => '🔥🔥🔥',
+                    'metadata_private_keys' => [
+                        [
+                            'user_id' => 'foo-bar',
+                            'data' => 'some data',
+                        ],
+                        [
+                            'user_id' => 1230,
+                            'data' => '*()_+(!#$%',
+                        ],
+                    ],
+                ],
+                'expected errors paths' => [
+                    'armored_key.isParsableArmoredPublicKey',
+                    'fingerprint.alphaNumeric',
+                    'metadata_private_keys.{n}.user_id.uuid',
+                    'metadata_private_keys.{n}.data.isValidOpenPGPMessage',
+                ],
+            ],
+            [
+                'data (expired armored key)' => [
+                    'armored_key' => $expiredKey['armored_key'],
+                    'fingerprint' => $expiredKey['fingerprint'],
+                    'metadata_private_keys' => [
+                        [
+                            'user_id' => UuidFactory::uuid(),
+                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                        ],
+                        [
+                            'user_id' => null,
+                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                        ],
+                    ],
+                ],
+                'expected errors paths' => ['armored_key.isPublicKeyValidStrict'],
+            ],
+            [
+                'data (more than one user_id null)' => [
+                    'armored_key' => $dummyKey['armored_key'],
+                    'fingerprint' => $dummyKey['fingerprint'],
+                    'metadata_private_keys' => [
+                        [
+                            'user_id' => null,
+                            'data' => $msgForServer,
+                        ],
+                        [
+                            'user_id' => null,
+                            'data' => $msgForServer,
+                        ],
+                    ],
+                ],
+                'expected errors paths' => ['metadata_private_keys.{n}.user_id._isUnique'],
+            ],
+            [
+                'data (more than one invalid uuid in user_id)' => [
+                    'armored_key' => $dummyKey['armored_key'],
+                    'fingerprint' => $dummyKey['fingerprint'],
+                    'metadata_private_keys' => [
+                        [
+                            'user_id' => 'foo-bar',
+                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                        ],
+                        [
+                            'user_id' => '🔥🔥🔥',
+                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                        ],
+                        [
+                            'user_id' => 12345,
+                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                        ],
+                    ],
+                ],
+                'expected errors paths' => ['metadata_private_keys.{n}.user_id.uuid'],
+            ],
+            [
+                'data (data is not encrypted with the server key if user_id if set to null)' => [
+                    'armored_key' => $dummyKey['armored_key'],
+                    'fingerprint' => $dummyKey['fingerprint'],
+                    'metadata_private_keys' => [
+                        [
+                            'user_id' => null,
+                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                        ],
+                    ],
+                ],
+                'expected errors paths' => ['metadata_private_keys.{n}.data.isValidEncryptedMetadataPrivateKey'],
+            ],
+            [
+                'data (fingerprint not matching public key)' => [
+                    'armored_key' => $makiKey['armored_key'],
+                    'fingerprint' => $dummyKey['fingerprint'],
+                    'metadata_private_keys' => [
+                        [
+                            'user_id' => null,
+                            'data' => $msgForServer,
+                        ],
+                    ],
+                ],
+                'expected errors paths' => [
+                    'fingerprint.isMatchingKeyFingerprint',
+                ],
+            ],
+            [
+                'data (valid algorithm for public key)' => [
+                    'armored_key' => $invalidAlgKey['armored_key'],
+                    'fingerprint' => $invalidAlgKey['fingerprint'],
+                    'metadata_private_keys' => [
+                        [
+                            'user_id' => null,
+                            'data' => $msgForServer,
+                        ],
+                    ],
+                ],
+                'expected errors paths' => [
+                    'armored_key.isPublicKeyValidStrict',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider invalidMetadataKeyDataProvider
+     */
+    public function testMetadataKeyCreateService_Error_Validation(array $data, array $expectedErrors): void
     {
         $user = UserFactory::make()->admin()->active()->persist();
         $uac = $this->makeUac($user);
 
-        $this->expectException(CustomValidationException::class);
-        $this->expectExceptionMessage('The metadata key could not be saved');
+        try {
+            $this->service->create($uac, MetadataKeyDto::fromArray($data));
+        } catch (CustomValidationException $e) {
+            // Use assertions (instead of expectException) in catch to assert errors thrown
+            $this->assertStringContainsString('The metadata key could not be saved', $e->getMessage());
 
-        $dto = MetadataKeyDto::fromArray([
-            'armored_key' => 'bar-foo',
-            'fingerprint' => '🔥🔥🔥',
-            'metadata_private_keys' => [
-                [
-                    'user_id' => 'foo-bar',
-                    'data' => 'some data',
-                ],
-                [
-                    'user_id' => 1230,
-                    'data' => '*()_+(!#$%',
-                ],
-            ],
-        ]);
-        $this->service->create($uac, $dto);
+            $errors = $e->getErrors();
+            foreach ($expectedErrors as $expectedErrorPath) {
+                $this->assertTrue(Hash::check($errors, $expectedErrorPath));
+            }
+        }
     }
 
     public function testMetadataKeyCreateService_Error_UserDeleted(): void
@@ -138,11 +268,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
-                    'data' => $this->getEncryptedMessageForMakiAndServerKey(),
+                    'data' => $this->getEncryptedMessageForMaki(),
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMessageForMakiAndServerKey(),
+                    'data' => $this->getEncryptedMessageForMaki(),
                 ],
             ],
         ]);
@@ -150,5 +280,47 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $this->expectException(CustomValidationException::class);
 
         $this->service->create($uac, $dto);
+    }
+
+    public function testMetadataKeyCreateService_Error_MoreThanOnePrivateKeysPerUser(): void
+    {
+        $keyInfo = $this->getMakiKeyInfo();
+        $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
+        $user = UserFactory::make()
+            ->with('Gpgkeys', $gpgkey)
+            ->admin()
+            ->active()
+            ->persist();
+        $uac = $this->makeUac($user);
+        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
+
+        $dto = MetadataKeyDto::fromArray([
+            'armored_key' => $dummyKey['armored_key'],
+            'fingerprint' => $dummyKey['fingerprint'],
+            'metadata_private_keys' => [
+                [
+                    'user_id' => null, // server key
+                    'data' => $this->getEncryptedMessageForServerKey(),
+                ],
+                [
+                    'user_id' => $uac->getId(),
+                    'data' => $this->getEncryptedMessageForMaki(),
+                ],
+                [
+                    // Same user, different encrypted message
+                    'user_id' => $uac->getId(),
+                    'data' => $this->getEncryptedMessageForMakiDifferent(),
+                ],
+            ],
+        ]);
+
+        try {
+            $this->service->create($uac, $dto);
+        } catch (CustomValidationException $e) {
+            $errors = $e->getErrors();
+
+            $this->assertTrue(Hash::check($errors, 'metadata_private_keys.{n}.user_id._isUnique'));
+            $this->assertTrue(Hash::check($errors, 'metadata_private_keys.{n}.metadata_key_id._isUnique'));
+        }
     }
 }

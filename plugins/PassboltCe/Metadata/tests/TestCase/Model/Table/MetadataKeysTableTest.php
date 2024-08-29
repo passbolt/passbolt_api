@@ -150,7 +150,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
         ]);
 
         $this->assertNotEmpty($entity->getErrors());
-        $this->assertArrayHasKey('isArmoredKeyNotExpired', $entity->getErrors()['armored_key']);
+        $this->assertArrayHasKey('isPublicKeyValidStrict', $entity->getErrors()['armored_key']);
     }
 
     /**
@@ -211,15 +211,11 @@ class MetadataKeysTableTest extends AppTestCaseV5
      */
     public function testMetadataKeysTable_BuildRules_IsNotServerKeyFingerprintRule(): void
     {
-        $user = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
-            ->persist();
+        $user = UserFactory::make()->user()->active()->persist();
 
         $entity = $this->buildEntity([
             'fingerprint' => Configure::read('passbolt.gpg.serverKey.fingerprint'), // server key
-            'armored_key' => $user['gpgkey']['armored_key'],
+            'armored_key' => file_get_contents(Configure::read('passbolt.gpg.serverKey.public')),
             'created_by' => $user['id'],
             'modified_by' => $user['id'],
         ]);

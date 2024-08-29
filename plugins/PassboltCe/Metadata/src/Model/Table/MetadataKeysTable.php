@@ -19,8 +19,9 @@ namespace Passbolt\Metadata\Model\Table;
 use App\Model\Rule\IsNotServerKeyFingerprintRule;
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\IsUniqueIfNotSoftDeletedRule;
-use App\Model\Validation\ArmoredKey\IsArmoredKeyNotExpiredRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
+use App\Model\Validation\ArmoredKey\IsPublicKeyValidStrictRule;
+use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -96,14 +97,15 @@ class MetadataKeysTable extends Table
             ->maxLength('fingerprint', 51, __('A fingerprint should not be greater than 51 characters.'))
             ->notEmptyString('fingerprint', __('A fingerprint should not be empty.'))
             ->alphaNumeric('fingerprint', __('The fingerprint should be a valid alphanumeric string.'))
-            ->add('fingerprint', 'custom', new IsValidFingerprintValidationRule());
+            ->add('fingerprint', 'custom', new IsValidFingerprintValidationRule())
+            ->add('fingerprint', 'isMatchingKeyFingerprint', new IsMatchingKeyFingerprintValidationRule());
 
         $validator
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
             ->requirePresence('armored_key', 'create', __('An armored key is required.'))
             ->notEmptyString('armored_key', __('The armored key should not be empty.'))
-            ->add('armored_key', 'isArmoredKeyNotExpired', new IsArmoredKeyNotExpiredRule())
-            ->add('armored_key', 'custom', new IsParsableArmoredKeyValidationRule());
+            ->add('armored_key', 'isPublicKeyValidStrict', new IsPublicKeyValidStrictRule())
+            ->add('armored_key', 'isParsableArmoredPublicKey', new IsParsableArmoredKeyValidationRule());
 
         $validator
             ->dateTime('deleted')
