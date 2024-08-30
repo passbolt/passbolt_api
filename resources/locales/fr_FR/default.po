@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-08-28 15:24\n"
+"PO-Revision-Date: 2024-08-30 07:54\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1283,7 +1283,7 @@ msgid "Using latest passbolt version ({0})."
 msgstr "Utilisation de la dernière version de Passbolt ({0})."
 
 msgid "Could connect to passbolt repository to check versions."
-msgstr ""
+msgstr "Impossible de se connecter au dépôt passbolt pour vérifier les versions."
 
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
 msgstr "Cette installation n'est pas à jour. Version actuelle {0} et elle devrait être {1}."
@@ -1394,7 +1394,7 @@ msgid "Debug mode is on."
 msgstr "Le mode débogage est activé."
 
 msgid "Set debug to false in {0}"
-msgstr ""
+msgstr "Définissez debug à false dans {0}"
 
 msgid "Full base url is set to {0}"
 msgstr "L'URL de base complète est définie à {0}"
@@ -1406,10 +1406,10 @@ msgid "Edit App.fullBaseUrl in {0}"
 msgstr "Modifier App.fullBaseUrl dans {0}"
 
 msgid "/healthcheck/status is reachable."
-msgstr ""
+msgstr "/healthcheck/status est accessible."
 
 msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
-msgstr ""
+msgstr "Impossible d'accéder à /healthcheck/status avec l'url spécifiée dans App.fullBaseUrl"
 
 msgid "Check that the domain name is correct in {0}"
 msgstr "Vérifiez que le nom de domaine est correct dans {0}"
@@ -1661,7 +1661,7 @@ msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
 msgstr ""
 
 msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
-msgstr ""
+msgstr "Assurez-vous d'ajouter extension=gnupg.so dans les fichiers ini de PHP, aussi bien pour php-cli que php."
 
 msgid "The private key file is defined in {0} and readable."
 msgstr "Le fichier de clé privée est défini dans {0} et lisible."
@@ -1676,7 +1676,7 @@ msgid "Ensure there is a private key armored block in the key file."
 msgstr ""
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Assurez-vous que la clé privée définie dans {0} existe et est accessible par l'utilisateur du serveur web."
 
 msgid "There is a valid email id defined for the server key."
 msgstr ""
@@ -1685,28 +1685,28 @@ msgid "The server key does not have a valid email id."
 msgstr ""
 
 msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr ""
+msgstr "La clé publique du serveur définie dans {0} (ou variables d'environnement) est dans le trousseau de clés."
 
 msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr ""
+msgstr "La clé publique du serveur définie dans l' {0} (ou les variables d'environnement) n'est pas dans le trousseau de clés"
 
 msgid "Import the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "Importer la clé privée du serveur dans le trousseau de l'utilisateur du serveur web."
 
 msgid "The public key file is defined in {0} and readable."
-msgstr ""
+msgstr "Le fichier de la clé publique est défini dans {0} et lisible."
 
 msgid "The public key file is not defined in {0} or not readable."
 msgstr "Le fichier de clé publique n'est pas défini dans {0} ou n'est pas lisible."
 
 msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
-msgstr ""
+msgstr "Assurez-vous que le fichier de clé publique est défini par la variable passbolt.gpg.serverKey.public dans {0}."
 
 msgid "Ensure there is a public key armored block in the key file."
 msgstr ""
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Assurez-vous que la clé publique définie dans {0} existe et est accessible par l'utilisateur du serveur web."
 
 msgid "Environment"
 msgstr "Environnement"
@@ -2915,10 +2915,10 @@ msgid "You sign in to passbolt just like you normally do."
 msgstr "Vous vous connectez à passbolt comme vous le faites habituellement."
 
 msgid "Use you 2FA device to authenticate."
-msgstr ""
+msgstr "Utilisez votre périphérique 2FA pour vous authentifier."
 
 msgid "Follow the procedure to login."
-msgstr ""
+msgstr "Suivez la procédure pour vous connecter."
 
 msgid "Cancel"
 msgstr "Annuler"
