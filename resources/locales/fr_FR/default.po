@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-08-30 07:54\n"
+"PO-Revision-Date: 2024-08-30 08:51\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1760,10 +1760,10 @@ msgid "SSL access is not enabled. You can still proceed, but it is highly recomm
 msgstr "L'accès SSL n'est pas activé. Vous pouvez toujours continuer, mais il est fortement recommandé de configurer votre serveur web pour qu'il utilise HTTPS avant de continuer."
 
 msgid "Not using a self-signed certificate."
-msgstr ""
+msgstr "N'utilise pas de certificat auto-signé."
 
 msgid "Using a self-signed certificate."
-msgstr ""
+msgstr "Utilisation d'un certificat auto-signé."
 
 msgid "SSL peer certificate validates."
 msgstr ""
@@ -2930,13 +2930,13 @@ msgid "Requirements"
 msgstr "Exigences"
 
 msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr ""
+msgstr "Pour continuer, vous devez installer l'application mobile Duo ou utiliser un périphérique d'authentification compatible avec Duo."
 
 msgid "For the list of supported devices, see:"
-msgstr ""
+msgstr "Pour la liste des périphériques pris en charge, voir :"
 
 msgid "Duo authentication methods"
-msgstr ""
+msgstr "Méthodes d'authentification Duo"
 
 msgid "Learn more"
 msgstr "En savoir plus"
@@ -2954,10 +2954,10 @@ msgid "Multi factor authentication verification"
 msgstr "Vérification de l'authentification multi-facteurs"
 
 msgid "Multi Factor Authentication Required"
-msgstr ""
+msgstr "Authentification multi-facteurs nécessaire"
 
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
-msgstr ""
+msgstr "Une authentification supplémentaire est requise en utilisant Duo. Vous allez être redirigé vers Duo pour vérification."
 
 msgid "Multi factor authentication"
 msgstr "Authentification multi-facteurs"
@@ -3035,7 +3035,7 @@ msgid "verify"
 msgstr "vérifier"
 
 msgid "Sign-in with Duo"
-msgstr ""
+msgstr "Se connecter avec Duo"
 
 msgid "Or try with another provider"
 msgstr "Ou essayez avec un autre fournisseur"
@@ -3059,43 +3059,43 @@ msgid "Log in passbolt"
 msgstr "Se connecter à passbolt"
 
 msgid "The automatic_expiry field must be true."
-msgstr ""
+msgstr "Le champ automatic_expiry doit être true."
 
 msgid "The automatic_update field must be true."
-msgstr ""
+msgstr "Le champ automatic_update doit être true."
 
 msgid "The value should be an array."
 msgstr ""
 
 msgid "{0} marked several passwords as expired"
-msgstr ""
+msgstr "{0} a marqué plusieurs mots de passe comme expirés"
 
 msgid "Some of your passwords expired"
-msgstr ""
+msgstr "Certains de vos mots de passe ont expirés"
 
 msgid "{0} marked the password {1} as expired"
-msgstr ""
+msgstr "{0} a marqué le mot de passe {1} comme expiré"
 
 msgid "You edited the password expiry settings"
-msgstr ""
+msgstr "Vous avez modifié les paramètres d'expiration de mot de passe"
 
 msgid "{0} edited the password expiry settings"
-msgstr ""
+msgstr "{0} a modifié les paramètres d'expiration de mot de passe"
 
 msgid "The send password expire setting should be a boolean."
 msgstr ""
 
 msgid "The password expiry setting does not exist."
-msgstr ""
+msgstr "Le paramètre d'expiration de mot de passe n'existe pas."
 
 msgid "Could not validate the password expiry settings."
-msgstr ""
+msgstr "Impossible de valider les paramètres d'expiration de mot de passe."
 
 msgid "The password expiry settings have been updated."
-msgstr ""
+msgstr "Les paramètres d'expiration de mot de passe ont été mis à jour."
 
 msgid "View them in passbolt"
-msgstr ""
+msgstr "Les voir dans passbolt"
 
 msgid "{0} resources were affected."
 msgstr "{0} ressources ont été affectées."
@@ -3104,25 +3104,25 @@ msgid "It would be too much to list them here, but you can go check them on pass
 msgstr "Ce serait trop de les énumérer ici, mais vous pouvez aller les vérifier sur passbolt."
 
 msgid "Change them in passbolt"
-msgstr ""
+msgstr "Les modifier dans passbolt"
 
 msgid "You have been requested to change them"
 msgstr ""
 
 msgid "Access for users to your shared passwords have been revoked."
-msgstr ""
+msgstr "L'accès des utilisateurs à vos mots de passe partagés a été révoqué."
 
 msgid "These passwords are now marked as expired."
-msgstr ""
+msgstr "Ces mots de passe sont maintenant marqués comme ayant expirés."
 
 msgid "Please rotate them to ensure continued security."
-msgstr ""
+msgstr "Veuillez les modifier pour assurer une sécurité permanente."
 
 msgid "Please rotate it to ensure continued security."
-msgstr ""
+msgstr "Veuillez le modifier pour assurer une sécurité permanente."
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "Mettre à jour dans passbolt "
 
 msgid "Could not retrieve the password policies."
 msgstr "Impossible de récupérer les politiques de mots de passe."
@@ -3146,7 +3146,7 @@ msgid "The password generator settings should not be empty."
 msgstr "Les paramètres du générateur de mots de passe ne doivent pas être vides."
 
 msgid "The password generator settings should have at least one mask selected."
-msgstr ""
+msgstr "Les paramètres du générateur de mot de passe doivent avoir au moins un critère sélectionné."
 
 msgid "The passphrase generator settings is required."
 msgstr "Les paramètres du générateur de phrase de passe sont nécessaires."
@@ -3443,7 +3443,7 @@ msgid "The provider should not be empty."
 msgstr "Le fournisseur ne doit pas être vide."
 
 msgid "The provider should be part of the supported list: {0}."
-msgstr ""
+msgstr "Le fournisseur doit faire partie de la liste supportée : {0}."
 
 msgid "The data should not be empty."
 msgstr "Les données ne doivent pas être vides."
