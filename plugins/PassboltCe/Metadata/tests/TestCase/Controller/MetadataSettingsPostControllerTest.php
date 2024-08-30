@@ -40,7 +40,7 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
     public function testMetadataSettingsPostController_Success(): void
     {
         $this->logInAsAdmin();
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $this->postJson('/metadata/settings.json', $data);
         $this->assertResponseCode(200);
         $this->assertEquals(1, OrganizationSettingFactory::count());
@@ -69,7 +69,7 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
     public function testMetadataSettingsPostController_Error_InvalidData(): void
     {
         $this->logInAsAdmin();
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $data[MetadataSettingsDto::DEFAULT_RESOURCE_TYPES] = 'v8';
         $this->postJson('/metadata/settings.json', $data);
         $this->assertResponseCode(400);

@@ -43,7 +43,7 @@ class MetadataSettingsFormTest extends TestCase
 
     public function getDefaultData(): array
     {
-        return MetadataSettingsFactory::getDefaultData();
+        return MetadataSettingsFactory::getDefaultDataV4();
     }
 
     public function testMetadataSettingsForm_Success(): void

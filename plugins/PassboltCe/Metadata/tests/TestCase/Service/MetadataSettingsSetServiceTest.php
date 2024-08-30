@@ -34,7 +34,7 @@ class MetadataSettingsSetServiceTest extends AppTestCase
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $uac = new UserAccessControl(Role::ADMIN, $user->id);
         $sut = new MetadataSettingsSetService();
         $dto = $sut->saveSettings($uac, $data);
@@ -45,7 +45,7 @@ class MetadataSettingsSetServiceTest extends AppTestCase
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $data[MetadataSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
         $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
         $data[MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
@@ -54,7 +54,7 @@ class MetadataSettingsSetServiceTest extends AppTestCase
 
         $uac = new UserAccessControl(Role::ADMIN, $user->id);
         $sut = new MetadataSettingsSetService();
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $dto = $sut->saveSettings($uac, $data);
         $this->assertEquals($data, $dto->toArray());
         $this->assertEquals(1, OrganizationSettingFactory::count());
@@ -64,7 +64,7 @@ class MetadataSettingsSetServiceTest extends AppTestCase
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->persist();
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $uac = new UserAccessControl(Role::USER, $user->id);
         $sut = new MetadataSettingsSetService();
         $this->expectException(ForbiddenException::class);
@@ -75,7 +75,7 @@ class MetadataSettingsSetServiceTest extends AppTestCase
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $data[MetadataSettingsDto::DEFAULT_RESOURCE_TYPES] = 'v8';
         $uac = new UserAccessControl(Role::ADMIN, $user->id);
         $sut = new MetadataSettingsSetService();

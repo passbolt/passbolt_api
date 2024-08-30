@@ -28,12 +28,12 @@ class MetadataSettingsGetServiceTest extends AppTestCase
     public function testMetadataSettingsGetService_getSettings_NotEntryReturnsDefault(): void
     {
         $sut = new MetadataSettingsGetService();
-        $this->assertEquals(MetadataSettingsFactory::getDefaultData(), $sut->getSettings()->toArray());
+        $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
     }
 
     public function testMetadataSettingsGetService_getSettings_NotDefault(): void
     {
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $data[MetadataSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
         $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
         $data[MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
@@ -45,11 +45,11 @@ class MetadataSettingsGetServiceTest extends AppTestCase
     public function testMetadataSettingsGetService_getSettings_BrokenSettingsReturnsDefault(): void
     {
         $this->assertEquals(0, MetadataSettingsFactory::count());
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = '🔥';
         MetadataSettingsFactory::make()->value(json_encode($data))->persist();
         $sut = new MetadataSettingsGetService();
-        $this->assertEquals(MetadataSettingsFactory::getDefaultData(), $sut->getSettings()->toArray());
+        $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
     }
 
     public function testMetadataSettingsGetService_getSettings_BrokenJsonSettingsReturnsDefault(): void
@@ -58,6 +58,6 @@ class MetadataSettingsGetServiceTest extends AppTestCase
             ->setPropertyAndValue(MetadataSettingsGetService::ORG_SETTING_PROPERTY, '🔥')
             ->persist();
         $sut = new MetadataSettingsGetService();
-        $this->assertEquals(MetadataSettingsFactory::getDefaultData(), $sut->getSettings()->toArray());
+        $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
     }
 }
