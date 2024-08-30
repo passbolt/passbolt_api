@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-08-30 08:25\n"
+"PO-Revision-Date: 2024-08-30 09:27\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -920,7 +920,7 @@ msgid "A role identifier is required."
 msgstr "Un identifiant de rôle est requis."
 
 msgid "The disabled date should be a valid date."
-msgstr ""
+msgstr "La date de désactivation doit être une date valide."
 
 msgid "The profile should not be empty."
 msgstr "Le profil ne doit pas être vide."
@@ -1766,10 +1766,10 @@ msgid "SSL access is not enabled. You can still proceed, but it is highly recomm
 msgstr "L'accès SSL n'est pas activé. Vous pouvez toujours continuer, mais il est fortement recommandé de configurer votre serveur web pour qu'il utilise HTTPS avant de continuer."
 
 msgid "Not using a self-signed certificate."
-msgstr ""
+msgstr "N'utilise pas de certificat auto-signé."
 
 msgid "Using a self-signed certificate."
-msgstr ""
+msgstr "Utilisation d'un certificat auto-signé."
 
 msgid "SSL peer certificate validates."
 msgstr ""
@@ -3128,7 +3128,7 @@ msgid "Please rotate it to ensure continued security."
 msgstr "Veuillez le modifier pour assurer une sécurité permanente."
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "Mettre à jour dans passbolt "
 
 msgid "Could not retrieve the password policies."
 msgstr "Impossible de récupérer les politiques de mots de passe."
@@ -3152,7 +3152,7 @@ msgid "The password generator settings should not be empty."
 msgstr "Les paramètres du générateur de mots de passe ne doivent pas être vides."
 
 msgid "The password generator settings should have at least one mask selected."
-msgstr ""
+msgstr "Les paramètres du générateur de mot de passe doivent avoir au moins un critère sélectionné."
 
 msgid "The passphrase generator settings is required."
 msgstr "Les paramètres du générateur de phrase de passe sont nécessaires."
@@ -5081,7 +5081,7 @@ msgid "SSL certification verification for LDAP server is disabled."
 msgstr "La vérification de certification SSL pour le serveur LDAP est désactivée."
 
 msgid "Disabling the ssl verify check can lead to security attacks."
-msgstr ""
+msgstr "Désactiver la vérification ssl peut conduire à des attaques de sécurité."
 
 msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
 msgstr "Un attaquant peut modifier le certificat et effectuer une attaque de type man-in-the-middle."
@@ -5612,13 +5612,13 @@ msgid "Azure SSO secret expiry date is near"
 msgstr ""
 
 msgid "SSL certification validation for SSO instance is enabled."
-msgstr ""
+msgstr "La validation de la certification SSL pour l'instance SSO est activée."
 
 msgid "SSL certification validation for SSO instance is disabled."
-msgstr ""
+msgstr "La validation de la certification SSL pour l'instance SSO est désactivée."
 
 msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
-msgstr ""
+msgstr "Pour corriger cela, vous pouvez définir la variable d'environnement PASSBOLT_SECURITY_SSO_SSL_VERIFY à true."
 
 msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
 msgstr ""
@@ -5627,7 +5627,7 @@ msgid "The user is missing for the SSO state."
 msgstr ""
 
 msgid "Email not provided by provider."
-msgstr ""
+msgstr "E-mail non fourni par le fournisseur."
 
 msgid "Username mismatch."
 msgstr "Le nom d'utilisateur ne correspond pas."
@@ -5693,10 +5693,10 @@ msgid "The SSO key does not exist."
 msgstr "La clé SSO n'existe pas."
 
 msgid "The SSO key could not be deleted."
-msgstr ""
+msgstr "La clé SSO n'a pas pu être supprimée."
 
 msgid "Could not update the SSO settings."
-msgstr ""
+msgstr "Impossible de mettre à jour les paramètres SSO."
 
 msgid "The settings status is invalid."
 msgstr ""
@@ -5831,7 +5831,7 @@ msgid "Could not validate the SSO recover request."
 msgstr "Impossible de valider la demande de récupération SSO."
 
 msgid "The email is required in URL parameters."
-msgstr ""
+msgstr "Une adresse e-mail est nécessaire dans les paramètres de l'URL."
 
 msgid "The case field is required."
 msgstr ""
@@ -5891,28 +5891,28 @@ msgid "Could not validate tags data."
 msgstr "Impossible de valider les données des tags."
 
 msgid "Could not retrieve the user passphrase policies."
-msgstr ""
+msgstr "Impossible de récupérer les règles de phrase de passe."
 
 msgid "The entropy minimum is required."
-msgstr ""
+msgstr "Une entropie minimale est nécessaire."
 
 msgid "The entropy minimum should be between {0} and {1}."
-msgstr ""
+msgstr "Le minimum d'entropie doit être compris entre {0} et {1}."
 
 msgid "You edited the user passphrase policy"
-msgstr ""
+msgstr "Vous avez modifié la politique de phrase de passe"
 
 msgid "{0} edited the user passphrase policy"
-msgstr ""
+msgstr "{0} a modifié la politique de phrase de passe"
 
 msgid "Could not validate the user passphrase policies settings."
-msgstr ""
+msgstr "Impossible de valider les paramètres de la politique de phrase de passe."
 
 msgid "Only administrators are allowed to create/update user passphrase policies settings."
-msgstr ""
+msgstr "Seuls les administrateurs sont autorisés à créer/mettre à jour les paramètres de la politique de phrase de passe."
 
 msgid "The user passphrase policy settings has been updated by {0}."
-msgstr ""
+msgstr "Les paramètres de la politique de phrase de passe utilisateur ont été mis à jour par {0}."
 
 msgid "Error"
 msgstr "Erreur"
@@ -5975,19 +5975,19 @@ msgid "Feel free to get in touch with the administrator at the origin of the ope
 msgstr "N'hésitez pas à contacter l'administrateur à l'origine de l'opération si vous pensez que cette action semble suspecte."
 
 msgid "Account suspended"
-msgstr ""
+msgstr "Compte suspendu"
 
 msgid "Your account has been suspended."
-msgstr ""
+msgstr "Votre compte a été suspendu."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Vous ne pouvez pas vous connecter à passbolt et recevoir des notifications par e-mail."
 
 msgid "Other users can still share resources with you and add you to a group."
-msgstr ""
+msgstr "Les autres utilisateurs peuvent partager des ressources avec vous et vous ajouter à un groupe."
 
 msgid "Contact your admin"
-msgstr ""
+msgstr "Contactez votre administrateur"
 
 msgid "{0} changed your role to user."
 msgstr "{0} a modifié votre rôle pour devenir utilisateur."
@@ -6020,19 +6020,19 @@ msgid "Please check with them first to confirm."
 msgstr "Veuillez vérifier avec eux d'abord pour confirmer."
 
 msgid "User suspended"
-msgstr ""
+msgstr "Utilisateur suspendu"
 
 msgid "The user {0} has been suspended."
-msgstr ""
+msgstr "L'utilisateur {0} a été suspendu."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Cet utilisateur ne pourra pas se connecter à passbolt et recevoir des notifications par e-mail."
 
 msgid "Other users can share resources and add this user to a group."
-msgstr ""
+msgstr "Les autres utilisateurs peuvent partager des ressources et ajouter cet utilisateur à un groupe."
 
 msgid "Check user suspension"
-msgstr ""
+msgstr "Vérifier la suspension de l'utilisateur"
 
 msgid "Welcome to {0}!"
 msgstr "Bienvenue {0} !"
