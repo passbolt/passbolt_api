@@ -48,13 +48,13 @@ class MetadataSettingsGetControllerTest extends AppIntegrationTestCaseV5
         $this->logInAsAdmin();
         $this->getJson('/metadata/settings.json');
         $this->assertResponseCode(200);
-        $this->assertEquals(MetadataSettingsFactory::getDefaultData(), $this->getResponseBodyAsArray());
+        $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $this->getResponseBodyAsArray());
     }
 
     public function testMetadataSettingsGetController_Success_SavedEntry(): void
     {
         $this->logInAsAdmin();
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $data[MetadataSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
         $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
         $data[MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;

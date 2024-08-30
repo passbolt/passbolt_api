@@ -26,7 +26,7 @@ class MetadataSettingsAssertServiceTest extends AppTestCase
 {
     public function testMetadataSettingsAssertService_Success(): void
     {
-        $data = MetadataSettingsFactory::getDefaultData();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
         $sut = new MetadataSettingsAssertService();
         $dto = $sut->assert($data);
         $this->assertEquals($data, $dto->toArray());
