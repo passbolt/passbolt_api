@@ -58,11 +58,6 @@ class V4100CreateMetadataSessionKeys extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('deleted', 'datetime', [
-                'default' => null,
-                'limit' => null,
-                'null' => true,
-            ])
             ->addIndex(['user_id'])
             ->create();
     }
