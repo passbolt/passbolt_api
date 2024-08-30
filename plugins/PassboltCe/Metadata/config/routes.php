@@ -42,4 +42,7 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
         ->setMethods(['GET']);
     $routes->connect('/session-keys', ['controller' => 'MetadataSessionKeyCreate', 'action' => 'create'])
         ->setMethods(['POST']);
+    $routes->connect('/session-keys/{id}', ['controller' => 'MetadataSessionKeyDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
 });

@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\Factory;
 
 use App\Model\Entity\User;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
  * @method \Passbolt\Metadata\Model\Entity\MetadataSessionKey getEntity()
@@ -17,6 +19,8 @@ use Faker\Generator;
  */
 class MetadataSessionKeyFactory extends CakephpBaseFactory
 {
+    use GpgMetadataKeysTestTrait;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -55,6 +59,22 @@ class MetadataSessionKeyFactory extends CakephpBaseFactory
         }
 
         return $this->with('Users', $user);
+    }
+
+    /**
+     * @return $this
+     */
+    public function withMakiSessionKey()
+    {
+        $keyInfo = $this->getMakiKeyInfo();
+        $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
+        $user = UserFactory::make()
+            ->with('Gpgkeys', $gpgkey)
+            ->admin()
+            ->active()
+            ->persist();
+
+        return $this->withUser($user)->setField('data', $this->getEncryptedMetadataSessionKeyForMaki());
     }
 
     /**
