@@ -123,6 +123,26 @@ trait GpgMetadataKeysTestTrait
     }
 
     /**
+     * Session key data encrypted for Server Key.
+     *
+     * @return false|string
+     */
+    public function getEncryptedMetadataSessionKeyForServerKey()
+    {
+        return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_session_key_for_server_key.msg');
+    }
+
+    /**
+     * Session key data encrypted for Maki.
+     *
+     * @return false|string
+     */
+    public function getEncryptedMetadataSessionKeyForMaki()
+    {
+        return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_session_key_for_maki.msg');
+    }
+
+    /**
      * Cleartext version of self::getEncryptedMessageForMaki()
      *
      * @return array
@@ -218,6 +238,34 @@ qHRRyS/qHxm+91OQZ99KGhkYMNNE5Xa7HQKDTgY=
 =A9iB
 -----END PGP PRIVATE KEY BLOCK-----',
             'passphrase' => 'server_metadata_private_key@passbolt.test',
+        ];
+    }
+
+    /**
+     * Cleartext version of self::getEncryptedMetadataSessionKeyForMaki()
+     *
+     * @return array
+     */
+    public function clearTextMetadataSessionKeyForMaki(): array
+    {
+        return [
+            'foreign_model' => 'secret', // can be: resource, secret, folder, etc.
+            'foreign_id' => '903a009d-2e58-4c28-bd61-52bc7c864816',
+            'session_key' => '9:1AEACC37D64E6CC77E7AA7D17B0BE3067890586BBC4BCD3D99051BD2D4459B99',
+        ];
+    }
+
+    /**
+     * Cleartext version of self::getEncryptedMetadataSessionKeyForServerKey()
+     *
+     * @return array
+     */
+    public function clearTextMetadataSessionKeyForServerKey(): array
+    {
+        return [
+            'foreign_model' => 'resource', // can be: resource, secret, folder, etc.
+            'foreign_id' => '0012adea-e778-4893-833e-65d7502452f1',
+            'session_key' => '9:1AEACC37D64E6CC77E7AA7D17B0BE3067890586BBC4BCD3D99051BD2D4457F28',
         ];
     }
 }
