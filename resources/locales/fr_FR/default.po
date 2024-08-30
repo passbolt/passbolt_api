@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-08-30 08:51\n"
+"PO-Revision-Date: 2024-08-30 09:51\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -920,7 +920,7 @@ msgid "A role identifier is required."
 msgstr "Un identifiant de rôle est requis."
 
 msgid "The disabled date should be a valid date."
-msgstr ""
+msgstr "La date de désactivation doit être une date valide."
 
 msgid "The profile should not be empty."
 msgstr "Le profil ne doit pas être vide."
@@ -4166,19 +4166,19 @@ msgid "Feel free to get in touch with the administrator at the origin of the ope
 msgstr "N'hésitez pas à contacter l'administrateur à l'origine de l'opération si vous pensez que cette action semble suspecte."
 
 msgid "Account suspended"
-msgstr ""
+msgstr "Compte suspendu"
 
 msgid "Your account has been suspended."
-msgstr ""
+msgstr "Votre compte a été suspendu."
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Vous ne pouvez pas vous connecter à passbolt et recevoir des notifications par e-mail."
 
 msgid "Other users can still share resources with you and add you to a group."
-msgstr ""
+msgstr "Les autres utilisateurs peuvent partager des ressources avec vous et vous ajouter à un groupe."
 
 msgid "Contact your admin"
-msgstr ""
+msgstr "Contactez votre administrateur"
 
 msgid "{0} changed your role to user."
 msgstr "{0} a modifié votre rôle pour devenir utilisateur."
@@ -4211,19 +4211,19 @@ msgid "Please check with them first to confirm."
 msgstr "Veuillez vérifier avec eux d'abord pour confirmer."
 
 msgid "User suspended"
-msgstr ""
+msgstr "Utilisateur suspendu"
 
 msgid "The user {0} has been suspended."
-msgstr ""
+msgstr "L'utilisateur {0} a été suspendu."
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "Cet utilisateur ne pourra pas se connecter à passbolt et recevoir des notifications par e-mail."
 
 msgid "Other users can share resources and add this user to a group."
-msgstr ""
+msgstr "Les autres utilisateurs peuvent partager des ressources et ajouter cet utilisateur à un groupe."
 
 msgid "Check user suspension"
-msgstr ""
+msgstr "Vérifier la suspension de l'utilisateur"
 
 msgid "Welcome to {0}!"
 msgstr "Bienvenue {0} !"
