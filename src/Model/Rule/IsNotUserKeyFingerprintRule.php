@@ -39,12 +39,9 @@ class IsNotUserKeyFingerprintRule
             return false;
         }
 
+        $gpgKeysTable = TableRegistry::getTableLocator()->get('Gpgkeys');
         try {
-            return !(TableRegistry::getTableLocator()->get('Gpgkeys')
-                ->exists([
-                    'fingerprint' => $fingerprint,
-                    'deleted' => false,
-                ]));
+            return !$gpgKeysTable->exists(['fingerprint' => $fingerprint, 'deleted' => false]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());
 

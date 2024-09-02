@@ -28,6 +28,7 @@ use Cake\ORM\Entity;
  * @property string|null $description
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime|null $deleted
  * @property \App\Model\Entity\Resource[] $resources
  */
 class ResourceType extends Entity
@@ -46,10 +47,25 @@ class ResourceType extends Entity
     public const SLUG_V5_TOTP_STANDALONE = 'v5-totp-standalone';
     public const SLUG_V5_DEFAULT_WITH_TOTP = 'v5-default-with-totp';
 
+    // v5 slugs
+    public const SLUG_V5_PASSWORD_STRING = 'v5-password-string';
+    public const SLUG_V5_DEFAULT = 'v5-default';
+    public const SLUG_V5_TOTP_STANDALONE = 'v5-totp-standalone';
+    public const SLUG_V5_DEFAULT_WITH_TOTP = 'v5-default-with-totp';
+
     protected $_accessible = [
         'name' => false,
         'slug' => false,
         'description' => false,
         'definition' => false,
+        'deleted' => false,
     ];
+
+    /**
+     * @return bool true if the resource type is soft deleted
+     */
+    public function isDeleted(): bool
+    {
+        return isset($this->deleted);
+    }
 }

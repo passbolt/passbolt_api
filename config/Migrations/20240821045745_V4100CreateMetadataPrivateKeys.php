@@ -21,14 +21,6 @@ use Phinx\Db\Adapter\MysqlAdapter;
 class V4100CreateMetadataPrivateKeys extends AbstractMigration
 {
     /**
-     * @inheritDoc
-     */
-    public function shouldExecute(): bool
-    {
-        return Configure::read('passbolt.v5.enabled');
-    }
-
-    /**
      * Change Method.
      *
      * More information on this method is available here:
@@ -74,8 +66,6 @@ class V4100CreateMetadataPrivateKeys extends AbstractMigration
             ])
             ->addIndex(['metadata_key_id'])
             ->addIndex(['user_id'])
-            ->addForeignKey('metadata_key_id', 'metadata_keys', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
-            ->addForeignKey('user_id', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
             ->create();
     }
 }

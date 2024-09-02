@@ -13,6 +13,7 @@
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.0.0
  */
+use Cake\Core\Configure;
 use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
@@ -24,7 +25,20 @@ $routes->plugin('Passbolt/ResourceTypes', ['path' => '/resource-types'], functio
         ->connect('/', ['controller' => 'ResourceTypesIndex', 'action' => 'index'])
         ->setMethods(['GET']);
 
-    $routes->connect('/{id}', ['controller' => 'ResourceTypesView', 'action' => 'view'])
+    $routes
+        ->connect('/{id}', ['controller' => 'ResourceTypesView', 'action' => 'view'])
         ->setPass(['id'])
         ->setMethods(['GET']);
+
+    if (Configure::read('passbolt.v5.enabled')) {
+        $routes
+            ->connect('/{id}', ['controller' => 'ResourceTypesDelete', 'action' => 'delete'])
+            ->setPass(['id'])
+            ->setMethods(['DELETE']);
+
+        $routes
+            ->connect('/{id}', ['controller' => 'ResourceTypesUpdate', 'action' => 'update'])
+            ->setPass(['id'])
+            ->setMethods(['PUT']);
+    }
 });

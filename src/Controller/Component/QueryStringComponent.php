@@ -118,7 +118,8 @@ class QueryStringComponent extends Component
                     // these should always be an array
                     $query['filter'][$filterName] = $filter = (array)$query['filter'][$filterName];
                 }
-                if (substr($filterName, 0, 3) === 'is-') {
+                $booleanFilters = ['deleted'];
+                if (substr($filterName, 0, 3) === 'is-' || in_array($filterName, $booleanFilters)) {
                     $query['filter'][$filterName] = self::normalizeBoolean($filter);
                 } elseif ($filterName === 'has-parent') {
                     foreach ($query['filter']['has-parent'] as $i => $parentId) {
@@ -183,7 +184,7 @@ class QueryStringComponent extends Component
      */
     protected static function mustBeArrayFilters(): array
     {
-        return ['search', 'has-parent', 'has-id', 'has-groups', 'has-managers', 'has-users', 'has-access',];
+        return ['search', 'has-parent', 'has-id', 'has-groups', 'has-managers', 'has-users', 'has-access'];
     }
 
     /**
@@ -325,6 +326,7 @@ class QueryStringComponent extends Component
                     case 'is-shared-with-me':
                     case 'is-success':
                     case 'is-deleted':
+                    case 'deleted':
                         self::validateFilterBoolean($values, $filterName);
                         break;
                     case 'has-tag':

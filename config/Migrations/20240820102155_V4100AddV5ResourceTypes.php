@@ -24,14 +24,6 @@ use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 class V4100AddV5ResourceTypes extends AbstractMigration
 {
     /**
-     * @inheritDoc
-     */
-    public function shouldExecute(): bool
-    {
-        return Configure::read('passbolt.v5.enabled');
-    }
-
-    /**
      * Up Method.
      *
      * @link https://book.cakephp.org/phinx/0/en/migrations.html#the-up-method

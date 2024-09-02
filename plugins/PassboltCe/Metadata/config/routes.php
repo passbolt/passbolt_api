@@ -18,4 +18,16 @@ use Cake\Routing\RouteBuilder;
 /** @var \Cake\Routing\RouteBuilder $routes */
 $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
+
+    $routes->connect('/settings', ['controller' => 'MetadataSettingsGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/settings', ['controller' => 'MetadataSettingsPost', 'action' => 'post'])
+        ->setMethods(['PUT', 'POST']);
+
+    $routes->connect('/keys', ['controller' => 'MetadataKeysIndex', 'action' => 'index'])
+        ->setMethods(['GET']);
+
+    $routes->connect('/keys', ['controller' => 'MetadataKeyCreate', 'action' => 'create'])
+        ->setMethods(['POST']);
 });
