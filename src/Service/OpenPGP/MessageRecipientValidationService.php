@@ -25,7 +25,7 @@ class MessageRecipientValidationService
 {
     /**
      * @param array $messageInfo see MessageValidationService::getMessageInfo
-     * @param array $keyInfo see PublicKeyValidationService::getMessageInfo
+     * @param array $keyInfo see PublicKeyValidationService::getPublicKeyInfo
      * @throw CustomValidationException if the message info or key info are not workable
      * @return bool
      */

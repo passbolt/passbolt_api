@@ -21,14 +21,6 @@ use Phinx\Db\Adapter\MysqlAdapter;
 class V4100CreateMetadataSessionKeys extends AbstractMigration
 {
     /**
-     * @inheritDoc
-     */
-    public function shouldExecute(): bool
-    {
-        return Configure::read('passbolt.v5.enabled');
-    }
-
-    /**
      * Change Method.
      *
      * More information on this method is available here:
@@ -66,13 +58,7 @@ class V4100CreateMetadataSessionKeys extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('deleted', 'datetime', [
-                'default' => null,
-                'limit' => null,
-                'null' => true,
-            ])
             ->addIndex(['user_id'])
-            ->addForeignKey('user_id', 'users', 'id', ['delete'=> 'NO_ACTION', 'update'=> 'NO_ACTION'])
             ->create();
     }
 }

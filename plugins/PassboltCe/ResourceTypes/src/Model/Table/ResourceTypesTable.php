@@ -17,8 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\ResourceTypes\Model\Table;
 
+use App\Model\Validation\DateTime\IsParsableDateTimeValidationRule;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
+use Cake\Core\Configure;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -116,6 +118,12 @@ class ResourceTypesTable extends Table
                 'rule' => [$this, 'isValidJson'],
                 'message' => __('The message should be valid JSON message.'),
             ]);
+
+        if (Configure::read('passbolt.v5.enabled')) {
+            $validator
+                ->allowEmptyDateTime('expired')
+                ->add('expired', 'expired', new IsParsableDateTimeValidationRule());
+        }
 
         return $validator;
     }

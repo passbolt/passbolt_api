@@ -28,6 +28,7 @@ use Cake\ORM\Entity;
  * @property string|null $description
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime|null $deleted
  * @property \App\Model\Entity\Resource[] $resources
  */
 class ResourceType extends Entity
@@ -51,5 +52,14 @@ class ResourceType extends Entity
         'slug' => false,
         'description' => false,
         'definition' => false,
+        'deleted' => false,
     ];
+
+    /**
+     * @return bool true if the resource type is soft deleted
+     */
+    public function isDeleted(): bool
+    {
+        return isset($this->deleted);
+    }
 }

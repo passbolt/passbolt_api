@@ -117,7 +117,9 @@ class ResourcesTable extends Table
             'saveStrategy' => 'replace',
         ]);
 
-        $this->belongsTo('ResourceTypes');
+        $this->belongsTo('ResourceTypes', [
+            'className' => 'Passbolt/ResourceTypes.ResourceTypes',
+        ]);
     }
 
     /**
