@@ -47,12 +47,6 @@ class ResourceType extends Entity
     public const SLUG_V5_TOTP_STANDALONE = 'v5-totp-standalone';
     public const SLUG_V5_DEFAULT_WITH_TOTP = 'v5-default-with-totp';
 
-    // v5 slugs
-    public const SLUG_V5_PASSWORD_STRING = 'v5-password-string';
-    public const SLUG_V5_DEFAULT = 'v5-default';
-    public const SLUG_V5_TOTP_STANDALONE = 'v5-totp-standalone';
-    public const SLUG_V5_DEFAULT_WITH_TOTP = 'v5-default-with-totp';
-
     protected $_accessible = [
         'name' => false,
         'slug' => false,
