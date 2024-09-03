@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Service\OpenPGP\MessageRecipientValidationService;
 use App\Service\OpenPGP\MessageValidationService;
 use App\Service\OpenPGP\PublicKeyValidationService;
+use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Log\Log;
@@ -50,7 +51,9 @@ class IsValidEncryptedMetadataSessionKeyRule
             $rules = MessageValidationService::getAsymmetricMessageRules();
             $msgInfo = MessageValidationService::parseAndValidateMessage($entity->get('data'), $rules);
         } catch (CustomValidationException $exception) {
-            Log::error('The message must contain an asymmetric packet. Error: ' . $exception->getMessage());
+            if (Configure::read('debug')) {
+                Log::error('The message must contain an asymmetric packet. Error: ' . $exception->getMessage());
+            }
 
             return false;
         }
