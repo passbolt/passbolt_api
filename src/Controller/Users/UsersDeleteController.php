@@ -34,6 +34,8 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
 /**
  * UsersDeleteController Class
@@ -211,6 +213,7 @@ class UsersDeleteController extends AppController
                     $findResourcesOptions['contain']['permissions.user.profile'] = true;
                     $findResourcesOptions['contain']['permissions.group'] = true;
                     $resources = $this->Resources->findAllByIds($user->id, $resourcesIds, $findResourcesOptions);
+                    $resources = $this->formatResources($resources->toArray());
                     $body['errors']['resources']['sole_owner'] = $resources;
                     $msg .= ' ' . $errors['id']['soleOwnerOfSharedContent'];
                 }
@@ -367,5 +370,25 @@ class UsersDeleteController extends AppController
             'deletedBy' => $this->User->id(),
         ]);
         $this->getEventManager()->dispatch($event);
+    }
+
+    /**
+     * Formats resource array fields according to V4/V5.
+     *
+     * @param \App\Model\Entity\Resource[] $resources Resources array to format.
+     * @return array
+     */
+    private function formatResources(array $resources): array
+    {
+        $metadataResourcesRenderService = new MetadataResourcesRenderService();
+        $result = [];
+
+        foreach ($resources as $resource) {
+            $resource = $resource->toArray();
+            $dto = MetadataResourceDto::fromArray($resource);
+            $result[] = $metadataResourcesRenderService->renderResource($resource, $dto->isV5());
+        }
+
+        return $result;
     }
 }
