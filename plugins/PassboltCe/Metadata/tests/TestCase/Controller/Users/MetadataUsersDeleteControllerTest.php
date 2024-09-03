@@ -44,12 +44,21 @@ class MetadataUsersDeleteControllerTest extends AppIntegrationTestCaseV5
         RoleFactory::make()->guest()->persist();
     }
 
+    public function dryRunProvider()
+    {
+        return [
+            [false], // delete
+            [true], // dry-run
+        ];
+    }
+
     /**
      * When V4, test V5 fields are not present in the response.
      *
      * @return void
+     * @dataProvider dryRunProvider
      */
-    public function testMetadataUsersDeleteController_Error_SoleOwnerV4()
+    public function testMetadataUsersDeleteController_Error_SoleOwnerV4(bool $isDryRun)
     {
         [$owner, $user] = UserFactory::make(2)->user()->persist();
         ResourceFactory::make(2)
@@ -60,7 +69,8 @@ class MetadataUsersDeleteControllerTest extends AppIntegrationTestCaseV5
 
         $this->logInAsAdmin();
         $ownerId = $owner->get('id');
-        $this->deleteJson("/users/{$ownerId}.json");
+        $url = $isDryRun ? "/users/{$ownerId}/dry-run.json" : "/users/{$ownerId}.json";
+        $this->deleteJson($url);
 
         $this->assertError(400);
         $this->assertUserIsNotSoftDeleted($ownerId);
@@ -80,8 +90,9 @@ class MetadataUsersDeleteControllerTest extends AppIntegrationTestCaseV5
      * When V5, test v4 fields are not present in the response.
      *
      * @return void
+     * @dataProvider dryRunProvider
      */
-    public function testMetadataUsersDeleteController_Error_SoleOwnerV5()
+    public function testMetadataUsersDeleteController_Error_SoleOwnerV5(bool $isDryRun)
     {
         [$owner, $user] = UserFactory::make(2)->user()->persist();
         ResourceFactory::make(2)
@@ -93,7 +104,8 @@ class MetadataUsersDeleteControllerTest extends AppIntegrationTestCaseV5
 
         $this->logInAsAdmin();
         $ownerId = $owner->get('id');
-        $this->deleteJson("/users/{$ownerId}.json");
+        $url = $isDryRun ? "/users/{$ownerId}/dry-run.json" : "/users/{$ownerId}.json";
+        $this->deleteJson($url);
 
         $this->assertError(400);
         $this->assertUserIsNotSoftDeleted($ownerId);
@@ -109,7 +121,10 @@ class MetadataUsersDeleteControllerTest extends AppIntegrationTestCaseV5
         }
     }
 
-    public function testMetadataUsersDeleteController_Error_SoleOwnerMixedV4AndV5Version()
+    /**
+     * @dataProvider dryRunProvider
+     */
+    public function testMetadataUsersDeleteController_Error_SoleOwnerMixedV4AndV5Version(bool $isDryRun)
     {
         [$owner, $user] = UserFactory::make(2)->user()->persist();
         // 1 - v4 resource
@@ -128,7 +143,8 @@ class MetadataUsersDeleteControllerTest extends AppIntegrationTestCaseV5
 
         $this->logInAsAdmin();
         $ownerId = $owner->get('id');
-        $this->deleteJson("/users/{$ownerId}.json");
+        $url = $isDryRun ? "/users/{$ownerId}/dry-run.json" : "/users/{$ownerId}.json";
+        $this->deleteJson($url);
 
         $this->assertError(400);
         $this->assertUserIsNotSoftDeleted($ownerId);
