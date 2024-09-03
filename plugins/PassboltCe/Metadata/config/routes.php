@@ -19,15 +19,30 @@ use Cake\Routing\RouteBuilder;
 $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
 
+    /**
+     * Metadata settings routes
+     */
     $routes->connect('/settings', ['controller' => 'MetadataSettingsGet', 'action' => 'get'])
         ->setMethods(['GET']);
-
     $routes->connect('/settings', ['controller' => 'MetadataSettingsPost', 'action' => 'post'])
         ->setMethods(['PUT', 'POST']);
 
+    /**
+     * Metadata keys routes
+     */
     $routes->connect('/keys', ['controller' => 'MetadataKeysIndex', 'action' => 'index'])
         ->setMethods(['GET']);
-
     $routes->connect('/keys', ['controller' => 'MetadataKeyCreate', 'action' => 'create'])
         ->setMethods(['POST']);
+
+    /**
+     * Metadata session keys routes
+     */
+    $routes->connect('/session-keys', ['controller' => 'MetadataSessionKeysGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+    $routes->connect('/session-keys', ['controller' => 'MetadataSessionKeyCreate', 'action' => 'create'])
+        ->setMethods(['POST']);
+    $routes->connect('/session-keys/{id}', ['controller' => 'MetadataSessionKeyDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
 });
