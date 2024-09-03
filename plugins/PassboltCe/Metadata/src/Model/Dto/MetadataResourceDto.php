@@ -94,11 +94,20 @@ class MetadataResourceDto
     }
 
     /**
+     * @param array $data Array data.
+     * @return self
+     */
+    public static function fromArray(array $data): self
+    {
+        return new MetadataResourceDto($data);
+    }
+
+    /**
      * @return bool
      */
     public function isV5(): bool
     {
-        return array_key_exists(self::METADATA, $this->data);
+        return array_key_exists(self::METADATA, $this->data) && !is_null($this->data[self::METADATA]);
     }
 
     /**
@@ -133,7 +142,7 @@ class MetadataResourceDto
         $isV4 = true;
         $v5MissingFields = [];
         foreach (self::V5_META_PROPS as $metadataField) {
-            if (array_key_exists($metadataField, $payload)) {
+            if (array_key_exists($metadataField, $payload) && !is_null($payload[$metadataField])) {
                 $isV4 = false;
             } else {
                 $v5MissingFields[] = $metadataField;
@@ -155,7 +164,7 @@ class MetadataResourceDto
         // Now that we know that we have a valid v5 payload, we check that no v4 fields are in the payload
         $v4SuperfluousFields = [];
         foreach (self::V4_META_PROPS as $v4Field) {
-            if (array_key_exists($v4Field, $payload)) {
+            if (array_key_exists($v4Field, $payload) && !is_null($payload[$v4Field])) {
                 $v4SuperfluousFields[] = $v4Field;
             }
         }
