@@ -161,7 +161,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'lib' => true,
                 'gpgKeyNotDefault' => false,
                 'info' => [
-                    'gpgHome' => '/root/.gnupg',
+                    'gpgHome' => getenv('GNUPGHOME'),
                     'gpgKeyPrivate' => Configure::read('passbolt.gpg.serverKey.private'),
                 ],
                 'gpgHomeWritable' => true,

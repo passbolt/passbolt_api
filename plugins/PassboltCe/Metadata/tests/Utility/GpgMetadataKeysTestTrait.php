@@ -26,41 +26,12 @@ trait GpgMetadataKeysTestTrait
      *
      * @return array
      */
-    public function getMakiKeyInfo(): array
+    public function getUserKeyInfo(): array
     {
         return [
             'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key'), // ecc, curve25519
             'fingerprint' => '3EED5E73EA34C95198A904067B28D501637D5102',
             'email' => 'maki@passbolt.com',
-        ];
-    }
-
-    /**
-     * Returns info related to Metadata server key.
-     *
-     * @return array
-     */
-    public function getMetadataServerKeyInfo(): array
-    {
-        return [
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'server_public.key'), // ecc, curve25519
-            'fingerprint' => '697179F80870413657DFE70BEB200F2DA0AC5BD3',
-            'email' => 'metadata_server_key@passbolt.test',
-        ];
-    }
-
-    /**
-     * Returns info related to Metadata shared key.
-     *
-     * @return array
-     */
-    public function getSharedKeyInfo(): array
-    {
-        return [
-            // Alg: ecc, curve25519
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'shared_public.key'),
-            'fingerprint' => 'BF06A5F8615F6DEDC687AA72CCE0BADF53537AA7',
-            'email' => 'shared@passbolt.test',
         ];
     }
 
@@ -97,17 +68,17 @@ trait GpgMetadataKeysTestTrait
      *
      * @return false|string
      */
-    public function getEncryptedMessageForMaki()
+    public function getEncryptedMetadataPrivateKeyFoUser()
     {
         return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_private_key_for_maki.msg');
     }
 
     /**
-     * Message encrypted for Maki (maki@passbolt.com), it's different from getEncryptedMessageForMaki().
+     * Message encrypted for Maki (maki@passbolt.com), it's different from getEncryptedMetadataPrivateKeyFoUser().
      *
      * @return false|string
      */
-    public function getEncryptedMessageForMakiDifferent()
+    public function getEncryptedMetadataPrivateKeyFoUserDifferent()
     {
         return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_private_key_for_maki_2.msg');
     }
@@ -117,7 +88,7 @@ trait GpgMetadataKeysTestTrait
      *
      * @return false|string
      */
-    public function getEncryptedMessageForServerKey()
+    public function getEncryptedMetadataPrivateKeyForServerKey()
     {
         return file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'msg_for_server_key.msg');
     }
@@ -143,14 +114,14 @@ trait GpgMetadataKeysTestTrait
     }
 
     /**
-     * Cleartext version of self::getEncryptedMessageForMaki()
+     * Cleartext version of self::getEncryptedMetadataPrivateKeyFoUser()
      *
      * @return array
      */
-    public function clearTextMessageOfEncryptedMessageForMaki(): array
+    public function clearTextMetadataPrivateKeyDataForUser(): array
     {
         return [
-            'object_type' => 'PASSBOLT_METADATA_KEY',
+            'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
             'domain' => 'https://passbolt.test',
             'fingerprint' => '3CAFE4CF16C5CC76878F9DB43679575AB19C3F00',
             'armored_key' => '-----BEGIN PGP PRIVATE KEY BLOCK-----
@@ -176,14 +147,14 @@ Ggmm+WO4Cw==
     }
 
     /**
-     * Cleartext version of self::getEncryptedMessageForMakiDifferent()
+     * Cleartext version of self::getEncryptedMetadataPrivateKeyFoUserDifferent()
      *
      * @return array
      */
-    public function clearTextMessageOfEncryptedMessageForMakiDifferent(): array
+    public function clearTextMetadataPrivateKeyDataForUserDifferent(): array
     {
         return [
-            'object_type' => 'PASSBOLT_METADATA_KEY',
+            'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
             'domain' => 'https://passbolt.test',
             'fingerprint' => 'AA47738ABBD0D9E9FE60DAD207B2A1DC00F49417',
             'armored_key' => '-----BEGIN PGP PRIVATE KEY BLOCK-----
@@ -209,14 +180,14 @@ Spb9xQz3BA==
     }
 
     /**
-     * Cleartext version of self::getEncryptedMessageForServerKey()
+     * Cleartext version of self::getEncryptedMetadataPrivateKeyForServerKey()
      *
      * @return array
      */
-    public function clearTextMessageOfEncryptedMessageForServerKey(): array
+    public function clearTextMetadataPrivateKeyDataForServer(): array
     {
         return [
-            'object_type' => 'PASSBOLT_METADATA_KEY',
+            'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
             'domain' => 'https://passbolt.test',
             'fingerprint' => '66453926843D575AB3F65389EFC27032BBF6EECB',
             'armored_key' => '-----BEGIN PGP PRIVATE KEY BLOCK-----

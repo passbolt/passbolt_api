@@ -66,7 +66,7 @@ class MetadataSessionKeyFactory extends CakephpBaseFactory
      */
     public function withMakiSessionKey()
     {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = $this->getUserKeyInfo();
         $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
         $user = UserFactory::make()
             ->with('Gpgkeys', $gpgkey)

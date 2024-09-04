@@ -259,7 +259,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
 
     private function getDummyMetadataKeysData(): array
     {
-        $factoryData = MetadataKeyFactory::make()->withMakiKey()->getEntity();
+        $factoryData = MetadataKeyFactory::make()->withValidOpenPGPKey()->getEntity();
 
         return [
             'fingerprint' => $factoryData->get('fingerprint'),
