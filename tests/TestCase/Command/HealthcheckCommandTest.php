@@ -279,12 +279,13 @@ class HealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Gpg_Happy_Path()
     {
+        $gnupgHome = getenv('GNUPGHOME') ?: '/root/.gnupg';
         $this->exec('passbolt healthcheck --gpg');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> PHP GPG Module is installed and loaded.');
-        $this->assertOutputContains('<success>[PASS]</success> The environment variable GNUPGHOME is set to ' . getenv('GNUPGHOME'));
-        $this->assertOutputContains('<success>[PASS]</success> The directory ' . getenv('GNUPGHOME') . ' containing the keyring is writable by the webserver user.');
+        $this->assertOutputContains('<success>[PASS]</success> The environment variable GNUPGHOME is set to ' . $gnupgHome);
+        $this->assertOutputContains('<success>[PASS]</success> The directory ' . $gnupgHome . ' containing the keyring is writable by the webserver user.');
         $this->assertOutputContains('<error>[FAIL] Do not use the default OpenPGP key for the server.</error>');
         $this->assertOutputContains('<success>[PASS]</success> The public key file is defined in ' . CONFIG . 'passbolt.php and readable.');
         $this->assertOutputContains('<success>[PASS]</success> The private key file is defined in ' . CONFIG . 'passbolt.php and readable.');
