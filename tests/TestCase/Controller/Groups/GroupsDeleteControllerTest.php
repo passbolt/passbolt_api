@@ -78,7 +78,10 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
         $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
         $groupId = $group->get('id');
 
-        $resource = ResourceFactory::make()->withPermissionsFor([$group], Permission::OWNER)->withPermissionsFor([$userCanRead], Permission::READ)->persist();
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor([$group], Permission::OWNER)
+            ->withPermissionsFor([$userCanRead], Permission::READ)
+            ->persist();
 
         $this->deleteJson('/groups/' . $groupId . '/dry-run.json');
         $this->assertError(400);
@@ -250,7 +253,10 @@ class GroupsDeleteControllerTest extends AppIntegrationTestCase
 
         $group = GroupFactory::make()->withGroupsManagersFor([$admin])->persist();
         $user = UserFactory::make()->user()->persist();
-        $resourceN = ResourceFactory::make()->withPermissionsFor([$user], Permission::OWNER)->withPermissionsFor([$group], Permission::READ)->persist();
+        $resourceN = ResourceFactory::make()
+            ->withPermissionsFor([$user], Permission::OWNER)
+            ->withPermissionsFor([$group], Permission::READ)
+            ->persist();
         $resourceSId = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->persist()->get('id');
 
         $userId = $user->get('id');
