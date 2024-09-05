@@ -27,6 +27,8 @@ use Cake\ORM\Entity;
  * @property string $data
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property string|null $created_by
+ * @property string|null $modified_by
  *
  * @property \Passbolt\Metadata\Model\Entity\MetadataKey $metadata_key
  * @property \App\Model\Entity\User|null $user
@@ -48,6 +50,8 @@ class MetadataPrivateKey extends Entity
         'data' => false,
         'created' => false,
         'modified' => false,
+        'created_by' => false,
+        'modified_by' => false,
         'metadata_key' => false,
         'user' => false,
     ];

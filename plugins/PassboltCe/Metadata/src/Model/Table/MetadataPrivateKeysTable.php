@@ -26,6 +26,8 @@ use Passbolt\Metadata\Model\Rule\UserIsActiveAndNotDeletedIfPresent;
 /**
  * MetadataPrivateKeys Model
  *
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
  * @property \Passbolt\Metadata\Model\Table\MetadataKeysTable&\Cake\ORM\Association\BelongsTo $MetadataKeys
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
  * @method \Passbolt\Metadata\Model\Entity\MetadataPrivateKey newEmptyEntity()
@@ -67,6 +69,17 @@ class MetadataPrivateKeysTable extends Table
             'className' => 'Passbolt/Metadata.MetadataKeys',
         ]);
         $this->belongsTo('Users', ['foreignKey' => 'user_id']);
+
+        $this->hasOne('Creator', [
+            'className' => 'Users',
+            'bindingKey' => 'created_by',
+            'foreignKey' => 'id',
+        ]);
+        $this->hasOne('Modifier', [
+            'className' => 'Users',
+            'bindingKey' => 'modified_by',
+            'foreignKey' => 'id',
+        ]);
     }
 
     /**
@@ -94,6 +107,14 @@ class MetadataPrivateKeysTable extends Table
             ->requirePresence('data', 'create', __('A data is required.'))
             ->notEmptyString('data', __('The data should not be empty.'))
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
+
+        $validator
+            ->uuid('created_by', __('The identifier of the user who created the metadata key should be a valid UUID.')) // phpcs:ignore;
+            ->allowEmptyString('created_by');
+
+        $validator
+            ->uuid('modified_by', __('The identifier of the user who modified the metadata key should be a valid UUID.')) // phpcs:ignore;
+            ->allowEmptyString('modified_by');
 
         return $validator;
     }
