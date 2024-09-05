@@ -67,7 +67,7 @@ class MetadataSessionKeysTableTest extends AppTestCaseV5
 
     public function testMetadataSessionKeysTable_Success(): void
     {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = $this->getUserKeyInfo();
         $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
         $user = UserFactory::make()
             ->with('Gpgkeys', $gpgkey)
@@ -230,7 +230,7 @@ class MetadataSessionKeysTableTest extends AppTestCaseV5
 
     private function getDummyMetadataSessionKeysData(): array
     {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = $this->getUserKeyInfo();
         $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
         $user = UserFactory::make()
             ->with('Gpgkeys', $gpgkey)

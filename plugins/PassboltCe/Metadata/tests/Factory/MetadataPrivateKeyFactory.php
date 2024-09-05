@@ -3,9 +3,13 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\Factory;
 
+use App\Model\Entity\Gpgkey;
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Chronos\Chronos;
+use Cake\Core\Configure;
+use Cake\Routing\Router;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
@@ -20,6 +24,11 @@ use Passbolt\Metadata\Model\Entity\MetadataKey;
  */
 class MetadataPrivateKeyFactory extends CakephpBaseFactory
 {
+    /**
+     * @var array|null cached private keys
+     */
+    private static $keycache = null;
+
     /**
      * Defines the Table Registry used to generate entities with
      *
@@ -40,7 +49,7 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
     {
         $this->setDefaultData(function (Generator $faker) {
             return [
-                'data' => self::getValidPgpMessage(),
+                'data' => self::getDummyPrivateKeyOpenPGPMessage(),
                 'created' => Chronos::now()->subDays($faker->randomNumber(3)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(3)),
             ];
@@ -62,7 +71,7 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
     public function withMetadataKey(?MetadataKey $metadataKey = null)
     {
         if (is_null($metadataKey)) {
-            $metadataKey = MetadataKeyFactory::make()->withMakiKey()->withCreatorAndModifier()->persist();
+            $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
         }
 
         return $this->with('MetadataKeys', $metadataKey);
@@ -81,12 +90,88 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
         return $this->with('Users', $user);
     }
 
+    public function withUserPrivateKey(Gpgkey $gpgkey)
+    {
+        return $this->patchData([
+            'data' => self::getValidPrivateKeyData($gpgkey->armored_key),
+            'user_id' => $gpgkey->user_id,
+        ]);
+    }
+
+    public function withServerPrivateKey()
+    {
+        return $this->patchData([
+            'data' => self::getValidPrivateKeyDataForServer(),
+            'user_id' => null,
+        ]);
+    }
+
+    public static function getValidPrivateKeyDataForServer(): string
+    {
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        if (!isset(static::$keycache[$fingerprint])) {
+            $gpg = OpenPGPBackendFactory::get();
+            $gpg->importServerKeyInKeyring();
+            $gpg->setEncryptKeyFromFingerprint($fingerprint);
+            self::$keycache[$fingerprint] = $gpg->encrypt(self::getValidPrivateKeyCleartextJson());
+        }
+
+        return self::$keycache[$fingerprint];
+    }
+
+    public static function getValidPrivateKeyData(string $publicKey): string
+    {
+        $gpg = OpenPGPBackendFactory::get();
+        $encryptKeyInfo = $gpg->getPublicKeyInfo($publicKey);
+        $fingerprint = $encryptKeyInfo['fingerprint'];
+        if (!isset(static::$keycache[$fingerprint])) {
+            $gpg = OpenPGPBackendFactory::get();
+            $gpg->setEncryptKey($publicKey);
+            self::$keycache[$fingerprint] = $gpg->encrypt(self::getValidPrivateKeyCleartextJson());
+        }
+
+        return self::$keycache[$fingerprint];
+    }
+
+    public static function getValidPrivateKeyCleartextJson(): string
+    {
+        return json_encode(self::getValidPrivateKeyCleartext());
+    }
+
+    public static function getValidPrivateKeyCleartext(): array
+    {
+        // See MetadataKeyFactory::getValidPublicKey()
+        // No passphrase
+        return [
+            'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
+            'domain' => Router::url('/', true),
+            'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
+            'passphrase' => '',
+            'armored_key' => '-----BEGIN PGP PRIVATE KEY BLOCK-----
+
+lFgEZtXbahYJKwYBBAHaRw8BAQdAgsF7oiI4napsPbhAQ9mrWY6vPLI5PHvqF53n
+PVVdHIYAAQCgbcRKgjAlDoeqGG+8cNKQUkhOHEt4grJx5lgrOzTQ1Q4wtDZQYXNz
+Ym9sdCBTaGFyZWQgTWV0YWRhdGEgS2V5IDx1bml0LXRlc3RzQHBhc3Nib2x0LmNv
+bT6IkwQTFgoAOxYhBHXpU/SOxcH8/+V1uxvQVFnVZWZrBQJm1dtqAhsjBQsJCAcC
+AiICBhUKCQgLAgQWAgMBAh4HAheAAAoJEBvQVFnVZWZrB0oBAJuk0GM+PPkFW/EM
+sT7CTfbMPHw+jYP8501Rfjw0DOEsAP4jLPjGq7UTvJOoHfdWfCsdGKAgT6Ycx2CU
+GgmXjGElC5xdBGbV22oSCisGAQQBl1UBBQEBB0AxhMzEG+RJeroF02KLX5uEmpsl
+vOopT1firRJ2j22tEwMBCAcAAP9ZVlMjLX+cE44Z1eemDRrf7arlEKY+lqtsYRrr
+FwBTGA6TiHgEGBYKACAWIQR16VP0jsXB/P/ldbsb0FRZ1WVmawUCZtXbagIbDAAK
+CRAb0FRZ1WVma2nnAPsHnnyfzsVdMLP3vpBcjEHCd4yFtf6uj/EtiBEYHE2QvAEA
+q1g/Fm0XqgBkfG2yUm3DH2mv0MFG8okEW1YWhcLJMQ0=
+=ETeQ
+-----END PGP PRIVATE KEY BLOCK-----',
+        ];
+    }
+
     /**
      * A valid OpenPGP message encrypted for maki_public.key and signed with unsecure_private.key.
      *
+     * @deprecated NOT A VALID PRIVATE KEY MESSAGE
      * @return string
      */
-    public static function getValidPgpMessage(): string
+    public static function getDummyPrivateKeyOpenPGPMessage(): string
     {
         // Decrypted message: super secret message
         return "-----BEGIN PGP MESSAGE-----

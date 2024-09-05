@@ -14,32 +14,24 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-namespace Passbolt\Metadata;
+namespace Passbolt\Metadata\Service;
 
-use Cake\Core\BasePlugin;
-use Cake\Core\PluginApplicationInterface;
-use Cake\Event\EventManager;
-use Passbolt\Metadata\Event\SetupCompleteListener;
+use App\Model\Entity\User;
 
-class MetadataPlugin extends BasePlugin
+interface MetadataKeyShareServiceInterface
 {
     /**
-     * @inheritDoc
-     */
-    public function bootstrap(PluginApplicationInterface $app): void
-    {
-        parent::bootstrap($app);
-        $this->attachListeners(EventManager::instance());
-    }
-
-    /**
-     * Attach the Locale related event listeners.
+     * Share the shared metadata key(s) for a given user
      *
-     * @param \Cake\Event\EventManager $eventManager EventManager
+     * @param \App\Model\Entity\User $user entity
+     * @throws \Passbolt\Metadata\Exception\MetadataKeyShareException
      * @return void
      */
-    public function attachListeners(EventManager $eventManager): void
-    {
-        $eventManager->on(new SetupCompleteListener());
-    }
+    public function shareMetadataKeyWithUser(User $user): void;
+
+    /**
+     * @param \Exception $exception exception from shareMetadataKeyWithUser
+     * @return void
+     */
+    public function onFailure(\Exception $exception): void;
 }

@@ -375,6 +375,8 @@ return [
                     FILTER_VALIDATE_BOOLEAN
                 ),
             ],
+            // Check for domain mismatch where possible
+            'checkDomainMismatch' => env('PASSBOLT_CHECK_DOMAIN_MISMATCH', true),
         ],
 
         // Should the app be SSL / HTTPS only.

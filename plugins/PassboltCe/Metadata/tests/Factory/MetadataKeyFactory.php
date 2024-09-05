@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Test\Factory;
 
+use App\Model\Entity\Gpgkey;
 use App\Model\Entity\User;
 use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use App\Test\Factory\UserFactory;
@@ -55,7 +56,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        $dummyData = self::getDummyKeyInfo();
+        $dummyData = self::getValidPublicKey();
 
         $this->setDefaultData(function (Generator $faker) use ($dummyData) {
             return [
@@ -87,15 +88,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     public function withValidOpenPGPKey()
     {
-        return $this->withMakiKey();
-    }
-
-    /**
-     * @return $this
-     */
-    public function withMakiKey()
-    {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = self::getValidPublicKey();
 
         return $this->patchData([
             'armored_key' => $keyInfo['armored_key'],
@@ -139,30 +132,40 @@ class MetadataKeyFactory extends CakephpBaseFactory
         return $this->with('Creator', $user)->setField('created_by', $user->get('id'));
     }
 
+    public function withUserPrivateKey(Gpgkey $gpgkey)
+    {
+        return $this->with('MetadataPrivateKeys', MetadataPrivateKeyFactory::make()->withUserPrivateKey($gpgkey));
+    }
+
+    public function withServerPrivateKey()
+    {
+        return $this->with('MetadataPrivateKeys', MetadataPrivateKeyFactory::make()->withServerPrivateKey());
+    }
+
     /**
      * Returns key information to use for metadata key tests.
      *
      * @return string[]
      */
-    public static function getDummyKeyInfo(): array
+    public static function getValidPublicKey(): array
     {
         return [
             'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
 
-xjMEZs7I7BYJKwYBBAHaRw8BAQdAXPnuKJwjOYF/cNRZSGCX/ftwHDfiLWTc
-PQE0dMglp7/NN01ldGFkYXRhIFNlcnZlciBLZXkgPG1ldGFkYXRhX3NlcnZl
-cl9rZXlAcGFzc2JvbHQudGVzdD7CjAQQFgoAPgWCZs7I7AQLCQcICZB5WxWo
-41ot9AMVCAoEFgACAQIZAQKbAwIeARYhBN5tDBSCnh2xswxonnlbFajjWi30
-AACKNAD/d8kCyHxZ2SFJ3YmkKfQwhoy7BSr8oOUt8DwUVtX05moBAMh7y2Hd
-8YWNAt2y5VKor70p9Aigd4qOAqowhNlibOwLzjgEZs7I7BIKKwYBBAGXVQEF
-AQEHQL3ZD0EgxabScRBLIfrb+0SU8jkbILrsEfNYQcRX4LM0AwEIB8J4BBgW
-CgAqBYJmzsjsCZB5WxWo41ot9AKbDBYhBN5tDBSCnh2xswxonnlbFajjWi30
-AADm+wD/UoI/iQYbjTVt1YvvgHVWROtFHpJlmIHtfeNkVG420KABAOH1/krs
-8lq98P8ujYtxzHFy1BMGgYaA7rBTQ9IS49oH
-=VVZV
+mDMEZtXbahYJKwYBBAHaRw8BAQdAgsF7oiI4napsPbhAQ9mrWY6vPLI5PHvqF53n
+PVVdHIa0NlBhc3Nib2x0IFNoYXJlZCBNZXRhZGF0YSBLZXkgPHVuaXQtdGVzdHNA
+cGFzc2JvbHQuY29tPoiTBBMWCgA7FiEEdelT9I7Fwfz/5XW7G9BUWdVlZmsFAmbV
+22oCGyMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQG9BUWdVlZmsHSgEA
+m6TQYz48+QVb8QyxPsJN9sw8fD6Ng/znTVF+PDQM4SwA/iMs+MartRO8k6gd91Z8
+Kx0YoCBPphzHYJQaCZeMYSULuDgEZtXbahIKKwYBBAGXVQEFAQEHQDGEzMQb5El6
+ugXTYotfm4SamyW86ilPV+KtEnaPba0TAwEIB4h4BBgWCgAgFiEEdelT9I7Fwfz/
+5XW7G9BUWdVlZmsFAmbV22oCGwwACgkQG9BUWdVlZmtp5wD7B558n87FXTCz976Q
+XIxBwneMhbX+ro/xLYgRGBxNkLwBAKtYPxZtF6oAZHxtslJtwx9pr9DBRvKJBFtW
+FoXCyTEN
+=zZuC
 -----END PGP PUBLIC KEY BLOCK-----
 ',
-            'fingerprint' => 'DE6D0C14829E1DB1B30C689E795B15A8E35A2DF4',
+            'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
         ];
     }
 }

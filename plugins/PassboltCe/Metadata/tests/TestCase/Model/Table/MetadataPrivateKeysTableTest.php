@@ -162,7 +162,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
                     'foo-bar' => false,
                     1 => false,
                     false => false,
-                    MetadataPrivateKeyFactory::getValidPgpMessage() => true,
+                    MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage() => true,
                 ],
             ],
         ];

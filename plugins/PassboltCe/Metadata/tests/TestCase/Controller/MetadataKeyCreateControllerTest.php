@@ -43,7 +43,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataKeyCreateController_Success()
     {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = $this->getUserKeyInfo();
         $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
         $user = UserFactory::make()
             ->with('Gpgkeys', $gpgkey)
@@ -52,18 +52,18 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         $this->logInAs($user);
 
-        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
+        $dummyKey = MetadataKeyFactory::getValidPublicKey();
         $this->postJson('/metadata/keys.json', [
             'armored_key' => $dummyKey['armored_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
-                    'data' => $this->getEncryptedMessageForServerKey(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
                 ],
                 [
                     'user_id' => $user['id'],
-                    'data' => $this->getEncryptedMessageForMaki(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
                 ],
             ],
         ]);
@@ -116,7 +116,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function invalidRequestDataProvider(): array
     {
-        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
+        $dummyKey = MetadataKeyFactory::getValidPublicKey();
 
         return [
             [
@@ -126,7 +126,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => null, // valid - server key
-                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                            'data' => MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                  ],
