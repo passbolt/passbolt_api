@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-08-30 13:17\n"
+"PO-Revision-Date: 2024-09-05 15:48\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -5573,13 +5573,13 @@ msgid "This nonce is already in use."
 msgstr ""
 
 msgid "This state is already in use."
-msgstr ""
+msgstr "Cet état est déjà activé."
 
 msgid "The SSO setting identifier does not exist."
 msgstr ""
 
 msgid "The user identifier does not exist."
-msgstr ""
+msgstr "L'identifiant utilisateur n'existe pas."
 
 msgid "The provided nonce is invalid."
 msgstr ""
@@ -5588,7 +5588,7 @@ msgid "The URL should start with https://"
 msgstr "L'URL doit commencer par https://"
 
 msgid "The provided state is invalid."
-msgstr ""
+msgstr "L'état fourni n'est pas valide."
 
 msgid "The type of the SSO state is invalid."
 msgstr ""
@@ -5681,7 +5681,7 @@ msgid "User agent mismatch."
 msgstr ""
 
 msgid "Settings mismatch."
-msgstr ""
+msgstr "Les paramètres ne correspondent pas."
 
 msgid "The SSO key could not be saved."
 msgstr "La clé SSO n'a pas pu être sauvegardée."
