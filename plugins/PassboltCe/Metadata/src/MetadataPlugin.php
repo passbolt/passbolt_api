@@ -19,8 +19,8 @@ namespace Passbolt\Metadata;
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
-use Passbolt\Metadata\Event\SetupCompleteListener;
 use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
+use Passbolt\Metadata\Event\SetupCompleteListener;
 
 class MetadataPlugin extends BasePlugin
 {

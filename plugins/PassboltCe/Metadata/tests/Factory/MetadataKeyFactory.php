@@ -114,7 +114,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     public function withServerKey()
     {
-        $keyInfo = $this->getMetadataServerKeyInfo();
+        $keyInfo = $this->getUserKeyInfo();
 
         return $this->patchData([
             'armored_key' => $keyInfo['armored_key'],
