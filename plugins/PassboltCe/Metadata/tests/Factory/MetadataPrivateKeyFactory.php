@@ -57,6 +57,8 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
     }
 
     /**
+     * Sets user_id to null.
+     *
      * @return $this
      */
     public function serverKey()
@@ -65,13 +67,18 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param MetadataKey|null $metadataKey
+     * @param MetadataKey|null $metadataKey Metadata key entity.
      * @return $this
      */
     public function withMetadataKey(?MetadataKey $metadataKey = null)
     {
         if (is_null($metadataKey)) {
-            $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+            if (is_null($this->getEntity()->get('user_id'))) {
+                $metadataKey = MetadataKeyFactory::make()->withServerKey()->withCreatorAndModifier()->persist();
+            } else {
+                // user related
+                $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+            }
         }
 
         return $this->with('MetadataKeys', $metadataKey);

@@ -109,6 +109,19 @@ class MetadataKeyFactory extends CakephpBaseFactory
         ]);
     }
 
+    /**
+     * @return $this
+     */
+    public function withServerKey()
+    {
+        $keyInfo = $this->getUserKeyInfo();
+
+        return $this->patchData([
+            'armored_key' => $keyInfo['armored_key'],
+            'fingerprint' => $keyInfo['fingerprint'],
+        ]);
+    }
+
     public function withCreatorAndModifier(?User $user = null)
     {
         return $this->withModifier($user)->withCreator($user);
