@@ -92,6 +92,8 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
         // check metadata_private_keys table data
         $metadataPrivateKeys = MetadataPrivateKeyFactory::find()->all()->toArray();
         $this->assertCount(2, $metadataPrivateKeys);
+        $this->assertSame($user->get('id'), $metadataPrivateKeys[0]['created_by']);
+        $this->assertSame($user->get('id'), $metadataPrivateKeys[0]['modified_by']);
     }
 
     public function testMetadataKeyCreateController_Error_AuthenticationRequired()

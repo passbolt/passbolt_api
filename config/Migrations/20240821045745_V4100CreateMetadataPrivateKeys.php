@@ -64,6 +64,20 @@ class V4100CreateMetadataPrivateKeys extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
+            ->addColumn('created_by', 'uuid', [
+                'default' => null,
+                'null' => true,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table (i.e. users)
+            ])
+            ->addColumn('modified_by', 'uuid', [
+                'default' => null,
+                'null' => true,
+                'encoding' => 'ascii',
+                'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table (i.e. users)
+            ])
+            ->addIndex(['created_by'])
+            ->addIndex(['modified_by'])
             ->addIndex(['metadata_key_id'])
             ->addIndex(['user_id'])
             ->create();
