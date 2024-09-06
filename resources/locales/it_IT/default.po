@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-09-06 11:49\n"
+"PO-Revision-Date: 2024-09-06 12:50\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -1598,7 +1598,7 @@ msgid "The server key fingerprint doesn't match the one defined in {0}."
 msgstr ""
 
 msgid "Double check the key fingerprint, example: "
-msgstr ""
+msgstr "Verifica nuovamente l’impronta digitale della chiave, ad esempio:"
 
 msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
 msgstr ""
@@ -1622,10 +1622,10 @@ msgid "The environment variable GNUPGHOME is set to {0}."
 msgstr ""
 
 msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
-msgstr ""
+msgstr "La variabile di ambiente GNUPGHOME è impostata su {0}, ma la directory non esiste."
 
 msgid "Ensure the keyring location exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Assicurati che la posizione del portachiavi esista e che sia accessibile dall'utente del webserver."
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
 msgstr ""
@@ -1673,7 +1673,7 @@ msgid "Ensure the private key file is defined by the variable passbolt.gpg.serve
 msgstr ""
 
 msgid "Ensure there is a private key armored block in the key file."
-msgstr ""
+msgstr "Assicurati che ci sia un blocco cifrato della chiave privata nel file della chiave.\n\n"
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
 msgstr ""
@@ -1703,7 +1703,7 @@ msgid "Ensure the public key file is defined by the variable passbolt.gpg.server
 msgstr ""
 
 msgid "Ensure there is a public key armored block in the key file."
-msgstr ""
+msgstr "Assicurati che ci sia un blocco cifrato della chiave pubblica nel file chiave."
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
 msgstr ""
@@ -1745,7 +1745,7 @@ msgid "Set the environment variable {0} to true"
 msgstr ""
 
 msgid "Enable the plugin in order to define SMTP settings in the database."
-msgstr ""
+msgstr "Abilita il plugin per definire le impostazioni SMTP nel database."
 
 msgid "Hostname is matching in SSL certificate."
 msgstr ""
@@ -3122,7 +3122,7 @@ msgid "Please rotate it to ensure continued security."
 msgstr ""
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "Cambialo in passbolt "
 
 msgid "Could not retrieve the password policies."
 msgstr "Non è stato possibile recuperare i criteri della password."
@@ -3158,7 +3158,7 @@ msgid "Could not validate the password policies settings."
 msgstr "Non è stato possibile convalidare le impostazioni dei criteri di password."
 
 msgid "The passphrase generator words is required."
-msgstr ""
+msgstr "Le parole del generatore di passphrase sono obbligatorie."
 
 msgid "The passphrase generator words should be between {0} and {1}."
 msgstr "Il numero di parole del generatore di passphrase dovrebbe essere compreso tra {0} e {1}."
@@ -3173,7 +3173,7 @@ msgid "The passphrase generator word separator should be maximum {0} characters.
 msgstr "Il separatore di parole nel generatore di passphrase dovrebbe essere composto al massimo da {0} caratteri."
 
 msgid "The passphrase generator word case is required."
-msgstr ""
+msgstr "Il parametro per il tipo di caratteri del generatore di passphrase è obbligatorio."
 
 msgid "The passphrase generator word case should be one of the following: {0}."
 msgstr "La lettera del generatore di passphrase dovrebbe essere una delle seguenti: {0}."
@@ -3251,7 +3251,7 @@ msgid "The password generator exclude look alike chars should be a boolean type.
 msgstr "L'opzione del generatore di password \"escludi i caratteri simili\" dovrebbe essere un booleano."
 
 msgid "Record not found"
-msgstr ""
+msgstr "Record non trovato"
 
 msgid "The request data is empty."
 msgstr "I dati della richiesta sono vuoti."
