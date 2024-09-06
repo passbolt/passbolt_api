@@ -64,12 +64,11 @@ class FoldersViewController extends AppController
         $options = $this->QueryString->get($whitelist);
 
         $folder = $foldersTable->findView($this->User->id(), $id, $options)->first();
-        $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
 
         if (empty($folder)) {
             throw new NotFoundException('The folder does not exist.');
         }
-
+        $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
         $this->success(__('The operation was successful.'), $folder);
     }
 }
