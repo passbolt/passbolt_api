@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Service;
 
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
@@ -25,33 +26,57 @@ use Passbolt\Metadata\Exception\MetadataKeyShareException;
 use Passbolt\Metadata\Service\MetadataKeyShareDefaultService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
  * @covers \Passbolt\Metadata\Service\MetadataKeyShareDefaultServiceTest
  */
 class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
 {
+    use GpgMetadataKeysTestTrait;
+
+    private $gpg;
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->gpg = OpenPGPBackendFactory::get();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function tearDown(): void
+    {
+        OpenPGPBackendFactory::reset();
+        $this->gpg = null;
+
+        parent::tearDown();
+    }
+
     public function testMetadataKeyShareDefaultService_FactorySanityCheck(): void
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->withValidGpgKey()->persist();
         MetadataKeyFactory::make()->withUserPrivateKey($user->gpgkey)->withServerPrivateKey()->persist();
         $this->assertEquals(2, MetadataPrivateKeyFactory::count());
-        $gpg = OpenPGPBackendFactory::get();
-        $gpg->importServerKeyInKeyring();
-        $gpg->setDecryptKeyFromFingerprint(
+        $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->importServerKeyInKeyring();
+        $this->gpg->setDecryptKeyFromFingerprint(
             Configure::read('passbolt.gpg.serverKey.fingerprint'),
             Configure::read('passbolt.gpg.serverKey.passphrase')
         );
         /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $secret */
         $secret = MetadataPrivateKeyFactory::find()->where(['user_id IS' => null])->firstOrFail();
-        $cleartext = $gpg->decrypt($secret->data);
-        $gpg->clearKeys();
+        $cleartext = $this->gpg->decrypt($secret->data);
         $dto = json_decode($cleartext, true, 2, JSON_THROW_ON_ERROR);
-        $this->assertEquals(MetadataPrivateKeyFactory::getValidPrivateKeyCleartext(), $dto);
+        $this->assertEquals($this->getValidPrivateKeyCleartext(), $dto);
     }
 
-    public function testMetadataKeyShareDefaultService_Success(): void
+    public function testMetadataKeyShareDefaultService_Success_CreatedByServer(): void
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->withValidGpgKey()->persist();
@@ -62,14 +87,49 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
 
         /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $privateKey */
         $privateKey = MetadataPrivateKeyFactory::find()->where(['user_id IS' => $user->id])->firstOrFail();
-        $gpg = OpenPGPBackendFactory::get();
+        $this->gpg = OpenPGPBackendFactory::get();
         $key = FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key';
-        $fingerprint = $gpg->importKeyIntoKeyring(file_get_contents($key));
-        $gpg->setDecryptKeyFromFingerprint($fingerprint, '');
-        $json = $gpg->decrypt($privateKey->data);
+        $fingerprint = $this->gpg->importKeyIntoKeyring(file_get_contents($key));
+        $this->gpg->setDecryptKeyFromFingerprint($fingerprint, '');
+        $json = $this->gpg->decrypt($privateKey->data);
         $privateKeyDto = json_decode($json, true, 2, JSON_THROW_ON_ERROR);
 
-        $this->assertEquals(MetadataPrivateKeyFactory::getValidPrivateKeyCleartext(), $privateKeyDto);
+        $this->assertEquals($this->getValidPrivateKeyCleartext(), $privateKeyDto);
+    }
+
+    public function testMetadataKeyShareDefaultService_Success_CreatedByUser(): void
+    {
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()
+            ->admin()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())
+            ->persist();
+        $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->importServerKeyInKeyring();
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
+        $adaPrivateKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key');
+        $this->gpg->setSignKey($adaPrivateKey, '');
+        $msg = $this->gpg->encryptSign(json_encode($this->getValidPrivateKeyCleartext()));
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $privateKey */
+        $privateKey = MetadataPrivateKeyFactory::make()->patchData([
+            'data' => $msg,
+            'user_id' => null,
+            'created_by' => $admin->id,
+            'modified_by' => $admin->id,
+        ]);
+        MetadataKeyFactory::make()->with('MetadataPrivateKeys', $privateKey)->persist();
+
+        $sut = new MetadataKeyShareDefaultService();
+        $sut->shareMetadataKeyWithUser($user);
+
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $privateKey */
+        $privateKey = MetadataPrivateKeyFactory::find()->where(['user_id IS' => $user->id])->firstOrFail();
+        $this->assertNotEmpty($privateKey);
     }
 
     public function testMetadataKeyShareDefaultService_Error_KeyNotFound(): void
@@ -115,10 +175,12 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->withValidGpgKey()->persist();
-        $gpg = OpenPGPBackendFactory::get();
-        $gpg->importServerKeyInKeyring();
-        $gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-        $msg = $gpg->encrypt('🔥');
+        $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->importServerKeyInKeyring();
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
+        $this->gpg->setSignKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
+        $msg = $this->gpg->encryptSign('🔥');
         /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $privateKey */
         $privateKey = MetadataPrivateKeyFactory::make()->patchData([
             'data' => $msg,
@@ -139,10 +201,12 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->withValidGpgKey()->persist();
-        $gpg = OpenPGPBackendFactory::get();
-        $gpg->importServerKeyInKeyring();
-        $gpg->setEncryptKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
-        $msg = $gpg->encrypt(json_encode(['🔥' => '🔥']));
+        $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->importServerKeyInKeyring();
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
+        $this->gpg->setSignKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
+        $msg = $this->gpg->encryptSign(json_encode(['🔥' => '🔥']));
         /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $privateKey */
         $privateKey = MetadataPrivateKeyFactory::make()->patchData([
             'data' => $msg,
@@ -156,6 +220,39 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
             $this->fail();
         } catch (MetadataKeyShareException $exception) {
             $this->assertTextContains('cleartext data is not valid', $exception->getMessage());
+        }
+    }
+
+    public function testMetadataKeyShareDefaultService_Error_KeyMessageNotAValidSignatureForCreatedBy(): void
+    {
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()
+            ->admin()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())
+            ->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->withValidGpgKey()->persist();
+        $this->gpg = OpenPGPBackendFactory::get();
+        $this->gpg->importServerKeyInKeyring();
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        $this->gpg->setEncryptKeyFromFingerprint($fingerprint);
+        $this->gpg->setSignKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
+        $msg = $this->gpg->encryptSign(json_encode($this->getValidPrivateKeyCleartext()));
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $privateKey */
+        $privateKey = MetadataPrivateKeyFactory::make()->patchData([
+            'data' => $msg,
+            'user_id' => null,
+            'created_by' => $admin->id,
+            'modified_by' => $admin->id,
+        ]);
+        MetadataKeyFactory::make()->with('MetadataPrivateKeys', $privateKey)->persist();
+
+        $sut = new MetadataKeyShareDefaultService();
+        try {
+            $sut->shareMetadataKeyWithUser($user);
+            $this->fail();
+        } catch (MetadataKeyShareException $exception) {
+            $this->assertTextContains('Invalid signature', $exception->getMessage());
         }
     }
 

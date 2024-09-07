@@ -56,7 +56,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        $dummyData = self::getValidPublicKey();
+        $dummyData = $this->getMetadataKeyInfo();
 
         $this->setDefaultData(function (Generator $faker) use ($dummyData) {
             return [
@@ -82,21 +82,6 @@ class MetadataKeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * Set the armored key and fingerprint to a valid openpgp key
-     *
-     * @return $this
-     */
-    public function withValidOpenPGPKey()
-    {
-        $keyInfo = self::getValidPublicKey();
-
-        return $this->patchData([
-            'armored_key' => $keyInfo['armored_key'],
-            'fingerprint' => $keyInfo['fingerprint'],
-        ]);
-    }
-
-    /**
      * @return $this
      */
     public function withExpiredKey()
@@ -114,7 +99,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     public function withServerKey()
     {
-        $keyInfo = $this->getUserKeyInfo();
+        $keyInfo = $this->getMetadataKeyInfo();
 
         return $this->patchData([
             'armored_key' => $keyInfo['armored_key'],
@@ -163,21 +148,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
     public static function getValidPublicKey(): array
     {
         return [
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
-
-mDMEZtXbahYJKwYBBAHaRw8BAQdAgsF7oiI4napsPbhAQ9mrWY6vPLI5PHvqF53n
-PVVdHIa0NlBhc3Nib2x0IFNoYXJlZCBNZXRhZGF0YSBLZXkgPHVuaXQtdGVzdHNA
-cGFzc2JvbHQuY29tPoiTBBMWCgA7FiEEdelT9I7Fwfz/5XW7G9BUWdVlZmsFAmbV
-22oCGyMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AACgkQG9BUWdVlZmsHSgEA
-m6TQYz48+QVb8QyxPsJN9sw8fD6Ng/znTVF+PDQM4SwA/iMs+MartRO8k6gd91Z8
-Kx0YoCBPphzHYJQaCZeMYSULuDgEZtXbahIKKwYBBAGXVQEFAQEHQDGEzMQb5El6
-ugXTYotfm4SamyW86ilPV+KtEnaPba0TAwEIB4h4BBgWCgAgFiEEdelT9I7Fwfz/
-5XW7G9BUWdVlZmsFAmbV22oCGwwACgkQG9BUWdVlZmtp5wD7B558n87FXTCz976Q
-XIxBwneMhbX+ro/xLYgRGBxNkLwBAKtYPxZtF6oAZHxtslJtwx9pr9DBRvKJBFtW
-FoXCyTEN
-=zZuC
------END PGP PUBLIC KEY BLOCK-----
-',
+            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_public.key'),
             'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
         ];
     }

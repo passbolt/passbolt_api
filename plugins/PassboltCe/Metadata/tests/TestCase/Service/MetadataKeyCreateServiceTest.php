@@ -135,11 +135,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => UuidFactory::uuid(),
-                            'data' => MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => null,
-                            'data' => MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],
@@ -169,15 +169,15 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => 'foo-bar',
-                            'data' => MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => '🔥🔥🔥',
-                            'data' => MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => 12345,
-                            'data' => MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],
@@ -190,7 +190,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => null,
-                            'data' => MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],

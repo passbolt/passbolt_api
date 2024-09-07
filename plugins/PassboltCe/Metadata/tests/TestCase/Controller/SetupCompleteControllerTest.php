@@ -23,9 +23,12 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 class SetupCompleteControllerTest extends AppIntegrationTestCaseV5
 {
+    use GpgMetadataKeysTestTrait;
+
     public function testMetadataSetupCompleteController_Success(): void
     {
         MetadataKeyFactory::make()->withServerPrivateKey()->persist();
@@ -58,6 +61,6 @@ class SetupCompleteControllerTest extends AppIntegrationTestCaseV5
         $gpg->setDecryptKeyFromFingerprint($fingerprint, '');
         $json = $gpg->decrypt($privateKey->data);
         $privateKeyDto = json_decode($json, true, 2, JSON_THROW_ON_ERROR);
-        $this->assertEquals(MetadataPrivateKeyFactory::getValidPrivateKeyCleartext(), $privateKeyDto);
+        $this->assertEquals($this->getValidPrivateKeyCleartext(), $privateKeyDto);
     }
 }

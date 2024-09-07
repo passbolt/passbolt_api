@@ -71,7 +71,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
             ->user()
             ->active()
             ->persist();
-        $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier($user)->getEntity();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->getEntity();
 
         $entity = $this->buildEntity([
             'fingerprint' => $metadataKey->get('fingerprint'),
@@ -164,7 +164,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
             ->user()
             ->active()
             ->persist();
-        $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier($user)->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->persist();
 
         $entity = $this->buildEntity([
             'fingerprint' => $metadataKey->get('fingerprint'),
@@ -191,7 +191,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
             ->user()
             ->active()
             ->persist();
-        $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->deleted()->withCreatorAndModifier($user)->persist();
+        $metadataKey = MetadataKeyFactory::make()->deleted()->withCreatorAndModifier($user)->persist();
 
         $entity = $this->buildEntity([
             'fingerprint' => $metadataKey->get('fingerprint'),
@@ -259,7 +259,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
 
     private function getDummyMetadataKeysData(): array
     {
-        $factoryData = MetadataKeyFactory::make()->withValidOpenPGPKey()->getEntity();
+        $factoryData = MetadataKeyFactory::make()->getEntity();
 
         return [
             'fingerprint' => $factoryData->get('fingerprint'),

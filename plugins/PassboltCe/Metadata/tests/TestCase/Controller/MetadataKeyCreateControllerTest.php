@@ -128,7 +128,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => null, // valid - server key
-                            'data' => MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                  ],

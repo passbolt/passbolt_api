@@ -28,6 +28,7 @@ use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Entity\MetadataPrivateKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
  * @covers \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable
@@ -35,6 +36,7 @@ use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 class MetadataPrivateKeysTableTest extends AppTestCaseV5
 {
     use FormatValidationTrait;
+    use GpgMetadataKeysTestTrait;
 
     /**
      * Test subject
@@ -71,7 +73,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
             ->user()
             ->active()
             ->persist();
-        $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier($user)->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->persist();
 
         $possibleUserIds = [$user->get('id'), null]; // null for server key
         $randomUserKey = array_rand($possibleUserIds);
@@ -162,7 +164,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
                     'foo-bar' => false,
                     1 => false,
                     false => false,
-                    MetadataPrivateKeyFactory::getDummyPrivateKeyOpenPGPMessage() => true,
+                    $this->getDummyPrivateKeyOpenPGPMessage() => true,
                 ],
             ],
         ];
