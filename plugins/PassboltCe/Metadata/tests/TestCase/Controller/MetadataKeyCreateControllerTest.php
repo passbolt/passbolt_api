@@ -20,6 +20,7 @@ namespace Passbolt\Metadata\Test\TestCase\Controller;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Metadata\MetadataPlugin;
@@ -179,5 +180,38 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
         foreach ($expectedErrors as $expectedErrorPath) {
             $this->assertTrue(Hash::check($responseBody, $expectedErrorPath));
         }
+    }
+
+    public function testMetadataKeyCreateController_ErrorSettingEditionDisabled()
+    {
+        $setting = Configure::read('passbolt.security.metadata.settings.editionDisabled');
+        Configure::write('passbolt.security.metadata.settings.editionDisabled', true);
+        $keyInfo = $this->getUserKeyInfo();
+        $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
+        $user = UserFactory::make()
+            ->with('Gpgkeys', $gpgkey)
+            ->admin()
+            ->active()
+            ->persist();
+        $this->logInAs($user);
+
+        $dummyKey = MetadataKeyFactory::getValidPublicKey();
+        $this->postJson('/metadata/keys.json', [
+            'armored_key' => $dummyKey['armored_key'],
+            'fingerprint' => $dummyKey['fingerprint'],
+            'metadata_private_keys' => [
+                [
+                    'user_id' => null, // server key
+                    'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
+                ],
+                [
+                    'user_id' => $user['id'],
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                ],
+            ],
+        ]);
+
+        $this->assertResponseCode(403);
+        Configure::write('passbolt.security.metadata.settings.editionDisabled', $setting);
     }
 }
