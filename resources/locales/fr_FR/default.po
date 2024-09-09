@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-09-06 08:39\n"
+"PO-Revision-Date: 2024-09-09 20:40\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -77,10 +77,10 @@ msgid "You are successfully logged in."
 msgstr "Vous avez été connecté avec succès."
 
 msgid "You are successfully logged out."
-msgstr "Vous êtes déconnecté avec succès."
+msgstr "Vous avez été déconnecté avec succès."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr "La route de déconnexion ne doit être accessible que par la méthode POST."
+msgstr "L'itinéraire de déconnexion doit être accédé uniquement avec la méthode POST."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "Les informations de la clé publique OpenPGP n'ont pas été trouvées dans la configuration."
@@ -1259,10 +1259,10 @@ msgid "Make sure this instance is not publicly available on the internet."
 msgstr "Assurez-vous que cette instance n'est pas accessible publiquement sur Internet."
 
 msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
-msgstr "Ou définissez la variable d'environnement PASSBOLT_EMAIL_VALIDATE_MX à vrai."
+msgstr "Ou définissez la variable d'environnement PASSBOLT_EMAIL_VALIDATE_MX à true."
 
 msgid "Or set passbolt.email.validate.mx to true in {0}."
-msgstr "Ou définissez passbolt.email.validate.mdx à vrai dans {0}."
+msgstr "Ou définissez passbolt.email.validate.mdx à true dans {0}."
 
 msgid "Serving the compiled version of the javascript app."
 msgstr "Servir la version compilée de l'application JavaScript."
@@ -1274,7 +1274,7 @@ msgid "Set passbolt.js.build to production in {0}"
 msgstr "Définissez passbolt.js.build sur production dans {0}"
 
 msgid "undefined"
-msgstr "non défini"
+msgstr "indéfini"
 
 msgid "Could not read tag information on github repository"
 msgstr "Impossible de lire les informations de tag sur le dépôt github"
@@ -1286,7 +1286,7 @@ msgid "Could connect to passbolt repository to check versions."
 msgstr "Impossible de se connecter au dépôt passbolt pour vérifier les versions."
 
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
-msgstr "Cette installation n'est pas à jour. Version actuelle {0} et elle devrait être {1}."
+msgstr "Cette installation n’est pas à jour. Elle utilise actuellement {0} et devrait être {1}."
 
 msgid "Could not connect to passbolt repository to check versions."
 msgstr "Impossible de se connecter au dépôt passbolt pour vérifier les versions."
@@ -1298,7 +1298,7 @@ msgid "See https://www.passbolt.com/help/tech/update"
 msgstr "Voir https://www.passbolt.com/help/tech/update"
 
 msgid "Check the network configuration to allow this script to check for updates."
-msgstr "Vérifiez la configuration réseau pour permettre à ce script de vérifier les mises à jour."
+msgstr "Vérifiez la configuration réseau pour permettre à ce script de vérifier s'il y a des mises à jour."
 
 msgid "Search engine robots are told not to index content."
 msgstr "Il est demandé aux robots des moteurs de recherche de ne pas indexer le contenu."
@@ -1310,7 +1310,7 @@ msgid "Set passbolt.meta.robots to false in {0}."
 msgstr "Définissez passbolt.meta.robots à false dans {0}."
 
 msgid "Selenium API endpoints are disabled."
-msgstr "Les points de terminaison de l'API Selenium sont désactivés."
+msgstr "Les points d'entrée de l'API Selenium sont désactivés."
 
 msgid "Selenium API endpoints are active. This setting should be used for testing only."
 msgstr "Les points de terminaison de l'API Selenium sont actifs. Ce paramètre ne doit être utilisé que pour des tests."
