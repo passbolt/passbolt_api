@@ -61,7 +61,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
         $this->setDefaultData(function (Generator $faker) use ($dummyData) {
             return [
                 'fingerprint' => $dummyData['fingerprint'],
-                'armored_key' => $dummyData['armored_key'],
+                'armored_key' => $dummyData['public_key'],
                 'created' => Chronos::now()->subDays($faker->randomNumber(3)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(3)),
                 'deleted' => null,
@@ -102,7 +102,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
         $keyInfo = $this->getMetadataKeyInfo();
 
         return $this->patchData([
-            'armored_key' => $keyInfo['armored_key'],
+            'armored_key' => $keyInfo['public_key'],
             'fingerprint' => $keyInfo['fingerprint'],
         ]);
     }
@@ -138,18 +138,5 @@ class MetadataKeyFactory extends CakephpBaseFactory
     public function withServerPrivateKey()
     {
         return $this->with('MetadataPrivateKeys', MetadataPrivateKeyFactory::make()->withServerPrivateKey());
-    }
-
-    /**
-     * Returns key information to use for metadata key tests.
-     *
-     * @return string[]
-     */
-    public static function getValidPublicKey(): array
-    {
-        return [
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_public.key'),
-            'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
-        ];
     }
 }

@@ -118,7 +118,7 @@ class GpgkeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * Set the armored key and fingerprint to ada's one
+     * Set the armored key and fingerprint to betty's one
      *
      * @return $this
      */

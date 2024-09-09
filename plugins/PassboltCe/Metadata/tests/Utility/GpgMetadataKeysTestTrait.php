@@ -45,21 +45,9 @@ trait GpgMetadataKeysTestTrait
     public function getMetadataKeyInfo(): array
     {
         return [
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_public.key'), // ecc, curve25519
-            'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
-            'email' => 'unit-tests@passbolt.com',
-        ];
-    }
-
-    /**
-     * Returns info related to the metadata private key
-     *
-     * @return array
-     */
-    public function getMetadataRawPrivateKeyInfo(): array
-    {
-        return [
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_private.key'), // ecc, curve25519
+            'public_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_public.key'), // ecc, curve25519
+            'private_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_private.key'), // ecc, curve25519
+            'passphrase' => '',
             'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
             'email' => 'unit-tests@passbolt.com',
         ];
@@ -307,14 +295,13 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
      */
     public function getValidPrivateKeyCleartext(): array
     {
-        // See MetadataKeyFactory::getValidPublicKey()
-        // No passphrase
+        $key = $this->getMetadataKeyInfo();
         return [
             'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
             'domain' => Router::url('/', true),
-            'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_private.key'),
-            'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
-            'passphrase' => '',
+            'armored_key' => $key['private_key'],
+            'fingerprint' => $key['fingerprint'],
+            'passphrase' => $key['passphrase'],
         ];
     }
 }

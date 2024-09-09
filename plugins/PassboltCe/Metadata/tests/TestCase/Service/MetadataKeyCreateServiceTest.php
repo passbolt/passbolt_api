@@ -72,11 +72,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $uac = $this->makeUac($user);
-        $dummyKey = MetadataKeyFactory::getValidPublicKey();
+        $dummyKey = $this->getMetadataKeyInfo();
 
         $dto = MetadataKeyDto::fromArray([
-            'armored_key' => $dummyKey['armored_key'],
-            'fingerprint' => $dummyKey['fingerprint'], // any random valid fingerprint
+            'armored_key' => $dummyKey['public_key'],
+            'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
@@ -99,7 +99,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
 
     public function invalidMetadataKeyDataProvider(): array
     {
-        $dummyKey = MetadataKeyFactory::getValidPublicKey();
+        $dummyKey = $this->getMetadataKeyInfo();
         $makiKey = $this->getUserKeyInfo();
         $expiredKey = $this->getExpiredKeyInfo();
         $msgForServer = $this->getEncryptedMetadataPrivateKeyForServerKey();
@@ -147,7 +147,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ],
             [
                 'data (more than one user_id null)' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
                         [
@@ -164,7 +164,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ],
             [
                 'data (more than one invalid uuid in user_id)' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
                         [
@@ -185,7 +185,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ],
             [
                 'data (data is not encrypted with the server key if user_id if set to null)' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
                         [
@@ -260,10 +260,10 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ->deleted()
             ->persist();
         $uac = $this->makeUac($user);
-        $dummyKey = MetadataKeyFactory::getValidPublicKey();
+        $dummyKey = $this->getMetadataKeyInfo();
 
         $dto = MetadataKeyDto::fromArray([
-            'armored_key' => $dummyKey['armored_key'],
+            'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
@@ -292,10 +292,10 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $uac = $this->makeUac($user);
-        $dummyKey = MetadataKeyFactory::getValidPublicKey();
+        $dummyKey = $this->getMetadataKeyInfo();
 
         $dto = MetadataKeyDto::fromArray([
-            'armored_key' => $dummyKey['armored_key'],
+            'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [

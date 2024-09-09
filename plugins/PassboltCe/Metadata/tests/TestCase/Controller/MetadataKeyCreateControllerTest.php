@@ -53,9 +53,9 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         $this->logInAs($user);
 
-        $dummyKey = MetadataKeyFactory::getValidPublicKey();
+        $dummyKey = $this->getMetadataKeyInfo();
         $this->postJson('/metadata/keys.json', [
-            'armored_key' => $dummyKey['armored_key'],
+            'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
@@ -86,7 +86,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertCount(1, $metadataKeys);
         $metadataKey = $metadataKeys[0];
         $this->assertSame($dummyKey['fingerprint'], $metadataKey['fingerprint']);
-        $this->assertSame($dummyKey['armored_key'], $metadataKey['armored_key']);
+        $this->assertSame($dummyKey['public_key'], $metadataKey['armored_key']);
         $this->assertSame($user->get('id'), $metadataKey['created_by']);
         $this->assertSame($user->get('id'), $metadataKey['modified_by']);
         $this->assertNull($metadataKey['deleted']);
@@ -119,7 +119,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function invalidRequestDataProvider(): array
     {
-        $dummyKey = MetadataKeyFactory::getValidPublicKey();
+        $dummyKey = $this->getMetadataKeyInfo();
 
         return [
             [
@@ -137,7 +137,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             ],
             [
                 'request data' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => 'foo', // invalid
                 ],
@@ -145,7 +145,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             ],
             [
                 'request data' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [], // empty metadata private keys
                 ],
@@ -153,7 +153,7 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             ],
             [
                 'request data' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => 1000,
                     'metadata_private_keys' => [
                         [
@@ -195,9 +195,9 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         $this->logInAs($user);
 
-        $dummyKey = MetadataKeyFactory::getValidPublicKey();
+        $dummyKey = $this->getMetadataKeyInfo();
         $this->postJson('/metadata/keys.json', [
-            'armored_key' => $dummyKey['armored_key'],
+            'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
