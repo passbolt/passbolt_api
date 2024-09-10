@@ -16,9 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata;
 
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
+use Passbolt\Metadata\Command\MigrateResourcesCommand;
 use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
 use Passbolt\Metadata\Event\SetupCompleteListener;
 
@@ -43,5 +45,16 @@ class MetadataPlugin extends BasePlugin
     {
         $eventManager->on(new SetupCompleteListener());
         $eventManager->on(new MetadataUserDeleteSuccessListener());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        // Alias commands
+        $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
+
+        return $commands;
     }
 }

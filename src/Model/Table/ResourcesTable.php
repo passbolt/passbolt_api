@@ -33,6 +33,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
@@ -231,6 +232,30 @@ class ResourcesTable extends Table
             ->hasAtMost('secrets', 1, __('The secrets should contain only the secret of the owner.'), 'create');
 
         return $validator;
+    }
+
+    /**
+     * V5 validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationV5(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
+        // Remove all validation on the v4 meta properties
+        foreach (MetadataResourceDto::V4_META_PROPS as $v4Fields) {
+            $validator->remove($v4Fields);
+        }
+
+        return $validator
+            ->uuid('metadata_key_id', __('The metadata key ID should be a valid UUID.'))
+            ->allowEmptyString('metadata_key_id')
+            ->utf8Extended('metadata', __('The metadata should be a valid UTF8 string.'))
+            ->allowEmptyString('metadata')
+            ->utf8Extended('metadata_key_type', __('The metadata key type should be a valid UTF8 string.'))
+            ->allowEmptyString('metadata_key_type');
     }
 
     /**

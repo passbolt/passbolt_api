@@ -84,6 +84,22 @@ class ResourceTypeFactory extends CakephpBaseFactory
         ]);
     }
 
+    public function standaloneTotp(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP),
+            'slug' => ResourceType::SLUG_STANDALONE_TOTP,
+        ]);
+    }
+
+    public function passwordDescriptionTotp(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP),
+            'slug' => ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP,
+        ]);
+    }
+
     public function v5PasswordString(): self
     {
         return $this->patchData([
@@ -97,6 +113,22 @@ class ResourceTypeFactory extends CakephpBaseFactory
         return $this->patchData([
             'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
             'slug' => ResourceType::SLUG_V5_DEFAULT,
+        ]);
+    }
+
+    public function v5StandaloneTotp(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_TOTP_STANDALONE),
+            'slug' => ResourceType::SLUG_V5_TOTP_STANDALONE,
+        ]);
+    }
+
+    public function v5DefaultWithTotp(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
+            'slug' => ResourceType::SLUG_V5_DEFAULT_WITH_TOTP,
         ]);
     }
 

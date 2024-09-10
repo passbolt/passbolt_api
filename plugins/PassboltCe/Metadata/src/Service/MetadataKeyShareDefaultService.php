@@ -303,7 +303,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
 
         $armoredKey = $user->gpgkey->armored_key;
         if (!is_string($armoredKey) || !PublicKeyValidationService::parseAndValidatePublicKey($armoredKey)) {
-            $msg = __('The user public key fingerprint is not available or incomplete.');
+            $msg = __('The user armored key is not available or incomplete.');
             throw new InternalErrorException($msg);
         }
     }
