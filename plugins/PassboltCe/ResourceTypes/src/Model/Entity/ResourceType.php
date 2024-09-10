@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\ResourceTypes\Model\Entity;
 
+use App\Utility\UuidFactory;
 use Cake\ORM\Entity;
 
 /**
@@ -62,5 +63,24 @@ class ResourceType extends Entity
     public function isDeleted(): bool
     {
         return isset($this->deleted);
+    }
+
+    /**
+     * Returns V4-V5 resource type ID mapping.
+     *
+     * @return array
+     */
+    public static function getV5Mapping(): array
+    {
+        return [
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING) =>
+                UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSWORD_STRING),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION) =>
+                UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP) =>
+                UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_TOTP_STANDALONE),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP) =>
+                UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
+        ];
     }
 }

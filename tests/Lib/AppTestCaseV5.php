@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Lib;
 
 use Cake\Core\Configure;
+use Passbolt\Metadata\MetadataPlugin;
 
 abstract class AppTestCaseV5 extends AppTestCase
 {
@@ -36,6 +37,7 @@ abstract class AppTestCaseV5 extends AppTestCase
         if (!$this->isV5Enabled) {
             Configure::write('passbolt.v5.enabled', true);
         }
+        $this->enableFeaturePlugin(MetadataPlugin::class);
     }
 
     /**

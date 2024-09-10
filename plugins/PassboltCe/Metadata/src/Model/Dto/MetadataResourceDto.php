@@ -18,7 +18,9 @@ namespace Passbolt\Metadata\Model\Dto;
 
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\InternalErrorException;
 use Passbolt\Metadata\MetadataPlugin;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
 class MetadataResourceDto
 {
@@ -40,6 +42,7 @@ class MetadataResourceDto
     public const RESOURCE_TYPE_ID = 'resource_type_id';
     public const PERMISSIONS = 'permissions';
     public const SECRETS = 'secrets';
+    public const CREATOR = 'creator';
 
     public const ALL_PROPS = [
         self::NAME,
@@ -59,6 +62,7 @@ class MetadataResourceDto
         self::RESOURCE_TYPE_ID,
         self::PERMISSIONS,
         self::SECRETS,
+        self::CREATOR,
     ];
 
     public const V4_META_PROPS = [
@@ -174,5 +178,34 @@ class MetadataResourceDto
                 implode(', ', $v4SuperfluousFields)
             ));
         }
+    }
+
+    /**
+     * Returns metadata array in cleartext form as per v5 format.
+     *
+     * @return array
+     */
+    public function getClearTextMetadata(): array
+    {
+        $mapping = ResourceType::getV5Mapping();
+
+        $v4resourceTypeId = $this->data[self::RESOURCE_TYPE_ID];
+        if (!isset($mapping[$v4resourceTypeId])) {
+            throw new InternalErrorException(__('No resource type mapping for ID \'{0}\'', $v4resourceTypeId));
+        }
+
+        return [
+            'object_type' => 'PASSBOLT_RESOURCE_METADATA',
+            'resource_type_id' => $mapping[$v4resourceTypeId],
+            'name' => $this->data[self::NAME],
+            'username' => $this->data[self::USERNAME],
+            'uris' => [$this->data[self::URI]], // only 1 for now
+            'description' => $this->data[self::DESCRIPTION],
+            // below fields are null for now will be added in future
+            'autofill_mappings' => null,
+            'custom_fields' => null,
+            'color' => null,
+            'icon' => null,
+        ];
     }
 }
