@@ -27,7 +27,6 @@ use App\Test\Lib\AppTestCaseV5;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateResourcesTestTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -65,7 +64,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         parent::tearDown();
     }
 
-    public function testMigrateAllV4ResourcesToV5Service_Success_PersonalResource(): void
+    public function testMetadataMigrateAllV4ResourcesToV5Service_Success_PersonalResource(): void
     {
         $resourceTypePasswordString = ResourceTypeFactory::make()->default()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
@@ -120,7 +119,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         $this->assertSame($v5ResourceTypePasswordString->id, $metadataArray['resource_type_id']);
     }
 
-    public function testMigrateAllV4ResourcesToV5Service_Success_SharedResource(): void
+    public function testMetadataMigrateAllV4ResourcesToV5Service_Success_SharedResource(): void
     {
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
@@ -155,13 +154,13 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
         $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
         // Assert decrypted content contains same data as previous one
-        $decryptedMetadata = $this->decrypt($metadata, MetadataPrivateKeyFactory::getValidPrivateKeyCleartext());
+        $decryptedMetadata = $this->decrypt($metadata, $this->getValidPrivateKeyCleartext());
         $metadataArray = json_decode($decryptedMetadata, true);
         $this->assertMetadataAgainstResource($resource, $metadataArray);
         $this->assertSame($v5ResourceType->id, $metadataArray['resource_type_id']);
     }
 
-    public function testMigrateAllV4ResourcesToV5Service_Success_MultipleResources(): void
+    public function testMetadataMigrateAllV4ResourcesToV5Service_Success_MultipleResources(): void
     {
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
@@ -230,7 +229,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
                 $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
                 $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
                 // Assert decrypted content contains same data as previous one
-                $decryptedMetadata = $this->decrypt($metadata, MetadataPrivateKeyFactory::getValidPrivateKeyCleartext());
+                $decryptedMetadata = $this->decrypt($metadata, $this->getValidPrivateKeyCleartext());
                 $resource = $sharedResource;
             }
             // Common assertions
@@ -240,7 +239,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         }
     }
 
-    public function testMigrateAllV4ResourcesToV5Service_Error_NoActiveMetadataKey(): void
+    public function testMetadataMigrateAllV4ResourcesToV5Service_Error_NoActiveMetadataKey(): void
     {
         $resourceTypePasswordString = ResourceTypeFactory::make()->default()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
@@ -261,7 +260,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         $this->assertStringContainsString('Record not found in table "metadata_keys"', $result['errors'][0]['error_message']);
     }
 
-    public function testMigrateAllV4ResourcesToV5Service_Error_ResourceIsAlreadyV5(): void
+    public function testMetadataMigrateAllV4ResourcesToV5Service_Error_ResourceIsAlreadyV5(): void
     {
         $resourceTypePasswordString = ResourceTypeFactory::make()->default()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */

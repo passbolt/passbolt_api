@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Test\Utility;
 
+use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Cake\Core\Configure;
 use Cake\Routing\Router;
 
 /**
@@ -23,6 +25,11 @@ use Cake\Routing\Router;
  */
 trait GpgMetadataKeysTestTrait
 {
+    /**
+     * @var array|null cached private keys
+     */
+    private static $keycache = null;
+
     /**
      * Returns info related to Maki's key.
      *
@@ -304,5 +311,44 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
             'fingerprint' => $key['fingerprint'],
             'passphrase' => $key['passphrase'],
         ];
+    }
+
+    public function getValidPrivateKeyDataForServer(): string
+    {
+        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
+        if (!isset(static::$keycache[$fingerprint])) {
+            $gpg = OpenPGPBackendFactory::get();
+            $gpg->importServerKeyInKeyring();
+            $gpg->setEncryptKeyFromFingerprint($fingerprint);
+            $gpg->setSignKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
+            self::$keycache[$fingerprint] = $gpg->encryptSign($this->getValidPrivateKeyCleartextJson());
+            $gpg->clearKeys();
+        }
+
+        return self::$keycache[$fingerprint];
+    }
+
+    public function getValidPrivateKeyData(string $publicKey): string
+    {
+        $gpg = OpenPGPBackendFactory::get();
+        $encryptKeyInfo = $gpg->getPublicKeyInfo($publicKey);
+        $fingerprint = $encryptKeyInfo['fingerprint'];
+        if (!isset(static::$keycache[$fingerprint])) {
+            $gpg = OpenPGPBackendFactory::get();
+            $gpg->setEncryptKey($publicKey);
+            $gpg->setSignKeyFromFingerprint(
+                Configure::read('passbolt.gpg.serverKey.fingerprint'),
+                Configure::read('passbolt.gpg.serverKey.passphrase')
+            );
+            self::$keycache[$fingerprint] = $gpg->encrypt($this->getValidPrivateKeyCleartextJson());
+            $gpg->clearKeys();
+        }
+
+        return self::$keycache[$fingerprint];
+    }
+
+    public function getValidPrivateKeyCleartextJson(): string
+    {
+        return json_encode($this->getValidPrivateKeyCleartext());
     }
 }

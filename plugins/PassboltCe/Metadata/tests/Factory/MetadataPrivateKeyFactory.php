@@ -6,9 +6,7 @@ namespace Passbolt\Metadata\Test\Factory;
 use App\Model\Entity\Gpgkey;
 use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Chronos\Chronos;
-use Cake\Core\Configure;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
@@ -25,11 +23,6 @@ use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 class MetadataPrivateKeyFactory extends CakephpBaseFactory
 {
     use GpgMetadataKeysTestTrait;
-
-    /**
-     * @var array|null cached private keys
-     */
-    private static $keycache = null;
 
     /**
      * Defines the Table Registry used to generate entities with
@@ -113,44 +106,5 @@ class MetadataPrivateKeyFactory extends CakephpBaseFactory
             'data' => $this->getValidPrivateKeyDataForServer(),
             'user_id' => null,
         ]);
-    }
-
-    public function getValidPrivateKeyDataForServer(): string
-    {
-        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        if (!isset(static::$keycache[$fingerprint])) {
-            $gpg = OpenPGPBackendFactory::get();
-            $gpg->importServerKeyInKeyring();
-            $gpg->setEncryptKeyFromFingerprint($fingerprint);
-            $gpg->setSignKeyFromFingerprint($fingerprint, Configure::read('passbolt.gpg.serverKey.passphrase'));
-            self::$keycache[$fingerprint] = $gpg->encryptSign($this->getValidPrivateKeyCleartextJson());
-            $gpg->clearKeys();
-        }
-
-        return self::$keycache[$fingerprint];
-    }
-
-    public function getValidPrivateKeyData(string $publicKey): string
-    {
-        $gpg = OpenPGPBackendFactory::get();
-        $encryptKeyInfo = $gpg->getPublicKeyInfo($publicKey);
-        $fingerprint = $encryptKeyInfo['fingerprint'];
-        if (!isset(static::$keycache[$fingerprint])) {
-            $gpg = OpenPGPBackendFactory::get();
-            $gpg->setEncryptKey($publicKey);
-            $gpg->setSignKeyFromFingerprint(
-                Configure::read('passbolt.gpg.serverKey.fingerprint'),
-                Configure::read('passbolt.gpg.serverKey.passphrase')
-            );
-            self::$keycache[$fingerprint] = $gpg->encrypt($this->getValidPrivateKeyCleartextJson());
-            $gpg->clearKeys();
-        }
-
-        return self::$keycache[$fingerprint];
-    }
-
-    public function getValidPrivateKeyCleartextJson(): string
-    {
-        return json_encode($this->getValidPrivateKeyCleartext());
     }
 }
