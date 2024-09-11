@@ -43,6 +43,7 @@ class MetadataResourceDto
     public const PERMISSIONS = 'permissions';
     public const SECRETS = 'secrets';
     public const CREATOR = 'creator';
+    public const FOLDER_PARENT_ID = 'folder_parent_id';
 
     public const ALL_PROPS = [
         self::NAME,
@@ -63,6 +64,8 @@ class MetadataResourceDto
         self::PERMISSIONS,
         self::SECRETS,
         self::CREATOR,
+        self::CREATOR,
+        self::FOLDER_PARENT_ID,
     ];
 
     public const V4_META_PROPS = [
