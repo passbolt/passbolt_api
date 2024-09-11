@@ -14,10 +14,12 @@
  * @since         4.10.0
  */
 use Cake\Routing\RouteBuilder;
+use Passbolt\Metadata\Middleware\MetadataSettingsSecurityMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
+    $routes->registerMiddleware(MetadataSettingsSecurityMiddleware::class, new MetadataSettingsSecurityMiddleware());
 
     /**
      * Metadata settings routes
@@ -25,7 +27,8 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     $routes->connect('/settings', ['controller' => 'MetadataSettingsGet', 'action' => 'get'])
         ->setMethods(['GET']);
     $routes->connect('/settings', ['controller' => 'MetadataSettingsPost', 'action' => 'post'])
-        ->setMethods(['PUT', 'POST']);
+        ->setMethods(['PUT', 'POST'])
+        ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
 
     /**
      * Metadata keys routes
@@ -33,7 +36,8 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     $routes->connect('/keys', ['controller' => 'MetadataKeysIndex', 'action' => 'index'])
         ->setMethods(['GET']);
     $routes->connect('/keys', ['controller' => 'MetadataKeyCreate', 'action' => 'create'])
-        ->setMethods(['POST']);
+        ->setMethods(['POST'])
+        ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
 
     /**
      * Metadata session keys routes

@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Test\Utility;
 
+use Cake\Routing\Router;
+
 /**
  * A helper to get test GPG keys, encrypted messages, etc.
  */
@@ -32,6 +34,22 @@ trait GpgMetadataKeysTestTrait
             'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key'), // ecc, curve25519
             'fingerprint' => '3EED5E73EA34C95198A904067B28D501637D5102',
             'email' => 'maki@passbolt.com',
+        ];
+    }
+
+    /**
+     * Returns info related to the metadata key
+     *
+     * @return array
+     */
+    public function getMetadataKeyInfo(): array
+    {
+        return [
+            'public_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_public.key'), // ecc, curve25519
+            'private_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'metadata_private.key'), // ecc, curve25519
+            'passphrase' => '',
+            'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
+            'email' => 'unit-tests@passbolt.com',
         ];
     }
 
@@ -237,6 +255,54 @@ qHRRyS/qHxm+91OQZ99KGhkYMNNE5Xa7HQKDTgY=
             'foreign_model' => 'resource', // can be: resource, secret, folder, etc.
             'foreign_id' => '0012adea-e778-4893-833e-65d7502452f1',
             'session_key' => '9:1AEACC37D64E6CC77E7AA7D17B0BE3067890586BBC4BCD3D99051BD2D4457F28',
+        ];
+    }
+
+    /**
+     * A valid OpenPGP message encrypted for maki_public.key and signed with unsecure_private.key.
+     *
+     * @deprecated NOT A VALID PRIVATE KEY MESSAGE
+     * @return string
+     */
+    public function getDummyPrivateKeyOpenPGPMessage(): string
+    {
+        // Decrypted message: super secret message
+        return "-----BEGIN PGP MESSAGE-----
+
+wV4DrGC7ooPDztsSAQdAln93/614xeFEl9aaP1VVTFZtbqF7+vle6L+kzSc+BU8w
+jk/YF9DJ9h1ovB64DKi4z0rxplOSR+d1FEBZBnDLHD5N2npyFxtGuAQ6vOoloJPD
+0sHCAXm7PcQeEN2dMhL7ctRWfOTP3F1OF9CG3dUbumKkKDDPf9uHqT17ij7Ifavn
+c3sii0LRDDlknva30jxtfwmJilX6LiWqAI+HzPeSwK1FLBhd5tM8Tknr2kh8pCKF
+lxLInZJZQbOCUJ1mQ6oW9IcV3Eu6n+BkeT26l/kGseuqITnDfo13X6FQCpHO7uLR
+993AN6Lf0kUNbcYVmyA/o1Fbz/PLgRGIzJRwWB/DTjUJ9vfwl3DLNz+25FGr+zxL
+NhyuchytmtY8ozO49YZp+l3d8N8yJvg2b++KG3PFB+JCfzlbLoTjD14hBig907Ez
+eC8n5Zmg6uIBY4CXVspCA5JoPZcGWii+jxhX4GnK82k2TPVMsIwkiBAWqqT80FWP
+ssMIWA23BDAA7DojZIUf/s+Tv05xtoEfNIPeuUP72g6K7bBaTloL116eEuzq7ctj
+JpilQqzgQuIx/UpxkXg+XYnbLCT/kxvaf4pjwepsm3R4kbt8acpB6VkVeM/Va0eI
+Ucuo2SD00yK5DTV/OMmS8ERYSD+N3lwzMbo9WBrpz3UYX37b2mnDMisXaUu54xGX
+n8pIxxyYdb6dVwxzJpvINvAiVUxC6wSDu+1u0Urh1ZV8sdN85qXCZMCn1af6RmQ6
+VmUhzIwATp4OkNJMSIvwMcVZ9UCfN33xLrn3Vo+7Bm2u08Q5CpLGuRSMeVgySikj
+MDkFSiznzXL0gQ4U1f8pDcY4+HIBItVtew/5fUNUkzNKA+JXqb9eOgavRAZIbb4d
+I4okmMzJpJrQJ7zEzOh8g3eIjBInevhcaaJqSwt9JGphoSND+b0XCIV1XOehLwEe
+dT/PmTWE57npBIIz4kQQcHOziFAG
+=vK1i
+-----END PGP MESSAGE-----
+";
+    }
+
+    /**
+     * @return array
+     */
+    public function getValidPrivateKeyCleartext(): array
+    {
+        $key = $this->getMetadataKeyInfo();
+
+        return [
+            'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
+            'domain' => Router::url('/', true),
+            'armored_key' => $key['private_key'],
+            'fingerprint' => $key['fingerprint'],
+            'passphrase' => $key['passphrase'],
         ];
     }
 }

@@ -118,7 +118,6 @@ class MetadataSessionKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $this->logInAs($user);
 
         $this->postJson('/metadata/session-keys.json', $requestData);
-
         $this->assertResponseCode(400);
         $responseBody = $this->getResponseBodyAsArray();
         foreach ($expectedErrors as $expectedErrorPath) {

@@ -43,6 +43,8 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
 
         // Find server copy
         try {
+            // TODO find all private key where metadata key is not deleted AND
+            // key is deleted but still some some stuffs in use (resource, folder, comments, tags)
             /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $serverMetadataPrivateKey */
             $serverMetadataPrivateKey = $metadataPrivateKeysTable->find()
                 ->where(['user_id IS' => null])
@@ -54,11 +56,10 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
             throw new MetadataKeyShareException($msg, 500, $exception);
         }
 
-        // Decrypt, validate, re-encrypt for user
-        // TODO signature verification
+        // Decrypt, verify, validate, re-encrypt and sign for user
         try {
-            $openpgp = $this->getOpenPGPBackendForDecrypt();
-            $clearText = $openpgp->decrypt($serverMetadataPrivateKey->data);
+            $openpgp = $this->getOpenPGPBackendForDecryptVerify($serverMetadataPrivateKey->modified_by);
+            $clearText = $openpgp->decrypt($serverMetadataPrivateKey->data, true);
             $this->assertPrivateKey($clearText);
             $openpgp = $this->getOpenPGPBackendForEncrypt($user);
             $secret = $openpgp->encrypt($clearText, true);
@@ -161,10 +162,11 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
     /**
      * Get the OpenPGP Backend ready to decrypt with server key
      *
+     * @param string|null $createdBy uuid of user
      * @throws \Cake\Http\Exception\InternalErrorException if the server key cannot be loaded
      * @return \App\Utility\OpenPGP\OpenPGPBackend backend configured to use server keys
      */
-    private function getOpenPGPBackendForDecrypt(): OpenPGPBackend
+    private function getOpenPGPBackendForDecryptVerify(?string $createdBy = null): OpenPGPBackend
     {
         $gpg = OpenPGPBackendFactory::get();
 
@@ -178,15 +180,47 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
 
         // set the key to be used for decrypting
         try {
-            $gpg->setVerifyKeyFromFingerprint($fingerprint);
             $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
         } catch (\Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
-                $gpg->setVerifyKeyFromFingerprint($fingerprint);
                 $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
             } catch (\Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
+                $msg .= $exception->getMessage();
+                throw new InternalErrorException($msg, 500, $exception);
+            }
+        }
+
+        // set the key used for verify
+        // server key if no user is defined
+        if ($createdBy === null) {
+            $gpg->setVerifyKeyFromFingerprint($fingerprint);
+
+            return $gpg;
+        }
+
+        // User key if modified by a user
+        $userKeys = TableRegistry::getTableLocator()->get('Gpgkeys');
+        try {
+            /** @var \App\Model\Entity\Gpgkey $key */
+            $key = $userKeys->find()
+                ->where(['user_id' => $createdBy])
+                ->order(['created' => 'DESC'])
+                ->firstOrFail();
+        } catch (\Exception $exception) {
+            $msg = __('The OpenPGP user key cannot be found.') . ' ';
+            $msg .= $exception->getMessage();
+            throw new InternalErrorException($msg, 500, $exception);
+        }
+        try {
+            $gpg->setVerifyKeyFromFingerprint($key->fingerprint);
+        } catch (\Exception $exception) {
+            try {
+                $gpg->importKeyIntoKeyring($key->armored_key);
+                $gpg->setVerifyKeyFromFingerprint($key->fingerprint);
+            } catch (\Exception $exception) {
+                $msg = __('Could not import the user OpenPGP key.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);
             }

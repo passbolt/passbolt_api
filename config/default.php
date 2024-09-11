@@ -377,6 +377,12 @@ return [
             ],
             // Check for domain mismatch where possible
             'checkDomainMismatch' => env('PASSBOLT_CHECK_DOMAIN_MISMATCH', true),
+            // Disable the edition of metadata settings, allow to lock the configuration and prevent admin edition
+            'metadata' => [
+                'settings' => [
+                    'editionDisabled' => filter_var(env('PASSBOLT_SECURITY_METADATA_SETTINGS_EDITION_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
+                ]
+            ],
         ],
 
         // Should the app be SSL / HTTPS only.

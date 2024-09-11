@@ -64,7 +64,7 @@ class MetadataKeysIndexServiceTest extends AppTestCaseV5
     public function testMetadataKeysIndexService_Success_SingleMetadataKey(): void
     {
         $userId = UserFactory::make()->active()->persist()->get('id');
-        MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
         $result = $this->service->get($userId);
         $this->assertNotEmpty($result->toArray());
         $this->assertCount(1, $result->toArray());
@@ -74,8 +74,8 @@ class MetadataKeysIndexServiceTest extends AppTestCaseV5
 
     public function testMetadataKeysIndexService_Success_MultipleMetadataKeys(): void
     {
-        MetadataKeyFactory::make(5)->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
-        MetadataKeyFactory::make()->deleted()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make(5)->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make()->deleted()->withCreatorAndModifier()->persist();
         $userId = UserFactory::make()->active()->persist()->get('id');
 
         $result = $this->service->get($userId);
@@ -86,8 +86,8 @@ class MetadataKeysIndexServiceTest extends AppTestCaseV5
 
     public function testMetadataKeysIndexService_Success_FilterDeletedKeys(): void
     {
-        MetadataKeyFactory::make(3)->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
-        MetadataKeyFactory::make(2)->deleted()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make(3)->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make(2)->deleted()->withCreatorAndModifier()->persist();
         $userId = UserFactory::make()->active()->persist()->get('id');
 
         $result = $this->service->get($userId, null, ['deleted' => true]);
@@ -102,7 +102,7 @@ class MetadataKeysIndexServiceTest extends AppTestCaseV5
     public function testMetadataKeysIndexService_Success_ContainMetadataPrivateKeys(): void
     {
         $user = UserFactory::make()->user()->active()->persist();
-        $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($user)->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($user)->persist();
 
