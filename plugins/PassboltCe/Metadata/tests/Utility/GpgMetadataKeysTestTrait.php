@@ -296,6 +296,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
     public function getValidPrivateKeyCleartext(): array
     {
         $key = $this->getMetadataKeyInfo();
+
         return [
             'object_type' => 'PASSBOLT_METADATA_PRIVATE_KEY',
             'domain' => Router::url('/', true),
