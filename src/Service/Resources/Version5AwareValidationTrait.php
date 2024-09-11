@@ -44,6 +44,7 @@ trait Version5AwareValidationTrait
             $validator = 'v5';
             /** @var \App\Model\Table\ResourcesTable $ResourcesTable */
             $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
+            /** @var \Cake\ORM\RulesChecker $rules */
             $rules = $ResourcesTable->rulesChecker();
             $ResourcesTable->buildRulesV5($rules);
         } else {

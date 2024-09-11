@@ -23,6 +23,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesAddControllerTest extends AppIntegrationTestCase
@@ -34,6 +35,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         parent::setUp();
         $this->setEmailNotificationsSetting('password.create', true);
         Configure::write('passbolt.v5.enabled', true);
+        $this->enableFeaturePlugin(ResourceTypesPlugin::class);
         ResourceTypeFactory::make()->default()->persist();
     }
 
@@ -43,12 +45,14 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->logInAs($user);
 
         $metadataKeyId = UuidFactory::uuid();
-        $metadata = 'metadata';
+        $metadata = $this->getDummyGpgMessage();
         $metadataKeyType = 'user_key';
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
         $data = [
             'metadata_key_id' => $metadataKeyId,
             'metadata' => $metadata,
             'metadata_key_type' => $metadataKeyType,
+            'resource_type_id' => $resourceTypeId,
             'secrets' => [
                 [
                     'data' => $this->getDummyGpgMessage(),
@@ -63,6 +67,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $this->assertSame($metadataKeyId, $resource->metadata_key_id);
         $this->assertSame($metadata, $resource->metadata);
         $this->assertSame($metadataKeyType, $resource->metadata_key_type);
+        $this->assertSame($resourceTypeId, $resource->resource_type_id);
         $this->assertObjectNotHasAttribute('name', $this->_responseJsonBody);
     }
 

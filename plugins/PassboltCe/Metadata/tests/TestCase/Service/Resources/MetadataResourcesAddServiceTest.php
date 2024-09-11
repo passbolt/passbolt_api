@@ -27,6 +27,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -78,8 +79,9 @@ class MetadataResourcesAddServiceTest extends TestCase
     {
         $payload = [
             MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
-            MetadataResourceDto::METADATA => 'foo',
+            MetadataResourceDto::METADATA => $this->getDummyGpgMessage(),
             MetadataResourceDto::METADATA_KEY_ID => UuidFactory::uuid(),
+            'resource_type_id' => ResourceTypeFactory::make()->v5Default()->persist()->get('id'),
             'secrets' => [
                 [
                     'data' => $this->getDummyGpgMessage(),
@@ -96,13 +98,13 @@ class MetadataResourcesAddServiceTest extends TestCase
         $this->assertSame(1, SecretFactory::count());
     }
 
-    public function testMetadataResourceAddService_With_v4_and_v5_fields_Deleted_Should_Fail()
+    public function testMetadataResourceAddService_With_ResourceType_Not_Found_In_DB_Should_Fail()
     {
         $payload = [
-            'name' => 'foo',
             MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
-            MetadataResourceDto::METADATA => 'foo',
+            MetadataResourceDto::METADATA => $this->getDummyGpgMessage(),
             MetadataResourceDto::METADATA_KEY_ID => UuidFactory::uuid(),
+            'resource_type_id' => ResourceTypeFactory::make()->v5Default()->getEntity()->get('id'),
             'secrets' => [
                 [
                     'data' => $this->getDummyGpgMessage(),
@@ -114,18 +116,19 @@ class MetadataResourcesAddServiceTest extends TestCase
         try {
             $this->service->add($uac, new MetadataResourceDto($payload));
         } catch (ValidationException $exception) {
-            $this->assertSame($exception->getErrors()['resource_type_id'], [
-                'resource_type_is_not_soft_deleted' => 'The resource type should not be deleted.',
-            ]);
+            $this->assertSame(
+                'The resource type does not exist.',
+                $exception->getErrors()['resource_type_id']['resource_type_exists']
+            );
         }
     }
 
     public function testMetadataResourceAddService_With_ResourceType_Deleted_Should_Fail()
     {
-        $resourceType = ResourceTypeFactory::make()->deleted()->persist();
-        $payload = [
+            $resourceType = ResourceTypeFactory::make()->v5Default()->deleted()->persist();
+            $payload = [
             MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
-            MetadataResourceDto::METADATA => 'foo',
+            MetadataResourceDto::METADATA => $this->getDummyGpgMessage(),
             MetadataResourceDto::METADATA_KEY_ID => UuidFactory::uuid(),
             'resource_type_id' => $resourceType->get('id'),
             'secrets' => [
@@ -133,14 +136,130 @@ class MetadataResourcesAddServiceTest extends TestCase
                     'data' => $this->getDummyGpgMessage(),
                 ],
             ],
+            ];
+
+            $uac = UserFactory::make()->persistedUAC();
+            try {
+                $this->service->add($uac, new MetadataResourceDto($payload));
+            } catch (ValidationException $exception) {
+                $this->assertSame(
+                    'The resource type should not be deleted.',
+                    $exception->getErrors()['resource_type_id']['resource_type_is_not_soft_deleted']
+                );
+            }
+    }
+
+    public function testMetadataResourceAddService_With_ResourceType_Not_V5_Should_Fail_If_v5_Fields_Are_Defined()
+    {
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
+            MetadataResourceDto::METADATA => $this->getDummyGpgMessage(),
+            MetadataResourceDto::METADATA_KEY_ID => UuidFactory::uuid(),
+            'resource_type_id' => UuidFactory::uuid(),
+            'secrets' => [
+                [
+                    'data' => $this->getDummyGpgMessage(),
+                ],
+            ],
         ];
 
         $uac = UserFactory::make()->persistedUAC();
         try {
             $this->service->add($uac, new MetadataResourceDto($payload));
         } catch (ValidationException $exception) {
-            $this->assertSame($exception->getErrors()['resource_type_id'], [
-                'resource_type_is_not_soft_deleted' => 'The resource type should not be deleted.',
+            $this->assertSame(
+                'The resource type should be one of the following: v5-default, v5-totp-standalone, v5-default-with-totp.',
+                $exception->getErrors()['resource_type_id']['inList']
+            );
+        }
+    }
+
+    public function testMetadataResourceAddService_With_v4_And_v5_Fields_Defined_Should_Fail()
+    {
+        $payload = [
+            'name' => 'foo',
+            MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
+            MetadataResourceDto::METADATA => $this->getDummyGpgMessage(),
+            MetadataResourceDto::METADATA_KEY_ID => UuidFactory::uuid(),
+            'secrets' => [
+                [
+                    'data' => $this->getDummyGpgMessage(),
+                ],
+            ],
+        ];
+
+        $uac = UserFactory::make()->persistedUAC();
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The following fields are not supported in v5: name.');
+        $this->service->add($uac, new MetadataResourceDto($payload));
+    }
+
+    public function testMetadataResourceAddService_Should_Fail_If_Metadata_Is_Not_OpenPGP()
+    {
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
+            MetadataResourceDto::METADATA => 'foo',
+            MetadataResourceDto::METADATA_KEY_ID => UuidFactory::uuid(),
+            'secrets' => [
+                [
+                    'data' => $this->getDummyGpgMessage(),
+                ],
+            ],
+        ];
+
+        $uac = UserFactory::make()->persistedUAC();
+        try {
+            $this->service->add($uac, new MetadataResourceDto($payload));
+        } catch (ValidationException $exception) {
+            $this->assertSame(
+                'The message should be a valid ASCII-armored OpenPGP message.',
+                $exception->getErrors()['metadata']['isMetadataParsable']
+            );
+        }
+    }
+
+    public function testMetadataResourceAddService_Should_Fail_If_Metadata_Key_Is_Not_Uuid()
+    {
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
+            MetadataResourceDto::METADATA => $this->getDummyGpgMessage(),
+            MetadataResourceDto::METADATA_KEY_ID => 'foo',
+            'secrets' => [
+                [
+                    'data' => $this->getDummyGpgMessage(),
+                ],
+            ],
+        ];
+
+        $uac = UserFactory::make()->persistedUAC();
+        try {
+            $this->service->add($uac, new MetadataResourceDto($payload));
+        } catch (ValidationException $exception) {
+            $this->assertSame($exception->getErrors()['metadata_key_id'], [
+                'uuid' => 'The metadata key ID should be a valid UUID.',
+            ]);
+        }
+    }
+
+    public function testMetadataResourceAddService_Should_Fail_If_Metadata_Key_Type_Is_Not_In_Valid_List()
+    {
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => 'foo',
+            MetadataResourceDto::METADATA => $this->getDummyGpgMessage(),
+            MetadataResourceDto::METADATA_KEY_ID => UuidFactory::uuid(),
+            'secrets' => [
+                [
+                    'data' => $this->getDummyGpgMessage(),
+                ],
+            ],
+        ];
+
+        $uac = UserFactory::make()->persistedUAC();
+        try {
+            $this->service->add($uac, new MetadataResourceDto($payload));
+        } catch (ValidationException $exception) {
+            $this->assertSame($exception->getErrors()['metadata_key_type'], [
+                'inList' => 'The metadata key type should be one of the following: user_key, shared_key.',
             ]);
         }
     }

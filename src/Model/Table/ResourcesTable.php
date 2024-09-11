@@ -22,6 +22,7 @@ use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
+use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Model\Validation\DateTime\IsParsableDateTimeValidationRule;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
@@ -34,6 +35,7 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
@@ -245,17 +247,38 @@ class ResourcesTable extends Table
         $validator = $this->validationDefault($validator);
 
         // Remove all validation on the v4 meta properties
+        // Enforce all v4 fields to be empty
         foreach (MetadataResourceDto::V4_META_PROPS as $v4Fields) {
             $validator->remove($v4Fields);
+            $validator->maxLength($v4Fields, 0);
+        }
+        $validV5ResourceTypeIds = [];
+        $validV5ResourceTypes = [];
+        foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $resourceTypeSlug) {
+            if ($resourceTypeSlug === ResourceType::SLUG_V5_PASSWORD_STRING) {
+                continue;
+            }
+            $validV5ResourceTypes[] = $resourceTypeSlug;
+            $validV5ResourceTypeIds[] = UuidFactory::uuid('resource-types.id.' . $resourceTypeSlug);
         }
 
         return $validator
             ->uuid('metadata_key_id', __('The metadata key ID should be a valid UUID.'))
             ->allowEmptyString('metadata_key_id')
-            ->utf8Extended('metadata', __('The metadata should be a valid UTF8 string.'))
-            ->allowEmptyString('metadata')
+            ->ascii('metadata', __('The metadata should be a valid ASCII string.'))
+            ->requirePresence('metadata', 'create', __('An armored key is required.'))
+            ->notEmptyString('metadata', __('The metadata should not be empty.'))
+            ->add('metadata', 'isMetadataParsable', new IsParsableMessageValidationRule())
             ->utf8Extended('metadata_key_type', __('The metadata key type should be a valid UTF8 string.'))
-            ->allowEmptyString('metadata_key_type');
+            ->allowEmptyString('metadata_key_type')
+            ->inList('metadata_key_type', ['user_key', 'shared_key'], __(
+                'The metadata key type should be one of the following: {0}.',
+                implode(', ', ['user_key', 'shared_key'])
+            ))
+            ->inList('resource_type_id', $validV5ResourceTypeIds, __(
+                'The resource type should be one of the following: {0}.',
+                implode(', ', $validV5ResourceTypes)
+            ));
     }
 
     /**

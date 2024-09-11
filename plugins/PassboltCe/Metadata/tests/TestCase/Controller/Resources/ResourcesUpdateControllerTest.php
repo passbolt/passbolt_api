@@ -23,6 +23,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
@@ -34,6 +35,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         parent::setUp();
         $this->setEmailNotificationsSetting('password.create', true);
         Configure::write('passbolt.v5.enabled', true);
+        $this->enableFeaturePlugin(ResourceTypesPlugin::class);
         ResourceTypeFactory::make()->default()->persist();
         RoleFactory::make()->guest()->persist();
     }
@@ -44,12 +46,14 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
 
         $metadataKeyId = UuidFactory::uuid();
-        $metadata = 'metadata';
+        $metadata = $this->getDummyGpgMessage();
         $metadataKeyType = 'user_key';
+        $resourceType = ResourceTypeFactory::make()->v5Default()->persist();
         $data = [
             'metadata_key_id' => $metadataKeyId,
             'metadata' => $metadata,
             'metadata_key_type' => $metadataKeyType,
+            'resource_type_id' => $resourceType->get('id'),
         ];
         $this->putJson("/resources/{$resource->get('id')}.json", $data);
         $this->assertSuccess();
@@ -64,6 +68,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertEquals($data['metadata_key_id'], $response->metadata_key_id);
         $this->assertEquals($data['metadata'], $response->metadata);
         $this->assertEquals($data['metadata_key_type'], $response->metadata_key_type);
+        $this->assertEquals($resourceType->get('id'), $response->resource_type_id);
         $this->assertEquals($resource->get('created_by'), $response->created_by);
         $this->assertEquals($user->id, $response->modified_by);
     }
