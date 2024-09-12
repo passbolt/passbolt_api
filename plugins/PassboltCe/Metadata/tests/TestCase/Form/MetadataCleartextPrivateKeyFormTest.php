@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace PassboltCe\Metadata\tests\TestCase\Form;
+namespace Passbolt\Metadata\tests\TestCase\Form;
 
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;

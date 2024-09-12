@@ -40,6 +40,16 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
         ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
 
     /**
+     * Metadata private keys routes
+     */
+    $routes->connect('/keys/private/{id}', ['controller' => 'MetadataPrivateKeysUpdate', 'action' => 'update'])
+        ->setPass(['id'])
+        ->setMethods(['PUT', 'POST']);
+    $routes->connect('/keys/{id}/private', ['controller' => 'MetadataPrivateKeysCreate', 'action' => 'create'])
+        ->setPass(['id'])
+        ->setMethods(['POST']);
+
+    /**
      * Metadata session keys routes
      */
     $routes->connect('/session-keys', ['controller' => 'MetadataSessionKeysGet', 'action' => 'get'])

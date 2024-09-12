@@ -27,7 +27,7 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateResourcesTestTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -38,6 +38,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
 {
     use ConsoleIntegrationTestTrait;
     use MigrateResourcesTestTrait;
+    use GpgMetadataKeysTestTrait;
 
     /**
      * @inheritDoc
@@ -128,7 +129,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
                 $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
                 $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
                 // Assert decrypted content contains same data as previous one
-                $decryptedMetadata = $this->decrypt($metadata, MetadataPrivateKeyFactory::getValidPrivateKeyCleartext());
+                $decryptedMetadata = $this->decrypt($metadata, $this->getValidPrivateKeyCleartext());
                 $resource = $sharedResource;
             }
             // Common assertions
