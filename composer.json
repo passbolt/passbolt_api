@@ -171,8 +171,8 @@
             "@test",
             "@cs-check"
         ],
-        "cs-check": "phpcs -d memory_limit=512M --colors -p --ignore=*.js,*/templates/* ./src ./tests ./plugins",
-        "cs-fix": "phpcbf -d memory_limit=512M --colors --ignore=*.js,*/templates/* ./src ./tests ./plugins",
+        "cs-check": "phpcs -d memory_limit=512M --colors -p",
+        "cs-fix": "phpcbf -d memory_limit=512M --colors -p",
         "install-dev": [
             "@composer install",
             "npm install",
