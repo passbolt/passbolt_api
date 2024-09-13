@@ -21,6 +21,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
 use Passbolt\Metadata\Command\MigrateResourcesCommand;
+use Passbolt\Metadata\Event\MetadataResourceIndexListener;
 use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
 use Passbolt\Metadata\Event\SetupCompleteListener;
 
@@ -43,8 +44,10 @@ class MetadataPlugin extends BasePlugin
      */
     public function attachListeners(EventManager $eventManager): void
     {
-        $eventManager->on(new SetupCompleteListener());
-        $eventManager->on(new MetadataUserDeleteSuccessListener());
+        $eventManager
+            ->on(new SetupCompleteListener())
+            ->on(new MetadataUserDeleteSuccessListener())
+            ->on(new MetadataResourceIndexListener());
     }
 
     /**

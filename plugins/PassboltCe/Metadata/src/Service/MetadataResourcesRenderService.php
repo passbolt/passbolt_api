@@ -16,13 +16,11 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service;
 
-use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Core\Configure;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
 class MetadataResourcesRenderService
 {
-    use FeaturePluginAwareTrait;
-
     /**
      * @param array $resource resource to render
      * @param bool $isV5 is resource with V5 metadata
@@ -41,5 +39,26 @@ class MetadataResourcesRenderService
         }
 
         return $resource;
+    }
+
+    /**
+     * @param array $resources resources to render
+     * @return array
+     */
+    public function renderResources(array $resources): array
+    {
+        $isV5Enabled = Configure::read('passbolt.v5.enabled');
+        foreach ($resources as $i => &$resource) {
+            // For performance reason, the detection of a v5 resource is made on the
+            // presence of metadata
+            $isResourceV5 = !empty($resource[MetadataResourceDto::METADATA]);
+            if ($isResourceV5 && !$isV5Enabled) {
+                unset($resources[$i]);
+            } else {
+                $resource = $this->renderResource($resource, $isResourceV5);
+            }
+        }
+
+        return $resources;
     }
 }
