@@ -35,6 +35,8 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedResourceRule;
+use Passbolt\Metadata\Model\Rule\IsResourceSharedAndMetadataCanBeDecryptedWithSharedSessionKeyRule;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
@@ -336,6 +338,24 @@ class ResourcesTable extends Table
             'errorField' => 'resource_type_id',
             'message' => __('The resource type should not be deleted.'),
         ]);
+
+        $rules->addUpdate(
+            new IsMetadataKeyTypeSharedOnSharedResourceRule(),
+            'IsMetadataKeyTypeSharedOnSharedResource',
+            [
+                'errorField' => 'metadata_key_type',
+                'message' => __('A resource of type personal cannot be shared with other users or a group.'),
+            ]
+        );
+
+        $rules->addUpdate(
+            new IsResourceSharedAndMetadataCanBeDecryptedWithSharedSessionKeyRule(),
+            'IsResourceSharedAndMetadataCanBeDecryptedWithSharedSessionKey',
+            [
+                'errorField' => 'metadata',
+                'message' => __('The resource of type shared could not be decrypted with the shared session key.'),
+            ]
+        );
 
         return $rules;
     }

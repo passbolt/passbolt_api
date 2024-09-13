@@ -91,7 +91,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
         $result = $this->service->migrate();
 
-        $this->assertTrue($result['success']);
+        $this->assertSame([], $result['errors']);
         /** @var \App\Model\Entity\Resource $updatedResource */
         $updatedResource = ResourceFactory::get($resource->id);
         $this->assertUpdatedResource($updatedResource);
@@ -138,7 +138,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
         $result = $this->service->migrate();
 
-        $this->assertTrue($result['success']);
+        $this->assertSame([], $result['errors']);
         /** @var \App\Model\Entity\Resource $updatedResource */
         $updatedResource = ResourceFactory::get($resource->id);
         $this->assertUpdatedResource($updatedResource);
@@ -192,7 +192,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
         $result = $this->service->migrate();
 
-        $this->assertTrue($result['success']);
+        $this->assertSame([], $result['errors']);
         /** @var \App\Model\Entity\Resource[] $updatedResources */
         $updatedResources = ResourceFactory::find()->toArray();
         $this->assertCount(2, $updatedResources);
