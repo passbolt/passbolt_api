@@ -252,7 +252,6 @@ class ResourcesTable extends Table
         // Enforce all v4 fields to be empty
         foreach (MetadataResourceDto::V4_META_PROPS as $v4Fields) {
             $validator->remove($v4Fields);
-            $validator->maxLength($v4Fields, 0);
         }
         $validV5ResourceTypeIds = [];
         $validV5ResourceTypes = [];

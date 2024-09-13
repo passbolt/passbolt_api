@@ -66,9 +66,9 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Success_PersonalResource(): void
     {
-        $resourceTypePasswordString = ResourceTypeFactory::make()->default()->persist();
-        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
-        $v5ResourceTypePasswordString = ResourceTypeFactory::make()->v5PasswordString()->persist();
+        $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5DefaultResourceType */
+        $v5DefaultResourceType = ResourceTypeFactory::make()->v5Default()->persist();
         $adaKeyInfo = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
             'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
@@ -84,7 +84,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
-            ->with('ResourceTypes', $resourceTypePasswordString)
+            ->with('ResourceTypes', $v4ResourceType)
             ->withPermissionsFor([$ada])
             ->withCreator(UserFactory::make()->user()->with('Gpgkeys', GpgkeyFactory::make($bettyKeyInfo)))
             ->persist();
@@ -96,7 +96,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         $updatedResource = ResourceFactory::get($resource->id);
         $this->assertUpdatedResource($updatedResource);
         $this->assertSame('user_key', $updatedResource->get('metadata_key_type'));
-        $this->assertSame($v5ResourceTypePasswordString->id, $updatedResource->resource_type_id);
+        $this->assertSame($v5DefaultResourceType->id, $updatedResource->resource_type_id);
         // Assert is valid OpenPGP message
         $metadata = $updatedResource->get('metadata');
         $this->assertTrue(MessageValidationService::isParsableArmoredMessage($metadata));
@@ -116,7 +116,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         ]);
         $metadataArray = json_decode($decryptedMetadata, true);
         $this->assertMetadataAgainstResource($resource, $metadataArray);
-        $this->assertSame($v5ResourceTypePasswordString->id, $metadataArray['resource_type_id']);
+        $this->assertSame($v5DefaultResourceType->id, $metadataArray['resource_type_id']);
     }
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Success_SharedResource(): void
@@ -241,13 +241,13 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Error_NoActiveMetadataKey(): void
     {
-        $resourceTypePasswordString = ResourceTypeFactory::make()->default()->persist();
+        $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
-        ResourceTypeFactory::make()->v5PasswordString()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
         // Shared resource.
         /** @var \App\Model\Entity\Resource $resource */
         $sharedResource = ResourceFactory::make()
-            ->with('ResourceTypes', $resourceTypePasswordString)
+            ->with('ResourceTypes', $v4ResourceType)
             ->withCreatorAndPermission(UserFactory::make()->persist())
             ->persist();
         PermissionFactory::make()->acoResource($sharedResource)->typeRead()->withAroUser()->persist();
@@ -262,14 +262,14 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Error_ResourceIsAlreadyV5(): void
     {
-        $resourceTypePasswordString = ResourceTypeFactory::make()->default()->persist();
+        $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
-        ResourceTypeFactory::make()->v5PasswordString()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
         // Shared resource.
         /** @var \App\Model\Entity\Resource $resource */
         $sharedResource = ResourceFactory::make()
             ->v5Fields(true)
-            ->with('ResourceTypes', $resourceTypePasswordString)
+            ->with('ResourceTypes', $v4ResourceType)
             ->withCreatorAndPermission(UserFactory::make()->persist())
             ->persist();
         PermissionFactory::make()->acoResource($sharedResource)->typeRead()->withAroUser()->persist();
