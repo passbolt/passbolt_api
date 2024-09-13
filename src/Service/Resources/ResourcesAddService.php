@@ -164,7 +164,7 @@ class ResourcesAddService
                     ],
                 ],
             ],
-        ], $this->getValidationOptions($baseAccessibleFields, $resourceDto->isV5()));
+        ], $this->getValidationOptionsAndSetBuildRules($baseAccessibleFields, $resourceDto->isV5()));
 
         return $this->Resources->newEntity($data, $options);
     }

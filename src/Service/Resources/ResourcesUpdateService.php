@@ -235,7 +235,7 @@ class ResourcesUpdateService
         return $this->Resources->patchEntity(
             $resource,
             $data,
-            $this->getValidationOptions($baseAccessibleFields, $isDataV5)
+            $this->getValidationOptionsAndSetBuildRules($baseAccessibleFields, $isDataV5)
         );
     }
 

@@ -37,7 +37,7 @@ trait Version5AwareValidationTrait
      * @param bool $isV5 is the data patched a v5 resource
      * @return array
      */
-    protected function getValidationOptions(array $accessibleFields, bool $isV5): array
+    protected function getValidationOptionsAndSetBuildRules(array $accessibleFields, bool $isV5): array
     {
         if ($isV5) {
             $metadataFields = MetadataResourceDto::V5_META_PROPS;
