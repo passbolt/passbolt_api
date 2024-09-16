@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:40+0000\n"
-"PO-Revision-Date: 2024-09-09 21:36\n"
+"PO-Revision-Date: 2024-09-13 08:57\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -3899,10 +3899,10 @@ msgid "Database name"
 msgstr "Nom de la base de données"
 
 msgid "schema"
-msgstr ""
+msgstr "schéma"
 
 msgid "Schema"
-msgstr ""
+msgstr "Schéma"
 
 msgid "Enter your SMTP server settings."
 msgstr "Saisissez les paramètres de votre serveur SMTP."
@@ -5393,13 +5393,13 @@ msgid "The SSO setting id should be a uuid."
 msgstr ""
 
 msgid "The SSO settings were activated."
-msgstr ""
+msgstr "Les paramètres SSO ont été activés."
 
 msgid "The draft setting was saved."
-msgstr ""
+msgstr "Le paramètre a été enregistré en tant que brouillon."
 
 msgid "The SSO settings were deleted."
-msgstr ""
+msgstr "Les paramètres SSO ont été supprimés."
 
 msgid "Ajax/Json request not supported."
 msgstr ""
@@ -5642,10 +5642,10 @@ msgid "Invalid provider data. Expected AD FS settings."
 msgstr ""
 
 msgid "No valid SSO settings found."
-msgstr ""
+msgstr "Pas de paramètres SSO valides."
 
 msgid "You must authenticate with Azure again."
-msgstr ""
+msgstr "Vous devez vous authentifier avec Azure à nouveau."
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
 msgstr ""
