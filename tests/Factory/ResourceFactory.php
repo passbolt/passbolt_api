@@ -63,6 +63,7 @@ class ResourceFactory extends CakephpBaseFactory
                 'name' => $faker->text(255),
                 'username' => $faker->email(),
                 'uri' => $faker->url(),
+                'description' => $faker->text(10),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
                 'created' => Chronos::now()->subDays($faker->randomNumber(4)),

@@ -48,6 +48,12 @@ class ResourceType extends Entity
     public const SLUG_V5_DEFAULT = 'v5-default';
     public const SLUG_V5_TOTP_STANDALONE = 'v5-totp-standalone';
     public const SLUG_V5_DEFAULT_WITH_TOTP = 'v5-default-with-totp';
+    public const V5_RESOURCE_TYPE_SLUGS = [
+        self::SLUG_V5_PASSWORD_STRING,
+        self::SLUG_V5_DEFAULT,
+        self::SLUG_V5_TOTP_STANDALONE,
+        self::SLUG_V5_DEFAULT_WITH_TOTP,
+    ];
 
     protected $_accessible = [
         'name' => false,

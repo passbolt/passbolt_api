@@ -12,43 +12,32 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         2.0.0
+ * @since         4.10.0
  */
 
-namespace App\Model\Rule;
+namespace Passbolt\Metadata\Model\Rule;
 
 use Cake\Datasource\EntityInterface;
-use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
-class IsNotSoftDeletedRule
+class MetadataKeyIdExistsInRule
 {
     /**
-     * Performs the check
-     *
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
-        if (!isset($options['errorField']) || !isset($options['table'])) {
-            return false;
+        $metadataKeyType = $entity->get('metadata_key_type');
+        $id = $entity->get('metadata_key_id');
+
+        if ($metadataKeyType === 'user_key') {
+            $table = TableRegistry::getTableLocator()->get('Gpgkeys');
+        } else {
+            $table = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys');
         }
 
-        try {
-            $Table = TableRegistry::getTableLocator()->get($options['table']);
-            $id = $entity->get($options['errorField']);
-            $lookupEntity = $Table->get($id);
-            $deleted = $lookupEntity->get('deleted');
-            if ($deleted instanceof FrozenTime) {
-                return $deleted->isFuture();
-            }
-
-            return $lookupEntity->get('deleted') !== true;
-        } catch (\Exception $e) {
-        }
-
-        return false;
+        return $table->exists(['id' => $id]);
     }
 }

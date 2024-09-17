@@ -27,6 +27,7 @@ use Cake\Event\EventInterface;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
@@ -38,6 +39,7 @@ use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 class ResourcesAddService
 {
     use LocatorAwareTrait;
+    use ResourceSaveV5AwareTrait;
 
     public const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
 
@@ -74,18 +76,18 @@ class ResourcesAddService
      * performed several times in case a PDO Exception is encountered.
      *
      * @param \App\Utility\UserAccessControl $uac User access control.
-     * @param array $data Payload to create the resource.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto The resource DTO
      * @return Resource
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\ServiceUnavailableException
      * @see ResourcesAddServiceStressTest
      */
-    public function add(UserAccessControl $uac, array $data): Resource
+    public function add(UserAccessControl $uac, MetadataResourceDto $resourceDto): Resource
     {
-        $this->attachListenerToAfterSaveEvent($uac, $data);
+        $this->attachListenerToAfterSaveEvent($uac, $resourceDto->toArray());
         $attempts = 1;
         do {
-            $resource = $this->buildEntity($uac->getId(), $data);
+            $resource = $this->buildEntity($uac->getId(), $resourceDto);
             $this->handleValidationError($resource);
             try {
                 $this->Resources->save($resource);
@@ -107,12 +109,13 @@ class ResourcesAddService
      * Build the resource entity from user input
      *
      * @param string $userId User ID creating the resource.
-     * @param array $data Array of data.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Array of data.
      * @return Resource
      * @throws \App\Error\Exception\ValidationException
      */
-    protected function buildEntity(string $userId, array $data): Resource
+    protected function buildEntity(string $userId, MetadataResourceDto $resourceDto): Resource
     {
+        $data = $resourceDto->toArray();
         // Enforce data.
         $data['created_by'] = $userId;
         $data['modified_by'] = $userId;
@@ -132,39 +135,17 @@ class ResourcesAddService
             $data['resource_type_id'] = ResourceTypesTable::getDefaultTypeId();
         }
 
-        // Build entity and perform basic check
-        return $this->Resources->newEntity($data, [
-            'accessibleFields' => [
-                'name' => true,
-                'username' => true,
-                'uri' => true,
-                'description' => true,
-                'expired' => true,
-                'created_by' => true,
-                'modified_by' => true,
-                'secrets' => true,
-                'permissions' => true,
-                'resource_type_id' => true,
-            ],
-            'associated' => [
-                'Permissions' => [
-                    'validate' => 'saveResource',
-                    'accessibleFields' => [
-                        'aco' => true,
-                        'aro' => true,
-                        'aro_foreign_key' => true,
-                        'type' => true,
-                    ],
-                ],
-                'Secrets' => [
-                    'validate' => 'saveResource',
-                    'accessibleFields' => [
-                        'user_id' => true,
-                        'data' => true,
-                    ],
-                ],
-            ],
+        $options = $this->getOptionsForResourceSave($resourceDto);
+        $options['accessibleFields'] = array_merge($options['accessibleFields'], [
+            'expired' => true,
+            'created_by' => true,
+            'modified_by' => true,
+            'secrets' => true,
+            'permissions' => true,
+            'resource_type_id' => true,
         ]);
+
+        return $this->Resources->newEntity($data, $options);
     }
 
     /**

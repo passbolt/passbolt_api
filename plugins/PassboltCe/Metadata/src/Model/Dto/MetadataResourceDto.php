@@ -43,6 +43,7 @@ class MetadataResourceDto
     public const PERMISSIONS = 'permissions';
     public const SECRETS = 'secrets';
     public const CREATOR = 'creator';
+    public const FOLDER_PARENT_ID = 'folder_parent_id';
 
     public const ALL_PROPS = [
         self::NAME,
@@ -63,6 +64,7 @@ class MetadataResourceDto
         self::PERMISSIONS,
         self::SECRETS,
         self::CREATOR,
+        self::FOLDER_PARENT_ID,
     ];
 
     public const V4_META_PROPS = [
@@ -183,20 +185,26 @@ class MetadataResourceDto
     /**
      * Returns metadata array in cleartext form as per v5 format.
      *
+     * @param bool $mapResourceType Should map resource type or not.
      * @return array
      */
-    public function getClearTextMetadata(): array
+    public function getClearTextMetadata(bool $mapResourceType = true): array
     {
-        $mapping = ResourceType::getV5Mapping();
+        $resourceTypeId = $this->data[self::RESOURCE_TYPE_ID];
+        if ($mapResourceType) {
+            $mapping = ResourceType::getV5Mapping();
 
-        $v4resourceTypeId = $this->data[self::RESOURCE_TYPE_ID];
-        if (!isset($mapping[$v4resourceTypeId])) {
-            throw new InternalErrorException(__('No resource type mapping for ID \'{0}\'', $v4resourceTypeId));
+            $v4resourceTypeId = $this->data[self::RESOURCE_TYPE_ID];
+            if (!isset($mapping[$v4resourceTypeId])) {
+                throw new InternalErrorException(__('No resource type mapping for ID \'{0}\'', $v4resourceTypeId));
+            }
+
+            $resourceTypeId = $mapping[$v4resourceTypeId];
         }
 
         return [
             'object_type' => 'PASSBOLT_RESOURCE_METADATA',
-            'resource_type_id' => $mapping[$v4resourceTypeId],
+            'resource_type_id' => $resourceTypeId,
             'name' => $this->data[self::NAME],
             'username' => $this->data[self::USERNAME],
             'uris' => [$this->data[self::URI]], // only 1 for now
