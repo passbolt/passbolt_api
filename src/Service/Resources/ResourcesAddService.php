@@ -39,7 +39,7 @@ use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 class ResourcesAddService
 {
     use LocatorAwareTrait;
-    use Version5AwareValidationTrait;
+    use ResourceSaveV5AwareTrait;
 
     public const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
 
@@ -135,36 +135,15 @@ class ResourcesAddService
             $data['resource_type_id'] = ResourceTypesTable::getDefaultTypeId();
         }
 
-        $baseAccessibleFields = [
+        $options = $this->getOptionsForResourceSave($resourceDto);
+        $options['accessibleFields'] = array_merge($options['accessibleFields'], [
             'expired' => true,
             'created_by' => true,
             'modified_by' => true,
             'secrets' => true,
             'permissions' => true,
             'resource_type_id' => true,
-        ];
-
-        // Build entity and perform basic check
-        $options = array_merge([
-            'associated' => [
-                'Permissions' => [
-                    'validate' => 'saveResource',
-                    'accessibleFields' => [
-                        'aco' => true,
-                        'aro' => true,
-                        'aro_foreign_key' => true,
-                        'type' => true,
-                    ],
-                ],
-                'Secrets' => [
-                    'validate' => 'saveResource',
-                    'accessibleFields' => [
-                        'user_id' => true,
-                        'data' => true,
-                    ],
-                ],
-            ],
-        ], $this->getValidationOptionsAndSetBuildRules($baseAccessibleFields, $resourceDto->isV5()));
+        ]);
 
         return $this->Resources->newEntity($data, $options);
     }

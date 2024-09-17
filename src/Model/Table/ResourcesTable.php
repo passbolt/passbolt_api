@@ -36,7 +36,8 @@ use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedResourceRule;
-use Passbolt\Metadata\Model\Rule\IsResourceSharedAndMetadataCanBeDecryptedWithSharedSessionKeyRule;
+use Passbolt\Metadata\Model\Rule\IsValidEncryptedResourceMetadataRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
@@ -332,10 +333,22 @@ class ResourcesTable extends Table
      */
     public function buildRulesV5(RulesChecker $rules): RulesChecker
     {
+        $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key does not exist.'),
+        ]);
+
         $rules->add(new IsNotSoftDeletedRule(), 'resource_type_is_not_soft_deleted', [
             'table' => 'Passbolt/ResourceTypes.ResourceTypes',
             'errorField' => 'resource_type_id',
             'message' => __('The resource type should not be deleted.'),
+        ]);
+
+        $rules->add(new IsValidEncryptedResourceMetadataRule(), 'isValidEncryptedResourceMetadata', [
+            'identifierField' => 'metadata_key_id',
+            'dataField' => 'metadata',
+            'errorField' => 'metadata',
+            'message' => __('The resource metadata provided can not be decrypted.'),
         ]);
 
         $rules->addUpdate(
@@ -344,15 +357,6 @@ class ResourcesTable extends Table
             [
                 'errorField' => 'metadata_key_type',
                 'message' => __('A resource of type personal cannot be shared with other users or a group.'),
-            ]
-        );
-
-        $rules->addUpdate(
-            new IsResourceSharedAndMetadataCanBeDecryptedWithSharedSessionKeyRule(),
-            'IsResourceSharedAndMetadataCanBeDecryptedWithSharedSessionKey',
-            [
-                'errorField' => 'metadata',
-                'message' => __('The resource of type shared could not be decrypted with the shared session key.'),
             ]
         );
 

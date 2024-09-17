@@ -17,89 +17,147 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Controller\Resources;
 
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
-use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
-class ResourcesUpdateControllerTest extends AppIntegrationTestCase
+class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 {
     use EmailQueueTrait;
+    use GpgMetadataKeysTestTrait;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->setEmailNotificationsSetting('password.create', true);
-        Configure::write('passbolt.v5.enabled', true);
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
-        ResourceTypeFactory::make()->default()->persist();
         RoleFactory::make()->guest()->persist();
     }
 
-    public function testResourcesUpdateController_Metadata_Enabled_Success(): void
+    public function testResourcesUpdateController_Success_SharedKey(): void
     {
-        $user = $this->logInAsUser();
-        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->user()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $metadataKey->get('id');
+        $resource = ResourceFactory::make(['resource_type_id' => $v4ResourceTypeId])->withPermissionsFor([$user])->persist();
+        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+        $metadataKeyType = 'shared_key';
+        $resourceId = $resource->get('id');
+        $this->logInAs($user);
 
-        $metadataKeyId = UuidFactory::uuid();
-        $metadata = $this->getDummyGpgMessage();
-        $metadataKeyType = 'user_key';
-        $resourceType = ResourceTypeFactory::make()->v5Default()->persist();
         $data = [
             'metadata_key_id' => $metadataKeyId,
             'metadata' => $metadata,
             'metadata_key_type' => $metadataKeyType,
-            'resource_type_id' => $resourceType->get('id'),
+            'resource_type_id' => $resourceTypeId,
         ];
-        $this->putJson("/resources/{$resource->get('id')}.json", $data);
-        $this->assertSuccess();
+        $this->putJson("/resources/{$resourceId}.json", $data);
 
+        $this->assertSuccess();
         // Check the server response.
         $response = $this->_responseJsonBody;
-
         // Check the resource attributes.
         $this->assertResourceV5Attributes($response);
         $this->assertObjectNotHasAttribute('name', $response);
-
         $this->assertEquals($data['metadata_key_id'], $response->metadata_key_id);
         $this->assertEquals($data['metadata'], $response->metadata);
         $this->assertEquals($data['metadata_key_type'], $response->metadata_key_type);
-        $this->assertEquals($resourceType->get('id'), $response->resource_type_id);
+        $this->assertEquals($resourceTypeId, $response->resource_type_id);
         $this->assertEquals($resource->get('created_by'), $response->created_by);
         $this->assertEquals($user->id, $response->modified_by);
     }
 
-    public function testResourcesUpdateController_Metadata_Enabled_Mix_v4_and_v5_Fields_Should_Throw_An_Error(): void
+    public function testResourcesUpdateController_Success_UserKey(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        ResourceTypeFactory::make()->passwordString()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $user->gpgkey->id;
+        $resource = ResourceFactory::make(['resource_type_id' => $resourceTypeId])
+            ->v5Fields()
+            ->withPermissionsFor([$user])
+            ->persist();
+        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata(false));
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+        $metadataKeyType = 'user_key';
+        $this->logInAs($user);
+        $resourceId = $resource->get('id');
+
+        $data = [
+            'metadata_key_id' => $metadataKeyId,
+            'metadata' => $metadata,
+            'metadata_key_type' => $metadataKeyType,
+            'resource_type_id' => $resourceTypeId,
+        ];
+        $this->putJson("/resources/{$resourceId}.json", $data);
+
+        $this->assertSuccess();
+        // Check the server response.
+        $response = $this->_responseJsonBody;
+        // Check the resource attributes.
+        $this->assertResourceV5Attributes($response);
+        $this->assertObjectNotHasAttribute('name', $response);
+        $this->assertEquals($user->gpgkey->id, $response->metadata_key_id);
+        $this->assertEquals($data['metadata'], $response->metadata);
+        $this->assertEquals($data['metadata_key_type'], $response->metadata_key_type);
+        $this->assertEquals($resourceTypeId, $response->resource_type_id);
+        $this->assertEquals($resource->get('created_by'), $response->created_by);
+        $this->assertEquals($user->id, $response->modified_by);
+    }
+
+    public function testResourcesUpdateController_Error_MixV4V5Fields(): void
     {
         $user = $this->logInAsUser();
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-
         $metadataKeyId = UuidFactory::uuid();
         $metadata = 'metadata';
-        $metadataKeyType = 'user_key';
+        $metadataKeyType = 'shared_key';
         $data = [
             'metadata_key_id' => $metadataKeyId,
             'metadata' => $metadata,
             'metadata_key_type' => $metadataKeyType,
             'name' => '新的專用資源名稱',
         ];
+
         $this->putJson("/resources/{$resource->get('id')}.json", $data);
+
         $this->assertBadRequestError('The following fields are not supported in v5: name.');
     }
 
-    public function testResourcesUpdateController_Metadata_Disabled_Mix_v4_and_v5_Fields_Should_Not_Throw_An_Error(): void
+    public function testResourcesUpdateController_Success_MetadataDisabledMixV4AndV5FieldsAllowed(): void
     {
         Configure::write('passbolt.v5.enabled', false);
         $user = $this->logInAsUser();
+        ResourceTypeFactory::make()->default()->persist()->get('id');
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-
         $metadataKeyId = UuidFactory::uuid();
         $metadata = 'metadata';
-        $metadataKeyType = 'user_key';
+        $metadataKeyType = 'shared_key';
+
         $data = [
             'metadata_key_id' => $metadataKeyId,
             'metadata' => $metadata,
@@ -107,8 +165,8 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
             'name' => '新的專用資源名稱',
         ];
         $this->putJson("/resources/{$resource->get('id')}.json", $data);
-        $this->assertSuccess();
 
+        $this->assertSuccess();
         $resource = ResourceFactory::firstOrFail();
         $this->assertNull($resource->metadata_key_id);
         $this->assertObjectNotHasAttribute('metadata', $this->_responseJsonBody);

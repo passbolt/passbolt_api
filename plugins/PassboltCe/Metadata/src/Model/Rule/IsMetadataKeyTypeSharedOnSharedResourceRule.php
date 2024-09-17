@@ -19,6 +19,8 @@ namespace Passbolt\Metadata\Model\Rule;
 
 use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
+use Cake\Core\Configure;
+use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 
 class IsMetadataKeyTypeSharedOnSharedResourceRule
@@ -56,6 +58,10 @@ class IsMetadataKeyTypeSharedOnSharedResourceRule
         /** @var \App\Model\Entity\Permission $permission */
         $permission = $permissions->first();
         if (is_null($permission)) {
+            if (Configure::read('debug')) {
+                Log::error(__('No permission found for resource: {0}', $resource->get('id')));
+            }
+
             return false;
         }
 

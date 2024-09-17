@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Test\Utility;
 
+use App\Model\Entity\User;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
@@ -350,5 +351,43 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
     public function getValidPrivateKeyCleartextJson(): string
     {
         return json_encode($this->getValidPrivateKeyCleartext());
+    }
+
+    /**
+     * @param string $data Data to encrypt.
+     * @return string Encrypted data
+     */
+    public function encryptForMetadataKey(string $data): string
+    {
+        $metadataKeyInfo = $this->getMetadataKeyInfo();
+        $fingerprint = $metadataKeyInfo['fingerprint'];
+        $passphrase = $metadataKeyInfo['passphrase'];
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->importServerKeyInKeyring();
+        $gpg->setEncryptKeyFromFingerprint($fingerprint);
+        $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+        $encryptedData = $gpg->encryptSign($data);
+        $gpg->clearKeys();
+
+        return $encryptedData;
+    }
+
+    /**
+     * @param string $data Data to encrypt
+     * @param User $user User entity.
+     * @param string $passphrase Passphrase.
+     * @return string Encrypted data.
+     */
+    private function encryptForUser(string $data, User $user, array $keyInfo): string
+    {
+        $fingerprint = $user->gpgkey->fingerprint;
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->importKeyIntoKeyring($keyInfo['privateKey']);
+        $gpg->setEncryptKeyFromFingerprint($fingerprint);
+        $gpg->setSignKeyFromFingerprint($fingerprint, $keyInfo['passphrase']);
+        $encryptedData = $gpg->encryptSign($data);
+        $gpg->clearKeys();
+
+        return $encryptedData;
     }
 }

@@ -41,7 +41,7 @@ class ResourcesUpdateService
 {
     use EventDispatcherTrait;
     use LocatorAwareTrait;
-    use Version5AwareValidationTrait;
+    use ResourceSaveV5AwareTrait;
 
     public const UPDATE_SUCCESS_EVENT_NAME = 'ResourcesUpdateController.update.success';
 
@@ -101,7 +101,7 @@ class ResourcesUpdateService
 
         $this->Resources->getConnection()->transactional(
             function () use (&$resource, $uac, $meta, $secrets, $resourceDto) {
-                $this->updateResourceMeta($uac, $resource, $meta, $resourceDto->isV5());
+                $this->updateResourceMeta($uac, $resource, $meta, $resourceDto);
 
                 $updatedSecrets = [];
                 if (!empty($secrets)) {
@@ -194,12 +194,16 @@ class ResourcesUpdateService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The resource to update
      * @param array $data The request data
-     * @param bool $isDataV5 Is the data passed a v5 format resource
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Resource DTO.
      * @return void
      */
-    private function updateResourceMeta(UserAccessControl $uac, Resource $resource, array $data, bool $isDataV5): void
-    {
-        $this->patchEntity($uac, $resource, $data, $isDataV5);
+    private function updateResourceMeta(
+        UserAccessControl $uac,
+        Resource $resource,
+        array $data,
+        MetadataResourceDto $resourceDto
+    ): void {
+        $this->patchEntity($uac, $resource, $data, $resourceDto);
         $this->handleValidationErrors($resource);
         $this->Resources->save($resource);
         $this->handleValidationErrors($resource);
@@ -211,17 +215,22 @@ class ResourcesUpdateService
      * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
      * @param \App\Model\Entity\Resource $resource The resource entity to update
      * @param array $data The resource data.
-     * @param bool $isDataV5 Is the data passed a v5 format resource
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Resource DTO.
      * @return Resource
      */
-    private function patchEntity(UserAccessControl $uac, Resource $resource, array $data, bool $isDataV5): Resource
-    {
+    private function patchEntity(
+        UserAccessControl $uac,
+        Resource $resource,
+        array $data,
+        MetadataResourceDto $resourceDto
+    ): Resource {
         $data['modified_by'] = $uac->getId();
         // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
         // when a user updates only the secret.
         $data['modified'] = new FrozenTime();
 
-        $baseAccessibleFields = [
+        $options = $this->getOptionsForResourceSave($resourceDto);
+        $options['accessibleFields'] = array_merge($options['accessibleFields'], [
             'name' => true,
             'username' => true,
             'uri' => true,
@@ -230,13 +239,9 @@ class ResourcesUpdateService
             'modified_by' => true,
             'resource_type_id' => true,
             'expired' => true,
-        ];
+        ]);
 
-        return $this->Resources->patchEntity(
-            $resource,
-            $data,
-            $this->getValidationOptionsAndSetBuildRules($baseAccessibleFields, $isDataV5)
-        );
+        return $this->Resources->patchEntity($resource, $data, $options);
     }
 
     /**
