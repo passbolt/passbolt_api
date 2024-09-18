@@ -16,14 +16,17 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
 use Passbolt\Metadata\Command\MigrateResourcesCommand;
 use Passbolt\Metadata\Event\MetadataResourceIndexListener;
 use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
 use Passbolt\Metadata\Event\SetupCompleteListener;
+use Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck;
 
 class MetadataPlugin extends BasePlugin
 {
@@ -48,6 +51,18 @@ class MetadataPlugin extends BasePlugin
             ->on(new SetupCompleteListener())
             ->on(new MetadataUserDeleteSuccessListener())
             ->on(new MetadataResourceIndexListener());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(ServerCanDecryptMetadataPrivateKeyHealthcheck::class);
+
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [ServerCanDecryptMetadataPrivateKeyHealthcheck::class]);
     }
 
     /**
