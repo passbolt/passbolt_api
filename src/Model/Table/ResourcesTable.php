@@ -345,8 +345,6 @@ class ResourcesTable extends Table
         ]);
 
         $rules->add(new IsValidEncryptedResourceMetadataRule(), 'isValidEncryptedResourceMetadata', [
-            'identifierField' => 'metadata_key_id',
-            'dataField' => 'metadata',
             'errorField' => 'metadata',
             'message' => __('The resource metadata provided can not be decrypted.'),
         ]);
