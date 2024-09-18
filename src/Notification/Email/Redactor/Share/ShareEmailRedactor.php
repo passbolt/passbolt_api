@@ -29,12 +29,14 @@ use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Locale\Service\LocaleService;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
 class ShareEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
     public const TEMPLATE = 'LU/resource_share';
+    public const TEMPLATE_V5 = 'Passbolt/Metadata.LU/resource_share_v5';
 
     /**
      * @var \App\Model\Table\UsersTable
@@ -129,10 +131,18 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      */
     private function createShareEmail(User $recipient, User $owner, Resource $resource, string $secret): Email
     {
+        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $isV5 = $resourceDto->isV5();
+
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($owner, $resource) {
-                return __('{0} shared the password {1}', $owner->profile->first_name, $resource->name);
+            function () use ($owner, $resource, $isV5) {
+                $subject = __('{0} shared the password {1}', $owner->profile->first_name, $resource->name);
+                if ($isV5) {
+                    $subject = __('{0} shared a password', $owner->profile->first_name);
+                }
+
+                return $subject;
             }
         );
 
@@ -145,10 +155,13 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
                 'showUri' => $this->getConfig('show.uri'),
                 'showDescription' => $this->getConfig('show.description'),
                 'showSecret' => $this->getConfig('show.secret'),
+                'isV5' => $isV5,
             ],
             'title' => $subject,
         ];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        $template = $isV5 ? self::TEMPLATE_V5 : self::TEMPLATE;
+
+        return new Email($recipient, $subject, $data, $template);
     }
 }
