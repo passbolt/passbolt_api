@@ -122,7 +122,7 @@ class MetadataResourcesUpdateServiceTest extends AppTestCaseV5
         } catch (ValidationException $exception) {
             $this->assertSame(
                 'A resource of type personal cannot be shared with other users or a group.',
-                $exception->getErrors()['metadata_key_type']['IsMetadataKeyTypeSharedOnSharedResource']
+                $exception->getErrors()['metadata_key_type']['isMetadataKeyTypeSharedOnSharedItem']
             );
         }
     }
@@ -149,7 +149,7 @@ class MetadataResourcesUpdateServiceTest extends AppTestCaseV5
         } catch (ValidationException $exception) {
             $this->assertSame(
                 'A resource of type personal cannot be shared with other users or a group.',
-                $exception->getErrors()['metadata_key_type']['IsMetadataKeyTypeSharedOnSharedResource']
+                $exception->getErrors()['metadata_key_type']['isMetadataKeyTypeSharedOnSharedItem']
             );
         }
     }

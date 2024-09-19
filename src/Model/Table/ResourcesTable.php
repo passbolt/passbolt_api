@@ -35,8 +35,8 @@ use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
-use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedResourceRule;
-use Passbolt\Metadata\Model\Rule\IsValidEncryptedResourceMetadataRule;
+use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
+use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
@@ -344,16 +344,14 @@ class ResourcesTable extends Table
             'message' => __('The resource type should not be deleted.'),
         ]);
 
-        $rules->add(new IsValidEncryptedResourceMetadataRule(), 'isValidEncryptedResourceMetadata', [
-            'identifierField' => 'metadata_key_id',
-            'dataField' => 'metadata',
+        $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedResourceMetadata', [
             'errorField' => 'metadata',
             'message' => __('The resource metadata provided can not be decrypted.'),
         ]);
 
         $rules->addUpdate(
-            new IsMetadataKeyTypeSharedOnSharedResourceRule(),
-            'IsMetadataKeyTypeSharedOnSharedResource',
+            new IsMetadataKeyTypeSharedOnSharedItemRule(),
+            'isMetadataKeyTypeSharedOnSharedItem',
             [
                 'errorField' => 'metadata_key_type',
                 'message' => __('A resource of type personal cannot be shared with other users or a group.'),

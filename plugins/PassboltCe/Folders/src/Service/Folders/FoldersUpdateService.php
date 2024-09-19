@@ -26,10 +26,13 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Utility\Folders\FolderSaveV5AwareTrait;
 
 class FoldersUpdateService
 {
     use EventDispatcherTrait;
+    use FolderSaveV5AwareTrait;
 
     public const FOLDERS_UPDATE_FOLDER_EVENT = 'folders.folder.update';
 
@@ -57,26 +60,22 @@ class FoldersUpdateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param string $id The folder to update
-     * @param array|null $data The folder data
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder DTO.
      * @return \Passbolt\Folders\Model\Entity\Folder
      * @throws \Exception If an unexpected error occurred
      */
-    public function update(UserAccessControl $uac, string $id, ?array $data = [])
+    public function update(UserAccessControl $uac, string $id, MetadataFolderDto $folderDto)
     {
         $folder = $this->getFolder($uac, $id);
-        $meta = $this->extractDataFolderMeta($data);
 
-        if (empty($meta)) {
-            return $folder;
-        }
-
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $meta) {
-            $this->updateFolderMeta($uac, $folder, $meta);
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto) {
+            $this->updateFolderMeta($uac, $folder, $folderDto);
         });
 
         $this->dispatchEvent(self::FOLDERS_UPDATE_FOLDER_EVENT, [
             'uac' => $uac,
             'folder' => $folder,
+            'isV5' => $folderDto->isV5(),
         ]);
 
         return $folder;
@@ -107,33 +106,16 @@ class FoldersUpdateService
     }
 
     /**
-     * Extract the resource meta data from the request data
-     *
-     * @param array $data The request data
-     * @return array
-     */
-    private function extractDataFolderMeta(array $data)
-    {
-        $meta = [];
-
-        if (array_key_exists('name', $data)) {
-            $meta['name'] = $data['name'];
-        }
-
-        return $meta;
-    }
-
-    /**
      * Update folder meta.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The folder to update.
-     * @param array $data The folder meta to updated
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder dto.
      * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
      */
-    private function updateFolderMeta(UserAccessControl $uac, Folder $folder, array $data)
+    private function updateFolderMeta(UserAccessControl $uac, Folder $folder, MetadataFolderDto $folderDto)
     {
-        $this->patchEntity($folder, $data);
+        $this->patchEntity($uac, $folder, $folderDto);
         $this->handleValidationErrors($folder);
         $this->foldersTable->save($folder);
         $this->handleValidationErrors($folder);
@@ -144,17 +126,24 @@ class FoldersUpdateService
     /**
      * Patch the folder entity.
      *
+     * @param \App\Utility\UserAccessControl $uac UAC.
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The folder entity to update.
-     * @param array $data The folder data.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder DTO.
      * @return \Cake\Datasource\EntityInterface|\Passbolt\Folders\Model\Entity\Folder
      */
-    private function patchEntity($folder, $data)
+    private function patchEntity(UserAccessControl $uac, Folder $folder, MetadataFolderDto $folderDto)
     {
-        $accessibleFields = [
-            'name' => true,
-        ];
+        $data = $folderDto->toArray();
+        $data = array_merge($data, [
+            'modified_by' => $uac->getId(),
+        ]);
 
-        return $this->foldersTable->patchEntity($folder, $data, ['accessibleFields' => $accessibleFields]);
+        $options = $this->getOptionsForFolderSave($folderDto);
+        $options['accessibleFields'] = array_merge($options['accessibleFields'], [
+            'modified_by' => true,
+        ]);
+
+        return $this->foldersTable->patchEntity($folder, $data, $options);
     }
 
     /**
