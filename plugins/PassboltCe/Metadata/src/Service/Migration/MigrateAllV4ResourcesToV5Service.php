@@ -17,24 +17,24 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service\Migration;
 
 use App\Model\Entity\Resource;
-use App\Model\Entity\User;
 use App\Model\Table\ResourcesTable;
-use App\Service\OpenPGP\PublicKeyValidationService;
-use App\Utility\OpenPGP\OpenPGPBackend;
+use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
+use App\Service\OpenPGP\OpenPGPCommonUserOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
-use Passbolt\Metadata\Model\Entity\MetadataKey;
+use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
 class MigrateAllV4ResourcesToV5Service
 {
     use LocatorAwareTrait;
+    use OpenPGPCommonMetadataOperationsTrait;
+    use OpenPGPCommonUserOperationsTrait;
+    use OpenPGPCommonServerOperationsTrait;
 
     private ResourcesTable $Resources;
 
@@ -45,6 +45,7 @@ class MigrateAllV4ResourcesToV5Service
      */
     private array $result = [
         'success' => true,
+        'migrated' => [],
         'errors' => [],
     ];
 
@@ -64,6 +65,7 @@ class MigrateAllV4ResourcesToV5Service
      */
     public function migrate(): array
     {
+        //TODO Assert settings MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCE === true
         $v4ResourceTypes = [
             UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING),
             UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
@@ -85,21 +87,24 @@ class MigrateAllV4ResourcesToV5Service
         }
 
         foreach ($resources as $resource) {
-            $isPersonal = count($resource->permissions) > 1 ? false : true;
-
             $dto = MetadataResourceDto::fromArray($resource->toArray());
-            // Continue with next resource if any error
             try {
                 if ($dto->isV5()) {
-                    throw new InternalErrorException(__('Resource ID "{0}" is already V5', $resource->id));
+                    $msg = __('Resource ID "{0}" is already V5', $resource->id);
+                    throw new InternalErrorException($msg);
                 }
-
-                if ($isPersonal) {
+                if (count($resource->permissions) === 0) {
+                    $msg = __('No permission found for resource ID {0}', $resource->id);
+                    throw new InternalErrorException($msg);
+                }
+                if (count($resource->permissions) === 1) {
                     $this->migratePersonal($dto, $resource);
                 } else {
                     $this->migrateShared($dto, $resource);
                 }
+                $this->addMigrated($resource);
             } catch (\Exception $e) {
+                // Continue with next resource if any error
                 $error = ['resource_id' => $resource->id, 'error_message' => $e->getMessage()];
                 if (Configure::read('debug')) {
                     $error['trace'] = $e->getTraceAsString();
@@ -132,14 +137,18 @@ class MigrateAllV4ResourcesToV5Service
     private function migratePersonal(MetadataResourceDto $dto, Resource $resource): void
     {
         $metadataArray = $dto->getClearTextMetadata();
+
         /** @var \App\Model\Entity\Permission $permission */
         $permission = $resource->get('permissions')[0];
         $user = $permission->user;
 
         try {
-            $openpgp = $this->getOpenPGPBackendForEncrypt($user);
+            $gpg = OpenPGPBackendFactory::get();
+            $gpg->clearKeys();
+            $gpg = $this->setSignKeyWithServerKey($gpg);
+            $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->gpgkey);
             $metadataClearText = json_encode($metadataArray, JSON_THROW_ON_ERROR);
-            $metadataEncrypted = $openpgp->encrypt($metadataClearText, true);
+            $metadataEncrypted = $gpg->encrypt($metadataClearText, true);
         } catch (\Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The metadata could not be encrypted with the user id: {0}.', $user->id);
@@ -171,9 +180,12 @@ class MigrateAllV4ResourcesToV5Service
         $metadataKey = $this->getMetadataKeyForEncryption();
 
         try {
-            $openpgp = $this->getOpenPGPBackendForMetadataKey($metadataKey);
+            $gpg = OpenPGPBackendFactory::get();
+            $gpg->clearKeys();
+            $gpg = $this->setSignKeyWithServerKey($gpg);
+            $gpg = $this->setEncryptKeyWithMetadataKey($gpg, $metadataKey);
             $metadataClearText = json_encode($metadataArray, JSON_THROW_ON_ERROR);
-            $metadataEncrypted = $openpgp->encrypt($metadataClearText, true);
+            $metadataEncrypted = $gpg->encrypt($metadataClearText, true);
         } catch (\Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The metadata could not be encrypted with the metadata key id: {0}.', $metadataKey->id);
@@ -189,208 +201,9 @@ class MigrateAllV4ResourcesToV5Service
             'metadata' => $metadataEncrypted,
             'metadata_key_id' => $metadataKey->id,
             'metadata_key_type' => 'shared_key',
+            //TODO support nullable resource.modified_by to allow server side modification
+            //'modified_by' => null,
         ]);
-    }
-
-    /**
-     * Get the OpenPGP Backend ready to encryption with user key
-     *
-     * @param \App\Model\Entity\User $user entity
-     * @return \App\Utility\OpenPGP\OpenPGPBackend backend configured to use server keys
-     * @throws \Cake\Http\Exception\InternalErrorException if the server key cannot be loaded
-     */
-    private function getOpenPGPBackendForEncrypt(User $user): OpenPGPBackend
-    {
-        $gpg = OpenPGPBackendFactory::get();
-        $gpg->clearKeys();
-
-        // Check if config contains fingerprint
-        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        $this->assertFingerprint($fingerprint);
-
-        // Check if config contains valid passphrase
-        $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
-        $this->assertServerPassphrase($passphrase);
-
-        // Set sign key as the one from the server
-        try {
-            $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
-            try {
-                $gpg->importServerKeyInKeyring();
-                $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
-                $msg = __('The OpenPGP server key defined in the config cannot be used to sign.') . ' ';
-                $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
-
-        // Set encryption key as the one from the user
-        try {
-            $this->assertUserKey($user);
-        } catch (\Exception $exception) {
-            if (Configure::read('debug')) {
-                Log::error(json_encode($user));
-            }
-            $msg = __('Could not validate user data.');
-            throw new InternalErrorException($msg, 500, $exception);
-        }
-        try {
-            $gpg->setEncryptKeyFromFingerprint($user->gpgkey->fingerprint);
-        } catch (\Exception $exception) {
-            // Try to import the key in keyring again
-            try {
-                $gpg->importKeyIntoKeyring($user->gpgkey->armored_key);
-                $gpg->setEncryptKeyFromFingerprint($user->gpgkey->fingerprint);
-            } catch (\Exception $exception) {
-                if (Configure::read('debug')) {
-                    Log::error(json_encode($user));
-                }
-                $msg = __('Could not import the user OpenPGP key.');
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
-
-        return $gpg;
-    }
-
-    /**
-     * Get the OpenPGP Backend ready to encryption with shared metadata key
-     *
-     * @param \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey Metadata entity object.
-     * @return \App\Utility\OpenPGP\OpenPGPBackend backend configured to use server keys
-     * @throws \Cake\Http\Exception\InternalErrorException if the server key cannot be loaded
-     */
-    private function getOpenPGPBackendForMetadataKey(MetadataKey $metadataKey): OpenPGPBackend
-    {
-        $gpg = OpenPGPBackendFactory::get();
-        $gpg->clearKeys();
-
-        // Check if config contains fingerprint
-        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        $this->assertFingerprint($fingerprint);
-
-        // Check if config contains valid passphrase
-        $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
-        $this->assertServerPassphrase($passphrase);
-
-        // Set sign key as the one from the server
-        try {
-            $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
-            try {
-                $gpg->importServerKeyInKeyring();
-                $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
-                $msg = __('The OpenPGP server key defined in the config cannot be used to sign.') . ' ';
-                $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
-
-        // Set encryption key as the metadata key
-        try {
-            $this->assertMetadataKey($metadataKey);
-        } catch (\Exception $exception) {
-            if (Configure::read('debug')) {
-                Log::error(json_encode($metadataKey));
-            }
-            $msg = __('Could not validate metadata key data.');
-            throw new InternalErrorException($msg, 500, $exception);
-        }
-        try {
-            $gpg->setEncryptKeyFromFingerprint($metadataKey->fingerprint);
-        } catch (\Exception $exception) {
-            // Try to import the key in keyring again
-            try {
-                $gpg->importKeyIntoKeyring($metadataKey->armored_key);
-                $gpg->setEncryptKeyFromFingerprint($metadataKey->fingerprint);
-            } catch (\Exception $exception) {
-                if (Configure::read('debug')) {
-                    Log::error(json_encode($metadataKey));
-                }
-                $msg = __('Could not import the metadata OpenPGP key.');
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
-
-        return $gpg;
-    }
-
-    /**
-     * @param mixed $fingerprint fingerprint
-     * @throws \Cake\Http\Exception\InternalErrorException
-     * @return void
-     */
-    private function assertFingerprint($fingerprint): void
-    {
-        if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
-            $msg = __('The config for the server private key fingerprint is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-    }
-
-    /**
-     * @param mixed $passphrase passphrase
-     * @throws \Cake\Http\Exception\InternalErrorException
-     * @return void
-     */
-    private function assertServerPassphrase($passphrase): void
-    {
-        if (!is_string($passphrase)) {
-            $msg = __('The config for the server private key passphrase is invalid.');
-            throw new InternalErrorException($msg);
-        }
-    }
-
-    /**
-     * @param \App\Model\Entity\User $user object as sent from event
-     * @return void
-     */
-    private function assertUserKey(User $user): void
-    {
-        if (!isset($user->gpgkey) || !isset($user->gpgkey->armored_key) || !isset($user->gpgkey->fingerprint)) {
-            $msg = __('The user public key is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-
-        $fingerprint = $user->gpgkey->fingerprint;
-        if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
-            $msg = __('The user public key fingerprint is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-
-        $armoredKey = $user->gpgkey->armored_key;
-        if (!is_string($armoredKey) || !PublicKeyValidationService::parseAndValidatePublicKey($armoredKey)) {
-            $msg = __('The user armored key is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-    }
-
-    /**
-     * @param \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey Metadata key entity.
-     * @throws \Cake\Http\Exception\InternalErrorException
-     * @return void
-     */
-    private function assertMetadataKey(MetadataKey $metadataKey): void
-    {
-        if (!isset($metadataKey->armored_key) || !isset($metadataKey->fingerprint)) {
-            $msg = __('The metadata key is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-
-        $fingerprint = $metadataKey->fingerprint;
-        if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
-            $msg = __('The metadata key fingerprint is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-
-        $armoredKey = $metadataKey->armored_key;
-        if (!is_string($armoredKey) || !PublicKeyValidationService::parseAndValidatePublicKey($armoredKey)) {
-            $msg = __('The metadata armored key is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
     }
 
     /**
@@ -429,6 +242,7 @@ class MigrateAllV4ResourcesToV5Service
                     'metadata' => true,
                     'metadata_key_id' => true,
                     'metadata_key_type' => true,
+                    'modified_by' => true,
                 ],
                 'validate' => 'v5',
             ]);
@@ -447,21 +261,13 @@ class MigrateAllV4ResourcesToV5Service
     private function getMetadataKeyForEncryption()
     {
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
-        $metadataPrivateKeysTable = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataPrivateKeys');
 
-        $subQuery = $metadataPrivateKeysTable->find()
-            ->select(['metadata_key_id'])
-            ->where(['user_id IS' => null])
-            ->order(['created' => 'DESC'])
-            ->limit(1);
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey */
         $metadataKey = $metadataKeysTable
             ->find()
             ->select(['id', 'fingerprint', 'armored_key'])
-            ->where([
-                'id' => $subQuery,
-                'deleted IS NULL',
-            ])
+            ->where(['deleted IS NULL'])
+            ->order(['created' => 'DESC'])
             ->firstOrFail();
 
         return $metadataKey;
@@ -476,5 +282,14 @@ class MigrateAllV4ResourcesToV5Service
     private function addError(array $error): void
     {
         $this->result['errors'][] = $error;
+    }
+
+    /**
+     * @param \App\Model\Entity\Resource $resource entity
+     * @return void
+     */
+    private function addMigrated(Resource $resource): void
+    {
+        $this->result['migrated'][] = $resource->id;
     }
 }

@@ -19,16 +19,20 @@ namespace Passbolt\Metadata\Command;
 use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
-use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
+use Cake\Core\Configure;
+use Passbolt\Metadata\Service\Migration\GenerateDummyMetadataKeyService;
 
-class MigrateResourcesCommand extends PassboltCommand
+class GenerateDummyMetadataKeyCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
     public static function getCommandDescription(): string
     {
-        return __('Migrate V4 resources to V5.');
+        return 'Generate a metadata private/public key pair.'
+            . 'Share it with server and users keys.'
+            . 'For testing purpose ONLY.'
+            . 'Requires both DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.';
     }
 
     /**
@@ -38,21 +42,17 @@ class MigrateResourcesCommand extends PassboltCommand
     {
         parent::execute($args, $io);
 
-        $migrateService = (new MigrateAllV4ResourcesToV5Service());
-        $result = $migrateService->migrate();
+        if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
+            $io->out('Please enable DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.');
 
-        if (isset($result['migrated']) && count($result['migrated'])) {
-            $this->error(__('{0} resources were migrated.', count($result['migrated'])), $io);
+            return $this->errorCode();
         }
-        if ($result['success']) {
-            $io->success(__('All resources successfully migrated.'));
-        } else {
-            $this->error(__('All resources could not migrated.'), $io);
-            $this->error(__('See errors:'), $io);
-            $errors = $result['errors'];
-            foreach ($errors as $error) {
-                $this->error($error['error_message'], $io);
-            }
+
+        try {
+            $key = (new GenerateDummyMetadataKeyService())->generate();
+            $io->out('New key generated and encrypted for users: ' . $key->fingerprint);
+        } catch (\Exception $e) {
+            $io->err($e->getMessage());
 
             return $this->errorCode();
         }

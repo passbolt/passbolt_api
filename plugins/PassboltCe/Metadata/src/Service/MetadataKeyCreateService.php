@@ -37,9 +37,6 @@ class MetadataKeyCreateService
     {
         $uac->assertIsAdmin();
 
-        /** @var \Passbolt\Metadata\Model\Table\MetadataKeysTable $metadataKeysTable */
-        $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
-
         // Set created and modified by on both key and relations
         $data = $dto->toArray() + [
             'created_by' => $uac->getId(),
@@ -49,6 +46,18 @@ class MetadataKeyCreateService
             $data['metadata_private_keys'][$i]['created_by'] = $uac->getId();
             $data['metadata_private_keys'][$i]['modified_by'] = $uac->getId();
         }
+
+        return $this->buildAndSaveEntity($data);
+    }
+
+    /**
+     * @param array $data user provided data
+     * @return \Passbolt\Metadata\Model\Entity\MetadataKey
+     */
+    public function buildAndSaveEntity(array $data): MetadataKey
+    {
+        /** @var \Passbolt\Metadata\Model\Table\MetadataKeysTable $metadataKeysTable */
+        $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
 
         $metadataKey = $metadataKeysTable->newEntity($data, [
             'accessibleFields' => [
