@@ -24,6 +24,7 @@ use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
  * FolderFactory
@@ -35,6 +36,7 @@ use Passbolt\Folders\Model\Entity\FoldersRelation;
 class FolderFactory extends CakephpBaseFactory
 {
     use FactoryDeletedTrait;
+    use GpgMetadataKeysTestTrait;
 
     /**
      * Defines the Table Registry used to generate entities with
@@ -98,5 +100,24 @@ class FolderFactory extends CakephpBaseFactory
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $values V5 Fields values to set.
+     * @param bool $isShared Metadata type.
+     * @return $this
+     */
+    public function v5Fields(array $values, bool $isShared = false)
+    {
+        $type = $isShared ? 'shared_key' : 'user_key';
+
+        $data = array_merge([
+            // Set V5 fields (not null and valid)
+            'metadata_key_type' => $type,
+            // Set V4 fields to null
+            'name' => null,
+        ], $values);
+
+        return $this->patchData($data);
     }
 }
