@@ -11,35 +11,40 @@
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
+ *
+ * @var array $body
+ * @var string $title
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
-use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
+
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
 }
-$owner = $body['owner'];
+$user = $body['user'];
 $resource = $body['resource'];
-$secret = $body['secret'];
+$armoredSecret = $body['armoredSecret'];
 $showSecret = $body['showSecret'];
 
 echo $this->element('Email/module/avatar',[
-    'url' => AvatarHelper::getAvatarUrl($owner['profile']['avatar']),
+    'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
-        'user' => $owner,
-        'datetime' => FrozenTime::now(),
-        'text' => __('{0} shared a resource with you', Purifier::clean($owner['profile']['first_name'])),
+        'user' => $user,
+        'datetime' => $resource['modified'],
+        'text' => $title,
     ])
 ]);
 
-$text = __('{0} shared a resource with you.', Purifier::clean($owner['profile']['first_name'])) . '<br/>';
+$text = __('You have edited a resource.') . '<br/>';
 
-if ($showSecret) {
-    echo $this->element('Email/module/code', ['text' => Purifier::clean($secret)]);
+echo $this->element('Email/module/text', [
+    'text' => $text,
+]);
+if ($showSecret && $armoredSecret !== null) {
+    echo $this->element('Email/module/code', ['text' => Purifier::clean($armoredSecret)]);
 }
-
 echo $this->element('Email/module/button', [
     'url' => Router::url("/app/passwords/view/{$resource['id']}", true),
-    'text' => __('View it in passbolt'),
+    'text' => __('View it in passbolt')
 ]);

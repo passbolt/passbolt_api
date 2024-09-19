@@ -108,7 +108,7 @@ class ResourcesUpdateService
                     $updatedSecrets = $this->updateResourceSecrets($uac, $resource, $secrets);
                 }
 
-                $this->postResourceUpdate($uac, $resource, $updatedSecrets);
+                $this->postResourceUpdate($uac, $resource, $updatedSecrets, $resourceDto);
             }
         );
 
@@ -301,11 +301,21 @@ class ResourcesUpdateService
      * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
      * @param \App\Model\Entity\Resource $resource The updated resource
      * @param \App\Model\Entity\Secret[] $secrets The secrets
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Resource DTO.
      * @return void
      */
-    private function postResourceUpdate(UserAccessControl $uac, Resource $resource, array $secrets): void
-    {
-        $eventData = ['resource' => $resource, 'accessControl' => $uac, 'secrets' => $secrets];
+    private function postResourceUpdate(
+        UserAccessControl $uac,
+        Resource $resource,
+        array $secrets,
+        MetadataResourceDto $resourceDto
+    ): void {
+        $eventData = [
+            'resource' => $resource,
+            'accessControl' => $uac,
+            'secrets' => $secrets,
+            'isV5' => $resourceDto->isV5(),
+        ];
         $this->dispatchEvent(static::UPDATE_SUCCESS_EVENT_NAME, $eventData);
     }
 }

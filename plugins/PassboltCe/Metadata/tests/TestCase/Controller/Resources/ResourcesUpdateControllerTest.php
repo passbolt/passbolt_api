@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Controller\Resources;
 
+use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
@@ -25,6 +26,8 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -42,6 +45,8 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->setEmailNotificationsSetting('password.create', true);
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
         RoleFactory::make()->guest()->persist();
+        // enable event tracking
+        EventManager::instance()->setEventList(new EventList());
     }
 
     public function testResourcesUpdateController_Success_SharedKey(): void
@@ -80,6 +85,12 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertEquals($resourceTypeId, $response->resource_type_id);
         $this->assertEquals($resource->get('created_by'), $response->created_by);
         $this->assertEquals($user->id, $response->modified_by);
+        // assert event
+        $this->assertEventFiredWith(
+            ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME,
+            'isV5',
+            true
+        );
     }
 
     public function testResourcesUpdateController_Success_UserKey(): void

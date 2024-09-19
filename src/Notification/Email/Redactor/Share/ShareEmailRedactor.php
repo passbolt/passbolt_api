@@ -137,9 +137,9 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($owner, $resource, $isV5) {
-                $subject = __('{0} shared the password {1}', $owner->profile->first_name, $resource->name);
+                $subject = __('{0} shared the resource {1}', $owner->profile->first_name, $resource->name);
                 if ($isV5) {
-                    $subject = __('{0} shared a password', $owner->profile->first_name);
+                    $subject = __('{0} shared a resource', $owner->profile->first_name);
                 }
 
                 return $subject;

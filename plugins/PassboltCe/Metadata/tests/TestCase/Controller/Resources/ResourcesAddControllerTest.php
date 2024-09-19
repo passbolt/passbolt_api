@@ -17,12 +17,15 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Controller\Resources;
 
+use App\Service\Resources\ResourcesAddService;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -39,6 +42,8 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         parent::setUp();
         $this->setEmailNotificationsSetting('password.create', true);
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
+        // enable event tracking
+        EventManager::instance()->setEventList(new EventList());
     }
 
     public function testResourcesAddController_SharedKeyType_Success(): void
@@ -76,6 +81,12 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertSame($metadataKeyType, $resource->metadata_key_type);
         $this->assertSame($resourceTypeId, $resource->resource_type_id);
         $this->assertObjectNotHasAttribute('name', $this->_responseJsonBody);
+        // assert event
+        $this->assertEventFiredWith(
+            ResourcesAddService::ADD_SUCCESS_EVENT_NAME,
+            'isV5',
+            true
+        );
     }
 
     public function testResourcesAddController_UserKeyType_Success(): void
