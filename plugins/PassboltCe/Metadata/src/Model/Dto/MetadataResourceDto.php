@@ -102,6 +102,7 @@ class MetadataResourceDto
     /**
      * @param array $data Array data.
      * @return self
+     * @throws \Cake\Http\Exception\BadRequestException If fields are not in valid form
      */
     public static function fromArray(array $data): self
     {

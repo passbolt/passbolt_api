@@ -84,7 +84,7 @@ class ResourcesAddService
      */
     public function add(UserAccessControl $uac, MetadataResourceDto $resourceDto): Resource
     {
-        $this->attachListenerToAfterSaveEvent($uac, $resourceDto->toArray());
+        $this->attachListenerToAfterSaveEvent($uac, $resourceDto);
         $attempts = 1;
         do {
             $resource = $this->buildEntity($uac->getId(), $resourceDto);
@@ -183,18 +183,20 @@ class ResourcesAddService
      *
      * @param \App\Model\Entity\Resource $resource The created resource
      * @param \App\Utility\UserAccessControl $uac The user creating the resource.
-     * @param array $data Payload to create the resource.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Resource DTO.
      * @return void
      * @throws \App\Error\Exception\ValidationException
      */
     public function afterSave(
         Resource $resource,
         UserAccessControl $uac,
-        array $data
+        MetadataResourceDto $resourceDto
     ): void {
         $this->handleValidationError($resource);
         $user = $this->Users->findFirstForEmail($uac->getId());
-        $eventData = compact('resource', 'uac', 'user', 'data');
+        $data = $resourceDto->toArray();
+        $isV5 = $resourceDto->isV5();
+        $eventData = compact('resource', 'uac', 'user', 'data', 'isV5');
         $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->Resources->getEventManager()->dispatch($event);
         $this->handleValidationError($resource);
@@ -204,19 +206,19 @@ class ResourcesAddService
      * Create the after save events on the Resources table.
      *
      * @param \App\Utility\UserAccessControl $uac User access control.
-     * @param array $data Payload.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto DTO.
      * @return void
      */
-    protected function attachListenerToAfterSaveEvent(UserAccessControl $uac, array $data): void
+    protected function attachListenerToAfterSaveEvent(UserAccessControl $uac, MetadataResourceDto $resourceDto): void
     {
         $this->Resources->getEventManager()->on(
             'Model.afterSave',
             ['priority' => 1],
-            function (EventInterface $event, $resource) use ($uac, $data) {
+            function (EventInterface $event, $resource) use ($uac, $resourceDto) {
                 $this->afterSave(
                     $resource,
                     $uac,
-                    $data
+                    $resourceDto
                 );
             }
         );

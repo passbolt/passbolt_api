@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
+use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Fixture\Base\FavoritesFixture;
 use App\Test\Fixture\Base\GpgkeysFixture;
 use App\Test\Fixture\Base\GroupsFixture;
@@ -32,6 +33,8 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\SecretsModelTrait;
 use App\Utility\UuidFactory;
+use Cake\Event\EventList;
+use Cake\Event\EventManager;
 
 class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 {
@@ -53,6 +56,8 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Success_UpdateResourceMeta(): void
     {
+        // enable event tracking
+        EventManager::instance()->setEventList(new EventList());
         [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourceMeta();
         $this->authenticateAs('betty');
 
@@ -92,6 +97,12 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->assertObjectHasAttribute('secrets', $resource);
         $this->assertCount(1, $resource->secrets);
         $this->assertSecretAttributes($resource->secrets[0]);
+        // assert event
+        $this->assertEventFiredWith(
+            ResourcesUpdateService::UPDATE_SUCCESS_EVENT_NAME,
+            'isV5',
+            false
+        );
     }
 
     private function insertFixture_UpdateResourceMeta(): array
