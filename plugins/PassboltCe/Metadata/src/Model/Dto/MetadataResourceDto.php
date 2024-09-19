@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Model\Dto;
 
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\Log\Log;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
@@ -162,10 +164,13 @@ class MetadataResourceDto
         // Now that we know that we are in v5, we check that all the v5 metadata fields are set
         // If all v5 fields are not provided, throw an exception.
         if (!empty($v5MissingFields)) {
-            throw new BadRequestException(__(
-                'The following fields are required: {0}.',
-                implode(', ', $v5MissingFields)
-            ));
+            $msg = __('Few fields are missing for the V5.');
+            if (Configure::read('debug')) {
+                Log::error($msg);
+                Log::error(__('Missing fields: {0}', implode(', ', $v5MissingFields)));
+            }
+
+            throw new BadRequestException($msg);
         }
 
         // Now that we know that we have a valid v5 payload, we check that no v4 fields are in the payload
@@ -176,10 +181,13 @@ class MetadataResourceDto
             }
         }
         if (!empty($v4SuperfluousFields)) {
-            throw new BadRequestException(__(
-                'The following fields are not supported in v5: {0}.',
-                implode(', ', $v4SuperfluousFields)
-            ));
+            $msg = __('V4 related fields are not supported for V5.');
+            if (Configure::read('debug')) {
+                Log::error($msg);
+                Log::error(__('Superfluous fields: {0}', implode(', ', $v4SuperfluousFields)));
+            }
+
+            throw new BadRequestException($msg);
         }
     }
 

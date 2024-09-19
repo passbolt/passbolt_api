@@ -23,7 +23,7 @@ use Cake\Log\Log;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 
-class IsMetadataKeyTypeSharedOnSharedResourceRule
+class IsMetadataKeyTypeSharedOnSharedItemRule
 {
     /**
      * Performs the check

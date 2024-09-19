@@ -192,7 +192,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $uac = UserFactory::make()->persistedUAC();
 
         $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('The following fields are not supported in v5: name.');
+        $this->expectExceptionMessage('V4 related fields are not supported for V5');
 
         $this->service->add($uac, new MetadataResourceDto($payload));
     }

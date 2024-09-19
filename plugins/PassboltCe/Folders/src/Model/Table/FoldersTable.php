@@ -26,8 +26,8 @@ use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
-use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedResourceRule;
-use Passbolt\Metadata\Model\Rule\IsValidEncryptedResourceMetadataRule;
+use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
+use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 
 /**
@@ -229,14 +229,14 @@ class FoldersTable extends Table
             'message' => __('The metadata key does not exist.'),
         ]);
 
-        $rules->add(new IsValidEncryptedResourceMetadataRule(), 'isValidEncryptedResourceMetadata', [
+        $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
             'errorField' => 'metadata',
             'message' => __('The resource metadata provided can not be decrypted.'),
         ]);
 
         $rules->addUpdate(
-            new IsMetadataKeyTypeSharedOnSharedResourceRule(),
-            'IsMetadataKeyTypeSharedOnSharedResource',
+            new IsMetadataKeyTypeSharedOnSharedItemRule(),
+            'isMetadataKeyTypeSharedOnSharedItem',
             [
                 'errorField' => 'metadata_key_type',
                 'message' => __('A folder of type personal cannot be shared with other users or a group.'),

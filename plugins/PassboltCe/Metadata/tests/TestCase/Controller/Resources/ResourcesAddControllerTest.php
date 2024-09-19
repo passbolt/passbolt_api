@@ -207,7 +207,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
         $this->postJson('/resources.json', $data);
 
-        $this->assertBadRequestError('The following fields are not supported in v5: name, username, uri, description.');
+        $this->assertBadRequestError('V4 related fields are not supported for V5');
         $this->assertSame(0, ResourceFactory::count());
     }
 

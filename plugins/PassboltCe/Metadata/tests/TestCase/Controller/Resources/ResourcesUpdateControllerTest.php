@@ -156,7 +156,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 
         $this->putJson("/resources/{$resource->get('id')}.json", $data);
 
-        $this->assertBadRequestError('The following fields are not supported in v5: name.');
+        $this->assertBadRequestError('V4 related fields are not supported for V5');
     }
 
     public function testResourcesUpdateController_Success_MetadataDisabledMixV4AndV5FieldsAllowed(): void

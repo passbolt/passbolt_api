@@ -211,7 +211,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
         ];
         $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
-        $this->assertError(400, 'The following fields are not supported in v5: name');
+        $this->assertError(400, 'V4 related fields are not supported for V5');
     }
 
     public function testMetadataFoldersUpdateController_Error_MetadataEncryptedForCorrectKeySharedKey()
@@ -244,7 +244,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
         $response = $this->getResponseBodyAsArray();
         $this->assertCount(2, $response);
         $this->assertTrue(Hash::check($response, 'metadata_key_id.metadata_key_exists'));
-        $this->assertTrue(Hash::check($response, 'metadata.isValidEncryptedResourceMetadata'));
+        $this->assertTrue(Hash::check($response, 'metadata.isValidEncryptedMetadata'));
     }
 
     public function testMetadataFoldersUpdateController_Error_MetadataEncryptedForCorrectKeyUserKey()
@@ -274,7 +274,7 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
         $response = $this->getResponseBodyAsArray();
         $this->assertCount(2, $response);
         $this->assertTrue(Hash::check($response, 'metadata_key_id.metadata_key_exists'));
-        $this->assertTrue(Hash::check($response, 'metadata.isValidEncryptedResourceMetadata'));
+        $this->assertTrue(Hash::check($response, 'metadata.isValidEncryptedMetadata'));
     }
 
     public function testMetadataFoldersUpdateController_Error_InsufficientPermission()

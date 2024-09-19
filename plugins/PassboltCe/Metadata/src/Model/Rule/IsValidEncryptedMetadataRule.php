@@ -27,7 +27,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 
-class IsValidEncryptedResourceMetadataRule
+class IsValidEncryptedMetadataRule
 {
     /**
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
