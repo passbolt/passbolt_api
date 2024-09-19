@@ -38,7 +38,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
         parent::tearDown();
     }
 
-    public function testServerCanDecryptMetadataPrivateKeyHealthcheck_Success(): void
+    public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Success(): void
     {
         MetadataPrivateKeyFactory::make()->withMetadataKey()->withServerPrivateKey()->persist();
 
@@ -52,7 +52,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
         $this->assertSame('canDecryptMetadataPrivateKey', $service->getLegacyArrayKey());
     }
 
-    public function testServerCanDecryptMetadataPrivateKeyHealthcheck_Error_UnableToDecrypt(): void
+    public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Error_UnableToDecrypt(): void
     {
         MetadataPrivateKeyFactory::make(['user_id' => null])->withMetadataKey()->persist();
 
@@ -63,7 +63,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
         $this->assertStringContainsString('Unable to decrypt the metadata private key data', $service->getFailureMessage());
     }
 
-    public function testServerCanDecryptMetadataPrivateKeyHealthcheck_Error_NoPrivateKeys(): void
+    public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Error_NoPrivateKeys(): void
     {
         $service = new ServerCanDecryptMetadataPrivateKeyHealthcheck();
         $service->check();
@@ -72,7 +72,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
         $this->assertStringContainsString('No server metadata private key found', $service->getFailureMessage());
     }
 
-    public function testServerCanDecryptMetadataPrivateKeyHealthcheck_Error_RelatedMetadataKeyIsDeleted(): void
+    public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Error_RelatedMetadataKeyIsDeleted(): void
     {
         MetadataPrivateKeyFactory::make()
             ->with('MetadataKeys', MetadataKeyFactory::make()->deleted()->withServerKey()->withCreatorAndModifier())
