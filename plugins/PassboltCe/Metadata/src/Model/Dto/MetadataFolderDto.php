@@ -112,6 +112,11 @@ class MetadataFolderDto
     private function validate(array $data): void
     {
         if (!$this->isFeaturePluginEnabled(MetadataPlugin::class)) {
+            // Set v5 fields to null since metadata plugin is disabled
+            $this->metadata = null;
+            $this->metadataKeyId = null;
+            $this->metadataKeyType = null;
+
             return;
         }
 

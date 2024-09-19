@@ -26,7 +26,7 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Utility\Hash;
 use Passbolt\Folders\FoldersPlugin;
-use Passbolt\Folders\Service\Folders\FoldersCreateService;
+use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
@@ -35,9 +35,9 @@ use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
- * @covers \Passbolt\Folders\Controller\Folders\FoldersCreateController
+ * @covers \Passbolt\Folders\Controller\Folders\FoldersUpdateController
  */
-class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
+class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
 {
     use GpgMetadataKeysTestTrait;
 
@@ -52,19 +52,22 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         EventManager::instance()->setEventList(new EventList());
     }
 
-    public function testMetadataFoldersCreateController_Success_Personal()
+    public function testMetadataFoldersUpdateController_Success_Personal()
     {
+        $this->disableErrorHandlerMiddleware();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->user()
             ->active()
             ->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing updated']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, [
             'passphrase' => 'ada@passbolt.com',
             'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
         ]);
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$user])->withPermissionsFor([$user])->persist();
         $this->logInAs($user);
 
         $data = [
@@ -72,7 +75,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             'metadata_key_id' => $user->gpgkey->id,
             'metadata_key_type' => 'user_key',
         ];
-        $this->postJson('/folders.json?api-version=2', $data);
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
         $this->assertSuccess();
         // Assert controller response
@@ -81,62 +84,21 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertNotNull($response['metadata']);
         $this->assertSame($user->gpgkey->id, $response['metadata_key_id']);
         $this->assertSame('user_key', $response['metadata_key_type']);
-        $this->assertEquals($user->id, $response['created_by']);
         $this->assertEquals($user->id, $response['modified_by']);
         // Assert folder data is saved in database
         $folders = FolderFactory::count();
         $this->assertSame(1, $folders);
         $this->assertSame(1, PermissionFactory::count());
+        $this->assertSame(1, FoldersRelationFactory::count());
         // Assert event data
         $this->assertEventFiredWith(
-            FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT,
+            FoldersUpdateService::FOLDERS_UPDATE_FOLDER_EVENT,
             'isV5',
             true
         );
     }
 
-    public function testMetadataFoldersCreateController_Success_PersonalChildFolder()
-    {
-        /** @var \App\Model\Entity\User $user */
-        $user = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
-            ->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
-        /** @var \Passbolt\Folders\Model\Entity\Folder $parentFolder */
-        $parentFolder = FolderFactory::make()->withPermissionsFor([$user])->persist();
-        $this->logInAs($user);
-
-        $data = [
-            'metadata' => $metadata,
-            'metadata_key_id' => $user->gpgkey->id,
-            'metadata_key_type' => 'user_key',
-            'folder_parent_id' => $parentFolder->id,
-        ];
-        $this->postJson('/folders.json?api-version=2', $data);
-
-        $this->assertSuccess();
-        // Assert controller response
-        $response = $this->getResponseBodyAsArray();
-        $this->assertArrayNotHasKey('name', $response);
-        $this->assertSame($parentFolder->id, $response['folder_parent_id']);
-        $this->assertNotNull($response['metadata']);
-        $this->assertSame($user->gpgkey->id, $response['metadata_key_id']);
-        $this->assertSame('user_key', $response['metadata_key_type']);
-        $this->assertEquals($user->id, $response['created_by']);
-        $this->assertEquals($user->id, $response['modified_by']);
-        // Assert folder data is saved in database
-        $this->assertSame(2, FolderFactory::count());
-        $this->assertSame(2, PermissionFactory::count());
-        $this->assertSame(1, FoldersRelationFactory::count());
-    }
-
-    public function testMetadataFoldersCreateController_Success_Shared()
+    public function testMetadataFoldersUpdateController_Success_Shared()
     {
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
@@ -150,24 +112,20 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->user()
             ->active()
             ->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'updated']);
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
-        /** @var \Passbolt\Folders\Model\Entity\Folder $parentFolder */
-        $parentFolder = FolderFactory::make()
-            ->withPermissionsFor([$ada, $betty])
-            ->withFoldersRelationsFor([$ada, $betty])
-            ->persist();
         // create metadata key
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada, $betty])->withPermissionsFor([$ada, $betty])->persist();
         $this->logInAs($betty);
 
         $data = [
             'metadata' => $metadata,
             'metadata_key_id' => $metadataKey->id,
             'metadata_key_type' => 'shared_key',
-            'folder_parent_id' => $parentFolder->id,
         ];
-        $this->postJson('/folders.json?api-version=2', $data);
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
         $this->assertSuccess();
         // Assert controller response
@@ -176,16 +134,15 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertNotNull($response['metadata']);
         $this->assertSame($metadataKey->id, $response['metadata_key_id']);
         $this->assertSame('shared_key', $response['metadata_key_type']);
-        $this->assertEquals($betty->id, $response['created_by']);
         $this->assertEquals($betty->id, $response['modified_by']);
         // Assert folder data is saved in database
-        $this->assertSame(2, FolderFactory::count());
-        $this->assertSame(3, PermissionFactory::count()); // 2 of parent folder, 1 child folder(just created)
-        $this->assertSame(3, FoldersRelationFactory::count());
+        $this->assertSame(1, FolderFactory::count());
+        $this->assertSame(2, PermissionFactory::count());
+        $this->assertSame(2, FoldersRelationFactory::count());
     }
 
     /**
-     * Data provider for testMetadataFoldersCreateController_Error_Validations()
+     * Data provider for testMetadataFoldersUpdateController_Error_Validations()
      *
      * @return array[]
      */
@@ -215,11 +172,13 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
      * @dataProvider invalidFolderDataProvider
      * @return void
      */
-    public function testMetadataFoldersCreateController_Error_Validations(array $data, array $expectedErrorPaths)
+    public function testMetadataFoldersUpdateController_Error_Validations(array $data, array $expectedErrorPaths)
     {
-        $this->logInAsAdmin();
+        $user = $this->logInAsAdmin();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$user])->withPermissionsFor([$user])->persist();
 
-        $this->postJson('/folders.json?api-version=2', $data);
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
         $this->assertError(400, 'Could not validate folder data');
         $response = $this->getResponseBodyAsArray();
@@ -228,7 +187,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         }
     }
 
-    public function testMetadataFoldersCreateController_Error_V5AndV4BothFieldsAreSent()
+    public function testMetadataFoldersUpdateController_Error_V5AndV4BothFieldsAreSent()
     {
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
@@ -236,10 +195,12 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->user()
             ->active()
             ->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing updated']);
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         // create metadata key
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
         $this->logInAs($ada);
 
         $data = [
@@ -247,14 +208,13 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             'metadata' => $metadata,
             'metadata_key_id' => $metadataKey->id,
             'metadata_key_type' => 'shared_key',
-            'folder_parent_id' => UuidFactory::uuid(),
         ];
-        $this->postJson('/folders.json?api-version=2', $data);
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
         $this->assertError(400, 'The following fields are not supported in v5: name');
     }
 
-    public function testMetadataFoldersCreateController_Error_MetadataEncryptedForCorrectKeySharedKey()
+    public function testMetadataFoldersUpdateController_Error_MetadataEncryptedForCorrectKeySharedKey()
     {
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
@@ -269,6 +229,8 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         ]);
         // create metadata key
         MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
         $this->logInAs($ada);
 
         $data = [
@@ -276,7 +238,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             'metadata_key_id' => $ada->gpgkey->id, // should be metadata key or type should be user_key
             'metadata_key_type' => 'shared_key',
         ];
-        $this->postJson('/folders.json?api-version=2', $data);
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
         $this->assertError(400, 'Could not validate folder data');
         $response = $this->getResponseBodyAsArray();
@@ -285,7 +247,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertTrue(Hash::check($response, 'metadata.isValidEncryptedResourceMetadata'));
     }
 
-    public function testMetadataFoldersCreateController_Error_MetadataEncryptedForCorrectKeyUserKey()
+    public function testMetadataFoldersUpdateController_Error_MetadataEncryptedForCorrectKeyUserKey()
     {
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
@@ -297,6 +259,8 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         // create metadata key
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
         $this->logInAs($ada);
 
         $data = [
@@ -304,7 +268,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             'metadata_key_id' => $metadataKey->id, // should be user gpg key or type should be shared_key
             'metadata_key_type' => 'user_key',
         ];
-        $this->postJson('/folders.json?api-version=2', $data);
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
         $this->assertError(400, 'Could not validate folder data');
         $response = $this->getResponseBodyAsArray();
@@ -313,35 +277,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertTrue(Hash::check($response, 'metadata.isValidEncryptedResourceMetadata'));
     }
 
-    public function testMetadataFoldersCreateController_Error_ParentFolderDoesNotExist()
-    {
-        /** @var \App\Model\Entity\User $ada */
-        $ada = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
-            ->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
-        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
-        // create metadata key
-        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
-        $this->logInAs($ada);
-
-        $data = [
-            'metadata' => $metadata,
-            'metadata_key_id' => $metadataKey->id,
-            'metadata_key_type' => 'shared_key',
-            'folder_parent_id' => UuidFactory::uuid(),
-        ];
-        $this->postJson('/folders.json?api-version=2', $data);
-
-        $this->assertError(400, 'Could not validate folder data');
-        $response = $this->getResponseBodyAsArray();
-        $error = Hash::get($response, 'folder_parent_id');
-        $this->assertEquals('The folder parent must exist.', $error['folder_exists']);
-    }
-
-    public function testMetadataFoldersCreateController_Error_ParentFolderInsufficientPermission()
+    public function testMetadataFoldersUpdateController_Error_InsufficientPermission()
     {
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
@@ -355,32 +291,25 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->user()
             ->active()
             ->persist();
-        /** @var \Passbolt\Folders\Model\Entity\Folder $parentFolder */
-        $parentFolder = FolderFactory::make()
-            ->withPermissionsFor([$ada])
-            ->withFoldersRelationsFor([$ada])
-            ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         // create metadata key
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
         $this->logInAs($betty);
 
         $data = [
             'metadata' => $metadata,
             'metadata_key_id' => $metadataKey->id,
             'metadata_key_type' => 'shared_key',
-            'folder_parent_id' => $parentFolder->id,
         ];
-        $this->postJson('/folders.json?api-version=2', $data);
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
-        $this->assertError(400, 'Could not validate folder data');
-        $response = $this->getResponseBodyAsArray();
-        $error = Hash::get($response, 'folder_parent_id');
-        $this->assertEquals('You are not allowed to create content into the parent folder.', $error['has_folder_access']);
+        $this->assertNotFoundError('The folder does not exist');
     }
 
-    public function testMetadataFoldersCreateController_Success_MetadataPluginDisabled()
+    public function testMetadataFoldersUpdateController_Success_MetadataPluginDisabled()
     {
         Configure::write('passbolt.v5.enabled', false);
         $this->disableFeaturePlugin(MetadataPlugin::class);
@@ -394,15 +323,17 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         // create metadata key
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
         $this->logInAs($ada);
 
         $data = [
-            'name' => 'marketing',
+            'name' => 'sales',
             'metadata' => $metadata,
             'metadata_key_id' => $metadataKey->id,
             'metadata_key_type' => 'shared_key',
         ];
-        $this->postJson('/folders.json?api-version=2', $data);
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
 
         $this->assertSuccess();
         $folders = FolderFactory::find()->toArray();
@@ -410,11 +341,11 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertSame(1, FoldersRelationFactory::count());
         $this->assertSame(1, PermissionFactory::count());
         // assert db values
-        $this->assertSame('marketing', $folders[0]['name']);
+        $this->assertSame('sales', $folders[0]['name']);
         $this->assertNull($folders[0]['metadata']);
         $this->assertNull($folders[0]['metadata_key_id']);
         $this->assertNull($folders[0]['metadata_key_type']);
-        $this->assertSame($ada->get('id'), $folders[0]['created_by']);
+        $this->assertSame($folder->get('created_by'), $folders[0]['created_by']);
         $this->assertSame($ada->get('id'), $folders[0]['modified_by']);
     }
 }

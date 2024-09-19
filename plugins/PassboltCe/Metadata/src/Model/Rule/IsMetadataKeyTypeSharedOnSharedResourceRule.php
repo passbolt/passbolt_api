@@ -17,10 +17,10 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Model\Rule;
 
-use App\Model\Entity\Resource;
 use App\Model\Table\PermissionsTable;
 use Cake\Core\Configure;
 use Cake\Log\Log;
+use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 
 class IsMetadataKeyTypeSharedOnSharedResourceRule
@@ -28,17 +28,17 @@ class IsMetadataKeyTypeSharedOnSharedResourceRule
     /**
      * Performs the check
      *
-     * Checks that if the `metadata_key_type` is 'user_key', the resource is not shared with
+     * Checks that if the `metadata_key_type` is 'user_key', the entity is not shared with
      * other users, or a group
      *
-     * @param \App\Model\Entity\Resource $resource The entity to check
+     * @param \Cake\ORM\Entity $entity The entity to check
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(Resource $resource, array $options): bool
+    public function __invoke(Entity $entity, array $options): bool
     {
         // If the resource's metadata key type is not personal, the present rule does not apply
-        $isPersonal = $resource->metadata_key_type === 'user_key';
+        $isPersonal = $entity->get('metadata_key_type') === 'user_key';
         if (!$isPersonal) {
             return true;
         }
@@ -47,8 +47,9 @@ class IsMetadataKeyTypeSharedOnSharedResourceRule
         $PermissionsTable = TableRegistry::getTableLocator()->get('Permissions');
 
         $permissions = $PermissionsTable->find()
-            ->where(['aco_foreign_key' => $resource->get('id')])
-            ->limit(2)->all();
+            ->where(['aco_foreign_key' => $entity->get('id')])
+            ->limit(2)
+            ->all();
 
         // If the resource has more than one permission, the metadata key type should not be "user_key"
         if ($permissions->count() > 1) {
@@ -59,7 +60,7 @@ class IsMetadataKeyTypeSharedOnSharedResourceRule
         $permission = $permissions->first();
         if (is_null($permission)) {
             if (Configure::read('debug')) {
-                Log::error(__('No permission found for resource: {0}', $resource->get('id')));
+                Log::error(__('No permission found for the entity: {0}', $entity->get('id')));
             }
 
             return false;

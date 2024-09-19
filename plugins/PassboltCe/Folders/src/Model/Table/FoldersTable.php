@@ -239,7 +239,7 @@ class FoldersTable extends Table
             'IsMetadataKeyTypeSharedOnSharedResource',
             [
                 'errorField' => 'metadata_key_type',
-                'message' => __('A resource of type personal cannot be shared with other users or a group.'),
+                'message' => __('A folder of type personal cannot be shared with other users or a group.'),
             ]
         );
 
