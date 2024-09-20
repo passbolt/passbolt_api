@@ -18,7 +18,8 @@ namespace Passbolt\Metadata\Service;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\User;
-use App\Service\OpenPGP\PublicKeyValidationService;
+use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
+use App\Service\OpenPGP\OpenPGPCommonUserOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
@@ -33,6 +34,8 @@ use Passbolt\Metadata\Form\MetadataCleartextPrivateKeyForm;
 class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
 {
     use LocatorAwareTrait;
+    use OpenPGPCommonServerOperationsTrait;
+    use OpenPGPCommonUserOperationsTrait;
 
     /**
      * @inheritDoc
@@ -58,10 +61,14 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
 
         // Decrypt, verify, validate, re-encrypt and sign for user
         try {
-            $openpgp = $this->getOpenPGPBackendForDecryptVerify($serverMetadataPrivateKey->modified_by);
+            $openpgp = OpenPGPBackendFactory::get();
+            $openpgp = $this->setDecryptKeyWithServerKey($openpgp);
+            $openpgp = $this->setKeyForVerify($openpgp, $serverMetadataPrivateKey->modified_by);
             $clearText = $openpgp->decrypt($serverMetadataPrivateKey->data, true);
             $this->assertPrivateKey($clearText);
-            $openpgp = $this->getOpenPGPBackendForEncrypt($user);
+            $openpgp->clearKeys();
+            $openpgp = $this->setSignKeyWithServerKey($openpgp);
+            $openpgp = $this->setEncryptKeyWithUserKey($openpgp, $user->gpgkey);
             $secret = $openpgp->encrypt($clearText, true);
         } catch (\Exception $exception) {
             $msg = $exception->getMessage() . ' ';
@@ -72,15 +79,16 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
         // Build and validate private key entity for the user
         try {
             $userMetadataPrivateKey = $metadataPrivateKeysTable->newEntity([
-                'metadata_key_id' => $serverMetadataPrivateKey->metadata_key_id,
-                'user_id' => $user->id,
-                'data' => $secret,
-            ], [
-                'accessibleFields' => [
-                    'metadata_key_id' => true,
-                    'user_id' => true,
-                    'data' => true,
-                ]]);
+                    'metadata_key_id' => $serverMetadataPrivateKey->metadata_key_id,
+                    'user_id' => $user->id,
+                    'data' => $secret,
+                ], [
+                    'accessibleFields' => [
+                        'metadata_key_id' => true,
+                        'user_id' => true,
+                        'data' => true,
+                    ],
+            ]);
             if (!empty($userMetadataPrivateKey->getErrors())) {
                 if (Configure::read('debug')) {
                     Log::error(json_encode($userMetadataPrivateKey->getErrors()));
@@ -162,50 +170,24 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
     /**
      * Get the OpenPGP Backend ready to decrypt with server key
      *
+     * @param \App\Utility\OpenPGP\OpenPGPBackend $gpg for example OpenPGPBackendFactory::get()
      * @param string|null $createdBy uuid of user
-     * @throws \Cake\Http\Exception\InternalErrorException if the server key cannot be loaded
      * @return \App\Utility\OpenPGP\OpenPGPBackend backend configured to use server keys
+     * @throws \Cake\Http\Exception\InternalErrorException if the server key cannot be loaded
      */
-    private function getOpenPGPBackendForDecryptVerify(?string $createdBy = null): OpenPGPBackend
+    private function setKeyForVerify(OpenPGPBackend $gpg, ?string $createdBy = null): OpenPGPBackend
     {
-        $gpg = OpenPGPBackendFactory::get();
-
-        // Check if config contains fingerprint
-        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        $this->assertServerFingerprint($fingerprint);
-
-        // Check if config contains valid passphrase
-        $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
-        $this->assertServerPassphrase($passphrase);
-
-        // set the key to be used for decrypting
-        try {
-            $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
-            try {
-                $gpg->importServerKeyInKeyring();
-                $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
-                $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
-                $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
-
-        // set the key used for verify
-        // server key if no user is defined
+        // Use server key if no user is defined in createdBy
         if ($createdBy === null) {
-            $gpg->setVerifyKeyFromFingerprint($fingerprint);
-
-            return $gpg;
+            return $this->setVerifyKeyWithServerKey($gpg);
         }
 
-        // User key if modified by a user
-        $userKeys = TableRegistry::getTableLocator()->get('Gpgkeys');
+        // User key if createdBy is a user
         try {
-            /** @var \App\Model\Entity\Gpgkey $key */
-            $key = $userKeys->find()
-                ->where(['user_id' => $createdBy])
+            $usersTable = TableRegistry::getTableLocator()->get('Gpgkeys');
+            /** @var \App\Model\Entity\Gpgkey $userKey */
+            $userKey = $usersTable->find()
+                ->where(['user_id' => $createdBy, 'deleted' => false])
                 ->order(['created' => 'DESC'])
                 ->firstOrFail();
         } catch (\Exception $exception) {
@@ -213,132 +195,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
             $msg .= $exception->getMessage();
             throw new InternalErrorException($msg, 500, $exception);
         }
-        try {
-            $gpg->setVerifyKeyFromFingerprint($key->fingerprint);
-        } catch (\Exception $exception) {
-            try {
-                $gpg->importKeyIntoKeyring($key->armored_key);
-                $gpg->setVerifyKeyFromFingerprint($key->fingerprint);
-            } catch (\Exception $exception) {
-                $msg = __('Could not import the user OpenPGP key.') . ' ';
-                $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
 
-        return $gpg;
-    }
-
-    /**
-     * Get the OpenPGP Backend ready to encryption with user key
-     *
-     * @param \App\Model\Entity\User $user entity
-     * @return \App\Utility\OpenPGP\OpenPGPBackend backend configured to use server keys
-     * @throws \Cake\Http\Exception\InternalErrorException if the server key cannot be loaded
-     */
-    private function getOpenPGPBackendForEncrypt(User $user): OpenPGPBackend
-    {
-        $gpg = OpenPGPBackendFactory::get();
-        $gpg->clearKeys();
-
-        // Check if config contains fingerprint
-        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        $this->assertServerFingerprint($fingerprint);
-
-        // Check if config contains valid passphrase
-        $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
-        $this->assertServerPassphrase($passphrase);
-
-        // Set sign key as the one from the server
-        try {
-            $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
-            try {
-                $gpg->importServerKeyInKeyring();
-                $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
-                $msg = __('The OpenPGP server key defined in the config cannot be used to sign.') . ' ';
-                $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
-
-        // Set encryption key as the one from the user
-        try {
-            $this->assertUserKey($user);
-        } catch (\Exception $exception) {
-            if (Configure::read('debug')) {
-                Log::error(json_encode($user));
-            }
-            $msg = __('Could not validate user data.');
-            throw new InternalErrorException($msg, 500, $exception);
-        }
-        try {
-            $gpg->setEncryptKeyFromFingerprint($user->gpgkey->fingerprint);
-        } catch (\Exception $exception) {
-            // Try to import the key in keyring again
-            try {
-                $gpg->importKeyIntoKeyring($user->gpgkey->armored_key);
-                $gpg->setEncryptKeyFromFingerprint($user->gpgkey->fingerprint);
-            } catch (\Exception $exception) {
-                if (Configure::read('debug')) {
-                    Log::error(json_encode($user));
-                }
-                $msg = __('Could not import the user OpenPGP key.');
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
-
-        return $gpg;
-    }
-
-    /**
-     * @param mixed $fingerprint fingerprint
-     * @throws \Cake\Http\Exception\InternalErrorException
-     * @return void
-     */
-    private function assertServerFingerprint($fingerprint): void
-    {
-        if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
-            $msg = __('The config for the server private key fingerprint is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-    }
-
-    /**
-     * @param mixed $passphrase passphrase
-     * @throws \Cake\Http\Exception\InternalErrorException
-     * @return void
-     */
-    private function assertServerPassphrase($passphrase): void
-    {
-        if (!is_string($passphrase)) {
-            $msg = __('The config for the server private key passphrase is invalid.');
-            throw new InternalErrorException($msg);
-        }
-    }
-
-    /**
-     * @param \App\Model\Entity\User $user object as sent from event
-     * @return void
-     */
-    private function assertUserKey(User $user): void
-    {
-        if (!isset($user->gpgkey) || !isset($user->gpgkey->armored_key) || !isset($user->gpgkey->fingerprint)) {
-            $msg = __('The user public key is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-
-        $fingerprint = $user->gpgkey->fingerprint;
-        if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
-            $msg = __('The user public key fingerprint is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
-
-        $armoredKey = $user->gpgkey->armored_key;
-        if (!is_string($armoredKey) || !PublicKeyValidationService::parseAndValidatePublicKey($armoredKey)) {
-            $msg = __('The user armored key is not available or incomplete.');
-            throw new InternalErrorException($msg);
-        }
+        return $this->setVerifyKeyWithUserKey($gpg, $userKey);
     }
 }

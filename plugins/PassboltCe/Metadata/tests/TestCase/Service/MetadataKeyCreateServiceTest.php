@@ -320,7 +320,6 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             $errors = $e->getErrors();
 
             $this->assertTrue(Hash::check($errors, 'metadata_private_keys.{n}.user_id._isUnique'));
-            $this->assertTrue(Hash::check($errors, 'metadata_private_keys.{n}.metadata_key_id._isUnique'));
         }
     }
 }

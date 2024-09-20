@@ -181,7 +181,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
      * @return void
      * @uses \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable::buildRules()
      */
-    public function testMetadataPrivateKeysTable_BuildRules_UserIdExistsInRule(): void
+    public function testMetadataPrivateKeysTable_BuildRules_UserIdExist(): void
     {
         $dummyData = $this->getDummyMetadataPrivateKeysData();
 
@@ -194,8 +194,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
 
         $this->assertFalse($result);
         $this->assertNotEmpty($entity->getErrors());
-        $this->assertCount(2, $entity->getErrors()['user_id']);
-        $this->assertArrayHasKey('_existsIn', $entity->getErrors()['user_id']);
+        $this->assertArrayHasKey('isUserActiveIfPresent', $entity->getErrors()['user_id']);
     }
 
     /**
@@ -232,13 +231,13 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
      */
     public function testMetadataPrivateKeysTable_BuildRules_DuplicateServerKey(): void
     {
-        MetadataPrivateKeyFactory::make()->serverKey()->withMetadataKey()->persist();
-        $dummyData = $this->getDummyMetadataPrivateKeysData();
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $key */
+        $key = MetadataPrivateKeyFactory::make()->serverKey()->withMetadataKey()->persist();
 
         $entity = $this->buildEntity([
-            'metadata_key_id' => $dummyData['metadata_key_id'],
+            'metadata_key_id' => $key->metadata_key_id,
             'user_id' => null,
-            'data' => $dummyData['data'],
+            'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
         ]);
         $result = $this->MetadataPrivateKeys->save($entity);
 

@@ -22,6 +22,7 @@ use Cake\Core\BasePlugin;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
+use Passbolt\Metadata\Command\GenerateDummyMetadataKeyCommand;
 use Passbolt\Metadata\Command\MigrateResourcesCommand;
 use Passbolt\Metadata\Event\MetadataResourceIndexListener;
 use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
@@ -72,6 +73,7 @@ class MetadataPlugin extends BasePlugin
     {
         // Alias commands
         $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
+        $commands->add('passbolt metadata generate_dummy_metadata_key', GenerateDummyMetadataKeyCommand::class);
 
         return $commands;
     }

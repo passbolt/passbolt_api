@@ -19,16 +19,17 @@ namespace Passbolt\Metadata\Service\Healthcheck;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 
 class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServiceInterface
 {
     use LocatorAwareTrait;
+    use OpenPGPCommonServerOperationsTrait;
 
     /**
      * Status of this health check if it is passed or failed.
@@ -52,6 +53,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
             /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $serverMetadataPrivateKey */
             $serverMetadataPrivateKey = $metadataPrivateKeysTable
                 ->find()
+                ->contain('MetadataKeys')
                 ->innerJoinWith('MetadataKeys', function (Query $q) {
                     $expr = $q->newExpr()->isNull('MetadataKeys.deleted');
 
@@ -72,7 +74,16 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
 
         // Try to decrypt it
         try {
-            $this->decrypt($serverMetadataPrivateKey->data);
+            $openpgp = OpenPGPBackendFactory::get();
+            $openpgp->clearKeys();
+            $openpgp = $this->setDecryptKeyWithServerKey($openpgp);
+            if ($serverMetadataPrivateKey->metadata_key->modified_by === null) {
+                $this->setVerifyKeyWithServerKey($openpgp);
+                $openpgp->decrypt($serverMetadataPrivateKey->data, true);
+            } else {
+                // TODO verify with user key
+                $openpgp->decrypt($serverMetadataPrivateKey->data, false);
+            }
 
             // mark as succeed if able to decrypt
             $this->status = true;
@@ -153,34 +164,5 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
     public function getLegacyArrayKey(): string
     {
         return 'canDecryptMetadataPrivateKey';
-    }
-
-    /**
-     * @param string $data Message to decrypt.
-     * @return void
-     * @throws \Cake\Http\Exception\InternalErrorException When unable to decrypt metadata private key data.
-     */
-    private function decrypt(string $data): void
-    {
-        $gpg = OpenPGPBackendFactory::get();
-        $fingerprint = Configure::read('passbolt.gpg.serverKey.fingerprint');
-        $passphrase = Configure::read('passbolt.gpg.serverKey.passphrase');
-
-        try {
-            $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-            $gpg->setVerifyKeyFromFingerprint($fingerprint);
-        } catch (\Exception $exception) {
-            try {
-                $gpg->importServerKeyInKeyring();
-                $gpg->setVerifyKeyFromFingerprint($fingerprint);
-                $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
-                $msg = __('Unable to decrypt the metadata private key.') . ' ';
-                $msg .= $exception->getMessage();
-                throw new InternalErrorException($msg, 500, $exception);
-            }
-        }
-
-        $gpg->decrypt($data, true);
     }
 }

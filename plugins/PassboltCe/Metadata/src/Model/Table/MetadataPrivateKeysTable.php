@@ -21,6 +21,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataPrivateKey;
+use Passbolt\Metadata\Model\Rule\UserAndMetadataKeyIdIsUniqueNullableCombo;
 use Passbolt\Metadata\Model\Rule\UserIsActiveAndNotDeletedIfPresent;
 
 /**
@@ -130,18 +131,15 @@ class MetadataPrivateKeysTable extends Table
     {
         $rules->add($rules->existsIn('metadata_key_id', 'MetadataKeys'), ['errorField' => 'metadata_key_id']);
 
-        $rules->add($rules->isUnique(['user_id']), null, ['message' => __('The user id is already in use.')]);
-        $rules->add($rules->existsIn('user_id', 'Users'), ['errorField' => 'user_id']);
         $rules->addCreate(new UserIsActiveAndNotDeletedIfPresent(), 'isUserActiveIfPresent', [
             'errorField' => 'user_id',
             'message' => __('The user does not exist or is not active or is deleted.'),
         ]);
 
-        $rules->add(
-            $rules->isUnique(['metadata_key_id', 'user_id']),
-            null,
-            ['message' => __('The metadata key id & user id combination is already in use.')]
-        );
+        $rules->addCreate(new UserAndMetadataKeyIdIsUniqueNullableCombo(), '_isUnique', [
+            'errorField' => 'user_id',
+            'message' => __('The metadata key id & user id combination is already in use.'),
+        ]);
 
         $rules->add(new IsValidEncryptedMetadataPrivateKey(), 'isValidEncryptedMetadataPrivateKey', [
             'errorField' => 'data',
