@@ -29,9 +29,9 @@ class GenerateDummyMetadataKeyCommand extends PassboltCommand
      */
     public static function getCommandDescription(): string
     {
-        return 'Generate a metadata private/public key pair.'
-            . 'Share it with server and users keys.'
-            . 'For testing purpose ONLY.'
+        return 'Generate a metadata private/public key pair. '
+            . 'Share it with server and users keys. '
+            . 'For testing purpose ONLY. '
             . 'Requires both DEBUG and PASSBOLT_SELENIUM_ACTIVE flags.';
     }
 
@@ -48,8 +48,12 @@ class GenerateDummyMetadataKeyCommand extends PassboltCommand
             return $this->errorCode();
         }
 
+        $verbose = false;
+        if ($args->getOption('verbose')) {
+            $verbose = true;
+        }
         try {
-            $key = (new GenerateDummyMetadataKeyService())->generate();
+            $key = (new GenerateDummyMetadataKeyService())->generate($verbose);
             $io->out('New key generated and encrypted for users: ' . $key->fingerprint);
         } catch (\Exception $e) {
             $io->err($e->getMessage());

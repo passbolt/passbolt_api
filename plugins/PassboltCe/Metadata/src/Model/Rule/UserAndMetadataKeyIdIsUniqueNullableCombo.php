@@ -36,22 +36,17 @@ class UserAndMetadataKeyIdIsUniqueNullableCombo
             return false;
         }
         if ($userId === null) {
-            $unique = $metadataPrivateKeys->find()
-                ->where([
-                    'metadata_key_id' => $metadataKeyId,
-                    'user_id IS' => null,
-                ])
-                ->all()
-                ->count() > 0;
+            $where = [
+                'metadata_key_id' => $metadataKeyId,
+                'user_id IS' => null,
+            ];
         } else {
-            $unique = $metadataPrivateKeys->find()
-                ->where([
-                    'metadata_key_id' => $metadataKeyId,
-                    'user_id' => $userId,
-                ])
-                ->all()
-                ->count() > 0;
+            $where = [
+                'metadata_key_id' => $metadataKeyId,
+                'user_id' => $userId,
+            ];
         }
+        $unique = $metadataPrivateKeys->find()->where($where)->all()->count() > 0;
 
         return !$unique;
     }

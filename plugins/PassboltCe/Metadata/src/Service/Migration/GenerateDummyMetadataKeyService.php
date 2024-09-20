@@ -49,12 +49,13 @@ class GenerateDummyMetadataKeyService extends MetadataKeyShareDefaultService
     }
 
     /**
+     * @param bool $verbose default false
      * @return \Passbolt\Metadata\Model\Entity\MetadataKey
      * @throws \Exception if process fails
      */
-    public function generate(): MetadataKey
+    public function generate(bool $verbose = false): MetadataKey
     {
-        $key = (new GenerateOpenPGPKeyService())->generateMetadataKey();
+        $key = (new GenerateOpenPGPKeyService())->generateMetadataKey($verbose);
 
         $data = [
             'armored_key' => $key['public_key'],

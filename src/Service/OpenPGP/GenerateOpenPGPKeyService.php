@@ -32,22 +32,22 @@ class GenerateOpenPGPKeyService
 
     /**
      * Constructor - prevent use in production
-     *
-     * @param bool $debug default false
      */
-    public function __construct(bool $debug = false)
+    public function __construct()
     {
         if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
             throw new ForbiddenException();
         }
-        $this->debug = $debug;
+        $this->assertKeyringAvailable();
     }
 
     /**
+     * @param bool $verbose default false
      * @return array
      */
-    public function generateMetadataKey(): array
+    public function generateMetadataKey(bool $verbose = false): array
     {
+        $this->debug = $verbose;
         $keyname = $this->genMainKey();
         $fingerprint = $this->getFingerprintFromName($keyname);
         $this->addSubKey($fingerprint);
@@ -211,6 +211,21 @@ class GenerateOpenPGPKeyService
                 throw new InternalErrorException('Fingerprint not found');
             default:
                 throw new InternalErrorException('Too many fingerprints found.');
+        }
+    }
+
+    /**
+     * @return void
+     */
+    private function assertKeyringAvailable(): void
+    {
+        $directory = Configure::read('passbolt.gpg.keyring') ?? false;
+        if ($directory === false || !is_string($directory)) {
+            throw new InternalErrorException(__('The keyring is not defined.'));
+        }
+        if (!is_dir($directory) || !is_readable($directory)) {
+            $msg = __('The keyring directory is not accessible by the current user: {0}', $directory);
+            throw new InternalErrorException($msg);
         }
     }
 }

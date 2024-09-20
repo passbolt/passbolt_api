@@ -53,6 +53,8 @@ class MetadataKeyCreateService
     /**
      * @param array $data user provided data
      * @return \Passbolt\Metadata\Model\Entity\MetadataKey
+     * @throws \App\Error\Exception\CustomValidationException if metadata key data cannot be validated.
+     * @throws \Cake\Http\Exception\InternalErrorException if metadata key cannot be saved due to internal issues.
      */
     public function buildAndSaveEntity(array $data): MetadataKey
     {
