@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Folders\Test\Factory;
 
+use App\Model\Entity\Permission;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
@@ -77,7 +78,12 @@ class FolderFactory extends CakephpBaseFactory
     {
         foreach ($aros as $aro) {
             $aroType = $aro instanceof User ? PermissionsTable::USER_ARO : PermissionsTable::GROUP_ARO;
-            $permissionsMeta = ['aco' => PermissionsTable::FOLDER_ACO, 'aro' => $aroType, 'aro_foreign_key' => $aro->id];
+            $permissionsMeta = [
+                'aco' => PermissionsTable::FOLDER_ACO,
+                'aro' => $aroType,
+                'aro_foreign_key' => $aro->id,
+                'type' => Permission::OWNER,
+            ];
             $this->with('Permissions', $permissionsMeta);
         }
 

@@ -92,6 +92,22 @@ class MetadataFolderDto
     }
 
     /**
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException If folder's metadata key type is not shared_key
+     */
+    public function assertShareable(): void
+    {
+        if (!$this->isFeaturePluginEnabled(MetadataPlugin::class)) {
+            // no check if metadata plugin is not enabled
+            return;
+        }
+
+        if ($this->metadataKeyType === 'user_key') {
+            throw new BadRequestException(__('Folder can not be shared'));
+        }
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array
