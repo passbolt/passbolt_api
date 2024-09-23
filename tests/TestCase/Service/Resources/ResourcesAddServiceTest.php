@@ -31,6 +31,7 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -110,7 +111,7 @@ class ResourcesAddServiceTest extends TestCase
     public function testResourceAddServiceSuccess(array $data)
     {
         $uac = UserFactory::make()->persistedUAC();
-        $resource = $this->service->add($uac, $data);
+        $resource = $this->service->add($uac, new MetadataResourceDto($data));
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
@@ -125,7 +126,7 @@ class ResourcesAddServiceTest extends TestCase
         $uac = UserFactory::make()->nonPersistedUAC();
         $this->expectException(ValidationException::class);
         // This UAC is not persisted
-        $this->service->add($uac, []);
+        $this->service->add($uac, new MetadataResourceDto());
     }
 
     public function testResourceAddServiceInvalidResourceType()
@@ -135,7 +136,7 @@ class ResourcesAddServiceTest extends TestCase
         $uac = UserFactory::make()->persistedUAC();
 
         $this->expectException(ValidationException::class);
-        $this->service->add($uac, $data);
+        $this->service->add($uac, new MetadataResourceDto($data));
     }
 
     public function testResourceAddServiceTooManySecrets()
@@ -148,7 +149,7 @@ class ResourcesAddServiceTest extends TestCase
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Could not validate resource data.');
-        $this->service->add($uac, $data);
+        $this->service->add($uac, new MetadataResourceDto($data));
     }
 
     public function testResourceAddService_Secret_Is_A_String()
@@ -158,7 +159,7 @@ class ResourcesAddServiceTest extends TestCase
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Could not validate resource data.');
-        $this->service->add($uac, $data);
+        $this->service->add($uac, new MetadataResourceDto($data));
     }
 
     public function testResourceAddServiceSoftDeletedUser()
@@ -167,7 +168,7 @@ class ResourcesAddServiceTest extends TestCase
         $uac = UserFactory::make()->user()->deleted()->persistedUAC();
 
         $this->expectException(ValidationException::class);
-        $resource = $this->service->add($uac, $data);
+        $resource = $this->service->add($uac, new MetadataResourceDto($data));
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
@@ -185,7 +186,7 @@ class ResourcesAddServiceTest extends TestCase
 
         $uac = UserFactory::make()->user()->persistedUAC();
 
-        $resource = $this->service->add($uac, $data);
+        $resource = $this->service->add($uac, new MetadataResourceDto($data));
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
@@ -202,6 +203,6 @@ class ResourcesAddServiceTest extends TestCase
         $uac = UserFactory::make()->persistedUAC();
         $this->expectExceptionMessage('Could not validate resource data.');
         $this->expectException(ValidationException::class);
-        $this->service->add($uac, [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'foo']);
+        $this->service->add($uac, new MetadataResourceDto([PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'foo']));
     }
 }

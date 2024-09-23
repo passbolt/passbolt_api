@@ -22,6 +22,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
 trait ResourcesModelTrait
 {
@@ -164,6 +165,15 @@ trait ResourcesModelTrait
     protected function assertResourceAttributes($resource)
     {
         $attributes = ['id', 'name', 'username', 'uri', 'description', 'deleted', 'created', 'modified', 'created_by', 'modified_by'];
+        $this->assertObjectHasAttributes($attributes, $resource);
+    }
+
+    protected function assertResourceV5Attributes($resource)
+    {
+        $attributes = array_merge(
+            ['id', 'deleted', 'created', 'modified', 'created_by', 'modified_by'],
+            MetadataResourceDto::V5_META_PROPS
+        );
         $this->assertObjectHasAttributes($attributes, $resource);
     }
 

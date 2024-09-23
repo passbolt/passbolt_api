@@ -335,6 +335,9 @@ class QueryStringComponent extends Component
                     case 'frequency':
                         self::validateFilterInteger($values, $filterName);
                         break;
+                    case 'metadata_key_type':
+                        self::validateFilterInList($values, $filterName, ['user_key', 'shared_key']);
+                        break;
                     default:
                         // Check if custom filter validators were defined for this filter
                         if (!isset($filterValidators[$filterName])) {
@@ -399,6 +402,24 @@ class QueryStringComponent extends Component
     public static function validateFilterInteger($values, string $filterName): bool
     {
         if (!is_int($values)) {
+            throw new CakeException(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the filter is in an array of accepted values
+     *
+     * @param mixed $values to check
+     * @param string $filterName for error message display
+     * @param array $acceptedValues values accepted
+     * @throw CakeException if the filter is not valid
+     * @return bool true if the filter is valid
+     */
+    public static function validateFilterInList($values, string $filterName, array $acceptedValues): bool
+    {
+        if (!in_array($values, $acceptedValues)) {
             throw new CakeException(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
         }
 

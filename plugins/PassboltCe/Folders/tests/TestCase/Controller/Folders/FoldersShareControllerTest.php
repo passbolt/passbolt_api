@@ -44,7 +44,7 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-    GpgkeysFixture::class,
+        GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -62,10 +62,6 @@ class FoldersShareControllerTest extends FoldersIntegrationTestCase
     {
         parent::setUp();
         Configure::write('passbolt.plugins.folders', ['enabled' => true]);
-//        $config = TableRegistry::getTableLocator()->exists('FoldersRelations') ? [] : ['className' => FoldersRelationsTable::class];
-//        $this->FoldersRelations = TableRegistry::getTableLocator()->get('FoldersRelations', $config);
-//        $config = TableRegistry::getTableLocator()->exists('Permissions') ? [] : ['className' => PermissionsTable::class];
-//        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions', $config);
     }
 
     /* COMMON & VALIDATION */

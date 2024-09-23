@@ -40,6 +40,7 @@ use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 
 /**
  * Passbolt\Folders\Service\FoldersUpdateService Test Case
@@ -101,7 +102,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta();
         $uac = new UserAccessControl(Role::USER, $userAId);
 
-        $this->service->update($uac, $folderA->id, ['name' => 'new name']);
+        $this->service->update($uac, $folderA->id, MetadataFolderDto::fromArray(['name' => 'new name']));
 
         $folderBUpdated = $this->foldersTable->findById($folderA->id)->first();
         $this->assertEquals('new name', $folderBUpdated->get('name'));
@@ -124,7 +125,8 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $name = 'new name';
-        $this->service->update($uac, $folderA->id, compact('name'));
+        $dto = MetadataFolderDto::fromArray(['name' => $name]);
+        $this->service->update($uac, $folderA->id, $dto);
 
         $this->assertEmailQueueCount(2);
         $this->assertEmailSubject('ada@passbolt.com', "You edited the folder $name");
@@ -140,7 +142,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $folderData = ['name' => ''];
 
         try {
-            $this->service->update($uac, $folderA->id, $folderData);
+            $this->service->update($uac, $folderA->id, MetadataFolderDto::fromArray($folderData));
             $this->assertFalse(true, 'The test should catch an exception');
         } catch (ValidationException $e) {
             $this->assertEquals('Could not validate folder data.', $e->getMessage());
@@ -156,7 +158,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userBId);
 
         $this->expectException(ForbiddenException::class);
-        $this->service->update($uac, $folderA->id, ['name' => 'new name']);
+        $this->service->update($uac, $folderA->id, MetadataFolderDto::fromArray(['name' => 'new name']));
     }
 
     private function insertFixture_InsufficientPermission()
@@ -179,7 +181,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $notExistFolderId = UuidFactory::uuid();
 
         $this->expectException(NotFoundException::class);
-        $this->service->update($uac, $notExistFolderId, ['name' => 'new name']);
+        $this->service->update($uac, $notExistFolderId, MetadataFolderDto::fromArray(['name' => 'new name']));
     }
 
     public function testUpdateFolderError_NoAccessToFolder()
@@ -189,6 +191,6 @@ class FoldersUpdateServiceTest extends FoldersTestCase
         $uac = new UserAccessControl(Role::USER, $userBId);
 
         $this->expectException(NotFoundException::class);
-        $this->service->update($uac, $folderA->id, ['name' => 'new name']);
+        $this->service->update($uac, $folderA->id, MetadataFolderDto::fromArray(['name' => 'new name']));
     }
 }

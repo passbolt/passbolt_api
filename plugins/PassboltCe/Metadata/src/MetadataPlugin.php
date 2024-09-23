@@ -16,8 +16,18 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
+use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
+use Cake\Event\EventManager;
+use Passbolt\Metadata\Command\GenerateDummyMetadataKeyCommand;
+use Passbolt\Metadata\Command\MigrateResourcesCommand;
+use Passbolt\Metadata\Event\MetadataResourceIndexListener;
+use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
+use Passbolt\Metadata\Event\SetupCompleteListener;
+use Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck;
 
 class MetadataPlugin extends BasePlugin
 {
@@ -27,5 +37,44 @@ class MetadataPlugin extends BasePlugin
     public function bootstrap(PluginApplicationInterface $app): void
     {
         parent::bootstrap($app);
+        $this->attachListeners(EventManager::instance());
+    }
+
+    /**
+     * Attach the Locale related event listeners.
+     *
+     * @param \Cake\Event\EventManager $eventManager EventManager
+     * @return void
+     */
+    public function attachListeners(EventManager $eventManager): void
+    {
+        $eventManager
+            ->on(new SetupCompleteListener())
+            ->on(new MetadataUserDeleteSuccessListener())
+            ->on(new MetadataResourceIndexListener());
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function services(ContainerInterface $container): void
+    {
+        $container->add(ServerCanDecryptMetadataPrivateKeyHealthcheck::class);
+
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [ServerCanDecryptMetadataPrivateKeyHealthcheck::class]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        // Alias commands
+        $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
+        $commands->add('passbolt metadata generate_dummy_metadata_key', GenerateDummyMetadataKeyCommand::class);
+
+        return $commands;
     }
 }

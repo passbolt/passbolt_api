@@ -30,6 +30,8 @@ use Cake\Validation\Validator;
 /**
  * MetadataKeys Model
  *
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Creator
+ * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
  * @property \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable&\Cake\ORM\Association\HasMany $MetadataPrivateKeys
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey newEmptyEntity()
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey newEntity(array $data, array $options = [])
@@ -112,30 +114,12 @@ class MetadataKeysTable extends Table
             ->allowEmptyDateTime('deleted');
 
         $validator
-            ->uuid('created_by', __('The identifier of the user who created the metadata key should be a valid UUID.')) // phpcs:ignore
-            ->requirePresence(
-                'created_by',
-                'create',
-                __('The identifier of the user who created the metadata key is required.')
-            )
-            ->allowEmptyString(
-                'created_by',
-                __('The identifier of the user who created the metadata key should not be empty.'),
-                false
-            );
+            ->uuid('created_by', __('The identifier of the user who created the metadata key should be a valid UUID.')) // phpcs:ignore;
+            ->allowEmptyString('created_by');
 
         $validator
-            ->uuid('modified_by', __('The identifier of the user who modified the metadata key should be a valid UUID.')) // phpcs:ignore
-            ->requirePresence(
-                'modified_by',
-                true,
-                __('The identifier of the user who modified the metadata key required.')
-            )
-            ->allowEmptyString(
-                'modified_by',
-                __('The identifier of the user who modified the metadata key should not be empty.'),
-                false
-            );
+            ->uuid('modified_by', __('The identifier of the user who modified the metadata key should be a valid UUID.')) // phpcs:ignore;
+            ->allowEmptyString('modified_by');
 
         return $validator;
     }

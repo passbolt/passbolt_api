@@ -28,6 +28,7 @@
             <directory name="plugins/PassboltCe/PasswordExpiry/templates/" />
             <directory name="plugins/PassboltCe/SelfRegistration/templates/" />
             <directory name="plugins/PassboltCe/Folders/templates/" />
+            <directory name="plugins/PassboltCe/Metadata/templates/" />
             <directory name="plugins/PassboltEe/AccountRecovery/templates/" />
             <directory name="plugins/PassboltEe/Sso/templates/" />
             <directory name="plugins/PassboltEe/MfaPolicies/templates/" />

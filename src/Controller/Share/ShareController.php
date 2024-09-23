@@ -28,6 +28,7 @@ use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
 /**
  * ShareController Class
@@ -140,6 +141,11 @@ class ShareController extends AppController
         $userId = $this->User->id();
         if (!$this->Resources->Permissions->hasAccess($acoType, $resourceId, $userId, Permission::OWNER)) {
             throw new ForbiddenException(__('You are not authorized to share this resource.'));
+        }
+        // V5 validations
+        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        if ($resourceDto->isV5() && $resource->get('metadata_key_type') === 'user_key') {
+            throw new BadRequestException(__('Resource metadata key type is invalid.'));
         }
     }
 

@@ -25,6 +25,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
@@ -95,7 +96,7 @@ class ResourcesAddServiceStressTest extends TestCase
     public function testResourceAddServiceSuccessStressTest(int $iter)
     {
         $data = $this->getDummyResourcesPostData();
-        $resource = $this->service->add(self::$uac, $data);
+        $resource = $this->service->add(self::$uac, new MetadataResourceDto($data));
 
         $this->assertInstanceOf(Resource::class, $resource);
         $this->assertInstanceOf(Secret::class, $resource->secrets[0]);

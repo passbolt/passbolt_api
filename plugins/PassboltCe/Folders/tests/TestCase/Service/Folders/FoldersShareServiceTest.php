@@ -61,7 +61,7 @@ class FoldersShareServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
 
     public $fixtures = [
-    GpgkeysFixture::class,
+        GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,

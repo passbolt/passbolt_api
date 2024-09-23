@@ -42,6 +42,7 @@ class HealthcheckServiceCollector
     public const DOMAIN_DATABASE = 'database';
     public const DOMAIN_GPG = 'gpg';
     public const DOMAIN_JWT = 'jwt';
+    public const DOMAIN_METADATA = 'metadata';
 
     /**
      * List of all available levels for health check results.
