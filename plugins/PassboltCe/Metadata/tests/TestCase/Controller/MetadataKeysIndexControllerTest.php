@@ -39,7 +39,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataKeysIndexController_Success()
     {
-        MetadataKeyFactory::make(2)->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make(2)->withCreatorAndModifier()->persist();
         $this->logInAsUser();
 
         $this->getJson('/metadata/keys.json');
@@ -55,7 +55,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
     public function testMetadataKeysIndexController_Success_WithMetadataPrivateKeys()
     {
         $user = UserFactory::make()->user()->active()->persist();
-        $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
         $metadataPrivateKey = MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($user)->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser()->persist();
         $this->logInAs($user);
@@ -81,8 +81,8 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataKeysIndexController_Success_FilterDeleted()
     {
-        MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
-        $deletedMetadataKey = MetadataKeyFactory::make()->deleted()->withValidOpenPGPKey()->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
+        $deletedMetadataKey = MetadataKeyFactory::make()->deleted()->withCreatorAndModifier()->persist();
         $this->logInAsUser();
 
         $queryParams = http_build_query(['filter' => ['deleted' => '1']]);

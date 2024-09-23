@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Test\Factory;
 
+use App\Model\Entity\Gpgkey;
 use App\Model\Entity\User;
 use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use App\Test\Factory\UserFactory;
@@ -55,12 +56,12 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        $dummyData = self::getDummyKeyInfo();
+        $dummyData = $this->getMetadataKeyInfo();
 
         $this->setDefaultData(function (Generator $faker) use ($dummyData) {
             return [
                 'fingerprint' => $dummyData['fingerprint'],
-                'armored_key' => $dummyData['armored_key'],
+                'armored_key' => $dummyData['public_key'],
                 'created' => Chronos::now()->subDays($faker->randomNumber(3)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(3)),
                 'deleted' => null,
@@ -81,21 +82,11 @@ class MetadataKeyFactory extends CakephpBaseFactory
     }
 
     /**
-     * Set the armored key and fingerprint to a valid openpgp key
-     *
      * @return $this
      */
-    public function withValidOpenPGPKey()
+    public function withExpiredKey()
     {
-        return $this->withMakiKey();
-    }
-
-    /**
-     * @return $this
-     */
-    public function withMakiKey()
-    {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = $this->getExpiredKeyInfo();
 
         return $this->patchData([
             'armored_key' => $keyInfo['armored_key'],
@@ -106,12 +97,12 @@ class MetadataKeyFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
-    public function withExpiredKey()
+    public function withServerKey()
     {
-        $keyInfo = $this->getExpiredKeyInfo();
+        $keyInfo = $this->getMetadataKeyInfo();
 
         return $this->patchData([
-            'armored_key' => $keyInfo['armored_key'],
+            'armored_key' => $keyInfo['public_key'],
             'fingerprint' => $keyInfo['fingerprint'],
         ]);
     }
@@ -139,30 +130,13 @@ class MetadataKeyFactory extends CakephpBaseFactory
         return $this->with('Creator', $user)->setField('created_by', $user->get('id'));
     }
 
-    /**
-     * Returns key information to use for metadata key tests.
-     *
-     * @return string[]
-     */
-    public static function getDummyKeyInfo(): array
+    public function withUserPrivateKey(Gpgkey $gpgkey)
     {
-        return [
-            'armored_key' => '-----BEGIN PGP PUBLIC KEY BLOCK-----
+        return $this->with('MetadataPrivateKeys', MetadataPrivateKeyFactory::make()->withUserPrivateKey($gpgkey));
+    }
 
-xjMEZs7I7BYJKwYBBAHaRw8BAQdAXPnuKJwjOYF/cNRZSGCX/ftwHDfiLWTc
-PQE0dMglp7/NN01ldGFkYXRhIFNlcnZlciBLZXkgPG1ldGFkYXRhX3NlcnZl
-cl9rZXlAcGFzc2JvbHQudGVzdD7CjAQQFgoAPgWCZs7I7AQLCQcICZB5WxWo
-41ot9AMVCAoEFgACAQIZAQKbAwIeARYhBN5tDBSCnh2xswxonnlbFajjWi30
-AACKNAD/d8kCyHxZ2SFJ3YmkKfQwhoy7BSr8oOUt8DwUVtX05moBAMh7y2Hd
-8YWNAt2y5VKor70p9Aigd4qOAqowhNlibOwLzjgEZs7I7BIKKwYBBAGXVQEF
-AQEHQL3ZD0EgxabScRBLIfrb+0SU8jkbILrsEfNYQcRX4LM0AwEIB8J4BBgW
-CgAqBYJmzsjsCZB5WxWo41ot9AKbDBYhBN5tDBSCnh2xswxonnlbFajjWi30
-AADm+wD/UoI/iQYbjTVt1YvvgHVWROtFHpJlmIHtfeNkVG420KABAOH1/krs
-8lq98P8ujYtxzHFy1BMGgYaA7rBTQ9IS49oH
-=VVZV
------END PGP PUBLIC KEY BLOCK-----
-',
-            'fingerprint' => 'DE6D0C14829E1DB1B30C689E795B15A8E35A2DF4',
-        ];
+    public function withServerPrivateKey()
+    {
+        return $this->with('MetadataPrivateKeys', MetadataPrivateKeyFactory::make()->withServerPrivateKey());
     }
 }

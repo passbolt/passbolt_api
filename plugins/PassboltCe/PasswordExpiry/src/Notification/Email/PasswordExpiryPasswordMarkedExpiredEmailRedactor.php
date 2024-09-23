@@ -31,6 +31,7 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\PasswordExpiry\Event\PasswordExpiryResourceMarkedAsExpiredEventListener;
 
 class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmailRedactorInterface
@@ -99,14 +100,16 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
         $resourceName = Purifier::clean($resource->name);
         $operatorFullName = Purifier::clean($operator->profile->full_name);
         $resourceId = $resource->id;
+        $isV5 = $this->isResourceV5($resource);
         $subject = (new LocaleService())->translateString(
             $user->locale,
-            function () use ($resourceName, $operatorFullName) {
-                return __(
-                    '{0} marked the password {1} as expired',
-                    $operatorFullName,
-                    $resourceName
-                );
+            function () use ($resourceName, $operatorFullName, $isV5) {
+                $subject = __('{0} marked the password {1} as expired', $operatorFullName, $resourceName);
+                if ($isV5) {
+                    $subject = __('{0} marked a password as expired', $operatorFullName);
+                }
+
+                return $subject;
             }
         );
 
@@ -141,5 +144,22 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
             ->order([], true); // Remove any order as it is not relevant here and breaks in MySQL
 
         return $UsersTable->filterQueryByResourcesAccess($usersToNotify, [$expiringResourceId], [Permission::OWNER]);
+    }
+
+    /**
+     * Checks if given resource entity is V5 or not.
+     *
+     * @param \App\Model\Entity\Resource $resource Resource entity.
+     * @return bool
+     */
+    private function isResourceV5(Resource $resource): bool
+    {
+        try {
+            $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return $resourceDto->isV5();
     }
 }

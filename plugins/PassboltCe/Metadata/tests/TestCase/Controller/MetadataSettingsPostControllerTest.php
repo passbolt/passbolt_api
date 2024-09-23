@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Test\TestCase\Controller;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
@@ -74,5 +75,16 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $this->postJson('/metadata/settings.json', $data);
         $this->assertResponseCode(400);
         $this->assertResponseContains('Could not validate the metadata settings');
+    }
+
+    public function testMetadataSettingsPostController_ErrorSettingsEditionDisabled(): void
+    {
+        $setting = Configure::read('passbolt.security.metadata.settings.editionDisabled');
+        Configure::write('passbolt.security.metadata.settings.editionDisabled', true);
+        $this->logInAsAdmin();
+        $data = MetadataSettingsFactory::getDefaultDataV4();
+        $this->postJson('/metadata/settings.json', $data);
+        $this->assertResponseCode(403);
+        Configure::write('passbolt.security.metadata.settings.editionDisabled', $setting);
     }
 }

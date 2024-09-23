@@ -64,7 +64,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
 
     public function testMetadataKeyCreateService_Success(): void
     {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = $this->getUserKeyInfo();
         $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
         $user = UserFactory::make()
             ->with('Gpgkeys', $gpgkey)
@@ -72,19 +72,19 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $uac = $this->makeUac($user);
-        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
+        $dummyKey = $this->getMetadataKeyInfo();
 
         $dto = MetadataKeyDto::fromArray([
-            'armored_key' => $dummyKey['armored_key'],
-            'fingerprint' => $dummyKey['fingerprint'], // any random valid fingerprint
+            'armored_key' => $dummyKey['public_key'],
+            'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
-                    'data' => $this->getEncryptedMessageForServerKey(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMessageForMaki(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
                 ],
             ],
         ]);
@@ -99,10 +99,10 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
 
     public function invalidMetadataKeyDataProvider(): array
     {
-        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
-        $makiKey = $this->getMakiKeyInfo();
+        $dummyKey = $this->getMetadataKeyInfo();
+        $makiKey = $this->getUserKeyInfo();
         $expiredKey = $this->getExpiredKeyInfo();
-        $msgForServer = $this->getEncryptedMessageForServerKey();
+        $msgForServer = $this->getEncryptedMetadataPrivateKeyForServerKey();
         $invalidAlgKey = $this->getInvalidAlgKeyInfo();
 
         return [
@@ -135,11 +135,11 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
                     'metadata_private_keys' => [
                         [
                             'user_id' => UuidFactory::uuid(),
-                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => null,
-                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],
@@ -147,7 +147,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ],
             [
                 'data (more than one user_id null)' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
                         [
@@ -164,20 +164,20 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ],
             [
                 'data (more than one invalid uuid in user_id)' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
                         [
                             'user_id' => 'foo-bar',
-                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => '🔥🔥🔥',
-                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                         [
                             'user_id' => 12345,
-                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],
@@ -185,12 +185,12 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ],
             [
                 'data (data is not encrypted with the server key if user_id if set to null)' => [
-                    'armored_key' => $dummyKey['armored_key'],
+                    'armored_key' => $dummyKey['public_key'],
                     'fingerprint' => $dummyKey['fingerprint'],
                     'metadata_private_keys' => [
                         [
                             'user_id' => null,
-                            'data' => MetadataPrivateKeyFactory::getValidPgpMessage(),
+                            'data' => $this->getDummyPrivateKeyOpenPGPMessage(),
                         ],
                     ],
                 ],
@@ -252,7 +252,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
 
     public function testMetadataKeyCreateService_Error_UserDeleted(): void
     {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = $this->getUserKeyInfo();
         $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
         $user = UserFactory::make()
             ->with('Gpgkeys', $gpgkey)
@@ -260,19 +260,19 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ->deleted()
             ->persist();
         $uac = $this->makeUac($user);
-        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
+        $dummyKey = $this->getMetadataKeyInfo();
 
         $dto = MetadataKeyDto::fromArray([
-            'armored_key' => $dummyKey['armored_key'],
+            'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
-                    'data' => $this->getEncryptedMessageForMaki(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMessageForMaki(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
                 ],
             ],
         ]);
@@ -284,7 +284,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
 
     public function testMetadataKeyCreateService_Error_MoreThanOnePrivateKeysPerUser(): void
     {
-        $keyInfo = $this->getMakiKeyInfo();
+        $keyInfo = $this->getUserKeyInfo();
         $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
         $user = UserFactory::make()
             ->with('Gpgkeys', $gpgkey)
@@ -292,24 +292,24 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $uac = $this->makeUac($user);
-        $dummyKey = MetadataKeyFactory::getDummyKeyInfo();
+        $dummyKey = $this->getMetadataKeyInfo();
 
         $dto = MetadataKeyDto::fromArray([
-            'armored_key' => $dummyKey['armored_key'],
+            'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
-                    'data' => $this->getEncryptedMessageForServerKey(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
                 ],
                 [
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMessageForMaki(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
                 ],
                 [
                     // Same user, different encrypted message
                     'user_id' => $uac->getId(),
-                    'data' => $this->getEncryptedMessageForMakiDifferent(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUserDifferent(),
                 ],
             ],
         ]);
@@ -320,7 +320,6 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             $errors = $e->getErrors();
 
             $this->assertTrue(Hash::check($errors, 'metadata_private_keys.{n}.user_id._isUnique'));
-            $this->assertTrue(Hash::check($errors, 'metadata_private_keys.{n}.metadata_key_id._isUnique'));
         }
     }
 }

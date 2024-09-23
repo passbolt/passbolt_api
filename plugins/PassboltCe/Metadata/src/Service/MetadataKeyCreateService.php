@@ -37,13 +37,30 @@ class MetadataKeyCreateService
     {
         $uac->assertIsAdmin();
 
-        /** @var \Passbolt\Metadata\Model\Table\MetadataKeysTable $metadataKeysTable */
-        $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
-
+        // Set created and modified by on both key and relations
         $data = $dto->toArray() + [
             'created_by' => $uac->getId(),
             'modified_by' => $uac->getId(),
         ];
+        foreach ($data['metadata_private_keys'] as $i => $value) {
+            $data['metadata_private_keys'][$i]['created_by'] = $uac->getId();
+            $data['metadata_private_keys'][$i]['modified_by'] = $uac->getId();
+        }
+
+        return $this->buildAndSaveEntity($data);
+    }
+
+    /**
+     * @param array $data user provided data
+     * @return \Passbolt\Metadata\Model\Entity\MetadataKey
+     * @throws \App\Error\Exception\CustomValidationException if metadata key data cannot be validated.
+     * @throws \Cake\Http\Exception\InternalErrorException if metadata key cannot be saved due to internal issues.
+     */
+    public function buildAndSaveEntity(array $data): MetadataKey
+    {
+        /** @var \Passbolt\Metadata\Model\Table\MetadataKeysTable $metadataKeysTable */
+        $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
+
         $metadataKey = $metadataKeysTable->newEntity($data, [
             'accessibleFields' => [
                 'armored_key' => true,
@@ -57,6 +74,8 @@ class MetadataKeyCreateService
                     'accessibleFields' => [
                         'user_id' => true,
                         'data' => true,
+                        'created_by' => true,
+                        'modified_by' => true,
                     ],
                 ],
             ],

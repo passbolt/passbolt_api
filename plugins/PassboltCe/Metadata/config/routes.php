@@ -14,20 +14,49 @@
  * @since         4.10.0
  */
 use Cake\Routing\RouteBuilder;
+use Passbolt\Metadata\Middleware\MetadataSettingsSecurityMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBuilder $routes) {
     $routes->setExtensions(['json']);
+    $routes->registerMiddleware(MetadataSettingsSecurityMiddleware::class, new MetadataSettingsSecurityMiddleware());
 
+    /**
+     * Metadata settings routes
+     */
     $routes->connect('/settings', ['controller' => 'MetadataSettingsGet', 'action' => 'get'])
         ->setMethods(['GET']);
-
     $routes->connect('/settings', ['controller' => 'MetadataSettingsPost', 'action' => 'post'])
-        ->setMethods(['PUT', 'POST']);
+        ->setMethods(['PUT', 'POST'])
+        ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
 
+    /**
+     * Metadata keys routes
+     */
     $routes->connect('/keys', ['controller' => 'MetadataKeysIndex', 'action' => 'index'])
         ->setMethods(['GET']);
-
     $routes->connect('/keys', ['controller' => 'MetadataKeyCreate', 'action' => 'create'])
+        ->setMethods(['POST'])
+        ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
+
+    /**
+     * Metadata private keys routes
+     */
+    $routes->connect('/keys/private/{id}', ['controller' => 'MetadataPrivateKeysUpdate', 'action' => 'update'])
+        ->setPass(['id'])
+        ->setMethods(['PUT', 'POST']);
+    $routes->connect('/keys/{id}/private', ['controller' => 'MetadataPrivateKeysCreate', 'action' => 'create'])
+        ->setPass(['id'])
         ->setMethods(['POST']);
+
+    /**
+     * Metadata session keys routes
+     */
+    $routes->connect('/session-keys', ['controller' => 'MetadataSessionKeysGet', 'action' => 'get'])
+        ->setMethods(['GET']);
+    $routes->connect('/session-keys', ['controller' => 'MetadataSessionKeyCreate', 'action' => 'create'])
+        ->setMethods(['POST']);
+    $routes->connect('/session-keys/{id}', ['controller' => 'MetadataSessionKeyDelete', 'action' => 'delete'])
+        ->setPass(['id'])
+        ->setMethods(['DELETE']);
 });

@@ -28,6 +28,7 @@ use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Entity\MetadataPrivateKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
  * @covers \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable
@@ -35,6 +36,7 @@ use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 class MetadataPrivateKeysTableTest extends AppTestCaseV5
 {
     use FormatValidationTrait;
+    use GpgMetadataKeysTestTrait;
 
     /**
      * Test subject
@@ -71,7 +73,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
             ->user()
             ->active()
             ->persist();
-        $metadataKey = MetadataKeyFactory::make()->withValidOpenPGPKey()->withCreatorAndModifier($user)->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->persist();
 
         $possibleUserIds = [$user->get('id'), null]; // null for server key
         $randomUserKey = array_rand($possibleUserIds);
@@ -162,7 +164,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
                     'foo-bar' => false,
                     1 => false,
                     false => false,
-                    MetadataPrivateKeyFactory::getValidPgpMessage() => true,
+                    $this->getDummyPrivateKeyOpenPGPMessage() => true,
                 ],
             ],
         ];
@@ -179,7 +181,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
      * @return void
      * @uses \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable::buildRules()
      */
-    public function testMetadataPrivateKeysTable_BuildRules_UserIdExistsInRule(): void
+    public function testMetadataPrivateKeysTable_BuildRules_UserIdExist(): void
     {
         $dummyData = $this->getDummyMetadataPrivateKeysData();
 
@@ -192,8 +194,7 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
 
         $this->assertFalse($result);
         $this->assertNotEmpty($entity->getErrors());
-        $this->assertCount(2, $entity->getErrors()['user_id']);
-        $this->assertArrayHasKey('_existsIn', $entity->getErrors()['user_id']);
+        $this->assertArrayHasKey('isUserActiveIfPresent', $entity->getErrors()['user_id']);
     }
 
     /**
@@ -230,13 +231,13 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
      */
     public function testMetadataPrivateKeysTable_BuildRules_DuplicateServerKey(): void
     {
-        MetadataPrivateKeyFactory::make()->serverKey()->withMetadataKey()->persist();
-        $dummyData = $this->getDummyMetadataPrivateKeysData();
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $key */
+        $key = MetadataPrivateKeyFactory::make()->serverKey()->withMetadataKey()->persist();
 
         $entity = $this->buildEntity([
-            'metadata_key_id' => $dummyData['metadata_key_id'],
+            'metadata_key_id' => $key->metadata_key_id,
             'user_id' => null,
-            'data' => $dummyData['data'],
+            'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
         ]);
         $result = $this->MetadataPrivateKeys->save($entity);
 

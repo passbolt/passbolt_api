@@ -22,6 +22,8 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 
 /**
  * @property \Passbolt\Folders\Model\Table\FoldersTable $Folders
@@ -65,6 +67,8 @@ class FoldersViewController extends AppController
 
         $folder = $foldersTable->findView($this->User->id(), $id, $options)->first();
         $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
+        $folderDto = MetadataFolderDto::fromArray($folder);
+        $folder = (new MetadataFoldersRenderService())->renderFolder($folder, $folderDto->isV5());
 
         if (empty($folder)) {
             throw new NotFoundException('The folder does not exist.');

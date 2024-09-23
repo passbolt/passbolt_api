@@ -23,6 +23,8 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
 /**
  * ResourcesUpdateController Class
@@ -49,9 +51,10 @@ class ResourcesUpdateController extends AppController
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
 
+        $resourceDto = new MetadataResourceDto((array)$this->getRequest()->getData());
+
         $uac = $this->User->getAccessControl();
-        $data = $this->request->getData();
-        $resource = $resourcesUpdateService->update($uac, $id, $data);
+        $resource = $resourcesUpdateService->update($uac, $id, $resourceDto);
 
         // Retrieve the updated resource.
         $options = [
@@ -64,9 +67,10 @@ class ResourcesUpdateController extends AppController
         }
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
-        $output = $resourcesTable->findView($this->User->id(), $resource->id, $options)->first();
-        $output = FolderizableBehavior::unsetPersonalPropertyIfNull($output->toArray());
+        $resource = $resourcesTable->findView($this->User->id(), $resource->id, $options)->first();
+        $resource = FolderizableBehavior::unsetPersonalPropertyIfNull($resource->toArray());
+        $resource = (new MetadataResourcesRenderService())->renderResource($resource, $resourceDto->isV5());
 
-        $this->success(__('The resource has been updated successfully.'), $output);
+        $this->success(__('The resource has been updated successfully.'), $resource);
     }
 }

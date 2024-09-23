@@ -62,13 +62,13 @@ class V4100CreateMetadataKeys extends AbstractMigration
             ])
             ->addColumn('created_by', 'uuid', [
                 'default' => null,
-                'null' => false,
+                'null' => true,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table (i.e. users)
             ])
             ->addColumn('modified_by', 'uuid', [
                 'default' => null,
-                'null' => false,
+                'null' => true,
                 'encoding' => 'ascii',
                 'collation' => 'ascii_general_ci', // required for FK, needs to be same as reference table (i.e. users)
             ])

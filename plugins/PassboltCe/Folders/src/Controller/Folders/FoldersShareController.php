@@ -22,6 +22,8 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Service\Folders\FoldersShareService;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 
 class FoldersShareController extends AppController
 {
@@ -46,8 +48,10 @@ class FoldersShareController extends AppController
 
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = $foldersUpdatePermissionsService->share($uac, $id, $data);
+        $folderDto = MetadataFolderDto::fromArray($folder->toArray());
+        $folder = (new MetadataFoldersRenderService())->renderFolder($folder->toArray(), $folderDto->isV5());
 
-        $this->success(__('The operation was successful.', $folder->name), $folder);
+        $this->success(__('The operation was successful.'), $folder);
     }
 
     /**
