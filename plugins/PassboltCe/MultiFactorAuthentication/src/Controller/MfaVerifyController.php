@@ -18,7 +18,6 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 
 use App\Authenticator\SessionIdentificationServiceInterface;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenDate;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
@@ -85,7 +84,7 @@ abstract class MfaVerifyController extends MfaController
     {
         if ($this->mfaSettings->getAccountSettings() === null) {
             if ($this->getRequest()->is('json')) {
-                throw new InternalErrorException('No valid multi-factor authentication settings found.');
+                throw new BadRequestException(__('No valid multi-factor authentication settings found.'));
             } else {
                 return $this->redirect('/');
             }

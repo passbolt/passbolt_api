@@ -47,4 +47,11 @@ class YubikeyVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseContains('<input type="checkbox" name="remember"');
         $this->assertResponseContains('/app/users');
     }
+
+    public function testMfaVerifyGetYubikey_Error_MfaNotConfigured()
+    {
+        $this->logInAsUser();
+        $this->getJson('/mfa/verify/yubikey.json?api-version=v2');
+        $this->assertBadRequestError('No valid multi-factor authentication settings found');
+    }
 }
