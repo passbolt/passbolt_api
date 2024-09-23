@@ -24,6 +24,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\I18n\FrozenTime;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\PasswordExpiryPolicies\Test\Factory\PasswordExpiryPoliciesSettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -64,8 +65,8 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             'name' => $newName,
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => null,
         ];
-
-        $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        $dto = MetadataResourceDto::fromArray($payload);
+        $this->service->update($this->makeUac($owner), $resource->id, $dto);
 
         // Assert
         /** @var \App\Model\Entity\Resource $resource */
@@ -94,8 +95,8 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             'name' => $newName,
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => FrozenTime::tomorrow()->toAtomString(),
         ];
-
-        $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        $dto = MetadataResourceDto::fromArray($payload);
+        $this->service->update($this->makeUac($owner), $resource->id, $dto);
 
         // Assert
         /** @var \App\Model\Entity\Resource $resource */
@@ -125,8 +126,8 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
             'name' => $newName,
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => $expiryDate,
         ];
-
-        $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        $dto = MetadataResourceDto::fromArray($payload);
+        $this->service->update($this->makeUac($owner), $resource->id, $dto);
 
         // Assert
         /** @var \App\Model\Entity\Resource $resource */
@@ -153,10 +154,11 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
         $payload = [
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => 'Foo',
         ];
+        $dto = MetadataResourceDto::fromArray($payload);
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Could not validate resource data.');
-        $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        $this->service->update($this->makeUac($owner), $resource->id, $dto);
     }
 
     public function testPasswordExpiryPoliciesResourcesUpdateService_Update_With_Settings_Not_Set()
@@ -174,9 +176,9 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
         $payload = [
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => null,
         ];
-
+        $dto = MetadataResourceDto::fromArray($payload);
         // Although the password expiry is deactivated, the password is now marked as not expired
-        $resource = $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        $resource = $this->service->update($this->makeUac($owner), $resource->id, $dto);
         $this->assertFalse($resource->isExpired());
     }
 }
