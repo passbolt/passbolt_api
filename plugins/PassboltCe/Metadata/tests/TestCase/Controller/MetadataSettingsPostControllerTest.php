@@ -18,7 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Controller;
 
 use App\Test\Factory\OrganizationSettingFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\MetadataPlugin;
@@ -30,6 +32,7 @@ use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
  */
 class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
 {
+    use EmailQueueTrait;
     use LocatorAwareTrait;
 
     public function setUp(): void
@@ -38,13 +41,35 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $this->enableFeaturePlugin(MetadataPlugin::class);
     }
 
-    public function testMetadataSettingsPostController_Success(): void
+    public function testMetadataSettingsPostController_Success_v4(): void
     {
-        $this->logInAsAdmin();
+        [$loggedInUser, $otherAdmin] = UserFactory::make(2)->admin()->persist();
+        // Create a disabled admin and a user to test emails
+        UserFactory::make()->admin()->disabled()->persist();
+        UserFactory::make()->user()->persist();
+        $this->logInAs($loggedInUser);
         $data = MetadataSettingsFactory::getDefaultDataV4();
         $this->postJson('/metadata/settings.json', $data);
         $this->assertResponseCode(200);
         $this->assertEquals(1, OrganizationSettingFactory::count());
+
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains([
+            'You edited the metadata settings',
+            'Default resource types: v4',
+            'Default comment type: v4',
+        ], $loggedInUser->username);
+        $this->assertEmailInBatchContains($loggedInUser->profile->last_name . ' edited the metadata settings', $otherAdmin->username);
+    }
+
+    public function testMetadataSettingsPostController_Success_v5(): void
+    {
+        [$loggedInUser, $otherAdmin] = UserFactory::make(2)->admin()->persist();
+        // Create a disabled admin and a user to test emails
+        UserFactory::make()->admin()->disabled()->persist();
+        UserFactory::make()->user()->persist();
+        $this->logInAs($loggedInUser);
+        $data = MetadataSettingsFactory::getDefaultDataV4();
 
         $data[MetadataSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
         $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
@@ -52,6 +77,13 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $this->postJson('/metadata/settings.json', $data);
         $this->assertResponseCode(200);
         $this->assertEquals(1, OrganizationSettingFactory::count());
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains([
+            'You edited the metadata settings',
+            'Default resource types: v4',
+            'Default comment type: v5',
+        ], $loggedInUser->username);
+        $this->assertEmailInBatchContains($loggedInUser->profile->last_name . ' edited the metadata settings', $otherAdmin->username);
     }
 
     public function testMetadataSettingsPostController_Error_AuthenticationNeeded()
