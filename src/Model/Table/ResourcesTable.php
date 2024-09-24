@@ -337,7 +337,7 @@ class ResourcesTable extends Table
         ]);
 
         $rules->addCreate(new IsNotV5PasswordStringType(), 'isNotV5PasswordStringType', [
-            'errorField' => 'metadata_key_id',
+            'errorField' => 'resource_type_id',
             'message' => __('It is not allowed to create v5-password-string resource types.'),
         ]);
 
