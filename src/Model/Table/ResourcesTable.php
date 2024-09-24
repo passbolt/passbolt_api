@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Rule\IsNotV5PasswordStringType;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Model\Validation\DateTime\IsParsableDateTimeValidationRule;
@@ -257,9 +258,6 @@ class ResourcesTable extends Table
         $validV5ResourceTypeIds = [];
         $validV5ResourceTypes = [];
         foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $resourceTypeSlug) {
-            if ($resourceTypeSlug === ResourceType::SLUG_V5_PASSWORD_STRING) {
-                continue;
-            }
             $validV5ResourceTypes[] = $resourceTypeSlug;
             $validV5ResourceTypeIds[] = UuidFactory::uuid('resource-types.id.' . $resourceTypeSlug);
         }
@@ -336,6 +334,11 @@ class ResourcesTable extends Table
         $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
             'errorField' => 'metadata_key_id',
             'message' => __('The metadata key does not exist.'),
+        ]);
+
+        $rules->addCreate(new IsNotV5PasswordStringType(), 'isNotV5PasswordStringType', [
+            'errorField' => 'resource_type_id',
+            'message' => __('It is not allowed to create v5-password-string resource types.'),
         ]);
 
         $rules->add(new IsNotSoftDeletedRule(), 'resource_type_is_not_soft_deleted', [
