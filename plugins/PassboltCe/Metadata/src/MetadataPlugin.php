@@ -28,6 +28,7 @@ use Passbolt\Metadata\Command\MigrateResourcesCommand;
 use Passbolt\Metadata\Event\MetadataResourceIndexListener;
 use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
 use Passbolt\Metadata\Event\SetupCompleteListener;
+use Passbolt\Metadata\Notification\Email\Redactor\MetadataEmailRedactorPool;
 use Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck;
 
 class MetadataPlugin extends BasePlugin
@@ -50,6 +51,7 @@ class MetadataPlugin extends BasePlugin
     public function attachListeners(EventManager $eventManager): void
     {
         $eventManager
+            ->on(new MetadataEmailRedactorPool())
             ->on(new SetupCompleteListener())
             ->on(new MetadataUserDeleteSuccessListener())
             ->on(new MetadataResourceIndexListener());

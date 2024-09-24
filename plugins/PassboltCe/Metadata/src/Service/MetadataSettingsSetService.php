@@ -17,12 +17,16 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service;
 
 use App\Utility\UserAccessControl;
+use Cake\Event\EventDispatcherTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
 
 class MetadataSettingsSetService
 {
+    use EventDispatcherTrait;
     use LocatorAwareTrait;
+
+    public const AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME = 'MetadataSettings.afterSettingSet.success';
 
     /**
      * Validates and save the metadata settings
@@ -47,6 +51,12 @@ class MetadataSettingsSetService
             MetadataSettingsGetService::ORG_SETTING_PROPERTY,
             $dto->toJson(),
             $uac
+        );
+
+        $this->dispatchEvent(
+            static::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
+            compact('dto', 'uac'),
+            $this
         );
 
         return $dto;
