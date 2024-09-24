@@ -142,6 +142,16 @@ class MigrateAllV4ResourcesToV5Service
         $permission = $resource->get('permissions')[0];
         $user = $permission->user;
 
+        if (!isset($user)) {
+            $msg = __('No user provided.') . ' ';
+            $msg .= __('The metadata could not be encrypted for permission id: {0}.', $permission->id);
+            throw new InternalErrorException($msg);
+        }
+        if (!isset($user->gpgkey)) {
+            $msg = __('No OpenPGP key found for the user.') . ' ';
+            $msg .= __('The metadata could not be encrypted with the user id: {0}.', $user->id);
+            throw new InternalErrorException($msg);
+        }
         try {
             $gpg = OpenPGPBackendFactory::get();
             $gpg->clearKeys();
@@ -214,7 +224,6 @@ class MigrateAllV4ResourcesToV5Service
     private function getV5ResourceType(string $v4ResourceTypeId): string
     {
         $mapping = ResourceType::getV5Mapping();
-
         if (!isset($mapping[$v4ResourceTypeId])) {
             throw new InternalErrorException(__('No resource type mapping for ID \'{0}\'', $v4ResourceTypeId));
         }
