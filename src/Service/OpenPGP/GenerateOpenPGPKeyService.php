@@ -31,6 +31,11 @@ class GenerateOpenPGPKeyService
     private $debug = false;
 
     /**
+     * @var string|null $gnupghome home directory
+     */
+    private $gnupghome = null;
+
+    /**
      * Constructor - prevent use in production
      */
     public function __construct()
@@ -38,6 +43,7 @@ class GenerateOpenPGPKeyService
         if (!Configure::read('debug') || !Configure::read('passbolt.selenium.active')) {
             throw new ForbiddenException();
         }
+        $this->gnupghome = env('GNUPGHOME', Configure::read('passbolt.gpg.keyring'));
         $this->assertKeyringAvailable();
     }
 
@@ -95,7 +101,7 @@ class GenerateOpenPGPKeyService
         $expires = 'never';
         $this->run([
             'gpg','--batch',
-            '--homedir', Configure::read('passbolt.gpg.keyring'),
+            '--homedir', $this->gnupghome,
             '--pinentry-mode', 'loopback', '--passphrase', "''",
             '--quick-generate-key', $keyname, $algo, $usage, $expires,
         ]);
@@ -111,7 +117,7 @@ class GenerateOpenPGPKeyService
     {
         $this->run([
             'gpg','--batch', '--yes',
-            '--homedir', Configure::read('passbolt.gpg.keyring'),
+            '--homedir', $this->gnupghome,
             '--delete-secret-key', $fingerprint,
         ]);
     }
@@ -129,7 +135,7 @@ class GenerateOpenPGPKeyService
         $expires = 'never';
         $this->run([
             'gpg','--batch',
-            '--homedir', Configure::read('passbolt.gpg.keyring'),
+            '--homedir', $this->gnupghome,
             '--pinentry-mode', 'loopback', '--passphrase', "''",
             '--quick-add-key', $fingerprint, $algo, $usage, $expires,
         ]);
@@ -143,7 +149,7 @@ class GenerateOpenPGPKeyService
     {
         return $this->run([
             'gpg','--batch',
-            '--homedir', Configure::read('passbolt.gpg.keyring'),
+            '--homedir', $this->gnupghome,
             '--pinentry-mode', 'loopback', '--passphrase', "''",
             '--armor', '--export-secret-keys', $fingerprint,
         ]);
@@ -157,7 +163,7 @@ class GenerateOpenPGPKeyService
     {
         return $this->run([
             'gpg','--batch',
-            '--homedir', Configure::read('passbolt.gpg.keyring'),
+            '--homedir', $this->gnupghome,
             '--armor', '--export', $fingerprint,
         ]);
     }
@@ -170,7 +176,7 @@ class GenerateOpenPGPKeyService
     {
         $output = $this->run([
             'gpg',
-            '--homedir', Configure::read('passbolt.gpg.keyring'),
+            '--homedir', $this->gnupghome,
             '--list-keys', '--with-colons', $name,
         ]);
 
@@ -219,7 +225,7 @@ class GenerateOpenPGPKeyService
      */
     private function assertKeyringAvailable(): void
     {
-        $directory = Configure::read('passbolt.gpg.keyring') ?? false;
+        $directory = $this->gnupghome ?? false;
         if ($directory === false || !is_string($directory)) {
             throw new InternalErrorException(__('The keyring is not defined.'));
         }
