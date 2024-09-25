@@ -20,13 +20,6 @@ use Phinx\Db\Adapter\MysqlAdapter;
 
 class V4100AddMetadataFieldsToTags extends AbstractMigration
 {
-    /**
-     * @inheritDoc
-     */
-    public function shouldExecute(): bool
-    {
-        return Configure::read('passbolt.v5.enabled');
-    }
 
     /**
      * Change Method.
