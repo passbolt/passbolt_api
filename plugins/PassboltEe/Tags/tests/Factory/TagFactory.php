@@ -93,4 +93,24 @@ class TagFactory extends CakephpBaseFactory
 
         return $this;
     }
+
+    /**
+     * Sets V5 fields (not null and valid).
+     *
+     * @param array $values V5 Fields values to set.
+     * @param bool $isShared Metadata type.
+     * @return $this
+     */
+    public function v5Fields(array $values, bool $isShared = false)
+    {
+        $type = $isShared ? 'shared_key' : 'user_key';
+
+        $data = array_merge([
+            'metadata_key_type' => $type,
+            // Set V4 fields to null
+            'slug' => null,
+        ], $values);
+
+        return $this->patchData($data);
+    }
 }

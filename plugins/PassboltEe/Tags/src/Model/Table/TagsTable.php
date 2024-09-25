@@ -18,16 +18,27 @@ namespace Passbolt\Tags\Model\Table;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Traits\Query\CaseSensitiveCompareValueTrait;
+use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\ORM\Association\PassboltBelongsToMany;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use Cake\Collection\CollectionInterface;
+use Cake\Core\Configure;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
+use Cake\Datasource\EntityInterface;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Log\Log;
 use Cake\ORM\Query;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
+use Passbolt\Tags\Model\Dto\MetadataTagDto;
+use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 
 /**
  * Tags Model
@@ -100,6 +111,91 @@ class TagsTable extends Table
     }
 
     /**
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationV5(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
+        // Remove all validation on the v4 meta properties
+        // Enforce all v4 fields to be empty
+        foreach (MetadataTagDto::V4_META_PROPS as $v4Fields) {
+            $validator->remove($v4Fields);
+        }
+
+        /**
+         * V5 fields validations.
+         */
+        $validator
+            ->uuid('metadata_key_id', __('The metadata key identifier should be a valid UUID.'))
+            ->allowEmptyString('metadata_key_id');
+
+        $validator
+            ->ascii('metadata', __('The metadata should be a valid ASCII string.'))
+            ->requirePresence('metadata', 'create', __('An armored key is required.'))
+            ->notEmptyString('metadata', __('The metadata should not be empty.'))
+            ->add('metadata', 'isMetadataParsable', new IsParsableMessageValidationRule());
+
+        $validator
+            ->utf8Extended('metadata_key_type', __('The metadata key type should be a valid UTF8 string.'))
+            ->allowEmptyString('metadata_key_type')
+            ->inList('metadata_key_type', ['user_key', 'shared_key'], __(
+                'The metadata key type should be one of the following: {0}.',
+                implode(', ', ['user_key', 'shared_key'])
+            ));
+
+        return $validator;
+    }
+
+    /**
+     * Rule checker for v5 properties
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRulesV5(RulesChecker $rules): RulesChecker
+    {
+        $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key does not exist.'),
+        ]);
+
+        $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
+            'errorField' => 'metadata',
+            'message' => __('The tag metadata provided can not be decrypted.'),
+        ]);
+
+        return $rules;
+    }
+
+    /**
+     * @param \Cake\Event\EventInterface $event Event object.
+     * @param \Cake\Datasource\EntityInterface $entity Entity object.
+     * @param \ArrayObject $options Options array.
+     * @param string $operation Create/update operation.
+     * @return true|void Return result when event is stopped, void otherwise.
+     */
+    public function beforeRules(
+        EventInterface $event,
+        EntityInterface $entity,
+        \ArrayObject $options,
+        string $operation
+    ) {
+        $dto = MetadataTagDto::fromArray($entity->toArray());
+
+        if (!$dto->isV5()) {
+            // This is little hack to not call `buildRulesV5` rules,
+            // Because these are saved as belongsToMany association along with resources, it tries to call build rules even for V4 tags.
+            $event->stopPropagation();
+
+            return true;
+        }
+    }
+
+    /**
      * Find tags for index
      *
      * @param string $userId uuid of the user to find tags for.
@@ -164,17 +260,38 @@ class TagsTable extends Table
             });
         } elseif (isset($options['contain']['tag'])) {
             // Display the user tags for a given resource
-            $query->contain('Tags', function (Query $q) use ($userId) {
-                return $q
-                    ->order(['slug'])
-                    ->where(function (QueryExpression $where) use ($userId) {
-                        return $where->or(function (QueryExpression $or) use ($userId) {
-                            return $or
-                                ->eq('ResourcesTags.user_id', $userId)
-                                ->isNull('ResourcesTags.user_id');
+            $query
+                ->contain('Tags', function (Query $q) use ($userId) {
+                    return $q
+                        ->order(['slug'])
+                        ->where(function (QueryExpression $where) use ($userId) {
+                            return $where->or(function (QueryExpression $or) use ($userId) {
+                                return $or
+                                    ->eq('ResourcesTags.user_id', $userId)
+                                    ->isNull('ResourcesTags.user_id');
+                            });
+                        })
+                        // Return fields according to v4/v5 format
+                        ->formatResults(function (CollectionInterface $tags) {
+                            return $tags->map(function ($tag) {
+                                $tag = is_object($tag) ? $tag->toArray() : $tag;
+
+                                try {
+                                    $tagDto = MetadataTagDto::fromArray($tag);
+                                    $isV5 = $tagDto->isV5();
+                                } catch (\Exception $e) {
+                                    if (Configure::read('debug')) {
+                                        $msg = __('Error while building tag DTO.');
+                                        Log::error($msg . ' ' . $e->getMessage());
+                                    }
+
+                                    $isV5 = false;
+                                }
+
+                                return (new MetadataTagsRenderService())->renderTag($tag, $isV5);
+                            });
                         });
-                    });
-            })
+                })
                 // Exclude _joinData from the result set. This strategy performs better than formatResults or map.
                 ->applyOptions([PassboltBelongsToMany::QUERY_OPTION_EXCLUDE_JUNCTION_PROPERTY => true]);
         }
@@ -212,7 +329,6 @@ class TagsTable extends Table
     }
 
     /**
-    /**
      * Build tag entities or fail
      *
      * @param string|null $userId uuid owner of the tags
@@ -222,46 +338,91 @@ class TagsTable extends Table
      */
     public function buildEntitiesOrFail(?string $userId, array $tags)
     {
+        if (empty($tags)) {
+            return [];
+        }
+
         $collection = [];
-        if (!empty($tags)) {
-            foreach ($tags as $i => $slug) {
-                $collection[$i] = $this->newEntity([
-                    'slug' => $slug,
-                ], [
-                    'accessibleFields' => [
-                        'slug' => true,
-                        'is_shared' => true,
-                        'resources_tags' => true,
-                    ],
-                ]);
-                if ($collection[$i]->getErrors()) {
-                    continue;
-                }
-                // If not shared, add the user_id in the resources_tags join table
-                // @codingStandardsIgnoreStart
-                $notShared = @mb_substr($slug, 0, 1, 'utf-8') !== '#';
-                // @codingStandardsIgnoreEnd
-                $resourceTagUserId = $notShared ? $userId : null;
-                $collection[$i]['_joinData'] = $this->ResourcesTags->newEntity([
-                    'user_id' => $resourceTagUserId,
-                ], [
-                    'accessibleFields' => [
-                        'user_id' => true,
-                    ],
-                ]);
-            }
-        }
         $errors = [];
-        foreach ($collection as $i => $tag) {
-            if ($tag->getErrors()) {
-                $errors[$i] = $tag->getErrors();
+
+        foreach ($tags as $i => $tag) {
+            if (is_string($tag)) {
+                $tag = ['slug' => $tag];
+            }
+
+            $dto = MetadataTagDto::fromArray($tag);
+
+            try {
+                $collection[$i] = $this->buildEntityOrFail($dto);
+
+                // If not shared, add the user_id in the resources_tags join table
+                $resourceTagUserId = null;
+                if (!$dto->isV5() && $dto->isPersonal()) {
+                    $resourceTagUserId = $userId;
+                }
+                $collection[$i]['_joinData'] = $this->ResourcesTags->newEntity(
+                    ['user_id' => $resourceTagUserId],
+                    ['accessibleFields' => ['user_id' => true]]
+                );
+            } catch (CustomValidationException $e) {
+                $errors[$i] = $e->getErrors();
             }
         }
+
         if (!empty($errors)) {
             throw new CustomValidationException(__('Could not validate tags data.'), $errors);
         }
 
         return $collection;
+    }
+
+    /**
+     * @param \Passbolt\Tags\Model\Dto\MetadataTagDto $dto DTO.
+     * @return \Passbolt\Tags\Model\Entity\Tag
+     * @throws \App\Error\Exception\CustomValidationException When there are errors building entity object.
+     */
+    public function buildEntityOrFail(MetadataTagDto $dto)
+    {
+        $tag = $dto->toArray();
+
+        if ($dto->isV5()) {
+            $data = [
+                'metadata' => $tag['metadata'],
+                'metadata_key_id' => $tag['metadata_key_id'],
+                'metadata_key_type' => $tag['metadata_key_type'],
+                'is_shared' => $tag['is_shared'],
+            ];
+            $options = [
+                'accessibleFields' => [
+                    'metadata' => true,
+                    'metadata_key_id' => true,
+                    'metadata_key_type' => true,
+                    'is_shared' => true,
+                    'resources_tags' => true,
+                ],
+                'validate' => 'v5',
+            ];
+            /** @var \Cake\ORM\RulesChecker $rules */
+            $rules = $this->rulesChecker();
+            $this->buildRulesV5($rules);
+        } else {
+            $data = ['slug' => $tag['slug']];
+            $options = [
+                'accessibleFields' => [
+                    'slug' => true,
+                    'is_shared' => true,
+                    'resources_tags' => true,
+                ],
+            ];
+        }
+
+        $entity = $this->newEntity($data, $options);
+
+        if (!empty($entity->getErrors())) {
+            throw new CustomValidationException(__('Unable to build tag entity'), $entity->getErrors());
+        }
+
+        return $entity;
     }
 
     /**
