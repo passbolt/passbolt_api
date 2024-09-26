@@ -19,22 +19,22 @@ namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Test\Lib\AppTestCase;
-use Passbolt\Metadata\Service\MetadataSettingsAssertService;
+use Passbolt\Metadata\Service\MetadataTypesSettingsAssertService;
 use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 
 class MetadataSettingsAssertServiceTest extends AppTestCase
 {
-    public function testMetadataSettingsAssertService_Success(): void
+    public function testMetadataTypesSettingsAssertService_Success(): void
     {
         $data = MetadataSettingsFactory::getDefaultDataV4();
-        $sut = new MetadataSettingsAssertService();
+        $sut = new MetadataTypesSettingsAssertService();
         $dto = $sut->assert($data);
         $this->assertEquals($data, $dto->toArray());
     }
 
-    public function testMetadataSettingsAssertService_ErrorFormat(): void
+    public function testMetadataTypesSettingsAssertService_ErrorFormat(): void
     {
-        $sut = new MetadataSettingsAssertService();
+        $sut = new MetadataTypesSettingsAssertService();
         $this->expectException(FormValidationException::class);
         $dto = $sut->assert([]);
     }
@@ -44,7 +44,7 @@ class MetadataSettingsAssertServiceTest extends AppTestCase
      *
      * @return void
      */
-    public function testMetadataSettingsAssertService_ErrorRules_DefaultResourceTypesAreDeleted(): void
+    public function testMetadataTypesSettingsAssertService_ErrorRules_DefaultResourceTypesAreDeleted(): void
     {
         $this->markTestIncomplete();
     }
@@ -54,7 +54,7 @@ class MetadataSettingsAssertServiceTest extends AppTestCase
      *
      * @return void
      */
-    public function testMetadataSettingsAssertService_ErrorRules_DefaultCryptoNoBueno(): void
+    public function testMetadataTypesSettingsAssertService_ErrorRules_DefaultCryptoNoBueno(): void
     {
         $this->markTestIncomplete();
     }

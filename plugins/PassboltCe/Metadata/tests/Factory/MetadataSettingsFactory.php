@@ -19,8 +19,8 @@ namespace Passbolt\Metadata\Test\Factory;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
-use Passbolt\Metadata\Service\MetadataSettingsGetService;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 
 /**
  * MetadataSettingsFactory
@@ -35,8 +35,8 @@ class MetadataSettingsFactory extends OrganizationSettingFactory
         parent::setDefaultTemplate();
 
         $this->patchData([
-            'property' => MetadataSettingsGetService::ORG_SETTING_PROPERTY,
-            'property_id' => UuidFactory::uuid(OrganizationSetting::UUID_NAMESPACE . MetadataSettingsGetService::ORG_SETTING_PROPERTY),
+            'property' => MetadataTypesSettingsGetService::ORG_SETTING_PROPERTY,
+            'property_id' => UuidFactory::uuid(OrganizationSetting::UUID_NAMESPACE . MetadataTypesSettingsGetService::ORG_SETTING_PROPERTY),
             'value' => json_encode(self::getDefaultDataV4()),
         ]);
     }
@@ -44,54 +44,54 @@ class MetadataSettingsFactory extends OrganizationSettingFactory
     public static function getDefaultDataV4(): array
     {
         return [
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataSettingsDto::V4,
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => MetadataSettingsDto::V4,
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => MetadataSettingsDto::V4,
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => MetadataSettingsDto::V4,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataTypesSettingsDto::V4,
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V4,
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => MetadataTypesSettingsDto::V4,
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => MetadataTypesSettingsDto::V4,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
         ];
     }
 
     public static function getDefaultDataV5(): array
     {
         return [
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataSettingsDto::V5,
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => MetadataSettingsDto::V5,
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => MetadataSettingsDto::V5,
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => MetadataSettingsDto::V5,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataTypesSettingsDto::V5,
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V5,
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => MetadataTypesSettingsDto::V5,
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => MetadataTypesSettingsDto::V5,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
         ];
     }
 
     public static function getDefaultDataV6(): array
     {
         return [
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataSettingsDto::V5,
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => MetadataSettingsDto::V5,
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => MetadataSettingsDto::V5,
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => MetadataSettingsDto::V5,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => false,
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataTypesSettingsDto::V5,
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V5,
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => MetadataTypesSettingsDto::V5,
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => MetadataTypesSettingsDto::V5,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => false,
         ];
     }
 

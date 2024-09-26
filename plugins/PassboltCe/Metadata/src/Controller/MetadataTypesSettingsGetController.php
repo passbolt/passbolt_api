@@ -17,23 +17,19 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Controller;
 
 use App\Controller\AppController;
-use Passbolt\Metadata\Service\MetadataSettingsSetService;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 
-class MetadataSettingsPostController extends AppController
+class MetadataTypesSettingsGetController extends AppController
 {
     /**
-     * Metadata settings POST action
+     * MetadataSettings GET action
      *
      * @return void
      */
-    public function post()
+    public function get()
     {
-        $this->User->assertIsAdmin();
-        $this->assertNotEmptyArrayData();
-
-        $service = new MetadataSettingsSetService();
-        $settings = $service->saveSettings($this->User->getAccessControl(), $this->getRequest()->getData());
-
+        $this->assertJson();
+        $settings = (new MetadataTypesSettingsGetService())->getSettings();
         $this->success(__('The operation was successful.'), $settings->toArray());
     }
 }

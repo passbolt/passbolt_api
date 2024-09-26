@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Dto;
 
-class MetadataSettingsDto
+class MetadataTypesSettingsDto
 {
     public const DEFAULT_RESOURCE_TYPES = 'default_resource_types';
     public const DEFAULT_FOLDER_TYPE = 'default_folder_type';
