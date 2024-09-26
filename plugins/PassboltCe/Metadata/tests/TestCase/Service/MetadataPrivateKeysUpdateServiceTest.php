@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace PassboltCe\Metadata\tests\TestCase\Service;
+namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
@@ -31,7 +31,7 @@ use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
- * @covers \Passbolt\Metadata\Service\MetadataPrivateKeysCreateService
+ * @covers \Passbolt\Metadata\Service\MetadataPrivateKeysUpdateService
  */
 class MetadataPrivateKeysUpdateServiceTest extends AppTestCaseV5
 {

@@ -13,7 +13,6 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-// @codingStandardsIgnoreStart
 use Migrations\AbstractMigration;
 
 class V4100AlterNameToNullableOnResources extends AbstractMigration
