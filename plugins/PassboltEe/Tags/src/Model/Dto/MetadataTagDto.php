@@ -111,9 +111,13 @@ class MetadataTagDto
      */
     public function isPersonal(): bool
     {
-        // @codingStandardsIgnoreStart
-        return @mb_substr($this->slug, 0, 1, 'utf-8') !== '#';
-        // @codingStandardsIgnoreEnd
+        if (!$this->isV5()) {
+            // @codingStandardsIgnoreStart
+            return @mb_substr($this->slug, 0, 1, 'utf-8') !== '#';
+            // @codingStandardsIgnoreEnd
+        }
+
+        return !$this->isShared;
     }
 
     /**

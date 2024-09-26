@@ -165,7 +165,7 @@ class TagsTable extends Table
 
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
             'errorField' => 'metadata',
-            'message' => __('The tag metadata provided can not be decrypted.'),
+            'message' => __('The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient.'), // phpcs:ignore
         ]);
 
         return $rules;
@@ -357,7 +357,7 @@ class TagsTable extends Table
 
                 // If not shared, add the user_id in the resources_tags join table
                 $resourceTagUserId = null;
-                if (!$dto->isV5() && $dto->isPersonal()) {
+                if ($dto->isPersonal()) {
                     $resourceTagUserId = $userId;
                 }
                 $collection[$i]['_joinData'] = $this->ResourcesTags->newEntity(
