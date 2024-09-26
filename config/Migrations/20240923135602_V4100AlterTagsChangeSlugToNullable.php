@@ -15,7 +15,7 @@ declare(strict_types=1);
  */
 use Migrations\AbstractMigration;
 
-class V4100AlterFoldersChangeNameToNullable extends AbstractMigration
+class V4100AlterTagsChangeSlugToNullable extends AbstractMigration
 {
     /**
      * Change Method.
@@ -26,10 +26,10 @@ class V4100AlterFoldersChangeNameToNullable extends AbstractMigration
      */
     public function change(): void
     {
-        $table = $this->table('folders');
-        $table->changeColumn('name', 'string', [
+        $table = $this->table('tags');
+        $table->changeColumn('slug', 'string', [
             'null' => true,
-            'limit' => 256,
+            'limit' => 128,
         ]);
         $table->update();
     }
