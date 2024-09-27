@@ -21,11 +21,11 @@ use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\MetadataPlugin;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 
 /**
- * @uses \Passbolt\Metadata\Controller\MetadataSettingsGetController
+ * @uses \Passbolt\Metadata\Controller\MetadataTypesSettingsGetController
  */
 class MetadataSettingsGetControllerTest extends AppIntegrationTestCaseV5
 {
@@ -37,30 +37,30 @@ class MetadataSettingsGetControllerTest extends AppIntegrationTestCaseV5
         $this->enableFeaturePlugin(MetadataPlugin::class);
     }
 
-    public function testMetadataSettingsGetController_Error_AuthenticationNeeded()
+    public function testMetadataTypesSettingsGetController_Error_AuthenticationNeeded()
     {
-        $this->getJson('/metadata/settings.json');
+        $this->getJson('/metadata/types/settings.json');
         $this->assertAuthenticationError();
     }
 
-    public function testMetadataSettingsGetController_Success_NoEntryReturnsDefault(): void
+    public function testMetadataTypesSettingsGetController_Success_NoEntryReturnsDefault(): void
     {
         $this->logInAsAdmin();
-        $this->getJson('/metadata/settings.json');
+        $this->getJson('/metadata/types/settings.json');
         $this->assertResponseCode(200);
         $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $this->getResponseBodyAsArray());
     }
 
-    public function testMetadataSettingsGetController_Success_SavedEntry(): void
+    public function testMetadataTypesSettingsGetController_Success_SavedEntry(): void
     {
         $this->logInAsAdmin();
         $data = MetadataSettingsFactory::getDefaultDataV4();
-        $data[MetadataSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
-        $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
-        $data[MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
+        $data[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
+        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
+        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
         MetadataSettingsFactory::make()->value(json_encode($data))->persist();
         $this->assertEquals(1, OrganizationSettingFactory::count());
-        $this->getJson('/metadata/settings.json');
+        $this->getJson('/metadata/types/settings.json');
         $this->assertResponseCode(200);
         $this->assertEquals($data, $this->getResponseBodyAsArray());
     }

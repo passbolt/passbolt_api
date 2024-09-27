@@ -24,9 +24,9 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     /**
      * Metadata settings routes
      */
-    $routes->connect('/settings', ['controller' => 'MetadataSettingsGet', 'action' => 'get'])
+    $routes->connect('/types/settings', ['controller' => 'MetadataTypesSettingsGet', 'action' => 'get'])
         ->setMethods(['GET']);
-    $routes->connect('/settings', ['controller' => 'MetadataSettingsPost', 'action' => 'post'])
+    $routes->connect('/types/settings', ['controller' => 'MetadataTypesSettingsPost', 'action' => 'post'])
         ->setMethods(['PUT', 'POST'])
         ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
 

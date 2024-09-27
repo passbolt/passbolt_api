@@ -19,13 +19,13 @@ namespace Passbolt\Metadata\Form;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 
-class MetadataSettingsForm extends Form
+class MetadataTypesSettingsForm extends Form
 {
     public const ALLOWED_VERSIONS = [
-        MetadataSettingsDto::V4,
-        MetadataSettingsDto::V5,
+        MetadataTypesSettingsDto::V4,
+        MetadataTypesSettingsDto::V5,
     ];
 
     /**
@@ -69,7 +69,7 @@ class MetadataSettingsForm extends Form
             ))
             ->add('default_resource_types', 'defaultTypeMustBeEnabled', [
                 'rule' => function ($value, $context) {
-                    if ($value === MetadataSettingsDto::V5) {
+                    if ($value === MetadataTypesSettingsDto::V5) {
                         return (!($context['data']['allow_creation_of_v5_resources'] ?? false)) === false;
                     } else {
                         return (!($context['data']['allow_creation_of_v4_resources'] ?? false)) === false;
@@ -88,7 +88,7 @@ class MetadataSettingsForm extends Form
             ))
             ->add('default_folder_type', 'defaultTypeMustBeEnabled', [
                 'rule' => function ($value, $context) {
-                    if ($value === MetadataSettingsDto::V5) {
+                    if ($value === MetadataTypesSettingsDto::V5) {
                         return (!($context['data']['allow_creation_of_v5_folders'] ?? false)) === false;
                     } else {
                         return (!($context['data']['allow_creation_of_v4_folders'] ?? false)) === false;
@@ -107,7 +107,7 @@ class MetadataSettingsForm extends Form
             ))
             ->add('default_comment_type', 'defaultTypeMustBeEnabled', [
                 'rule' => function ($value, $context) {
-                    if ($value === MetadataSettingsDto::V5) {
+                    if ($value === MetadataTypesSettingsDto::V5) {
                         return (!($context['data']['allow_creation_of_v5_comments'] ?? false)) === false;
                     } else {
                         return (!($context['data']['allow_creation_of_v4_comments'] ?? false)) === false;
@@ -126,7 +126,7 @@ class MetadataSettingsForm extends Form
             ))
             ->add('default_tag_type', 'defaultTypeMustBeEnabled', [
                 'rule' => function ($value, $context) {
-                    if ($value === MetadataSettingsDto::V5) {
+                    if ($value === MetadataTypesSettingsDto::V5) {
                         return (!($context['data']['allow_creation_of_v5_tags'] ?? false)) === false;
                     } else {
                         return (!($context['data']['allow_creation_of_v4_tags'] ?? false)) === false;

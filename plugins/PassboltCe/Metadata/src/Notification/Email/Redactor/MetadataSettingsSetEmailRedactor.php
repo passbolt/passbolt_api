@@ -27,8 +27,8 @@ use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
-use Passbolt\Metadata\Service\MetadataSettingsSetService;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Service\MetadataTypesSettingsSetService;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
@@ -63,7 +63,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
     public function getSubscribedEvents(): array
     {
         return [
-            MetadataSettingsSetService::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
+            MetadataTypesSettingsSetService::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -84,7 +84,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
         $emailCollection = new EmailCollection();
         /** @var \App\Utility\UserAccessControl $uac */
         $uac = $event->getData('uac');
-        /** @var \Passbolt\Metadata\Model\Dto\MetadataSettingsDto $dto */
+        /** @var \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto $dto */
         $dto = $event->getData('dto');
 
         $modifier = $this->Users->findFirstForEmail($uac->getId());
@@ -105,13 +105,13 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
     /**
      * @param \App\Model\Entity\User $recipient Admin being notified
      * @param \App\Model\Entity\User $modifier Admin who performed the action
-     * @param \Passbolt\Metadata\Model\Dto\MetadataSettingsDto $dto settings DTO
+     * @param \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto $dto settings DTO
      * @return \App\Notification\Email\Email
      */
     private function createEmail(
         User $recipient,
         User $modifier,
-        MetadataSettingsDto $dto
+        MetadataTypesSettingsDto $dto
     ): Email {
         if ($recipient->id === $modifier->id) {
             $subject = $this->getSubjectForModifier($recipient);
