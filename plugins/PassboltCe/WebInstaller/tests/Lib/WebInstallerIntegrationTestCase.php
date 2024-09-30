@@ -22,7 +22,7 @@ use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
-use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
+use Passbolt\Subscription\Test\DummySubscriptionTrait;
 
 class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -34,7 +34,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
     protected $_configured;
 
     /**
-     * @var \Passbolt\Ee\Model\Table\SubscriptionsTable
+     * @var \Passbolt\Subscription\Model\Table\SubscriptionsTable
      */
     public $Subscriptions;
 
@@ -43,7 +43,7 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
         TableRegistry::getTableLocator()->clear();
         parent::setUp();
         $this->_recover = false;
-        $this->Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
+        $this->Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Subscription.Subscriptions');
     }
 
     public function tearDown(): void

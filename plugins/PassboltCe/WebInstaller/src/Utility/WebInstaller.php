@@ -223,8 +223,8 @@ class WebInstaller
     public function importSubscription(): void
     {
         $asciiKey = $this->getSettings('subscription.subscription_key');
-        /** @var \Passbolt\Ee\Model\Table\SubscriptionsTable $Subscriptions */
-        $Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Ee.Subscriptions');
+        /** @var \Passbolt\Subscription\Model\Table\SubscriptionsTable $Subscriptions */
+        $Subscriptions = TableRegistry::getTableLocator()->get('Passbolt/Subscription.Subscriptions');
         $userId = $this->getSettings('user.user_id');
         if (is_null($userId)) {
             /** @var \App\Model\Table\UsersTable $Users */

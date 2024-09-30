@@ -19,18 +19,13 @@ namespace Passbolt\Ee;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Setup\AbstractRecoverStartService;
 use App\Service\Setup\AbstractSetupStartService;
-use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
-use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Passbolt\AccountRecovery\Service\Setup\RecoverStartAccountRecoveryInfoService;
 use Passbolt\AccountRecovery\Service\Setup\SetupStartAccountRecoveryInfoService;
-use Passbolt\Ee\Command\SubscriptionCheckCommand;
-use Passbolt\Ee\Command\SubscriptionImportCommand;
 use Passbolt\Ee\Service\AccountRecoveryContinue\AccountRecoveryContinueAggregatorService;
 use Passbolt\Ee\Service\Healthcheck\EeHealthcheckServiceCollector;
 use Passbolt\Ee\Service\Setup\EeRecoverStartService;
 use Passbolt\Ee\Service\Setup\EeSetupStartService;
-use Passbolt\Ee\Service\Subscriptions\EeSubscriptionCheckInCommandService;
 use Passbolt\UserPassphrasePolicies\Service\AccountRecovery\AccountRecoveryContinueUserPassphrasePoliciesService;
 use Passbolt\UserPassphrasePolicies\Service\Setup\RecoverStartUserPassphrasePoliciesInfoService;
 use Passbolt\UserPassphrasePolicies\Service\Setup\SetupStartUserPassphrasePoliciesInfoService;
@@ -41,30 +36,8 @@ class EePlugin extends BasePlugin
     /**
      * @inheritDoc
      */
-    public function console($commands): CommandCollection
-    {
-        // Alias license_check to subscription_check for retro compatibility
-        $commands->add('passbolt license_check', SubscriptionCheckCommand::class);
-        $commands->add('passbolt subscription_check', SubscriptionCheckCommand::class);
-        $commands->add('passbolt subscription_import', SubscriptionImportCommand::class);
-
-        return $commands;
-    }
-
-    /**
-     * @inheritDoc
-     */
     public function services(ContainerInterface $container): void
     {
-        if ($container->has(SubscriptionCheckInCommandServiceInterface::class)) {
-            $container
-                ->extend(SubscriptionCheckInCommandServiceInterface::class)
-                ->setConcrete(EeSubscriptionCheckInCommandService::class);
-            $container->add(SubscriptionCheckCommand::class)->addArguments([
-                SubscriptionCheckInCommandServiceInterface::class,
-            ]);
-        }
-
         $container
             ->extend(HealthcheckServiceCollector::class)
             ->setConcrete(EeHealthcheckServiceCollector::class);

@@ -37,7 +37,8 @@ class EeSolutionBootstrapper extends BaseSolutionBootstrapper
             $app->addPlugin('PassboltTestData', ['bootstrap' => true, 'routes' => false]);
         }
 
-        $app->addPlugin('Passbolt/Ee', ['bootstrap' => true, 'routes' => true]);
+        $app->addPlugin('Passbolt/Ee', ['bootstrap' => true]);
+        $app->addPlugin('Passbolt/Subscription', ['bootstrap' => true, 'routes' => true]);
         $this->addFeaturePluginIfEnabled($app, 'JwtAuthentication');
 
         // Add tags plugin if not configured.
