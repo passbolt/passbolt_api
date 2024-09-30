@@ -102,7 +102,7 @@ class GenerateOpenPGPKeyService
         $this->run([
             'gpg','--batch',
             '--homedir', $this->gnupghome,
-            '--pinentry-mode', 'loopback', '--passphrase', "''",
+            '--pinentry-mode', 'loopback', '--passphrase', '',
             '--quick-generate-key', $keyname, $algo, $usage, $expires,
         ]);
 
@@ -136,7 +136,7 @@ class GenerateOpenPGPKeyService
         $this->run([
             'gpg','--batch',
             '--homedir', $this->gnupghome,
-            '--pinentry-mode', 'loopback', '--passphrase', "''",
+            '--pinentry-mode', 'loopback', '--passphrase', '',
             '--quick-add-key', $fingerprint, $algo, $usage, $expires,
         ]);
     }
@@ -150,7 +150,7 @@ class GenerateOpenPGPKeyService
         return $this->run([
             'gpg','--batch',
             '--homedir', $this->gnupghome,
-            '--pinentry-mode', 'loopback', '--passphrase', "''",
+            '--pinentry-mode', 'loopback', '--passphrase', '',
             '--armor', '--export-secret-keys', $fingerprint,
         ]);
     }
