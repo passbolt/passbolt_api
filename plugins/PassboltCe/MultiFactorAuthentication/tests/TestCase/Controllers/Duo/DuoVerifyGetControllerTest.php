@@ -51,4 +51,11 @@ class DuoVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->assertResponseCode(400);
         $this->assertResponseContains('The multi-factor authentication is not required.');
     }
+
+    public function testMfaVerifyGetDuo_Error_MfaNotConfigured()
+    {
+        $this->logInAsUser();
+        $this->getJson('/mfa/verify/duo.json?api-version=v2');
+        $this->assertBadRequestError('This functionality is not available using AJAX');
+    }
 }
