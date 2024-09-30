@@ -41,7 +41,7 @@ class ResourcesAddController extends AppController
     {
         $this->assertJson();
 
-        $resourceDto = new MetadataResourceDto((array)$this->getRequest()->getData());
+        $resourceDto = new MetadataResourceDto($this->getRequest()->getData());
         $resource = $resourcesAddService->add(
             $this->User->getAccessControl(),
             $resourceDto
