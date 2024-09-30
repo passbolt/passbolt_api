@@ -18,22 +18,19 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Resources;
 
 use App\Model\Entity\Permission;
+use App\Test\Factory\FavoriteFactory;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
-use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\Utility\Hash;
 use Passbolt\Folders\FoldersPlugin;
-use PassboltTestData\Lib\PermissionMatrix;
 
 class ResourcesIndexControllerTest extends AppIntegrationTestCase
 {
     use FavoritesModelTrait;
-
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources',
-        'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions',
-    ];
 
     public function setUp(): void
     {
@@ -41,9 +38,12 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->enableFeaturePlugin(FoldersPlugin::class);
     }
 
-    public function testResourcesIndexController_Success(): void
+    public function testResourcesIndexController_Success_WithFactories(): void
     {
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        ResourceFactory::make(3)->withPermissionsFor([$user], Permission::READ)->persist();
+        ResourceFactory::make(3)->withPermissionsFor([$user], Permission::UPDATE)->persist();
+        ResourceFactory::make(3)->withPermissionsFor([$user])->persist();
         $this->getJson('/resources.json?filter=[]');
         $this->assertSuccess();
         $this->assertGreaterThan(1, count($this->_responseJsonBody));
@@ -61,14 +61,30 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
     }
 
-    public function testResourcesIndexController_Success_WithContain(): void
+    public function testResourcesIndexController_Success_WithContain_WithFactories(): void
     {
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        ResourceFactory::make()->withPermissionsFor([$user], Permission::READ)
+            ->withSecretsFor([$user])
+            ->withCreator(UserFactory::make())
+            ->with('Modifier')
+            ->persist();
+        ResourceFactory::make(3)->withPermissionsFor([$user], Permission::UPDATE)
+            ->withSecretsFor([$user])
+            ->withCreator(UserFactory::make())
+            ->with('Modifier')
+            ->persist();
+        $favoriteResource = ResourceFactory::make()->withPermissionsFor([$user])
+            ->withSecretsFor([$user])
+            ->withCreator(UserFactory::make())
+            ->with('Modifier')
+            ->with('Favorites', FavoriteFactory::make()->setUser($user))
+            ->persist();
+
         $urlParameter = 'contain[creator]=1&contain[favorite]=1&contain[modifier]=1&contain[permission]=1';
         $urlParameter .= '&contain[permissions.user.profile]=1&contain[permissions.group]=1&contain[secret]=1';
         $this->getJson("/resources.json?$urlParameter");
         $this->assertSuccess();
-
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody[0]);
         // Contain creator.
@@ -97,7 +113,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         // Contain favorite.
         $this->assertObjectHasAttribute('favorite', $this->_responseJsonBody[0]);
         // A resource marked as favorite contains the favorite data.
-        $favoriteResourceId = UuidFactory::uuid('resource.id.apache');
+        $favoriteResourceId = $favoriteResource->id;
         $favoriteResource = current(array_filter($this->_responseJsonBody, function ($resource) use ($favoriteResourceId) {
             return $resource->id == $favoriteResourceId;
         }));
@@ -105,9 +121,12 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertFavoriteAttributes($favoriteResource->favorite);
     }
 
-    public function testResourcesIndexController_Success_FilterIsFavorite(): void
+    public function testResourcesIndexController_Success_FilterIsFavorite_WithFactories(): void
     {
-        $this->authenticateAs('dame');
+        $user = $this->logInAsUser();
+        [$resourceA, $resourceB] = ResourceFactory::make(2)->withPermissionsFor([$user], Permission::READ)
+            ->with('Favorites', FavoriteFactory::make()->setUser($user))
+            ->persist();
         $urlParameter = 'filter[is-favorite]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
         $this->assertSuccess();
@@ -115,7 +134,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
 
         // Check that the result contain only the expected favorite resources.
         $favoriteResourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
-        $expectedResources = [UuidFactory::uuid('resource.id.apache'), UuidFactory::uuid('resource.id.april')];
+        $expectedResources = [$resourceA->id, $resourceB->id];
         $this->assertEquals(0, count(array_diff($expectedResources, $favoriteResourcesIds)));
 
         // Expected fields.
@@ -125,57 +144,58 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
     }
 
-    public function testResourcesIndexController_Success_FilterIsSharedWithGroup(): void
+    public function testResourcesIndexController_Success_FilterIsSharedWithGroup_WithFactories(): void
     {
-        $this->authenticateAs('irene');
-        $groupDId = UuidFactory::uuid('group.id.developer');
-        $urlParameter = "filter[is-shared-with-group]=$groupDId";
+        $user = $this->logInAsUser();
+        $user2 = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
+        $resourceA = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
+        $resourceB = ResourceFactory::make()->withPermissionsFor([$group], Permission::UPDATE)->persist();
+        $resourceC = ResourceFactory::make()->withPermissionsFor([$group])->persist();
+        ResourceFactory::make()->withPermissionsFor([$user2])->persist();
+        $groupId = $group->id;
+        $urlParameter = "filter[is-shared-with-group]=$groupId";
         $this->getJson("/resources.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
         sort($resourcesIds);
 
-        // Extract the resource the group should have access.
-        $permissionsMatrix = PermissionMatrix::getGroupsResourcesPermissions('group');
-        $expectedResourcesIds = [];
-        foreach ($permissionsMatrix['developer'] as $resourceAlias => $resourcePermission) {
-            if ($resourcePermission > 0) {
-                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
-            }
-        }
+        $expectedResourcesIds = [$resourceA->id, $resourceB->id, $resourceC->id];
         sort($expectedResourcesIds);
 
         $this->assertCount(count($expectedResourcesIds), $resourcesIds);
         $this->assertEmpty(array_diff($expectedResourcesIds, $resourcesIds));
     }
 
-    public function testResourcesIndexController_Success_FilterIsSharedWithMe(): void
+    public function testResourcesIndexController_Success_FilterIsSharedWithMe_WithFactories(): void
     {
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $user2 = UserFactory::make()->user()->persist();
+        $resourceA = ResourceFactory::make()->withPermissionsFor([$user], Permission::READ)->persist();
+        $resourceB = ResourceFactory::make()->withPermissionsFor([$user], Permission::UPDATE)->persist();
+        ResourceFactory::make()->withPermissionsFor([$user, $user2])->persist();
+        ResourceFactory::make()->persist();
         $urlParameter = 'filter[is-shared-with-me]=1';
         $this->getJson("/resources.json?$urlParameter&api-version=2");
         $this->assertSuccess();
         $resourcesIds = Hash::extract($this->_responseJsonBody, '{n}.id');
         sort($resourcesIds);
 
-        // Get all resources with permissions.
-        $permissionsMatrix = PermissionMatrix::getCalculatedUsersResourcesPermissions('user');
-        $expectedResourcesIds = [];
-        foreach ($permissionsMatrix['ada'] as $resourceAlias => $resourcePermission) {
-            if ($resourcePermission >= Permission::READ && $resourcePermission < Permission::OWNER) {
-                $expectedResourcesIds[] = UuidFactory::uuid("resource.id.$resourceAlias");
-            }
-        }
+        // Get all resources Ids
+        $expectedResourcesIds = [$resourceA->id, $resourceB->id];
         sort($expectedResourcesIds);
 
-        $this->assertEquals($resourcesIds, $expectedResourcesIds);
+        $this->assertEquals($expectedResourcesIds, $resourcesIds);
     }
 
-    public function testResourcesIndexController_Success_FilterHasId(): void
+    public function testResourcesIndexController_Success_FilterHasId_WithFactories(): void
     {
-        $this->authenticateAs('ada');
-        $resourceAId = UuidFactory::uuid('resource.id.apache');
-        $resourceBId = UuidFactory::uuid('resource.id.bower');
+        $user = $this->logInAsUser();
+        $resourceA = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $resourceB = ResourceFactory::make()->withPermissionsFor([$user], Permission::READ)->persist();
+        ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $resourceAId = $resourceA->id;
+        $resourceBId = $resourceB->id;
         $urlParameter = "filter[has-id][]=$resourceAId&filter[has-id][]=$resourceBId";
         $this->getJson("/resources.json?$urlParameter&api-version=2");
         $this->assertSuccess();
@@ -186,7 +206,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertContains($resourceBId, $resourcesIds);
     }
 
-    public function testResourcesIndexController_Error_NotAuthenticated(): void
+    public function testResourcesIndexController_Error_NotAuthenticated_WithFactories(): void
     {
         $this->getJson('/resources.json');
         $this->assertAuthenticationError();
@@ -195,10 +215,17 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
     /**
      * Check that calling url without JSON extension throws a 404
      */
-    public function testResourcesIndexController_Error_NotJson(): void
+    public function testResourcesIndexController_Error_NotJson_WithFactories(): void
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->get('/resources');
         $this->assertResponseCode(404);
+    }
+
+    public function testResourcesIndexController_InvalidFilterSharedWithGroup(): void
+    {
+        $this->authenticateAs('ada');
+        $this->getJson('/resources.json?filter[is-shared-with-group]=1');
+        $this->assertBadRequestError('Invalid filter');
     }
 }

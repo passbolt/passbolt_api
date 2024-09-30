@@ -51,7 +51,7 @@ class MfaVerifyControllerTest extends MfaIntegrationTestCase
         $this->assertRedirect('/');
 
         $this->getJson('/mfa/verify/totp.json');
-        $this->assertInternalError('No valid multi-factor authentication settings found.');
+        $this->assertBadRequestError('No valid multi-factor authentication settings found.');
     }
 
     public function testMfaVerifyControllerHandleInvalidSettings_MFASetForUserButNotForOrg()
