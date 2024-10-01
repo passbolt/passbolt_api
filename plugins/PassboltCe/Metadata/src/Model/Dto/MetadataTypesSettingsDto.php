@@ -48,6 +48,8 @@ class MetadataTypesSettingsDto
         self::ALLOW_CREATION_OF_V4_COMMENTS,
     ];
 
+    public const ENTITY_RESOURCE = 'resource';
+
     /**
      * @var array data
      */
@@ -74,6 +76,24 @@ class MetadataTypesSettingsDto
             self::ALLOW_CREATION_OF_V4_TAGS => $data[self::ALLOW_CREATION_OF_V4_TAGS] ?? null,
             self::ALLOW_CREATION_OF_V4_COMMENTS => $data[self::ALLOW_CREATION_OF_V4_COMMENTS] ?? null,
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV5ResourceCreationAllowed(): bool
+    {
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV4ResourceCreationAllowed(): bool
+    {
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES];
     }
 
     /**

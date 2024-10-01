@@ -28,6 +28,8 @@ use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
@@ -40,6 +42,7 @@ class ResourcesAddService
 {
     use LocatorAwareTrait;
     use ResourceSaveV5AwareTrait;
+    use MetadataSettingsAwareTrait;
 
     public const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
 
@@ -84,6 +87,8 @@ class ResourcesAddService
      */
     public function add(UserAccessControl $uac, MetadataResourceDto $resourceDto): Resource
     {
+        $this->assertCreationAllowedByMetadataSettings($resourceDto->isV5(), MetadataTypesSettingsDto::ENTITY_RESOURCE);
+
         $this->attachListenerToAfterSaveEvent($uac, $resourceDto);
         $attempts = 1;
         do {
