@@ -247,14 +247,14 @@ class GroupsTable extends Table
 
         // Check validation rules.
         $group = $this->buildEntity($data);
-        if (!empty($group->getErrors())) {
+        if ($group->getErrors()) {
             throw new ValidationException(__('Could not validate group data.'), $group, $this);
         }
 
         $groupSaved = $this->save($group);
 
         // Check for validation errors. (associated models too).
-        if (!empty($group->getErrors())) {
+        if ($group->getErrors()) {
             throw new ValidationException(__('Could not validate group data.'), $group, $this);
         }
 

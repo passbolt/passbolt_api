@@ -84,7 +84,7 @@ class MfaUserSettingsDeleteController extends MfaController
         try {
             $mfaSettings = MfaAccountSettings::get(new UserAccessControl($user->role->name, $userId));
 
-            if (!empty($mfaSettings->getEnabledProviders())) {
+            if ($mfaSettings->getEnabledProviders()) {
                 $mfaSettings->delete();
                 $message = __('The multi-factor authentication settings for the user were deleted.');
             }
