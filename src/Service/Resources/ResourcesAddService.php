@@ -87,7 +87,7 @@ class ResourcesAddService
      */
     public function add(UserAccessControl $uac, MetadataResourceDto $resourceDto): Resource
     {
-        $this->assertAgainstMetadataSettings($resourceDto->isV5(), MetadataTypesSettingsDto::ENTITY_RESOURCE);
+        $this->assertCreationAllowedByMetadataSettings($resourceDto->isV5(), MetadataTypesSettingsDto::ENTITY_RESOURCE);
 
         $this->attachListenerToAfterSaveEvent($uac, $resourceDto);
         $attempts = 1;

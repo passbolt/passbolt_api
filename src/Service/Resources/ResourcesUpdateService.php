@@ -92,7 +92,7 @@ class ResourcesUpdateService
      */
     public function update(UserAccessControl $uac, string $id, MetadataResourceDto $resourceDto): Resource
     {
-        $this->assertAgainstMetadataSettings($resourceDto->isV5(), MetadataTypesSettingsDto::ENTITY_RESOURCE);
+        $this->assertCreationAllowedByMetadataSettings($resourceDto->isV5(), MetadataTypesSettingsDto::ENTITY_RESOURCE);
 
         $resource = $this->getResource($uac, $id);
         $meta = $this->extractDataResourceMeta($resourceDto);

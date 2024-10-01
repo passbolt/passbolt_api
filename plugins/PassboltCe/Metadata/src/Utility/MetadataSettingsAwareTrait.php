@@ -29,9 +29,15 @@ trait MetadataSettingsAwareTrait
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException If entity creation/modification is not allowed.
      */
-    public function assertAgainstMetadataSettings(bool $isV5, string $entity): void
+    public function assertCreationAllowedByMetadataSettings(bool $isV5, string $entity): void
     {
-        if (!Configure::read('passbolt.v5.enabled')) {
+        $v5Enabled = Configure::read('passbolt.v5.enabled');
+
+        if (!$v5Enabled && $isV5) {
+            throw new BadRequestException(__('V5 metadata format is not enabled.'));
+        }
+        if (!$v5Enabled) {
+            // No need to assert if format is v4 and v5 config is disabled
             return;
         }
 
@@ -40,13 +46,13 @@ trait MetadataSettingsAwareTrait
         if ($isV5) {
             if ($entity === MetadataTypesSettingsDto::ENTITY_RESOURCE) {
                 if (!$settingsDto->isV5ResourceCreationAllowed()) {
-                    throw new BadRequestException(__('Resource creation/modification with encrypted metadata not allowed')); // phpcs:ignore
+                    throw new BadRequestException(__('Resource creation/modification with encrypted metadata not allowed.')); // phpcs:ignore
                 }
             }
         } else {
             if ($entity === MetadataTypesSettingsDto::ENTITY_RESOURCE) {
                 if (!$settingsDto->isV4ResourceCreationAllowed()) {
-                    throw new BadRequestException(__('Resource creation/modification with cleartext metadata not allowed')); // phpcs:ignore
+                    throw new BadRequestException(__('Resource creation/modification with cleartext metadata not allowed.')); // phpcs:ignore
                 }
             }
         }
