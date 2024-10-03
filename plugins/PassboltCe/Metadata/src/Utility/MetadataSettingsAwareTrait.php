@@ -48,11 +48,19 @@ trait MetadataSettingsAwareTrait
                 if (!$settingsDto->isV5ResourceCreationAllowed()) {
                     throw new BadRequestException(__('Resource creation/modification with encrypted metadata not allowed.')); // phpcs:ignore
                 }
+            } elseif ($entity === MetadataTypesSettingsDto::ENTITY_FOLDER) {
+                if (!$settingsDto->isV5FolderCreationAllowed()) {
+                    throw new BadRequestException(__('Folder creation/modification with encrypted metadata not allowed.')); // phpcs:ignore
+                }
             }
         } else {
             if ($entity === MetadataTypesSettingsDto::ENTITY_RESOURCE) {
                 if (!$settingsDto->isV4ResourceCreationAllowed()) {
                     throw new BadRequestException(__('Resource creation/modification with cleartext metadata not allowed.')); // phpcs:ignore
+                }
+            } elseif ($entity === MetadataTypesSettingsDto::ENTITY_FOLDER) {
+                if (!$settingsDto->isV4FolderCreationAllowed()) {
+                    throw new BadRequestException(__('Folder creation/modification with cleartext metadata not allowed.')); // phpcs:ignore
                 }
             }
         }
