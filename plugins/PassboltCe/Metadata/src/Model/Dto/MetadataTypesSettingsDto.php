@@ -49,6 +49,7 @@ class MetadataTypesSettingsDto
     ];
 
     public const ENTITY_RESOURCE = 'resource';
+    public const ENTITY_FOLDER = 'folder';
 
     /**
      * @var array data
@@ -83,8 +84,7 @@ class MetadataTypesSettingsDto
      */
     public function isV5ResourceCreationAllowed(): bool
     {
-        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES])
-            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES];
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]);
     }
 
     /**
@@ -92,8 +92,23 @@ class MetadataTypesSettingsDto
      */
     public function isV4ResourceCreationAllowed(): bool
     {
-        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES])
-            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES];
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV5FolderCreationAllowed(): bool
+    {
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV4FolderCreationAllowed(): bool
+    {
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]);
     }
 
     /**

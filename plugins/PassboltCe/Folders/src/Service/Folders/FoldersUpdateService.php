@@ -27,12 +27,15 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Utility\Folders\FolderSaveV5AwareTrait;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 
 class FoldersUpdateService
 {
     use EventDispatcherTrait;
     use FolderSaveV5AwareTrait;
+    use MetadataSettingsAwareTrait;
 
     public const FOLDERS_UPDATE_FOLDER_EVENT = 'folders.folder.update';
 
@@ -66,6 +69,8 @@ class FoldersUpdateService
      */
     public function update(UserAccessControl $uac, string $id, MetadataFolderDto $folderDto)
     {
+        $this->assertCreationAllowedByMetadataSettings($folderDto->isV5(), MetadataTypesSettingsDto::ENTITY_FOLDER);
+
         $folder = $this->getFolder($uac, $id);
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto) {

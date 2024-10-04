@@ -34,12 +34,15 @@ use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Utility\Folders\FolderSaveV5AwareTrait;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 
 class FoldersCreateService
 {
     use EventDispatcherTrait;
     use FolderSaveV5AwareTrait;
+    use MetadataSettingsAwareTrait;
 
     public const FOLDERS_CREATE_FOLDER_EVENT = 'folders.folder.create';
 
@@ -84,6 +87,8 @@ class FoldersCreateService
      */
     public function create(UserAccessControl $uac, MetadataFolderDto $folderDto): Folder
     {
+        $this->assertCreationAllowedByMetadataSettings($folderDto->isV5(), MetadataTypesSettingsDto::ENTITY_FOLDER);
+
         $folder = null;
 
         $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto) {
