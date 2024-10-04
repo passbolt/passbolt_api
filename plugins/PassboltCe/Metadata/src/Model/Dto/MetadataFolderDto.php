@@ -182,4 +182,21 @@ class MetadataFolderDto
             throw new BadRequestException($msg);
         }
     }
+
+    /**
+     * Returns metadata array in cleartext form as per v5 format.
+     *
+     * @return array
+     */
+    public function getClearTextMetadata(): array
+    {
+        return [
+            'object_type' => 'PASSBOLT_FOLDER_METADATA',
+            'name' => $this->name,
+            // below fields are null for now will be added in future
+            'color' => null,
+            'description' => null,
+            'icon' => null,
+        ];
+    }
 }

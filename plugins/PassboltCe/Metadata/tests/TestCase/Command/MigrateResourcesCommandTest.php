@@ -141,7 +141,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         }
     }
 
-    public function testMigrateResourcesCommand_Error_FewResourcesNotMigrate(): void
+    public function testMigrateResourcesCommand_Error_PartialFailures(): void
     {
         MetadataSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
@@ -174,6 +174,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         $this->exec('passbolt metadata migrate_resources');
 
         $this->assertExitError();
+        $this->assertOutputContains('<success>1 resources were migrated.</success>');
         $this->assertOutputContains('All resources could not migrated.');
         $this->assertOutputContains('See errors:');
         $this->assertOutputContains('Record not found in table "metadata_keys"');
