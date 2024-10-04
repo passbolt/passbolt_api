@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Form;
 
 use Cake\Form\Form;
 use Cake\Form\Schema;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 
@@ -218,7 +219,7 @@ class MetadataTypesSettingsForm extends Form
      */
     protected function sanitizeData(array $data): array
     {
-        return [
+        $data = [
             'default_resource_types' => $data['default_resource_types'] ?? null,
             'default_folder_type' => $data['default_folder_type'] ?? null,
             'default_tag_type' => $data['default_tag_type'] ?? null,
@@ -232,5 +233,24 @@ class MetadataTypesSettingsForm extends Form
             'allow_creation_of_v4_comments' => $data['allow_creation_of_v4_comments'] ?? null,
             'allow_creation_of_v4_tags' => $data['allow_creation_of_v4_tags'] ?? null,
         ];
+
+        $booleanFields = [
+            'allow_creation_of_v5_resources',
+            'allow_creation_of_v5_folders',
+            'allow_creation_of_v5_comments',
+            'allow_creation_of_v5_tags',
+            'allow_creation_of_v4_resources',
+            'allow_creation_of_v4_folders',
+            'allow_creation_of_v4_comments',
+            'allow_creation_of_v4_tags',
+        ];
+        foreach ($data as $field => $value) {
+            // Convert values like '1', '0' to boolean data type
+            if (in_array($field, $booleanFields) && Validation::boolean($value)) {
+                $data[$field] = (bool)$value;
+            }
+        }
+
+        return $data;
     }
 }

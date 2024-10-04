@@ -121,7 +121,9 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
         $settings = [];
         foreach ($dto->toArray() as $key => $setting) {
             $key = Purifier::clean(ucfirst(str_replace('_', ' ', $key)));
-            $settings[$key] = Purifier::clean($setting);
+            if (is_string($setting)) {
+                $settings[$key] = Purifier::clean($setting);
+            }
         }
 
         return new Email(
