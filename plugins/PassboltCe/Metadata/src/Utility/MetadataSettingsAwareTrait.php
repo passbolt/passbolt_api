@@ -33,6 +33,15 @@ trait MetadataSettingsAwareTrait
     }
 
     /**
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException If V5 folder creation/modification is allowed.
+     */
+    public function assertV5FolderCreationEnabled(): void
+    {
+        $this->assertCreationAllowedByMetadataSettings(true, MetadataTypesSettingsDto::ENTITY_FOLDER);
+    }
+
+    /**
      * @param bool $isV5 Format is V5 or not.
      * @param string $entity Entity to check for (resource, folder, etc.)
      * @return void

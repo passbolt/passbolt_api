@@ -40,8 +40,10 @@ trait GpgMetadataKeysTestTrait
     {
         return [
             'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key'), // ecc, curve25519
+            'private_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_private.key'),
             'fingerprint' => '3EED5E73EA34C95198A904067B28D501637D5102',
             'email' => 'maki@passbolt.com',
+            'passphrase' => 'maki@passbolt.com',
         ];
     }
 
@@ -375,7 +377,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
     /**
      * @param string $data Data to encrypt
      * @param User $user User entity.
-     * @param string $passphrase Passphrase.
+     * @param array $keyInfo Key information.
      * @return string Encrypted data.
      */
     private function encryptForUser(string $data, User $user, array $keyInfo): string

@@ -16,29 +16,32 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service\Migration;
 
-use App\Model\Entity\Resource;
-use App\Model\Table\ResourcesTable;
+use App\Model\Table\PermissionsTable;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Service\OpenPGP\OpenPGPCommonUserOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
-use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
-class MigrateAllV4ResourcesToV5Service
+class MigrateAllV4FoldersToV5Service
 {
     use LocatorAwareTrait;
     use OpenPGPCommonMetadataOperationsTrait;
     use OpenPGPCommonUserOperationsTrait;
     use OpenPGPCommonServerOperationsTrait;
     use MetadataSettingsAwareTrait;
+    use FoldersFindersTrait;
 
-    private ResourcesTable $Resources;
+    private FoldersTable $Folders;
+
+    private PermissionsTable $Permissions;
 
     /**
      * Result of migration.
@@ -57,60 +60,56 @@ class MigrateAllV4ResourcesToV5Service
     public function __construct()
     {
         /** @phpstan-ignore-next-line */
-        $this->Resources = $this->fetchTable('Resources');
+        $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
+        /** @phpstan-ignore-next-line */
+        $this->Permissions = $this->fetchTable('Permissions');
     }
 
     /**
-     * Migrates all V4 resources to V5.
+     * Migrates all V4 folders to V5.
      *
      * @return array Result
-     * @throws \Cake\Http\Exception\BadRequestException If V5 resource creation/modification is not allowed.
      */
     public function migrate(): array
     {
-        $this->assertV5ResourceCreationEnabled();
+        $this->assertV5FolderCreationEnabled();
 
-        $v4ResourceTypes = [
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP),
-        ];
-        /** @var \App\Model\Entity\Resource[] $resources */
-        $resources = $this->Resources
+        /** @var \Passbolt\Folders\Model\Entity\Folder[] $folders */
+        $folders = $this->Folders
             ->find()
-            ->contain(['Permissions.Users.Gpgkeys', 'Creator.Gpgkeys'])
-            ->where(['resource_type_id IN' => $v4ResourceTypes])
+            ->contain(['Permissions.Users.Gpgkeys'])
+            ->where(['name IS NOT NULL'])
             ->all()
             ->toArray();
 
-        if (empty($resources)) {
-            $this->addError(['error_message' => __('No resources to migrate.')]);
+        if (empty($folders)) {
+            $this->addError(['error_message' => __('No folders to migrate.')]);
 
             return $this->getResult();
         }
 
-        foreach ($resources as $resource) {
-            $dto = MetadataResourceDto::fromArray($resource->toArray());
+        foreach ($folders as $folder) {
+            $dto = MetadataFolderDto::fromArray($folder->toArray());
 
             try {
                 if ($dto->isV5()) {
-                    $msg = __('Resource ID "{0}" is already V5', $resource->id);
+                    $msg = __('Folder ID "{0}" is already V5', $folder->id);
                     throw new InternalErrorException($msg);
                 }
-                if (count($resource->permissions) === 0) {
-                    $msg = __('No permission found for resource ID {0}', $resource->id);
+                if (count($folder->permissions) === 0) {
+                    $msg = __('No permission found for folder ID {0}', $folder->id);
                     throw new InternalErrorException($msg);
                 }
-                if (count($resource->permissions) === 1) {
-                    $this->migratePersonal($dto, $resource);
+
+                if (count($folder->permissions) === 1) {
+                    $this->migratePersonal($dto, $folder);
                 } else {
-                    $this->migrateShared($dto, $resource);
+                    $this->migrateShared($dto, $folder);
                 }
-                $this->addMigrated($resource);
+                $this->addMigrated($folder);
             } catch (\Exception $e) {
                 // Continue with next resource if any error
-                $error = ['resource_id' => $resource->id, 'error_message' => $e->getMessage()];
+                $error = ['folder_id' => $folder->id, 'error_message' => $e->getMessage()];
                 if (Configure::read('debug')) {
                     $error['trace'] = $e->getTraceAsString();
                 }
@@ -134,29 +133,28 @@ class MigrateAllV4ResourcesToV5Service
     }
 
     /**
-     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $dto DTO.
-     * @param \App\Model\Entity\Resource $resource Resource entity.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $dto DTO.
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder Folder entity.
      * @return void
-     * @throws \Cake\Http\Exception\InternalErrorException When resource type mapping is does not exist.
      */
-    private function migratePersonal(MetadataResourceDto $dto, Resource $resource): void
+    private function migratePersonal(MetadataFolderDto $dto, Folder $folder): void
     {
         $metadataArray = $dto->getClearTextMetadata();
 
         /** @var \App\Model\Entity\Permission $permission */
-        $permission = $resource->get('permissions')[0];
+        $permission = $folder->get('permissions')[0];
         $user = $permission->user;
-
-        if (!isset($user)) {
+        if (is_null($user)) {
             $msg = __('No user provided.') . ' ';
             $msg .= __('The metadata could not be encrypted for permission id: {0}.', $permission->id);
             throw new InternalErrorException($msg);
         }
-        if (!isset($user->gpgkey)) {
+        if (is_null($user->gpgkey)) {
             $msg = __('No OpenPGP key found for the user.') . ' ';
             $msg .= __('The metadata could not be encrypted with the user id: {0}.', $user->id);
             throw new InternalErrorException($msg);
         }
+
         try {
             $gpg = OpenPGPBackendFactory::get();
             $gpg->clearKeys();
@@ -170,12 +168,8 @@ class MigrateAllV4ResourcesToV5Service
             throw new InternalErrorException($msg, 500, $exception);
         }
 
-        $this->updateResource($resource, [
+        $this->updateFolder($folder, [
             'name' => null,
-            'username' => null,
-            'uri' => null,
-            'description' => null,
-            'resource_type_id' => $this->getV5ResourceType($resource->resource_type_id),
             'metadata' => $metadataEncrypted,
             'metadata_key_id' => $user->gpgkey->id,
             'metadata_key_type' => 'user_key',
@@ -183,13 +177,12 @@ class MigrateAllV4ResourcesToV5Service
     }
 
     /**
-     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $dto DTO.
-     * @param \App\Model\Entity\Resource $resource Resource entity.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $dto DTO.
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder Entity.
      * @return void
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no metadata key record.
-     * @throws \Cake\Http\Exception\InternalErrorException When resource type mapping is does not exist.
      */
-    private function migrateShared(MetadataResourceDto $dto, Resource $resource): void
+    private function migrateShared(MetadataFolderDto $dto, Folder $folder): void
     {
         $metadataArray = $dto->getClearTextMetadata();
         $metadataKey = $this->getMetadataKeyForEncryption();
@@ -207,12 +200,8 @@ class MigrateAllV4ResourcesToV5Service
             throw new InternalErrorException($msg, 500, $exception);
         }
 
-        $this->updateResource($resource, [
+        $this->updateFolder($folder, [
             'name' => null,
-            'username' => null,
-            'uri' => null,
-            'description' => null,
-            'resource_type_id' => $this->getV5ResourceType($resource->resource_type_id),
             'metadata' => $metadataEncrypted,
             'metadata_key_id' => $metadataKey->id,
             'metadata_key_type' => 'shared_key',
@@ -222,47 +211,27 @@ class MigrateAllV4ResourcesToV5Service
     }
 
     /**
-     * @param string $v4ResourceTypeId V4 Resource type identifier to get mapping from.
-     * @return string Mapped V5 resource type identifier.
-     * @throws \Cake\Http\Exception\InternalErrorException If mapping doesn't exist.
-     */
-    private function getV5ResourceType(string $v4ResourceTypeId): string
-    {
-        $mapping = ResourceType::getV5Mapping();
-        if (!isset($mapping[$v4ResourceTypeId])) {
-            throw new InternalErrorException(__('No resource type mapping for ID \'{0}\'', $v4ResourceTypeId));
-        }
-
-        return $mapping[$v4ResourceTypeId];
-    }
-
-    /**
      * Updates entity with given data.
      *
-     * @param \App\Model\Entity\Resource $resource Resource entity to update.
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder Folder entity to update.
      * @param array $data Data to update.
      * @return void
      */
-    private function updateResource(Resource $resource, array $data): void
+    private function updateFolder(Folder $folder, array $data): void
     {
         try {
-            $resource = $this->Resources->patchEntity($resource, $data, [
+            $folder = $this->Folders->patchEntity($folder, $data, [
                 'accessibleFields' => [
                     'name' => true,
-                    'username' => true,
-                    'uri' => true,
-                    'description' => true,
-                    'resource_type_id' => true,
                     'metadata' => true,
                     'metadata_key_id' => true,
                     'metadata_key_type' => true,
-                    'modified_by' => true,
                 ],
                 'validate' => 'v5',
             ]);
-            $this->Resources->saveOrFail($resource, ['checkRules' => false]);
+            $this->Folders->saveOrFail($folder, ['checkRules' => false]);
         } catch (\Exception $exception) {
-            $msg = __('Unable to migrate resource ID: {0} to V5.', $resource->id);
+            $msg = __('Unable to migrate folder ID: {0} to V5.', $folder->id);
             $msg .= ' ' . $exception->getMessage();
             throw new InternalErrorException($msg, 500, $exception);
         }
@@ -295,11 +264,11 @@ class MigrateAllV4ResourcesToV5Service
     }
 
     /**
-     * @param \App\Model\Entity\Resource $resource entity
+     * @param \Passbolt\Folders\Model\Entity\Folder $folder entity
      * @return void
      */
-    private function addMigrated(Resource $resource): void
+    private function addMigrated(Folder $folder): void
     {
-        $this->result['migrated'][] = $resource->id;
+        $this->result['migrated'][] = $folder->id;
     }
 }
