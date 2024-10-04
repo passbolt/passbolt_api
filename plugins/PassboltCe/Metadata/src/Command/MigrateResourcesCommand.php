@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Command;
 use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
+use Cake\Http\Exception\BadRequestException;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
 
 class MigrateResourcesCommand extends PassboltCommand
@@ -38,8 +39,15 @@ class MigrateResourcesCommand extends PassboltCommand
     {
         parent::execute($args, $io);
 
-        $migrateService = (new MigrateAllV4ResourcesToV5Service());
-        $result = $migrateService->migrate();
+        try {
+            $result = (new MigrateAllV4ResourcesToV5Service())->migrate();
+        } catch (BadRequestException $e) {
+            $msg = $e->getMessage();
+            $msg .= "\n";
+            $msg .= __('To enable, set "allow_creation_of_v5_resources" metadata settings to true via `update_metadata_types_settings` command.'); // phpcs:ignore
+
+            $io->abort($msg);
+        }
 
         if (isset($result['migrated']) && count($result['migrated'])) {
             $this->error(__('{0} resources were migrated.', count($result['migrated'])), $io);

@@ -27,6 +27,7 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateResourcesTestTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -62,6 +63,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateResourcesCommand_Success_MultipleResources(): void
     {
+        MetadataSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
         $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
@@ -141,6 +143,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateResourcesCommand_Error_FewResourcesNotMigrate(): void
     {
+        MetadataSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
         $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
@@ -193,11 +196,45 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateResourcesCommand_Error_NoResources(): void
     {
+        MetadataSettingsFactory::make()->v5()->persist();
+
         $this->exec('passbolt metadata migrate_resources');
 
         $this->assertExitError();
         $this->assertOutputContains('All resources could not migrated.');
         $this->assertOutputContains('See errors:');
         $this->assertOutputContains('No resources to migrate.');
+    }
+
+    public function testMigrateResourcesCommand_Error_AllowCreationOfV5ResourcesDisabled(): void
+    {
+        MetadataSettingsFactory::make()->v4()->persist(); // only allow V4 format
+        $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5DefaultResourceType */
+        ResourceTypeFactory::make()->v5Default()->persist();
+        $adaKeyInfo = [
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
+            'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+        ];
+        $bettyKeyInfo = [
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key'),
+            'fingerprint' => 'A754860C3ADE5AB04599025ED3F1FE4BE61D7009',
+        ];
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make($adaKeyInfo))
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->with('ResourceTypes', $v4ResourceType)
+            ->withPermissionsFor([$ada])
+            ->withCreator(UserFactory::make()->user()->with('Gpgkeys', GpgkeyFactory::make($bettyKeyInfo)))
+            ->persist();
+
+        $this->exec('passbolt metadata migrate_resources');
+
+        $this->assertExitError();
+        $this->assertErrorContains('Resource creation/modification with encrypted metadata not allowed');
     }
 }

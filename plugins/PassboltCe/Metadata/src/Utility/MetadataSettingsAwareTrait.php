@@ -24,6 +24,15 @@ use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 trait MetadataSettingsAwareTrait
 {
     /**
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException If V5 resource creation/modification is not allowed.
+     */
+    public function assertV5ResourceCreationEnabled(): void
+    {
+        $this->assertCreationAllowedByMetadataSettings(true, MetadataTypesSettingsDto::ENTITY_RESOURCE);
+    }
+
+    /**
      * @param bool $isV5 Format is V5 or not.
      * @param string $entity Entity to check for (resource, folder, etc.)
      * @return void

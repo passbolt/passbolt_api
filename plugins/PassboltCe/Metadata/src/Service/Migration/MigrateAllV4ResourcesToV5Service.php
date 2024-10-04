@@ -27,6 +27,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
 class MigrateAllV4ResourcesToV5Service
@@ -35,6 +36,7 @@ class MigrateAllV4ResourcesToV5Service
     use OpenPGPCommonMetadataOperationsTrait;
     use OpenPGPCommonUserOperationsTrait;
     use OpenPGPCommonServerOperationsTrait;
+    use MetadataSettingsAwareTrait;
 
     private ResourcesTable $Resources;
 
@@ -62,10 +64,12 @@ class MigrateAllV4ResourcesToV5Service
      * Migrates all V4 resources to V5.
      *
      * @return array Result
+     * @throws \Cake\Http\Exception\BadRequestException If V5 resource creation/modification is not allowed.
      */
     public function migrate(): array
     {
-        //TODO Assert settings MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCE === true
+        $this->assertV5ResourceCreationEnabled();
+
         $v4ResourceTypes = [
             UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING),
             UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
@@ -88,6 +92,7 @@ class MigrateAllV4ResourcesToV5Service
 
         foreach ($resources as $resource) {
             $dto = MetadataResourceDto::fromArray($resource->toArray());
+
             try {
                 if ($dto->isV5()) {
                     $msg = __('Resource ID "{0}" is already V5', $resource->id);
