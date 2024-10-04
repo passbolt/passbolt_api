@@ -54,7 +54,9 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheckTest extends AppTestCaseV5
 
     public function testMetadataServerCanDecryptMetadataPrivateKeyHealthcheck_Error_UnableToDecrypt(): void
     {
-        MetadataPrivateKeyFactory::make(['user_id' => null])->withMetadataKey()->persist();
+        // Set a message that is not for server
+        $msg = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg');
+        MetadataPrivateKeyFactory::make(['user_id' => null, 'data' => $msg])->withMetadataKey()->persist();
 
         $service = new ServerCanDecryptMetadataPrivateKeyHealthcheck();
         $service->check();
