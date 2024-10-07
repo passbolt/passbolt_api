@@ -14,24 +14,26 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-namespace Passbolt\Metadata\Service;
+namespace Passbolt\Metadata\Controller;
 
-use App\Model\Entity\User;
+use App\Controller\AppController;
+use Passbolt\Metadata\Service\MetadataKeysSettingsSetService;
 
-interface MetadataKeyShareServiceInterface
+class MetadataKeysSettingsPostController extends AppController
 {
     /**
-     * Share the shared metadata key(s) for a given user
+     * Metadata settings POST action
      *
-     * @param \App\Model\Entity\User $user entity
-     * @throws \Passbolt\Metadata\Exception\MetadataKeyShareException
      * @return void
      */
-    public function shareMetadataKeysWithUser(User $user): void;
+    public function post()
+    {
+        $this->User->assertIsAdmin();
+        $this->assertNotEmptyArrayData();
 
-    /**
-     * @param \Exception $exception exception from shareMetadataKeyWithUser
-     * @return void
-     */
-    public function onFailure(\Exception $exception): void;
+        $service = new MetadataKeysSettingsSetService();
+        $settings = $service->saveSettings($this->User->getAccessControl(), $this->getRequest()->getData());
+
+        $this->success(__('The operation was successful.'), $settings->toArray());
+    }
 }

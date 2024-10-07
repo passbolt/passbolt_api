@@ -31,7 +31,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -66,7 +66,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->service = new ResourcesAddService();
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
     }
 
     public function tearDown(): void

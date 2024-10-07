@@ -28,7 +28,7 @@ use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ItemsToV5Service;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateFoldersTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateResourcesTestTrait;
@@ -85,7 +85,7 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4ItemsToV5Service_Success(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         // Folder
         $adaKeyInfo = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
@@ -140,7 +140,7 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4ItemsToV5Service_Error_NoActiveMetadataKey(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -168,7 +168,7 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4ItemsToV5Service_Error_ItemsAreAlreadyV5(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
         ResourceTypeFactory::make()->v5Default()->persist();

@@ -23,7 +23,7 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateFoldersTestTrait;
 
@@ -58,7 +58,7 @@ class MigrateFoldersCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateFoldersCommand_Success_MultipleFolders(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -118,7 +118,7 @@ class MigrateFoldersCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateFoldersCommand_Error_PartialFailures(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -154,7 +154,7 @@ class MigrateFoldersCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateFoldersCommand_Error_NoFolders(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
 
         $this->exec('passbolt metadata migrate_folders');
 
@@ -166,7 +166,7 @@ class MigrateFoldersCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateFoldersCommand_Error_CreationOfV5FoldersIsDisabled(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         $this->exec('passbolt metadata migrate_folders');
 

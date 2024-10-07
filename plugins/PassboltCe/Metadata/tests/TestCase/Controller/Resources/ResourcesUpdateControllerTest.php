@@ -30,7 +30,7 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -52,7 +52,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesUpdateController_Success_SharedKey(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
@@ -97,7 +97,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesUpdateController_Success_UserKey(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -145,7 +145,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesUpdateController_Error_MixV4V5Fields(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $user = $this->logInAsUser();
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
         $metadataKeyId = UuidFactory::uuid();
@@ -190,7 +190,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
     public function testResourcesUpdateController_Error_AllowModificationOfV5ResourceDisabled(): void
     {
         // Allow only V4 format
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -229,7 +229,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
     public function testResourcesUpdateController_Error_AllowModificationOfV4ResourceDisabled(): void
     {
         // Disable V4 format
-        MetadataSettingsFactory::make()->v6()->persist();
+        MetadataTypesSettingsFactory::make()->v6()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->active()->persist();
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();

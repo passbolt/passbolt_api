@@ -25,12 +25,12 @@ use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
 /**
  * @uses \Passbolt\Metadata\Controller\MetadataTypesSettingsGetController
  */
-class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
+class MetadataTypesSettingsPostControllerTest extends AppIntegrationTestCaseV5
 {
     use EmailQueueTrait;
     use LocatorAwareTrait;
@@ -48,7 +48,7 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
         UserFactory::make()->admin()->disabled()->persist();
         UserFactory::make()->user()->persist();
         $this->logInAs($loggedInUser);
-        $data = MetadataSettingsFactory::getDefaultDataV4();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV4();
         $this->postJson('/metadata/types/settings.json', $data);
         $this->assertResponseCode(200);
         $this->assertEquals(1, OrganizationSettingFactory::count());
@@ -69,7 +69,7 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
         UserFactory::make()->admin()->disabled()->persist();
         UserFactory::make()->user()->persist();
         $this->logInAs($loggedInUser);
-        $data = MetadataSettingsFactory::getDefaultDataV4();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV4();
 
         $data[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
@@ -102,11 +102,11 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
     public function testMetadataTypesSettingsPostController_Error_InvalidData(): void
     {
         $this->logInAsAdmin();
-        $data = MetadataSettingsFactory::getDefaultDataV4();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV4();
         $data[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES] = 'v8';
         $this->postJson('/metadata/types/settings.json', $data);
         $this->assertResponseCode(400);
-        $this->assertResponseContains('Could not validate the metadata settings');
+        $this->assertResponseContains('Could not validate the settings');
     }
 
     public function testMetadataTypesSettingsPostController_ErrorSettingsEditionDisabled(): void
@@ -114,7 +114,7 @@ class MetadataSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $setting = Configure::read('passbolt.security.metadata.settings.editionDisabled');
         Configure::write('passbolt.security.metadata.settings.editionDisabled', true);
         $this->logInAsAdmin();
-        $data = MetadataSettingsFactory::getDefaultDataV4();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV4();
         $this->postJson('/metadata/types/settings.json', $data);
         $this->assertResponseCode(403);
         Configure::write('passbolt.security.metadata.settings.editionDisabled', $setting);

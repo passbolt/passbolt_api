@@ -14,24 +14,26 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-namespace Passbolt\Metadata\Service;
+namespace PassboltCe\Metadata\src\Service;
 
 use App\Model\Entity\User;
+use Passbolt\Metadata\Service\MetadataKeyShareServiceInterface;
 
-interface MetadataKeyShareServiceInterface
+class MetadataKeyShareNothingService implements MetadataKeyShareServiceInterface
 {
     /**
-     * Share the shared metadata key(s) for a given user
-     *
-     * @param \App\Model\Entity\User $user entity
-     * @throws \Passbolt\Metadata\Exception\MetadataKeyShareException
-     * @return void
+     * @inheritDoc
      */
-    public function shareMetadataKeysWithUser(User $user): void;
+    public function shareMetadataKeysWithUser(User $user): void
+    {
+        // Do nothing
+    }
 
     /**
-     * @param \Exception $exception exception from shareMetadataKeyWithUser
-     * @return void
+     * @inheritDoc
      */
-    public function onFailure(\Exception $exception): void;
+    public function onFailure(\Exception $exception): void
+    {
+        // Do nothing
+    }
 }

@@ -25,7 +25,7 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\ResourceTypes\Service\ResourceTypesDeleteService;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
@@ -42,7 +42,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
      */
     public function testResourceTypesDeleteService_Delete_Success_V4DeleteV4Type(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();
@@ -62,7 +62,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
 
     public function testResourceTypesDeleteService_Delete_V5DeleteV4Type(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
 
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();
@@ -82,7 +82,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
 
     public function testResourceTypesDeleteService_Delete_V6DeleteV5Type(): void
     {
-        MetadataSettingsFactory::make()->v6()->persist();
+        MetadataTypesSettingsFactory::make()->v6()->persist();
 
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();
@@ -102,7 +102,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
 
     public function testResourceTypesDeleteService_Delete_ErrorHighlanderV4(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();
@@ -119,7 +119,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
 
     public function testResourceTypesDeleteService_Delete_ErrorHighlanderV5(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
 
         /** @var \App\Model\Entity\User $admin */
         $admin = UserFactory::make()->admin()->persist();

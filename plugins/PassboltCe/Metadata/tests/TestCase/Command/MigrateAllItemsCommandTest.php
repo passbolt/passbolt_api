@@ -26,7 +26,7 @@ use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateFoldersTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateResourcesTestTrait;
@@ -64,7 +64,7 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateAllItemsCommand_Success(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -126,7 +126,7 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateAllItemsCommand_Error_PartialFailures(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -173,7 +173,7 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateAllItemsCommand_Error_NoItems(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
 
         $this->exec('passbolt metadata migrate_all_items');
 
@@ -186,12 +186,12 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateAllItemsCommand_Error_CreationOfV5ResourcesDisabled(): void
     {
-        $value = array_merge(MetadataSettingsFactory::getDefaultDataV4(), [
+        $value = array_merge(MetadataTypesSettingsFactory::getDefaultDataV4(), [
             MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V5,
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => true,
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => false,
         ]);
-        MetadataSettingsFactory::make()->value($value)->persist();
+        MetadataTypesSettingsFactory::make()->value($value)->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())

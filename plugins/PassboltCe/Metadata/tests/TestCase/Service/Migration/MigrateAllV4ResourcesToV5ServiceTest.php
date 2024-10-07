@@ -25,7 +25,7 @@ use Cake\Http\Exception\BadRequestException;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateResourcesTestTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -65,7 +65,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Success_PersonalResource(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5DefaultResourceType */
         $v5DefaultResourceType = ResourceTypeFactory::make()->v5Default()->persist();
@@ -102,7 +102,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Success_SharedResource(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceType */
@@ -128,7 +128,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Success_MultipleResources(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
         $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
@@ -177,7 +177,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Error_NoActiveMetadataKey(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
         ResourceTypeFactory::make()->v5Default()->persist();
@@ -199,7 +199,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Error_ResourceIsAlreadyV5(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
         ResourceTypeFactory::make()->v5Default()->persist();
@@ -222,7 +222,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
     public function testMetadataMigrateAllV4ResourcesToV5Service_Error_AllowCreationOfV5ResourcesDisabled(): void
     {
         // Allow only V4 format
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
         $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
         ResourceTypeFactory::make()->v5Default()->persist();

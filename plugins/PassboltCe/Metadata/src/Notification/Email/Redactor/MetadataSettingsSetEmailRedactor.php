@@ -27,7 +27,7 @@ use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
-use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsSetService;
 
 /**
@@ -38,7 +38,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
     use LocatorAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const EMAIL_TEMPLATE = 'Passbolt/Metadata.Admin/settings_update';
+    public const EMAIL_TEMPLATE = 'Passbolt/Metadata.Admin/metadata_settings_update';
 
     /**
      * @var \App\Model\Table\UsersTable
@@ -84,7 +84,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
         $emailCollection = new EmailCollection();
         /** @var \App\Utility\UserAccessControl $uac */
         $uac = $event->getData('uac');
-        /** @var \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto $dto */
+        /** @var \Passbolt\Metadata\Model\Dto\MetadataSettingsDto $dto */
         $dto = $event->getData('dto');
 
         $modifier = $this->Users->findFirstForEmail($uac->getId());
@@ -105,26 +105,20 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
     /**
      * @param \App\Model\Entity\User $recipient Admin being notified
      * @param \App\Model\Entity\User $modifier Admin who performed the action
-     * @param \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto $dto settings DTO
+     * @param \Passbolt\Metadata\Model\Dto\MetadataSettingsDto $dto settings DTO
      * @return \App\Notification\Email\Email
      */
     private function createEmail(
         User $recipient,
         User $modifier,
-        MetadataTypesSettingsDto $dto
+        MetadataSettingsDto $dto
     ): Email {
         if ($recipient->id === $modifier->id) {
             $subject = $this->getSubjectForModifier($recipient);
         } else {
             $subject = $this->getSubjectForOtherAdmin($recipient, $modifier);
         }
-        $settings = [];
-        foreach ($dto->toArray() as $key => $setting) {
-            $key = Purifier::clean(ucfirst(str_replace('_', ' ', $key)));
-            if (is_string($setting)) {
-                $settings[$key] = Purifier::clean($setting);
-            }
-        }
+        $settings = $dto->toHumanReadableArray(); // No purifying needed, hardcoded [key:value]
 
         return new Email(
             $recipient,

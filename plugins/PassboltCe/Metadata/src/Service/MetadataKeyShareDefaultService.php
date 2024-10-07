@@ -23,13 +23,13 @@ use App\Service\OpenPGP\OpenPGPCommonUserOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Exception\MetadataKeyShareException;
 use Passbolt\Metadata\Form\MetadataCleartextPrivateKeyForm;
+use Passbolt\Metadata\Model\Entity\MetadataPrivateKey;
 
 class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
 {
@@ -40,24 +40,39 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
     /**
      * @inheritDoc
      */
-    public function shareMetadataKeyWithUser(User $user): void
+    public function shareMetadataKeysWithUser(User $user): void
     {
-        $metadataPrivateKeysTable = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataPrivateKeys');
+        $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
 
-        // Find server copy
-        try {
-            // TODO find all private key where metadata key is not deleted AND
-            // key is deleted but still some some stuffs in use (resource, folder, comments, tags)
-            /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $serverMetadataPrivateKey */
-            $serverMetadataPrivateKey = $metadataPrivateKeysTable->find()
-                ->where(['user_id IS' => null])
-                ->order(['created' => 'DESC'])
-                ->firstOrFail();
-        } catch (\PDOException | RecordNotFoundException $exception) {
+        // Find server copies
+        // We share all the possible private keys, even if the parent entity is marked as deleted
+        // As the metadata key can be marked as deleted but still in use for some stuffs
+        // (resource, folder, comments, tags)
+        $serverMetadataPrivateKeys = $metadataPrivateKeysTable->find()
+            ->where(['user_id IS' => null])
+            ->order(['created' => 'DESC'])
+            ->all();
+
+        if ($serverMetadataPrivateKeys->isEmpty()) {
             $msg = __('Server metadata private key was not found.') . ' ';
             $msg .= __('Metadata key could not be shared with user id: {0}.', $user->id);
-            throw new MetadataKeyShareException($msg, 500, $exception);
+            throw new MetadataKeyShareException($msg);
         }
+
+        foreach ($serverMetadataPrivateKeys as $serverMetadataPrivateKey) {
+            $this->shareMetadataKeyWithUser($user, $serverMetadataPrivateKey);
+        }
+    }
+
+    /**
+     * @param \App\Model\Entity\User $user user that completed the setup
+     * @param \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $serverMetadataPrivateKey key to share
+     * @return void
+     * @throws \Passbolt\Metadata\Exception\MetadataKeyShareException
+     */
+    protected function shareMetadataKeyWithUser(User $user, MetadataPrivateKey $serverMetadataPrivateKey): void
+    {
+        $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
 
         // Decrypt, verify, validate, re-encrypt and sign for user
         try {
@@ -79,21 +94,22 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
         // Build and validate private key entity for the user
         try {
             $userMetadataPrivateKey = $metadataPrivateKeysTable->newEntity([
-                    'metadata_key_id' => $serverMetadataPrivateKey->metadata_key_id,
-                    'user_id' => $user->id,
-                    'data' => $secret,
-                ], [
-                    'accessibleFields' => [
-                        'metadata_key_id' => true,
-                        'user_id' => true,
-                        'data' => true,
-                    ],
+                'metadata_key_id' => $serverMetadataPrivateKey->metadata_key_id,
+                'user_id' => $user->id,
+                'data' => $secret,
+            ], [
+                'accessibleFields' => [
+                    'metadata_key_id' => true,
+                    'user_id' => true,
+                    'data' => true,
+                ],
             ]);
             if (!empty($userMetadataPrivateKey->getErrors())) {
                 if (Configure::read('debug')) {
                     Log::error(json_encode($userMetadataPrivateKey->getErrors()));
                 }
                 $msg = __('The OpenPGP key data is not valid.');
+                /** @phpstan-ignore-next-line */
                 throw new ValidationException($msg, $userMetadataPrivateKey, $metadataPrivateKeysTable);
             }
             if (!$metadataPrivateKeysTable->checkRules($userMetadataPrivateKey)) {
@@ -101,6 +117,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
                     Log::error(json_encode($userMetadataPrivateKey->getErrors()));
                 }
                 $msg = __('The OpenPGP key data is not valid.');
+                /** @phpstan-ignore-next-line */
                 throw new ValidationException($msg, $userMetadataPrivateKey, $metadataPrivateKeysTable);
             }
         } catch (\Exception $exception) {

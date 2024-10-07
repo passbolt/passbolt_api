@@ -18,9 +18,9 @@ namespace Passbolt\Metadata\Service;
 
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 
-class MetadataTypesSettingsGetService
+class MetadataKeysSettingsGetService
 {
     use LocatorAwareTrait;
 
@@ -29,31 +29,21 @@ class MetadataTypesSettingsGetService
     /**
      * TODO for v5 it should default to v5
      *
-     * @return \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto default settings when there is none set
+     * @return \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto default settings when there is none set
      */
-    public function getDefaultSettings(): MetadataTypesSettingsDto
+    public function getDefaultSettings(): MetadataKeysSettingsDto
     {
-        return new MetadataTypesSettingsDto(self::defaultV4Settings());
+        return new MetadataKeysSettingsDto(self::getDefaultSettingsArray());
     }
 
     /**
-     * @return array
+     * @return array default settings values
      */
-    public static function defaultV4Settings(): array
+    public static function getDefaultSettingsArray(): array
     {
         return [
-            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataTypesSettingsDto::V4,
-            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V4,
-            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => MetadataTypesSettingsDto::V4,
-            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => MetadataTypesSettingsDto::V4,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => false,
         ];
     }
 
@@ -61,16 +51,16 @@ class MetadataTypesSettingsGetService
      * Read the metadata settings in the DB, or in file.
      * Validates the setting and return them
      *
-     * @return \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto dto
+     * @return \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto dto
      * @throws \App\Error\Exception\FormValidationException if the data does not validate
      */
-    public function getSettings(): MetadataTypesSettingsDto
+    public function getSettings(): MetadataKeysSettingsDto
     {
         try {
             // fetch the settings from DB if any
             /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
             $orgSettingsTable = $this->fetchTable('OrganizationSettings');
-            $setting = $orgSettingsTable->getFirstSettingOrFail(MetadataTypesSettingsGetService::ORG_SETTING_PROPERTY);
+            $setting = $orgSettingsTable->getFirstSettingOrFail(MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY);
 
             // Deserialize and revalidate the settings
             if (!isset($setting->value) || !is_string($setting->value)) {
@@ -78,7 +68,7 @@ class MetadataTypesSettingsGetService
             }
             $data = json_decode($setting->value, true, 2, JSON_THROW_ON_ERROR);
 
-            return (new MetadataTypesSettingsAssertService())->assert($data);
+            return (new MetadataKeysSettingsAssertService())->assert($data);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
 

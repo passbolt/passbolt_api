@@ -83,7 +83,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
         MetadataKeyFactory::make()->withServerPrivateKey()->persist();
 
         $sut = new MetadataKeyShareDefaultService();
-        $sut->shareMetadataKeyWithUser($user);
+        $sut->shareMetadataKeysWithUser($user);
 
         /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $privateKey */
         $privateKey = MetadataPrivateKeyFactory::find()->where(['user_id IS' => $user->id])->firstOrFail();
@@ -125,7 +125,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
         MetadataKeyFactory::make()->with('MetadataPrivateKeys', $privateKey)->persist();
 
         $sut = new MetadataKeyShareDefaultService();
-        $sut->shareMetadataKeyWithUser($user);
+        $sut->shareMetadataKeysWithUser($user);
 
         /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $privateKey */
         $privateKey = MetadataPrivateKeyFactory::find()->where(['user_id IS' => $user->id])->firstOrFail();
@@ -138,7 +138,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
         $user = UserFactory::make()->user()->persist();
         $sut = new MetadataKeyShareDefaultService();
         try {
-            $sut->shareMetadataKeyWithUser($user);
+            $sut->shareMetadataKeysWithUser($user);
             $this->fail();
         } catch (MetadataKeyShareException $exception) {
             $this->assertTextContains('not found', $exception->getMessage());
@@ -159,7 +159,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
 
         $sut = new MetadataKeyShareDefaultService();
         try {
-            $sut->shareMetadataKeyWithUser($user);
+            $sut->shareMetadataKeysWithUser($user);
             $this->fail();
         } catch (MetadataKeyShareException $exception) {
             $this->assertTextContains('Decryption failed', $exception->getMessage());
@@ -190,7 +190,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
 
         $sut = new MetadataKeyShareDefaultService();
         try {
-            $sut->shareMetadataKeyWithUser($user);
+            $sut->shareMetadataKeysWithUser($user);
             $this->fail();
         } catch (MetadataKeyShareException $exception) {
             $this->assertTextContains('JSON', $exception->getMessage());
@@ -216,7 +216,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
 
         $sut = new MetadataKeyShareDefaultService();
         try {
-            $sut->shareMetadataKeyWithUser($user);
+            $sut->shareMetadataKeysWithUser($user);
             $this->fail();
         } catch (MetadataKeyShareException $exception) {
             $this->assertTextContains('cleartext data is not valid', $exception->getMessage());
@@ -249,7 +249,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
 
         $sut = new MetadataKeyShareDefaultService();
         try {
-            $sut->shareMetadataKeyWithUser($user);
+            $sut->shareMetadataKeysWithUser($user);
             $this->fail();
         } catch (MetadataKeyShareException $exception) {
             $this->assertTextContains('Invalid signature', $exception->getMessage());
@@ -264,7 +264,7 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
 
         $sut = new MetadataKeyShareDefaultService();
         try {
-            $sut->shareMetadataKeyWithUser($user);
+            $sut->shareMetadataKeysWithUser($user);
             $this->fail();
         } catch (MetadataKeyShareException $exception) {
             $this->assertTextContains('not valid', $exception->getMessage());

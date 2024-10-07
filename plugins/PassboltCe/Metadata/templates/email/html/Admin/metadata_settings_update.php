@@ -33,7 +33,7 @@ if ($recipient['id'] === $modifier['id']) {
     $text = $subject;
 } else {
     $modifierFullName = Purifier::clean($modifier['profile']['first_name']) . ' ' . Purifier::clean($modifier['profile']['last_name']);
-    $text = __('{0} edited the metadata settings', $modifierFullName);
+    $text = __('{0} edited the metadata settings.', $modifierFullName);
 }
 $text = '<h3>' . $text . '</h3><br/>';
 foreach ($settings as $setting => $value) {

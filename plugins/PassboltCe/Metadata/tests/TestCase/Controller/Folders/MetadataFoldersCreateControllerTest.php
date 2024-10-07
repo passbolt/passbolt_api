@@ -32,7 +32,7 @@ use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
@@ -55,7 +55,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Success_Personal()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -99,7 +99,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Success_PersonalChildFolder()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -141,7 +141,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Success_Shared()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -221,7 +221,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
      */
     public function testMetadataFoldersCreateController_Error_Validations(array $data, array $expectedErrorPaths)
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $this->logInAsAdmin();
 
         $this->postJson('/folders.json?api-version=2', $data);
@@ -235,7 +235,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Error_V5AndV4BothFieldsAreSent()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -262,7 +262,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Error_MetadataEncryptedForCorrectKeySharedKey()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -294,7 +294,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Error_MetadataEncryptedForCorrectKeyUserKey()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -323,7 +323,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Error_ParentFolderDoesNotExist()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -352,7 +352,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Error_ParentFolderInsufficientPermission()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -392,7 +392,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataFoldersCreateController_Success_MetadataPluginDisabled()
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         Configure::write('passbolt.v5.enabled', false);
         $this->disableFeaturePlugin(MetadataPlugin::class);
         /** @var \App\Model\Entity\User $ada */
@@ -432,7 +432,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
     public function testMetadataFoldersCreateController_Error_AllowCreationOfV5FoldersDisabled()
     {
         // Allow only V4 format
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
