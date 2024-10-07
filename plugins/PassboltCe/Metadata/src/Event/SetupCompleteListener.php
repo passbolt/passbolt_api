@@ -44,7 +44,7 @@ class SetupCompleteListener implements EventListenerInterface
         $strategy = (new ShareMetadataKeyServiceFactory())->get();
 
         try {
-            $strategy->shareMetadataKeyWithUser($user);
+            $strategy->shareMetadataKeysWithUser($user);
         } catch (\Exception $e) {
             $strategy->onFailure($e);
         }

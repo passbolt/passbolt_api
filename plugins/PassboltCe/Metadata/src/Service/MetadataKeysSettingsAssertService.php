@@ -17,31 +17,29 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service;
 
 use App\Error\Exception\FormValidationException;
-use Passbolt\Metadata\Form\MetadataTypesSettingsForm;
-use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Form\MetadataKeysSettingsForm;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 
-class MetadataTypesSettingsAssertService
+class MetadataKeysSettingsAssertService
 {
     /**
      * Validates the setting and return them
      *
      * @param array $data untrusted input
-     * @return \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto dto
+     * @return \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto dto
      * @throws \App\Error\Exception\FormValidationException if the data does not validate
      */
-    public function assert(array $data): MetadataTypesSettingsDto
+    public function assert(array $data): MetadataKeysSettingsDto
     {
-        $form = new MetadataTypesSettingsForm();
+        $form = new MetadataKeysSettingsForm();
         if (!$form->execute($data)) {
             throw new FormValidationException(__('Could not validate the settings.'), $form);
         }
 
-        $dto = new MetadataTypesSettingsDto($form->getData());
+        // TODO build rules
+        // if ZERO_KNOWLEDGE_KEY_SHARE && metadata private key exist in settings
+        //  then metadata private key must be available for the server
 
-        // TODO "Build rules"
-        // Admin select a default resource version but all resource types are deleted for this version
-        // Admin selects v5 but metadata keys do not exist or are not available to all
-
-        return $dto;
+        return new MetadataKeysSettingsDto($form->getData());
     }
 }

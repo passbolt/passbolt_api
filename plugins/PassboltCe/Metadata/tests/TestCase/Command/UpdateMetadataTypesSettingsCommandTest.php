@@ -21,7 +21,7 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
@@ -55,7 +55,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
     public function testUpdateMetadataTypesSettingsCommand_Success_UpgradeResourcesToV5(): void
     {
         $user = UserFactory::make()->active()->persist();
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         $optionsArray = [
             sprintf('--%s=%s', MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES, MetadataTypesSettingsDto::V5),
@@ -69,7 +69,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
         $this->assertExitSuccess('Metadata types settings have been updated');
         /** @var \App\Model\Entity\OrganizationSetting $settings */
-        $settings = MetadataSettingsFactory::firstOrFail();
+        $settings = MetadataTypesSettingsFactory::firstOrFail();
         $settingsArray = json_decode($settings->value, true);
         $this->assertSame(MetadataTypesSettingsDto::V5, $settingsArray[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES]);
         $this->assertTrue($settingsArray[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]);
@@ -80,7 +80,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
     {
         $user = UserFactory::make()->active()->persist();
         /** @var \App\Model\Entity\OrganizationSetting $metadataSettings */
-        $metadataSettings = MetadataSettingsFactory::make()->v4()->persist();
+        $metadataSettings = MetadataTypesSettingsFactory::make()->v4()->persist();
         $oldSettings = json_decode($metadataSettings->value, true);
 
         $optionsArray = [
@@ -95,7 +95,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
         $this->assertExitSuccess('Metadata types settings have been updated');
         /** @var \App\Model\Entity\OrganizationSetting $updatedSettings */
-        $updatedSettings = MetadataSettingsFactory::firstOrFail();
+        $updatedSettings = MetadataTypesSettingsFactory::firstOrFail();
         $updatedSettings = json_decode($updatedSettings->value, true);
         $this->assertSame(MetadataTypesSettingsDto::V5, $updatedSettings[MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE]);
         $this->assertTrue($updatedSettings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS]);
@@ -115,7 +115,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
     public function testUpdateMetadataTypesSettingsCommand_Success_UpgradeTagsToV5(): void
     {
         $user = UserFactory::make()->active()->persist();
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         $optionsArray = [
             sprintf('--%s=%s', MetadataTypesSettingsDto::DEFAULT_TAG_TYPE, MetadataTypesSettingsDto::V5),
@@ -129,7 +129,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
         $this->assertExitSuccess('Metadata types settings have been updated');
         /** @var \App\Model\Entity\OrganizationSetting $updatedSettings */
-        $updatedSettings = MetadataSettingsFactory::firstOrFail();
+        $updatedSettings = MetadataTypesSettingsFactory::firstOrFail();
         $updatedSettings = json_decode($updatedSettings->value, true);
         $this->assertSame(MetadataTypesSettingsDto::V5, $updatedSettings[MetadataTypesSettingsDto::DEFAULT_TAG_TYPE]);
         $this->assertTrue($updatedSettings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS]);
@@ -152,7 +152,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
         $this->assertExitSuccess('Metadata types settings have been updated');
         /** @var \App\Model\Entity\OrganizationSetting[] $updatedSettings */
-        $updatedSettings = MetadataSettingsFactory::find()->toArray();
+        $updatedSettings = MetadataTypesSettingsFactory::find()->toArray();
         $this->assertCount(1, $updatedSettings);
         $updatedSetting = $updatedSettings[0];
         $updatedSetting = json_decode($updatedSetting->value, true);
@@ -164,7 +164,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
     public function testUpdateMetadataTypesSettingsCommand_Success_DowngradeResourcesToV4(): void
     {
         $user = UserFactory::make()->active()->persist();
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
 
         $optionsArray = [
             sprintf('--%s=%s', MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES, MetadataTypesSettingsDto::V4),
@@ -178,7 +178,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
 
         $this->assertExitSuccess('Metadata types settings have been updated');
         /** @var \App\Model\Entity\OrganizationSetting $updatedSettings */
-        $updatedSettings = MetadataSettingsFactory::firstOrFail();
+        $updatedSettings = MetadataTypesSettingsFactory::firstOrFail();
         $updatedSettings = json_decode($updatedSettings->value, true);
         $this->assertSame(MetadataTypesSettingsDto::V4, $updatedSettings[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES]);
         $this->assertTrue($updatedSettings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]);
@@ -204,7 +204,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
     {
         $user = UserFactory::make()->active()->persist();
         /** @var \App\Model\Entity\OrganizationSetting $oldSettings */
-        $oldSettings = MetadataSettingsFactory::make()->v5()->persist();
+        $oldSettings = MetadataTypesSettingsFactory::make()->v5()->persist();
         $oldSettings = json_decode($oldSettings->value, true);
 
         $optionsArray = [
@@ -230,7 +230,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('allow_creation_of_v4_resources');
         $this->assertOutputContains('The setting should be a valid boolean');
         /** @var \App\Model\Entity\OrganizationSetting $updatedSettings */
-        $updatedSettings = MetadataSettingsFactory::firstOrFail();
+        $updatedSettings = MetadataTypesSettingsFactory::firstOrFail();
         $updatedSettings = json_decode($updatedSettings->value, true);
         // no update
         $this->assertArrayEqualsCanonicalizing($oldSettings, $updatedSettings);

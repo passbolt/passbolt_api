@@ -24,7 +24,7 @@ use Cake\Http\Exception\BadRequestException;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4FoldersToV5Service;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateFoldersTestTrait;
 
@@ -63,7 +63,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4FoldersToV5Service_Success_PersonalFolder(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         // Folder 1
         $adaKeyInfo = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
@@ -90,7 +90,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4FoldersToV5Service_Success_SharedFolder(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -118,7 +118,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4FoldersToV5Service_Success_MultipleFolders(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -185,7 +185,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4FoldersToV5Service_Error_NoActiveMetadataKey(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -210,7 +210,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4FoldersToV5Service_Error_FolderIsAlreadyV5(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -241,7 +241,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
 
     public function testMigrateAllV4FoldersToV5Service_Error_AllowCreationOfV5FoldersDisabled(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist(); // disable v5 creation
+        MetadataTypesSettingsFactory::make()->v4()->persist(); // disable v5 creation
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())

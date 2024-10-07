@@ -23,9 +23,9 @@ use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 
 /**
- * MetadataSettingsFactory
+ * MetadataTypesSettingsFactory
  */
-class MetadataSettingsFactory extends OrganizationSettingFactory
+class MetadataTypesSettingsFactory extends OrganizationSettingFactory
 {
     /**
      * @inheritDoc
@@ -43,20 +43,7 @@ class MetadataSettingsFactory extends OrganizationSettingFactory
 
     public static function getDefaultDataV4(): array
     {
-        return [
-            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataTypesSettingsDto::V4,
-            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V4,
-            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => MetadataTypesSettingsDto::V4,
-            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => MetadataTypesSettingsDto::V4,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
-            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
-        ];
+        return MetadataTypesSettingsGetService::defaultV4Settings();
     }
 
     public static function getDefaultDataV5(): array

@@ -15,19 +15,19 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\Test\TestCase\Controller;
+namespace Passbolt\Metadata\TestCase\Controller;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\MetadataPlugin;
-use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 
 /**
- * @uses \Passbolt\Metadata\Controller\MetadataTypesSettingsGetController
+ * @uses \Passbolt\Metadata\Controller\MetadataKeysSettingsGetController
  */
-class MetadataSettingsGetControllerTest extends AppIntegrationTestCaseV5
+class MetadataKeysSettingsGetControllerTest extends AppIntegrationTestCaseV5
 {
     use LocatorAwareTrait;
 
@@ -37,30 +37,28 @@ class MetadataSettingsGetControllerTest extends AppIntegrationTestCaseV5
         $this->enableFeaturePlugin(MetadataPlugin::class);
     }
 
-    public function testMetadataTypesSettingsGetController_Error_AuthenticationNeeded()
+    public function testMetadataKeysSettingsGetController_Error_AuthenticationNeeded()
     {
-        $this->getJson('/metadata/types/settings.json');
+        $this->getJson('/metadata/keys/settings.json');
         $this->assertAuthenticationError();
     }
 
-    public function testMetadataTypesSettingsGetController_Success_NoEntryReturnsDefault(): void
+    public function testMetadataKeysSettingsGetController_Success_NoEntryReturnsDefault(): void
     {
         $this->logInAsAdmin();
-        $this->getJson('/metadata/types/settings.json');
+        $this->getJson('/metadata/keys/settings.json');
         $this->assertResponseCode(200);
-        $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $this->getResponseBodyAsArray());
+        $this->assertEquals(MetadataKeysSettingsFactory::getDefaultData(), $this->getResponseBodyAsArray());
     }
 
-    public function testMetadataTypesSettingsGetController_Success_SavedEntry(): void
+    public function testMetadataKeysSettingsGetController_Success_SavedEntry(): void
     {
         $this->logInAsAdmin();
-        $data = MetadataSettingsFactory::getDefaultDataV4();
-        $data[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
-        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
-        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
-        MetadataSettingsFactory::make()->value(json_encode($data))->persist();
+        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+        MetadataKeysSettingsFactory::make()->value(json_encode($data))->persist();
         $this->assertEquals(1, OrganizationSettingFactory::count());
-        $this->getJson('/metadata/types/settings.json');
+        $this->getJson('/metadata/keys/settings.json');
         $this->assertResponseCode(200);
         $this->assertEquals($data, $this->getResponseBodyAsArray());
     }

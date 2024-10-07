@@ -28,7 +28,7 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -49,7 +49,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_SharedKeyType_Success(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
@@ -93,7 +93,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_UserKeyType_Success(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -139,7 +139,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_Error_NotCurrentUser(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->user()
@@ -186,7 +186,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_Error_MixV4V5Fields(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
@@ -218,7 +218,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_Success_V5DisabledMixV4V5FieldsWorks(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         Configure::write('passbolt.v5.enabled', false);
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
@@ -245,7 +245,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
     public function testResourcesAddController_Error_AllowCreationOfV5ResourceDisabled(): void
     {
         // Allow only V4 format
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
@@ -279,7 +279,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
     public function testResourcesAddController_Error_AllowCreationOfV4ResourceDisabled(): void
     {
         // Allow only V4 format
-        MetadataSettingsFactory::make()->v6()->persist();
+        MetadataTypesSettingsFactory::make()->v6()->persist();
         $user = UserFactory::make()->user()->persist();
         // login
         $this->logInAs($user);

@@ -20,9 +20,9 @@ namespace Passbolt\Metadata\Test\TestCase\Form;
 use Cake\TestSuite\TestCase;
 use Passbolt\Metadata\Form\MetadataTypesSettingsForm;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
-class MetadataSettingsFormTest extends TestCase
+class MetadataTypesSettingsFormTest extends TestCase
 {
     /**
      * @var MetadataTypesSettingsForm $form
@@ -43,7 +43,7 @@ class MetadataSettingsFormTest extends TestCase
 
     public function getDefaultData(): array
     {
-        return MetadataSettingsFactory::getDefaultDataV4();
+        return MetadataTypesSettingsFactory::getDefaultDataV4();
     }
 
     public function testMetadataTypesSettingsForm_Success(): void
