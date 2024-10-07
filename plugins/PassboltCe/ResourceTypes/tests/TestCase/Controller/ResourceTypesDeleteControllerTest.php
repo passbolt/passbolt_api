@@ -20,7 +20,7 @@ namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\UuidFactory;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
@@ -40,7 +40,7 @@ class ResourceTypesDeleteControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourceTypesDeleteController_Success(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordString()->persist();
@@ -58,7 +58,7 @@ class ResourceTypesDeleteControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourceTypesDeleteController_ErrorHighlander(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordString()->persist();
@@ -73,7 +73,7 @@ class ResourceTypesDeleteControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourceTypesDeleteController_ErrorSomeResourcesExists(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordString()->persist();

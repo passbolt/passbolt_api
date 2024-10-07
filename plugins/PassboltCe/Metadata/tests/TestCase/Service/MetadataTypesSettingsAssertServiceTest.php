@@ -20,13 +20,13 @@ namespace Passbolt\Metadata\Test\TestCase\Service;
 use App\Error\Exception\FormValidationException;
 use App\Test\Lib\AppTestCase;
 use Passbolt\Metadata\Service\MetadataTypesSettingsAssertService;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
-class MetadataSettingsAssertServiceTest extends AppTestCase
+class MetadataTypesSettingsAssertServiceTest extends AppTestCase
 {
     public function testMetadataTypesSettingsAssertService_Success(): void
     {
-        $data = MetadataSettingsFactory::getDefaultDataV4();
+        $data = MetadataTypesSettingsFactory::getDefaultDataV4();
         $sut = new MetadataTypesSettingsAssertService();
         $dto = $sut->assert($data);
         $this->assertEquals($data, $dto->toArray());

@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Dto;
 
-class MetadataTypesSettingsDto
+class MetadataTypesSettingsDto extends MetadataSettingsDto
 {
     public const DEFAULT_RESOURCE_TYPES = 'default_resource_types';
     public const DEFAULT_FOLDER_TYPE = 'default_folder_type';
@@ -52,17 +52,13 @@ class MetadataTypesSettingsDto
     public const ENTITY_FOLDER = 'folder';
 
     /**
-     * @var array data
-     */
-    protected $data = [];
-
-    /**
      * Constructor.
      *
      * @param array|null $data data
      */
     public function __construct(?array $data = null)
     {
+        parent::__construct($data);
         $this->data = [
             self::DEFAULT_RESOURCE_TYPES => $data[self::DEFAULT_RESOURCE_TYPES] ?? null,
             self::DEFAULT_FOLDER_TYPE => $data[self::DEFAULT_FOLDER_TYPE] ?? null,
@@ -114,17 +110,58 @@ class MetadataTypesSettingsDto
     /**
      * @return ?array
      */
-    public function toArray(): ?array
+    public function toHumanReadableArray(): ?array
     {
-        return $this->data;
-    }
+        $data = [];
+        foreach (self::PROPS as $prop) {
+            switch ($prop) {
+                case self::DEFAULT_RESOURCE_TYPES:
+                    $data[__('Default resource types')] = $this->data[self::DEFAULT_RESOURCE_TYPES];
+                    break;
+                case self::DEFAULT_FOLDER_TYPE:
+                    $data[__('Default folder type')] = $this->data[self::DEFAULT_FOLDER_TYPE];
+                    break;
+                case self::DEFAULT_TAG_TYPE:
+                    $data[__('Default folder type')] = $this->data[self::DEFAULT_TAG_TYPE];
+                    break;
+                case self::DEFAULT_COMMENT_TYPE:
+                    $data[__('Default comment type')] = $this->data[self::DEFAULT_COMMENT_TYPE];
+                    break;
+                case self::ALLOW_CREATION_OF_V5_RESOURCES:
+                    $data[__('Allow creation of V5 resources')] = $this->data[self::ALLOW_CREATION_OF_V5_RESOURCES] ?
+                        __('True') : __('False');
+                    break;
+                case self::ALLOW_CREATION_OF_V5_FOLDERS:
+                    $data[__('Allow creation of V5 folders')] = $this->data[self::ALLOW_CREATION_OF_V5_FOLDERS] ?
+                        __('True') : __('False');
+                    break;
+                case self::ALLOW_CREATION_OF_V5_TAGS:
+                    $data[__('Allow creation of V5 tags')] = $this->data[self::ALLOW_CREATION_OF_V5_TAGS] ?
+                        __('True') : __('False');
+                    break;
+                case self::ALLOW_CREATION_OF_V5_COMMENTS:
+                    $data[__('Allow creation of V5 comments')] = $this->data[self::ALLOW_CREATION_OF_V5_COMMENTS] ?
+                        __('True') : __('False');
+                    break;
+                case self::ALLOW_CREATION_OF_V4_RESOURCES:
+                    $data[__('Allow creation of V4 resources')] = $this->data[self::ALLOW_CREATION_OF_V5_RESOURCES] ?
+                        __('True') : __('False');
+                    break;
+                case self::ALLOW_CREATION_OF_V4_FOLDERS:
+                    $data[__('Allow creation of V4 folders')] = $this->data[self::ALLOW_CREATION_OF_V4_FOLDERS] ?
+                        __('True') : __('False');
+                    break;
+                case self::ALLOW_CREATION_OF_V4_TAGS:
+                    $data[__('Allow creation of V4 tags')] = $this->data[self::ALLOW_CREATION_OF_V4_TAGS] ?
+                        __('True') : __('False');
+                    break;
+                case self::ALLOW_CREATION_OF_V4_COMMENTS:
+                    $data[__('Allow creation of V5 comments')] = $this->data[self::ALLOW_CREATION_OF_V4_COMMENTS] ?
+                        __('True') : __('False');
+                    break;
+            }
+        }
 
-    /**
-     * @return string self::data serialized as json string
-     * @throws \JsonException if there is an issue with the data
-     */
-    public function toJson(): string
-    {
-        return json_encode($this->data, JSON_THROW_ON_ERROR);
+        return $data;
     }
 }

@@ -16,24 +16,35 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Utility;
 
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Service\MetadataKeyShareDefaultService;
 use Passbolt\Metadata\Service\MetadataKeyShareServiceInterface;
+use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
+use PassboltCe\Metadata\src\Service\MetadataKeyShareNothingService;
 
 class ShareMetadataKeyServiceFactory
 {
+    use LocatorAwareTrait;
+
     /**
      * @return \Passbolt\Metadata\Service\MetadataKeyShareServiceInterface
      */
     public function get(): MetadataKeyShareServiceInterface
     {
-        // In the future we may check the settings to see which strategy to use
-        // to onboard users and share the keys.
-        // Stage 0 - Keys is shared by the server
-        // Stage 1 - Depending on settings there may be another service with different security properties
-        // For example:
-        // - It could be triggering an email prompt for an admin to login, and share it via the web extension
-        // - It could be a notification / action on mobile phone by an admin
-        // - It could be sending a request to a 3rd party service in charge of this, etc.
-        return new MetadataKeyShareDefaultService();
+        // Nothing to share
+        $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
+        $keyCount = $metadataKeysTable->find()->all()->count();
+        if ($keyCount === 0) {
+            return new MetadataKeyShareNothingService();
+        }
+
+        // Key is sharable by server directly
+        $settings = (new MetadataKeysSettingsGetService())->getSettings();
+        if (!$settings->isKeyShareZeroKnowledge()) {
+            return new MetadataKeyShareDefaultService();
+        } else {
+            // Trigger an email prompt for an admin to login, and share it via the web extension
+            return new MetadataKeyShareNothingService();
+        }
     }
 }

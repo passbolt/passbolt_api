@@ -24,7 +24,7 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateResourcesTestTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -60,7 +60,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateResourcesCommand_Success_MultipleResources(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
         $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
@@ -109,7 +109,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateResourcesCommand_Error_PartialFailures(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
         $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
@@ -162,7 +162,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateResourcesCommand_Error_NoResources(): void
     {
-        MetadataSettingsFactory::make()->v5()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
 
         $this->exec('passbolt metadata migrate_resources');
 
@@ -174,7 +174,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
 
     public function testMigrateResourcesCommand_Error_AllowCreationOfV5ResourcesDisabled(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist(); // only allow V4 format
+        MetadataTypesSettingsFactory::make()->v4()->persist(); // only allow V4 format
         $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5DefaultResourceType */
         ResourceTypeFactory::make()->v5Default()->persist();

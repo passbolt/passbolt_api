@@ -19,7 +19,7 @@ namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\UuidFactory;
-use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
@@ -39,7 +39,7 @@ class ResourceTypesUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourceTypesUpdateController_Success(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordString()->deleted()->persist();
@@ -53,7 +53,7 @@ class ResourceTypesUpdateControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourceTypesUpdateController_ErrorNotDeleted(): void
     {
-        MetadataSettingsFactory::make()->v4()->persist();
+        MetadataTypesSettingsFactory::make()->v4()->persist();
 
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordString()->persist();
