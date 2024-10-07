@@ -20,7 +20,6 @@ use App\Model\Entity\Gpgkey;
 use App\Service\OpenPGP\MessageRecipientValidationService;
 use App\Service\OpenPGP\MessageValidationService;
 use App\Service\OpenPGP\PublicKeyValidationService;
-use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 
@@ -59,7 +58,7 @@ trait MigrateFoldersTestTrait
         $keyInfo = PublicKeyValidationService::getPublicKeyInfo($userArmoredKey);
         $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
         // Assert decrypted content contains same data as previous one
-        $decryptedMetadata = $this->decrypt($metadata, [
+        $decryptedMetadata = $this->decryptOpenPGPMessage($metadata, [
             'fingerprint' => $userFingerprint,
             'armored_key' => $userKeyInfo['private_key'],
             'passphrase' => $userKeyInfo['passphrase'],
@@ -91,7 +90,7 @@ trait MigrateFoldersTestTrait
         $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
         $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
         // Assert decrypted content contains same data as previous one
-        $decryptedMetadata = $this->decrypt($metadata, $this->getValidPrivateKeyCleartext());
+        $decryptedMetadata = $this->decryptOpenPGPMessage($metadata, $this->getValidPrivateKeyCleartext());
         $metadataArray = json_decode($decryptedMetadata, true);
         $this->assertArrayEqualsCanonicalizing([
             'object_type' => 'PASSBOLT_FOLDER_METADATA',
@@ -100,30 +99,5 @@ trait MigrateFoldersTestTrait
             'description' => null,
             'icon' => null,
         ], $metadataArray);
-    }
-
-    /**
-     * @param string $ciphertext Message to decrypt.
-     * @param array $keyInfo Key information - fingerprint, passphrase, armored_key(private key).
-     * @return string
-     */
-    private function decrypt(string $ciphertext, array $keyInfo): string
-    {
-        $gpg = OpenPGPBackendFactory::get();
-        $gpg->clearKeys();
-
-        $fingerprint = $keyInfo['fingerprint'];
-        $passphrase = $keyInfo['passphrase'];
-
-        try {
-            $gpg->setVerifyKeyFromFingerprint($fingerprint);
-            $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
-            $gpg->importKeyIntoKeyring($keyInfo['armored_key']);
-            $gpg->setVerifyKeyFromFingerprint($fingerprint);
-            $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-        }
-
-        return $gpg->decrypt($ciphertext);
     }
 }

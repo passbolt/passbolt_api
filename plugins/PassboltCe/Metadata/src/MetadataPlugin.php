@@ -24,6 +24,7 @@ use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
 use Passbolt\Metadata\Command\GenerateDummyMetadataKeyCommand;
 use Passbolt\Metadata\Command\InsertDummyDataCommand;
+use Passbolt\Metadata\Command\MigrateAllItemsCommand;
 use Passbolt\Metadata\Command\MigrateFoldersCommand;
 use Passbolt\Metadata\Command\MigrateResourcesCommand;
 use Passbolt\Metadata\Command\UpdateMetadataTypesSettingsCommand;
@@ -83,6 +84,7 @@ class MetadataPlugin extends BasePlugin
         // Migration commands
         $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
         $commands->add('passbolt metadata migrate_folders', MigrateFoldersCommand::class);
+        $commands->add('passbolt metadata migrate_all_items', MigrateAllItemsCommand::class);
 
         return $commands;
     }

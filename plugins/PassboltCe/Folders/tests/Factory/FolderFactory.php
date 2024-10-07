@@ -33,6 +33,7 @@ use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
  * @method \Passbolt\Folders\Model\Entity\Folder|\Passbolt\Folders\Model\Entity\Folder[] persist()
  * @method \Passbolt\Folders\Model\Entity\Folder getEntity()
  * @method \Passbolt\Folders\Model\Entity\Folder[] getEntities()
+ * @method static \Passbolt\Folders\Model\Entity\Folder get($primaryKey, array $options = [])
  */
 class FolderFactory extends CakephpBaseFactory
 {
