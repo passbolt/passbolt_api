@@ -17,9 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Service\Migration;
 
-use App\Service\OpenPGP\MessageRecipientValidationService;
-use App\Service\OpenPGP\MessageValidationService;
-use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
@@ -97,29 +94,10 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         $this->assertSame([], $result['errors']);
         /** @var \App\Model\Entity\Resource $updatedResource */
         $updatedResource = ResourceFactory::get($resource->id);
-        $this->assertUpdatedResource($updatedResource);
-        $this->assertSame('user_key', $updatedResource->get('metadata_key_type'));
-        $this->assertSame($v5DefaultResourceType->id, $updatedResource->resource_type_id);
-        // Assert is valid OpenPGP message
-        $metadata = $updatedResource->get('metadata');
-        $this->assertTrue(MessageValidationService::isParsableArmoredMessage($metadata));
-        // Assert encrypted with ada key
-        $userArmoredKey = $ada->gpgkey->armored_key;
-        $userFingerprint = $ada->gpgkey->fingerprint;
-        $rules = MessageValidationService::getAsymmetricMessageRules();
-        $msgInfo = MessageValidationService::parseAndValidateMessage($metadata, $rules);
-        $keyInfo = PublicKeyValidationService::getPublicKeyInfo($userArmoredKey);
-        $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
-        // Assert decrypted content contains same data as previous one
-        $userPrivateKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key');
-        $decryptedMetadata = $this->decrypt($metadata, [
-            'fingerprint' => $userFingerprint,
-            'armored_key' => $userPrivateKey,
+        $this->assertionsForPersonalResource($updatedResource, $resource, $ada->gpgkey, [
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
             'passphrase' => 'ada@passbolt.com',
         ]);
-        $metadataArray = json_decode($decryptedMetadata, true);
-        $this->assertMetadataAgainstResource($resource, $metadataArray);
-        $this->assertSame($v5DefaultResourceType->id, $metadataArray['resource_type_id']);
     }
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Success_SharedResource(): void
@@ -145,23 +123,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         $this->assertSame([], $result['errors']);
         /** @var \App\Model\Entity\Resource $updatedResource */
         $updatedResource = ResourceFactory::get($resource->id);
-        $this->assertUpdatedResource($updatedResource);
-        $this->assertSame('shared_key', $updatedResource->get('metadata_key_type'));
-        $this->assertSame($v5ResourceType->id, $updatedResource->resource_type_id);
-        // Assert is valid OpenPGP message
-        $metadata = $updatedResource->get('metadata');
-        $this->assertTrue(MessageValidationService::isParsableArmoredMessage($metadata));
-        // Assert encrypted with shared key
-        $armoredKey = $metadataKey->armored_key;
-        $rules = MessageValidationService::getAsymmetricMessageRules();
-        $msgInfo = MessageValidationService::parseAndValidateMessage($metadata, $rules);
-        $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
-        $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
-        // Assert decrypted content contains same data as previous one
-        $decryptedMetadata = $this->decrypt($metadata, $this->getValidPrivateKeyCleartext());
-        $metadataArray = json_decode($decryptedMetadata, true);
-        $this->assertMetadataAgainstResource($resource, $metadataArray);
-        $this->assertSame($v5ResourceType->id, $metadataArray['resource_type_id']);
+        $this->assertionsForSharedResource($updatedResource, $resource, $metadataKey);
     }
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Success_MultipleResources(): void
@@ -171,7 +133,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
         $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
         // Shared resource.
-        /** @var \App\Model\Entity\Resource $resource */
+        /** @var \App\Model\Entity\Resource $sharedResource */
         $sharedResource = ResourceFactory::make()
             ->with('ResourceTypes', $totpStandalone)
             ->withCreatorAndPermission(UserFactory::make()->persist())
@@ -202,45 +164,14 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         $updatedResources = ResourceFactory::find()->toArray();
         $this->assertCount(2, $updatedResources);
         foreach ($updatedResources as $updatedResource) {
-            $this->assertUpdatedResource($updatedResource);
-            $this->assertSame($v5TotpStandalone->id, $updatedResource->resource_type_id);
-            // Assert is valid OpenPGP message
-            $metadata = $updatedResource->get('metadata');
-            $this->assertTrue(MessageValidationService::isParsableArmoredMessage($metadata));
-
             if ($updatedResource->id === $personalResource->id) { // personal resource assertions
-                $this->assertSame('user_key', $updatedResource->get('metadata_key_type'));
-                // Assert encrypted with user key
-                $userArmoredKey = $user->gpgkey->armored_key;
-                $userFingerprint = $user->gpgkey->fingerprint;
-                $rules = MessageValidationService::getAsymmetricMessageRules();
-                $msgInfo = MessageValidationService::parseAndValidateMessage($metadata, $rules);
-                $keyInfo = PublicKeyValidationService::getPublicKeyInfo($userArmoredKey);
-                $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
-                // Assert decrypted content contains same data as previous one
-                $userPrivateKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key');
-                $decryptedMetadata = $this->decrypt($metadata, [
-                    'fingerprint' => $userFingerprint,
-                    'armored_key' => $userPrivateKey,
+                $this->assertionsForPersonalResource($updatedResource, $personalResource, $user->gpgkey, [
+                    'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
                     'passphrase' => 'ada@passbolt.com',
                 ]);
-                $resource = $personalResource;
             } else { // shared resource assertions
-                $this->assertSame('shared_key', $updatedResource->get('metadata_key_type'));
-                // Assert encrypted with shared key
-                $armoredKey = $metadataKey->armored_key;
-                $rules = MessageValidationService::getAsymmetricMessageRules();
-                $msgInfo = MessageValidationService::parseAndValidateMessage($metadata, $rules);
-                $keyInfo = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
-                $this->assertTrue(MessageRecipientValidationService::isMessageForRecipient($msgInfo, $keyInfo));
-                // Assert decrypted content contains same data as previous one
-                $decryptedMetadata = $this->decrypt($metadata, $this->getValidPrivateKeyCleartext());
-                $resource = $sharedResource;
+                $this->assertionsForSharedResource($updatedResource, $sharedResource, $metadataKey);
             }
-            // Common assertions
-            $metadataArray = json_decode($decryptedMetadata, true);
-            $this->assertMetadataAgainstResource($resource, $metadataArray);
-            $this->assertSame($v5TotpStandalone->id, $metadataArray['resource_type_id']);
         }
     }
 

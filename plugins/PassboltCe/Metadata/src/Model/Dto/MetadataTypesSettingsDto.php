@@ -100,7 +100,7 @@ class MetadataTypesSettingsDto
      */
     public function isV5FolderCreationAllowed(): bool
     {
-        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]);
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS]);
     }
 
     /**

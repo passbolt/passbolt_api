@@ -30,7 +30,7 @@ use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 
-class MigrateAllV4FoldersToV5Service
+class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
 {
     use LocatorAwareTrait;
     use OpenPGPCommonMetadataOperationsTrait;
@@ -69,6 +69,7 @@ class MigrateAllV4FoldersToV5Service
      * Migrates all V4 folders to V5.
      *
      * @return array Result
+     * @throws \Cake\Http\Exception\BadRequestException If V5 folder creation/modification is allowed.
      */
     public function migrate(): array
     {

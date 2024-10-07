@@ -30,7 +30,7 @@ use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
-class MigrateAllV4ResourcesToV5Service
+class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterface
 {
     use LocatorAwareTrait;
     use OpenPGPCommonMetadataOperationsTrait;

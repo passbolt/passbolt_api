@@ -392,4 +392,29 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
 
         return $encryptedData;
     }
+
+    /**
+     * @param string $ciphertext Message to decrypt.
+     * @param array $keyInfo Key information - fingerprint, passphrase, armored_key(private key).
+     * @return string
+     */
+    private function decryptOpenPGPMessage(string $ciphertext, array $keyInfo): string
+    {
+        $gpg = OpenPGPBackendFactory::get();
+        $gpg->clearKeys();
+
+        $fingerprint = $keyInfo['fingerprint'];
+        $passphrase = $keyInfo['passphrase'];
+
+        try {
+            $gpg->setVerifyKeyFromFingerprint($fingerprint);
+            $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
+        } catch (\Exception $exception) {
+            $gpg->importKeyIntoKeyring($keyInfo['armored_key']);
+            $gpg->setVerifyKeyFromFingerprint($fingerprint);
+            $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
+        }
+
+        return $gpg->decrypt($ciphertext);
+    }
 }
