@@ -50,7 +50,7 @@ trait ThemeSettingsTrait
      * Custom validation rule to validate account setting property name
      *
      * @param string $value fingerprint
-     * @param array $context not in use
+     * @param array|null $context not in use
      * @return bool
      */
     public function isValidTheme(string $value, ?array $context = null)

@@ -37,7 +37,7 @@ class IsMfaAuthenticationRequiredService
      * @param \Cake\Http\ServerRequest $request request
      * @param \Passbolt\MultiFactorAuthentication\Utility\MfaSettings $mfaSettings MFA settings
      * @param \App\Utility\UserAccessControl $uac User Access Controller
-     * @param \App\Authenticator\SessionIdentificationServiceInterface $sessionIdentificationService Session ID identifier
+     * @param \App\Authenticator\SessionIdentificationServiceInterface|null $sessionIdentificationService Session ID identifier
      * @return bool
      */
     public function isMfaCheckRequired(

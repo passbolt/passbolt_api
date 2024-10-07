@@ -56,7 +56,7 @@ trait FoldersRelationsModelTrait
      * Get a dummy folder relation with test data.
      * The relation returned shoudl passe a default validation.
      *
-     * @param array $data Custom data that will be merged with the default content.
+     * @param array|null $data Custom data that will be merged with the default content.
      * @return array
      * @throws \Exception
      */
@@ -80,7 +80,7 @@ trait FoldersRelationsModelTrait
      * @param string $foreignId
      * @param string $foreignModel
      * @param string $userId
-     * @param string $folderParentId
+     * @param string|null $folderParentId
      */
     protected function assertFolderRelation(string $foreignId, string $foreignModel, string $userId, ?string $folderParentId = null)
     {
@@ -104,7 +104,7 @@ trait FoldersRelationsModelTrait
      *
      * @param string $foreignId
      * @param string $userId
-     * @param string $folderParentId
+     * @param string|null $folderParentId
      */
     protected function assertFolderRelationNotExist(string $foreignId, string $userId, ?string $folderParentId = null)
     {

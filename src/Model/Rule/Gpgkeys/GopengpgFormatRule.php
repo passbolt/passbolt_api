@@ -25,7 +25,7 @@ class GopengpgFormatRule
      * Performs the check
      *
      * @param \App\Model\Entity\Gpgkey $entity The entity to check
-     * @param ?array $options Options passed to the check
+     * @param array|null $options Options passed to the check
      * @return bool
      */
     public function __invoke(Gpgkey $entity, ?array $options = []): bool

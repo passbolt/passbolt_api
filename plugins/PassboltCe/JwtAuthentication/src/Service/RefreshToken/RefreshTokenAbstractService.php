@@ -119,7 +119,7 @@ abstract class RefreshTokenAbstractService
     }
 
     /**
-     * @param ?string $token Refresh token
+     * @param string|null $token Refresh token
      * @return \Cake\ORM\Query
      */
     public function queryRefreshToken(?string $token): Query

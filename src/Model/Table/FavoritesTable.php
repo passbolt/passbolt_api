@@ -184,7 +184,7 @@ class FavoritesTable extends Table
     /**
      * Delete duplicated favorites
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupDuplicatedFavorites(?bool $dryRun = false): int

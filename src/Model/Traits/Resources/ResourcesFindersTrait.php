@@ -40,7 +40,7 @@ trait ResourcesFindersTrait
      * Build the query that fetches data for resource index
      *
      * @param string $userId The user to get the resources for
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
@@ -198,7 +198,7 @@ trait ResourcesFindersTrait
      *
      * @param string $userId The user to get the resources for
      * @param string $resourceId The resource to retrieve
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
@@ -242,7 +242,7 @@ trait ResourcesFindersTrait
      *
      * @param string $userId uuid
      * @param array $resourceIds array of resource uuids
-     * @param array $options array of options
+     * @param array|null $options array of options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
