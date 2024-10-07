@@ -31,6 +31,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -65,6 +66,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->service = new ResourcesAddService();
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
+        MetadataSettingsFactory::make()->v5()->persist();
     }
 
     public function tearDown(): void
@@ -172,7 +174,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             $this->service->add($uac, new MetadataResourceDto($payload));
         } catch (ValidationException $exception) {
             $this->assertSame(
-                'The resource type should be one of the following: v5-default, v5-totp-standalone, v5-default-with-totp.',
+                'The resource type should be one of the following: v5-password-string, v5-default, v5-totp-standalone, v5-default-with-totp.',
                 $exception->getErrors()['resource_type_id']['inList']
             );
         }

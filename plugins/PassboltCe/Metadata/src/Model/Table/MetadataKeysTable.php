@@ -155,4 +155,18 @@ class MetadataKeysTable extends Table
 
         return $rules;
     }
+
+    /**
+     * @return array|\Cake\Datasource\EntityInterface
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
+     */
+    public function getLatestNonDeletedKey()
+    {
+        return $this
+            ->find()
+            ->select(['id', 'fingerprint', 'armored_key'])
+            ->where(['deleted IS NULL'])
+            ->order(['created' => 'DESC'])
+            ->firstOrFail();
+    }
 }

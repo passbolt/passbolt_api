@@ -92,8 +92,21 @@ class MetadataCleartextPrivateKeyForm extends Form
 
         $validator
             ->requirePresence('domain', 'create', __('A domain is required.'))
-            ->notEmptyString('domain', __('The domain should not be empty.'))
-            ->urlWithProtocol('domain', __('The domain should be a valid URL.'));
+            ->notEmptyString('domain', __('The domain should not be empty.'));
+
+        $sslForce = Configure::read('passbolt.ssl.force') ?? true;
+        $validator->add('domain', 'urlWithProtocol', [
+            'rule' => function ($value, $context) use ($sslForce) {
+                if (strpos($value, 'https://') === 0) {
+                    return true;
+                }
+                if ($sslForce) {
+                    return false;
+                }
+
+                return strpos($value, 'http://') === 0;
+            },
+        ]);
 
         if (Configure::read('passbolt.security.checkDomainMismatch')) {
             $validator

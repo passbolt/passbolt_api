@@ -129,4 +129,17 @@ class GpgkeyFactory extends CakephpBaseFactory
             'fingerprint' => 'A754860C3ADE5AB04599025ED3F1FE4BE61D7009',
         ]);
     }
+
+    /**
+     * Set the armored key and fingerprint to the given key
+     *
+     * @return $this
+     */
+    public function withKeyInfo(array $keyInfo)
+    {
+        return $this->patchData([
+            'armored_key' => $keyInfo['armored_key'],
+            'fingerprint' => $keyInfo['fingerprint'],
+        ]);
+    }
 }

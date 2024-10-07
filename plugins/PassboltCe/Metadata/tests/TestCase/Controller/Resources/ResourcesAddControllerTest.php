@@ -28,6 +28,7 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -48,6 +49,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_SharedKeyType_Success(): void
     {
+        MetadataSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
@@ -91,6 +93,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_UserKeyType_Success(): void
     {
+        MetadataSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -136,6 +139,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_Error_NotCurrentUser(): void
     {
+        MetadataSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->user()
@@ -182,6 +186,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_Error_MixV4V5Fields(): void
     {
+        MetadataSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
@@ -213,6 +218,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourcesAddController_Success_V5DisabledMixV4V5FieldsWorks(): void
     {
+        MetadataSettingsFactory::make()->v5()->persist();
         Configure::write('passbolt.v5.enabled', false);
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
@@ -234,5 +240,61 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::firstOrFail();
         $this->assertNull($resource->metadata_key_id);
         $this->assertObjectNotHasAttribute('metadata', $this->_responseJsonBody);
+    }
+
+    public function testResourcesAddController_Error_AllowCreationOfV5ResourceDisabled(): void
+    {
+        // Allow only V4 format
+        MetadataSettingsFactory::make()->v4()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $metadataKey->get('id');
+        $dummyResourceData = $this->getDummyResourcesPostData([
+            'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
+        ]);
+        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+        $metadataKeyType = 'shared_key';
+        // login
+        $this->logInAs($user);
+
+        $data = [
+            'metadata_key_id' => $metadataKeyId,
+            'metadata' => $metadata,
+            'metadata_key_type' => $metadataKeyType,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $this->postJson('/resources.json', $data);
+
+        // `\` here is to pass regex in the assertion method
+        $this->assertBadRequestError('Resource creation\/modification with encrypted metadata not allowed');
+    }
+
+    public function testResourcesAddController_Error_AllowCreationOfV4ResourceDisabled(): void
+    {
+        // Allow only V4 format
+        MetadataSettingsFactory::make()->v6()->persist();
+        $user = UserFactory::make()->user()->persist();
+        // login
+        $this->logInAs($user);
+
+        $data = [
+            'name' => 'Test',
+            'username' => 'username',
+            'uri' => 'https://www.test.org',
+            'description' => 'Test',
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $this->postJson('/resources.json', $data);
+
+        $this->assertBadRequestError('Resource creation\/modification with cleartext metadata not allowed');
     }
 }

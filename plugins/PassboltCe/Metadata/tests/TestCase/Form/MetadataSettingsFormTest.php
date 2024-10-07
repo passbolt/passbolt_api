@@ -18,21 +18,21 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Form;
 
 use Cake\TestSuite\TestCase;
-use Passbolt\Metadata\Form\MetadataSettingsForm;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
+use Passbolt\Metadata\Form\MetadataTypesSettingsForm;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 
 class MetadataSettingsFormTest extends TestCase
 {
     /**
-     * @var MetadataSettingsForm $form
+     * @var MetadataTypesSettingsForm $form
      */
     protected $form;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->form = new MetadataSettingsForm();
+        $this->form = new MetadataTypesSettingsForm();
     }
 
     public function tearDown(): void
@@ -46,90 +46,90 @@ class MetadataSettingsFormTest extends TestCase
         return MetadataSettingsFactory::getDefaultDataV4();
     }
 
-    public function testMetadataSettingsForm_Success(): void
+    public function testMetadataTypesSettingsForm_Success(): void
     {
         $this->assertTrue($this->form->execute($this->getDefaultData()));
     }
 
-    public function testMetadataSettingsForm_Error_Empty(): void
+    public function testMetadataTypesSettingsForm_Error_Empty(): void
     {
         $this->assertFalse($this->form->execute([]));
         $errors = $this->form->getErrors();
-        foreach (MetadataSettingsDto::PROPS as $prop) {
+        foreach (MetadataTypesSettingsDto::PROPS as $prop) {
             $this->assertTrue(isset($errors[$prop]['_empty']));
         }
     }
 
-    public function testMetadataSettingsForm_Error_NotEmptyString(): void
+    public function testMetadataTypesSettingsForm_Error_NotEmptyString(): void
     {
         $data = array_merge($this->getDefaultData(), [
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => '',
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => '',
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => '',
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => '',
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => '',
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => '',
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => '',
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => '',
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_RESOURCE_TYPES]['_empty']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_FOLDER_TYPE]['_empty']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_TAG_TYPE]['_empty']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_COMMENT_TYPE]['_empty']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES]['_empty']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE]['_empty']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_TAG_TYPE]['_empty']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE]['_empty']));
     }
 
-    public function testMetadataSettingsForm_Error_NotString(): void
+    public function testMetadataTypesSettingsForm_Error_NotString(): void
     {
         $data = array_merge($this->getDefaultData(), [
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => 0,
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => 0,
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => 0,
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => 0,
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => 0,
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => 0,
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => 0,
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => 0,
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_RESOURCE_TYPES]['utf8']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_FOLDER_TYPE]['utf8']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_TAG_TYPE]['utf8']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_COMMENT_TYPE]['utf8']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES]['utf8']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE]['utf8']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_TAG_TYPE]['utf8']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE]['utf8']));
     }
 
-    public function testMetadataSettingsForm_Error_NotInList(): void
+    public function testMetadataTypesSettingsForm_Error_NotInList(): void
     {
         $data = array_merge($this->getDefaultData(), [
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => 'v0',
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => 'v0',
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => 'v0',
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => 'v0',
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => 'v0',
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => 'v0',
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => 'v0',
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => 'v0',
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_RESOURCE_TYPES]['inList']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_FOLDER_TYPE]['inList']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_TAG_TYPE]['inList']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_COMMENT_TYPE]['inList']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES]['inList']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE]['inList']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_TAG_TYPE]['inList']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE]['inList']));
     }
 
-    public function testMetadataSettingsForm_Error_NotBool(): void
+    public function testMetadataTypesSettingsForm_Error_NotBool(): void
     {
         $data = array_merge($this->getDefaultData(), [
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => 'test',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => 'test',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS => 'test',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => 'test',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => 'test',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => 'test',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS => 'test',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => 'test',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => 'test',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => 'test',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => 'test',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => 'test',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => 'test',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => 'test',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => 'test',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => 'test',
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]['boolean']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS]['boolean']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS]['boolean']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS]['boolean']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]['boolean']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS]['boolean']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS]['boolean']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS]['boolean']));
     }
 
     /**
@@ -137,24 +137,24 @@ class MetadataSettingsFormTest extends TestCase
      *
      * @return void
      */
-    public function testMetadataSettingsForm_Error_AtLeastOneEnabled(): void
+    public function testMetadataTypesSettingsForm_Error_AtLeastOneEnabled(): void
     {
         $data = array_merge($this->getDefaultData(), [
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => false,
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]['atLeastOne']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS]['atLeastOne']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS]['atLeastOne']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS]['atLeastOne']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]['atLeastOne']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS]['atLeastOne']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS]['atLeastOne']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS]['atLeastOne']));
     }
 
     /**
@@ -162,48 +162,48 @@ class MetadataSettingsFormTest extends TestCase
      *
      * @return void
      */
-    public function testMetadataSettingsAssertService_Error_DefaultMustBeEnabled(): void
+    public function testMetadataTypesSettingsAssertService_Error_DefaultMustBeEnabled(): void
     {
         $data = array_merge($this->getDefaultData(), [
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => 'v5',
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => 'v5',
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => 'v5',
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => 'v5',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => 'v5',
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => 'v5',
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => 'v5',
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => 'v5',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_RESOURCE_TYPES]['defaultTypeMustBeEnabled']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_FOLDER_TYPE]['defaultTypeMustBeEnabled']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_TAG_TYPE]['defaultTypeMustBeEnabled']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_COMMENT_TYPE]['defaultTypeMustBeEnabled']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES]['defaultTypeMustBeEnabled']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE]['defaultTypeMustBeEnabled']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_TAG_TYPE]['defaultTypeMustBeEnabled']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE]['defaultTypeMustBeEnabled']));
 
         $data = array_merge($this->getDefaultData(), [
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => 'v4',
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => 'v4',
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => 'v4',
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => 'v4',
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => false,
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => 'v4',
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => 'v4',
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => 'v4',
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => 'v4',
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => false,
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_RESOURCE_TYPES]['defaultTypeMustBeEnabled']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_FOLDER_TYPE]['defaultTypeMustBeEnabled']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_TAG_TYPE]['defaultTypeMustBeEnabled']));
-        $this->assertTrue(isset($errors[MetadataSettingsDto::DEFAULT_COMMENT_TYPE]['defaultTypeMustBeEnabled']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES]['defaultTypeMustBeEnabled']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE]['defaultTypeMustBeEnabled']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_TAG_TYPE]['defaultTypeMustBeEnabled']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE]['defaultTypeMustBeEnabled']));
     }
 }

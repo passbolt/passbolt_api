@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Service;
 
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -26,7 +27,10 @@ use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class MetadataKeyCreateService
 {
+    use EventDispatcherTrait;
     use LocatorAwareTrait;
+
+    public const AFTER_METADATA_KEY_CREATE_SUCCESS_EVENT_NAME = 'MetadataKey.afterKeyCreate.success';
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC.
@@ -47,7 +51,15 @@ class MetadataKeyCreateService
             $data['metadata_private_keys'][$i]['modified_by'] = $uac->getId();
         }
 
-        return $this->buildAndSaveEntity($data);
+        $metadataKey = $this->buildAndSaveEntity($data);
+
+        $this->dispatchEvent(
+            static::AFTER_METADATA_KEY_CREATE_SUCCESS_EVENT_NAME,
+            compact('metadataKey', 'uac'),
+            $this
+        );
+
+        return $metadataKey;
     }
 
     /**

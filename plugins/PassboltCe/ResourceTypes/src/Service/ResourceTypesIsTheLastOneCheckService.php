@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\ResourceTypes\Service;
 
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\Service\MetadataSettingsGetService;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
 class ResourceTypesIsTheLastOneCheckService
@@ -38,7 +38,7 @@ class ResourceTypesIsTheLastOneCheckService
             ResourceType::SLUG_STANDALONE_TOTP,
         ];
 
-        $settings = (new MetadataSettingsGetService())->getSettings();
+        $settings = (new MetadataTypesSettingsGetService())->getSettings();
 
         if ($settings::DEFAULT_RESOURCE_TYPES === $settings::V4) {
             // default is v4 and resource type is of type v4

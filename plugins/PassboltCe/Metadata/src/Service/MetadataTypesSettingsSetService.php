@@ -17,36 +17,46 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service;
 
 use App\Utility\UserAccessControl;
+use Cake\Event\EventDispatcherTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 
-class MetadataSettingsSetService
+class MetadataTypesSettingsSetService
 {
+    use EventDispatcherTrait;
     use LocatorAwareTrait;
+
+    public const AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME = 'MetadataSettings.afterSettingSet.success';
 
     /**
      * Validates and save the metadata settings
      *
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param array $data Data provided in the payload
-     * @throws \App\Error\Exception\FormValidationException if the data does not validate
+     * @return \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto dto
      * @throws \Cake\Http\Exception\UnauthorizedException When user role is not admin.
      * @throws \App\Error\Exception\CustomValidationException When there are validation errors.
      * @throws \Cake\Http\Exception\InternalErrorException|\Exception When unable to save the entity.
-     * @return \Passbolt\Metadata\Model\Dto\MetadataSettingsDto dto
+     * @throws \App\Error\Exception\FormValidationException if the data does not validate
      */
-    public function saveSettings(UserAccessControl $uac, array $data): MetadataSettingsDto
+    public function saveSettings(UserAccessControl $uac, array $data): MetadataTypesSettingsDto
     {
         $uac->assertIsAdmin();
 
-        $dto = (new MetadataSettingsAssertService())->assert($data);
+        $dto = (new MetadataTypesSettingsAssertService())->assert($data);
 
         /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
         $orgSettingsTable = $this->fetchTable('OrganizationSettings');
         $orgSettingsTable->createOrUpdateSetting(
-            MetadataSettingsGetService::ORG_SETTING_PROPERTY,
+            MetadataTypesSettingsGetService::ORG_SETTING_PROPERTY,
             $dto->toJson(),
             $uac
+        );
+
+        $this->dispatchEvent(
+            static::AFTER_METADATA_SETTINGS_SET_SUCCESS_EVENT_NAME,
+            compact('dto', 'uac'),
+            $this
         );
 
         return $dto;

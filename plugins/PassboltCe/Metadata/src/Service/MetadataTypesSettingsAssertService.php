@@ -18,10 +18,10 @@ namespace Passbolt\Metadata\Service;
 
 use App\Error\Exception\FormValidationException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\Form\MetadataSettingsForm;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
+use Passbolt\Metadata\Form\MetadataTypesSettingsForm;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 
-class MetadataSettingsAssertService
+class MetadataTypesSettingsAssertService
 {
     use LocatorAwareTrait;
 
@@ -29,17 +29,17 @@ class MetadataSettingsAssertService
      * Validates the setting and return them
      *
      * @param array $data untrusted input
-     * @return \Passbolt\Metadata\Model\Dto\MetadataSettingsDto dto
+     * @return \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto dto
      * @throws \App\Error\Exception\FormValidationException if the data does not validate
      */
-    public function assert(array $data): MetadataSettingsDto
+    public function assert(array $data): MetadataTypesSettingsDto
     {
-        $form = new MetadataSettingsForm();
+        $form = new MetadataTypesSettingsForm();
         if (!$form->execute($data)) {
             throw new FormValidationException(__('Could not validate the metadata settings.'), $form);
         }
 
-        $dto = new MetadataSettingsDto($form->getData());
+        $dto = new MetadataTypesSettingsDto($form->getData());
 
         // TODO "Build rules"
         // Admin select a default resource version but all resource types are deleted for this version

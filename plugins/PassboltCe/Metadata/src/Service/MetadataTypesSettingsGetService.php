@@ -18,9 +18,9 @@ namespace Passbolt\Metadata\Service;
 
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 
-class MetadataSettingsGetService
+class MetadataTypesSettingsGetService
 {
     use LocatorAwareTrait;
 
@@ -29,23 +29,23 @@ class MetadataSettingsGetService
     /**
      * TODO for v5 it should default to v5
      *
-     * @return \Passbolt\Metadata\Model\Dto\MetadataSettingsDto default settings when there is none set
+     * @return \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto default settings when there is none set
      */
-    public function getDefaultSettings(): MetadataSettingsDto
+    public function getDefaultSettings(): MetadataTypesSettingsDto
     {
-        return new MetadataSettingsDto([
-            MetadataSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataSettingsDto::V4,
-            MetadataSettingsDto::DEFAULT_FOLDER_TYPE => MetadataSettingsDto::V4,
-            MetadataSettingsDto::DEFAULT_TAG_TYPE => MetadataSettingsDto::V4,
-            MetadataSettingsDto::DEFAULT_COMMENT_TYPE => MetadataSettingsDto::V4,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
-            MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
+        return new MetadataTypesSettingsDto([
+            MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES => MetadataTypesSettingsDto::V4,
+            MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE => MetadataTypesSettingsDto::V4,
+            MetadataTypesSettingsDto::DEFAULT_TAG_TYPE => MetadataTypesSettingsDto::V4,
+            MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE => MetadataTypesSettingsDto::V4,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS => false,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
+            MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
         ]);
     }
 
@@ -53,16 +53,16 @@ class MetadataSettingsGetService
      * Read the metadata settings in the DB, or in file.
      * Validates the setting and return them
      *
-     * @return \Passbolt\Metadata\Model\Dto\MetadataSettingsDto dto
+     * @return \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto dto
      * @throws \App\Error\Exception\FormValidationException if the data does not validate
      */
-    public function getSettings(): MetadataSettingsDto
+    public function getSettings(): MetadataTypesSettingsDto
     {
         try {
             // fetch the settings from DB if any
             /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
             $orgSettingsTable = $this->fetchTable('OrganizationSettings');
-            $setting = $orgSettingsTable->getFirstSettingOrFail(MetadataSettingsGetService::ORG_SETTING_PROPERTY);
+            $setting = $orgSettingsTable->getFirstSettingOrFail(MetadataTypesSettingsGetService::ORG_SETTING_PROPERTY);
 
             // Deserialize and revalidate the settings
             if (!isset($setting->value) || !is_string($setting->value)) {
@@ -70,7 +70,7 @@ class MetadataSettingsGetService
             }
             $data = json_decode($setting->value, true, 2, JSON_THROW_ON_ERROR);
 
-            return (new MetadataSettingsAssertService())->assert($data);
+            return (new MetadataTypesSettingsAssertService())->assert($data);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
 

@@ -19,45 +19,45 @@ namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\AppTestCase;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
-use Passbolt\Metadata\Service\MetadataSettingsGetService;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 
 class MetadataSettingsGetServiceTest extends AppTestCase
 {
-    public function testMetadataSettingsGetService_getSettings_NotEntryReturnsDefault(): void
+    public function testMetadataTypesSettingsGetService_getSettings_NotEntryReturnsDefault(): void
     {
-        $sut = new MetadataSettingsGetService();
+        $sut = new MetadataTypesSettingsGetService();
         $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
     }
 
-    public function testMetadataSettingsGetService_getSettings_NotDefault(): void
+    public function testMetadataTypesSettingsGetService_getSettings_NotDefault(): void
     {
         $data = MetadataSettingsFactory::getDefaultDataV4();
-        $data[MetadataSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
-        $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
-        $data[MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
+        $data[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
+        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
+        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
         MetadataSettingsFactory::make()->value(json_encode($data))->persist();
-        $sut = new MetadataSettingsGetService();
+        $sut = new MetadataTypesSettingsGetService();
         $this->assertEquals($data, $sut->getSettings()->toArray());
     }
 
-    public function testMetadataSettingsGetService_getSettings_BrokenSettingsReturnsDefault(): void
+    public function testMetadataTypesSettingsGetService_getSettings_BrokenSettingsReturnsDefault(): void
     {
         $this->assertEquals(0, MetadataSettingsFactory::count());
         $data = MetadataSettingsFactory::getDefaultDataV4();
-        $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = '🔥';
+        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = '🔥';
         MetadataSettingsFactory::make()->value(json_encode($data))->persist();
-        $sut = new MetadataSettingsGetService();
+        $sut = new MetadataTypesSettingsGetService();
         $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
     }
 
-    public function testMetadataSettingsGetService_getSettings_BrokenJsonSettingsReturnsDefault(): void
+    public function testMetadataTypesSettingsGetService_getSettings_BrokenJsonSettingsReturnsDefault(): void
     {
         OrganizationSettingFactory::make()
-            ->setPropertyAndValue(MetadataSettingsGetService::ORG_SETTING_PROPERTY, '🔥')
+            ->setPropertyAndValue(MetadataTypesSettingsGetService::ORG_SETTING_PROPERTY, '🔥')
             ->persist();
-        $sut = new MetadataSettingsGetService();
+        $sut = new MetadataTypesSettingsGetService();
         $this->assertEquals(MetadataSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
     }
 }

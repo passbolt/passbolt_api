@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Dto;
 
-class MetadataSettingsDto
+class MetadataTypesSettingsDto
 {
     public const DEFAULT_RESOURCE_TYPES = 'default_resource_types';
     public const DEFAULT_FOLDER_TYPE = 'default_folder_type';
@@ -48,6 +48,9 @@ class MetadataSettingsDto
         self::ALLOW_CREATION_OF_V4_COMMENTS,
     ];
 
+    public const ENTITY_RESOURCE = 'resource';
+    public const ENTITY_FOLDER = 'folder';
+
     /**
      * @var array data
      */
@@ -74,6 +77,38 @@ class MetadataSettingsDto
             self::ALLOW_CREATION_OF_V4_TAGS => $data[self::ALLOW_CREATION_OF_V4_TAGS] ?? null,
             self::ALLOW_CREATION_OF_V4_COMMENTS => $data[self::ALLOW_CREATION_OF_V4_COMMENTS] ?? null,
         ];
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV5ResourceCreationAllowed(): bool
+    {
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV4ResourceCreationAllowed(): bool
+    {
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV5FolderCreationAllowed(): bool
+    {
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV4FolderCreationAllowed(): bool
+    {
+        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]);
     }
 
     /**

@@ -20,6 +20,7 @@ namespace Passbolt\Metadata\Test\TestCase\Controller;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
@@ -33,6 +34,7 @@ use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
  */
 class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
 {
+    use EmailQueueTrait;
     use LocatorAwareTrait;
     use GpgMetadataKeysTestTrait;
 
@@ -46,17 +48,23 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
     {
         $keyInfo = $this->getUserKeyInfo();
         $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
+        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', $gpgkey)
             ->admin()
             ->active()
             ->persist();
+        $otherAdmin = UserFactory::make()->admin()->persist();
+        // Create a disabled admin and a user to test emails
+        UserFactory::make()->admin()->disabled()->persist();
+        UserFactory::make()->user()->persist();
         $this->logInAs($user);
 
         $dummyKey = $this->getMetadataKeyInfo();
+        $fingerprint = $dummyKey['fingerprint'];
         $this->postJson('/metadata/keys.json', [
             'armored_key' => $dummyKey['public_key'],
-            'fingerprint' => $dummyKey['fingerprint'],
+            'fingerprint' => $fingerprint,
             'metadata_private_keys' => [
                 [
                     'user_id' => null, // server key
@@ -95,6 +103,12 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
         $this->assertCount(2, $metadataPrivateKeys);
         $this->assertSame($user->get('id'), $metadataPrivateKeys[0]['created_by']);
         $this->assertSame($user->get('id'), $metadataPrivateKeys[0]['modified_by']);
+        // assert that an email is sent to all admins
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains([
+            'Fingerprint: ' . $fingerprint,
+        ], $user->username);
+        $this->assertEmailInBatchContains($user->profile->last_name . ' created a new metadata key', $otherAdmin->get('username'));
     }
 
     public function testMetadataKeyCreateController_Error_AuthenticationRequired()

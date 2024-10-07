@@ -24,61 +24,61 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\ForbiddenException;
-use Passbolt\Metadata\Model\Dto\MetadataSettingsDto;
-use Passbolt\Metadata\Service\MetadataSettingsSetService;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Service\MetadataTypesSettingsSetService;
 use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 
 class MetadataSettingsSetServiceTest extends AppTestCase
 {
-    public function testMetadataSettingsSetService_Success_Create(): void
+    public function testMetadataTypesSettingsSetService_Success_Create(): void
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $data = MetadataSettingsFactory::getDefaultDataV4();
         $uac = new UserAccessControl(Role::ADMIN, $user->id);
-        $sut = new MetadataSettingsSetService();
+        $sut = new MetadataTypesSettingsSetService();
         $dto = $sut->saveSettings($uac, $data);
         $this->assertEquals($data, $dto->toArray());
     }
 
-    public function testMetadataSettingsSetService_Success_Edit(): void
+    public function testMetadataTypesSettingsSetService_Success_Edit(): void
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $data = MetadataSettingsFactory::getDefaultDataV4();
-        $data[MetadataSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
-        $data[MetadataSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
-        $data[MetadataSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
+        $data[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
+        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
+        $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
         MetadataSettingsFactory::make()->value(json_encode($data))->persist();
         $this->assertEquals(1, OrganizationSettingFactory::count());
 
         $uac = new UserAccessControl(Role::ADMIN, $user->id);
-        $sut = new MetadataSettingsSetService();
+        $sut = new MetadataTypesSettingsSetService();
         $data = MetadataSettingsFactory::getDefaultDataV4();
         $dto = $sut->saveSettings($uac, $data);
         $this->assertEquals($data, $dto->toArray());
         $this->assertEquals(1, OrganizationSettingFactory::count());
     }
 
-    public function testMetadataSettingsSetService_Error_NotAdmin(): void
+    public function testMetadataTypesSettingsSetService_Error_NotAdmin(): void
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->persist();
         $data = MetadataSettingsFactory::getDefaultDataV4();
         $uac = new UserAccessControl(Role::USER, $user->id);
-        $sut = new MetadataSettingsSetService();
+        $sut = new MetadataTypesSettingsSetService();
         $this->expectException(ForbiddenException::class);
         $sut->saveSettings($uac, $data);
     }
 
-    public function testMetadataSettingsSetService_Error_Invalid(): void
+    public function testMetadataTypesSettingsSetService_Error_Invalid(): void
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $data = MetadataSettingsFactory::getDefaultDataV4();
-        $data[MetadataSettingsDto::DEFAULT_RESOURCE_TYPES] = 'v8';
+        $data[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES] = 'v8';
         $uac = new UserAccessControl(Role::ADMIN, $user->id);
-        $sut = new MetadataSettingsSetService();
+        $sut = new MetadataTypesSettingsSetService();
         $this->expectException(FormValidationException::class);
         $sut->saveSettings($uac, $data);
     }

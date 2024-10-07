@@ -20,16 +20,16 @@ use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Http\Exception\BadRequestException;
-use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4FoldersToV5Service;
 
-class MigrateResourcesCommand extends PassboltCommand
+class MigrateFoldersCommand extends PassboltCommand
 {
     /**
      * @inheritDoc
      */
     public static function getCommandDescription(): string
     {
-        return __('Migrate V4 resources to V5.');
+        return __('Migrate V4 folders to V5.');
     }
 
     /**
@@ -40,7 +40,7 @@ class MigrateResourcesCommand extends PassboltCommand
         parent::execute($args, $io);
 
         try {
-            $result = (new MigrateAllV4ResourcesToV5Service())->migrate();
+            $result = (new MigrateAllV4FoldersToV5Service())->migrate();
         } catch (BadRequestException $e) {
             $msg = $e->getMessage();
             $msg .= "\n";
@@ -50,12 +50,12 @@ class MigrateResourcesCommand extends PassboltCommand
         }
 
         if (isset($result['migrated']) && count($result['migrated'])) {
-            $this->success(__('{0} resources were migrated.', count($result['migrated'])), $io);
+            $this->success(__('{0} folders were migrated.', count($result['migrated'])), $io);
         }
         if ($result['success']) {
-            $io->success(__('All resources successfully migrated.'));
+            $io->success(__('All folders successfully migrated.'));
         } else {
-            $this->error(__('All resources could not migrated.'), $io);
+            $this->error(__('All folders could not migrated.'), $io);
             $this->error(__('See errors:'), $io);
             $errors = $result['errors'];
             foreach ($errors as $error) {

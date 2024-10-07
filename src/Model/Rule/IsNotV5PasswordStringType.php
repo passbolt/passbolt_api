@@ -14,22 +14,24 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-namespace Passbolt\Metadata\Controller;
 
-use App\Controller\AppController;
-use Passbolt\Metadata\Service\MetadataSettingsGetService;
+namespace App\Model\Rule;
 
-class MetadataSettingsGetController extends AppController
+use App\Utility\UuidFactory;
+use Cake\Datasource\EntityInterface;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
+
+class IsNotV5PasswordStringType
 {
     /**
-     * MetadataSettings GET action
-     *
-     * @return void
+     * @param \Cake\Datasource\EntityInterface $entity The entity to check
+     * @param array $options Options passed to the check
+     * @return bool
      */
-    public function get()
+    public function __invoke(EntityInterface $entity, array $options)
     {
-        $this->assertJson();
-        $settings = (new MetadataSettingsGetService())->getSettings();
-        $this->success(__('The operation was successful.'), $settings->toArray());
+        $v5PasswordStringId = UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSWORD_STRING);
+
+        return $entity->get('resource_type_id') !== $v5PasswordStringId;
     }
 }

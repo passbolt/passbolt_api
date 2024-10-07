@@ -35,6 +35,8 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 class ResourcesUpdateService
@@ -42,6 +44,7 @@ class ResourcesUpdateService
     use EventDispatcherTrait;
     use LocatorAwareTrait;
     use ResourceSaveV5AwareTrait;
+    use MetadataSettingsAwareTrait;
 
     public const UPDATE_SUCCESS_EVENT_NAME = 'ResourcesUpdateController.update.success';
 
@@ -89,6 +92,8 @@ class ResourcesUpdateService
      */
     public function update(UserAccessControl $uac, string $id, MetadataResourceDto $resourceDto): Resource
     {
+        $this->assertCreationAllowedByMetadataSettings($resourceDto->isV5(), MetadataTypesSettingsDto::ENTITY_RESOURCE);
+
         $resource = $this->getResource($uac, $id);
         $meta = $this->extractDataResourceMeta($resourceDto);
         $meta = $this->presetOrAssertResourceType($meta);

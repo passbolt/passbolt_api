@@ -29,6 +29,7 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -63,6 +64,8 @@ class MetadataResourcesUpdateServiceTest extends AppTestCaseV5
         $this->Secrets = TableRegistry::getTableLocator()->get('Secrets');
         $this->service = new ResourcesUpdateService();
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
+        // Enable v5 settings
+        MetadataSettingsFactory::make()->v5()->persist();
     }
 
     public function tearDown(): void

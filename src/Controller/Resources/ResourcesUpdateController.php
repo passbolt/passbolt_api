@@ -51,7 +51,7 @@ class ResourcesUpdateController extends AppController
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
 
-        $resourceDto = new MetadataResourceDto((array)$this->getRequest()->getData());
+        $resourceDto = new MetadataResourceDto($this->getRequest()->getData());
 
         $uac = $this->User->getAccessControl();
         $resource = $resourcesUpdateService->update($uac, $id, $resourceDto);
