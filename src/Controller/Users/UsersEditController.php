@@ -82,7 +82,7 @@ class UsersEditController extends AppController
             throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
         }
         $this->Users->checkRules($user);
-        if (!empty($user->getErrors())) {
+        if ($user->getErrors()) {
             throw new ValidationException(__('Could not validate user data.'), $user, $this->Users);
         }
         $isBeingDisabled = $wasDisabledNull && !is_null($user->disabled);

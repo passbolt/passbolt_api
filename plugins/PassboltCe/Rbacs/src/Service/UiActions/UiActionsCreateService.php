@@ -61,7 +61,7 @@ class UiActionsCreateService
 
         // Check business rules
         $this->uiActionsTable->checkRules($entity);
-        if (!empty($entity->getErrors())) {
+        if ($entity->getErrors()) {
             $msg = __('The UI actions data could not be validated.');
             throw new ValidationException($msg, $entity, $this->uiActionsTable);
         }
