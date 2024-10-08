@@ -18,9 +18,9 @@ namespace Passbolt\Metadata\Utility;
 
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Service\MetadataKeyShareDefaultService;
+use Passbolt\Metadata\Service\MetadataKeyShareNothingService;
 use Passbolt\Metadata\Service\MetadataKeyShareServiceInterface;
 use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
-use PassboltCe\Metadata\src\Service\MetadataKeyShareNothingService;
 
 class ShareMetadataKeyServiceFactory
 {

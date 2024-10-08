@@ -24,7 +24,7 @@ class MetadataTypesSettingsGetService
 {
     use LocatorAwareTrait;
 
-    public const ORG_SETTING_PROPERTY = 'metadataKeys';
+    public const ORG_SETTING_PROPERTY = 'metadataTypes';
 
     /**
      * TODO for v5 it should default to v5
