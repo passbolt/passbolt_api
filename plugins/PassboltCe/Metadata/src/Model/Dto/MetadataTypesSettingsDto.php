@@ -80,7 +80,8 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
      */
     public function isV5ResourceCreationAllowed(): bool
     {
-        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]);
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES] === true;
     }
 
     /**
@@ -88,7 +89,8 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
      */
     public function isV4ResourceCreationAllowed(): bool
     {
-        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]);
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES] === true;
     }
 
     /**
@@ -96,7 +98,8 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
      */
     public function isV5FolderCreationAllowed(): bool
     {
-        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS]);
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS] === true;
     }
 
     /**
@@ -104,7 +107,17 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
      */
     public function isV4FolderCreationAllowed(): bool
     {
-        return !empty($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]);
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES] === true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV5TagCreationAllowed(): bool
+    {
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS] === true;
     }
 
     /**
