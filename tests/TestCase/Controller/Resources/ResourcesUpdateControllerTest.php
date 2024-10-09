@@ -40,7 +40,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
         EventManager::instance()->setEventList(new EventList());
         RoleFactory::make()->guest()->persist();
         [$r1, $userA, $userB] = $this->insertFixture_UpdateResourceMeta();
-        $this->authenticateAs($userB);
+        $this->logInAs($userB);
 
         $data = [
             'name' => 'R1 name updated',
