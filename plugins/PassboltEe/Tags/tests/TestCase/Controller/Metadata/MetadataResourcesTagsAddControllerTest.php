@@ -21,8 +21,12 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\UuidFactory;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Tags\TagsPlugin;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 
 /**
@@ -41,6 +45,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataResourcesTagsAddController_Success(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -64,6 +69,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
                 'tag1', // new
                 'tag_2', // existing (update)
                 [
+                    // new
                     'metadata' => $metadata,
                     'metadata_key_id' => $user->gpgkey->id,
                     'metadata_key_type' => 'user_key',
@@ -100,8 +106,151 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertCount(3, $tags);
     }
 
+    public function testMetadataResourcesTagsAddController_Success_ReuseExistingSharedTag(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        // Existing tag created by another user
+        $betty = UserFactory::make()->user()->active()->persist();
+        $resource2 = ResourceFactory::make()->withPermissionsFor([$betty])->persist();
+        // Create a shared tag
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $myFavMetadata = $this->encryptForMetadataKey($myFavTagClearText);
+        $myfavTag = TagFactory::make()
+            ->isSharedFor($resource2)
+            ->v5Fields(['metadata' => $myFavMetadata, 'metadata_key_id' => $metadataKey->id], true)
+            ->persist();
+        // Create a personal tag that is already linked, to test it's not duplicated
+        $marketingClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'marketing']);
+        $marketingMetadata = $this->encryptForUser($marketingClearText, $ada, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+        $marketingTag = TagFactory::make()
+            ->isPersonalFor($resource, $ada)
+            ->v5Fields(['metadata' => $marketingMetadata, 'metadata_key_id' => $ada->gpgkey->id])
+            ->persist();
+        // A V4 tag
+        TagFactory::make(['slug' => 'imv4'])->isPersonalFor($resource2, $betty)->persist();
+        // Prepare metadata for the request
+        $starredTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'starred']);
+        $starredMetadata = $this->encryptForUser($starredTagClearText, $ada, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+
+        $this->logInAs($ada);
+        $data = [
+            'tags' => [
+                'imv4', // existing tag (reuse)
+                [
+                    // new
+                    'metadata' => $starredMetadata,
+                    'metadata_key_id' => $ada->gpgkey->id,
+                    'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+                    'is_shared' => false,
+                ],
+                [
+                    // existing tag (reuse)
+                    'id' => $myfavTag->get('id'),
+                ],
+                [
+                    'id' => $marketingTag->get('id'),
+                ],
+            ],
+        ];
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
+
+        $this->assertSuccess();
+        // assert response
+        $this->assertCount(4, $this->getResponseBodyAsArray());
+        // assert database entries
+        $this->assertCount(4, TagFactory::find()->toArray());
+        $resourceTags = ResourcesTagFactory::find()->where(['resource_id' => $resource->id])->toArray();
+        $this->assertCount(4, $resourceTags);
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        foreach ($resourceTags as $resourceTag) {
+            if (is_null($resourceTag->user_id)) {
+                $this->assertSame($myfavTag->get('id'), $resourceTag->tag_id);
+                $this->assertNull($resourceTag->user_id);
+            } else {
+                $this->assertSame($ada->id, $resourceTag->user_id);
+            }
+        }
+    }
+
+    public function testMetadataResourcesTagsAddController_Success_UnlinkV5TagFromResource(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        // Create two personal tags
+        // tag 1
+        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $myFavMetadata = $this->encryptForUser($myFavTagClearText, $ada, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+        $tag1 = TagFactory::make()
+            ->isPersonalFor($resource, $ada)
+            ->v5Fields(['metadata' => $myFavMetadata, 'metadata_key_id' => $ada->gpgkey->id])
+            ->persist();
+        // tag 2
+        $marketingClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'marketing']);
+        $marketingMetadata = $this->encryptForUser($marketingClearText, $ada, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+        TagFactory::make()
+            ->isPersonalFor($resource, $ada)
+            ->v5Fields(['metadata' => $marketingMetadata, 'metadata_key_id' => $ada->gpgkey->id])
+            ->persist();
+
+        $this->logInAs($ada);
+        $data = [
+            'tags' => [
+                [
+                    'id' => $tag1->get('id'),
+                ],
+                // note: not sending $tag2 id because we want to unlink it from the resource
+            ],
+        ];
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
+
+        $this->assertSuccess();
+        // assert response
+        $this->assertCount(1, $this->getResponseBodyAsArray());
+        // assert database entries
+        $tags = TagFactory::find()->toArray();
+        $this->assertCount(1, $tags);
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = $tags[0];
+        $this->assertSame($tag1->get('id'), $tag->get('id'));
+        $resourceTags = ResourcesTagFactory::find()->where(['resource_id' => $resource->id])->toArray();
+        $this->assertCount(1, $resourceTags);
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = $resourceTags[0];
+        $this->assertSame($tag1->get('id'), $resourceTag->get('tag_id'));
+        $this->assertSame($ada->get('id'), $resourceTag->get('user_id'));
+    }
+
     public function testMetadataResourcesTagsAddController_Error_InvalidData(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -122,6 +271,12 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
                     'metadata_key_type' => 'my_secret_key',
                     'is_shared' => UuidFactory::uuid(),
                 ],
+                [
+                    'id' => 'invalid-uuid',
+                ],
+                [
+                    'id' => UuidFactory::uuid(), // tag does not exists
+                ],
             ],
         ];
         $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
@@ -129,24 +284,35 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertError(400);
         // assert response
         $response = $this->getResponseBodyAsArray();
+        $this->assertCount(5, $response);
+        // validation field 1
         $this->assertCount(4, $response[0]);
         $this->assertArrayHasKey('_required', $response[0]['metadata']);
         $this->assertArrayHasKey('_required', $response[0]['metadata_key_id']);
         $this->assertArrayHasKey('_required', $response[0]['metadata_key_type']);
         $this->assertArrayHasKey('_required', $response[0]['is_shared']);
+        // validation field 2
         $this->assertCount(4, $response[1]);
         $this->assertArrayHasKey('ascii', $response[1]['metadata']);
         $this->assertArrayHasKey('_required', $response[1]['metadata_key_id']);
         $this->assertArrayHasKey('_required', $response[1]['metadata_key_type']);
         $this->assertArrayHasKey('_required', $response[1]['is_shared']);
+        // validation field 3
         $this->assertCount(3, $response[2]);
         $this->assertArrayHasKey('ascii', $response[2]['metadata']);
         $this->assertArrayHasKey('uuid', $response[2]['metadata_key_id']);
         $this->assertArrayHasKey('boolean', $response[2]['is_shared']);
+        // validation field 4
+        $this->assertCount(1, $response[3]);
+        $this->assertArrayHasKey('uuid', $response[3]['id']);
+        // validation field 5
+        $this->assertCount(1, $response[4]);
+        $this->assertArrayHasKey('tagExists', $response[4]['id']);
     }
 
     public function testMetadataResourcesTagsAddController_Error_V4AndV5BothFieldsAreSent(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -185,6 +351,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
 
     public function testMetadataResourcesTagsAddController_Error_InsufficientResourcePermission(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -215,5 +382,158 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
 
         $this->assertNotFoundError('The resource does not exist');
+    }
+
+    /**
+     * Case: Id is specified and the tag is personal and the tag was not created by the current user, e.g. the user doesn't have right to view that tag
+     *
+     * @return void
+     * @throws \Exception
+     */
+    public function testMetadataResourcesTagsAddController_Error_InsufficientPersonalTagPermission(): void
+    {
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $myFavMetadata = $this->encryptForUser($myFavTagClearText, $ada, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+        $tag = TagFactory::make()
+            ->isPersonalFor($resource, $ada)
+            ->v5Fields(['metadata' => $myFavMetadata, 'metadata_key_id' => $ada->gpgkey->id])
+            ->persist();
+
+        $this->logInAsUser(); // Login with different user
+        $data = [
+            'tags' => [
+                [
+                    'id' => $tag->get('id'),
+                ],
+            ],
+        ];
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
+
+        $this->assertError(400);
+        $response = $this->getResponseBodyAsArray();
+        $this->assertArrayHasKey('tagExists', $response[0]['id']);
+    }
+
+    public function testMetadataResourcesTagsAddController_Error_TagIsSharedButNotEncryptedWithSharedKey(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        // Create a shared tag
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        // note: encrypt metadata using user key instead of shared metadata key
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+
+        $this->logInAs($ada);
+        $data = [
+            'tags' => [
+                [
+                    'metadata' => $metadata,
+                    'metadata_key_id' => $metadataKey->id,
+                    'metadata_key_type' => 'shared_key',
+                    'is_shared' => true,
+                ],
+            ],
+        ];
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
+
+        $this->assertError(400);
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(1, $response['tags']);
+        $this->assertArrayHasKey('metadata', $response['tags'][0]);
+        $this->assertArrayHasKey('isValidEncryptedMetadata', $response['tags'][0]['metadata']);
+    }
+
+    public function testMetadataResourcesTagsAddController_Error_PersonalTagNotEncryptedUsingUserKey(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        // Create a shared tag
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        // note: encrypt metadata using metadata key
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+
+        $this->logInAs($ada);
+        $data = [
+            'tags' => [
+                [
+                    'metadata' => $metadata,
+                    'metadata_key_id' => $ada->gpgkey->id,
+                    'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+                    'is_shared' => false,
+                ],
+            ],
+        ];
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
+
+        $this->assertError(400);
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(1, $response['tags']);
+        $this->assertArrayHasKey('metadata', $response['tags'][0]);
+        $this->assertArrayHasKey('isValidEncryptedMetadata', $response['tags'][0]['metadata']);
+    }
+
+    public function testMetadataResourcesTagsAddController_Error_AllowCreationOfV5IsDisabled(): void
+    {
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        // Create a shared tag
+        MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        // note: encrypt metadata using metadata key
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+
+        $this->logInAs($ada);
+        $data = [
+            'tags' => [
+                [
+                    'metadata' => $metadata,
+                    'metadata_key_id' => $ada->gpgkey->id,
+                    'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+                    'is_shared' => false,
+                ],
+            ],
+        ];
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
+
+        $this->assertError(400);
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(1, $response);
+        $this->assertStringContainsString('Tag creation/modification with encrypted metadata not allowed', $response[0][0]);
     }
 }

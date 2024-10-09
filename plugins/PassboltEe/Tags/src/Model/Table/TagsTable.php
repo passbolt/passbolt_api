@@ -233,14 +233,28 @@ class TagsTable extends Table
      * Retrieve all the tags by slugs.
      *
      * @param array|null $slugs The slugs to search
+     * @param array $encryptedTagsIds The tag identifiers of encrypted tags (V5)
      * @return \Cake\ORM\Query
      * @throws \Cake\Database\Exception\DatabaseException if $slugs is empty
      */
-    public function findAllBySlugs(?array $slugs = [])
+    public function findAllBySlugsOrIds(?array $slugs = [], array $encryptedTagsIds = [])
     {
         $query = $this->find();
 
-        return $query->where(['slug IN' => $this->getCaseSensitiveValues($query, $slugs)]);
+        if (!empty($slugs) && !empty($encryptedTagsIds)) {
+            $query->where([
+                'OR' => [
+                    ['slug IN' => $this->getCaseSensitiveValues($query, $slugs)],
+                    ['id IN' => $encryptedTagsIds],
+                ],
+            ]);
+        } elseif (!empty($slugs) && empty($encryptedTagsIds)) {
+            $query->where(['slug IN' => $this->getCaseSensitiveValues($query, $slugs)]);
+        } else {
+            $query->where(['id IN' => $encryptedTagsIds]);
+        }
+
+        return $query;
     }
 
     /**

@@ -7,6 +7,7 @@ use App\Model\Entity\Resource;
 use App\Model\Entity\User;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 /**
  * TagFactory
@@ -103,7 +104,7 @@ class TagFactory extends CakephpBaseFactory
      */
     public function v5Fields(array $values, bool $isShared = false)
     {
-        $type = $isShared ? 'shared_key' : 'user_key';
+        $type = $isShared ? MetadataKey::TYPE_SHARED_KEY : MetadataKey::TYPE_USER_KEY;
 
         $data = array_merge([
             'metadata_key_type' => $type,
