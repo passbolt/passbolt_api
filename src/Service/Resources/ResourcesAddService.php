@@ -27,6 +27,9 @@ use Cake\Event\EventInterface;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
@@ -38,6 +41,8 @@ use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 class ResourcesAddService
 {
     use LocatorAwareTrait;
+    use ResourceSaveV5AwareTrait;
+    use MetadataSettingsAwareTrait;
 
     public const ADD_SUCCESS_EVENT_NAME = 'ResourcesAddController.addPost.success';
 
@@ -74,18 +79,20 @@ class ResourcesAddService
      * performed several times in case a PDO Exception is encountered.
      *
      * @param \App\Utility\UserAccessControl $uac User access control.
-     * @param array $data Payload to create the resource.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto The resource DTO
      * @return Resource
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\ServiceUnavailableException
      * @see ResourcesAddServiceStressTest
      */
-    public function add(UserAccessControl $uac, array $data): Resource
+    public function add(UserAccessControl $uac, MetadataResourceDto $resourceDto): Resource
     {
-        $this->attachListenerToAfterSaveEvent($uac, $data);
+        $this->assertCreationAllowedByMetadataSettings($resourceDto->isV5(), MetadataTypesSettingsDto::ENTITY_RESOURCE);
+
+        $this->attachListenerToAfterSaveEvent($uac, $resourceDto);
         $attempts = 1;
         do {
-            $resource = $this->buildEntity($uac->getId(), $data);
+            $resource = $this->buildEntity($uac->getId(), $resourceDto);
             $this->handleValidationError($resource);
             try {
                 $this->Resources->save($resource);
@@ -107,12 +114,13 @@ class ResourcesAddService
      * Build the resource entity from user input
      *
      * @param string $userId User ID creating the resource.
-     * @param array $data Array of data.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Array of data.
      * @return Resource
      * @throws \App\Error\Exception\ValidationException
      */
-    protected function buildEntity(string $userId, array $data): Resource
+    protected function buildEntity(string $userId, MetadataResourceDto $resourceDto): Resource
     {
+        $data = $resourceDto->toArray();
         // Enforce data.
         $data['created_by'] = $userId;
         $data['modified_by'] = $userId;
@@ -132,39 +140,17 @@ class ResourcesAddService
             $data['resource_type_id'] = ResourceTypesTable::getDefaultTypeId();
         }
 
-        // Build entity and perform basic check
-        return $this->Resources->newEntity($data, [
-            'accessibleFields' => [
-                'name' => true,
-                'username' => true,
-                'uri' => true,
-                'description' => true,
-                'expired' => true,
-                'created_by' => true,
-                'modified_by' => true,
-                'secrets' => true,
-                'permissions' => true,
-                'resource_type_id' => true,
-            ],
-            'associated' => [
-                'Permissions' => [
-                    'validate' => 'saveResource',
-                    'accessibleFields' => [
-                        'aco' => true,
-                        'aro' => true,
-                        'aro_foreign_key' => true,
-                        'type' => true,
-                    ],
-                ],
-                'Secrets' => [
-                    'validate' => 'saveResource',
-                    'accessibleFields' => [
-                        'user_id' => true,
-                        'data' => true,
-                    ],
-                ],
-            ],
+        $options = $this->getOptionsForResourceSave($resourceDto);
+        $options['accessibleFields'] = array_merge($options['accessibleFields'], [
+            'expired' => true,
+            'created_by' => true,
+            'modified_by' => true,
+            'secrets' => true,
+            'permissions' => true,
+            'resource_type_id' => true,
         ]);
+
+        return $this->Resources->newEntity($data, $options);
     }
 
     /**
@@ -202,18 +188,20 @@ class ResourcesAddService
      *
      * @param \App\Model\Entity\Resource $resource The created resource
      * @param \App\Utility\UserAccessControl $uac The user creating the resource.
-     * @param array $data Payload to create the resource.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Resource DTO.
      * @return void
      * @throws \App\Error\Exception\ValidationException
      */
     public function afterSave(
         Resource $resource,
         UserAccessControl $uac,
-        array $data
+        MetadataResourceDto $resourceDto
     ): void {
         $this->handleValidationError($resource);
         $user = $this->Users->findFirstForEmail($uac->getId());
-        $eventData = compact('resource', 'uac', 'user', 'data');
+        $data = $resourceDto->toArray();
+        $isV5 = $resourceDto->isV5();
+        $eventData = compact('resource', 'uac', 'user', 'data', 'isV5');
         $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, $eventData);
         $this->Resources->getEventManager()->dispatch($event);
         $this->handleValidationError($resource);
@@ -223,19 +211,19 @@ class ResourcesAddService
      * Create the after save events on the Resources table.
      *
      * @param \App\Utility\UserAccessControl $uac User access control.
-     * @param array $data Payload.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto DTO.
      * @return void
      */
-    protected function attachListenerToAfterSaveEvent(UserAccessControl $uac, array $data): void
+    protected function attachListenerToAfterSaveEvent(UserAccessControl $uac, MetadataResourceDto $resourceDto): void
     {
         $this->Resources->getEventManager()->on(
             'Model.afterSave',
             ['priority' => 1],
-            function (EventInterface $event, $resource) use ($uac, $data) {
+            function (EventInterface $event, $resource) use ($uac, $resourceDto) {
                 $this->afterSave(
                     $resource,
                     $uac,
-                    $data
+                    $resourceDto
                 );
             }
         );

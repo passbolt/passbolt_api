@@ -17,12 +17,18 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Model\Table;
 
+use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use Cake\ORM\Behavior\TimestampBehavior;
+use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
+use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 
 /**
  * Folders Model
@@ -168,6 +174,76 @@ class FoldersTable extends Table
             );
 
         return $validator;
+    }
+
+    /**
+     * V5 validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationV5(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
+        // Remove all validation on the v4 meta properties
+        // Enforce all v4 fields to be empty
+        foreach (MetadataFolderDto::V4_META_PROPS as $v4Fields) {
+            $validator->remove($v4Fields);
+        }
+
+        /**
+         * V5 fields validations.
+         */
+        $validator
+            ->uuid('metadata_key_id', __('The metadata key ID should be a valid UUID.'))
+            ->allowEmptyString('metadata_key_id');
+
+        $validator
+            ->ascii('metadata', __('The metadata should be a valid ASCII string.'))
+            ->requirePresence('metadata', 'create', __('An armored key is required.'))
+            ->notEmptyString('metadata', __('The metadata should not be empty.'))
+            ->add('metadata', 'isMetadataParsable', new IsParsableMessageValidationRule());
+
+        $validator
+            ->utf8Extended('metadata_key_type', __('The metadata key type should be a valid UTF8 string.'))
+            ->allowEmptyString('metadata_key_type')
+            ->inList('metadata_key_type', ['user_key', 'shared_key'], __(
+                'The metadata key type should be one of the following: {0}.',
+                implode(', ', ['user_key', 'shared_key'])
+            ));
+
+        return $validator;
+    }
+
+    /**
+     * Rule checker for v5 properties
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRulesV5(RulesChecker $rules): RulesChecker
+    {
+        $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key does not exist.'),
+        ]);
+
+        $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
+            'errorField' => 'metadata',
+            'message' => __('The resource metadata provided can not be decrypted.'),
+        ]);
+
+        $rules->addUpdate(
+            new IsMetadataKeyTypeSharedOnSharedItemRule(),
+            'isMetadataKeyTypeSharedOnSharedItem',
+            [
+                'errorField' => 'metadata_key_type',
+                'message' => __('A folder of type personal cannot be shared with other users or a group.'),
+            ]
+        );
+
+        return $rules;
     }
 
     /**

@@ -40,6 +40,9 @@ return [
         // Edition.
         'edition' => 'ce',
         'featurePluginAdder' => \App\BaseSolutionBootstrapper::class,
+        'v5' => [
+            'enabled' => filter_var(env('PASSBOLT_V5_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
+        ],
 
         // Authentication & Authorisation.
         'auth' => [
@@ -371,6 +374,14 @@ return [
                     env('PASSBOLT_SECURITY_EMAIL_ANONYMISE_ADMINISTRATOR_IDENTITY', false),
                     FILTER_VALIDATE_BOOLEAN
                 ),
+            ],
+            // Check for domain mismatch where possible
+            'checkDomainMismatch' => env('PASSBOLT_CHECK_DOMAIN_MISMATCH', true),
+            // Disable the edition of metadata settings, allow to lock the configuration and prevent admin edition
+            'metadata' => [
+                'settings' => [
+                    'editionDisabled' => filter_var(env('PASSBOLT_SECURITY_METADATA_SETTINGS_EDITION_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
+                ]
             ],
         ],
 

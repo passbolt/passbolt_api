@@ -55,8 +55,19 @@ class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterfac
     {
         $Migrations = new Migrations(['connection' => ConnectionManager::get('default')->configName()]);
         $migrations = $Migrations->status();
+        $v5MigrationsToExclude = [
+            'V4100AddDeletedToResourceTypes',
+            'V4100AddV5ResourceTypes',
+            'V4100CreateMetadataKeys',
+            'V4100CreateMetadataSessionKeys',
+            'V4100CreateMetadataPrivateKeys',
+            'V4100AddMetadataFieldsToFolders',
+            'V4100AddDataToComments',
+            'V4100AddMetadataFieldsToTags',
+            'V4100AddMetadataFieldsToResources',
+        ];
         foreach ($migrations as $migration) {
-            if ($migration['status'] === 'down') {
+            if ($migration['status'] === 'down' && !in_array($migration['name'], $v5MigrationsToExclude)) {
                 return true;
             }
         }
