@@ -26,4 +26,18 @@ interface ResourceTypesFinderInterface
      * @return \Cake\ORM\Query
      */
     public function find(): Query;
+
+    /**
+     * @param \Cake\ORM\Query $query query to filter
+     * @param array $options options with the filter option
+     * @return void
+     */
+    public function filter(Query $query, array $options): void;
+
+    /**
+     * @param \Cake\ORM\Query $query query to filter
+     * @param array $options options with the contain option
+     * @return void
+     */
+    public function contain(Query $query, array $options): void;
 }

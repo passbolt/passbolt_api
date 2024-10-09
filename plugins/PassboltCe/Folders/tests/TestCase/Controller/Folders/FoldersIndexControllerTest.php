@@ -91,8 +91,6 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $this->assertContains($folderA->id, $folderIds);
         $this->assertContains($folderB->id, $folderIds);
         $this->assertNotContains(UuidFactory::uuid('folder.id.other'), $this->_responseJsonBody);
-
-        $this->assertSuccess();
     }
 
     /**
@@ -111,8 +109,6 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
         $folderIds = Hash::extract($this->_responseJsonBody, '{n}.id');
         $this->assertContains($folderA->id, $folderIds);
         $this->assertNotContains(UuidFactory::uuid('folder.id.other'), $this->_responseJsonBody);
-
-        $this->assertSuccess();
     }
 
     private function insertFixtureCase3()

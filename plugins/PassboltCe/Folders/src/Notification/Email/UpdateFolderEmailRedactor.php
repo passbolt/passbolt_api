@@ -42,6 +42,8 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public const TEMPLATE = 'Passbolt/Folders.LU/folder_update';
 
+    public const TEMPLATE_V5 = 'Passbolt/Metadata.LU/folder_update_v5';
+
     /**
      * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
      */
@@ -97,10 +99,15 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`uac` is missing from event data.');
         }
 
+        $isV5 = $event->getData('isV5');
+        if (is_null($isV5)) {
+            $isV5 = false;
+        }
+
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
         $recipients = $this->findUsersUsernameToSendEmailTo($folder);
         foreach ($recipients as $recipient) {
-            $email = $this->createEmail($recipient, $operator, $folder);
+            $email = $this->createEmail($recipient, $operator, $folder, $isV5);
             $emailCollection->addEmail($email);
         }
 
@@ -124,22 +131,29 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\User $recipient The recipient
      * @param \App\Model\Entity\User $operator The user at the origin of the operation
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
+     * @param bool $isV5 Folder entity format is V5 or not.
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $recipient, User $operator, Folder $folder)
+    private function createEmail(User $recipient, User $operator, Folder $folder, bool $isV5)
     {
         $isOperator = $recipient->id === $operator->id;
         $userFirstName = Purifier::clean($operator->profile->first_name);
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($isOperator, $userFirstName, $folder) {
+            function () use ($isOperator, $userFirstName, $folder, $isV5) {
+                $subject = __('{0} edited the folder', $userFirstName);
                 if ($isOperator) {
-                    return __('You edited the folder {0}', Purifier::clean($folder->name));
+                    $subject = __('You edited the folder');
                 }
 
-                return __('{0} edited the folder {1}', $userFirstName, Purifier::clean($folder->name));
+                if (!$isV5) {
+                    $subject .= ' ' . Purifier::clean($folder->name);
+                }
+
+                return $subject;
             }
         );
+
         $data = [
             'body' => [
                 'isOperator' => $isOperator,
@@ -150,6 +164,11 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        $template = static::TEMPLATE;
+        if ($isV5) {
+            $template = static::TEMPLATE_V5;
+        }
+
+        return new Email($recipient, $subject, $data, $template);
     }
 }

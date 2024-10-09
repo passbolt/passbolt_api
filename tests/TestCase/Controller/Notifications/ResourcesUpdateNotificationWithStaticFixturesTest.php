@@ -77,9 +77,9 @@ class ResourcesUpdateNotificationWithStaticFixturesTest extends AppIntegrationTe
 
         $this->assertSuccess();
         // Assert email contents
-        $this->assertEmailInBatchContains('edited the password', 'ada@passbolt.com');
-        $this->assertEmailInBatchContains('edited the password', 'betty@passbolt.com');
-        $this->assertEmailInBatchContains('edited the password', 'carol@passbolt.com');
-        $this->assertEmailInBatchContains('edited the password', 'dame@passbolt.com');
+        $this->assertEmailInBatchContains('edited the resource', 'ada@passbolt.com');
+        $this->assertEmailInBatchContains('edited the resource', 'betty@passbolt.com');
+        $this->assertEmailInBatchContains('edited the resource', 'carol@passbolt.com');
+        $this->assertEmailInBatchContains('edited the resource', 'dame@passbolt.com');
     }
 }
