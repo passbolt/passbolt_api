@@ -112,8 +112,8 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+            'passphrase' => '',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
         ]);
         $metadataKeyType = 'user_key';
         // login
@@ -162,8 +162,8 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+            'passphrase' => '',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
         ]);
         $metadataKeyType = 'user_key';
         // login
@@ -319,8 +319,8 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
             'resource_type_id' => $resourceTypeId,
         ]));
         $metadata = $this->encryptForUser($metadataJson, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+            'passphrase' => '',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
         ]);
 
         $this->logInAs($user);

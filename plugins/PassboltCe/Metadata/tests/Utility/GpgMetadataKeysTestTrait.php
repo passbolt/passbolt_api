@@ -365,7 +365,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
         $fingerprint = $metadataKeyInfo['fingerprint'];
         $passphrase = $metadataKeyInfo['passphrase'];
         $gpg = OpenPGPBackendFactory::get();
-        $gpg->importServerKeyInKeyring();
+        $gpg->importKeyIntoKeyring($metadataKeyInfo['private_key']);
         $gpg->setEncryptKeyFromFingerprint($fingerprint);
         $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
         $encryptedData = $gpg->encryptSign($data);
