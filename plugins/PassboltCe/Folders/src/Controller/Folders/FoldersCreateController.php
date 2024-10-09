@@ -18,9 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
-use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\Folders\FoldersCreateService;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 
 class FoldersCreateController extends AppController
 {
@@ -33,11 +34,11 @@ class FoldersCreateController extends AppController
     public function create()
     {
         $uac = $this->User->getAccessControl();
-        $data = $this->getData();
+        $folderDto = MetadataFolderDto::fromArray($this->getRequest()->getData());
         $folderCreateService = new FoldersCreateService();
 
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
-        $folder = $folderCreateService->create($uac, $data);
+        $folder = $folderCreateService->create($uac, $folderDto);
 
         // Retrieve and sanity the query options.
         $whitelist = [
@@ -55,30 +56,8 @@ class FoldersCreateController extends AppController
         $options = $this->QueryString->get($whitelist);
         $folder = $folderCreateService->foldersTable->findView($this->User->id(), $folder->id, $options)->first();
         $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
+        $folder = (new MetadataFoldersRenderService())->renderFolder($folder, $folderDto->isV5());
 
         $this->success(__('The folder has been added successfully.'), $folder);
-    }
-
-    /**
-     * Extract data from the request body.
-     *
-     * @return array
-     */
-    private function getData()
-    {
-        $data = [];
-        $body = $this->getRequest()->getParsedBody();
-
-        $name = Hash::get($body, 'name');
-        if (isset($name)) {
-            $data['name'] = $name;
-        }
-
-        $folderParentId = Hash::get($body, 'folder_parent_id');
-        if (isset($folderParentId)) {
-            $data['folder_parent_id'] = $folderParentId;
-        }
-
-        return $data;
     }
 }

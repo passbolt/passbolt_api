@@ -23,6 +23,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Chronos\ChronosInterface;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -70,14 +71,14 @@ class PasswordExpiryResourcesAddServiceTest extends AppTestCase
         foreach ($valuesNotParsable as $expired) {
             $payload['expired'] = $expired;
             try {
-                $this->service->add($uac, $payload);
+                $this->service->add($uac, new MetadataResourceDto($payload));
             } catch (ValidationException $e) {
                 $this->assertSame('Could not validate resource data.', $e->getMessage());
             }
         }
         foreach ($valuesParsable as $expired) {
             $payload['expired'] = $expired;
-            $resource = $this->service->add($uac, $payload);
+            $resource = $this->service->add($uac, new MetadataResourceDto($payload));
             if (empty($expired)) {
                 $this->assertNull($resource->expired);
             } else {
@@ -101,7 +102,7 @@ class PasswordExpiryResourcesAddServiceTest extends AppTestCase
             'description' => 'Nouvelle description de resource privée',
             'expired' => null,
         ]);
-        $this->service->add($uac, $payload);
+        $this->service->add($uac, new MetadataResourceDto($payload));
 
         // Assert
         /** @var \App\Model\Entity\Resource $resource */

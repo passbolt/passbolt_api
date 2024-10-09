@@ -40,6 +40,7 @@ use Passbolt\Folders\Service\Folders\FoldersCreateService;
 use Passbolt\Folders\Test\Lib\FoldersTestCase;
 use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
 use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 
 /**
  * Passbolt\Folders\Service\Folders\FoldersCreateService Test Case
@@ -88,7 +89,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => ''];
+        $folderData = MetadataFolderDto::fromArray(['name' => '']);
 
         try {
             $this->service->create($uac, $folderData);
@@ -103,10 +104,10 @@ class FoldersCreateServiceTest extends FoldersTestCase
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = [
+        $folderData = MetadataFolderDto::fromArray([
             'name' => 'B',
             'folder_parent_id' => UuidFactory::uuid('folder.id.not-exist'),
-        ];
+        ]);
 
         try {
             $this->service->create($uac, $folderData);
@@ -123,7 +124,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
+        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $parentFolder->id]);
 
         try {
             $this->service->create($uac, $folderData);
@@ -152,7 +153,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'A'];
+        $folderData = MetadataFolderDto::fromArray(['name' => 'A']);
         $this->service->create($uac, $folderData);
 
         $this->assertEmailIsInQueue([
@@ -170,7 +171,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
     {
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'A'];
+        $folderData = MetadataFolderDto::fromArray(['name' => 'A']);
         $folder = $this->service->create($uac, $folderData);
 
         $this->assertEquals('A', $folder->name);
@@ -187,7 +188,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
+        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $parentFolder->id]);
         $folder = $this->service->create($uac, $folderData);
 
         $this->assertEquals('B', $folder->name);
@@ -216,7 +217,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
 
         $userId = UuidFactory::uuid('user.id.ada');
         $uac = new UserAccessControl(Role::USER, $userId);
-        $folderData = ['name' => 'B', 'folder_parent_id' => $parentFolder->id];
+        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $parentFolder->id]);
 
         try {
             $this->service->create($uac, $folderData);
@@ -246,7 +247,7 @@ class FoldersCreateServiceTest extends FoldersTestCase
         $userAId = UuidFactory::uuid('user.id.ada');
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userAId);
-        $folderData = ['name' => 'B', 'folder_parent_id' => $folderA->id];
+        $folderData = MetadataFolderDto::fromArray(['name' => 'B', 'folder_parent_id' => $folderA->id]);
         $folderB = $this->service->create($uac, $folderData);
 
         $this->assertEquals('B', $folderB->name);

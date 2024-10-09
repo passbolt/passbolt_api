@@ -40,6 +40,7 @@ trait FoldersFindersTrait
     /**
      * Build the query that fetches data for folders index
      *
+     * @psalm-suppress UndefinedMethod
      * @param string $userId The user to get the folders for
      * @param array $options options
      * @return \Cake\ORM\Query
@@ -51,6 +52,7 @@ trait FoldersFindersTrait
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
+        /** @phpstan-ignore-next-line */
         $query = $this->find();
 
         $query->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);

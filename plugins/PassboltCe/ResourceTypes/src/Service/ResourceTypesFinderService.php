@@ -16,6 +16,8 @@ declare(strict_types=1);
  */
 namespace Passbolt\ResourceTypes\Service;
 
+use Cake\Database\Expression\IdentifierExpression;
+use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -23,18 +25,14 @@ use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 class ResourceTypesFinderService implements ResourceTypesFinderInterface
 {
-    /**
-     * @var \Passbolt\ResourceTypes\Model\Table\ResourceTypesTable
-     */
-    protected $resourceTypesTable;
+    protected ResourceTypesTable $resourceTypesTable;
 
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
-        $this->resourceTypesTable = TableRegistry::getTableLocator()->get('ResourceTypes');
+        $this->resourceTypesTable = TableRegistry::getTableLocator()->get('Passbolt/ResourceTypes.ResourceTypes');
     }
 
     /**
@@ -67,5 +65,43 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
         return $this->find()
             ->where(['id' => $id])
             ->firstOrFail();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function filter(Query $query, array $options): void
+    {
+        if (isset($options['filter']['is-deleted'])) {
+            $isDeleted = (bool)$options['filter']['is-deleted'];
+            $deletedField = $query->getRepository()->aliasField('deleted');
+            if ($isDeleted) {
+                $query->where(function (QueryExpression $exp) use ($deletedField) {
+                    return $exp->isNotNull($deletedField);
+                });
+            } else {
+                $query->where(function (QueryExpression $exp) use ($deletedField) {
+                    return $exp->isNull($deletedField);
+                });
+            }
+        }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function contain(Query $query, array $options): void
+    {
+        if (isset($options['contain']['resources_count'])) {
+            $containResourcesCount = (bool)$options['contain']['resources_count'];
+            if ($containResourcesCount) {
+                $query->leftJoinWith('Resources')
+                    ->selectAlso([
+                        'resources_count' => new IdentifierExpression('COUNT(Resources.id)'),
+                    ])
+                    ->group($query->getRepository()->aliasField('id'));
+                $query->getSelectTypeMap()->addDefaults(['resources_count' => 'integer']);
+            }
+        }
     }
 }

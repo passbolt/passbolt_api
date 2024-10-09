@@ -34,6 +34,8 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
 
     public const TEMPLATE = 'LU/resource_create';
 
+    public const TEMPLATE_V5 = 'Passbolt/Metadata.LU/resource_create_v5';
+
     /**
      * @param array|null $config Configuration for the redactor
      */
@@ -73,8 +75,12 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
         /** @var \App\Model\Entity\Resource $resource */
         $resource = $event->getData('resource');
         $user = $event->getData('user');
+        $isV5 = $event->getData('isV5');
+        if (is_null($isV5)) {
+            $isV5 = false;
+        }
 
-        $emailCollection->addEmail($this->createResourceCreateEmail($resource, $user));
+        $emailCollection->addEmail($this->createResourceCreateEmail($resource, $user, $isV5));
 
         return $emailCollection;
     }
@@ -82,15 +88,21 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\Resource $resource Resource created.
      * @param \App\Model\Entity\User $user User creating the resource.
+     * @param bool $isV5 Resource entity format is V5 or not.
      * @return \App\Notification\Email\Email
      */
-    private function createResourceCreateEmail(Resource $resource, User $user): Email
+    private function createResourceCreateEmail(Resource $resource, User $user, bool $isV5): Email
     {
         $locale = (new GetUserLocaleService())->getLocale($user->username);
         $subject = (new LocaleService())->translateString(
             $locale,
-            function () use ($resource) {
-                return __('You added the password {0}', $resource->name);
+            function () use ($resource, $isV5) {
+                $subject = __('You added the password {0}', $resource->name);
+                if ($isV5) {
+                    $subject = __('You added a new password');
+                }
+
+                return $subject;
             }
         );
 
@@ -102,9 +114,15 @@ class ResourceCreateEmailRedactor implements SubscribedEmailRedactorInterface
                 'showUri' => $this->getConfig('show.uri'),
                 'showDescription' => $this->getConfig('show.description'),
                 'showSecret' => $this->getConfig('show.secret'),
-            ], 'title' => $subject,
+            ],
+            'title' => $subject,
         ];
 
-        return new Email($user, $subject, $data, self::TEMPLATE);
+        $template = self::TEMPLATE;
+        if ($isV5) {
+            $template = self::TEMPLATE_V5;
+        }
+
+        return new Email($user, $subject, $data, $template);
     }
 }
