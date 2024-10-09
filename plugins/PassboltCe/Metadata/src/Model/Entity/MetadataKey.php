@@ -36,6 +36,9 @@ use Cake\ORM\Entity;
  */
 class MetadataKey extends Entity
 {
+    public const TYPE_USER_KEY = 'user_key';
+    public const TYPE_SHARED_KEY = 'shared_key';
+
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
      *
