@@ -34,6 +34,8 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
 /**
  * GroupsDeleteController Class
@@ -87,6 +89,7 @@ class GroupsDeleteController extends AppController
         $group = $this->_validateRequestData($id);
         $this->_validateDelete($group);
         $resources = $this->Resources->findAllByGroupAccess($id);
+        $resources = $this->formatResources($resources->toArray());
         $this->success(__('The group can be deleted.'), $resources);
     }
 
@@ -180,6 +183,7 @@ class GroupsDeleteController extends AppController
                     $findResourcesOptions['contain']['permissions.user.profile'] = true;
                     $findResourcesOptions['contain']['permissions.group'] = true;
                     $resources = $this->Resources->findAllByIds($group->id, $resourcesIds, $findResourcesOptions);
+                    $resources = $this->formatResources($resources->toArray());
                     $body['errors']['resources']['sole_owner'] = $resources;
                     $msg .= $errors['id']['soleOwnerOfSharedContent'];
                 }
@@ -274,5 +278,25 @@ class GroupsDeleteController extends AppController
             'userId' => $this->User->id(),
         ]);
         $this->getEventManager()->dispatch($event);
+    }
+
+    /**
+     * Formats resource array fields according to V4/V5.
+     *
+     * @param \App\Model\Entity\Resource[] $resources Resources array to format.
+     * @return array
+     */
+    private function formatResources(array $resources): array
+    {
+        $metadataResourcesRenderService = new MetadataResourcesRenderService();
+        $result = [];
+
+        foreach ($resources as $resource) {
+            $resource = $resource->toArray();
+            $dto = MetadataResourceDto::fromArray($resource);
+            $result[] = $metadataResourcesRenderService->renderResource($resource, $dto->isV5());
+        }
+
+        return $result;
     }
 }

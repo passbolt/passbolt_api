@@ -17,12 +17,15 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
+use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Tags\Form\MetadataResourcesTagsAddForm;
+use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 
 /**
  * @property \App\Model\Table\ResourcesTable $Resources
@@ -57,6 +60,7 @@ class ResourcesTagsAddController extends AppController
 
         $userId = $this->User->id();
         $data = $this->_formatRequestData();
+        $data = $this->validateRequestData($data);
 
         $options = ['contain' => ['all_tags' => 1, 'permission' => 1]];
         /** @var Resource $resource */
@@ -71,7 +75,10 @@ class ResourcesTagsAddController extends AppController
             $this->Tags->deleteAllUnusedTags();
             $options = ['contain' => ['tag' => 1, 'permission' => 1]];
             $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
-            $this->success(__('The operation was successful.'), $resource->get('tags'));
+
+            $tags = $resource->get('tags');
+            $tags = (new MetadataTagsRenderService())->renderTags($tags);
+            $this->success(__('The operation was successful.'), $tags);
         } else {
             throw new InternalErrorException('Could not save the tags, try again later.');
         }
@@ -84,7 +91,7 @@ class ResourcesTagsAddController extends AppController
      */
     protected function _formatRequestData()
     {
-        $data = $this->request->getData();
+        $data = $this->getRequest()->getData();
 
         // Data given in V1 format.
         // @deprecated with v2
@@ -99,6 +106,47 @@ class ResourcesTagsAddController extends AppController
     }
 
     /**
+     * Validates the request data.
+     *
+     * @param array $data Data to validate.
+     * @return array Valid request data
+     * @throws \App\Error\Exception\CustomValidationException If data is invalid.
+     */
+    private function validateRequestData(array $data): array
+    {
+        $errors = [];
+        foreach ($data as $i => $tag) {
+            $errors[$i] = [];
+
+            if (!is_string($tag) && !is_array($tag)) {
+                $errors[$i][] = __('The tags data should be a string or an array.');
+            }
+
+            if (is_array($tag)) {
+                $form = new MetadataResourcesTagsAddForm();
+                if (!$form->validate($tag)) {
+                    $errors[$i] = array_merge($errors[$i], $form->getErrors());
+                }
+            }
+
+            if (empty($errors[$i])) {
+                unset($errors[$i]);
+            }
+        }
+
+        if (!empty($errors)) {
+            throw new CustomValidationException(
+                __('Could not validate request data.'),
+                $errors,
+                null,
+                400
+            );
+        }
+
+        return $data;
+    }
+
+    /**
      * Patch the resource tags entities of a resource for a given user
      *
      * @param \App\Model\Entity\Resource $resource The resource to patch the tags for
@@ -110,12 +158,14 @@ class ResourcesTagsAddController extends AppController
         $userId = $this->User->id();
         $isOwner = $resource->permission->type === Permission::OWNER;
 
+        [$clearTextTags, $encryptedTags] = $this->extractClearTextAndEncryptedTags($data);
+
         foreach ($resource->get('tags') as $i => $tag) {
             // Do not patch tags owned by other users.
             if ($tag->_joinData->user_id != $userId && !is_null($tag->_joinData->user_id)) {
                 continue;
             }
-            $tagFoundIndex = array_search($tag->slug, $data);
+            $tagFoundIndex = array_search($tag->slug, $clearTextTags);
             if ($tagFoundIndex === false) {
                 // If the user is not owner of the resource he cannot edit shared tags
                 if ($tag->is_shared && !$isOwner) {
@@ -125,27 +175,27 @@ class ResourcesTagsAddController extends AppController
                     unset($resource['tags'][$i]);
                 }
             } else {
-                unset($data[$tagFoundIndex]);
+                unset($clearTextTags[$tagFoundIndex]);
             }
         }
 
         // If the user is not owner of the resource he cannot edit shared tags
         if (!$isOwner) {
-            if (!empty(preg_grep('/(^#|,#)/', $data))) {
+            if (!empty(preg_grep('/(^#|,#)/', $clearTextTags))) {
                 $msg = __('You do not have the permission to edit shared tags on this resource.');
-                throw new BadRequestException();
+                throw new BadRequestException($msg);
             }
         }
 
         // The tag the user is adding already exist, associate it to the resource.
-        if (!empty($data)) {
-            $existingTags = $this->Tags->findAllBySlugs($data)->all()->toArray();
+        if (!empty($clearTextTags)) {
+            $existingTags = $this->Tags->findAllBySlugs($clearTextTags)->all()->toArray();
             foreach ($existingTags as $existingTag) {
                 // @codingStandardsIgnoreStart
                 $notShared = @mb_substr($existingTag->slug, 0, 1, 'utf-8') !== '#';
                 // @codingStandardsIgnoreEnd
 
-                unset($data[array_search($existingTag->slug, $data)]);
+                unset($clearTextTags[array_search($existingTag->slug, $clearTextTags)]);
                 if ($notShared) {
                     $existingTag->_joinData = new \stdClass();
                     $existingTag->_joinData = $this->Tags->ResourcesTags->newEntity([
@@ -159,9 +209,34 @@ class ResourcesTagsAddController extends AppController
         }
 
         // Create the new tags.
-        $requestTags = $this->Tags->buildEntitiesOrFail($userId, $data);
+        $newTags = array_merge($clearTextTags, $encryptedTags);
+        $requestTags = $this->Tags->buildEntitiesOrFail($userId, $newTags);
         $resource->set('tags', array_merge($resource->get('tags'), $requestTags));
-        $resource->setDirty('tags', true);
+        $resource->setDirty('tags');
         $resource->setAccess('tags', true);
+    }
+
+    /**
+     * Extracts tags data into two separate arrays.
+     *
+     * @param array $data Data to extract from.
+     * @return array
+     */
+    private function extractClearTextAndEncryptedTags(array $data): array
+    {
+        $clearTextTags = [];
+        $encryptedTags = [];
+
+        foreach ($data as $tag) {
+            if (is_array($tag)) {
+                $encryptedTags[] = $tag;
+            } elseif (is_string($tag)) {
+                $clearTextTags[] = $tag;
+            } else {
+                throw new BadRequestException(__('The tags data should be a string or an array.'));
+            }
+        }
+
+        return [$clearTextTags, $encryptedTags];
     }
 }

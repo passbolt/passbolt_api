@@ -57,6 +57,13 @@ class PublicKeyValidationService
     public const HAS_MULTIPLE_MAIN_PACKETS_RULE = 'hasMultipleMainPacketsRule';
 
     /**
+     * Used to cache public key information saving us from parsing it each and everytime.
+     *
+     * @var array
+     */
+    private static $publicKeyInfo = [];
+
+    /**
      * This is the historical set of rules used for user public keys
      * See extended rules for better future usage
      *
@@ -344,7 +351,17 @@ class PublicKeyValidationService
      */
     public static function getPublicKeyInfo(string $armoredKey): array
     {
-        return OpenPGPBackendFactory::get()->getPublicKeyInfo($armoredKey);
+        $key = hash('sha256', $armoredKey);
+
+        if (array_key_exists($key, self::$publicKeyInfo) && !empty(self::$publicKeyInfo[$key])) {
+            return self::$publicKeyInfo[$key];
+        }
+
+        $keyInfo = OpenPGPBackendFactory::get()->getPublicKeyInfo($armoredKey);
+        // Cache key info, so it can be fetched fast next time
+        self::$publicKeyInfo[$key] = $keyInfo;
+
+        return $keyInfo;
     }
 
     /**
