@@ -26,8 +26,10 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
@@ -296,5 +298,43 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $this->postJson('/resources.json', $data);
 
         $this->assertBadRequestError('Resource creation\/modification with cleartext metadata not allowed');
+    }
+
+    public function testResourcesAddController_Error_MetadataKeySettings_PersonalKeysDisabled(): void
+    {
+        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+        MetadataKeysSettingsFactory::make()->value($data)->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+
+        $metadataJson = json_encode($this->getDummyResourcesPostData([
+            'resource_type_id' => $resourceTypeId,
+        ]));
+        $metadata = $this->encryptForUser($metadataJson, $user, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+
+        $this->logInAs($user);
+        $data = [
+            'metadata' => $metadata,
+            'metadata_key_type' => 'user_key',
+            'metadata_key_id' => $user->gpgkey->id,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $this->postJson('/resources.json', $data);
+        $this->assertError(400);
+        $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 }

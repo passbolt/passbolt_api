@@ -21,6 +21,7 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
 use App\Service\Resources\ResourcesAddService;
+use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\SecretFactory;
 use App\Test\Factory\UserFactory;
@@ -29,8 +30,10 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
@@ -75,7 +78,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         parent::tearDown();
     }
 
-    public function testMetadataResourceAddServiceSuccess()
+    public function testMetadataResourceAddService_Success_SharedKey()
     {
         $user = UserFactory::make()->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
@@ -94,6 +97,42 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             MetadataResourceDto::METADATA_KEY_TYPE => $metadataKeyType,
             MetadataResourceDto::METADATA => $metadata,
             MetadataResourceDto::METADATA_KEY_ID => $metadataKeyId,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $uac = UserFactory::make()->persistedUAC();
+        $resource = $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+
+        $this->assertInstanceOf(Resource::class, $resource);
+        $this->assertInstanceOf(Secret::class, $resource->secrets[0]);
+        $this->assertSame(1, ResourceFactory::count());
+        $this->assertSame(1, SecretFactory::count());
+    }
+
+    public function testMetadataResourceAddService_Success_UserKey()
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+
+        $metadataJson = json_encode($this->getDummyResourcesPostData([
+            'resource_type_id' => $resourceTypeId,
+        ]));
+        $metadata = $this->encryptForUser($metadataJson, $user, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
+            MetadataResourceDto::METADATA => $metadata,
+            MetadataResourceDto::METADATA_KEY_ID => $user->gpgkey->id,
             'resource_type_id' => $resourceTypeId,
             'secrets' => [
                 ['data' => $this->getDummyGpgMessage()],
@@ -260,6 +299,48 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             $this->assertSame($exception->getErrors()['metadata_key_type'], [
                 'inList' => 'The metadata key type should be one of the following: user_key, shared_key.',
             ]);
+        }
+    }
+
+    public function testMetadataResourceAddService_Error_UserKey_NotAllowedBySettings()
+    {
+        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+        MetadataKeysSettingsFactory::make()->value($data)->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+
+        $metadataJson = json_encode($this->getDummyResourcesPostData([
+            'resource_type_id' => $resourceTypeId,
+        ]));
+        $metadata = $this->encryptForUser($metadataJson, $user, [
+            'passphrase' => 'ada@passbolt.com',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+        ]);
+
+        $payload = [
+            MetadataResourceDto::METADATA => $metadata,
+            MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
+            MetadataResourceDto::METADATA_KEY_ID => $user->gpgkey->id,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $uac = UserFactory::make()->persistedUAC();
+        try {
+            $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+            $this->fail();
+        } catch (ValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertNotEmpty($errors['metadata_key_type']['isMetadataKeyTypeAllowedBySettings']);
         }
     }
 }

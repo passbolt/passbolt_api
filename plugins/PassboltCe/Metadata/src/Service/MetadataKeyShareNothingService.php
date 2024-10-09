@@ -14,10 +14,9 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-namespace PassboltCe\Metadata\src\Service;
+namespace Passbolt\Metadata\Service;
 
 use App\Model\Entity\User;
-use Passbolt\Metadata\Service\MetadataKeyShareServiceInterface;
 
 class MetadataKeyShareNothingService implements MetadataKeyShareServiceInterface
 {
