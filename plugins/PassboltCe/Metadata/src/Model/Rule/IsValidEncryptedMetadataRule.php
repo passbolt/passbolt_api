@@ -26,6 +26,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class IsValidEncryptedMetadataRule
 {
@@ -75,7 +76,7 @@ class IsValidEncryptedMetadataRule
      */
     private function getArmoredKey(string $metadataKeyType, string $metadataKeyId)
     {
-        if ($metadataKeyType === 'shared_key') {
+        if ($metadataKeyType === MetadataKey::TYPE_SHARED_KEY) {
             $metadataKeysTable = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys');
             /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey */
             $metadataKey = $metadataKeysTable
