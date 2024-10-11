@@ -63,10 +63,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $this->logInAs($user);
 
         $data = [
@@ -107,10 +104,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         /** @var \Passbolt\Folders\Model\Entity\Folder $parentFolder */
         $parentFolder = FolderFactory::make()->withPermissionsFor([$user])->persist();
         $this->logInAs($user);
@@ -270,10 +264,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $ada, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
         // create metadata key
         MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
         $this->logInAs($ada);

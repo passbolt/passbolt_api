@@ -164,10 +164,7 @@ class MetadataFoldersShareControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $ada, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
         /** @var \App\Model\Entity\User $betty */
         $betty = UserFactory::make()->user()->active()->persist();
         // v5 folder

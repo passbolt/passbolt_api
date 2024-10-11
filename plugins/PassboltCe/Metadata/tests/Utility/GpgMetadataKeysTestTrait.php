@@ -64,6 +64,22 @@ trait GpgMetadataKeysTestTrait
     }
 
     /**
+     * Returns info related to the ada's key (without passphrase)
+     *
+     * @return array
+     */
+    public function getAdaNoPassphraseKeyInfo(): array
+    {
+        return [
+            'public_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
+            'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+            'email' => 'ada@passbolt.com',
+        ];
+    }
+
+    /**
      * Returns info related to Metadata shared key.
      *
      * @return array
@@ -384,7 +400,8 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
     {
         $fingerprint = $user->gpgkey->fingerprint;
         $gpg = OpenPGPBackendFactory::get();
-        $gpg->importKeyIntoKeyring($keyInfo['privateKey']);
+        $gpg->importServerKeyInKeyring();
+        $gpg->importKeyIntoKeyring($keyInfo['private_key']);
         $gpg->setEncryptKeyFromFingerprint($fingerprint);
         $gpg->setSignKeyFromFingerprint($fingerprint, $keyInfo['passphrase']);
         $encryptedData = $gpg->encryptSign($data);

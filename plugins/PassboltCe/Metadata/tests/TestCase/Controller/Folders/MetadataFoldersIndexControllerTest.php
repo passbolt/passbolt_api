@@ -51,10 +51,7 @@ class MetadataFoldersIndexControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         // v5 folder
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $v5Folder = FolderFactory::make()
             ->withPermissionsFor([$user])
             ->withFoldersRelationsFor([$user])
@@ -173,10 +170,7 @@ class MetadataFoldersIndexControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         // v5 folder
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $folder = FolderFactory::make()
             ->withPermissionsFor([$user])
             ->withFoldersRelationsFor([$user])
@@ -217,10 +211,7 @@ class MetadataFoldersIndexControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         // v5 folder (not searchable)
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         FolderFactory::make()
             ->withPermissionsFor([$user])
             ->withFoldersRelationsFor([$user])
@@ -260,10 +251,7 @@ class MetadataFoldersIndexControllerTest extends AppIntegrationTestCaseV5
         // create metadata key
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $ada, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
         /** @var \Passbolt\Folders\Model\Entity\Folder $parentFolder */
         $parentFolder = FolderFactory::make(['name' => 'sales'])
             ->withPermissionsFor([$ada])
