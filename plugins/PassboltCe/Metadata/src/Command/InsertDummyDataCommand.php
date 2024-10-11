@@ -16,16 +16,16 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Command;
 
-use PassboltTestData\Command\Alt0\GroupsDataCommand;
-use PassboltTestData\Command\Alt0\GroupsUsersDataCommand;
-use PassboltTestData\Command\Alt0\PermissionsDataCommand;
-use PassboltTestData\Command\Alt0\SecretsDataCommand;
 use PassboltTestData\Command\Base\FoldersDataCommand;
 use PassboltTestData\Command\Base\FoldersPermissionsDataCommand;
 use PassboltTestData\Command\Base\FoldersRelationsDataCommand;
 use PassboltTestData\Command\Base\GpgkeysDataCommand;
+use PassboltTestData\Command\Base\GroupsDataCommand;
+use PassboltTestData\Command\Base\GroupsUsersDataCommand;
+use PassboltTestData\Command\Base\PermissionsDataCommand;
 use PassboltTestData\Command\Base\ProfilesDataCommand;
 use PassboltTestData\Command\Base\ResourcesDataCommand;
+use PassboltTestData\Command\Base\SecretsDataCommand;
 use PassboltTestData\Command\Base\UsersDataCommand;
 use PassboltTestData\Command\InsertCommand;
 
@@ -42,13 +42,13 @@ class InsertDummyDataCommand extends InsertCommand
         if ($scenario === 'default') {
             return [
                 UsersDataCommand::class,
-                GpgkeysDataCommand::class,
                 ProfilesDataCommand::class,
+                GpgkeysDataCommand::class,
                 GroupsDataCommand::class,
                 GroupsUsersDataCommand::class,
                 ResourcesDataCommand::class,
-                SecretsDataCommand::class,
                 PermissionsDataCommand::class,
+                SecretsDataCommand::class,
                 FoldersDataCommand::class,
                 FoldersRelationsDataCommand::class,
                 FoldersPermissionsDataCommand::class,
