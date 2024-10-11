@@ -125,17 +125,14 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
         // assert data updated into the db
         $updatedResource = ResourceFactory::get($resource->get('id'));
         $this->assertionsForPersonalResource($updatedResource, $resource, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
         ]);
         $updatedResource = ResourceFactory::get($sharedResource->get('id'));
         $this->assertionsForSharedResource($updatedResource, $sharedResource, $metadataKey);
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder */
         $updatedFolder = FolderFactory::get($folder->id);
-        $this->assertionsForPersonalFolder($updatedFolder, $folder, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
-        ]);
+        $this->assertionsForPersonalFolder($updatedFolder, $folder, $ada->gpgkey, $this->getAdaNoPassphraseKeyInfo());
     }
 
     public function testMigrateAllV4ItemsToV5Service_Error_NoActiveMetadataKey(): void

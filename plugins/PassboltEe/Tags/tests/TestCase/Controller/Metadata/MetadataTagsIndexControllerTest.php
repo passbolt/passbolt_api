@@ -54,15 +54,9 @@ class MetadataTagsIndexControllerTest extends AppIntegrationTestCaseV5
         TagFactory::make(['slug' => 'marketing'])->isPersonalFor($resource, $user2)->persist();
         // v5 tag
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'test2']);
-        $metadataTest2 = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadataTest2 = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'test3']);
-        $metadataTest3 = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadataTest3 = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $v5TagTest2 = TagFactory::make()
             ->isPersonalFor($resource, $user)
             ->v5Fields(['metadata' => $metadataTest2, 'metadata_key_id' => $user->gpgkey->id])

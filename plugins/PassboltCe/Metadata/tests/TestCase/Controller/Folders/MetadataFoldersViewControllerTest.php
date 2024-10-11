@@ -52,10 +52,7 @@ class MetadataFoldersViewControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         // v5 folder
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $v5Folder = FolderFactory::make()
             ->withPermissionsFor([$user])
             ->withFoldersRelationsFor([$user])
@@ -108,10 +105,7 @@ class MetadataFoldersViewControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         // v5 folder
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $v5Folder = FolderFactory::make()
             ->withPermissionsFor([$user])
             ->withFoldersRelationsFor([$user])
@@ -161,10 +155,7 @@ class MetadataFoldersViewControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         // v5 folder
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $v5Folder = FolderFactory::make()
             ->withPermissionsFor([$user])
             ->withFoldersRelationsFor([$user])

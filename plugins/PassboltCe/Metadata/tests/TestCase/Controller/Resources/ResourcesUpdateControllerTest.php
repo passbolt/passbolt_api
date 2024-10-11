@@ -113,10 +113,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata(false));
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $metadataKeyType = 'user_key';
         $this->logInAs($user);
         $resourceId = $resource->get('id');
@@ -206,10 +203,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata(false));
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $metadataKeyType = 'user_key';
         $this->logInAs($user);
         $resourceId = $resource->get('id');

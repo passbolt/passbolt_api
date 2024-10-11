@@ -95,8 +95,8 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         /** @var \App\Model\Entity\Resource $updatedResource */
         $updatedResource = ResourceFactory::get($resource->id);
         $this->assertionsForPersonalResource($updatedResource, $resource, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
         ]);
     }
 
@@ -166,8 +166,8 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         foreach ($updatedResources as $updatedResource) {
             if ($updatedResource->id === $personalResource->id) { // personal resource assertions
                 $this->assertionsForPersonalResource($updatedResource, $personalResource, $user->gpgkey, [
-                    'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-                    'passphrase' => 'ada@passbolt.com',
+                    'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+                    'passphrase' => '',
                 ]);
             } else { // shared resource assertions
                 $this->assertionsForSharedResource($updatedResource, $sharedResource, $metadataKey);
