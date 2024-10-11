@@ -133,8 +133,8 @@ class TagsTableTest extends TagTestCase
     public function testTagsTable_findAllBySlugs()
     {
         [$tag1, $tag2] = TagFactory::make(5)->persist();
-        $tags1 = $this->Tags->findAllBySlugs([$tag1->slug]);
-        $tags2 = $this->Tags->findAllBySlugs([$tag2->slug]);
+        $tags1 = $this->Tags->findAllBySlugsOrIds([$tag1->slug]);
+        $tags2 = $this->Tags->findAllBySlugsOrIds([$tag2->slug]);
 
         $tags = $tags1->union($tags2);
 

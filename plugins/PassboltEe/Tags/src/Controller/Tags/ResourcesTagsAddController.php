@@ -18,13 +18,20 @@ namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Exception\PersistenceFailedException;
+use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
+use Passbolt\Tags\Form\MetadataResourcesAddExistingTagForm;
 use Passbolt\Tags\Form\MetadataResourcesTagsAddForm;
+use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 
 /**
@@ -71,17 +78,28 @@ class ResourcesTagsAddController extends AppController
 
         $this->patchTagsEntities($resource, $data);
         $saveOptions = ['associated' => ['Tags', 'Tags._joinData']];
-        if ($this->Resources->save($resource, $saveOptions)) {
-            $this->Tags->deleteAllUnusedTags();
-            $options = ['contain' => ['tag' => 1, 'permission' => 1]];
-            $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
 
-            $tags = $resource->get('tags');
-            $tags = (new MetadataTagsRenderService())->renderTags($tags);
-            $this->success(__('The operation was successful.'), $tags);
-        } else {
-            throw new InternalErrorException('Could not save the tags, try again later.');
+        try {
+            $this->Resources->saveOrFail($resource, $saveOptions);
+        } catch (PersistenceFailedException $e) { // @phpstan-ignore-line
+            throw new ValidationException(
+                __('Could not save the tags, try again later.'),
+                $resource,
+                $this->Resources
+            );
+        } catch (\Exception $e) {
+            $msg = __('Could not save the tags, try again later.');
+            $msg .= ' ' . $e->getMessage();
+            throw new InternalErrorException($msg, null, $e);
         }
+
+        $this->Tags->deleteAllUnusedTags();
+        $options = ['contain' => ['tag' => 1, 'permission' => 1]];
+        $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
+
+        $tags = $resource->get('tags');
+        $tags = (new MetadataTagsRenderService())->renderTags($tags);
+        $this->success(__('The operation was successful.'), $tags);
     }
 
     /**
@@ -114,16 +132,30 @@ class ResourcesTagsAddController extends AppController
      */
     private function validateRequestData(array $data): array
     {
+        $settingsDto = (new MetadataTypesSettingsGetService())->getSettings();
+
         $errors = [];
         foreach ($data as $i => $tag) {
             $errors[$i] = [];
 
             if (!is_string($tag) && !is_array($tag)) {
                 $errors[$i][] = __('The tags data should be a string or an array.');
+                continue;
             }
 
             if (is_array($tag)) {
-                $form = new MetadataResourcesTagsAddForm();
+                try {
+                    $this->isCreationOfV5TagAllowed($settingsDto, $tag);
+                } catch (BadRequestException $e) {
+                    $errors[$i][] = $e->getMessage();
+                }
+
+                if (array_key_exists('id', $tag)) {
+                    $form = new MetadataResourcesAddExistingTagForm($this->User->getAccessControl());
+                } else {
+                    $form = new MetadataResourcesTagsAddForm();
+                }
+
                 if (!$form->validate($tag)) {
                     $errors[$i] = array_merge($errors[$i], $form->getErrors());
                 }
@@ -160,6 +192,7 @@ class ResourcesTagsAddController extends AppController
 
         [$clearTextTags, $encryptedTags] = $this->extractClearTextAndEncryptedTags($data);
 
+        // Do not link tag again if already linked with the resource
         foreach ($resource->get('tags') as $i => $tag) {
             // Do not patch tags owned by other users.
             if ($tag->_joinData->user_id != $userId && !is_null($tag->_joinData->user_id)) {
@@ -188,22 +221,27 @@ class ResourcesTagsAddController extends AppController
         }
 
         // The tag the user is adding already exist, associate it to the resource.
-        if (!empty($clearTextTags)) {
-            $existingTags = $this->Tags->findAllBySlugs($clearTextTags)->all()->toArray();
+        $encryptedTagsIds = Hash::extract($encryptedTags, '{n}.id');
+        if ($clearTextTags || $encryptedTagsIds) {
+            $existingTags = $this->Tags->findAllBySlugsOrIds($clearTextTags, $encryptedTagsIds)->all()->toArray();
             foreach ($existingTags as $existingTag) {
-                // @codingStandardsIgnoreStart
-                $notShared = @mb_substr($existingTag->slug, 0, 1, 'utf-8') !== '#';
-                // @codingStandardsIgnoreEnd
+                $tagDto = MetadataTagDto::fromArray($existingTag->toArray());
 
-                unset($clearTextTags[array_search($existingTag->slug, $clearTextTags)]);
-                if ($notShared) {
-                    $existingTag->_joinData = new \stdClass();
+                // To prevent duplication, unset from array so it don't get build as a new entity
+                if (!$tagDto->isV5()) {
+                    unset($clearTextTags[array_search($existingTag->slug, $clearTextTags)]);
+                } else {
+                    $encryptedTags = Hash::remove($encryptedTags, "{n}[id={$existingTag->id}]");
+                }
+
+                if ($tagDto->isPersonal()) {
                     $existingTag->_joinData = $this->Tags->ResourcesTags->newEntity([
                         'user_id' => $userId,
                     ]);
                 }
+
                 $tags = $resource->get('tags') ?? [];
-                array_push($tags, $existingTag);
+                $tags[] = $existingTag;
                 $resource->set('tags', $tags);
             }
         }
@@ -238,5 +276,23 @@ class ResourcesTagsAddController extends AppController
         }
 
         return [$clearTextTags, $encryptedTags];
+    }
+
+    /**
+     * @param \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto $settingsDto Settings DTO.
+     * @param array $tag Tag metadata.
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException When v5 tag creation/modification is disabled.
+     */
+    private function isCreationOfV5TagAllowed(MetadataTypesSettingsDto $settingsDto, array $tag): void
+    {
+        // do not check if no metadata fields are set
+        if (empty($tag['metadata']) && empty($tag['metadata_key_id']) && empty($tag['metadata_key_type'])) {
+            return;
+        }
+
+        if (!$settingsDto->isV5TagCreationAllowed()) {
+            throw new BadRequestException(__('Tag creation/modification with encrypted metadata not allowed.'));
+        }
     }
 }
