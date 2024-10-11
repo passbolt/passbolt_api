@@ -93,11 +93,7 @@ class MetadataResourcesAddExistingTagFormTest extends TestCase
             ->active()
             ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'personal-tag']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => '',
-            // TODO fix error "Could not use the key to sign and encrypt. encrypt-sign failed"
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         // Create a tag
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
