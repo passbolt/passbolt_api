@@ -28,8 +28,10 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
@@ -240,5 +242,45 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 
         // `\` here is to pass regex in the assertion method
         $this->assertBadRequestError('Resource creation\/modification with cleartext metadata not allowed');
+    }
+
+    public function testResourcesUpdateController_Error_MetadataKeySettings_PersonalKeysDisabled(): void
+    {
+        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+        MetadataKeysSettingsFactory::make()->value($data)->persist();
+
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        ResourceTypeFactory::make()->passwordString()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $user->gpgkey->id;
+        $resource = ResourceFactory::make(['resource_type_id' => $resourceTypeId])
+            ->v5Fields()
+            ->withPermissionsFor([$user])
+            ->persist();
+        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata(false));
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
+        $metadataKeyType = 'user_key';
+        $this->logInAs($user);
+        $resourceId = $resource->get('id');
+
+        $data = [
+            'metadata_key_id' => $metadataKeyId,
+            'metadata' => $metadata,
+            'metadata_key_type' => $metadataKeyType,
+            'resource_type_id' => $resourceTypeId,
+        ];
+        $this->putJson("/resources/{$resourceId}.json", $data);
+
+        $this->assertError(400);
+        $this->assertResponseContains('metadata_key_type');
+        $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 }

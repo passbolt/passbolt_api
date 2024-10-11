@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Test\Utility;
 use App\Model\Entity\User;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
+use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
 
 /**
@@ -380,10 +381,27 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
         $metadataKeyInfo = $this->getMetadataKeyInfo();
         $fingerprint = $metadataKeyInfo['fingerprint'];
         $passphrase = $metadataKeyInfo['passphrase'];
+        $armoredKey = $metadataKeyInfo['public_key'];
+
         $gpg = OpenPGPBackendFactory::get();
-        $gpg->importServerKeyInKeyring();
-        $gpg->setEncryptKeyFromFingerprint($fingerprint);
-        $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+        try {
+            $gpg->importKeyIntoKeyring($armoredKey);
+            $gpg->setEncryptKeyFromFingerprint($fingerprint);
+            $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+        } catch (\Exception $exception) {
+            try {
+                // Try to import the key in keyring again
+                $gpg->importServerKeyInKeyring();
+                $gpg->importKeyIntoKeyring($metadataKeyInfo['private_key']);
+
+                $gpg->setEncryptKeyFromFingerprint($fingerprint);
+                $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
+            } catch (\Exception $exception) {
+                $msg = __('Could not import the user OpenPGP key.');
+                throw new InternalErrorException($msg, 500, $exception);
+            }
+        }
+
         $encryptedData = $gpg->encryptSign($data);
         $gpg->clearKeys();
 
@@ -400,7 +418,6 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
     {
         $fingerprint = $user->gpgkey->fingerprint;
         $gpg = OpenPGPBackendFactory::get();
-        $gpg->importServerKeyInKeyring();
         $gpg->importKeyIntoKeyring($keyInfo['private_key']);
         $gpg->setEncryptKeyFromFingerprint($fingerprint);
         $gpg->setSignKeyFromFingerprint($fingerprint, $keyInfo['passphrase']);
