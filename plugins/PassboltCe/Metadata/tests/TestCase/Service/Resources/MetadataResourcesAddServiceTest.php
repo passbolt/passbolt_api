@@ -125,8 +125,8 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             'resource_type_id' => $resourceTypeId,
         ]));
         $metadata = $this->encryptForUser($metadataJson, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+            'passphrase' => '',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
         ]);
 
         $payload = [
@@ -321,8 +321,8 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             'resource_type_id' => $resourceTypeId,
         ]));
         $metadata = $this->encryptForUser($metadataJson, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
+            'passphrase' => '',
+            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
         ]);
 
         $payload = [
