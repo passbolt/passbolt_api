@@ -95,8 +95,8 @@ class MigrateFoldersCommandTest extends AppIntegrationTestCaseV5
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder1 */
         $updatedFolder1 = FolderFactory::get($folder1->get('id'));
         $this->assertionsForPersonalFolder($updatedFolder1, $folder1, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
         ]);
         // Personal folder of Betty
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder2 */
@@ -147,8 +147,8 @@ class MigrateFoldersCommandTest extends AppIntegrationTestCaseV5
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder */
         $updatedFolder = FolderFactory::get($personalFolder->get('id'));
         $this->assertionsForPersonalFolder($updatedFolder, $personalFolder, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
         ]);
     }
 

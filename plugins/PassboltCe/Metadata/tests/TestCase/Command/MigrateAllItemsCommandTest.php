@@ -111,8 +111,8 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
         // Resources assertions
         $updatedPersonalResource = ResourceFactory::get($personalResource->get('id'));
         $this->assertionsForPersonalResource($updatedPersonalResource, $personalResource, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
         ]);
         $updatedSharedResource = ResourceFactory::get($sharedResource->get('id'));
         $this->assertionsForSharedResource($updatedSharedResource, $sharedResource, $metadataKey);
@@ -166,8 +166,8 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
         // Check db is updated
         $updatedResource = ResourceFactory::get($personalResource->get('id'));
         $this->assertionsForPersonalResource($updatedResource, $personalResource, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
         ]);
     }
 

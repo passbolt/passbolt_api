@@ -124,10 +124,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $metadataJson = json_encode($this->getDummyResourcesPostData([
             'resource_type_id' => $resourceTypeId,
         ]));
-        $metadata = $this->encryptForUser($metadataJson, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($metadataJson, $user, $this->getAdaNoPassphraseKeyInfo());
 
         $payload = [
             MetadataResourceDto::METADATA_KEY_TYPE => 'user_key',
@@ -320,10 +317,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
         $metadataJson = json_encode($this->getDummyResourcesPostData([
             'resource_type_id' => $resourceTypeId,
         ]));
-        $metadata = $this->encryptForUser($metadataJson, $user, [
-            'passphrase' => 'ada@passbolt.com',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-        ]);
+        $metadata = $this->encryptForUser($metadataJson, $user, $this->getAdaNoPassphraseKeyInfo());
 
         $payload = [
             MetadataResourceDto::METADATA => $metadata,
