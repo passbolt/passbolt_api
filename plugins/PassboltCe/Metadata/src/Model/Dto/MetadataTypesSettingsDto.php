@@ -50,6 +50,7 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
 
     public const ENTITY_RESOURCE = 'resource';
     public const ENTITY_FOLDER = 'folder';
+    public const ENTITY_TAG = 'tag';
 
     /**
      * Constructor.
@@ -118,6 +119,15 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
     {
         return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS])
             && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS] === true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV4TagCreationAllowed(): bool
+    {
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS] === true;
     }
 
     /**
