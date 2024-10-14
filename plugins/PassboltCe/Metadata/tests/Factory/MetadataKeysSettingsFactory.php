@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Test\Factory;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 
 /**
@@ -43,5 +44,16 @@ class MetadataKeysSettingsFactory extends OrganizationSettingFactory
     public static function getDefaultData(): array
     {
         return MetadataKeysSettingsGetService::getDefaultSettingsArray();
+    }
+
+    /**
+     * @return $this
+     */
+    public function disableUsageOfPersonalKeys()
+    {
+        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+
+        return $this->value($data);
     }
 }
