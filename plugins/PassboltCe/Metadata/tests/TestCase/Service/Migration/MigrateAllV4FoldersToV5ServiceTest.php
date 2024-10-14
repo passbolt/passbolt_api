@@ -83,8 +83,8 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder */
         $updatedFolder = FolderFactory::get($folder->id);
         $this->assertionsForPersonalFolder($updatedFolder, $folder, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
         ]);
     }
 
@@ -161,10 +161,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
         // Personal folder of Ada
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder1 */
         $updatedFolder1 = FolderFactory::get($folder1->get('id'));
-        $this->assertionsForPersonalFolder($updatedFolder1, $folder1, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
-        ]);
+        $this->assertionsForPersonalFolder($updatedFolder1, $folder1, $ada->gpgkey, $this->getAdaNoPassphraseKeyInfo());
         // Personal folder of Betty
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder2 */
         $updatedFolder2 = FolderFactory::get($folder2->get('id'));

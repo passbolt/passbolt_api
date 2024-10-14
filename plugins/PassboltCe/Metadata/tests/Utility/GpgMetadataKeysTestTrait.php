@@ -41,10 +41,10 @@ trait GpgMetadataKeysTestTrait
     {
         return [
             'armored_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_public.key'), // ecc, curve25519
-            'private_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_private.key'),
+            'private_key' => file_get_contents(__DIR__ . DS . '..' . DS . 'Fixture' . DS . 'maki_private_nopassphrase.key'),
             'fingerprint' => '3EED5E73EA34C95198A904067B28D501637D5102',
             'email' => 'maki@passbolt.com',
-            'passphrase' => 'maki@passbolt.com',
+            'passphrase' => '',
         ];
     }
 
@@ -61,6 +61,22 @@ trait GpgMetadataKeysTestTrait
             'passphrase' => '',
             'fingerprint' => '75E953F48EC5C1FCFFE575BB1BD05459D565666B',
             'email' => 'unit-tests@passbolt.com',
+        ];
+    }
+
+    /**
+     * Returns info related to the ada's key (without passphrase)
+     *
+     * @return array
+     */
+    public function getAdaNoPassphraseKeyInfo(): array
+    {
+        return [
+            'public_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
+            'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+            'email' => 'ada@passbolt.com',
         ];
     }
 
@@ -402,8 +418,7 @@ dT/PmTWE57npBIIz4kQQcHOziFAG
     {
         $fingerprint = $user->gpgkey->fingerprint;
         $gpg = OpenPGPBackendFactory::get();
-        $gpg->importServerKeyInKeyring();
-        $gpg->importKeyIntoKeyring($keyInfo['privateKey']);
+        $gpg->importKeyIntoKeyring($keyInfo['private_key']);
         $gpg->setEncryptKeyFromFingerprint($fingerprint);
         $gpg->setSignKeyFromFingerprint($fingerprint, $keyInfo['passphrase']);
         $encryptedData = $gpg->encryptSign($data);

@@ -31,7 +31,9 @@ use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\MetadataPlugin;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
@@ -63,10 +65,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => '',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $this->logInAs($user);
 
         $data = [
@@ -107,10 +106,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $user, [
-            'passphrase' => '',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         /** @var \Passbolt\Folders\Model\Entity\Folder $parentFolder */
         $parentFolder = FolderFactory::make()->withPermissionsFor([$user])->persist();
         $this->logInAs($user);
@@ -270,10 +266,7 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
             ->active()
             ->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing']);
-        $metadata = $this->encryptForUser($clearTextMetadata, $ada, [
-            'passphrase' => '',
-            'privateKey' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
-        ]);
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
         // create metadata key
         MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
         $this->logInAs($ada);
@@ -453,5 +446,32 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
 
         // `\` here is to pass regex in the assertion method
         $this->assertBadRequestError('Folder creation\/modification with encrypted metadata not allowed');
+    }
+
+    public function testMetadataFoldersCreateController_Error_UserKey_NotAllowedInSettings()
+    {
+        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+        MetadataKeysSettingsFactory::make()->value($data)->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
+        $this->logInAs($user);
+
+        $data = [
+            'metadata' => $metadata,
+            'metadata_key_id' => $user->gpgkey->id,
+            'metadata_key_type' => 'user_key',
+        ];
+        $this->postJson('/folders.json?api-version=2', $data);
+        $this->assertError(400);
+        $this->assertResponseContains('metadata_key_type');
+        $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 }
