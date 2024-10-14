@@ -35,6 +35,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
@@ -158,6 +159,11 @@ class TagsTable extends Table
      */
     public function buildRulesV5(RulesChecker $rules): RulesChecker
     {
+        $rules->add(new IsMetadataKeyTypeAllowedBySettingsRule(), 'isMetadataKeyTypeAllowedBySettings', [
+            'errorField' => 'metadata_key_type',
+            'message' => __('The settings selected by your administrator prevent from using that key type.'),
+        ]);
+
         $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
             'errorField' => 'metadata_key_id',
             'message' => __('The metadata key does not exist.'),

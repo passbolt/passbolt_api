@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Tags\TagsPlugin;
@@ -328,5 +329,46 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
         ]);
 
         $this->assertBadRequestError('Tag creation\/modification with cleartext metadata not allowed');
+    }
+
+    /**
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testMetadataTagsUpdateController_Error_PersonalKeysDisabled(): void
+    {
+        MetadataKeysSettingsFactory::make()->disableUsageOfPersonalKeys()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
+        $tag = TagFactory::make()
+            ->isPersonalFor($resource, $ada)
+            ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $ada->gpgkey->id])
+            ->persist();
+        // data to update
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $metadataToUpdate = $this->encryptForMetadataKey($newMetadata);
+        // login
+        $this->logInAs($ada);
+
+        $tagId = $tag->get('id');
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'metadata' => $metadataToUpdate,
+            'metadata_key_id' => $ada->gpgkey->id,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+            'is_shared' => false,
+        ]);
+
+        $this->assertError(400);
+        $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 }
