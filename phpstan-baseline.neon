@@ -36,46 +36,6 @@ parameters:
 			path: plugins/PassboltCe/Folders/src/Service/Resources/ResourcesAfterCreateService.php
 
 		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Log/src/Model/Table/ActionLogsTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Log/src/Model/Table/ActionsTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Log/src/Model/Table/EntitiesHistoryTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Log/src/Model/Table/PermissionsHistoryTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Log/src/Model/Table/SecretAccessesTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Mobile/src/Service/Transfers/TransfersCreateService.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Mobile/src/Service/Transfers/TransfersUpdateService.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Rbacs/src/Service/UiActions/UiActionsCreateService.php
-
-		-
 			message: "#^Dead catch \\- InvalidArgumentException is never thrown in the try block\\.$#"
 			count: 1
 			path: plugins/PassboltCe/Reports/src/Controller/Reports/ReportsViewController.php
@@ -138,22 +98,7 @@ parameters:
 		-
 			message: "#^If condition is always false\\.$#"
 			count: 1
-			path: src/Controller/Users/UsersEditController.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Model/Table/GroupsTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
 			path: src/Model/Table/ResourcesTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: src/Model/Table/UsersTable.php
 
 		-
 			message: "#^Property Cake\\\\Validation\\\\ValidationRule\\:\\:\\$_message \\(string\\) on left side of \\?\\? is not nullable\\.$#"
