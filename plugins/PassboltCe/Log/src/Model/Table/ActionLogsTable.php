@@ -138,7 +138,7 @@ class ActionLogsTable extends Table
         ];
         // Check validation rules.
         $log = $this->buildEntity($data);
-        if (!empty($log->getErrors())) {
+        if ($log->getErrors()) {
             throw new ValidationException(__('Could not validate action log data.'), $log, $this);
         }
 
@@ -146,7 +146,7 @@ class ActionLogsTable extends Table
         $logSaved = $this->save($log);
 
         // Check for validation errors. (associated models too).
-        if (!empty($log->getErrors())) {
+        if ($log->getErrors()) {
             throw new ValidationException(__('Could not validate action log data.'), $log, $this);
         }
 

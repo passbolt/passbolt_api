@@ -26,6 +26,7 @@ use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
@@ -224,6 +225,11 @@ class FoldersTable extends Table
      */
     public function buildRulesV5(RulesChecker $rules): RulesChecker
     {
+        $rules->add(new IsMetadataKeyTypeAllowedBySettingsRule(), 'isMetadataKeyTypeAllowedBySettings', [
+            'errorField' => 'metadata_key_type',
+            'message' => __('The settings selected by your administrator prevent from using that key type.'),
+        ]);
+
         $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
             'errorField' => 'metadata_key_id',
             'message' => __('The metadata key does not exist.'),

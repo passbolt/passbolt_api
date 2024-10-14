@@ -617,12 +617,15 @@ trait UsersFindersTrait
     public function findlastLoggedIn(Query $query)
     {
         // Retrieve the last logged in date for each user, based on the action_logs table.
-        $loginActionId = UuidFactory::uuid('AuthLogin.loginPost');
+        $loginActionIds = [
+            UuidFactory::uuid('AuthLogin.loginPost'),
+            UuidFactory::uuid('JwtLogin.loginPost'),
+        ];
         $subQuery = $this->ActionLogs->find();
         $subQuery
             ->select(['last_logged_in' => $subQuery->func()->max(new IdentifierExpression('ActionLogs.created'))])
             ->where([
-                 'ActionLogs.action_id' => $loginActionId,
+                 'ActionLogs.action_id IN' => $loginActionIds,
                  'ActionLogs.status' => 1,
                  'ActionLogs.user_id' => new IdentifierExpression('Users.id'),
             ])
