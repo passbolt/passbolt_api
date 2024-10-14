@@ -98,8 +98,8 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         foreach ($updatedResources as $updatedResource) {
             if ($updatedResource->id === $personalResource->id) { // personal resource assertions
                 $this->assertionsForPersonalResource($updatedResource, $personalResource, $user->gpgkey, [
-                    'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-                    'passphrase' => 'ada@passbolt.com',
+                    'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+                    'passphrase' => '',
                 ]);
             } else { // shared resource assertions
                 $this->assertionsForSharedResource($updatedResource, $sharedResource, $metadataKey);
@@ -147,8 +147,8 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         // Make sure v5 fields are updated
         $updatedResource = ResourceFactory::get($personalResource->id);
         $this->assertionsForPersonalResource($updatedResource, $personalResource, $user->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private.key'),
-            'passphrase' => 'ada@passbolt.com',
+            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
+            'passphrase' => '',
         ]);
         // Make sure v4 fields are present due to failure
         $updatedResource = ResourceFactory::get($sharedResource->id);

@@ -31,7 +31,9 @@ use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\MetadataPlugin;
+use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
@@ -397,5 +399,34 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
 
         // `\` here is to pass regex in the assertion method
         $this->assertBadRequestError('Folder creation\/modification with cleartext metadata not allowed');
+    }
+
+    public function testMetadataFoldersUpdateController_Error_UserKey_NotAllowedInSettings()
+    {
+        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+        MetadataKeysSettingsFactory::make()->value($data)->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'marketing updated']);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$user])->withPermissionsFor([$user])->persist();
+        $this->logInAs($user);
+
+        $data = [
+            'metadata' => $metadata,
+            'metadata_key_id' => $user->gpgkey->id,
+            'metadata_key_type' => 'user_key',
+        ];
+        $this->postJson("/folders/{$folder->id}.json", $data);
+        $this->assertError(400);
+        $this->assertResponseContains('metadata_key_type');
+        $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 }

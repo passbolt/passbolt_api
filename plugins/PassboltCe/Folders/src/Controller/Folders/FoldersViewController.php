@@ -66,7 +66,6 @@ class FoldersViewController extends AppController
         $options = $this->QueryString->get($whitelist);
 
         $folder = $foldersTable->findView($this->User->id(), $id, $options)->first();
-
         if (empty($folder)) {
             throw new NotFoundException('The folder does not exist.');
         }

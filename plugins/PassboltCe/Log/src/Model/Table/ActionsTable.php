@@ -121,14 +121,14 @@ class ActionsTable extends Table
 
         // Check validation rules.
         $action = $this->buildEntity($data);
-        if (!empty($action->getErrors())) {
+        if ($action->getErrors()) {
             throw new ValidationException(__('Could not validate action data.', true), $action, $this);
         }
 
         $actionSaved = $this->save($action);
 
         // Check for validation errors.
-        if (!empty($action->getErrors())) {
+        if ($action->getErrors()) {
             throw new ValidationException(__('Could not validate action data.'), $action, $this);
         }
 
