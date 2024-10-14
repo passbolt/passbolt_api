@@ -371,6 +371,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
      */
     public function testMetadataResourcesTagsAddController_Error_InsufficientPersonalTagPermission(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -475,7 +476,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayHasKey('isValidEncryptedMetadata', $response['tags'][0]['metadata']);
     }
 
-    public function testMetadataResourcesTagsAddController_Error_AllowCreationOfV5IsDisabled(): void
+    public function testMetadataResourcesTagsAddController_Error_AllowCreationOfV5TagIsDisabled(): void
     {
         /** @var \App\Model\Entity\User $ada */
         $ada = UserFactory::make()
@@ -504,9 +505,26 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         ];
         $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
 
-        $this->assertError(400);
-        $response = $this->getResponseBodyAsArray();
-        $this->assertCount(1, $response);
-        $this->assertStringContainsString('Tag creation/modification with encrypted metadata not allowed', $response[0][0]);
+        $this->assertBadRequestError('Tag creation\/modification with encrypted metadata not allowed');
+    }
+
+    public function testMetadataResourcesTagsAddController_Error_AllowCreationOfV4TagIsDisabled(): void
+    {
+        MetadataTypesSettingsFactory::make()->v6()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+
+        $this->logInAs($ada);
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", [
+            'tags' => ['test-tag'],
+        ]);
+
+        $this->assertBadRequestError('Tag creation\/modification with cleartext metadata not allowed');
     }
 }

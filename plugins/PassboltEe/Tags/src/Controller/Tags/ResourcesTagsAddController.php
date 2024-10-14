@@ -27,8 +27,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
-use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\Tags\Form\MetadataResourcesAddExistingTagForm;
 use Passbolt\Tags\Form\MetadataResourcesTagsAddForm;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
@@ -40,6 +39,8 @@ use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
  */
 class ResourcesTagsAddController extends AppController
 {
+    use MetadataSettingsAwareTrait;
+
     /**
      * @inheritDoc
      */
@@ -70,9 +71,9 @@ class ResourcesTagsAddController extends AppController
         $data = $this->validateRequestData($data);
 
         $options = ['contain' => ['all_tags' => 1, 'permission' => 1]];
-        /** @var Resource $resource */
+        /** @var Resource|null $resource */
         $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
-        if (empty($resource)) {
+        if (is_null($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
 
@@ -132,8 +133,6 @@ class ResourcesTagsAddController extends AppController
      */
     private function validateRequestData(array $data): array
     {
-        $settingsDto = (new MetadataTypesSettingsGetService())->getSettings();
-
         $errors = [];
         foreach ($data as $i => $tag) {
             $errors[$i] = [];
@@ -144,11 +143,7 @@ class ResourcesTagsAddController extends AppController
             }
 
             if (is_array($tag)) {
-                try {
-                    $this->isCreationOfV5TagAllowed($settingsDto, $tag);
-                } catch (BadRequestException $e) {
-                    $errors[$i][] = $e->getMessage();
-                }
+                $this->assertV5TagCreationEnabled();
 
                 if (array_key_exists('id', $tag)) {
                     $form = new MetadataResourcesAddExistingTagForm($this->User->getAccessControl());
@@ -159,6 +154,8 @@ class ResourcesTagsAddController extends AppController
                 if (!$form->validate($tag)) {
                     $errors[$i] = array_merge($errors[$i], $form->getErrors());
                 }
+            } else {
+                $this->assertV4TagCreationEnabled();
             }
 
             if (empty($errors[$i])) {
@@ -276,23 +273,5 @@ class ResourcesTagsAddController extends AppController
         }
 
         return [$clearTextTags, $encryptedTags];
-    }
-
-    /**
-     * @param \Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto $settingsDto Settings DTO.
-     * @param array $tag Tag metadata.
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException When v5 tag creation/modification is disabled.
-     */
-    private function isCreationOfV5TagAllowed(MetadataTypesSettingsDto $settingsDto, array $tag): void
-    {
-        // do not check if no metadata fields are set
-        if (empty($tag['metadata']) && empty($tag['metadata_key_id']) && empty($tag['metadata_key_type'])) {
-            return;
-        }
-
-        if (!$settingsDto->isV5TagCreationAllowed()) {
-            throw new BadRequestException(__('Tag creation/modification with encrypted metadata not allowed.'));
-        }
     }
 }

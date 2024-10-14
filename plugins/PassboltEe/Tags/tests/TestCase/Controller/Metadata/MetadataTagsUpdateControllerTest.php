@@ -20,9 +20,12 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Tags\TagsPlugin;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 
 /**
@@ -46,6 +49,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
      */
     public function testMetadataTagsUpdateController_Success_Personal(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -98,6 +102,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
      */
     public function testMetadataTagsUpdateController_Success_Shared(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -152,6 +157,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
      */
     public function testMetadataTagsUpdateController_Error_V4AndV5BothFieldsAreSent(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -192,6 +198,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
      */
     public function testMetadataTagsUpdateController_Error_InvalidMetadataKeyType(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -235,6 +242,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
      */
     public function testMetadataTagsUpdateController_Error_InvalidEncryptedMetadata(): void
     {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -267,5 +275,58 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
         $response = $this->getResponseBodyAsArray();
         $this->assertArrayHasKey('metadata', $response);
         $this->assertArrayHasKey('isValidEncryptedMetadata', $response['metadata']);
+    }
+
+    public function testMetadataTagsUpdateController_Error_AllowCreationOfV5TagIsDisabled(): void
+    {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
+        $tag = TagFactory::make()
+            ->isPersonalFor($resource, $user)
+            ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $user->gpgkey->id])
+            ->persist();
+        // data to update
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $metadataToUpdate = $this->encryptForUser($newMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
+        // login
+        $this->logInAs($user);
+
+        $tagId = $tag->get('id');
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'metadata' => $metadataToUpdate,
+            'metadata_key_id' => $user->gpgkey->id,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+            'is_shared' => false,
+        ]);
+
+        $this->assertBadRequestError('Tag creation\/modification with encrypted metadata not allowed');
+    }
+
+    public function testMetadataTagsUpdateController_Error_AllowCreationOfV4TagIsDisabled(): void
+    {
+        MetadataTypesSettingsFactory::make()->v6()->persist();
+        $user = $this->logInAsUser();
+        /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */
+        $resourceTag = ResourcesTagFactory::make()
+            ->with('Users', $user)
+            ->with('Tags', ['slug' => 'firefox'])
+            ->persist();
+        $tagId = $resourceTag->tag->id;
+        // login
+        $this->logInAs($user);
+
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'slug' => 'chrome',
+        ]);
+
+        $this->assertBadRequestError('Tag creation\/modification with cleartext metadata not allowed');
     }
 }
