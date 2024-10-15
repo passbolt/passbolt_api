@@ -167,7 +167,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('Host availability will be checked.');
         $this->assertOutputContains('Serving the compiled version of the javascript app.');
         $this->assertOutputContains('All email notifications will be sent.');
-        $this->assertOutputContains('No error found. Nice one sparky!');
+        $this->assertOutputContains('No error found. Nice one, sparky!');
     }
 
     public function testHealthcheckCommand_Application_Unhappy_Path()

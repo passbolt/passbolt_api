@@ -45,6 +45,7 @@ use App\Service\Healthcheck\Environment\IntlHealthcheck;
 use App\Service\Healthcheck\Environment\LogFolderWritableHealthcheck;
 use App\Service\Healthcheck\Environment\MbstringHealthcheck;
 use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
+use App\Service\Healthcheck\Environment\OperatingSystemHealthcheck;
 use App\Service\Healthcheck\Environment\PcreHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\TmpFolderWritableHealthcheck;
@@ -85,6 +86,7 @@ class HealthcheckServiceProvider extends ServiceProvider
         HealthcheckServiceCollector::class,
         PhpVersionHealthcheck::class,
         NextMinPhpVersionHealthcheck::class,
+        OperatingSystemHealthcheck::class,
         PcreHealthcheck::class,
         MbstringHealthcheck::class,
         IntlHealthcheck::class,
@@ -122,6 +124,7 @@ class HealthcheckServiceProvider extends ServiceProvider
         // Environment health checks
         $container->add(PhpVersionHealthcheck::class);
         $container->add(NextMinPhpVersionHealthcheck::class);
+        $container->add(OperatingSystemHealthcheck::class);
         $container->add(PcreHealthcheck::class);
         $container->add(MbstringHealthcheck::class);
         $container->add(IntlHealthcheck::class);
@@ -209,6 +212,7 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(HealthcheckServiceCollector::class)
             ->addMethodCall('addService', [PhpVersionHealthcheck::class])
             ->addMethodCall('addService', [NextMinPhpVersionHealthcheck::class])
+            ->addMethodCall('addService', [OperatingSystemHealthcheck::class])
             ->addMethodCall('addService', [PcreHealthcheck::class])
             ->addMethodCall('addService', [MbstringHealthcheck::class])
             ->addMethodCall('addService', [IntlHealthcheck::class])
