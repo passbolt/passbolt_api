@@ -74,7 +74,7 @@
         "ext-openssl": "*",
         "ext-pdo": "*",
         "ext-curl": "*",
-        "composer/composer": "^2.7.7",
+        "composer/composer": "^2.8.1",
         "cakephp/cakephp": "^4.5",
         "cakephp/chronos": "2.4.*",
         "longwave/laminas-diactoros": "^2.14.1",
@@ -97,7 +97,7 @@
         "duosecurity/duo_universal_php": "^1.0.2"
     },
     "require-dev": {
-        "phpstan/phpstan": "~1.10.0",
+        "phpstan/phpstan": "^1.11.0",
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "^4.9.0",
         "cakephp/bake": "^2.3.0",
