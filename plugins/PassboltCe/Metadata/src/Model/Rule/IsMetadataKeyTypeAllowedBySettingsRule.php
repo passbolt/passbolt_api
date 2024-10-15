@@ -18,15 +18,13 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Model\Rule;
 
 use Cake\ORM\Entity;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 
 class IsMetadataKeyTypeAllowedBySettingsRule
 {
     /**
-     * Performs the check
-     *
-     * Checks that if the `metadata_key_type` is 'user_key', the entity is not shared with
-     * other users, or a group
+     * Checks if the `metadata_key_type` is 'user_key' then the metadata settings allows using personal keys.
      *
      * @param \Cake\ORM\Entity $entity The entity to check
      * @param array $options Options passed to the check
@@ -34,8 +32,8 @@ class IsMetadataKeyTypeAllowedBySettingsRule
      */
     public function __invoke(Entity $entity, array $options): bool
     {
-        // If the resource's metadata key type is not personal, the present rule does not apply
-        $isPersonal = $entity->get('metadata_key_type') === 'user_key';
+        // If the item's metadata key type is not personal, the present rule does not apply
+        $isPersonal = $entity->get('metadata_key_type') === MetadataKey::TYPE_USER_KEY;
         if (!$isPersonal) {
             return true;
         }
