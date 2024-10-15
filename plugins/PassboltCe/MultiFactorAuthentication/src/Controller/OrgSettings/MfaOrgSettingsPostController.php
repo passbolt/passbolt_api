@@ -30,7 +30,7 @@ class MfaOrgSettingsPostController extends MfaController
      * @throws \App\Error\Exception\CustomValidationException if the user provided data do not validate
      * @throws \Cake\Http\Exception\ForbiddenException if the user is not an admin
      * @throws \Cake\Http\Exception\BadRequestException if the request is not made using Ajax/Json
-     * @param \Duo\DuoUniversal\Client $duoSdkClient Duo SDK Client
+     * @param \Duo\DuoUniversal\Client|null $duoSdkClient Duo SDK Client
      * @return void
      */
     public function post(?Client $duoSdkClient = null): void

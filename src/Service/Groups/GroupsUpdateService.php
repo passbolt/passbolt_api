@@ -341,7 +341,7 @@ class GroupsUpdateService
      * @param \App\Model\Entity\Group $group The group to update.
      * @param array $groupUserData The data of the group user to update.
      * @param int $rowIndexRef The index of the treated group user in the request data, for error purpose.
-     * @return ?\App\Model\Entity\GroupsUser
+     * @return \App\Model\Entity\GroupsUser|null
      */
     private function updateGroupUser(
         UserAccessControl $uac,

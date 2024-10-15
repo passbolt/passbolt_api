@@ -29,7 +29,7 @@ class PermissionsCleanupBehavior extends Behavior
     /**
      * Delete all records where associated folders are deleted
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int number of affected records
      */
     public function cleanupHardDeletedFolders(?bool $dryRun = false): int

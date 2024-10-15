@@ -47,7 +47,7 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param array|null $config Configuration for the redactor
-     * @param \App\Model\Table\UsersTable $usersTable Users Table
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
      */
     public function __construct(?array $config = [], ?UsersTable $usersTable = null)
     {

@@ -60,7 +60,7 @@ class SelfRegistrationHealthcheckService
     /**
      * Returns the self registration provider defined in organization settings or null
      *
-     * @return ?string
+     * @return string|null
      */
     protected function selfRegistrationProvider(): ?string
     {

@@ -217,7 +217,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 
     /**
      * @dataProvider dataFortestBaseSolutionBootstrapper_AddFeaturePlugin_On_Disabled_Plugin
-     * @param callable|bool $isEnabledByDefault
+     * @param callable|bool|null $isEnabledByDefault
      */
     public function testBaseSolutionBootstrapper_AddFeaturePlugin_On_Disabled_Plugin($isEnabledByDefault = null)
     {

@@ -61,7 +61,7 @@ class ResourcesAfterCreateService
     /**
      * @param \App\Utility\UserAccessControl $uac The current user.
      * @param \App\Model\Entity\Resource $resource The created resource.
-     * @param array $data The data sent by the user to create the resource.
+     * @param array|null $data The data sent by the user to create the resource.
      * @return void
      * @throws \Cake\Http\Exception\InternalErrorException If an unexpected error occurred while creating the folder relation.
      */

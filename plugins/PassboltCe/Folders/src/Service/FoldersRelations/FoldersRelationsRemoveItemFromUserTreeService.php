@@ -45,7 +45,7 @@ class FoldersRelationsRemoveItemFromUserTreeService
      *
      * @param string $foreignId The target item
      * @param string $userId The target user
-     * @param bool $moveContentToRoot (optional) Should the content be moved to root. Default false.
+     * @param bool|null $moveContentToRoot (optional) Should the content be moved to root. Default false.
      * @return void
      * @throws \Exception
      */

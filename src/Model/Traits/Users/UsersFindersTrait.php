@@ -217,7 +217,7 @@ trait UsersFindersTrait
      * Build the query that fetches data for user index
      *
      * @param string $role name
-     * @param array $options filters
+     * @param array|null $options filters
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if no role is specified
      */
@@ -381,7 +381,7 @@ trait UsersFindersTrait
      * including role and profile
      *
      * @param string $username email of user to retrieve
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the username is not an email
      */

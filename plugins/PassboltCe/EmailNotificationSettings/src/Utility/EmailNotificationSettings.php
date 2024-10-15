@@ -60,7 +60,7 @@ class EmailNotificationSettings
      * 2. configuration file
      * 3. the defaults in this function
      *
-     * @param ?string $key (optional) Key to lookup. If not provided, return all the settings.
+     * @param string|null $key (optional) Key to lookup. If not provided, return all the settings.
      * @return mixed
      */
     public static function get(?string $key = null)

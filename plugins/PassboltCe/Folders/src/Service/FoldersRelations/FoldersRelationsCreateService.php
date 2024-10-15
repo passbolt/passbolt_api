@@ -43,7 +43,7 @@ class FoldersRelationsCreateService
      * Create a folder relation.
      *
      * @param array $folderRelationData The folder relation data
-     * @param bool $checkRules (optional) Should the table rules be checked while saving the entity. Default true.
+     * @param bool|null $checkRules (optional) Should the table rules be checked while saving the entity. Default true.
      * @return \Passbolt\Folders\Model\Entity\FoldersRelation
      * @throws \Exception If an unexpected error occurred
      */
