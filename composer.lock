@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "992a3097957020fa973c1a3f4b0db12e",
+    "content-hash": "8a5809664621a8e39110f81d7c186e59",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -8831,10 +8831,9 @@
     "minimum-stability": "stable",
     "stability-flags": {
         "cakephp/migrations": 20,
-        "lorenzo/cakephp-email-queue": 20,
-        "psy/psysh": 0,
         "robmorgan/phinx": 20,
-        "singpolyma/openpgp-php": 20
+        "lorenzo/cakephp-email-queue": 20,
+        "psy/psysh": 0
     },
     "prefer-stable": true,
     "prefer-lowest": false,
@@ -8849,7 +8848,7 @@
         "ext-pdo": "*",
         "ext-curl": "*"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "platform-overrides": {
         "php": "7.4"
     },
