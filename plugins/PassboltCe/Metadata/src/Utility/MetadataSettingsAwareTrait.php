@@ -34,11 +34,29 @@ trait MetadataSettingsAwareTrait
 
     /**
      * @return void
-     * @throws \Cake\Http\Exception\BadRequestException If V5 folder creation/modification is allowed.
+     * @throws \Cake\Http\Exception\BadRequestException If V5 folder creation/modification is not allowed.
      */
     public function assertV5FolderCreationEnabled(): void
     {
         $this->assertCreationAllowedByMetadataSettings(true, MetadataTypesSettingsDto::ENTITY_FOLDER);
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException If V5 tag creation/modification is not allowed.
+     */
+    public function assertV5TagCreationEnabled(): void
+    {
+        $this->assertCreationAllowedByMetadataSettings(true, MetadataTypesSettingsDto::ENTITY_TAG);
+    }
+
+    /**
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException If v4 tag creation/modification is not allowed.
+     */
+    public function assertV4TagCreationEnabled(): void
+    {
+        $this->assertCreationAllowedByMetadataSettings(false, MetadataTypesSettingsDto::ENTITY_TAG);
     }
 
     /**
@@ -70,6 +88,10 @@ trait MetadataSettingsAwareTrait
                 if (!$settingsDto->isV5FolderCreationAllowed()) {
                     throw new BadRequestException(__('Folder creation/modification with encrypted metadata not allowed.')); // phpcs:ignore
                 }
+            } elseif ($entity === MetadataTypesSettingsDto::ENTITY_TAG) {
+                if (!$settingsDto->isV5TagCreationAllowed()) {
+                    throw new BadRequestException(__('Tag creation/modification with encrypted metadata not allowed.')); // phpcs:ignore
+                }
             }
         } else {
             if ($entity === MetadataTypesSettingsDto::ENTITY_RESOURCE) {
@@ -79,6 +101,10 @@ trait MetadataSettingsAwareTrait
             } elseif ($entity === MetadataTypesSettingsDto::ENTITY_FOLDER) {
                 if (!$settingsDto->isV4FolderCreationAllowed()) {
                     throw new BadRequestException(__('Folder creation/modification with cleartext metadata not allowed.')); // phpcs:ignore
+                }
+            } elseif ($entity === MetadataTypesSettingsDto::ENTITY_TAG) {
+                if (!$settingsDto->isV4TagCreationAllowed()) {
+                    throw new BadRequestException(__('Tag creation/modification with cleartext metadata not allowed.')); // phpcs:ignore
                 }
             }
         }

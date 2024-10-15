@@ -21,12 +21,14 @@ use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\Model\Entity\Tag;
 
 class UpdatePersonalTagService
 {
     use LocatorAwareTrait;
+    use MetadataSettingsAwareTrait;
 
     /**
      * Update personal tag
@@ -45,6 +47,8 @@ class UpdatePersonalTagService
         $tagsTable = $this->fetchTable('Passbolt/Tags.Tags');
 
         if ($tagDto->isV5()) {
+            $this->assertV5TagCreationEnabled();
+
             $options = [
                 'accessibleFields' => [
                     'metadata' => true,
@@ -79,6 +83,8 @@ class UpdatePersonalTagService
 
             return $entity;
         } else {
+            $this->assertV4TagCreationEnabled();
+
             $slug = $dtoArray['slug'];
 
             if (!is_null($slug) && mb_substr($slug, 0, 1) === '#') {
