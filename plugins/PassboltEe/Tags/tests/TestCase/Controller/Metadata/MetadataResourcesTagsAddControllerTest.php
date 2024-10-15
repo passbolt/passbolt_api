@@ -23,6 +23,7 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\UuidFactory;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Tags\TagsPlugin;
@@ -526,5 +527,37 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         ]);
 
         $this->assertBadRequestError('Tag creation\/modification with cleartext metadata not allowed');
+    }
+
+    public function testMetadataResourcesTagsAddController_Error_PersonalKeysDisabled(): void
+    {
+        MetadataKeysSettingsFactory::make()->disableUsageOfPersonalKeys()->persist();
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
+
+        $this->logInAs($ada);
+        $data = [
+            'tags' => [
+                [
+                    'metadata' => $metadata,
+                    'metadata_key_id' => $ada->gpgkey->id,
+                    'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+                    'is_shared' => false,
+                ],
+            ],
+        ];
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
+
+        $this->assertError(400);
+        $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
 }

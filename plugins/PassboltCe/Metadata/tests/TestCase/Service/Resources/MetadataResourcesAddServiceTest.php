@@ -30,7 +30,6 @@ use App\Test\Lib\Model\ResourcesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\TableRegistry;
-use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
@@ -301,9 +300,7 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
 
     public function testMetadataResourceAddService_Error_UserKey_NotAllowedBySettings()
     {
-        $data = MetadataKeysSettingsFactory::getDefaultData();
-        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
-        MetadataKeysSettingsFactory::make()->value($data)->persist();
+        MetadataKeysSettingsFactory::make()->disableUsageOfPersonalKeys()->persist();
         MetadataTypesSettingsFactory::make()->v5()->persist();
 
         /** @var \App\Model\Entity\User $user */
