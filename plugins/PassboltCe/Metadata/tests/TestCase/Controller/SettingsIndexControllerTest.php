@@ -19,16 +19,11 @@ namespace Passbolt\Metadata\Test\TestCase\Controller;
 
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
-use Passbolt\Metadata\MetadataPlugin;
 
 class SettingsIndexControllerTest extends AppIntegrationTestCaseV5
 {
     public function testSettingsIndexController_MetadataPlugin_Enabled_Logged_In(): void
     {
-        // Enable the v5 flag so the metadata plugin gets loaded in the Bootstrapper
-        Configure::write('passbolt.v5.enabled', true);
-        // Enable the plugin to the SettingsController knows about it and displays it in the response
-        $this->enableFeaturePlugin(MetadataPlugin::class);
         $this->logInAsUser();
         $this->getJson('/settings.json');
         $this->assertTrue($this->_responseJsonBody->passbolt->plugins->metadata->enabled);
@@ -37,10 +32,6 @@ class SettingsIndexControllerTest extends AppIntegrationTestCaseV5
 
     public function testSettingsIndexController_MetadataPlugin_Enabled_Not_Logged_In(): void
     {
-        // Enable the v5 flag so the metadata plugin gets loaded in the Bootstrapper
-        Configure::write('passbolt.v5.enabled', true);
-        // Enable the plugin to the SettingsController knows about it and displays it in the response
-        $this->enableFeaturePlugin(MetadataPlugin::class);
         $this->getJson('/settings.json');
         $this->assertFalse(isset($this->_responseJsonBody->passbolt->plugins->metadata));
     }
