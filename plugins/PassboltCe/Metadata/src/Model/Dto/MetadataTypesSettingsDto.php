@@ -30,6 +30,7 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
     public const ALLOW_CREATION_OF_V4_FOLDERS = 'allow_creation_of_v4_folders';
     public const ALLOW_CREATION_OF_V4_TAGS = 'allow_creation_of_v4_tags';
     public const ALLOW_CREATION_OF_V4_COMMENTS = 'allow_creation_of_v4_comments';
+    public const ALLOW_V5_V4_DOWNGRADE = 'allow_v5_v4_downgrade';
     public const V4 = 'v4';
     public const V5 = 'v5';
 
@@ -46,6 +47,7 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
         self::ALLOW_CREATION_OF_V4_FOLDERS,
         self::ALLOW_CREATION_OF_V4_TAGS,
         self::ALLOW_CREATION_OF_V4_COMMENTS,
+        self::ALLOW_V5_V4_DOWNGRADE,
     ];
 
     public const ENTITY_RESOURCE = 'resource';
@@ -73,6 +75,7 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
             self::ALLOW_CREATION_OF_V4_FOLDERS => $data[self::ALLOW_CREATION_OF_V4_FOLDERS] ?? null,
             self::ALLOW_CREATION_OF_V4_TAGS => $data[self::ALLOW_CREATION_OF_V4_TAGS] ?? null,
             self::ALLOW_CREATION_OF_V4_COMMENTS => $data[self::ALLOW_CREATION_OF_V4_COMMENTS] ?? null,
+            self::ALLOW_V5_V4_DOWNGRADE => $data[self::ALLOW_V5_V4_DOWNGRADE] ?? null,
         ];
     }
 
