@@ -49,6 +49,7 @@ class MetadataTypesSettingsSetServiceTest extends AppTestCase
         $data[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
+        $data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE] = true;
         MetadataTypesSettingsFactory::make()->value(json_encode($data))->persist();
         $this->assertEquals(1, OrganizationSettingFactory::count());
 

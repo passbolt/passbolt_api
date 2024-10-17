@@ -61,6 +61,7 @@ class MetadataTypesSettingsFactory extends OrganizationSettingFactory
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => true,
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => true,
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => true,
+            MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE => false,
         ];
     }
 
@@ -79,6 +80,7 @@ class MetadataTypesSettingsFactory extends OrganizationSettingFactory
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => false,
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => false,
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => false,
+            MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE => false,
         ];
     }
 

@@ -200,6 +200,10 @@ class MetadataTypesSettingsForm extends Form
                 'message' => __('Both v4 and v5 settings cannot be disabled.'),
             ]);
 
+        $validator
+            ->boolean('allow_v5_v4_downgrade', __('The setting should be a valid boolean.'))
+            ->requirePresence('allow_v5_v4_downgrade', true, __('The setting is required.'));
+
         return $validator;
     }
 
@@ -232,6 +236,7 @@ class MetadataTypesSettingsForm extends Form
             'allow_creation_of_v4_folders' => $data['allow_creation_of_v4_folders'] ?? null,
             'allow_creation_of_v4_comments' => $data['allow_creation_of_v4_comments'] ?? null,
             'allow_creation_of_v4_tags' => $data['allow_creation_of_v4_tags'] ?? null,
+            'allow_v5_v4_downgrade' => $data['allow_v5_v4_downgrade'] ?? null,
         ];
 
         $booleanFields = [
@@ -243,6 +248,7 @@ class MetadataTypesSettingsForm extends Form
             'allow_creation_of_v4_folders',
             'allow_creation_of_v4_comments',
             'allow_creation_of_v4_tags',
+            'allow_v5_v4_downgrade',
         ];
         foreach ($data as $field => $value) {
             // Convert values like '1', '0' to boolean data type

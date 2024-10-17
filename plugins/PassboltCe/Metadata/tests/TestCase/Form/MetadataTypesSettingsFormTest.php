@@ -119,6 +119,7 @@ class MetadataTypesSettingsFormTest extends TestCase
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS => 'test',
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => 'test',
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => 'test',
+            MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE => 'test',
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
@@ -130,6 +131,7 @@ class MetadataTypesSettingsFormTest extends TestCase
         $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_FOLDERS]['boolean']));
         $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS]['boolean']));
         $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE]['boolean']));
     }
 
     /**
