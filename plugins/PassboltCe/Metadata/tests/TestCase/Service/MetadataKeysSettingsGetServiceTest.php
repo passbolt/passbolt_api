@@ -15,15 +15,15 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Service;
+namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Test\Factory\OrganizationSettingFactory;
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppTestCaseV5;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 
-class MetadataKeysSettingsGetServiceTest extends AppTestCase
+class MetadataKeysSettingsGetServiceTest extends AppTestCaseV5
 {
     public function testMetadataKeysSettingsGetService_getSettings_NotEntryReturnsDefault(): void
     {

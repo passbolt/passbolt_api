@@ -18,19 +18,13 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Controller\Resources;
 
 use App\Test\Factory\ResourceFactory;
-use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
 use Cake\I18n\FrozenTime;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
-class MetadataResourcesIndexControllerTest extends AppIntegrationTestCase
+class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        Configure::write('passbolt.v5.enabled', true);
-    }
-
     public function testMetadataResourcesIndexController_Metadata_Enabled_Success(): void
     {
         $user = $this->logInAsUser();

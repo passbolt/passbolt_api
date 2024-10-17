@@ -23,8 +23,8 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
-use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4ToV5ServiceCollector;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -50,7 +50,8 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
         parent::setUp();
 
         $this->useCommandRunner();
-        $this->enableFeaturePlugin(MetadataPlugin::class);
+        // clear collector state to get proper results
+        MigrateAllV4ToV5ServiceCollector::clear();
     }
 
     public function testMigrateAllItemsCommand_Help()

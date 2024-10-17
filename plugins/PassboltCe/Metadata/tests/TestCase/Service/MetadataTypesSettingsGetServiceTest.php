@@ -18,12 +18,12 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Test\Factory\OrganizationSettingFactory;
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppTestCaseV5;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
-class MetadataTypesSettingsGetServiceTest extends AppTestCase
+class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
 {
     public function testMetadataTypesSettingsGetService_getSettings_NotEntryReturnsDefault(): void
     {
