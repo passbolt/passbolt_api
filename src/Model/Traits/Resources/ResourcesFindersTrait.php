@@ -27,6 +27,7 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
+use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
@@ -413,16 +414,22 @@ trait ResourcesFindersTrait
             return true;
         });
 
-        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot) {
-            $conditions = [];
-            if (!empty($parentIds)) {
-                $conditions[] = $q->expr()->in('FoldersRelations.folder_parent_id', $parentIds);
-            }
-            if ($includeRoot === true) {
-                $conditions[] = $q->expr()->isNull('FoldersRelations.folder_parent_id');
-            }
+        $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
+        $foldersRelationsQuery = $foldersRelationsTable->find();
+        $conditions = [];
+        if (!empty($parentIds)) {
+            $conditions[] = ['folder_parent_id IN' => $parentIds];
+        }
+        if ($includeRoot === true) {
+            $conditions[] = ['folder_parent_id IS NULL'];
+        }
+        $folderRelationsSubQuery = $foldersRelationsQuery
+            ->distinct()
+            ->select(['foreign_id'])
+            ->where(['OR' => $conditions]);
 
-            return $q->where(['OR' => $conditions]);
-        });
+        $query->where(['Resources.id IN' => $folderRelationsSubQuery]);
+
+        return $query;
     }
 }
