@@ -39,7 +39,7 @@ class ShareMetadataKeyServiceFactory
         }
 
         // Key is sharable by server directly
-        $settings = (new MetadataKeysSettingsGetService())->getSettings();
+        $settings = MetadataKeysSettingsGetService::getSettings();
         if (!$settings->isKeyShareZeroKnowledge()) {
             return new MetadataKeyShareDefaultService();
         } else {
