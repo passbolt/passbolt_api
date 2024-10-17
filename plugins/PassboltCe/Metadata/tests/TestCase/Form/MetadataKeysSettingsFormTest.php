@@ -15,14 +15,15 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Form;
+namespace Passbolt\Metadata\Test\TestCase\Form;
 
-use Cake\TestSuite\TestCase;
+use App\Test\Lib\AppTestCaseV5;
 use Passbolt\Metadata\Form\MetadataKeysSettingsForm;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4ToV5ServiceCollector;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 
-class MetadataKeysSettingsFormTest extends TestCase
+class MetadataKeysSettingsFormTest extends AppTestCaseV5
 {
     /**
      * @var MetadataKeysSettingsForm $form
@@ -37,8 +38,9 @@ class MetadataKeysSettingsFormTest extends TestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         unset($this->form);
+        MigrateAllV4ToV5ServiceCollector::clear();
+        parent::tearDown();
     }
 
     public function getDefaultData(): array

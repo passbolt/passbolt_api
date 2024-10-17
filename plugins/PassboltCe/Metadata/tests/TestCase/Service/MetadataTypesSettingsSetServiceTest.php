@@ -21,14 +21,14 @@ use App\Error\Exception\FormValidationException;
 use App\Model\Entity\Role;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppTestCaseV5;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\ForbiddenException;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsSetService;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
-class MetadataTypesSettingsSetServiceTest extends AppTestCase
+class MetadataTypesSettingsSetServiceTest extends AppTestCaseV5
 {
     public function testMetadataTypesSettingsSetService_Success_Create(): void
     {

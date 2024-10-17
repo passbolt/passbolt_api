@@ -26,7 +26,10 @@ use Cake\Console\TestSuite\StubConsoleInput;
 use Cake\Console\TestSuite\StubConsoleOutput;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4FoldersToV5Service;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ItemsToV5Service;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4ToV5ServiceCollector;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -67,6 +70,12 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
         $this->err = new StubConsoleOutput();
         $this->in = new StubConsoleInput([]);
         $this->io = new ConsoleIo($this->out, $this->err, $this->in);
+        // setup collector, start with clear state
+        MigrateAllV4ToV5ServiceCollector::clear();
+        MigrateAllV4ToV5ServiceCollector::add([
+            MigrateAllV4ResourcesToV5Service::class,
+            MigrateAllV4FoldersToV5Service::class,
+        ]);
     }
 
     /**

@@ -15,14 +15,14 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Service;
+namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppTestCaseV5;
 use Passbolt\Metadata\Service\MetadataKeysSettingsAssertService;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 
-class MetadataKeysSettingsAssertServiceTest extends AppTestCase
+class MetadataKeysSettingsAssertServiceTest extends AppTestCaseV5
 {
     public function testMetadataKeysSettingsAssertService_Success(): void
     {

@@ -17,12 +17,12 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Form;
 
-use Cake\TestSuite\TestCase;
+use App\Test\Lib\AppTestCaseV5;
 use Passbolt\Metadata\Form\MetadataTypesSettingsForm;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
-class MetadataTypesSettingsFormTest extends TestCase
+class MetadataTypesSettingsFormTest extends AppTestCaseV5
 {
     /**
      * @var MetadataTypesSettingsForm $form
@@ -37,8 +37,8 @@ class MetadataTypesSettingsFormTest extends TestCase
 
     public function tearDown(): void
     {
-        parent::tearDown();
         unset($this->form);
+        parent::tearDown();
     }
 
     public function getDefaultData(): array

@@ -66,6 +66,14 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getHumanReadableName(): string
+    {
+        return 'folder';
+    }
+
+    /**
      * Migrates all V4 folders to V5.
      *
      * @return array Result

@@ -16,20 +16,40 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service\Migration;
 
-interface V4ToV5MigrationServiceInterface
+class MigrateAllV4ToV5ServiceCollector
 {
-    /**
-     * Migrate V4 items to V5.
-     *
-     * @return array Result.
-     * @throws \Cake\Http\Exception\BadRequestException If V5 item creation/modification is not allowed.
-     */
-    public function migrate(): array;
+    private static array $services = [];
 
     /**
-     * Returns human-readable name (in singular form).
+     * Add new migrator service to collector.
      *
-     * @return string
+     * @param array|string $services Service(s) to add.
+     * @return void
      */
-    public function getHumanReadableName(): string;
+    public static function add($services): void
+    {
+        if (is_string($services)) {
+            $services = [$services];
+        }
+
+        foreach ($services as $service) {
+            self::$services[] = $service;
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public static function get(): array
+    {
+        return self::$services;
+    }
+
+    /**
+     * @return void
+     */
+    public static function clear(): void
+    {
+        self::$services = [];
+    }
 }

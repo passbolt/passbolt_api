@@ -34,19 +34,6 @@ class MigrateAllV4ItemsToV5Service
     ];
 
     /**
-     * Services list to migrate.
-     *
-     * @return \Passbolt\Metadata\Service\Migration\V4ToV5MigrationServiceInterface[]
-     */
-    public function getMigrationServices(): array
-    {
-        return [
-            (new MigrateAllV4ResourcesToV5Service()),
-            (new MigrateAllV4FoldersToV5Service()),
-        ];
-    }
-
-    /**
      * Migrates all V4 items to V5.
      *
      * @param \Cake\Console\ConsoleIo $io Console IO object.
@@ -54,11 +41,13 @@ class MigrateAllV4ItemsToV5Service
      */
     public function migrate(ConsoleIo $io): array
     {
-        $services = $this->getMigrationServices();
+        $services = MigrateAllV4ToV5ServiceCollector::get();
 
         foreach ($services as $service) {
-            $classString = get_class($service);
-            $entityName = Inflector::pluralize($this->getEntity($classString));
+            /** @var \Passbolt\Metadata\Service\Migration\V4ToV5MigrationServiceInterface $service */
+            $service = new $service();
+
+            $entityName = Inflector::pluralize($service->getHumanReadableName());
 
             $io->out(__('Migrating {0}...', $entityName));
 
@@ -116,25 +105,5 @@ class MigrateAllV4ItemsToV5Service
             'entity' => $entityName,
             'ids' => $migratedIds,
         ];
-    }
-
-    /**
-     * Returns human-readable entity name from class string.
-     *
-     * @param string $classString Class string.
-     * @return string
-     */
-    private function getEntity(string $classString): string
-    {
-        $entityServiceMapping = [
-            MigrateAllV4ResourcesToV5Service::class => 'resource',
-            MigrateAllV4FoldersToV5Service::class => 'folder',
-        ];
-
-        if (empty($entityServiceMapping[$classString])) {
-            return 'undefined';
-        }
-
-        return $entityServiceMapping[$classString];
     }
 }

@@ -18,11 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppTestCaseV5;
 use Passbolt\Metadata\Service\MetadataTypesSettingsAssertService;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
-class MetadataTypesSettingsAssertServiceTest extends AppTestCase
+class MetadataTypesSettingsAssertServiceTest extends AppTestCaseV5
 {
     public function testMetadataTypesSettingsAssertService_Success(): void
     {

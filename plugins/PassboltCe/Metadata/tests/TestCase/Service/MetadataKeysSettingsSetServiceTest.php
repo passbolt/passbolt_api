@@ -15,20 +15,20 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Service;
+namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Error\Exception\FormValidationException;
 use App\Model\Entity\Role;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
-use App\Test\Lib\AppTestCase;
+use App\Test\Lib\AppTestCaseV5;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\ForbiddenException;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Service\MetadataKeysSettingsSetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 
-class MetadataKeysSettingsSetServiceTest extends AppTestCase
+class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 {
     public function testMetadataKeysSettingsSetService_Success_Create(): void
     {

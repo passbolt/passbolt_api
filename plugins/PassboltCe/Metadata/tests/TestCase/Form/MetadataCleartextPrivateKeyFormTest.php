@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Form;
 
+use App\Test\Lib\AppTestCaseV5;
 use Cake\Routing\Router;
-use Cake\TestSuite\TestCase;
 use Passbolt\Metadata\Form\MetadataCleartextPrivateKeyForm;
 
-class MetadataCleartextPrivateKeyFormTest extends TestCase
+class MetadataCleartextPrivateKeyFormTest extends AppTestCaseV5
 {
     public function getDefaultData(): array
     {
