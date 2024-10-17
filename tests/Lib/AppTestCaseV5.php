@@ -48,7 +48,6 @@ abstract class AppTestCaseV5 extends AppTestCase
         if (!$this->isV5Enabled) {
             Configure::write('passbolt.v5.enabled', false);
         }
-
         parent::tearDown();
     }
 }

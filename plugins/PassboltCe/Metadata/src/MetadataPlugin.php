@@ -33,6 +33,9 @@ use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
 use Passbolt\Metadata\Event\SetupCompleteListener;
 use Passbolt\Metadata\Notification\Email\Redactor\MetadataEmailRedactorPool;
 use Passbolt\Metadata\Service\Healthcheck\ServerCanDecryptMetadataPrivateKeyHealthcheck;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4FoldersToV5Service;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4ToV5ServiceCollector;
 
 class MetadataPlugin extends BasePlugin
 {
@@ -43,6 +46,11 @@ class MetadataPlugin extends BasePlugin
     {
         parent::bootstrap($app);
         $this->attachListeners(EventManager::instance());
+        // Add migrator services
+        MigrateAllV4ToV5ServiceCollector::add([
+            MigrateAllV4ResourcesToV5Service::class,
+            MigrateAllV4FoldersToV5Service::class,
+        ]);
     }
 
     /**
