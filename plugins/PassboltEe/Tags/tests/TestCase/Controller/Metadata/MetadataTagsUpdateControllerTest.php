@@ -59,14 +59,14 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'old']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $tag = TagFactory::make()
             ->isPersonalFor($resource, $user)
             ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $user->gpgkey->id])
             ->persist();
         // data to update
-        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'new']);
         $metadataToUpdate = $this->encryptForUser($newMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         // login
         $this->logInAs($user);
@@ -112,7 +112,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'old']);
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
         // create metadata key
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
@@ -121,7 +121,7 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $metadataKey->get('id')], true)
             ->persist();
         // data to update
-        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'new']);
         $metadataToUpdate = $this->encryptForMetadataKey($newMetadata);
         // login
         $this->logInAs($user);
@@ -167,14 +167,14 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'old']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $tag = TagFactory::make()
             ->isPersonalFor($resource, $user)
             ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $user->gpgkey->id])
             ->persist();
         // data to update
-        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'new']);
         $metadataToUpdate = $this->encryptForUser($newMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         // login
         $this->logInAs($user);
@@ -208,14 +208,14 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'old']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $tag = TagFactory::make()
             ->isPersonalFor($resource, $user)
             ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $user->gpgkey->id])
             ->persist();
         // data to update
-        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'new']);
         $metadataToUpdate = $this->encryptForUser($newMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         // login
         $this->logInAs($user);
@@ -252,14 +252,14 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'old']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $tag = TagFactory::make()
             ->isPersonalFor($resource, $user)
             ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $user->gpgkey->id])
             ->persist();
         // data to update
-        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'new']);
         $metadataToUpdate = $this->encryptForMetadataKey($newMetadata);
         // login
         $this->logInAs($user);
@@ -288,14 +288,14 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'old']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         $tag = TagFactory::make()
             ->isPersonalFor($resource, $user)
             ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $user->gpgkey->id])
             ->persist();
         // data to update
-        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'new']);
         $metadataToUpdate = $this->encryptForUser($newMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         // login
         $this->logInAs($user);
@@ -348,14 +348,14 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'old']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'old']);
         $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
         $tag = TagFactory::make()
             ->isPersonalFor($resource, $ada)
             ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $ada->gpgkey->id])
             ->persist();
         // data to update
-        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'new']);
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'new']);
         $metadataToUpdate = $this->encryptForMetadataKey($newMetadata);
         // login
         $this->logInAs($ada);

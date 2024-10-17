@@ -17,11 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Controller;
 
-use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
 use Passbolt\Metadata\MetadataPlugin;
 
-class SettingsIndexControllerTest extends AppIntegrationTestCase
+class SettingsIndexControllerTest extends AppIntegrationTestCaseV5
 {
     public function testSettingsIndexController_MetadataPlugin_Enabled_Logged_In(): void
     {

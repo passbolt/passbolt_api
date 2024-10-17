@@ -84,6 +84,10 @@ class TagsTable extends Table
         ]);
 
         $this->hasMany('ResourcesTags');
+
+        $this->belongsToMany('Users', [
+            'through' => 'ResourcesTags',
+        ]);
     }
 
     /**

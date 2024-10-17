@@ -18,18 +18,12 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Controller\Resources;
 
 use App\Test\Factory\ResourceFactory;
-use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
-class MetadataResourcesViewControllerTest extends AppIntegrationTestCase
+class MetadataResourcesViewControllerTest extends AppIntegrationTestCaseV5
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-        Configure::write('passbolt.v5.enabled', true);
-    }
-
     public function testResourcesViewController_Metadata_Enabled_Success_V4_Resource(): void
     {
         $user = $this->logInAsUser();

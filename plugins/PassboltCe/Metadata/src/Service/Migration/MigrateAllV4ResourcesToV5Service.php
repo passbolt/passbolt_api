@@ -61,6 +61,14 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
     }
 
     /**
+     * @inheritDoc
+     */
+    public function getHumanReadableName(): string
+    {
+        return 'resource';
+    }
+
+    /**
      * Migrates all V4 resources to V5.
      *
      * @return array Result

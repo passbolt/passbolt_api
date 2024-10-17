@@ -19,9 +19,9 @@ namespace Passbolt\Tags\Test\TestCase\Form;
 
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
+use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
-use Cake\TestSuite\TestCase;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -30,7 +30,7 @@ use Passbolt\Tags\Form\MetadataResourcesTagsAddForm;
 /**
  * @covers \Passbolt\Tags\Form\MetadataResourcesTagsAddForm
  */
-class MetadataResourcesTagsAddFormTest extends TestCase
+class MetadataResourcesTagsAddFormTest extends AppTestCaseV5
 {
     use UserAccessControlTrait;
     use GpgMetadataKeysTestTrait;
@@ -57,7 +57,7 @@ class MetadataResourcesTagsAddFormTest extends TestCase
     {
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->active()->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'test-tag']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'test-tag']);
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
 
@@ -79,7 +79,7 @@ class MetadataResourcesTagsAddFormTest extends TestCase
             ->user()
             ->active()
             ->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'personal-tag']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'personal-tag']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
 
         $result = $this->form->execute([

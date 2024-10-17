@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\Test\TestCase\Service\Migration;
+namespace Passbolt\Tags\Test\TestCase\Service\Metadata;
 
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
@@ -36,15 +36,19 @@ use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateFoldersTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateResourcesTestTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
+use Passbolt\Tags\Service\Metadata\MigrateAllV4TagsToV5Service;
+use Passbolt\Tags\Test\Factory\TagFactory;
+use Passbolt\Tags\Test\Lib\Metadata\MigrateTagsTestTrait;
 
 /**
  * @covers \Passbolt\Metadata\Service\Migration\MigrateAllV4ItemsToV5Service
  */
-class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
+class TagsMigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
 {
     use GpgMetadataKeysTestTrait;
     use MigrateFoldersTestTrait;
     use MigrateResourcesTestTrait;
+    use MigrateTagsTestTrait;
 
     /**
      * @var MigrateAllV4ItemsToV5Service|null
@@ -75,6 +79,7 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
         MigrateAllV4ToV5ServiceCollector::add([
             MigrateAllV4ResourcesToV5Service::class,
             MigrateAllV4FoldersToV5Service::class,
+            MigrateAllV4TagsToV5Service::class,
         ]);
     }
 
@@ -92,7 +97,7 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
         parent::tearDown();
     }
 
-    public function testMigrateAllV4ItemsToV5Service_Success(): void
+    public function testTagsMigrateAllV4ItemsToV5Service_Success(): void
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         // Folder
@@ -122,110 +127,30 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
         $metadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
+        // Personal tag of Ada
+        $personalTag = TagFactory::make(['slug' => 'special'])
+            ->isPersonalFor(ResourceFactory::make()->withPermissionsFor([$ada])->persist(), $ada)
+            ->persist();
 
         $result = $this->service->migrate($this->io);
 
         $this->assertSame([], $result['errors']);
-        $this->assertCount(2, $result['migrated']);
+        $this->assertCount(3, $result['migrated']);
         $this->assertSame('resources', $result['migrated'][0]['entity']);
         $this->assertCount(2, $result['migrated'][0]['ids']);
         $this->assertSame('folders', $result['migrated'][1]['entity']);
         $this->assertCount(1, $result['migrated'][1]['ids']);
+        $this->assertSame('tags', $result['migrated'][2]['entity']);
+        $this->assertCount(1, $result['migrated'][2]['ids']);
         // assert data updated into the db
         $updatedResource = ResourceFactory::get($resource->get('id'));
-        $this->assertionsForPersonalResource($updatedResource, $resource, $ada->gpgkey, [
-            'private_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
-            'passphrase' => '',
-        ]);
+        $this->assertionsForPersonalResource($updatedResource, $resource, $ada->gpgkey, $this->getAdaNoPassphraseKeyInfo());
         $updatedResource = ResourceFactory::get($sharedResource->get('id'));
         $this->assertionsForSharedResource($updatedResource, $sharedResource, $metadataKey);
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder */
         $updatedFolder = FolderFactory::get($folder->id);
         $this->assertionsForPersonalFolder($updatedFolder, $folder, $ada->gpgkey, $this->getAdaNoPassphraseKeyInfo());
-    }
-
-    public function testMigrateAllV4ItemsToV5Service_Error_NoActiveMetadataKey(): void
-    {
-        MetadataTypesSettingsFactory::make()->v5()->persist();
-        /** @var \App\Model\Entity\User $ada */
-        $ada = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
-            ->persist();
-        /** @var \App\Model\Entity\User $betty */
-        $betty = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())
-            ->user()
-            ->active()
-            ->persist();
-        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
-        FolderFactory::make()->withFoldersRelationsFor([$ada, $betty])->withPermissionsFor([$ada, $betty])->persist();
-
-        $result = $this->service->migrate($this->io);
-
-        $this->assertFalse($result['success']);
-        $this->assertCount(2, $result['errors']);
-        $resourceError = $result['errors'][0]['error_message'];
-        $this->assertStringContainsString('No resources to migrate', $resourceError);
-        $folderError = $result['errors'][1]['error_message'];
-        $this->assertStringContainsString('Record not found in table \"metadata_keys\"', $folderError);
-    }
-
-    public function testMigrateAllV4ItemsToV5Service_Error_ItemsAreAlreadyV5(): void
-    {
-        MetadataTypesSettingsFactory::make()->v5()->persist();
-        $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
-        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceTypePasswordString */
-        ResourceTypeFactory::make()->v5Default()->persist();
-        // Shared resource.
-        /** @var \App\Model\Entity\Resource $resource */
-        $sharedResource = ResourceFactory::make()
-            ->v5Fields(true)
-            ->with('ResourceTypes', $v4ResourceType)
-            ->withCreatorAndPermission(UserFactory::make()->persist())
-            ->persist();
-        PermissionFactory::make()->acoResource($sharedResource)->typeRead()->withAroUser()->persist();
-        PermissionFactory::make()->acoResource($sharedResource)->typeUpdate()->withAroUser()->persist();
-
-        $result = $this->service->migrate($this->io);
-
-        $this->assertFalse($result['success']);
-        $this->assertCount(2, $result['errors']);
-        $resourceError = $result['errors'][0]['error_message'];
-        $this->assertStringContainsString(sprintf('Resource ID \"%s\" is already V5', $sharedResource->get('id')), $resourceError);
-        $folderError = $result['errors'][1]['error_message'];
-        $this->assertStringContainsString('No folders to migrate', $folderError);
-    }
-
-    public function testMigrateAllV4ItemsToV5Service_Error_AllV5ItemsCreationsDisabled(): void
-    {
-        /** @var \App\Model\Entity\User $ada */
-        $ada = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
-            ->persist();
-        /** @var \App\Model\Entity\User $betty */
-        $betty = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())
-            ->user()
-            ->active()
-            ->persist();
-        FolderFactory::make()->withFoldersRelationsFor([$ada, $betty])->withPermissionsFor([$ada, $betty])->persist();
-        // no metadata settings
-
-        $result = $this->service->migrate($this->io);
-
-        $this->assertFalse($result['success']);
-        $this->assertCount(2, $result['errors']);
-        $this->assertStringContainsString(
-            'Resource creation/modification with encrypted metadata not allowed',
-            $result['errors'][0]['error_message']
-        );
-        $this->assertStringContainsString(
-            'Folder creation/modification with encrypted metadata not allowed',
-            $result['errors'][1]['error_message']
-        );
+        $updatedTag = TagFactory::get($personalTag->get('id'));
+        $this->assertionsForPersonalTag($updatedTag, $personalTag, $ada->gpgkey, $this->getAdaNoPassphraseKeyInfo());
     }
 }
