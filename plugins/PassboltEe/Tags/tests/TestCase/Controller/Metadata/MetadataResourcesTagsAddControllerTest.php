@@ -56,7 +56,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
         // prepare metadata
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'tag-3']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'tag-3']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         TagFactory::make(['slug' => 'tag_2'])->isPersonalFor($resource, $user)->persist();
         TagFactory::make(['slug' => 'unused'])->persist(); // unused tag, used to make sure it's deleted afterwards
@@ -120,14 +120,14 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $resource2 = ResourceFactory::make()->withPermissionsFor([$betty])->persist();
         // Create a shared tag
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
-        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         $myFavMetadata = $this->encryptForMetadataKey($myFavTagClearText);
         $myfavTag = TagFactory::make()
             ->isSharedFor($resource2)
             ->v5Fields(['metadata' => $myFavMetadata, 'metadata_key_id' => $metadataKey->id], true)
             ->persist();
         // Create a personal tag that is already linked, to test it's not duplicated
-        $marketingClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'marketing']);
+        $marketingClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'marketing']);
         $marketingMetadata = $this->encryptForUser($marketingClearText, $ada, $this->getAdaNoPassphraseKeyInfo());
         $marketingTag = TagFactory::make()
             ->isPersonalFor($resource, $ada)
@@ -136,7 +136,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         // A V4 tag
         TagFactory::make(['slug' => 'imv4'])->isPersonalFor($resource2, $betty)->persist();
         // Prepare metadata for the request
-        $starredTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'starred']);
+        $starredTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'starred']);
         $starredMetadata = $this->encryptForUser($starredTagClearText, $ada, $this->getAdaNoPassphraseKeyInfo());
 
         $this->logInAs($ada);
@@ -192,14 +192,14 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         // Create two personal tags
         // tag 1
-        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         $myFavMetadata = $this->encryptForUser($myFavTagClearText, $ada, $this->getAdaNoPassphraseKeyInfo());
         $tag1 = TagFactory::make()
             ->isPersonalFor($resource, $ada)
             ->v5Fields(['metadata' => $myFavMetadata, 'metadata_key_id' => $ada->gpgkey->id])
             ->persist();
         // tag 2
-        $marketingClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'marketing']);
+        $marketingClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'marketing']);
         $marketingMetadata = $this->encryptForUser($marketingClearText, $ada, $this->getAdaNoPassphraseKeyInfo());
         TagFactory::make()
             ->isPersonalFor($resource, $ada)
@@ -308,7 +308,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
         // prepare metadata
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'tag-3']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'tag-3']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
         TagFactory::make(['slug' => 'tag_2'])->isPersonalFor($resource, $user)->persist();
         TagFactory::make(['slug' => 'unused'])->persist(); // unused tag, used to make sure it's deleted afterwards
@@ -345,7 +345,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$user2])->persist();
         // prepare metadata
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'tag-3']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'tag-3']);
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
 
         $this->logInAs($user);
@@ -381,7 +381,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
-        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $myFavTagClearText = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         $myFavMetadata = $this->encryptForUser($myFavTagClearText, $ada, $this->getAdaNoPassphraseKeyInfo());
         $tag = TagFactory::make()
             ->isPersonalFor($resource, $ada)
@@ -416,7 +416,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         // Create a shared tag
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         // note: encrypt metadata using user key instead of shared metadata key
         $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
 
@@ -453,7 +453,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         // Create a shared tag
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         // note: encrypt metadata using metadata key
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
 
@@ -489,7 +489,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         // Create a shared tag
         MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         // note: encrypt metadata using metadata key
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
 
@@ -541,7 +541,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
             ->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
-        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'name' => 'my-fav']);
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
 
         $this->logInAs($ada);
