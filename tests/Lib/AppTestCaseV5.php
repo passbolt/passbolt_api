@@ -18,6 +18,7 @@ namespace App\Test\Lib;
 
 use Cake\Core\Configure;
 use Passbolt\Metadata\MetadataPlugin;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 
 abstract class AppTestCaseV5 extends AppTestCase
 {
@@ -48,6 +49,7 @@ abstract class AppTestCaseV5 extends AppTestCase
         if (!$this->isV5Enabled) {
             Configure::write('passbolt.v5.enabled', false);
         }
+        MetadataTypesSettingsGetService::clear();
         parent::tearDown();
     }
 }

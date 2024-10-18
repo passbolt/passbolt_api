@@ -27,8 +27,8 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
 {
     public function testMetadataTypesSettingsGetService_getSettings_NotEntryReturnsDefault(): void
     {
-        $sut = new MetadataTypesSettingsGetService();
-        $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
+        $settings = MetadataTypesSettingsGetService::getSettings();
+        $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $settings->toArray());
     }
 
     public function testMetadataTypesSettingsGetService_getSettings_NotDefault(): void
@@ -39,8 +39,8 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
         $data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE] = true;
         MetadataTypesSettingsFactory::make()->value(json_encode($data))->persist();
-        $sut = new MetadataTypesSettingsGetService();
-        $this->assertEquals($data, $sut->getSettings()->toArray());
+        $settings = MetadataTypesSettingsGetService::getSettings();
+        $this->assertEquals($data, $settings->toArray());
     }
 
     public function testMetadataTypesSettingsGetService_getSettings_BrokenSettingsReturnsDefault(): void
@@ -49,8 +49,8 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
         $data = MetadataTypesSettingsFactory::getDefaultDataV4();
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = '🔥';
         MetadataTypesSettingsFactory::make()->value(json_encode($data))->persist();
-        $sut = new MetadataTypesSettingsGetService();
-        $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
+        $settings = MetadataTypesSettingsGetService::getSettings();
+        $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $settings->toArray());
     }
 
     public function testMetadataTypesSettingsGetService_getSettings_BrokenJsonSettingsReturnsDefault(): void
@@ -58,7 +58,7 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
         OrganizationSettingFactory::make()
             ->setPropertyAndValue(MetadataTypesSettingsGetService::ORG_SETTING_PROPERTY, '🔥')
             ->persist();
-        $sut = new MetadataTypesSettingsGetService();
-        $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $sut->getSettings()->toArray());
+        $settings = MetadataTypesSettingsGetService::getSettings();
+        $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $settings->toArray());
     }
 }

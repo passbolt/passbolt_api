@@ -38,7 +38,7 @@ class ResourceTypesIsTheLastOneCheckService
             ResourceType::SLUG_STANDALONE_TOTP,
         ];
 
-        $settings = (new MetadataTypesSettingsGetService())->getSettings();
+        $settings = MetadataTypesSettingsGetService::getSettings();
 
         if ($settings::DEFAULT_RESOURCE_TYPES === $settings::V4) {
             // default is v4 and resource type is of type v4

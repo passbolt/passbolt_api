@@ -125,7 +125,7 @@ class UpdateMetadataTypesSettingsCommand extends PassboltCommand
             $io->abort(__('No metadata types settings provided. Please check available options.'));
         }
 
-        $existingSettings = (new MetadataTypesSettingsGetService())->getSettings();
+        $existingSettings = MetadataTypesSettingsGetService::getSettings();
 
         $uac = new UserAccessControl(Role::ADMIN, $user->id, $user->username);
         try {
