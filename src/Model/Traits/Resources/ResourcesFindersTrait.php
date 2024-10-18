@@ -99,7 +99,7 @@ trait ResourcesFindersTrait
         if (Configure::read('passbolt.plugins.folders')) {
             // Filter on resources with the given parent ids.
             if (isset($options['filter']['has-parent'])) {
-                $query = $this->filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
+                $query = $this->filterQueryByFolderParentIds($query, $userId, $options['filter']['has-parent']);
             }
         }
 
@@ -393,10 +393,11 @@ trait ResourcesFindersTrait
      * Filter a query by parents ids.
      *
      * @param \Cake\ORM\Query $query Query to filter on
+     * @param string $userId The user to filter the resources for
      * @param array $parentIds Array of parent ids
      * @return \Cake\ORM\Query
      */
-    public function filterQueryByFolderParentIds(Query $query, array $parentIds): Query
+    public function filterQueryByFolderParentIds(Query $query, string $userId, array $parentIds): Query
     {
         if (empty($parentIds)) {
             return $query;
@@ -413,7 +414,7 @@ trait ResourcesFindersTrait
             return true;
         });
 
-        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot) {
+        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot, $userId) {
             $conditions = [];
             if (!empty($parentIds)) {
                 $conditions[] = $q->expr()->in('FoldersRelations.folder_parent_id', $parentIds);
@@ -422,7 +423,10 @@ trait ResourcesFindersTrait
                 $conditions[] = $q->expr()->isNull('FoldersRelations.folder_parent_id');
             }
 
-            return $q->where(['OR' => $conditions]);
+            return $q->where([
+                'OR' => $conditions,
+                'user_id' => $userId,
+            ]);
         });
     }
 }
