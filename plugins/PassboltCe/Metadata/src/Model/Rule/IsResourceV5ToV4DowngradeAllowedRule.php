@@ -21,7 +21,7 @@ use Cake\ORM\Entity;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
-class IsV5ToV4DowngradeAllowedRule
+class IsResourceV5ToV4DowngradeAllowedRule
 {
     /**
      * Checks if v5 resource is updated to v4, fails if settings doesn't allow it.

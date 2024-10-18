@@ -20,7 +20,7 @@ use App\Model\Table\ResourcesTable;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Entity;
-use Passbolt\Metadata\Model\Rule\IsV5ToV4DowngradeAllowedRule;
+use Passbolt\Metadata\Model\Rule\IsResourceV5ToV4DowngradeAllowedRule;
 
 class MetadataResourceUpdateListener implements EventListenerInterface
 {
@@ -46,7 +46,7 @@ class MetadataResourceUpdateListener implements EventListenerInterface
         }
 
         $isMetadataTypeDirty = $entity->isDirty('resource_type_id');
-        $isResourceTypeDowngrade = IsV5ToV4DowngradeAllowedRule::isResourceTypeChangeToV4(
+        $isResourceTypeDowngrade = IsResourceV5ToV4DowngradeAllowedRule::isResourceTypeChangeToV4(
             $entity->getOriginal('resource_type_id'),
             $entity->get('resource_type_id')
         );
