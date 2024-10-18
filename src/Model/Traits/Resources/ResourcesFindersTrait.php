@@ -27,7 +27,6 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
@@ -426,7 +425,7 @@ trait ResourcesFindersTrait
 
             return $q->where([
                 'OR' => $conditions,
-                'user_id' => $userId
+                'user_id' => $userId,
             ]);
         });
     }
