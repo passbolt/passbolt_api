@@ -134,6 +134,15 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
     }
 
     /**
+     * @return bool
+     */
+    public function isV4DowngradeAllowed(): bool
+    {
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE] === true;
+    }
+
+    /**
      * @return ?array
      */
     public function toHumanReadableArray(): ?array

@@ -89,4 +89,36 @@ class ResourceType extends Entity
                 UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
         ];
     }
+
+    /**
+     * Returns V4 resource types IDs array.
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public static function getV4ResourceTypes(): array
+    {
+        return [
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP),
+        ];
+    }
+
+    /**
+     * Returns V5 resource types IDs array.
+     *
+     * @return array
+     * @throws \Exception
+     */
+    public static function getV5ResourceTypes(): array
+    {
+        return [
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSWORD_STRING),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_TOTP_STANDALONE),
+            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
+        ];
+    }
 }
