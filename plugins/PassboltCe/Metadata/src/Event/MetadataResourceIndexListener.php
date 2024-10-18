@@ -60,6 +60,6 @@ class MetadataResourceIndexListener implements EventListenerInterface
     private function filterByMetadataKeyType(Query $query, string $metadataKeyType): void
     {
         $fieldAlias = $query->getRepository()->aliasField('metadata_key_type');
-        $query->where([$fieldAlias => $metadataKeyType,]);
+        $query->where([$fieldAlias => $metadataKeyType]);
     }
 }
