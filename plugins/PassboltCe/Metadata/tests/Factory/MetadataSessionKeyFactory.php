@@ -6,9 +6,9 @@ namespace Passbolt\Metadata\Test\Factory;
 use App\Model\Entity\User;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
+use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
-use Faker\Generator;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
@@ -39,13 +39,36 @@ class MetadataSessionKeyFactory extends CakephpBaseFactory
      */
     protected function setDefaultTemplate(): void
     {
-        $this->setDefaultData(function (Generator $faker) {
-            return [
-                'data' => self::getValidPgpMessage(),
-                'created' => Chronos::now()->subDays($faker->randomNumber(3)),
-                'modified' => Chronos::now()->subDays($faker->randomNumber(3)),
-            ];
+        $this->setDefaultData(function () {
+            return self::getDefaultData();
         });
+    }
+
+    public static function getDefaultData(): array
+    {
+        return [
+            'data' => self::getValidPgpMessage(),
+            'created' => '2024-10-14 14:08:17.000000',
+            'modified' => '2024-10-14 14:08:17.000000',
+        ];
+    }
+
+    public static function getCleartextDataJson(): string
+    {
+        return json_encode(self::getCleartextData());
+    }
+
+    public static function getCleartextData(): array
+    {
+        return [
+            'object_type' => 'PASSBOLT_SESSION_KEYS',
+            'session_keys' => [
+                'foreign_model' => 'resource',
+                'foreign_id' => UuidFactory::uuid(),
+                'session_key' => '9:' . strtoupper(bin2hex(random_bytes(32))),
+                'modified' => Chronos::now()->subDays(3),
+            ],
+        ];
     }
 
     /**
@@ -84,7 +107,7 @@ class MetadataSessionKeyFactory extends CakephpBaseFactory
      */
     public static function getValidPgpMessage(): string
     {
-        return "-----BEGIN PGP MESSAGE-----
+        return '-----BEGIN PGP MESSAGE-----
 
 wV4DrGC7ooPDztsSAQdAln93/614xeFEl9aaP1VVTFZtbqF7+vle6L+kzSc+BU8w
 jk/YF9DJ9h1ovB64DKi4z0rxplOSR+d1FEBZBnDLHD5N2npyFxtGuAQ6vOoloJPD
@@ -104,6 +127,6 @@ I4okmMzJpJrQJ7zEzOh8g3eIjBInevhcaaJqSwt9JGphoSND+b0XCIV1XOehLwEe
 dT/PmTWE57npBIIz4kQQcHOziFAG
 =vK1i
 -----END PGP MESSAGE-----
-";
+';
     }
 }
