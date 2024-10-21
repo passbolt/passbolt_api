@@ -23,12 +23,15 @@ use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 
+/**
+ * @covers \Passbolt\Metadata\Service\MetadataKeysSettingsGetService
+ */
 class MetadataKeysSettingsGetServiceTest extends AppTestCaseV5
 {
     public function testMetadataKeysSettingsGetService_getSettings_NotEntryReturnsDefault(): void
     {
-        $sut = new MetadataKeysSettingsGetService();
-        $this->assertEquals(MetadataKeysSettingsFactory::getDefaultData(), $sut->getSettings()->toArray());
+        $settings = MetadataKeysSettingsGetService::getSettings();
+        $this->assertEquals(MetadataKeysSettingsFactory::getDefaultData(), $settings->toArray());
     }
 
     public function testMetadataKeysSettingsGetService_getSettings_NotDefault(): void
@@ -37,8 +40,8 @@ class MetadataKeysSettingsGetServiceTest extends AppTestCaseV5
         $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
         $data[MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE] = true;
         MetadataKeysSettingsFactory::make()->value(json_encode($data))->persist();
-        $sut = new MetadataKeysSettingsGetService();
-        $this->assertEquals($data, $sut->getSettings()->toArray());
+        $settings = MetadataKeysSettingsGetService::getSettings();
+        $this->assertEquals($data, $settings->toArray());
     }
 
     public function testMetadataKeysSettingsGetService_getSettings_BrokenSettingsReturnsDefault(): void
@@ -48,8 +51,8 @@ class MetadataKeysSettingsGetServiceTest extends AppTestCaseV5
         $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = '🔥';
         $data[MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE] = '🔥';
         MetadataKeysSettingsFactory::make()->value(json_encode($data))->persist();
-        $sut = new MetadataKeysSettingsGetService();
-        $this->assertEquals(MetadataKeysSettingsFactory::getDefaultData(), $sut->getSettings()->toArray());
+        $settings = MetadataKeysSettingsGetService::getSettings();
+        $this->assertEquals(MetadataKeysSettingsFactory::getDefaultData(), $settings->toArray());
     }
 
     public function testMetadataKeysSettingsGetService_getSettings_BrokenJsonSettingsReturnsDefault(): void
@@ -57,7 +60,7 @@ class MetadataKeysSettingsGetServiceTest extends AppTestCaseV5
         OrganizationSettingFactory::make()
             ->setPropertyAndValue(MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY, '🔥')
             ->persist();
-        $sut = new MetadataKeysSettingsGetService();
-        $this->assertEquals(MetadataKeysSettingsFactory::getDefaultData(), $sut->getSettings()->toArray());
+        $settings = MetadataKeysSettingsGetService::getSettings();
+        $this->assertEquals(MetadataKeysSettingsFactory::getDefaultData(), $settings->toArray());
     }
 }

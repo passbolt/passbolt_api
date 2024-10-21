@@ -23,23 +23,16 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
 /**
- * @uses \Passbolt\Metadata\Controller\MetadataTypesSettingsGetController
+ * @uses \Passbolt\Metadata\Controller\MetadataTypesSettingsPostController
  */
 class MetadataTypesSettingsPostControllerTest extends AppIntegrationTestCaseV5
 {
     use EmailQueueTrait;
     use LocatorAwareTrait;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->enableFeaturePlugin(MetadataPlugin::class);
-    }
 
     public function testMetadataTypesSettingsPostController_Success_v4(): void
     {
@@ -50,7 +43,7 @@ class MetadataTypesSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $this->logInAs($loggedInUser);
         $data = MetadataTypesSettingsFactory::getDefaultDataV4();
         $this->postJson('/metadata/types/settings.json', $data);
-        $this->assertResponseCode(200);
+        $this->assertSuccess();
         $this->assertEquals(1, OrganizationSettingFactory::count());
 
         $this->assertEmailQueueCount(2);
@@ -75,7 +68,7 @@ class MetadataTypesSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
         $this->postJson('/metadata/types/settings.json', $data);
-        $this->assertResponseCode(200);
+        $this->assertSuccess();
         $this->assertEquals(1, OrganizationSettingFactory::count());
         $this->assertEmailQueueCount(2);
         $this->assertEmailInBatchContains([

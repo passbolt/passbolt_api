@@ -195,8 +195,8 @@ class AuthenticationTokensTable extends Table
      *
      * @param string $userId uuid
      * @param string $type AuthenticationToken::TYPE_*
-     * @param ?string $token token value (optional)
-     * @param ?array $data data value (optional)
+     * @param string|null $token token value (optional)
+     * @param array|null $data data value (optional)
      * @throws \App\Error\Exception\ValidationException is the user is not a valid uuid
      * @throws \App\Error\Exception\ValidationException is the user is not found
      * @throws \App\Error\Exception\ValidationException is the user is deleted
@@ -326,7 +326,7 @@ class AuthenticationTokensTable extends Table
      * Get a token entity using a user id
      *
      * @param string $userId uuid
-     * @param string $type token type
+     * @param string|null $type token type
      * @throws \InvalidArgumentException is the token is not a valid uuid
      * @return array|\Cake\Datasource\EntityInterface|null
      */

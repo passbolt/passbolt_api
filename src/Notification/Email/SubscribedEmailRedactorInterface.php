@@ -61,7 +61,7 @@ interface SubscribedEmailRedactorInterface extends EventListenerInterface
      * If disabled in the email settings, the redactor is inactive
      * If the path is null, the redactor cannot be deactivated and is always active
      *
-     * @return ?string
+     * @return string|null
      */
     public function getNotificationSettingPath(): ?string;
 }

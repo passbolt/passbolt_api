@@ -29,7 +29,7 @@ class MetadataKeysSettingsGetController extends AppController
     public function get()
     {
         $this->assertJson();
-        $settings = (new MetadataKeysSettingsGetService())->getSettings();
+        $settings = MetadataKeysSettingsGetService::getSettings();
         $this->success(__('The operation was successful.'), $settings->toArray());
     }
 }

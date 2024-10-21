@@ -77,7 +77,7 @@ trait MetadataSettingsAwareTrait
             return;
         }
 
-        $settingsDto = (new MetadataTypesSettingsGetService())->getSettings();
+        $settingsDto = MetadataTypesSettingsGetService::getSettings();
 
         if ($isV5) {
             if ($entity === MetadataTypesSettingsDto::ENTITY_RESOURCE) {

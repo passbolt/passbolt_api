@@ -20,7 +20,6 @@ namespace Passbolt\Metadata\Test\TestCase\Controller;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
@@ -30,12 +29,6 @@ use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 class MetadataTypesSettingsGetControllerTest extends AppIntegrationTestCaseV5
 {
     use LocatorAwareTrait;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->enableFeaturePlugin(MetadataPlugin::class);
-    }
 
     public function testMetadataTypesSettingsGetController_Error_AuthenticationNeeded()
     {
@@ -47,7 +40,7 @@ class MetadataTypesSettingsGetControllerTest extends AppIntegrationTestCaseV5
     {
         $this->logInAsAdmin();
         $this->getJson('/metadata/types/settings.json');
-        $this->assertResponseCode(200);
+        $this->assertSuccess();
         $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $this->getResponseBodyAsArray());
     }
 
@@ -61,7 +54,7 @@ class MetadataTypesSettingsGetControllerTest extends AppIntegrationTestCaseV5
         MetadataTypesSettingsFactory::make()->value(json_encode($data))->persist();
         $this->assertEquals(1, OrganizationSettingFactory::count());
         $this->getJson('/metadata/types/settings.json');
-        $this->assertResponseCode(200);
+        $this->assertSuccess();
         $this->assertEquals($data, $this->getResponseBodyAsArray());
     }
 }

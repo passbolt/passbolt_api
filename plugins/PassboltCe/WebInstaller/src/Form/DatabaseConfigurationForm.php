@@ -137,7 +137,7 @@ class DatabaseConfigurationForm extends Form
 
     /**
      * @param array $data data to sanitize
-     * @return array|null[]
+     * @return array
      */
     private function sanitizeData(array $data): array
     {

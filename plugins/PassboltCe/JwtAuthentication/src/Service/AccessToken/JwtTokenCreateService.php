@@ -35,7 +35,7 @@ class JwtTokenCreateService extends JwtAbstractService
 
     /**
      * @param string $userId The id of the user successfully logging in.
-     * @param ?string $expiration The validity duration of the token in words (optional).
+     * @param string|null $expiration The validity duration of the token in words (optional).
      * @return string
      * @throws \InvalidArgumentException if the userId is not a valid Uuid
      * @throws \Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException if the JWT secret key is not readable.
