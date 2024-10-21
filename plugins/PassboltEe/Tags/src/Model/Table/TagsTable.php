@@ -481,6 +481,7 @@ class TagsTable extends Table
      * @param string $slug The slug to search for
      * @param \App\Utility\UserAccessControl $control User Access Control
      * @return mixed
+     * @throws \App\Error\Exception\CustomValidationException When validation errors.
      */
     public function findOrCreateTag(string $slug, UserAccessControl $control)
     {
