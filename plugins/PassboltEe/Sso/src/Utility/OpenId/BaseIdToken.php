@@ -109,27 +109,70 @@ class BaseIdToken extends AccessToken
             throw new BadRequestException('No claims');
         }
 
-        if (
-            !isset($tokenClaims['aud'])
-            || !is_string($tokenClaims['aud'])
-            || $this->provider->getClientId() != $tokenClaims['aud']
-        ) {
-            throw new BadRequestException('The aud (client id) parameter is invalid');
-        }
+        $this->assertAudClaim($tokenClaims);
+        $this->assertIssClaim($tokenClaims);
+        $this->assertEmailClaim($tokenClaims);
+    }
 
+    /**
+     * Validation email claim against application email validation rule
+     *
+     * @param array $tokenClaims claims
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the claim does not validate
+     */
+    public function assertEmailClaim(array $tokenClaims): void
+    {
+        if (!isset($tokenClaims['email']) || !EmailValidationRule::check($tokenClaims['email'])) {
+            throw new BadRequestException('The email claim is not found or invalid.');
+        }
+    }
+
+    /**
+     * Validate issuer against provider base uri
+     * Allows for trailing slash variations
+     *
+     * @param array $tokenClaims claims
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the claim does not validate
+     */
+    public function assertIssClaim(array $tokenClaims): void
+    {
         if (!isset($tokenClaims['iss']) || !is_string($tokenClaims['iss'])) {
             throw new BadRequestException('The iss (issuer) parameter is invalid.');
         }
 
         $openIdBaseUri = rtrim($this->provider->getOpenIdBaseUri(), '/');
         $iss = rtrim($tokenClaims['iss'], '/');
-        if ($iss != $openIdBaseUri) {
+        if ($iss !== $openIdBaseUri) {
             throw new BadRequestException('The iss (issuer) parameter does not match.');
         }
+    }
 
-        if (!isset($tokenClaims['email']) || !EmailValidationRule::check($tokenClaims['email'])) {
-            throw new BadRequestException('The email claim is not found or invalid.');
+    /**
+     * https://datatracker.ietf.org/doc/html/rfc7519#section-4.1.3
+     *
+     * @param array $tokenClaims claims
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException if the claim does not validate
+     */
+    public function assertAudClaim(array $tokenClaims): void
+    {
+        if (isset($tokenClaims['aud'])) {
+            if (is_string($tokenClaims['aud'])) {
+                $auds[] = $tokenClaims['aud'];
+            } else {
+                $auds = $tokenClaims['aud'];
+            }
+
+            if (is_array($auds)) {
+                if (in_array($this->provider->getClientId(), $auds, true)) {
+                    return;
+                }
+            }
         }
+
+        throw new BadRequestException('The aud (client id) parameter is invalid.');
     }
 
     /**
