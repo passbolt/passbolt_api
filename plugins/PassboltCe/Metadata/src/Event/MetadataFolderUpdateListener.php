@@ -16,41 +16,41 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Event;
 
-use App\Model\Table\ResourcesTable;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Entity;
-use Passbolt\Metadata\Model\Rule\IsResourceV5ToV4DowngradeAllowedRule;
+use Passbolt\Folders\Model\Table\FoldersTable;
+use Passbolt\Metadata\Model\Rule\IsFolderV5ToV4DowngradeAllowedRule;
 
-class MetadataResourceUpdateListener implements EventListenerInterface
+class MetadataFolderUpdateListener implements EventListenerInterface
 {
     /**
      * @inheritDoc
      */
     public function implementedEvents(): array
     {
-        return ['Model.beforeSave' => 'updateResourceMetadata'];
+        return ['Model.beforeSave' => 'updateFolderMetadata'];
     }
 
     /**
-     * Updates metadata fields if resource is being downgrade from V5 to V6.
+     * Updates metadata fields if folder is being downgraded from V5 to V6.
      *
      * @param \Cake\Event\EventInterface $event Event object.
      * @param \Cake\ORM\Entity $entity Resource being updated.
      * @return void
      */
-    public function updateResourceMetadata(EventInterface $event, Entity $entity): void
+    public function updateFolderMetadata(EventInterface $event, Entity $entity): void
     {
-        if (!$event->getSubject() instanceof ResourcesTable) {
+        if (!$event->getSubject() instanceof FoldersTable) {
             return;
         }
 
-        $isMetadataTypeDirty = $entity->isDirty('resource_type_id');
-        $isResourceTypeDowngrade = IsResourceV5ToV4DowngradeAllowedRule::isResourceTypeChangeToV4(
-            $entity->getOriginal('resource_type_id'),
-            $entity->get('resource_type_id')
+        $isNameDirty = $entity->isDirty('name');
+        $isFolderDowngradeToV4 = IsFolderV5ToV4DowngradeAllowedRule::isFolderDowngradeToV4(
+            $entity->getOriginal('name'),
+            $entity->get('name')
         );
-        if ($isMetadataTypeDirty && $isResourceTypeDowngrade) {
+        if ($isNameDirty && $isFolderDowngradeToV4) {
             // update entity to set metadata fields to null
             $entity->set('metadata', null);
             $entity->set('metadata_key_id', null);

@@ -65,6 +65,7 @@ class FoldersUpdateService
      * @param string $id The folder to update
      * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder DTO.
      * @return \Passbolt\Folders\Model\Entity\Folder
+     * @throws \App\Error\Exception\ValidationException When validation is triggered
      * @throws \Exception If an unexpected error occurred
      */
     public function update(UserAccessControl $uac, string $id, MetadataFolderDto $folderDto)

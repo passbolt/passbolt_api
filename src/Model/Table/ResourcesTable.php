@@ -38,7 +38,7 @@ use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
-use Passbolt\Metadata\Model\Rule\IsV5ToV4DowngradeAllowedRule;
+use Passbolt\Metadata\Model\Rule\IsResourceV5ToV4DowngradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -321,7 +321,7 @@ class ResourcesTable extends Table
             'errorField' => 'permissions',
             'message' => __('The permissions should contain at least the owner permission.'),
         ]);
-        $rules->addUpdate(new IsV5ToV4DowngradeAllowedRule(), 'v5_to_v4_downgrade_allowed', [
+        $rules->addUpdate(new IsResourceV5ToV4DowngradeAllowedRule(), 'v5_to_v4_downgrade_allowed', [
             'errorField' => 'resource_type_id',
             'message' => __('The settings selected by your administrator prevent from downgrading resource type.'),
         ]);

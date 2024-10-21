@@ -26,6 +26,7 @@ use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Model\Rule\IsFolderV5ToV4DowngradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
@@ -215,6 +216,22 @@ class FoldersTable extends Table
             ));
 
         return $validator;
+    }
+
+    /**
+     * Rule checker.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->addUpdate(new IsFolderV5ToV4DowngradeAllowedRule(), 'v5_to_v4_downgrade_allowed', [
+            'errorField' => 'name',
+            'message' => __('The settings selected by your administrator prevent from downgrading folder.'),
+        ]);
+
+        return $rules;
     }
 
     /**
