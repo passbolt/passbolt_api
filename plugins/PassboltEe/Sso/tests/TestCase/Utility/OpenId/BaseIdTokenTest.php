@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Test\TestCase\Utility\OpenId;
 
 use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
 use Cake\Routing\Router;
@@ -38,91 +39,29 @@ class BaseIdTokenTest extends AppTestCase
 
     public function testBaseIdToken_Success(): void
     {
-        $provider = new OAuth2Provider([
-            'clientId' => 'client-id',
-            'clientSecret' => 'super-strong-client-secret',
-            'redirectUri' => Router::url('/sso/oauth2/redirect', true),
-            'openIdBaseUri' => 'https://oauth2.passbolt.test',
-            'openIdConfigurationPath' => '/.well-known/openid-configuration',
-        ]);
-        $jwkSet = $this->getJwkSet();
-        $responseQueue = [
-            new Response(200, [], json_encode([
-                'jwks_uri' => 'https://oauth2.passbolt.test/jwks/uri',
-                'authorization_endpoint' => 'https://oauth2.passbolt.test/authorize',
-                'token_endpoint' => 'https://oauth2.passbolt.test/token',
-                'keys' => $jwkSet['keys'],
-            ])),
-            new Response(200, [], json_encode([
-                'jwks_uri' => 'https://oauth2.passbolt.test/jwks/uri',
-                'authorization_endpoint' => 'https://oauth2.passbolt.test/authorize',
-                'token_endpoint' => 'https://oauth2.passbolt.test/token',
-                'keys' => $jwkSet['keys'],
-            ])),
-        ];
-        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
-        $provider->setHttpClient($httpClientMock);
-
+        $provider = $this->getTestProvider();
         $idToken = $this->getIdToken([
             'clientId' => 'client-id',
             'openIdBaseUri' => 'https://oauth2.passbolt.test/',
             'keyId' => 'jwk1',
             'username' => 'ada@passbolt.test',
         ]);
-        new BaseIdToken([
-            'id_token' => $idToken,
-            'expires_in' => FrozenTime::now()->addHours(1)->getTimestamp(),
-            'access_token' => 'access_token',
-            'resource_owner_id' => 'resource_owner_id',
-            'refresh_token' => 'refresh_token',
-        ], $provider);
 
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
         $this->assertTrue(true);
     }
 
     public function testBaseIdToken_Success_WithTrailingSlash(): void
     {
-        $provider = new AdfsProvider([
-            'clientId' => 'client-id',
-            'clientSecret' => 'super-strong-client-secret',
-            'redirectUri' => Router::url('/sso/oauth2/redirect', true),
-            'openIdBaseUri' => 'https://oauth2.passbolt.test', // without trailing slash
-            'openIdConfigurationPath' => '/.well-known/openid-configuration',
-        ]);
-        $jwkSet = $this->getJwkSet();
-        $responseQueue = [
-            new Response(200, [], json_encode([
-                'issuer' => 'https://oauth2.passbolt.test/o/passbolt/', // Trailing slash is important here
-                'jwks_uri' => 'https://oauth2.passbolt.test/jwks/uri/',
-                'authorization_endpoint' => 'https://oauth2.passbolt.test/authorize/',
-                'token_endpoint' => 'https://oauth2.passbolt.test/token/',
-                'keys' => $jwkSet['keys'],
-            ])),
-            new Response(200, [], json_encode([
-                'issuer' => 'https://oauth2.passbolt.test/o/passbolt/',
-                'jwks_uri' => 'https://oauth2.passbolt.test/jwks/uri/',
-                'authorization_endpoint' => 'https://oauth2.passbolt.test/authorize/',
-                'token_endpoint' => 'https://oauth2.passbolt.test/token/',
-                'keys' => $jwkSet['keys'],
-            ])),
-        ];
-        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
-        $provider->setHttpClient($httpClientMock);
-
+        $provider = $this->getTestProvider();
         $idToken = $this->getIdToken([
             'clientId' => 'client-id',
             'openIdBaseUri' => 'https://oauth2.passbolt.test/', // Trailing slash is important here
             'keyId' => 'jwk1',
             'username' => 'ada@passbolt.test',
         ]);
-        new BaseIdToken([
-            'id_token' => $idToken,
-            'expires_in' => FrozenTime::now()->addHours(1)->getTimestamp(),
-            'access_token' => 'access_token',
-            'resource_owner_id' => 'resource_owner_id',
-            'refresh_token' => 'refresh_token',
-        ], $provider);
 
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
         $this->assertTrue(true);
     }
 
@@ -164,14 +103,8 @@ class BaseIdTokenTest extends AppTestCase
             'keyId' => 'jwk1',
             'username' => 'ada@passbolt.test',
         ]);
-        new BaseIdToken([
-            'id_token' => $idToken,
-            'expires_in' => FrozenTime::now()->addHours(1)->getTimestamp(),
-            'access_token' => 'access_token',
-            'resource_owner_id' => 'resource_owner_id',
-            'refresh_token' => 'refresh_token',
-        ], $provider);
 
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
         $this->assertTrue(true);
     }
 
@@ -249,6 +182,104 @@ class BaseIdTokenTest extends AppTestCase
         ], $provider);
     }
 
+    public function testBaseIdToken_Success_WithAudArray(): void
+    {
+        $provider = $this->getTestProvider();
+        $idToken = $this->getIdToken([
+            'clientId' => ['client-id'],
+            'openIdBaseUri' => 'https://oauth2.passbolt.test',
+            'keyId' => 'jwk1',
+            'username' => 'ada@passbolt.test',
+        ]);
+
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
+        $this->assertTrue(true);
+    }
+
+    public function testBaseIdToken_Success_WithAudArray2(): void
+    {
+        $provider = $this->getTestProvider();
+        $idToken = $this->getIdToken([
+            'clientId' => ['client-id1', 'client-id'],
+            'openIdBaseUri' => 'https://oauth2.passbolt.test/',
+            'keyId' => 'jwk1',
+            'username' => 'ada@passbolt.test',
+        ]);
+
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
+        $this->assertTrue(true);
+    }
+
+    public function testBaseIdToken_Error_EmptyAudArray(): void
+    {
+        $provider = $this->getTestProvider();
+        $idToken = $this->getIdToken([
+            'clientId' => [],
+            'openIdBaseUri' => 'https://oauth2.passbolt.test/',
+            'keyId' => 'jwk1',
+            'username' => 'ada@passbolt.test',
+        ]);
+
+        $this->expectException(BadRequestException::class);
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
+    }
+
+    public function testBaseIdToken_Error_InvalidAudArray(): void
+    {
+        $provider = $this->getTestProvider();
+        $idToken = $this->getIdToken([
+            'clientId' => ['🔥'],
+            'openIdBaseUri' => 'https://oauth2.passbolt.test/',
+            'keyId' => 'jwk1',
+            'username' => 'ada@passbolt.test',
+        ]);
+
+        $this->expectException(BadRequestException::class);
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
+    }
+
+    public function testBaseIdToken_Error_InvalidEmail(): void
+    {
+        $provider = $this->getTestProvider();
+        $idToken = $this->getIdToken([
+            'clientId' => 'client-id',
+            'openIdBaseUri' => 'https://oauth2.passbolt.test/',
+            'keyId' => 'jwk1',
+            'username' => '🔥',
+        ]);
+
+        $this->expectException(BadRequestException::class);
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
+    }
+
+    public function testBaseIdToken_Error_InvalidEmail2(): void
+    {
+        $provider = $this->getTestProvider();
+        $idToken = $this->getIdToken([
+            'clientId' => 'client-id',
+            'openIdBaseUri' => 'https://oauth2.passbolt.test/',
+            'keyId' => 'jwk1',
+            'username' => '',
+        ]);
+
+        $this->expectException(BadRequestException::class);
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
+    }
+
+    public function testBaseIdToken_Error_InvalidIss(): void
+    {
+        $provider = $this->getTestProvider();
+        $idToken = $this->getIdToken([
+            'clientId' => 'client-id',
+            'openIdBaseUri' => '🔥',
+            'keyId' => 'jwk1',
+            'username' => 'ada@passbolt.test',
+        ]);
+
+        $this->expectException(BadRequestException::class);
+        new BaseIdToken($this->getBasedIdTokenOptions($idToken), $provider);
+    }
+
     /** Helper methods */
 
     public function getJwkSet(): array
@@ -278,5 +309,48 @@ class BaseIdTokenTest extends AppTestCase
         ];
 
         return JWT::encode($payload, $privateKey, $alg, $options['keyId']);
+    }
+
+    public function getTestProvider(): OAuth2Provider
+    {
+        $provider = new AdfsProvider([
+            'clientId' => 'client-id',
+            'clientSecret' => 'super-strong-client-secret',
+            'redirectUri' => Router::url('/sso/oauth2/redirect', true),
+            'openIdBaseUri' => 'https://oauth2.passbolt.test', // without trailing slash
+            'openIdConfigurationPath' => '/.well-known/openid-configuration',
+        ]);
+        $jwkSet = $this->getJwkSet();
+        $responseQueue = [
+            new Response(200, [], json_encode([
+                'issuer' => 'https://oauth2.passbolt.test/o/passbolt/', // Trailing slash is important here
+                'jwks_uri' => 'https://oauth2.passbolt.test/jwks/uri/',
+                'authorization_endpoint' => 'https://oauth2.passbolt.test/authorize/',
+                'token_endpoint' => 'https://oauth2.passbolt.test/token/',
+                'keys' => $jwkSet['keys'],
+            ])),
+            new Response(200, [], json_encode([
+                'issuer' => 'https://oauth2.passbolt.test/o/passbolt/',
+                'jwks_uri' => 'https://oauth2.passbolt.test/jwks/uri/',
+                'authorization_endpoint' => 'https://oauth2.passbolt.test/authorize/',
+                'token_endpoint' => 'https://oauth2.passbolt.test/token/',
+                'keys' => $jwkSet['keys'],
+            ])),
+        ];
+        $httpClientMock = $this->mockHttpClientResponse($responseQueue);
+        $provider->setHttpClient($httpClientMock);
+
+        return $provider;
+    }
+
+    public function getBasedIdTokenOptions(string $idToken): array
+    {
+        return [
+            'id_token' => $idToken,
+            'expires_in' => FrozenTime::now()->addHours(1)->getTimestamp(),
+            'access_token' => 'access_token',
+            'resource_owner_id' => 'resource_owner_id',
+            'refresh_token' => 'refresh_token',
+        ];
     }
 }
