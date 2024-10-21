@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Lib;
 
 use Cake\Core\Configure;
+use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 
 abstract class AppIntegrationTestCaseV5 extends AppIntegrationTestCase
@@ -47,6 +48,7 @@ abstract class AppIntegrationTestCaseV5 extends AppIntegrationTestCase
             Configure::write('passbolt.v5.enabled', false);
         }
         MetadataTypesSettingsGetService::clear();
+        MetadataKeysSettingsGetService::clear();
         parent::tearDown();
     }
 }

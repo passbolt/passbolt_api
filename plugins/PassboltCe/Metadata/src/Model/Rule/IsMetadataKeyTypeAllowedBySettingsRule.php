@@ -38,8 +38,7 @@ class IsMetadataKeyTypeAllowedBySettingsRule
             return true;
         }
 
-        // Should be cached if doing multiple insert, but not needed atm
-        $settings = (new MetadataKeysSettingsGetService())->getSettings();
+        $settings = MetadataKeysSettingsGetService::getSettings();
 
         return $settings->isUsageOfPersonalKeysAllowed();
     }

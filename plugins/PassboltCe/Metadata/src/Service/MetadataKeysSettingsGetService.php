@@ -17,21 +17,24 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service;
 
 use Cake\Log\Log;
-use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 
 class MetadataKeysSettingsGetService
 {
-    use LocatorAwareTrait;
-
     public const ORG_SETTING_PROPERTY = 'metadataKeys';
+
+    /**
+     * @var \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto|null
+     */
+    private static ?MetadataKeysSettingsDto $settings = null;
 
     /**
      * TODO for v5 it should default to v5
      *
      * @return \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto default settings when there is none set
      */
-    public function getDefaultSettings(): MetadataKeysSettingsDto
+    public static function getDefaultSettings(): MetadataKeysSettingsDto
     {
         return new MetadataKeysSettingsDto(self::getDefaultSettingsArray());
     }
@@ -54,12 +57,16 @@ class MetadataKeysSettingsGetService
      * @return \Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto dto
      * @throws \App\Error\Exception\FormValidationException if the data does not validate
      */
-    public function getSettings(): MetadataKeysSettingsDto
+    public static function getSettings(): MetadataKeysSettingsDto
     {
+        if (!is_null(self::$settings)) {
+            return self::$settings;
+        }
+
         try {
             // fetch the settings from DB if any
             /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
-            $orgSettingsTable = $this->fetchTable('OrganizationSettings');
+            $orgSettingsTable = TableRegistry::getTableLocator()->get('OrganizationSettings');
             $setting = $orgSettingsTable->getFirstSettingOrFail(MetadataKeysSettingsGetService::ORG_SETTING_PROPERTY);
 
             // Deserialize and revalidate the settings
@@ -68,11 +75,23 @@ class MetadataKeysSettingsGetService
             }
             $data = json_decode($setting->value, true, 2, JSON_THROW_ON_ERROR);
 
-            return (new MetadataKeysSettingsAssertService())->assert($data);
+            self::$settings = (new MetadataKeysSettingsAssertService())->assert($data);
         } catch (\Exception $exception) {
             Log::error($exception->getMessage());
 
-            return $this->getDefaultSettings();
+            self::$settings = self::getDefaultSettings();
         }
+
+        return self::$settings;
+    }
+
+    /**
+     * Clears cached settings.
+     *
+     * @return void
+     */
+    public static function clear(): void
+    {
+        self::$settings = null;
     }
 }
