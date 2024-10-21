@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # This script receives an passbolt tag and returns the passbolt version semver compliant (without 'v')
@@ -5,7 +6,6 @@
 # and release candiate versions eg. v3.11.0-rc.1 -> 3.11.0-rc.1
 
 tag="$1"
-branch="$2"
 
 function is_release_candidate () {
   local version=$1
@@ -57,13 +57,4 @@ fi
 echo "Creating the following variables"
 echo "================================="
 echo "PASSBOLT_VERSION=${version}"
-
-passbolt_version="${version}"
-
-curl -X POST \
-     -F token="$PACKAGING_TOKEN" \
-     -F "ref=$branch" \
-     -F "variables[PASSBOLT_FLAVOUR]=$PASSBOLT_FLAVOUR" \
-     -F "variables[PASSBOLT_VERSION]=$passbolt_version" \
-     -F "variables[PASSBOLT_BRANCH]=$tag" \
-     "https://gitlab.com/api/v4/projects/$DOWNSTREAM_PROJECT_ID/trigger/pipeline"
+export PB_VERSION=${version}
