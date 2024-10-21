@@ -30,6 +30,8 @@ use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
@@ -166,8 +168,8 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
     {
         Configure::write('passbolt.v5.enabled', false);
         $user = $this->logInAsUser();
-        ResourceTypeFactory::make()->default()->persist()->get('id');
-        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $resourceTypeId = ResourceTypeFactory::make()->default()->persist()->get('id');
+        $resource = ResourceFactory::make(['resource_type_id' => $resourceTypeId])->withPermissionsFor([$user])->persist();
         $metadataKeyId = UuidFactory::uuid();
         $metadata = 'metadata';
         $metadataKeyType = 'shared_key';
@@ -282,5 +284,56 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertError(400);
         $this->assertResponseContains('metadata_key_type');
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
+    }
+
+    public function testResourcesUpdateController_Error_V5ToV4DowngradeNotAllowed(): void
+    {
+        $v5ResourceType = ResourceTypeFactory::make()->v5Default()->persist();
+        ResourceTypeFactory::make()->default()->persist();
+        $user = $this->logInAsUser();
+        $resource = ResourceFactory::make(['resource_type_id' => $v5ResourceType->get('id')])->v5Fields()->withPermissionsFor([$user])->persist();
+
+        $this->putJson("/resources/{$resource->get('id')}.json", [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+        ]);
+
+        $this->assertError(400);
+        $this->assertResponseContains('v5_to_v4_downgrade_allowed');
+    }
+
+    public function testResourcesUpdateController_Success_V5ToV4DowngradeAllowed(): void
+    {
+        $settings = MetadataTypesSettingsGetService::defaultV4Settings();
+        $settings[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE] = true;
+        MetadataTypesSettingsFactory::make()->value($settings)->persist();
+        $v5ResourceType = ResourceTypeFactory::make()->v5Default()->persist();
+        $v4ResourceType = ResourceTypeFactory::make()->default()->persist();
+        $user = $this->logInAsUser();
+        $resource = ResourceFactory::make(['resource_type_id' => $v5ResourceType->get('id')])->v5Fields()->withPermissionsFor([$user])->persist();
+
+        $data = [
+            'name' => 'R1 name updated',
+            'username' => 'R1 username updated',
+            'uri' => 'https://r1-updated.com',
+            'description' => 'R1 description updated',
+        ];
+        $this->putJson("/resources/{$resource->get('id')}.json", $data);
+
+        $this->assertSuccess();
+        // check data updated in the db
+        $result = ResourceFactory::get($resource->get('id'));
+        $this->assertEqualsCanonicalizing($data, [
+            'name' => $result->get('name'),
+            'username' => $result->get('username'),
+            'uri' => $result->get('uri'),
+            'description' => $result->get('description'),
+        ]);
+        $this->assertSame($v4ResourceType->get('id'), $result->get('resource_type_id'));
+        $this->assertNull($result->get('metadata'));
+        $this->assertNull($result->get('metadata_key_id'));
+        $this->assertNull($result->get('metadata_key_type'));
     }
 }

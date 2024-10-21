@@ -73,9 +73,10 @@ class FolderFactory extends CakephpBaseFactory
      * Define the associated permissions to create for a given list of users.
      *
      * @param array $aros Array of users or groups to create a permission for
+     * @param int $permissionType (Optional) Permission type. Default owner.
      * @return FolderFactory
      */
-    public function withPermissionsFor(array $aros): FolderFactory
+    public function withPermissionsFor(array $aros, int $permissionType = Permission::OWNER): FolderFactory
     {
         foreach ($aros as $aro) {
             $aroType = $aro instanceof User ? PermissionsTable::USER_ARO : PermissionsTable::GROUP_ARO;
@@ -83,7 +84,7 @@ class FolderFactory extends CakephpBaseFactory
                 'aco' => PermissionsTable::FOLDER_ACO,
                 'aro' => $aroType,
                 'aro_foreign_key' => $aro->id,
-                'type' => Permission::OWNER,
+                'type' => $permissionType,
             ];
             $this->with('Permissions', $permissionsMeta);
         }

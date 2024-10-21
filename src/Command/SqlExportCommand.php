@@ -264,7 +264,7 @@ class SqlExportCommand extends PassboltCommand
      * @param string $dir directory
      * @param \Cake\Console\Arguments $args Arguments.
      * @param \Cake\Console\ConsoleIo $io Console IO.
-     * @return ?string
+     * @return string|null
      */
     protected function getFile($dir, Arguments $args, ConsoleIo $io): ?string
     {
@@ -289,7 +289,7 @@ class SqlExportCommand extends PassboltCommand
      *
      * @param \Cake\Console\Arguments $args Arguments.
      * @param \Cake\Console\ConsoleIo $io Console IO.
-     * @return ?string or null if not exist
+     * @return string|null or null if not exist
      */
     protected function getDir(Arguments $args, ConsoleIo $io): ?string
     {

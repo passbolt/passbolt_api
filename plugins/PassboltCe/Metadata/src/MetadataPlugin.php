@@ -28,7 +28,9 @@ use Passbolt\Metadata\Command\MigrateAllItemsCommand;
 use Passbolt\Metadata\Command\MigrateFoldersCommand;
 use Passbolt\Metadata\Command\MigrateResourcesCommand;
 use Passbolt\Metadata\Command\UpdateMetadataTypesSettingsCommand;
+use Passbolt\Metadata\Event\MetadataFolderUpdateListener;
 use Passbolt\Metadata\Event\MetadataResourceIndexListener;
+use Passbolt\Metadata\Event\MetadataResourceUpdateListener;
 use Passbolt\Metadata\Event\MetadataUserDeleteSuccessListener;
 use Passbolt\Metadata\Event\SetupCompleteListener;
 use Passbolt\Metadata\Notification\Email\Redactor\MetadataEmailRedactorPool;
@@ -65,7 +67,9 @@ class MetadataPlugin extends BasePlugin
             ->on(new MetadataEmailRedactorPool())
             ->on(new SetupCompleteListener())
             ->on(new MetadataUserDeleteSuccessListener())
-            ->on(new MetadataResourceIndexListener());
+            ->on(new MetadataResourceIndexListener())
+            ->on(new MetadataResourceUpdateListener())
+            ->on(new MetadataFolderUpdateListener());
     }
 
     /**

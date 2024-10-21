@@ -45,7 +45,7 @@ class MfaAccountSettingFactory extends AccountSettingFactory
 
     /**
      * @param string $uri Provisioning URI
-     * @param FrozenTime|null $verified Date of verification
+     * @param \Cake\I18n\FrozenTime|null $verified Date of verification
      * @return self
      */
     public function totp(string $uri = 'Foo', ?FrozenTime $verified = null): self
@@ -62,7 +62,7 @@ class MfaAccountSettingFactory extends AccountSettingFactory
 
     /**
      * @param string|null $yubikeyId YUBI Key ID
-     * @param FrozenTime|null $verified Date of verification
+     * @param \Cake\I18n\FrozenTime|null $verified Date of verification
      * @return self
      */
     public function yubikey(?string $yubikeyId = null, ?FrozenTime $verified = null): self
@@ -79,7 +79,7 @@ class MfaAccountSettingFactory extends AccountSettingFactory
     }
 
     /**
-     * @param FrozenTime|null $verified Date of verification
+     * @param \Cake\I18n\FrozenTime|null $verified Date of verification
      * @return self
      */
     public function duo(?FrozenTime $verified = null): self
@@ -94,7 +94,7 @@ class MfaAccountSettingFactory extends AccountSettingFactory
     }
 
     /**
-     * @param FrozenTime|null $verified Date of verification
+     * @param \Cake\I18n\FrozenTime|null $verified Date of verification
      * @return self
      */
     public function duoWithTotp(string $uri = 'Foo', ?FrozenTime $verified = null): self

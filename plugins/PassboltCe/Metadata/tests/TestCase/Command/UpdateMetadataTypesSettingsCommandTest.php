@@ -144,6 +144,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
             sprintf('--%s=%s', MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES, MetadataTypesSettingsDto::V5),
             sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES, '1'),
             sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES, '0'),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE, '1'),
         ];
         $optionsArray[] = sprintf('--username=%s', $user->get('username'));
         $options = implode(' ', $optionsArray);
@@ -159,6 +160,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
         $this->assertSame(MetadataTypesSettingsDto::V5, $updatedSetting[MetadataTypesSettingsDto::DEFAULT_RESOURCE_TYPES]);
         $this->assertTrue($updatedSetting[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES]);
         $this->assertFalse($updatedSetting[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_RESOURCES]);
+        $this->assertTrue($updatedSetting[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE]);
     }
 
     public function testUpdateMetadataTypesSettingsCommand_Success_DowngradeResourcesToV4(): void
@@ -213,6 +215,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
             sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES, '🔥'),
             sprintf('--%s=%f', MetadataTypesSettingsDto::DEFAULT_FOLDER_TYPE, 9.99),
             sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS, '888'),
+            sprintf('--%s=%s', MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE, 108),
         ];
         $optionsArray[] = sprintf('--username=%s', $user->get('username'));
         $options = implode(' ', $optionsArray);
@@ -228,6 +231,7 @@ class UpdateMetadataTypesSettingsCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('allow_creation_of_v5_resources');
         $this->assertOutputContains('allow_creation_of_v5_folders');
         $this->assertOutputContains('allow_creation_of_v4_resources');
+        $this->assertOutputContains('allow_v5_v4_downgrade');
         $this->assertOutputContains('The setting should be a valid boolean');
         /** @var \App\Model\Entity\OrganizationSetting $updatedSettings */
         $updatedSettings = MetadataTypesSettingsFactory::firstOrFail();

@@ -42,7 +42,7 @@ trait FoldersFindersTrait
      *
      * @psalm-suppress UndefinedMethod
      * @param string $userId The user to get the folders for
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
@@ -159,7 +159,7 @@ trait FoldersFindersTrait
      *
      * @param string $userId The user to get the folders for
      * @param string $folderId The folder to retrieve
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      */
     public function findView(string $userId, string $folderId, ?array $options = []): Query

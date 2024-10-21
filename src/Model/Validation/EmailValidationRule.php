@@ -48,8 +48,8 @@ final class EmailValidationRule extends PassboltValidationRule
      * Convenient static method to perform some checks outside of model/form validations
      *
      * @param mixed $email Value to check
-     * @param ?bool $skipMxCheck Do not check if the Mx check flag is set in configs
-     * @param ?bool $skipRegexCheck Do not check if a regex pattern is defined in configs
+     * @param bool|null $skipMxCheck Do not check if the Mx check flag is set in configs
+     * @param bool|null $skipRegexCheck Do not check if a regex pattern is defined in configs
      * @return bool
      * @throws \Cake\Http\Exception\InternalErrorException if the regex defined in config is not valid
      */

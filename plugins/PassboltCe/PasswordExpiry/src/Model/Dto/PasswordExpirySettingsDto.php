@@ -42,9 +42,9 @@ class PasswordExpirySettingsDto
     /**
      * Constructor.
      *
-     * @param bool $automaticExpiry Automatic expiry.
-     * @param bool $automaticUpdate Automatic update.
-     * @param bool $policyOverride Is policy overridable.
+     * @param bool|null $automaticExpiry Automatic expiry.
+     * @param bool|null $automaticUpdate Automatic update.
+     * @param bool|null $policyOverride Is policy overridable.
      * @param int|null $defaultPasswordExpiryPeriodInDays Default expiry period.
      * @param int|null $expiryNotificationInDays Number of days prior to expiry notification.
      * @param string|null $id ID.
@@ -167,7 +167,7 @@ class PasswordExpirySettingsDto
     }
 
     /**
-     * @return ?array
+     * @return array|null
      */
     public function toArray(): ?array
     {

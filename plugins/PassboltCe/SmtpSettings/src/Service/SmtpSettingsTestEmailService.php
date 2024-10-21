@@ -94,7 +94,7 @@ class SmtpSettingsTestEmailService
 
     /**
      * @param string $str string where to remove the credentials
-     * @return array|string|string[]
+     * @return array|string
      */
     protected function removeCredentials(string $str)
     {
