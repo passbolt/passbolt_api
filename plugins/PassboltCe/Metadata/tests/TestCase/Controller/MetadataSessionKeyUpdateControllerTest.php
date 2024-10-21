@@ -24,7 +24,6 @@ use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\Metadata\Test\Factory\MetadataSessionKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
@@ -36,12 +35,6 @@ class MetadataSessionKeyUpdateControllerTest extends AppIntegrationTestCaseV5
     use LocatorAwareTrait;
     use GpgMetadataKeysTestTrait;
     use OpenPGPCommonUserOperationsTrait;
-
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->enableFeaturePlugin(MetadataPlugin::class);
-    }
 
     public function testMetadataSessionKeyUpdateController_Success(): void
     {

@@ -67,6 +67,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
 
     public function testMetadataSessionKeyUpdateService_Success(): void
     {
+        FrozenTime::setTestNow('2021-01-31 22:11:30');
         $key = GpgkeyFactory::make()->withAdaKey();
         $user = UserFactory::make()->with('Gpgkeys', $key)->active()->persist();
         $sessionKey = MetadataSessionKeyFactory::make()->withUser($user)->persist();
@@ -80,7 +81,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
             'modified' => $oldModified,
             'data' => $msg,
         ];
-        sleep(1);
+        FrozenTime::setTestNow(null);
         $this->service->update($uac, $sessionKey->get('id'), $data);
 
         $this->assertEquals(1, MetadataSessionKeyFactory::count());
@@ -89,7 +90,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
 
         // modified time was updated
         $newModified = new FrozenTime($updatedSessionKey->get('modified'));
-        $this->assertFalse($oldModified->equals($newModified));
+        $this->assertTrue($newModified->greaterThan($oldModified));
     }
 
     public function testMetadataSessionKeyUpdateService_Error_NoUpdate(): void
@@ -192,6 +193,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
 
     public function testMetadataSessionKeyUpdateService_ErrorWrongUserKey(): void
     {
+        FrozenTime::setTestNow('2021-01-31 22:11:30');
         $key = GpgkeyFactory::make()->withAdaKey();
         $user = UserFactory::make()->with('Gpgkeys', $key)->active()->persist();
         $sessionKey = MetadataSessionKeyFactory::make()->withUser($user)->persist();
@@ -207,7 +209,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
             'modified' => $oldModified,
             'data' => $msg,
         ];
-        sleep(1);
+        FrozenTime::setTestNow(null);
 
         $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('The metadata session key could not be saved.');
