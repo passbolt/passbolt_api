@@ -21,7 +21,7 @@ use Cake\TestSuite\TestCase;
 
 class GpgHealthcheckTest extends TestCase
 {
-    public function testHealthcheckOperationSystemIsPassed_Success(): void
+    public function testHealthcheckGpgIsPassed_Success(): void
     {
         $service = new GpgHealthcheck();
         $service->check();

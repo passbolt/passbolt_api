@@ -21,7 +21,7 @@ use Cake\TestSuite\TestCase;
 
 class DistributionHealthcheckTest extends TestCase
 {
-    public function testHealthcheckOperationSystemIsPassed_Success(): void
+    public function testHealthcheckDistributionIsPassed_Success(): void
     {
         $service = new DistributionHealthcheck();
         $service->check();
