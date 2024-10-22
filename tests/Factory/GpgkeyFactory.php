@@ -85,6 +85,16 @@ class GpgkeyFactory extends CakephpBaseFactory
     }
 
     /**
+     * Set the deleted field
+     *
+     * @return $this
+     */
+    public function deleted()
+    {
+        return $this->setField('deleted', true);
+    }
+
+    /**
      * Set the expires field to the past
      *
      * @return $this
