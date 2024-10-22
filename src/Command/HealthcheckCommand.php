@@ -417,7 +417,7 @@ class HealthcheckCommand extends PassboltCommand
         if ($this->__errorCount >= 1) {
             $this->display(__('{0} error(s) found. Hang in there!', $this->__errorCount), 'fail');
         } else {
-            $this->display(__('No error found. Nice one sparky!'), 'pass');
+            $this->display(__('No error found. Nice one, sparky!'), 'pass');
         }
         $this->io->out('');
     }

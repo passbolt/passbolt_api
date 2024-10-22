@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         4.10.0
  */
 
 namespace App\Service\Healthcheck\Environment;
@@ -21,7 +21,7 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 
-class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class OperatingSystemHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
     /**
      * Status of this health check if it is passed or failed.
@@ -35,7 +35,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = extension_loaded('mbstring');
+        $this->status = $this->is64bit();
 
         return $this;
     }
@@ -61,7 +61,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -69,7 +69,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getSuccessMessage(): string
     {
-        return __('Mbstring extension is installed.');
+        return __('64-bit architecture system detected.');
     }
 
     /**
@@ -77,7 +77,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getFailureMessage(): string
     {
-        return __('You must enable the mbstring extension to use Passbolt.');
+        return __('32-bit architecture system detected, this environment will not be supported as of Passbolt v5+.');
     }
 
     /**
@@ -85,7 +85,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getHelpMessage()
     {
-        return [__('See: https://secure.php.net/manual/en/book.mbstring.php')];
+        return [__('See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php')];
     }
 
     /**
@@ -103,6 +103,14 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getLegacyArrayKey(): string
     {
-        return 'mbstring';
+        return 'osArchitecture';
+    }
+
+    /**
+     * @return bool
+     */
+    protected function is64bit(): bool
+    {
+        return PHP_INT_MAX !== 2147483647;
     }
 }
