@@ -20,6 +20,7 @@ namespace Passbolt\Metadata\Service;
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -135,9 +136,16 @@ class MetadataPrivateKeysCreateService
         // Assert private key does not already exist for the user/server
         /** @var \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable $metadataPrivateKeysTable */
         $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
-        $conditions = ['metadata_key_id' => $metadataKeyId];
-        $conditions['user_id'] = $data['user_id'] ?? 'IS NULL';
-        $metadataPrivateKey = $metadataPrivateKeysTable->find()->where($conditions)->first();
+        $metadataPrivateKey = $metadataPrivateKeysTable->find()
+            ->where(['metadata_key_id' => $metadataKeyId])
+            ->where(function (QueryExpression $exp) use ($data) {
+                if (isset($data['user_id'])) {
+                    return $exp->eq('user_id', $data['user_id']);
+                }
+
+                return $exp->isNull('user_id');
+            })
+            ->first();
         if (!empty($metadataPrivateKey)) {
             throw new BadRequestException(__('The metadata key is already shared with the user.'));
         }
