@@ -24,7 +24,7 @@ use Cake\Log\Log;
 use Passbolt\Metadata\MetadataPlugin;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
-class MetadataResourceDto
+class MetadataResourceDto extends MetadataDto
 {
     use FeaturePluginAwareTrait;
 
@@ -32,9 +32,6 @@ class MetadataResourceDto
     public const USERNAME = 'username';
     public const URI = 'uri';
     public const DESCRIPTION = 'description';
-    public const METADATA = 'metadata';
-    public const METADATA_KEY_ID = 'metadata_key_id';
-    public const METADATA_KEY_TYPE = 'metadata_key_type';
     public const DELETED = 'deleted';
     public const EXPIRED = 'expired';
     public const CREATED = 'created';
