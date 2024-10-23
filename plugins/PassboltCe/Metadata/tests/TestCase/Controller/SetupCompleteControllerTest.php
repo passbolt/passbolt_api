@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
@@ -32,6 +33,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCaseV5
     public function testMetadataSetupCompleteController_Success(): void
     {
         MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        MetadataKeysSettingsFactory::make()->disableZeroTrustKeySharing()->persist();
 
         /** @var \App\Model\Entity\AuthenticationToken $t */
         $t = AuthenticationTokenFactory::make()

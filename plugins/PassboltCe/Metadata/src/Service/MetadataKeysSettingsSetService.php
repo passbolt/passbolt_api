@@ -16,9 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service;
 
+use App\Error\Exception\CustomValidationException;
+use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
+use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\Validation\Validation;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 
 class MetadataKeysSettingsSetService
@@ -44,6 +48,41 @@ class MetadataKeysSettingsSetService
         $uac->assertIsAdmin();
 
         $dto = (new MetadataKeysSettingsAssertService())->assert($data);
+
+        if (!$dto->isKeyShareZeroKnowledge()) {
+            /** @var \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable $metadataPrivateKeysTable */
+            $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
+            $serverKeysCount = $metadataPrivateKeysTable->find()
+                ->where(['user_id IS' => null])
+                ->order(['created' => 'DESC'])
+                ->all()
+                ->count();
+            if ($serverKeysCount === 0) {
+                if (
+                    !isset($data['metadata_private_keys']) ||
+                    !is_array($data['metadata_private_keys']) ||
+                    !count($data['metadata_private_keys'])
+                ) {
+                    $msg = __('The server metadata private key is required to enable these settings.');
+                    throw new BadRequestException($msg);
+                }
+
+                $service = new MetadataPrivateKeysCreateService();
+                foreach ($data['metadata_private_keys'] as $i => $key) {
+                    if (!isset($key['metadata_key_id']) || !Validation::uuid($key['metadata_key_id'])) {
+                        $msg = __('The server metadata key id is required.');
+                        throw new BadRequestException($msg);
+                    }
+                    try {
+                        $service->create($uac, $key['metadata_key_id'], $key);
+                    } catch (ValidationException $exception) {
+                        $msg = __('The server metadata private key is invalid.');
+                        $errors['metadata_private_keys'][$i] = $exception->getErrors();
+                        throw new CustomValidationException($msg, $errors);
+                    }
+                }
+            }
+        }
 
         /** @var \App\Model\Table\OrganizationSettingsTable $orgSettingsTable */
         $orgSettingsTable = $this->fetchTable('OrganizationSettings');

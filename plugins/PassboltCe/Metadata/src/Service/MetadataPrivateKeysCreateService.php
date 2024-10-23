@@ -113,7 +113,7 @@ class MetadataPrivateKeysCreateService
         if (!Validation::uuid($metadataKeyId)) {
             throw new BadRequestException(__('The request data is invalid.'));
         }
-        if (!isset($data['user_id']) || !Validation::uuid($data['user_id'])) {
+        if (isset($data['user_id']) && !Validation::uuid($data['user_id'])) {
             throw new BadRequestException(__('The request data is invalid.'));
         }
         if (!isset($data['data']) || !is_string($data['data'])) {
@@ -126,19 +126,18 @@ class MetadataPrivateKeysCreateService
         try {
             $metadataKeysTable
                 ->find()
-                ->where(['id ' => $metadataKeyId, 'deleted IS' => null])
+                ->where(['id' => $metadataKeyId, 'deleted IS' => null])
                 ->firstOrFail();
         } catch (RecordNotFoundException $exception) {
             throw new NotFoundException(__('The metadata key does not exist or has been deleted.'));
         }
 
-        // Assert private key does not already exist for the user
+        // Assert private key does not already exist for the user/server
         /** @var \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable $metadataPrivateKeysTable */
         $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
-        $metadataPrivateKey = $metadataPrivateKeysTable
-            ->find()
-            ->where(['metadata_key_id ' => $metadataKeyId, 'user_id ' => $data['user_id']])
-            ->first();
+        $conditions = ['metadata_key_id' => $metadataKeyId];
+        $conditions['user_id'] = $data['user_id'] ?? 'IS NULL';
+        $metadataPrivateKey = $metadataPrivateKeysTable->find()->where($conditions)->first();
         if (!empty($metadataPrivateKey)) {
             throw new BadRequestException(__('The metadata key is already shared with the user.'));
         }

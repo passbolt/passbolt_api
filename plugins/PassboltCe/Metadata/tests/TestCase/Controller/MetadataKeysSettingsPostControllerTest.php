@@ -58,7 +58,7 @@ class MetadataKeysSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $this->assertEmailInBatchContains([
             'You edited the metadata settings',
             'Allow usage of personal keys: False',
-            'Zero-knowledge key share: False',
+            'Zero-knowledge key share: True',
         ], $loggedInUser->username);
         $this->assertEmailInBatchContains($loggedInUser->profile->last_name . ' edited the metadata settings', $otherAdmin->username);
     }
