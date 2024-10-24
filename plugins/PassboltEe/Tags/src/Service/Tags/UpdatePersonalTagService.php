@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\Model\Entity\Tag;
@@ -38,6 +39,7 @@ class UpdatePersonalTagService
      * @param \Passbolt\Tags\Model\Entity\Tag $tag The tag entity to update.
      * @return \Passbolt\Tags\Model\Entity\Tag|bool The updated tag entity.
      * @throws \Cake\Http\Exception\BadRequestException If a non admin tries to change a personal tag into a shared tag.
+     * @throws \App\Error\Exception\CustomValidationException If unable to save tag entity due to validation errors.
      * @throws \Exception
      */
     public function update(UserAccessControl $uac, MetadataTagDto $tagDto, Tag $tag)
@@ -93,6 +95,8 @@ class UpdatePersonalTagService
                 );
             }
 
+            $this->assertV4DowngradeAllowed($tag);
+
             /** @var \Passbolt\Tags\Model\Table\ResourcesTagsTable $resourcesTagsTable */
             $resourcesTagsTable = $this->fetchTable('Passbolt/Tags.ResourcesTags');
 
@@ -123,6 +127,25 @@ class UpdatePersonalTagService
 
                 return $newTag;
             });
+        }
+    }
+
+    /**
+     * @param \Passbolt\Tags\Model\Entity\Tag $tag Existing tag entity.
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException If v5_to_v4_downgrade is disabled.
+     */
+    private function assertV4DowngradeAllowed(Tag $tag): void
+    {
+        // We consider a tag downgrade when current tag's slug is null and request contains slug field (not empty)
+        if (!is_null($tag->slug)) {
+            return;
+        }
+
+        $metadataTypesSettings = MetadataTypesSettingsGetService::getSettings();
+
+        if (!$metadataTypesSettings->isV4DowngradeAllowed()) {
+            throw new BadRequestException(__('The settings selected by your administrator prevent from downgrading tag.')); // phpcs:ignore
         }
     }
 }
