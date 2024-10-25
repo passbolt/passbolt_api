@@ -26,16 +26,22 @@ use App\Utility\UserAccessControl;
 use Cake\Http\Exception\ForbiddenException;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Service\MetadataKeysSettingsSetService;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 {
+    use GpgMetadataKeysTestTrait;
+
     public function testMetadataKeysSettingsSetService_Success_Create(): void
     {
-        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
-        $data = MetadataKeysSettingsFactory::getDefaultData();
-        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $data = [
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => true,
+        ];
+        $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
         $sut = new MetadataKeysSettingsSetService();
         $dto = $sut->saveSettings($uac, $data);
         $this->assertEquals($data, $dto->toArray());
@@ -43,16 +49,20 @@ class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 
     public function testMetadataKeysSettingsSetService_Success_EditSimple(): void
     {
-        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
-        $data = MetadataKeysSettingsFactory::getDefaultData();
-        $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+        $data = [
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => false,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => true,
+        ];
         MetadataKeysSettingsFactory::make()->value(json_encode($data))->persist();
         $this->assertEquals(1, OrganizationSettingFactory::count());
 
-        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
         $sut = new MetadataKeysSettingsSetService();
-        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data = [
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => true,
+        ];
         $dto = $sut->saveSettings($uac, $data);
         $this->assertEquals($data, $dto->toArray());
         $this->assertEquals(1, OrganizationSettingFactory::count());
@@ -60,7 +70,29 @@ class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 
     public function testMetadataKeysSettingsSetService_Success_EditZeroKnowledgeOnOff(): void
     {
-        $this->markTestIncomplete();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->admin()->withValidGpgKey()->persist();
+        $key = MetadataKeyFactory::make()->withUserPrivateKey($user->gpgkey)->persist();
+
+        $data = [
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => false,
+            'metadata_private_keys' => [[
+                'metadata_key_id' => $key->get('id'),
+                'user_id' => null, // server key
+                'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
+            ]],
+        ];
+        $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
+        $sut = new MetadataKeysSettingsSetService();
+
+        $dto = $sut->saveSettings($uac, $data);
+
+        $this->assertEquals([
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => false,
+        ], $dto->toArray());
+        $this->assertEquals(1, OrganizationSettingFactory::count());
     }
 
     public function testMetadataKeysSettingsSetService_Success_EditZeroKnowledgeOffOn(): void
@@ -70,10 +102,9 @@ class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 
     public function testMetadataKeysSettingsSetService_Error_NotAdmin(): void
     {
-        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->user()->persist();
         $data = MetadataKeysSettingsFactory::getDefaultData();
-        $uac = new UserAccessControl(Role::USER, $user->id);
+        $uac = new UserAccessControl(Role::USER, $user->get('id'));
         $sut = new MetadataKeysSettingsSetService();
         $this->expectException(ForbiddenException::class);
         $sut->saveSettings($uac, $data);
@@ -81,11 +112,10 @@ class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 
     public function testMetadataKeysSettingsSetService_Error_Invalid(): void
     {
-        /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()->admin()->persist();
         $data = MetadataKeysSettingsFactory::getDefaultData();
         $data[MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE] = 'zero-trust';
-        $uac = new UserAccessControl(Role::ADMIN, $user->id);
+        $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
         $sut = new MetadataKeysSettingsSetService();
         $this->expectException(FormValidationException::class);
         $sut->saveSettings($uac, $data);

@@ -20,6 +20,7 @@ namespace Passbolt\Metadata\Service;
 use App\Error\Exception\ValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -113,7 +114,7 @@ class MetadataPrivateKeysCreateService
         if (!Validation::uuid($metadataKeyId)) {
             throw new BadRequestException(__('The request data is invalid.'));
         }
-        if (!isset($data['user_id']) || !Validation::uuid($data['user_id'])) {
+        if (isset($data['user_id']) && !Validation::uuid($data['user_id'])) {
             throw new BadRequestException(__('The request data is invalid.'));
         }
         if (!isset($data['data']) || !is_string($data['data'])) {
@@ -126,18 +127,24 @@ class MetadataPrivateKeysCreateService
         try {
             $metadataKeysTable
                 ->find()
-                ->where(['id ' => $metadataKeyId, 'deleted IS' => null])
+                ->where(['id' => $metadataKeyId, 'deleted IS' => null])
                 ->firstOrFail();
         } catch (RecordNotFoundException $exception) {
             throw new NotFoundException(__('The metadata key does not exist or has been deleted.'));
         }
 
-        // Assert private key does not already exist for the user
+        // Assert private key does not already exist for the user/server
         /** @var \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable $metadataPrivateKeysTable */
         $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
-        $metadataPrivateKey = $metadataPrivateKeysTable
-            ->find()
-            ->where(['metadata_key_id ' => $metadataKeyId, 'user_id ' => $data['user_id']])
+        $metadataPrivateKey = $metadataPrivateKeysTable->find()
+            ->where(['metadata_key_id' => $metadataKeyId])
+            ->where(function (QueryExpression $exp) use ($data) {
+                if (isset($data['user_id'])) {
+                    return $exp->eq('user_id', $data['user_id']);
+                }
+
+                return $exp->isNull('user_id');
+            })
             ->first();
         if (!empty($metadataPrivateKey)) {
             throw new BadRequestException(__('The metadata key is already shared with the user.'));
