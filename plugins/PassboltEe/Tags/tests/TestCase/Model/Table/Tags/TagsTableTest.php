@@ -26,7 +26,7 @@ use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
 /**
- * Passbolt\Tags\Model\Table\ Test Case
+ * @covers \Passbolt\Tags\Model\Table\TagsTable
  */
 class TagsTableTest extends TagTestCase
 {
