@@ -144,6 +144,50 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertEquals($user->id, $response->modified_by);
     }
 
+    public function testResourcesUpdateController_Success_UserKey_Null(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        ResourceTypeFactory::make()->passwordString()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $resource = ResourceFactory::make(['resource_type_id' => $resourceTypeId])
+            ->v5Fields()
+            ->withPermissionsFor([$user])
+            ->persist();
+        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata(false));
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
+        $metadataKeyType = 'user_key';
+        $this->logInAs($user);
+        $resourceId = $resource->get('id');
+
+        $data = [
+            'metadata_key_id' => null,
+            'metadata' => $metadata,
+            'metadata_key_type' => $metadataKeyType,
+            'resource_type_id' => $resourceTypeId,
+        ];
+        $this->putJson("/resources/{$resourceId}.json", $data);
+
+        $this->assertSuccess();
+        // Check the server response.
+        $response = $this->_responseJsonBody;
+        // Check the resource attributes.
+        $this->assertResourceV5Attributes($response);
+        $this->assertObjectNotHasAttribute('name', $response);
+        $this->assertEquals($user->gpgkey->id, $response->metadata_key_id);
+        $this->assertEquals($data['metadata'], $response->metadata);
+        $this->assertEquals($data['metadata_key_type'], $response->metadata_key_type);
+        $this->assertEquals($resourceTypeId, $response->resource_type_id);
+        $this->assertEquals($resource->get('created_by'), $response->created_by);
+        $this->assertEquals($user->id, $response->modified_by);
+    }
+
     public function testResourcesUpdateController_Error_MixV4V5Fields(): void
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
