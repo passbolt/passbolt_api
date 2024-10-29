@@ -190,6 +190,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'osArchitecture' => true,
                 'distribution' => true,
                 'gpg' => true,
+                'timeSync' => false,
             ],
             'configFile' => [
                 'app' => true,

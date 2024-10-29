@@ -50,6 +50,7 @@ use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
 use App\Service\Healthcheck\Environment\OperatingSystemHealthcheck;
 use App\Service\Healthcheck\Environment\PcreHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
+use App\Service\Healthcheck\Environment\TimeSyncHealthcheck;
 use App\Service\Healthcheck\Environment\TmpFolderWritableHealthcheck;
 use App\Service\Healthcheck\Gpg\CanDecryptGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\CanDecryptVerifyGpgHealthcheck;
@@ -137,6 +138,7 @@ class HealthcheckServiceProvider extends ServiceProvider
         $container->add(ImageHealthcheck::class);
         $container->add(TmpFolderWritableHealthcheck::class);
         $container->add(LogFolderWritableHealthcheck::class);
+        $container->add(TimeSyncHealthcheck::class);
         // Config files health checks
         $container->add(AppConfigFileHealthcheck::class);
         $container->add(PassboltConfigFileHealthcheck::class);
@@ -227,6 +229,7 @@ class HealthcheckServiceProvider extends ServiceProvider
             ->addMethodCall('addService', [ImageHealthcheck::class])
             ->addMethodCall('addService', [TmpFolderWritableHealthcheck::class])
             ->addMethodCall('addService', [LogFolderWritableHealthcheck::class])
+            ->addMethodCall('addService', [TimeSyncHealthcheck::class])
             ->addMethodCall('addService', [AppConfigFileHealthcheck::class])
             ->addMethodCall('addService', [PassboltConfigFileHealthcheck::class])
             ->addMethodCall('addService', [CacheCoreHealthcheck::class])
