@@ -188,6 +188,8 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'tmpWritable' => true,
                 'logWritable' => true,
                 'osArchitecture' => true,
+                'distribution' => true,
+                'gpg' => true,
             ],
             'configFile' => [
                 'app' => true,
