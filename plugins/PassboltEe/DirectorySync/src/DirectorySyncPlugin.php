@@ -28,6 +28,7 @@ use Passbolt\DirectorySync\Command\GroupsCommand;
 use Passbolt\DirectorySync\Command\IgnoreCreateCommand;
 use Passbolt\DirectorySync\Command\IgnoreDeleteCommand;
 use Passbolt\DirectorySync\Command\IgnoreListCommand;
+use Passbolt\DirectorySync\Command\PurgeDirectoryReportsCommand;
 use Passbolt\DirectorySync\Command\TestCommand;
 use Passbolt\DirectorySync\Command\UsersCommand;
 use Passbolt\DirectorySync\Service\Healthcheck\DirectorySyncEndpointsDisabledHealthcheck;
@@ -54,6 +55,7 @@ class DirectorySyncPlugin extends BasePlugin
         $container->add(TestCommand::class)->addArgument(ProcessUserService::class);
         $container->add(UsersCommand::class)
             ->addArguments([ProcessUserService::class, ResourcesExpireResourcesServiceInterface::class]);
+        $container->add(PurgeDirectoryReportsCommand::class)->addArgument(ProcessUserService::class);
 
         // Directory sync health checks
         $container->add(DirectorySyncEndpointsDisabledHealthcheck::class);
