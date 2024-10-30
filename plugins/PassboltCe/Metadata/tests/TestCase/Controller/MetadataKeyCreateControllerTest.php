@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Metadata\MetadataPlugin;
@@ -109,6 +110,36 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
             'Fingerprint: ' . $fingerprint,
         ], $user->username);
         $this->assertEmailInBatchContains($user->profile->last_name . ' created a new metadata key', $otherAdmin->get('username'));
+    }
+
+    public function testMetadataKeyCreateController_Success_ExpiredDeletedNull()
+    {
+        $keyInfo = $this->getUserKeyInfo();
+        $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->with('Gpgkeys', $gpgkey)->admin()->active()->persist();
+        $this->logInAs($user);
+
+        $dummyKey = $this->getMetadataKeyInfo();
+        $fingerprint = $dummyKey['fingerprint'];
+        $this->postJson('/metadata/keys.json', [
+            'armored_key' => $dummyKey['public_key'],
+            'fingerprint' => $fingerprint,
+            'metadata_private_keys' => [
+                [
+                    'user_id' => null, // server key
+                    'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
+                ],
+                [
+                    'user_id' => $user['id'],
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                ],
+            ],
+            'expired' => null,
+            'deleted' => null,
+        ]);
+
+        $this->assertSuccess();
     }
 
     public function testMetadataKeyCreateController_Error_AuthenticationRequired()
@@ -227,5 +258,37 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
 
         $this->assertResponseCode(403);
         Configure::write('passbolt.security.metadata.settings.editionDisabled', $setting);
+    }
+
+    public function testMetadataKeyCreateController_ErrorDeletedAndExpired()
+    {
+        $keyInfo = $this->getUserKeyInfo();
+        $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->with('Gpgkeys', $gpgkey)->admin()->active()->persist();
+        $this->logInAs($user);
+
+        $dummyKey = $this->getMetadataKeyInfo();
+        $this->postJson('/metadata/keys.json', [
+            'armored_key' => $dummyKey['public_key'],
+            'fingerprint' => $dummyKey['fingerprint'],
+            'metadata_private_keys' => [
+                [
+                    'user_id' => null, // server key
+                    'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
+                ],
+                [
+                    'user_id' => $user['id'],
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                ],
+            ],
+            'deleted' => FrozenTime::yesterday()->format('Y-m-d H:i:s'),
+            'expired' => FrozenTime::yesterday()->format('Y-m-d H:i:s'),
+        ]);
+
+        $this->assertResponseCode(400);
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertTrue(isset($errors['deleted']['isNullOnCreate']));
+        $this->assertTrue(isset($errors['expired']['isNullOnCreate']));
     }
 }

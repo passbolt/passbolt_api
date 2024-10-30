@@ -32,7 +32,7 @@ class MetadataKeysIndexController extends AppController
 
         $options = $this->QueryString->get([
             'contain' => ['metadata_private_keys'],
-            'filter' => ['deleted'],
+            'filter' => ['deleted', 'expired'],
         ]);
 
         $metadataKeys = (new MetadataKeysIndexService())->get(

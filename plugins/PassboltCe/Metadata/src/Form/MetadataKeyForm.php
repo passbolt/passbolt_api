@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Form;
 
+use App\Model\Validation\IsNullOnCreateRule;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
@@ -54,9 +55,18 @@ class MetadataKeyForm extends Form
             ->ascii('armored_key', __('The armored key should be a valid ASCII string.'));
 
         $validator
+            ->requirePresence('metadata_private_keys', 'create', __('Private keys are required.'))
             ->array('metadata_private_keys')
             ->hasAtLeast('metadata_private_keys', 1, __('Need at least one metadata private key.'))
             ->addNestedMany('metadata_private_keys', $this->getMetadataPrivateKeysValidator());
+
+        $validator
+            ->allowEmptyDateTime('expired')
+            ->add('expired', 'isNullOnCreate', new IsNullOnCreateRule());
+
+        $validator
+            ->allowEmptyDateTime('deleted')
+            ->add('deleted', 'isNullOnCreate', new IsNullOnCreateRule());
 
         return $validator;
     }

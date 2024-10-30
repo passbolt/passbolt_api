@@ -334,4 +334,75 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
             $this->assertNotEmpty($errors['metadata_key_type']['isMetadataKeyTypeAllowedBySettings']);
         }
     }
+
+    public function testMetadataResourceAddService_Error_SharedKeyExpired()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $metadataKey = MetadataKeyFactory::make()
+            ->withCreatorAndModifier($user)->withServerPrivateKey()
+            ->expired()->persist();
+        $v4ResourceTypeId = ResourceTypeFactory::make()->default()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $metadataKey->get('id');
+        $dummyResourceData = $this->getDummyResourcesPostData([
+            'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
+        ]);
+        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => 'shared_key',
+            MetadataResourceDto::METADATA => $metadata,
+            MetadataResourceDto::METADATA_KEY_ID => $metadataKeyId,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $uac = UserFactory::make()->persistedUAC();
+
+        try {
+            $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+            $this->fail();
+        } catch (ValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertTrue(isset($errors['metadata_key_id']['isMetadataKeyNotExpired']));
+        }
+    }
+
+    public function testMetadataResourceAddService_Error_SharedKeyDeleted()
+    {
+        $user = UserFactory::make()->user()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()
+            ->deleted()->persist();
+        $v4ResourceTypeId = ResourceTypeFactory::make()->default()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $metadataKey->get('id');
+        $dummyResourceData = $this->getDummyResourcesPostData([
+            'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
+        ]);
+        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+
+        $payload = [
+            MetadataResourceDto::METADATA_KEY_TYPE => 'shared_key',
+            MetadataResourceDto::METADATA => $metadata,
+            MetadataResourceDto::METADATA_KEY_ID => $metadataKeyId,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $uac = UserFactory::make()->persistedUAC();
+
+        try {
+            $this->service->add($uac, MetadataResourceDto::fromArray($payload));
+            $this->fail();
+        } catch (ValidationException $exception) {
+            $errors = $exception->getErrors();
+            $this->assertTrue(isset($errors['metadata_key_id']['metadata_key_exists']));
+        }
+    }
 }

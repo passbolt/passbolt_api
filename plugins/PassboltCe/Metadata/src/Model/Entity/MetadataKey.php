@@ -26,6 +26,7 @@ use Cake\ORM\Entity;
  * @property string $armored_key
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\FrozenTime|null $expired
  * @property \Cake\I18n\FrozenTime|null $deleted
  * @property string $created_by
  * @property string $modified_by
@@ -53,6 +54,7 @@ class MetadataKey extends Entity
         'armored_key' => false,
         'created' => false,
         'modified' => false,
+        'expired' => false,
         'deleted' => false,
         'created_by' => false,
         'modified_by' => false,

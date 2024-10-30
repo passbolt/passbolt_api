@@ -64,7 +64,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
         parent::tearDown();
     }
 
-    public function testMetadataKeysTable_Success(): void
+    public function testMetadataKeysTable_Save_Success(): void
     {
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -151,6 +151,56 @@ class MetadataKeysTableTest extends AppTestCaseV5
 
         $this->assertNotEmpty($entity->getErrors());
         $this->assertArrayHasKey('isPublicKeyValidStrict', $entity->getErrors()['armored_key']);
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::validationDefault()
+     */
+    public function testMetadataKeysTable_ValidationDefault_Expired_NotValidDate(): void
+    {
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->getEntity();
+
+        $entity = $this->buildEntity([
+            'fingerprint' => $metadataKey->get('fingerprint'),
+            'armored_key' => $metadataKey->get('armored_key'),
+            'expired' => '🔥',
+            'created_by' => $user['id'],
+            'modified_by' => $user['id'],
+        ]);
+
+        $this->assertNotEmpty($entity->getErrors());
+        $this->assertArrayHasKey('dateTime', $entity->getErrors()['expired']);
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::validationDefault()
+     */
+    public function testMetadataKeysTable_ValidationDefault_Deleted_NotValidDate(): void
+    {
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->getEntity();
+
+        $entity = $this->buildEntity([
+            'fingerprint' => $metadataKey->get('fingerprint'),
+            'armored_key' => $metadataKey->get('armored_key'),
+            'deleted' => '🔥',
+            'created_by' => $user['id'],
+            'modified_by' => $user['id'],
+        ]);
+
+        $this->assertNotEmpty($entity->getErrors());
+        $this->assertArrayHasKey('dateTime', $entity->getErrors()['deleted']);
     }
 
     /**

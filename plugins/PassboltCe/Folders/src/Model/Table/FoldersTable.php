@@ -31,6 +31,7 @@ use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
 
 /**
  * Folders Model
@@ -250,6 +251,11 @@ class FoldersTable extends Table
         $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
             'errorField' => 'metadata_key_id',
             'message' => __('The metadata key does not exist.'),
+        ]);
+
+        $rules->add(new MetadataKeyIdNotExpiredRule(), 'isMetadataKeyNotExpired', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key is marked as expired.'),
         ]);
 
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [

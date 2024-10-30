@@ -110,6 +110,10 @@ class MetadataKeysTable extends Table
             ->add('armored_key', 'isParsableArmoredPublicKey', new IsParsableArmoredKeyValidationRule());
 
         $validator
+            ->dateTime('expired')
+            ->allowEmptyDateTime('expired');
+
+        $validator
             ->dateTime('deleted')
             ->allowEmptyDateTime('deleted');
 
@@ -146,13 +150,6 @@ class MetadataKeysTable extends Table
             'message' => __('You cannot reuse the user key.'),
         ]);
 
-        // TODO: Fix this, existsIn doesn't work with hasOne
-//        $rules->addCreate($rules->existsIn('created_by', 'Users'), 'creator_exists');
-//        $rules->addCreate($rules->existsIn('modified_by', 'Users'), 'modifier_exists');
-
-        // Update rules
-//        $rules->addUpdate($rules->existsIn('modified_by', 'Users'), 'modifier_exists');
-
         return $rules;
     }
 
@@ -160,12 +157,12 @@ class MetadataKeysTable extends Table
      * @return array|\Cake\Datasource\EntityInterface
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getLatestNonDeletedKey()
+    public function getLatestActiveKey()
     {
         return $this
             ->find()
             ->select(['id', 'fingerprint', 'armored_key'])
-            ->where(['deleted IS NULL'])
+            ->where(['deleted IS NULL', 'expired IS NULL'])
             ->order(['created' => 'DESC'])
             ->firstOrFail();
     }

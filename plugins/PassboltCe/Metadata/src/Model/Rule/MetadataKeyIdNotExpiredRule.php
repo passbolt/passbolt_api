@@ -20,7 +20,7 @@ namespace Passbolt\Metadata\Model\Rule;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 
-class MetadataKeyIdExistsInRule
+class MetadataKeyIdNotExpiredRule
 {
     /**
      * @param \Cake\Datasource\EntityInterface $entity The entity to check
@@ -34,10 +34,10 @@ class MetadataKeyIdExistsInRule
 
         if ($metadataKeyType === 'user_key') {
             $table = TableRegistry::getTableLocator()->get('Gpgkeys');
-            $conditions = ['id' => $id, 'deleted' => false];
+            $conditions = ['id' => $id, 'expires IS NULL'];
         } else {
             $table = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys');
-            $conditions = ['id' => $id, 'deleted IS NULL'];
+            $conditions = ['id' => $id, 'expired IS NULL'];
         }
 
         return $table->exists($conditions);

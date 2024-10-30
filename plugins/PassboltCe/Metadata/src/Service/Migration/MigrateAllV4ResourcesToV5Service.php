@@ -286,7 +286,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
 
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey */
-        $metadataKey = $metadataKeysTable->getLatestNonDeletedKey();
+        $metadataKey = $metadataKeysTable->getLatestActiveKey();
 
         return $metadataKey;
     }
