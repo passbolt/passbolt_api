@@ -19,6 +19,8 @@ namespace Passbolt\Metadata\Model\Rule;
 
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class MetadataKeyIdNotExpiredRule
 {
@@ -32,14 +34,27 @@ class MetadataKeyIdNotExpiredRule
         $metadataKeyType = $entity->get('metadata_key_type');
         $id = $entity->get('metadata_key_id');
 
-        if ($metadataKeyType === 'user_key') {
-            $table = TableRegistry::getTableLocator()->get('Gpgkeys');
-            $conditions = ['id' => $id, 'expires IS NULL'];
-        } else {
-            $table = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys');
-            $conditions = ['id' => $id, 'expired IS NULL'];
+        if (!isset($id) || !is_string($id) || !Validation::uuid($id)) {
+            return false;
+        }
+        if (!isset($metadataKeyType) || !is_string($metadataKeyType)) {
+            return false;
         }
 
-        return $table->exists($conditions);
+        if ($metadataKeyType === MetadataKey::TYPE_USER_KEY) {
+            $table = TableRegistry::getTableLocator()->get('Gpgkeys');
+            $conditions = ['id' => $id, 'expires IS NULL'];
+
+            return $table->exists($conditions);
+        }
+
+        if ($metadataKeyType === MetadataKey::TYPE_SHARED_KEY) {
+            $table = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys');
+            $conditions = ['id' => $id, 'expired IS NULL'];
+
+            return $table->exists($conditions);
+        }
+
+        return false;
     }
 }

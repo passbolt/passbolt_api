@@ -60,4 +60,20 @@ class MetadataKey extends Entity
         'modified_by' => false,
         'metadata_private_keys' => false,
     ];
+
+    /**
+     * @return bool true if deleted is set
+     */
+    public function isDeleted(): bool
+    {
+        return $this->deleted !== null;
+    }
+
+    /**
+     * @return bool true if expired is set
+     */
+    public function isExpired(): bool
+    {
+        return $this->expired !== null;
+    }
 }

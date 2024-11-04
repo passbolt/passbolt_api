@@ -137,7 +137,7 @@ class MetadataKeysTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add(new IsUniqueIfNotSoftDeletedRule(), '_isUnique', [
+        $rules->addCreate(new IsUniqueIfNotSoftDeletedRule(), '_isUnique', [
             'errorField' => 'fingerprint',
             'message' => __('The fingerprint is already in use.'),
         ]);
