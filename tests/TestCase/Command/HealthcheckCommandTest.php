@@ -35,6 +35,7 @@ use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
+use Passbolt\Subscription\Test\SubscriptionFactory;
 
 class HealthcheckCommandTest extends AppTestCase
 {
@@ -153,6 +154,8 @@ class HealthcheckCommandTest extends AppTestCase
         Configure::write('passbolt.js.build', 'production');
         Configure::write('passbolt.email.send', '');
         $this->enableFeaturePlugin(SelfRegistrationPlugin::class);
+
+        $this->mockSubscriptionKey();
 
         $this->exec('passbolt healthcheck -d test --application');
 
@@ -310,5 +313,19 @@ class HealthcheckCommandTest extends AppTestCase
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<error>[FAIL] The server key fingerprint doesn\'t match the one defined in ');
+    }
+
+    /**
+     * @return void
+     */
+    protected function mockSubscriptionKey(): void
+    {
+        $licenseDevPublicKey = PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'gpg' . DS . 'subscription_dev_public.key';
+        Configure::write('passbolt.plugins.ee.subscriptionKey.public', $licenseDevPublicKey);
+
+        $content = file_get_contents(PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev');
+        SubscriptionFactory::make([
+            'value' => $content,
+        ])->persist();
     }
 }

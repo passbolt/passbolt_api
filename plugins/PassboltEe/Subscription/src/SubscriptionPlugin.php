@@ -16,11 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\Subscription;
 
+use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Subscriptions\SubscriptionCheckInCommandServiceInterface;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
 use Passbolt\Subscription\Command\SubscriptionCheckCommand;
 use Passbolt\Subscription\Command\SubscriptionImportCommand;
+use Passbolt\Subscription\Service\Healthcheck\Application\SubscriptionKeyApplicationHealthcheck;
 use Passbolt\Subscription\Service\Subscriptions\EeSubscriptionCheckInCommandService;
 use Psr\Container\ContainerInterface;
 
@@ -52,5 +54,11 @@ class SubscriptionPlugin extends BasePlugin
                 SubscriptionCheckInCommandServiceInterface::class,
             ]);
         }
+
+        $container->add(SubscriptionKeyApplicationHealthcheck::class);
+
+        $container
+            ->extend(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [SubscriptionKeyApplicationHealthcheck::class]);
     }
 }
