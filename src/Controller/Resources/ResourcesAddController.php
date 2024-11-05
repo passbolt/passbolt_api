@@ -23,12 +23,15 @@ use Cake\Core\Configure;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
 class ResourcesAddController extends AppController
 {
+    use MetadataPopulateUserKeyIdTrait;
+
     /**
      * Resource Add action
      *
@@ -42,7 +45,12 @@ class ResourcesAddController extends AppController
     {
         $this->assertJson();
 
-        $resourceDto = new MetadataResourceDto($this->getRequest()->getData());
+        // Massage the user provided data
+        $data = $this->getRequest()->getData();
+        $data = $this->populatedMetadataUserKeyId($this->User->id(), $data);
+        $resourceDto = new MetadataResourceDto($data);
+
+        // Add the new resource
         $resource = $resourcesAddService->add(
             $this->User->getAccessControl(),
             $resourceDto

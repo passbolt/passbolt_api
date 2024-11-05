@@ -56,4 +56,15 @@ class MetadataKeysSettingsFactory extends OrganizationSettingFactory
 
         return $this->value($data);
     }
+
+    /**
+     * @return $this
+     */
+    public function disableZeroTrustKeySharing()
+    {
+        $data = MetadataKeysSettingsFactory::getDefaultData();
+        $data[MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE] = false;
+
+        return $this->value($data);
+    }
 }

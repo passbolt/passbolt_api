@@ -58,6 +58,27 @@ class MetadataPrivateKeysCreateServiceTest extends AppTestCaseV5
         $this->assertNotEmpty($created->created);
     }
 
+    public function testMetadataPrivateKeysCreateService_Success_ServerKey(): void
+    {
+        /** @var \App\Model\Entity\User $admin */
+        $admin = UserFactory::make()->admin()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->withValidGpgKey()->persist();
+        $key = MetadataKeyFactory::make()->withUserPrivateKey($user->gpgkey)->persist();
+
+        $uac = new UserAccessControl(Role::ADMIN, $admin->id);
+        $data = [
+            'user_id' => null,
+            'data' => $this->getValidPrivateKeyDataForServer(),
+        ];
+
+        $sut = new MetadataPrivateKeysCreateService();
+        $created = $sut->create($uac, $key->id, $data);
+        $this->assertEquals($data['data'], $created->data);
+        $this->assertEquals($admin->id, $created->created_by);
+        $this->assertNotEmpty($created->created);
+    }
+
     public function testMetadataPrivateKeysCreateService_Error_NotAdmin(): void
     {
         /** @var \App\Model\Entity\User $notAdmin */
@@ -73,24 +94,6 @@ class MetadataPrivateKeysCreateServiceTest extends AppTestCaseV5
         $sut = new MetadataPrivateKeysCreateService();
         $this->expectException(ForbiddenException::class);
         $sut->create($uac, UuidFactory::uuid(), $data);
-    }
-
-    public function testMetadataPrivateKeysCreateService_Error_UserIdNotSet(): void
-    {
-        /** @var \App\Model\Entity\User $admin */
-        $admin = UserFactory::make()->admin()->persist();
-        /** @var \App\Model\Entity\User $user */
-        $user = UserFactory::make()->withValidGpgKey()->persist();
-        $key = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
-
-        $uac = new UserAccessControl(Role::ADMIN, $admin->id);
-        $data = [
-            'user_id' => null,
-            'data' => $this->getValidPrivateKeyData($user->gpgkey->armored_key),
-        ];
-        $sut = new MetadataPrivateKeysCreateService();
-        $this->expectException(BadRequestException::class);
-        $sut->create($uac, $key->id, $data);
     }
 
     public function testMetadataPrivateKeysCreateService_Error_UserIdNotUuid(): void

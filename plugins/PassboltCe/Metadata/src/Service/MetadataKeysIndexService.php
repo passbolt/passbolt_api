@@ -38,6 +38,8 @@ class MetadataKeysIndexService
             'armored_key',
             'created',
             'modified',
+            'created_by',
+            'modified_by',
             'deleted',
         ]);
 

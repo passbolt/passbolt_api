@@ -25,10 +25,6 @@ class HealthcheckServiceCollector
      * @var \App\Service\Healthcheck\HealthcheckServiceInterface[]
      */
     protected array $services = [];
-    /**
-     * @var string[]
-     */
-    protected array $domainTitles = [];
 
     /**
      * List of all available health check domains.

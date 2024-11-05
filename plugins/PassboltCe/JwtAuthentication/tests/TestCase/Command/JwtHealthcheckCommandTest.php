@@ -47,7 +47,7 @@ class JwtHealthcheckCommandTest extends AppTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('<warning>[WARN] The JWT Authentication plugin is disabled.</warning>');
         $this->assertOutputContains('<info>[HELP]</info> Set the environment variable PASSBOLT_PLUGINS_JWT_AUTHENTICATION_ENABLED to true');
-        $this->assertOutputContains('No error found. Nice one sparky!');
+        $this->assertOutputContains('No error found. Nice one, sparky!');
     }
 
     public function testHealthcheckCommand_Jwt_Valid()

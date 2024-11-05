@@ -24,9 +24,12 @@ use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 
 class FoldersUpdateController extends AppController
 {
+    use MetadataPopulateUserKeyIdTrait;
+
     /**
      * Folders update action
      *
@@ -42,7 +45,8 @@ class FoldersUpdateController extends AppController
 
         $uac = $this->User->getAccessControl();
         $foldersUpdateService = new FoldersUpdateService();
-        $folderDto = MetadataFolderDto::fromArray($this->getRequest()->getData());
+        $requestData = $this->populatedMetadataUserKeyId($uac->getId(), $this->getRequest()->getData());
+        $folderDto = MetadataFolderDto::fromArray($requestData);
 
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
         $folder = $foldersUpdateService->update($uac, $id, $folderDto);

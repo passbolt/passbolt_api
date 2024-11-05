@@ -91,14 +91,18 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertSuccess();
         $response = $this->getResponseBodyAsArray();
         $this->assertCount(1, $response);
-        $this->assertEqualsCanonicalizing([
+
+        $expected = [
             'id' => $deletedMetadataKey->get('id'),
             'fingerprint' => $deletedMetadataKey->get('fingerprint'),
             'armored_key' => $deletedMetadataKey->get('armored_key'),
             'created' => $deletedMetadataKey->get('created')->toAtomString(),
             'modified' => $deletedMetadataKey->get('modified')->toAtomString(),
+            'created_by' => $deletedMetadataKey->get('created_by'),
+            'modified_by' => $deletedMetadataKey->get('modified_by'),
             'deleted' => $deletedMetadataKey->get('deleted')->toAtomString(),
-        ], $response[0]);
+        ];
+        $this->assertEqualsCanonicalizing($expected, $response[0]);
     }
 
     public function testMetadataKeysIndexController_Error_AuthenticationRequired()

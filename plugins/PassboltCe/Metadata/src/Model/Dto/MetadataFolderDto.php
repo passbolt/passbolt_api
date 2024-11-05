@@ -23,7 +23,7 @@ use Cake\Log\Log;
 use Cake\Utility\Hash;
 use Passbolt\Metadata\MetadataPlugin;
 
-class MetadataFolderDto
+class MetadataFolderDto extends MetadataDto
 {
     use FeaturePluginAwareTrait;
 

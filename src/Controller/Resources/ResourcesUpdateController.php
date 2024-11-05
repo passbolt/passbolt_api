@@ -25,12 +25,15 @@ use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 
 /**
  * ResourcesUpdateController Class
  */
 class ResourcesUpdateController extends AppController
 {
+    use MetadataPopulateUserKeyIdTrait;
+
     /**
      * Resource Update action
      *
@@ -51,7 +54,8 @@ class ResourcesUpdateController extends AppController
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
 
-        $resourceDto = new MetadataResourceDto($this->getRequest()->getData());
+        $requestData = $this->populatedMetadataUserKeyId($this->User->id(), $this->getRequest()->getData());
+        $resourceDto = new MetadataResourceDto($requestData);
 
         $uac = $this->User->getAccessControl();
         $resource = $resourcesUpdateService->update($uac, $id, $resourceDto);

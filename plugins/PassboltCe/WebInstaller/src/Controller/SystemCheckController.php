@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
+use App\Service\Healthcheck\Environment\TimeSyncHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
@@ -25,6 +26,7 @@ use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
 use Cake\Collection\Collection;
 use Cake\Collection\CollectionInterface;
+use Cake\Core\Configure;
 use Cake\Routing\Router;
 
 class SystemCheckController extends WebInstallerController
@@ -51,6 +53,9 @@ class SystemCheckController extends WebInstallerController
             }
             if ($healthcheckService instanceof IsRequestHttpsSslHealthcheck) {
                 $isRequestHttps = $result->isPassed();
+                continue;
+            }
+            if ($healthcheckService instanceof TimeSyncHealthcheck && Configure::read('debug')) {
                 continue;
             }
             $isSystemOk = $isSystemOk && $result->isPassed();

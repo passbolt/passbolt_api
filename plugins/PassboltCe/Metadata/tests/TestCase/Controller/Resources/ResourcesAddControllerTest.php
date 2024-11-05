@@ -49,7 +49,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         EventManager::instance()->setEventList(new EventList());
     }
 
-    public function testResourcesAddController_SharedKeyType_Success(): void
+    public function testResourcesAddController_Success_SharedKeyType(): void
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $user = UserFactory::make()->user()->persist();
@@ -93,7 +93,7 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         );
     }
 
-    public function testResourcesAddController_UserKeyType_Success(): void
+    public function testResourcesAddController_Success_UserKeyType(): void
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
@@ -118,6 +118,48 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
 
         $data = [
             'metadata_key_id' => $metadataKeyId,
+            'metadata' => $metadata,
+            'metadata_key_type' => $metadataKeyType,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+        $this->postJson('/resources.json', $data);
+
+        $this->assertSuccess();
+        $resource = ResourceFactory::firstOrFail();
+        $this->assertSame($user->gpgkey->id, $resource->metadata_key_id);
+        $this->assertSame($metadata, $resource->metadata);
+        $this->assertSame($metadataKeyType, $resource->metadata_key_type);
+        $this->assertSame($resourceTypeId, $resource->resource_type_id);
+        $this->assertObjectNotHasAttribute('name', $this->_responseJsonBody);
+    }
+
+    public function testResourcesAddController_Success_UserKeyType_KeyIdNull(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $dummyResourceData = $this->getDummyResourcesPostData([
+            'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
+        ]);
+        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
+        $metadataKeyType = 'user_key';
+        // login
+        $this->logInAs($user);
+
+        $data = [
+            'metadata_key_id' => null, // will be set by controller
             'metadata' => $metadata,
             'metadata_key_type' => $metadataKeyType,
             'resource_type_id' => $resourceTypeId,
@@ -327,5 +369,37 @@ class ResourcesAddControllerTest extends AppIntegrationTestCaseV5
         $this->postJson('/resources.json', $data);
         $this->assertError(400);
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
+    }
+
+    public function testResourcesAddController_Error_SharedKeyType_Empty(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        $user = UserFactory::make()->user()->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
+        $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
+        $metadataKeyId = $metadataKey->get('id');
+        $dummyResourceData = $this->getDummyResourcesPostData([
+            'resource_type_id' => $v4ResourceTypeId, // v4 here is intentional, needed for mapping
+        ]);
+        $resourceDto = MetadataResourceDto::fromArray($dummyResourceData);
+        $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+        $metadataKeyType = 'shared_key';
+        // login
+        $this->logInAs($user);
+
+        $data = [
+            'metadata_key_id' => null,
+            'metadata' => $metadata,
+            'metadata_key_type' => $metadataKeyType,
+            'resource_type_id' => $resourceTypeId,
+            'secrets' => [
+                ['data' => $this->getDummyGpgMessage()],
+            ],
+        ];
+
+        $this->postJson('/resources.json', $data);
+        $this->assertError(400);
     }
 }

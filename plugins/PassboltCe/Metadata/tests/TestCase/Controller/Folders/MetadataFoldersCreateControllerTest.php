@@ -96,6 +96,47 @@ class MetadataFoldersCreateControllerTest extends AppIntegrationTestCaseV5
         );
     }
 
+    public function testMetadataFoldersCreateController_Success_Personal_KeyIdNull(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'Social media']);
+        $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
+        $this->logInAs($user);
+
+        $data = [
+            'metadata' => $metadata,
+            'metadata_key_id' => null,
+            'metadata_key_type' => 'user_key',
+        ];
+        $this->postJson('/folders.json?api-version=2', $data);
+
+        $this->assertSuccess();
+        // Assert controller response
+        $response = $this->getResponseBodyAsArray();
+        $this->assertArrayNotHasKey('name', $response);
+        $this->assertNotNull($response['metadata']);
+        $this->assertSame($user->gpgkey->id, $response['metadata_key_id']);
+        $this->assertSame('user_key', $response['metadata_key_type']);
+        $this->assertEquals($user->id, $response['created_by']);
+        $this->assertEquals($user->id, $response['modified_by']);
+        // Assert folder data is saved in database
+        $folders = FolderFactory::count();
+        $this->assertSame(1, $folders);
+        $this->assertSame(1, PermissionFactory::count());
+        // Assert event data
+        $this->assertEventFiredWith(
+            FoldersCreateService::FOLDERS_CREATE_FOLDER_EVENT,
+            'isV5',
+            true
+        );
+    }
+
     public function testMetadataFoldersCreateController_Success_PersonalChildFolder()
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();

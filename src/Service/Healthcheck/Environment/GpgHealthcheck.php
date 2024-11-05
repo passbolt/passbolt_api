@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         4.10.0
  */
 
 namespace App\Service\Healthcheck\Environment;
@@ -20,9 +20,13 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use Symfony\Component\Process\Process;
 
-class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
+    private const COMMAND_GPG = 'gpg --version | grep gpg';
+    private const COMMAND_LIBGCRYPT = 'gpg --version | grep libgcrypt';
+
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -30,12 +34,18 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     private bool $status = false;
 
+    private ?string $gpgVersion = null;
+
+    private ?string $libgcryptVersion = null;
+
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = extension_loaded('mbstring');
+        $this->gpgVersion = $this->runCommand(self::COMMAND_GPG);
+        $this->libgcryptVersion = $this->runCommand(self::COMMAND_LIBGCRYPT);
+        $this->status = $this->gpgVersion !== null && $this->libgcryptVersion !== null;
 
         return $this;
     }
@@ -61,7 +71,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return $this->status ? HealthcheckServiceCollector::LEVEL_NOTICE : HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -69,7 +79,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getSuccessMessage(): string
     {
-        return __('Mbstring extension is installed.');
+        return $this->gpgVersion . ' / ' . $this->libgcryptVersion;
     }
 
     /**
@@ -77,7 +87,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getFailureMessage(): string
     {
-        return __('You must enable the mbstring extension to use Passbolt.');
+        return __('Cannot detect your `gpg` or `libgcrypt` version.');
     }
 
     /**
@@ -85,7 +95,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getHelpMessage()
     {
-        return [__('See: https://secure.php.net/manual/en/book.mbstring.php')];
+        return [__('See `{0}` and `{1}`.', self::COMMAND_GPG, self::COMMAND_LIBGCRYPT)];
     }
 
     /**
@@ -103,6 +113,21 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getLegacyArrayKey(): string
     {
-        return 'mbstring';
+        return 'gpg';
+    }
+
+    /**
+     * @param string $command Command to run.
+     * @return string|null
+     */
+    private function runCommand(string $command): ?string
+    {
+        $process = Process::fromShellCommandLine($command);
+        $process->run();
+        if (!$process->isSuccessful()) {
+            return null;
+        }
+
+        return trim($process->getOutput()) ?: null;
     }
 }

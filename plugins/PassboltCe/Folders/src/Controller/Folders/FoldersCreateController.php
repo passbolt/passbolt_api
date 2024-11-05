@@ -22,9 +22,12 @@ use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\Folders\FoldersCreateService;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 
 class FoldersCreateController extends AppController
 {
+    use MetadataPopulateUserKeyIdTrait;
+
     /**
      * Folders create action.
      *
@@ -33,8 +36,11 @@ class FoldersCreateController extends AppController
      */
     public function create()
     {
+        $this->assertJson();
+
         $uac = $this->User->getAccessControl();
-        $folderDto = MetadataFolderDto::fromArray($this->getRequest()->getData());
+        $requestData = $this->populatedMetadataUserKeyId($uac->getId(), $this->getRequest()->getData());
+        $folderDto = MetadataFolderDto::fromArray($requestData);
         $folderCreateService = new FoldersCreateService();
 
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */

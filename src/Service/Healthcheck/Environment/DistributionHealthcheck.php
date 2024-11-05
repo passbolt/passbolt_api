@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.7.0
+ * @since         4.10.0
  */
 
 namespace App\Service\Healthcheck\Environment;
@@ -20,9 +20,12 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use Symfony\Component\Process\Process;
 
-class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
+class DistributionHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
+    private const COMMAND = ['uname', '-a'];
+
     /**
      * Status of this health check if it is passed or failed.
      *
@@ -30,12 +33,15 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     private bool $status = false;
 
+    private ?string $result = null;
+
     /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = extension_loaded('mbstring');
+        $this->result = $this->detectDistribution();
+        $this->status = $this->result !== null;
 
         return $this;
     }
@@ -61,7 +67,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function level(): string
     {
-        return HealthcheckServiceCollector::LEVEL_ERROR;
+        return $this->status ? HealthcheckServiceCollector::LEVEL_NOTICE : HealthcheckServiceCollector::LEVEL_WARNING;
     }
 
     /**
@@ -69,7 +75,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getSuccessMessage(): string
     {
-        return __('Mbstring extension is installed.');
+        return (string)$this->result;
     }
 
     /**
@@ -77,7 +83,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getFailureMessage(): string
     {
-        return __('You must enable the mbstring extension to use Passbolt.');
+        return __('Cannot detect your system distribution details.');
     }
 
     /**
@@ -85,7 +91,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getHelpMessage()
     {
-        return [__('See: https://secure.php.net/manual/en/book.mbstring.php')];
+        return [__('See `{0}`.', implode(' ', self::COMMAND))];
     }
 
     /**
@@ -103,6 +109,20 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     public function getLegacyArrayKey(): string
     {
-        return 'mbstring';
+        return 'distribution';
+    }
+
+    /**
+     * @return string|null
+     */
+    private function detectDistribution(): ?string
+    {
+        $process = new Process(self::COMMAND);
+        $process->run();
+        if (!$process->isSuccessful()) {
+            return null;
+        }
+
+        return trim($process->getOutput()) ?: null;
     }
 }
