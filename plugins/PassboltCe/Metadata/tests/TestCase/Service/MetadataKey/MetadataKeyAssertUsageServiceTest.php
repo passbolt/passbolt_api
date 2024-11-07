@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\Test\TestCase\Service;
+namespace Passbolt\Metadata\Test\TestCase\Service\MetadataKey;
 
 use App\Test\Factory\ResourceFactory;
 use App\Test\Lib\AppTestCaseV5;
@@ -26,7 +26,7 @@ use Passbolt\Metadata\Service\MetadataKey\MetadataKeyAssertUsageService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 
 /**
- * @covers \Passbolt\Metadata\Service\MetadataKeyDeleteService
+ * @covers \Passbolt\Metadata\Service\MetadataKey\MetadataKeyDeleteService
  */
 class MetadataKeyAssertUsageServiceTest extends AppTestCaseV5
 {
