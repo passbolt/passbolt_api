@@ -320,10 +320,10 @@ class HealthcheckCommandTest extends AppTestCase
      */
     protected function mockSubscriptionKey(): void
     {
-        $licenseDevPublicKey = PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'gpg' . DS . 'subscription_dev_public.key';
-        Configure::write('passbolt.plugins.ee.subscriptionKey.public', $licenseDevPublicKey);
+        $licenseDevPublicKey = PLUGINS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'gpg' . DS . 'subscription_dev_public.key';
+        Configure::write('passbolt.plugins.subscription.subscriptionKey.public', $licenseDevPublicKey);
 
-        $content = file_get_contents(PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev');
+        $content = file_get_contents(PLUGINS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'subscription' . DS . 'subscription_dev');
         SubscriptionFactory::make([
             'value' => $content,
         ])->persist();
