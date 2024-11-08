@@ -70,7 +70,14 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
                     // new
                     'metadata' => $metadata,
                     'metadata_key_id' => $user->gpgkey->id,
-                    'metadata_key_type' => 'user_key',
+                    'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+                    'is_shared' => false,
+                ],
+                [
+                    // metadata key id is null
+                    'metadata' => $metadata,
+                    'metadata_key_id' => null,
+                    'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
                     'is_shared' => false,
                 ],
             ],
@@ -80,7 +87,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertSuccess();
         // assert response
         $response = $this->getResponseBodyAsArray();
-        $this->assertCount(3, $response);
+        $this->assertCount(4, $response);
         foreach ($response as $item) {
             if (array_key_exists('slug', $item)) {
                 // v4
@@ -94,6 +101,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
                 $this->assertArrayHasKey('metadata', $item);
                 $this->assertArrayHasKey('metadata_key_id', $item);
                 $this->assertArrayHasKey('metadata_key_type', $item);
+                $this->assertSame($user->gpgkey->id, $item['metadata_key_id']);
             }
 
             // is shared will be present for both
@@ -101,7 +109,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         }
         // assert tags are saved properly
         $tags = TagFactory::find()->toArray();
-        $this->assertCount(3, $tags);
+        $this->assertCount(4, $tags);
     }
 
     public function testMetadataResourcesTagsAddController_Success_ReuseExistingSharedTag(): void
@@ -272,15 +280,13 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $response = $this->getResponseBodyAsArray();
         $this->assertCount(5, $response);
         // validation field 1
-        $this->assertCount(4, $response[0]);
+        $this->assertCount(3, $response[0]);
         $this->assertArrayHasKey('_required', $response[0]['metadata']);
-        $this->assertArrayHasKey('_required', $response[0]['metadata_key_id']);
         $this->assertArrayHasKey('_required', $response[0]['metadata_key_type']);
         $this->assertArrayHasKey('_required', $response[0]['is_shared']);
         // validation field 2
-        $this->assertCount(4, $response[1]);
+        $this->assertCount(3, $response[1]);
         $this->assertArrayHasKey('ascii', $response[1]['metadata']);
-        $this->assertArrayHasKey('_required', $response[1]['metadata_key_id']);
         $this->assertArrayHasKey('_required', $response[1]['metadata_key_type']);
         $this->assertArrayHasKey('_required', $response[1]['is_shared']);
         // validation field 3

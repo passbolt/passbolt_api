@@ -18,9 +18,11 @@ namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
+use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\Tags\Form\MetadataResourcesAddExistingTagForm;
 use Passbolt\Tags\Form\MetadataResourcesTagsAddForm;
@@ -34,6 +36,7 @@ use Passbolt\Tags\Service\Tags\ResourcesTagsAddService;
 class ResourcesTagsAddController extends AppController
 {
     use MetadataSettingsAwareTrait;
+    use MetadataPopulateUserKeyIdTrait;
 
     /**
      * @inheritDoc
@@ -62,7 +65,7 @@ class ResourcesTagsAddController extends AppController
 
         $uac = $this->User->getAccessControl();
         $data = $this->formatRequestData();
-        $data = $this->validateRequestData($data);
+        $data = $this->validateRequestData($data, $uac);
 
         $options = ['contain' => ['all_tags' => 1, 'permission' => 1]];
         /** @var \App\Model\Entity\Resource|null $resource */
@@ -101,11 +104,12 @@ class ResourcesTagsAddController extends AppController
      * Validates the request data.
      *
      * @param array $data Data to validate.
+     * @param \App\Utility\UserAccessControl $uac User access control.
      * @return array Valid request data
      * @throws \App\Error\Exception\CustomValidationException If data is invalid.
      * @throws \Cake\Http\Exception\BadRequestException If V5 or V4 tag creation/modification is not allowed.
      */
-    private function validateRequestData(array $data): array
+    private function validateRequestData(array $data, UserAccessControl $uac): array
     {
         $errors = [];
         foreach ($data as $i => $tag) {
@@ -125,9 +129,11 @@ class ResourcesTagsAddController extends AppController
                     $form = new MetadataResourcesTagsAddForm();
                 }
 
-                if (!$form->validate($tag)) {
+                if (!$form->execute($tag)) {
                     $errors[$i] = array_merge($errors[$i], $form->getErrors());
                 }
+
+                $data[$i] = $this->populatedMetadataUserKeyId($uac->getId(), $form->getData());
             } else {
                 $this->assertV4TagCreationEnabled();
             }
