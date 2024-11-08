@@ -64,6 +64,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
                 'armored_key' => $dummyData['public_key'],
                 'created' => Chronos::now()->subDays($faker->randomNumber(3)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(3)),
+                'expired' => null,
                 'deleted' => null,
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
@@ -79,6 +80,16 @@ class MetadataKeyFactory extends CakephpBaseFactory
     public function deleted()
     {
         return $this->setField('deleted', FrozenTime::yesterday());
+    }
+
+    /**
+     * Set expired in the past.
+     *
+     * @return $this
+     */
+    public function expired()
+    {
+        return $this->setField('expired', FrozenTime::yesterday());
     }
 
     /**

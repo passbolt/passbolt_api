@@ -110,7 +110,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
                     $msg = __('No permission found for resource ID {0}', $resource->id);
                     throw new InternalErrorException($msg);
                 }
-                if (count($resource->permissions) === 1) {
+                if (count($resource->permissions) === 1 && !$resource->permissions[0]->isAroGroup()) {
                     $this->migratePersonal($dto, $resource);
                 } else {
                     $this->migrateShared($dto, $resource);
@@ -286,7 +286,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
 
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey */
-        $metadataKey = $metadataKeysTable->getLatestNonDeletedKey();
+        $metadataKey = $metadataKeysTable->getLatestActiveKey();
 
         return $metadataKey;
     }

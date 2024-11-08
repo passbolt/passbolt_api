@@ -41,6 +41,7 @@ use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
 use Passbolt\Metadata\Model\Rule\IsResourceV5ToV4DowngradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
@@ -344,7 +345,12 @@ class ResourcesTable extends Table
 
         $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
             'errorField' => 'metadata_key_id',
-            'message' => __('The metadata key does not exist.'),
+            'message' => __('The metadata key does not exist or was deleted.'),
+        ]);
+
+        $rules->add(new MetadataKeyIdNotExpiredRule(), 'isMetadataKeyNotExpired', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key is marked as expired.'),
         ]);
 
         $rules->addCreate(new IsNotV5PasswordStringType(), 'isNotV5PasswordStringType', [

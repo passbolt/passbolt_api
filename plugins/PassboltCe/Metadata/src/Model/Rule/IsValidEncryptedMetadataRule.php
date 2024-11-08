@@ -78,11 +78,10 @@ class IsValidEncryptedMetadataRule
     {
         if ($metadataKeyType === MetadataKey::TYPE_SHARED_KEY) {
             $metadataKeysTable = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys');
+            // No "expired IS NULL" in conditions, it's handled by MetadataKeyIdNotExpiredRule
+            $conditions = ['id' => $metadataKeyId, 'deleted IS NULL'];
             /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey */
-            $metadataKey = $metadataKeysTable
-                ->find()
-                ->where(['id' => $metadataKeyId, 'deleted IS NULL'])
-                ->firstOrFail();
+            $metadataKey = $metadataKeysTable->find()->where($conditions)->firstOrFail();
             $armoredKey = $metadataKey->armored_key;
         } else {
             // user_key

@@ -472,4 +472,40 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertResponseContains('metadata_key_type');
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
     }
+
+    public function testMetadataFoldersUpdateController_Error_SharedKeyExpired()
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\User $betty */
+        $betty = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())
+            ->user()
+            ->active()
+            ->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_FOLDER_METADATA', 'name' => 'updated']);
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+        // create metadata key
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()
+            ->expired()->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada, $betty])->withPermissionsFor([$ada, $betty])->persist();
+        $this->logInAs($betty);
+
+        $data = [
+            'metadata' => $metadata,
+            'metadata_key_id' => $metadataKey->id,
+            'metadata_key_type' => 'shared_key',
+        ];
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
+
+        $this->assertError(400);
+        $this->assertResponseContains('metadata_key_id');
+        $this->assertResponseContains('isMetadataKeyNotExpired');
+    }
 }

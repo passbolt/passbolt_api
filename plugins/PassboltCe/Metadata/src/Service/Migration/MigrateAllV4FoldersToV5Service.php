@@ -256,7 +256,7 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
 
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey */
-        $metadataKey = $metadataKeysTable->getLatestNonDeletedKey();
+        $metadataKey = $metadataKeysTable->getLatestActiveKey();
 
         return $metadataKey;
     }

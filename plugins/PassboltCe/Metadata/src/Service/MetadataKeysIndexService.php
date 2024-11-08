@@ -40,6 +40,7 @@ class MetadataKeysIndexService
             'modified',
             'created_by',
             'modified_by',
+            'expired',
             'deleted',
         ]);
 
@@ -56,6 +57,9 @@ class MetadataKeysIndexService
         if (is_array($filters) && !empty($filters)) {
             if (isset($filters['deleted'])) {
                 $query->where($filters['deleted'] ? ['deleted IS NOT NULL'] : ['deleted IS NULL']);
+            }
+            if (isset($filters['expired'])) {
+                $query->where($filters['expired'] ? ['expired IS NOT NULL'] : ['expired IS NULL']);
             }
         }
 

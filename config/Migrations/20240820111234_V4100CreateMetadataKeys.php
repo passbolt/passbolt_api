@@ -55,6 +55,11 @@ class V4100CreateMetadataKeys extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
+            ->addColumn('expired', 'datetime', [
+                'default' => null,
+                'limit' => null,
+                'null' => true,
+            ])
             ->addColumn('deleted', 'datetime', [
                 'default' => null,
                 'limit' => null,

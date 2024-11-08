@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Service\Migration;
 
 use App\Test\Factory\GpgkeyFactory;
+use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
@@ -173,6 +174,38 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
                 $this->assertionsForSharedResource($updatedResource, $sharedResource, $metadataKey);
             }
         }
+    }
+
+    public function testMetadataMigrateAllV4ResourcesToV5Service_Success_Group(): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5DefaultResourceType */
+        $v5DefaultResourceType = ResourceTypeFactory::make()->v5Default()->persist();
+        $adaKeyInfo = [
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
+            'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
+        ];
+        // metadata key
+        $metadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->user()
+            ->with('Gpgkeys', GpgkeyFactory::make($adaKeyInfo))
+            ->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$ada])->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->with('ResourceTypes', $v4ResourceType)
+            ->withPermissionsFor([$group])
+            ->persist();
+
+        $result = $this->service->migrate();
+
+        $this->assertSame([], $result['errors']);
+        /** @var \App\Model\Entity\Resource $updatedResource */
+        $updatedResource = ResourceFactory::get($resource->id);
+        $this->assertionsForSharedResource($updatedResource, $resource, $metadataKey);
     }
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Error_NoActiveMetadataKey(): void

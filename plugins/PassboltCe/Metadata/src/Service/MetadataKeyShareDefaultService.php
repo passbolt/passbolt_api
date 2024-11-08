@@ -45,8 +45,8 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
         $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
 
         // Find server copies
-        // We share all the possible private keys, even if the parent entity is marked as deleted
-        // As the metadata key can be marked as deleted but still in use for some stuffs
+        // We share all the possible private keys, even if the parent entity is marked as expired
+        // As the metadata key can be marked as expired but still in use for some stuffs
         // (resource, folder, comments, tags)
         $serverMetadataPrivateKeys = $metadataPrivateKeysTable->find()
             ->where(['user_id IS' => null])

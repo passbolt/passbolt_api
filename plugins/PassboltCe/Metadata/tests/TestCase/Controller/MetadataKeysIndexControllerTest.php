@@ -100,7 +100,35 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
             'modified' => $deletedMetadataKey->get('modified')->toAtomString(),
             'created_by' => $deletedMetadataKey->get('created_by'),
             'modified_by' => $deletedMetadataKey->get('modified_by'),
+            'expired' => $deletedMetadataKey->get('expired'),
             'deleted' => $deletedMetadataKey->get('deleted')->toAtomString(),
+        ];
+        $this->assertEqualsCanonicalizing($expected, $response[0]);
+    }
+
+    public function testMetadataKeysIndexController_Success_FilterExpired()
+    {
+        MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
+        $deletedMetadataKey = MetadataKeyFactory::make()->expired()->withCreatorAndModifier()->persist();
+        $this->logInAsUser();
+
+        $queryParams = http_build_query(['filter' => ['expired' => '1']]);
+        $this->getJson("/metadata/keys.json?{$queryParams}");
+
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(1, $response);
+
+        $expected = [
+            'id' => $deletedMetadataKey->get('id'),
+            'fingerprint' => $deletedMetadataKey->get('fingerprint'),
+            'armored_key' => $deletedMetadataKey->get('armored_key'),
+            'created' => $deletedMetadataKey->get('created')->toAtomString(),
+            'modified' => $deletedMetadataKey->get('modified')->toAtomString(),
+            'created_by' => $deletedMetadataKey->get('created_by'),
+            'modified_by' => $deletedMetadataKey->get('modified_by'),
+            'expired' => $deletedMetadataKey->get('expired')->toAtomString(),
+            'deleted' => $deletedMetadataKey->get('deleted'),
         ];
         $this->assertEqualsCanonicalizing($expected, $response[0]);
     }
