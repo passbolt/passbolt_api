@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a5809664621a8e39110f81d7c186e59",
+    "content-hash": "069004cad95983a340883db280b9d461",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -331,16 +331,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "4.5.2",
+            "version": "4.5.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "c0977cecf79eb2ae0ed8d89423c1014c200801c0"
+                "reference": "a296aef749b6c7e453c4cb4839647c266c77d4b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/c0977cecf79eb2ae0ed8d89423c1014c200801c0",
-                "reference": "c0977cecf79eb2ae0ed8d89423c1014c200801c0",
+                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/a296aef749b6c7e453c4cb4839647c266c77d4b3",
+                "reference": "a296aef749b6c7e453c4cb4839647c266c77d4b3",
                 "shasum": ""
             },
             "require": {
@@ -388,7 +388,7 @@
             "require-dev": {
                 "cakephp/cakephp-codesniffer": "^4.5",
                 "mikey179/vfsstream": "^1.6.10",
-                "paragonie/csp-builder": "^2.3",
+                "paragonie/csp-builder": "^2.3 || ^3.0",
                 "phpunit/phpunit": "^8.5 || ^9.3"
             },
             "suggest": {
@@ -440,7 +440,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2023-12-15T03:05:55+00:00"
+            "time": "2024-09-21T03:01:37+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -8852,5 +8852,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
