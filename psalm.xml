@@ -31,4 +31,8 @@
             <directory name="plugins/PassboltCe/Metadata/templates/" />
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <MissingTemplateParam errorLevel="suppress"/>
+    </issueHandlers>
 </psalm>
