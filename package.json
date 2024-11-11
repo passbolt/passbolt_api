@@ -24,10 +24,14 @@
     "jquery": "^3.5.1",
     "lockfile-lint": "^4.14.0",
     "openpgp": "^5.11.1",
-    "passbolt-styleguide": "^4.9.2"
+    "passbolt-styleguide": "^4.10.0"
   },
   "scripts": {
     "lint": "npm run lint:lockfile",
     "lint:lockfile": "lockfile-lint --path package-lock.json --allowed-hosts npm --allowed-schemes \"https:\" --empty-hostname false"
+  },
+  "dependencies": {
+    "micromatch": "^4.0.8",
+    "react-router-dom": "^5.3.4"
   }
 }

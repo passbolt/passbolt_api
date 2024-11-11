@@ -87,7 +87,7 @@ class ActionLogsPurgeServiceTest extends AppTestCase
             $this->assertSame($totalCountToDelete + $totalCountToIgnore, ActionLogFactory::count());
         } else {
             $result = $service->purge($retentionPeriodInDays, 1000);
-            $this->assertSame($result, $totalCountToDelete);
+            $this->assertSame($totalCountToDelete, $result);
             $this->assertSame($totalCountToIgnore, ActionLogFactory::count());
         }
         $this->assertSame($entitiesHistoryCount, EntitiesHistoryFactory::count());
