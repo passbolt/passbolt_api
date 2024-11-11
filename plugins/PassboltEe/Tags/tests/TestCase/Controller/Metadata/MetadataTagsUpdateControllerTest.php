@@ -44,11 +44,25 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
     }
 
     /**
+     * Data provider for testMetadataTagsUpdateController_Success_Personal.
+     *
+     * @return array
+     */
+    public function metadataTagsUpdatePersonalProvider(): array
+    {
+        return [
+            ['user key id' => true],
+            ['user key id' => false],
+        ];
+    }
+
+    /**
      * @group pro
      * @group tag
      * @group TagUpdate
+     * @dataProvider metadataTagsUpdatePersonalProvider
      */
-    public function testMetadataTagsUpdateController_Success_Personal(): void
+    public function testMetadataTagsUpdateController_Success_Personal(bool $userKeyIdFlag): void
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
@@ -74,8 +88,8 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
         $tagId = $tag->get('id');
         $this->putJson("/tags/{$tagId}.json?api-version=v2", [
             'metadata' => $metadataToUpdate,
-            'metadata_key_id' => $user->gpgkey->id,
-            'metadata_key_type' => 'user_key',
+            'metadata_key_id' => $userKeyIdFlag ? $user->gpgkey->id : null,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
             'is_shared' => false,
         ]);
 

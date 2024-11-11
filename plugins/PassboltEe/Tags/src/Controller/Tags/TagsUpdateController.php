@@ -23,6 +23,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 use Passbolt\Tags\Service\Tags\UpdatePersonalTagService;
@@ -34,6 +35,7 @@ use Passbolt\Tags\Service\Tags\UpdatePersonalTagService;
 class TagsUpdateController extends AppController
 {
     use TagAccessTrait;
+    use MetadataPopulateUserKeyIdTrait;
 
     /**
      * @inheritDoc
@@ -73,12 +75,10 @@ class TagsUpdateController extends AppController
             throw new NotFoundException(__('The tag does not exist.'));
         }
 
-        $tagDto = MetadataTagDto::fromArray($this->getRequest()->getData());
-        $updatedTag = (new UpdatePersonalTagService())->update(
-            $this->User->getAccessControl(),
-            $tagDto,
-            $tag
-        );
+        $uac = $this->User->getAccessControl();
+        $data = $this->populatedMetadataUserKeyId($uac->getId(), $this->getRequest()->getData());
+        $tagDto = MetadataTagDto::fromArray($data);
+        $updatedTag = (new UpdatePersonalTagService())->update($uac, $tagDto, $tag);
         $updatedTag = (new MetadataTagsRenderService())->renderTag($updatedTag->toArray(), $tagDto->isV5());
 
         $this->success(__('The tag has been updated successfully.'), $updatedTag);

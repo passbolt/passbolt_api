@@ -45,7 +45,7 @@ class MetadataResourcesTagsAddForm extends Form
             ->ascii('metadata', __('The metadata should be a valid ASCII string.'));
 
         $validator
-            ->requirePresence('metadata_key_id')
+            ->allowEmptyString('metadata_key_id')
             ->uuid('metadata_key_id', __('The metadata key identifier should be a valid UUID.'));
 
         $validator
@@ -57,13 +57,5 @@ class MetadataResourcesTagsAddForm extends Form
             ->boolean('is_shared', __('The is shared should be a boolean type.'));
 
         return $validator;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function _execute(array $data): bool
-    {
-        return true;
     }
 }

@@ -96,8 +96,8 @@ class MetadataResourcesTagsAddFormTest extends AppTestCaseV5
     {
         $this->assertFalse($this->form->execute([]));
         $errors = $this->form->getErrors();
-        $this->assertCount(4, $errors);
-        $fields = ['metadata', 'metadata_key_id', 'metadata_key_type', 'is_shared'];
+        $this->assertCount(3, $errors);
+        $fields = ['metadata', 'metadata_key_type', 'is_shared'];
         foreach ($fields as $field) {
             $this->assertArrayHasKey($field, $errors);
             $this->assertArrayHasKey('_required', $errors[$field]);
