@@ -29,6 +29,9 @@ use Closure;
  * Add the following option to the ORM query to remove any _jointData from the returned result.
  *
  *   $query->applyOptions(["excludeJunctionProperty" => true]);
+ *
+ * @template T of \Cake\ORM\Table
+ * @mixin T
  */
 class PassboltBelongsToMany extends BelongsToMany
 {

@@ -38,4 +38,8 @@
             <directory name="plugins/PassboltEe/PasswordExpiryPolicies/templates/" />
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <MissingTemplateParam errorLevel="suppress"/>
+    </issueHandlers>
 </psalm>
