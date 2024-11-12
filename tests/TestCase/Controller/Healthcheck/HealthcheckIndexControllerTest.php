@@ -142,6 +142,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'hostAvailabilityCheckEnabled' => Configure::read(EmailValidationRule::MX_CHECK_KEY),
                 'jsProd' => (Configure::read('passbolt.js.build') === 'production'),
                 'emailNotificationEnabled' => false,
+                'subscriptionKeyStatus' => false,
             ],
             'gpg' => [
                 'canDecryptVerify' => true,
@@ -161,7 +162,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'lib' => true,
                 'gpgKeyNotDefault' => false,
                 'info' => [
-                    'gpgHome' => '/root/.gnupg',
+                    'gpgHome' => getenv('GNUPGHOME') ?: '/root/.gnupg',
                     'gpgKeyPrivate' => Configure::read('passbolt.gpg.serverKey.private'),
                 ],
                 'gpgHomeWritable' => true,
@@ -187,6 +188,10 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'image' => true,
                 'tmpWritable' => true,
                 'logWritable' => true,
+                'osArchitecture' => true,
+                'distribution' => true,
+                'gpg' => true,
+                'timeSync' => false,
             ],
             'configFile' => [
                 'app' => true,

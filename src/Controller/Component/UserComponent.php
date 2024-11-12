@@ -232,7 +232,7 @@ class UserComponent extends Component
     /**
      * Allow admins only.
      *
-     * @param ?string $msg Optional message
+     * @param string|null $msg Optional message
      * @throws \Cake\Http\Exception\ForbiddenException
      * @return void
      */

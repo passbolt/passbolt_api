@@ -201,7 +201,7 @@ class HealthcheckIndexController extends AppController
                     // We don't want to set this in JSON response
                     continue;
                 } elseif ($checkResult instanceof HostValidSslHealthcheck || $checkResult instanceof PeerValidSslHealthcheck) { // phpcs:ignore
-                    if (!empty($checkResult->getHelpMessage())) {
+                    if ($checkResult->getHelpMessage()) {
                         $result[$domainKey]['info'] = $checkResult->getHelpMessage()[0];
                     }
                 }

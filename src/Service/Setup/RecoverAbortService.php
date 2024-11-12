@@ -21,10 +21,12 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\Users\UserGetService;
+use Cake\Core\Configure;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**
@@ -63,7 +65,7 @@ class RecoverAbortService
     }
 
     /**
-     * Return the token or failÎ
+     * Return the token or fail
      *
      * @param string $token token.token
      * @param string $userId User ID
@@ -75,6 +77,9 @@ class RecoverAbortService
             $tokenEntity = (new AuthenticationTokenGetService())
                 ->getActiveNotExpiredOrFail($token, $userId, AuthenticationToken::TYPE_RECOVER);
         } catch (NotFoundException $exception) {
+            if (Configure::read('debug')) {
+                Log::error('getActiveNotExpiredOrFail() failed: ' . $exception->getMessage());
+            }
             throw new BadRequestException(__('The authentication token is not valid.'));
         }
 

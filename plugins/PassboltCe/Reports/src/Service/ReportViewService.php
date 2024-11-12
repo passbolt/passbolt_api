@@ -31,7 +31,7 @@ class ReportViewService
     private $reportPool;
 
     /**
-     * @param \Passbolt\Reports\Service\ReportPool $reportPool An instance of ReportPool
+     * @param \Passbolt\Reports\Service\ReportPool|null $reportPool An instance of ReportPool
      */
     public function __construct(?ReportPool $reportPool = null)
     {

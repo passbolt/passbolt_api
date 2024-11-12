@@ -18,6 +18,7 @@ namespace Passbolt\WebInstaller\Test\TestCase\Controller;
 
 use Cake\Core\Configure;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
+use RuntimeException;
 
 class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
 {
@@ -30,14 +31,14 @@ class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
 
     protected function mockSubscriptionKeyIssuerKey()
     {
-        Configure::load('Passbolt/Ee.config', 'default', true);
-        $licenseDevPublicKey = PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'gpg' . DS . 'subscription_dev_public.key';
-        Configure::write('passbolt.plugins.ee.subscriptionKey.public', $licenseDevPublicKey);
+        Configure::load('Passbolt/Subscription.config', 'default', true);
+        $licenseDevPublicKey = PLUGINS . DS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'gpg' . DS . 'subscription_dev_public.key';
+        Configure::write('passbolt.plugins.subscription.subscriptionKey.public', $licenseDevPublicKey);
     }
 
-    protected function checkPluginSubscriptionKeyExists()
+    protected function checkPluginSubscriptionExists(): bool
     {
-        return file_exists(PLUGINS . DS . 'PassboltEe' . DS . 'Ee');
+        return file_exists(PLUGINS . DS . 'PassboltEe' . DS . 'Subscription');
     }
 
     public function testWebInstallerSubscriptionKeyViewSuccess()
@@ -50,10 +51,10 @@ class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerSubscriptionKeyPostSuccess()
     {
-        if ($this->checkPluginSubscriptionKeyExists()) {
+        if ($this->checkPluginSubscriptionExists()) {
             $this->mockSubscriptionKeyIssuerKey();
             $postData = [
-                'subscription_key' => file_get_contents(PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev'),
+                'subscription_key' => file_get_contents(PLUGINS . DS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'subscription' . DS . 'subscription_dev'),
             ];
             $this->post('/install/subscription', $postData);
             $this->assertResponseCode(302);
@@ -65,7 +66,7 @@ class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerSubscriptionKeyPostError_InvalidData()
     {
-        if ($this->checkPluginSubscriptionKeyExists()) {
+        if ($this->checkPluginSubscriptionExists()) {
             $this->mockSubscriptionKeyIssuerKey();
             $postData = [
                 'subscription_key' => 'invalid-format',
@@ -80,10 +81,14 @@ class SubscriptionKeyControllerTest extends WebInstallerIntegrationTestCase
 
     public function testWebInstallerSubscriptionKeyPostError_SubscriptionKeyExpired()
     {
-        if ($this->checkPluginSubscriptionKeyExists()) {
+        if ($this->checkPluginSubscriptionExists()) {
             $this->mockSubscriptionKeyIssuerKey();
+            $expiredSubscriptionFile = PLUGINS . DS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'subscription' . DS . 'subscription_expired';
+            if (!is_file($expiredSubscriptionFile)) {
+                throw new RuntimeException('Cannot find expired subscription file ' . $expiredSubscriptionFile);
+            }
             $postData = [
-                'subscription_key' => file_get_contents(PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_expired'),
+                'subscription_key' => file_get_contents($expiredSubscriptionFile),
             ];
             $this->post('/install/subscription', $postData);
             $data = $this->_getBodyAsString();

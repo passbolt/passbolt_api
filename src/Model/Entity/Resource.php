@@ -27,6 +27,9 @@ use Cake\ORM\Entity;
  * @property string|null $username
  * @property string|null $uri
  * @property string|null $description
+ * @property string|null $metadata_key_id
+ * @property string|null $metadata
+ * @property string|null $metadata_key_type
  * @property bool $deleted
  * @property \Cake\I18n\FrozenTime|null $expired
  * @property \Cake\I18n\FrozenTime $created
@@ -69,6 +72,9 @@ class Resource extends Entity
         'username' => false,
         'uri' => false,
         'description' => false,
+        'metadata' => false,
+        'metadata_key_id' => false,
+        'metadata_key_type' => false,
         'deleted' => false,
         'expired' => false,
         'created' => false,

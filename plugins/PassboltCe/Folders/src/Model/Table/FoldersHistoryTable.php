@@ -163,7 +163,7 @@ class FoldersHistoryTable extends Table
 
         // Check validation rules.
         $folderHistory = $this->buildEntity($data);
-        if (!empty($folderHistory->getErrors())) {
+        if ($folderHistory->getErrors()) {
             throw new ValidationException(__('Could not validate folder history data.', true), $folderHistory, $this);
         }
         $folderHistory = $this->save($folderHistory);
@@ -174,7 +174,7 @@ class FoldersHistoryTable extends Table
         }
 
         // Check for validation errors. (associated models too).
-        if (!empty($folderHistory->getErrors())) {
+        if ($folderHistory->getErrors()) {
             throw new ValidationException(__('Could not validate folder history data.'), $folderHistory, $this);
         }
 

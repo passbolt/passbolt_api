@@ -176,6 +176,14 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
         $this->assertAuthenticationError();
     }
 
+    public function testFoldersViewError_DoesNotExist()
+    {
+        $this->authenticateAs('ada');
+        $folderId = UuidFactory::uuid();
+        $this->getJson("/folders/{$folderId}.json?api-version=2");
+        $this->assertResponseError('The folder does not exist.');
+    }
+
     public function testFoldersViewSuccess_ContainPermissionsGroup()
     {
         $folder = $this->insertContainPermissionsGroupFixture();

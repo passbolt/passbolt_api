@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -17,12 +17,17 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
-use App\Model\Entity\Permission;
-use App\Model\Entity\Resource;
+use App\Error\Exception\CustomValidationException;
+use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
+use Passbolt\Tags\Form\MetadataResourcesAddExistingTagForm;
+use Passbolt\Tags\Form\MetadataResourcesTagsAddForm;
+use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
+use Passbolt\Tags\Service\Tags\ResourcesTagsAddService;
 
 /**
  * @property \App\Model\Table\ResourcesTable $Resources
@@ -30,6 +35,9 @@ use Cake\Validation\Validation;
  */
 class ResourcesTagsAddController extends AppController
 {
+    use MetadataSettingsAwareTrait;
+    use MetadataPopulateUserKeyIdTrait;
+
     /**
      * @inheritDoc
      */
@@ -55,26 +63,20 @@ class ResourcesTagsAddController extends AppController
             throw new BadRequestException(__('The resource identifier should be a valid UUID.'));
         }
 
-        $userId = $this->User->id();
-        $data = $this->_formatRequestData();
+        $uac = $this->User->getAccessControl();
+        $data = $this->formatRequestData();
+        $data = $this->validateRequestData($data, $uac);
 
         $options = ['contain' => ['all_tags' => 1, 'permission' => 1]];
-        /** @var Resource $resource */
-        $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
-        if (empty($resource)) {
+        /** @var \App\Model\Entity\Resource|null $resource */
+        $resource = $this->Resources->findView($uac->getId(), $resourceId, $options)->first();
+        if (is_null($resource)) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
 
-        $this->patchTagsEntities($resource, $data);
-        $saveOptions = ['associated' => ['Tags', 'Tags._joinData']];
-        if ($this->Resources->save($resource, $saveOptions)) {
-            $this->Tags->deleteAllUnusedTags();
-            $options = ['contain' => ['tag' => 1, 'permission' => 1]];
-            $resource = $this->Resources->findView($userId, $resourceId, $options)->first();
-            $this->success(__('The operation was successful.'), $resource->get('tags'));
-        } else {
-            throw new InternalErrorException('Could not save the tags, try again later.');
-        }
+        $tags = (new ResourcesTagsAddService())->add($uac, $resource, $data);
+        $tags = (new MetadataTagsRenderService())->renderTags($tags);
+        $this->success(__('The operation was successful.'), $tags);
     }
 
     /**
@@ -82,9 +84,9 @@ class ResourcesTagsAddController extends AppController
      *
      * @return array
      */
-    protected function _formatRequestData()
+    private function formatRequestData(): array
     {
-        $data = $this->request->getData();
+        $data = $this->getRequest()->getData();
 
         // Data given in V1 format.
         // @deprecated with v2
@@ -99,69 +101,57 @@ class ResourcesTagsAddController extends AppController
     }
 
     /**
-     * Patch the resource tags entities of a resource for a given user
+     * Validates the request data.
      *
-     * @param \App\Model\Entity\Resource $resource The resource to patch the tags for
-     * @param array $data The list
-     * @return void
+     * @param array $data Data to validate.
+     * @param \App\Utility\UserAccessControl $uac User access control.
+     * @return array Valid request data
+     * @throws \App\Error\Exception\CustomValidationException If data is invalid.
+     * @throws \Cake\Http\Exception\BadRequestException If V5 or V4 tag creation/modification is not allowed.
      */
-    private function patchTagsEntities(Resource $resource, array $data): void
+    private function validateRequestData(array $data, UserAccessControl $uac): array
     {
-        $userId = $this->User->id();
-        $isOwner = $resource->permission->type === Permission::OWNER;
+        $errors = [];
+        foreach ($data as $i => $tag) {
+            $errors[$i] = [];
 
-        foreach ($resource->get('tags') as $i => $tag) {
-            // Do not patch tags owned by other users.
-            if ($tag->_joinData->user_id != $userId && !is_null($tag->_joinData->user_id)) {
+            if (!is_string($tag) && !is_array($tag)) {
+                $errors[$i][] = __('The tags data should be a string or an array.');
                 continue;
             }
-            $tagFoundIndex = array_search($tag->slug, $data);
-            if ($tagFoundIndex === false) {
-                // If the user is not owner of the resource he cannot edit shared tags
-                if ($tag->is_shared && !$isOwner) {
-                    $msg = __('You do not have the permission to edit shared tags on this resource.');
-                    throw new BadRequestException($msg);
+
+            if (is_array($tag)) {
+                $this->assertV5TagCreationEnabled();
+
+                if (array_key_exists('id', $tag)) {
+                    $form = new MetadataResourcesAddExistingTagForm($this->User->getAccessControl());
                 } else {
-                    unset($resource['tags'][$i]);
+                    $form = new MetadataResourcesTagsAddForm();
                 }
+
+                if (!$form->execute($tag)) {
+                    $errors[$i] = array_merge($errors[$i], $form->getErrors());
+                }
+
+                $data[$i] = $this->populatedMetadataUserKeyId($uac->getId(), $form->getData());
             } else {
-                unset($data[$tagFoundIndex]);
+                $this->assertV4TagCreationEnabled();
+            }
+
+            if (empty($errors[$i])) {
+                unset($errors[$i]);
             }
         }
 
-        // If the user is not owner of the resource he cannot edit shared tags
-        if (!$isOwner) {
-            if (!empty(preg_grep('/(^#|,#)/', $data))) {
-                $msg = __('You do not have the permission to edit shared tags on this resource.');
-                throw new BadRequestException();
-            }
+        if (!empty($errors)) {
+            throw new CustomValidationException(
+                __('Could not validate request data.'),
+                $errors,
+                null,
+                400
+            );
         }
 
-        // The tag the user is adding already exist, associate it to the resource.
-        if (!empty($data)) {
-            $existingTags = $this->Tags->findAllBySlugs($data)->all()->toArray();
-            foreach ($existingTags as $existingTag) {
-                // @codingStandardsIgnoreStart
-                $notShared = @mb_substr($existingTag->slug, 0, 1, 'utf-8') !== '#';
-                // @codingStandardsIgnoreEnd
-
-                unset($data[array_search($existingTag->slug, $data)]);
-                if ($notShared) {
-                    $existingTag->_joinData = new \stdClass();
-                    $existingTag->_joinData = $this->Tags->ResourcesTags->newEntity([
-                        'user_id' => $userId,
-                    ]);
-                }
-                $tags = $resource->get('tags') ?? [];
-                array_push($tags, $existingTag);
-                $resource->set('tags', $tags);
-            }
-        }
-
-        // Create the new tags.
-        $requestTags = $this->Tags->buildEntitiesOrFail($userId, $data);
-        $resource->set('tags', array_merge($resource->get('tags'), $requestTags));
-        $resource->setDirty('tags', true);
-        $resource->setAccess('tags', true);
+        return $data;
     }
 }

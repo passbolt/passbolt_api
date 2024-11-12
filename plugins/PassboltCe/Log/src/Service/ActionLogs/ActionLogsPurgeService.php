@@ -180,8 +180,6 @@ class ActionLogsPurgeService
             'UsersView.view',
             'MfaVerifyAjaxError.get',
             'MfaPoliciesSettingsGet.get',
-            'MfaSetupSelectProvider.get',
-            'AccountRecoveryOrganizationPoliciesGet.get',
         ]);
     }
 }

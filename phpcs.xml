@@ -1,11 +1,19 @@
 <?xml version="1.0"?>
 <ruleset name="App">
     <config name="installed_paths" value="../../cakephp/cakephp-codesniffer"/>
+
+    <file>src/</file>
+    <file>tests/</file>
+    <file>plugins/</file>
+
+    <exclude-pattern>/templates/</exclude-pattern>
+    <exclude-pattern>*.js</exclude-pattern>
+
     <rule ref="CakePHP"/>
 
     <rule ref="Generic.Formatting.SpaceAfterNot">
         <properties>
-            <property name="spacing" value="0" />
+            <property name="spacing" value="0"/>
         </properties>
     </rule>
 </ruleset>

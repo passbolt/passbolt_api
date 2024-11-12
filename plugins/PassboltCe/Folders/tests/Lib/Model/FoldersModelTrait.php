@@ -53,7 +53,7 @@ trait FoldersModelTrait
      * Get a dummy folder with test data.
      * The relation returned shoudl passe a default validation.
      *
-     * @param array $data Custom data that will be merged with the default content.
+     * @param array|null $data Custom data that will be merged with the default content.
      * @return array
      * @throws \Exception If the create date is not correct.
      */
@@ -75,10 +75,10 @@ trait FoldersModelTrait
      * Add a folder for a given list of users and groups. This function creates also the associated data: secrets,
      * permissions, folders_relations.
      *
-     * @param array $data The folder meta data
-     * @param array $users List of user to add a resource for. The first element should refer to a user id.
-     * @param array $groups List of groups to add a resource for.
-     * @param array $options The folder entity create options
+     * @param array|null $data The folder meta data
+     * @param array|null $users List of user to add a resource for. The first element should refer to a user id.
+     * @param array|null $groups List of groups to add a resource for.
+     * @param array|null $options The folder entity create options
      * @return \Passbolt\Folders\Model\Entity\Folder
      */
     public function addFolderFor(?array $data = [], ?array $users = [], ?array $groups = [], ?array $options = [])

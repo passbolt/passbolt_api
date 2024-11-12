@@ -139,6 +139,9 @@ class DirectorySyncCommand extends PassboltCommand
         $parser->addArgument('debug', [
             'help' => __d('cake_console', 'Debug configuration helper'),
         ]);
+        $parser->addArgument('purge_directory_reports', [
+            'help' => __d('cake_console', 'Purge directory sync report entries'),
+        ]);
 
         return $parser;
     }

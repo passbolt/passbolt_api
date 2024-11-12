@@ -85,22 +85,22 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
 
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => 'You edited the password ' . $resourceShared->get('name'),
+            'subject' => 'You edited the resource ' . $resourceShared->get('name'),
             'template' => ResourceUpdateEmailRedactor::TEMPLATE,
         ]);
         $this->assertEmailIsInQueue([
             'email' => $otherOwner->username,
-            'subject' => $user->profile->first_name . ' edited the password ' . $resourceShared->get('name'),
+            'subject' => $user->profile->first_name . ' edited the resource ' . $resourceShared->get('name'),
             'template' => ResourceUpdateEmailRedactor::TEMPLATE,
         ]);
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => 'You edited the password ' . $resourceNotShared->get('name'),
+            'subject' => 'You edited the resource ' . $resourceNotShared->get('name'),
             'template' => ResourceUpdateEmailRedactor::TEMPLATE,
         ]);
         $this->assertEmailIsInQueue([
             'email' => $user->username,
-            'subject' => 'You edited the password ' . $resourceNotShared->get('name'),
+            'subject' => 'You edited the resource ' . $resourceNotShared->get('name'),
             'template' => ResourceUpdateEmailRedactor::TEMPLATE,
         ]);
         $this->assertEmailIsInQueue([
@@ -140,7 +140,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
             $resource = json_decode(json_encode($resource), true);
             $this->assertSame($resource['expired'], $newExpiryDateInTheFuture);
             $this->assertSame($resource['modified_by'], $user->get('id'));
-            $this->assertEmailInBatchContains('You edited the password ' . $resource['name'], $i);
+            $this->assertEmailInBatchContains('You edited the resource ' . $resource['name'], $i);
         }
         $this->assertEmailInBatchNotContains('This resource is not expired anymore.', 0);
         $this->assertEmailInBatchNotContains('This resource is now set as expired.', 0);

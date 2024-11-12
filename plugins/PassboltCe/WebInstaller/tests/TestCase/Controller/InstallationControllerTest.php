@@ -22,7 +22,7 @@ use App\Utility\Filesystem\DirectoryUtility;
 use Cake\Core\Configure;
 use Cake\Datasource\ConnectionManager;
 use Cake\Validation\Validation;
-use Passbolt\Ee\Model\Entity\Subscription;
+use Passbolt\Subscription\Model\Entity\Subscription;
 use Passbolt\WebInstaller\Form\DatabaseConfigurationForm;
 use Passbolt\WebInstaller\Service\WebInstallerChangeConfigFolderPermissionService;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
@@ -233,7 +233,7 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
                 'role_id' => '0d6990c8-4aaa-4456-a333-00e803ba0828',
             ],
         ];
-        if (file_exists(PLUGINS . DS . 'PassboltEe' . DS . 'Ee')) {
+        if (file_exists(PLUGINS . DS . 'PassboltEe' . DS . 'Subscription')) {
             $data['subscription'] = ['subscription_key' => $this->getValidSubscriptionKey()];
         }
 
@@ -272,7 +272,9 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->assertEmpty($tables);
 
         $testConfigDir = TMP . 'test_config' . DS;
-        mkdir($testConfigDir);
+        if (!is_dir($testConfigDir)) {
+            mkdir($testConfigDir);
+        }
         $testConfigFile = $testConfigDir . 'test_file.txt';
         file_put_contents($testConfigFile, 'blah');
         $configFolderPermissionService = new WebInstallerChangeConfigFolderPermissionService($testConfigDir);

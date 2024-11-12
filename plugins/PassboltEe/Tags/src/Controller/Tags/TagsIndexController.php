@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
+use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 
 /**
  * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
@@ -33,6 +34,7 @@ class TagsIndexController extends AppController
         /** @var \Passbolt\Tags\Model\Table\TagsTable $tagsTable */
         $tagsTable = $this->fetchTable('Passbolt/Tags.Tags');
         $tags = $tagsTable->findIndex($this->User->id())->disableHydration();
+        $tags = (new MetadataTagsRenderService())->renderTags($tags->toArray());
         $this->success(__('The operation was successful.'), $tags);
     }
 }
