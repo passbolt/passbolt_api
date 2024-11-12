@@ -36,6 +36,7 @@ use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTreeService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 
 class FoldersShareService
 {
@@ -106,13 +107,15 @@ class FoldersShareService
     {
         $folder = $this->getFolder($id, $uac);
         $this->assertUserCanShare($uac, $folder);
+        $folderDto = MetadataFolderDto::fromArray($folder->toArray());
+        $folderDto->assertShareable();
 
         $permissionsData = Hash::get($data, 'permissions', []);
         if (empty($permissionsData)) {
             return $folder;
         }
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $permissionsData) {
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $permissionsData, $folderDto) { // phpcs:ignore
             $isPersonal = $this->foldersRelationsTable->isItemPersonal($folder->id);
             $entitiesChanges = $this->updatePermissions($uac, $folder, $permissionsData);
             $addedPermissions = $entitiesChanges->getAddedEntities(Permission::class);
@@ -123,7 +126,7 @@ class FoldersShareService
                 $this->moveSelfOrganizedContentWithInsufficientPermissionToRoot($uac, $folder);
             }
             $this->postPermissionsRevoked($folder, $deletedPermissions);
-            $this->postPermissionsAdded($uac, $folder, $addedPermissions);
+            $this->postPermissionsAdded($uac, $folder, $folderDto, $addedPermissions);
         });
 
         return $folder;
@@ -295,17 +298,22 @@ class FoldersShareService
      *
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto Folder DTO.
      * @param array|null $addedPermissions The list of added permissions
      * @return void
      * @throws \Exception If something unexpected occurred
      */
-    private function postPermissionsAdded(UserAccessControl $uac, Folder $folder, ?array $addedPermissions = []): void
-    {
+    private function postPermissionsAdded(
+        UserAccessControl $uac,
+        Folder $folder,
+        MetadataFolderDto $folderDto,
+        ?array $addedPermissions = []
+    ): void {
         foreach ($addedPermissions as $permission) {
             if ($permission->aro === PermissionsTable::GROUP_ARO) {
-                $this->addFolderToGroupUsersTrees($uac, $folder, $permission->aro_foreign_key);
+                $this->addFolderToGroupUsersTrees($uac, $folder, $permission->aro_foreign_key, $folderDto);
             } else {
-                $this->addFolderToUserTree($uac, $folder, $permission->aro_foreign_key);
+                $this->addFolderToUserTree($uac, $folder, $permission->aro_foreign_key, $folderDto);
             }
         }
     }
@@ -316,14 +324,19 @@ class FoldersShareService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param string $groupId The target group
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto Folder DTO
      * @return void
      * @throws \Exception If something wrong occurred
      */
-    private function addFolderToGroupUsersTrees(UserAccessControl $uac, Folder $folder, string $groupId): void
-    {
+    private function addFolderToGroupUsersTrees(
+        UserAccessControl $uac,
+        Folder $folder,
+        string $groupId,
+        MetadataFolderDto $folderDto
+    ): void {
         $groupsUsersIds = $this->groupsUsersTable->findByGroupId($groupId)->all()->extract('user_id')->toArray();
         foreach ($groupsUsersIds as $groupUserId) {
-            $this->addFolderToUserTree($uac, $folder, $groupUserId);
+            $this->addFolderToUserTree($uac, $folder, $groupUserId, $folderDto);
         }
     }
 
@@ -333,11 +346,16 @@ class FoldersShareService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @param string $userId The target user
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto Folder DTO
      * @return void
      * @throws \Exception If something wrong occurred
      */
-    private function addFolderToUserTree(UserAccessControl $uac, Folder $folder, string $userId): void
-    {
+    private function addFolderToUserTree(
+        UserAccessControl $uac,
+        Folder $folder,
+        string $userId,
+        MetadataFolderDto $folderDto
+    ): void {
         $exists = $this->foldersRelationsTable->isItemInUserTree($userId, $folder->id);
         if ($exists) {
             return;
@@ -349,6 +367,7 @@ class FoldersShareService
             'uac' => $uac,
             'folder' => $folder,
             'userId' => $userId,
+            'isV5' => $folderDto->isV5(),
         ]);
     }
 }

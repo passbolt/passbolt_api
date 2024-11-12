@@ -61,7 +61,7 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function level(): string
     {
-        return 'error';
+        return HealthcheckServiceCollector::LEVEL_ERROR;
     }
 
     /**
@@ -85,7 +85,7 @@ class IntlHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInte
      */
     public function getHelpMessage()
     {
-        return [__('See. https://secure.php.net/manual/en/book.intl.php')];
+        return [__('See: https://secure.php.net/manual/en/book.intl.php')];
     }
 
     /**

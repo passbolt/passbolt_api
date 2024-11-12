@@ -24,6 +24,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
 /**
  * @property \BryanCrowe\ApiPagination\Controller\Component\ApiPaginationComponent $ApiPagination
@@ -74,7 +75,10 @@ class ResourcesIndexController extends AppController
                 'creator', 'favorite', 'modifier', 'secret', 'resource-type',
                 'permission', 'permissions', 'permissions.user.profile', 'permissions.group',
             ],
-            'filter' => ['is-favorite', 'is-shared-with-group', 'is-owned-by-me', 'is-shared-with-me', 'has-id'],
+            'filter' => [
+                'is-favorite', 'is-shared-with-group', 'is-owned-by-me',
+                'is-shared-with-me', 'has-id', 'metadata_key_type',
+            ],
         ];
 
         if (Configure::read('passbolt.plugins.tags')) {
@@ -94,6 +98,7 @@ class ResourcesIndexController extends AppController
         $resources = FolderizableBehavior::unsetPersonalPropertyIfNullOnResultSet($resources);
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
         $this->_logSecretAccesses($resources, $options);
+        $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
         $this->success(__('The operation was successful.'), $resources);
     }
 

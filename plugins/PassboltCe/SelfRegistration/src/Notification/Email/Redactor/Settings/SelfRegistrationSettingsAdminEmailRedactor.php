@@ -128,7 +128,7 @@ class SelfRegistrationSettingsAdminEmailRedactor implements SubscribedEmailRedac
      * @param \App\Model\Entity\User $recipient Admin being notified
      * @param \App\Model\Entity\User $modifier Admin who performed the action
      * @param string $status Enabled or disabled
-     * @param ?string $info Info on the provider
+     * @param string|null $info Info on the provider
      * @return \App\Notification\Email\Email
      */
     private function createEmailAdminSettingsUpdate(

@@ -33,10 +33,16 @@ use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Utility\Folders\FolderSaveV5AwareTrait;
+use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 
 class FoldersCreateService
 {
     use EventDispatcherTrait;
+    use FolderSaveV5AwareTrait;
+    use MetadataSettingsAwareTrait;
 
     public const FOLDERS_CREATE_FOLDER_EVENT = 'folders.folder.create';
 
@@ -75,23 +81,26 @@ class FoldersCreateService
      * Create a folder for the current user.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
-     * @param array|null $data The folder data
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder DTO.
      * @return \Passbolt\Folders\Model\Entity\Folder
      * @throws \Exception If an unexpected error occurred
      */
-    public function create(UserAccessControl $uac, ?array $data = []): Folder
+    public function create(UserAccessControl $uac, MetadataFolderDto $folderDto): Folder
     {
+        $this->assertCreationAllowedByMetadataSettings($folderDto->isV5(), MetadataTypesSettingsDto::ENTITY_FOLDER);
+
         $folder = null;
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $data) {
-            $folder = $this->createFolder($uac, $data);
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto) {
+            $folder = $this->createFolder($uac, $folderDto);
             $this->createPermission($uac, $folder);
-            $this->createFolderRelation($uac, $folder, $data);
+            $this->createFolderRelation($uac, $folder, $folderDto);
         });
 
         $this->dispatchEvent(self::FOLDERS_CREATE_FOLDER_EVENT, [
             'uac' => $uac,
             'folder' => $folder,
+            'isV5' => $folderDto->isV5(),
         ]);
 
         return $folder;
@@ -101,12 +110,12 @@ class FoldersCreateService
      * Create and save the folder in database.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
-     * @param array $data The folder data
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder DTO.
      * @return \Passbolt\Folders\Model\Entity\Folder
      */
-    private function createFolder(UserAccessControl $uac, array $data): Folder
+    private function createFolder(UserAccessControl $uac, MetadataFolderDto $folderDto): Folder
     {
-        $folder = $this->buildFolderEntity($uac, $data);
+        $folder = $this->buildFolderEntity($uac, $folderDto);
         $this->handleValidationErrors($folder);
         $this->foldersTable->save($folder);
         $this->handleValidationErrors($folder);
@@ -118,24 +127,25 @@ class FoldersCreateService
      * Build the folder entity.
      *
      * @param \App\Utility\UserAccessControl $uac The current user
-     * @param array $data The folder data
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder dto.
      * @return \Passbolt\Folders\Model\Entity\Folder
      */
-    private function buildFolderEntity(UserAccessControl $uac, array $data): Folder
+    private function buildFolderEntity(UserAccessControl $uac, MetadataFolderDto $folderDto): Folder
     {
+        $data = $folderDto->toArray();
         $userId = $uac->getId();
-        $data = [
-            'name' => Hash::get($data, 'name'),
+        $data = array_merge($data, [
             'created_by' => $userId,
             'modified_by' => $userId,
-        ];
-        $accessibleFields = [
-            'name' => true,
+        ]);
+
+        $options = $this->getOptionsForFolderSave($folderDto);
+        $options['accessibleFields'] = array_merge($options['accessibleFields'], [
             'created_by' => true,
             'modified_by' => true,
-        ];
+        ]);
 
-        return $this->foldersTable->newEntity($data, ['accessibleFields' => $accessibleFields]);
+        return $this->foldersTable->newEntity($data, $options);
     }
 
     /**
@@ -182,12 +192,13 @@ class FoldersCreateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The folder
-     * @param array|null $data Optional data
+     * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto Folder DTO.
      * $data.folder_parent_id $string The folder parent id
      * @return void
      */
-    private function createFolderRelation(UserAccessControl $uac, Folder $folder, ?array $data = [])
+    private function createFolderRelation(UserAccessControl $uac, Folder $folder, MetadataFolderDto $folderDto)
     {
+        $data = $folderDto->toArray();
         $folderParentId = Hash::get($data, 'folder_parent_id', null);
         if (!is_null($folderParentId)) {
             $this->validateParentFolder($uac, $folder, $folderParentId);

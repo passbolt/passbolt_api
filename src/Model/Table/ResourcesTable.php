@@ -21,7 +21,9 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Rule\IsNotSoftDeletedRule;
+use App\Model\Rule\IsNotV5PasswordStringType;
 use App\Model\Traits\Resources\ResourcesFindersTrait;
+use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Model\Validation\DateTime\IsParsableDateTimeValidationRule;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UuidFactory;
@@ -33,6 +35,14 @@ use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
+use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
+use Passbolt\Metadata\Model\Rule\IsResourceV5ToV4DowngradeAllowedRule;
+use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
@@ -117,7 +127,9 @@ class ResourcesTable extends Table
             'saveStrategy' => 'replace',
         ]);
 
-        $this->belongsTo('ResourceTypes');
+        $this->belongsTo('ResourceTypes', [
+            'className' => 'Passbolt/ResourceTypes.ResourceTypes',
+        ]);
     }
 
     /**
@@ -232,6 +244,47 @@ class ResourcesTable extends Table
     }
 
     /**
+     * V5 validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationV5(Validator $validator): Validator
+    {
+        $validator = $this->validationDefault($validator);
+
+        // Remove all validation on the v4 meta properties
+        // Enforce all v4 fields to be empty
+        foreach (MetadataResourceDto::V4_META_PROPS as $v4Fields) {
+            $validator->remove($v4Fields);
+        }
+        $validV5ResourceTypeIds = [];
+        $validV5ResourceTypes = [];
+        foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $resourceTypeSlug) {
+            $validV5ResourceTypes[] = $resourceTypeSlug;
+            $validV5ResourceTypeIds[] = UuidFactory::uuid('resource-types.id.' . $resourceTypeSlug);
+        }
+
+        return $validator
+            ->uuid('metadata_key_id', __('The metadata key ID should be a valid UUID.'))
+            ->allowEmptyString('metadata_key_id')
+            ->ascii('metadata', __('The metadata should be a valid ASCII string.'))
+            ->requirePresence('metadata', 'create', __('An armored key is required.'))
+            ->notEmptyString('metadata', __('The metadata should not be empty.'))
+            ->add('metadata', 'isMetadataParsable', new IsParsableMessageValidationRule())
+            ->utf8Extended('metadata_key_type', __('The metadata key type should be a valid UTF8 string.'))
+            ->allowEmptyString('metadata_key_type')
+            ->inList('metadata_key_type', ['user_key', 'shared_key'], __(
+                'The metadata key type should be one of the following: {0}.',
+                implode(', ', ['user_key', 'shared_key'])
+            ))
+            ->inList('resource_type_id', $validV5ResourceTypeIds, __(
+                'The resource type should be one of the following: {0}.',
+                implode(', ', $validV5ResourceTypes)
+            ));
+    }
+
+    /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
      *
@@ -269,6 +322,61 @@ class ResourcesTable extends Table
             'errorField' => 'permissions',
             'message' => __('The permissions should contain at least the owner permission.'),
         ]);
+        $rules->addUpdate(new IsResourceV5ToV4DowngradeAllowedRule(), 'v5_to_v4_downgrade_allowed', [
+            'errorField' => 'resource_type_id',
+            'message' => __('The settings selected by your administrator prevent from downgrading resource type.'),
+        ]);
+
+        return $rules;
+    }
+
+    /**
+     * Rule checker for v5 properties
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRulesV5(RulesChecker $rules): RulesChecker
+    {
+        $rules->add(new IsMetadataKeyTypeAllowedBySettingsRule(), 'isMetadataKeyTypeAllowedBySettings', [
+            'errorField' => 'metadata_key_type',
+            'message' => __('The settings selected by your administrator prevent from using that key type.'),
+        ]);
+
+        $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key does not exist or was deleted.'),
+        ]);
+
+        $rules->add(new MetadataKeyIdNotExpiredRule(), 'isMetadataKeyNotExpired', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key is marked as expired.'),
+        ]);
+
+        $rules->addCreate(new IsNotV5PasswordStringType(), 'isNotV5PasswordStringType', [
+            'errorField' => 'resource_type_id',
+            'message' => __('It is not allowed to create v5-password-string resource types.'),
+        ]);
+
+        $rules->add(new IsNotSoftDeletedRule(), 'resource_type_is_not_soft_deleted', [
+            'table' => 'Passbolt/ResourceTypes.ResourceTypes',
+            'errorField' => 'resource_type_id',
+            'message' => __('The resource type should not be deleted.'),
+        ]);
+
+        $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedResourceMetadata', [
+            'errorField' => 'metadata',
+            'message' => __('The resource metadata provided can not be decrypted.'),
+        ]);
+
+        $rules->addUpdate(
+            new IsMetadataKeyTypeSharedOnSharedItemRule(),
+            'isMetadataKeyTypeSharedOnSharedItem',
+            [
+                'errorField' => 'metadata_key_type',
+                'message' => __('A resource of type personal cannot be shared with other users or a group.'),
+            ]
+        );
 
         return $rules;
     }

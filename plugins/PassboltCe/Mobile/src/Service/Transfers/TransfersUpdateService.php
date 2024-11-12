@@ -80,14 +80,14 @@ class TransfersUpdateService
         $transfer = $this->patchTransferEntity($transfer, $data);
         $this->assertTransitionAllowed($originalTransfer, $transfer);
 
-        if (!empty($transfer->getErrors())) {
+        if ($transfer->getErrors()) {
             $msg = __('Could not validate the transfer data.');
             throw new ValidationException($msg, $transfer, $this->Transfers);
         }
 
         // Save and check for application rules errors.
         $transferSaved = $this->Transfers->save($transfer);
-        if (!empty($transfer->getErrors())) {
+        if ($transfer->getErrors()) {
             $msg = __('Could not update the transfer data.');
             throw new ValidationException($msg, $transfer, $this->Transfers);
         }

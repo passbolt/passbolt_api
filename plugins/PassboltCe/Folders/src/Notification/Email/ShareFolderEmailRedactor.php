@@ -40,6 +40,8 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public const TEMPLATE = 'Passbolt/Folders.LU/folder_share';
 
+    public const TEMPLATE_V5 = 'Passbolt/Metadata.LU/folder_share_v5';
+
     /**
      * @var \App\Model\Table\UsersTable
      */
@@ -94,6 +96,11 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`userId` is missing from event data.');
         }
 
+        $isV5 = $event->getData('isV5');
+        if (is_null($isV5)) {
+            $isV5 = false;
+        }
+
         $operator = $this->usersTable->findFirstForEmail($uac->getId());
 
         /** @var \App\Model\Entity\User $recipient */
@@ -103,7 +110,7 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
             ->first();
 
         if (isset($recipient)) {
-            $email = $this->createEmail($recipient, $operator, $folder);
+            $email = $this->createEmail($recipient, $operator, $folder, $isV5);
             $emailCollection->addEmail($email);
         }
 
@@ -114,17 +121,24 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\User $recipient The recipient
      * @param \App\Model\Entity\User $operator The user at the origin of the operation
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
+     * @param bool $isV5 Folder is V5 or not.
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $recipient, User $operator, Folder $folder)
+    private function createEmail(User $recipient, User $operator, Folder $folder, bool $isV5)
     {
         $userFirstName = Purifier::clean($operator->profile->first_name);
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($userFirstName, $folder) {
-                return __('{0} shared the folder {1}', $userFirstName, Purifier::clean($folder->name));
+            function () use ($userFirstName, $folder, $isV5) {
+                $subject = __('{0} shared the folder {1}', $userFirstName, Purifier::clean($folder->name));
+                if ($isV5) {
+                    $subject = __('{0} shared a folder', $userFirstName);
+                }
+
+                return $subject;
             }
         );
+
         $data = [
             'body' => [
                 'user' => $operator,
@@ -133,6 +147,8 @@ class ShareFolderEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        $template = $isV5 ? self::TEMPLATE_V5 : self::TEMPLATE;
+
+        return new Email($recipient, $subject, $data, $template);
     }
 }

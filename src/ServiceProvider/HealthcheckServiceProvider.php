@@ -40,13 +40,17 @@ use App\Service\Healthcheck\Database\ConnectDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\DefaultContentDatabaseHealthcheck;
 use App\Service\Healthcheck\Database\SchemaUpToDateApplicationHealthcheck;
 use App\Service\Healthcheck\Database\TablesCountDatabaseHealthcheck;
+use App\Service\Healthcheck\Environment\DistributionHealthcheck;
+use App\Service\Healthcheck\Environment\GpgHealthcheck;
 use App\Service\Healthcheck\Environment\ImageHealthcheck;
 use App\Service\Healthcheck\Environment\IntlHealthcheck;
 use App\Service\Healthcheck\Environment\LogFolderWritableHealthcheck;
 use App\Service\Healthcheck\Environment\MbstringHealthcheck;
 use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
+use App\Service\Healthcheck\Environment\OperatingSystemHealthcheck;
 use App\Service\Healthcheck\Environment\PcreHealthcheck;
 use App\Service\Healthcheck\Environment\PhpVersionHealthcheck;
+use App\Service\Healthcheck\Environment\TimeSyncHealthcheck;
 use App\Service\Healthcheck\Environment\TmpFolderWritableHealthcheck;
 use App\Service\Healthcheck\Gpg\CanDecryptGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\CanDecryptVerifyGpgHealthcheck;
@@ -82,9 +86,12 @@ use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckSer
 class HealthcheckServiceProvider extends ServiceProvider
 {
     protected $provides = [
+        DistributionHealthcheck::class,
         HealthcheckServiceCollector::class,
         PhpVersionHealthcheck::class,
         NextMinPhpVersionHealthcheck::class,
+        OperatingSystemHealthcheck::class,
+        GpgHealthcheck::class,
         PcreHealthcheck::class,
         MbstringHealthcheck::class,
         IntlHealthcheck::class,
@@ -120,14 +127,18 @@ class HealthcheckServiceProvider extends ServiceProvider
     {
         // Register service itself to container
         // Environment health checks
+        $container->add(DistributionHealthcheck::class);
         $container->add(PhpVersionHealthcheck::class);
         $container->add(NextMinPhpVersionHealthcheck::class);
+        $container->add(OperatingSystemHealthcheck::class);
+        $container->add(GpgHealthcheck::class);
         $container->add(PcreHealthcheck::class);
         $container->add(MbstringHealthcheck::class);
         $container->add(IntlHealthcheck::class);
         $container->add(ImageHealthcheck::class);
         $container->add(TmpFolderWritableHealthcheck::class);
         $container->add(LogFolderWritableHealthcheck::class);
+        $container->add(TimeSyncHealthcheck::class);
         // Config files health checks
         $container->add(AppConfigFileHealthcheck::class);
         $container->add(PassboltConfigFileHealthcheck::class);
@@ -207,14 +218,18 @@ class HealthcheckServiceProvider extends ServiceProvider
 
         // Append core health checks to service collector
         $container->add(HealthcheckServiceCollector::class)
+            ->addMethodCall('addService', [DistributionHealthcheck::class])
             ->addMethodCall('addService', [PhpVersionHealthcheck::class])
             ->addMethodCall('addService', [NextMinPhpVersionHealthcheck::class])
+            ->addMethodCall('addService', [OperatingSystemHealthcheck::class])
+            ->addMethodCall('addService', [GpgHealthcheck::class])
             ->addMethodCall('addService', [PcreHealthcheck::class])
             ->addMethodCall('addService', [MbstringHealthcheck::class])
             ->addMethodCall('addService', [IntlHealthcheck::class])
             ->addMethodCall('addService', [ImageHealthcheck::class])
             ->addMethodCall('addService', [TmpFolderWritableHealthcheck::class])
             ->addMethodCall('addService', [LogFolderWritableHealthcheck::class])
+            ->addMethodCall('addService', [TimeSyncHealthcheck::class])
             ->addMethodCall('addService', [AppConfigFileHealthcheck::class])
             ->addMethodCall('addService', [PassboltConfigFileHealthcheck::class])
             ->addMethodCall('addService', [CacheCoreHealthcheck::class])

@@ -25,6 +25,7 @@ use Cake\Chronos\Chronos;
 use Cake\I18n\FrozenTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
+use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 
 /**
  * ResourceFactory
@@ -62,6 +63,7 @@ class ResourceFactory extends CakephpBaseFactory
                 'name' => $faker->text(255),
                 'username' => $faker->email(),
                 'uri' => $faker->url(),
+                'description' => $faker->text(10),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
                 'created' => Chronos::now()->subDays($faker->randomNumber(4)),
@@ -154,5 +156,28 @@ class ResourceFactory extends CakephpBaseFactory
     public function expired(?FrozenTime $expired = null)
     {
         return $this->setField('expired', $expired ?? FrozenTime::now()->subMinutes(1));
+    }
+
+    /**
+     * @param bool $isShared Is metadata type shared or not.
+     * @return $this
+     */
+    public function v5Fields($isShared = false)
+    {
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $metadataPrivateKey */
+        $metadataPrivateKey = MetadataPrivateKeyFactory::make()->serverKey()->withMetadataKey()->persist();
+        $type = $isShared ? 'shared_key' : 'user_key';
+
+        return $this->patchData([
+            // Set V5 fields (not null and valid)
+            'metadata_key_id' => $metadataPrivateKey->metadata_key_id,
+            'metadata' => 'foo-bar', // todo set proper encrypted resource metadata
+            'metadata_key_type' => $type,
+            // Set V4 fields to null
+            'name' => null,
+            'username' => null,
+            'uri' => null,
+            'description' => null,
+        ]);
     }
 }

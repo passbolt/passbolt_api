@@ -160,14 +160,14 @@ class SecretAccessesTable extends Table
 
         // Check validation rules.
         $secretAccess = $this->buildEntity($data);
-        if (!empty($secretAccess->getErrors())) {
+        if ($secretAccess->getErrors()) {
             throw new ValidationException(__('Could not validate secret access data.', true), $secretAccess, $this);
         }
 
         $secretAccessSaved = $this->save($secretAccess);
 
         // Check for validation errors. (associated models too).
-        if (!empty($secretAccess->getErrors())) {
+        if ($secretAccess->getErrors()) {
             throw new ValidationException(__('Could not validate secret access data.'), $secretAccess, $this);
         }
 

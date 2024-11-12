@@ -87,7 +87,7 @@ abstract class AbstractCompleteService
     {
         $data = $this->request->getData();
 
-        // @depracted since v3.6
+        // @deprecated since v3.6
         if (isset($data['authenticationtoken'])) {
             $data['authentication_token'] = $data['authenticationtoken'];
         }

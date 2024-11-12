@@ -19,6 +19,7 @@ namespace Passbolt\ResourceTypes\Controller;
 
 use App\Controller\AppController;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Core\Configure;
 use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
 
 class ResourceTypesIndexController extends AppController
@@ -36,6 +37,16 @@ class ResourceTypesIndexController extends AppController
     {
         $this->assertJson();
         $resourceTypes = $resourceTypesFinder->find();
+        if (Configure::read('passbolt.v5.enabled')) {
+            $options = $this->QueryString->get([
+                'contain' => ['resources_count'],
+                'filter' => ['is-deleted'],
+            ]);
+            $resourceTypesFinder->filter($resourceTypes, $options);
+            if ($this->User->isAdmin()) {
+                $resourceTypesFinder->contain($resourceTypes, $options);
+            }
+        }
 
         $this->success(__('The operation was successful.'), $resourceTypes->all());
     }

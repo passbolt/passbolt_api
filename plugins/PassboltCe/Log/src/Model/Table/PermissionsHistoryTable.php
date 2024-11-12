@@ -198,14 +198,14 @@ class PermissionsHistoryTable extends Table
     {
         // Check validation rules.
         $log = $this->buildEntity($data);
-        if (!empty($log->getErrors())) {
+        if ($log->getErrors()) {
             throw new ValidationException(__('Could not validate permission history data.', true), $log, $this);
         }
 
         $permissionHistory = $this->save($log);
 
         // Check for validation errors. (associated models too).
-        if (!empty($log->getErrors())) {
+        if ($log->getErrors()) {
             throw new ValidationException(__('Could not validate permission history data.'), $permissionHistory, $this);
         }
 
