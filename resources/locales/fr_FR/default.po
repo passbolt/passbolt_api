@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 09:43+0000\n"
-"PO-Revision-Date: 2024-11-12 11:07\n"
+"PO-Revision-Date: 2024-11-12 12:08\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1586,7 +1586,7 @@ msgid "Ensure the logs directory and its content are writable by the webserver u
 msgstr ""
 
 msgid "You can try:"
-msgstr ""
+msgstr "Vous pouvez essayer :"
 
 msgid "Mbstring extension is installed."
 msgstr "L'extension Mbstring est installée."
@@ -2360,10 +2360,10 @@ msgid "{0} shared a folder"
 msgstr ""
 
 msgid "{0} edited the folder"
-msgstr ""
+msgstr "{0} a édité le dossier"
 
 msgid "You edited the folder"
-msgstr ""
+msgstr "Vous avez modifié le dossier"
 
 msgid "An email notification setting should be a boolean."
 msgstr "Un paramètre de notification par e-mail doit être un booléen."
@@ -2717,7 +2717,7 @@ msgid "The object type is invalid."
 msgstr ""
 
 msgid "A passphrase is required."
-msgstr ""
+msgstr "Une phrase de passe est requise."
 
 msgid "The passphrase should be a valid BMP-UTF8 string."
 msgstr ""
@@ -2744,7 +2744,7 @@ msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
 msgstr ""
 
 msgid "A domain is required."
-msgstr ""
+msgstr "Un domaine est requis."
 
 msgid "The domain should not be empty."
 msgstr ""
@@ -3134,7 +3134,7 @@ msgid "{0} created a new metadata key"
 msgstr ""
 
 msgid "You have created a new folder."
-msgstr ""
+msgstr "Vous avez créé un nouveau dossier."
 
 msgid "{0} has shared a folder with you."
 msgstr ""
@@ -3302,7 +3302,7 @@ msgid "The multi-factor authentication is not required."
 msgstr "L'authentification multi-facteurs n'est pas requise."
 
 msgid "No valid multi-factor authentication settings found."
-msgstr ""
+msgstr "Aucun paramètre d'authentification multi-facteurs valide trouvé."
 
 msgid "No valid multi-factor authentication settings found for this provider."
 msgstr "Aucun paramètre d'authentification multi-facteurs valide n'a été trouvé pour ce fournisseur."
@@ -6557,7 +6557,7 @@ msgid "Unable to migrate tag id: {0} to V5."
 msgstr ""
 
 msgid "Could not save the tags, try again later."
-msgstr ""
+msgstr "Impossible d'enregistrer les tags, réessayez plus tard."
 
 msgid "You do not have the permission to edit shared tags on this resource."
 msgstr "Vous n'avez pas la permission de modifier les tags partagés sur cette ressource."
