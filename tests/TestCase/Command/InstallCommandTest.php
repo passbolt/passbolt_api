@@ -29,8 +29,8 @@ use Cake\Http\Client;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Faker\Factory;
-use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
+use Passbolt\Subscription\Test\DummySubscriptionTrait;
 
 class InstallCommandTest extends AppTestCase
 {

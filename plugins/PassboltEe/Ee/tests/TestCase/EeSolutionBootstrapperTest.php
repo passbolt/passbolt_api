@@ -39,7 +39,10 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
     use IntegrationTestTrait;
 
     public const EXPECTED_EE_PLUGINS = [
+        'PassboltSeleniumApi',
+        'PassboltTestData',
         'Passbolt/Ee',
+        'Passbolt/Subscription',
         'Passbolt/JwtAuthentication',
         'Passbolt/Rbacs',
         'Passbolt/AccountSettings',
@@ -84,8 +87,6 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
                 'Authentication',
                 'EmailQueue',
                 'BryanCrowe/ApiPagination',
-                'PassboltSeleniumApi',
-                'PassboltTestData',
             ],
             self::EXPECTED_EE_PLUGINS,
             [
@@ -110,6 +111,7 @@ class EeSolutionBootstrapperTest extends SolutionBootstrapperTestCase
             'PassboltSeleniumApi',
             'PassboltTestData',
             'Passbolt/Ee',
+            'Passbolt/Subscription',
             'Passbolt/JwtAuthentication',
             'Passbolt/WebInstaller',
             'Bake',
