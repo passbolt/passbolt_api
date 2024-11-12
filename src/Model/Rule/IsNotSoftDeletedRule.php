@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Model\Rule;
 
 use Cake\Datasource\EntityInterface;
+use Cake\I18n\FrozenTime;
 use Cake\ORM\TableRegistry;
 
 class IsNotSoftDeletedRule
@@ -39,6 +40,10 @@ class IsNotSoftDeletedRule
             $Table = TableRegistry::getTableLocator()->get($options['table']);
             $id = $entity->get($options['errorField']);
             $lookupEntity = $Table->get($id);
+            $deleted = $lookupEntity->get('deleted');
+            if ($deleted instanceof FrozenTime) {
+                return $deleted->isFuture();
+            }
 
             return $lookupEntity->get('deleted') !== true;
         } catch (\Exception $e) {

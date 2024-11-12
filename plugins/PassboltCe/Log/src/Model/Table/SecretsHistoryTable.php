@@ -140,7 +140,7 @@ class SecretsHistoryTable extends Table
     {
         // Check validation rules.
         $secretHistory = $this->buildEntity($data);
-        if (!empty($secretHistory->getErrors())) {
+        if ($secretHistory->getErrors()) {
             throw new ValidationException(__('Could not validate secret history data.', true), $secretHistory, $this);
         }
 
@@ -152,7 +152,7 @@ class SecretsHistoryTable extends Table
         }
 
         // Check for validation errors. (associated models too).
-        if (!empty($secretHistory->getErrors())) {
+        if ($secretHistory->getErrors()) {
             throw new ValidationException(__('Could not validate secret history data.'), $secretHistory, $this);
         }
 

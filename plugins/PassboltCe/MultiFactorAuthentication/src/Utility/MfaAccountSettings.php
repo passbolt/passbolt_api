@@ -76,7 +76,7 @@ class MfaAccountSettings
      * MfaSettings constructor.
      *
      * @param \App\Utility\UserAccessControl $uac user access control
-     * @param array $settings account settings
+     * @param array|null $settings account settings
      */
     public function __construct(UserAccessControl $uac, ?array $settings = null)
     {

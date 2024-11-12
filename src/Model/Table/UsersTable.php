@@ -540,13 +540,13 @@ class UsersTable extends Table
 
         // Check validation rules
         $user = $this->buildEntity($data);
-        if (!empty($user->getErrors())) {
+        if ($user->getErrors()) {
             throw new ValidationException(__('Could not validate user data.'), $user, $this);
         }
 
         // Check business rules
         $this->checkRules($user);
-        if (!empty($user->getErrors())) {
+        if ($user->getErrors()) {
             throw new ValidationException(__('Could not validate user data.'), $user, $this);
         }
 
@@ -563,7 +563,7 @@ class UsersTable extends Table
 
         // Generate event data
         $eventData = ['user' => $user, 'token' => $token];
-        if (isset($control) && !empty($control->getId())) {
+        if ($control && $control->getId()) {
             $eventData['adminId'] = $control->getId();
             $this->dispatchEvent(static::AFTER_REGISTER_SUCCESS_EVENT_NAME, $eventData, $this);
         } else {

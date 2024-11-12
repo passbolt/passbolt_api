@@ -50,7 +50,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppIntegrationTestCase
         $this->assertExitSuccess();
         $this->assertOutputContains('<warning>[WARN] The SMTP Settings plugin is disabled.</warning>');
         $this->assertOutputContains('<info>[HELP]</info> Enable the plugin in order to define SMTP settings in the database.');
-        $this->assertOutputContains('No error found. Nice one sparky!');
+        $this->assertOutputContains('No error found. Nice one, sparky!');
     }
 
     public function testHealthcheckCommand_SmtpSettings_Valid()
@@ -68,7 +68,7 @@ class SmtpSettingsHealthcheckCommandTest extends AppIntegrationTestCase
         $this->assertOutputContains('<success>[PASS]</success> SMTP Settings coherent. You may send a test email to validate them.');
         $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings source is: database.');
         $this->assertOutputContains('<success>[PASS]</success> The SMTP Settings plugin endpoints are disabled.');
-        $this->assertOutputContains('No error found. Nice one sparky!');
+        $this->assertOutputContains('No error found. Nice one, sparky!');
     }
 
     public function testHealthcheckCommand_SmtpSettings_Invalid()

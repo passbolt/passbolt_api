@@ -50,7 +50,7 @@ class MfaDuoStartDuoAuthenticationService
      * Constructor.
      *
      * @param string $authenticationTokenType Authentication token type
-     * @param \Duo\DuoUniversal\Client $client Duo SDK Client
+     * @param \Duo\DuoUniversal\Client|null $client Duo SDK Client
      * @return void
      * @throws \Cake\Http\Exception\ServiceUnavailableException If it cannot create the Duo Sdk Client
      */

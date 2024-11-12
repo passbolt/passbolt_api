@@ -19,13 +19,17 @@ namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Service\Folders\FoldersUpdateService;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 
 class FoldersUpdateController extends AppController
 {
+    use MetadataPopulateUserKeyIdTrait;
+
     /**
      * Folders update action
      *
@@ -41,11 +45,11 @@ class FoldersUpdateController extends AppController
 
         $uac = $this->User->getAccessControl();
         $foldersUpdateService = new FoldersUpdateService();
-
-        $data = $this->getData();
+        $requestData = $this->populatedMetadataUserKeyId($uac->getId(), $this->getRequest()->getData());
+        $folderDto = MetadataFolderDto::fromArray($requestData);
 
         /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
-        $folder = $foldersUpdateService->update($uac, $id, $data);
+        $folder = $foldersUpdateService->update($uac, $id, $folderDto);
 
         // Retrieve and sanity the query options.
         $whitelist = [
@@ -63,25 +67,8 @@ class FoldersUpdateController extends AppController
         $options = $this->QueryString->get($whitelist);
         $folder = $foldersUpdateService->foldersTable->findView($this->User->id(), $folder->id, $options)->first();
         $folder = FolderizableBehavior::unsetPersonalPropertyIfNull($folder->toArray());
+        $folder = (new MetadataFoldersRenderService())->renderFolder($folder, $folderDto->isV5());
 
         $this->success(__('The folder has been updated successfully.'), $folder);
-    }
-
-    /**
-     * Extract data from the request body.
-     *
-     * @return array
-     */
-    private function getData()
-    {
-        $data = [];
-        $body = $this->getRequest()->getParsedBody();
-
-        $name = Hash::get($body, 'name');
-        if (isset($name)) {
-            $data['name'] = $name;
-        }
-
-        return $data;
     }
 }

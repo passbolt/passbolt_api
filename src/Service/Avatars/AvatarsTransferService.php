@@ -80,7 +80,7 @@ class AvatarsTransferService
      *
      * In debug mode, returns the errors and successes in $this->results array.
      *
-     * @return array|array[]
+     * @return array
      */
     public function transfer(): array
     {
