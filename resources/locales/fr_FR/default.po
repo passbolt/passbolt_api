@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-09-17 10:02\n"
+"PO-Revision-Date: 2024-11-12 10:02\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -3254,7 +3254,7 @@ msgid "Record not found"
 msgstr "Enregistrement introuvable"
 
 msgid "The request data is empty."
-msgstr ""
+msgstr "Les données de la requête sont vides."
 
 msgid "The request data is invalid: expected a collection."
 msgstr ""
@@ -3266,7 +3266,7 @@ msgid "The request data is invalid: id missing."
 msgstr ""
 
 msgid "The request data is invalid: id invalid."
-msgstr ""
+msgstr "Les données de la requête sont invalides : id invalide."
 
 msgid "The request data is invalid: control_function missing."
 msgstr ""
@@ -3275,7 +3275,7 @@ msgid "The request data is invalid: control_function invalid."
 msgstr ""
 
 msgid "The request data is invalid: ids must be unique."
-msgstr ""
+msgstr "Les données de la requête sont invalides : les identifiants doivent être uniques."
 
 msgid "An action identifier should be a valid UUID."
 msgstr ""
@@ -3302,13 +3302,13 @@ msgid "The control function name used length should be maximum {0} characters."
 msgstr ""
 
 msgid "The control function is not supported."
-msgstr ""
+msgstr "La fonction de contrôle n'est pas prise en charge."
 
 msgid "A control function is required."
-msgstr ""
+msgstr "Une fonction de contrôle est requise."
 
 msgid "The control function should not be empty."
-msgstr ""
+msgstr "La fonction de contrôle ne peut pas être vide."
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
 msgstr "L'identifiant de l'utilisateur qui a créé le Rbac doit être un UUID valide."
