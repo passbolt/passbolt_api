@@ -1,12 +1,29 @@
+tag-cleaner:
+  stage: packaging-trigger
+  script:    
+  - | 
+      source .gitlab-ci/scripts/lib/tag-cleaner.sh $CI_COMMIT_TAG
+      echo "PB_VERSION=$PB_VERSION" >> tag.env
+  rules:
+    - if: $CI_COMMIT_TAG
+      when: on_success  
+  artifacts:
+    reports:
+      dotenv: tag.env
+
 packaging-trigger:
   stage: packaging-trigger
   variables:
     PACKAGING_TRIGGER_BRANCH: "main"
-    DOWNSTREAM_PROJECT_ID: "$PACKAGING_PROJECT_ID"
-  image: ${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/debian:bookworm-slim
-  script:
-    - apt update && apt install -y curl
-    - bash .gitlab-ci/scripts/bin/packaging-trigger.sh "$CI_COMMIT_TAG" "$PACKAGING_TRIGGER_BRANCH"
+    PASSBOLT_FLAVOUR: $PASSBOLT_FLAVOUR
+    PASSBOLT_VERSION: $PB_VERSION
+    PASSBOLT_BRANCH: $CI_COMMIT_TAG
+  trigger:
+    project: passbolt/passbolt-ops/passbolt-packaging
+    branch: $PACKAGING_TRIGGER_BRANCH
   rules:
     - if: $CI_COMMIT_TAG
       when: on_success
+  needs:
+    - job: tag-cleaner
+      artifacts: true

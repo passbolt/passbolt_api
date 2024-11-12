@@ -167,7 +167,7 @@ class AvatarsCacheService
     /**
      * The default avatar file.
      *
-     * @param ?string $format Format of the image.
+     * @param string|null $format Format of the image.
      * @return string
      * @throws \RuntimeException if the avatar config is not set in config/file_storage.php
      */

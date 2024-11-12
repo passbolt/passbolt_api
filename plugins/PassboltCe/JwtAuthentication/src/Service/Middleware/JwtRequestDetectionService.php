@@ -120,7 +120,7 @@ class JwtRequestDetectionService
      */
     public function isJwtAccessTokenSetInHeader(): bool
     {
-        return !empty($this->request->getHeaderLine(JwtAuthenticationService::JWT_HEADER));
+        return (bool)$this->request->getHeaderLine(JwtAuthenticationService::JWT_HEADER);
     }
 
     /**
@@ -130,6 +130,6 @@ class JwtRequestDetectionService
      */
     public function isJwtRefreshTokenSetInCookie(): bool
     {
-        return !empty($this->request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE));
+        return (bool)$this->request->getCookie(RefreshTokenAbstractService::REFRESH_TOKEN_COOKIE);
     }
 }

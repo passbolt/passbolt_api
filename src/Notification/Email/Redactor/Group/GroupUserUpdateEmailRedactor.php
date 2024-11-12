@@ -43,7 +43,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     private $usersTable;
 
     /**
-     * @param \App\Model\Table\UsersTable $usersTable Users Table
+     * @param \App\Model\Table\UsersTable|null $usersTable Users Table
      */
     public function __construct(?UsersTable $usersTable = null)
     {

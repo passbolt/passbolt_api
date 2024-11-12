@@ -217,7 +217,7 @@ trait UsersFindersTrait
      * Build the query that fetches data for user index
      *
      * @param string $role name
-     * @param array $options filters
+     * @param array|null $options filters
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if no role is specified
      */
@@ -381,7 +381,7 @@ trait UsersFindersTrait
      * including role and profile
      *
      * @param string $username email of user to retrieve
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the username is not an email
      */
@@ -617,12 +617,15 @@ trait UsersFindersTrait
     public function findlastLoggedIn(Query $query)
     {
         // Retrieve the last logged in date for each user, based on the action_logs table.
-        $loginActionId = UuidFactory::uuid('AuthLogin.loginPost');
+        $loginActionIds = [
+            UuidFactory::uuid('AuthLogin.loginPost'),
+            UuidFactory::uuid('JwtLogin.loginPost'),
+        ];
         $subQuery = $this->ActionLogs->find();
         $subQuery
             ->select(['last_logged_in' => $subQuery->func()->max(new IdentifierExpression('ActionLogs.created'))])
             ->where([
-                 'ActionLogs.action_id' => $loginActionId,
+                 'ActionLogs.action_id IN' => $loginActionIds,
                  'ActionLogs.status' => 1,
                  'ActionLogs.user_id' => new IdentifierExpression('Users.id'),
             ])

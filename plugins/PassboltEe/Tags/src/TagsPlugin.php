@@ -16,10 +16,15 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags;
 
+use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
+use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
+use Passbolt\Metadata\Service\Migration\MigrateAllV4ToV5ServiceCollector;
+use Passbolt\Tags\Command\Metadata\MigrateTagsCommand;
 use Passbolt\Tags\EventListener\AddTaggableBehaviorToTaggableTables;
 use Passbolt\Tags\EventListener\GroupsUsersEventListener;
+use Passbolt\Tags\Service\Metadata\MigrateAllV4TagsToV5Service;
 
 class TagsPlugin extends BasePlugin
 {
@@ -31,6 +36,10 @@ class TagsPlugin extends BasePlugin
         parent::bootstrap($app);
 
         $this->registerListeners($app);
+
+        if (Configure::read('passbolt.v5.enabled')) {
+            MigrateAllV4ToV5ServiceCollector::add(MigrateAllV4TagsToV5Service::class);
+        }
     }
 
     /**
@@ -44,5 +53,15 @@ class TagsPlugin extends BasePlugin
         $app->getEventManager()
             ->on(new AddTaggableBehaviorToTaggableTables()) // Decorate the core/other plugins table classes that can be tagged.
             ->on(new GroupsUsersEventListener()); // Remove tags when a group user is deleted and the user lost access to some resources.
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function console(CommandCollection $commands): CommandCollection
+    {
+        $commands->add('passbolt metadata migrate_tags', MigrateTagsCommand::class);
+
+        return $commands;
     }
 }

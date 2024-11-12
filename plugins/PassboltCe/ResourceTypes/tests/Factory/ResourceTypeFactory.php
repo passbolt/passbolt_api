@@ -17,10 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\ResourceTypes\Test\Factory;
 
+use App\Utility\UuidFactory;
 use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
-use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
 /**
  * ResourceFactory
@@ -55,6 +56,7 @@ class ResourceTypeFactory extends CakephpBaseFactory
                 'slug' => $faker->slug(3),
                 'name' => $faker->words(3, true),
                 'description' => $faker->text(64),
+                'definition' => json_encode([]),
                 'created' => FrozenDate::now()->subDays($faker->randomNumber(4)),
                 'modified' => FrozenDate::now()->subDays($faker->randomNumber(4)),
             ];
@@ -63,11 +65,79 @@ class ResourceTypeFactory extends CakephpBaseFactory
 
     public function default(): self
     {
-        return $this->patchData(['id' => ResourceTypesTable::getDefaultTypeId()]);
+        return $this->passwordString();
+    }
+
+    public function passwordString(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING),
+            'slug' => ResourceType::SLUG_PASSWORD_STRING,
+        ]);
     }
 
     public function passwordAndDescription(): self
     {
-        return $this->patchData(['id' => ResourceTypesTable::getPasswordAndDescriptionTypeId()]);
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
+            'slug' => ResourceType::SLUG_PASSWORD_AND_DESCRIPTION,
+        ]);
+    }
+
+    public function standaloneTotp(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP),
+            'slug' => ResourceType::SLUG_STANDALONE_TOTP,
+        ]);
+    }
+
+    public function passwordDescriptionTotp(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP),
+            'slug' => ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP,
+        ]);
+    }
+
+    public function v5PasswordString(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSWORD_STRING),
+            'slug' => ResourceType::SLUG_V5_PASSWORD_STRING,
+        ]);
+    }
+
+    public function v5Default(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
+            'slug' => ResourceType::SLUG_V5_DEFAULT,
+        ]);
+    }
+
+    public function v5StandaloneTotp(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_TOTP_STANDALONE),
+            'slug' => ResourceType::SLUG_V5_TOTP_STANDALONE,
+        ]);
+    }
+
+    public function v5DefaultWithTotp(): self
+    {
+        return $this->patchData([
+            'id' => UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
+            'slug' => ResourceType::SLUG_V5_DEFAULT_WITH_TOTP,
+        ]);
+    }
+
+    public function deleted(?FrozenDate $deleted = null): self
+    {
+        if (is_null($deleted)) {
+            $deleted = FrozenDate::yesterday();
+        }
+
+        return $this->setField('deleted', $deleted);
     }
 }

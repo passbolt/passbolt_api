@@ -39,6 +39,12 @@ if (PHP_SAPI === 'cli') {
         'Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords' => [
             'Hard Deleted AccountRecoveryPrivateKeys',
         ],
+        'Passbolt/Tags.ResourcesTags' => [
+            /**
+             * @see \Passbolt\Tags\Model\Table\ResourcesTagsTable::cleanupDuplicatedResourcesTags()
+             */
+            'Duplicated ResourcesTags',
+        ],
     ];
     CleanupCommand::addCleanups($cleanups);
 }

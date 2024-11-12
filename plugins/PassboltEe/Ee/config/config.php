@@ -14,19 +14,11 @@
  * @since         2.0.0
  */
 
-use Cake\Core\Configure;
-
 return [
     'passbolt' => [
         'plugins' => [
-            'ee' => [
+            'ee' => [ // Must be `ee` for BC
                 'version' => '2.0.0',
-                'subscriptionKey' => [
-                    'public' => Configure::read(
-                        'passbolt.plugins.ee.subscriptionKey.public',
-                        __DIR__ . DS . 'subscription_public.key'
-                    ),
-                ],
             ],
         ],
     ],

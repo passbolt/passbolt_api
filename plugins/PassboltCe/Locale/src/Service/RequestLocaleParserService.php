@@ -98,7 +98,7 @@ class RequestLocaleParserService extends LocaleService
     /**
      * Get the authenticated username, or null if not authenticated.
      *
-     * @return string
+     * @return string|null
      */
     protected function getUsername(): ?string
     {

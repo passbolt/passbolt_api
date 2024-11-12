@@ -146,7 +146,7 @@ class EmailQueueFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ?string $subject locale of the email
+     * @param string|null $subject locale of the email
      * @return $this
      */
     public function setSubject(?string $subject = null)

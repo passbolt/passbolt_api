@@ -209,7 +209,7 @@ class FoldersRelationsTable extends Table
     /**
      * Delete all records where associated users are soft deleted
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupSoftDeletedUsers(?bool $dryRun = false): int
@@ -220,7 +220,7 @@ class FoldersRelationsTable extends Table
     /**
      * Delete all records where associated users are deleted
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupHardDeletedUsers(?bool $dryRun = false): int
@@ -231,7 +231,7 @@ class FoldersRelationsTable extends Table
     /**
      * Delete all records where associated resources are soft deleted
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupSoftDeletedResources(?bool $dryRun = false): int
@@ -243,7 +243,7 @@ class FoldersRelationsTable extends Table
      * Delete all association records where associated model entities are soft deleted
      *
      * @param string $modelName model
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     private function cleanupSoftDeletedForeignId(string $modelName, ?bool $dryRun = false): int
@@ -262,7 +262,7 @@ class FoldersRelationsTable extends Table
     /**
      * Delete all records where associated resources are deleted
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupHardDeletedResources(?bool $dryRun = false): int
@@ -291,7 +291,7 @@ class FoldersRelationsTable extends Table
     /**
      * Delete all records where associated folders are deleted
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupHardDeletedFolders(?bool $dryRun = false): int
@@ -302,7 +302,7 @@ class FoldersRelationsTable extends Table
     /**
      * Move to root all folders relations where associated folders parents are deleted
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupHardDeletedFoldersParents(?bool $dryRun = false): int
@@ -316,7 +316,7 @@ class FoldersRelationsTable extends Table
     /**
      * Add missing folders relations for each resource the users have access to.
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      * @throws \Exception If something unexpected occurred
      */
@@ -329,7 +329,7 @@ class FoldersRelationsTable extends Table
      * Add a folder relation for each item users have access but don't have it in their trees.
      *
      * @param string $foreignModel The type of item. Can be Folder or Resource
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      * @throws \Exception If something unexpected occurred
      */
@@ -358,7 +358,7 @@ class FoldersRelationsTable extends Table
     /**
      * Delete duplicated folders relations
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupDuplicatedFoldersRelations(?bool $dryRun = false): int
@@ -391,7 +391,7 @@ class FoldersRelationsTable extends Table
     /**
      * Add missing folders relations for each folder the users have access to.
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      * @throws \Exception If something unexpected occurred
      */
@@ -443,7 +443,7 @@ class FoldersRelationsTable extends Table
      *
      * @param array $usersIds The list of users to get the item folder parent id
      * @param string $foreignId The target entity id
-     * @param bool $excludeRoot Exclude the root folder. Default false.
+     * @param bool|null $excludeRoot Exclude the root folder. Default false.
      * @return array
      */
     public function getItemFoldersParentIdsInUsersTrees(

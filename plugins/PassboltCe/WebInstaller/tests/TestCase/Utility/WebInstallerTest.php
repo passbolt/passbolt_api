@@ -23,8 +23,8 @@ use App\Test\Lib\Model\GpgkeysModelTrait;
 use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\ORM\TableRegistry;
-use Passbolt\Ee\Model\Entity\Subscription;
-use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
+use Passbolt\Subscription\Model\Entity\Subscription;
+use Passbolt\Subscription\Test\DummySubscriptionTrait;
 use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
 use Passbolt\WebInstaller\Test\Lib\WebInstallerIntegrationTestCase;
@@ -82,8 +82,11 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
 
         $gpgSettings = $webInstaller->getSettings('gpg');
         $this->assertNotNull($gpgSettings['fingerprint']);
-        $this->assertEquals(file_get_contents(Configure::read('passbolt.gpg.serverKey.public')), $gpgSettings['public_key_armored']);
-        $this->assertEquals(file_get_contents(Configure::read('passbolt.gpg.serverKey.private')), $gpgSettings['private_key_armored']);
+        $publicFile = Configure::read('passbolt.gpg.serverKey.public');
+        $privateFile = Configure::read('passbolt.gpg.serverKey.private');
+
+        $this->assertEquals(file_get_contents($publicFile), $gpgSettings['public_key_armored']);
+        $this->assertEquals(file_get_contents($privateFile), $gpgSettings['private_key_armored']);
         $this->assertFileExists(Configure::read('passbolt.gpg.serverKey.public'));
         $this->assertFileExists(Configure::read('passbolt.gpg.serverKey.private'));
     }
@@ -188,7 +191,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $webInstaller = new WebInstaller(null);
         $webInstaller->setSettings('user', ['user_id' => $user->id]);
         $subscriptionSettings = [
-            'subscription_key' => file_get_contents(PLUGINS . DS . 'PassboltEe' . DS . 'Ee' . DS . 'tests' . DS . 'data' . DS . 'subscription' . DS . 'subscription_dev'),
+            'subscription_key' => file_get_contents(PLUGINS . DS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'subscription' . DS . 'subscription_dev'),
         ];
         $webInstaller->setSettings('subscription', $subscriptionSettings);
 
@@ -202,7 +205,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         $webInstaller->importSubscription();
 
         // Without Public Subscription Key, no exception should be thrown, the former subscription is still valid
-        Configure::delete('passbolt.plugins.ee.subscriptionKey.public');
+        Configure::delete('passbolt.plugins.subscription.subscriptionKey.public');
         $webInstaller->importSubscription();
         $this->assertInstanceOf(Subscription::class, $this->Subscriptions->getOrFail());
     }

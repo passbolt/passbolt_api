@@ -34,7 +34,7 @@ class MfaVerifiedToken
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param string $provider provider name
      * @param string $sessionId Session ID
-     * @param bool $remember Remember flag
+     * @param bool|null $remember Remember flag
      * @return string token
      */
     public static function get(

@@ -62,14 +62,14 @@ class TransfersCreateService
     {
         // Check for validation errors
         $transfer = $this->buildTransferEntity($data, $uac);
-        if (!empty($transfer->getErrors())) {
+        if ($transfer->getErrors()) {
             $msg = __('Could not validate the transfer data.');
             throw new ValidationException($msg, $transfer, $this->Transfers);
         }
 
         // Save and check for build rules errors.
         $transferSaved = $this->Transfers->save($transfer);
-        if (!empty($transfer->getErrors())) {
+        if ($transfer->getErrors()) {
             $msg = __('Could not validate the transfer data.');
             throw new ValidationException($msg, $transfer, $this->Transfers);
         }

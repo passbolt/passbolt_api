@@ -52,7 +52,7 @@ abstract class AbstractHealthcheckService
 
     /**
      * @param string $checkName health check name
-     * @param bool $success optional
+     * @param bool|null $success optional
      * @return \App\Utility\Healthchecks\Healthcheck
      */
     protected function healthcheckFactory(string $checkName, ?bool $success = null): Healthcheck

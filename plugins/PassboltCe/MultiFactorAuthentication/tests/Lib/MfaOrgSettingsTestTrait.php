@@ -27,7 +27,7 @@ trait MfaOrgSettingsTestTrait
     /**
      * @param array $data org settings ['providers' => [...
      * @param string $type configure or database
-     * @param UserAccessControl $user optional, only used when $type is database
+     * @param UserAccessControl|null $user optional, only used when $type is database
      */
     public function mockMfaOrgSettings(array $data, string $type = 'configure', ?UserAccessControl $user = null)
     {

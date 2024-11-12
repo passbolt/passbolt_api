@@ -20,7 +20,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
-use Passbolt\Ee\Test\Lib\DummySubscriptionTrait;
+use Passbolt\Subscription\Test\DummySubscriptionTrait;
 
 /**
  * App\Command\MigrateCommand Test Case
