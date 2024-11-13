@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 08:33+0000\n"
-"PO-Revision-Date: 2024-11-13 00:38\n"
+"PO-Revision-Date: 2024-11-13 01:37\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -2702,58 +2702,58 @@ msgid "The metadata key identifier should be a UUID."
 msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
 
 msgid "The private key identifier should be a UUID."
-msgstr ""
+msgstr "개인 키 식별자는 UUID여야 합니다."
 
 msgid "An object type is required."
 msgstr "객체가 필요합니다."
 
 msgid "The object type is invalid."
-msgstr ""
+msgstr "객체 유형이 잘못되었습니다."
 
 msgid "A passphrase is required."
 msgstr "패스프레이즈가 필요합니다."
 
 msgid "The passphrase should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "패스프레이즈는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "A fingerprint is required."
 msgstr "지문이 필요합니다."
 
 msgid "A fingerprint should not be greater than 51 characters."
-msgstr ""
+msgstr "지문은 51자를 초과할 수 없습니다."
 
 msgid "A fingerprint should not be empty."
-msgstr ""
+msgstr "지문은 비워둘 수 없습니다."
 
 msgid "The fingerprint should be a valid alphanumeric string."
 msgstr "지문은 올바른 영숫자 문자열이어야 합니다."
 
 msgid "The armored key should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "아머드 키는 유효한 ASCII 문자열이어야 합니다."
 
 msgid "The value is not a valid OpenPGP private key."
 msgstr "값이 올바른 OpenPGP 개인키가 아닙니다."
 
 msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
-msgstr ""
+msgstr "지문이 OpenPGP 공개키 및 OpenPGP 개인키 지문과 일치하지 않습니다."
 
 msgid "A domain is required."
 msgstr "도메인이 필요합니다."
 
 msgid "The domain should not be empty."
-msgstr ""
+msgstr "도메인은 비워둘 수 없습니다."
 
 msgid "The domain should match current instance URL."
-msgstr ""
+msgstr "도메인은 현재 인스턴스 URL과 일치해야 합니다."
 
 msgid "Private keys are required."
-msgstr ""
+msgstr "개인 키가 필요합니다."
 
 msgid "Need at least one metadata private key."
-msgstr ""
+msgstr "하나 이상의 메타데이터 개인 키가 필요합니다."
 
 msgid "A data is required."
-msgstr ""
+msgstr "데이터가 필요합니다."
 
 msgid "The data should not be empty."
 msgstr "데이터는 비워둘 수 없습니다."
@@ -2762,97 +2762,97 @@ msgid "The data should be a valid ASCII string."
 msgstr "데이터는 유효한 ASCII 문자열이어야 합니다."
 
 msgid "The setting should be a valid boolean."
-msgstr ""
+msgstr "설정은 유효한 부울이어야 합니다."
 
 msgid "The setting is required."
-msgstr ""
+msgstr "설정이 필요합니다."
 
 msgid "The data is required."
 msgstr "데이터가 필요합니다."
 
 msgid "The modified date should be a valid date."
-msgstr ""
+msgstr "수정 날짜는 유효한 날짜여야 합니다."
 
 msgid "A modified date is required."
-msgstr ""
+msgstr "수정 날짜가 필요합니다."
 
 msgid "The modified date should not be empty."
-msgstr ""
+msgstr "수정 날짜는 비워둘 수 없습니다."
 
 msgid "The setting should not be empty."
-msgstr ""
+msgstr "설정은 비워둘 수 없습니다."
 
 msgid "The setting should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "설정은 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "The setting should be one of the following: {0}."
-msgstr ""
+msgstr "설정은 다음 중 하나여야 합니다: {0}."
 
 msgid "The content type needs to be enabled in order to be set as default."
-msgstr ""
+msgstr "기본값으로 설정하려면 콘텐츠 유형이 활성화되어 있어야 합니다."
 
 msgid "Both v4 and v5 settings cannot be disabled."
-msgstr ""
+msgstr "v4 및 v5 설정을 모두 비활성화할 수 없습니다."
 
 msgid "Metadata settings endpoints are disabled."
-msgstr ""
+msgstr "메타데이터 설정 엔드포인트를 사용할 수 없습니다."
 
 msgid "Folder can not be shared"
-msgstr ""
+msgstr "폴더를 공유할 수 없음"
 
 msgid "Few fields are missing for the V5."
-msgstr ""
+msgstr "V5에 필요한 몇 가지 필드가 누락되었습니다."
 
 msgid "Missing fields: {0}"
-msgstr ""
+msgstr "누락 필드: {0}"
 
 msgid "V4 related fields are not supported for V5."
-msgstr ""
+msgstr "V5에서는 V4 관련 필드를 지원하지 않습니다."
 
 msgid "Superfluous fields: {0}"
-msgstr ""
+msgstr "불필요한 필드: {0}"
 
 msgid "Allow usage of personal keys"
-msgstr ""
+msgstr "개인 키 사용 사용"
 
 msgid "True"
-msgstr ""
+msgstr "참"
 
 msgid "False"
-msgstr ""
+msgstr "거짓"
 
 msgid "Zero-knowledge key share"
-msgstr ""
+msgstr "영지식 키 공유"
 
 msgid "No resource type mapping for ID '{0}'"
-msgstr ""
+msgstr "ID '{0}'에 대한 리소스 유형 매핑이 없습니다."
 
 msgid "Default resource types"
-msgstr ""
+msgstr "기본 리소스 유형"
 
 msgid "Default folder type"
-msgstr ""
+msgstr "기본 폴더 유형"
 
 msgid "Default comment type"
-msgstr ""
+msgstr "기본 댓글 유형"
 
 msgid "Allow creation of V5 resources"
-msgstr ""
+msgstr "V5 리소스 생성 허용"
 
 msgid "Allow creation of V5 folders"
-msgstr ""
+msgstr "V5 폴더 생성 허용"
 
 msgid "Allow creation of V5 tags"
-msgstr ""
+msgstr "V5 태그 생성 허용"
 
 msgid "Allow creation of V5 comments"
-msgstr ""
+msgstr "V5 댓글 생성 허용"
 
 msgid "Allow creation of V4 resources"
-msgstr ""
+msgstr "V4 리소스 생성 허용"
 
 msgid "Allow creation of V4 folders"
-msgstr ""
+msgstr "V4 폴더 생성 허용"
 
 msgid "Allow creation of V4 tags"
 msgstr "V4 태그 생성 허용"
@@ -2930,127 +2930,127 @@ msgid "The metadata key could not be saved."
 msgstr "메타데이터 키를 저장할 수 없습니다."
 
 msgid "Could not save the metadata key, please try again later."
-msgstr ""
+msgstr "메타데이터 키를 저장할 수 없습니다, 나중에 재시도 하세요."
 
 msgid "Server metadata private key was not found."
-msgstr ""
+msgstr "서버 메타데이터 개인 키를 찾을 수 없습니다."
 
 msgid "Metadata key could not be shared with user id: {0}."
-msgstr ""
+msgstr "메타데이터 키를 사용자 ID: {0} 와 공유할 수 없습니다."
 
 msgid "The data could not be validated."
-msgstr ""
+msgstr "데이터를 검증할 수 없습니다."
 
 msgid "The data could not be saved."
-msgstr ""
+msgstr "데이터를 저장할 수 없습니다."
 
 msgid "The metadata private key should not be empty."
-msgstr ""
+msgstr "메타데이터 키를 비워 둘 수 없습니다."
 
 msgid "The metadata private key cleartext data should be in JSON format."
-msgstr ""
+msgstr "메타데이터 개인 키의 평문 데이터는 JSON 형식이어야 합니다."
 
 msgid "The metadata private key cleartext data should not be empty."
-msgstr ""
+msgstr "메타데이터 개인 키의 평문 데이터는 비워둘 수 없습니다."
 
 msgid "The metadata private key cleartext data is not valid."
-msgstr ""
+msgstr "메타데이터 개인 키의 평문 데이터는 비워둘 수 없습니다."
 
 msgid "The OpenPGP user key cannot be found."
-msgstr ""
+msgstr "OpenPGP 사용자 키를 찾을 수 없습니다."
 
 msgid "Could not validate the settings."
-msgstr ""
+msgstr "설정의 유효성을 검사할 수 없습니다."
 
 msgid "The server metadata private key is required to enable these settings."
-msgstr ""
+msgstr "서버 메타데이터 개인 키가 이러한 설정을 활성화하는 데 필요합니다."
 
 msgid "The server metadata key id is required."
-msgstr ""
+msgstr "서버 메타데이터 키 ID가 필요합니다."
 
 msgid "The server metadata private key is invalid."
-msgstr ""
+msgstr "서버 메타데이터 개인 키가 유효하지 않습니다."
 
 msgid "The metadata private key could not be updated."
-msgstr ""
+msgstr "메타데이터 개인 키를 업데이트할 수 없습니다."
 
 msgid "Please try again later."
 msgstr "나중 후 다시 시도하세요."
 
 msgid "The metadata private key could not be validated."
-msgstr ""
+msgstr "메타데이터 개인 키를 검증할 수 없습니다."
 
 msgid "The request data is invalid."
-msgstr ""
+msgstr "요청 데이터가 잘못되었습니다."
 
 msgid "The metadata key is already shared with the user."
-msgstr ""
+msgstr "메타데이터 키는 이미 사용자와 공유되었습니다."
 
 msgid "The metadata private key does not exist or has been deleted."
-msgstr ""
+msgstr "메타데이터 개인 키가 존재하지 않거나 삭제되었습니다."
 
 msgid "The metadata private key was already edited by the user."
-msgstr ""
+msgstr "메타데이터 개인 키는 이미 사용자에 의해 편집되었습니다."
 
 msgid "The metadata session key could not be saved."
-msgstr ""
+msgstr "메타데이터 세션 키를 저장할 수 없습니다."
 
 msgid "Could not save the metadata session key, please try again later."
-msgstr ""
+msgstr "메타데이터 세션 키를 저장할 수 없습니다, 나중에 재시도 하세요."
 
 msgid "The data must be a string."
-msgstr ""
+msgstr "데이터는 문자열이어야 합니다."
 
 msgid "The metadata session key identifier should be a UUID."
-msgstr ""
+msgstr "메타데이터 세션 키 식별자는 유효한 UUID여야 합니다."
 
 msgid "The metadata session key does not exist or does not belong to this user."
-msgstr ""
+msgstr "메타데이터 세션 키가 존재하지 않거나 이 사용자에게 속해 있지 않습니다."
 
 msgid "The metadata session key could not be deleted."
-msgstr ""
+msgstr "메타데이터 세션 키를 삭제할 수 없습니다."
 
 msgid "Could not validate the data."
-msgstr ""
+msgstr "데이터를 검사할 수 없습니다."
 
 msgid "The metadata session key data is identical."
-msgstr ""
+msgstr "메타데이터 세션 키 데이터가 동일합니다."
 
 msgid "The metadata session key data has changed."
-msgstr ""
+msgstr "메타데이터 세션 키 데이터가 변경되었습니다."
 
 msgid "Could not save the metadata session keys, please try again later."
-msgstr ""
+msgstr "메타데이터 세션 키를 저장할 수 없습니다, 나중에 재시도 하세요."
 
 msgid "Could not prepare private key for server key."
-msgstr ""
+msgstr "서버 키에 대한 개인 키를 준비할 수 없습니다."
 
 msgid "User key not found."
-msgstr ""
+msgstr "사용자 키가 없음."
 
 msgid "Could not prepare private key for user id {0}."
-msgstr ""
+msgstr "사용자 ID {0} 에 대한 개인 키를 준비할 수 없습니다."
 
 msgid "No folders to migrate."
-msgstr ""
+msgstr "마이그레이션할 폴더가 없음."
 
 msgid "Folder ID \"{0}\" is already V5"
-msgstr ""
+msgstr "폴더 ID \"{0}\" 은(는) 이미 V5입니다."
 
 msgid "No permission found for folder ID {0}"
-msgstr ""
+msgstr "폴더 ID {0} 에 대한 권한이 없음"
 
 msgid "No user provided."
-msgstr ""
+msgstr "제공된 사용자가 없음."
 
 msgid "The metadata could not be encrypted for permission id: {0}."
-msgstr ""
+msgstr "권한 ID {0} 에 대해 메타데이터를 암호화할 수 없습니다."
 
 msgid "No OpenPGP key found for the user."
-msgstr ""
+msgstr "사용자에 대한 OpenPGP 키를 찾을 수 없음."
 
 msgid "The metadata could not be encrypted with the user id: {0}."
-msgstr ""
+msgstr "메타데이터를 사용자 ID {0} 로 암호화할 수 없습니다."
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
 msgstr ""
@@ -3107,49 +3107,49 @@ msgid "V5 metadata format is not enabled."
 msgstr ""
 
 msgid "Resource creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "암호화된 메타데이터로 리소스를 생성/수정할 수 없습니다."
 
 msgid "Folder creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "암호화된 메타데이터로 폴더를 생성/수정할 수 없습니다."
 
 msgid "Tag creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "암호화된 메타데이터로 태그를 생성/수정할 수 없습니다."
 
 msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "평문 메타데이터로 리소스를 생성/수정할 수 없습니다."
 
 msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "평문 메타데이터로 폴더를 생성/수정할 수 없습니다."
 
 msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "평문 메타데이터로 태그를 생성/수정할 수 없습니다."
 
 msgid "{0} created a new metadata key"
-msgstr ""
+msgstr "{0} 이(가) 새로운 메타데이터 키를 생성"
 
 msgid "You have created a new folder."
-msgstr ""
+msgstr "새 폴더가 생성되었습니다."
 
 msgid "{0} has shared a folder with you."
-msgstr ""
+msgstr "{0} 이(가) 당신과 암호를 공유함."
 
 msgid "You have edited a folder."
-msgstr ""
+msgstr "폴더를 수정했습니다."
 
 msgid "You have saved a new password"
 msgstr "새 암호를 저장했습니다."
 
 msgid "You have created a new password."
-msgstr ""
+msgstr "새 암호를 생성했습니다."
 
 msgid "{0} shared a resource with you"
-msgstr ""
+msgstr "{0} 이(가) 당신과 리소스를 공유함"
 
 msgid "{0} shared a resource with you."
-msgstr ""
+msgstr "{0} 이(가) 당신과 리소스를 공유함."
 
 msgid "You have edited a resource."
-msgstr ""
+msgstr "리소스가 수정됨."
 
 msgid "Information about the transfer is required."
 msgstr "전송에 대한 정보가 필요합니다."
@@ -3296,7 +3296,7 @@ msgid "The multi-factor authentication is not required."
 msgstr "다단계 인증이 필요하지 않습니다."
 
 msgid "No valid multi-factor authentication settings found."
-msgstr ""
+msgstr "유효한 다단계 인증 설정을 찾을 수 없습니다."
 
 msgid "No valid multi-factor authentication settings found for this provider."
 msgstr "이 공급자에 대한 올바른 다단계 인증 설정을 찾을 수 없습니다."
@@ -3680,7 +3680,7 @@ msgid "{0} marked the password {1} as expired"
 msgstr "{0} 이(가) {1} 암호를 만료된 것으로 표시했습니다"
 
 msgid "{0} marked a password as expired"
-msgstr ""
+msgstr "{0} 이(가) 암호를 만료된 것으로 표시했습니다"
 
 msgid "You edited the password expiry settings"
 msgstr "암호 만료 설정을 수정했습니다"
@@ -4007,10 +4007,10 @@ msgid "No"
 msgstr "아니요"
 
 msgid "The deleted field must be set to null."
-msgstr ""
+msgstr "삭제된 필드는 null로 설정해야 합니다."
 
 msgid "It is not allowed to update these resource type properties."
-msgstr ""
+msgstr "이 리소스 유형 속성은 업데이트할 수 없습니다."
 
 msgid "The name should be a valid BMP-UTF8 string."
 msgstr "이름은 유효한 BMP-UTF8 문자열이어야합니다."
@@ -4046,25 +4046,25 @@ msgid "A resource type already exists with this definition."
 msgstr "이 정의를 가진 리소스 유형이 이미 있습니다."
 
 msgid "The resource type identifier should be a UUID."
-msgstr ""
+msgstr "리소스 유형 식별자는 유효한 UUID여야 합니다."
 
 msgid "The resource type is already deleted."
-msgstr ""
+msgstr "리소스 유형은 이미 삭제되었습니다."
 
 msgid "You cannot delete the last resource type of the default version."
-msgstr ""
+msgstr "기본 버전의 마지막 리소스 유형은 삭제할 수 없습니다."
 
 msgid "You cannot delete the last resource type available."
-msgstr ""
+msgstr "사용 가능한 마지막 리소스 유형은 삭제할 수 없습니다."
 
 msgid "The resource type can not be deleted as resources of this type still exist."
-msgstr ""
+msgstr "이 리소스 유형의 자원이 아직 존재하므로 삭제할 수 없습니다."
 
 msgid "The resource type could not be deleted."
-msgstr ""
+msgstr "리소스 유형을 삭제할 수 없습니다."
 
 msgid "The resource type is not deleted."
-msgstr ""
+msgstr "리소스 유형이 삭제되지 않았습니다."
 
 msgid "The self registration setting id should be a valid UUID."
 msgstr "자체 등록 설정 ID는 올바른 UUID여야 합니다."
