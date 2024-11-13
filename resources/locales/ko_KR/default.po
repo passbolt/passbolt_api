@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 08:33+0000\n"
-"PO-Revision-Date: 2024-11-12 14:03\n"
+"PO-Revision-Date: 2024-11-13 00:38\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -2330,16 +2330,16 @@ msgid "The settings selected by your administrator prevent from downgrading fold
 msgstr "관리자가 선택한 설정으로 인해 폴더를 다운그레이드할 수 없습니다."
 
 msgid "The metadata key does not exist."
-msgstr ""
+msgstr "메타데이터 키가 존재하지 않습니다."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "개인 유형의 폴더는 다른 사용자 또는 그룹과 공유할 수 없습니다."
 
 msgid "You added the folder {0}"
 msgstr "폴더 {0} 이(가) 추가됨"
 
 msgid "You added a new folder"
-msgstr ""
+msgstr "새 폴더가 추가됨"
 
 msgid "You deleted the folder {0}"
 msgstr "{0} 폴더를 삭제했습니다"
@@ -2351,13 +2351,13 @@ msgid "{0} shared the folder {1}"
 msgstr "{0} 이(가) {1} 폴더를 공유함"
 
 msgid "{0} shared a folder"
-msgstr ""
+msgstr "{0} 이(가) 폴더를 공유함"
 
 msgid "{0} edited the folder"
-msgstr ""
+msgstr "{0} 이(가) 폴더를 수정함"
 
 msgid "You edited the folder"
-msgstr ""
+msgstr "폴더를 수정함"
 
 msgid "An email notification setting should be a boolean."
 msgstr "이메일 알림 설정은 부울이여야 합니다."
@@ -2696,10 +2696,10 @@ msgid "Could not validate secret history data."
 msgstr "암호 기록 데이터의 유효성을 검사할 수 없습니다."
 
 msgid "Could not validate the metadata key data."
-msgstr ""
+msgstr "메타데이터 키 데이터를 검사할 수 없습니다."
 
 msgid "The metadata key identifier should be a UUID."
-msgstr ""
+msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
 
 msgid "The private key identifier should be a UUID."
 msgstr ""
