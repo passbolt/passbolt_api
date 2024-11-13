@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-07-17 04:36+0000\n"
-"PO-Revision-Date: 2024-07-24 02:14\n"
+"POT-Creation-Date: 2024-11-12 08:33+0000\n"
+"PO-Revision-Date: 2024-11-13 03:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -83,7 +83,7 @@ msgid "The logout route should only be accessed with POST method."
 msgstr "로그아웃 경로는 POST 방법으로만 접근해야 합니다."
 
 msgid "The OpenPGP public key information was not found in config."
-msgstr "구성에서 OpenPGP 공개키 정보를 찾을 수 없습니다."
+msgstr "구성에서 OpenPGP 공개 키 정보를 찾을 수 없습니다."
 
 msgid "The operation was successful."
 msgstr "작업이 성공하였습니다."
@@ -303,6 +303,9 @@ msgstr "게스트만 설정를 시작할 수 있습니다."
 
 msgid "You are not authorized to share this resource."
 msgstr "이 리소스를 공유할 수 있는 권한이 없습니다."
+
+msgid "Resource metadata key type is invalid."
+msgstr "리소스 메타데이터 키 유형이 잘못되었습니다."
 
 msgid "Only administrators can add new users."
 msgstr "관리자만이 새로운 사용자를 추가할 수 있습니다."
@@ -608,10 +611,10 @@ msgid "A valid OpenPGP key must be provided."
 msgstr "유효한 OpenPGP 키가 제공되어야 합니다."
 
 msgid "The OpenPGP armored key could not be parsed."
-msgstr "OpenPGP 무장키는 구문 분석할수 없습니다."
+msgstr "OpenPGP 아머드 키는 구문 분석할수 없습니다."
 
 msgid "The OpenPGP armored key could not be validated."
-msgstr "OpenPGP 무장키는 검증할 수 없습니다."
+msgstr "OpenPGP 아머드 키는 검증할 수 없습니다."
 
 msgid "The name should be a valid UTF8 string."
 msgstr "이름은 유효한 BMP-UTF8 문자열이어야합니다."
@@ -853,6 +856,24 @@ msgstr "비밀번호는 비워둘 수 없습니다."
 msgid "The secrets should contain only the secret of the owner."
 msgstr "비밀번호는 오직 소유주의 비밀번호만을 포함해야 합니다."
 
+msgid "The metadata key ID should be a valid UUID."
+msgstr "메타데이터 키 ID는 유효한 UUID여야 합니다."
+
+msgid "The metadata should be a valid ASCII string."
+msgstr "데이터는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "The metadata should not be empty."
+msgstr "메타데이터는 비워둘 수 없습니다."
+
+msgid "The metadata key type should be a valid UTF8 string."
+msgstr "메타데이터 키 유형은 유효한 UTF8 문자열이어야합니다."
+
+msgid "The metadata key type should be one of the following: {0}."
+msgstr "메타데이터 키 유형은 다음 중 하나여야 합니다: {0}."
+
+msgid "The resource type should be one of the following: {0}."
+msgstr "리소스 유형은 다음 중 하나여야 합니다: {0}."
+
 msgid "The resource type does not exist."
 msgstr "리소스 유형이 존재하지 않습니다."
 
@@ -867,6 +888,30 @@ msgstr "비밀번호는 리소스에 접근할 수 있는 모든 사용자의 �
 
 msgid "The permissions should contain at least the owner permission."
 msgstr "권한은 최소한 소유주의 권한을 포함해야 합니다."
+
+msgid "The settings selected by your administrator prevent from downgrading resource type."
+msgstr "관리자가 선택한 설정으로 인해 리소스 유형이 다운그레이드되지 않습니다"
+
+msgid "The settings selected by your administrator prevent from using that key type."
+msgstr "관리자가 선택한 설정으로 인해 해당 키 유형을 사용할 수 없습니다."
+
+msgid "The metadata key does not exist or was deleted."
+msgstr "메타데이터 키가 없거나 삭제되었습니다."
+
+msgid "The metadata key is marked as expired."
+msgstr "메타데이터 키가 만료된 것으로 표시됩니다."
+
+msgid "It is not allowed to create v5-password-string resource types."
+msgstr "v5-암호 문자열 리소스 유형은 만들 수 없습니다."
+
+msgid "The resource type should not be deleted."
+msgstr "리소스 유형은 비워둘 수 없습니다."
+
+msgid "The resource metadata provided can not be decrypted."
+msgstr "제공된 리소스 메타데이터를 복호화할 수 없습니다."
+
+msgid "A resource of type personal cannot be shared with other users or a group."
+msgstr "개인 유형의 리소스는 다른 사용자 또는 그룹과 공유할 수 없습니다."
 
 msgid "The resource should not be already soft deleted."
 msgstr "리소스를 임시로 삭제해서는 안 됩니다."
@@ -949,8 +994,11 @@ msgstr "{0} 사용자를 삭제할 수 없습니다, 나중에 재시도 하세�
 msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr "무장된 키는 유효한 ASCII로 무장된 OpenPGP key여야 합니다."
 
+msgid "The armored key is not valid."
+msgstr "암호화된 키가 유효하지 않습니다."
+
 msgid "The message should be a valid ASCII-armored OpenPGP message."
-msgstr "메시지는 유효한 ASCII로 무장된 OpenPGP key여야 합니다."
+msgstr "메시지는 유효한 ASCII-암호화된 OpenPGP 메시지여야 합니다."
 
 msgid "The creation date should be set in the past."
 msgstr "생성 날짜는 과거 날짜로 설정해야 합니다."
@@ -968,7 +1016,7 @@ msgid "The regular expression should be a valid string."
 msgstr "정규식은 올바른 문자열이어야 합니다."
 
 msgid "The fingerprint does not match the one of the armored key."
-msgstr "지문이 무장키와 맞지 않습니다."
+msgstr "지문이 아머드 키와 맞지 않습니다."
 
 msgid "The fingerprint should be a string of 40 hexadecimal characters."
 msgstr "지문은 40개의 16진수 문자로 구성된 문자열이어야 합니다."
@@ -978,6 +1026,9 @@ msgstr "유형은 RSA, ECC, ECDSA, DH 중 하나여야 합니다."
 
 msgid "The delete status should be a valid boolean."
 msgstr "삭제된 상태는 유효한 부울이어야 합니다."
+
+msgid "The field must be null when creating a new record."
+msgstr "새 레코드를 만들 때 필드는 null이어야 합니다."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "키 식별자는 8개의 16진수 문자로 구성된 문자열이어야 합니다."
@@ -1036,20 +1087,29 @@ msgstr "{0} 계정이 복구되었습니다!"
 msgid "You added the password {0}"
 msgstr "{0} 암호가 추가되었습니다"
 
+msgid "You added a new password"
+msgstr "새 암호가 추가됨"
+
 msgid "{0} deleted the password {1}"
 msgstr "{0} 에 의해 {1} 암호가 삭제됨"
 
-msgid "You edited the password {0}"
-msgstr "{0} 암호를 수정함"
+msgid "You edited a resource"
+msgstr "리소스가 수정됨"
 
-msgid "{0} edited the password {1}"
-msgstr "{0} 에 의해 {1} 비밀번호가 수정됨"
+msgid "You edited the resource {0}"
+msgstr "{0} 리소스를 수정함"
+
+msgid "{0} edited the resource {1}"
+msgstr "{0} 에 의해 {1} 리소스가 수정됨"
 
 msgid "{0} can not complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다."
 
-msgid "{0} shared the password {1}"
-msgstr "{0} 에 의해 {1} 암호가 공유됨"
+msgid "{0} shared the resource {1}"
+msgstr "{0} 에 의해 {1} 리소스가 공유됨"
+
+msgid "{0} shared a resource"
+msgstr "{0} 에 의해 리소스가 공유됨"
 
 msgid "You deleted administrator {0}"
 msgstr "관리자 {0} 이(가) 삭제됨"
@@ -1477,16 +1537,28 @@ msgstr "{0} 테이블이 발견됨."
 msgid "No table found."
 msgstr "테이블을 찾을 수 없습니다."
 
+msgid "Cannot detect your system distribution details."
+msgstr "시스템 배포 세부 정보를 감지할 수 없습니다."
+
+msgid "See `{0}`."
+msgstr "'{0}' 을(를) 참조하세요."
+
+msgid "Cannot detect your `gpg` or `libgcrypt` version."
+msgstr "'gpg' 또는 'libgcrypt' 버전을 감지할 수 없습니다."
+
+msgid "See `{0}` and `{1}`."
+msgstr "{0}' 및 '{1}'을(를) 참조하세요."
+
 msgid "GD or Imagick extension is installed."
 msgstr "GD 또는 Imagick 확장 프로그램이 설치되어 있습니다."
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
 msgstr "패스볼트를 사용하려면 gd 또는 imagick 확장을 활성화해야 합니다."
 
-msgid "See. https://secure.php.net/manual/en/book.image.php"
-msgstr "https://secure.php.net/manual/en/book.image.php 를 참조하세요."
+msgid "See: https://secure.php.net/manual/en/book.image.php"
+msgstr "htttps://secure.php.net/manual/en/book.image.php 를 참조하세요."
 
-msgid "See. https://secure.php.net/manual/en/book.imagick.php"
+msgid "See: https://secure.php.net/manual/en/book.imagick.php"
 msgstr "https://secure.php.net/manual/en/book.imagick.php 를 참조하세요."
 
 msgid "Intl extension is installed."
@@ -1495,7 +1567,7 @@ msgstr "intl 확장이 설치되었습니다."
 msgid "You must enable the intl extension to use Passbolt."
 msgstr "패스볼트를 사용하려면 intl 확장을 활성화해야 합니다."
 
-msgid "See. https://secure.php.net/manual/en/book.intl.php"
+msgid "See: https://secure.php.net/manual/en/book.intl.php"
 msgstr "https://secure.php.net/manual/en/book.intl.php 를 참조하세요."
 
 msgid "The logs directory and its content are writable."
@@ -1504,10 +1576,10 @@ msgstr "로그 디렉터리와 해당 콘텐츠는 쓰기 가능합니다."
 msgid "The logs directory and its content are not writable."
 msgstr "로그 디렉터리와 해당 콘텐츠는 쓰기 가능지 않습니다."
 
-msgid "Ensure the logs directory and its content are writable by the user the webserver user."
+msgid "Ensure the logs directory and its content are writable by the webserver user."
 msgstr "웹 서버 사용자가 로그 디렉터리와 해당 내용을 쓸 수 있는지 확인하세요."
 
-msgid "you can try:"
+msgid "You can try:"
 msgstr "시도해볼 것:"
 
 msgid "Mbstring extension is installed."
@@ -1516,7 +1588,7 @@ msgstr "mbstring 확장이 설치되었습니다."
 msgid "You must enable the mbstring extension to use Passbolt."
 msgstr "패스볼트를 사용하려면 mbstring 확장을 활성화해야 합니다."
 
-msgid "See. https://secure.php.net/manual/en/book.mbstring.php"
+msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
 msgstr "https://secure.php.net/manual/en/book.mbstring.php 를 참조하세요."
 
 msgid "PHP version is {0} or above."
@@ -1524,6 +1596,15 @@ msgstr "PHP 버전은 {0} 이상입니다."
 
 msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
 msgstr "{0} 미만의 PHP 버전은 곧 패스볼트에서 지원되지 않으므로 운영 체제나 PHP 환경을 업그레이드하는 것이 좋습니다."
+
+msgid "64-bit architecture system detected."
+msgstr "64비트 아키텍처 시스템이 감지되었습니다."
+
+msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
+msgstr "32비트 아키텍처 시스템이 감지되었습니다. 이 환경은 Passbolt v5+부터 지원하지 않습니다."
+
+msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
+msgstr "PHP_INT_MAX를 참조세요 - https://www.php.net/manual/en/language.types.integer.php"
 
 msgid "PCRE compiled with unicode support."
 msgstr "유니코드 지원으로 컴파일된 PCRE."
@@ -1540,6 +1621,27 @@ msgstr "PHP 버전 {0}."
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
 msgstr "PHP 버전이 너무 낮습니다. 패스볼트는 PHP {0} 이상이 필요합니다."
 
+msgid "System clock is synchronized and NTP service is active."
+msgstr "시스템 시각이 동기화되고 NTP 서비스가 활성화됩니다."
+
+msgid "System clock and NTP service information cannot be found."
+msgstr "시스템 시각 및 NTP 서비스 정보를 찾을 수 없습니다."
+
+msgid "NTP service is active but the system clock is not synchronized."
+msgstr "NTP 서비스가 활성화되었지만 시스템 시각이 동기화되지 않았습니다."
+
+msgid "System clock is synchronized but NTP service is inactive."
+msgstr "시스템 시각이 동기화되었지만 NTP 서비스가 비활성화됩니다."
+
+msgid "System clock is not synchronized and NTP service is inactive."
+msgstr "시스템 시각이 동기화되지 않았고 NTP 서비스가 활성화됩니다."
+
+msgid "That generally means the NTP service is failing to contact any NTP servers."
+msgstr "이는 일반적으로 NTP 서비스가 NTP 서버에 연결하지 못한다는 것을 의미합니다."
+
+msgid "See `{0}`. More information: {1}"
+msgstr "`{0}` 을(를) 참조하세요. 자세한 정보: {1}"
+
 msgid "The temporary directory and its content are writable and not executable."
 msgstr "임시 디렉터리와 해당 콘텐츠는 쓰기 가능하지만 실행 가능하지 않습니다."
 
@@ -1548,6 +1650,9 @@ msgstr "임시 디렉터리와 해당 콘텐츠는 쓸 수 없거나 실행 가�
 
 msgid "Ensure the temporary directory and its content are writable by the webserver user."
 msgstr "웹 서버 사용자가 임시 디렉토리와 해당 컨텐츠를 쓸 수 있는지 확인하십시오."
+
+msgid "you can try:"
+msgstr "시도해볼 것:"
 
 msgid "The private key can be used to decrypt a message."
 msgstr "개인 키를 사용하여 메시지를 해독할 수 있습니다."
@@ -1771,11 +1876,17 @@ msgstr "SSL 피어 인증서가 유효합니다."
 msgid "SSL peer certificate does not validate."
 msgstr "SSL 피어 인증서가 검증되지 않습니다."
 
+msgid "The keyring is not defined."
+msgstr "키링이 정의되지 않았습니다."
+
+msgid "The keyring directory is not accessible by the current user: {0}"
+msgstr "현재 사용자가 키링 디렉토리에 액세스할 수 없습니다: {0}"
+
 msgid "Could not validate sub key data."
 msgstr "하위 키 데이터를 검사할 수 없습니다."
 
 msgid "Public key sub key id could not be found."
-msgstr "공개키 하위 키 Id를 찾을 수 없습니다."
+msgstr "공개 키 하위 키 Id를 찾을 수 없습니다."
 
 msgid "Could not validate message data."
 msgstr "메시지 데이터를 검사할 수 없습니다."
@@ -1784,10 +1895,10 @@ msgid "Recipient information could not be found."
 msgstr "수신자 정보를 찾을 수 없습니다."
 
 msgid "The public key could not be parsed."
-msgstr "공개키 구문 해석을 할 수 없습니다."
+msgstr "공개 키 구문 해석을 할 수 없습니다."
 
 msgid "The armored message must not contain an extra line before the end block."
-msgstr "무장된 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
+msgstr "암호화된 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
 
 msgid "The message must contain an asymmetric packet."
 msgstr "메시지에 비대칭 패킷이 포함되어야 합니다."
@@ -1802,7 +1913,31 @@ msgid "Unknown key validation rule: {0}"
 msgstr "알 수 없는 키 유효성 검사 규칙: {0}"
 
 msgid "The armored message could not be validated."
-msgstr "무장된 메시지를 검증할 수 없습니다."
+msgstr "암호화된 메시지를 검증할 수 없습니다."
+
+msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
+msgstr "구성에서 정의한 OpenPGP 서버 키를 사용하여 암호화할 수 없습니다."
+
+msgid "The OpenPGP server key defined in the config cannot be used to verify signature."
+msgstr "구성에 정의된 OpenPGP 서버 키는 서명을 확인하는 데 사용할 수 없습니다."
+
+msgid "The OpenPGP server key defined in the config cannot be used to sign."
+msgstr "구성에 정의된 OpenPGP 서버 키를 사용하여 서명할 수 없습니다."
+
+msgid "The config for the server private key fingerprint is not available or incomplete."
+msgstr "서버 개인 키 지문에 대한 구성을 사용할 수 없거나 완전하지 않습니다."
+
+msgid "The config for the server private key passphrase is invalid."
+msgstr "서버 개인 키 패스프레이즈 대한 구성이 올바르지 않습니다."
+
+msgid "The user public key is not available or incomplete."
+msgstr "사용자 공개 키를 사용할 수 없거나 불완전합니다."
+
+msgid "The user public key fingerprint is not available or incomplete."
+msgstr "사용자 공개 키 지문을 사용할 수 없거나 불완전합니다."
+
+msgid "The user armored key is not available or incomplete."
+msgstr "사용자의 아머드 키가 없거나 불완전합니다."
 
 msgid "The algorithm is invalid."
 msgstr "알고리즘이 잘못되었습니다."
@@ -1811,7 +1946,7 @@ msgid "The fingerprint id is invalid."
 msgstr "지문 Id가 잘못되었습니다."
 
 msgid "The public key id is invalid."
-msgstr "공개키 id가 잘못되었습니다."
+msgstr "공개 키 id가 잘못되었습니다."
 
 msgid "The key size is not valid."
 msgstr "키 사이즈가 잘못되었습니다."
@@ -1835,13 +1970,13 @@ msgid "The key must not be revoked."
 msgstr "키를 해지하면 안 됩니다."
 
 msgid "The armored key must not contain an extra line before the end block."
-msgstr "무장키는엔드 블록 앞에 추가 줄이 없어야 합니다."
+msgstr "아머드 키는 엔드 블록 앞에 추가 줄이 없어야 합니다."
 
 msgid "The armored key must not contain multiple keys."
-msgstr "무장키에 여러 개의 키를 포함할 수 없습니다."
+msgstr "아머드 키에 여러 개의 키를 포함할 수 없습니다."
 
 msgid "The public key could not be validated."
-msgstr "공개키를 검증할 수 없습니다."
+msgstr "공개 키를 검증할 수 없습니다."
 
 msgid "Could not validate permission data."
 msgstr "권한 데이터를 검사할 수 없습니다."
@@ -2021,7 +2156,7 @@ msgid "The OpenPGP server key defined in the config cannot be opened."
 msgstr "구성에 정의된 OpenPGP 서버키를 열 수 없습니다."
 
 msgid "The OpenPGP server key defined on file is not a valid private key."
-msgstr "파일에 정의된 OpenPGP 서버키가 올바른 개인키가 아닙니다."
+msgstr "파일에 정의된 OpenPGP 서버키가 올바른 개인 키가 아닙니다."
 
 msgid "There is an issue with the OpenPGP server key."
 msgstr "OpenPGP 서버키에 문제가 있습니다."
@@ -2033,7 +2168,7 @@ msgid "No OpenPGP marker found."
 msgstr "OpenPGP 마커를 찾을 수 없습니다."
 
 msgid "Invalid key. No OpenPGP public key package found."
-msgstr "잘못된 키입니다. OpenPGP 공개키 패키지를 찾을 수 없습니다."
+msgstr "잘못된 키입니다. OpenPGP 공개 키 패키지를 찾을 수 없습니다."
 
 msgid "Invalid key. No user ID found."
 msgstr "잘못된 키입니다. 사용자 ID를 찾을 수 없습니다."
@@ -2042,7 +2177,7 @@ msgid "Unsupported algorithm."
 msgstr "지원되지않는 알고리즘."
 
 msgid "Invalid key. No OpenPGP package found."
-msgstr "잘못된 키입니다. OpenPGP 공개키 패키지를 찾을 수 없습니다."
+msgstr "잘못된 키입니다. OpenPGP 공개 키 패키지를 찾을 수 없습니다."
 
 msgid "This is not a valid OpenPGP armored marker."
 msgstr "유효한 OpenPGP 무장 마커가 아닙니다."
@@ -2191,8 +2326,20 @@ msgstr "폴더를 수정한 사용자의 식별자가 필요합니다."
 msgid "The identifier of the user who modified the folder should not be empty."
 msgstr "폴더를 수정한 사용자의 식별자는 비워 둘 수 없습니다."
 
+msgid "The settings selected by your administrator prevent from downgrading folder."
+msgstr "관리자가 선택한 설정으로 인해 폴더를 다운그레이드할 수 없습니다."
+
+msgid "The metadata key does not exist."
+msgstr "메타데이터 키가 존재하지 않습니다."
+
+msgid "A folder of type personal cannot be shared with other users or a group."
+msgstr "개인 유형의 폴더는 다른 사용자 또는 그룹과 공유할 수 없습니다."
+
 msgid "You added the folder {0}"
 msgstr "폴더 {0} 이(가) 추가됨"
+
+msgid "You added a new folder"
+msgstr "새 폴더가 추가됨"
 
 msgid "You deleted the folder {0}"
 msgstr "{0} 폴더를 삭제했습니다"
@@ -2203,11 +2350,14 @@ msgstr "{0} 이(가) {1} 폴더를 삭제함"
 msgid "{0} shared the folder {1}"
 msgstr "{0} 이(가) {1} 폴더를 공유함"
 
-msgid "You edited the folder {0}"
-msgstr "{0} 폴더를 수정했습니다"
+msgid "{0} shared a folder"
+msgstr "{0} 이(가) 폴더를 공유함"
 
-msgid "{0} edited the folder {1}"
-msgstr "{0} 이(가) {1} 폴더를 수정함"
+msgid "{0} edited the folder"
+msgstr "{0} 이(가) 폴더를 수정함"
+
+msgid "You edited the folder"
+msgstr "폴더를 수정함"
 
 msgid "An email notification setting should be a boolean."
 msgstr "이메일 알림 설정은 부울이여야 합니다."
@@ -2296,12 +2446,6 @@ msgstr "챌린지가 유효하지 않습니다. 역직렬화에 실패했습니�
 msgid "The challenge is invalid. Validation Failed."
 msgstr "챌린지가 유효하지 않습니다. 검사가 실패했습니다."
 
-msgid "The config for the server private key fingerprint is not available or incomplete."
-msgstr "서버 개인키 지문에 대한 구성을 사용할 수 없거나 완전하지 않습니다."
-
-msgid "The config for the server private key passphrase is invalid."
-msgstr "서버 개인키 패스프레이즈 대한 구성이 올바르지 않습니다."
-
 msgid "The user id is missing or invalid."
 msgstr "사용자 Id가 없거나 올바르지 않습니다."
 
@@ -2369,10 +2513,10 @@ msgid "The key pair for JWT Authentication is not complete."
 msgstr "JWT 인증 키 쌍이 완전하지 않습니다."
 
 msgid "The JWT public key could not be read or is not valid."
-msgstr "JWT 공개키를 읽을 수 없거나 유효하지 않습니다."
+msgstr "JWT 공개 키를 읽을 수 없거나 유효하지 않습니다."
 
 msgid "The JWT private key should be at least {0} bytes long."
-msgstr "JWT 개인키는 {0} 바이트 이상이어야 합니다."
+msgstr "JWT 개인 키는 {0} 바이트 이상이어야 합니다."
 
 msgid "The configuration {0} is not correctly set."
 msgstr "구성 {0} 이(가) 올바르게 설정되지 않았습니다."
@@ -2551,6 +2695,462 @@ msgstr "암호 접근 데이터를 검사할 수 없습니다."
 msgid "Could not validate secret history data."
 msgstr "암호 기록 데이터의 유효성을 검사할 수 없습니다."
 
+msgid "Could not validate the metadata key data."
+msgstr "메타데이터 키 데이터를 검사할 수 없습니다."
+
+msgid "The metadata key identifier should be a UUID."
+msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
+
+msgid "The private key identifier should be a UUID."
+msgstr "개인 키 식별자는 UUID여야 합니다."
+
+msgid "An object type is required."
+msgstr "객체가 필요합니다."
+
+msgid "The object type is invalid."
+msgstr "객체 유형이 잘못되었습니다."
+
+msgid "A passphrase is required."
+msgstr "패스프레이즈가 필요합니다."
+
+msgid "The passphrase should be a valid BMP-UTF8 string."
+msgstr "패스프레이즈는 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "A fingerprint is required."
+msgstr "지문이 필요합니다."
+
+msgid "A fingerprint should not be greater than 51 characters."
+msgstr "지문은 51자를 초과할 수 없습니다."
+
+msgid "A fingerprint should not be empty."
+msgstr "지문은 비워둘 수 없습니다."
+
+msgid "The fingerprint should be a valid alphanumeric string."
+msgstr "지문은 올바른 영숫자 문자열이어야 합니다."
+
+msgid "The armored key should be a valid BMP-UTF8 string."
+msgstr "아머드 키는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "The value is not a valid OpenPGP private key."
+msgstr "값이 올바른 OpenPGP 개인 키가 아닙니다."
+
+msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
+msgstr "지문이 OpenPGP 공개 키 및 OpenPGP 개인 키 지문과 일치하지 않습니다."
+
+msgid "A domain is required."
+msgstr "도메인이 필요합니다."
+
+msgid "The domain should not be empty."
+msgstr "도메인은 비워둘 수 없습니다."
+
+msgid "The domain should match current instance URL."
+msgstr "도메인은 현재 인스턴스 URL과 일치해야 합니다."
+
+msgid "Private keys are required."
+msgstr "개인 키가 필요합니다."
+
+msgid "Need at least one metadata private key."
+msgstr "하나 이상의 메타데이터 개인 키가 필요합니다."
+
+msgid "A data is required."
+msgstr "데이터가 필요합니다."
+
+msgid "The data should not be empty."
+msgstr "데이터는 비워둘 수 없습니다."
+
+msgid "The data should be a valid ASCII string."
+msgstr "데이터는 유효한 ASCII 문자열이어야 합니다."
+
+msgid "The setting should be a valid boolean."
+msgstr "설정은 유효한 부울이어야 합니다."
+
+msgid "The setting is required."
+msgstr "설정이 필요합니다."
+
+msgid "The data is required."
+msgstr "데이터가 필요합니다."
+
+msgid "The modified date should be a valid date."
+msgstr "수정 날짜는 유효한 날짜여야 합니다."
+
+msgid "A modified date is required."
+msgstr "수정 날짜가 필요합니다."
+
+msgid "The modified date should not be empty."
+msgstr "수정 날짜는 비워둘 수 없습니다."
+
+msgid "The setting should not be empty."
+msgstr "설정은 비워둘 수 없습니다."
+
+msgid "The setting should be a valid BMP-UTF8 string."
+msgstr "설정은 유효한 BMP-UTF8 문자열이어야합니다."
+
+msgid "The setting should be one of the following: {0}."
+msgstr "설정은 다음 중 하나여야 합니다: {0}."
+
+msgid "The content type needs to be enabled in order to be set as default."
+msgstr "기본값으로 설정하려면 콘텐츠 유형이 활성화되어 있어야 합니다."
+
+msgid "Both v4 and v5 settings cannot be disabled."
+msgstr "v4 및 v5 설정을 모두 비활성화할 수 없습니다."
+
+msgid "Metadata settings endpoints are disabled."
+msgstr "메타데이터 설정 엔드포인트를 사용할 수 없습니다."
+
+msgid "Folder can not be shared"
+msgstr "폴더를 공유할 수 없음"
+
+msgid "Few fields are missing for the V5."
+msgstr "V5에 필요한 몇 가지 필드가 누락되었습니다."
+
+msgid "Missing fields: {0}"
+msgstr "누락 필드: {0}"
+
+msgid "V4 related fields are not supported for V5."
+msgstr "V5에서는 V4 관련 필드를 지원하지 않습니다."
+
+msgid "Superfluous fields: {0}"
+msgstr "불필요한 필드: {0}"
+
+msgid "Allow usage of personal keys"
+msgstr "개인 키 사용 사용"
+
+msgid "True"
+msgstr "참"
+
+msgid "False"
+msgstr "거짓"
+
+msgid "Zero-knowledge key share"
+msgstr "영지식 키 공유"
+
+msgid "No resource type mapping for ID '{0}'"
+msgstr "ID '{0}'에 대한 리소스 유형 매핑이 없습니다."
+
+msgid "Default resource types"
+msgstr "기본 리소스 유형"
+
+msgid "Default folder type"
+msgstr "기본 폴더 유형"
+
+msgid "Default comment type"
+msgstr "기본 댓글 유형"
+
+msgid "Allow creation of V5 resources"
+msgstr "V5 리소스 생성 허용"
+
+msgid "Allow creation of V5 folders"
+msgstr "V5 폴더 생성 허용"
+
+msgid "Allow creation of V5 tags"
+msgstr "V5 태그 생성 허용"
+
+msgid "Allow creation of V5 comments"
+msgstr "V5 댓글 생성 허용"
+
+msgid "Allow creation of V4 resources"
+msgstr "V4 리소스 생성 허용"
+
+msgid "Allow creation of V4 folders"
+msgstr "V4 폴더 생성 허용"
+
+msgid "Allow creation of V4 tags"
+msgstr "V4 태그 생성 허용"
+
+msgid "No permission found for the entity: {0}"
+msgstr "엔티티에 대한 권한을 찾을 수 없습니다: {0}"
+
+msgid "The identifier of the user who created the metadata key should be a valid UUID."
+msgstr "메타데이터 키를 만든 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "The identifier of the user who modified the metadata key should be a valid UUID."
+msgstr "메타데이터 키를 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "The fingerprint is already in use."
+msgstr "지문이 이미 사용 중입니다."
+
+msgid "You cannot reuse the user key."
+msgstr "사용자 키는 재사용할 수 없습니다."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
+
+msgid "The metadata key identifier should not be empty."
+msgstr "메타데이터 키 식별자는 비워 둘 수 없습니다."
+
+msgid "The user does not exist or is not active or is deleted."
+msgstr "사용자가 존재하지 않거나 활성 중이 아니거나 삭제되었습니다."
+
+msgid "The metadata key id & user id combination is already in use."
+msgstr "메타데이터 키 id 및 사용자 id 조합이 이미 사용 중입니다."
+
+msgid "The data is not valid. Please make sure it is encrypted for the correct key."
+msgstr "데이터가 올바르지 않습니다. 올바른 키를 위해 암호화되어 있는지 확인하세요."
+
+msgid "{0} created a new metadata key."
+msgstr "{0}이(가) 새로운 메타데이터 키를 생성했습니다."
+
+msgid "You created a new metadata key."
+msgstr "새 메타데이터 키를 생성했습니다."
+
+msgid "{0} edited the metadata settings."
+msgstr "{0}이(가) 새로운 메타데이터 키를 수정했습니다."
+
+msgid "You edited the metadata settings."
+msgstr "메타데이터 설정을 수정했습니다."
+
+msgid "No server metadata private key found."
+msgstr "서버 메타데이터 개인 키를 찾을 수 없습니다."
+
+msgid "Unable to decrypt the metadata private key data."
+msgstr "메타데이터 개인 키 데이터를 복호화할 수 없습니다."
+
+msgid "The server is able to decrypt the metadata private key."
+msgstr "서버가 메타데이터 개인 키를 복호화할 수 있습니다."
+
+msgid "Unable to decrypt the metadata private key."
+msgstr "메타데이터 개인 키를 복호화할 수 없습니다."
+
+msgid "The metadata key does not exist or has been deleted."
+msgstr "메타데이터 키가 없거나 삭제되었습니다."
+
+msgid "The metadata key has already been deleted."
+msgstr "메타데이터 키가 이미 삭제되었습니다."
+
+msgid "The metadata key should be marked as expired first."
+msgstr "메타데이터 키는 먼저 만료된 것으로 표시해야 합니다."
+
+msgid "The metadata key is still in use, migrate the remaining items to the new key first."
+msgstr "메타데이터 키가 여전히 사용 중이므로 나머지 항목을 먼저 새 키로 마이그레이션합니다."
+
+msgid "The metadata key could not be deleted."
+msgstr "메타데이터 키를 삭제할 수 없습니다."
+
+msgid "The metadata key could not be saved."
+msgstr "메타데이터 키를 저장할 수 없습니다."
+
+msgid "Could not save the metadata key, please try again later."
+msgstr "메타데이터 키를 저장할 수 없습니다, 나중에 재시도 하세요."
+
+msgid "Server metadata private key was not found."
+msgstr "서버 메타데이터 개인 키를 찾을 수 없습니다."
+
+msgid "Metadata key could not be shared with user id: {0}."
+msgstr "메타데이터 키를 사용자 ID: {0} 와 공유할 수 없습니다."
+
+msgid "The data could not be validated."
+msgstr "데이터를 검증할 수 없습니다."
+
+msgid "The data could not be saved."
+msgstr "데이터를 저장할 수 없습니다."
+
+msgid "The metadata private key should not be empty."
+msgstr "메타데이터 키를 비워 둘 수 없습니다."
+
+msgid "The metadata private key cleartext data should be in JSON format."
+msgstr "메타데이터 개인 키의 평문 데이터는 JSON 형식이어야 합니다."
+
+msgid "The metadata private key cleartext data should not be empty."
+msgstr "메타데이터 개인 키의 평문 데이터는 비워둘 수 없습니다."
+
+msgid "The metadata private key cleartext data is not valid."
+msgstr "메타데이터 개인 키의 평문 데이터는 비워둘 수 없습니다."
+
+msgid "The OpenPGP user key cannot be found."
+msgstr "OpenPGP 사용자 키를 찾을 수 없습니다."
+
+msgid "Could not validate the settings."
+msgstr "설정의 유효성을 검사할 수 없습니다."
+
+msgid "The server metadata private key is required to enable these settings."
+msgstr "서버 메타데이터 개인 키가 이러한 설정을 활성화하는 데 필요합니다."
+
+msgid "The server metadata key id is required."
+msgstr "서버 메타데이터 키 ID가 필요합니다."
+
+msgid "The server metadata private key is invalid."
+msgstr "서버 메타데이터 개인 키가 유효하지 않습니다."
+
+msgid "The metadata private key could not be updated."
+msgstr "메타데이터 개인 키를 업데이트할 수 없습니다."
+
+msgid "Please try again later."
+msgstr "나중 후 다시 시도하세요."
+
+msgid "The metadata private key could not be validated."
+msgstr "메타데이터 개인 키를 검증할 수 없습니다."
+
+msgid "The request data is invalid."
+msgstr "요청 데이터가 잘못되었습니다."
+
+msgid "The metadata key is already shared with the user."
+msgstr "메타데이터 키는 이미 사용자와 공유되었습니다."
+
+msgid "The metadata private key does not exist or has been deleted."
+msgstr "메타데이터 개인 키가 존재하지 않거나 삭제되었습니다."
+
+msgid "The metadata private key was already edited by the user."
+msgstr "메타데이터 개인 키는 이미 사용자에 의해 편집되었습니다."
+
+msgid "The metadata session key could not be saved."
+msgstr "메타데이터 세션 키를 저장할 수 없습니다."
+
+msgid "Could not save the metadata session key, please try again later."
+msgstr "메타데이터 세션 키를 저장할 수 없습니다, 나중에 재시도 하세요."
+
+msgid "The data must be a string."
+msgstr "데이터는 문자열이어야 합니다."
+
+msgid "The metadata session key identifier should be a UUID."
+msgstr "메타데이터 세션 키 식별자는 유효한 UUID여야 합니다."
+
+msgid "The metadata session key does not exist or does not belong to this user."
+msgstr "메타데이터 세션 키가 존재하지 않거나 이 사용자에게 속해 있지 않습니다."
+
+msgid "The metadata session key could not be deleted."
+msgstr "메타데이터 세션 키를 삭제할 수 없습니다."
+
+msgid "Could not validate the data."
+msgstr "데이터를 검사할 수 없습니다."
+
+msgid "The metadata session key data is identical."
+msgstr "메타데이터 세션 키 데이터가 동일합니다."
+
+msgid "The metadata session key data has changed."
+msgstr "메타데이터 세션 키 데이터가 변경되었습니다."
+
+msgid "Could not save the metadata session keys, please try again later."
+msgstr "메타데이터 세션 키를 저장할 수 없습니다, 나중에 재시도 하세요."
+
+msgid "Could not prepare private key for server key."
+msgstr "서버 키에 대한 개인 키를 준비할 수 없습니다."
+
+msgid "User key not found."
+msgstr "사용자 키가 없음."
+
+msgid "Could not prepare private key for user id {0}."
+msgstr "사용자 ID {0} 에 대한 개인 키를 준비할 수 없습니다."
+
+msgid "No folders to migrate."
+msgstr "마이그레이션할 폴더가 없음."
+
+msgid "Folder ID \"{0}\" is already V5"
+msgstr "폴더 ID \"{0}\" 은(는) 이미 V5입니다."
+
+msgid "No permission found for folder ID {0}"
+msgstr "폴더 ID {0} 에 대한 권한이 없음"
+
+msgid "No user provided."
+msgstr "제공된 사용자가 없음."
+
+msgid "The metadata could not be encrypted for permission id: {0}."
+msgstr "권한 ID {0} 에 대해 메타데이터를 암호화할 수 없습니다."
+
+msgid "No OpenPGP key found for the user."
+msgstr "사용자에 대한 OpenPGP 키를 찾을 수 없음."
+
+msgid "The metadata could not be encrypted with the user id: {0}."
+msgstr "메타데이터를 사용자 ID {0} 로 암호화할 수 없습니다."
+
+msgid "The metadata could not be encrypted with the metadata key id: {0}."
+msgstr "메타데이터를 메타데이터 키 ID {0} 로 암호화할 수 없습니다."
+
+msgid "Unable to migrate folder ID: {0} to V5."
+msgstr "폴더 ID {0} 을(를) V5로 마이그레이션할 수 없습니다."
+
+msgid "Migrating {0}..."
+msgstr "{0} 마이그레이션 중..."
+
+msgid "Errors (encoded): {0}"
+msgstr "오류(인코딩됨): {0}"
+
+msgid "Migration process for {0} finished."
+msgstr "{0} 에 대한 마이그레이션 프로세스가 완료되었습니다."
+
+msgid "No resources to migrate."
+msgstr "마이그레이션할 리소스가 없음."
+
+msgid "Resource ID \"{0}\" is already V5"
+msgstr "리소스 ID \"{0}\" 은(는) 이미 V5입니다."
+
+msgid "No permission found for resource ID {0}"
+msgstr "리소스 ID {0} 에 대한 권한이 없음"
+
+msgid "Unable to migrate resource ID: {0} to V5."
+msgstr "리소스 ID {0} 을(를) V5로 마이그레이션할 수 없습니다."
+
+msgid "Could not validate metadata key data."
+msgstr "메타데이터 키 데이터를 검사할 수 없습니다."
+
+msgid "Could not import the metadata OpenPGP key."
+msgstr "메타데이터 OpenPGP 키를 가져올 수 없습니다."
+
+msgid "The metadata key is not available or incomplete."
+msgstr "메타데이터 키를 사용할 수 없거나 불완전합니다."
+
+msgid "The metadata key fingerprint is not available or incomplete."
+msgstr "메타데이터 키 지문을 사용할 수 없거나 불완전합니다."
+
+msgid "The metadata armored key is not available or incomplete."
+msgstr "메타데이터 아머드 키를 사용할 수 없거나 불완전합니다."
+
+msgid "The user identifier should be a UUID."
+msgstr "사용자 식별자는 유효한 UUID여야 합니다."
+
+msgid "The user metadata private keys could not be deleted."
+msgstr "사용자 메타데이터 개인 키를 업데이트할 수 없습니다."
+
+msgid "The user metadata session keys could not be deleted."
+msgstr "사용자 메타데이터 세션 키를 삭제할 수 없습니다."
+
+msgid "V5 metadata format is not enabled."
+msgstr "V5 메타데이터 형식을 사용할 수 없습니다."
+
+msgid "Resource creation/modification with encrypted metadata not allowed."
+msgstr "암호화된 메타데이터로 리소스를 생성/수정할 수 없습니다."
+
+msgid "Folder creation/modification with encrypted metadata not allowed."
+msgstr "암호화된 메타데이터로 폴더를 생성/수정할 수 없습니다."
+
+msgid "Tag creation/modification with encrypted metadata not allowed."
+msgstr "암호화된 메타데이터로 태그를 생성/수정할 수 없습니다."
+
+msgid "Resource creation/modification with cleartext metadata not allowed."
+msgstr "평문 메타데이터로 리소스를 생성/수정할 수 없습니다."
+
+msgid "Folder creation/modification with cleartext metadata not allowed."
+msgstr "평문 메타데이터로 폴더를 생성/수정할 수 없습니다."
+
+msgid "Tag creation/modification with cleartext metadata not allowed."
+msgstr "평문 메타데이터로 태그를 생성/수정할 수 없습니다."
+
+msgid "{0} created a new metadata key"
+msgstr "{0} 이(가) 새로운 메타데이터 키를 생성"
+
+msgid "You have created a new folder."
+msgstr "새 폴더가 생성되었습니다."
+
+msgid "{0} has shared a folder with you."
+msgstr "{0} 이(가) 당신과 암호를 공유함."
+
+msgid "You have edited a folder."
+msgstr "폴더를 수정했습니다."
+
+msgid "You have saved a new password"
+msgstr "새 암호를 저장했습니다."
+
+msgid "You have created a new password."
+msgstr "새 암호를 생성했습니다."
+
+msgid "{0} shared a resource with you"
+msgstr "{0} 이(가) 당신과 리소스를 공유함"
+
+msgid "{0} shared a resource with you."
+msgstr "{0} 이(가) 당신과 리소스를 공유함."
+
+msgid "You have edited a resource."
+msgstr "리소스가 수정됨."
+
 msgid "Information about the transfer is required."
 msgstr "전송에 대한 정보가 필요합니다."
 
@@ -2694,6 +3294,9 @@ msgstr "다단계인증이 필요합니다."
 
 msgid "The multi-factor authentication is not required."
 msgstr "다단계 인증이 필요하지 않습니다."
+
+msgid "No valid multi-factor authentication settings found."
+msgstr "유효한 다단계 인증 설정을 찾을 수 없습니다."
 
 msgid "No valid multi-factor authentication settings found for this provider."
 msgstr "이 공급자에 대한 올바른 다단계 인증 설정을 찾을 수 없습니다."
@@ -3076,6 +3679,9 @@ msgstr "암호 중 일부가 만료되었습니다"
 msgid "{0} marked the password {1} as expired"
 msgstr "{0} 이(가) {1} 암호를 만료된 것으로 표시했습니다"
 
+msgid "{0} marked a password as expired"
+msgstr "{0} 이(가) 암호를 만료된 것으로 표시했습니다"
+
 msgid "You edited the password expiry settings"
 msgstr "암호 만료 설정을 수정했습니다"
 
@@ -3400,6 +4006,12 @@ msgstr "역할"
 msgid "No"
 msgstr "아니요"
 
+msgid "The deleted field must be set to null."
+msgstr "삭제된 필드는 null로 설정해야 합니다."
+
+msgid "It is not allowed to update these resource type properties."
+msgstr "이 리소스 유형 속성은 업데이트할 수 없습니다."
+
 msgid "The name should be a valid BMP-UTF8 string."
 msgstr "이름은 유효한 BMP-UTF8 문자열이어야합니다."
 
@@ -3433,6 +4045,27 @@ msgstr "이 슬러그를 가진 리소스 유형이 이미 있습니다."
 msgid "A resource type already exists with this definition."
 msgstr "이 정의를 가진 리소스 유형이 이미 있습니다."
 
+msgid "The resource type identifier should be a UUID."
+msgstr "리소스 유형 식별자는 유효한 UUID여야 합니다."
+
+msgid "The resource type is already deleted."
+msgstr "리소스 유형은 이미 삭제되었습니다."
+
+msgid "You cannot delete the last resource type of the default version."
+msgstr "기본 버전의 마지막 리소스 유형은 삭제할 수 없습니다."
+
+msgid "You cannot delete the last resource type available."
+msgstr "사용 가능한 마지막 리소스 유형은 삭제할 수 없습니다."
+
+msgid "The resource type can not be deleted as resources of this type still exist."
+msgstr "이 리소스 유형의 자원이 아직 존재하므로 삭제할 수 없습니다."
+
+msgid "The resource type could not be deleted."
+msgstr "리소스 유형을 삭제할 수 없습니다."
+
+msgid "The resource type is not deleted."
+msgstr "리소스 유형이 삭제되지 않았습니다."
+
 msgid "The self registration setting id should be a valid UUID."
 msgstr "자체 등록 설정 ID는 올바른 UUID여야 합니다."
 
@@ -3444,9 +4077,6 @@ msgstr "공급자는 비워둘 수 없습니다."
 
 msgid "The provider should be part of the supported list: {0}."
 msgstr "제공되는 지원되는 일부 리스트: {0}"
-
-msgid "The data should not be empty."
-msgstr "데이터는 비워둘 수 없습니다."
 
 msgid "The list of allowed domains should not be empty."
 msgstr "허용된 도메인 목록은 비워 둘 수 없습니다."
@@ -3731,55 +4361,46 @@ msgid "The schema should be a valid BMP-UTF8 string."
 msgstr "스키마는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "An OpenPGP public key is required."
-msgstr "OpenPGP 공개키가 필요합니다."
+msgstr "OpenPGP 공개 키가 필요합니다."
 
 msgid "The OpenPGP public key should not be empty."
-msgstr "OpenPGP 공개키는 비워 둘 수 없습니다."
+msgstr "OpenPGP 공개 키는 비워 둘 수 없습니다."
 
 msgid "The OpenPGP public key should be a valid ASCII string."
-msgstr "OpenPGP 공개키는 유효한 ASCII 문자열이어야 합니다."
+msgstr "OpenPGP 공개 키는 유효한 ASCII 문자열이어야 합니다."
 
 msgid "The key is not a valid OpenPGP public key."
-msgstr "키는 유효한 openpgp 공개키여야 합니다."
+msgstr "키는 유효한 openpgp 공개 키여야 합니다."
 
 msgid "The OpenPGP public key should not have an expiry date."
-msgstr "OpenPGP 공개키에는 만료 날짜가 없어야 합니다."
+msgstr "OpenPGP 공개 키에는 만료 날짜가 없어야 합니다."
 
 msgid "The OpenPGP public key cannot be used to encrypt."
-msgstr "OpenPGP 공개키를 사용하여 암호화할 수 없습니다."
+msgstr "OpenPGP 공개 키를 사용하여 암호화할 수 없습니다."
 
 msgid "An OpenPGP private key is required."
-msgstr "OpenPGP 개인키가 필요합니다."
+msgstr "OpenPGP 개인 키가 필요합니다."
 
 msgid "The OpenPGP private key should not be empty."
-msgstr "OpenPGP 개인키는 비워 둘 수 없습니다."
+msgstr "OpenPGP 개인 키는 비워 둘 수 없습니다."
 
 msgid "The OpenPGP private key should be a valid ASCII string."
-msgstr "OpenPGP 개인키는 유효한 ASCII 문자열이어야 합니다."
-
-msgid "The value is not a valid OpenPGP private key."
-msgstr "값이 올바른 OpenPGP 개인키가 아닙니다."
+msgstr "OpenPGP 개인 키는 유효한 ASCII 문자열이어야 합니다."
 
 msgid "The OpenPGP private key should not have an expiry date."
-msgstr "OpenPGP 개인키에는 만료 날짜가 없어야 합니다."
+msgstr "OpenPGP 개인 키에는 만료 날짜가 없어야 합니다."
 
 msgid "The OpenPGP private key cannot be used to decrypt."
-msgstr "OpenPGP 개인키를 사용하여 복호화할 수 없습니다."
+msgstr "OpenPGP 개인 키를 사용하여 복호화할 수 없습니다."
 
 msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
 msgstr "패스볼트는 암호로 보호된 OpenPGP 키를 지원하지 않습니다."
 
-msgid "A fingerprint is required."
-msgstr "지문이 필요합니다."
-
 msgid "The fingerprint should not be empty."
 msgstr "지문은 비워둘 수 없습니다."
 
-msgid "The fingerprint should be a valid alphanumeric string."
-msgstr "지문은 올바른 영숫자 문자열이어야 합니다."
-
 msgid "The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints."
-msgstr "지문이 OpenPGP 공개키 및 OpenPGP 개인키 지문과 일치하지 않습니다."
+msgstr "지문이 OpenPGP 공개 키 및 OpenPGP 개인 키 지문과 일치하지 않습니다."
 
 msgid "A full base url is required."
 msgstr "전체 기본 url이 필요합니다."
@@ -3815,10 +4436,10 @@ msgid "Ensure the file {0} is writable by the webserver user."
 msgstr "웹 서버 사용자가 {0} 파일을 쓸 수 있는지 확인하세요."
 
 msgid "The server OpenPGP public key file is writable."
-msgstr "서버 OpenPGP 공개키 파일에 쓸 수 있습니다."
+msgstr "서버 OpenPGP 공개 키 파일에 쓸 수 있습니다."
 
 msgid "The server OpenPGP public key file is not writable."
-msgstr "서버 OpenPGP 공개키 파일에 쓸 수 없습니다."
+msgstr "서버 OpenPGP 공개 키 파일에 쓸 수 없습니다."
 
 msgid "The database schema does not match the one expected"
 msgstr "데이터베이스 스키마가 예상된 것과 일치하지 않습니다."
@@ -4202,7 +4823,7 @@ msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
-msgstr "이 사용자는 개인키 및(또는) 패스프레이즈를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
+msgstr "이 사용자는 개인 키 및(또는) 패스프레이즈를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
 
 msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
 msgstr "안타깝게도 계정을 삭제하고 처음부터 다시 시작하려면 귀하의 도움이 필요합니다."
@@ -4356,9 +4977,6 @@ msgstr "패스볼트로 이동"
 
 msgid "{0} deleted {1} groups you were a member of."
 msgstr "{0} 이(가) 사용자가 속한 {1} 개 그룹을 삭제했습니다."
-
-msgid "You have saved a new password"
-msgstr "새 암호를 저장했습니다."
 
 msgid "Username: {0}"
 msgstr "사용자이름: {0}"
