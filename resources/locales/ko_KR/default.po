@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 08:33+0000\n"
-"PO-Revision-Date: 2024-11-13 01:37\n"
+"PO-Revision-Date: 2024-11-13 02:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -3053,58 +3053,58 @@ msgid "The metadata could not be encrypted with the user id: {0}."
 msgstr "메타데이터를 사용자 ID {0} 로 암호화할 수 없습니다."
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
-msgstr ""
+msgstr "메타데이터를 메타데이터 키 ID {0} 로 암호화할 수 없습니다."
 
 msgid "Unable to migrate folder ID: {0} to V5."
-msgstr ""
+msgstr "폴더 ID {0} 을(를) V5로 마이그레이션할 수 없습니다."
 
 msgid "Migrating {0}..."
-msgstr ""
+msgstr "{0} 마이그레이션 중..."
 
 msgid "Errors (encoded): {0}"
-msgstr ""
+msgstr "오류(인코딩됨): {0}"
 
 msgid "Migration process for {0} finished."
-msgstr ""
+msgstr "{0} 에 대한 마이그레이션 프로세스가 완료되었습니다."
 
 msgid "No resources to migrate."
-msgstr ""
+msgstr "마이그레이션할 리소스가 없음."
 
 msgid "Resource ID \"{0}\" is already V5"
-msgstr ""
+msgstr "리소스 ID \"{0}\" 은(는) 이미 V5입니다."
 
 msgid "No permission found for resource ID {0}"
-msgstr ""
+msgstr "리소스 ID {0} 에 대한 권한이 없음"
 
 msgid "Unable to migrate resource ID: {0} to V5."
-msgstr ""
+msgstr "리소스 ID {0} 을(를) V5로 마이그레이션할 수 없습니다."
 
 msgid "Could not validate metadata key data."
-msgstr ""
+msgstr "메타데이터 키 데이터를 검사할 수 없습니다."
 
 msgid "Could not import the metadata OpenPGP key."
-msgstr ""
+msgstr "메타데이터 OpenPGP 키를 가져올 수 없습니다."
 
 msgid "The metadata key is not available or incomplete."
-msgstr ""
+msgstr "메타데이터 키를 사용할 수 없거나 불완전합니다."
 
 msgid "The metadata key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "메타데이터 키 지문을 사용할 수 없거나 불완전합니다."
 
 msgid "The metadata armored key is not available or incomplete."
-msgstr ""
+msgstr "메타데이터 아머드 키를 사용할 수 없거나 불완전합니다."
 
 msgid "The user identifier should be a UUID."
-msgstr ""
+msgstr "사용자 식별자는 유효한 UUID여야 합니다."
 
 msgid "The user metadata private keys could not be deleted."
-msgstr ""
+msgstr "사용자 메타데이터 개인 키를 업데이트할 수 없습니다."
 
 msgid "The user metadata session keys could not be deleted."
-msgstr ""
+msgstr "사용자 메타데이터 세션 키를 삭제할 수 없습니다."
 
 msgid "V5 metadata format is not enabled."
-msgstr ""
+msgstr "V5 메타데이터 형식을 사용할 수 없습니다."
 
 msgid "Resource creation/modification with encrypted metadata not allowed."
 msgstr "암호화된 메타데이터로 리소스를 생성/수정할 수 없습니다."
