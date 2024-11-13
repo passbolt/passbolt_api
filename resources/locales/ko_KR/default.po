@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 08:33+0000\n"
-"PO-Revision-Date: 2024-11-13 02:34\n"
+"PO-Revision-Date: 2024-11-13 03:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -83,7 +83,7 @@ msgid "The logout route should only be accessed with POST method."
 msgstr "로그아웃 경로는 POST 방법으로만 접근해야 합니다."
 
 msgid "The OpenPGP public key information was not found in config."
-msgstr "구성에서 OpenPGP 공개키 정보를 찾을 수 없습니다."
+msgstr "구성에서 OpenPGP 공개 키 정보를 찾을 수 없습니다."
 
 msgid "The operation was successful."
 msgstr "작업이 성공하였습니다."
@@ -611,10 +611,10 @@ msgid "A valid OpenPGP key must be provided."
 msgstr "유효한 OpenPGP 키가 제공되어야 합니다."
 
 msgid "The OpenPGP armored key could not be parsed."
-msgstr "OpenPGP 무장키는 구문 분석할수 없습니다."
+msgstr "OpenPGP 아머드 키는 구문 분석할수 없습니다."
 
 msgid "The OpenPGP armored key could not be validated."
-msgstr "OpenPGP 무장키는 검증할 수 없습니다."
+msgstr "OpenPGP 아머드 키는 검증할 수 없습니다."
 
 msgid "The name should be a valid UTF8 string."
 msgstr "이름은 유효한 BMP-UTF8 문자열이어야합니다."
@@ -998,7 +998,7 @@ msgid "The armored key is not valid."
 msgstr "암호화된 키가 유효하지 않습니다."
 
 msgid "The message should be a valid ASCII-armored OpenPGP message."
-msgstr "메시지는 유효한 ASCII로 무장된 OpenPGP key여야 합니다."
+msgstr "메시지는 유효한 ASCII-암호화된 OpenPGP 메시지여야 합니다."
 
 msgid "The creation date should be set in the past."
 msgstr "생성 날짜는 과거 날짜로 설정해야 합니다."
@@ -1016,7 +1016,7 @@ msgid "The regular expression should be a valid string."
 msgstr "정규식은 올바른 문자열이어야 합니다."
 
 msgid "The fingerprint does not match the one of the armored key."
-msgstr "지문이 무장키와 맞지 않습니다."
+msgstr "지문이 아머드 키와 맞지 않습니다."
 
 msgid "The fingerprint should be a string of 40 hexadecimal characters."
 msgstr "지문은 40개의 16진수 문자로 구성된 문자열이어야 합니다."
@@ -1886,7 +1886,7 @@ msgid "Could not validate sub key data."
 msgstr "하위 키 데이터를 검사할 수 없습니다."
 
 msgid "Public key sub key id could not be found."
-msgstr "공개키 하위 키 Id를 찾을 수 없습니다."
+msgstr "공개 키 하위 키 Id를 찾을 수 없습니다."
 
 msgid "Could not validate message data."
 msgstr "메시지 데이터를 검사할 수 없습니다."
@@ -1895,10 +1895,10 @@ msgid "Recipient information could not be found."
 msgstr "수신자 정보를 찾을 수 없습니다."
 
 msgid "The public key could not be parsed."
-msgstr "공개키 구문 해석을 할 수 없습니다."
+msgstr "공개 키 구문 해석을 할 수 없습니다."
 
 msgid "The armored message must not contain an extra line before the end block."
-msgstr "무장된 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
+msgstr "암호화된 메시지에는 끝 블록 앞에 추가 줄이 없어야 합니다."
 
 msgid "The message must contain an asymmetric packet."
 msgstr "메시지에 비대칭 패킷이 포함되어야 합니다."
@@ -1913,7 +1913,7 @@ msgid "Unknown key validation rule: {0}"
 msgstr "알 수 없는 키 유효성 검사 규칙: {0}"
 
 msgid "The armored message could not be validated."
-msgstr "무장된 메시지를 검증할 수 없습니다."
+msgstr "암호화된 메시지를 검증할 수 없습니다."
 
 msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
 msgstr "구성에서 정의한 OpenPGP 서버 키를 사용하여 암호화할 수 없습니다."
@@ -1925,10 +1925,10 @@ msgid "The OpenPGP server key defined in the config cannot be used to sign."
 msgstr "구성에 정의된 OpenPGP 서버 키를 사용하여 서명할 수 없습니다."
 
 msgid "The config for the server private key fingerprint is not available or incomplete."
-msgstr "서버 개인키 지문에 대한 구성을 사용할 수 없거나 완전하지 않습니다."
+msgstr "서버 개인 키 지문에 대한 구성을 사용할 수 없거나 완전하지 않습니다."
 
 msgid "The config for the server private key passphrase is invalid."
-msgstr "서버 개인키 패스프레이즈 대한 구성이 올바르지 않습니다."
+msgstr "서버 개인 키 패스프레이즈 대한 구성이 올바르지 않습니다."
 
 msgid "The user public key is not available or incomplete."
 msgstr "사용자 공개 키를 사용할 수 없거나 불완전합니다."
@@ -1946,7 +1946,7 @@ msgid "The fingerprint id is invalid."
 msgstr "지문 Id가 잘못되었습니다."
 
 msgid "The public key id is invalid."
-msgstr "공개키 id가 잘못되었습니다."
+msgstr "공개 키 id가 잘못되었습니다."
 
 msgid "The key size is not valid."
 msgstr "키 사이즈가 잘못되었습니다."
@@ -1970,13 +1970,13 @@ msgid "The key must not be revoked."
 msgstr "키를 해지하면 안 됩니다."
 
 msgid "The armored key must not contain an extra line before the end block."
-msgstr "무장키는엔드 블록 앞에 추가 줄이 없어야 합니다."
+msgstr "아머드 키는 엔드 블록 앞에 추가 줄이 없어야 합니다."
 
 msgid "The armored key must not contain multiple keys."
-msgstr "무장키에 여러 개의 키를 포함할 수 없습니다."
+msgstr "아머드 키에 여러 개의 키를 포함할 수 없습니다."
 
 msgid "The public key could not be validated."
-msgstr "공개키를 검증할 수 없습니다."
+msgstr "공개 키를 검증할 수 없습니다."
 
 msgid "Could not validate permission data."
 msgstr "권한 데이터를 검사할 수 없습니다."
@@ -2156,7 +2156,7 @@ msgid "The OpenPGP server key defined in the config cannot be opened."
 msgstr "구성에 정의된 OpenPGP 서버키를 열 수 없습니다."
 
 msgid "The OpenPGP server key defined on file is not a valid private key."
-msgstr "파일에 정의된 OpenPGP 서버키가 올바른 개인키가 아닙니다."
+msgstr "파일에 정의된 OpenPGP 서버키가 올바른 개인 키가 아닙니다."
 
 msgid "There is an issue with the OpenPGP server key."
 msgstr "OpenPGP 서버키에 문제가 있습니다."
@@ -2168,7 +2168,7 @@ msgid "No OpenPGP marker found."
 msgstr "OpenPGP 마커를 찾을 수 없습니다."
 
 msgid "Invalid key. No OpenPGP public key package found."
-msgstr "잘못된 키입니다. OpenPGP 공개키 패키지를 찾을 수 없습니다."
+msgstr "잘못된 키입니다. OpenPGP 공개 키 패키지를 찾을 수 없습니다."
 
 msgid "Invalid key. No user ID found."
 msgstr "잘못된 키입니다. 사용자 ID를 찾을 수 없습니다."
@@ -2177,7 +2177,7 @@ msgid "Unsupported algorithm."
 msgstr "지원되지않는 알고리즘."
 
 msgid "Invalid key. No OpenPGP package found."
-msgstr "잘못된 키입니다. OpenPGP 공개키 패키지를 찾을 수 없습니다."
+msgstr "잘못된 키입니다. OpenPGP 공개 키 패키지를 찾을 수 없습니다."
 
 msgid "This is not a valid OpenPGP armored marker."
 msgstr "유효한 OpenPGP 무장 마커가 아닙니다."
@@ -2513,10 +2513,10 @@ msgid "The key pair for JWT Authentication is not complete."
 msgstr "JWT 인증 키 쌍이 완전하지 않습니다."
 
 msgid "The JWT public key could not be read or is not valid."
-msgstr "JWT 공개키를 읽을 수 없거나 유효하지 않습니다."
+msgstr "JWT 공개 키를 읽을 수 없거나 유효하지 않습니다."
 
 msgid "The JWT private key should be at least {0} bytes long."
-msgstr "JWT 개인키는 {0} 바이트 이상이어야 합니다."
+msgstr "JWT 개인 키는 {0} 바이트 이상이어야 합니다."
 
 msgid "The configuration {0} is not correctly set."
 msgstr "구성 {0} 이(가) 올바르게 설정되지 않았습니다."
@@ -2732,10 +2732,10 @@ msgid "The armored key should be a valid BMP-UTF8 string."
 msgstr "아머드 키는 유효한 ASCII 문자열이어야 합니다."
 
 msgid "The value is not a valid OpenPGP private key."
-msgstr "값이 올바른 OpenPGP 개인키가 아닙니다."
+msgstr "값이 올바른 OpenPGP 개인 키가 아닙니다."
 
 msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
-msgstr "지문이 OpenPGP 공개키 및 OpenPGP 개인키 지문과 일치하지 않습니다."
+msgstr "지문이 OpenPGP 공개 키 및 OpenPGP 개인 키 지문과 일치하지 않습니다."
 
 msgid "A domain is required."
 msgstr "도메인이 필요합니다."
@@ -4361,37 +4361,37 @@ msgid "The schema should be a valid BMP-UTF8 string."
 msgstr "스키마는 유효한 BMP-UTF8 문자열이어야합니다."
 
 msgid "An OpenPGP public key is required."
-msgstr "OpenPGP 공개키가 필요합니다."
+msgstr "OpenPGP 공개 키가 필요합니다."
 
 msgid "The OpenPGP public key should not be empty."
-msgstr "OpenPGP 공개키는 비워 둘 수 없습니다."
+msgstr "OpenPGP 공개 키는 비워 둘 수 없습니다."
 
 msgid "The OpenPGP public key should be a valid ASCII string."
-msgstr "OpenPGP 공개키는 유효한 ASCII 문자열이어야 합니다."
+msgstr "OpenPGP 공개 키는 유효한 ASCII 문자열이어야 합니다."
 
 msgid "The key is not a valid OpenPGP public key."
-msgstr "키는 유효한 openpgp 공개키여야 합니다."
+msgstr "키는 유효한 openpgp 공개 키여야 합니다."
 
 msgid "The OpenPGP public key should not have an expiry date."
-msgstr "OpenPGP 공개키에는 만료 날짜가 없어야 합니다."
+msgstr "OpenPGP 공개 키에는 만료 날짜가 없어야 합니다."
 
 msgid "The OpenPGP public key cannot be used to encrypt."
-msgstr "OpenPGP 공개키를 사용하여 암호화할 수 없습니다."
+msgstr "OpenPGP 공개 키를 사용하여 암호화할 수 없습니다."
 
 msgid "An OpenPGP private key is required."
-msgstr "OpenPGP 개인키가 필요합니다."
+msgstr "OpenPGP 개인 키가 필요합니다."
 
 msgid "The OpenPGP private key should not be empty."
-msgstr "OpenPGP 개인키는 비워 둘 수 없습니다."
+msgstr "OpenPGP 개인 키는 비워 둘 수 없습니다."
 
 msgid "The OpenPGP private key should be a valid ASCII string."
-msgstr "OpenPGP 개인키는 유효한 ASCII 문자열이어야 합니다."
+msgstr "OpenPGP 개인 키는 유효한 ASCII 문자열이어야 합니다."
 
 msgid "The OpenPGP private key should not have an expiry date."
-msgstr "OpenPGP 개인키에는 만료 날짜가 없어야 합니다."
+msgstr "OpenPGP 개인 키에는 만료 날짜가 없어야 합니다."
 
 msgid "The OpenPGP private key cannot be used to decrypt."
-msgstr "OpenPGP 개인키를 사용하여 복호화할 수 없습니다."
+msgstr "OpenPGP 개인 키를 사용하여 복호화할 수 없습니다."
 
 msgid "Please note that passbolt does not support OpenPGP key protected with a secret."
 msgstr "패스볼트는 암호로 보호된 OpenPGP 키를 지원하지 않습니다."
@@ -4400,7 +4400,7 @@ msgid "The fingerprint should not be empty."
 msgstr "지문은 비워둘 수 없습니다."
 
 msgid "The fingerprint does not match the OpenPGP public and the OpenPGP private keys fingerprints."
-msgstr "지문이 OpenPGP 공개키 및 OpenPGP 개인키 지문과 일치하지 않습니다."
+msgstr "지문이 OpenPGP 공개 키 및 OpenPGP 개인 키 지문과 일치하지 않습니다."
 
 msgid "A full base url is required."
 msgstr "전체 기본 url이 필요합니다."
@@ -4436,10 +4436,10 @@ msgid "Ensure the file {0} is writable by the webserver user."
 msgstr "웹 서버 사용자가 {0} 파일을 쓸 수 있는지 확인하세요."
 
 msgid "The server OpenPGP public key file is writable."
-msgstr "서버 OpenPGP 공개키 파일에 쓸 수 있습니다."
+msgstr "서버 OpenPGP 공개 키 파일에 쓸 수 있습니다."
 
 msgid "The server OpenPGP public key file is not writable."
-msgstr "서버 OpenPGP 공개키 파일에 쓸 수 없습니다."
+msgstr "서버 OpenPGP 공개 키 파일에 쓸 수 없습니다."
 
 msgid "The database schema does not match the one expected"
 msgstr "데이터베이스 스키마가 예상된 것과 일치하지 않습니다."
@@ -4823,7 +4823,7 @@ msgid "{0} cannot complete the account recovery process!"
 msgstr "{0} 이(가) 계정 복구 작업이 완료할 수 없습니다!"
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
-msgstr "이 사용자는 개인키 및(또는) 패스프레이즈를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
+msgstr "이 사용자는 개인 키 및(또는) 패스프레이즈를 분실하여 계정 복구 프로세스를 완료할 수 없습니다."
 
 msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
 msgstr "안타깝게도 계정을 삭제하고 처음부터 다시 시작하려면 귀하의 도움이 필요합니다."
