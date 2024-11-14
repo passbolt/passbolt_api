@@ -28,6 +28,7 @@ use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Passbolt\Locale\Service\LocaleService;
 
 /**
@@ -89,9 +90,9 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param array $groupsIds Groups IDs
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function getRecipientsWithGroups(array $groupsIds): Query
+    private function getRecipientsWithGroups(array $groupsIds): SelectQuery
     {
         $filter = [
             'Groups.id IN' => $groupsIds,

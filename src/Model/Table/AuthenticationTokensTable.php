@@ -23,7 +23,7 @@ use App\Utility\AuthToken\AuthTokenExpiry;
 use App\Utility\UuidFactory;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\DateTime;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -366,13 +366,13 @@ class AuthenticationTokensTable extends Table
      * Finder to return authentication token that have expired
      * Requires a type to be provided
      *
-     * @param \Cake\ORM\Query $query query
+     * @param \Cake\ORM\Query\SelectQuery $query query
      * @param ?string $tokenType type
-     * @return \Cake\ORM\Query
-     * @throws \Cake\Http\Exception\InternalErrorException if token type does not have expiry in config
      * @throws \InvalidArgumentException if type is missing in options
+     * @throws \Cake\Http\Exception\InternalErrorException if token type does not have expiry in config
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findExpiredByType(Query $query, ?string $tokenType = null): Query
+    public function findExpiredByType(SelectQuery $query, ?string $tokenType = null): SelectQuery
     {
         if (!isset($tokenType)) {
             $msg = 'AuthenticationTokensTable::findExpiredByType error, a token type is required';

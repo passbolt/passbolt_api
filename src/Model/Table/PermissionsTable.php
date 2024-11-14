@@ -49,10 +49,10 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, int $type)
- * @method \Cake\ORM\Query findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
- * @method \Cake\ORM\Query findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
- * @method \Cake\ORM\Query findByAcoForeignKeyAndAroForeignKey(string $acoForeignKey, string $aroForeignKey)
+ * @method \Cake\ORM\Query\SelectQuery findByAcoForeignKeyAndType(string $acoForeignKey, int $type)
+ * @method \Cake\ORM\Query\SelectQuery findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
+ * @method \Cake\ORM\Query\SelectQuery findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
+ * @method \Cake\ORM\Query\SelectQuery findByAcoForeignKeyAndAroForeignKey(string $acoForeignKey, string $aroForeignKey)
  */
 class PermissionsTable extends Table
 {

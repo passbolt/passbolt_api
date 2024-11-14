@@ -9,9 +9,9 @@
     - composer config --global process-timeout 2000
     - composer install --no-interaction
     - composer validate --check-lock --no-check-publish
-    - composer cs-check
     - composer stan
     - composer psalm
+    - composer cs-check
 
 static-analysis:
   extends: .static-analysis

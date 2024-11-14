@@ -22,7 +22,7 @@ use App\Utility\UuidFactory;
 use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -142,9 +142,9 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId uuid
      * @param array $whitelist example ['theme']
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findIndex(string $userId, array $whitelist): Query
+    public function findIndex(string $userId, array $whitelist): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
@@ -269,11 +269,11 @@ class AccountSettingsTable extends Table
     /**
      * Find setting per property
      *
-     * @param \Cake\ORM\Query $query Query
+     * @param  \Cake\ORM\Query\SelectQuery $query Query
      * @param ?string $property Property
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findByProperty(Query $query, ?string $property = null): Query
+    public function findByProperty(SelectQuery $query, ?string $property = null): SelectQuery
     {
         if (!isset($property)) {
             throw new InternalErrorException(__('The parameter {0} is not set.', 'property'));

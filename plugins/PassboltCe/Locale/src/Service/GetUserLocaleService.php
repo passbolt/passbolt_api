@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Service;
 
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
@@ -62,7 +62,7 @@ class GetUserLocaleService extends LocaleService
         $setting = TableRegistry::getTableLocator()
             ->get('Passbolt/AccountSettings.AccountSettings')
             ->find('byProperty', property: static::SETTING_PROPERTY)
-            ->innerJoinWith('Users', function (Query $q) use ($username) {
+            ->innerJoinWith('Users', function (SelectQuery $q) use ($username) {
                 return $q->where([
                     'Users.username' => $username,
                     'Users.deleted' => false,

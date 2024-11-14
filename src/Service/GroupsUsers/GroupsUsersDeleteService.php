@@ -26,7 +26,7 @@ use App\Model\Table\PermissionsTable;
 use App\Model\Table\SecretsTable;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 
 class GroupsUsersDeleteService
@@ -140,9 +140,9 @@ class GroupsUsersDeleteService
      * Find the lost access resources ids.
      *
      * @param \App\Model\Entity\GroupsUser $groupUser The group user to delete.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function findLostAccessResourcesIdsQuery(GroupsUser $groupUser): Query
+    private function findLostAccessResourcesIdsQuery(GroupsUser $groupUser): SelectQuery
     {
         return $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,

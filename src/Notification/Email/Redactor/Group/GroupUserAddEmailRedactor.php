@@ -28,7 +28,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Groups\GroupsUpdateService;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Locale\Service\LocaleService;
@@ -109,9 +109,9 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      * Return a list of recipients
      *
      * @param array $userIds List of user ids
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function getRecipients(array $userIds): Query
+    private function getRecipients(array $userIds): SelectQuery
     {
         return $this->usersTable->find('locale')
             ->find('notDisabled')

@@ -26,7 +26,7 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -247,14 +247,14 @@ class CommentsTable extends Table
      * @param string $foreignKey The foreign model uuid to find comments for
      * @param array|null $options options
      * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
     public function findViewForeignComments(
         string $userId,
         string $foreignModelName,
         string $foreignKey,
         ?array $options = []
-    ): Query {
+    ): SelectQuery {
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {
             throw new InvalidArgumentException('The parameter foreignModel provided is not supported');

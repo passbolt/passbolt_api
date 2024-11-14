@@ -19,7 +19,7 @@ namespace App\Model\Traits\Groups;
 use App\Model\Traits\Query\CaseInsensitiveSearchQueryTrait;
 use App\Utility\UuidFactory;
 use Cake\Database\Expression\IdentifierExpression;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
@@ -37,11 +37,11 @@ trait GroupsFindersTrait
      *
      * Should filter all the users that do not have a permission for apache.
      *
-     * @param \Cake\ORM\Query $query The query to augment.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to augment.
      * @param string $resourceId The resource to search potential groups for.
-     * @return \Cake\ORM\Query $query
+     * @return \Cake\ORM\Query\SelectQuery $query
      */
-    private function _filterQueryByHasNotPermission(Query $query, string $resourceId): Query
+    private function _filterQueryByHasNotPermission(SelectQuery $query, string $resourceId): SelectQuery
     {
         $permissionQuery = $this->getAssociation('Permissions')
             ->find()
@@ -65,11 +65,11 @@ trait GroupsFindersTrait
      *
      * Should filter all the groups with a name containing creative.
      *
-     * @param \Cake\ORM\Query $query The query to augment.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to augment.
      * @param string $search The string to search.
-     * @return \Cake\ORM\Query $query
+     * @return \Cake\ORM\Query\SelectQuery $query
      */
-    private function _filterQueryBySearch(Query $query, string $search): Query
+    private function _filterQueryBySearch(SelectQuery $query, string $search): SelectQuery
     {
         return $this->searchCaseInsensitiveOnField($query, 'Groups.name', $search);
     }
@@ -78,9 +78,9 @@ trait GroupsFindersTrait
      * Build the query that fetches data for group index
      *
      * @param array|null $options options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findIndex(?array $options = []): Query
+    public function findIndex(?array $options = []): SelectQuery
     {
         $query = $this->find();
 
@@ -201,10 +201,10 @@ trait GroupsFindersTrait
     /**
      * Count the members of the groups and add the value to the field user_count.
      *
-     * @param \Cake\ORM\Query $query The query to augment.
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query The query to augment.
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function _containUserCount(Query $query): Query
+    private function _containUserCount(SelectQuery $query): SelectQuery
     {
         // Count the members of the groups in a subquery.
         $subQuery = $this->getAssociation('GroupsUsers')->find();
@@ -221,13 +221,16 @@ trait GroupsFindersTrait
     /**
      * Filter a Groups query by groups users.
      *
-     * @param \Cake\ORM\Query $query The query to augment.
-     * @param array <string> $usersIds The users to filter the query on.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to augment.
+     * @param array<string> $usersIds The users to filter the query on.
      * @param bool|null $areManager (optional) Should the users be managers ? Default false.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function _filterQueryByGroupsUsers(Query $query, array $usersIds, ?bool $areManager = false): Query
-    {
+    private function _filterQueryByGroupsUsers(
+        SelectQuery $query,
+        array $usersIds,
+        ?bool $areManager = false
+    ): SelectQuery {
         // If there is only one user use a left join
         if (count($usersIds) == 1) {
             $query->leftJoinWith('GroupsUsers');
@@ -276,9 +279,9 @@ trait GroupsFindersTrait
      * @param string $groupId The group to retrieve
      * @param array|null $options options
      * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findView(string $groupId, ?array $options = []): Query
+    public function findView(string $groupId, ?array $options = []): SelectQuery
     {
         if (!Validation::uuid($groupId)) {
             throw new InvalidArgumentException('The parameter groupId should be a valid UUID.');
@@ -292,9 +295,9 @@ trait GroupsFindersTrait
      *
      * @param array $groupsIds array of groups uuids
      * @param array|null $options array of options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findAllByIds(array $groupsIds, ?array $options = []): Query
+    public function findAllByIds(array $groupsIds, ?array $options = []): SelectQuery
     {
         if (empty($groupsIds)) {
             throw new InvalidArgumentException('The parameter groupIds cannot be empty.');

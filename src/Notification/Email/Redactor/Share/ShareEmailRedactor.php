@@ -113,7 +113,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      * Return a collection of users from a list of user ids
      *
      * @param array $userIds A list of user ids
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
     private function getUserFromIds(array $userIds): Query
     {

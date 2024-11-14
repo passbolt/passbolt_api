@@ -17,9 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Model\Behavior;
 
+use Cake\Collection\CollectionInterface;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 
 /**
@@ -73,10 +75,10 @@ class LocaleBehavior extends Behavior
     /**
      * Finder to find the locale associated to the users.
      *
-     * @param \Cake\ORM\Query $query The target query.
-     * @return \Cake\ORM\Query
+     * @param  \Cake\ORM\Query\SelectQuery $query The target query.
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findLocale(Query $query): Query
+    public function findLocale(SelectQuery $query): SelectQuery
     {
         $query->contain('Locale');
         $this->formatResults($query);
@@ -89,10 +91,10 @@ class LocaleBehavior extends Behavior
      * The locale is either found in the association, or if not
      * the organization locale is taken.
      *
-     * @param \Cake\ORM\Query $query The target query.
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\SelectQuery $query The target query.
+     * @return \Cake\ORM\SelectQuery
      */
-    public function formatResults(Query $query): Query
+    public function formatResults(SelectQuery $query): SelectQuery
     {
         return $query->formatResults(function (CollectionInterface $results) {
             return $results->map(function ($entity) {

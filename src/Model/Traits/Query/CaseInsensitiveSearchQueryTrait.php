@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Model\Traits\Query;
 
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 
 /**
  * Helper methods to perform case insensitive searches.
@@ -25,24 +25,27 @@ use Cake\ORM\Query;
 trait CaseInsensitiveSearchQueryTrait
 {
     /**
-     * @param \Cake\ORM\Query $query Reference query object.
+     * @param \Cake\ORM\Query\SelectQuery $query Reference query object.
      * @param string $alias field to search along
      * @param string $string to be searched
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function searchCaseInsensitiveOnField(Query $query, string $alias, string $string): Query
+    protected function searchCaseInsensitiveOnField(SelectQuery $query, string $alias, string $string): SelectQuery
     {
         return $query->where(["LOWER($alias) LIKE" => '%' . mb_strtolower($string) . '%']);
     }
 
     /**
-     * @param \Cake\ORM\Query $query Reference query object.
+     * @param \Cake\ORM\Query\SelectQuery $query Reference query object.
      * @param array<string> $aliases fields to search along
      * @param string $string to be searched
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function searchCaseInsensitiveOnMultipleFields(Query $query, array $aliases, string $string): Query
-    {
+    protected function searchCaseInsensitiveOnMultipleFields(
+        SelectQuery $query,
+        array $aliases,
+        string $string
+    ): SelectQuery {
         $or = [];
         $value = '%' . mb_strtolower($string) . '%';
         foreach ($aliases as $alias) {

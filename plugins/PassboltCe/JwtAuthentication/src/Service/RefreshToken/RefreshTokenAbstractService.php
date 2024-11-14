@@ -22,7 +22,7 @@ use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
 use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
@@ -122,9 +122,9 @@ abstract class RefreshTokenAbstractService
 
     /**
      * @param string|null $token Refresh token
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function queryRefreshToken(?string $token): Query
+    public function queryRefreshToken(?string $token): SelectQuery
     {
         $this->validateRefreshToken($token);
 
@@ -137,10 +137,10 @@ abstract class RefreshTokenAbstractService
     /**
      * @param string $token Refresh token
      * @param string $userId User ID
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the $id is not valid
      */
-    public function queryRefreshTokenWithUserId(string $token, string $userId): Query
+    public function queryRefreshTokenWithUserId(string $token, string $userId): SelectQuery
     {
         $this->validateUserId($userId);
 

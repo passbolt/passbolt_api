@@ -56,8 +56,8 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\Group>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Group>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Group>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
+ * @method \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method \Cake\ORM\Query\SelectQuery findByIdAndGroupId(string $id, string $groupId)
  */
 class GroupsTable extends Table
 {

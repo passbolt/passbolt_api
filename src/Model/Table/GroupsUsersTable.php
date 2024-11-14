@@ -25,7 +25,7 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use ArrayObject;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -51,11 +51,11 @@ use InvalidArgumentException;
  * @method iterable<\App\Model\Entity\GroupsUser>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\GroupsUser>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\GroupsUser>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByGroupId(string $groupId)
- * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
- * @method \Cake\ORM\Query findByGroupIdAndUserId(string $groupId, string $userId)
- * @method \Cake\ORM\Query findByGroupIdAndIsAdmin(string $groupId, bool $isAdmin)
+ * @method \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method \Cake\ORM\Query\SelectQuery findByGroupId(string $groupId)
+ * @method \Cake\ORM\Query\SelectQuery findByIdAndGroupId(string $id, string $groupId)
+ * @method \Cake\ORM\Query\SelectQuery findByGroupIdAndUserId(string $groupId, string $userId)
+ * @method \Cake\ORM\Query\SelectQuery findByGroupIdAndIsAdmin(string $groupId, bool $isAdmin)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class GroupsUsersTable extends Table
@@ -175,9 +175,9 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId): Query
+    public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -206,9 +206,9 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findGroupsWhereUserIsSoleManager(string $userId): Query
+    public function findGroupsWhereUserIsSoleManager(string $userId): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -259,9 +259,9 @@ class GroupsUsersTable extends Table
      * The user should be the manager at the point but we might as well cast a larger net
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findGroupsWhereUserOnlyMember(string $userId): Query
+    public function findGroupsWhereUserOnlyMember(string $userId): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -308,9 +308,9 @@ class GroupsUsersTable extends Table
      * Useful to know which group to delete when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findGroupsWhereUserNotOnlyMember(string $userId): Query
+    public function findGroupsWhereUserNotOnlyMember(string $userId): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
