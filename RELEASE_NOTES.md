@@ -1,12 +1,10 @@
 Release song: https://www.youtube.com/watch?v=2YdC0GshApE
 
-Passbolt v4.10.0 is a maintenance update that prepares for the upcoming v5 release, introducing beta support for the v5 resource type format within the v4 user interface and addressing reported issues.
+Passbolt v4.10.0 Release Candidate is a maintenance update of preparatory work for the incoming v5 and addresses reported issues. Specifically, it brings the codebase to ease the later encryption of the resource metadata.
 
-This release is particularly valuable for maintainers of clients or integrations, offering an early preview of the v5 resource type format to aid in planning for future adaptations. While previous content types will remain supported until version 6, the new content types expand functionality, empowering technical teams to manage a broader range of credentials. Stay tuned—a blog article will be released soon to explain how to enable v5 support and begin testing your integrations.
+Thank you to the community for reporting the issues.
 
-Thank you to our community for your continued support.
-
-## [4.10.0-test.1] - 2024-11-12
+## [4.10.0-rc.1] - 2024-11-14
 ### Added
 - PB-34458 Add v5 config flag PASSBOLT_V5_ENABLED
 - PB-34459 Add metadata plugin
@@ -40,6 +38,7 @@ Thank you to our community for your continued support.
 - PB-35365 Update POST /share/folders/<uuid>.json to support v5 logic
 - PB-35363 Update GET /folders/<uuid>.json to support v5 format
 - PB-35363 Update GET /folders.json to support v5 format
+- PB-35921 Add API endpoint PUT /metadata/session-keys/<uuid>.json
 - PB-35368 As a developer I can run a command to create metadata private key & share it with all users
 - PB-35362 Update PUT /folders/<uuid>.json to support v5 format
 - PB-35361 Update POST /folders.json to support v5 format
@@ -62,7 +61,11 @@ Thank you to our community for your continued support.
 - PB-35756 Update resource create endpoint to throw an error if allow_usage_of_personal_keys is set to false and personal key is used
 - PB-35758 Update folders create/update endpoints to throw an error if allow_usage_of_personal_keys is set to false and personal key is used
 - PB-35928 Add allow_v5_v4_downgrade to metadata types settings
+- PB-35945 Add static method to cache and reuse MetadataTypesSettingsGetService results
+- PB-35946 Add static method to cache and reuse MetadataKeysSettingsGetService results
 - PB-35930 Update edit resource to support allow_v5_v4_downgrade settings
+- PB-35931 Update edit folders to support allow_v5_v4_downgrade settings
+- PB-35937 Add allow_v5_v4_downgrade settings to passbolt update_metadata_types_settings command
 - PB-35084 Add the distribution/gpg information in the health-check
 - PB-35866 Add OperatingSystemHealthcheck for 32 vs 64 bit
 - PB-36228 ResourceCreateController should populate empty metadata_key_id if key type is user_key
