@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="5.12.0@f90118cdeacd0088e7215e64c0c99ceca819e176">
+<files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
   <file src="plugins/PassboltCe/AccountSettings/tests/TestCase/Controller/Themes/ThemesSelectControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -10,6 +10,11 @@
       <code><![CDATA[$dbEmailNotifSettings->value]]></code>
       <code><![CDATA[$dbEmailNotifSettings->value]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/src/Model/Traits/Folders/FoldersFindersTrait.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[$includeRoot === true]]></code>
+    </TypeDoesNotContainType>
   </file>
   <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerPaginationTest.php">
     <InvalidPropertyFetch>
@@ -314,12 +319,12 @@
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/src/Controller/Duo/DuoSetupPostController.php">
     <InvalidReturnType>
-      <code>\Cake\Http\Response</code>
+      <code><![CDATA[\Cake\Http\Response]]></code>
     </InvalidReturnType>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/src/Controller/Duo/DuoVerifyPostController.php">
     <InvalidReturnType>
-      <code>\Cake\Http\Response</code>
+      <code><![CDATA[\Cake\Http\Response]]></code>
     </InvalidReturnType>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Scenario/Totp/MfaTotpScenario.php">
@@ -515,16 +520,26 @@
   </file>
   <file src="plugins/PassboltCe/SmtpSettings/tests/TestCase/Command/SmtpSettingsEmailDigestPreviewCommandTest.php">
     <InvalidArrayOffset>
-      <code>$sender[$senderEmail]</code>
+      <code><![CDATA[$sender[$senderEmail]]]></code>
     </InvalidArrayOffset>
     <InvalidCast>
-      <code>$senderEmail</code>
-      <code>$senderEmail</code>
+      <code><![CDATA[$senderEmail]]></code>
+      <code><![CDATA[$senderEmail]]></code>
     </InvalidCast>
   </file>
   <file src="src/Controller/Settings/SettingsIndexController.php">
     <InvalidConstantAssignmentValue>
       <code><![CDATA[SETTINGS_VISIBILITY_KEY = 'settingsVisibility']]></code>
     </InvalidConstantAssignmentValue>
+  </file>
+  <file src="src/Datasource/Paging/NumericCountAwarePaginator.php">
+    <InvalidArgument>
+      <code><![CDATA[$data['options']['maxLimit'] ?? $data['defaults']['maxLimit']]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Model/Traits/Resources/ResourcesFindersTrait.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[$includeRoot === true]]></code>
+    </TypeDoesNotContainType>
   </file>
 </files>
