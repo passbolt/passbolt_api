@@ -26,7 +26,6 @@ use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\Healthcheck\Ssl\IsRequestHttpsSslHealthcheck;
 use Cake\Collection\Collection;
 use Cake\Collection\CollectionInterface;
-use Cake\Core\Configure;
 use Cake\Routing\Router;
 
 class SystemCheckController extends WebInstallerController
@@ -51,11 +50,11 @@ class SystemCheckController extends WebInstallerController
             if ($healthcheckService instanceof NextMinPhpVersionHealthcheck) {
                 continue;
             }
-            if ($healthcheckService instanceof IsRequestHttpsSslHealthcheck) {
-                $isRequestHttps = $result->isPassed();
+            if ($healthcheckService instanceof TimeSyncHealthcheck) {
                 continue;
             }
-            if ($healthcheckService instanceof TimeSyncHealthcheck && Configure::read('debug')) {
+            if ($healthcheckService instanceof IsRequestHttpsSslHealthcheck) {
+                $isRequestHttps = $result->isPassed();
                 continue;
             }
             $isSystemOk = $isSystemOk && $result->isPassed();
