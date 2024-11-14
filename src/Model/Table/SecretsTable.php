@@ -24,7 +24,7 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Service\Secrets\SecretsCleanupHardDeletedPermissionsService;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -50,9 +50,9 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\Secret>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Secret>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Secret>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByResourceId(string $resourceId)
- * @method \Cake\ORM\Query findByResourceIdAndUserId(string $resourceId, string $userId)
- * @method \Cake\ORM\Query findByUserId(string $id)
+ * @method \Cake\ORM\Query\SelectQuery findByResourceId(string $resourceId)
+ * @method \Cake\ORM\Query\SelectQuery findByResourceIdAndUserId(string $resourceId, string $userId)
+ * @method \Cake\ORM\Query\SelectQuery findByUserId(string $id)
  */
 class SecretsTable extends Table
 {
@@ -176,9 +176,9 @@ class SecretsTable extends Table
      *
      * @param string $resourceId The resource to find the secret for
      * @param string $userId The user to find the secret for
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findByResourceUser(string $resourceId, string $userId): Query
+    public function findByResourceUser(string $resourceId, string $userId): SelectQuery
     {
         return $this->find()
             ->where([

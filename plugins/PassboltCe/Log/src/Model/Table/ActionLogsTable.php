@@ -23,7 +23,7 @@ use App\Utility\UserAction;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use DateTime;
@@ -181,9 +181,9 @@ class ActionLogsTable extends Table
 
     /**
      * @param array $options options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function index(array $options): Query
+    public function index(array $options): SelectQuery
     {
         $logs = $this->find();
         $this->addContain($logs, $options);
@@ -195,11 +195,11 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * @param \Cake\ORM\Query $query Logs
+     * @param  \Cake\ORM\Query\SelectQuery $query Logs
      * @param array $options options
      * @return void
      */
-    protected function addContain(Query $query, array $options): void
+    protected function addContain(SelectQuery $query, array $options): void
     {
         $contain = $options['contain'] ?? [];
         if (isset($contain['user'])) {
@@ -212,11 +212,11 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * @param \Cake\ORM\Query $logs Logs
+     * @param  \Cake\ORM\Query\SelectQuery $logs Logs
      * @param array $options options
      * @return void
      */
-    protected function filterByUsers(Query $logs, array $options): void
+    protected function filterByUsers(SelectQuery $logs, array $options): void
     {
         $hasUsers = $options['filter']['has-users'] ?? [];
         if (empty($hasUsers)) {
@@ -229,11 +229,11 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * @param \Cake\ORM\Query $logs Logs
+     * @param  \Cake\ORM\Query\SelectQuery $logs Logs
      * @param array $options options
      * @return void
      */
-    protected function filterByDate(Query $logs, array $options): void
+    protected function filterByDate(SelectQuery $logs, array $options): void
     {
         $from = $options['filter']['created-after'] ?? null;
         $to = $options['filter']['created-before'] ?? null;
@@ -255,11 +255,11 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * @param \Cake\ORM\Query $logs Logs
+     * @param  \Cake\ORM\Query\SelectQuery $logs Logs
      * @param array $options options
      * @return void
      */
-    protected function filterBySuccess(Query $logs, array $options): void
+    protected function filterBySuccess(SelectQuery $logs, array $options): void
     {
         $isSuccess = $options['filter']['is-success'] ?? null;
         if (!is_null($isSuccess)) {

@@ -26,7 +26,7 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Utility\Purifier;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
@@ -119,9 +119,9 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * Find the users the email has to be sent to.
      *
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The updated folder
-     * @return \Cake\ORM\Query The list of users username
+     * @return  \Cake\ORM\Query\SelectQuery The list of users username
      */
-    private function findUsersUsernameToSendEmailTo(Folder $folder): Query
+    private function findUsersUsernameToSendEmailTo(Folder $folder): SelectQuery
     {
         $usersIds = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($folder->id);
 

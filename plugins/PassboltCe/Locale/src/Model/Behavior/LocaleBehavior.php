@@ -17,9 +17,11 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Model\Behavior;
 
+use Cake\Collection\CollectionInterface;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 
 /**
@@ -73,12 +75,12 @@ class LocaleBehavior extends Behavior
     /**
      * Finder to find the locale associated to the users.
      *
-     * @param \Cake\ORM\Query $query The target query.
-     * @return \Cake\ORM\Query
+     * @param  \Cake\ORM\Query\SelectQuery $query The target query.
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findLocale(Query $query): Query
+    public function findLocale(SelectQuery $query): SelectQuery
     {
-        $query->leftJoinWith('Locale', function (Query $q) {
+        $query->leftJoinWith('Locale', function (SelectQuery $q) {
             $organizationLocale = GetOrgLocaleService::getLocale();
             $locale = $q->expr()->case()
                 ->when($q->expr()->isNotNull('Locale.value'))
@@ -91,5 +93,43 @@ class LocaleBehavior extends Behavior
         });
 
         return $query;
+    }
+
+    /**
+     * Format a query result and associate to each item its locale.
+     * The locale is either found in the association, or if not
+     * the organization locale is taken.
+     *
+     * @param  \Cake\ORM\Query\SelectQuery $query The target query.
+     * @return \Cake\ORM\Query\SelectQuery
+     */
+    public function formatResults(SelectQuery $query): SelectQuery
+    {
+        return $query->formatResults(function (CollectionInterface $results) {
+            return $results->map(function ($entity) {
+                if (is_null($entity->locale)) {
+                    $locale = GetOrgLocaleService::getLocale();
+                } else {
+                    $locale = $entity->locale->value;
+                }
+
+                return $this->addLocalePropertyToEntity($entity, $locale);
+            });
+        });
+    }
+
+    /**
+     * Add the locale property to an entity
+     *
+     * @param \Cake\Datasource\EntityInterface $entity The target entity
+     * @param string|null $locale The locale
+     * @return \Cake\Datasource\EntityInterface
+     */
+    private function addLocalePropertyToEntity(EntityInterface $entity, ?string $locale = null): EntityInterface
+    {
+        $entity->setVirtual([self::LOCALE_PROPERTY], true);
+        $entity->set(self::LOCALE_PROPERTY, $locale);
+
+        return $entity;
     }
 }

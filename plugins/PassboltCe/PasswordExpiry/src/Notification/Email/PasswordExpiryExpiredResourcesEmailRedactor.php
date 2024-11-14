@@ -26,7 +26,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
@@ -110,9 +110,9 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
      *
      * @param array $expiringResourcesIds Resources that have just been expired
      * @param array $userIdsToSkip Users that should not be notified, e.g. if a user is being disabled or deleted
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function findUsersToNotify(array $expiringResourcesIds, array $userIdsToSkip): Query
+    protected function findUsersToNotify(array $expiringResourcesIds, array $userIdsToSkip): SelectQuery
     {
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');

@@ -30,6 +30,7 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\DateTime;
 use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use Exception;
@@ -46,13 +47,16 @@ trait UsersFindersTrait
     /**
      * Filter a Groups query by groups users.
      *
-     * @param \Cake\ORM\Query $query The query to augment.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to augment.
      * @param array<string> $groupsIds The users to filter the query on.
      * @param bool $areManager (optional) Should the users be only managers ? Default false.
-     * @return \Cake\ORM\Query $query
+     * @return \Cake\ORM\Query\SelectQuery $query
      */
-    private function _filterQueryByGroupsUsers(Query $query, array $groupsIds, bool $areManager = false): Query
-    {
+    private function _filterQueryByGroupsUsers(
+        SelectQuery $query,
+        array $groupsIds,
+        bool $areManager = false
+    ): SelectQuery {
         // If there is only one group use a left join
         if (count($groupsIds) == 1) {
             $query->leftJoinWith('GroupsUsers');
@@ -97,12 +101,12 @@ trait UsersFindersTrait
      * Should filter all the users with a passbolt username who have a permission to access the resource identified by
      * RESOURCE_UUID.
      *
-     * @param \Cake\ORM\Query $query The query to augment.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to augment.
      * @param string $resourceId The resource the users must have access.
-     * @return \Cake\ORM\Query $query
+     * @return \Cake\ORM\Query\SelectQuery $query
      * @throws \InvalidArgumentException if the ressourceId is not a valid uuid
      */
-    public function filterQueryByResourceAccess(Query $query, string $resourceId): Query
+    public function filterQueryByResourceAccess(SelectQuery $query, string $resourceId): SelectQuery
     {
         if (!Validation::uuid($resourceId)) {
             throw new InvalidArgumentException(__('The resource identifier should be a valid UUID.'));
@@ -112,13 +116,16 @@ trait UsersFindersTrait
     }
 
     /**
-     * @param \Cake\ORM\Query $query Users query
-     * @param \Cake\ORM\Query|array $resourceIds Resource IDs the users should have access to
-     * @param array $permissionTypes array of permission type to filter along (OWNER, UPDATE or READ). If empty do not filter vy permission type
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query Users query
+     * @param array|\Cake\ORM\Query\SelectQuery $resourceIds Resource IDs the users should have access to
+\     * @param array $permissionTypes array of permission type to filter along (OWNER, UPDATE or READ). If empty do not filter vy permission type
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function filterQueryByResourcesAccess(Query $query, array|Query $resourceIds, array $permissionTypes = []): Query // phpcs:ignore
-    {
+    public function filterQueryByResourcesAccess(
+        SelectQuery $query,
+        array|Query $resourceIds,
+        array $permissionTypes = []
+    ): SelectQuery {
         if (is_array($resourceIds) && empty($resourceIds)) {
             return $query;
         }
@@ -169,11 +176,11 @@ trait UsersFindersTrait
      *
      * Should filter all the users with a username or a name containing ada.
      *
-     * @param \Cake\ORM\Query $query The query to augment.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to augment.
      * @param string $search The string to search.
-     * @return \Cake\ORM\Query $query
+     * @return \Cake\ORM\Query\SelectQuery $query
      */
-    private function _filterQueryBySearch(Query $query, string $search): Query
+    private function _filterQueryBySearch(SelectQuery $query, string $search): SelectQuery
     {
         return $this->searchCaseInsensitiveOnMultipleFields($query, [
             'Users.username',
@@ -191,12 +198,12 @@ trait UsersFindersTrait
      *
      * Should filter all the users that do not have a permission for apache.
      *
-     * @param \Cake\ORM\Query $query The query to augment.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to augment.
      * @param string $resourceId The resource to search potential users for.
-     * @return \Cake\ORM\Query $query
+     * @return \Cake\ORM\Query\SelectQuery $query
      * @throws \InvalidArgumentException if the resource id is not a valid uuid
      */
-    private function _filterQueryByHasNotPermission(Query $query, string $resourceId): Query
+    private function _filterQueryByHasNotPermission(SelectQuery $query, string $resourceId): SelectQuery
     {
         if (!Validation::uuid($resourceId)) {
             throw new InvalidArgumentException('The resource identifier should be a valid UUID.');
@@ -218,11 +225,12 @@ trait UsersFindersTrait
      *
      * @param string $role name
      * @param array|null $options filters
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if no role is specified
      */
-    public function findIndex(string $role, ?array $options = []): Query
+    public function findIndex(string $role, ?array $options = []): SelectQuery
     {
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $this->find();
 
         $event = TableFindIndexBefore::create($query, FindIndexOptions::createFromArray($options), $this);
@@ -316,11 +324,11 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \Exception
      * @throws \InvalidArgumentException if the role name or user id are not valid
      */
-    public function findView(string $userId, string $roleName): Query
+    public function findView(string $userId, string $roleName): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -338,10 +346,10 @@ trait UsersFindersTrait
      *
      * @param string $userId uuid
      * @param string $roleName role name
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the role name or user id are not valid
      */
-    public function findDelete(string $userId, string $roleName): Query
+    public function findDelete(string $userId, string $roleName): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -356,12 +364,12 @@ trait UsersFindersTrait
     /**
      * Build the query that fetches the user data during authentication
      *
-     * @param \Cake\ORM\Query $query a query instance
+     * @param \Cake\ORM\Query\SelectQuery $query a query instance
      * @param ?string $fingerprint fingerprint
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \Exception if fingerprint id is not set
      */
-    public function findAuth(Query $query, ?string $fingerprint = null): Query
+    public function findAuth(SelectQuery $query, ?string $fingerprint = null): SelectQuery
     {
         // Options must contain an id
         if (!isset($fingerprint)) {
@@ -382,10 +390,10 @@ trait UsersFindersTrait
      *
      * @param string $username email of user to retrieve
      * @param array|null $options options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the username is not an email
      */
-    public function findByUsername(string $username, ?array $options = []): Query
+    public function findByUsername(string $username, ?array $options = []): SelectQuery
     {
         if (!EmailValidationRule::check($username)) {
             throw new InvalidArgumentException('The username should be a valid email.');
@@ -406,12 +414,13 @@ trait UsersFindersTrait
      * filter out the false matches
      *
      * @param string $username username to query
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the username is not valid email
      * @see UsersTable::isUsernameCaseSensitive()
      */
-    public function findByUsernameCaseAware(string $username): Query
+    public function findByUsernameCaseAware(string $username): SelectQuery
     {
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $this->find()->where([
             'LOWER(Users.username)' => mb_strtolower($username),
         ]);
@@ -430,9 +439,9 @@ trait UsersFindersTrait
     /**
      * Lists ['user_id' => 'username'] not deleted and featured multiple times
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function listDuplicateUsernames(): Query
+    public function listDuplicateUsernames(): SelectQuery
     {
         if ($this->isUsernameCaseSensitive()) {
             return $this->listDuplicateUsernameCaseSensitive();
@@ -444,9 +453,9 @@ trait UsersFindersTrait
     /**
      * Lists all duplicated lower-cased usernames
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function listDuplicateUsernamesCaseInsensitive(): Query
+    protected function listDuplicateUsernamesCaseInsensitive(): SelectQuery
     {
         $subQueryOfLowerCasedUsernameDuplicates = $this
             ->find()
@@ -467,9 +476,9 @@ trait UsersFindersTrait
     }
 
     /**
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function listDuplicateUsernameCaseSensitive(): Query
+    protected function listDuplicateUsernameCaseSensitive(): SelectQuery
     {
         // Let PHP remove the unique usernames, case sensitive
         $filterUniqueCaseSensitive = function (CollectionInterface $results): CollectionInterface {
@@ -560,7 +569,7 @@ trait UsersFindersTrait
     /**
      * Return a list of admin users (active, non soft-deleted) with their role attached
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
     public function findAdmins(): Query
     {
@@ -579,9 +588,9 @@ trait UsersFindersTrait
     /**
      * Get all active users.
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findActive(): Query
+    public function findActive(): SelectQuery
     {
         return $this->find()
              ->where([
@@ -594,10 +603,10 @@ trait UsersFindersTrait
     /**
      * Filter out disabled users.
      *
-     * @param \Cake\ORM\Query $query query
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findNotDisabled(Query $query): Query
+    public function findNotDisabled(SelectQuery $query): SelectQuery
     {
         return $query->where(function (QueryExpression $where) {
             return $where->or(function (QueryExpression $or) {
@@ -611,10 +620,10 @@ trait UsersFindersTrait
     /**
      * Retrieve users' last logged in date.
      *
-     * @param \Cake\ORM\Query $query query
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findlastLoggedIn(Query $query): Query
+    public function findlastLoggedIn(SelectQuery $query): SelectQuery
     {
         // Retrieve the last logged in date for each user, based on the action_logs table.
         $loginActionIds = [
@@ -642,10 +651,10 @@ trait UsersFindersTrait
     /**
      * Active and non deleted users.
      *
-     * @param \Cake\ORM\Query $query Query to carve.
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query to carve.
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findActiveNotDeleted(Query $query): Query
+    public function findActiveNotDeleted(SelectQuery $query): SelectQuery
     {
         return $query->where([
             $this->aliasField('active') => true,
@@ -656,10 +665,10 @@ trait UsersFindersTrait
     /**
      * Active and non deleted users only with role
      *
-     * @param \Cake\ORM\Query $query Query to carve.
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query to carve.
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findActiveNotDeletedContainRole(Query $query): Query
+    public function findActiveNotDeletedContainRole(SelectQuery $query): SelectQuery
     {
         return $query->find('activeNotDeleted')->contain('Roles');
     }

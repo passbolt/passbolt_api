@@ -20,7 +20,7 @@ use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UuidFactory;
 use ArrayObject;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Validation\Validator;
 
 /**
@@ -80,10 +80,10 @@ class PasswordExpirySettingsTable extends OrganizationSettingsTable
      * Filter organization settings by property.
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
-     * @param \Cake\ORM\Query $query Any query performed on the present table.
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query Any query performed on the present table.
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function beforeFind(Event $event, Query $query): Query
+    public function beforeFind(Event $event, SelectQuery $query): SelectQuery
     {
         return $query->where([
             $this->aliasField('property_id') => $this->getPropertyId(),

@@ -24,7 +24,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Exception;
 use PDOException;
 
@@ -56,7 +56,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
             $serverMetadataPrivateKey = $metadataPrivateKeysTable
                 ->find()
                 ->contain('MetadataKeys')
-                ->innerJoinWith('MetadataKeys', function (Query $q) {
+                ->innerJoinWith('MetadataKeys', function (SelectQuery $q) {
                     $expr = $q->newExpr()->isNull('MetadataKeys.deleted');
 
                     return $q->where([$expr]);

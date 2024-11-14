@@ -22,7 +22,7 @@ use App\Model\Table\PermissionsTable;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Http\Exception\BadRequestException;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
@@ -35,9 +35,9 @@ trait PermissionsFindersTrait
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param \Cake\Database\Expression\IdentifierExpression|string $acoForeignKey The target aco. By instance resource or folder id.
      * @param string $aroForeignKey The target aro id. By instance a user or a group id.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findHighestByAcoAndAro(string $acoType, string|IdentifierExpression $acoForeignKey, string $aroForeignKey): Query // phpcs:ignore
+    public function findHighestByAcoAndAro(string $acoType, string|IdentifierExpression $acoForeignKey, string $aroForeignKey): SelectQuery // phpcs:ignore
     {
         return $this->findAllByAro($acoType, $aroForeignKey, ['checkGroupsUsers' => true])
             ->where(['Permissions.aco_foreign_key' => $acoForeignKey])
@@ -52,9 +52,9 @@ trait PermissionsFindersTrait
      * @param array|null $options options
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findViewAcoPermissions(string $aco, ?array $options = []): Query
+    public function findViewAcoPermissions(string $aco, ?array $options = []): SelectQuery
     {
         if (!Validation::uuid($aco)) {
             throw new InvalidArgumentException('The access control object identifier should be a valid UUID.');
@@ -97,10 +97,10 @@ trait PermissionsFindersTrait
      * [
      *   bool $checkGroupsUsers Check also for the groups the aro is member of
      * ]
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \Cake\Http\Exception\BadRequestException if the aro foreign key is not a valid UUID
      */
-    public function findAllByAro(string $acoType, string $aroForeignKey, ?array $options = []): Query
+    public function findAllByAro(string $acoType, string $aroForeignKey, ?array $options = []): SelectQuery
     {
         if (!Validation::uuid($aroForeignKey)) {
             throw new BadRequestException(__('The identifier should be a valid UUID.'));
@@ -140,9 +140,9 @@ trait PermissionsFindersTrait
      *   bool $checkGroupsUsers Check also for the groups the aro is member of
      * ]
      * @throws \InvalidArgumentException if the user id is not a valid uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findSharedAcosByAroIsSoleOwner(string $acoType, string $aro, ?array $options = []): Query
+    public function findSharedAcosByAroIsSoleOwner(string $acoType, string $aro, ?array $options = []): SelectQuery
     {
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
 
@@ -222,9 +222,9 @@ trait PermissionsFindersTrait
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param array $aros An array of aro id. Composed of users or groups ids.
      * @throw \InvalidArgumentException if the aros parameter contains not only uuid value.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findAcosByArosAreSoleOwner(string $acoType, array $aros): Query
+    public function findAcosByArosAreSoleOwner(string $acoType, array $aros): SelectQuery
     {
         foreach ($aros as $aro) {
             if (!Validation::uuid($aro)) {
@@ -288,9 +288,9 @@ trait PermissionsFindersTrait
      *   bool $checkGroupsUsers Check also for the groups the aro is member of.
      * ]
      * @throws \InvalidArgumentException if the aro id is not a valid uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findAcosOnlyAroCanAccess(string $acoType, string $aro, ?array $options = []): Query
+    public function findAcosOnlyAroCanAccess(string $acoType, string $aro, ?array $options = []): SelectQuery
     {
         $checkGroupsUsers = Hash::get($options, 'checkGroupsUsers', false);
 
@@ -347,10 +347,13 @@ trait PermissionsFindersTrait
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $groupId The group identifier.
      * @param string $userId The user identifier.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findAcosAccessesDiffBetweenGroupAndUser(string $acoType, string $groupId, string $userId): Query
-    {
+    public function findAcosAccessesDiffBetweenGroupAndUser(
+        string $acoType,
+        string $groupId,
+        string $userId
+    ): SelectQuery {
         // R = All the resources or folders that are only accessible by a group and not accessible by a user
 
         // Details:
@@ -378,10 +381,13 @@ trait PermissionsFindersTrait
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $groupId The group identifier.
      * @param array<string> $usersIds The user identifier.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findAcosAccessesDiffBetweenGroupAndUsers(string $acoType, string $groupId, array $usersIds): Query
-    {
+    public function findAcosAccessesDiffBetweenGroupAndUsers(
+        string $acoType,
+        string $groupId,
+        array $usersIds
+    ): SelectQuery {
         // @todo to document
 
         $directUsersAccessesQuery = $this->find()
@@ -445,9 +451,9 @@ trait PermissionsFindersTrait
      *   bool $checkGroupsUsers Check also for the groups the aro is member of
      * ]
      * @throws \InvalidArgumentException if the aro foreign key is not a valid uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findAcosByAroIsOwner(string $acoType, string $aro, ?array $options = []): Query
+    public function findAcosByAroIsOwner(string $acoType, string $aro, ?array $options = []): SelectQuery
     {
         return $this->findAllByAro($acoType, $aro, $options)
             ->where(['Permissions.type' => Permission::OWNER])

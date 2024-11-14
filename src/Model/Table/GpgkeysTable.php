@@ -30,7 +30,7 @@ use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Core\Exception\CakeException;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\DateTime;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -171,12 +171,12 @@ class GpgkeysTable extends Table
     /**
      * Build the query that fetches data for user index
      *
-     * @param \Cake\ORM\Query $query a query instance
+     * @param \Cake\ORM\Query\SelectQuery $query a query instance
      * @param array $options options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \Cake\Core\Exception\CakeException if no role is specified
      */
-    public function findIndex(Query $query, array $options): Query
+    public function findIndex(SelectQuery $query, array $options): SelectQuery
     {
         if (isset($options['filter']['modified-after'])) {
             $modified = new DateTime($options['filter']['modified-after']);
@@ -195,12 +195,12 @@ class GpgkeysTable extends Table
     /**
      * Find view
      *
-     * @param \Cake\ORM\Query $query a query instance
+     * @param \Cake\ORM\Query\SelectQuery $query a query instance
      * @param ?string $id ID
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \Cake\Core\Exception\CakeException if no id is specified
      */
-    public function findView(Query $query, ?string $id): Query
+    public function findView(SelectQuery $query, ?string $id): SelectQuery
     {
         // Options must contain an id
         if (!isset($id)) {
@@ -216,12 +216,12 @@ class GpgkeysTable extends Table
     /**
      * Find current gpgkey to use
      *
-     * @param \Cake\ORM\Query $query a query instance
+     * @param \Cake\ORM\Query\SelectQuery $query a query instance
      * @param ?string $userId user ID
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \Cake\Core\Exception\CakeException if no user_id is specified
      */
-    public function findCurrent(Query $query, ?string $userId = null): Query
+    public function findCurrent(SelectQuery $query, ?string $userId = null): SelectQuery
     {
         // Options must contain a user_id
         if (!isset($userId) || !Validation::uuid($userId)) {

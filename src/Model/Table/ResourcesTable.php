@@ -75,7 +75,7 @@ use Throwable;
  * @method iterable<\App\Model\Entity\Resource>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Resource>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Resource>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByIdAndDeleted(string $id, bool $delete)
+ * @method \Cake\ORM\Query\SelectQuery findByIdAndDeleted(string $id, bool $delete)
  */
 class ResourcesTable extends Table
 {

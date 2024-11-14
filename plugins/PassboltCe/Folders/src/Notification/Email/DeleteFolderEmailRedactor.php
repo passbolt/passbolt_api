@@ -25,7 +25,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\Purifier;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
@@ -110,9 +110,9 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * Find the users the email has to be sent to.
      *
      * @param array $usersIds The list of users id to send the email to.
-     * @return \Cake\ORM\Query The list of users username
+     * @return  \Cake\ORM\Query\SelectQuery The list of users username
      */
-    private function findUsersUsernameToSendEmailTo(array $usersIds): Query
+    private function findUsersUsernameToSendEmailTo(array $usersIds): SelectQuery
     {
         return $this->usersTable->find('locale')
             ->find('notDisabled')

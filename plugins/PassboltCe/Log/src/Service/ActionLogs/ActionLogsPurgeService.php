@@ -20,7 +20,7 @@ use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\I18n\Date;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
 use PDOException;
@@ -69,9 +69,9 @@ class ActionLogsPurgeService
      * Dry run of the purge
      *
      * @param int $retentionInDays retention in days
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function dryRun(int $retentionInDays): Query
+    public function dryRun(int $retentionInDays): SelectQuery
     {
         $total = $this->getActionLogsToPurge($retentionInDays)
             ->select([
@@ -101,9 +101,9 @@ class ActionLogsPurgeService
 
     /**
      * @param int $retentionInDays retention in days
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function getActionLogsToPurge(int $retentionInDays): Query
+    private function getActionLogsToPurge(int $retentionInDays): SelectQuery
     {
         $createdBefore = Date::now()->subDays($retentionInDays);
         $ActionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');

@@ -53,7 +53,7 @@ use Throwable;
  * @method iterable<\App\Model\Entity\Avatar>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Avatar>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Avatar>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
+ * @method \Cake\ORM\Query\SelectQuery findById(string $id)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class AvatarsTable extends Table

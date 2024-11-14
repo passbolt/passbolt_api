@@ -27,7 +27,7 @@ class MetadataKeysIndexService
      * @param string $userId User identifier.
      * @param array|null $contain Contain values.
      * @param array|null $filters Filter values.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
     public function get(string $userId, ?array $contain = null, ?array $filters = null): Query
     {

@@ -20,7 +20,7 @@ namespace Passbolt\MultiFactorAuthentication\Service\Query;
 use App\Utility\UserAccessControl;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Http\Exception\BadRequestException;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -32,14 +32,14 @@ class IsMfaEnabledQueryService
     public const MFA_SETTINGS_PROPERTY = 'mfa_settings';
 
     /**
-     * @param \Cake\ORM\Query $query Query
+     * @param  \Cake\ORM\Query\SelectQuery $query Query
      * @param \App\Utility\UserAccessControl $uac User Access Control
      * @param array $options Query Options
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if a non-admin requests the is_mfa_enabled contain
      * @throws \Cake\Http\Exception\BadRequestException if the filter is applied and is_mfa_enabled not contained
      */
-    public function decorateAndFilterForIndex(Query $query, UserAccessControl $uac, array $options): void
+    public function decorateAndFilterForIndex(SelectQuery $query, UserAccessControl $uac, array $options): void
     {
         $queryContainsIsMfaEnabled = $this->queryContainsIsMfaEnabled($options);
 
@@ -62,12 +62,12 @@ class IsMfaEnabledQueryService
      *  - by an admin
      *  - or the user being viewed
      *
-     * @param \Cake\ORM\Query $query Query
+     * @param  \Cake\ORM\Query\SelectQuery $query Query
      * @param \App\Utility\UserAccessControl $uac UAC
      * @param string $userId ID of the user viewed
      * @return void
      */
-    public function decorateForView(Query $query, UserAccessControl $uac, string $userId): void
+    public function decorateForView(SelectQuery $query, UserAccessControl $uac, string $userId): void
     {
         if ($uac->isAdmin() || $uac->getId() === $userId) {
             $this->addIsMfaEnabledPropertyToQuery($query);
@@ -75,12 +75,12 @@ class IsMfaEnabledQueryService
     }
 
     /**
-     * @param \Cake\ORM\Query $query Query
+     * @param  \Cake\ORM\Query\SelectQuery $query Query
      * @param bool $isMfaEnabledFilter filter users by mfa enable if true, and mfa disabled if false
      * @param bool $containIsMfaEnabledProperty if true, append the is_mfa_enabled field to the query result
      * @return void
      */
-    private function filterByMfaEnabled(Query $query, bool $isMfaEnabledFilter, bool $containIsMfaEnabledProperty): void
+    private function filterByMfaEnabled(SelectQuery $query, bool $isMfaEnabledFilter, bool $containIsMfaEnabledProperty): void
     {
         $query->leftJoinWith('MfaSettings');
 
@@ -123,10 +123,10 @@ class IsMfaEnabledQueryService
     }
 
     /**
-     * @param \Cake\ORM\Query $query Query
+     * @param  \Cake\ORM\Query\SelectQuery $query Query
      * @return void
      */
-    private function addIsMfaEnabledPropertyToQuery(Query $query): void
+    private function addIsMfaEnabledPropertyToQuery(SelectQuery $query): void
     {
         $mfaOrgSettings = MfaOrgSettings::get();
         if ($mfaOrgSettings->isEnabled()) {

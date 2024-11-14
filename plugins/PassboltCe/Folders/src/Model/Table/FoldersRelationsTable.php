@@ -52,14 +52,14 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTree
  * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByForeignId(string $id)
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByUserId(string $userId)
- * @method \Cake\ORM\Query findByFolderParentId(string $folderParentId)
- * @method \Cake\ORM\Query findByUserIdAndForeignModel(string $userId, string $foreignModel)
- * @method \Cake\ORM\Query findByForeignIdAndFolderParentId(string $foreignId, string $folderParentId)
- * @method \Cake\ORM\Query findByUserIdAndFolderParentId(string $userId, string $folderParentId)
- * @method \Cake\ORM\Query findMissingFoldersRelations(string $foreignModel)
+ * @method  \Cake\ORM\Query\SelectQuery findByForeignId(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findByUserId(string $userId)
+ * @method  \Cake\ORM\Query\SelectQuery findByFolderParentId(string $folderParentId)
+ * @method  \Cake\ORM\Query\SelectQuery findByUserIdAndForeignModel(string $userId, string $foreignModel)
+ * @method  \Cake\ORM\Query\SelectQuery findByForeignIdAndFolderParentId(string $foreignId, string $folderParentId)
+ * @method  \Cake\ORM\Query\SelectQuery findByUserIdAndFolderParentId(string $userId, string $folderParentId)
+ * @method  \Cake\ORM\Query\SelectQuery findMissingFoldersRelations(string $foreignModel)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class FoldersRelationsTable extends Table

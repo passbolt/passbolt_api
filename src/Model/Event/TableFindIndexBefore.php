@@ -19,7 +19,7 @@ namespace App\Model\Event;
 
 use App\Model\Table\Dto\FindIndexOptions;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\Table;
 
 class TableFindIndexBefore extends Event
@@ -32,7 +32,7 @@ class TableFindIndexBefore extends Event
     private FindIndexOptions $options;
 
     /**
-     * @var \Cake\ORM\Query
+     * @var \Cake\ORM\Query\SelectQuery
      */
     private Query $query;
 
@@ -78,10 +78,10 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @param \Cake\ORM\Query $query Instance of Query
+     * @param \Cake\ORM\Query\SelectQuery $query Instance of Query
      * @return $this
      */
-    private function setQuery(Query $query)
+    private function setQuery(SelectQuery $query)
     {
         $this->query = clone $query;
 
@@ -89,12 +89,12 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @param \Cake\ORM\Query $query Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
      * @param \App\Model\Table\Dto\FindIndexOptions $options Options
      * @param \Cake\ORM\Table $table Table
      * @return self
      */
-    public static function create(Query $query, FindIndexOptions $options, Table $table): self
+    public static function create(SelectQuery $query, FindIndexOptions $options, Table $table): self
     {
         return new static(static::EVENT_NAME, $table, [
             'query' => $query,
@@ -119,7 +119,7 @@ class TableFindIndexBefore extends Event
     }
 
     /**
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
     public function getQuery(): Query
     {

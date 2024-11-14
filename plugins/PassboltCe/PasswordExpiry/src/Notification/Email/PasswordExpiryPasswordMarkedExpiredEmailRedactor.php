@@ -28,7 +28,7 @@ use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\Locale\Service\LocaleService;
@@ -131,9 +131,9 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
      *
      * @param string $expiringResourceId Resources that have just been expired
      * @param \App\Model\Entity\User $operator User performing the action.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function findOwnersToNotify(string $expiringResourceId, User $operator): Query
+    protected function findOwnersToNotify(string $expiringResourceId, User $operator): SelectQuery
     {
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');

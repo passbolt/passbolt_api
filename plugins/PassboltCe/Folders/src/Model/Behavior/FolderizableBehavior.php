@@ -27,7 +27,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use UnexpectedValueException;
@@ -115,12 +115,12 @@ class FolderizableBehavior extends Behavior
     /**
      * Finder method
      *
-     * @param \Cake\ORM\Query $query The target query.
+     * @param  \Cake\ORM\Query\SelectQuery $query The target query.
      * @param array $options Options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @see $_defaultConfig
      */
-    public function findFolderParentId(Query $query, array $options): Query
+    public function findFolderParentId(SelectQuery $query, array $options): SelectQuery
     {
         return $this->formatResults($query, $options['user_id']);
     }
@@ -128,11 +128,11 @@ class FolderizableBehavior extends Behavior
     /**
      * Format a query result and associate to each item its folder parent id and its personal status.
      *
-     * @param \Cake\ORM\Query $query The target query.
+     * @param  \Cake\ORM\Query\SelectQuery $query The target query.
      * @param string $userId The user id for whom the request has been executed.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function formatResults(Query $query, string $userId): Query
+    public function formatResults(SelectQuery $query, string $userId): SelectQuery
     {
         $this->table()->hasOne('FolderParentId')
             ->setClassName('Passbolt/Folders.FoldersRelations')
@@ -141,7 +141,7 @@ class FolderizableBehavior extends Behavior
                 'FolderParentId.user_id' => $userId,
                 $query->expr()->isNotNull('FolderParentId.folder_parent_id'),
             ]);
-        $query->contain('FolderParentId', function (Query $q) {
+        $query->contain('FolderParentId', function (SelectQuery $q) {
             return $q->select([
                 'folder_parent_id' => 'FolderParentId.folder_parent_id',
             ]);
