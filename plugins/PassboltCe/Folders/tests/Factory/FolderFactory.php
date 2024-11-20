@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Folders\Test\Factory;
 
+use App\Model\Entity\Permission;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
@@ -24,6 +25,7 @@ use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
  * FolderFactory
@@ -31,10 +33,12 @@ use Passbolt\Folders\Model\Entity\FoldersRelation;
  * @method \Passbolt\Folders\Model\Entity\Folder|\Passbolt\Folders\Model\Entity\Folder[] persist()
  * @method \Passbolt\Folders\Model\Entity\Folder getEntity()
  * @method \Passbolt\Folders\Model\Entity\Folder[] getEntities()
+ * @method static \Passbolt\Folders\Model\Entity\Folder get($primaryKey, array $options = [])
  */
 class FolderFactory extends CakephpBaseFactory
 {
     use FactoryDeletedTrait;
+    use GpgMetadataKeysTestTrait;
 
     /**
      * Defines the Table Registry used to generate entities with
@@ -69,13 +73,19 @@ class FolderFactory extends CakephpBaseFactory
      * Define the associated permissions to create for a given list of users.
      *
      * @param array $aros Array of users or groups to create a permission for
+     * @param int $permissionType (Optional) Permission type. Default owner.
      * @return FolderFactory
      */
-    public function withPermissionsFor(array $aros): FolderFactory
+    public function withPermissionsFor(array $aros, int $permissionType = Permission::OWNER): FolderFactory
     {
         foreach ($aros as $aro) {
             $aroType = $aro instanceof User ? PermissionsTable::USER_ARO : PermissionsTable::GROUP_ARO;
-            $permissionsMeta = ['aco' => PermissionsTable::FOLDER_ACO, 'aro' => $aroType, 'aro_foreign_key' => $aro->id];
+            $permissionsMeta = [
+                'aco' => PermissionsTable::FOLDER_ACO,
+                'aro' => $aroType,
+                'aro_foreign_key' => $aro->id,
+                'type' => $permissionType,
+            ];
             $this->with('Permissions', $permissionsMeta);
         }
 
@@ -98,5 +108,24 @@ class FolderFactory extends CakephpBaseFactory
         }
 
         return $this;
+    }
+
+    /**
+     * @param array $values V5 Fields values to set.
+     * @param bool $isShared Metadata type.
+     * @return $this
+     */
+    public function v5Fields(array $values, bool $isShared = false)
+    {
+        $type = $isShared ? 'shared_key' : 'user_key';
+
+        $data = array_merge([
+            // Set V5 fields (not null and valid)
+            'metadata_key_type' => $type,
+            // Set V4 fields to null
+            'name' => null,
+        ], $values);
+
+        return $this->patchData($data);
     }
 }

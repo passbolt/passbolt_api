@@ -27,7 +27,7 @@ class RefreshTokenAuthenticationService extends RefreshTokenAbstractService
     /**
      * Fetch the user from a provided refresh token.
      *
-     * @param ?string $token Token to retrieve
+     * @param string|null $token Token to retrieve
      * @return string refresh token
      * @throws \InvalidArgumentException if the token is not a valid UUIDs
      * @throws \Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException When there is no user associated to this token.

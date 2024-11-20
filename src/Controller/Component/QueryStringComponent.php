@@ -118,7 +118,8 @@ class QueryStringComponent extends Component
                     // these should always be an array
                     $query['filter'][$filterName] = $filter = (array)$query['filter'][$filterName];
                 }
-                if (substr($filterName, 0, 3) === 'is-') {
+                $booleanFilters = ['deleted', 'expired'];
+                if (substr($filterName, 0, 3) === 'is-' || in_array($filterName, $booleanFilters)) {
                     $query['filter'][$filterName] = self::normalizeBoolean($filter);
                 } elseif ($filterName === 'has-parent') {
                     foreach ($query['filter']['has-parent'] as $i => $parentId) {
@@ -183,7 +184,7 @@ class QueryStringComponent extends Component
      */
     protected static function mustBeArrayFilters(): array
     {
-        return ['search', 'has-parent', 'has-id', 'has-groups', 'has-managers', 'has-users', 'has-access',];
+        return ['search', 'has-parent', 'has-id', 'has-groups', 'has-managers', 'has-users', 'has-access'];
     }
 
     /**
@@ -325,6 +326,8 @@ class QueryStringComponent extends Component
                     case 'is-shared-with-me':
                     case 'is-success':
                     case 'is-deleted':
+                    case 'expired':
+                    case 'deleted':
                         self::validateFilterBoolean($values, $filterName);
                         break;
                     case 'has-tag':
@@ -332,6 +335,9 @@ class QueryStringComponent extends Component
                         break;
                     case 'frequency':
                         self::validateFilterInteger($values, $filterName);
+                        break;
+                    case 'metadata_key_type':
+                        self::validateFilterInList($values, $filterName, ['user_key', 'shared_key']);
                         break;
                     default:
                         // Check if custom filter validators were defined for this filter
@@ -397,6 +403,24 @@ class QueryStringComponent extends Component
     public static function validateFilterInteger($values, string $filterName): bool
     {
         if (!is_int($values)) {
+            throw new CakeException(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if the filter is in an array of accepted values
+     *
+     * @param mixed $values to check
+     * @param string $filterName for error message display
+     * @param array $acceptedValues values accepted
+     * @throw CakeException if the filter is not valid
+     * @return bool true if the filter is valid
+     */
+    public static function validateFilterInList($values, string $filterName, array $acceptedValues): bool
+    {
+        if (!in_array($values, $acceptedValues)) {
             throw new CakeException(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
         }
 
@@ -553,12 +577,12 @@ class QueryStringComponent extends Component
      * - Bueno: '98c2bef5-cd5f-59e7-a1a7-0107c9a7cf08'
      * - No Bueno: 'no-bueno'
      *
-     * @param string $groupId uuid
+     * @param mixed $groupId Value to check.
      * @param string $filterName name of filters
      * @throw CakeException if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterGroup(string $groupId, string $filterName): bool
+    public static function validateFilterGroup($groupId, string $filterName): bool
     {
         if (!Validation::uuid($groupId)) {
             throw new CakeException(

@@ -19,7 +19,7 @@ namespace Passbolt\WebInstaller\Form;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
-use Passbolt\Ee\Service\Subscriptions\SubscriptionKeyValidateService;
+use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyValidateService;
 
 class SubscriptionForm extends Form
 {

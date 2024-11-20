@@ -128,7 +128,7 @@ class FoldersRelationsMoveItemInUserTreeService
     /**
      * Handle move validation errors.
      *
-     * @param array $errors The list of errors
+     * @param array|null $errors The list of errors
      * @return void
      * @throws \App\Error\Exception\CustomValidationException If the provided data does not validate.
      */

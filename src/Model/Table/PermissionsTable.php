@@ -457,7 +457,7 @@ class PermissionsTable extends Table
     /**
      * Delete duplicated permissions
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupDuplicatedPermissions(?bool $dryRun = false): int

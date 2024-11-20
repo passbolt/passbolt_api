@@ -22,7 +22,7 @@ use Cake\Http\Exception\BadRequestException;
 trait GpgAuthenticatorTrait
 {
     /**
-     * @param \App\Utility\OpenPGP\OpenPGPBackendInterface $gpg GPG instance
+     * @param \App\Utility\OpenPGP\OpenPGPBackendInterface|null $gpg GPG instance
      * @param mixed $gpgMessage GPG message
      * @param string $errorMessage Error message to throw if GPG message is not valid
      * @throws \Cake\Http\Exception\BadRequestException If GPG message is not valid

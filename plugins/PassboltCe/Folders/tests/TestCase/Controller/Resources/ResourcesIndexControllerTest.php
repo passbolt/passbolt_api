@@ -1,21 +1,6 @@
 <?php
 declare(strict_types=1);
 
-namespace Passbolt\Folders\Test\TestCase\Controller\Resources;
-
-use App\Model\Entity\Permission;
-use App\Test\Lib\Model\PermissionsModelTrait;
-use App\Test\Lib\Utility\FixtureProviderTrait;
-use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
-use Closure;
-use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
-use Passbolt\Folders\Test\Factory\ResourceFactory;
-use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
-use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
-use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
-
 /**
  * Passbolt ~ Open source password manager for teams
  * Copyright (c) Passbolt SA (https://www.passbolt.com)
@@ -28,6 +13,28 @@ use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.13.0
+ */
+namespace Passbolt\Folders\Test\TestCase\Controller\Resources;
+
+use App\Model\Entity\Permission;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
+use App\Test\Lib\Model\PermissionsModelTrait;
+use App\Test\Lib\Utility\FixtureProviderTrait;
+use App\Utility\UuidFactory;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
+use Closure;
+use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
+use Passbolt\Folders\Test\Factory\ResourceFactory;
+use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
+use Passbolt\Folders\Test\Lib\Model\FoldersModelTrait;
+use Passbolt\Folders\Test\Lib\Model\FoldersRelationsModelTrait;
+
+/**
+ * @covers \App\Controller\Resources\ResourcesIndexController
  */
 class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
 {
@@ -202,12 +209,34 @@ class ResourcesIndexControllerTest extends FoldersIntegrationTestCase
     public function testResourcesIndexController_Personal_Should_Be_Unset_If_Null()
     {
         $user = $this->logInAsUser();
-        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
-        ResourceFactory::find()->all();
+        ResourceFactory::make()->withPermissionsFor([$user])->persist();
         $this->getJson('/resources.json');
 
         $result = (array)$this->_responseJsonBody[0];
         $this->assertArrayHasKey('id', $result);
         $this->assertArrayNotHasKey(FolderizableBehavior::PERSONAL_PROPERTY, $result);
+    }
+
+    public function testResourcesIndexController_FilterHasParentWithFolderAndGroup()
+    {
+        $ada = UserFactory::make()->user()->persist();
+        $betty = UserFactory::make()->user()->persist();
+        $group = GroupFactory::make()->withGroupsManagersFor([$ada])->withGroupsUsersFor([$betty])->persist();
+        $resource1 = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
+        $resource2 = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
+        $folder = FolderFactory::make()->withPermissionsFor([$group], Permission::READ)->persist();
+        FoldersRelationFactory::make()->foreignModelResource($resource1)->user($ada)->folderParent($folder)->persist();
+        FoldersRelationFactory::make()->foreignModelResource($resource2)->user($ada)->folderParent($folder)->persist();
+        FoldersRelationFactory::make()->foreignModelResource($resource1)->user($betty)->folderParent($folder)->persist();
+        FoldersRelationFactory::make()->foreignModelResource($resource2)->user($betty)->folderParent($folder)->persist();
+        // login with Ada
+        $this->logInAs($ada);
+
+        $this->getJson('/resources.json?filter[has-parent]=' . $folder->get('id'));
+
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(2, $response);
+        $expectedResourceIds = [$resource1->get('id'), $resource2->get('id')];
+        $this->assertEqualsCanonicalizing($expectedResourceIds, [$response[0]['id'], $response[1]['id']]);
     }
 }

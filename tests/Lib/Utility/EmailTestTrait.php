@@ -126,7 +126,7 @@ trait EmailTestTrait
     /**
      * Asserts an email subject contains expected contents
      *
-     * @param string $contents Contents
+     * @param string|int $contents Contents
      * @param string $message Message
      * @return void
      */

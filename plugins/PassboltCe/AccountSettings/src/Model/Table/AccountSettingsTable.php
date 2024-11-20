@@ -114,7 +114,7 @@ class AccountSettingsTable extends Table
      * Custom validation rule to validate account setting property name
      *
      * @param string $value fingerprint
-     * @param array $context not in use
+     * @param array|null $context not in use
      * @return bool
      */
     public function isValidProperty(string $value, ?array $context = null)

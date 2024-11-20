@@ -283,7 +283,7 @@ trait PermissionsFindersTrait
      *
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $aro The target aro id. By instance a user or a group id.
-     * @param array $options (optional) array of options
+     * @param array|null $options (optional) array of options
      * [
      *   bool $checkGroupsUsers Check also for the groups the aro is member of.
      * ]
@@ -440,7 +440,7 @@ trait PermissionsFindersTrait
      *
      * @param string $acoType The aco type. By instance Resource or Folder.
      * @param string $aro The target aro id. By instance a user or a group id.
-     * @param array $options (optional) array of options
+     * @param array|null $options (optional) array of options
      * [
      *   bool $checkGroupsUsers Check also for the groups the aro is member of
      * ]
@@ -460,7 +460,7 @@ trait PermissionsFindersTrait
      * @param string $acoType The target aco type. By instance a Resource or a Folder.
      * @param string $acoForeignKey The target aco id. By instance a resource or a folder id.
      * @param string $aroForeignKey The target aro id. By instance a user or a group id.
-     * @param int $permissionType The minimum permission type
+     * @param int|null $permissionType The minimum permission type
      * @throws \InvalidArgumentException if the $aco parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the $aro parameter is not a valid uuid.
      * @return bool

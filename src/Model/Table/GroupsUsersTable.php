@@ -429,7 +429,7 @@ class GroupsUsersTable extends Table
     /**
      * Delete duplicated groups users
      *
-     * @param bool $dryRun false
+     * @param bool|null $dryRun false
      * @return int of affected records
      */
     public function cleanupDuplicatedGroupsUsers(?bool $dryRun = false): int

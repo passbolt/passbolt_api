@@ -24,6 +24,9 @@ use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
+/**
+ * @covers \Passbolt\Tags\Controller\Tags\ResourcesTagsAddController
+ */
 class ResourcesTagsAddControllerWithFactoriesTest extends TagPluginIntegrationTestCase
 {
     public function testResourcesTagsAddController_Add_Two_Unshared_Tags_With_Identical_Name()

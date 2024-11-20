@@ -87,10 +87,10 @@ class LogFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
     {
         return [
             __('Ensure the logs directory and its content are writable by the webserver user.'),
-            __('you can try:'),
-            'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . 'logs',
-            'sudo chmod 775 $(find ' . ROOT . 'logs -type d)',
-            'sudo chmod 664 $(find ' . ROOT . 'logs -type f)',
+            __('You can try:'),
+            'sudo chown -R ' . PROCESS_USER . ':' . PROCESS_USER . ' ' . ROOT . DS . 'logs',
+            'sudo chmod 775 $(find ' . ROOT . DS . 'logs -type d)',
+            'sudo chmod 664 $(find ' . ROOT . DS . 'logs -type f)',
         ];
     }
 

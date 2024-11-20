@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Model\Table;
 
+use App\Model\Traits\Cleanup\TableCleanupTrait;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -43,6 +44,8 @@ use Cake\Validation\Validator;
  */
 class ResourcesTagsTable extends Table
 {
+    use TableCleanupTrait;
+
     /**
      * Initialize method
      *
@@ -149,5 +152,19 @@ class ResourcesTagsTable extends Table
             'tag_id' => $oldTagId,
             'user_id' => $userId,
         ]);
+    }
+
+    /**
+     * Delete duplicate resources tags entries.
+     *
+     * @param bool|null $dryRun Dry run or not.
+     * @return int No. of affected records.
+     * @throws \Exception If the table to clean up does not have an "id" column.
+     */
+    public function cleanupDuplicatedResourcesTags(?bool $dryRun = false): int
+    {
+        $keys = ['resource_id', 'tag_id', 'user_id'];
+
+        return $this->cleanupDuplicates($keys, $dryRun);
     }
 }

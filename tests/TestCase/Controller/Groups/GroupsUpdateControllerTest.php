@@ -17,10 +17,16 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Groups;
 
+use App\Model\Entity\Permission;
+use App\Notification\Email\Redactor\Group\GroupUpdateAdminSummaryEmailRedactor;
 use App\Test\Factory\FavoriteFactory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\GroupsUserFactory;
+use App\Test\Factory\PermissionFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Test\Lib\Model\GroupsModelTrait;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Utility\UuidFactory;
@@ -34,11 +40,7 @@ class GroupsUpdateControllerTest extends AppIntegrationTestCase
 {
     use GroupsModelTrait;
     use GroupsUsersModelTrait;
-
-    public $fixtures = ['app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
-        'app.Base/Users', 'app.Base/Secrets', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Favorites',
-    ];
+    use EmailQueueTrait;
 
     /**
      * @var \App\Model\Table\ResourcesTable|null
@@ -68,160 +70,169 @@ hcciUFw5
 -----END PGP MESSAGE-----';
     }
 
-    /*
-     * As a group manager I can update the roles of the members of a group I manage
-     *   - Remove the group manager role of a member
-     *   - Add the group manager role to a member
-     */
-
-    public function testGroupsUpdateAsGMUpdateMembersRoleSuccess(): void
+    public function testGroupsUpdateController_Add_A_Group_Manager(): void
     {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userJId = UuidFactory::uuid('user.id.jean');
-        $userNId = UuidFactory::uuid('user.id.nancy');
+        $group = GroupFactory::make()
+            ->with('GroupsUsers', GroupsUserFactory::make(2)->admin()->with('Users'))
+            ->persist();
+        $groupId = $group->id;
 
-        // Retrieve the resources the group has access.
-        $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
-        $groupHasAccess = Hash::extract($resources, '{n}.id');
+        $groupManager1 = $group->groups_users[0]->user;
+        $groupManager2 = $group->groups_users[1]->user;
+
+        $newGroupMember = UserFactory::make()->user()->persist();
+
+        // Build the request data.
+        $changes = [];
+
+        // Add new member.
+        $changes[] = ['user_id' => $newGroupMember->id, 'is_admin' => true];
+
+        // Update the group users.
+        $this->logInAs($groupManager1);
+        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
+        $this->assertSuccess();
+
+        $this->assertUserIsAdmin($groupId, $newGroupMember->id);
+        $this->assertEmailQueueCount(2);
+
+        // Assert email summary is sent to the group managers
+        $this->assertEmailInBatchContains([
+            "{$groupManager1->profile->first_name} updated the group $group->name",
+            "{$newGroupMember->profile->full_name}                                                                (Group manager)",
+        ], $groupManager2->username);
+        $this->assertEmailInBatchNotContains([
+            'Updated roles',
+            'Removed members',
+        ], $groupManager2->username);
+
+        $this->assertEmailInBatchContains([
+            "{$groupManager1->profile->first_name} added you to the group $group->name",
+        ], $newGroupMember->username);
+    }
+
+    public function testGroupsUpdateController_Update_Role(): void
+    {
+        $group = GroupFactory::make()
+            ->with('GroupsUsers', GroupsUserFactory::make(3)->admin()->with('Users'))
+            ->with('GroupsUsers[2].Users')
+            ->persist();
+        $groupId = $group->id;
+
+        $groupManager1 = $group->groups_users[0]->user;
+        $groupManager2 = $group->groups_users[1]->user;
+        $groupManager3 = $group->groups_users[2]->user;
+        $groupMember1 = $group->groups_users[3]->user;
+        $groupMember2 = $group->groups_users[4]->user;
+
+        [$newGroupMember, $newGroupManager] = UserFactory::make(2)->user()->persist();
 
         // Build the request data.
         $changes = [];
 
         // Update memberships.
-        // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
-        // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
+        // Remove group admin 2 as admin
+        $changes[] = ['id' => $group->groups_users[1]->id, 'is_admin' => false];
+        // Make group member 1 as admin
+        $changes[] = ['id' => $group->groups_users[3]->id, 'is_admin' => true];
+        // Add a user to the group
+        $changes[] = ['user_id' => $newGroupMember->id, 'is_admin' => false];
+        // Add a group admin to the group
+        $changes[] = ['user_id' => $newGroupManager->id, 'is_admin' => true];
 
         // Update the group users.
-        $this->authenticateAs('jean');
+        $this->logInAs($groupManager1);
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
 
         $this->assertSuccess();
 
-        // Jean and Nancy should still have access to the resources.
-        $this->assertUserHasAccessResources($userJId, $groupHasAccess);
-        $this->assertUserHasAccessResources($userNId, $groupHasAccess);
+        // Group manager 2 should no longer be a group manager of the group
+        $this->assertUserIsNotAdmin($groupId, $groupManager2->id);
+        $this->assertUserIsNotAdmin($groupId, $groupMember2->id);
+        $this->assertUserIsNotAdmin($groupId, $newGroupMember->id);
 
-        // Jean should no longer be a group manager of the group
-        $this->assertUserIsNotAdmin($groupId, $userJId);
+        // Group member 1 should be a group manager of the group
+        $this->assertUserIsAdmin($groupId, $groupMember1->id);
+        $this->assertUserIsAdmin($groupId, $groupManager1->id);
+        $this->assertUserIsAdmin($groupId, $newGroupManager->id);
 
-        // Nancy should be a group manager of the group
-        $this->assertUserIsAdmin($groupId, $userNId);
+        // Assert emails are sent to the members which roles changed
+        $this->assertEmailSubject($groupManager2->username, "{$groupManager1->profile->first_name} updated your membership in the group $group->name");
+        $this->assertEmailSubject($newGroupMember->username, "{$groupManager1->profile->first_name} added you to the group $group->name");
+        $this->assertEmailSubject($newGroupManager->username, "{$groupManager1->profile->first_name} added you to the group $group->name");
+
+        // Assert email summary is sent to the group managers
+        $this->assertEmailInBatchContains([
+            "{$groupManager1->profile->first_name} updated the group $group->name",
+            "{$newGroupMember->profile->full_name}                                                                (Member)",
+            "{$newGroupManager->profile->full_name}                                                                (Group manager)",
+        ], $groupManager3->username);
+        $this->assertEmailInBatchNotContains('Removed members', $groupManager3->username);
+
+        // The member made manager does not receive a notification as group manager
+        $this->assertEmailIsNotInQueue([
+            'email' => $groupMember1->username,
+            'template' => GroupUpdateAdminSummaryEmailRedactor::TEMPLATE,
+        ]);
+        // The new admin does not receive a notification as group manager
+        $this->assertEmailIsNotInQueue([
+            'email' => $newGroupManager->username,
+            'template' => GroupUpdateAdminSummaryEmailRedactor::TEMPLATE,
+        ]);
+        // Assert the group manager removed does not receive an email as group manager
+        $this->assertEmailIsNotInQueue([
+            'email' => $groupManager2->username,
+            'template' => GroupUpdateAdminSummaryEmailRedactor::TEMPLATE,
+        ]);
+        // Assert that the user performing the action is not notified
+        $this->assertEmailIsNotInQueue([
+            'email' => $groupManager1->username,
+            'template' => GroupUpdateAdminSummaryEmailRedactor::TEMPLATE,
+        ]);
+        $this->assertEmailQueueCount(5);
     }
 
-    /*
-     * As a group manager I can add members to a group I manage
-     *   - A member who has no previous access to the resources shared with the group
-     *   - A member who has already an access to all the resources shared with the group
-     *   - A member who has already an access to some resources shared with the group
-     */
-
-    public function testGroupsUpdateAsGMAddMembersSuccess(): void
+    public function testGroupsUpdateController_Remove_A_Member(): void
     {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $resourceCId = UuidFactory::uuid('resource.id.chai');
-        $resourceFId = UuidFactory::uuid('resource.id.fosdem');
-        $resourceGId = UuidFactory::uuid('resource.id.grunt');
+        $group = GroupFactory::make()
+            ->with('GroupsUsers', GroupsUserFactory::make(2)->admin()->with('Users'))
+            ->with('GroupsUsers[2].Users')
+            ->persist();
+        $groupId = $group->id;
 
-        // Retrieve the resources the group has access.
-        $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
-        $groupHasAccess = Hash::extract($resources, '{n}.id');
-
-        // Build the request data.
-        $changes = [];
-        $secrets = [];
-
-        // Add a user who has not access to the group resources before adding it to the group.
-        // Add Frances.
-        $changes[] = ['user_id' => $userFId, 'is_admin' => true];
-        // Add all the new secrets for the user.
-        foreach ($groupHasAccess as $resourceId) {
-            $secrets[] = ['resource_id' => $resourceId, 'user_id' => $userFId, 'data' => $this->getValidSecret()];
-        }
-
-        // Add a user who already has access to all of the resources the group has access.
-        // Carol has the same access as the group Freelancer.
-        // No secret need to be encrypted for the user.
-        $changes[] = ['user_id' => $userCId];
-
-        // Add a user who already has access to some of the resources the group has access.
-        // Ada already has access to few resources the group has access : chai, fosdem, grunt
-        // Expect the secrets Ada had no access to be encrypted.
-        $changes[] = ['user_id' => $userAId];
-        $resourcesAdaAccessedBefore = [$resourceCId, $resourceFId, $resourceGId];
-        foreach ($resourcesAdaAccessedBefore as $resourceId) {
-            $secrets[] = ['resource_id' => $resourceId, 'user_id' => $userAId, 'data' => $this->getValidSecret()];
-        }
-
-        // Update the group users.
-        $this->authenticateAs('jean');
-        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => $secrets]);
-        $this->assertSuccess();
-
-        // Frances should have access to the group resources.
-        $this->assertUserHasAccessResources($userFId, $groupHasAccess);
-        // Frances should also be group manager of the group.
-        $this->assertUserIsAdmin($groupId, $userFId);
-
-        // Carol should have access to the group resources.
-        $this->assertUserHasAccessResources($userCId, $groupHasAccess);
-        // Carol should not be group manager of the group.
-        $this->assertUserIsNotAdmin($groupId, $userCId);
-
-        // Ada should have access to the group resources.
-        $this->assertUserHasAccessResources($userAId, $groupHasAccess);
-        // Ada should not be group manager of the group.
-        $this->assertUserIsNotAdmin($groupId, $userAId);
-    }
-
-    /*
-     * As a group manager I can delete members to a group I manage
-     *   - A member who has access to the resources shared with the group only because of its membership
-     *   - A member who has access to some resources shared with the group because of other permissions
-     */
-
-    public function testGroupsUpdateAsGMDeleteMembersSuccess(): void
-    {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $resourceCId = UuidFactory::uuid('resource.id.chai');
-
-        // Retrieve the resources the group has access.
-        $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
-        $groupHasAccess = Hash::extract($resources, '{n}.id');
+        $groupManager1 = $group->groups_users[0]->user;
+        $groupManager2 = $group->groups_users[1]->user;
+        $groupMember1 = $group->groups_users[2]->user;
+        $groupMember2 = $group->groups_users[3]->user;
 
         // Build the request data.
         $changes = [];
 
-        // Remove users from the group
-        // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
-
-        // Remove a user who has its own access to the same resource the group has.
-        // Remove lynne who has a direct access to the resource chai.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
+        // Add new member.
+        $changes[] = ['id' => $group->groups_users[2]->id, 'delete' => true];
 
         // Update the group users.
-        $this->authenticateAs('jean');
+        $this->logInAs($groupManager1);
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        // kathleen should not have anymore access to the group resources.
-        $this->assertUserHasNotAccessResources($userKId, $groupHasAccess);
+        $this->assertUserIsNotMemberOf($groupId, $groupMember1->id);
+        $this->assertEmailQueueCount(2);
 
-        // Lynne should not have anymore access to the group resources (except chai).
-        $userHasAccess = [$resourceCId];
-        $userHasNotAccess = array_diff($groupHasAccess, $userHasAccess);
-        $this->assertUserHasNotAccessResources($userLId, $userHasNotAccess);
-        $this->assertUserHasAccessResources($userLId, $userHasAccess);
+        // Assert email summary is sent to the group managers
+        $this->assertEmailInBatchContains([
+            'Removed members',
+            "{$groupManager1->profile->first_name} updated the group $group->name",
+            "{$groupMember1->profile->full_name}                                                                (Member)",
+        ], $groupManager2->username);
+        $this->assertEmailInBatchNotContains([
+            'Added members',
+            'Updated roles',
+        ], $groupManager2->username);
+
+        $this->assertEmailInBatchContains([
+            "{$groupManager1->profile->first_name} removed you from the group $group->name",
+        ], $groupMember1->username);
     }
 
     /*
@@ -239,20 +250,31 @@ hcciUFw5
      *   - A member who has access to some resources shared with the group because of other permissions
      */
 
-    public function testGroupsUpdateAsGMUpdateGroupComplexScenarioSuccess(): void
+    public function testGroupsUpdateController_Success_AsGMUpdateGroupComplexScenario(): void
     {
         // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userCId = UuidFactory::uuid('user.id.carol');
-        $userFId = UuidFactory::uuid('user.id.frances');
-        $userJId = UuidFactory::uuid('user.id.jean');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $userNId = UuidFactory::uuid('user.id.nancy');
-        $resourceCId = UuidFactory::uuid('resource.id.chai');
-        $resourceFId = UuidFactory::uuid('resource.id.fosdem');
-        $resourceGId = UuidFactory::uuid('resource.id.grunt');
+        [$userJ, $userN, $userK, $userL] = UserFactory::make(4)->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userJ])
+            ->withGroupsUsersFor([$userN, $userK, $userL])
+            ->persist();
+        [$userA, $userC, $userF] = UserFactory::make(3)->persist();
+
+        [$resourceC, $resourceF, $resourceG] = ResourceFactory::make(3)->withPermissionsFor([$group, $userC], Permission::UPDATE)
+            ->withSecretsFor([$group, $userC])
+            ->persist();
+        PermissionFactory::make()
+            ->acoResource($resourceC)
+            ->aroUser($userL)
+            ->typeOwner()
+            ->persist();
+
+        // Ids
+        $groupId = $group->id;
+        $groupUserJId = $group->groups_users[0]->id;
+        $groupUserNId = $group->groups_users[1]->id;
+        $groupUserKId = $group->groups_users[2]->id;
+        $groupUserLId = $group->groups_users[3]->id;
 
         // Retrieve the resources the group has access.
         $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
@@ -262,65 +284,65 @@ hcciUFw5
         $changes = [];
 
         // Update memberships.
-        // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
-        // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
+        // Remove userJ as admin
+        $changes[] = ['id' => $groupUserJId, 'is_admin' => false];
+        // Make userN admin
+        $changes[] = ['id' => $groupUserNId, 'is_admin' => true];
 
         // Remove users from the group
-        // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
+        // Remove userK who has access to the group resources only because of her membership.
+        $changes[] = ['id' => $groupUserKId, 'delete' => true];
 
         // Remove a user who has its own access to the same resource the group has.
-        // Remove lynne who has a direct access to the resource chai.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
+        // Remove userL who has direct access to the resourceC.
+        $changes[] = ['id' => $groupUserLId, 'delete' => true];
 
         // Add a user who has not access to the group resources before adding it to the group.
-        // Add Frances.
-        $changes[] = ['user_id' => $userFId];
+        // Add userF.
+        $changes[] = ['user_id' => $userF->id];
         // Add all the new secrets for the user.
         foreach ($groupHasAccess as $resourceId) {
-            $secrets[] = ['resource_id' => $resourceId, 'user_id' => $userFId, 'data' => $this->getValidSecret()];
+            $secrets[] = ['resource_id' => $resourceId, 'user_id' => $userF->id, 'data' => $this->getValidSecret()];
         }
 
         // Add a user who already has access to all of the resources the group has access.
-        // Carol has the same access as the group Freelancer.
+        // userC has the same access as the group resourceF.
         // No secret need to be encrypted for the user.
-        $changes[] = ['user_id' => $userCId];
+        $changes[] = ['user_id' => $userC->id];
 
         // Add a user who already has access to some of the resources the group has access.
-        // Ada already has access to few resources the group has access : chai, fosdem, grunt
+        // Ada already has access to few resources the group has access : resourceC, resourceF, resourceG
         // Expect the secrets Ada had no access to be encrypted.
-        $changes[] = ['user_id' => $userAId];
-        $resourcesAdaAccessedBefore = [$resourceCId, $resourceFId, $resourceGId];
+        $changes[] = ['user_id' => $userA->id];
+        $resourcesAdaAccessedBefore = [$resourceC->id, $resourceF->id, $resourceG->id];
         foreach ($resourcesAdaAccessedBefore as $resourceId) {
-            $secrets[] = ['resource_id' => $resourceId, 'user_id' => $userAId, 'data' => $this->getValidSecret()];
+            $secrets[] = ['resource_id' => $resourceId, 'user_id' => $userA->id, 'data' => $this->getValidSecret()];
         }
 
         // Update the group users.
-        $this->authenticateAs('jean');
+        $this->logInAs($userJ);
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes, 'secrets' => $secrets]);
         $this->assertSuccess();
 
-        // Jean and Nancy should still have access to the resources.
-        $this->assertUserHasAccessResources($userJId, $groupHasAccess);
-        $this->assertUserHasAccessResources($userNId, $groupHasAccess);
+        // userJ and userN should still have access to the resources.
+        $this->assertUserHasAccessResources($userJ->id, $groupHasAccess);
+        $this->assertUserHasAccessResources($userN->id, $groupHasAccess);
 
-        // kathleen should not have anymore access to the group resources.
-        $this->assertUserHasNotAccessResources($userKId, $groupHasAccess);
+        // userK should not have anymore access to the group resources.
+        $this->assertUserHasNotAccessResources($userK->id, $groupHasAccess);
 
-        // Lynne should not have anymore access to the group resources (except chai).
-        $userHasAccess = [$resourceCId];
+        // Lynne should not have anymore access to the group resources (except resourceC).
+        $userHasAccess = [$resourceC->id];
         $userHasNotAccess = array_diff($groupHasAccess, $userHasAccess);
-        $this->assertUserHasNotAccessResources($userLId, $userHasNotAccess);
-        $this->assertUserHasAccessResources($userLId, $userHasAccess);
+        $this->assertUserHasNotAccessResources($userL->id, $userHasNotAccess);
+        $this->assertUserHasAccessResources($userL->id, $userHasAccess);
 
         // Frances should have access to the group resources.
-        $this->assertUserHasAccessResources($userFId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userF->id, $groupHasAccess);
         // Carol should have access to the group resources.
-        $this->assertUserHasAccessResources($userCId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userC->id, $groupHasAccess);
         // Ada should have access to the group resources.
-        $this->assertUserHasAccessResources($userAId, $groupHasAccess);
+        $this->assertUserHasAccessResources($userA->id, $groupHasAccess);
     }
 
     /*
@@ -328,22 +350,27 @@ hcciUFw5
      * Only an administrator is allowed to update the name of a group
      */
 
-    public function testGroupsUpdateAsGMCannotUpdateNameError(): void
+    public function testGroupsUpdateController_Error_AsGMCannotUpdateName(): void
     {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $group = GroupFactory::make(['name' => 'Freelancer'])
+            ->with('GroupsUsers', GroupsUserFactory::make()
+                ->admin()
+                ->with('Users'))
+            ->persist();
+        $groupId = $group->id;
+        $groupManager1 = $group->groups_users[0]->user;
 
-        // Try to add the user frances.
+        // Try to update the name.
         $data = [
             'name' => 'Updated group name',
         ];
 
         // Update the group name.
-        $this->authenticateAs('jean');
+        $this->logInAs($groupManager1);
         $this->putJson("/groups/$groupId.json", $data);
         $this->assertSuccess();
 
-        // The name of the group should be updated
+        // The name of the group should not be updated
         $group = GroupFactory::get($groupId);
         $this->assertNotEquals($data['name'], $group->name);
         $this->assertEquals('Freelancer', $group->name);
@@ -354,18 +381,17 @@ hcciUFw5
      * Only an administrator is allowed to update the name of a group
      */
 
-    public function testGroupsUpdateAsADUpdateNameSuccess(): void
+    public function testGroupsUpdateController_Success_AsADUpdateName(): void
     {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
+        $groupId = GroupFactory::make(['name' => 'Freelancer'])->persist()->id;
 
-        // Try to add the user frances.
+        // Try to update name.
         $data = [
             'name' => 'Updated group name',
         ];
 
         // Update the group name.
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->putJson("/groups/$groupId.json", $data);
         $this->assertSuccess();
 
@@ -379,12 +405,26 @@ hcciUFw5
      * @see testAsGMUpdateMembersRoleSuccess
      */
 
-    public function testGroupsUpdateAsADUpdateMembersRoleSuccess(): void
+    public function testGroupUpdatedController_Success_AsAAdminUpdateMembersRole(): void
     {
         // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userJId = UuidFactory::uuid('user.id.jean');
-        $userNId = UuidFactory::uuid('user.id.nancy');
+        $group = GroupFactory::make()
+            ->with('GroupsUsers', GroupsUserFactory::make()
+                ->with('Users', UserFactory::make()
+                    ->user())
+                ->admin())
+            ->with('GroupsUsers', GroupsUserFactory::make()
+                ->with('Users', UserFactory::make()
+                    ->user()))
+            ->with(
+                'Permissions',
+                PermissionFactory::make()
+                    ->with('Resources', ResourceFactory::make())
+            )
+            ->persist();
+        $groupId = $group->id;
+        $groupManager = $group->groups_users[0];
+        $groupMember = $group->groups_users[1];
 
         // Retrieve the resources the group has access.
         $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
@@ -394,25 +434,25 @@ hcciUFw5
         $changes = [];
 
         // Update memberships.
-        // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
-        // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
+        // Remove userJ as admin
+        $changes[] = ['id' => $groupManager->id, 'is_admin' => false];
+        // Make userN admin
+        $changes[] = ['id' => $groupMember->id, 'is_admin' => true];
 
         // Update the group users.
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        // Jean and Nancy should still have access to the resources.
-        $this->assertUserHasAccessResources($userJId, $groupHasAccess);
-        $this->assertUserHasAccessResources($userNId, $groupHasAccess);
+        // userJ and userN should still have access to the resources.
+        $this->assertUserHasAccessResources($groupManager->user_id, $groupHasAccess);
+        $this->assertUserHasAccessResources($groupMember->user_id, $groupHasAccess);
 
         // Jean should no longer be a group manager of the group
-        $this->assertUserIsNotAdmin($groupId, $userJId);
+        $this->assertUserIsNotAdmin($groupId, $groupManager->user_id);
 
         // Nancy should be a group manager of the group
-        $this->assertUserIsAdmin($groupId, $userNId);
+        $this->assertUserIsAdmin($groupId, $groupMember->user_id);
     }
 
     /*
@@ -421,13 +461,22 @@ hcciUFw5
      *   - A member who has access to some resources shared with the group because of other permissions
      */
 
-    public function testGroupsUpdateAsADDeleteMembersSuccess(): void
+    public function testGroupsUpdateController_Success_AsADDeleteMembers(): void
     {
         // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userKId = UuidFactory::uuid('user.id.kathleen');
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $resourceCId = UuidFactory::uuid('resource.id.chai');
+        $group = GroupFactory::make()->with(
+            'GroupsUsers',
+            GroupsUserFactory::make(2)->with(
+                'Users',
+                UserFactory::make()
+            )
+        )->persist();
+        $groupId = $group->id;
+        $groupUserK = $group->groups_users[0];
+        $groupUserL = $group->groups_users[1];
+
+        ResourceFactory::make(4)->withPermissionsFor([$group])->persist();
+        $resourceC = ResourceFactory::make()->withPermissionsFor([$groupUserL->user, $group])->withSecretsFor([$groupUserL->user, $group])->persist();
 
         // Retrieve the resources the group has access.
         $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
@@ -437,26 +486,26 @@ hcciUFw5
         $changes = [];
 
         // Remove users from the group
-        // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
+        // Remove userK who has access to the group resources only because of her membership.
+        $changes[] = ['id' => $groupUserK->id, 'delete' => true];
 
         // Remove a user who has its own access to the same resource the group has.
-        // Remove lynne who has a direct access to the resource chai.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
+        // Remove userL who has direct access to the resourceC.
+        $changes[] = ['id' => $groupUserL->id, 'delete' => true];
 
         // Update the group users.
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        // kathleen should not have anymore access to the group resources.
-        $this->assertUserHasNotAccessResources($userKId, $groupHasAccess);
+        // userL should not have anymore access to the group resources.
+        $this->assertUserHasNotAccessResources($groupUserK->user_id, $groupHasAccess);
 
-        // Lynne should not have anymore access to the group resources (except chai).
-        $userHasAccess = [$resourceCId];
+        // userL should not have anymore access to the group resources (except chai).
+        $userHasAccess = [$resourceC->id];
         $userHasNotAccess = array_diff($groupHasAccess, $userHasAccess);
-        $this->assertUserHasNotAccessResources($userLId, $userHasNotAccess);
-        $this->assertUserHasAccessResources($userLId, $userHasAccess);
+        $this->assertUserHasNotAccessResources($groupUserL->user_id, $userHasNotAccess);
+        $this->assertUserHasAccessResources($groupUserL->user_id, $userHasAccess);
     }
 
     /*
@@ -468,12 +517,19 @@ hcciUFw5
      *   - Add the group manager role to a member
      */
 
-    public function testGroupsUpdateAsADUpdateGroupComplexScenarioSuccess(): void
+    public function testGroupsUpdateController_Success_AsADUpdateGroupComplexScenario(): void
     {
         // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userJId = UuidFactory::uuid('user.id.jean');
-        $userNId = UuidFactory::uuid('user.id.nancy');
+        [$userJ, $userN] = UserFactory::make(2)->user()->persist();
+        $group = GroupFactory::make()
+            ->withGroupsManagersFor([$userJ])
+            ->withGroupsUsersFor([$userN])
+            ->persist();
+        ResourceFactory::make(3)
+            ->withSecretsFor([$group])->withPermissionsFor([$group])->persist();
+
+        // Ids
+        $groupId = $group->id;
 
         // Retrieve the resources the group has access.
         $resources = $this->Resources->findAllByGroupAccess($groupId)->all()->toArray();
@@ -483,79 +539,83 @@ hcciUFw5
         $changes = [];
 
         // Update memberships.
-        // Remove Jean as admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-jean'), 'is_admin' => false];
-        // Make Kathleen admin
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-nancy'), 'is_admin' => true];
+        // Remove userJ as admin
+        $changes[] = ['id' => $group->groups_users[0]->id, 'is_admin' => false];
+        // Make userN admin
+        $changes[] = ['id' => $group->groups_users[1]->id, 'is_admin' => true];
 
-        // Try to add the user frances.
         $data = [
             'name' => 'Updated group name',
             'groups_users' => $changes,
         ];
 
         // Update the group users.
-        $this->authenticateAs('admin');
+        $this->logInAsAdmin();
         $this->putJson("/groups/$groupId.json", $data);
         $this->assertSuccess();
-
         // The name of the group should be updated
         $group = GroupFactory::get($groupId);
         $this->assertEquals($data['name'], $group->name);
 
-        // Jean and Nancy should still have access to the resources.
-        $this->assertUserHasAccessResources($userJId, $groupHasAccess);
-        $this->assertUserHasAccessResources($userNId, $groupHasAccess);
+        // userJ and userN should still have access to the resources.
+        $this->assertUserHasAccessResources($userJ->id, $groupHasAccess);
+        $this->assertUserHasAccessResources($userN->id, $groupHasAccess);
 
-        // Jean should no longer be a group manager of the group
-        $this->assertUserIsNotAdmin($groupId, $userJId);
+        // userJ should no longer be a group manager of the group
+        $this->assertUserIsNotAdmin($groupId, $userJ->id);
 
-        // Nancy should be a group manager of the group
-        $this->assertUserIsAdmin($groupId, $userNId);
+        // userN should be a group manager of the group
+        $this->assertUserIsAdmin($groupId, $userN->id);
     }
 
-    // As an administrator I shouldn't be able to add users to a group
-
-    public function testGroupsUpdateAsAdminCannotAddGroupUserError(): void
+    public function testGroupsUpdateController_Error_AsAdminCannotAddGroupUser(): void
     {
         // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userCId = UuidFactory::uuid('user.id.carol');
+        $group = GroupFactory::make()->persist();
+        $groupId = $group->id;
+        $user = UserFactory::make()->user()->persist();
+        $userId = $user->id;
+        ResourceFactory::make()->withPermissionsFor([$group, $user])->persist();
 
-        // Add a user who already has access to all of the resources the group has access.
-        // Carol has the same access as the group Freelancer.
+        // Add a user who already has access to all the resources the group has access.
+        // user has the same access as the group.
         // No secret need to be encrypted for the user.
-        $changes[] = ['user_id' => $userCId];
+        $changes[] = ['user_id' => $userId];
 
-        // Update the group name.
-        $this->authenticateAs('admin');
+        // Update the group.
+        $this->logInAsAdmin();
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        // The user carol shouldn't be member of the group
-        $groupUser = GroupsUserFactory::find()->where(['user_id' => $userCId, 'group_id' => $groupId])->first();
+        // The user shouldn't be member of the group
+        $groupUser = GroupsUserFactory::find()->where(['user_id' => $userId, 'group_id' => $groupId])->first();
         $this->assertEmpty($groupUser);
     }
 
-    public function testGroupsUpdateLostAccessFavoritesDeleted(): void
+    public function testGroupsUpdateController_Success_LostAccessFavoritesDeleted(): void
     {
         // Define actors of this tests
-        $userLId = UuidFactory::uuid('user.id.lynne');
-        $groupFId = UuidFactory::uuid('group.id.freelancer');
-        $resourceCId = UuidFactory::uuid('resource.id.cakephp');
+        [$userJ, $userN, $userL] = UserFactory::make(3)->user()->persist();
+        $userLId = $userL->id;
+        $group = GroupFactory::make()->withGroupsManagersFor([$userJ])->withGroupsUsersFor([$userN, $userL])->persist();
+        $groupId = $group->id;
+        $resourceC = ResourceFactory::make()->withPermissionsFor([$group], Permission::READ)->withSecretsFor([$group])->persist();
+        $resourceCId = $resourceC->id;
+        FavoriteFactory::make()->setUser($userL)->setResource(ResourceFactory::make()->persist())->persist();
+        FavoriteFactory::make()->setUser($userL)->setResource($resourceC)->persist();
 
         // Build the changes.
         $changes = [];
 
-        // Delete irene from the group developer
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-lynne'), 'delete' => true];
+        // Delete userL from the group
+        $changes[] = ['id' => $group->groups_users[2]->id, 'delete' => true];
 
         // Update the group.
-        $this->authenticateAs('admin');
-        $this->putJson("/groups/$groupFId.json", ['groups_users' => $changes]);
+        $this->logInAsAdmin();
+        $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        // As Irene is also member of the group ergonom, the favorite for cakephp shouldn't be removed.
+        // For userL the favorite for other resource shouldn't be removed.
         $resources = FavoriteFactory::find()
             ->where(['user_id' => $userLId])
             ->all();
@@ -563,29 +623,29 @@ hcciUFw5
         $this->assertNotcontains($resourceCId, $resourcesId);
     }
 
-    // As an administrator I shouldn't be able to add users to a group
-
-    public function testGroupsUpdateAsAdminCannotDeleteGroupUserError(): void
+    public function testGroupUpdatedController_Error_AdminCannotDeleteGroupUser(): void
     {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $userKId = UuidFactory::uuid('user.id.nancy');
+        // Define actors of this test
+        $group = GroupFactory::make()->with('GroupsUsers.Users')->persist();
+        $groupId = $group->id;
+        $groupUserKId = $group->groups_users[0]->id;
+        $UserKId = $group->groups_users[0]->user_id;
 
         // Remove users from the group
-        // Remove Kathleen who has access to the group resources only because of her membership.
-        $changes[] = ['id' => UuidFactory::uuid('group_user.id.freelancer-kathleen'), 'delete' => true];
+        // Remove userK who has access to the group resources only because of her membership.
+        $changes[] = ['id' => $groupUserKId, true];
 
-        // Update the group name.
-        $this->authenticateAs('admin');
+        // Update the group
+        $this->logInAsAdmin();
         $this->putJson("/groups/$groupId.json", ['groups_users' => $changes]);
         $this->assertSuccess();
 
-        // The user Kathleen should still be member of the group
-        $groupUser = GroupsUserFactory::find()->where(['user_id' => $userKId, 'group_id' => $groupId])->first();
+        // The user userK should still be member of the group
+        $groupUser = GroupsUserFactory::find()->where(['user_id' => $UserKId, 'group_id' => $groupId])->first();
         $this->assertnotEmpty($groupUser);
     }
 
-    public function testGroupsUpdateErrorNotValidId(): void
+    public function testGroupsUpdateController_Error_NotValidGroupId(): void
     {
         $this->logInAsUser();
         $groupId = 'invalid-id';
@@ -593,7 +653,7 @@ hcciUFw5
         $this->assertError(400, 'The group id is not valid.');
     }
 
-    public function testGroupsUpdateErrorDoesNotExistGroup(): void
+    public function testGroupsUpdateController_Error_GroupDoesNotExist(): void
     {
         $this->logInAsUser();
         $groupId = UuidFactory::uuid();
@@ -601,7 +661,7 @@ hcciUFw5
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testGroupsUpdateErrorGroupIsSoftDeleted(): void
+    public function testGroupsUpdateController_Error_GroupIsSoftDeleted(): void
     {
         $this->logInAsAdmin();
         $groupId = GroupFactory::make()->deleted()->persist()->id;
@@ -610,7 +670,7 @@ hcciUFw5
         $this->assertError(404, 'The group does not exist.');
     }
 
-    public function testGroupsUpdateErrorAccessDenied(): void
+    public function testGroupsUpdateController_Error_AccessDenied(): void
     {
         $groupId = GroupFactory::make()->persist()->id;
         $this->logInAsUser();
@@ -618,14 +678,14 @@ hcciUFw5
         $this->assertForbiddenError('You are not authorized to access that location.');
     }
 
-    public function testGroupsUpdateErrorNotAuthenticated(): void
+    public function testGroupsUpdateController_Error_NotAuthenticated(): void
     {
         $postData = [];
         $this->putJson('/groups/foo.json', $postData);
         $this->assertAuthenticationError();
     }
 
-    public function testGroupsUpdateErrorCsrfToken(): void
+    public function testGroupsUpdateController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
         $this->logInAsAdmin();
@@ -633,20 +693,13 @@ hcciUFw5
         $this->assertResponseCode(403);
     }
 
-    /**
-     * Check that calling url without JSON extension throws a 404
-     */
     public function testGroupsUpdateController_Error_NotJson(): void
     {
-        // Define actors of this tests
-        $groupId = UuidFactory::uuid('group.id.freelancer');
-        $data = [
-            'name' => 'Updated group name',
-        ];
+        $groupId = UuidFactory::uuid();
 
         // Update the group name.
-        $this->authenticateAs('admin');
-        $this->put("/groups/$groupId", $data);
+        $this->logInAsAdmin();
+        $this->put("/groups/$groupId", []);
         $this->assertResponseCode(404);
     }
 }

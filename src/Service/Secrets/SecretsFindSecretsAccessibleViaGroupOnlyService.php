@@ -55,7 +55,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
      *
      * @param string $groupId The group to find the accesses for.
      * @param array $usersIds The list of users to find the accesses for.
-     * @param ?string $acoType The type of ACO to find the accesses for.
+     * @param string|null $acoType The type of ACO to find the accesses for.
      * @return \Cake\ORM\Query
      */
     public function find(string $groupId, array $usersIds, ?string $acoType = null): Query
@@ -177,7 +177,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
      *
      * @param string $groupId The group to find the accesses for.
      * @param array $usersIds The list of users to find the accesses for.
-     * @param ?string $acoType The type of ACO to find the accesses for.
+     * @param string|null $acoType The type of ACO to find the accesses for.
      * @return \Cake\ORM\Query
      */
     public function findWithExists(string $groupId, array $usersIds, ?string $acoType = null): Query
