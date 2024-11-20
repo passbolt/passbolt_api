@@ -287,4 +287,16 @@ mQINBFYuIFQBEACpYmcjzX1XC0LPJCMOY/LwxIB3lGfL5+X5kJSfLpWDYKa0XFXv
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa2048_public_broken_base64.key');
         $this->assertFalse(PublicKeyValidationService::isParsableArmoredPublicKey($armoredKey));
     }
+
+    public function testPublicKeyValidationService_GetPublicKeyInfoIsCached()
+    {
+        $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
+
+        $resultFresh = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+        $resultTry1 = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+        $resultTry2 = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
+
+        $this->assertEquals($resultFresh, $resultTry1);
+        $this->assertEquals($resultFresh, $resultTry2);
+    }
 }

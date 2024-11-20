@@ -161,7 +161,7 @@ class FoldersRelationsHistoryTable extends Table
     {
         // Check validation rules.
         $folderRelationHistory = $this->buildEntity($data);
-        if (!empty($folderRelationHistory->getErrors())) {
+        if ($folderRelationHistory->getErrors()) {
             $msg = __('Could not validate folders relations history data.');
             throw new ValidationException($msg, $folderRelationHistory, $this);
         }
@@ -173,7 +173,7 @@ class FoldersRelationsHistoryTable extends Table
         }
 
         // Check for validation errors. (associated models too).
-        if (!empty($folderRelationHistory->getErrors())) {
+        if ($folderRelationHistory->getErrors()) {
             $msg = __('Could not validate folders relations history data.');
             throw new ValidationException($msg, $folderRelationHistory, $this);
         }

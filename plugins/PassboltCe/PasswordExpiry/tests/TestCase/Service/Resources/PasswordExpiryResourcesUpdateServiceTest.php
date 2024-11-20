@@ -23,6 +23,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\I18n\FrozenTime;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
@@ -99,7 +100,7 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
             PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => $expiredFieldInPayload,
         ];
 
-        $this->service->update($this->makeUac($owner), $resource->id, $payload);
+        $this->service->update($this->makeUac($owner), $resource->id, new MetadataResourceDto($payload));
 
         // Assert
         /** @var \App\Model\Entity\Resource $resource */

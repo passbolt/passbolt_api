@@ -17,34 +17,26 @@ declare(strict_types=1);
 
 namespace App\Test\TestCase\Controller\Resources;
 
+use App\Model\Entity\Permission;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UuidFactory;
-use Cake\ORM\TableRegistry;
 use Passbolt\Folders\FoldersPlugin;
 
 class ResourcesDeleteControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Profiles', 'app.Base/Gpgkeys',
-        'app.Base/Secrets', 'app.Base/Permissions', 'app.Base/Roles', 'app.Base/Favorites',
-    ];
-
-    /**
-     * @var \App\Model\Table\ResourcesTable
-     */
-    protected $Resources;
-
     public function setUp(): void
     {
         parent::setUp();
         $this->enableFeaturePlugin(FoldersPlugin::class);
-        $this->Resources = TableRegistry::getTableLocator()->get('Resources');
+        RoleFactory::make()->guest()->persist();
     }
 
     public function testResourcesDeleteController_Success(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $user = $this->logInAsUser();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user])->persist()->id;
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertSuccess();
     }
@@ -52,39 +44,39 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
     public function testResourcesDeleteController_Error_CsrfToken(): void
     {
         $this->disableCsrfToken();
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $user = $this->logInAsUser();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user])->persist()->id;
         $this->delete("/resources/$resourceId.json");
         $this->assertResponseCode(403);
     }
 
     public function testResourcesDeleteController_Error_ResourceIsSoftDeleted(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.jquery');
+        $this->logInAsUser();
+        $resourceId = ResourceFactory::make()->deleted()->persist()->id;
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testResourcesDeleteController_Error_AccessDenied(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.april');
+        $this->logInAsUser();
+        $resourceId = ResourceFactory::make()->persist()->id;
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertError(404, 'The resource does not exist.');
     }
 
     public function testResourcesDeleteController_Error_AccessDenied_ReadAccess(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.bower');
+        $user = $this->logInAsUser();
+        $resourceId = ResourceFactory::make()->withPermissionsFor([$user], Permission::READ)->persist()->id;
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertError(403, 'You do not have the permission to delete this resource.');
     }
 
     public function testResourcesDeleteController_Error_NotAuthenticated(): void
     {
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $resourceId = UuidFactory::uuid();
         $this->deleteJson("/resources/$resourceId.json");
         $this->assertAuthenticationError();
     }
@@ -94,8 +86,8 @@ class ResourcesDeleteControllerTest extends AppIntegrationTestCase
      */
     public function testResourcesDeleteController_Error_NotJson(): void
     {
-        $this->authenticateAs('ada');
-        $resourceId = UuidFactory::uuid('resource.id.apache');
+        $this->logInAsUser();
+        $resourceId = UuidFactory::uuid();
         $this->delete("/resources/$resourceId");
         $this->assertResponseCode(404);
     }

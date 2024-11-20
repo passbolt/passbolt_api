@@ -24,6 +24,8 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 use Exception;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
 /**
  * ResourcesViewController Class
@@ -75,6 +77,8 @@ class ResourcesViewController extends AppController
             throw new NotFoundException(__('The resource does not exist.'));
         }
         $resource = FolderizableBehavior::unsetPersonalPropertyIfNull($resource->toArray());
+        $resourceDto = MetadataResourceDto::fromArray($resource);
+        $resource = (new MetadataResourcesRenderService())->renderResource($resource, $resourceDto->isV5());
 
         // Log secret access.
         $this->_logSecretAccesses($resource);

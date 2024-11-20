@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
+use App\Service\Healthcheck\Environment\TimeSyncHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableDefinedGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\HomeVariableWritableGpgHealthcheck;
 use App\Service\Healthcheck\Gpg\PhpGpgModuleInstalledGpgHealthcheck;
@@ -47,6 +48,9 @@ class SystemCheckController extends WebInstallerController
 
             $resultCollection = $resultCollection->appendItem($result);
             if ($healthcheckService instanceof NextMinPhpVersionHealthcheck) {
+                continue;
+            }
+            if ($healthcheckService instanceof TimeSyncHealthcheck) {
                 continue;
             }
             if ($healthcheckService instanceof IsRequestHttpsSslHealthcheck) {

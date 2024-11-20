@@ -170,8 +170,8 @@ class GpgkeysTable extends Table
      *
      * @param \Cake\ORM\Query $query a query instance
      * @param array $options options
-     * @throws \Cake\Core\Exception\CakeException if no role is specified
      * @return \Cake\ORM\Query
+     * @throws \Cake\Core\Exception\CakeException if no role is specified
      */
     public function findIndex(Query $query, array $options): Query
     {
@@ -194,8 +194,8 @@ class GpgkeysTable extends Table
      *
      * @param \Cake\ORM\Query $query a query instance
      * @param array $options options
-     * @throws \Cake\Core\Exception\CakeException if no id is specified
      * @return \Cake\ORM\Query
+     * @throws \Cake\Core\Exception\CakeException if no id is specified
      */
     public function findView(Query $query, array $options): Query
     {
@@ -209,6 +209,29 @@ class GpgkeysTable extends Table
         $query->where(['id' => $options['id']]);
 
         return $query;
+    }
+
+    /**
+     * Find current gpgkey to use
+     *
+     * @param \Cake\ORM\Query $query a query instance
+     * @param array $options options
+     * @return \Cake\ORM\Query
+     * @throws \Cake\Core\Exception\CakeException if no user_id is specified
+     */
+    public function findCurrent(Query $query, array $options): Query
+    {
+        // Options must contain a user_id
+        if (!isset($options['user_id']) || !Validation::uuid($options['user_id'])) {
+            throw new CakeException('Gpgkey table findCurrent should have a user_id set in options.');
+        }
+
+        // Same rule than index apply
+        // with a specific id requested
+        return $query
+            ->where(['user_id' => $options['user_id'], 'deleted' => false])
+            ->order('created DESC')
+            ->limit(1);
     }
 
     /**

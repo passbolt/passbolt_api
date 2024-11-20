@@ -33,7 +33,7 @@ class DebugSmtpTransport extends SmtpTransport
     /**
      * Add trace in buffer.
      *
-     * @param ?string $data data sent
+     * @param string|null $data data sent
      * @param array $response response received
      * @return array
      */

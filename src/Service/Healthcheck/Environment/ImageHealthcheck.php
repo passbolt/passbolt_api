@@ -61,7 +61,7 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
      */
     public function level(): string
     {
-        return 'error';
+        return HealthcheckServiceCollector::LEVEL_ERROR;
     }
 
     /**
@@ -86,8 +86,8 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
     public function getHelpMessage()
     {
         return [
-            __('See. https://secure.php.net/manual/en/book.image.php'),
-            __('See. https://secure.php.net/manual/en/book.imagick.php'),
+            __('See: https://secure.php.net/manual/en/book.image.php'),
+            __('See: https://secure.php.net/manual/en/book.imagick.php'),
         ];
     }
 

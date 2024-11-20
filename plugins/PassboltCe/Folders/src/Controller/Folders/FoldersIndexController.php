@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 
 /**
  * @property \Passbolt\Folders\Model\Table\FoldersTable $Folders
@@ -88,6 +89,7 @@ class FoldersIndexController extends AppController
         $folders = FolderizableBehavior::unsetPersonalPropertyIfNullOnResultSet($folders);
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
         $folders = $this->removeJoinDataFromResults($folders->toArray(), $options);
+        $folders = (new MetadataFoldersRenderService())->renderFolders($folders);
 
         $this->success(__('The operation was successful.'), $folders);
     }

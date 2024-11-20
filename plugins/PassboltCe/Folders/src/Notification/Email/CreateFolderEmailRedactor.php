@@ -39,6 +39,8 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public const TEMPLATE = 'Passbolt/Folders.LU/folder_create';
 
+    public const TEMPLATE_V5 = 'Passbolt/Metadata.LU/folder_create_v5';
+
     /**
      * @var \App\Model\Table\UsersTable
      */
@@ -88,7 +90,12 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
             throw new InvalidArgumentException('`uac` is missing from event data.');
         }
 
-        $email = $this->createEmail($folder, $uac);
+        $isV5 = $event->getData('isV5');
+        if (is_null($isV5)) {
+            $isV5 = false;
+        }
+
+        $email = $this->createEmail($folder, $uac, $isV5);
 
         return $emailCollection->addEmail($email);
     }
@@ -96,17 +103,28 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \Passbolt\Folders\Model\Entity\Folder $folder Folder entity
      * @param \App\Utility\UserAccessControl $uac UserAccessControl
+     * @param bool $isV5 If folder entity is V5 or not.
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(Folder $folder, UserAccessControl $uac)
+    private function createEmail(Folder $folder, UserAccessControl $uac, bool $isV5): Email
     {
         $recipient = $this->usersTable->findFirstForEmail($uac->getId());
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($folder) {
-                return __('You added the folder {0}', $folder->name);
+            function () use ($folder, $isV5) {
+                $subject = __('You added the folder {0}', $folder->name);
+                if ($isV5) {
+                    $subject = __('You added a new folder');
+                }
+
+                return $subject;
             }
         );
+
+        $template = self::TEMPLATE;
+        if ($isV5) {
+            $template = self::TEMPLATE_V5;
+        }
 
         return new Email(
             $recipient,
@@ -118,7 +136,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
                 ],
                 'title' => $subject,
             ],
-            self::TEMPLATE
+            $template
         );
     }
 }

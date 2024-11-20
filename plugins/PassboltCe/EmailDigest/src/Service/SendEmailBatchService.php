@@ -81,7 +81,7 @@ class SendEmailBatchService
         } finally {
             // We use finally to guarantee that even if an exception occurred
             // while flagging the emails, locks are released
-            if (!empty($emailDigest->getEmailIds())) {
+            if ($emailDigest->getEmailIds()) {
                 $this->emailQueueTable->releaseLocks($emailDigest->getEmailIds());
             }
         }

@@ -5,11 +5,6 @@
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/EmailNotificationSettings/src/Utility/EmailNotificationSettingsDefinitionRegisterEvent.php">
-    <MissingTemplateParam>
-      <code>EmailNotificationSettingsDefinitionRegisterEvent</code>
-    </MissingTemplateParam>
-  </file>
   <file src="plugins/PassboltCe/EmailNotificationSettings/tests/TestCase/Utility/EmailNotificationSettingsTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$dbEmailNotifSettings->value]]></code>
@@ -527,24 +522,9 @@
       <code>$senderEmail</code>
     </InvalidCast>
   </file>
-  <file src="src/Controller/Events/ControllerFindIndexOptionsBeforeMarshal.php">
-    <MissingTemplateParam>
-      <code>ControllerFindIndexOptionsBeforeMarshal</code>
-    </MissingTemplateParam>
-  </file>
   <file src="src/Controller/Settings/SettingsIndexController.php">
     <InvalidConstantAssignmentValue>
       <code><![CDATA[SETTINGS_VISIBILITY_KEY = 'settingsVisibility']]></code>
     </InvalidConstantAssignmentValue>
-  </file>
-  <file src="src/Model/Event/TableFindIndexBefore.php">
-    <MissingTemplateParam>
-      <code>TableFindIndexBefore</code>
-    </MissingTemplateParam>
-  </file>
-  <file src="src/Notification/Email/CollectSubscribedEmailRedactorEvent.php">
-    <MissingTemplateParam>
-      <code>CollectSubscribedEmailRedactorEvent</code>
-    </MissingTemplateParam>
   </file>
 </files>

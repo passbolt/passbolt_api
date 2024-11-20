@@ -107,7 +107,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
     {
         [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
         $data = [
-            'name' => ['A updated'],
+            'name' => 'A updated',
         ];
         $this->authenticateAs('betty');
         $this->putJson("/folders/$folderA->id.json", $data);
