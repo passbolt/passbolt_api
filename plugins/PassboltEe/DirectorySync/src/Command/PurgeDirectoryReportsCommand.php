@@ -92,7 +92,10 @@ class PurgeDirectoryReportsCommand extends DirectorySyncCommand
             return $this->successCode();
         }
 
-        $this->purgeDirectoryReports($reports);
+        [$directoryReportPurgeCount, $directoryReportItemsPurgeCount] = $this->purgeDirectoryReports($reports);
+
+        $this->success(__('{0} directory report entries purged.', $directoryReportPurgeCount), $io);
+        $this->success(__('{0} directory report item entries purged.', $directoryReportItemsPurgeCount), $io);
 
         return $this->successCode();
     }
@@ -117,13 +120,15 @@ class PurgeDirectoryReportsCommand extends DirectorySyncCommand
 
     /**
      * @param array $directoryReports Directory reports.
-     * @return void
+     * @return array
      */
-    private function purgeDirectoryReports(array $directoryReports): void
+    private function purgeDirectoryReports(array $directoryReports): array
     {
         $reportIds = Hash::extract($directoryReports, '{n}.id');
 
-        $this->DirectoryReports->deleteAll(['id IN' => $reportIds]);
-        $this->DirectoryReportsItems->deleteAll(['report_id IN' => $reportIds]);
+        $directoryReportPurgeCount = $this->DirectoryReports->deleteAll(['id IN' => $reportIds]);
+        $directoryReportItemsPurgeCount = $this->DirectoryReportsItems->deleteAll(['report_id IN' => $reportIds]);
+
+        return [$directoryReportPurgeCount, $directoryReportItemsPurgeCount];
     }
 }
