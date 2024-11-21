@@ -338,12 +338,14 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_DUO, $sessionId);
         $tokensCount = $this->AuthenticationTokens->find()
             ->where(['user_id' => $uac->getId(), 'type' => MfaSettings::MFA, 'active' => true])
+            ->all()
             ->count();
         $this->assertEquals($tokensCount, 3);
 
         MfaVerifiedToken::setAllInactive($uac);
         $tokensCount = $this->AuthenticationTokens->find()
             ->where(['user_id' => $uac->getId(), 'type' => MfaSettings::MFA, 'active' => true])
+            ->all()
             ->count();
         $this->assertEquals($tokensCount, 0);
     }

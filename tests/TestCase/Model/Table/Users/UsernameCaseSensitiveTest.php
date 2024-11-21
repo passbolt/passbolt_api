@@ -132,7 +132,7 @@ class UsernameCaseSensitiveTest extends TestCase
     {
         UserFactory::make(rand(3, 5))->persist();
         $duplicatesCaseInsensitive = $this->Users->listDuplicateUsernames();
-        $this->assertSame(0, $duplicatesCaseInsensitive->count());
+        $this->assertSame(0, $duplicatesCaseInsensitive->all()->count());
     }
 
     public function testUsernameCaseSensitive_listDuplicateUsernamesCaseInsensitive()

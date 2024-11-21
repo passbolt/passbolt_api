@@ -93,7 +93,7 @@ class VerifyTokenCreateServiceTest extends TestCase
         $token = UuidFactory::uuid();
         $this->service->createToken($token, $userId);
 
-        $this->assertSame(2, $this->AuthenticationTokens->find()->count());
+        $this->assertSame(2, $this->AuthenticationTokens->find()->all()->count());
         $this->assertTrue($this->AuthenticationTokens->exists(compact('token')));
         $this->assertTrue($this->AuthenticationTokens->exists(['type' => 'Foo']));
     }

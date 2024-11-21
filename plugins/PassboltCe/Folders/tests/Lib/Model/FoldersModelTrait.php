@@ -171,15 +171,15 @@ trait FoldersModelTrait
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
         $permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
 
-        $folder = $foldersTable->find()->where(['id' => $id])->count();
+        $folder = $foldersTable->find()->where(['id' => $id])->all()->count();
         $this->assertEmpty($folder);
 
-        $foldersRelations = $foldersRelationsTable->find()->where(['foreign_id' => $id])->count();
+        $foldersRelations = $foldersRelationsTable->find()->where(['foreign_id' => $id])->all()->count();
         $this->assertEmpty($foldersRelations);
-        $foldersRelationsParents = $foldersRelationsTable->find()->where(['folder_parent_id' => $id])->count();
+        $foldersRelationsParents = $foldersRelationsTable->find()->where(['folder_parent_id' => $id])->all()->count();
         $this->assertEmpty($foldersRelationsParents);
 
-        $permissions = $permissionsTable->find()->where(['aco_foreign_key' => $id])->count();
+        $permissions = $permissionsTable->find()->where(['aco_foreign_key' => $id])->all()->count();
         $this->assertEmpty($permissions);
     }
 }

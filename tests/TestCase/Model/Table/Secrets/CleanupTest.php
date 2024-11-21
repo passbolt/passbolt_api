@@ -53,7 +53,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupSecretsSoftDeletedResourcesSuccess()
     {
-        $originalCount = $this->Secrets->find()->count();
+        $originalCount = $this->Secrets->find()->all()->count();
         $sec = $this->Secrets->newEntity(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.jquery'),
             'user_id' => UuidFactory::uuid('user.id.ada')]), $this->options);
@@ -63,7 +63,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupSecretsHardDeletedResourcesSuccess()
     {
-        $originalCount = $this->Secrets->find()->count();
+        $originalCount = $this->Secrets->find()->all()->count();
         $sec = $this->Secrets->newEntity(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.nope'),
             'user_id' => UuidFactory::uuid('user.id.ada')]), $this->options);
@@ -73,7 +73,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupSecretsSoftDeletedUsersSuccess()
     {
-        $originalCount = $this->Secrets->find()->count();
+        $originalCount = $this->Secrets->find()->all()->count();
         $sec = $this->Secrets->newEntity(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.jquery'),
             'user_id' => UuidFactory::uuid('user.id.sofia')]), $this->options);
@@ -83,7 +83,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupSecretsHardDeletedUsersSuccess()
     {
-        $originalCount = $this->Secrets->find()->count();
+        $originalCount = $this->Secrets->find()->all()->count();
         $sec = $this->Secrets->newEntity(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.jquery'),
             'user_id' => UuidFactory::uuid('user.id.nope')]), $this->options);
@@ -93,7 +93,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupSecretsHardDeletedPermissionsSuccess()
     {
-        $originalCount = $this->Secrets->find()->count();
+        $originalCount = $this->Secrets->find()->all()->count();
         $sec = $this->Secrets->newEntity(self::getDummySecretData([
             'resource_id' => UuidFactory::uuid('resource.id.apache'),
             'user_id' => UuidFactory::uuid('user.id.frances')]), $this->options);

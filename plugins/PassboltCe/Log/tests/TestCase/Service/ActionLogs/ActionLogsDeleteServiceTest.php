@@ -61,7 +61,7 @@ class ActionLogsDeleteServiceTest extends AppTestCase
 
         $actionsLeft = ActionLogFactory::find()->where(['action_id' => UuidFactory::uuid($actionName)]);
         $this->assertSame($nRandomActions, ActionLogFactory::count());
-        $this->assertSame(0, $actionsLeft->count());
+        $this->assertSame(0, $actionsLeft->all()->count());
     }
 
     /**
@@ -94,7 +94,7 @@ class ActionLogsDeleteServiceTest extends AppTestCase
 
         $actionsLeft = ActionLogFactory::find()->where(['action_id' => UuidFactory::uuid($actionName)]);
         $this->assertSame($nRandomActions + $nToBeKept, ActionLogFactory::count());
-        $this->assertSame($nToBeKept, $actionsLeft->count());
+        $this->assertSame($nToBeKept, $actionsLeft->all()->count());
     }
 
     /**

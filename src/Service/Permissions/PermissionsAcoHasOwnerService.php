@@ -45,6 +45,7 @@ class PermissionsAcoHasOwnerService
     public function check(string $acoForeignKey): bool
     {
         return $this->permissionsTable->findByAcoForeignKeyAndType($acoForeignKey, Permission::OWNER)
+            ->all()
             ->count() > 0;
     }
 }

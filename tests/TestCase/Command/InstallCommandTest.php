@@ -191,7 +191,7 @@ class InstallCommandTest extends AppTestCase
             ->innerJoinWith('Roles', function (Query $q) {
                 return $q->where(['Roles.name' => Role::ADMIN]);
             });
-        $this->assertSame(1, $admins->count());
+        $this->assertSame(1, $admins->all()->count());
         $admin = $admins->first();
         $this->assertSame($userName, $admin->get('username'));
         $this->assertSame($firstName, $admin->profile->first_name);

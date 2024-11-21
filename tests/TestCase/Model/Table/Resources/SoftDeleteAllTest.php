@@ -124,7 +124,7 @@ class SoftDeleteAllTest extends AppTestCase
         // Count associated entities
         $count = [];
         foreach ($associations as $association) {
-            $count[$association] = $this->Resources->{$association}->find()->count();
+            $count[$association] = $this->Resources->{$association}->find()->all()->count();
             $this->assertTrue($count[$association] > 0, "No $association were found");
         }
 
@@ -133,7 +133,7 @@ class SoftDeleteAllTest extends AppTestCase
 
         // Check that the associated entities were deleted if cascade is true
         foreach ($associations as $association) {
-            $count[$association] = $this->Resources->{$association}->find()->count();
+            $count[$association] = $this->Resources->{$association}->find()->all()->count();
             $expect = $cascade ? 0 : $count[$association];
             $this->assertSame($expect, $count[$association]);
         }
