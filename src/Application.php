@@ -159,8 +159,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     {
         parent::bootstrap();
 
-        // For testing lets run it also on CI
-        if (true || PHP_SAPI !== 'cli') {
+        if (PHP_SAPI !== 'cli') {
             FactoryLocator::add(
                 'Table',
                 (new TableLocator())->allowFallbackClass(false)
