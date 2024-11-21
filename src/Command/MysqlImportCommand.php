@@ -147,6 +147,7 @@ class MysqlImportCommand extends PassboltCommand
                 return null;
             }
 
+            /** @phpstan-ignore-next-line */
             return array_values($files)[0];
         }
     }

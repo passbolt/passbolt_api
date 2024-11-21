@@ -167,7 +167,7 @@ class HealthcheckCommandTest extends AppTestCase
         $this->assertOutputContains('Host availability will be checked.');
         $this->assertOutputContains('Serving the compiled version of the javascript app.');
         $this->assertOutputContains('All email notifications will be sent.');
-        $this->assertOutputContains('No error found. Nice one sparky!');
+        $this->assertOutputContains('No error found. Nice one, sparky!');
     }
 
     public function testHealthcheckCommand_Application_Unhappy_Path()
@@ -279,12 +279,13 @@ class HealthcheckCommandTest extends AppTestCase
 
     public function testHealthcheckCommand_Gpg_Happy_Path()
     {
+        $gnupgHome = getenv('GNUPGHOME') ?: '/root/.gnupg';
         $this->exec('passbolt healthcheck --gpg');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('<success>[PASS]</success> PHP GPG Module is installed and loaded.');
-        $this->assertOutputContains('<success>[PASS]</success> The environment variable GNUPGHOME is set to /root/.gnupg.');
-        $this->assertOutputContains('<success>[PASS]</success> The directory /root/.gnupg containing the keyring is writable by the webserver user.');
+        $this->assertOutputContains('<success>[PASS]</success> The environment variable GNUPGHOME is set to ' . $gnupgHome);
+        $this->assertOutputContains('<success>[PASS]</success> The directory ' . $gnupgHome . ' containing the keyring is writable by the webserver user.');
         $this->assertOutputContains('<error>[FAIL] Do not use the default OpenPGP key for the server.</error>');
         $this->assertOutputContains('<success>[PASS]</success> The public key file is defined in ' . CONFIG . 'passbolt.php and readable.');
         $this->assertOutputContains('<success>[PASS]</success> The private key file is defined in ' . CONFIG . 'passbolt.php and readable.');

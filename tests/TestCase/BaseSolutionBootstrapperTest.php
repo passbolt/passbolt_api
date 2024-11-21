@@ -60,6 +60,32 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         'Passbolt/PasswordPolicies',
     ];
 
+    public const EXPECTED_CE_PLUGINS_V5 = [
+        'Passbolt/JwtAuthentication',
+        'Passbolt/Metadata',
+        'Passbolt/Rbacs',
+        'Passbolt/AccountSettings',
+        'Passbolt/Import',
+        'Passbolt/InFormIntegration',
+        'Passbolt/Locale',
+        'Passbolt/Export',
+        'Passbolt/PasswordExpiry',
+        'Passbolt/ResourceTypes',
+        'Passbolt/TotpResourceTypes',
+        'Passbolt/RememberMe',
+        'Passbolt/EmailNotificationSettings',
+        'Passbolt/EmailDigest',
+        'Passbolt/Reports',
+        'Passbolt/Mobile',
+        'Passbolt/SelfRegistration',
+        'Passbolt/PasswordGenerator',
+        'Passbolt/SmtpSettings',
+        'Passbolt/MultiFactorAuthentication',
+        'Passbolt/Log',
+        'Passbolt/Folders',
+        'Passbolt/PasswordPolicies',
+    ];
+
     public function testBaseSolutionBootstrapper_Application_Bootstrap(): void
     {
         $plugins = $this->arrangeAndGetPlugins();
@@ -86,22 +112,49 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
         $this->assertPluginList($plugins, $expectedPluginList);
     }
 
+    public function testBaseSolutionBootstrapper_v5PluginsEnabled(): void
+    {
+        Configure::write('passbolt.v5.enabled', true);
+        $plugins = $this->arrangeAndGetPlugins();
+        $this->assertPluginList($plugins, $this->getExpectedPluginsV5());
+    }
+
     protected function getExpectedPlugins(bool $withWebInstaller = false): array
     {
         return array_merge(
             [
-            'Migrations',
-            'Authentication',
-            'EmailQueue',
-            'BryanCrowe/ApiPagination',
-            'PassboltSeleniumApi',
-            'PassboltTestData',
+                'Migrations',
+                'Authentication',
+                'EmailQueue',
+                'BryanCrowe/ApiPagination',
+                'PassboltSeleniumApi',
+                'PassboltTestData',
             ],
             self::EXPECTED_CE_PLUGINS,
             [
-            'Bake',
-            'CakephpFixtureFactories',
-            'Cake/TwigView',
+                'Bake',
+                'CakephpFixtureFactories',
+                'Cake/TwigView',
+            ]
+        );
+    }
+
+    protected function getExpectedPluginsV5(): array
+    {
+        return array_merge(
+            [
+                'Migrations',
+                'Authentication',
+                'EmailQueue',
+                'BryanCrowe/ApiPagination',
+                'PassboltSeleniumApi',
+                'PassboltTestData',
+            ],
+            self::EXPECTED_CE_PLUGINS_V5,
+            [
+                'Bake',
+                'CakephpFixtureFactories',
+                'Cake/TwigView',
             ]
         );
     }
@@ -164,7 +217,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
 
     /**
      * @dataProvider dataFortestBaseSolutionBootstrapper_AddFeaturePlugin_On_Disabled_Plugin
-     * @param callable|bool $isEnabledByDefault
+     * @param callable|bool|null $isEnabledByDefault
      */
     public function testBaseSolutionBootstrapper_AddFeaturePlugin_On_Disabled_Plugin($isEnabledByDefault = null)
     {

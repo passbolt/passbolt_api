@@ -13,24 +13,87 @@
  */
 
 (function () {
-  const selfTag = document.querySelector('#stylesheet-manager');
-  if (!selfTag) {
-    return;
+  class Stylesheet {
+    constructor() {
+      this.bindCallbacks();
+      this.init();
+    }
+
+    /**
+     * Bind callbacks
+     */
+    bindCallbacks() {
+      this.setThemeFromOsPreference = this.setThemeFromOsPreference.bind(this);
+    }
+
+    /**
+     * Initialise to get the theme from stylesheet or OS preference
+     */
+    init() {
+      this.stylesheetTag = document.querySelector('#stylesheet-manager');
+      if (this.isThemeDefined()) {
+        this.theme = this.stylesheetTag.dataset.theme;
+      } else {
+        this.mediaQueryPreferColor = window.matchMedia('(prefers-color-scheme: dark)');
+        this.setThemeFromOsPreference(this.mediaQueryPreferColor);
+        this.mediaQueryPreferColor.addEventListener("change", this.setThemeFromOsPreference);
+      }
+      this.updateStylesWithUserPreferences();
+    }
+
+    /**
+     * Update link reference with the theme
+     */
+    updateStylesWithUserPreferences() {
+      if (!this.stylesheetTag) {
+        return;
+      }
+
+      const baseUrl = document.querySelector("base").getAttribute("href").replace(/\/$/, '');
+      const cssFile = this.stylesheetTag.dataset.file;
+      const version = this.stylesheetTag.getAttribute("cache-version");
+
+      this.getLinkTag().setAttribute("href", `${baseUrl}/css/themes/${this.theme}/${cssFile}?v=${version}`);
+    }
+
+    /**
+     * Get link tag
+     * @returns {Element}
+     */
+    getLinkTag() {
+      let link = document.querySelector("#stylesheet");
+      if (link) {
+        return link;
+      }
+
+      link = document.createElement("link");
+      link.setAttribute("id", "stylesheet");
+      link.setAttribute("media", "all");
+      link.setAttribute("rel", "stylesheet");
+
+      document.querySelector("head").appendChild(link);
+
+      return link;
+    }
+
+    /**
+     * Is theme defined
+     * @returns {boolean}
+     */
+    isThemeDefined() {
+      return Boolean(this.stylesheetTag.dataset.theme);
+    }
+
+    /**
+     * Set theme according to the OS preference
+     * @param mediaQueryPreferColor
+     */
+    setThemeFromOsPreference(mediaQueryPreferColor) {
+      this.theme = mediaQueryPreferColor.matches
+        ? "midgar"
+        : "default";
+      this.updateStylesWithUserPreferences();
+    }
   }
-
-  const baseUrl = document.querySelector("base").getAttribute("href").replace(/\/$/, '');
-  const cssFile = selfTag.dataset.file;
-  const version = selfTag.getAttribute("cache-version");
-
-  const theme = selfTag.dataset.theme
-    ? selfTag.dataset.theme
-    : window.matchMedia('(prefers-color-scheme: dark)').matches
-      ? "midgar"
-      : "default";
-
-  const link = document.createElement('link');
-  link.setAttribute("href", `${baseUrl}/css/themes/${theme}/${cssFile}?v=${version}`);
-  link.setAttribute("media", "all");
-  link.setAttribute("rel", "stylesheet");
-  document.querySelector("head").appendChild(link);
+  new Stylesheet();
 })();

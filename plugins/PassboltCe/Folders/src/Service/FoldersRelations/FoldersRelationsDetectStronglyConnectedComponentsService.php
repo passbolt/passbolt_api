@@ -183,7 +183,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
      * WHERE (foreign_id, folder_parent_id) IN ((FOLDER_RELATION_1_FOREIGN_ID, FOLDER_RELATION_1_FOLDER_PARENT_ID), ...)
      *
      * @param array<\Passbolt\Folders\Model\Entity\FoldersRelation> $foldersRelations The folders relations to build a tuple comparison expression for
-     * @param bool $isInOperator (Optional) By default true and the expression with use the IN operator. If false the
+     * @param bool|null $isInOperator (Optional) By default true and the expression with use the IN operator. If false the
      * expression will use the NOT IN operator.
      * @return \Cake\Database\Expression\TupleComparison
      */

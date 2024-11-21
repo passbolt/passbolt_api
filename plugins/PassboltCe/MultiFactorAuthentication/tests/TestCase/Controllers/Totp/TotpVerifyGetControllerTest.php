@@ -113,4 +113,11 @@ class TotpVerifyGetControllerTest extends MfaIntegrationTestCase
         $this->assertError();
         $this->assertResponseContains('No valid multi-factor authentication settings found for this provider.');
     }
+
+    public function testMfaVerifyGetTotp_Error_MfaNotConfigured()
+    {
+        $this->logInAsUser();
+        $this->getJson('/mfa/verify/totp.json?api-version=v2');
+        $this->assertBadRequestError('No valid multi-factor authentication settings found');
+    }
 }

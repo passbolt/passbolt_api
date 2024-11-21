@@ -360,10 +360,12 @@ class InstallCommand extends PassboltCommand
     protected function getInstallCheckHealthcheckServices(): array
     {
         $domainsIncluded = [];
-        if ($this->isFeaturePluginEnabled(JwtAuthenticationPlugin::class)) {
-            $domainsIncluded = [
-                HealthcheckServiceCollector::DOMAIN_JWT,
-            ];
+        if (!Configure::read('debug')) {
+            if ($this->isFeaturePluginEnabled(JwtAuthenticationPlugin::class)) {
+                $domainsIncluded = [
+                    HealthcheckServiceCollector::DOMAIN_JWT,
+                ];
+            }
         }
 
         $servicesIncluded = [

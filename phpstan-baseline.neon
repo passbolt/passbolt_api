@@ -36,39 +36,44 @@ parameters:
 			path: plugins/PassboltCe/Folders/src/Service/Resources/ResourcesAfterCreateService.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: plugins/PassboltCe/Log/src/Model/Table/ActionLogsTable.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: plugins/PassboltCe/Log/src/Model/Table/ActionsTable.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: plugins/PassboltCe/Log/src/Model/Table/EntitiesHistoryTable.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: plugins/PassboltCe/Log/src/Model/Table/PermissionsHistoryTable.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: plugins/PassboltCe/Log/src/Model/Table/SecretAccessesTable.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: plugins/PassboltCe/Mobile/src/Service/Transfers/TransfersCreateService.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: plugins/PassboltCe/Mobile/src/Service/Transfers/TransfersUpdateService.php
+
+		-
+			message: "#^If condition is always false\\.$#"
+			count: 1
+			path: plugins/PassboltCe/Rbacs/src/Service/UiActions/UiActionsCreateService.php
 
 		-
 			message: "#^Dead catch \\- InvalidArgumentException is never thrown in the try block\\.$#"
@@ -131,7 +136,12 @@ parameters:
 			path: src/Controller/Share/ShareController.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
+			count: 1
+			path: src/Controller/Users/UsersEditController.php
+
+		-
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: src/Model/Table/GroupsTable.php
 
@@ -141,7 +151,7 @@ parameters:
 			path: src/Model/Table/ResourcesTable.php
 
 		-
-			message: "#^Expression in empty\\(\\) is always falsy\\.$#"
+			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: src/Model/Table/UsersTable.php
 

@@ -40,7 +40,7 @@ trait ResourcesFindersTrait
      * Build the query that fetches data for resource index
      *
      * @param string $userId The user to get the resources for
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
@@ -99,7 +99,7 @@ trait ResourcesFindersTrait
         if (Configure::read('passbolt.plugins.folders')) {
             // Filter on resources with the given parent ids.
             if (isset($options['filter']['has-parent'])) {
-                $query = $this->filterQueryByFolderParentIds($query, $options['filter']['has-parent']);
+                $query = $this->filterQueryByFolderParentIds($query, $userId, $options['filter']['has-parent']);
             }
         }
 
@@ -198,7 +198,7 @@ trait ResourcesFindersTrait
      *
      * @param string $userId The user to get the resources for
      * @param string $resourceId The resource to retrieve
-     * @param array $options options
+     * @param array|null $options options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
@@ -242,7 +242,7 @@ trait ResourcesFindersTrait
      *
      * @param string $userId uuid
      * @param array $resourceIds array of resource uuids
-     * @param array $options array of options
+     * @param array|null $options array of options
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
@@ -393,10 +393,11 @@ trait ResourcesFindersTrait
      * Filter a query by parents ids.
      *
      * @param \Cake\ORM\Query $query Query to filter on
+     * @param string $userId The user to filter the resources for
      * @param array $parentIds Array of parent ids
      * @return \Cake\ORM\Query
      */
-    public function filterQueryByFolderParentIds(Query $query, array $parentIds): Query
+    public function filterQueryByFolderParentIds(Query $query, string $userId, array $parentIds): Query
     {
         if (empty($parentIds)) {
             return $query;
@@ -413,7 +414,7 @@ trait ResourcesFindersTrait
             return true;
         });
 
-        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot) {
+        return $query->innerJoinWith('FoldersRelations', function (Query $q) use ($parentIds, $includeRoot, $userId) {
             $conditions = [];
             if (!empty($parentIds)) {
                 $conditions[] = $q->expr()->in('FoldersRelations.folder_parent_id', $parentIds);
@@ -422,7 +423,10 @@ trait ResourcesFindersTrait
                 $conditions[] = $q->expr()->isNull('FoldersRelations.folder_parent_id');
             }
 
-            return $q->where(['OR' => $conditions]);
+            return $q->where([
+                'OR' => $conditions,
+                'user_id' => $userId,
+            ]);
         });
     }
 }

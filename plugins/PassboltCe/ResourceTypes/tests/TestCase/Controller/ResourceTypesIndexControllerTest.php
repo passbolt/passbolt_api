@@ -17,15 +17,17 @@ declare(strict_types=1);
 
 namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 
-use App\Test\Lib\AppIntegrationTestCase;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Lib\AppIntegrationTestCaseV5;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
 use Passbolt\ResourceTypes\Test\Scenario\ResourceTypesScenario;
 
 /**
  * @covers \Passbolt\ResourceTypes\Controller\ResourceTypesIndexController
  */
-class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
+class ResourceTypesIndexControllerTest extends AppIntegrationTestCaseV5
 {
     use ResourceTypesModelTrait;
 
@@ -35,7 +37,7 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
         $this->enableFeaturePlugin(ResourceTypesPlugin::class);
     }
 
-    public function testResourceTypesIndex_Success()
+    public function testResourceTypesIndexController_Success()
     {
         $this->loadFixtureScenario(ResourceTypesScenario::class);
         $this->logInAsUser();
@@ -48,9 +50,60 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCase
         $this->assertCount(2, $this->_responseJsonBody);
     }
 
-    public function testResourceTypesIndex_ErrorNotAuthenticated()
+    public function testResourceTypesIndexController_ErrorNotAuthenticated()
     {
         $this->getJson('/resource-types.json');
         $this->assertAuthenticationError();
+    }
+
+    public function testResourceTypesIndexController_FilterByDeleted()
+    {
+        $typeDeletedId = ResourceTypeFactory::make()->deleted()->persist()->get('id');
+        ResourceTypeFactory::make()->persist();
+        $this->logInAsUser();
+        $this->getJson('/resource-types.json?filter[is-deleted]=1');
+
+        $this->assertSuccess();
+        $this->assertCount(1, $this->_responseJsonBody);
+        $this->assertSame($typeDeletedId, $this->_responseJsonBody[0]->id);
+    }
+
+    public function testResourceTypesIndexController_FilterByDeleted_Non_Boolean()
+    {
+        $this->logInAsUser();
+        $this->getJson('/resource-types.json?filter[is-deleted]=foo');
+        $this->assertBadRequestError('Invalid filter. "foo" is not a valid value for filter is-deleted.');
+    }
+
+    public function testResourceTypesIndexController_Contain_Resources_Count()
+    {
+        $resourceType = ResourceTypeFactory::make(1)->persist();
+        ResourceFactory::make(3)->with('ResourceTypes', $resourceType)->persist();
+
+        $this->logInAsAdmin();
+        $this->getJson('/resource-types.json?contain[resources_count]=1');
+
+        $this->assertSuccess();
+        $this->assertCount(1, $this->_responseJsonBody);
+        $this->assertSame(3, $this->_responseJsonBody[0]->resources_count);
+    }
+
+    public function testResourceTypesIndexController_Contain_Resources_Count_Non_Admin()
+    {
+        $resourceType = ResourceTypeFactory::make(1)->persist();
+        ResourceFactory::make(3)->with('ResourceTypes', $resourceType)->persist();
+        $this->logInAsUser();
+        $this->getJson('/resource-types.json?contain[resources_count]=1');
+
+        $this->assertSuccess();
+        $this->assertCount(1, $this->_responseJsonBody);
+        $this->assertObjectNotHasAttributes(['resources_count'], $this->_responseJsonBody[0]);
+    }
+
+    public function testResourceTypesIndexController__Contain_Resources_Count_Non_Boolean()
+    {
+        $this->logInAsUser();
+        $this->getJson('/resource-types.json?contain[resources_count]=foo');
+        $this->assertBadRequestError('Invalid contain. "foo" is not a valid contain value.');
     }
 }

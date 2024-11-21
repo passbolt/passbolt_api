@@ -35,7 +35,7 @@ class ActionLogsDeleteService
 
     /**
      * @param string $actionName Action name (no UUID) which logs will be deleted.
-     * @param ?\Cake\Chronos\ChronosDate $cutOffDate Delete entries strictly older than this date. Delete all if null
+     * @param \Cake\Chronos\ChronosDate|null $cutOffDate Delete entries strictly older than this date. Delete all if null
      * @return void
      */
     public function delete(string $actionName, ?ChronosDate $cutOffDate = null): void

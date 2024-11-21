@@ -63,7 +63,7 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ?ActionLogFactory $actionLogFactory ActionLog factory
+     * @param \Passbolt\Log\Test\Factory\ActionLogFactory|null $actionLogFactory ActionLog factory
      * @return $this
      */
     public function withActionLog(?ActionLogFactory $actionLogFactory = null)
@@ -72,7 +72,7 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ?ResourceFactory $resourceFactory Resource factory
+     * @param \Passbolt\Folders\Test\Factory\ResourceFactory|null $resourceFactory Resource factory
      * @return $this
      */
     public function withResource(?ResourceFactory $resourceFactory = null)
@@ -81,7 +81,7 @@ class EntitiesHistoryFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ?ResourceFactory $resourceFactory Resource factory
+     * @param \Passbolt\Folders\Test\Factory\ResourceFactory|null $resourceFactory Resource factory
      * @return $this
      */
     public function withSecretAccessOnResource(?ResourceFactory $resourceFactory = null)

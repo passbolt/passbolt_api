@@ -25,7 +25,7 @@ trait ErrorTestTrait
      * Asserts a validation exception.
      *
      * @param string $errorMessage Expected error message.
-     * @param string|null $errorFieldName Expected field to return an error.
+     * @param string $errorFieldName Expected field to return an error.
      * @return void
      */
     protected function assertValidationException(ValidationException $e, string $errorMessage, ?string $errorFieldName = null): void

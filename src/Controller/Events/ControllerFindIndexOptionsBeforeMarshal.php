@@ -38,7 +38,7 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     /**
      * @param string $name Name
      * @param \App\Controller\AppController $subject Subject must be an instance of Table
-     * @param array $data Data
+     * @param array|null $data Data
      */
     final public function __construct($name, AppController $subject, $data = null)
     {

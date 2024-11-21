@@ -20,12 +20,17 @@ namespace App\Controller\Resources;
 use App\Controller\AppController;
 use App\Service\Resources\ResourcesAddService;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Service\MetadataResourcesRenderService;
+use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
 class ResourcesAddController extends AppController
 {
+    use MetadataPopulateUserKeyIdTrait;
+
     /**
      * Resource Add action
      *
@@ -39,9 +44,15 @@ class ResourcesAddController extends AppController
     {
         $this->assertJson();
 
+        // Massage the user provided data
+        $data = $this->getRequest()->getData();
+        $data = $this->populatedMetadataUserKeyId($this->User->id(), $data);
+        $resourceDto = new MetadataResourceDto($data);
+
+        // Add the new resource
         $resource = $resourcesAddService->add(
             $this->User->getAccessControl(),
-            $this->getRequest()->getData()
+            $resourceDto
         );
 
         // Retrieve the saved resource.
@@ -55,6 +66,7 @@ class ResourcesAddController extends AppController
         $Resources = $this->fetchTable('Resources');
         $resource = $Resources->findView($this->User->id(), $resource->id, $options)->first();
         $resource = FolderizableBehavior::unsetPersonalPropertyIfNull($resource->toArray());
+        $resource = (new MetadataResourcesRenderService())->renderResource($resource, $resourceDto->isV5());
 
         $this->success(__('The resource has been added successfully.'), $resource);
     }

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2023-10-24 08:11\n"
+"PO-Revision-Date: 2024-09-06 11:49\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -177,7 +177,7 @@ msgstr "%s fa"
 
 #: I18n/RelativeTimeFormatter.php:410
 msgid "on %s"
-msgstr ""
+msgstr "su %s"
 
 #: I18n/RelativeTimeFormatter.php:53
 #: I18n/RelativeTimeFormatter.php:132
@@ -242,11 +242,11 @@ msgstr "Questo valore non esiste"
 
 #: ORM/RulesChecker.php:224
 msgid "Cannot modify row: a constraint for the `{0}` association fails."
-msgstr ""
+msgstr "Impossibile modificare la riga: un vincolo per l'associazione `{0}` fallisce."
 
 #: ORM/RulesChecker.php:262
 msgid "The count does not match {0}{1}"
-msgstr ""
+msgstr "Il conteggio non corrisponde {0}{1}"
 
 #: Utility/Text.php:915
 msgid "and"
