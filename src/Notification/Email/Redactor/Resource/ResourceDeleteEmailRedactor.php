@@ -91,7 +91,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         $users = $event->getData('users');
 
         // if there is nobody, give it up. The deleter has already been removed from $users.
-        if ($users->all()->count() < 1) {
+        if ($users->count() < 1) {
             return $emailCollection;
         }
 
