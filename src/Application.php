@@ -52,6 +52,7 @@ use Cake\Console\CommandCollection;
 use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Core\Exception\MissingPluginException;
+use Cake\Datasource\FactoryLocator;
 use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Client;
@@ -59,6 +60,7 @@ use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\SecurityHeadersMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\Http\ServerRequest;
+use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
@@ -156,6 +158,14 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     public function bootstrap(): void
     {
         parent::bootstrap();
+
+        // For testing lets run it also on CI
+        if (true || PHP_SAPI !== 'cli') {
+            FactoryLocator::add(
+                'Table',
+                (new TableLocator())->allowFallbackClass(false)
+            );
+        }
 
         $this->addCorePlugins()
             ->addVendorPlugins();
