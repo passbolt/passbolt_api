@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.10.0
  */
-namespace PassboltEe\Subscription\tests\TestCase\Service\Healthcheck\Application;
+namespace Passbolt\Subscription\Test\TestCase\Service\Healthcheck\Application;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\I18n\FrozenDate;
