@@ -60,46 +60,43 @@ class GroupsIndexControllerWithFactoriesTest extends AppIntegrationTestCase
             ->persist();
         $this->logInAs($user);
 
-        $urlParameter = 'contain[modifier]=1';
-        $urlParameter .= '&contain[modifier.profile]=1';
-        $urlParameter .= '&contain[user]=1';
-        $urlParameter .= '&contain[group_user]=1';
-        $urlParameter .= '&contain[my_group_user]=1';
-        $this->getJson("/groups.json?{$urlParameter}&api-version=2");
+        $urlParameter = http_build_query([
+            'contain' => [
+                'modifier' => 1,
+                'modifier.profile' => 1,
+                'user' => 1,
+                'group_user' => 1,
+                'my_group_user' => 1,
+            ],
+            'api-version' => 2,
+        ]);
+        $this->getJson("/groups.json?{$urlParameter}");
 
         $this->assertSuccess();
         $this->assertCount(2, $this->_responseJsonBody);
-        // Expected content.
-        $this->assertGroupAttributes($this->_responseJsonBody[0]);
-        $this->assertObjectHasAttribute('modifier', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->modifier);
-        $this->assertObjectHasAttribute('profile', $this->_responseJsonBody[0]->modifier);
-        $this->assertProfileAttributes($this->_responseJsonBody[0]->modifier->profile);
-        $this->assertObjectHasAttribute('users', $this->_responseJsonBody[0]);
-        $this->assertUserAttributes($this->_responseJsonBody[0]->users[0]);
-        $this->assertObjectHasAttribute('groups_users', $this->_responseJsonBody[0]);
-        $this->assertGroupUserAttributes($this->_responseJsonBody[0]->groups_users[0]);
+        $responseGroupA = null;
+        $responseGroupB = null;
+        foreach ($this->_responseJsonBody as $response) {
+            if ($response->id === $groupA->get('id')) {
+                $responseGroupA = $response;
+            } else {
+                $responseGroupB = $response;
+            }
+        }
         // A group user is not a member
-        $groupAId = $groupA->id;
-        $groupA = array_reduce($this->_responseJsonBody, function ($carry, $item) use ($groupAId) {
-            if ($item->id == $groupAId) {
-                $carry = $item;
-            }
-
-            return $carry;
-        });
-        $this->assertNull($groupA->my_group_user);
+        $this->assertNull($responseGroupA->my_group_user);
         // A group user is a member
-        $groupBId = $groupB->id;
-        $groupB = array_reduce($this->_responseJsonBody, function ($carry, $item) use ($groupBId) {
-            if ($item->id == $groupBId) {
-                $carry = $item;
-            }
-
-            return $carry;
-        });
-        $this->assertObjectHasAttribute('my_group_user', $groupB);
-        $this->assertGroupUserAttributes($groupB->my_group_user);
+        $this->assertGroupAttributes($responseGroupB);
+        $this->assertObjectHasAttribute('modifier', $responseGroupB);
+        $this->assertUserAttributes($responseGroupB->modifier);
+        $this->assertObjectHasAttribute('profile', $responseGroupB->modifier);
+        $this->assertProfileAttributes($responseGroupB->modifier->profile);
+        $this->assertObjectHasAttribute('users', $responseGroupB);
+        $this->assertUserAttributes($responseGroupB->users[0]);
+        $this->assertObjectHasAttribute('groups_users', $responseGroupB);
+        $this->assertGroupUserAttributes($responseGroupB->groups_users[0]);
+        $this->assertObjectHasAttribute('my_group_user', $responseGroupB);
+        $this->assertGroupUserAttributes($responseGroupB->my_group_user);
     }
 
     public function testGroupsIndexController_Success_FilterHasUsers(): void
