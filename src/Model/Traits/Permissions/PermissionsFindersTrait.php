@@ -486,6 +486,6 @@ trait PermissionsFindersTrait
         $query = $this->findHighestByAcoAndAro($acoType, $acoForeignKey, $aroForeignKey)
             ->where(['Permissions.type >=' => $permissionType]);
 
-        return $query->count() !== 0;
+        return $query->all()->count() !== 0;
     }
 }

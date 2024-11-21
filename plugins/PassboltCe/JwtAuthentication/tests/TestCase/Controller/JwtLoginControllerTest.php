@@ -98,8 +98,8 @@ class JwtLoginControllerTest extends JwtAuthenticationIntegrationTestCase
         $this->assertIsString($challenge->access_token);
         $this->assertTrue(Validation::uuid($challenge->refresh_token));
         $this->assertSame($verifyToken, $challenge->verify_token);
-        $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->refresh_token, 'user_id' => $user->id])->count());
-        $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->verify_token, 'user_id' => $user->id])->count());
+        $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->refresh_token, 'user_id' => $user->id])->all()->count());
+        $this->assertSame(1, AuthenticationTokenFactory::find()->where(['token' => $challenge->verify_token, 'user_id' => $user->id])->all()->count());
 
         // Assert login action log
         $this->assertOneActionLog();

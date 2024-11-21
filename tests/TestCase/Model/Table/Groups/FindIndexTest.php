@@ -161,7 +161,7 @@ class FindIndexTest extends AppTestCase
         foreach ($groups as $group) {
             $this->assertNotEmpty($group->user_count);
             $expectedCount = $this->Groups->getAssociation('GroupsUsers')->find()
-                ->where(['GroupsUsers.group_id' => $group->id])->count();
+                ->where(['GroupsUsers.group_id' => $group->id])->all()->count();
             $this->assertEquals($expectedCount, $group->user_count);
         }
     }

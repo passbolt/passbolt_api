@@ -74,7 +74,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             // Check user was saved
             $users = TableRegistry::getTableLocator()->get('Users');
             $query = $users->find()->where(['username' => $data['username']]);
-            $this->assertEquals(1, $query->count());
+            $this->assertEquals(1, $query->all()->count());
             $user = $query->first();
             $this->assertFalse($user->active);
             $this->assertFalse($user->deleted);
@@ -82,7 +82,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             // Check profile exist
             $profiles = TableRegistry::getTableLocator()->get('Profiles');
             $query = $profiles->find()->where(['first_name' => $data['profile']['first_name']]);
-            $this->assertEquals(1, $query->count());
+            $this->assertEquals(1, $query->all()->count());
 
             // Check role exist
             $roles = TableRegistry::getTableLocator()->get('Roles');

@@ -690,6 +690,7 @@ class ResourcesTable extends Table
         if ($dryRun) {
             return $this->find()
                 ->where($condition)
+                ->all()
                 ->count();
         }
 

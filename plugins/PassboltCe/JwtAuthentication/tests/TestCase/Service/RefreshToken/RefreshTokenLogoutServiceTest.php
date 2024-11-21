@@ -84,7 +84,7 @@ class RefreshTokenLogoutServiceTest extends TestCase
         $deactivated = $this->service->logout($user->id, $request);
 
         $this->assertSame(1, $deactivated);
-        $this->assertSame(5, AuthenticationTokenFactory::find()->where(['active' => true])->count());
+        $this->assertSame(5, AuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
         $this->assertTrue($this->AuthenticationTokens->exists([
             'active' => false,
             'id' => $tokenToDeactivate->id,
@@ -99,12 +99,12 @@ class RefreshTokenLogoutServiceTest extends TestCase
         $deactivated = $this->service->logout($user->id, new ServerRequest());
 
         $this->assertSame(2, $deactivated);
-        $this->assertSame(4, $this->AuthenticationTokens->find()->where(['active' => true])->count());
+        $this->assertSame(4, $this->AuthenticationTokens->find()->where(['active' => true])->all()->count());
         $this->assertSame(2, $this->AuthenticationTokens->find()->where([
             'active' => false,
             'user_id' => $user->id,
             'type' => AuthenticationToken::TYPE_REFRESH_TOKEN,
-        ])->count());
+        ])->all()->count());
     }
 
     /**

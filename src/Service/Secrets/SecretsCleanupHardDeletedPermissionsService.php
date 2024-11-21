@@ -50,7 +50,7 @@ class SecretsCleanupHardDeletedPermissionsService
         $secretsIdsToDelete = $this->findSecretsToDelete()->select('id');
 
         if ($dryRun) {
-            return $secretsIdsToDelete->count();
+            return $secretsIdsToDelete->all()->count();
         }
 
         if ($secretsIdsToDelete->getConnection()->getDriver() instanceof Postgres) {

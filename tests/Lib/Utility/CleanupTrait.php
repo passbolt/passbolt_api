@@ -40,7 +40,7 @@ trait CleanupTrait
         $table = TableRegistry::getTableLocator()->get($modelName);
 
         // Check that the broken record was inserted
-        $beforeCleanupCount = $table->find()->count();
+        $beforeCleanupCount = $table->find()->all()->count();
         if ($isDeleteCleanup) {
             $expectedCountBeforeCleanup = $expectedCount + $cleanupCount;
         } else {
@@ -59,7 +59,7 @@ trait CleanupTrait
         // Check that subsequent cleanup do not delete anything
         $deletedCount = $table->{$checkName}();
         $this->assertEquals(0, $deletedCount, 'Running a second cleanup should not find more stuffs to fix');
-        $afterCount = $table->find()->count();
+        $afterCount = $table->find()->all()->count();
         $this->assertEquals($expectedCount, $afterCount, 'Cleanup should not fix more than necessary');
     }
 }

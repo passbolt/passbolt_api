@@ -103,6 +103,7 @@ class GroupsUsersDeleteService
         }
 
         $groupManagersCount = $this->groupsUsersTable->findByGroupIdAndIsAdmin($groupUser->group_id, true)
+            ->all()
             ->count();
 
         if ($groupManagersCount === 1) {
