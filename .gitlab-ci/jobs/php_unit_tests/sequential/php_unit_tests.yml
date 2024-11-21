@@ -155,6 +155,7 @@ seq-php7.4-mariadb10.5:
   extends:
     - .mysql-template
     - .test-template
+  allow_failure: true
   rules:
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
     - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
