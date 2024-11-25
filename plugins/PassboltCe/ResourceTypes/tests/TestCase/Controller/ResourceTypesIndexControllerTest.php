@@ -19,6 +19,7 @@ namespace Passbolt\ResourceTypes\Test\TestCase\Controller;
 
 use App\Test\Factory\ResourceFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use Cake\Core\Configure;
 use Passbolt\ResourceTypes\ResourceTypesPlugin;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 use Passbolt\ResourceTypes\Test\Lib\Model\ResourceTypesModelTrait;
@@ -105,5 +106,20 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCaseV5
         $this->logInAsUser();
         $this->getJson('/resource-types.json?contain[resources_count]=foo');
         $this->assertBadRequestError('Invalid contain. "foo" is not a valid contain value.');
+    }
+
+    public function testResourceTypesIndexController_Success_v4DoesntReturnV5Types()
+    {
+        $v5Setting = Configure::read('passbolt.v5.enabled');
+        Configure::write('passbolt.v5.enabled', false);
+
+        ResourceTypeFactory::make()->v5PasswordString()->persist();
+
+        $this->logInAsUser();
+        $this->getJson('/resource-types.json');
+        $this->assertSuccess();
+        $this->assertCount(0, $this->_responseJsonBody);
+
+        Configure::write('passbolt.v5.enabled', $v5Setting);
     }
 }
