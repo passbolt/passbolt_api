@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Form;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use Cake\Form\Form;
 use Cake\Form\Schema;
+use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 
 class MetadataSessionKeyUpdateForm extends Form
@@ -51,7 +52,7 @@ class MetadataSessionKeyUpdateForm extends Form
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator
-            ->dateTime('modified', ['ymd'], __('The modified date should be a valid date.'))
+            ->dateTime('modified', [Validation::DATETIME_ISO8601], __('The modified date should be a valid ISO 80601 date.')) // phpcs:ignore;
             ->requirePresence('modified', 'create', __('A modified date is required.'))
             ->notEmptyDateTime('modified', __('The modified date should not be empty.'));
 
