@@ -29,10 +29,8 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
      */
     public function up(): void
     {
-        $data = [];
-        $resourceType = $this->fetchRow("SELECT slug from resource_types where slug='v5-password-string'");
-        if (!isset($resourceType)) {
-            $data[] = [
+        $data = [
+            'v5-password-string' => [
                 'id' => UuidFactory::uuid('resource-types.id.v5-password-string'),
                 'slug' => ResourceType::SLUG_V5_PASSWORD_STRING,
                 'name' => 'Simple Password (Deprecated)',
@@ -40,12 +38,8 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
                 'definition' => json_encode([]),
                 'created' => (new FrozenTime())->toDateTimeString(),
                 'modified' => (new FrozenTime())->toDateTimeString(),
-            ];
-        }
-
-        $resourceType = $this->fetchRow("SELECT slug from resource_types where slug='v5-default'");
-        if (!isset($resourceType)) {
-            $data[] = [
+            ],
+            'v5-default' => [
                 'id' => UuidFactory::uuid('resource-types.id.v5-default'),
                 'slug' => ResourceType::SLUG_V5_DEFAULT,
                 'name' => 'Default resource type',
@@ -53,12 +47,8 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
                 'definition' => json_encode([]),
                 'created' => (new FrozenTime())->toDateTimeString(),
                 'modified' => (new FrozenTime())->toDateTimeString(),
-            ];
-        }
-
-        $resourceType = $this->fetchRow("SELECT slug from resource_types where slug='v5-totp-standalone'");
-        if (!isset($resourceType)) {
-            $data[] = [
+            ],
+            'v5-totp-standalone' => [
                 'id' => UuidFactory::uuid('resource-types.id.v5-totp-standalone'),
                 'slug' => ResourceType::SLUG_V5_TOTP_STANDALONE,
                 'name' => 'Standalone TOTP',
@@ -66,12 +56,8 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
                 'definition' => json_encode([]),
                 'created' => (new FrozenTime())->toDateTimeString(),
                 'modified' => (new FrozenTime())->toDateTimeString(),
-            ];
-        }
-
-        $resourceType = $this->fetchRow("SELECT slug from resource_types where slug='v5-default-with-totp'");
-        if (!isset($resourceType)) {
-            $data[] = [
+            ],
+            'v5-default-with-totp' => [
                 'id' => UuidFactory::uuid('resource-types.id.v5-default-with-totp'),
                 'slug' => ResourceType::SLUG_V5_DEFAULT_WITH_TOTP,
                 'name' => 'Default resource type with TOTP',
@@ -79,7 +65,22 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
                 'definition' => json_encode([]),
                 'created' => (new FrozenTime())->toDateTimeString(),
                 'modified' => (new FrozenTime())->toDateTimeString(),
-            ];
+            ],
+        ];
+
+        $stmt = $this->query("SELECT slug FROM resource_types WHERE slug IN ('v5-password-string', 'v5-default', 'v5-totp-standalone', 'v5-default-with-totp')");
+        $rows = $stmt->fetchAll();
+        foreach ($rows as $row) {
+            // Do not insert if already present
+            if ($row['slug'] === 'v5-password-string') {
+                unset($data['v5-password-string']);
+            } elseif ($row['slug'] === 'v5-default') {
+                unset($data['v5-default']);
+            } elseif ($row['slug'] === 'v5-totp-standalone') {
+                unset($data['v5-totp-standalone']);
+            } elseif ($row['slug'] === 'v5-default-with-totp') {
+                unset($data['v5-default-with-totp']);
+            }
         }
 
         if (!empty($data)) {
