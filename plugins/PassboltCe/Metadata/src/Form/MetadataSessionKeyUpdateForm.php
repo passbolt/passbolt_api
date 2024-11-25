@@ -52,7 +52,7 @@ class MetadataSessionKeyUpdateForm extends Form
             ->add('data', 'isValidOpenPGPMessage', new IsParsableMessageValidationRule());
 
         $validator
-            ->dateTime('modified', [Validation::DATETIME_ISO8601], __('The modified date should be a valid ISO 80601 date.'))
+            ->dateTime('modified', [Validation::DATETIME_ISO8601], __('The modified date should be a valid ISO 80601 date.')) // phpcs:ignore;
             ->requirePresence('modified', 'create', __('A modified date is required.'))
             ->notEmptyDateTime('modified', __('The modified date should not be empty.'));
 
