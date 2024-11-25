@@ -107,7 +107,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
         $connection = ConnectionManager::get('default');
         $tableCount = count($connection->getSchemaCollection()->listTables());
         $result = $this->getResponseBodyAsArray();
-        $https = strpos(Configure::read('App.fullBaseUrl'), 'https') === 0;
+        $https = strpos((string)Configure::read('App.fullBaseUrl'), 'https') === 0;
         $expectedResponse = [
             'ssl' => [
                 'peerValid' => true,
