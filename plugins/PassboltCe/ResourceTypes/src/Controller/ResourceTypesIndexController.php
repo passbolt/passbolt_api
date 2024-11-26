@@ -20,6 +20,7 @@ namespace Passbolt\ResourceTypes\Controller;
 use App\Controller\AppController;
 use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Service\ResourceTypesFinderInterface;
 
 class ResourceTypesIndexController extends AppController
@@ -46,6 +47,8 @@ class ResourceTypesIndexController extends AppController
             if ($this->User->isAdmin()) {
                 $resourceTypesFinder->contain($resourceTypes, $options);
             }
+        } else {
+            $resourceTypes = $resourceTypes->where(['slug NOT IN' => ResourceType::V5_RESOURCE_TYPE_SLUGS]);
         }
 
         $this->success(__('The operation was successful.'), $resourceTypes->all());
