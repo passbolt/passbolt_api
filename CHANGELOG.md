@@ -2,6 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.10.1] - 2024-11-26
+### Fixed
+- PB-37010 Fix v5 resource types should not be returned if v5 flag is disabled
+- PB-37011 Fix session keys creation modified date validation to match ISO 8601 format
+
 ## [4.10.1-test.1] - 2024-11-25
 ### Fixed
 - PB-37010 Fix v5 resource types should not be returned if v5 flag is disabled
