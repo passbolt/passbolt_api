@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Form;
+namespace Passbolt\Metadata\Test\TestCase\Form;
 
 use Cake\TestSuite\TestCase;
 use Passbolt\Metadata\Form\MetadataSessionKeyUpdateForm;
@@ -58,10 +58,22 @@ class MetadataSessionKeyUpdateFormTest extends TestCase
         $this->assertTrue(isset($errors['data']['_empty']));
     }
 
-    public function testMetadataSessionKeyUpdateForm_Error_DataNotValidDateTime(): void
+    public function metadataSessionKeyUpdateFormInvalidModifiedDateTimeProvider()
+    {
+        return [
+            ['🔥'],
+            ['20140619'],
+            ['2014-05-19'],
+        ];
+    }
+
+    /**
+     * @dataProvider metadataSessionKeyUpdateFormInvalidModifiedDateTimeProvider
+     */
+    public function testMetadataSessionKeyUpdateForm_Error_DataNotValidDateTime(string $modified): void
     {
         $data = $this->getDefaultData();
-        $data['modified'] = '🔥';
+        $data['modified'] = $modified;
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
         $this->assertTrue(isset($errors['modified']['dateTime']));
