@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
+use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\I18n\FrozenTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
@@ -66,6 +67,7 @@ class ResourceFactory extends CakephpBaseFactory
                 'description' => $faker->text(10),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
+                'resource_type_id' => UuidFactory::uuid5('resource-types.id.password-and-description'),
                 'created' => Chronos::now()->subDays($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];

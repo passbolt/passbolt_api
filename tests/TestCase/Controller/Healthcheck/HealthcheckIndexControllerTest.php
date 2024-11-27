@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Controller\Healthcheck;
 use App\Controller\Healthcheck\HealthcheckIndexController;
 use App\Model\Validation\EmailValidationRule;
 use App\Service\Healthcheck\Environment\NextMinPhpVersionHealthcheck;
+use App\Service\Healthcheck\Environment\TimeSyncHealthcheck;
 use App\Test\Factory\RoleFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\HealthcheckRequestTestTrait;
@@ -190,7 +191,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'osArchitecture' => true,
                 'distribution' => true,
                 'gpg' => true,
-                'timeSync' => false,
+                'timeSync' => (new TimeSyncHealthcheck())->check()->isPassed(),
             ],
             'configFile' => [
                 'app' => true,
