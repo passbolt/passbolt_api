@@ -38,6 +38,7 @@ class MetadataKeyUpdateService
     /**
      * @param \App\Utility\UserAccessControl $uac user access control
      * @param string $id key uuid
+     * @param \Passbolt\Metadata\Model\Dto\MetadataKeyUpdateDto $dto from MetadataKeyUpdateForm
      * @return void
      * @throws \Cake\Http\Exception\ForbiddenException if user is not an administrator
      * @throws \Cake\Http\Exception\NotFoundException if the key does not exist or is already expired
