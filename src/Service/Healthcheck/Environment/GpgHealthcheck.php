@@ -20,7 +20,7 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Symfony\Component\Process\Process;
+use App\Utility\CommandRunner;
 
 class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -120,11 +120,10 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
      * @param string $command Command to run.
      * @return string|null
      */
-    private function runCommand(string $command): ?string
+    protected function runCommand(string $command): ?string
     {
-        $process = Process::fromShellCommandLine($command);
-        $process->run();
-        if (!$process->isSuccessful()) {
+        $process = CommandRunner::run($command);
+        if (!$process || !$process->isSuccessful()) {
             return null;
         }
 
