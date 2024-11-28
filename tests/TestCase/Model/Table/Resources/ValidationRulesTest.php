@@ -26,6 +26,9 @@ use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
+/**
+ * @covers \App\Model\Table\ResourcesTable
+ */
 class ValidationRulesTest extends AppTestCase
 {
     use FormatValidationTrait;

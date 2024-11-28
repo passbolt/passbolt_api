@@ -19,49 +19,87 @@ namespace App\Test\TestCase\Service\Healthcheck\Core;
 use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
 use Cake\TestSuite\TestCase;
 
+/**
+ * @covers \App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck
+ */
 class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
 {
-    public function testValidFullBaseUrlCoreHealthcheckTest_Success(): void
+    /**
+     * @dataProvider validFullBaseUrlCoreHealthcheckUrlsProvider
+     */
+    public function testValidFullBaseUrlCoreHealthcheck_IsPassed(string $url, bool $expectedResult): void
     {
-        $pass = [
-            'https://cloud.passbolt.com/workspace',
-            'https://passbolt.com',
-            'https://passbolt.cloud',
-            'https://passbolt',
-            'https://localhost',
-            'https://localhost:8443',
-            'http://cloud.passbolt.com/workspace',
-            'http://passbolt.com',
-            'http://passbolt.cloud',
-            'http://passbolt',
-            'http://localhost',
-            'http://localhost:8080',
-        ];
-        foreach ($pass as $url) {
-            $test = (new ValidFullBaseUrlCoreHealthcheck($url))->check()->isPassed();
-            if (!$test) {
-                $this->fail('Test failed: ' . $url);
-            } else {
-                $this->assertTrue(true);
-            }
-        }
+        $result = (new ValidFullBaseUrlCoreHealthcheck($url))->check()->isPassed();
+        $this->assertSame($expectedResult, $result);
     }
 
-    public function testValidFullBaseUrlCoreHealthcheckTest_Fail(): void
+    public function validFullBaseUrlCoreHealthcheckUrlsProvider(): array
     {
-        $pass = [
-            'htt://cloud.passbolt.com/workspace',
-            'ftp://localhost:8080',
-            'gopher://localhost:8080',
-            '🔥',
+        return [
+            [
+                'url' => 'https://cloud.passbolt.com/workspace',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'https://passbolt.com',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'https://passbolt.cloud',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'https://passbolt',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'https://localhost',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'https://localhost:8443',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'http://cloud.passbolt.com/workspace',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'http://passbolt.com',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'http://passbolt.cloud',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'http://passbolt',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'http://localhost',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'http://localhost:8080',
+                'expected result' => true,
+            ],
+            [
+                'url' => 'htt://cloud.passbolt.com/workspace',
+                'expected result' => false,
+            ],
+            [
+                'url' => 'ftp://localhost:8080',
+                'expected result' => false,
+            ],
+            [
+                'url' => 'gopher://localhost:8080',
+                'expected result' => false,
+            ],
+            [
+                'url' => '🔥',
+                'expected result' => false,
+            ],
         ];
-        foreach ($pass as $url) {
-            $test = (new ValidFullBaseUrlCoreHealthcheck($url))->check()->isPassed();
-            if ($test) {
-                $this->fail('Test failed: ' . $url);
-            } else {
-                $this->assertTrue(true);
-            }
-        }
     }
 }

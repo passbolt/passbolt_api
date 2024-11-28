@@ -26,6 +26,9 @@ use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
+/**
+ * @covers \App\Model\Table\ResourcesTable
+ */
 class BuildRulesTest extends AppTestCase
 {
     use GpgMetadataKeysTestTrait;

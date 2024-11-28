@@ -49,9 +49,8 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
      */
     public function check(): HealthcheckServiceInterface
     {
-        if (!is_string($this->url)) {
-            $this->status = false;
-        } else {
+        $this->status = false;
+        if (is_string($this->url)) {
             $this->status = (strpos($this->url, 'https://') === 0) || (strpos($this->url, 'http://') === 0);
         }
 
