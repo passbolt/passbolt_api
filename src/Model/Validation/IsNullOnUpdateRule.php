@@ -12,12 +12,12 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.10.0
+ * @since         4.11.0
  */
 
 namespace App\Model\Validation;
 
-class IsNullOnCreateRule extends PassboltValidationRule
+class IsNullOnUpdateRule extends PassboltValidationRule
 {
     /**
      * @inheritDoc
@@ -32,7 +32,7 @@ class IsNullOnCreateRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
-        if (isset($context['newRecord']) && $context['newRecord'] === true) {
+        if (!isset($context['newRecord']) || $context['newRecord'] === false) {
             return $value === null;
         }
 

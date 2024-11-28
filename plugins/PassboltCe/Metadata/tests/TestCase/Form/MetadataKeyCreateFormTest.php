@@ -20,22 +20,22 @@ namespace Passbolt\Metadata\TestCase\Form;
 use App\Utility\UuidFactory;
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
-use Passbolt\Metadata\Form\MetadataKeyForm;
+use Passbolt\Metadata\Form\MetadataKeyCreateForm;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
-class MetadataKeyFormTest extends TestCase
+class MetadataKeyCreateFormTest extends TestCase
 {
     use GpgMetadataKeysTestTrait;
 
     /**
-     * @var MetadataKeyForm $form
+     * @var MetadataKeyCreateForm $form
      */
     protected $form;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->form = new MetadataKeyForm();
+        $this->form = new MetadataKeyCreateForm();
     }
 
     public function tearDown(): void
