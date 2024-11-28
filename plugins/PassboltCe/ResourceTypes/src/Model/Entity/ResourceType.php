@@ -39,9 +39,14 @@ class ResourceType extends Entity
      */
     public const SLUG_PASSWORD_STRING = 'password-string';
     public const SLUG_PASSWORD_AND_DESCRIPTION = 'password-and-description';
-    // TODO: Move this to TotpResourceType entity
     public const SLUG_STANDALONE_TOTP = 'totp';
     public const SLUG_PASSWORD_DESCRIPTION_TOTP = 'password-description-totp';
+    public const V4_RESOURCE_TYPE_SLUGS = [
+        self::SLUG_PASSWORD_STRING,
+        self::SLUG_PASSWORD_AND_DESCRIPTION,
+        self::SLUG_STANDALONE_TOTP,
+        self::SLUG_PASSWORD_DESCRIPTION_TOTP,
+    ];
 
     // v5 slugs
     public const SLUG_V5_PASSWORD_STRING = 'v5-password-string';
@@ -94,15 +99,14 @@ class ResourceType extends Entity
      * Returns V4 resource types IDs array.
      *
      * @return array
-     * @throws \Exception
      */
     public static function getV4ResourceTypes(): array
     {
         return [
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_PASSWORD_STRING),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_PASSWORD_AND_DESCRIPTION),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP),
         ];
     }
 
@@ -110,15 +114,14 @@ class ResourceType extends Entity
      * Returns V5 resource types IDs array.
      *
      * @return array
-     * @throws \Exception
      */
     public static function getV5ResourceTypes(): array
     {
         return [
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSWORD_STRING),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_TOTP_STANDALONE),
-            UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_V5_PASSWORD_STRING),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_V5_TOTP_STANDALONE),
+            UuidFactory::uuid5('resource-types.id.' . ResourceType::SLUG_V5_DEFAULT_WITH_TOTP),
         ];
     }
 }
