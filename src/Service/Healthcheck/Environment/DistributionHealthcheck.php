@@ -20,7 +20,7 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
-use Symfony\Component\Process\Process;
+use App\Utility\CommandRunner;
 
 class DistributionHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -115,11 +115,10 @@ class DistributionHealthcheck implements HealthcheckServiceInterface, Healthchec
     /**
      * @return string|null
      */
-    private function detectDistribution(): ?string
+    protected function detectDistribution(): ?string
     {
-        $process = new Process(self::COMMAND);
-        $process->run();
-        if (!$process->isSuccessful()) {
+        $process = CommandRunner::run(self::COMMAND);
+        if (!$process || !$process->isSuccessful()) {
             return null;
         }
 
