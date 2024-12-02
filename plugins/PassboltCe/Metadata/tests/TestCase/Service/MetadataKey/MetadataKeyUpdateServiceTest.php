@@ -65,6 +65,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
 
         $updatedKey = MetadataKeyFactory::get($key->get('id'));
         $this->assertEquals($data['armored_key'], $updatedKey->get('armored_key'));
+        $this->assertInstanceOf(FrozenTime::class, $updatedKey->get('expired'));
     }
 
     public function testMetadataKeyUpdateService_Error_NotAdmin(): void

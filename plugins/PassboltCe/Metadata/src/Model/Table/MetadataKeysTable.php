@@ -22,6 +22,7 @@ use App\Model\Rule\IsUniqueIfNotSoftDeletedRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\ArmoredKey\IsPublicKeyRevokedRule;
 use App\Model\Validation\ArmoredKey\IsPublicKeyValidStrictRule;
+use App\Model\Validation\DateTime\IsDateInPastValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Model\Validation\IsNullOnCreateRule;
@@ -162,7 +163,8 @@ class MetadataKeysTable extends Table
         $validator
             ->dateTime('expired')
             ->requirePresence('expired', 'update', __('A expired date is required.'))
-            ->notEmptyDateTime('expired', __('The expired date should not be empty.'));
+            ->notEmptyDateTime('expired', __('The expired date should not be empty.'))
+            ->add('expired', 'isDateInPast', new IsDateInPastValidationRule());
 
         $validator
             ->dateTime('deleted')

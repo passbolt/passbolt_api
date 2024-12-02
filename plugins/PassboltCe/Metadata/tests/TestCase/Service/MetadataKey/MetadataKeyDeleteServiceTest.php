@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Service\MetadataKey;
 
-use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
@@ -53,11 +52,7 @@ class MetadataKeyDeleteServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
 
         $sut = new MetadataKeyDeleteService();
-        try {
-            $sut->delete($uac, $id);
-        } catch (CustomValidationException $exception) {
-            pr($exception->getErrors());
-        }
+        $sut->delete($uac, $id);
 
         $this->assertEquals(2, MetadataKeyFactory::count());
         $this->assertEquals(1, MetadataPrivateKeyFactory::count());
