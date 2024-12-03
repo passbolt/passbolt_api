@@ -47,6 +47,10 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     $routes->connect('/keys', ['controller' => 'MetadataKeyCreate', 'action' => 'create'])
         ->setMethods(['POST'])
         ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
+    $routes->connect('/keys/{id}', ['controller' => 'MetadataKeyUpdate', 'action' => 'update'])
+        ->setPass(['id'])
+        ->setMethods(['PUT', 'POST'])
+        ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
     $routes->connect('/keys/{id}', ['controller' => 'MetadataKeyDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE'])

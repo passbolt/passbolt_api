@@ -12,19 +12,26 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.10.0
+ * @since         4.11.0
  */
 
-namespace App\Model\Validation;
+namespace App\Model\Validation\DateTime;
 
-class IsNullOnCreateRule extends PassboltValidationRule
+use App\Model\Validation\PassboltValidationRule;
+use Cake\Chronos\ChronosInterface;
+use Cake\I18n\FrozenTime;
+
+/**
+ * Check if a date is set in the past
+ */
+class IsDateInPastValidationRule extends PassboltValidationRule
 {
     /**
      * @inheritDoc
      */
     public function defaultErrorMessage($value, $context): string
     {
-        return __('The field must be null when creating a new record.');
+        return __('The date should not be set in the future.');
     }
 
     /**
@@ -32,10 +39,10 @@ class IsNullOnCreateRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
-        if (isset($context['newRecord']) && $context['newRecord'] === true) {
-            return $value === null;
+        if (!($value instanceof ChronosInterface)) {
+            return false;
         }
 
-        return true;
+        return $value->lessThan(FrozenTime::now());
     }
 }
