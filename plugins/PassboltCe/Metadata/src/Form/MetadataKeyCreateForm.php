@@ -25,8 +25,6 @@ use Cake\Validation\Validator;
 class MetadataKeyCreateForm extends Form
 {
     /**
-     * Email configuration schema.
-     *
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
