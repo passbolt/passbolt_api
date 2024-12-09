@@ -70,7 +70,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
      * @return void
      * @throws \Passbolt\Metadata\Exception\MetadataKeyShareException
      */
-    protected function shareMetadataKeyWithUser(User $user, MetadataPrivateKey $serverMetadataPrivateKey): void
+    public function shareMetadataKeyWithUser(User $user, MetadataPrivateKey $serverMetadataPrivateKey): void
     {
         $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
 
@@ -93,6 +93,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
 
         // Build and validate private key entity for the user
         try {
+            /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $userMetadataPrivateKey */
             $userMetadataPrivateKey = $metadataPrivateKeysTable->newEntity([
                 'metadata_key_id' => $serverMetadataPrivateKey->metadata_key_id,
                 'user_id' => $user->id,
@@ -109,7 +110,6 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
                     Log::error(json_encode($userMetadataPrivateKey->getErrors()));
                 }
                 $msg = __('The OpenPGP key data is not valid.');
-                /** @phpstan-ignore-next-line */
                 throw new ValidationException($msg, $userMetadataPrivateKey, $metadataPrivateKeysTable);
             }
             if (!$metadataPrivateKeysTable->checkRules($userMetadataPrivateKey)) {
@@ -117,7 +117,6 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
                     Log::error(json_encode($userMetadataPrivateKey->getErrors()));
                 }
                 $msg = __('The OpenPGP key data is not valid.');
-                /** @phpstan-ignore-next-line */
                 throw new ValidationException($msg, $userMetadataPrivateKey, $metadataPrivateKeysTable);
             }
         } catch (\Exception $exception) {

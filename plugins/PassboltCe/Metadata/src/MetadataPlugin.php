@@ -27,6 +27,7 @@ use Passbolt\Metadata\Command\InsertDummyDataCommand;
 use Passbolt\Metadata\Command\MigrateAllItemsCommand;
 use Passbolt\Metadata\Command\MigrateFoldersCommand;
 use Passbolt\Metadata\Command\MigrateResourcesCommand;
+use Passbolt\Metadata\Command\ShareMetadataKeyCommand;
 use Passbolt\Metadata\Command\UpdateMetadataTypesSettingsCommand;
 use Passbolt\Metadata\Event\AddHasManyMetadataPrivateKeysToUsersListener;
 use Passbolt\Metadata\Event\MetadataFolderUpdateListener;
@@ -97,6 +98,7 @@ class MetadataPlugin extends BasePlugin
         $commands->add('passbolt metadata generate_dummy_metadata_key', GenerateDummyMetadataKeyCommand::class);
         $commands->add('passbolt metadata insert_dummy_data', InsertDummyDataCommand::class);
         $commands->add('passbolt metadata update_metadata_types_settings', UpdateMetadataTypesSettingsCommand::class);
+        $commands->add('passbolt metadata share_metadata_key', ShareMetadataKeyCommand::class);
         // Migration commands
         $commands->add('passbolt metadata migrate_resources', MigrateResourcesCommand::class);
         $commands->add('passbolt metadata migrate_folders', MigrateFoldersCommand::class);
