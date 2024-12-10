@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Event;
 
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Controller\Users\UsersIndexController;
+use App\Controller\Users\UsersViewController;
 use App\Middleware\UacAwareMiddlewareTrait;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\UsersTable;
@@ -26,6 +27,7 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Http\Exception\ForbiddenException;
+use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -78,18 +80,47 @@ class MissingMetadataKeyIdsContainListener implements EventListenerInterface
     public function assertUserHasAccess(EventInterface $event): void
     {
         $controller = $event->getSubject();
-        if (!$controller instanceof UsersIndexController) {
+        if (!$controller instanceof UsersIndexController && !$controller instanceof UsersViewController) {
             return;
         }
 
-        $isContainPresent = $controller->getRequest()->getQuery('contain.missing_metadata_key_ids', false);
-        $isAdmin = $this->getUacInRequest($controller->getRequest())->isAdmin();
-
-        if ($isContainPresent && !$isAdmin) {
-            throw new ForbiddenException(__('The missing_metadata_key_ids contain is only allowed for administrators.')); // phpcs:ignore
+        $request = $controller->getRequest();
+        $isContainPresent = (bool)$request->getQuery('contain.missing_metadata_key_ids', false);
+        if ($controller instanceof UsersIndexController) {
+            $this->assertIsAdmin($isContainPresent, $request);
+        } else {
+            $this->assertIsAdminOrMe($isContainPresent, $request);
         }
 
-        $this->isContainPresent = (bool)$isContainPresent;
+        $this->isContainPresent = $isContainPresent;
+    }
+
+    /**
+     * @param bool $isContainPresent If contain is present or not.
+     * @param \Cake\Http\ServerRequest $request Controller request object.
+     * @return void
+     * @throws \Cake\Http\Exception\ForbiddenException If contain is present and user is not admin.
+     */
+    private function assertIsAdmin(bool $isContainPresent, ServerRequest $request): void
+    {
+        $uac = $this->getUacInRequest($request);
+        if ($isContainPresent && !$uac->isAdmin()) {
+            throw new ForbiddenException(__('The missing_metadata_key_ids contain is only allowed for administrators.')); // phpcs:ignore
+        }
+    }
+
+    /**
+     * @param bool $isContainPresent If contain is present or not.
+     * @param \Cake\Http\ServerRequest $request Controller request object.
+     * @return void
+     * @throws \Cake\Http\Exception\ForbiddenException If contain is present and user is not admin or not "me".
+     */
+    private function assertIsAdminOrMe(bool $isContainPresent, ServerRequest $request): void
+    {
+        $uac = $this->getUacInRequest($request);
+        if ($isContainPresent && !$uac->isAdmin() && $request->getParam('id') !== 'me') {
+            throw new ForbiddenException(__('The missing_metadata_key_ids contain is only allowed for administrators or yourself.')); // phpcs:ignore
+        }
     }
 
     /**
