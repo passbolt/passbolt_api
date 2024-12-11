@@ -27,7 +27,6 @@ use Cake\Datasource\EntityInterface;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
 use Cake\Http\Exception\ForbiddenException;
-use Cake\Http\ServerRequest;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -80,47 +79,32 @@ class MissingMetadataKeyIdsContainListener implements EventListenerInterface
     public function assertUserHasAccess(EventInterface $event): void
     {
         $controller = $event->getSubject();
-        if (!$controller instanceof UsersIndexController && !$controller instanceof UsersViewController) {
+        $request = $controller->getRequest();
+        $isUsersIndexRequest = $controller instanceof UsersIndexController;
+        $isUsersViewRequest = $controller instanceof UsersViewController;
+
+        if (!$isUsersIndexRequest && !$isUsersViewRequest) {
             return;
         }
 
-        $request = $controller->getRequest();
         $isContainPresent = (bool)$request->getQuery('contain.missing_metadata_key_ids', false);
-        if ($controller instanceof UsersIndexController) {
-            $this->assertIsAdmin($isContainPresent, $request);
-        } else {
-            $this->assertIsAdminOrMe($isContainPresent, $request);
+        if (!$isContainPresent) {
+            return;
         }
 
-        $this->isContainPresent = $isContainPresent;
-    }
-
-    /**
-     * @param bool $isContainPresent If contain is present or not.
-     * @param \Cake\Http\ServerRequest $request Controller request object.
-     * @return void
-     * @throws \Cake\Http\Exception\ForbiddenException If contain is present and user is not admin.
-     */
-    private function assertIsAdmin(bool $isContainPresent, ServerRequest $request): void
-    {
         $uac = $this->getUacInRequest($request);
-        if ($isContainPresent && !$uac->isAdmin()) {
-            throw new ForbiddenException(__('The missing_metadata_key_ids contain is only allowed for administrators.')); // phpcs:ignore
-        }
-    }
+        $isUsersViewMeRequest = $isUsersViewRequest &&
+            ($request->getParam('id') === 'me' || $request->getParam('id') === $uac->getId());
 
-    /**
-     * @param bool $isContainPresent If contain is present or not.
-     * @param \Cake\Http\ServerRequest $request Controller request object.
-     * @return void
-     * @throws \Cake\Http\Exception\ForbiddenException If contain is present and user is not admin or not "me".
-     */
-    private function assertIsAdminOrMe(bool $isContainPresent, ServerRequest $request): void
-    {
-        $uac = $this->getUacInRequest($request);
-        if ($isContainPresent && !$uac->isAdmin() && $request->getParam('id') !== 'me') {
-            throw new ForbiddenException(__('The missing_metadata_key_ids contain is only allowed for administrators or yourself.')); // phpcs:ignore
+        // With the exception of user view requests made by the currently signed-in user to retrieve their own
+        // information, only an administrator can use this contain.
+        if (!$isUsersViewMeRequest && !$uac->isAdmin()) {
+            throw new ForbiddenException(
+                __('The missing_metadata_key_ids contain is only allowed for administrators.')
+            );
         }
+
+        $this->isContainPresent = true;
     }
 
     /**

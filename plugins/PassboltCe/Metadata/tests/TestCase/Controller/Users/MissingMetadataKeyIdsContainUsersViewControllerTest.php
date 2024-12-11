@@ -84,6 +84,26 @@ class MissingMetadataKeyIdsContainUsersViewControllerTest extends AppIntegration
         $this->assertEqualsCanonicalizing([$metadataKey->get('id')], $responseArray['missing_metadata_key_ids']);
     }
 
+    public function testMissingMetadataKeyIdsContainUsersViewController_Success_MeAsUuid(): void
+    {
+        $this->disableErrorHandlerMiddleware();
+        $admin = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->admin()->active()->persist();
+        $user = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->active()->persist();
+        // metadata key
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($admin)->withServerPrivateKey()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
+
+        $this->logInAs($user);
+        $queryParams = http_build_query(['contain' => ['missing_metadata_key_ids' => true]]);
+        $this->getJson("/users/{$user->get('id')}.json?{$queryParams}");
+
+        $this->assertSuccess();
+        $responseArray = $this->getResponseBodyAsArray();
+        $this->assertArrayHasKey('missing_metadata_key_ids', $responseArray);
+        $this->assertCount(1, $responseArray['missing_metadata_key_ids']);
+        $this->assertEqualsCanonicalizing([$metadataKey->get('id')], $responseArray['missing_metadata_key_ids']);
+    }
+
     public function testMissingMetadataKeyIdsContainUsersViewController_Success_ContainNotPresentIfV5Disabled()
     {
         Configure::write('passbolt.v5.enabled', false);
