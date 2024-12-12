@@ -38,6 +38,9 @@ class MissingMetadataKeyIdsContainUsersIndexControllerTest extends AppIntegratio
     use LocatorAwareTrait;
     use GpgMetadataKeysTestTrait;
 
+    /**
+     * @inheritDoc
+     */
     public function setUp(): void
     {
         parent::setUp();

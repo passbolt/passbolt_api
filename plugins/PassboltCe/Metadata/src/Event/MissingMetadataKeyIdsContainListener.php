@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Event;
 
 use App\Controller\Events\ControllerFindIndexOptionsBeforeMarshal;
 use App\Controller\Users\UsersIndexController;
+use App\Controller\Users\UsersViewController;
 use App\Middleware\UacAwareMiddlewareTrait;
 use App\Model\Event\TableFindIndexBefore;
 use App\Model\Table\UsersTable;
@@ -78,18 +79,32 @@ class MissingMetadataKeyIdsContainListener implements EventListenerInterface
     public function assertUserHasAccess(EventInterface $event): void
     {
         $controller = $event->getSubject();
-        if (!$controller instanceof UsersIndexController) {
+        $request = $controller->getRequest();
+        $isUsersIndexRequest = $controller instanceof UsersIndexController;
+        $isUsersViewRequest = $controller instanceof UsersViewController;
+
+        if (!$isUsersIndexRequest && !$isUsersViewRequest) {
             return;
         }
 
-        $isContainPresent = $controller->getRequest()->getQuery('contain.missing_metadata_key_ids', false);
-        $isAdmin = $this->getUacInRequest($controller->getRequest())->isAdmin();
-
-        if ($isContainPresent && !$isAdmin) {
-            throw new ForbiddenException(__('The missing_metadata_key_ids contain is only allowed for administrators.')); // phpcs:ignore
+        $isContainPresent = (bool)$request->getQuery('contain.missing_metadata_key_ids', false);
+        if (!$isContainPresent) {
+            return;
         }
 
-        $this->isContainPresent = (bool)$isContainPresent;
+        $uac = $this->getUacInRequest($request);
+        $isUsersViewMeRequest = $isUsersViewRequest &&
+            ($request->getParam('id') === 'me' || $request->getParam('id') === $uac->getId());
+
+        // With the exception of user view requests made by the currently signed-in user to retrieve their own
+        // information, only an administrator can use this contain.
+        if (!$isUsersViewMeRequest && !$uac->isAdmin()) {
+            throw new ForbiddenException(
+                __('The missing_metadata_key_ids contain is only allowed for administrators.')
+            );
+        }
+
+        $this->isContainPresent = true;
     }
 
     /**
