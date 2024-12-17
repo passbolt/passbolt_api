@@ -18,7 +18,7 @@ use Cake\I18n\FrozenTime;
 
 $recipient = $body['recipient'];
 $modifier = $body['modifier'];
-$subject = Purifier::clean($body['subject']);
+$subject = $body['subject'];
 $fingerprint = $body['fingerprint'] ?? [];
 
 echo $this->element('Email/module/avatar',[
