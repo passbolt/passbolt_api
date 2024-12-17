@@ -15,8 +15,9 @@ declare(strict_types=1);
  * @since         4.11.0
  */
 
-namespace Passbolt\Metadata\TestCase\Controller\MetadataKeys;
+namespace Passbolt\Metadata\Test\TestCase\Controller\MetadataKeys;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
@@ -48,7 +49,8 @@ class MetadataKeyUpdateControllerTest extends AppIntegrationTestCaseV5
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
         ])->persist();
 
-        $this->logInAsAdmin();
+        $admin = $this->logInAsAdmin();
+        $someOtherAmin = UserFactory::make()->admin()->persist();
         $this->putJson('/metadata/keys/' . $key->get('id') . '.json', [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
@@ -56,6 +58,19 @@ class MetadataKeyUpdateControllerTest extends AppIntegrationTestCaseV5
         ]);
 
         $this->assertResponseCode(200);
+
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains(
+            'You have expired a metadata key.',
+            $admin->username,
+        );
+        $this->assertEmailInBatchContains(
+            [
+                'Fingerprint: 67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
+                $admin->profile->first_name . ' has expired a metadata key',
+            ],
+            $someOtherAmin->get('username'),
+        );
     }
 
     public function testMetadataKeyUpdateController_Error_FingerprintMismatch(): void

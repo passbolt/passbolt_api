@@ -30,6 +30,7 @@ class MetadataEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 
         $redactors[] = new MetadataSettingsSetEmailRedactor();
         $redactors[] = new MetadataKeyCreateEmailRedactor();
+        $redactors[] = new MetadataKeyExpiredEmailRedactor();
 
         return $redactors;
     }

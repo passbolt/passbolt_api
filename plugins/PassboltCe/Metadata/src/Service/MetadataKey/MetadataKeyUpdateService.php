@@ -90,6 +90,7 @@ class MetadataKeyUpdateService
             'expired' => $dto->expired,
             'modified_by' => $uac->getId(),
         ];
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey */
         $metadataKey = $metadataKeysTable->patchEntity($metadataKey, $patch, $options);
         if ($metadataKey->getErrors()) {
             $msg = __('The metadata key could not be updated.');

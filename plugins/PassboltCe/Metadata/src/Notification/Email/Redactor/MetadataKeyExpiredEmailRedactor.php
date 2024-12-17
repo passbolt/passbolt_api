@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.10.0
+ * @since         4.11.0
  */
 
 namespace Passbolt\Metadata\Notification\Email\Redactor;
@@ -28,17 +28,17 @@ use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
-use Passbolt\Metadata\Service\MetadataKeyCreateService;
+use Passbolt\Metadata\Service\MetadataKey\MetadataKeyUpdateService;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
-class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
+class MetadataKeyExpiredEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use LocatorAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const EMAIL_TEMPLATE = 'Passbolt/Metadata.Admin/metadata_key_create';
+    public const EMAIL_TEMPLATE = 'Passbolt/Metadata.Admin/metadata_key_expire';
 
     /**
      * @var \App\Model\Table\UsersTable
@@ -46,7 +46,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
     protected $Users;
 
     /**
-     * MetadataKeyCreateEmailRedactor constructor.
+     * MetadataKeyExpiredEmailRedactor constructor.
      */
     public function __construct()
     {
@@ -63,7 +63,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
     public function getSubscribedEvents(): array
     {
         return [
-            MetadataKeyCreateService::AFTER_METADATA_KEY_CREATE_SUCCESS_EVENT_NAME,
+            MetadataKeyUpdateService::AFTER_METADATA_KEY_UPDATE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -143,7 +143,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($modifierFirstName) {
-                return __('{0} created a new metadata key', $modifierFirstName);
+                return __('{0} has expired a metadata key', $modifierFirstName);
             }
         );
     }
@@ -157,7 +157,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () {
-                return __('You created a new metadata key');
+                return __('You have expired a metadata key');
             }
         );
     }
