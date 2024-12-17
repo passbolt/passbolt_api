@@ -261,6 +261,7 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
         return TableRegistry::getTableLocator()->get('Users')
             ->find()
             ->where(['Users.deleted' => false])
+            ->where(['Users.active' => true])
             ->all()
             ->count();
     }
