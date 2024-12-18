@@ -28,17 +28,17 @@ use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
-use Passbolt\Metadata\Service\MetadataKey\MetadataKeyUpdateService;
+use Passbolt\Metadata\Service\MetadataKey\MetadataKeyDeleteService;
 
 /**
  * @property \App\Model\Table\UsersTable $Users
  */
-class MetadataKeyExpiredEmailRedactor implements SubscribedEmailRedactorInterface
+class MetadataKeyDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use LocatorAwareTrait;
     use SubscribedEmailRedactorTrait;
 
-    public const EMAIL_TEMPLATE = 'Passbolt/Metadata.Admin/metadata_key_expire';
+    public const EMAIL_TEMPLATE = 'Passbolt/Metadata.Admin/metadata_key_delete';
 
     /**
      * @var \App\Model\Table\UsersTable
@@ -63,7 +63,7 @@ class MetadataKeyExpiredEmailRedactor implements SubscribedEmailRedactorInterfac
     public function getSubscribedEvents(): array
     {
         return [
-            MetadataKeyUpdateService::AFTER_METADATA_KEY_UPDATE_SUCCESS_EVENT_NAME,
+            MetadataKeyDeleteService::AFTER_METADATA_KEY_DELETE_SUCCESS_EVENT_NAME,
         ];
     }
 
@@ -143,7 +143,7 @@ class MetadataKeyExpiredEmailRedactor implements SubscribedEmailRedactorInterfac
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($modifierFirstName) {
-                return __('{0} has expired a metadata key', $modifierFirstName);
+                return __('{0} deleted a metadata key', $modifierFirstName);
             }
         );
     }
@@ -157,7 +157,7 @@ class MetadataKeyExpiredEmailRedactor implements SubscribedEmailRedactorInterfac
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () {
-                return __('You have expired a metadata key');
+                return __('You deleted a metadata key');
             }
         );
     }

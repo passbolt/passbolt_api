@@ -10,7 +10,7 @@
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.11.0
+ * @since         4.10.0
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
@@ -30,10 +30,10 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 if ($recipient['id'] === $modifier['id']) {
-    $text = __('You have expired a metadata key.');
+    $text = __('You deleted a metadata key.');
 } else {
     $modifierFullName = Purifier::clean($modifier['profile']['first_name']) . ' ' . Purifier::clean($modifier['profile']['last_name']);
-    $text = __('{0} has expired a metadata key.', $modifierFullName);
+    $text = __('{0} deleted a metadata key.', $modifierFullName);
 }
 $text = '<h3>' . $text . '</h3><br/>';
 $text .= 'Fingerprint: ' . $fingerprint;

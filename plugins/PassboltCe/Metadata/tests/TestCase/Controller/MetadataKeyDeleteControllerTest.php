@@ -17,7 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Controller;
 
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
@@ -28,13 +30,16 @@ use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
  */
 class MetadataKeyDeleteControllerTest extends AppIntegrationTestCaseV5
 {
+    use EmailQueueTrait;
+
     public function testMetadataKeyDeleteController_Success(): void
     {
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $key */
         $key = MetadataKeyFactory::make()->withServerPrivateKey()->expired()->persist();
         $this->assertFalse($key->isDeleted());
         $id = $key->get('id');
-        $this->logInAsAdmin();
+        $admin = $this->logInAsAdmin();
+        $someOtherAmin = UserFactory::make()->admin()->persist();
         $this->deleteJson('/metadata/keys/' . $id . '.json');
         $this->assertSuccess();
         $this->assertTrue(MetadataKeyFactory::count() === 1);
@@ -43,6 +48,19 @@ class MetadataKeyDeleteControllerTest extends AppIntegrationTestCaseV5
         /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $updatedKey */
         $updatedKey = MetadataKeyFactory::get($id);
         $this->assertTrue($updatedKey->isDeleted());
+
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailInBatchContains(
+            'You deleted a metadata key.',
+            $admin->username,
+        );
+        $this->assertEmailInBatchContains(
+            [
+                'Fingerprint: ' . $key['fingerprint'],
+                $admin->profile->first_name . ' deleted a metadata key',
+            ],
+            $someOtherAmin->get('username'),
+        );
     }
 
     public function testMetadataKeyDeleteController_Error_NotLoggedIn(): void
