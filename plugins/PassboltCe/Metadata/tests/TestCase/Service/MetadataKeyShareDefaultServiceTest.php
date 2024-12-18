@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
+use Cake\Routing\Router;
 use Passbolt\Metadata\Exception\MetadataKeyShareException;
 use Passbolt\Metadata\Service\MetadataKeyShareDefaultService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
@@ -44,6 +45,11 @@ class MetadataKeyShareDefaultServiceTest extends AppTestCaseV5
     {
         parent::setUp();
         $this->gpg = OpenPGPBackendFactory::get();
+        // Set ssl force config to `false` when url is http, this is to pass `urlWithProtocol` validation rule for the domain field
+        $domain = Router::url('/', true);
+        if (strpos($domain, 'http://') === 0) {
+            Configure::write('passbolt.ssl.force', false);
+        }
     }
 
     /**
