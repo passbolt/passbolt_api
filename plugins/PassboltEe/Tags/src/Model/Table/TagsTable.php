@@ -258,7 +258,7 @@ class TagsTable extends Table
                     ['id IN' => $encryptedTagsIds],
                 ],
             ]);
-        } elseif (!empty($slugs) && empty($encryptedTagsIds)) {
+        } elseif (!empty($slugs)) {
             $query->where(['slug IN' => $this->getCaseSensitiveValues($query, $slugs)]);
         } else {
             $query->where(['id IN' => $encryptedTagsIds]);
