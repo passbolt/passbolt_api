@@ -141,4 +141,9 @@ trait JsonRequestTrait
     {
         return json_decode(json_encode($this->_responseJsonBody), true);
     }
+
+    public function getHeadersAsArray(): ?array
+    {
+        return json_decode(json_encode($this->_responseJsonHeader), true);
+    }
 }

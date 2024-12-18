@@ -81,4 +81,18 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     $routes->connect('/session-keys/{id}', ['controller' => 'MetadataSessionKeyDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
+
+    /**
+     * Key rotation endpoints.
+     */
+    $routes->scope('/rotate-key', function (RouteBuilder $routes) {
+        $routes->setExtensions(['json']);
+
+        $routes
+            ->connect(
+                '/resources',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+    });
 });
