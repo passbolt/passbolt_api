@@ -16,9 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\Subscription\Form;
 
+use App\Utility\OpenPGP\Backends\Gnupg;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
-use Cake\Event\EventManager;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Log\Log;
@@ -42,22 +42,8 @@ class SubscriptionKeyAsciiForm extends Form
 {
     /**
      * Gpg object.
-     *
-     * @var \App\Utility\OpenPGP\Backends\Gnupg
      */
-    protected $_gpg;
-
-    /**
-     * SubscriptionKeyAsciiForm constructor.
-     *
-     * @param \Cake\Event\EventManager|null $eventManager event manager
-     */
-    public function __construct(?EventManager $eventManager = null)
-    {
-        $this->_gpg = OpenPGPBackendFactory::get();
-
-        parent::__construct($eventManager);
-    }
+    protected ?Gnupg $_gpg = null;
 
     /**
      * Subscription key schema.
@@ -100,10 +86,9 @@ class SubscriptionKeyAsciiForm extends Form
      * Check if a subscription is in a valid format.
      *
      * @param string $value The subscription
-     * @param array $context not in use
      * @return bool
      */
-    public function checkSubscriptionFormat(string $value, ?array $context = null)
+    public function checkSubscriptionFormat(string $value): bool
     {
         try {
             $this->getArmoredSignedSubscription($value);
@@ -118,10 +103,9 @@ class SubscriptionKeyAsciiForm extends Form
      * Check if the subscription is signed properly.
      *
      * @param string $value The subscription
-     * @param array|null $context not in use
-     * @return string|bool
+     * @return bool
      */
-    public function checkSignature(string $value, ?array $context = null)
+    public function checkSignature(string $value): bool
     {
         try {
             $this->parse($value);
@@ -167,14 +151,14 @@ class SubscriptionKeyAsciiForm extends Form
      * @return string The armored signed subscription
      * @throws \Exception If the subscription format is not valid
      */
-    public function getArmoredSignedSubscription(string $keyAscii)
+    public function getArmoredSignedSubscription(string $keyAscii): string
     {
         $armoredSignedSubscription = base64_decode($keyAscii);
         if (!$armoredSignedSubscription) {
             throw new \Exception(__('The subscription format is not valid.'));
         }
 
-        $isSignedMessage = $this->_gpg->isParsableArmoredSignedMessage($armoredSignedSubscription);
+        $isSignedMessage = $this->getGpg()->isParsableArmoredSignedMessage($armoredSignedSubscription);
         if (!$isSignedMessage) {
             throw new \Exception(__('The subscription format is not valid. Invalid format.'));
         }
@@ -202,10 +186,10 @@ class SubscriptionKeyAsciiForm extends Form
             throw new SubscriptionSignatureException($subscriptionSigned, $msg);
         }
         $subscriptionPublicKey = file_get_contents($filePublicKey);
-        $fingerprint = $this->_gpg->importKeyIntoKeyring($subscriptionPublicKey);
-        $this->_gpg->setVerifyKeyFromFingerprint($fingerprint);
+        $fingerprint = $this->getGpg()->importKeyIntoKeyring($subscriptionPublicKey);
+        $this->getGpg()->setVerifyKeyFromFingerprint($fingerprint);
         try {
-            $this->_gpg->verify($subscriptionSigned, $subscription);
+            $this->getGpg()->verify($subscriptionSigned, $subscription);
         } catch (\Exception $e) {
             $msg .= ' ' . $e->getMessage();
             throw new SubscriptionSignatureException($subscriptionSigned, $msg);
@@ -213,6 +197,18 @@ class SubscriptionKeyAsciiForm extends Form
 
         /** @psalm-suppress NullableReturnStatement this is always a string */
         return $subscription;
+    }
+
+    /**
+     * @return \App\Utility\OpenPGP\Backends\Gnupg
+     */
+    private function getGpg(): Gnupg
+    {
+        if (is_null($this->_gpg)) {
+            $this->_gpg = OpenPGPBackendFactory::get();
+        }
+
+        return $this->_gpg;
     }
 
     /**
