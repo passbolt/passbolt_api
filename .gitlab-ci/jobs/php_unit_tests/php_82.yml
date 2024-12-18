@@ -56,6 +56,14 @@ php8.2-mariadb10.6:
   extends:
     - .test-template-parallel
 
+php8.2-mariadb11.5:
+  variables:
+    PHP_VERSION: "8.2"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+  extends:
+    - .test-template-parallel-scheduled
+  allow_failure: true
+
 #################
 # PHP 8.2 MySQL #
 #################

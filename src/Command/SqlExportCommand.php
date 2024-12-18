@@ -217,9 +217,9 @@ class SqlExportCommand extends PassboltCommand
     protected function postgresDump(array $config, string $dir, string $file): int
     {
         // Build the dump command.
-        // Credentials are provided in ~/.pgpass
-        $cmd = 'pg_dump -h ' . escapeshellarg($config['host']) . ' -U ' . escapeshellarg($config['username']);
-        $cmd .= ' -w -d ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
+        $cmd = 'PGPASSWORD=' . escapeshellarg($config['password']) . ' pg_dump -h ' . escapeshellarg($config['host']);
+        $cmd .= ' -U ' . escapeshellarg($config['username']);
+        $cmd .= ' -d ' . escapeshellarg($config['database']) . ' > ' . $dir . $file;
         exec($cmd, $output, $status);
 
         return $status;

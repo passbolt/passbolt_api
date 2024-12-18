@@ -37,9 +37,9 @@ class GroupMembershipDigestTemplate extends AbstractDigestTemplate
     /**
      * @inheritDoc
      */
-    public function getDigestSubjectIfRecipientIsNotTheOperator(): string
+    public function getDigestSubjectIfRecipientIsNotTheOperator(?string $operatorName = null): string
     {
-        return __('{0} updated your memberships in several groups', '{0}');
+        return __('{0} updated your memberships in several groups', $operatorName);
     }
 
     /**

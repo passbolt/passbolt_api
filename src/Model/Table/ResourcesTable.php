@@ -186,8 +186,8 @@ class ResourcesTable extends Table
             ->allowEmptyString('deleted', __('The deleted status should not be empty'), false);
 
         $validator
-        ->allowEmptyDateTime('expired')
-        ->add('expired', 'expired', new IsParsableDateTimeValidationRule());
+            ->allowEmptyDateTime('expired')
+            ->add('expired', 'expired', new IsParsableDateTimeValidationRule());
 
         $validator
             ->uuid('created_by', __('The identifier of the user who created the resource should be a valid UUID.'))
@@ -220,12 +220,15 @@ class ResourcesTable extends Table
 
         $validator
             ->uuid('resource_type_id', __('The resource type identifier should be a valid UUID.'))
-            ->requirePresence('resource_type_id', 'create', __('A resource type identifier is required.'));
+            ->requirePresence('resource_type_id', 'create', __('A resource type identifier is required.'))
+            ->inList('resource_type_id', ResourceType::getV4ResourceTypes(), __(
+                'The resource type should be one of the following: {0}.',
+                implode(', ', ResourceType::V4_RESOURCE_TYPE_SLUGS)
+            ));
 
         // Associated fields
         $validator
             ->requirePresence('permissions', 'create', __('The permissions are required.'))
-            // @todo Secrets is an array
             ->allowEmptyString('permissions', __('The permissions should not be empty.'), false)
             ->hasAtMost(
                 'permissions',
@@ -236,7 +239,6 @@ class ResourcesTable extends Table
 
         $validator
             ->requirePresence('secrets', 'create', __('The owner secret is required.'))
-            // @todo Secrets is an array
             ->allowEmptyString('secrets', __('The secrets should not be empty.'), false)
             ->hasAtMost('secrets', 1, __('The secrets should contain only the secret of the owner.'), 'create');
 
@@ -258,30 +260,34 @@ class ResourcesTable extends Table
         foreach (MetadataResourceDto::V4_META_PROPS as $v4Fields) {
             $validator->remove($v4Fields);
         }
-        $validV5ResourceTypeIds = [];
-        $validV5ResourceTypes = [];
-        foreach (ResourceType::V5_RESOURCE_TYPE_SLUGS as $resourceTypeSlug) {
-            $validV5ResourceTypes[] = $resourceTypeSlug;
-            $validV5ResourceTypeIds[] = UuidFactory::uuid('resource-types.id.' . $resourceTypeSlug);
-        }
 
-        return $validator
+        $validator
             ->uuid('metadata_key_id', __('The metadata key ID should be a valid UUID.'))
-            ->allowEmptyString('metadata_key_id')
+            ->allowEmptyString('metadata_key_id');
+
+        $validator
             ->ascii('metadata', __('The metadata should be a valid ASCII string.'))
             ->requirePresence('metadata', 'create', __('An armored key is required.'))
             ->notEmptyString('metadata', __('The metadata should not be empty.'))
-            ->add('metadata', 'isMetadataParsable', new IsParsableMessageValidationRule())
+            ->add('metadata', 'isMetadataParsable', new IsParsableMessageValidationRule());
+
+        $validator
             ->utf8Extended('metadata_key_type', __('The metadata key type should be a valid UTF8 string.'))
             ->allowEmptyString('metadata_key_type')
             ->inList('metadata_key_type', ['user_key', 'shared_key'], __(
                 'The metadata key type should be one of the following: {0}.',
                 implode(', ', ['user_key', 'shared_key'])
-            ))
-            ->inList('resource_type_id', $validV5ResourceTypeIds, __(
-                'The resource type should be one of the following: {0}.',
-                implode(', ', $validV5ResourceTypes)
             ));
+
+        $validator
+            ->uuid('resource_type_id', __('The resource type identifier should be a valid UUID.'))
+            ->requirePresence('resource_type_id', 'create', __('A resource type identifier is required.'))
+            ->inList('resource_type_id', ResourceType::getV5ResourceTypes(), __(
+                'The resource type should be one of the following: {0}.',
+                implode(', ', ResourceType::V5_RESOURCE_TYPE_SLUGS)
+            ));
+
+        return $validator;
     }
 
     /**

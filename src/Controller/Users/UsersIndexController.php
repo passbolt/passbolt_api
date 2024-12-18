@@ -23,6 +23,7 @@ use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\ORM\TableRegistry;
@@ -34,17 +35,6 @@ use Passbolt\MultiFactorAuthentication\Service\Query\IsMfaEnabledQueryService;
 class UsersIndexController extends AppController
 {
     use FeaturePluginAwareTrait;
-
-    /**
-     * @inheritDoc
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->loadComponent('ApiPagination', [
-            'model' => 'Users',
-        ]);
-    }
 
     public $paginate = [
         'sortableFields' => [
@@ -61,6 +51,28 @@ class UsersIndexController extends AppController
             'Users.username' => 'asc', // Default sorted field
         ],
     ];
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->loadComponent('ApiPagination', [
+            'model' => 'Users',
+        ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function afterFilter(EventInterface $event)
+    {
+        parent::afterFilter($event);
+
+        // Reset the datetime type map to defaults
+        ISOFormatDateTimeType::remapDatetimeTypesToDefault();
+    }
 
     /**
      * @return void
@@ -106,7 +118,6 @@ class UsersIndexController extends AppController
         }
 
         $this->paginate($users);
-        ISOFormatDateTimeType::remapDatetimeTypesToDefault();
         $this->success(__('The operation was successful.'), $users);
     }
 

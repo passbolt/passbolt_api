@@ -261,4 +261,12 @@ class UserFactory extends CakephpBaseFactory
     {
         return $this->with('Gpgkeys', GpgkeyFactory::make()->withValidOpenPGPKey());
     }
+
+    /**
+     * @return $this
+     */
+    public function withAdaKey()
+    {
+        return $this->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey());
+    }
 }

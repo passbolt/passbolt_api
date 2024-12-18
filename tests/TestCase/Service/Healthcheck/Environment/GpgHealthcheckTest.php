@@ -19,12 +19,23 @@ namespace App\Test\TestCase\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\Environment\GpgHealthcheck;
 use Cake\TestSuite\TestCase;
 
+/**
+ * @covers \App\Service\Healthcheck\Environment\GpgHealthcheck
+ */
 class GpgHealthcheckTest extends TestCase
 {
-    public function testHealthcheckGpgIsPassed_Success(): void
+    public function testHealthcheckGpgCheck_Success(): void
     {
         $service = new GpgHealthcheck();
         $service->check();
         $this->assertTrue($service->isPassed());
+    }
+
+    public function testHealthcheckGpgCheck_Fail(): void
+    {
+        $service = $this->getMockBuilder(GpgHealthcheck::class)->onlyMethods(['runCommand'])->getMock();
+        $service->expects($this->exactly(2))->method('runCommand')->willReturnOnConsecutiveCalls(null, null);
+        $service->check();
+        $this->assertFalse($service->isPassed());
     }
 }

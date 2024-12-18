@@ -55,6 +55,11 @@ if ($invitedByYou) {
     $text .= __('This user was invited by {0} {1}.', Purifier::clean($invitedBy['profile']['first_name']), $invitedWhen);
 }
 $text .= '<br/>';
+
+if (isset($missingMetadataKey) && $missingMetadataKey) {
+    $text .= __('This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually.');
+}
+
 echo $this->element('Email/module/text', [
     'text' => $text
 ]);
