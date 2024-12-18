@@ -51,4 +51,16 @@ class UuidFactory
             return $uuid5->toString();
         }
     }
+
+    /**
+     * @param string $seed required
+     * @return string
+     */
+    public static function uuid5(string $seed): string
+    {
+        // Generate a version 5 (name-based and hashed with SHA1) UUID object
+        $uuid5 = Uuid::uuid5(UuidFactory::PASSBOLT_SEED, $seed);
+
+        return $uuid5->toString();
+    }
 }

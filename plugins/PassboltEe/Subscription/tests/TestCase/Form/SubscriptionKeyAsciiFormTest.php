@@ -120,7 +120,7 @@ class SubscriptionKeyAsciiFormTest extends TestCase
     /**
      * @dataProvider dataForTestParse
      * @param string $subscriptionFileName
-     * @param array $expected
+     * @param array|string $expected
      */
     public function testSubscriptionKeyAsciiForm_Parse(string $subscriptionFileName, $expected)
     {

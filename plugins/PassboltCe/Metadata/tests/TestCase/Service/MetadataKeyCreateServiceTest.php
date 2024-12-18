@@ -23,7 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
-use Passbolt\Metadata\Model\Dto\MetadataKeyDto;
+use Passbolt\Metadata\Model\Dto\MetadataKeyCreateDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\MetadataKeyCreateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
@@ -74,7 +74,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
         $dummyKey = $this->getMetadataKeyInfo();
 
-        $dto = MetadataKeyDto::fromArray([
+        $dto = MetadataKeyCreateDto::fromArray([
             'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
@@ -238,7 +238,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
 
         try {
-            $this->service->create($uac, MetadataKeyDto::fromArray($data));
+            $this->service->create($uac, MetadataKeyCreateDto::fromArray($data));
         } catch (CustomValidationException $e) {
             // Use assertions (instead of expectException) in catch to assert errors thrown
             $this->assertStringContainsString('The metadata key could not be saved', $e->getMessage());
@@ -262,7 +262,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
         $dummyKey = $this->getMetadataKeyInfo();
 
-        $dto = MetadataKeyDto::fromArray([
+        $dto = MetadataKeyCreateDto::fromArray([
             'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [
@@ -294,7 +294,7 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
         $uac = $this->makeUac($user);
         $dummyKey = $this->getMetadataKeyInfo();
 
-        $dto = MetadataKeyDto::fromArray([
+        $dto = MetadataKeyCreateDto::fromArray([
             'armored_key' => $dummyKey['public_key'],
             'fingerprint' => $dummyKey['fingerprint'],
             'metadata_private_keys' => [

@@ -47,7 +47,7 @@ class PublicKeyRevocationCheckService
 
             return self::searchForRevocation($signatures, $keyInfo['key_id']);
         } else {
-            // TODO use php-gnupg revoked flag
+            // TODO PB-37113
             throw new InternalErrorException('This functionality is not supported with ECC keys.');
         }
     }

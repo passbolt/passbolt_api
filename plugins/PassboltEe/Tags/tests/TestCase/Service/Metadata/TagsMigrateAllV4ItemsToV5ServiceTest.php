@@ -129,7 +129,7 @@ class TagsMigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
         $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
         // Personal tag of Ada
         $personalTag = TagFactory::make(['slug' => 'special'])
-            ->isPersonalFor(ResourceFactory::make()->withPermissionsFor([$ada])->persist(), $ada)
+            ->isPersonalFor($resource, $ada)
             ->persist();
 
         $result = $this->service->migrate($this->io);
