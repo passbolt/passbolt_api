@@ -16,9 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Form\RotateKey;
 
+use App\Model\Validation\DateTime\IsDateInFutureValidationRule;
 use Cake\Form\Form;
 use Cake\Form\Schema;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
@@ -37,7 +37,8 @@ class MetadataRotateKeyResourcesForm extends Form
             ->addField('metadata_key_type', ['type' => 'string'])
             ->addField('metadata', ['type' => 'string'])
             ->addField('modified', ['type' => 'datetime'])
-            ->addField('modified_by', ['type' => 'string']);
+            ->addField('modified_by', ['type' => 'string'])
+            ->addField('metadata_key', ['type' => 'array']);
     }
 
     /**
@@ -56,12 +57,14 @@ class MetadataRotateKeyResourcesForm extends Form
         $validator
             ->requirePresence('metadata_key_id', 'create', __('A metadata key identifier is required.'))
             ->notEmptyString('metadata_key_id', __('The metadata key identifier should not be empty.'))
-            ->uuid('metadata_key_id', __('The metadata key identifier should be a valid UUID.'))
-            ->add('metadata_key_id', 'expired_or_deleted', [
-                'last' => true,
-                'rule' => [$this, 'isMetadataKeyIdExpiredOrDeleted'],
-                'message' => __('The metadata key is expired or deleted.'),
-            ]);
+            ->uuid('metadata_key_id', __('The metadata key identifier should be a valid UUID.'));
+
+        $metadataKeysValidator = new Validator();
+        $metadataKeysValidator
+            ->add('expired', 'metadata_key_expired', new IsDateInFutureValidationRule())
+            ->equals('deleted', false);
+        $validator->array('metadata_key');
+        $validator->addNested('metadata_key', $metadataKeysValidator);
 
         $validator
             ->requirePresence('metadata_key_type', 'create', __('A metadata key type is required.'))
@@ -91,29 +94,6 @@ class MetadataRotateKeyResourcesForm extends Form
     }
 
     /**
-     * @param string $id Value to check.
-     * @param array $context A key value list of data containing the validation context.
-     * @return bool Returns true if metadata key is not deleted or not expired, false otherwise.
-     */
-    public function isMetadataKeyIdExpiredOrDeleted(string $id, array $context): bool
-    {
-        if (!Validation::uuid($id)) {
-            return false;
-        }
-
-        $metadataKeysQuery = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys')->find();
-        $metadataKey = $metadataKeysQuery
-            ->where([
-                'id' => $id,
-                $metadataKeysQuery->newExpr()->isNull('expired'),
-                $metadataKeysQuery->newExpr()->isNull('deleted'),
-            ])
-            ->first();
-
-        return !is_null($metadataKey);
-    }
-
-    /**
      * @inheritDoc
      */
     public function execute(array $data, array $options = []): bool
@@ -132,6 +112,7 @@ class MetadataRotateKeyResourcesForm extends Form
         return [
             'id' => $data['id'] ?? null,
             'metadata_key_id' => $data['metadata_key_id'] ?? null,
+            'metadata_key' => $data['metadata_key'] ?? null,
             'metadata_key_type' => $data['metadata_key_type'] ?? null,
             'metadata' => $data['metadata'] ?? null,
             'modified' => $data['modified'] ?? null,
