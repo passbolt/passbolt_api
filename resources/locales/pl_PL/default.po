@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 08:33+0000\n"
-"PO-Revision-Date: 2024-11-12 11:09\n"
+"PO-Revision-Date: 2024-12-19 17:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
@@ -305,7 +305,7 @@ msgid "You are not authorized to share this resource."
 msgstr "Nie masz uprawnień do udostępniania tego zasobu."
 
 msgid "Resource metadata key type is invalid."
-msgstr ""
+msgstr "Typ klucza metadanych zasobu jest nieprawidłowy."
 
 msgid "Only administrators can add new users."
 msgstr "Tylko administratorzy mogą dodawać nowych użytkowników."
@@ -857,16 +857,16 @@ msgid "The secrets should contain only the secret of the owner."
 msgstr "Sekrety powinny zawierać wyłącznie sekret właściciela."
 
 msgid "The metadata key ID should be a valid UUID."
-msgstr ""
+msgstr "Identyfikator klucza metadanych powinien być poprawnym UUID."
 
 msgid "The metadata should be a valid ASCII string."
-msgstr ""
+msgstr "Metadane powinny być prawidłowym ciągiem ASCII."
 
 msgid "The metadata should not be empty."
-msgstr ""
+msgstr "Metadane nie powinny być puste."
 
 msgid "The metadata key type should be a valid UTF8 string."
-msgstr ""
+msgstr "Typ klucza metadanych powinien być prawidłowym ciągiem UTF8."
 
 msgid "The metadata key type should be one of the following: {0}."
 msgstr ""
