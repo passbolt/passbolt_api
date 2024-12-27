@@ -18,16 +18,18 @@ namespace Passbolt\Metadata\Model\Validation;
 
 use Cake\ORM\Query;
 
-class MetadataResourcesBatchValidationService extends MetadataEntityBatchValidationService
+class MetadataResourcesBatchUpdateValidationService extends MetadataBatchUpdateValidationService
 {
+    /**
+     * @inheritDoc
+     */
     public function getModel(): string
     {
         return 'Resources';
     }
 
     /**
-     * @param array $entityIds Resource ids to find.
-     * @return \Cake\ORM\Query
+     * @inheritDoc
      */
     protected function queryEntitiesFromIds(array $entityIds): Query
     {

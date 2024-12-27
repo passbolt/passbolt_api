@@ -16,14 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Form\RotateKey;
 
-use App\Model\Validation\DateTime\IsDateInFutureValidationRule;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 
-class MetadataRotateKeyResourcesForm extends Form
+class MetadataBatchUpdateForm extends Form
 {
     /**
      * @param \Cake\Form\Schema $schema schema
@@ -59,12 +58,8 @@ class MetadataRotateKeyResourcesForm extends Form
             ->notEmptyString('metadata_key_id', __('The metadata key identifier should not be empty.'))
             ->uuid('metadata_key_id', __('The metadata key identifier should be a valid UUID.'));
 
-        $metadataKeysValidator = new Validator();
-        $metadataKeysValidator
-            ->add('expired', 'metadata_key_expired', new IsDateInFutureValidationRule())
-            ->equals('deleted', false);
         $validator->array('metadata_key');
-        $validator->addNested('metadata_key', $metadataKeysValidator);
+        $validator->addNested('metadata_key', $this->getMetadataKeyValidator());
 
         $validator
             ->requirePresence('metadata_key_type', 'create', __('A metadata key type is required.'))
@@ -89,6 +84,27 @@ class MetadataRotateKeyResourcesForm extends Form
             ->requirePresence('modified_by', 'create', __('A modified by is required.'))
             ->notEmptyString('modified_by', __('The modified by should not be empty.'))
             ->uuid('modified_by', __('The modified by should be a valid UUID.'));
+
+        return $validator;
+    }
+
+    /**
+     * Validations for metadata key nested values.
+     *
+     * @return \Cake\Validation\Validator
+     */
+    private function getMetadataKeyValidator(): Validator
+    {
+        $validator = new Validator();
+
+        $validator->notEmptyDateTime('expired');
+
+        $validator
+            ->allowEmptyDateTime('deleted')
+            ->add('deleted', 'metadata_key_deleted', [
+                'rule' => ['equalTo', null],
+                'message' => __('The metadata key should not be deleted.'),
+            ]);
 
         return $validator;
     }

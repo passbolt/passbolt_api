@@ -21,28 +21,28 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use Cake\TestSuite\TestCase;
-use Passbolt\Metadata\Form\RotateKey\MetadataRotateKeyResourcesForm;
+use Passbolt\Metadata\Form\RotateKey\MetadataBatchUpdateForm;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
- * @covers \Passbolt\Metadata\Form\RotateKey\MetadataRotateKeyResourcesForm
+ * @covers \Passbolt\Metadata\Form\RotateKey\MetadataBatchUpdateForm
  */
-class MetadataRotateKeyResourcesFormTest extends TestCase
+class MetadataBatchUpdateFormTest extends TestCase
 {
     use GpgMetadataKeysTestTrait;
 
     /**
-     * @var MetadataRotateKeyResourcesForm $form
+     * @var MetadataBatchUpdateForm $form
      */
-    protected $form;
+    protected MetadataBatchUpdateForm $form;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->form = new MetadataRotateKeyResourcesForm();
+        $this->form = new MetadataBatchUpdateForm();
     }
 
     public function tearDown(): void
@@ -51,12 +51,12 @@ class MetadataRotateKeyResourcesFormTest extends TestCase
         parent::tearDown();
     }
 
-    public function testMetadataRotateKeyResourcesForm_Success(): void
+    public function testMetadataBatchUpdateForm_Success(): void
     {
         $this->assertTrue($this->form->execute($this->getDefaultData()));
     }
 
-    public function testMetadataRotateKeyResourcesForm_Error_Empty(): void
+    public function testMetadataBatchUpdateForm_Error_Empty(): void
     {
         $result = $this->form->execute([]);
         $errors = $this->form->getErrors();
@@ -67,7 +67,7 @@ class MetadataRotateKeyResourcesFormTest extends TestCase
         }
     }
 
-    public function testMetadataRotateKeyResourcesForm_Error_InvalidUuid(): void
+    public function testMetadataBatchUpdateForm_Error_InvalidUuid(): void
     {
         $data = array_merge($this->getDefaultData(), [
             'id' => '🔥',
@@ -83,7 +83,7 @@ class MetadataRotateKeyResourcesFormTest extends TestCase
         }
     }
 
-    public function testMetadataRotateKeyResourcesForm_Error_MetadataKeyTypeShouldBeSharedKey(): void
+    public function testMetadataBatchUpdateForm_Error_MetadataKeyTypeShouldBeSharedKey(): void
     {
         $data = array_merge($this->getDefaultData(), [
             'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
@@ -94,28 +94,17 @@ class MetadataRotateKeyResourcesFormTest extends TestCase
         $this->assertArrayHasKey('is_not_shared_key', $errors['metadata_key_type']);
     }
 
-    public function testMetadataRotateKeyResourcesForm_Error_MetadataKeyIdExpired(): void
-    {
-        $metadataKey = MetadataKeyFactory::make()->expired()->persist();
-        $data = array_merge($this->getDefaultData(), [
-            'metadata_key_id' => $metadataKey->get('id'),
-        ]);
-        $result = $this->form->execute($data);
-        $errors = $this->form->getErrors();
-        $this->assertFalse($result);
-        $this->assertArrayHasKey('expired_or_deleted', $errors['metadata_key_id']);
-    }
-
-    public function testMetadataRotateKeyResourcesForm_Error_MetadataKeyIdDeleted(): void
+    public function testMetadataBatchUpdateForm_Error_MetadataKeyIdDeleted(): void
     {
         $metadataKey = MetadataKeyFactory::make()->deleted()->persist();
         $data = array_merge($this->getDefaultData(), [
             'metadata_key_id' => $metadataKey->get('id'),
+            'metadata_key' => $metadataKey->toArray(),
         ]);
         $result = $this->form->execute($data);
         $errors = $this->form->getErrors();
         $this->assertFalse($result);
-        $this->assertArrayHasKey('expired_or_deleted', $errors['metadata_key_id']);
+        $this->assertArrayHasKey('metadata_key_deleted', $errors['metadata_key']['deleted']);
     }
 
     public function metadataRotateKeyResourcesFormModifiedInvalidDateTimeFormat(): array
@@ -130,7 +119,7 @@ class MetadataRotateKeyResourcesFormTest extends TestCase
     /**
      * @dataProvider metadataRotateKeyResourcesFormModifiedInvalidDateTimeFormat
      */
-    public function testMetadataRotateKeyResourcesForm_Error_Modified_InvalidDateTimeFormat(string $datetime): void
+    public function testMetadataBatchUpdateForm_Error_Modified_InvalidDateTimeFormat(string $datetime): void
     {
         $data = array_merge($this->getDefaultData(), ['modified' => $datetime]);
         $result = $this->form->execute($data);
@@ -165,6 +154,7 @@ class MetadataRotateKeyResourcesFormTest extends TestCase
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
             'modified' => $resource->get('modified'),
             'modified_by' => $resource->get('modified_by'),
+            'metadata_key' => $activeMetadataKey->toArray(),
         ];
     }
 }

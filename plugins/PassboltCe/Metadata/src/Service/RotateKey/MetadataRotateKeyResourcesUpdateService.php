@@ -25,14 +25,12 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
 use Passbolt\Metadata\Controller\RotateKey\MetadataRotateKeyResourcesIndexController;
-use Passbolt\Metadata\Form\RotateKey\MetadataRotateKeyResourcesForm;
+use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpdateValidationService;
 
 class MetadataRotateKeyResourcesUpdateService
 {
@@ -52,63 +50,27 @@ class MetadataRotateKeyResourcesUpdateService
         $uac->assertIsAdmin();
         $this->assertRequestData($requestData);
 
-        $data = [];
-        foreach ($requestData as $i => $values) {
-            if (!is_array($values)) {
-                throw new BadRequestException(__('The resource metadata key data must be an array.'));
-            }
-
-            $form = new MetadataRotateKeyResourcesForm();
-            if (!$form->execute($values)) {
-                $errors = [$i => $form->getErrors()];
-                throw new CustomValidationException(__('Could not validate the resource metadata key data.'), $errors); // phpcs:ignore;
-            }
-
-            $data[$i] = $form->getData();
-        }
-
-        $resourcesIds = Hash::extract($data, '{n}.id');
-        $resources = $this->getResourcesFromIds($resourcesIds);
-
-        $this->updateData($uac, $resources, $data);
-    }
-
-    /**
-     * @param array $resourcesIds Resource ids to find.
-     * @return array
-     */
-    private function getResourcesFromIds(array $resourcesIds): array
-    {
-        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
-
-        return $resourcesTable->find()->where([
-            'id IN' => $resourcesIds,
-            'deleted' => false,
-        ])->toArray();
+        $metadataBatchValidationService = new MetadataResourcesBatchUpdateValidationService();
+        $data = $metadataBatchValidationService->validateMany($requestData);
+        $this->updateData($uac, $data, $metadataBatchValidationService->getEntities());
     }
 
     /**
      * @param \App\Utility\UserAccessControl $uac User access control.
-     * @param \App\Model\Entity\Resource[] $resources Resource entities
      * @param array $data Data to update
+     * @param \App\Model\Entity\Resource[] $resources Resource entities
      * @return void
      */
-    private function updateData(UserAccessControl $uac, array $resources, array $data): void
+    private function updateData(UserAccessControl $uac, array $data, array $resources): void
     {
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
 
-        // Re-arrange resources array to set key as identifier and value as entity object to easily find it
-        $resources = Hash::combine($resources, '{n}.id', '{n}');
         $entities = [];
         foreach ($data as $i => $values) {
-            if (!array_key_exists($values['id'], $resources)) {
-                throw new NotFoundException(__('Resource {0} not found.', $values['id']));
-            }
-
             $resource = $resources[$values['id']];
 
-            $this->assertData($values, $resource);
+            $this->assertConflict($values, $resource);
 
             $values = array_merge($values, [
                 'modified' => FrozenTime::now(),
@@ -131,7 +93,7 @@ class MetadataRotateKeyResourcesUpdateService
 
             if ($entity->getErrors()) {
                 $errors = [$i => $entity->getErrors()];
-                throw new CustomValidationException(__('The resource metadata key data is not valid.'), $errors);
+                throw new CustomValidationException(__('The resource metadata key data could not be updated.'), $errors); // phpcs:ignore
             }
 
             $entities[$i] = $entity;
@@ -174,7 +136,7 @@ class MetadataRotateKeyResourcesUpdateService
         }
 
         $errors = [$index => $exception->getEntity()->getErrors()];
-        throw new CustomValidationException(__('The metadata private keys could not be created.'), $errors);
+        throw new CustomValidationException(__('The resource metadata key data could not be updated.'), $errors);
     }
 
     /**
@@ -188,17 +150,20 @@ class MetadataRotateKeyResourcesUpdateService
             throw new BadRequestException(__('The request data should not be empty.'));
         }
 
-        if (count($requestData) >= MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT) {
+        if (count($requestData) > MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT) {
             throw new BadRequestException(__('The request data is too large.'));
         }
     }
 
     /**
+     * Checks for modified datetime and modified by to make sure it's not been changed by other user.
+     *
      * @param array $values Values to assert.
      * @param \App\Model\Entity\Resource $resource Existing resource entity.
      * @return void
+     * @throws \Cake\Http\Exception\ConflictException If provided values do not match with the ones present in the DB.
      */
-    private function assertData(array $values, Resource $resource): void
+    private function assertConflict(array $values, Resource $resource): void
     {
         // Assert modified date hasn't been changed
         $modified = $values['modified'] instanceof ChronosInterface ? $values['modified'] : new Chronos($values['modified']); // phpcs:ignore

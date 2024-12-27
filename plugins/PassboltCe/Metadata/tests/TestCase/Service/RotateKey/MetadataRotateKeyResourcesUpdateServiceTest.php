@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.10.0
+ * @since         4.11.0
  */
 
 namespace Passbolt\Metadata\Test\TestCase\Service\RotateKey;
@@ -248,11 +248,12 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->admin()
             ->active()
             ->persist();
-        $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
-            'metadata_key_id' => UuidFactory::uuid(),
+            'metadata_key_id' => $expiredMetadataKey->get('id'),
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
+        $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->makeUac($admin);
         $data = [
             [
@@ -276,11 +277,12 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->admin()
             ->active()
             ->persist();
-        $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
-            'metadata_key_id' => UuidFactory::uuid(),
+            'metadata_key_id' => $expiredMetadataKey->get('id'),
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
+        $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->makeUac($admin);
         $data = [
             [

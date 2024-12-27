@@ -17,18 +17,21 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Model\Validation;
 
 use App\Utility\UuidFactory;
+use Cake\Http\Exception\BadRequestException;
+use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
-use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchValidationService;
+use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpdateValidationService;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 
 class MetadataResourcesBatchValidationServiceTest extends TestCase
 {
     use TruncateDirtyTables;
 
-    protected MetadataResourcesBatchValidationService $service;
+    protected MetadataResourcesBatchUpdateValidationService $service;
 
     /**
      * @inheritDoc
@@ -37,7 +40,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new MetadataResourcesBatchValidationService();
+        $this->service = new MetadataResourcesBatchUpdateValidationService();
     }
 
     /**
@@ -55,7 +58,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
             ->setField('metadata', 'foo')
-            ->with('MetadataKeys')
+            ->with('MetadataKeys', MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey())
             ->persist();
 
         $requestData = [[
@@ -72,7 +75,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
         $this->assertSame('bar', $result[0]['metadata']);
     }
 
-    public function testMetadataResourcesBatchValidationService_Non_Existing_Resource(): void
+    public function testMetadataResourcesBatchValidationService_ResourceNotFound(): void
     {
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
@@ -89,7 +92,31 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
             'modified_by' => UuidFactory::uuid(),
         ]];
 
-        $this->expectExceptionMessage("Could not validate the metadata key data for the entity with ID: $resourceId.");
+        $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage("Entity {$resourceId} not found.");
+        $this->service->validateMany($requestData);
+    }
+
+    public function metadataResourcesBatchValidationServiceInvalidRequestDataValuesProvider(): array
+    {
+        return [
+            [
+                ['🔥'],
+                [new \stdClass()],
+                [[]],
+                [['id' => 'not-a-valid-uuid']],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider metadataResourcesBatchValidationServiceInvalidRequestDataValuesProvider
+     * @param array $requestData Invalid data.
+     * @return void
+     */
+    public function testMetadataResourcesBatchValidationService_Error_InvalidRequestDataValues(array $requestData): void
+    {
+        $this->expectException(BadRequestException::class);
         $this->service->validateMany($requestData);
     }
 }
