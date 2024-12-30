@@ -453,4 +453,39 @@ trait ResourcesFindersTrait
             ])
             ->disableHydration();
     }
+
+    /**
+     * Returns all resources in v4 format that need to be upgraded.
+     *
+     * @param array $options query options
+     * @return \Cake\ORM\Query
+     */
+    public function findMetadataUpgradeIndex(array $options): Query
+    {
+        $query = $this->find();
+
+        if (isset($options['filter']['is-shared'])) {
+            $isShared = $options['filter']['is-shared'];
+            $permissions = $this->Permissions->find()
+                ->select(['count_permissions' => 'COUNT(*)'])
+                ->where(['Permissions.aco_foreign_key' => $query->identifier('Resources.id')]);
+
+            if ($isShared === true) {
+                $query
+                    ->selectAlso(['count_permissions' => $permissions])
+                    ->having(['count_permissions > 1']);
+            } elseif ($isShared === false) {
+                $query
+                    ->selectAlso(['count_permissions' => $permissions])
+                    ->having(['count_permissions = 1']);
+            }
+        }
+
+        return $query
+            ->where([
+                'Resources.deleted' => false,
+                $query->newExpr()->isNull('Resources.metadata'),
+            ])
+            ->disableHydration();
+    }
 }

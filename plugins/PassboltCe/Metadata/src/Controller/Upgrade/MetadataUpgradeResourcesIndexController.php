@@ -14,20 +14,19 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.11.0
  */
-namespace Passbolt\Metadata\Controller\RotateKey;
+namespace Passbolt\Metadata\Controller\Upgrade;
 
 use App\Database\Type\ISOFormatDateTimeType;
-use Passbolt\Metadata\Controller\Upgrade\BaseMetadataResourcesIndexController;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
-class MetadataRotateKeyResourcesIndexController extends BaseMetadataResourcesIndexController
+class MetadataUpgradeResourcesIndexController extends BaseMetadataResourcesIndexController
 {
     /**
      * @var array
      */
     public $paginate = [
         'order' => [
-            'Resources.name' => 'asc', // Default sorted field
+            'Resources.created' => 'asc', // Default sorted field
         ],
     ];
 
@@ -39,14 +38,23 @@ class MetadataRotateKeyResourcesIndexController extends BaseMetadataResourcesInd
         $this->assertJson();
         $this->User->assertIsAdmin();
 
+        // Retrieve and sanity the query options.
+        $whitelist = ['filter' => ['is-shared',],];
+        $options = $this->QueryString->get($whitelist);
+
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
-        $resources = $this->Resources->findMetadataRotateKeyIndex();
+        $resources = $this->Resources->findMetadataUpgradeIndex($options);
         $this->paginate($resources);
         $resources = $resources->all();
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
         $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
+        if (isset($options['filter']['is-shared'])) {
+            foreach ($resources as &$resource) {
+                unset($resource['count_permissions']);
+            }
+        }
         $this->success(__('The operation was successful.'), $resources);
     }
 
@@ -55,7 +63,7 @@ class MetadataRotateKeyResourcesIndexController extends BaseMetadataResourcesInd
      */
     protected function getDefaultPaginationConfigurationKey(): string
     {
-        return 'passbolt.plugins.metadata.rotateKey.defaultPaginationLimit';
+        return 'passbolt.plugins.metadata.upgrade.defaultPaginationLimit';
     }
 
     /**
@@ -63,7 +71,7 @@ class MetadataRotateKeyResourcesIndexController extends BaseMetadataResourcesInd
      */
     protected function getInvalidPaginationConfigurationMessage(): string
     {
-        // To fix this, adjust `passbolt.plugins.metadata.rotateKey.defaultPaginationLimit` or `PASSBOLT_PLUGINS_METADATA_ROTATE_KEY_DEFAULT_PAGINATION_LIMIT`
-        return __('Invalid pagination limit set for metadata rotate key endpoint.'); // phpcs:ignore
+        // To fix this, adjust `passbolt.plugins.metadata.upgrade.defaultPaginationLimit` or `PASSBOLT_PLUGINS_METADATA_ROTATE_KEY_DEFAULT_PAGINATION_LIMIT`
+        return __('Invalid pagination limit set for metadata upgrade endpoint.');
     }
 }

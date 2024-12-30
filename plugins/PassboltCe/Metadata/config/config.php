@@ -7,6 +7,9 @@ return [
                 'rotateKey' => [
                     'defaultPaginationLimit' => filter_var(env('PASSBOLT_PLUGINS_METADATA_ROTATE_KEY_DEFAULT_PAGINATION_LIMIT', '20'), FILTER_VALIDATE_INT), // phpcs:ignore
                 ],
+                'upgrade' => [
+                    'defaultPaginationLimit' => filter_var(env('PASSBOLT_PLUGINS_METADATA_UPGRADE_DEFAULT_PAGINATION_LIMIT', '20'), FILTER_VALIDATE_INT), // phpcs:ignore
+                ],
             ],
         ],
     ],
