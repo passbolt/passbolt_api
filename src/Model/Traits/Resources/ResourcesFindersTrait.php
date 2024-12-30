@@ -30,6 +30,7 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 
 /**
@@ -436,5 +437,28 @@ trait ResourcesFindersTrait
                 'user_id' => $userId,
             ]);
         });
+    }
+
+    /**
+     * Returns all resources with expired metadata key.
+     *
+     * @return \Cake\ORM\Query
+     */
+    public function findMetadataRotateKeyIndex(): Query
+    {
+        $query = $this->find();
+
+        return $query
+            ->where([
+                'Resources.deleted' => false,
+                'Resources.metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                $query->newExpr()->isNotNull('Resources.metadata'),
+                $query->newExpr()->isNotNull('Resources.metadata_key_id'),
+            ])
+            ->innerJoin(['MetadataKeys' => 'metadata_keys'], [
+                'MetadataKeys.id' => new IdentifierExpression('Resources.metadata_key_id'),
+                $query->newExpr()->isNotNull('MetadataKeys.expired'),
+            ])
+            ->disableHydration();
     }
 }

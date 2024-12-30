@@ -130,6 +130,10 @@ class ResourcesTable extends Table
         $this->belongsTo('ResourceTypes', [
             'className' => 'Passbolt/ResourceTypes.ResourceTypes',
         ]);
+
+        $this->belongsTo('MetadataKeys', [
+            'className' => 'Passbolt/Metadata.MetadataKeys',
+        ]);
     }
 
     /**
