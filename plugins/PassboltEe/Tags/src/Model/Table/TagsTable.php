@@ -38,6 +38,7 @@ use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 
@@ -171,6 +172,11 @@ class TagsTable extends Table
         $rules->add(new MetadataKeyIdExistsInRule(), 'metadata_key_exists', [
             'errorField' => 'metadata_key_id',
             'message' => __('The metadata key does not exist.'),
+        ]);
+
+        $rules->add(new MetadataKeyIdNotExpiredRule(), 'isMetadataKeyNotExpired', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key is marked as expired.'),
         ]);
 
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
