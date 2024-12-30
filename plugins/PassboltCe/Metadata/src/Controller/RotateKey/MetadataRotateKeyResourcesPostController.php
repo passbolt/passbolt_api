@@ -21,19 +21,17 @@ use App\Database\Type\ISOFormatDateTimeType;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
+use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 
 /**
  * @property \App\Controller\Component\ApiPaginationComponent $ApiPagination
  */
-class MetadataRotateKeyResourcesIndexController extends AppController
+class MetadataRotateKeyResourcesPostController extends AppController
 {
     /**
      * @var \App\Model\Table\ResourcesTable
      */
     protected $Resources;
-
-    public const MAX_PAGINATION_LIMIT = 200;
-    public const MIN_PAGINATION_LIMIT = 1;
 
     /**
      * @var array
@@ -62,10 +60,16 @@ class MetadataRotateKeyResourcesIndexController extends AppController
     /**
      * @return void
      */
-    public function index()
+    public function post()
     {
         $this->assertJson();
         $this->User->assertIsAdmin();
+        $this->assertNotEmptyArrayData();
+
+        (new MetadataRotateKeyResourcesUpdateService())->updateMany(
+            $this->User->getAccessControl(),
+            $this->getRequest()->getData()
+        );
 
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
@@ -93,17 +97,17 @@ class MetadataRotateKeyResourcesIndexController extends AppController
         }
 
         $this->paginate['limit'] = $limit;
-        if ($limit > self::MAX_PAGINATION_LIMIT) {
-            $this->paginate['limit'] = self::MAX_PAGINATION_LIMIT;
-        } elseif ($limit < self::MIN_PAGINATION_LIMIT) {
-            $this->paginate['limit'] = self::MIN_PAGINATION_LIMIT;
+        if ($limit > MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT) {
+            $this->paginate['limit'] = MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT;
+        } elseif ($limit < MetadataRotateKeyResourcesIndexController::MIN_PAGINATION_LIMIT) {
+            $this->paginate['limit'] = MetadataRotateKeyResourcesIndexController::MIN_PAGINATION_LIMIT;
         }
 
-        $this->paginate['maxLimit'] = self::MAX_PAGINATION_LIMIT;
+        $this->paginate['maxLimit'] = MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT;
     }
 
     /**
-     * Remove pagination query parameters, those are controlled by configuration for security reasons.
+     * Remove pagination query parameters those are not controlled by administrators for security reasons.
      *
      * @return void
      */
