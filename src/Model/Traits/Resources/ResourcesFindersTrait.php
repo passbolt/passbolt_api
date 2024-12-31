@@ -466,18 +466,18 @@ trait ResourcesFindersTrait
 
         if (isset($options['filter']['is-shared'])) {
             $isShared = $options['filter']['is-shared'];
-            $permissions = $this->Permissions->find()
+
+            $subQuery = $this->Permissions->find()
                 ->select(['count_permissions' => 'COUNT(*)'])
                 ->where(['Permissions.aco_foreign_key' => $query->identifier('Resources.id')]);
-
             if ($isShared === true) {
-                $query
-                    ->selectAlso(['count_permissions' => $permissions])
-                    ->having(['count_permissions > 1']);
+                $query->where(function (QueryExpression $exp) use ($subQuery) {
+                    return $exp->gt($subQuery, 1);
+                });
             } elseif ($isShared === false) {
-                $query
-                    ->selectAlso(['count_permissions' => $permissions])
-                    ->having(['count_permissions = 1']);
+                $query->where(function (QueryExpression $exp) use ($subQuery) {
+                    return $exp->eq($subQuery, 1);
+                });
             }
         }
 

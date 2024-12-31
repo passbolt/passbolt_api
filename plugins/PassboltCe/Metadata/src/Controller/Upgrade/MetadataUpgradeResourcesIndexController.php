@@ -50,11 +50,6 @@ class MetadataUpgradeResourcesIndexController extends BaseMetadataResourcesIndex
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
         $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
-        if (isset($options['filter']['is-shared'])) {
-            foreach ($resources as &$resource) {
-                unset($resource['count_permissions']);
-            }
-        }
         $this->success(__('The operation was successful.'), $resources);
     }
 
