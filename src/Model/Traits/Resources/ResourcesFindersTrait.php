@@ -469,7 +469,10 @@ trait ResourcesFindersTrait
 
             $subQuery = $this->Permissions->find()
                 ->select(['count_permissions' => 'COUNT(*)'])
-                ->where(['Permissions.aco_foreign_key' => $query->identifier('Resources.id')]);
+                ->where([
+                    'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
+                    'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
+                ]);
             if ($isShared === true) {
                 $query->where(function (QueryExpression $exp) use ($subQuery) {
                     return $exp->gt($subQuery, 1);
