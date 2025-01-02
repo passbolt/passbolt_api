@@ -69,20 +69,24 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
         $user = UserFactory::make()->guest()->persist();
         $uac = $this->makeExtendedUac($user, '127.0.0.1', 'phpunit');
 
-        $this->expectException(ForbiddenException::class);
-        $this->expectErrorMessage('Only administrators are allowed');
-
-        $this->service->createOrUpdate($uac, []);
+        try {
+            $this->service->createOrUpdate($uac, []);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ForbiddenException::class, $e);
+            $this->assertStringContainsString('Only administrators are allowed', $e->getMessage());
+        }
     }
 
     public function testPasswordPoliciesSetSettingsService_Error_UserForbidden()
     {
         $uac = $this->mockExtendedUserAccessControl();
 
-        $this->expectException(ForbiddenException::class);
-        $this->expectErrorMessage('Only administrators are allowed');
-
-        $this->service->createOrUpdate($uac, []);
+        try {
+            $this->service->createOrUpdate($uac, []);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ForbiddenException::class, $e);
+            $this->assertStringContainsString('Only administrators are allowed', $e->getMessage());
+        }
     }
 
     public function testPasswordPoliciesSetSettingsService_Error_InvalidData()

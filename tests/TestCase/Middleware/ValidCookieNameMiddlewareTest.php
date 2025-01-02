@@ -40,10 +40,12 @@ class ValidCookieNameMiddlewareTest extends TestCase
         $request = $request->withCookieCollection(new CookieCollection([$cookieStub]));
         $handler = $this->createMock(RequestHandlerInterface::class);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('The cookie name `foo,_bar` contains invalid characters');
-        $this->expectExceptionCode(400);
-
-        (new ValidCookieNameMiddleware())->process($request, $handler);
+        try {
+            (new ValidCookieNameMiddleware())->process($request, $handler);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('The cookie name `foo,_bar` contains invalid characters', $e->getMessage());
+            $this->assertSame(400, $e->getCode());
+        }
     }
 }

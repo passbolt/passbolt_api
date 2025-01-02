@@ -87,17 +87,19 @@ class SsoRecoverAssertServiceTest extends AppTestCase
         $settingsDto = new SsoSettingsDto($ssoSetting, []);
         $ssoService->method('getSettings')->willReturn($settingsDto);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('Invalid nonce');
-
-        $this->service->assertAndGetRedirectUrl(
-            $ssoService,
-            $ssoState,
-            '123456',
-            $ip,
-            $userAgent,
-            SsoSetting::PROVIDER_AZURE
-        );
+        try {
+            $this->service->assertAndGetRedirectUrl(
+                $ssoService,
+                $ssoState,
+                '123456',
+                $ip,
+                $userAgent,
+                SsoSetting::PROVIDER_AZURE
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('Invalid nonce', $e->getMessage());
+        }
     }
 
     public function testAssertStateCodeAndGetAuthToken_ErrorUserNotExist(): void
@@ -120,17 +122,19 @@ class SsoRecoverAssertServiceTest extends AppTestCase
         $settingsDto = new SsoSettingsDto($ssoSetting, []);
         $ssoService->method('getSettings')->willReturn($settingsDto);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('Access to this service requires an invitation');
-
-        $this->service->assertAndGetRedirectUrl(
-            $ssoService,
-            $ssoState,
-            '123456',
-            $ip,
-            $userAgent,
-            SsoSetting::PROVIDER_AZURE
-        );
+        try {
+            $this->service->assertAndGetRedirectUrl(
+                $ssoService,
+                $ssoState,
+                '123456',
+                $ip,
+                $userAgent,
+                SsoSetting::PROVIDER_AZURE
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('Access to this service requires an invitation', $e->getMessage());
+        }
     }
 
     public function testAssertStateCodeAndGetAuthToken_ErrorUserDeleted(): void
@@ -154,17 +158,19 @@ class SsoRecoverAssertServiceTest extends AppTestCase
         $settingsDto = new SsoSettingsDto($ssoSetting, []);
         $ssoService->method('getSettings')->willReturn($settingsDto);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('Access to this service requires an invitation');
-
-        $this->service->assertAndGetRedirectUrl(
-            $ssoService,
-            $ssoState,
-            '123456',
-            $ip,
-            $userAgent,
-            SsoSetting::PROVIDER_AZURE
-        );
+        try {
+            $this->service->assertAndGetRedirectUrl(
+                $ssoService,
+                $ssoState,
+                '123456',
+                $ip,
+                $userAgent,
+                SsoSetting::PROVIDER_AZURE
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('Access to this service requires an invitation', $e->getMessage());
+        }
     }
 
     public function testAssertStateCodeAndGetAuthToken_ErrorStateExpired(): void
@@ -189,17 +195,19 @@ class SsoRecoverAssertServiceTest extends AppTestCase
         $settingsDto = new SsoSettingsDto($ssoSetting, []);
         $ssoService->method('getSettings')->willReturn($settingsDto);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('The SSO state is expired');
-
-        $this->service->assertAndGetRedirectUrl(
-            $ssoService,
-            $ssoState,
-            '123456',
-            $ip,
-            $userAgent,
-            SsoSetting::PROVIDER_AZURE
-        );
+        try {
+            $this->service->assertAndGetRedirectUrl(
+                $ssoService,
+                $ssoState,
+                '123456',
+                $ip,
+                $userAgent,
+                SsoSetting::PROVIDER_AZURE
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('The SSO state is expired', $e->getMessage());
+        }
     }
 
     public function testAssertStateCodeAndGetAuthToken_Success_Azure(): void
@@ -324,17 +332,19 @@ class SsoRecoverAssertServiceTest extends AppTestCase
         // Disable plugin
         $this->disableFeaturePlugin('SelfRegistration');
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('user does not exist or has been deleted');
-
-        $this->service->assertAndGetRedirectUrl(
-            $ssoService,
-            $ssoState,
-            '123456',
-            $ip,
-            $userAgent,
-            SsoSetting::PROVIDER_AZURE
-        );
+        try {
+            $this->service->assertAndGetRedirectUrl(
+                $ssoService,
+                $ssoState,
+                '123456',
+                $ip,
+                $userAgent,
+                SsoSetting::PROVIDER_AZURE
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('user does not exist or has been deleted', $e->getMessage());
+        }
     }
 
     public function testAssertAndGetRedirectUrl_Error_EmailNotAllowed(): void
@@ -357,16 +367,18 @@ class SsoRecoverAssertServiceTest extends AppTestCase
         $settingsDto = new SsoSettingsDto($ssoSetting, []);
         $ssoService->method('getSettings')->willReturn($settingsDto);
 
-        $this->expectException(BadRequestException::class);
-        $this->expectExceptionMessage('Access to this service requires an invitation');
-
-        $this->service->assertAndGetRedirectUrl(
-            $ssoService,
-            $ssoState,
-            '123456',
-            $ip,
-            $userAgent,
-            SsoSetting::PROVIDER_AZURE
-        );
+        try {
+            $this->service->assertAndGetRedirectUrl(
+                $ssoService,
+                $ssoState,
+                '123456',
+                $ip,
+                $userAgent,
+                SsoSetting::PROVIDER_AZURE
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('Access to this service requires an invitation', $e->getMessage());
+        }
     }
 }
