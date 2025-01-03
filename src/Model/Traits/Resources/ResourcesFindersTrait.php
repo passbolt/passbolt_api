@@ -28,7 +28,6 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
-use DebugKit\DebugSql;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
