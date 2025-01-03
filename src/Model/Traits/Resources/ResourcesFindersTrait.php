@@ -28,6 +28,7 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use DebugKit\DebugSql;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
@@ -466,20 +467,33 @@ trait ResourcesFindersTrait
 
         if (isset($options['filter']['is-shared'])) {
             $isShared = $options['filter']['is-shared'];
-
-            $subQuery = $this->Permissions->find()
-                ->select(['count_permissions' => 'COUNT(*)'])
+            $groupPermissionsCount = $this->Permissions->find()
+                ->select(['permissions_on_groups' => 'COUNT(*)'])
                 ->where([
                     'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
                     'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
+                    'Permissions.aro' => PermissionsTable::GROUP_ARO,
+                ]);
+            $userPermissionsCount = $this->Permissions->find()
+                ->select(['permissions_on_users' => 'COUNT(*)'])
+                ->where([
+                    'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
+                    'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
+                    'Permissions.aro' => PermissionsTable::USER_ARO,
                 ]);
             if ($isShared === true) {
-                $query->where(function (QueryExpression $exp) use ($subQuery) {
-                    return $exp->gt($subQuery, 1);
+                // Is shared if at least one permission is a group permission
+                // OR if at least two permissions are user permissions
+                $query->where(function (QueryExpression $exp) use ($groupPermissionsCount, $userPermissionsCount) {
+                    return $exp->or(function (QueryExpression $or) use ($groupPermissionsCount, $userPermissionsCount) {
+                        return $or->gte($userPermissionsCount, 2)->gte($groupPermissionsCount, 1);
+                    });
                 });
             } elseif ($isShared === false) {
-                $query->where(function (QueryExpression $exp) use ($subQuery) {
-                    return $exp->eq($subQuery, 1);
+                // Is not shared if no permission is a group permission
+                // AND the only permission is a user permission
+                $query->where(function (QueryExpression $exp) use ($groupPermissionsCount, $userPermissionsCount) {
+                    return $exp->eq($groupPermissionsCount, 0)->eq($userPermissionsCount, 1);
                 });
             }
         }
