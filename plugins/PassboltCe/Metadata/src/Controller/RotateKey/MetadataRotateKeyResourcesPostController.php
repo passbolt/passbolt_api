@@ -18,8 +18,6 @@ namespace Passbolt\Metadata\Controller\RotateKey;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
-use Cake\Core\Configure;
-use Cake\Http\Exception\InternalErrorException;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 
@@ -34,27 +32,19 @@ class MetadataRotateKeyResourcesPostController extends AppController
     protected $Resources;
 
     /**
-     * @var array
-     */
-    public $paginate = [
-        'order' => [
-            'Resources.name' => 'asc', // Default sorted field
-        ],
-    ];
-
-    /**
      * @inheritDoc
      */
     public function initialize(): void
     {
         parent::initialize();
 
-        $this->loadComponent('ApiPagination', [
-            'model' => 'Resources',
-        ]);
         $this->Resources = $this->fetchTable('Resources');
-        $this->setPaginationOptions();
-        $this->unsetDisallowedPaginationParams();
+        $this->loadComponent('Passbolt/Metadata.MetadataPagination', [
+            'model' => 'Resources',
+            'order' => [
+                'Resources.name' => 'asc', // Default sorted field
+            ],
+        ]);
     }
 
     /**
@@ -80,43 +70,5 @@ class MetadataRotateKeyResourcesPostController extends AppController
 
         $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
         $this->success(__('The operation was successful.'), $resources);
-    }
-
-    /**
-     * Set pagination options.
-     *
-     * @return void
-     */
-    private function setPaginationOptions(): void
-    {
-        $limit = Configure::read('passbolt.plugins.metadata.rotateKey.defaultPaginationLimit');
-
-        if (!is_int($limit)) {
-            // To fix this adjust `passbolt.plugins.metadata.rotateKey.defaultPaginationLimit` or `PASSBOLT_PLUGINS_METADATA_ROTATE_KEY_DEFAULT_PAGINATION_LIMIT`
-            throw new InternalErrorException(__('Invalid pagination limit set for metadata rotate key endpoint. Please contact your administrator.')); // phpcs:ignore
-        }
-
-        $this->paginate['limit'] = $limit;
-        if ($limit > MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT) {
-            $this->paginate['limit'] = MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT;
-        } elseif ($limit < MetadataRotateKeyResourcesIndexController::MIN_PAGINATION_LIMIT) {
-            $this->paginate['limit'] = MetadataRotateKeyResourcesIndexController::MIN_PAGINATION_LIMIT;
-        }
-
-        $this->paginate['maxLimit'] = MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT;
-    }
-
-    /**
-     * Remove pagination query parameters those are not controlled by administrators for security reasons.
-     *
-     * @return void
-     */
-    private function unsetDisallowedPaginationParams(): void
-    {
-        $params = $this->getRequest()->getQueryParams();
-        unset($params['page']);
-        unset($params['limit']);
-        $request = $this->getRequest()->withQueryParams($params);
-        $this->setRequest($request);
     }
 }

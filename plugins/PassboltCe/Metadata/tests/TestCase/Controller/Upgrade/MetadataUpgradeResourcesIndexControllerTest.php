@@ -139,10 +139,10 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
 
     public function testMetadataUpgradeResourcesIndexController_Error_InvalidConfigValue(): void
     {
-        Configure::write('passbolt.plugins.metadata.upgrade.defaultPaginationLimit', '🔥');
+        Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', '🔥');
         $this->logInAsAdmin();
         $this->getJson('/metadata/upgrade/resources.json');
 
-        $this->assertInternalError('Invalid pagination limit set for metadata upgrade endpoint');
+        $this->assertInternalError('Invalid pagination limit set for metadata endpoint');
     }
 }

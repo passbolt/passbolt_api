@@ -16,19 +16,31 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Controller\Upgrade;
 
+use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
-class MetadataUpgradeResourcesIndexController extends BaseMetadataResourcesIndexController
+class MetadataUpgradeResourcesIndexController extends AppController
 {
     /**
-     * @var array
+     * @var \App\Model\Table\ResourcesTable
      */
-    public $paginate = [
-        'order' => [
-            'Resources.created' => 'asc', // Default sorted field
-        ],
-    ];
+    protected $Resources;
+
+    /**
+     * @inheritDoc
+     */
+    public function initialize(): void
+    {
+        parent::initialize();
+        $this->Resources = $this->fetchTable('Resources');
+        $this->loadComponent('Passbolt/Metadata.MetadataPagination', [
+            'model' => 'Resources',
+            'order' => [
+                'Resources.created' => 'asc', // Default sorted field
+            ],
+        ]);
+    }
 
     /**
      * @return void
@@ -51,22 +63,5 @@ class MetadataUpgradeResourcesIndexController extends BaseMetadataResourcesIndex
 
         $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
         $this->success(__('The operation was successful.'), $resources);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getDefaultPaginationConfigurationKey(): string
-    {
-        return 'passbolt.plugins.metadata.upgrade.defaultPaginationLimit';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getInvalidPaginationConfigurationMessage(): string
-    {
-        // To fix this, adjust `passbolt.plugins.metadata.upgrade.defaultPaginationLimit` or `PASSBOLT_PLUGINS_METADATA_ROTATE_KEY_DEFAULT_PAGINATION_LIMIT`
-        return __('Invalid pagination limit set for metadata upgrade endpoint.');
     }
 }

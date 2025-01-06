@@ -139,7 +139,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
      */
     public function testMetadataRotateKeyResourcesIndexController_Success_PaginationMinMaxValues(int $config, int $no, int $expectedCount): void
     {
-        Configure::write('passbolt.plugins.metadata.rotateKey.defaultPaginationLimit', $config);
+        Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', $config);
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->admin()
@@ -184,16 +184,10 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
 
     public function testMetadataRotateKeyResourcesIndexController_Error_InvalidConfigValue(): void
     {
-        Configure::write('passbolt.plugins.metadata.rotateKey.defaultPaginationLimit', '🔥');
-        $admin = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->admin()
-            ->active()
-            ->persist();
-
-        $this->logInAs($admin);
+        Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', '🔥');
+        $this->logInAsAdmin();
         $this->getJson('/metadata/rotate-key/resources.json');
 
-        $this->assertInternalError('Invalid pagination limit set for metadata rotate key endpoint');
+        $this->assertInternalError('Invalid pagination limit set for metadata endpoint');
     }
 }
