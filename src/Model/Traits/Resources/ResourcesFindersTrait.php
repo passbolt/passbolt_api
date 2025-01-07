@@ -464,37 +464,39 @@ trait ResourcesFindersTrait
     {
         $query = $this->find('v4')->disableHydration();
 
-        if (isset($options['filter']['is-shared'])) {
-            $isShared = $options['filter']['is-shared'];
-            $groupPermissionsCount = $this->Permissions->find()
-                ->select(['permissions_on_groups' => 'COUNT(*)'])
-                ->where([
-                    'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
-                    'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
-                    'Permissions.aro' => PermissionsTable::GROUP_ARO,
-                ]);
-            $userPermissionsCount = $this->Permissions->find()
-                ->select(['permissions_on_users' => 'COUNT(*)'])
-                ->where([
-                    'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
-                    'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
-                    'Permissions.aro' => PermissionsTable::USER_ARO,
-                ]);
-            if ($isShared === true) {
-                // Is shared if at least one permission is a group permission
-                // OR if at least two permissions are user permissions
-                $query->where(function (QueryExpression $exp) use ($groupPermissionsCount, $userPermissionsCount) {
-                    return $exp->or(function (QueryExpression $or) use ($groupPermissionsCount, $userPermissionsCount) {
-                        return $or->gte($userPermissionsCount, 2)->gte($groupPermissionsCount, 1);
-                    });
+        if (!isset($options['filter']['is-shared'])) {
+            return $query;
+        }
+
+        $isShared = $options['filter']['is-shared'];
+        $groupPermissionsCount = $this->Permissions->find()
+            ->select(['permissions_on_groups' => 'COUNT(*)'])
+            ->where([
+                'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
+                'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
+                'Permissions.aro' => PermissionsTable::GROUP_ARO,
+            ]);
+        $userPermissionsCount = $this->Permissions->find()
+            ->select(['permissions_on_users' => 'COUNT(*)'])
+            ->where([
+                'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
+                'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
+                'Permissions.aro' => PermissionsTable::USER_ARO,
+            ]);
+        if ($isShared === true) {
+            // Is shared if at least one permission is a group permission
+            // OR if at least two permissions are user permissions
+            $query->where(function (QueryExpression $exp) use ($groupPermissionsCount, $userPermissionsCount) {
+                return $exp->or(function (QueryExpression $or) use ($groupPermissionsCount, $userPermissionsCount) {
+                    return $or->gte($userPermissionsCount, 2)->gte($groupPermissionsCount, 1);
                 });
-            } elseif ($isShared === false) {
-                // Is not shared if no permission is a group permission
-                // AND the only permission is a user permission
-                $query->where(function (QueryExpression $exp) use ($groupPermissionsCount, $userPermissionsCount) {
-                    return $exp->eq($groupPermissionsCount, 0)->eq($userPermissionsCount, 1);
-                });
-            }
+            });
+        } elseif ($isShared === false) {
+            // Is not shared if no permission is a group permission
+            // AND the only permission is a user permission
+            $query->where(function (QueryExpression $exp) use ($groupPermissionsCount, $userPermissionsCount) {
+                return $exp->eq($groupPermissionsCount, 0)->eq($userPermissionsCount, 1);
+            });
         }
 
         return $query;
