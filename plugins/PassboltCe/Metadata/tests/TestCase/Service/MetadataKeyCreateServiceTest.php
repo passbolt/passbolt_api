@@ -322,4 +322,47 @@ class MetadataKeyCreateServiceTest extends AppTestCaseV5
             $this->assertTrue(Hash::check($errors, 'metadata_private_keys.{n}.user_id._isUnique'));
         }
     }
+
+    public function testMetadataKeyCreateService_Error_TwoActiveKeyAlreadyPresent(): void
+    {
+        $keyInfo = $this->getUserKeyInfo();
+        $gpgkey = GpgkeyFactory::make(['armored_key' => $keyInfo['armored_key'], 'fingerprint' => $keyInfo['fingerprint']]);
+        $user = UserFactory::make()
+            ->with('Gpgkeys', $gpgkey)
+            ->admin()
+            ->active()
+            ->persist();
+        $uac = $this->makeUac($user);
+        $dummyKey = [
+            'fingerprint' => 'A754860C3ADE5AB04599025ED3F1FE4BE61D7009',
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key'),
+        ];
+        // already exists
+        MetadataKeyFactory::make(2)->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier()->deleted()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier()->expired()->persist();
+
+        $dto = MetadataKeyCreateDto::fromArray([
+            'armored_key' => $dummyKey['armored_key'],
+            'fingerprint' => $dummyKey['fingerprint'],
+            'metadata_private_keys' => [
+                [
+                    'user_id' => null, // server key
+                    'data' => $this->getEncryptedMetadataPrivateKeyForServerKey(),
+                ],
+                [
+                    'user_id' => $uac->getId(),
+                    'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
+                ],
+            ],
+        ]);
+
+        try {
+            $this->service->create($uac, $dto);
+        } catch (CustomValidationException $e) {
+            $errors = $e->getErrors();
+
+            $this->assertTrue(Hash::check($errors, 'fingerprint.maxNoOfActiveKeys'));
+        }
+    }
 }
