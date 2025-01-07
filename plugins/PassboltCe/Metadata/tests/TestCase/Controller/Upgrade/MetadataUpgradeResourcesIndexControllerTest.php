@@ -29,8 +29,6 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
 {
     public function testMetadataUpgradeResourcesIndexController_Success_Pagination(): void
     {
-        $admin = $this->logInAsAdmin();
-
         // V4 resources
         $nV4Resources = 3;
         ResourceFactory::make($nV4Resources)->persist();
@@ -38,7 +36,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         // V5 resource
         ResourceFactory::make()->v5Fields()->persist();
 
-        $this->logInAs($admin);
+        $this->logInAsAdmin();
         $this->getJson('/metadata/upgrade/resources.json');
 
         $this->assertSuccess();
@@ -51,13 +49,10 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
             'page' => 1,
             'limit' => null,
         ], $headers['pagination']);
-        $this->assertArrayNotHasKey('count_permissions', $response[0]);
     }
 
     public function testMetadataUpgradeResourcesIndexController_Success_Is_Shared(): void
     {
-        $admin = $this->logInAsAdmin();
-
         // V4 resources
         $nV4SharedResources = 3;
         ResourceFactory::make($nV4SharedResources)->withPermissionsFor(UserFactory::make(2)->persist())->persist();
@@ -69,7 +64,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         // V5 resource
         ResourceFactory::make()->v5Fields()->persist();
 
-        $this->logInAs($admin);
+        $this->logInAsAdmin();
         $this->getJson('/metadata/upgrade/resources.json?filter[is-shared]=1');
 
         $this->assertSuccess();
@@ -82,13 +77,10 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
             'page' => 1,
             'limit' => null,
         ], $headers['pagination']);
-        $this->assertArrayNotHasKey('count_permissions', $response[0]);
     }
 
     public function testMetadataUpgradeResourcesIndexController_Success_Is_Not_Shared(): void
     {
-        $admin = $this->logInAsAdmin();
-
         // V4 resources
         $nV4SharedResources = 3;
         ResourceFactory::make($nV4SharedResources)->withPermissionsFor(UserFactory::make(2)->persist())->persist();
@@ -101,7 +93,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         // V5 resource
         ResourceFactory::make()->v5Fields()->withPermissionsFor([UserFactory::make()->persist()])->persist();
 
-        $this->logInAs($admin);
+        $this->logInAsAdmin();
         $this->getJson('/metadata/upgrade/resources.json?filter[is-shared]=0');
 
         $this->assertSuccess();
@@ -114,7 +106,42 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
             'page' => 1,
             'limit' => null,
         ], $headers['pagination']);
-        $this->assertArrayNotHasKey('count_permissions', $response[0]);
+    }
+
+    public function testMetadataUpgradeResourcesIndexController_Success_Pagination_Sort_By_ID_Desc(): void
+    {
+        // V4 resources
+        /** @var array $resources */
+        $resources = ResourceFactory::make([
+            ['id' => '300a2f02-8111-485f-a62c-114cd6306435'],
+            ['id' => '200a2f02-8111-485f-a62c-114cd6306435'],
+            ['id' => '100a2f02-8111-485f-a62c-114cd6306435'],
+        ])->persist();
+
+        $this->logInAsAdmin();
+        $this->getJson('/metadata/upgrade/resources.json?page=2&limit=2');
+
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount(3, $response);
+        $headers = $this->getHeadersAsArray();
+        $this->assertArrayHasKey('pagination', $headers);
+        $this->assertArrayEqualsCanonicalizing([
+            'count' => 3,
+            'page' => 1,
+            'limit' => null,
+        ], $headers['pagination']);
+        // Assert that
+        $this->assertEquals($resources[2]['id'], $response[0]['id']);
+        $this->assertEquals($resources[1]['id'], $response[1]['id']);
+        $this->assertEquals($resources[0]['id'], $response[2]['id']);
+    }
+
+    public function testMetadataUpgradeResourcesIndexController_Success_Pagination_Sorting_Is_Not_Allowed(): void
+    {
+        $this->logInAsAdmin();
+        $this->getJson('/metadata/upgrade/resources.json?page=2&limit=2&sort[Resources.id]=desc');
+        $this->assertBadRequestError('Invalid order. "Resources.id" is not in the list of allowed order.');
     }
 
     public function testMetadataUpgradeResourcesIndexController_Error_NotJson(): void

@@ -37,7 +37,7 @@ class MetadataUpgradeResourcesIndexController extends AppController
         $this->loadComponent('Passbolt/Metadata.MetadataPagination', [
             'model' => 'Resources',
             'order' => [
-                'Resources.created' => 'asc', // Default sorted field
+                'Resources.id' => 'asc', // Default sorted field
             ],
         ]);
     }
