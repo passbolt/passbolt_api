@@ -462,7 +462,7 @@ trait ResourcesFindersTrait
      */
     public function findMetadataUpgradeIndex(array $options): Query
     {
-        $query = $this->find();
+        $query = $this->find('v4')->disableHydration();
 
         if (isset($options['filter']['is-shared'])) {
             $isShared = $options['filter']['is-shared'];
@@ -497,11 +497,18 @@ trait ResourcesFindersTrait
             }
         }
 
-        return $query
-            ->where([
-                'Resources.deleted' => false,
-                $query->newExpr()->isNull('Resources.metadata'),
-            ])
-            ->disableHydration();
+        return $query;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query Query
+     * @return \Cake\ORM\Query
+     */
+    public function findV4(Query $query): Query
+    {
+        return $query->where([
+            'Resources.deleted' => false,
+            $query->newExpr()->isNull('Resources.metadata'),
+        ]);
     }
 }
