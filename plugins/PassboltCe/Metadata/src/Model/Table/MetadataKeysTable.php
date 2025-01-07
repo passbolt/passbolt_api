@@ -26,9 +26,11 @@ use App\Model\Validation\DateTime\IsDateInPastValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Model\Validation\IsNullOnCreateRule;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Metadata\Model\Rule\MaxNoOfActiveMetadataKeysRule;
 
 /**
  * MetadataKeys Model
@@ -190,6 +192,10 @@ class MetadataKeysTable extends Table
             'errorField' => 'fingerprint',
             'message' => __('The fingerprint is already in use.'),
         ]);
+        $rules->addCreate(new MaxNoOfActiveMetadataKeysRule(), 'maxNoOfActiveKeys', [
+            'errorField' => 'fingerprint',
+            'message' => __('Already two metadata keys are active.'),
+        ]);
         $rules->add(new IsNotServerKeyFingerprintRule(), 'isNotServerKeyFingerprintRule', [
             'errorField' => 'fingerprint',
             'message' => __('You cannot reuse the server keys.'),
@@ -200,6 +206,19 @@ class MetadataKeysTable extends Table
         ]);
 
         return $rules;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query Query.
+     * @param array $options Finder options.
+     * @return \Cake\ORM\Query
+     */
+    public function findActive(Query $query, array $options): Query
+    {
+        return $query->where([
+            $query->newExpr()->isNull('deleted'),
+            $query->newExpr()->isNull('expired'),
+        ]);
     }
 
     /**
