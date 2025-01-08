@@ -305,6 +305,35 @@ class MetadataKeysTableTest extends AppTestCaseV5
         $this->assertArrayHasKey('isNotUserKeyFingerprintRule', $entity->getErrors()['fingerprint']);
     }
 
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::buildRules()
+     */
+    public function testMetadataKeysTable_BuildRules_TwoActiveKeysAlreadyExists(): void
+    {
+        MetadataKeyFactory::make(2)->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier()->deleted()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier()->expired()->persist();
+        $user = UserFactory::make()->user()->active()->persist();
+        $validKeyInfo = [
+            'fingerprint' => 'A754860C3ADE5AB04599025ED3F1FE4BE61D7009',
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key'),
+        ];
+
+        $entity = $this->buildEntity([
+            'fingerprint' => $validKeyInfo['fingerprint'],
+            'armored_key' => $validKeyInfo['armored_key'],
+            'created_by' => $user['id'],
+            'modified_by' => $user['id'],
+        ]);
+        $result = $this->MetadataKeys->save($entity);
+
+        $this->assertFalse($result);
+        $this->assertNotEmpty($entity->getErrors());
+        $this->assertCount(1, $entity->getErrors()['fingerprint']);
+        $this->assertArrayHasKey('maxNoOfActiveKeys', $entity->getErrors()['fingerprint']);
+    }
+
     public function testMetadataKeysTable_UpdateSave_Success(): void
     {
         $user = UserFactory::make()

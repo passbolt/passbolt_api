@@ -28,6 +28,9 @@ use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Service\MetadataTypesSettingsSetService;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
+/**
+ * @covers \Passbolt\Metadata\Service\MetadataTypesSettingsSetService
+ */
 class MetadataTypesSettingsSetServiceTest extends AppTestCaseV5
 {
     public function testMetadataTypesSettingsSetService_Success_Create(): void
@@ -50,6 +53,7 @@ class MetadataTypesSettingsSetServiceTest extends AppTestCaseV5
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
         $data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE] = true;
+        $data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] = true;
         MetadataTypesSettingsFactory::make()->value(json_encode($data))->persist();
         $this->assertEquals(1, OrganizationSettingFactory::count());
 

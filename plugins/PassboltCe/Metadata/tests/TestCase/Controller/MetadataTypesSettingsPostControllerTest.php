@@ -42,10 +42,11 @@ class MetadataTypesSettingsPostControllerTest extends AppIntegrationTestCaseV5
         UserFactory::make()->user()->persist();
         $this->logInAs($loggedInUser);
         $data = MetadataTypesSettingsFactory::getDefaultDataV4();
+
         $this->postJson('/metadata/types/settings.json', $data);
+
         $this->assertSuccess();
         $this->assertEquals(1, OrganizationSettingFactory::count());
-
         $this->assertEmailQueueCount(2);
         $this->assertEmailInBatchContains([
             'You edited the metadata settings',
@@ -63,11 +64,13 @@ class MetadataTypesSettingsPostControllerTest extends AppIntegrationTestCaseV5
         UserFactory::make()->user()->persist();
         $this->logInAs($loggedInUser);
         $data = MetadataTypesSettingsFactory::getDefaultDataV4();
-
         $data[MetadataTypesSettingsDto::DEFAULT_COMMENT_TYPE] = 'v5';
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
+        $data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] = true;
+
         $this->postJson('/metadata/types/settings.json', $data);
+
         $this->assertSuccess();
         $this->assertEquals(1, OrganizationSettingFactory::count());
         $this->assertEmailQueueCount(2);

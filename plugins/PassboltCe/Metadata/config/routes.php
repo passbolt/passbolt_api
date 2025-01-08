@@ -83,6 +83,20 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
         ->setMethods(['DELETE']);
 
     /**
+     * Resources upgrade endpoints.
+     */
+    $routes->scope('/upgrade', function (RouteBuilder $routes) {
+        $routes->setExtensions(['json']);
+
+        $routes
+            ->connect(
+                '/resources',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+    });
+
+    /**
      * Key rotation endpoints.
      */
     $routes->scope('/rotate-key', function (RouteBuilder $routes) {
