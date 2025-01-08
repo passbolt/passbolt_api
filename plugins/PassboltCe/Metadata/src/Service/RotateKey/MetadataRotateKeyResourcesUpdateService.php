@@ -29,7 +29,7 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
-use Passbolt\Metadata\Controller\RotateKey\MetadataRotateKeyResourcesIndexController;
+use Passbolt\Metadata\Controller\Component\MetadataPaginationComponent;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpdateValidationService;
 
 class MetadataRotateKeyResourcesUpdateService
@@ -150,7 +150,7 @@ class MetadataRotateKeyResourcesUpdateService
             throw new BadRequestException(__('The request data should not be empty.'));
         }
 
-        if (count($requestData) > MetadataRotateKeyResourcesIndexController::MAX_PAGINATION_LIMIT) {
+        if (count($requestData) > MetadataPaginationComponent::MAX_PAGINATION_LIMIT) {
             throw new BadRequestException(__('The request data is too large.'));
         }
     }

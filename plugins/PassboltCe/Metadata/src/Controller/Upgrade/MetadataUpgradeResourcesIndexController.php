@@ -14,17 +14,13 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.11.0
  */
-namespace Passbolt\Metadata\Controller\RotateKey;
+namespace Passbolt\Metadata\Controller\Upgrade;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
-use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 
-/**
- * @property \App\Controller\Component\ApiPaginationComponent $ApiPagination
- */
-class MetadataRotateKeyResourcesPostController extends AppController
+class MetadataUpgradeResourcesIndexController extends AppController
 {
     /**
      * @var \App\Model\Table\ResourcesTable
@@ -37,7 +33,6 @@ class MetadataRotateKeyResourcesPostController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-
         $this->Resources = $this->fetchTable('Resources');
         $this->loadComponent('Passbolt/Metadata.MetadataPagination', [
             'model' => 'Resources',
@@ -50,20 +45,18 @@ class MetadataRotateKeyResourcesPostController extends AppController
     /**
      * @return void
      */
-    public function post()
+    public function index()
     {
         $this->assertJson();
         $this->User->assertIsAdmin();
-        $this->assertNotEmptyArrayData();
 
-        (new MetadataRotateKeyResourcesUpdateService())->updateMany(
-            $this->User->getAccessControl(),
-            $this->getRequest()->getData()
-        );
+        // Retrieve and sanity the query options.
+        $whitelist = ['filter' => ['is-shared',],];
+        $options = $this->QueryString->get($whitelist);
 
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
-        $resources = $this->Resources->findMetadataRotateKeyIndex();
+        $resources = $this->Resources->findMetadataUpgradeIndex($options);
         $this->paginate($resources);
         $resources = $resources->all();
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();

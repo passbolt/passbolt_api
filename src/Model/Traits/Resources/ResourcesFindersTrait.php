@@ -453,4 +453,64 @@ trait ResourcesFindersTrait
             ])
             ->disableHydration();
     }
+
+    /**
+     * Returns all resources in v4 format that need to be upgraded.
+     *
+     * @param array $options query options
+     * @return \Cake\ORM\Query
+     */
+    public function findMetadataUpgradeIndex(array $options): Query
+    {
+        $query = $this->find('v4')->disableHydration();
+
+        if (!isset($options['filter']['is-shared'])) {
+            return $query;
+        }
+
+        $isShared = $options['filter']['is-shared'];
+        $groupPermissionsCount = $this->Permissions->find()
+            ->select(['permissions_on_groups' => 'COUNT(*)'])
+            ->where([
+                'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
+                'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
+                'Permissions.aro' => PermissionsTable::GROUP_ARO,
+            ]);
+        $userPermissionsCount = $this->Permissions->find()
+            ->select(['permissions_on_users' => 'COUNT(*)'])
+            ->where([
+                'Permissions.aco_foreign_key' => $query->identifier('Resources.id'),
+                'Permissions.aco' => PermissionsTable::RESOURCE_ACO,
+                'Permissions.aro' => PermissionsTable::USER_ARO,
+            ]);
+        if ($isShared === true) {
+            // Is shared if at least one permission is a group permission
+            // OR if at least two permissions are user permissions
+            $query->where(function (QueryExpression $exp) use ($groupPermissionsCount, $userPermissionsCount) {
+                return $exp->or(function (QueryExpression $or) use ($groupPermissionsCount, $userPermissionsCount) {
+                    return $or->gte($userPermissionsCount, 2)->gte($groupPermissionsCount, 1);
+                });
+            });
+        } elseif ($isShared === false) {
+            // Is not shared if no permission is a group permission
+            // AND the only permission is a user permission
+            $query->where(function (QueryExpression $exp) use ($groupPermissionsCount, $userPermissionsCount) {
+                return $exp->eq($groupPermissionsCount, 0)->eq($userPermissionsCount, 1);
+            });
+        }
+
+        return $query;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query Query
+     * @return \Cake\ORM\Query
+     */
+    public function findV4(Query $query): Query
+    {
+        return $query->where([
+            'Resources.deleted' => false,
+            $query->newExpr()->isNull('Resources.metadata'),
+        ]);
+    }
 }

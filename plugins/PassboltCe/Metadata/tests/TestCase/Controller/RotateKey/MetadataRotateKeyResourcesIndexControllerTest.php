@@ -45,15 +45,15 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         // create expired metadata key
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        ResourceFactory::make(29)->withPermissionsFor([$admin])->v5Fields(true, [
+        ResourceFactory::make(29)->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->id,
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
         // resources shouldn't be returned
-        ResourceFactory::make()->withPermissionsFor([$admin])->persist(); // v4
+        ResourceFactory::make()->persist(); // v4
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        ResourceFactory::make()->withPermissionsFor([$admin])->v5Fields(true, [
+        ResourceFactory::make()->v5Fields(true, [
             'metadata_key_id' => $activeMetadataKey->id,
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist(); // resource with active metadata key
@@ -64,7 +64,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
             ->active()
             ->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
-        ResourceFactory::make()->withPermissionsFor([$user])->v5Fields(true, [
+        ResourceFactory::make()->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->id,
             'metadata' => $this->encryptForUser(json_encode([]), $user, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
@@ -94,7 +94,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         // create expired metadata key
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        ResourceFactory::make(8)->withPermissionsFor([$admin])->v5Fields(true, [
+        ResourceFactory::make(8)->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->id,
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
@@ -139,7 +139,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
      */
     public function testMetadataRotateKeyResourcesIndexController_Success_PaginationMinMaxValues(int $config, int $no, int $expectedCount): void
     {
-        Configure::write('passbolt.plugins.metadata.rotateKey.defaultPaginationLimit', $config);
+        Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', $config);
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
             ->admin()
@@ -148,7 +148,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         // create expired metadata key
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        ResourceFactory::make($no)->withPermissionsFor([$admin])->v5Fields(true, [
+        ResourceFactory::make($no)->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->id,
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
@@ -184,16 +184,10 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
 
     public function testMetadataRotateKeyResourcesIndexController_Error_InvalidConfigValue(): void
     {
-        Configure::write('passbolt.plugins.metadata.rotateKey.defaultPaginationLimit', '🔥');
-        $admin = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->admin()
-            ->active()
-            ->persist();
-
-        $this->logInAs($admin);
+        Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', '🔥');
+        $this->logInAsAdmin();
         $this->getJson('/metadata/rotate-key/resources.json');
 
-        $this->assertInternalError('Invalid pagination limit set for metadata rotate key endpoint');
+        $this->assertInternalError('Invalid pagination limit set for metadata endpoint');
     }
 }
