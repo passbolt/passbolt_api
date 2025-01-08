@@ -25,6 +25,7 @@ use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Event\ContainAccountRecoveryUserSettings;
 use Passbolt\AccountRecovery\Event\ContainPendingAccountRecoveryRequest;
 use Passbolt\AccountRecovery\Event\DeleteAccountRecoveryInfoOnUserDelete;
+use Passbolt\AccountRecovery\Event\Metadata\MetadataKeysBuildRulesListener;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Notification\AccountRecoveryEmailRedactorPool;
 use Passbolt\AccountRecovery\Notification\AccountRecoveryNotificationSettingsDefinition;
@@ -75,7 +76,8 @@ class AccountRecoveryPlugin extends BasePlugin
             ->on(new AccountRecoveryNotificationSettingsDefinition())
             ->on(new ContainAccountRecoveryUserSettings())
             ->on(new ContainPendingAccountRecoveryRequest())
-            ->on(new DeleteAccountRecoveryInfoOnUserDelete());
+            ->on(new DeleteAccountRecoveryInfoOnUserDelete())
+            ->on(new MetadataKeysBuildRulesListener());
     }
 
     /**
