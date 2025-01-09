@@ -26,6 +26,7 @@ use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * @uses \Passbolt\Metadata\Controller\RotateKey\MetadataRotateKeyResourcesPostController
@@ -34,6 +35,17 @@ class MetadataRotateKeyResourcesPostControllerTest extends AppIntegrationTestCas
 {
     use LocatorAwareTrait;
     use GpgMetadataKeysTestTrait;
+
+    /**
+     * @inheritDoc
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        ResourceTypeFactory::make()->default()->persist();
+        ResourceTypeFactory::make()->passwordAndDescription()->persist();
+    }
 
     public function testMetadataRotateKeyResourcesPostController_Success(): void
     {
@@ -48,7 +60,7 @@ class MetadataRotateKeyResourcesPostControllerTest extends AppIntegrationTestCas
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
+            'metadata' => $this->encryptForMetadataKey(json_encode([])),
         ])->persist();
         // another user's resource returned
         $user = UserFactory::make()
@@ -71,7 +83,7 @@ class MetadataRotateKeyResourcesPostControllerTest extends AppIntegrationTestCas
                 'id' => $expiredResource1->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
-                'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()), // todo: use valid v5 json metadata format
+                'metadata' => $this->encryptForMetadataKey(json_encode([])), // todo: use valid v5 json metadata format
                 'modified' => $expiredResource1->get('modified'),
                 'modified_by' => $expiredResource1->get('modified_by'),
             ],

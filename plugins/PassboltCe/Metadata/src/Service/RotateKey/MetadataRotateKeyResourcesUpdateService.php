@@ -100,7 +100,7 @@ class MetadataRotateKeyResourcesUpdateService
         }
 
         try {
-            $resourcesTable->saveManyOrFail($entities, ['checkRules' => false]);
+            $resourcesTable->saveManyOrFail($entities);
         } catch (PersistenceFailedException $exception) { // @phpstan-ignore-line
             $this->handleSaveManyValidationException($exception, $entities);
         } catch (\Exception $exception) {
