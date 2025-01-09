@@ -33,6 +33,7 @@ use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * @covers \Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService
@@ -53,6 +54,9 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
     {
         parent::setUp();
         $this->service = new MetadataRotateKeyResourcesUpdateService();
+
+        ResourceTypeFactory::make()->default()->persist();
+        ResourceTypeFactory::make()->passwordAndDescription()->persist();
     }
 
     /**
@@ -77,7 +81,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
         $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
+            'metadata' => $this->encryptForMetadataKey(json_encode([])),
         ])->persist();
         // another user's resource returned
         $user = UserFactory::make()
@@ -88,12 +92,12 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
         $expiredResource2 = ResourceFactory::make()->withPermissionsFor([$user])->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForUser(json_encode([]), $user, $this->getAdaNoPassphraseKeyInfo()),
+            'metadata' => $this->encryptForMetadataKey(json_encode([])),
         ])->persist();
 
         $uac = $this->mockAdminAccessControl();
-        $metadataForR1 = $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo());
-        $metadataForR2 = $this->encryptForUser(json_encode([]), $user, $this->getAdaNoPassphraseKeyInfo());
+        $metadataForR1 = $this->encryptForMetadataKey(json_encode([]));
+        $metadataForR2 = $this->encryptForMetadataKey(json_encode([]));
         $data = [
             [
                 'id' => $expiredResource1->get('id'),
@@ -297,5 +301,39 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
 
         $this->expectException(ConflictException::class);
         $this->service->updateMany($uac, $data);
+    }
+
+    public function testMetadataRotateKeyResourcesUpdateService_Error_MetadataKeyIsExpired(): void
+    {
+        $admin = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
+        $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])->v5Fields(true, [
+            'metadata_key_id' => $expiredMetadataKey->get('id'),
+            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
+        ])->persist();
+
+        try {
+            $uac = $this->mockAdminAccessControl();
+            $data = [
+                [
+                    'id' => $expiredResource1->get('id'),
+                    'metadata_key_id' => $expiredMetadataKey->get('id'),
+                    'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                    'metadata' => $this->encryptForMetadataKey(json_encode([])),
+                    'modified' => $expiredResource1->get('modified'),
+                    'modified_by' => $expiredResource1->get('modified_by'),
+                ],
+            ];
+            $this->service->updateMany($uac, $data);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(CustomValidationException::class, $e);
+            $errors = $e->getErrors();
+            $this->assertArrayHasKey('isMetadataKeyNotExpired', $errors[0]['metadata_key_id']);
+        }
     }
 }
