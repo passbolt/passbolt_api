@@ -57,6 +57,7 @@ class AdminUserSetupCompleteEmailRedactorTest extends AppTestCaseV5
 
     public function testAdminUserSetupCompleteEmailRedactor_ZeroKnowledgeKeyShare()
     {
+        MetadataKeysSettingsFactory::make()->enableZeroTrustKeySharing()->persist();
         UserFactory::make()->admin()->active()->persist();
         $user = UserFactory::make()->user()->active()->persist();
 
@@ -72,7 +73,7 @@ class AdminUserSetupCompleteEmailRedactorTest extends AppTestCaseV5
 
     public function testAdminUserSetupCompleteEmailRedactor_ZeroKnowledgeKeyShareDisabled()
     {
-        MetadataKeysSettingsFactory::make()->disableZeroTrustKeySharing()->persist();
+        MetadataKeysSettingsFactory::make()->persist();
         UserFactory::make()->admin()->active()->persist();
         $user = UserFactory::make()->user()->active()->persist();
 
