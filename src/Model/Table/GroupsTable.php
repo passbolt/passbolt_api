@@ -384,8 +384,14 @@ class GroupsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupWithNoMembers($dryRun = false)
+    public function cleanupWithNoMembers(bool $dryRun = false): int
     {
-        return $this->cleanupHardDeleted('GroupsUsers', $dryRun);
+        $query = $this->selectQuery()
+            ->select(['id'])
+            ->leftJoinWith('GroupsUsers')
+            ->whereNull('GroupsUsers.id')
+            ->where([$this->aliasField('deleted') => 0]);
+
+        return $this->cleanupHardDeleted('GroupsUsers', $dryRun, $query);
     }
 }

@@ -85,21 +85,31 @@ class CleanupCommandTest extends AppTestCase
     public function testCleanupCommandFixMode_GroupsWithNoMembers()
     {
         // Add group with no member
-        GroupFactory::make()->persist();
+        $groupWithNoMembers = GroupFactory::make()->persist();
         // Add group with member(s)
         $userManager = UserFactory::make()->admin()->persist();
         $groupWithMember = GroupFactory::make()->withGroupsManagersFor([$userManager])->persist();
+        $deletedGroupWithMember = GroupFactory::make()->deleted()->withGroupsManagersFor([$userManager])->persist();
+        $deletedGroupWithNoMember = GroupFactory::make()->deleted()->persist();
 
         $this->exec('passbolt cleanup');
 
         $this->assertExitSuccess();
         $this->assertOutputContains('Cleanup shell');
         $this->assertOutputContains('(fix mode)');
-        // Make sure the group with member(s) not deleted
-        $groups = GroupFactory::find()->toArray();
-        $this->assertCount(1, $groups);
-        $this->assertSame($groupWithMember->get('id'), $groups[0]->get('id'));
-        $this->assertSame(1, UserFactory::find()->count());
+        // Make sure the groups with member(s) or already soft-deleted are not deleted
+        $expectedGroupsNotDeleted = [
+            $groupWithMember,
+            $deletedGroupWithMember,
+            $deletedGroupWithNoMember,
+        ];
+        $groups = GroupFactory::find('list')->all()->toArray();
+        $this->assertCount(3, $groups);
+        $this->assertSame(3, GroupFactory::count());
+        foreach ($expectedGroupsNotDeleted as $group) {
+            $this->assertArrayHasKey($group['id'], $groups);
+        }
+        $this->assertArrayNotHasKey($group['id'], $groupWithNoMembers);
     }
 
     public function testCleanupCommand_NoActiveAdministrator()
