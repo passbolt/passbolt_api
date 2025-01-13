@@ -24,6 +24,7 @@ use OTPHP\Factory;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
+use Passbolt\MultiFactorAuthentication\Form\Totp\TotpVerifyForm;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
@@ -57,9 +58,12 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
+        $this->mockTotpMfaForm(TotpVerifyForm::class);
+
         $this->post('/mfa/verify/totp?redirect=' . $redirect, [
             'totp' => $otp->now(),
         ]);
+
         $this->assertRedirect($redirect);
     }
 
