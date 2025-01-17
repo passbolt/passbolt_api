@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 09:43+0000\n"
-"PO-Revision-Date: 2025-01-17 18:15\n"
+"PO-Revision-Date: 2025-01-17 19:16\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -866,13 +866,13 @@ msgid "The metadata should not be empty."
 msgstr "Los metadatos no deben estar vacíos."
 
 msgid "The metadata key type should be a valid UTF8 string."
-msgstr ""
+msgstr "El tipo de clave de los metadatos debe ser una cadena UTF8 válida."
 
 msgid "The metadata key type should be one of the following: {0}."
-msgstr ""
+msgstr "El tipo de clave de los metadatos debe ser uno de los siguientes: {0}."
 
 msgid "The resource type should be one of the following: {0}."
-msgstr ""
+msgstr "El tipo de recurso debe ser uno de los siguientes: {0}."
 
 msgid "The resource type does not exist."
 msgstr "El tipo de recurso no existe."
@@ -890,28 +890,28 @@ msgid "The permissions should contain at least the owner permission."
 msgstr "Los permisos deben contener al menos el permiso de propietario."
 
 msgid "The settings selected by your administrator prevent from downgrading resource type."
-msgstr ""
+msgstr "Los ajustes seleccionados por su administrador impiden degradar el tipo de recurso."
 
 msgid "The settings selected by your administrator prevent from using that key type."
-msgstr ""
+msgstr "Los ajustes seleccionados por su administrador impiden usar ese tipo de clave."
 
 msgid "The metadata key does not exist or was deleted."
-msgstr ""
+msgstr "La clave de los metadatos no existe o ha sido eliminada."
 
 msgid "The metadata key is marked as expired."
-msgstr ""
+msgstr "La clave de los metadatos está marcada como caducada."
 
 msgid "It is not allowed to create v5-password-string resource types."
-msgstr ""
+msgstr "No se permite crear tipos de recurso v5-password-string."
 
 msgid "The resource type should not be deleted."
-msgstr ""
+msgstr "El tipo de recurso no debe ser eliminado."
 
 msgid "The resource metadata provided can not be decrypted."
-msgstr ""
+msgstr "Los metadatos del recurso proporcionados no se pueden descifrar."
 
 msgid "A resource of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "Un recurso de tipo personal no se puede compartir con otros usuarios o un grupo."
 
 msgid "The resource should not be already soft deleted."
 msgstr "El recurso no debe haberse eliminado temporalmente."
@@ -995,7 +995,7 @@ msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr "La clave blindada debe ser una clave OpenPGP con blindaje ASCII válido."
 
 msgid "The armored key is not valid."
-msgstr ""
+msgstr "La clave blindada no es válida."
 
 msgid "The message should be a valid ASCII-armored OpenPGP message."
 msgstr "El mensaje debe ser un mensaje ASCII válido con armadura OpenPGP."
@@ -1028,7 +1028,7 @@ msgid "The delete status should be a valid boolean."
 msgstr "El estado eliminado debe ser un booleano válido."
 
 msgid "The field must be null when creating a new record."
-msgstr ""
+msgstr "El campo debe ser nulo cuando se crea un nuevo registro."
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "El identificador de clave debe ser una cadena de 8 caracteres hexadecimales."
@@ -1094,28 +1094,28 @@ msgid "You added the password {0}"
 msgstr "Ha añadido la contraseña {0}"
 
 msgid "You added a new password"
-msgstr ""
+msgstr "Has añadido una nueva contraseña"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} ha eliminado la contraseña {1}"
 
 msgid "You edited a resource"
-msgstr ""
+msgstr "Has editado un recurso"
 
 msgid "You edited the resource {0}"
-msgstr ""
+msgstr "Has editado el recurso {0}"
 
 msgid "{0} edited the resource {1}"
-msgstr ""
+msgstr "{0} ha editado el recurso {1}"
 
 msgid "{0} can not complete the account recovery process!"
 msgstr "¡{0} no puede completar el proceso de recuperación de cuenta!"
 
 msgid "{0} shared the resource {1}"
-msgstr ""
+msgstr "{0} ha compartido el recurso {1}"
 
 msgid "{0} shared a resource"
-msgstr ""
+msgstr "{0} ha compartido un recurso"
 
 msgid "You deleted administrator {0}"
 msgstr "Ha eliminado al administrador {0}"
@@ -1544,16 +1544,16 @@ msgid "No table found."
 msgstr "No se han encontrado tablas."
 
 msgid "Cannot detect your system distribution details."
-msgstr ""
+msgstr "No se pueden detectar los detalles de la distribución del sistema."
 
 msgid "See `{0}`."
-msgstr ""
+msgstr "Vea `{0}`."
 
 msgid "Cannot detect your `gpg` or `libgcrypt` version."
-msgstr ""
+msgstr "No se ha podido detectar su versión `gpg` o `libgcrypt`."
 
 msgid "See `{0}` and `{1}`."
-msgstr ""
+msgstr "Vea `{0}` y `{1}`."
 
 msgid "GD or Imagick extension is installed."
 msgstr "La extensión GD o Imagick está instalada."
@@ -1562,10 +1562,10 @@ msgid "You must enable the gd or imagick extensions to use Passbolt."
 msgstr "Debe habilitar las extensiones GD o Imagick para usar Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "Vea: https://secure.php.net/manual/es/book.image.php"
 
 msgid "See: https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "Vea: https://secure.php.net/manual/es/book.imagick.php"
 
 msgid "Intl extension is installed."
 msgstr "La extensión Intl está instalada."
@@ -1574,7 +1574,7 @@ msgid "You must enable the intl extension to use Passbolt."
 msgstr "Debe habilitar la extensión Intl para usar Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "Vea: https://secure.php.net/manual/es/book.intl.php"
 
 msgid "The logs directory and its content are writable."
 msgstr "El directorio de logs y su contenido tienen permisos de escritura."
@@ -1583,7 +1583,7 @@ msgid "The logs directory and its content are not writable."
 msgstr "El directorio de logs y su contenido no tienen permisos de escritura."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "Asegúrate de que el usuario del servidor web puede escribir en el directorio de registros y en su contenido."
 
 msgid "You can try:"
 msgstr "Puedes probar:"
@@ -1595,7 +1595,7 @@ msgid "You must enable the mbstring extension to use Passbolt."
 msgstr "Debe habilitar la extensión Mbstring para usar Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "Vea: https://secure.php.net/manual/es/book.mbstring.php"
 
 msgid "PHP version is {0} or above."
 msgstr "La versión de PHP es {0} o superior."
@@ -1604,13 +1604,13 @@ msgid "PHP version less than {0} will soon be not supported by passbolt, so cons
 msgstr "Las versiones de PHP menores que {0} pronto dejarán de ser compatibles con Passbolt, así que considere actualizar su sistema operativo o entorno PHP."
 
 msgid "64-bit architecture system detected."
-msgstr ""
+msgstr "Sistema de arquitectura de 64 bits detectado."
 
 msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
-msgstr ""
+msgstr "Sistema de arquitectura de 32 bits detectado, este entorno no será soportado a partir de Passbolt v5."
 
 msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
-msgstr ""
+msgstr "Vea PHP_INT_MAX - https://www.php.net/manual/es/language.types.integer.php"
 
 msgid "PCRE compiled with unicode support."
 msgstr "PCRE compilado con soporte Unicode."
@@ -1628,25 +1628,25 @@ msgid "PHP version is too low, passbolt need PHP {0} or higher."
 msgstr "La versión de PHP es demasiado baja, Passbolt necesita PHP {0} o superior."
 
 msgid "System clock is synchronized and NTP service is active."
-msgstr ""
+msgstr "El reloj del sistema está sincronizado y el servicio NTP está activo."
 
 msgid "System clock and NTP service information cannot be found."
-msgstr ""
+msgstr "No se pudo encontrar información sobre el reloj del sistema y el servicio NTP."
 
 msgid "NTP service is active but the system clock is not synchronized."
-msgstr ""
+msgstr "El servicio NTP está activo pero el reloj del sistema no está sincronizado."
 
 msgid "System clock is synchronized but NTP service is inactive."
-msgstr ""
+msgstr "El reloj del sistema está sincronizado pero el servicio NTP no está activo."
 
 msgid "System clock is not synchronized and NTP service is inactive."
-msgstr ""
+msgstr "El reloj del sistema no está sincronizado y el servicio NTP no está activo."
 
 msgid "That generally means the NTP service is failing to contact any NTP servers."
-msgstr ""
+msgstr "Por lo general, esto significa que el servicio NTP no está contactando con ningún servidor NTP."
 
 msgid "See `{0}`. More information: {1}"
-msgstr ""
+msgstr "Vea `{0}`. Más información: {1}"
 
 msgid "The temporary directory and its content are writable and not executable."
 msgstr "El directorio temporal y su contenido tienen permisos de escritura y no son ejecutables."
@@ -1883,10 +1883,10 @@ msgid "SSL peer certificate does not validate."
 msgstr "El certificado de pares SSL no valida."
 
 msgid "The keyring is not defined."
-msgstr ""
+msgstr "El llavero no está definido."
 
 msgid "The keyring directory is not accessible by the current user: {0}"
-msgstr ""
+msgstr "El directorio del llaveros no es accesible por el usuario actual: {0}"
 
 msgid "Could not validate sub key data."
 msgstr "No se pudieron validar los datos de la sub-clave."
@@ -1925,10 +1925,10 @@ msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
 msgstr "No se puede usar la clave OpenPGP del servidor definida en la configuración para encriptar."
 
 msgid "The OpenPGP server key defined in the config cannot be used to verify signature."
-msgstr ""
+msgstr "No se puede usar la clave OpenPGP del servidor definida en la configuración para verificar la firma."
 
 msgid "The OpenPGP server key defined in the config cannot be used to sign."
-msgstr ""
+msgstr "No se puede usar la clave OpenPGP del servidor definida en la configuración para firmar."
 
 msgid "The config for the server private key fingerprint is not available or incomplete."
 msgstr "La configuración de la huella de la clave privada del servidor no está disponible o está incompleta."
@@ -1937,13 +1937,13 @@ msgid "The config for the server private key passphrase is invalid."
 msgstr "La configuración de la contraseña de clave privada del servidor no es válida."
 
 msgid "The user public key is not available or incomplete."
-msgstr ""
+msgstr "La clave pública del usuario no está disponible o está incompleta."
 
 msgid "The user public key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "La huella digital de la clave pública del usuario no está disponible o está incompleta."
 
 msgid "The user armored key is not available or incomplete."
-msgstr ""
+msgstr "La clave blindada del usuario no está disponible o está incompleta."
 
 msgid "The algorithm is invalid."
 msgstr "El algoritmo no es válido."
@@ -2333,19 +2333,19 @@ msgid "The identifier of the user who modified the folder should not be empty."
 msgstr "El identificador del usuario que modificó la carpeta no debe estar vacío."
 
 msgid "The settings selected by your administrator prevent from downgrading folder."
-msgstr ""
+msgstr "Los ajustes seleccionados por su administrador impiden que la carpeta se degrade."
 
 msgid "The metadata key does not exist."
-msgstr ""
+msgstr "La clave de los metadatos no existe."
 
 msgid "A folder of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "Una carpeta de tipo personal no se puede compartir con otros usuarios o un grupo."
 
 msgid "You added the folder {0}"
 msgstr "Añadiste la carpeta {0}"
 
 msgid "You added a new folder"
-msgstr ""
+msgstr "Has añadido una nueva carpeta"
 
 msgid "You deleted the folder {0}"
 msgstr "Ha eliminado la carpeta {0}"
@@ -2357,7 +2357,7 @@ msgid "{0} shared the folder {1}"
 msgstr "{0} ha compartido la carpeta {1}"
 
 msgid "{0} shared a folder"
-msgstr ""
+msgstr "{0} ha compartido una carpeta"
 
 msgid "{0} edited the folder"
 msgstr "{0} ha editado la carpeta"
@@ -2702,40 +2702,40 @@ msgid "Could not validate secret history data."
 msgstr "No se pudo validar los datos históricos del secreto."
 
 msgid "Could not validate the metadata key data."
-msgstr ""
+msgstr "No se pudieron validar los datos de la clave de metadatos."
 
 msgid "The metadata key identifier should be a UUID."
-msgstr ""
+msgstr "El identificador de la clave de metadatos debe ser un UUID."
 
 msgid "The private key identifier should be a UUID."
-msgstr ""
+msgstr "El identificador de la clave privada debe ser un UUID."
 
 msgid "An object type is required."
 msgstr "Se requiere un tipo de objeto."
 
 msgid "The object type is invalid."
-msgstr ""
+msgstr "El tipo de objeto no es válido."
 
 msgid "A passphrase is required."
 msgstr "Se requiere una frase de contraseña."
 
 msgid "The passphrase should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "La frase de contraseña debe ser una cadena BMP-UTF8 válida."
 
 msgid "A fingerprint is required."
 msgstr "Se requiere una huella digital."
 
 msgid "A fingerprint should not be greater than 51 characters."
-msgstr ""
+msgstr "Una huella dactilar no debe tener más de 51 caracteres."
 
 msgid "A fingerprint should not be empty."
-msgstr ""
+msgstr "Una huella dactilar no debe estar vacía."
 
 msgid "The fingerprint should be a valid alphanumeric string."
 msgstr "La huella digital debe ser una cadena alfanumérica válida."
 
 msgid "The armored key should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "La clave blindada debe ser una cadena BMP-UTF8 válida."
 
 msgid "The value is not a valid OpenPGP private key."
 msgstr "El valor no es una clave privada OpenPGP válida."
@@ -3017,70 +3017,70 @@ msgid "The metadata session key could not be deleted."
 msgstr ""
 
 msgid "Could not validate the data."
-msgstr ""
+msgstr "No se pudieron validar los datos."
 
 msgid "The metadata session key data is identical."
 msgstr ""
 
 msgid "The metadata session key data has changed."
-msgstr ""
+msgstr "Los datos de la clave de sesión de los metadatos han cambiado."
 
 msgid "Could not save the metadata session keys, please try again later."
-msgstr ""
+msgstr "No se pudieron guardar las claves de sesión de los metadatos, por favor inténtelo de nuevo más tarde."
 
 msgid "Could not prepare private key for server key."
-msgstr ""
+msgstr "No se pudo preparar la clave privada para la clave del servidor."
 
 msgid "User key not found."
-msgstr ""
+msgstr "Clave del usuario no encontrada."
 
 msgid "Could not prepare private key for user id {0}."
-msgstr ""
+msgstr "No se pudo preparar la clave privada para el id de usuario {0}."
 
 msgid "No folders to migrate."
-msgstr ""
+msgstr "No hay carpetas para migrar."
 
 msgid "Folder ID \"{0}\" is already V5"
-msgstr ""
+msgstr "El ID de la carpeta \"{0}\" ya es V5"
 
 msgid "No permission found for folder ID {0}"
-msgstr ""
+msgstr "No se encontraron permisos para el ID de la carpeta {0}"
 
 msgid "No user provided."
-msgstr ""
+msgstr "No se ha proporcionado usuario."
 
 msgid "The metadata could not be encrypted for permission id: {0}."
-msgstr ""
+msgstr "Los metadatos no pudieron ser cifrados para el id del permiso: {0}."
 
 msgid "No OpenPGP key found for the user."
-msgstr ""
+msgstr "No se ha encontrado una clave OpenPGP para el usuario."
 
 msgid "The metadata could not be encrypted with the user id: {0}."
-msgstr ""
+msgstr "Los metadatos no se han podido cifrar con el ID del usuario: {0}."
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
-msgstr ""
+msgstr "Los metadatos no pudieron ser cifrados con la clave de metadatos: {0}."
 
 msgid "Unable to migrate folder ID: {0} to V5."
-msgstr ""
+msgstr "No se pudo migrar el ID de la carpeta: {0} a V5."
 
 msgid "Migrating {0}..."
-msgstr ""
+msgstr "Migrando {0}..."
 
 msgid "Errors (encoded): {0}"
-msgstr ""
+msgstr "Errores (codificados): {0}"
 
 msgid "Migration process for {0} finished."
-msgstr ""
+msgstr "El proceso de migración de {0} ha terminado."
 
 msgid "No resources to migrate."
-msgstr ""
+msgstr "No hay recursos para migrar."
 
 msgid "Resource ID \"{0}\" is already V5"
-msgstr ""
+msgstr "El ID de recurso \"{0}\" ya es V5"
 
 msgid "No permission found for resource ID {0}"
-msgstr ""
+msgstr "No se encontró ningún permiso para el ID de recurso {0}"
 
 msgid "Unable to migrate resource ID: {0} to V5."
 msgstr ""
@@ -3140,7 +3140,7 @@ msgid "{0} has shared a folder with you."
 msgstr ""
 
 msgid "You have edited a folder."
-msgstr ""
+msgstr "Has editado una carpeta."
 
 msgid "You have saved a new password"
 msgstr "Has guardado una nueva contraseña"
