@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 09:43+0000\n"
-"PO-Revision-Date: 2025-01-17 22:15\n"
+"PO-Revision-Date: 2025-01-17 23:15\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1586,7 +1586,7 @@ msgid "Ensure the logs directory and its content are writable by the webserver u
 msgstr "Asegúrate de que el usuario del servidor web puede escribir en el directorio de registros y en su contenido."
 
 msgid "You can try:"
-msgstr "Puedes probar:"
+msgstr "Puede probar:"
 
 msgid "Mbstring extension is installed."
 msgstr "La extensión Mbstring está instalada."
@@ -2918,109 +2918,109 @@ msgid "Unable to decrypt the metadata private key."
 msgstr "No se pudo descifrar la clave privada de los metadatos."
 
 msgid "The metadata key does not exist or has been deleted."
-msgstr ""
+msgstr "La clave de metadatos no existe o ha sido eliminada."
 
 msgid "The metadata key has already been deleted."
-msgstr ""
+msgstr "La clave de metadatos ya ha sido eliminada."
 
 msgid "The metadata key should be marked as expired first."
-msgstr ""
+msgstr "La clave de metadatos debe marcarse como caducada primero."
 
 msgid "The metadata key is still in use, migrate the remaining items to the new key first."
-msgstr ""
+msgstr "La clave de metadatos todavía está en uso, migre los elementos restantes a la nueva clave primero."
 
 msgid "The metadata key could not be deleted."
-msgstr ""
+msgstr "La clave de metadatos no pudo ser eliminada."
 
 msgid "The metadata key could not be saved."
-msgstr ""
+msgstr "La clave de metadatos no pudo ser guardada."
 
 msgid "Could not save the metadata key, please try again later."
-msgstr ""
+msgstr "No se pudo guardar la clave de metadatos, por favor inténtelo de nuevo más tarde."
 
 msgid "Server metadata private key was not found."
-msgstr ""
+msgstr "No se encontró la clave privada de metadatos del servidor."
 
 msgid "Metadata key could not be shared with user id: {0}."
-msgstr ""
+msgstr "La clave de metadatos no se pudo compartir con el ID de usuario: {0}."
 
 msgid "The data could not be validated."
-msgstr ""
+msgstr "Los datos no pudieron ser validados."
 
 msgid "The data could not be saved."
-msgstr ""
+msgstr "No se pudieron guardar los datos."
 
 msgid "The metadata private key should not be empty."
-msgstr ""
+msgstr "La clave privada de metadatos no debe estar vacía."
 
 msgid "The metadata private key cleartext data should be in JSON format."
-msgstr ""
+msgstr "Los datos de texto claro de la clave privada de metadatos deben estar en formato JSON."
 
 msgid "The metadata private key cleartext data should not be empty."
-msgstr ""
+msgstr "Los datos de texto claro de la clave privada de metadatos no deben estar vacíos."
 
 msgid "The metadata private key cleartext data is not valid."
-msgstr ""
+msgstr "Los datos de texto claro de clave privada de metadatos no son válidos."
 
 msgid "The OpenPGP user key cannot be found."
-msgstr ""
+msgstr "No se pudo encontrar la clave de usuario OpenPGP."
 
 msgid "Could not validate the settings."
-msgstr ""
+msgstr "No se pudieron validar los ajustes."
 
 msgid "The server metadata private key is required to enable these settings."
-msgstr ""
+msgstr "Se requiere la clave privada de los metadatos del servidor para habilitar estos ajustes."
 
 msgid "The server metadata key id is required."
-msgstr ""
+msgstr "Se requiere el identificador de clave de metadatos del servidor."
 
 msgid "The server metadata private key is invalid."
-msgstr ""
+msgstr "La clave privada de metadatos del servidor no es válida."
 
 msgid "The metadata private key could not be updated."
-msgstr ""
+msgstr "La clave privada de metadatos no pudo ser actualizada."
 
 msgid "Please try again later."
 msgstr "Por favor, inténtelo de nuevo más tarde."
 
 msgid "The metadata private key could not be validated."
-msgstr ""
+msgstr "La clave privada de metadatos no pudo ser validada."
 
 msgid "The request data is invalid."
-msgstr ""
+msgstr "Los datos de la solicitud no son válidos."
 
 msgid "The metadata key is already shared with the user."
-msgstr ""
+msgstr "La clave de metadatos ya está compartida con el usuario."
 
 msgid "The metadata private key does not exist or has been deleted."
-msgstr ""
+msgstr "La clave privada de metadatos no existe o ha sido eliminada."
 
 msgid "The metadata private key was already edited by the user."
-msgstr ""
+msgstr "La clave privada de metadatos ya ha sido editada por el usuario."
 
 msgid "The metadata session key could not be saved."
-msgstr ""
+msgstr "La clave de sesión de metadatos no pudo ser guardada."
 
 msgid "Could not save the metadata session key, please try again later."
-msgstr ""
+msgstr "No se pudo guardar la clave de sesión de metadatos. Por favor, inténtelo de nuevo más tarde."
 
 msgid "The data must be a string."
-msgstr ""
+msgstr "Los datos deben ser una cadena de texto."
 
 msgid "The metadata session key identifier should be a UUID."
-msgstr ""
+msgstr "El identificador de clave de sesión de metadatos debe ser un UUID."
 
 msgid "The metadata session key does not exist or does not belong to this user."
-msgstr ""
+msgstr "La clave de sesión de metadatos no existe o no pertenece a este usuario."
 
 msgid "The metadata session key could not be deleted."
-msgstr ""
+msgstr "La clave de sesión de metadatos no pudo ser eliminada."
 
 msgid "Could not validate the data."
 msgstr "No se pudieron validar los datos."
 
 msgid "The metadata session key data is identical."
-msgstr ""
+msgstr "Los datos de la clave de sesión de metadatos son idénticos."
 
 msgid "The metadata session key data has changed."
 msgstr "Los datos de la clave de sesión de los metadatos han cambiado."
@@ -3083,79 +3083,79 @@ msgid "No permission found for resource ID {0}"
 msgstr "No se encontró ningún permiso para el ID de recurso {0}"
 
 msgid "Unable to migrate resource ID: {0} to V5."
-msgstr ""
+msgstr "No se puede migrar el ID de recurso: {0} a V5."
 
 msgid "Could not validate metadata key data."
-msgstr ""
+msgstr "No se pudieron validar los datos de la clave de metadatos."
 
 msgid "Could not import the metadata OpenPGP key."
-msgstr ""
+msgstr "No se pudo importar la clave OpenPGP de los metadatos."
 
 msgid "The metadata key is not available or incomplete."
-msgstr ""
+msgstr "La clave de metadatos no está disponible o está incompleta."
 
 msgid "The metadata key fingerprint is not available or incomplete."
 msgstr "La huella digital de la clave de metadatos no está disponible o está incompleta."
 
 msgid "The metadata armored key is not available or incomplete."
-msgstr ""
+msgstr "La clave blindada de los metadatos no está disponible o está incompleta."
 
 msgid "The user identifier should be a UUID."
-msgstr ""
+msgstr "El identificador de usuario debe ser un UUID."
 
 msgid "The user metadata private keys could not be deleted."
-msgstr ""
+msgstr "No se han podido eliminar las claves privadas de los metadatos del usuario."
 
 msgid "The user metadata session keys could not be deleted."
-msgstr ""
+msgstr "No se han podido eliminar las claves de sesión de los metadatos de usuario."
 
 msgid "V5 metadata format is not enabled."
-msgstr ""
+msgstr "El formato de metadatos V5 no está habilitado."
 
 msgid "Resource creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "No se permite la creación/modificación de recursos con metadatos cifrados."
 
 msgid "Folder creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "No se permite la creación/modificación de carpetas con metadatos cifrados."
 
 msgid "Tag creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "No se permite la creación/modificación de etiquetas con metadatos cifrados."
 
 msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "No se permite la creación/modificación de recursos con metadatos de texto claro."
 
 msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "No se permite la creación/modificación de carpetas con metadatos de texto claro."
 
 msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "No se permite la creación/modificación de etiquetas con metadatos de texto claro."
 
 msgid "{0} created a new metadata key"
-msgstr ""
+msgstr "{0} ha creado una nueva clave de metadatos"
 
 msgid "You have created a new folder."
-msgstr "Has creado una nueva carpeta."
+msgstr "Ha creado una nueva carpeta."
 
 msgid "{0} has shared a folder with you."
-msgstr ""
+msgstr "{0} ha compartido una carpeta contigo."
 
 msgid "You have edited a folder."
-msgstr "Has editado una carpeta."
+msgstr "Ha editado una carpeta."
 
 msgid "You have saved a new password"
 msgstr "Has guardado una nueva contraseña"
 
 msgid "You have created a new password."
-msgstr ""
+msgstr "Ha creado una nueva contraseña."
 
 msgid "{0} shared a resource with you"
-msgstr ""
+msgstr "{0} ha compartido un recurso contigo"
 
 msgid "{0} shared a resource with you."
-msgstr ""
+msgstr "{0} ha compartido un recurso contigo."
 
 msgid "You have edited a resource."
-msgstr ""
+msgstr "Ha editado un recurso."
 
 msgid "Information about the transfer is required."
 msgstr "Se requiere información sobre la transferencia."
@@ -3302,7 +3302,7 @@ msgid "The multi-factor authentication is not required."
 msgstr "La autenticación de múltiples factores no es necesaria."
 
 msgid "No valid multi-factor authentication settings found."
-msgstr ""
+msgstr "No se encontraron ajustes de autenticación de múltiple factor."
 
 msgid "No valid multi-factor authentication settings found for this provider."
 msgstr "No se han encontrado configuraciones de autenticación de múltiples factores válidas para este proveedor."
@@ -3686,7 +3686,7 @@ msgid "{0} marked the password {1} as expired"
 msgstr "{0} marcó la contraseña {1} como caducada"
 
 msgid "{0} marked a password as expired"
-msgstr ""
+msgstr "{0} ha marcado una contraseña como caducada"
 
 msgid "You edited the password expiry settings"
 msgstr "Ha editado la configuración de caducidad de las contraseñas"
@@ -4013,10 +4013,10 @@ msgid "No"
 msgstr "No"
 
 msgid "The deleted field must be set to null."
-msgstr ""
+msgstr "El campo eliminado debe ser nulo."
 
 msgid "It is not allowed to update these resource type properties."
-msgstr ""
+msgstr "No está permitido actualizar estas propiedades de tipo de recurso."
 
 msgid "The name should be a valid BMP-UTF8 string."
 msgstr "El nombre debe ser una cadena BMP-UTF8 válida."
@@ -4052,25 +4052,25 @@ msgid "A resource type already exists with this definition."
 msgstr "Ya existe un tipo de recurso con esta definición."
 
 msgid "The resource type identifier should be a UUID."
-msgstr ""
+msgstr "El identificador de tipo de recurso debe ser un UUID."
 
 msgid "The resource type is already deleted."
-msgstr ""
+msgstr "El tipo de recurso ya ha sido eliminado."
 
 msgid "You cannot delete the last resource type of the default version."
-msgstr ""
+msgstr "No puede eliminar el último tipo de recurso de la versión predeterminada."
 
 msgid "You cannot delete the last resource type available."
-msgstr ""
+msgstr "No puede eliminar el último tipo de recurso disponible."
 
 msgid "The resource type can not be deleted as resources of this type still exist."
-msgstr ""
+msgstr "El tipo de recurso no puede ser eliminado ya que recursos de este tipo todavía existen."
 
 msgid "The resource type could not be deleted."
-msgstr ""
+msgstr "No se pudo eliminar el tipo de recurso."
 
 msgid "The resource type is not deleted."
-msgstr ""
+msgstr "El tipo de recurso no se ha eliminado."
 
 msgid "The self registration setting id should be a valid UUID."
 msgstr "El identificador del ajuste del auto-registro debe ser un UUID válido."
@@ -5006,7 +5006,7 @@ msgid "The account recovery user setting is not valid."
 msgstr "La configuración de recuperación de cuenta de usuario no es válida."
 
 msgid "You have disabled the account recovery."
-msgstr "Has desactivado la recuperación de cuenta."
+msgstr "Ha desactivado la recuperación de la cuenta."
 
 msgid "{0} has disabled the account recovery."
 msgstr "{0} ha deshabilitado la recuperación de cuenta."
@@ -5030,7 +5030,7 @@ msgid "{0} has initiated a recovery request"
 msgstr "{0} ha iniciado una solicitud de recuperación"
 
 msgid "You have initiated a recovery request"
-msgstr "Has iniciado una solicitud de recuperación"
+msgstr "Ha iniciado una solicitud de recuperación"
 
 msgid "Recovery request approved!"
 msgstr "¡Solicitud de recuperación aprobada!"
@@ -6389,28 +6389,28 @@ msgid "The subscription key format is not valid."
 msgstr "El formato de la clave de suscripción no es válido."
 
 msgid "Subscription is valid and up to date."
-msgstr ""
+msgstr "La suscripción es válida y está actualizada."
 
 msgid "Subscription cannot be found or is invalid/expired."
-msgstr ""
+msgstr "La suscripción no se puede encontrar o no es válida/está caducada."
 
 msgid "Subscription invalid/expired ({0})."
-msgstr ""
+msgstr "La suscripción no es válida/está caducada ({0})."
 
 msgid "Subscription expired ({0})."
-msgstr ""
+msgstr "Suscripción caducada ({0})."
 
 msgid "Subscription user count has been exceeded ({0}/{1})."
-msgstr ""
+msgstr "Se ha superado el número de usuarios de la suscripción ({0}/{1})."
 
 msgid "Subscription will expire in {0} days."
-msgstr ""
+msgstr "La suscripción caducará en {0} días."
 
 msgid "Subscription soon exceeds user count ({0}/{1})."
-msgstr ""
+msgstr "La suscripción pronto superará el número de usuarios ({0}/{1})."
 
 msgid "Subscription invalid or expired."
-msgstr ""
+msgstr "La suscripción no es válida o está caducada."
 
 msgid "Subscription key format error."
 msgstr "Error en el formato de la clave de suscripción."
@@ -6479,10 +6479,10 @@ msgid "Only administrators can update the subscription details."
 msgstr "Sólo los administradores pueden actualizar los detalles de la suscripción."
 
 msgid "The tags data should be a string or an array."
-msgstr ""
+msgstr "Los datos de las etiquetas deben ser una cadena de texto o una matriz."
 
 msgid "Could not validate request data."
-msgstr ""
+msgstr "No se pudieron validar los datos de la solicitud."
 
 msgid "The tag id is not valid."
 msgstr "El id de la etiqueta no es válido."
@@ -6503,10 +6503,10 @@ msgid "The tag has been updated successfully."
 msgstr "La etiqueta se ha actualizado correctamente."
 
 msgid "The tag identifier should be a valid UUID."
-msgstr ""
+msgstr "El identificador de etiqueta debe ser un UUID válido."
 
 msgid "The tag is missing or does not belong to current user."
-msgstr ""
+msgstr "No se ha encontrado la etiqueta o no pertenece al usuario actual."
 
 msgid "The is shared should be a boolean type."
 msgstr ""
@@ -6533,16 +6533,16 @@ msgid "The tag metadata OpenPGP message cannot be parsed or is not for the inten
 msgstr ""
 
 msgid "Error while building tag DTO."
-msgstr ""
+msgstr "Error al construir la etiqueta DTO."
 
 msgid "Could not validate tags data."
 msgstr "No se pudo validar los datos de las etiquetas."
 
 msgid "Unable to build tag entity"
-msgstr ""
+msgstr "No se pudo crear la entidad de etiqueta"
 
 msgid "No tags to migrate."
-msgstr ""
+msgstr "No hay etiquetas para migrar."
 
 msgid "Tag ID \"{0}\" is already V5"
 msgstr "El ID de la etiqueta \"{0}\" ya es V5"
