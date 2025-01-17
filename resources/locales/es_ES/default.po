@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 09:43+0000\n"
-"PO-Revision-Date: 2025-01-17 21:15\n"
+"PO-Revision-Date: 2025-01-17 22:15\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -2867,55 +2867,55 @@ msgid "No permission found for the entity: {0}"
 msgstr "No se encontraron permisos para la entidad: {0}"
 
 msgid "The identifier of the user who created the metadata key should be a valid UUID."
-msgstr ""
+msgstr "El identificador del usuario que creó la clave de metadatos debe ser un UUID válido."
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
-msgstr ""
+msgstr "El identificador del usuario que modificó la clave de metadatos debe ser un UUID válido."
 
 msgid "The fingerprint is already in use."
-msgstr ""
+msgstr "La huella digital ya está en uso."
 
 msgid "You cannot reuse the user key."
-msgstr ""
+msgstr "No puede reutilizar la clave de usuario."
 
 msgid "The metadata key identifier should be a valid UUID."
-msgstr ""
+msgstr "El identificador de clave de metadatos debe ser un UUID válido."
 
 msgid "The metadata key identifier should not be empty."
-msgstr ""
+msgstr "El identificador de clave de metadatos no debe estar vacío."
 
 msgid "The user does not exist or is not active or is deleted."
-msgstr ""
+msgstr "El usuario no existe o no está activo o ha sido eliminado."
 
 msgid "The metadata key id & user id combination is already in use."
-msgstr ""
+msgstr "La combinación de ID de clave de metadatos e ID de usuario ya está en uso."
 
 msgid "The data is not valid. Please make sure it is encrypted for the correct key."
-msgstr ""
+msgstr "Los datos no son válidos. Por favor, asegúrese de que están cifrados para la clave correcta."
 
 msgid "{0} created a new metadata key."
-msgstr ""
+msgstr "{0} ha creado una nueva clave de metadatos."
 
 msgid "You created a new metadata key."
-msgstr ""
+msgstr "Has creado una nueva clave de metadatos."
 
 msgid "{0} edited the metadata settings."
-msgstr ""
+msgstr "{0} ha editado los ajustes de metadatos."
 
 msgid "You edited the metadata settings."
-msgstr ""
+msgstr "Has editado la configuración de los metadatos."
 
 msgid "No server metadata private key found."
-msgstr ""
+msgstr "No se ha encontrado una clave privada de metadatos del servidor."
 
 msgid "Unable to decrypt the metadata private key data."
-msgstr ""
+msgstr "No se puede descifrar los datos de la clave privada de los metadatas."
 
 msgid "The server is able to decrypt the metadata private key."
-msgstr ""
+msgstr "El servidor es capaz de descifrar la clave privada de metadatos."
 
 msgid "Unable to decrypt the metadata private key."
-msgstr ""
+msgstr "No se pudo descifrar la clave privada de los metadatos."
 
 msgid "The metadata key does not exist or has been deleted."
 msgstr ""
@@ -3095,7 +3095,7 @@ msgid "The metadata key is not available or incomplete."
 msgstr ""
 
 msgid "The metadata key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "La huella digital de la clave de metadatos no está disponible o está incompleta."
 
 msgid "The metadata armored key is not available or incomplete."
 msgstr ""
