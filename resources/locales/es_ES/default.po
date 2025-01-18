@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2024-11-12 09:43+0000\n"
-"PO-Revision-Date: 2025-01-17 23:15\n"
+"PO-Revision-Date: 2025-01-18 00:14\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -308,7 +308,7 @@ msgid "Resource metadata key type is invalid."
 msgstr "El tipo de clave de los metadatos de recursos no es válido."
 
 msgid "Only administrators can add new users."
-msgstr "Sólo los administradores pueden agregar nuevos usuarios."
+msgstr "Solo los administradores pueden agregar nuevos usuarios."
 
 msgid "The user was successfully added. This user now need to complete the setup."
 msgstr "El usuario se ha añadido correctamente. Este usuario necesita completar la configuración."
@@ -719,7 +719,7 @@ msgid "This property id is already in use."
 msgstr "Este id de propiedad ya está en uso."
 
 msgid "Only admin can create or update organization settings."
-msgstr "Sólo un administrador puede crear o actualizar la configuración de la organización."
+msgstr "Solo un administrador puede crear o actualizar la configuración de la organización."
 
 msgid "This is not a valid setting."
 msgstr "Esta no es una configuración válida."
@@ -1931,7 +1931,7 @@ msgid "The OpenPGP server key defined in the config cannot be used to sign."
 msgstr "No se puede usar la clave OpenPGP del servidor definida en la configuración para firmar."
 
 msgid "The config for the server private key fingerprint is not available or incomplete."
-msgstr "La configuración de la huella de la clave privada del servidor no está disponible o está incompleta."
+msgstr "La configuración de la huella digital de la clave privada del servidor no está disponible o está incompleta."
 
 msgid "The config for the server private key passphrase is invalid."
 msgstr "La configuración de la contraseña de clave privada del servidor no es válida."
@@ -2123,7 +2123,7 @@ msgid "The directory {0} cannot be deleted"
 msgstr "No se puede eliminar el directorio {0}"
 
 msgid "The key {0} cannot be used to encrypt."
-msgstr "La clave {0} no se puede usar para encriptar."
+msgstr "No se puede usar la clave {0} para cifrar."
 
 msgid "The key {0} cannot be used to decrypt."
 msgstr "No se puede usar la clave {0} para descifrar."
@@ -2138,10 +2138,10 @@ msgid "Could not import the OpenPGP key."
 msgstr "No se pudo importar la clave OpenPGP."
 
 msgid "Could not use the key to sign and encrypt."
-msgstr "No se pudo usar la clave para firmar y encriptar."
+msgstr "No se pudo usar la clave para firmar y cifrar."
 
 msgid "Could not use the key to encrypt."
-msgstr "No se pudo usar la clave para encriptar."
+msgstr "No se pudo usar la clave para cifrar."
 
 msgid "Expected {0} and got {1}."
 msgstr "Se esperaba {0} y se obtuvo {1}."
@@ -2168,7 +2168,7 @@ msgid "There is an issue with the OpenPGP server key."
 msgstr "Hay un problema con la clave del servidor OpenPGP."
 
 msgid "The fingerprint does not match the one associated with the key on file."
-msgstr "La 'fingerprint' no coincide con la asociada a la clave en el archivo."
+msgstr "La huella digital no coincide con la asociada a la clave en el archivo."
 
 msgid "No OpenPGP marker found."
 msgstr "No se encontró ningún marcador OpenPGP."
@@ -2414,7 +2414,7 @@ msgid "The folder parent does not exist."
 msgstr "La carpeta principal no existe."
 
 msgid "You have created a new folder"
-msgstr "Has creado una nueva carpeta"
+msgstr "Ha creado una nueva carpeta"
 
 msgid "Name: {0}"
 msgstr "Nombre: {0}"
@@ -3143,7 +3143,7 @@ msgid "You have edited a folder."
 msgstr "Ha editado una carpeta."
 
 msgid "You have saved a new password"
-msgstr "Has guardado una nueva contraseña"
+msgstr "Ha guardado una nueva contraseña"
 
 msgid "You have created a new password."
 msgstr "Ha creado una nueva contraseña."
@@ -3668,10 +3668,10 @@ msgid "Log in passbolt"
 msgstr "Iniciar sesión passbolt"
 
 msgid "The automatic_expiry field must be true."
-msgstr "El campo \"Expiración automática\" debe ser verdadero."
+msgstr "El campo automatic_expiry debe ser true."
 
 msgid "The automatic_update field must be true."
-msgstr "El campo \"Actualización automática\" debe ser verdadero."
+msgstr "El campo automatic_update debe ser true."
 
 msgid "The value should be an array."
 msgstr "El valor debe ser una matriz."
@@ -3971,7 +3971,7 @@ msgid "until I log out"
 msgstr "hasta que cierre la sesión"
 
 msgid "Only administrators can view reports."
-msgstr "Sólo los administradores pueden ver los informes."
+msgstr "Solo los administradores pueden ver los informes."
 
 msgid "The requested report `{0}` does not exist."
 msgstr "El informe solicitado `{0}` no existe."
@@ -4382,7 +4382,7 @@ msgid "The OpenPGP public key should not have an expiry date."
 msgstr "La clave pública OpenPGP no debe tener una fecha de caducidad."
 
 msgid "The OpenPGP public key cannot be used to encrypt."
-msgstr "La clave pública OpenPGP no se puede usar para cifrar."
+msgstr "No se puede usar la clave pública OpenPGP para cifrar."
 
 msgid "An OpenPGP private key is required."
 msgstr "Se requiere una clave privada OpenPGP."
@@ -5207,7 +5207,7 @@ msgid "This is a potential security threat."
 msgstr "Esta es una amenaza potencial para la seguridad."
 
 msgid "You have initiated an account recovery!"
-msgstr "¡Has iniciado una recuperación de cuenta!"
+msgstr "¡Ha iniciado una recuperación de cuenta!"
 
 msgid "Recovery Request"
 msgstr "Solicitud de recuperación"
@@ -5339,7 +5339,7 @@ msgid "The {0} {1} could not be suspended because of an internal error. Please t
 msgstr "El {0} {1} no se pudo suspender debido a un error interno. Inténtelo de nuevo más tarde."
 
 msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
-msgstr "El {0} {1} no se pudo eliminar debido a un error interno. Inténtalo de nuevo más tarde."
+msgstr "No se ha podido eliminar el {0} {1} debido a un error interno. Por favor, inténtelo de nuevo más tarde."
 
 msgid "The {0} {1} was not synced because the passbolt {0} is marked as to be ignored."
 msgstr "El {0} {1} no se sincronizó porque passbolt {0} está marcado como ignorado."
@@ -5405,7 +5405,7 @@ msgid "The record does not exist."
 msgstr "El registro no existe."
 
 msgid "The record could not be unmarked as ignored. Please try again later."
-msgstr "El registro no pudo ser desmarcado como ignorado. Inténtalo de nuevo más tarde."
+msgstr "No se ha podido desmarcar el registro como ignorado. Por favor, inténtelo de nuevo más tarde."
 
 msgid "The record will not be ignored in the next directory synchronization."
 msgstr "El registro no se ignorará en la próxima sincronización de directorios."
@@ -5492,7 +5492,7 @@ msgid "The groups parent group should be a valid BMP-UTF8 string."
 msgstr "El grupo padre de los grupos debe ser una cadena BMP-UTF8 válida."
 
 msgid "The enabled users only setting should be a boolean."
-msgstr "La configuración de usuarios habilitados debe ser un boolean."
+msgstr "La configuración de solo usuarios habilitados debe ser un boolean."
 
 msgid "The sync of created users setting should be a boolean."
 msgstr "La sincronización de la configuración de usuarios creados debe ser un booleano."
@@ -6476,7 +6476,7 @@ msgid "The file {0} could not be read."
 msgstr "El archivo {0} no se pudo leer."
 
 msgid "Only administrators can update the subscription details."
-msgstr "Sólo los administradores pueden actualizar los detalles de la suscripción."
+msgstr "Solo los administradores pueden actualizar los detalles de la suscripción."
 
 msgid "The tags data should be a string or an array."
 msgstr "Los datos de las etiquetas deben ser una cadena de texto o una matriz."
@@ -6530,7 +6530,7 @@ msgid "A shared status is required."
 msgstr "Se requiere un estado compartido."
 
 msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
-msgstr ""
+msgstr "El mensaje OpenPGP de los metadatos de la etiqueta no puede ser analizado o no es para el destinatario previsto."
 
 msgid "Error while building tag DTO."
 msgstr "Error al construir la etiqueta DTO."
@@ -6602,7 +6602,7 @@ msgid "The requested address was not found on this server."
 msgstr "La dirección solicitada no se encontró en este servidor."
 
 msgid "Please double check the url."
-msgstr "Por favor, comprueba la url."
+msgstr "Por favor, compruebe la URL."
 
 msgid "Maybe the page was deleted or moved."
 msgstr "Tal vez la página fue eliminada o movida."
@@ -6800,7 +6800,7 @@ msgid "{0} deleted the group \"{1}\" you were a member of."
 msgstr "{0} eliminó el grupo \"{1}\" del que eras miembro."
 
 msgid "All passwords that were shared only with this group were also deleted."
-msgstr "También se eliminaron todas las contraseñas que fueron compartidas sólo con este grupo."
+msgstr "También se eliminaron todas las contraseñas que fueron compartidas solo con este grupo."
 
 msgid "As member of the group you now have access to all the passwords that are shared with this group."
 msgstr "Como miembro del grupo ahora tiene acceso a todas las contraseñas que se comparten con este grupo."
