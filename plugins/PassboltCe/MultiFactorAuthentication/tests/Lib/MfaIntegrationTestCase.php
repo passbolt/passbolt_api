@@ -118,4 +118,19 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
             return $stubSessionIdentifier;
         });
     }
+
+    /**
+     * Mock form to prevent failing verify call due timestamp mismatch.
+     *
+     * @param string $className Form class to mock.
+     * @return void
+     */
+    public function mockTotpMfaForm(string $className): void
+    {
+        $form = $this->createMock($className);
+        $form->method('isValidOtp')->willReturn(true);
+        $this->mockService($className, function () use ($form) {
+            return $form;
+        });
+    }
 }
