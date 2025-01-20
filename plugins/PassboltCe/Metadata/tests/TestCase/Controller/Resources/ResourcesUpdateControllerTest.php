@@ -31,6 +31,7 @@ use Cake\Event\EventManager;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
@@ -216,7 +217,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::make(['resource_type_id' => $resourceTypeId])->withPermissionsFor([$user])->persist();
         $metadataKeyId = UuidFactory::uuid();
         $metadata = 'metadata';
-        $metadataKeyType = 'shared_key';
+        $metadataKeyType = MetadataKey::TYPE_SHARED_KEY;
 
         $data = [
             'metadata_key_id' => $metadataKeyId,
@@ -252,7 +253,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata(false));
         $metadata = $this->encryptForUser($clearTextMetadata, $user, $this->getAdaNoPassphraseKeyInfo());
-        $metadataKeyType = 'user_key';
+        $metadataKeyType = MetadataKey::TYPE_USER_KEY;
         $this->logInAs($user);
         $resourceId = $resource->get('id');
 
@@ -379,5 +380,37 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertNull($result->get('metadata'));
         $this->assertNull($result->get('metadata_key_id'));
         $this->assertNull($result->get('metadata_key_type'));
+    }
+
+    public function testResourcesUpdateController_Error_V4ToV5UpgradeNotAllowed(): void
+    {
+        $settings = MetadataTypesSettingsGetService::defaultV4Settings(); // by default it's false in v4
+        $settings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES] = true;
+        MetadataTypesSettingsFactory::make()->value($settings)->persist();
+        $v5ResourceType = ResourceTypeFactory::make()->v5Default()->persist();
+        $v4ResourceType = ResourceTypeFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        $resource = ResourceFactory::make(['resource_type_id' => $v4ResourceType->get('id')])->withPermissionsFor([$user])->persist();
+        $dto = MetadataResourceDto::fromArray($resource->toArray());
+        $metadataArray = $dto->getClearTextMetadata();
+        $metadata = $this->encryptForUser(json_encode($metadataArray), $user, $this->getAdaNoPassphraseKeyInfo());
+        $this->logInAs($user);
+
+        $data = [
+            'metadata_key_id' => $user->gpgkey->id,
+            'metadata' => $metadata,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+            'resource_type_id' => $v5ResourceType->get('id'),
+        ];
+        $this->putJson("/resources/{$resource->get('id')}.json", $data);
+
+        $this->assertError(400);
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertArrayHasKey('v4_to_v5_upgrade_allowed', $errors['resource_type_id']);
     }
 }

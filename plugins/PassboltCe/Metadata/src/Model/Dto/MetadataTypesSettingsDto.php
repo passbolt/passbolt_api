@@ -146,6 +146,15 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
     }
 
     /**
+     * @return bool
+     */
+    public function isV5UpgradeAllowed(): bool
+    {
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] === true;
+    }
+
+    /**
      * @return ?array
      */
     public function toHumanReadableArray(): ?array
