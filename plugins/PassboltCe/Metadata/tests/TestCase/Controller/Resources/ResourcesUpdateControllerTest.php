@@ -411,6 +411,6 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
 
         $this->assertError(400);
         $errors = $this->getResponseBodyAsArray();
-        $this->assertArrayHasKey('v4_to_v5_upgrade_allowed', $errors['resource_type_id']);
+        $this->assertArrayHasKey('v4_to_v5_upgrade_allowed', $errors['metadata']);
     }
 }
