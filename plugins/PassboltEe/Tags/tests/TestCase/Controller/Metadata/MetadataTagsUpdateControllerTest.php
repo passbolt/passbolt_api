@@ -21,11 +21,14 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\I18n\FrozenTime;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\TagsPlugin;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
@@ -442,5 +445,49 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
 
         $this->assertError(400);
         $this->assertResponseContains($expectedResponse);
+    }
+
+    /**
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testMetadataTagsUpdateController_Success_V4ToV5Upgrade(): void
+    {
+        $settings = MetadataTypesSettingsGetService::defaultV4Settings(); // by default v4_v5_upgrade setting is disabled in v4
+        $settings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS] = true;
+        $settings[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] = true;
+        MetadataTypesSettingsFactory::make()->value($settings)->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        $tag = TagFactory::make(['slug' => 'special'])->isPersonalFor($resource, $ada)->persist();
+        $dto = MetadataTagDto::fromArray($tag->toArray());
+        $clearTextMetadata = json_encode($dto->getClearTextMetadata());
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
+        // login
+        $this->logInAs($ada);
+
+        $tagId = $tag->get('id');
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'slug' => null,
+            'metadata' => $metadata,
+            'metadata_key_id' => $ada->gpgkey->id,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+            'is_shared' => false,
+        ]);
+
+        $this->assertSuccess();
+        $updatedTag = TagFactory::get($tagId);
+        $this->assertEquals($metadata, $updatedTag->get('metadata'));
+        $this->assertEquals($ada->gpgkey->id, $updatedTag->get('metadata_key_id'));
+        $this->assertEquals(MetadataKey::TYPE_USER_KEY, $updatedTag->get('metadata_key_type'));
+        $this->assertFalse($updatedTag->get('is_shared'));
+        $this->assertNull($updatedTag->get('slug'));
     }
 }
