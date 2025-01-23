@@ -390,7 +390,7 @@ class ResourcesTable extends Table
         );
 
         $rules->addUpdate(new IsV4ToV5UpgradeAllowedRule(), 'v4_to_v5_upgrade_allowed', [
-            'errorField' => 'resource_type_id',
+            'errorField' => 'metadata',
             'message' => __('The settings selected by your administrator prevent from upgrading v4 to v5.'),
         ]);
 
