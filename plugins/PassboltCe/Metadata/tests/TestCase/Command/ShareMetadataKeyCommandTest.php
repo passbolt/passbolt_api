@@ -62,7 +62,7 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
 
     public function testShareMetadataKeyCommand_Success_NoUsers(): void
     {
-        MetadataKeysSettingsFactory::make()->disableZeroTrustKeySharing()->persist();
+        MetadataKeysSettingsFactory::make()->persist();
         MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $this->exec('passbolt metadata share_metadata_key');
         $this->assertExitSuccess();
@@ -71,7 +71,7 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
 
     public function testShareMetadataKeyCommand_Success_UserFriendlyMode(): void
     {
-        MetadataKeysSettingsFactory::make()->disableZeroTrustKeySharing()->persist();
+        MetadataKeysSettingsFactory::make()->persist();
         // metadata keys
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->expired()->persist();
@@ -114,7 +114,7 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
 
     public function testShareMetadataKeyCommand_Success_ZeroKnowledgeMode(): void
     {
-        MetadataKeysSettingsFactory::make()->persist();
+        MetadataKeysSettingsFactory::make()->enableZeroTrustKeySharing()->persist();
         // users
         UserFactory::make()->user()->active()->withValidGpgKey()->persist();
         $activeAdmin = UserFactory::make()->admin()->active()->withValidGpgKey()->persist();
@@ -129,7 +129,7 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
 
     public function testShareMetadataKeyCommand_Error_UnableShareWithOneOrMoreUsers(): void
     {
-        MetadataKeysSettingsFactory::make()->disableZeroTrustKeySharing()->persist();
+        MetadataKeysSettingsFactory::make()->persist();
         // metadata keys
         $filename = FIXTURES . DS . 'OpenPGP' . DS . 'Messages' . DS . 'ada_for_betty_signed.msg';
         $armoredMessage = file_get_contents($filename);

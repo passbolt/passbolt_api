@@ -109,6 +109,7 @@ abstract class MetadataBatchUpdateValidationService
                 $Table->aliasField('id'),
                 $Table->aliasField('modified'),
                 $Table->aliasField('modified_by'),
+                $Table->aliasField('resource_type_id'),
                 'MetadataKeys.id',
                 'MetadataKeys.expired',
                 'MetadataKeys.deleted',

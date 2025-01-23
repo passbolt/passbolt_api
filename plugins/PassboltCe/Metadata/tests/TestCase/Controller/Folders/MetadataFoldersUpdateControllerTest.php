@@ -31,7 +31,11 @@ use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\MetadataPlugin;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Dto\MetadataKeysSettingsDto;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
@@ -507,5 +511,69 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertError(400);
         $this->assertResponseContains('metadata_key_id');
         $this->assertResponseContains('isMetadataKeyNotExpired');
+    }
+
+    public function testMetadataFoldersUpdateController_Error_V4ToV5UpgradeNotAllowed()
+    {
+        $settings = MetadataTypesSettingsGetService::defaultV4Settings(); // by default it's false in v4
+        $settings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS] = true;
+        MetadataTypesSettingsFactory::make()->value($settings)->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
+        $dto = MetadataFolderDto::fromArray($folder->toArray());
+        $metadataArray = $dto->getClearTextMetadata();
+        $metadata = $this->encryptForUser(json_encode($metadataArray), $ada, $this->getAdaNoPassphraseKeyInfo());
+        $this->logInAs($ada);
+
+        $data = [
+            'metadata' => $metadata,
+            'metadata_key_id' => $ada->gpgkey->id,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+        ];
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
+
+        $this->assertError(400);
+        $errors = $this->getResponseBodyAsArray();
+        $this->assertArrayHasKey('v4_to_v5_upgrade_allowed', $errors['metadata']);
+    }
+
+    public function testMetadataFoldersUpdateController_Success_V4ToV5UpgradeSettingAllowed()
+    {
+        $settings = MetadataTypesSettingsGetService::defaultV4Settings();
+        $settings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_FOLDERS] = true;
+        $settings[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] = true;
+        MetadataTypesSettingsFactory::make()->value($settings)->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folder */
+        $folder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
+        $dto = MetadataFolderDto::fromArray($folder->toArray());
+        $metadataArray = $dto->getClearTextMetadata();
+        $metadata = $this->encryptForUser(json_encode($metadataArray), $ada, $this->getAdaNoPassphraseKeyInfo());
+        $this->logInAs($ada);
+
+        $data = [
+            'metadata' => $metadata,
+            'metadata_key_id' => $ada->gpgkey->id,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+        ];
+        $this->postJson("/folders/{$folder->id}.json?api-version=2", $data);
+
+        $this->assertSuccess();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder */
+        $updatedFolder = FolderFactory::get($folder->id);
+        $this->assertEquals($metadata, $updatedFolder->metadata);
+        $this->assertEquals($ada->gpgkey->id, $updatedFolder->metadata_key_id);
+        $this->assertEquals(MetadataKey::TYPE_USER_KEY, $updatedFolder->metadata_key_type);
     }
 }
