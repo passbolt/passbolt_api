@@ -21,28 +21,28 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use Cake\TestSuite\TestCase;
-use Passbolt\Metadata\Form\RotateKey\MetadataBatchUpdateForm;
+use Passbolt\Metadata\Form\RotateKey\MetadataBatchRotateKeyForm;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
- * @covers \Passbolt\Metadata\Form\RotateKey\MetadataBatchUpdateForm
+ * @covers \Passbolt\Metadata\Form\RotateKey\MetadataBatchRotateKeyForm
  */
 class MetadataBatchUpdateFormTest extends TestCase
 {
     use GpgMetadataKeysTestTrait;
 
     /**
-     * @var MetadataBatchUpdateForm $form
+     * @var MetadataBatchRotateKeyForm $form
      */
-    protected MetadataBatchUpdateForm $form;
+    protected MetadataBatchRotateKeyForm $form;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->form = new MetadataBatchUpdateForm();
+        $this->form = new MetadataBatchRotateKeyForm();
     }
 
     public function tearDown(): void
