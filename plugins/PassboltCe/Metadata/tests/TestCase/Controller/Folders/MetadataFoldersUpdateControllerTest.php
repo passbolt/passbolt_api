@@ -575,5 +575,6 @@ class MetadataFoldersUpdateControllerTest extends AppIntegrationTestCaseV5
         $this->assertEquals($metadata, $updatedFolder->metadata);
         $this->assertEquals($ada->gpgkey->id, $updatedFolder->metadata_key_id);
         $this->assertEquals(MetadataKey::TYPE_USER_KEY, $updatedFolder->metadata_key_type);
+        $this->assertNull($updatedFolder->name);
     }
 }
