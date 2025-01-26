@@ -32,17 +32,12 @@ class IsNotAccountRecoveryFingerprintRule
     {
         // if entity does not contain fingerprint rule fails
         $fingerprint = $entity->get('fingerprint');
+
         if (!isset($fingerprint) || !is_string($fingerprint)) {
             return false;
         }
 
-        $query = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys')->find(); // phpcs:ignore
-        try {
-            return !$query->where(['fingerprint' => $fingerprint])->firstOrFail();
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-
-            return false;
-        }
+        $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys'); // phpcs:ignore
+        return !$table->find()->where(['fingerprint' => $fingerprint])->all()->count();
     }
 }
