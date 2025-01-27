@@ -25,6 +25,8 @@ use Cake\ORM\TableRegistry;
 use Passbolt\AccountRecovery\Event\Metadata\MetadataKeysBuildRulesListener;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFactory;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
+use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
  * @covers \Passbolt\Metadata\Model\Table\MetadataKeysTable
@@ -32,6 +34,7 @@ use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPublicKeyFa
 class MetadataKeysTableTest extends AppTestCaseV5
 {
     use FormatValidationTrait;
+    use GpgMetadataKeysTestTrait;
 
     /**
      * Test subject
@@ -66,7 +69,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
      * @return void
      * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::buildRules()
      */
-    public function testMetadataKeysTable_BuildRules_IsNotAccountRecoveryFingerprintRule(): void
+    public function testMetadataKeysTable_BuildRules_IsNotAccountRecoveryFingerprintRule_Fail(): void
     {
         $user = UserFactory::make()->user()->active()->persist();
         /** @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy $policy */
@@ -92,6 +95,55 @@ class MetadataKeysTableTest extends AppTestCaseV5
         $this->assertNotEmpty($entity->getErrors());
         $this->assertCount(1, $entity->getErrors()['fingerprint']);
         $this->assertArrayHasKey('isNotAccountRecoveryFingerprint', $entity->getErrors()['fingerprint']);
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::buildRules()
+     */
+    public function testMetadataKeysTable_BuildRules_IsNotAccountRecoveryFingerprintRule_Pass(): void
+    {
+        $user = UserFactory::make()->user()->active()->persist();
+        AccountRecoveryOrganizationPolicyFactory::make()
+            ->optin()
+            ->with(
+                'AccountRecoveryOrganizationPublicKeys',
+                AccountRecoveryOrganizationPublicKeyFactory::make()->rsa4096Key()
+            )
+            ->persist();
+        $dummyKey = $this->getUserKeyInfo();
+
+        $entity = $this->buildEntity([
+            'fingerprint' => $dummyKey['fingerprint'],
+            'armored_key' => $dummyKey['armored_key'],
+            'created_by' => $user['id'],
+            'modified_by' => $user['id'],
+        ]);
+        $result = $this->MetadataKeys->save($entity);
+
+        $this->assertEmpty($entity->getErrors());
+        $this->assertInstanceOf(MetadataKey::class, $result);
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::buildRules()
+     */
+    public function testMetadataKeysTable_BuildRules_IsNotAccountRecoveryFingerprintRule_PassWhenNoAccountRecoveryKeyPresent(): void
+    {
+        $user = UserFactory::make()->user()->active()->persist();
+        $dummyKey = $this->getUserKeyInfo();
+
+        $entity = $this->buildEntity([
+            'fingerprint' => $dummyKey['fingerprint'],
+            'armored_key' => $dummyKey['armored_key'],
+            'created_by' => $user['id'],
+            'modified_by' => $user['id'],
+        ]);
+        $result = $this->MetadataKeys->save($entity);
+
+        $this->assertEmpty($entity->getErrors());
+        $this->assertInstanceOf(MetadataKey::class, $result);
     }
 
     // ---------------------------

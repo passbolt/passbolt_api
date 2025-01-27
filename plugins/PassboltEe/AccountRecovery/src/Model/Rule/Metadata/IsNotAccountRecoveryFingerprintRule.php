@@ -17,7 +17,6 @@ declare(strict_types=1);
 
 namespace Passbolt\AccountRecovery\Model\Rule\Metadata;
 
-use Cake\Log\Log;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 
@@ -38,6 +37,7 @@ class IsNotAccountRecoveryFingerprintRule
         }
 
         $table = TableRegistry::getTableLocator()->get('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys'); // phpcs:ignore
+
         return !$table->find()->where(['fingerprint' => $fingerprint])->all()->count();
     }
 }
