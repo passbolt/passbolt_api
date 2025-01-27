@@ -413,4 +413,47 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
         $errors = $this->getResponseBodyAsArray();
         $this->assertArrayHasKey('v4_to_v5_upgrade_allowed', $errors['metadata']);
     }
+
+    public function testResourcesUpdateController_Success_V4ToV5Upgrade(): void
+    {
+        $settings = MetadataTypesSettingsGetService::defaultV4Settings(); // by default it's false in v4
+        $settings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_RESOURCES] = true;
+        $settings[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] = true;
+        MetadataTypesSettingsFactory::make()->value($settings)->persist();
+        $v5ResourceType = ResourceTypeFactory::make()->v5Default()->persist();
+        $v4ResourceType = ResourceTypeFactory::make()->default()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make(['resource_type_id' => $v4ResourceType->get('id')])->withPermissionsFor([$user])->persist();
+        $dto = MetadataResourceDto::fromArray($resource->toArray());
+        $metadataArray = $dto->getClearTextMetadata();
+        $metadata = $this->encryptForUser(json_encode($metadataArray), $user, $this->getAdaNoPassphraseKeyInfo());
+        $this->logInAs($user);
+
+        $data = [
+            'metadata_key_id' => $user->gpgkey->id,
+            'metadata' => $metadata,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+            'resource_type_id' => $v5ResourceType->get('id'),
+        ];
+        $this->putJson("/resources/{$resource->id}.json", $data);
+
+        $this->assertSuccess();
+        /** @var \App\Model\Entity\Resource $updatedResource */
+        $updatedResource = ResourceFactory::get($resource->id);
+        $this->assertEquals($metadata, $updatedResource->metadata);
+        $this->assertEquals($user->gpgkey->id, $updatedResource->metadata_key_id);
+        $this->assertEquals(MetadataKey::TYPE_USER_KEY, $updatedResource->metadata_key_type);
+        $this->assertEquals($v5ResourceType->get('id'), $updatedResource->resource_type_id);
+        // make sure v4 fields are set to null
+        $this->assertNull($updatedResource->name);
+        $this->assertNull($updatedResource->username);
+        $this->assertNull($updatedResource->uri);
+        $this->assertNull($updatedResource->description);
+    }
 }

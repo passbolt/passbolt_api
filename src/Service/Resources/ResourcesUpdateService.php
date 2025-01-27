@@ -233,6 +233,13 @@ class ResourcesUpdateService
         // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
         // when a user updates only the secret.
         $data['modified'] = new FrozenTime();
+        if ($resourceDto->isV5()) {
+            // clear v4 fields in case of v5 upgrade
+            $data['name'] = null;
+            $data['username'] = null;
+            $data['uri'] = null;
+            $data['description'] = null;
+        }
 
         $options = $this->getOptionsForResourceSave($resourceDto);
         $options['accessibleFields'] = array_merge($options['accessibleFields'], [
