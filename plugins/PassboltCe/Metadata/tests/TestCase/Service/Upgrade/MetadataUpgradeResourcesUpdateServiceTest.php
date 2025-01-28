@@ -346,4 +346,38 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
         $resourceUpdated = ResourceFactory::firstOrFail();
         $this->assertSame($resource->get('expired'), $resourceUpdated->expired);
     }
+
+    public function testMetadataUpgradeResourcesUpdateService_v4_Fields_Set_To_Null(): void
+    {
+        // create metadata keys
+        $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->persist();
+        $resource = ResourceFactory::make([
+            'name' => 'foo',
+            'username' => 'bar',
+            'uri' => 'foo',
+            'description' => 'bar',
+        ])->persist();
+
+        $uac = $this->mockAdminAccessControl();
+        $metadataForR1 = $this->encryptForMetadataKey(json_encode([]));
+        $data = [
+            [
+                'id' => $resource->get('id'),
+                'metadata_key_id' => $activeMetadataKey->get('id'),
+                'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                'metadata' => $metadataForR1,
+                'modified' => $resource->get('modified'),
+                'modified_by' => $resource->get('modified_by'),
+                'expired' => FrozenTime::yesterday(),
+            ],
+        ];
+        $this->service->updateMany($uac, $data);
+        $resourceUpdated = ResourceFactory::firstOrFail();
+        $this->assertSame($resource->get('expired'), $resourceUpdated->expired);
+        $this->assertNull($resourceUpdated->name);
+        $this->assertNull($resourceUpdated->username);
+        $this->assertNull($resourceUpdated->uri);
+        $this->assertNull($resourceUpdated->description);
+    }
 }
