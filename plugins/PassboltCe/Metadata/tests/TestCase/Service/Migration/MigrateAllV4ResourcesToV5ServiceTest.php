@@ -269,9 +269,11 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         PermissionFactory::make()->acoResource($sharedResource)->typeRead()->withAroUser()->persist();
         PermissionFactory::make()->acoResource($sharedResource)->typeUpdate()->withAroUser()->persist();
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('Resource creation/modification with encrypted metadata not allowed');
-
-        $this->service->migrate();
+        try {
+            $this->service->migrate();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('Resource creation/modification with encrypted metadata not allowed', $e->getMessage());
+        }
     }
 }

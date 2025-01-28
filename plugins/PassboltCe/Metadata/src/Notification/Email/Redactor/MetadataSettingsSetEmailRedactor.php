@@ -46,7 +46,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
     protected $Users;
 
     /**
-     * JwtAuthenticationAttackEmailRedactor constructor.
+     * MetadataSettingsSetEmailRedactor constructor.
      */
     public function __construct()
     {
@@ -143,7 +143,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($modifierFirstName) {
-                return __('{0} edited the metadata settings.', $modifierFirstName);
+                return __('{0} edited the metadata settings', $modifierFirstName);
             }
         );
     }
@@ -157,7 +157,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () {
-                return __('You edited the metadata settings.');
+                return __('You edited the metadata settings');
             }
         );
     }

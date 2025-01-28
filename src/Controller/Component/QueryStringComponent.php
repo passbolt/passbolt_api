@@ -324,6 +324,7 @@ class QueryStringComponent extends Component
                     case 'is-favorite':
                     case 'is-owned-by-me':
                     case 'is-shared-with-me':
+                    case 'is-shared':
                     case 'is-success':
                     case 'is-deleted':
                     case 'expired':

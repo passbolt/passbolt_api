@@ -20,11 +20,15 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use Cake\I18n\FrozenTime;
+use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
+use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\TagsPlugin;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
@@ -384,5 +388,145 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
 
         $this->assertError(400);
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
+    }
+
+    public function metadataTagsUpdateControllerErrorDeletedOrExpiredValuesProvider(): array
+    {
+        return [
+            [
+                'input' => ['expired' => FrozenTime::yesterday()],
+                'expected response' => 'isMetadataKeyNotExpired',
+            ],
+            [
+                'input' => ['deleted' => FrozenTime::now()],
+                'expected response' => 'metadata_key_exists',
+            ],
+        ];
+    }
+
+    /**
+     * @param array $fields
+     * @param string $expectedResponse
+     * @return void
+     * @dataProvider metadataTagsUpdateControllerErrorDeletedOrExpiredValuesProvider
+     */
+    public function testMetadataTagsUpdateController_Error_DeletedOrExpiredKeyNotAllowed(array $fields, string $expectedResponse): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'old']);
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+        // create metadata key
+        $metadataKey = MetadataKeyFactory::make($fields)->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        $tag = TagFactory::make()
+            ->isPersonalFor($resource, $user)
+            ->v5Fields(['metadata' => $metadata, 'metadata_key_id' => $metadataKey->get('id')], true)
+            ->persist();
+        // data to update
+        $newMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'new']);
+        $metadataToUpdate = $this->encryptForMetadataKey($newMetadata);
+        // login
+        $this->logInAs($user);
+
+        $tagId = $tag->get('id');
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'metadata' => $metadataToUpdate,
+            'metadata_key_id' => $metadataKey->get('id'),
+            'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+            'is_shared' => true,
+        ]);
+
+        $this->assertError(400);
+        $this->assertResponseContains($expectedResponse);
+    }
+
+    /**
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testMetadataTagsUpdateController_Success_V4ToV5Upgrade(): void
+    {
+        $settings = MetadataTypesSettingsGetService::defaultV4Settings(); // by default v4_v5_upgrade setting is disabled in v4
+        $settings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS] = true;
+        $settings[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] = true;
+        MetadataTypesSettingsFactory::make()->value($settings)->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        $tag = TagFactory::make(['slug' => 'special'])->isPersonalFor($resource, $ada)->persist();
+        $dto = MetadataTagDto::fromArray($tag->toArray());
+        $clearTextMetadata = json_encode($dto->getClearTextMetadata());
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
+        // login
+        $this->logInAs($ada);
+
+        $tagId = $tag->get('id');
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'slug' => null,
+            'metadata' => $metadata,
+            'metadata_key_id' => $ada->gpgkey->id,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+            'is_shared' => false,
+        ]);
+
+        $this->assertSuccess();
+        $updatedTag = TagFactory::get($tagId);
+        $this->assertEquals($metadata, $updatedTag->get('metadata'));
+        $this->assertEquals($ada->gpgkey->id, $updatedTag->get('metadata_key_id'));
+        $this->assertEquals(MetadataKey::TYPE_USER_KEY, $updatedTag->get('metadata_key_type'));
+        $this->assertFalse($updatedTag->get('is_shared'));
+        $this->assertNull($updatedTag->get('slug'));
+    }
+
+    /**
+     * @group pro
+     * @group tag
+     * @group TagUpdate
+     */
+    public function testMetadataTagsUpdateController_Error_V4ToV5UpgradeNotAllowed(): void
+    {
+        $settings = MetadataTypesSettingsGetService::defaultV4Settings(); // by default v4_v5_upgrade setting is disabled in v4
+        $settings[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_TAGS] = true;
+        MetadataTypesSettingsFactory::make()->value($settings)->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        $tag = TagFactory::make(['slug' => 'special'])->isPersonalFor($resource, $ada)->persist();
+        $dto = MetadataTagDto::fromArray($tag->toArray());
+        $clearTextMetadata = json_encode($dto->getClearTextMetadata());
+        $metadata = $this->encryptForUser($clearTextMetadata, $ada, $this->getAdaNoPassphraseKeyInfo());
+        // login
+        $this->logInAs($ada);
+
+        $tagId = $tag->get('id');
+        $this->putJson("/tags/{$tagId}.json?api-version=v2", [
+            'slug' => null,
+            'metadata' => $metadata,
+            'metadata_key_id' => $ada->gpgkey->id,
+            'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
+            'is_shared' => false,
+        ]);
+
+        $this->assertError(400);
+        $response = $this->getResponseBodyAsArray();
+        $this->assertArrayHasKey('v4_to_v5_upgrade_allowed', $response['metadata']);
     }
 }

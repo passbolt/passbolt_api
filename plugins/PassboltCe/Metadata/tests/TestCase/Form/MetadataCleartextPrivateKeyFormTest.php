@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Form;
 
 use App\Test\Lib\AppTestCaseV5;
+use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Passbolt\Metadata\Form\MetadataCleartextPrivateKeyForm;
 
@@ -25,9 +26,15 @@ class MetadataCleartextPrivateKeyFormTest extends AppTestCaseV5
 {
     public function getDefaultData(): array
     {
+        // Set ssl force config to `false` when url is http, this is to pass `urlWithProtocol` validation rule for the domain field
+        $domain = Router::url('/', true);
+        if (strpos($domain, 'http://') === 0) {
+            Configure::write('passbolt.ssl.force', false);
+        }
+
         return [
             'object_type' => MetadataCleartextPrivateKeyForm::PASSBOLT_METADATA_PRIVATE_KEY,
-            'domain' => Router::url('/', true),
+            'domain' => $domain,
             'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_private_nopassphrase.key'),
             'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
             'passphrase' => '',

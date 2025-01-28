@@ -49,14 +49,14 @@ class NotificationOrgSettingsGetController extends AppController
     /**
      * Format the . delimited keys to snake_case
      *
-     * @param array|null $data The data to Format
-     * @return array the formatted array
+     * @param array<string, mixed>|null $data The data to Format
+     * @return array<string, mixed> the formatted array
      */
     private function _formatForOutput(?array $data = [])
     {
         $output = [];
 
-        foreach ($data as $key => $value) {
+        foreach ((array)$data as $key => $value) {
             $key = str_replace('.', '_', $key);
 
             $output[$key] = $value;

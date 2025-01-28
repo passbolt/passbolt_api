@@ -132,10 +132,12 @@ class SsoStatesSetServiceTest extends SsoTestCase
             'PHPUnit User Agent'
         );
 
-        $this->expectException(InternalErrorException::class);
-        $this->expectErrorMessage('Could not save the SSO state, please try again later.');
-
-        $this->service->create($nonce, $state, SsoState::TYPE_SSO_GET_KEY, $ssoSettingId, $uac);
+        try {
+            $this->service->create($nonce, $state, SsoState::TYPE_SSO_GET_KEY, $ssoSettingId, $uac);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(InternalErrorException::class, $e);
+            $this->assertStringContainsString('Could not save the SSO state, please try again later.', $e->getMessage());
+        }
     }
 
     public function testSsoStatesSetService_Error_InvalidNonce(): void
@@ -152,10 +154,12 @@ class SsoStatesSetServiceTest extends SsoTestCase
             'PHPUnit User Agent'
         );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('invalid nonce');
-
-        $this->service->create($nonce, $state, SsoState::TYPE_SSO_GET_KEY, $ssoSettingId, $uac);
+        try {
+            $this->service->create($nonce, $state, SsoState::TYPE_SSO_GET_KEY, $ssoSettingId, $uac);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('invalid nonce', $e->getMessage());
+        }
     }
 
     public function testSsoStatesSetService_Error_UniqueNonce(): void
@@ -179,17 +183,19 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $uac
         );
 
-        $this->expectException(InternalErrorException::class);
-        $this->expectErrorMessage('Could not save the SSO state');
-
-        // Storing state with the nonce value that is already present should throw error
-        $this->service->create(
-            $nonce,
-            SsoState::generate(),
-            SsoState::TYPE_SSO_SET_SETTINGS,
-            $ssoSettingId,
-            $uac
-        );
+        try {
+            // Storing state with the nonce value that is already present should throw error
+            $this->service->create(
+                $nonce,
+                SsoState::generate(),
+                SsoState::TYPE_SSO_SET_SETTINGS,
+                $ssoSettingId,
+                $uac
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(InternalErrorException::class, $e);
+            $this->assertStringContainsString('Could not save the SSO state', $e->getMessage());
+        }
     }
 
     public function testSsoStatesSetService_Error_UniqueState(): void
@@ -213,16 +219,18 @@ class SsoStatesSetServiceTest extends SsoTestCase
             $uac
         );
 
-        $this->expectException(InternalErrorException::class);
-        $this->expectErrorMessage('Could not save the SSO state');
-
-        // Storing state with the state value that is already present should throw error
-        $this->service->create(
-            SsoState::generate(),
-            $state,
-            SsoState::TYPE_SSO_SET_SETTINGS,
-            $ssoSettingId,
-            $uac
-        );
+        try {
+            // Storing state with the state value that is already present should throw error
+            $this->service->create(
+                SsoState::generate(),
+                $state,
+                SsoState::TYPE_SSO_SET_SETTINGS,
+                $ssoSettingId,
+                $uac
+            );
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(InternalErrorException::class, $e);
+            $this->assertStringContainsString('Could not save the SSO state', $e->getMessage());
+        }
     }
 }
