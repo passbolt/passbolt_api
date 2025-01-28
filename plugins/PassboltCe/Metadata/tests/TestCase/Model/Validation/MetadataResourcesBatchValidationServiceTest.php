@@ -24,14 +24,14 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
-use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpdateValidationService;
+use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchRotateKeyValidationService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 
 class MetadataResourcesBatchValidationServiceTest extends TestCase
 {
     use TruncateDirtyTables;
 
-    protected MetadataResourcesBatchUpdateValidationService $service;
+    protected MetadataResourcesBatchRotateKeyValidationService $service;
 
     /**
      * @inheritDoc
@@ -40,7 +40,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
     {
         parent::setUp();
 
-        $this->service = new MetadataResourcesBatchUpdateValidationService();
+        $this->service = new MetadataResourcesBatchRotateKeyValidationService();
     }
 
     /**

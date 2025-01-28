@@ -49,7 +49,13 @@ class MetadataKeysSettingsSetService
 
         $dto = (new MetadataKeysSettingsAssertService())->assert($data);
 
-        if (!$dto->isKeyShareZeroKnowledge()) {
+        $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
+        $keysCount = $metadataKeysTable->find()
+            ->where(['deleted IS NOT NULL'])
+            ->all()
+            ->count();
+
+        if ($keysCount && !$dto->isKeyShareZeroKnowledge()) {
             /** @var \Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable $metadataPrivateKeysTable */
             $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
             $serverKeysCount = $metadataPrivateKeysTable->find()

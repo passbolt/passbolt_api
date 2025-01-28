@@ -94,6 +94,13 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
                 ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesIndex', 'action' => 'index']
             )
             ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/resources',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
     });
 
     /**

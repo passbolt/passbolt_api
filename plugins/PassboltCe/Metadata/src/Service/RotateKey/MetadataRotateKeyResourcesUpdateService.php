@@ -30,7 +30,8 @@ use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Controller\Component\MetadataPaginationComponent;
-use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpdateValidationService;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchRotateKeyValidationService;
 
 class MetadataRotateKeyResourcesUpdateService
 {
@@ -50,7 +51,7 @@ class MetadataRotateKeyResourcesUpdateService
         $uac->assertIsAdmin();
         $this->assertRequestData($requestData);
 
-        $metadataBatchValidationService = new MetadataResourcesBatchUpdateValidationService();
+        $metadataBatchValidationService = new MetadataResourcesBatchRotateKeyValidationService();
         $data = $metadataBatchValidationService->validateMany($requestData);
         $this->updateData($uac, $data, $metadataBatchValidationService->getEntities());
     }
@@ -61,7 +62,7 @@ class MetadataRotateKeyResourcesUpdateService
      * @param \App\Model\Entity\Resource[] $resources Resource entities
      * @return void
      */
-    private function updateData(UserAccessControl $uac, array $data, array $resources): void
+    protected function updateData(UserAccessControl $uac, array $data, array $resources): void
     {
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
@@ -78,6 +79,10 @@ class MetadataRotateKeyResourcesUpdateService
             ]);
             $entity = $resourcesTable->patchEntity($resource, $values, [
                 'accessibleFields' => [
+                    'name' => true,
+                    'username' => true,
+                    'uri' => true,
+                    'description' => true,
                     'metadata_key_id' => true,
                     'metadata_key_type' => true,
                     'metadata' => true,
@@ -86,7 +91,9 @@ class MetadataRotateKeyResourcesUpdateService
                 ],
                 'validate' => 'v5',
             ]);
-
+            foreach (MetadataResourceDto::V4_META_PROPS as $prop) {
+                $entity->set($prop, null);
+            }
             /** @var \Cake\ORM\RulesChecker $rules */
             $rules = $resourcesTable->rulesChecker();
             $resourcesTable->buildRulesV5($rules);
@@ -144,7 +151,7 @@ class MetadataRotateKeyResourcesUpdateService
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException If data could not be asserted.
      */
-    private function assertRequestData(array $requestData): void
+    protected function assertRequestData(array $requestData): void
     {
         if (empty($requestData)) {
             throw new BadRequestException(__('The request data should not be empty.'));
