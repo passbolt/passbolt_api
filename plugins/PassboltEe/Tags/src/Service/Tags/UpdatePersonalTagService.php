@@ -53,6 +53,7 @@ class UpdatePersonalTagService
 
             $options = [
                 'accessibleFields' => [
+                    'slug' => true,
                     'metadata' => true,
                     'metadata_key_id' => true,
                     'metadata_key_type' => true,
@@ -67,6 +68,7 @@ class UpdatePersonalTagService
             $entity = $tagsTable->patchEntity(
                 $tag,
                 [
+                    'slug' => null,
                     'metadata' => $dtoArray['metadata'],
                     'metadata_key_id' => $dtoArray['metadata_key_id'],
                     'metadata_key_type' => $dtoArray['metadata_key_type'],
