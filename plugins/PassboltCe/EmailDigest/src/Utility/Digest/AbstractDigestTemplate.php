@@ -46,9 +46,10 @@ abstract class AbstractDigestTemplate
     /**
      * Subject of the digest if the operator is not the recipient
      *
+     * @param string|null $operatorName Operator name.
      * @return string
      */
-    abstract public function getDigestSubjectIfRecipientIsNotTheOperator(): string;
+    abstract public function getDigestSubjectIfRecipientIsNotTheOperator(?string $operatorName = null): string;
 
     /**
      * Templates of all the emails that will be gathered by the digest using this template
@@ -100,7 +101,7 @@ abstract class AbstractDigestTemplate
     {
         if ($digest->isRecipientTheOperator()) {
             $makeSubject = function (): string {
-                return __($this->getDigestSubjectIfRecipientIsTheOperator());
+                return $this->getDigestSubjectIfRecipientIsTheOperator();
             };
         } else {
             $operatorProfile = $digest->getOperator()->profile;
@@ -108,7 +109,7 @@ abstract class AbstractDigestTemplate
                 $operatorProfile['first_name'] . ' ' . $operatorProfile['last_name']
             );
             $makeSubject = function () use ($operatorFullName): string {
-                return __($this->getDigestSubjectIfRecipientIsNotTheOperator(), $operatorFullName);
+                return $this->getDigestSubjectIfRecipientIsNotTheOperator($operatorFullName);
             };
         }
         $emailLocale = $digest->getLocale();

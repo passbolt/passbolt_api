@@ -18,7 +18,7 @@ use Cake\I18n\FrozenTime;
 
 $recipient = $body['recipient'];
 $modifier = $body['modifier'];
-$subject = Purifier::clean($body['subject']);
+$subject = $body['subject'];
 $fingerprint = $body['fingerprint'] ?? [];
 
 echo $this->element('Email/module/avatar',[
@@ -30,10 +30,10 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 if ($recipient['id'] === $modifier['id']) {
-    $text = $subject;
+    $text = __('You created a new metadata key.');
 } else {
     $modifierFullName = Purifier::clean($modifier['profile']['first_name']) . ' ' . Purifier::clean($modifier['profile']['last_name']);
-    $text = __('{0} created a new metadata key', $modifierFullName);
+    $text = __('{0} created a new metadata key.', $modifierFullName);
 }
 $text = '<h3>' . $text . '</h3><br/>';
 $text .= 'Fingerprint: ' . $fingerprint;

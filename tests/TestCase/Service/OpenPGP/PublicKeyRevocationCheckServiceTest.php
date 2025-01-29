@@ -42,7 +42,7 @@ class PublicKeyRevocationCheckServiceTest extends AppTestCase
 
     public function testPublicKeyRevocationCheckService_Check_SuccessECC()
     {
-        // See @TODO crypto check not implemented for non RSA keys
+        // See @TODO PB-37113 crypto check not implemented for non RSA keys
         $this->markTestIncomplete();
     }
 

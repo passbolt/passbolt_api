@@ -30,6 +30,9 @@ use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
+/**
+ * \Passbolt\Metadata\Service\MetadataKeysSettingsSetService
+ */
 class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
 {
     use GpgMetadataKeysTestTrait;
@@ -40,6 +43,19 @@ class MetadataKeysSettingsSetServiceTest extends AppTestCaseV5
         $data = [
             MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
             MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => true,
+        ];
+        $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
+        $sut = new MetadataKeysSettingsSetService();
+        $dto = $sut->saveSettings($uac, $data);
+        $this->assertEquals($data, $dto->toArray());
+    }
+
+    public function testMetadataKeysSettingsSetService_Success_ZeroKnowledgeDisabled(): void
+    {
+        $user = UserFactory::make()->admin()->persist();
+        $data = [
+            MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => false,
         ];
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
         $sut = new MetadataKeysSettingsSetService();

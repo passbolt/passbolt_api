@@ -21,7 +21,6 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Core\Configure;
-use Cake\Validation\Validation;
 
 class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -33,11 +32,27 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
     private bool $status = false;
 
     /**
+     * @var mixed $url
+     */
+    private $url;
+
+    /**
+     * @param mixed $url url
+     */
+    public function __construct($url = null)
+    {
+        $this->url = $url ?? Configure::read('App.fullBaseUrl');
+    }
+
+    /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
-        $this->status = Validation::url(Configure::read('App.fullBaseUrl'), true);
+        $this->status = false;
+        if (is_string($this->url)) {
+            $this->status = (strpos($this->url, 'https://') === 0) || (strpos($this->url, 'http://') === 0);
+        }
 
         return $this;
     }

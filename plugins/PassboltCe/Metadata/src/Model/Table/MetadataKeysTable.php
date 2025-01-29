@@ -20,12 +20,17 @@ use App\Model\Rule\IsNotServerKeyFingerprintRule;
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
 use App\Model\Rule\IsUniqueIfNotSoftDeletedRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
+use App\Model\Validation\ArmoredKey\IsPublicKeyRevokedRule;
 use App\Model\Validation\ArmoredKey\IsPublicKeyValidStrictRule;
+use App\Model\Validation\DateTime\IsDateInPastValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
+use App\Model\Validation\IsNullOnCreateRule;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Passbolt\Metadata\Model\Rule\MaxNoOfActiveMetadataKeysRule;
 
 /**
  * MetadataKeys Model
@@ -111,19 +116,65 @@ class MetadataKeysTable extends Table
 
         $validator
             ->dateTime('expired')
-            ->allowEmptyDateTime('expired');
+            ->allowEmptyDateTime('expired')
+            ->add('expired', 'isNullOnCreate', new IsNullOnCreateRule());
+
+        $validator
+            ->dateTime('deleted')
+            ->allowEmptyDateTime('deleted')
+            ->add('deleted', 'isNullOnCreate', new IsNullOnCreateRule());
+
+        $validator
+            ->uuid('created_by', __('The identifier of the user who created the metadata key should be a valid UUID.'))
+            ->requirePresence('created_by', 'create', __('The creator is required.'));
+
+        $validator
+            ->uuid('modified_by', __('The identifier of the user who modified the metadata key should be a valid UUID.')) // phpcs:ignore;
+            ->allowEmptyString('modified_by');
+
+        return $validator;
+    }
+
+    /**
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationUpdate(Validator $validator): Validator
+    {
+        $validator
+            ->uuid('id', __('The identifier should be a valid UUID.'))
+            ->requirePresence('id', 'update', __('An identifier is required.'));
+
+        $validator
+            ->requirePresence('fingerprint', 'update', __('A fingerprint is required.'))
+            ->maxLength('fingerprint', 51, __('A fingerprint should not be greater than 51 characters.'))
+            ->notEmptyString('fingerprint', __('A fingerprint should not be empty.'))
+            ->alphaNumeric('fingerprint', __('The fingerprint should be a valid alphanumeric string.'))
+            ->add('fingerprint', 'isValidFingerprint', new IsValidFingerprintValidationRule())
+            ->add('fingerprint', 'isMatchingKeyFingerprint', new IsMatchingKeyFingerprintValidationRule());
+
+        $validator
+            ->ascii('armored_key', __('The armored key should be a valid ASCII string.'))
+            ->requirePresence('armored_key', 'update', __('An armored key is required.'))
+            ->notEmptyString('armored_key', __('The armored key should not be empty.'))
+            ->add('armored_key', 'isParsableArmoredPublicKey', new IsParsableArmoredKeyValidationRule())
+            ->add('armored_key', 'isPublicKeyRevoked', new IsPublicKeyRevokedRule());
+
+        $validator
+            ->dateTime('expired')
+            ->requirePresence('expired', 'update', __('A expired date is required.'))
+            ->notEmptyDateTime('expired', __('The expired date should not be empty.'))
+            ->add('expired', 'isDateInPast', new IsDateInPastValidationRule());
 
         $validator
             ->dateTime('deleted')
             ->allowEmptyDateTime('deleted');
 
         $validator
-            ->uuid('created_by', __('The identifier of the user who created the metadata key should be a valid UUID.')) // phpcs:ignore;
-            ->allowEmptyString('created_by');
-
-        $validator
             ->uuid('modified_by', __('The identifier of the user who modified the metadata key should be a valid UUID.')) // phpcs:ignore;
-            ->allowEmptyString('modified_by');
+            ->requirePresence('modified_by', 'update', __('The modifier is required.'));
 
         return $validator;
     }
@@ -141,6 +192,10 @@ class MetadataKeysTable extends Table
             'errorField' => 'fingerprint',
             'message' => __('The fingerprint is already in use.'),
         ]);
+        $rules->addCreate(new MaxNoOfActiveMetadataKeysRule(), 'maxNoOfActiveKeys', [
+            'errorField' => 'fingerprint',
+            'message' => __('Already two metadata keys are active.'),
+        ]);
         $rules->add(new IsNotServerKeyFingerprintRule(), 'isNotServerKeyFingerprintRule', [
             'errorField' => 'fingerprint',
             'message' => __('You cannot reuse the server keys.'),
@@ -151,6 +206,19 @@ class MetadataKeysTable extends Table
         ]);
 
         return $rules;
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query Query.
+     * @param array $options Finder options.
+     * @return \Cake\ORM\Query
+     */
+    public function findActive(Query $query, array $options): Query
+    {
+        return $query->where([
+            $query->newExpr()->isNull('deleted'),
+            $query->newExpr()->isNull('expired'),
+        ]);
     }
 
     /**

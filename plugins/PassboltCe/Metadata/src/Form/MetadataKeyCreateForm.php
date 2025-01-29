@@ -16,16 +16,15 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Form;
 
+use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Model\Validation\IsNullOnCreateRule;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 
-class MetadataKeyForm extends Form
+class MetadataKeyCreateForm extends Form
 {
     /**
-     * Email configuration schema.
-     *
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
@@ -46,8 +45,10 @@ class MetadataKeyForm extends Form
     {
         $validator
             ->requirePresence('fingerprint', 'create', __('A fingerprint is required.'))
+            ->maxLength('fingerprint', 51, __('A fingerprint should not be greater than 51 characters.'))
             ->notEmptyString('fingerprint', __('A fingerprint should not be empty.'))
-            ->alphaNumeric('fingerprint', __('The fingerprint should be a valid alphanumeric string.'));
+            ->alphaNumeric('fingerprint', __('The fingerprint should be a valid alphanumeric string.'))
+            ->add('fingerprint', 'custom', new IsValidFingerprintValidationRule());
 
         $validator
             ->requirePresence('armored_key', 'create', __('An armored key is required.'))

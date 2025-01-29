@@ -31,10 +31,14 @@ class LatestVersionApplicationHealthcheckTest extends TestCase
 {
     public function testLatestVersionApplicationHealthcheck_Success(): void
     {
-        $client = new Client();
-        $socketService = new SocketService();
+        $client = $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
+        $response = new Response([], json_encode(['tag_name' => '4.10.1']));
+        $client->method('get')->willReturn($response);
+        // mock socket service
+        $socketService = $this->getMockBuilder(SocketService::class)->getMock();
+        $socketService->method('canConnect')->willReturn(true);
         // Set version to high on purpose so that we don't have to change this each time when we version bump
-        Configure::write('passbolt.version', '5.0.0');
+        Configure::write('passbolt.version', '99.9.9');
 
         $service = new LatestVersionApplicationHealthcheck($client, $socketService);
         $service->check();

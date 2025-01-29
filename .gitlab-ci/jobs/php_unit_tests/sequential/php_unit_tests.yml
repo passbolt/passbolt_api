@@ -27,6 +27,35 @@
     - mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "ALTER USER '$DATASOURCES_TEST_USERNAME'@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
     - mysql -h $DATASOURCES_DEFAULT_HOST -u root -p$MYSQL_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME;" mysql
 
+.mariadb-template:
+  services:
+    - name: $DATABASE_ENGINE_VERSION
+      command:
+        - /bin/bash
+        - -c
+        - |
+          mount -t tmpfs -o size=1024m tmpfs /var/lib/mysql
+          docker-entrypoint.sh mariadbd --default-authentication-plugin=mysql_native_password --log-bin-trust-function-creators=1
+  # MySQL services variables
+  variables:
+    MARIADB_USER: user
+    MARIADB_PASSWORD: testing-password
+    MARIADB_ROOT_PASSWORD: testing-password2
+    MARIADB_DATABASE: test
+    DATASOURCES_DEFAULT_DATABASE: non_existing_database # to ensure that all tests run on the test datasource
+    DATASOURCES_DEFAULT_USERNAME: $MARIADB_USER
+    DATASOURCES_DEFAULT_PASSWORD: $MARIADB_PASSWORD
+    DATASOURCES_DEFAULT_HOST: 127.0.0.1
+    DATASOURCES_TEST_DATABASE: $MARIADB_DATABASE
+    DATASOURCES_TEST_USERNAME: $MARIADB_USER
+    DATASOURCES_TEST_PASSWORD: $MARIADB_PASSWORD
+    DATASOURCES_TEST_HOST: 127.0.0.1
+  before_script:
+    - mariadb --version
+    - while ! mariadb-admin -u root -h $DATASOURCES_DEFAULT_HOST -p$MARIADB_ROOT_PASSWORD ping; do sleep 1; done
+    - mariadb -h $DATASOURCES_DEFAULT_HOST -u root -p$MARIADB_ROOT_PASSWORD -e "ALTER USER '$DATASOURCES_TEST_USERNAME'@'%' identified by '$DATASOURCES_TEST_PASSWORD';" mysql
+    - mariadb -h $DATASOURCES_DEFAULT_HOST -u root -p$MARIADB_ROOT_PASSWORD -e "GRANT ALL ON *.* to $DATASOURCES_TEST_USERNAME;" mysql
+
 .postgres-template:
   services:
     - $DATABASE_ENGINE_VERSION # should be DATABASE_ENGINE_VERSION
@@ -273,3 +302,57 @@ seq-php8.3-mariadb10.5:
     - .test-template
   rules:
     - if: "$TEST_DISABLED == null"
+
+
+# Mariadb 11.5 tests
+
+seq-php8.0-mariadb11.5:
+  variables:
+    PHP_VERSION: "8.0"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+  extends:
+    - .mariadb-template
+    - .test-template
+  rules:
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+    - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "release"'
+  allow_failure: true
+
+seq-php8.1-mariadb11.5:
+  variables:
+    PHP_VERSION: "8.1"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+  extends:
+    - .mariadb-template
+    - .test-template
+  rules:
+      - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+      - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+      - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "release"'
+  allow_failure: true
+
+  # This is what we ship with the docker image as of 14 Nov 2024
+seq-php8.2-mariadb11.5:
+  variables:
+    PHP_VERSION: "8.2"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+  extends:
+    - .mariadb-template
+    - .test-template
+  rules:
+    - if: "$TEST_DISABLED == null"
+  allow_failure: true
+
+seq-php8.3-mariadb11.5:
+  variables:
+    PHP_VERSION: "8.3"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+  extends:
+    - .mariadb-template
+    - .test-template
+  rules:
+      - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "master"'
+      - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "develop"'
+      - if: '$TEST_DISABLED == null && $CI_COMMIT_BRANCH == "release"'
+  allow_failure: true

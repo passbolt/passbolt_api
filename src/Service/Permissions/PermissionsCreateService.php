@@ -52,10 +52,10 @@ class PermissionsCreateService
      *   string $aro_foreign_key The permission aro instance id
      *   int $type The permission type
      * ]
-     * @return \App\Model\Entity\Permission
+     * @return \App\Model\Entity\Permission|null
      * @throws \Exception
      */
-    public function create(UserAccessControl $uac, ?array $data = []): Permission
+    public function create(UserAccessControl $uac, ?array $data = []): ?Permission
     {
         $permission = null;
         $this->permissionsTable->getConnection()->transactional(function () use (&$permission, $uac, $data) {
