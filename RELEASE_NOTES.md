@@ -8,7 +8,7 @@ As one of the final updates in the v4 series, this version prepares administrato
 
 Thank you to the community for your feedback and support.
 
-## [4.11.0-test.1] - 2025-01-29
+## [4.11.0-test.2] - 2025-01-29
 ### Added
 - PB-35761 As an administrator I receive an email if zero_knowledge_key_share is set to true and a new user completed the setup
 - PB-36558 As an administrator I can mark metadata_keys as expired
