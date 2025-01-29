@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-01-29 05:51+0000\n"
-"PO-Revision-Date: 2025-01-29 09:25\n"
+"PO-Revision-Date: 2025-01-29 10:27\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -1094,13 +1094,13 @@ msgid "You added the password {0}"
 msgstr "Ha añadido la contraseña {0}"
 
 msgid "You added a new password"
-msgstr "Has añadido una nueva contraseña"
+msgstr "Se ha añadido una nueva contraseña"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} ha eliminado la contraseña {1}"
 
 msgid "You edited a resource"
-msgstr "Has editado un recurso"
+msgstr "Se ha editado un recurso"
 
 msgid "You edited the resource {0}"
 msgstr "Se ha editado el recurso {0}"
@@ -2825,22 +2825,22 @@ msgid "A metadata key type is required."
 msgstr "Se requiere un tipo de clave de metadatos."
 
 msgid "The metadata key type should not be empty."
-msgstr ""
+msgstr "El tipo de clave de metadatos no debe estar vacío."
 
 msgid "The metadata key type should be shared key."
-msgstr ""
+msgstr "El tipo de clave de metadatos debe ser una clave compartida."
 
 msgid "A metadata is required."
-msgstr ""
+msgstr "Se requiere un metadato."
 
 msgid "A modified by is required."
-msgstr ""
+msgstr "Se requiere un modificado por."
 
 msgid "The modified by should not be empty."
-msgstr ""
+msgstr "El modificado por no debe estar vacío."
 
 msgid "The modified by should be a valid UUID."
-msgstr ""
+msgstr "El modificado por debe ser una UUID válida."
 
 msgid "Metadata settings endpoints are disabled."
 msgstr "Los endpoints de ajustes de metadatos están desactivados."
@@ -2873,7 +2873,7 @@ msgid "Zero-knowledge key share"
 msgstr "Clave de conocimiento cero compartida"
 
 msgid "The metadata private key data must be an array."
-msgstr ""
+msgstr "Los datos de la clave privada de los metadatos deben ser una matriz."
 
 msgid "No resource type mapping for ID '{0}'"
 msgstr "No hay tipos de mapeo de recursos para el ID '{0}'"
@@ -2915,25 +2915,25 @@ msgid "The identifier of the user who created the metadata key should be a valid
 msgstr "El identificador del usuario que creó la clave de metadatos debe ser un UUID válido."
 
 msgid "The creator is required."
-msgstr ""
+msgstr "Se requiere un creador."
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
 msgstr "El identificador del usuario que modificó la clave de metadatos debe ser un UUID válido."
 
 msgid "A expired date is required."
-msgstr ""
+msgstr "Se requiere una fecha de caducidad."
 
 msgid "The expired date should not be empty."
-msgstr ""
+msgstr "La fecha de caducidad no debe estar vacía."
 
 msgid "The modifier is required."
-msgstr ""
+msgstr "Se necesita un modificador."
 
 msgid "The fingerprint is already in use."
 msgstr "La huella digital ya está en uso."
 
 msgid "Already two metadata keys are active."
-msgstr ""
+msgstr "Ya hay dos claves de metadatos activas."
 
 msgid "You cannot reuse the user key."
 msgstr "No puede reutilizar la clave de usuario."
@@ -2948,13 +2948,13 @@ msgid "The data is not valid. Please make sure it is encrypted for the correct k
 msgstr "Los datos no son válidos. Por favor, asegúrese de que están cifrados para la clave correcta."
 
 msgid "The entity must be an array."
-msgstr ""
+msgstr "La entidad debe ser una matriz."
 
 msgid "Entity {0} not found."
-msgstr ""
+msgstr "No se ha encontrado la entidad {0}."
 
 msgid "Could not validate the metadata key data for the entity with ID: {0}."
-msgstr ""
+msgstr "No se pudo validar la clave de metadatos para la entidad con ID: {0}."
 
 msgid "{0} created a new metadata key"
 msgstr "{0} ha creado una nueva clave de metadatos"
@@ -2963,16 +2963,16 @@ msgid "You created a new metadata key"
 msgstr "Se ha creado una nueva clave de metadatos"
 
 msgid "{0} deleted a metadata key"
-msgstr ""
+msgstr "{0} ha eliminado una clave de metadatos"
 
 msgid "You deleted a metadata key"
-msgstr ""
+msgstr "Se ha eliminado una clave de metadatos"
 
 msgid "{0} has expired a metadata key"
-msgstr ""
+msgstr "{0} ha caducado una clave de metadatos"
 
 msgid "You have expired a metadata key"
-msgstr ""
+msgstr "Se ha caducado una clave de metadatos"
 
 msgid "{0} edited the metadata settings"
 msgstr "{0} ha editado los ajustes de metadatos"
@@ -3008,13 +3008,13 @@ msgid "The metadata key could not be deleted."
 msgstr "La clave de metadatos no pudo ser eliminada."
 
 msgid "The metadata key fingerprint is invalid."
-msgstr ""
+msgstr "La huella digital de la clave de metadatos no es válida."
 
 msgid "The metadata key is already marked as expired."
-msgstr ""
+msgstr "La clave de metadatos ya está marcada como caducada."
 
 msgid "The metadata key could not be updated."
-msgstr ""
+msgstr "No se pudo actualizar la clave de metadatos."
 
 msgid "The metadata key could not be saved."
 msgstr "La clave de metadatos no pudo ser guardada."
@@ -3062,7 +3062,7 @@ msgid "The server metadata private key is invalid."
 msgstr "La clave privada de metadatos del servidor no es válida."
 
 msgid "The metadata private key could not be created."
-msgstr ""
+msgstr "No se pudo crear la clave privada de metadatos."
 
 msgid "Please try again later."
 msgstr "Por favor, inténtelo de nuevo más tarde."
@@ -3077,10 +3077,10 @@ msgid "The metadata key is already shared with the user."
 msgstr "La clave de metadatos ya está compartida con el usuario."
 
 msgid "The metadata private keys could not be created."
-msgstr ""
+msgstr "No se han podido crear las claves privadas de metadatos."
 
 msgid "The metadata private key data is not valid."
-msgstr ""
+msgstr "Los datos de la clave privada de metadatos no son válidos."
 
 msgid "The metadata private key does not exist or has been deleted."
 msgstr "La clave privada de metadatos no existe o ha sido eliminada."
@@ -3194,19 +3194,19 @@ msgid "The metadata armored key is not available or incomplete."
 msgstr "La clave blindada de los metadatos no está disponible o está incompleta."
 
 msgid "The resource metadata key data could not be updated."
-msgstr ""
+msgstr "No se pudieron actualizar los datos de la clave de metadatos de los recursos."
 
 msgid "The request data should not be empty."
 msgstr "Los datos de la solicitud no deben estar vacíos."
 
 msgid "The request data is too large."
-msgstr ""
+msgstr "Los datos de la solicitud son demasiado grandes."
 
 msgid "The provided modified date does not match."
-msgstr ""
+msgstr "La fecha de modificación proporcionada no coincide."
 
 msgid "The provided modified by does not match."
-msgstr ""
+msgstr "El modificado por proporcionado no coincide."
 
 msgid "The user identifier should be a UUID."
 msgstr "El identificador de usuario debe ser un UUID."
@@ -3239,22 +3239,22 @@ msgid "Tag creation/modification with cleartext metadata not allowed."
 msgstr "No se permite la creación/modificación de etiquetas con metadatos de texto claro."
 
 msgid "You created a new metadata key."
-msgstr "Has creado una nueva clave de metadatos."
+msgstr "Se ha creado una nueva clave de metadatos."
 
 msgid "{0} created a new metadata key."
 msgstr "{0} ha creado una nueva clave de metadatos."
 
 msgid "You deleted a metadata key."
-msgstr ""
+msgstr "Se ha eliminado una clave de metadatos."
 
 msgid "{0} deleted a metadata key."
-msgstr ""
+msgstr "{0} ha eliminado una clave de metadatos."
 
 msgid "You have expired a metadata key."
-msgstr ""
+msgstr "Se ha caducado una clave de metadatos."
 
 msgid "{0} has expired a metadata key."
-msgstr ""
+msgstr "{0} ha caducado una clave de metadatos."
 
 msgid "You edited the metadata settings."
 msgstr "Se ha editado la configuración de los metadatos."
@@ -3275,7 +3275,7 @@ msgid "You have saved a new password"
 msgstr "Ha guardado una nueva contraseña"
 
 msgid "You have created a new password."
-msgstr "Ha creado una nueva contraseña."
+msgstr "Se ha creado una nueva contraseña."
 
 msgid "{0} shared a resource with you"
 msgstr "{0} ha compartido un recurso contigo"
