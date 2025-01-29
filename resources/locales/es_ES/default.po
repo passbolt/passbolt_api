@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-01-29 06:04+0000\n"
-"PO-Revision-Date: 2025-01-29 06:36\n"
+"PO-Revision-Date: 2025-01-29 11:26\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -224,7 +224,7 @@ msgid "The group was deleted successfully."
 msgstr "El grupo se ha eliminado correctamente."
 
 msgid "You are not authorized to access that location."
-msgstr "No estás autorizado a acceder a esa ubicación."
+msgstr "No está autorizado a acceder a esa ubicación."
 
 msgid "The group identifier should be a valid UUID."
 msgstr "El identificador de grupo debe ser un UUID válido."
@@ -323,7 +323,7 @@ msgid "The user identifier should be a valid UUID."
 msgstr "El identificador de usuario debe ser un UUID válido."
 
 msgid "You are not allowed to delete yourself."
-msgstr "No tienes permiso para borrarte a ti mismo."
+msgstr "No tiene permiso para borrarse a si mismo."
 
 msgid "The user does not exist or has been already deleted."
 msgstr "El usuario no existe o ya ha sido eliminado."
@@ -914,7 +914,7 @@ msgid "A resource of type personal cannot be shared with other users or a group.
 msgstr "Un recurso de tipo personal no se puede compartir con otros usuarios o un grupo."
 
 msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
-msgstr ""
+msgstr "Los ajustes seleccionados por su administrador impiden actualizar v4 a v5."
 
 msgid "The resource should not be already soft deleted."
 msgstr "El recurso no debe haberse eliminado temporalmente."
@@ -1010,7 +1010,7 @@ msgid "The key should not already be expired."
 msgstr "La clave no debe estar ya caducada."
 
 msgid "The date should not be set in the future."
-msgstr ""
+msgstr "La fecha no debe establecerse en el futuro."
 
 msgid "The date could not be parsed."
 msgstr "No se ha podido analizar la fecha."
@@ -1052,7 +1052,7 @@ msgid "{0} deleted several group memberships"
 msgstr "{0} ha eliminado varios miembros del grupo"
 
 msgid "You made changes on several resources"
-msgstr "Ha realizado cambios en varios recursos"
+msgstr "Se ha realizado cambios en varios recursos"
 
 msgid "{0} has made changes on several resources"
 msgstr "{0} ha hecho cambios en varios recursos"
@@ -1097,19 +1097,19 @@ msgid "Your account recovery, {0}!"
 msgstr "¡Su cuenta se recupera, {0}!"
 
 msgid "You added the password {0}"
-msgstr "Ha añadido la contraseña {0}"
+msgstr "Se ha añadido la contraseña {0}"
 
 msgid "You added a new password"
-msgstr "Has añadido una nueva contraseña"
+msgstr "Se ha añadido una nueva contraseña"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} ha eliminado la contraseña {1}"
 
 msgid "You edited a resource"
-msgstr "Has editado un recurso"
+msgstr "Se ha editado un recurso"
 
 msgid "You edited the resource {0}"
-msgstr "Has editado el recurso {0}"
+msgstr "Se ha editado el recurso {0}"
 
 msgid "{0} edited the resource {1}"
 msgstr "{0} ha editado el recurso {1}"
@@ -1124,10 +1124,10 @@ msgid "{0} shared a resource"
 msgstr "{0} ha compartido un recurso"
 
 msgid "You deleted administrator {0}"
-msgstr "Ha eliminado al administrador {0}"
+msgstr "Se ha eliminado al administrador {0}"
 
 msgid "{0} deleted your account"
-msgstr "{0} eliminó su cuenta"
+msgstr "{0} ha eliminado su cuenta"
 
 msgid "{0} deleted administrator {1}"
 msgstr "{0} eliminó al administrador {1}"
@@ -2024,7 +2024,7 @@ msgid "Validation success for resource {0}"
 msgstr "Éxito en la validación para el recurso {0}"
 
 msgid "You are not allowed to update this resource."
-msgstr "No tienes permisos para actualizar este recurso."
+msgstr "No tiene permisos para actualizar este recurso."
 
 msgid "Additional resource types are not enabled on this server."
 msgstr "Los tipos de recursos adicionales no están habilitados en este servidor."
@@ -2231,7 +2231,7 @@ msgid "This theme is not supported."
 msgstr "Este tema no está soportado."
 
 msgid "You are not allowed to access this location."
-msgstr "No tienes permisos para acceder a esta ubicación."
+msgstr "No tiene permisos para acceder a esta ubicación."
 
 msgid "This is not a valid Ajax/Json request."
 msgstr "Esta no es una petición Ajax/Json válida."
@@ -2351,10 +2351,10 @@ msgid "You added the folder {0}"
 msgstr "Añadiste la carpeta {0}"
 
 msgid "You added a new folder"
-msgstr "Has añadido una nueva carpeta"
+msgstr "Se ha añadido una nueva carpeta"
 
 msgid "You deleted the folder {0}"
-msgstr "Ha eliminado la carpeta {0}"
+msgstr "Se ha eliminado la carpeta {0}"
 
 msgid "{0} deleted the folder {1}"
 msgstr "{0} eliminó la carpeta {1}"
@@ -2369,7 +2369,7 @@ msgid "{0} edited the folder"
 msgstr "{0} ha editado la carpeta"
 
 msgid "You edited the folder"
-msgstr "Ha editado la carpeta"
+msgstr "Se ha editado la carpeta"
 
 msgid "An email notification setting should be a boolean."
 msgstr "La \"configuración de notificación por correo electrónico\" debe ser un valor booleano."
@@ -2408,10 +2408,10 @@ msgid "The object to move does not exist."
 msgstr "El objeto a mover no existe."
 
 msgid "You are not allowed to move this item out of its parent folder."
-msgstr "No tienes permisos para mover este elemento fuera de su carpeta principal."
+msgstr "No tiene permisos para mover este elemento fuera de su carpeta principal."
 
 msgid "You are not allowed to move this item."
-msgstr "No tienes permisos para mover este elemento."
+msgstr "No tiene permisos para mover este elemento."
 
 msgid "You are not allowed to move an item in read only into the parent folder."
 msgstr "No puede mover un elemento en modo de solo lectura a la carpeta principal."
@@ -2420,7 +2420,7 @@ msgid "The folder parent does not exist."
 msgstr "La carpeta principal no existe."
 
 msgid "You have created a new folder"
-msgstr "Ha creado una nueva carpeta"
+msgstr "Se ha creado una nueva carpeta"
 
 msgid "Name: {0}"
 msgstr "Nombre: {0}"
@@ -2429,7 +2429,7 @@ msgid "View it in passbolt"
 msgstr "Verla en Passbolt"
 
 msgid "You deleted a folder"
-msgstr "Ha eliminado una carpeta"
+msgstr "Se ha eliminado una carpeta"
 
 msgid "{0} deleted a folder"
 msgstr "{0} eliminó una carpeta"
@@ -2441,7 +2441,7 @@ msgid "{0} shared a folder with you"
 msgstr "{0} ha compartido una carpeta contigo"
 
 msgid "You edited a folder"
-msgstr "Ha editado una carpeta"
+msgstr "Se ha editado una carpeta"
 
 msgid "{0} edited a folder"
 msgstr "{0} editó una carpeta"
@@ -2708,7 +2708,7 @@ msgid "Could not validate secret history data."
 msgstr "No se pudo validar los datos históricos del secreto."
 
 msgid "Invalid pagination limit set for metadata endpoint."
-msgstr ""
+msgstr "Límite de paginación no válido para el endpoint de metadatos."
 
 msgid "Could not validate the metadata key data."
 msgstr "No se pudieron validar los datos de la clave de metadatos."
@@ -2720,10 +2720,10 @@ msgid "The private key identifier should be a UUID."
 msgstr "El identificador de la clave privada debe ser un UUID."
 
 msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr ""
+msgstr "Límite de paginación no válido para el endpoint de actualización de metadatos."
 
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
-msgstr ""
+msgstr "El contenido de missing_metadata_key_ids sólo está permitido para los administradores."
 
 msgid "An object type is required."
 msgstr "Se requiere un tipo de objeto."
@@ -2783,7 +2783,7 @@ msgid "The data should be a valid ASCII string."
 msgstr "Los datos deben ser una cadena ASCII válida."
 
 msgid "The modified date should be a valid ISO 80601 date."
-msgstr ""
+msgstr "La fecha modificada debe ser una fecha ISO 80601 válida."
 
 msgid "The setting should be a valid boolean."
 msgstr "El ajuste debe ser un booleano válido."
@@ -2816,10 +2816,10 @@ msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Los ajustes v4 y v5 no se pueden desactivar."
 
 msgid "The metadata key should not be deleted."
-msgstr ""
+msgstr "La clave de metadatos no debe ser eliminada."
 
 msgid "A metadata key identifier is required."
-msgstr ""
+msgstr "Se requiere un identificador de clave de metadatos."
 
 msgid "The metadata key identifier should not be empty."
 msgstr "El identificador de clave de metadatos no debe estar vacío."
@@ -2828,28 +2828,28 @@ msgid "The metadata key identifier should be a valid UUID."
 msgstr "El identificador de clave de metadatos debe ser un UUID válido."
 
 msgid "A metadata key type is required."
-msgstr ""
+msgstr "Se requiere un tipo de clave de metadatos."
 
 msgid "The metadata key type should not be empty."
-msgstr ""
+msgstr "El tipo de clave de metadatos no debe estar vacío."
 
 msgid "The metadata key type should be shared key."
-msgstr ""
+msgstr "El tipo de clave de metadatos debe ser una clave compartida."
 
 msgid "A metadata is required."
-msgstr ""
+msgstr "Se requiere un metadato."
 
 msgid "A modified by is required."
-msgstr ""
+msgstr "Se requiere un modificado por."
 
 msgid "The modified by should not be empty."
-msgstr ""
+msgstr "El modificado por no debe estar vacío."
 
 msgid "The modified by should be a valid UUID."
-msgstr ""
+msgstr "El modificado por debe ser una UUID válida."
 
 msgid "Metadata settings endpoints are disabled."
-msgstr "Los puntos finales de ajustes de metadatos están desactivados."
+msgstr "Los endpoints de ajustes de metadatos están desactivados."
 
 msgid "Folder can not be shared"
 msgstr "La carpeta no puede ser compartida"
@@ -2879,7 +2879,7 @@ msgid "Zero-knowledge key share"
 msgstr "Clave de conocimiento cero compartida"
 
 msgid "The metadata private key data must be an array."
-msgstr ""
+msgstr "Los datos de la clave privada de los metadatos deben ser una matriz."
 
 msgid "No resource type mapping for ID '{0}'"
 msgstr "No hay tipos de mapeo de recursos para el ID '{0}'"
@@ -2921,25 +2921,25 @@ msgid "The identifier of the user who created the metadata key should be a valid
 msgstr "El identificador del usuario que creó la clave de metadatos debe ser un UUID válido."
 
 msgid "The creator is required."
-msgstr ""
+msgstr "Se requiere un creador."
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
 msgstr "El identificador del usuario que modificó la clave de metadatos debe ser un UUID válido."
 
 msgid "A expired date is required."
-msgstr ""
+msgstr "Se requiere una fecha de caducidad."
 
 msgid "The expired date should not be empty."
-msgstr ""
+msgstr "La fecha de caducidad no debe estar vacía."
 
 msgid "The modifier is required."
-msgstr ""
+msgstr "Se necesita un modificador."
 
 msgid "The fingerprint is already in use."
 msgstr "La huella digital ya está en uso."
 
 msgid "Already two metadata keys are active."
-msgstr ""
+msgstr "Ya hay dos claves de metadatos activas."
 
 msgid "You cannot reuse the user key."
 msgstr "No puede reutilizar la clave de usuario."
@@ -2954,37 +2954,37 @@ msgid "The data is not valid. Please make sure it is encrypted for the correct k
 msgstr "Los datos no son válidos. Por favor, asegúrese de que están cifrados para la clave correcta."
 
 msgid "The entity must be an array."
-msgstr ""
+msgstr "La entidad debe ser una matriz."
 
 msgid "Entity {0} not found."
-msgstr ""
+msgstr "No se ha encontrado la entidad {0}."
 
 msgid "Could not validate the metadata key data for the entity with ID: {0}."
-msgstr ""
+msgstr "No se pudo validar la clave de metadatos para la entidad con ID: {0}."
 
 msgid "{0} created a new metadata key"
 msgstr "{0} ha creado una nueva clave de metadatos"
 
 msgid "You created a new metadata key"
-msgstr "Has creado una nueva clave de metadatos"
+msgstr "Se ha creado una nueva clave de metadatos"
 
 msgid "{0} deleted a metadata key"
-msgstr ""
+msgstr "{0} ha eliminado una clave de metadatos"
 
 msgid "You deleted a metadata key"
-msgstr ""
+msgstr "Se ha eliminado una clave de metadatos"
 
 msgid "{0} has expired a metadata key"
-msgstr ""
+msgstr "{0} ha caducado una clave de metadatos"
 
 msgid "You have expired a metadata key"
-msgstr ""
+msgstr "Se ha caducado una clave de metadatos"
 
 msgid "{0} edited the metadata settings"
 msgstr "{0} ha editado los ajustes de metadatos"
 
 msgid "You edited the metadata settings"
-msgstr "Has editado la configuración de los metadatos"
+msgstr "Se ha editado la configuración de los metadatos"
 
 msgid "No server metadata private key found."
 msgstr "No se ha encontrado una clave privada de metadatos del servidor."
@@ -3014,13 +3014,13 @@ msgid "The metadata key could not be deleted."
 msgstr "La clave de metadatos no pudo ser eliminada."
 
 msgid "The metadata key fingerprint is invalid."
-msgstr ""
+msgstr "La huella digital de la clave de metadatos no es válida."
 
 msgid "The metadata key is already marked as expired."
-msgstr ""
+msgstr "La clave de metadatos ya está marcada como caducada."
 
 msgid "The metadata key could not be updated."
-msgstr ""
+msgstr "No se pudo actualizar la clave de metadatos."
 
 msgid "The metadata key could not be saved."
 msgstr "La clave de metadatos no pudo ser guardada."
@@ -3068,7 +3068,7 @@ msgid "The server metadata private key is invalid."
 msgstr "La clave privada de metadatos del servidor no es válida."
 
 msgid "The metadata private key could not be created."
-msgstr ""
+msgstr "No se pudo crear la clave privada de metadatos."
 
 msgid "Please try again later."
 msgstr "Por favor, inténtelo de nuevo más tarde."
@@ -3083,10 +3083,10 @@ msgid "The metadata key is already shared with the user."
 msgstr "La clave de metadatos ya está compartida con el usuario."
 
 msgid "The metadata private keys could not be created."
-msgstr ""
+msgstr "No se han podido crear las claves privadas de metadatos."
 
 msgid "The metadata private key data is not valid."
-msgstr ""
+msgstr "Los datos de la clave privada de metadatos no son válidos."
 
 msgid "The metadata private key does not exist or has been deleted."
 msgstr "La clave privada de metadatos no existe o ha sido eliminada."
@@ -3200,19 +3200,19 @@ msgid "The metadata armored key is not available or incomplete."
 msgstr "La clave blindada de los metadatos no está disponible o está incompleta."
 
 msgid "The resource metadata key data could not be updated."
-msgstr ""
+msgstr "No se pudieron actualizar los datos de la clave de metadatos de los recursos."
 
 msgid "The request data should not be empty."
 msgstr "Los datos de la solicitud no deben estar vacíos."
 
 msgid "The request data is too large."
-msgstr ""
+msgstr "Los datos de la solicitud son demasiado grandes."
 
 msgid "The provided modified date does not match."
-msgstr ""
+msgstr "La fecha de modificación proporcionada no coincide."
 
 msgid "The provided modified by does not match."
-msgstr ""
+msgstr "El modificado por proporcionado no coincide."
 
 msgid "The user identifier should be a UUID."
 msgstr "El identificador de usuario debe ser un UUID."
@@ -3245,43 +3245,43 @@ msgid "Tag creation/modification with cleartext metadata not allowed."
 msgstr "No se permite la creación/modificación de etiquetas con metadatos de texto claro."
 
 msgid "You created a new metadata key."
-msgstr "Has creado una nueva clave de metadatos."
+msgstr "Se ha creado una nueva clave de metadatos."
 
 msgid "{0} created a new metadata key."
 msgstr "{0} ha creado una nueva clave de metadatos."
 
 msgid "You deleted a metadata key."
-msgstr ""
+msgstr "Se ha eliminado una clave de metadatos."
 
 msgid "{0} deleted a metadata key."
-msgstr ""
+msgstr "{0} ha eliminado una clave de metadatos."
 
 msgid "You have expired a metadata key."
-msgstr ""
+msgstr "Se ha caducado una clave de metadatos."
 
 msgid "{0} has expired a metadata key."
-msgstr ""
+msgstr "{0} ha caducado una clave de metadatos."
 
 msgid "You edited the metadata settings."
-msgstr "Has editado la configuración de los metadatos."
+msgstr "Se ha editado la configuración de los metadatos."
 
 msgid "{0} edited the metadata settings."
 msgstr "{0} ha editado los ajustes de metadatos."
 
 msgid "You have created a new folder."
-msgstr "Ha creado una nueva carpeta."
+msgstr "Se ha creado una nueva carpeta."
 
 msgid "{0} has shared a folder with you."
 msgstr "{0} ha compartido una carpeta contigo."
 
 msgid "You have edited a folder."
-msgstr "Ha editado una carpeta."
+msgstr "Se ha editado una carpeta."
 
 msgid "You have saved a new password"
 msgstr "Ha guardado una nueva contraseña"
 
 msgid "You have created a new password."
-msgstr "Ha creado una nueva contraseña."
+msgstr "Se ha creado una nueva contraseña."
 
 msgid "{0} shared a resource with you"
 msgstr "{0} ha compartido un recurso contigo"
@@ -3290,7 +3290,7 @@ msgid "{0} shared a resource with you."
 msgstr "{0} ha compartido un recurso contigo."
 
 msgid "You have edited a resource."
-msgstr "Ha editado un recurso."
+msgstr "Se ha editado un recurso."
 
 msgid "Information about the transfer is required."
 msgstr "Se requiere información sobre la transferencia."
@@ -3758,7 +3758,7 @@ msgid "Time based One Time Password (TOTP) is enabled!"
 msgstr "¡La contraseña de un solo uso basada en el tiempo (TOTP) está habilitada!"
 
 msgid "When logging in from a new device you will need to enter a unique verification code generated by an app on your mobile."
-msgstr "Al iniciar sesión desde un nuevo dispositivo tendrás que introducir un código de verificación único generado por una aplicación en tu móvil."
+msgstr "Al iniciar sesión desde un nuevo dispositivo tendrá que introducir un código de verificación único generado por una aplicación en tu móvil."
 
 msgid "Remember this device for a month."
 msgstr "Recordar este dispositivo durante un mes."
@@ -3773,7 +3773,7 @@ msgid "Yubikey One Time Password is enabled!"
 msgstr "¡La contraseña de un solo uso de la Yubikey está habilitada!"
 
 msgid "When logging in from a new device you will need a unique code generated by your yubikey."
-msgstr "Al iniciar sesión desde un nuevo dispositivo necesitarás un código único generado por tu yubikey."
+msgstr "Al iniciar sesión desde un nuevo dispositivo necesitará un código único generado por su yubikey."
 
 msgid "verify"
 msgstr "verificar"
@@ -3794,7 +3794,7 @@ msgid "Your multi-factor authentication is disabled."
 msgstr "Su autenticación de múltiples factores está deshabilitada."
 
 msgid "Multi-factor authentication settings were reset for your account by an administrator."
-msgstr "Tu configuración de autenticación de múltiples factores fue restablecida por un administrador."
+msgstr "Su configuración de autenticación de múltiples factores fue restablecida por un administrador."
 
 msgid "Please contact your administrator if you didn't request this action."
 msgstr "Póngase en contacto con su administrador si no solicitó esta acción."
@@ -3824,7 +3824,7 @@ msgid "{0} marked a password as expired"
 msgstr "{0} ha marcado una contraseña como caducada"
 
 msgid "You edited the password expiry settings"
-msgstr "Ha editado la configuración de caducidad de las contraseñas"
+msgstr "Se ha editado la configuración de caducidad de las contraseñas"
 
 msgid "{0} edited the password expiry settings"
 msgstr "{0} ha editado la configuración de caducidad de las contraseña"
@@ -4235,7 +4235,7 @@ msgid "{0} edited the self registration settings."
 msgstr "{0} editó los ajustes del auto-registro."
 
 msgid "You edited the self registration settings."
-msgstr "Ha editado los ajustes del auto-registro."
+msgstr "Se ha editado los ajustes del auto-registro."
 
 msgid "{0} just created an account on passbolt!"
 msgstr "¡{0} acaba de crear una cuenta en Passbolt!"
@@ -4268,7 +4268,7 @@ msgid "Could not validate the self registration settings."
 msgstr "No se pudieron validar los ajustes del auto-registro."
 
 msgid "{0} updated the self registration settings"
-msgstr "{0} actualizó los ajustes del auto-registro"
+msgstr "{0} ha actualizado los ajustes del auto-registro"
 
 msgid "Status: {0}"
 msgstr "Estado: {0}"
@@ -4604,7 +4604,7 @@ msgid "There was a problem creating the registration token"
 msgstr "Hubo un problema al crear el token de registro"
 
 msgid "Create your user account!"
-msgstr "¡Crea tu cuenta de usuario!"
+msgstr "¡Cree su cuenta de usuario!"
 
 msgid "Admin user details"
 msgstr "Detalles del usuario administrador"
@@ -4754,13 +4754,13 @@ msgid "Browse"
 msgstr "Navegar"
 
 msgid "Or select a file from your computer"
-msgstr "O selecciona un archivo de tu ordenador"
+msgstr "O seleccione un archivo de su ordenador"
 
 msgid "Some binary things are happening..."
 msgstr "Algunas cosas binarias están ocurriendo..."
 
 msgid "Choose your preferences."
-msgstr "Elige tus preferencias."
+msgstr "Elija sus preferencias."
 
 msgid "Full Base Url"
 msgstr "Url Base Completa"
@@ -4796,7 +4796,7 @@ msgid "Environment is configured correctly."
 msgstr "El entorno está configurado correctamente."
 
 msgid "URL rewriting is not properly configured on your server."
-msgstr "La reescritura de URL no está correctamente configurada en tu servidor."
+msgstr "La reescritura de URL no está correctamente configurada en su servidor."
 
 msgid "GPG is configured correctly."
 msgstr "GPG está configurado correctamente."
@@ -4817,7 +4817,7 @@ msgid "You have completed successfully the configuration procedure, congrats!"
 msgstr "Ha completado con éxito el procedimiento de configuración, ¡felicidades!"
 
 msgid "You will soon be redirected to passbolt to complete your account setup."
-msgstr "Pronto serás redirigido a passbolt para completar la configuración de tu cuenta."
+msgstr "Pronto será redirigido a Passbolt para completar la configuración de su cuenta."
 
 msgid "You will soon be redirected to the login page."
 msgstr "Pronto serás redirigido a la página de inicio de sesión."
@@ -4847,7 +4847,7 @@ msgid "Help"
 msgstr "Ayuda"
 
 msgid "Need help? You can find more information on how to install passbolt in the official online help."
-msgstr "¿Necesitas ayuda? Puede encontrar más información sobre cómo instalar passbolt en la ayuda oficial en línea."
+msgstr "¿Necesita ayuda? Puede encontrar más información sobre cómo instalar passbolt en la ayuda oficial en línea."
 
 msgid "Send test email"
 msgstr "Enviar correo electrónico de prueba"
@@ -4862,7 +4862,7 @@ msgid "See trace"
 msgstr "Ver rastro"
 
 msgid "Your email address"
-msgstr "Tu correo electrónico"
+msgstr "Su correo electrónico"
 
 msgid "Why do I need a SMTP server?"
 msgstr "¿Por qué necesito un servidor SMTP?"
@@ -4874,7 +4874,7 @@ msgid "What subscription key?"
 msgstr "¿Qué clave de suscripción?"
 
 msgid "The subscription key is a file that was sent to you when you purchased Passbolt Pro. We need the subscription key in order to activate the Pro features of passbolt."
-msgstr "La clave de suscripción es un archivo que se le envió cuando compró Passbolt Pro. Necesitamos la clave de suscripción para activar las características Pro de passbolt."
+msgstr "La clave de suscripción es un archivo que se le envió cuando compró Passbolt Pro. Necesitamos la clave de suscripción para activar las características Pro de Passbolt."
 
 msgid "The user id is invalid."
 msgstr "El id de usuario no es válido."
@@ -4889,7 +4889,7 @@ msgid "Invalid request. Please provide the required data."
 msgstr "Solicitud no válida. Por favor, proporcione los datos requeridos."
 
 msgid "The request id is invalid."
-msgstr "El id de solicitud no es válido."
+msgstr "El ID de solicitud no es válido."
 
 msgid "Please provide a valid request id."
 msgstr "Por favor, proporcione un id de solicitud válido."
@@ -4898,7 +4898,7 @@ msgid "Only admin are allowed to create an account recovery request."
 msgstr "Solo los administradores pueden crear una solicitud de recuperación de cuenta."
 
 msgid "You cannot reuse the account recovery key."
-msgstr ""
+msgstr "No puede reutilizar la clave de recuperación de la cuenta."
 
 msgid "A policy is required."
 msgstr "Se requiere una política."
@@ -5141,19 +5141,19 @@ msgid "The account recovery user setting is not valid."
 msgstr "La configuración de recuperación de cuenta de usuario no es válida."
 
 msgid "You have disabled the account recovery."
-msgstr "Ha desactivado la recuperación de la cuenta."
+msgstr "Se ha desactivado la recuperación de la cuenta."
 
 msgid "{0} has disabled the account recovery."
 msgstr "{0} ha deshabilitado la recuperación de cuenta."
 
 msgid "You have set the account recovery organization policy to {0}."
-msgstr "Ha establecido la política de recuperación de cuenta de la organización a {0}."
+msgstr "Se ha establecido la política de recuperación de cuenta de la organización a {0}."
 
 msgid "{0} has set the account recovery organization policy to {1}."
 msgstr "{0} ha establecido la política de recuperación de cuenta de la organización a {1}."
 
 msgid "You have updated the account recovery organization policy to {0}."
-msgstr "Ha actualizado la política de recuperación de cuenta de la organización a {0}."
+msgstr "Se ha actualizado la política de recuperación de cuenta de la organización a {0}."
 
 msgid "{0} has updated the account recovery organization policy to {1}."
 msgstr "{0} ha actualizado la política de recuperación de cuenta de la organización a {1}."
@@ -5165,7 +5165,7 @@ msgid "{0} has initiated a recovery request"
 msgstr "{0} ha iniciado una solicitud de recuperación"
 
 msgid "You have initiated a recovery request"
-msgstr "Ha iniciado una solicitud de recuperación"
+msgstr "Se ha iniciado una solicitud de recuperación"
 
 msgid "Recovery request approved!"
 msgstr "¡Solicitud de recuperación aprobada!"
@@ -5342,7 +5342,7 @@ msgid "This is a potential security threat."
 msgstr "Esta es una amenaza potencial para la seguridad."
 
 msgid "You have initiated an account recovery!"
-msgstr "¡Ha iniciado una recuperación de cuenta!"
+msgstr "¡Se ha iniciado una recuperación de cuenta!"
 
 msgid "Recovery Request"
 msgstr "Solicitud de recuperación"
@@ -5357,10 +5357,10 @@ msgid "If you did not make this request please inform your administrator."
 msgstr "Si no ha realizado esta solicitud, por favor informe a su administrador."
 
 msgid "You have updated a recovery request to {0}."
-msgstr "Ha actualizado una solicitud de recuperación a {0}."
+msgstr "Se ha actualizado una solicitud de recuperación a {0}."
 
 msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
-msgstr "Ha establecido el estado de la solicitud de la recuperación de cuenta iniciada por {0} ({1}) a {2}."
+msgstr "Se ha establecido el estado de la solicitud de la recuperación de cuenta iniciada por {0} ({1}) a {2}."
 
 msgid "{0} ({1}) has updated a recovery request to {2}."
 msgstr "{0} ({1}) ha actualizado una solicitud de recuperación a {2}."
@@ -5894,7 +5894,7 @@ msgid "The remember me for a month should be a boolean type."
 msgstr "Recuérdame durante un mes debe ser un tipo booleano."
 
 msgid "You edited the MFA policy"
-msgstr "Has editado la política de MFA"
+msgstr "Se ha editado la política de MFA"
 
 msgid "{0} edited the MFA policy"
 msgstr "{0} editó la política de MFA"
@@ -5951,7 +5951,7 @@ msgid "The resource with ID {0} does not exist."
 msgstr "El recurso con identificador {0} no existe."
 
 msgid "You edited the password policy"
-msgstr "Ha editado la política de contraseñas"
+msgstr "Se ha editado la política de contraseñas"
 
 msgid "{0} edited the password policy"
 msgstr "{0} ha editado la política de contraseña"
@@ -6626,7 +6626,7 @@ msgid "The tag does not exist."
 msgstr "La etiqueta no existe."
 
 msgid "You do not have the permission to delete shared tags."
-msgstr "No tienes permiso para eliminar las etiquetas compartidas."
+msgstr "No tiene permiso para eliminar las etiquetas compartidas."
 
 msgid "The tag has been deleted successfully."
 msgstr "La etiqueta se ha eliminado correctamente."
@@ -6695,7 +6695,7 @@ msgid "Could not save the tags, try again later."
 msgstr "No se pudieron guardar las etiquetas, inténtelo de nuevo más tarde."
 
 msgid "You do not have the permission to edit shared tags on this resource."
-msgstr "No tienes permiso para editar etiquetas compartidas en este recurso."
+msgstr "No tiene permiso para editar etiquetas compartidas en este recurso."
 
 msgid "Unable to save the tag."
 msgstr "No se pudo guardar la etiqueta."
@@ -6716,7 +6716,7 @@ msgid "The entropy minimum should be between {0} and {1}."
 msgstr "El mínimo de entropía debe estar entre {0} y {1}."
 
 msgid "You edited the user passphrase policy"
-msgstr "Ha editado la política de contraseñas del usuario"
+msgstr "Se ha editado la política de contraseñas del usuario"
 
 msgid "{0} edited the user passphrase policy"
 msgstr "{0} ha editado la política de contraseñas del usuario"
@@ -6764,10 +6764,10 @@ msgid "is not anymore group manager"
 msgstr "ya no es administrador de grupo"
 
 msgid "User Agent: "
-msgstr ""
+msgstr "Agente del usuario: "
 
 msgid "User IP: "
-msgstr ""
+msgstr "IP del usuario: "
 
 msgid "Terms"
 msgstr "Condiciones"
@@ -6860,13 +6860,13 @@ msgid "Welcome to {0}!"
 msgstr "¡Bienvenido a {0}!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr "{0} usó la función de auto-registro para crear una cuenta en Passbolt."
+msgstr "{0} ha usado la función de auto-registro para crear una cuenta en Passbolt."
 
 msgid "Welcome back!"
 msgstr "¡Bienvenido de nuevo!"
 
 msgid "You just requested to recover your passbolt account on this device."
-msgstr "Has solicitado recuperar tu cuenta de passbolt en este dispositivo."
+msgstr "Se ha solicitado recuperar tu cuenta de passbolt en este dispositivo."
 
 msgid "Make sure you have a backup of your secret key handy."
 msgstr "Asegúrese de tener una copia de seguridad de su clave secreta a mano."
@@ -6902,7 +6902,7 @@ msgid "get started"
 msgstr "empezar"
 
 msgid "You just created your account on passbolt!"
-msgstr "¡Acabas de crear tu cuenta en passbolt!"
+msgstr "¡Acaba de crear su cuenta en Passbolt!"
 
 msgid "You just opened an account on passbolt at {0}."
 msgstr "Acabas de abrir una cuenta de passbolt en {0}."
@@ -6953,7 +6953,7 @@ msgid "You are no longer a member of this group."
 msgstr "Ya no eres miembro de este grupo."
 
 msgid "You are no longer authorized to access the passwords shared with this group."
-msgstr "Ya no tienes autorización para acceder a las contraseñas compartidas con este grupo."
+msgstr "Ya no tiene autorización para acceder a las contraseñas compartidas con este grupo."
 
 msgid "Please contact {0} or another group manager if this is a mistake."
 msgstr "Póngase en contacto con {0} u otro administrador de grupo si se trata de un error."
@@ -6971,7 +6971,7 @@ msgid "You are no longer a group manager of this group."
 msgstr "Ya no eres un administrador de grupo de este grupo."
 
 msgid "You are no longer authorized to edit the members of this group."
-msgstr "Ya no tienes autorización para editar los miembros de este grupo."
+msgstr "Ya no tiene autorización para editar los miembros de este grupo."
 
 msgid "{0} group memberships were affected."
 msgstr "{0} miembros del grupo se vieron afectados."
@@ -6983,7 +6983,7 @@ msgid "go to passbolt"
 msgstr "ir a passbolt"
 
 msgid "{0} deleted {1} groups you were a member of."
-msgstr "{0} eliminó {1} grupos de los que era miembro."
+msgstr "{0} ha eliminado {1} grupos de los que era miembro."
 
 msgid "Username: {0}"
 msgstr "Nombre de usuario: {0}"
@@ -6995,13 +6995,13 @@ msgid "Description: {0}"
 msgstr "Descripción: {0}"
 
 msgid "{0} shared a password with you"
-msgstr "{0} compartió una contraseña contigo"
+msgstr "{0} ha compartido una contraseña contigo"
 
 msgid "{0} shared passwords with you"
-msgstr "{0} compartió una contraseña contigo"
+msgstr "{0} ha compartido contraseñas contigo"
 
 msgid "{0} resources were shared with you."
-msgstr "{0} recursos fueron compartidos contigo."
+msgstr "{0} recursos han sido compartidos contigo."
 
 msgid "{0} just activated their account on passbolt!"
 msgstr "{0} acaba de activar su cuenta en passbolt!"
@@ -7019,7 +7019,7 @@ msgid "This user was invited by {0} {1}."
 msgstr "Este usuario fue invitado por {0} {1}."
 
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr ""
+msgstr "Este usuario no tiene la clave de cifrado para los metadatos de recursos compartidos. Por favor inicie sesión, vaya al área de trabajo del usuario y comparta la clave con ellos manualmente."
 
 msgid "view users"
 msgstr "ver usuarios"

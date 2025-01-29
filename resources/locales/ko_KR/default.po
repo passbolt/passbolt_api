@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-01-29 06:04+0000\n"
-"PO-Revision-Date: 2025-01-29 06:36\n"
+"PO-Revision-Date: 2025-01-29 07:34\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -914,7 +914,7 @@ msgid "A resource of type personal cannot be shared with other users or a group.
 msgstr "개인 유형의 리소스는 다른 사용자 또는 그룹과 공유할 수 없습니다."
 
 msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
-msgstr ""
+msgstr "관리자가 선택한 설정으로 인해 v4에서 v5로 업그레이드되지 않습니다."
 
 msgid "The resource should not be already soft deleted."
 msgstr "리소스를 임시로 삭제해서는 안 됩니다."
@@ -1010,7 +1010,7 @@ msgid "The key should not already be expired."
 msgstr "키가 이미 만료되지 않아야 합니다."
 
 msgid "The date should not be set in the future."
-msgstr ""
+msgstr "날짜를 미래로 설정할 수 없습니다."
 
 msgid "The date could not be parsed."
 msgstr "날짜를 읽을 수 없습니다."
@@ -2708,7 +2708,7 @@ msgid "Could not validate secret history data."
 msgstr "암호 기록 데이터의 유효성을 검사할 수 없습니다."
 
 msgid "Invalid pagination limit set for metadata endpoint."
-msgstr ""
+msgstr "메타데이터 엔드포인트에 잘못된 페이징 제한이 설정되었습니다"
 
 msgid "Could not validate the metadata key data."
 msgstr "메타데이터 키 데이터를 검사할 수 없습니다."
@@ -2720,10 +2720,10 @@ msgid "The private key identifier should be a UUID."
 msgstr "개인 키 식별자는 UUID여야 합니다."
 
 msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr ""
+msgstr "메타데이터 업그레이드 엔드포인트에 잘못된 페이징 제한이 설정되었습니다."
 
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
-msgstr ""
+msgstr "missing_metadata_key_ids 포함은 관리자에게만 허용됩니다."
 
 msgid "An object type is required."
 msgstr "객체가 필요합니다."
@@ -2783,7 +2783,7 @@ msgid "The data should be a valid ASCII string."
 msgstr "데이터는 유효한 ASCII 문자열이어야 합니다."
 
 msgid "The modified date should be a valid ISO 80601 date."
-msgstr ""
+msgstr "수정된 날짜는 유효한 ISO 80601 날짜여야 합니다."
 
 msgid "The setting should be a valid boolean."
 msgstr "설정은 유효한 부울이어야 합니다."
@@ -2816,10 +2816,10 @@ msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "v4 및 v5 설정을 모두 비활성화할 수 없습니다."
 
 msgid "The metadata key should not be deleted."
-msgstr ""
+msgstr "메타데이터 키는 삭제될 수 없습니다."
 
 msgid "A metadata key identifier is required."
-msgstr ""
+msgstr "메타데이터 키 식별자가 필요합니다."
 
 msgid "The metadata key identifier should not be empty."
 msgstr "메타데이터 키 식별자는 비워 둘 수 없습니다."
@@ -2828,25 +2828,25 @@ msgid "The metadata key identifier should be a valid UUID."
 msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
 
 msgid "A metadata key type is required."
-msgstr ""
+msgstr "메타데이터 키 유형이 필요합니다."
 
 msgid "The metadata key type should not be empty."
-msgstr ""
+msgstr "메타데이터 키 유형은 비워둘 수 없습니다."
 
 msgid "The metadata key type should be shared key."
-msgstr ""
+msgstr "메타데이터 키 유형은 공유 키여야 합니다."
 
 msgid "A metadata is required."
-msgstr ""
+msgstr "메타데이터가 필요합니다."
 
 msgid "A modified by is required."
-msgstr ""
+msgstr "수정한 사람이 필요합니다."
 
 msgid "The modified by should not be empty."
-msgstr ""
+msgstr "수정한 사람은 비워두면 안 됩니다."
 
 msgid "The modified by should be a valid UUID."
-msgstr ""
+msgstr "수정한 사람은 유효한 UUID여야 합니다."
 
 msgid "Metadata settings endpoints are disabled."
 msgstr "메타데이터 설정 엔드포인트를 사용할 수 없습니다."
@@ -2879,7 +2879,7 @@ msgid "Zero-knowledge key share"
 msgstr "영지식 키 공유"
 
 msgid "The metadata private key data must be an array."
-msgstr ""
+msgstr "메타데이터 개인 키 데이터는 배열이어야 합니다."
 
 msgid "No resource type mapping for ID '{0}'"
 msgstr "ID '{0}'에 대한 리소스 유형 매핑이 없습니다."
