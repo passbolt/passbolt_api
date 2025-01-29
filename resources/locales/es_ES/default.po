@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-01-29 05:51+0000\n"
-"PO-Revision-Date: 2025-01-29 07:23\n"
+"PO-Revision-Date: 2025-01-29 09:25\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -914,7 +914,7 @@ msgid "A resource of type personal cannot be shared with other users or a group.
 msgstr "Un recurso de tipo personal no se puede compartir con otros usuarios o un grupo."
 
 msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
-msgstr ""
+msgstr "Los ajustes seleccionados por su administrador impiden actualizar v4 a v5."
 
 msgid "The resource should not be already soft deleted."
 msgstr "El recurso no debe haberse eliminado temporalmente."
@@ -1010,7 +1010,7 @@ msgid "The key should not already be expired."
 msgstr "La clave no debe estar ya caducada."
 
 msgid "The date should not be set in the future."
-msgstr ""
+msgstr "La fecha no debe establecerse en el futuro."
 
 msgid "The date could not be parsed."
 msgstr "No se ha podido analizar la fecha."
@@ -1103,7 +1103,7 @@ msgid "You edited a resource"
 msgstr "Has editado un recurso"
 
 msgid "You edited the resource {0}"
-msgstr "Has editado el recurso {0}"
+msgstr "Se ha editado el recurso {0}"
 
 msgid "{0} edited the resource {1}"
 msgstr "{0} ha editado el recurso {1}"
@@ -2435,7 +2435,7 @@ msgid "{0} shared a folder with you"
 msgstr "{0} ha compartido una carpeta contigo"
 
 msgid "You edited a folder"
-msgstr "Ha editado una carpeta"
+msgstr "Se ha editado una carpeta"
 
 msgid "{0} edited a folder"
 msgstr "{0} editó una carpeta"
@@ -2702,7 +2702,7 @@ msgid "Could not validate secret history data."
 msgstr "No se pudo validar los datos históricos del secreto."
 
 msgid "Invalid pagination limit set for metadata endpoint."
-msgstr ""
+msgstr "Límite de paginación no válido para el endpoint de metadatos."
 
 msgid "Could not validate the metadata key data."
 msgstr "No se pudieron validar los datos de la clave de metadatos."
@@ -2714,10 +2714,10 @@ msgid "The private key identifier should be a UUID."
 msgstr "El identificador de la clave privada debe ser un UUID."
 
 msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr ""
+msgstr "Límite de paginación no válido para el endpoint de actualización de metadatos."
 
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
-msgstr ""
+msgstr "El contenido de missing_metadata_key_ids sólo está permitido para los administradores."
 
 msgid "An object type is required."
 msgstr "Se requiere un tipo de objeto."
@@ -2777,7 +2777,7 @@ msgid "The data should be a valid ASCII string."
 msgstr "Los datos deben ser una cadena ASCII válida."
 
 msgid "The modified date should be a valid ISO 80601 date."
-msgstr ""
+msgstr "La fecha modificada debe ser una fecha ISO 80601 válida."
 
 msgid "The setting should be a valid boolean."
 msgstr "El ajuste debe ser un booleano válido."
@@ -2810,10 +2810,10 @@ msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "Los ajustes v4 y v5 no se pueden desactivar."
 
 msgid "The metadata key should not be deleted."
-msgstr ""
+msgstr "La clave de metadatos no debe ser eliminada."
 
 msgid "A metadata key identifier is required."
-msgstr ""
+msgstr "Se requiere un identificador de clave de metadatos."
 
 msgid "The metadata key identifier should not be empty."
 msgstr "El identificador de clave de metadatos no debe estar vacío."
@@ -2822,7 +2822,7 @@ msgid "The metadata key identifier should be a valid UUID."
 msgstr "El identificador de clave de metadatos debe ser un UUID válido."
 
 msgid "A metadata key type is required."
-msgstr ""
+msgstr "Se requiere un tipo de clave de metadatos."
 
 msgid "The metadata key type should not be empty."
 msgstr ""
@@ -2843,7 +2843,7 @@ msgid "The modified by should be a valid UUID."
 msgstr ""
 
 msgid "Metadata settings endpoints are disabled."
-msgstr "Los puntos finales de ajustes de metadatos están desactivados."
+msgstr "Los endpoints de ajustes de metadatos están desactivados."
 
 msgid "Folder can not be shared"
 msgstr "La carpeta no puede ser compartida"
@@ -2960,7 +2960,7 @@ msgid "{0} created a new metadata key"
 msgstr "{0} ha creado una nueva clave de metadatos"
 
 msgid "You created a new metadata key"
-msgstr "Has creado una nueva clave de metadatos"
+msgstr "Se ha creado una nueva clave de metadatos"
 
 msgid "{0} deleted a metadata key"
 msgstr ""
@@ -2978,7 +2978,7 @@ msgid "{0} edited the metadata settings"
 msgstr "{0} ha editado los ajustes de metadatos"
 
 msgid "You edited the metadata settings"
-msgstr "Has editado la configuración de los metadatos"
+msgstr "Se ha editado la configuración de los metadatos"
 
 msgid "No server metadata private key found."
 msgstr "No se ha encontrado una clave privada de metadatos del servidor."
@@ -3257,7 +3257,7 @@ msgid "{0} has expired a metadata key."
 msgstr ""
 
 msgid "You edited the metadata settings."
-msgstr "Has editado la configuración de los metadatos."
+msgstr "Se ha editado la configuración de los metadatos."
 
 msgid "{0} edited the metadata settings."
 msgstr "{0} ha editado los ajustes de metadatos."
@@ -3269,7 +3269,7 @@ msgid "{0} has shared a folder with you."
 msgstr "{0} ha compartido una carpeta contigo."
 
 msgid "You have edited a folder."
-msgstr "Ha editado una carpeta."
+msgstr "Se ha editado una carpeta."
 
 msgid "You have saved a new password"
 msgstr "Ha guardado una nueva contraseña"
@@ -3284,7 +3284,7 @@ msgid "{0} shared a resource with you."
 msgstr "{0} ha compartido un recurso contigo."
 
 msgid "You have edited a resource."
-msgstr "Ha editado un recurso."
+msgstr "Se ha editado un recurso."
 
 msgid "Information about the transfer is required."
 msgstr "Se requiere información sobre la transferencia."
@@ -3818,7 +3818,7 @@ msgid "{0} marked a password as expired"
 msgstr "{0} ha marcado una contraseña como caducada"
 
 msgid "You edited the password expiry settings"
-msgstr "Ha editado la configuración de caducidad de las contraseñas"
+msgstr "Se ha editado la configuración de caducidad de las contraseñas"
 
 msgid "{0} edited the password expiry settings"
 msgstr "{0} ha editado la configuración de caducidad de las contraseña"
@@ -4229,7 +4229,7 @@ msgid "{0} edited the self registration settings."
 msgstr "{0} editó los ajustes del auto-registro."
 
 msgid "You edited the self registration settings."
-msgstr "Ha editado los ajustes del auto-registro."
+msgstr "Se ha editado los ajustes del auto-registro."
 
 msgid "{0} just created an account on passbolt!"
 msgstr "¡{0} acaba de crear una cuenta en Passbolt!"
@@ -4895,10 +4895,10 @@ msgid "is not anymore group manager"
 msgstr "ya no es administrador de grupo"
 
 msgid "User Agent: "
-msgstr ""
+msgstr "Agente del usuario: "
 
 msgid "User IP: "
-msgstr ""
+msgstr "IP del usuario: "
 
 msgid "Terms"
 msgstr "Condiciones"
@@ -5153,7 +5153,7 @@ msgid "This user was invited by {0} {1}."
 msgstr "Este usuario fue invitado por {0} {1}."
 
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr ""
+msgstr "Este usuario no tiene la clave de cifrado para los metadatos de recursos compartidos. Por favor inicie sesión, vaya al área de trabajo del usuario y comparta la clave con ellos manualmente."
 
 msgid "view users"
 msgstr "ver usuarios"
