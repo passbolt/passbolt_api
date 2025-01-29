@@ -14,7 +14,7 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.11.0
  */
-namespace Passbolt\Metadata\Form\RotateKey;
+namespace Passbolt\Metadata\Form\Upgrade;
 
 use Cake\Form\Form;
 use Cake\Form\Schema;
@@ -22,7 +22,7 @@ use Cake\Validation\Validation;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 
-class MetadataBatchUpdateForm extends Form
+class MetadataBatchUpgradeForm extends Form
 {
     /**
      * @param \Cake\Form\Schema $schema schema
@@ -36,8 +36,7 @@ class MetadataBatchUpdateForm extends Form
             ->addField('metadata_key_type', ['type' => 'string'])
             ->addField('metadata', ['type' => 'string'])
             ->addField('modified', ['type' => 'datetime'])
-            ->addField('modified_by', ['type' => 'string'])
-            ->addField('metadata_key', ['type' => 'array']);
+            ->addField('modified_by', ['type' => 'string']);
     }
 
     /**
@@ -57,9 +56,6 @@ class MetadataBatchUpdateForm extends Form
             ->requirePresence('metadata_key_id', 'create', __('A metadata key identifier is required.'))
             ->notEmptyString('metadata_key_id', __('The metadata key identifier should not be empty.'))
             ->uuid('metadata_key_id', __('The metadata key identifier should be a valid UUID.'));
-
-        $validator->array('metadata_key');
-        $validator->addNested('metadata_key', $this->getMetadataKeyValidator());
 
         $validator
             ->requirePresence('metadata_key_type', 'create', __('A metadata key type is required.'))
@@ -84,27 +80,6 @@ class MetadataBatchUpdateForm extends Form
             ->requirePresence('modified_by', 'create', __('A modified by is required.'))
             ->notEmptyString('modified_by', __('The modified by should not be empty.'))
             ->uuid('modified_by', __('The modified by should be a valid UUID.'));
-
-        return $validator;
-    }
-
-    /**
-     * Validations for metadata key nested values.
-     *
-     * @return \Cake\Validation\Validator
-     */
-    private function getMetadataKeyValidator(): Validator
-    {
-        $validator = new Validator();
-
-        $validator->notEmptyDateTime('expired');
-
-        $validator
-            ->allowEmptyDateTime('deleted')
-            ->add('deleted', 'metadata_key_deleted', [
-                'rule' => ['equalTo', null],
-                'message' => __('The metadata key should not be deleted.'),
-            ]);
 
         return $validator;
     }

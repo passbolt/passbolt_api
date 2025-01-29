@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Model\Validation;
 
 use Cake\ORM\Query;
+use Passbolt\Metadata\Form\RotateKey\MetadataBatchRotateKeyForm;
+use Passbolt\Metadata\Form\Upgrade\MetadataBatchUpgradeForm;
 
-class MetadataResourcesBatchUpdateValidationService extends MetadataBatchUpdateValidationService
+class MetadataResourcesBatchRotateKeyValidationService extends MetadataBatchUpdateValidationService
 {
     /**
      * @inheritDoc
@@ -38,5 +40,13 @@ class MetadataResourcesBatchUpdateValidationService extends MetadataBatchUpdateV
         return $resources->where([
             'Resources.deleted' => false,
         ]);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getForm(): MetadataBatchUpgradeForm
+    {
+        return new MetadataBatchRotateKeyForm();
     }
 }

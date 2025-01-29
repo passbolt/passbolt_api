@@ -23,7 +23,7 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
-use Passbolt\Metadata\Form\RotateKey\MetadataBatchUpdateForm;
+use Passbolt\Metadata\Form\Upgrade\MetadataBatchUpgradeForm;
 
 abstract class MetadataBatchUpdateValidationService
 {
@@ -35,6 +35,13 @@ abstract class MetadataBatchUpdateValidationService
      * @return string
      */
     abstract public function getModel(): string;
+
+    /**
+     * Get the validation form
+     *
+     * @return \Passbolt\Metadata\Form\Upgrade\MetadataBatchUpgradeForm
+     */
+    abstract public function getForm(): MetadataBatchUpgradeForm;
 
     /**
      * @param array $requestData Request data.
@@ -75,7 +82,7 @@ abstract class MetadataBatchUpdateValidationService
             }
             $entity['metadata_key'] = $metadataKey;
 
-            $form = new MetadataBatchUpdateForm();
+            $form = $this->getForm();
             if (!$form->execute($entity)) {
                 $errors[] = $form->getErrors();
                 throw new CustomValidationException(__('Could not validate the metadata key data for the entity with ID: {0}.', $entityId), $errors); // phpcs:ignore;
