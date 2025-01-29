@@ -1,8 +1,15 @@
 Release song: https://youtu.be/3RmQTYLD398?si=eKKvftgUpBTIm51p
 
-TBD
+Passbolt v4.11.0 introduces beta support for encrypted metadata in the administration settings, laying groundwork for the upcoming v5 release and its new resource format. This beta feature allows developers and integrators to explore and adapt their systems ahead of the transition.
 
-## [4.11.0-test.1] - 2025-01-29
+This release also resolves a security issue where an attacker could modify the Passbolt URL in certain emails if an administrator’s configuration was invalid. Additionally, role-based access control is now enforced for the “Copy to Clipboard” feature in the browser extension. Vulnerabilities in dependencies—though not directly impacting Passbolt—have been addressed as well.
+
+As one of the final updates in the v4 series, this version prepares administrators for v5. While v4.11.0 does not require PHP 8.2, v5 will. We recommend beginning to plan or upgrade PHP to ensure a smooth transition. If a server migration is needed, please consult the online documentation.
+
+Thank you to the community for your feedback and support.
+
+
+## [4.11.0-test.2] - 2025-01-29
 ### Added
 - PB-35761 As an administrator I receive an email if zero_knowledge_key_share is set to true and a new user completed the setup
 - PB-36558 As an administrator I can mark metadata_keys as expired
