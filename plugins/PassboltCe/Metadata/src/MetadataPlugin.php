@@ -19,6 +19,7 @@ namespace Passbolt\Metadata;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use Cake\Console\CommandCollection;
 use Cake\Core\BasePlugin;
+use Cake\Core\Configure;
 use Cake\Core\ContainerInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventManager;
@@ -95,8 +96,10 @@ class MetadataPlugin extends BasePlugin
     public function console(CommandCollection $commands): CommandCollection
     {
         // Alias commands
-        $commands->add('passbolt metadata generate_dummy_metadata_key', GenerateDummyMetadataKeyCommand::class);
-        $commands->add('passbolt metadata insert_dummy_data', InsertDummyDataCommand::class);
+        if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
+            $commands->add('passbolt metadata generate_dummy_metadata_key', GenerateDummyMetadataKeyCommand::class);
+            $commands->add('passbolt metadata insert_dummy_data', InsertDummyDataCommand::class);
+        }
         $commands->add('passbolt metadata update_metadata_types_settings', UpdateMetadataTypesSettingsCommand::class);
         $commands->add('passbolt metadata share_metadata_key', ShareMetadataKeyCommand::class);
         // Migration commands
