@@ -59,12 +59,12 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
     {
         MetadataTypesSettingsFactory::make()->v5()->persist();
         /** @var \App\Model\Entity\User $user */
-        $user = UserFactory::make()->user()->persist();
+        [$user, $userWithPermission] = UserFactory::make(2)->user()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->passwordString()->persist()->get('id');
         $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
         $metadataKeyId = $metadataKey->get('id');
-        $resource = ResourceFactory::make(['resource_type_id' => $v4ResourceTypeId])->withPermissionsFor([$user])->persist();
+        $resource = ResourceFactory::make(['resource_type_id' => $v4ResourceTypeId])->withPermissionsFor([$user, $userWithPermission])->persist();
         $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
         $clearTextMetadata = json_encode($resourceDto->getClearTextMetadata());
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
@@ -98,6 +98,12 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCaseV5
             'isV5',
             true
         );
+        $this->assertEmailQueueCount(2);
+        $this->assertEmailIsInQueue(['email' => $user->username, 'subject' => 'You edited a resource']);
+        $this->assertEmailIsInQueue([
+            'email' => $userWithPermission->username,
+            'subject' => $user->profile->first_name . ' edited a resource',
+        ]);
     }
 
     public function testResourcesUpdateController_Success_UserKey(): void
