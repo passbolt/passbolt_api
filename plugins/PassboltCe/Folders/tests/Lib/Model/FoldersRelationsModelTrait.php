@@ -131,7 +131,7 @@ trait FoldersRelationsModelTrait
     protected function assertItemIsInTrees(string $foreignId, int $count)
     {
         $foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
-        $found = $foldersRelationsTable->find()->where(['foreign_id' => $foreignId])->count();
+        $found = $foldersRelationsTable->find()->where(['foreign_id' => $foreignId])->all()->count();
         $this->assertEquals($count, $found);
     }
 
@@ -149,7 +149,7 @@ trait FoldersRelationsModelTrait
             'user_id' => $userId,
         ]);
 
-        $this->assertEquals(0, $folderRelationQuery->count());
+        $this->assertEquals(0, $folderRelationQuery->all()->count());
     }
 
     protected function assertObjectHasFolderParentIdAttribute($object, ?string $expectedParentId = null)

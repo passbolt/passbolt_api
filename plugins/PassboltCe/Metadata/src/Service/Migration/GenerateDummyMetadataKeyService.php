@@ -25,6 +25,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Log\Log;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\Metadata\Form\MetadataCleartextPrivateKeyForm;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
@@ -57,11 +58,15 @@ class GenerateDummyMetadataKeyService extends MetadataKeyShareDefaultService
     {
         $key = (new GenerateOpenPGPKeyService())->generateMetadataKey($verbose);
 
+        /** @var \App\Model\Table\UsersTable $UsersTable */
+        $UsersTable = TableRegistry::getTableLocator()->get('Users');
+
+        $createdBy = $UsersTable->findFirstAdminOrThrowNoAdminInDbException()->id;
         $data = [
             'armored_key' => $key['public_key'],
             'fingerprint' => $key['fingerprint'],
-            'created_by' => null,
-            'modified_by' => null,
+            'created_by' => $createdBy,
+            'modified_by' => $createdBy,
             'metadata_private_keys' => [],
         ];
 

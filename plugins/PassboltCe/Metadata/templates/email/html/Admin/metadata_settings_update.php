@@ -30,7 +30,7 @@ echo $this->element('Email/module/avatar',[
     ])
 ]);
 if ($recipient['id'] === $modifier['id']) {
-    $text = $subject;
+    $text = __('You edited the metadata settings.');
 } else {
     $modifierFullName = Purifier::clean($modifier['profile']['first_name']) . ' ' . Purifier::clean($modifier['profile']['last_name']);
     $text = __('{0} edited the metadata settings.', $modifierFullName);

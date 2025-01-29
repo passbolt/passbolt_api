@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Totp;
 use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
 use OTPHP\Factory;
+use Passbolt\MultiFactorAuthentication\Form\Totp\TotpSetupForm;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpOrganizationOnlyScenario;
@@ -170,6 +171,8 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $otp = Factory::loadFromProvisioningUri($uri);
         $sessionId = 'some_session_id';
         $this->mockSessionId($sessionId);
+        $this->mockTotpMfaForm(TotpSetupForm::class);
+
         $this->post('/mfa/setup/totp.json?api-version=v2', [
             'otpProvisioningUri' => $uri,
             'totp' => $otp->now(),
@@ -196,6 +199,8 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
         /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
+        $this->mockTotpMfaForm(TotpSetupForm::class);
+
         $this->post('/mfa/setup/totp.json?api-version=v2', [
             'otpProvisioningUri' => $uri,
             'totp' => $otp->now(),

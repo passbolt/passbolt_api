@@ -20,8 +20,8 @@ namespace App\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
+use App\Utility\CommandRunner;
 use Cake\Core\Configure;
-use Symfony\Component\Process\Process;
 
 class TimeSyncHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -171,9 +171,8 @@ class TimeSyncHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
      */
     protected function runCommand(string $command): ?string
     {
-        $process = Process::fromShellCommandLine($command);
-        $process->run();
-        if (!$process->isSuccessful()) {
+        $process = CommandRunner::run($command);
+        if (!$process || !$process->isSuccessful()) {
             return null;
         }
 

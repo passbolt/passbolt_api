@@ -13,5 +13,11 @@
  */
 
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 
+// Merge config
+$mainConfig = Configure::read('passbolt.plugins.metadata');
 Configure::load('Passbolt/Metadata.config', 'default', true);
+$pluginConfig = Configure::read('passbolt.plugins.metadata');
+$newConfig = Hash::merge($pluginConfig, $mainConfig);
+Configure::write('passbolt.plugins.metadata', $newConfig);

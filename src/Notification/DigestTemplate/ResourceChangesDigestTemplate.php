@@ -49,9 +49,9 @@ class ResourceChangesDigestTemplate extends AbstractDigestTemplate
     /**
      * @inheritDoc
      */
-    public function getDigestSubjectIfRecipientIsNotTheOperator(): string
+    public function getDigestSubjectIfRecipientIsNotTheOperator(?string $operatorName = null): string
     {
-        return __('{0} has made changes on several resources', '{0}');
+        return __('{0} has made changes on several resources', $operatorName);
     }
 
     /**

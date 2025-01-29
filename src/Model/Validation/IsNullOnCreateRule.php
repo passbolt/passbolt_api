@@ -32,7 +32,7 @@ class IsNullOnCreateRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
-        if (isset($context['newRecord'])) {
+        if (isset($context['newRecord']) && $context['newRecord'] === true) {
             return $value === null;
         }
 

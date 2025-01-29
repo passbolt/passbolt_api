@@ -22,7 +22,7 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Passbolt\Metadata\Model\Dto\MetadataKeyDto;
+use Passbolt\Metadata\Model\Dto\MetadataKeyCreateDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class MetadataKeyCreateService
@@ -34,10 +34,10 @@ class MetadataKeyCreateService
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC.
-     * @param \Passbolt\Metadata\Model\Dto\MetadataKeyDto $dto DTO.
+     * @param \Passbolt\Metadata\Model\Dto\MetadataKeyCreateDto $dto DTO.
      * @return \Passbolt\Metadata\Model\Entity\MetadataKey
      */
-    public function create(UserAccessControl $uac, MetadataKeyDto $dto): MetadataKey
+    public function create(UserAccessControl $uac, MetadataKeyCreateDto $dto): MetadataKey
     {
         $uac->assertIsAdmin();
 
