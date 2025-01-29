@@ -78,7 +78,7 @@ class RbacsTable extends Table
         ]);
 
         $this->hasOne('Action', [
-            'className' => 'Passbolt/Logs.Actions',
+            'className' => 'Passbolt/Log.Actions',
             'bindingKey' => 'foreign_id',
             'foreignKey' => 'id',
             'conditions' => [

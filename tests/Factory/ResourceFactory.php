@@ -21,6 +21,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\User;
 use App\Model\Table\PermissionsTable;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
+use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
 use Cake\I18n\FrozenTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
@@ -66,6 +67,7 @@ class ResourceFactory extends CakephpBaseFactory
                 'description' => $faker->text(10),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
+                'resource_type_id' => UuidFactory::uuid5('resource-types.id.password-and-description'),
                 'created' => Chronos::now()->subDays($faker->randomNumber(4)),
                 'modified' => Chronos::now()->subDays($faker->randomNumber(4)),
             ];
@@ -162,7 +164,7 @@ class ResourceFactory extends CakephpBaseFactory
      * @param bool $isShared Is metadata type shared or not.
      * @return $this
      */
-    public function v5Fields($isShared = false)
+    public function v5Fields($isShared = false, array $v5Fields = [])
     {
         /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $metadataPrivateKey */
         $metadataPrivateKey = MetadataPrivateKeyFactory::make()->serverKey()->withMetadataKey()->persist();
@@ -170,8 +172,8 @@ class ResourceFactory extends CakephpBaseFactory
 
         return $this->patchData([
             // Set V5 fields (not null and valid)
-            'metadata_key_id' => $metadataPrivateKey->metadata_key_id,
-            'metadata' => 'foo-bar', // todo set proper encrypted resource metadata
+            'metadata_key_id' => $v5Fields['metadata_key_id'] ?? $metadataPrivateKey->metadata_key_id,
+            'metadata' => $v5Fields['metadata'] ?? 'foo-bar', // todo set proper encrypted resource metadata
             'metadata_key_type' => $type,
             // Set V4 fields to null
             'name' => null,

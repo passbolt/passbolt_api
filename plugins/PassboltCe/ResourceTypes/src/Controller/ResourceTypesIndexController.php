@@ -48,7 +48,9 @@ class ResourceTypesIndexController extends AppController
                 $resourceTypesFinder->contain($resourceTypes, $options);
             }
         } else {
-            $resourceTypes = $resourceTypes->where(['slug NOT IN' => ResourceType::V5_RESOURCE_TYPE_SLUGS]);
+            $resourceTypes = $resourceTypes
+                ->find('notDeleted')
+                ->where(['slug NOT IN' => ResourceType::V5_RESOURCE_TYPE_SLUGS]);
         }
 
         $this->success(__('The operation was successful.'), $resourceTypes->all());

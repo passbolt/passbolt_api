@@ -25,7 +25,6 @@ use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Exception;
 use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyGetService;
-use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyValidateService;
 
 class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -60,6 +59,19 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
      * @var array<string, mixed>
      */
     protected array $result = [];
+
+    /**
+     * @var \Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyGetService
+     */
+    protected SubscriptionKeyGetService $subscriptionKeyGetService;
+
+    /**
+     * @param \Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyGetService $subscriptionKeyGetService subscription key service
+     */
+    public function __construct(SubscriptionKeyGetService $subscriptionKeyGetService)
+    {
+        $this->subscriptionKeyGetService = $subscriptionKeyGetService;
+    }
 
     /**
      * @inheritDoc
@@ -182,18 +194,8 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
      */
     protected function checkSubscription(): array
     {
-        $subscriptionKeyGetService = new SubscriptionKeyGetService();
         try {
-            $subscriptionKeyDto = $subscriptionKeyGetService->get(new UserAccessControl(Role::ADMIN));
-        } catch (Exception $e) {
-            return [
-                'error' => $e->getMessage(),
-            ];
-        }
-
-        try {
-            $subscriptionKeyValidateService = new SubscriptionKeyValidateService();
-            $subscriptionKeyValidateService->validate($subscriptionKeyDto->data);
+            $subscriptionKeyDto = $this->subscriptionKeyGetService->get(new UserAccessControl(Role::ADMIN));
         } catch (Exception $e) {
             return [
                 'error' => $e->getMessage(),
@@ -256,11 +258,10 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
     /**
      * @return int
      */
-    protected function currentUsers(): int
+    private function currentUsers(): int
     {
         return TableRegistry::getTableLocator()->get('Users')
-            ->find()
-            ->where(['Users.deleted' => false])
+            ->find('activeNotDeleted')
             ->all()
             ->count();
     }

@@ -23,6 +23,7 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
+use App\Middleware\PreventHostHeaderFallbackMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
@@ -56,6 +57,7 @@ class ApplicationTest extends TestCase
             ValidCookieNameMiddleware::class,
             ContentSecurityPolicyMiddleware::class,
             ErrorHandlerMiddleware::class,
+            PreventHostHeaderFallbackMiddleware::class,
             SslForceMiddleware::class,
             AssetMiddleware::class,
             RoutingMiddleware::class,

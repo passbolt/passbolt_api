@@ -47,6 +47,10 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     $routes->connect('/keys', ['controller' => 'MetadataKeyCreate', 'action' => 'create'])
         ->setMethods(['POST'])
         ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
+    $routes->connect('/keys/{id}', ['controller' => 'MetadataKeyUpdate', 'action' => 'update'])
+        ->setPass(['id'])
+        ->setMethods(['PUT', 'POST'])
+        ->setMiddleware([MetadataSettingsSecurityMiddleware::class]);
     $routes->connect('/keys/{id}', ['controller' => 'MetadataKeyDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE'])
@@ -60,6 +64,8 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
         ->setMethods(['PUT', 'POST']);
     $routes->connect('/keys/{id}/private', ['controller' => 'MetadataPrivateKeysCreate', 'action' => 'create'])
         ->setPass(['id'])
+        ->setMethods(['POST']);
+    $routes->connect('/keys/privates', ['controller' => 'MetadataMissingPrivateKeysShare', 'action' => 'share'])
         ->setMethods(['POST']);
 
     /**
@@ -75,4 +81,46 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     $routes->connect('/session-keys/{id}', ['controller' => 'MetadataSessionKeyDelete', 'action' => 'delete'])
         ->setPass(['id'])
         ->setMethods(['DELETE']);
+
+    /**
+     * Resources upgrade endpoints.
+     */
+    $routes->scope('/upgrade', function (RouteBuilder $routes) {
+        $routes->setExtensions(['json']);
+
+        $routes
+            ->connect(
+                '/resources',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/resources',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
+    });
+
+    /**
+     * Key rotation endpoints.
+     */
+    $routes->scope('/rotate-key', function (RouteBuilder $routes) {
+        $routes->setExtensions(['json']);
+
+        $routes
+            ->connect(
+                '/resources',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/resources',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
+    });
 });

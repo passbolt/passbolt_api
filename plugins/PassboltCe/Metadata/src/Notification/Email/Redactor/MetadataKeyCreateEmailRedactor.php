@@ -46,7 +46,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
     protected $Users;
 
     /**
-     * JwtAuthenticationAttackEmailRedactor constructor.
+     * MetadataKeyCreateEmailRedactor constructor.
      */
     public function __construct()
     {
@@ -143,7 +143,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($modifierFirstName) {
-                return __('{0} created a new metadata key.', $modifierFirstName);
+                return __('{0} created a new metadata key', $modifierFirstName);
             }
         );
     }
@@ -157,7 +157,7 @@ class MetadataKeyCreateEmailRedactor implements SubscribedEmailRedactorInterface
         return (new LocaleService())->translateString(
             $recipient->locale,
             function () {
-                return __('You created a new metadata key.');
+                return __('You created a new metadata key');
             }
         );
     }

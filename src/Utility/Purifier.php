@@ -22,9 +22,9 @@ class Purifier
      * Purify a html string
      *
      * @param string|null $html html to clean
-     * @return mixed
+     * @return string|null
      */
-    public static function clean(?string $html = null)
+    public static function clean(?string $html = null): ?string
     {
         if (is_null($html)) {
             return null;

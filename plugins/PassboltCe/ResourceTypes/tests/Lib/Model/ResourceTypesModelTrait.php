@@ -21,11 +21,11 @@ trait ResourceTypesModelTrait
     /**
      * Asserts that an object has all the attributes a role should have.
      *
-     * @param object $roles
+     * @param object $resourceType
      */
-    protected function assertResourceTypeAttributes($roles)
+    protected function assertResourceTypeAttributes($resourceType)
     {
-        $attributes = ['id', 'name', 'slug', 'description', 'definition'];
-        $this->assertObjectHasAttributes($attributes, $roles);
+        $attributes = ['id', 'name', 'slug', 'description', 'definition', 'deleted', 'created', 'modified'];
+        $this->assertObjectHasAttributes($attributes, $resourceType);
     }
 }

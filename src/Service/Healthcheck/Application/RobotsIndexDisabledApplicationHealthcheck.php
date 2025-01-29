@@ -36,7 +36,7 @@ class RobotsIndexDisabledApplicationHealthcheck implements HealthcheckServiceInt
      */
     public function check(): HealthcheckServiceInterface
     {
-        $robots = strpos(Configure::read('passbolt.meta.robots'), 'noindex');
+        $robots = strpos((string)Configure::read('passbolt.meta.robots'), 'noindex');
         $this->status = ($robots !== false);
 
         return $this;

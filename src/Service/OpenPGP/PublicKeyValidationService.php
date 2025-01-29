@@ -116,7 +116,15 @@ class PublicKeyValidationService
      */
     public static function getRevokedKeyRules(): array
     {
-        return array_merge(self::getHistoricalRules(), [
+        return array_merge([
+            // historical rules
+            self::IS_VALID_ALGORITHM_RULE,
+            self::IS_VALID_FINGERPRINT_RULE,
+            self::IS_VALID_KEY_ID_RULE,
+            self::IS_VALID_KEY_SIZE_RULE,
+            self::IS_NOT_CREATED_IN_THE_FUTURE_RULE,
+            //self::IS_NOT_EXPIRED_RULE, // allow expired keys
+        ], [
             self::IS_VALID_KEY_SIZE_STRICT_RULE,
             self::HAS_NO_EXTRA_BREAK_LINE_RULE,
             self::IS_REVOKED_RULE,

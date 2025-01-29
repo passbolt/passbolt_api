@@ -36,7 +36,7 @@ class SslFullBaseUrlApplicationHealthcheck implements HealthcheckServiceInterfac
      */
     public function check(): HealthcheckServiceInterface
     {
-        $https = strpos(Configure::read('App.fullBaseUrl'), 'https') === 0;
+        $https = strpos((string)Configure::read('App.fullBaseUrl'), 'https') === 0;
         $this->status = ($https !== false);
 
         return $this;

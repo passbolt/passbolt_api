@@ -36,8 +36,10 @@ use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
+use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
+use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 
@@ -173,9 +175,19 @@ class TagsTable extends Table
             'message' => __('The metadata key does not exist.'),
         ]);
 
+        $rules->add(new MetadataKeyIdNotExpiredRule(), 'isMetadataKeyNotExpired', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The metadata key is marked as expired.'),
+        ]);
+
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
             'errorField' => 'metadata',
             'message' => __('The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient.'), // phpcs:ignore
+        ]);
+
+        $rules->addUpdate(new IsV4ToV5UpgradeAllowedRule(), 'v4_to_v5_upgrade_allowed', [
+            'errorField' => 'metadata',
+            'message' => __('The settings selected by your administrator prevent from upgrading v4 to v5.'),
         ]);
 
         return $rules;
@@ -258,7 +270,7 @@ class TagsTable extends Table
                     ['id IN' => $encryptedTagsIds],
                 ],
             ]);
-        } elseif (!empty($slugs) && empty($encryptedTagsIds)) {
+        } elseif (!empty($slugs)) {
             $query->where(['slug IN' => $this->getCaseSensitiveValues($query, $slugs)]);
         } else {
             $query->where(['id IN' => $encryptedTagsIds]);

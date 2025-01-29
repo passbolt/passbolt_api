@@ -21,6 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\UuidFactory;
+use Cake\I18n\FrozenTime;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
@@ -432,7 +433,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
                 [
                     'metadata' => $metadata,
                     'metadata_key_id' => $metadataKey->id,
-                    'metadata_key_type' => 'shared_key',
+                    'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                     'is_shared' => true,
                 ],
             ],
@@ -565,5 +566,59 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
 
         $this->assertError(400);
         $this->assertResponseContains('isMetadataKeyTypeAllowedBySettings');
+    }
+
+    public function metadataResourcesTagsAddControllerErrorDeletedOrExpiredValuesProvider(): array
+    {
+        return [
+            [
+                'input' => ['expired' => FrozenTime::yesterday()],
+                'expected response' => 'isMetadataKeyNotExpired',
+            ],
+            [
+                'input' => ['deleted' => FrozenTime::now()],
+                'expected response' => 'metadata_key_exists',
+            ],
+        ];
+    }
+
+    /**
+     * @param array $fields Fields to set.
+     * @param string $expectedResponse Expected response.
+     * @return void
+     * @dataProvider metadataResourcesTagsAddControllerErrorDeletedOrExpiredValuesProvider
+     */
+    public function testMetadataResourcesTagsAddController_Error_DeletedOrExpiredKeyNotAllowed(array $fields, string $expectedResponse): void
+    {
+        MetadataTypesSettingsFactory::make()->v5()->persist();
+        /** @var \App\Model\Entity\User $ada */
+        $ada = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        // Create a shared tag
+        $metadataKey = MetadataKeyFactory::make($fields)->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
+        // note: encrypt metadata using user key instead of shared metadata key
+        $metadata = $this->encryptForMetadataKey($clearTextMetadata);
+
+        $this->logInAs($ada);
+        $data = [
+            'tags' => [
+                [
+                    'metadata' => $metadata,
+                    'metadata_key_id' => $metadataKey->get('id'),
+                    'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                    'is_shared' => true,
+                ],
+            ],
+        ];
+        $this->postJson("/tags/{$resource->id}.json?api-version=2", $data);
+
+        $this->assertError(400);
+        $this->assertResponseContains($expectedResponse);
     }
 }
