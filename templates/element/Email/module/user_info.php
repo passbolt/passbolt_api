@@ -25,13 +25,15 @@ $canSeeUserAgent = Configure::read('passbolt.security.userAgent');
 $text = '';
 
 if ($canSeeUserAgent) {
-    $text .= "User Agent: <i>" . Purifier::clean($userAgent) . "</i>";
+    $text .= __('User Agent: ');
+    $text .= "<i>" . Purifier::clean($userAgent) . "</i>";
 }
 if ($canSeeUserIp && $canSeeUserAgent) {
     $text .= "<br/>";
 }
 if ($canSeeUserIp) {
-    $text .= "User IP: <i>" . Purifier::clean($clientIp) . "</i>";
+    $text .= __('User IP: ');
+    $text .= "<i>" . Purifier::clean($clientIp) . "</i>";
 }
 
 echo $this->element('Email/module/text', [

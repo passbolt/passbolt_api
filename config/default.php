@@ -447,6 +447,7 @@ return [
                 'secure' => filter_var(env('PASSBOLT_SECURITY_COOKIE_SECURE', true), FILTER_VALIDATE_BOOLEAN)
             ],
             'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN),
+            'preventHostHeaderFallback' => filter_var(env('PASSBOLT_SECURITY_PREVENT_HOST_HEADER_FALLBACK', false), FILTER_VALIDATE_BOOLEAN),
             'csrfProtection' => [
                 'active' => true,
                 'unlockedActions' => [
@@ -553,7 +554,7 @@ return [
             'metadata' => [
                 'settings' => [
                     'editionDisabled' => filter_var(env('PASSBOLT_SECURITY_METADATA_SETTINGS_EDITION_DISABLED', false), FILTER_VALIDATE_BOOLEAN)
-                ]
+                ],
             ],
         ],
 

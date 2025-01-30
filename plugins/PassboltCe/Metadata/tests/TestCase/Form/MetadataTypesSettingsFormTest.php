@@ -22,6 +22,9 @@ use Passbolt\Metadata\Form\MetadataTypesSettingsForm;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 
+/**
+ * @covers \Passbolt\Metadata\Form\MetadataTypesSettingsForm
+ */
 class MetadataTypesSettingsFormTest extends AppTestCaseV5
 {
     /**
@@ -120,6 +123,7 @@ class MetadataTypesSettingsFormTest extends AppTestCaseV5
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS => 'test',
             MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS => 'test',
             MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE => 'test',
+            MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE => 'test',
         ]);
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
@@ -132,6 +136,7 @@ class MetadataTypesSettingsFormTest extends AppTestCaseV5
         $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_TAGS]['boolean']));
         $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS]['boolean']));
         $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE]['boolean']));
+        $this->assertTrue(isset($errors[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE]['boolean']));
     }
 
     /**

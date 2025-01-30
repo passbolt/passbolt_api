@@ -16,29 +16,28 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Dto;
 
-class MetadataKeyDto
+use Cake\I18n\FrozenTime;
+
+class MetadataKeyUpdateDto
 {
-    private string $fingerprint;
+    public string $fingerprint;
 
-    private string $armoredKey;
+    public string $armoredKey;
 
-    /**
-     * @var array
-     */
-    private array $metadataPrivateKeys;
+    public FrozenTime $expired;
 
     /**
      * Constructor.
      *
      * @param string $fingerprint Fingerprint.
      * @param string $armoredKey Armored key.
-     * @param array $metadataPrivateKeys Metadata private keys data.
+     * @param \Cake\I18n\FrozenTime $expired Expired time
      */
-    public function __construct(string $fingerprint, string $armoredKey, array $metadataPrivateKeys)
+    public function __construct(string $fingerprint, string $armoredKey, FrozenTime $expired)
     {
         $this->fingerprint = $fingerprint;
         $this->armoredKey = $armoredKey;
-        $this->metadataPrivateKeys = $metadataPrivateKeys;
+        $this->expired = $expired;
     }
 
     /**
@@ -49,7 +48,7 @@ class MetadataKeyDto
         return [
             'fingerprint' => $this->fingerprint,
             'armored_key' => $this->armoredKey,
-            'metadata_private_keys' => $this->metadataPrivateKeys,
+            'expired' => $this->expired,
         ];
     }
 
@@ -59,6 +58,6 @@ class MetadataKeyDto
      */
     public static function fromArray(array $data): self
     {
-        return new self($data['fingerprint'], $data['armored_key'], $data['metadata_private_keys']);
+        return new self($data['fingerprint'], $data['armored_key'], $data['expired']);
     }
 }

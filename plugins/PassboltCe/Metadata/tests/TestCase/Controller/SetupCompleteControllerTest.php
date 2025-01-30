@@ -33,7 +33,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCaseV5
     public function testMetadataSetupCompleteController_Success(): void
     {
         MetadataKeyFactory::make()->withServerPrivateKey()->persist();
-        MetadataKeysSettingsFactory::make()->disableZeroTrustKeySharing()->persist();
+        MetadataKeysSettingsFactory::make()->persist();
 
         /** @var \App\Model\Entity\AuthenticationToken $t */
         $t = AuthenticationTokenFactory::make()

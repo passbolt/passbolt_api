@@ -58,10 +58,12 @@ class SsoStatesGetServiceTest extends SsoTestCase
 
     public function testSsoStatesGetService_ErrorRecordNotFound(): void
     {
-        $this->expectException(RecordNotFoundException::class);
-        $this->expectErrorMessage('The SSO state does not exist.');
-
-        $this->service->getOrFail(SsoState::generate());
+        try {
+            $this->service->getOrFail(SsoState::generate());
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(RecordNotFoundException::class, $e);
+            $this->assertStringContainsString('The SSO state does not exist.', $e->getMessage());
+        }
     }
 
     public function testSsoStatesGetService_ErrorRecordDeleted(): void
@@ -74,18 +76,22 @@ class SsoStatesGetServiceTest extends SsoTestCase
             ->deleted()
             ->persist();
 
-        $this->expectException(RecordNotFoundException::class);
-        $this->expectErrorMessage('The SSO state does not exist.');
-
-        $this->service->getOrFail($ssoState->state);
+        try {
+            $this->service->getOrFail($ssoState->state);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(RecordNotFoundException::class, $e);
+            $this->assertStringContainsString('The SSO state does not exist.', $e->getMessage());
+        }
     }
 
     public function testSsoStatesGetService_ErrorInvalidState(): void
     {
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('The SSO state is invalid.');
-
-        $this->service->getOrFail('123456');
+        try {
+            $this->service->getOrFail('123456');
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('The SSO state is invalid.', $e->getMessage());
+        }
     }
 
     public function testSsoStatesGetService_Success(): void

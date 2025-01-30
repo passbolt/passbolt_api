@@ -23,6 +23,9 @@ use Cake\ORM\Entity;
  *
  * @property string $id
  * @property string $name
+ * @property string $metadata
+ * @property string $metadata_key_id
+ * @property string $metadata_key_type
  * @property \Cake\I18n\FrozenTime $created
  * @property \Cake\I18n\FrozenTime $modified
  * @property string $created_by

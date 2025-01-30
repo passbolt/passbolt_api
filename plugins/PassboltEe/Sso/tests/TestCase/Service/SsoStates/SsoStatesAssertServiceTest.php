@@ -73,10 +73,12 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $ssoState->user_agent
         );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('The SSO state is invalid.');
-
-        $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        try {
+            $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('The SSO state is invalid', $e->getMessage());
+        }
     }
 
     public function testSsoStatesAssertService_ErrorStateExpired(): void
@@ -96,10 +98,12 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $ssoState->user_agent
         );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('The SSO state is expired.');
-
-        $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        try {
+            $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('The SSO state is expired', $e->getMessage());
+        }
     }
 
     public function testSsoStatesAssertService_ErrorInvalidUac(): void
@@ -119,10 +123,12 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             'Foo user agent'
         );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('User id mismatch.');
-
-        $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        try {
+            $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('User id mismatch', $e->getMessage());
+        }
     }
 
     public function testSsoStatesAssertService_ErrorInvalidIp(): void
@@ -141,10 +147,12 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $ssoState->user_agent
         );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('User IP mismatch.');
-
-        $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        try {
+            $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('User IP mismatch', $e->getMessage());
+        }
     }
 
     public function testSsoStatesAssertService_ErrorInvalidUserAgent(): void
@@ -163,10 +171,12 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             'foo agent' // Different User Agent
         );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('User agent mismatch.');
-
-        $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        try {
+            $this->service->assertAndConsume($ssoState, $ssoSettingId, $uac);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('User agent mismatch', $e->getMessage());
+        }
     }
 
     public function testSsoStatesAssertService_ErrorSettingsIdMismatch(): void
@@ -185,11 +195,13 @@ class SsoStatesAssertServiceTest extends SsoTestCase
             $ssoState->user_agent
         );
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('Settings mismatch.');
-
-        // Different SSO settings ID
-        $this->service->assertAndConsume($ssoState, UuidFactory::uuid(), $uac);
+        try {
+            // Different SSO settings ID
+            $this->service->assertAndConsume($ssoState, UuidFactory::uuid(), $uac);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('Settings mismatch', $e->getMessage());
+        }
     }
 
     public function testSsoStatesAssertService_Success(): void

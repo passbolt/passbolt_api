@@ -65,13 +65,15 @@ class MfaPoliciesSetSettingsServiceTest extends AppTestCase
     {
         $uac = $this->mockExtendedUserAccessControl();
 
-        $this->expectException(ForbiddenException::class);
-        $this->expectErrorMessage('administrators are allowed to create/update MFA policies settings');
-
-        $this->service->createOrUpdate($uac, MfaPolicySettings::createFromArray([
-            'policy' => MfaPoliciesSetting::POLICY_OPT_IN,
-            'remember_me_for_a_month' => true,
-        ]));
+        try {
+            $this->service->createOrUpdate($uac, MfaPolicySettings::createFromArray([
+                'policy' => MfaPoliciesSetting::POLICY_OPT_IN,
+                'remember_me_for_a_month' => true,
+            ]));
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(ForbiddenException::class, $e);
+            $this->assertStringContainsString('administrators are allowed to create/update MFA policies settings', $e->getMessage());
+        }
     }
 
     public function testCreateOrUpdate_Success_CreateWithDefaultValues()

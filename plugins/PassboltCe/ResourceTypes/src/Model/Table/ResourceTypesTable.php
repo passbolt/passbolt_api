@@ -21,6 +21,8 @@ use App\Model\Validation\DateTime\IsParsableDateTimeValidationRule;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
+use Cake\Database\Expression\QueryExpression;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -212,5 +214,27 @@ class ResourceTypesTable extends Table
                 });
             };
         }
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query query
+     * @return \Cake\ORM\Query
+     */
+    public function findNotDeleted(Query $query): Query
+    {
+        return $query->where(function (QueryExpression $exp) {
+            return $exp->isNull($this->aliasField('deleted'));
+        });
+    }
+
+    /**
+     * @param \Cake\ORM\Query $query query
+     * @return \Cake\ORM\Query
+     */
+    public function findDeleted(Query $query): Query
+    {
+        return $query->where(function (QueryExpression $exp) {
+            return $exp->isNotNull($this->aliasField('deleted'));
+        });
     }
 }

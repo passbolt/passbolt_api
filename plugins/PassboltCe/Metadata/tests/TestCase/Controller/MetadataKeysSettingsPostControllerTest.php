@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Controller;
+namespace Passbolt\Metadata\Test\TestCase\Controller;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Factory\UserFactory;
@@ -51,6 +51,7 @@ class MetadataKeysSettingsPostControllerTest extends AppIntegrationTestCaseV5
         $data = MetadataKeysSettingsFactory::getDefaultData();
 
         $data[MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS] = false;
+        $data[MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE] = true;
         $this->postJson('/metadata/keys/settings.json', $data);
         $this->assertResponseCode(200);
         $this->assertEquals(1, OrganizationSettingFactory::count());

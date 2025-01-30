@@ -264,6 +264,7 @@ class AccountRecoveryResponsesCreateService
         AccountRecoveryResponse $response
     ): void {
         $tokenId = $response->account_recovery_request->authentication_token_id;
+        /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = $this->AccountRecoveryRequests->AuthenticationTokens->get($tokenId);
 
         if ($response->isApproved() && $token->isExpired()) {

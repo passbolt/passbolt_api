@@ -176,6 +176,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
 
         $this->assertNotEmpty($entity->getErrors());
         $this->assertArrayHasKey('dateTime', $entity->getErrors()['expired']);
+        $this->assertArrayHasKey('isNullOnCreate', $entity->getErrors()['expired']);
     }
 
     /**
@@ -201,6 +202,7 @@ class MetadataKeysTableTest extends AppTestCaseV5
 
         $this->assertNotEmpty($entity->getErrors());
         $this->assertArrayHasKey('dateTime', $entity->getErrors()['deleted']);
+        $this->assertArrayHasKey('isNullOnCreate', $entity->getErrors()['deleted']);
     }
 
     /**
@@ -303,6 +305,122 @@ class MetadataKeysTableTest extends AppTestCaseV5
         $this->assertArrayHasKey('isNotUserKeyFingerprintRule', $entity->getErrors()['fingerprint']);
     }
 
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::buildRules()
+     */
+    public function testMetadataKeysTable_BuildRules_TwoActiveKeysAlreadyExists(): void
+    {
+        MetadataKeyFactory::make(2)->withCreatorAndModifier()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier()->deleted()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier()->expired()->persist();
+        $user = UserFactory::make()->user()->active()->persist();
+        $validKeyInfo = [
+            'fingerprint' => 'A754860C3ADE5AB04599025ED3F1FE4BE61D7009',
+            'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key'),
+        ];
+
+        $entity = $this->buildEntity([
+            'fingerprint' => $validKeyInfo['fingerprint'],
+            'armored_key' => $validKeyInfo['armored_key'],
+            'created_by' => $user['id'],
+            'modified_by' => $user['id'],
+        ]);
+        $result = $this->MetadataKeys->save($entity);
+
+        $this->assertFalse($result);
+        $this->assertNotEmpty($entity->getErrors());
+        $this->assertCount(1, $entity->getErrors()['fingerprint']);
+        $this->assertArrayHasKey('maxNoOfActiveKeys', $entity->getErrors()['fingerprint']);
+    }
+
+    public function testMetadataKeysTable_UpdateSave_Success(): void
+    {
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $fingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key');
+        $entity = $this->buildEntity([
+            'armored_key' => $armoredKey,
+            'fingerprint' => $fingerprint,
+            'expired' => FrozenTime::yesterday(),
+            'created_by' => $user['id'],
+            'modified_by' => $user['id'],
+        ], [
+            'validate' => 'update',
+        ]);
+        $result = $this->MetadataKeys->save($entity);
+
+        $this->assertInstanceOf(MetadataKey::class, $result);
+        $this->assertEmpty($entity->getErrors());
+        $this->assertNotEmpty($result->get('id'));
+        $this->assertSame($fingerprint, $result->get('fingerprint'));
+        $this->assertSame($armoredKey, $result->get('armored_key'));
+        $this->assertSame($user['id'], $result->get('created_by'));
+        $this->assertSame($user['id'], $result->get('modified_by'));
+        $this->assertInstanceOf(FrozenTime::class, $result->get('created'));
+        $this->assertInstanceOf(FrozenTime::class, $result->get('modified'));
+        $this->assertInstanceOf(FrozenTime::class, $result->get('expired'));
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::validationUpdate()
+     */
+    public function testMetadataKeysTable_ValidationUpdate_Error(): void
+    {
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        $fingerprint = '67BFFCB7B74AF4C85E81AB26508850525CD78BAA';
+        $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
+        $entity = $this->buildEntity([
+            'armored_key' => $armoredKey,
+            'fingerprint' => $fingerprint,
+            'expired' => FrozenTime::tomorrow(),
+            'created_by' => $user['id'],
+            'modified_by' => $user['id'],
+        ], [
+            'validate' => 'update',
+        ]);
+        $this->MetadataKeys->save($entity);
+        $this->assertNotEmpty($entity->getErrors());
+        $this->assertArrayHasKey('isPublicKeyRevoked', $entity->getErrors()['armored_key']);
+        $this->assertArrayHasKey('isDateInPast', $entity->getErrors()['expired']);
+    }
+
+    /**
+     * @return void
+     * @uses \Passbolt\Metadata\Model\Table\MetadataKeysTable::validationUpdate()
+     */
+    public function testMetadataKeysTable_ValidationUpdate_ErrorInvalidValues(): void
+    {
+        $entity = $this->buildEntity([
+            'armored_key' => '🔥',
+            'fingerprint' => '🔥',
+            'expired' => '🔥',
+            'modified_by' => '🔥',
+        ], [
+            'validate' => 'update',
+        ]);
+        $this->MetadataKeys->save($entity);
+        $this->assertNotEmpty($entity->getErrors());
+        $this->assertArrayHasKey('alphaNumeric', $entity->getErrors()['fingerprint']);
+        $this->assertArrayHasKey('isValidFingerprint', $entity->getErrors()['fingerprint']);
+        $this->assertArrayHasKey('isMatchingKeyFingerprint', $entity->getErrors()['fingerprint']);
+        $this->assertArrayHasKey('ascii', $entity->getErrors()['armored_key']);
+        $this->assertArrayHasKey('isParsableArmoredPublicKey', $entity->getErrors()['armored_key']);
+        $this->assertArrayHasKey('isPublicKeyRevoked', $entity->getErrors()['armored_key']);
+        $this->assertArrayHasKey('dateTime', $entity->getErrors()['expired']);
+        $this->assertArrayHasKey('isDateInPast', $entity->getErrors()['expired']);
+        $this->assertArrayHasKey('uuid', $entity->getErrors()['modified_by']);
+    }
+
     // ---------------------------
     // Helper methods
     // ---------------------------
@@ -332,18 +450,19 @@ class MetadataKeysTableTest extends AppTestCaseV5
         ];
     }
 
-    private function buildEntity(array $data): Entity
+    private function buildEntity(array $data, array $option = []): Entity
     {
         return $this->MetadataKeys->newEntity(
             $data,
-            [
+            array_merge([
                 'accessibleFields' => [
                     'fingerprint' => true,
                     'armored_key' => true,
                     'created_by' => true,
                     'modified_by' => true,
+                    'expired' => true,
                 ],
-            ]
+            ], $option)
         );
     }
 }

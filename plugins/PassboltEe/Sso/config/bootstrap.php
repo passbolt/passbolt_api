@@ -15,5 +15,11 @@ declare(strict_types=1);
  * @since         3.9.0
  */
 use Cake\Core\Configure;
+use Cake\Utility\Hash;
 
+// Merge config
+$mainConfig = Configure::read('passbolt.plugins.sso');
 Configure::load('Passbolt/Sso.config', 'default', true);
+$pluginConfig = Configure::read('passbolt.plugins.sso');
+$newConfig = Hash::merge($pluginConfig, $mainConfig);
+Configure::write('passbolt.plugins.sso', $newConfig);

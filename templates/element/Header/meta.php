@@ -21,6 +21,7 @@ use Cake\Routing\Router;
     <meta name="robots" content="<?= Configure::read('passbolt.meta.robots'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="shortcut icon" type="image/x-icon" href="<?= Router::url('/favicon.ico', true); ?>" />
+    <link rel="icon" href="<?= Router::url('/favicon.svg', true); ?>" />
     <link rel="icon" href="<?= Router::url('/favicon_32.png', true); ?>" sizes="32x32" />
     <link rel="icon" href="<?= Router::url('/favicon_57.png', true); ?>" sizes="57x57" />
     <link rel="icon" href="<?= Router::url('/favicon_76.png', true); ?>" sizes="76x76" />
