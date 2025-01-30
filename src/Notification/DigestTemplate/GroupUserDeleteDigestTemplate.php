@@ -35,9 +35,9 @@ class GroupUserDeleteDigestTemplate extends AbstractDigestTemplate
     /**
      * @inheritDoc
      */
-    public function getDigestSubjectIfRecipientIsNotTheOperator(): string
+    public function getDigestSubjectIfRecipientIsNotTheOperator(?string $operatorName = null): string
     {
-        return __('{0} deleted several group memberships', '{0}');
+        return __('{0} deleted several group memberships', $operatorName);
     }
 
     /**

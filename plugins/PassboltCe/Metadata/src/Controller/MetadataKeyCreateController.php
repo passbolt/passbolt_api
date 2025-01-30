@@ -18,8 +18,8 @@ namespace Passbolt\Metadata\Controller;
 
 use App\Controller\AppController;
 use App\Error\Exception\FormValidationException;
-use Passbolt\Metadata\Form\MetadataKeyForm;
-use Passbolt\Metadata\Model\Dto\MetadataKeyDto;
+use Passbolt\Metadata\Form\MetadataKeyCreateForm;
+use Passbolt\Metadata\Model\Dto\MetadataKeyCreateDto;
 use Passbolt\Metadata\Service\MetadataKeyCreateService;
 
 class MetadataKeyCreateController extends AppController
@@ -35,12 +35,12 @@ class MetadataKeyCreateController extends AppController
         $this->User->assertIsAdmin();
         $this->assertNotEmptyArrayData();
 
-        $form = new MetadataKeyForm();
+        $form = new MetadataKeyCreateForm();
         if (!$form->execute($this->getRequest()->getData())) {
             throw new FormValidationException(__('Could not validate the metadata key data.'), $form);
         }
 
-        $dto = MetadataKeyDto::fromArray($form->getData());
+        $dto = MetadataKeyCreateDto::fromArray($form->getData());
         $uac = $this->User->getAccessControl();
         $metadataKey = (new MetadataKeyCreateService())->create($uac, $dto);
 
