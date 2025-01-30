@@ -27,6 +27,7 @@ use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
+use App\Middleware\PreventHostHeaderFallbackMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
@@ -106,6 +107,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->prepend(new ContainerInjectorMiddleware($this->getContainer()))
             ->add(new ContentSecurityPolicyMiddleware())
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
+            ->add(new PreventHostHeaderFallbackMiddleware())
             ->add(SslForceMiddleware::class)
             ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
             ->add(new RoutingMiddleware($this))

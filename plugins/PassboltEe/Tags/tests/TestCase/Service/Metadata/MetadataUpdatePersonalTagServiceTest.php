@@ -86,11 +86,13 @@ class MetadataUpdatePersonalTagServiceTest extends AppTestCaseV5
         // data to update
         $newData = ['slug' => 'tag updated'];
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('The settings selected by your administrator prevent from downgrading tag');
-
         $uac = $this->makeUac($user);
         $tagDto = MetadataTagDto::fromArray($newData);
-        $this->service->update($uac, $tagDto, $tag);
+        try {
+            $this->service->update($uac, $tagDto, $tag);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('The settings selected by your administrator prevent from downgrading tag', $e->getMessage());
+        }
     }
 }

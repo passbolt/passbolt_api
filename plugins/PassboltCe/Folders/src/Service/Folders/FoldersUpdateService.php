@@ -140,13 +140,16 @@ class FoldersUpdateService
     private function patchEntity(UserAccessControl $uac, Folder $folder, MetadataFolderDto $folderDto)
     {
         $data = $folderDto->toArray();
-        $data = array_merge($data, [
-            'modified_by' => $uac->getId(),
-        ]);
+        $data = array_merge($data, ['modified_by' => $uac->getId()]);
+        if ($folderDto->isV5()) {
+            // clear v4 fields
+            $data['name'] = null;
+        }
 
         $options = $this->getOptionsForFolderSave($folderDto);
         $options['accessibleFields'] = array_merge($options['accessibleFields'], [
             'modified_by' => true,
+            'name' => true, // also required for v5 to clear out field
         ]);
 
         return $this->foldersTable->patchEntity($folder, $data, $options);

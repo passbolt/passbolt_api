@@ -61,6 +61,14 @@ php7.4-mariadb10.6:
   extends:
     - .test-template-parallel-scheduled
 
+php7.4-mariadb11.5:
+  variables:
+    PHP_VERSION: "7.4"
+    DATABASE_ENGINE_VERSION: "${CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX}/mariadb:11.5"
+  extends:
+    - .test-template-parallel-scheduled
+  allow_failure: true
+
 #################
 # PHP 7.4 MySQL #
 #################

@@ -46,7 +46,7 @@ class MetadataKeysSettingsGetService
     {
         return [
             MetadataKeysSettingsDto::ALLOW_USAGE_OF_PERSONAL_KEYS => true,
-            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => true,
+            MetadataKeysSettingsDto::ZERO_KNOWLEDGE_KEY_SHARE => false,
         ];
     }
 

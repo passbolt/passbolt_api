@@ -69,6 +69,19 @@ class ResourceTypesFinderServiceTest extends AppTestCase
         $this->assertSame($resourceTypeNotDeletedId, $resourceTypes->firstOrFail()->get('id'));
     }
 
+    public function testResourceTypesFinderService_No_Filter()
+    {
+        ResourceTypeFactory::make()->deleted()->persist();
+        $resourceTypeNotDeletedId = ResourceTypeFactory::make()->persist()->get('id');
+        $resourceTypes = $this->service->find();
+
+        $options = [];
+        $this->service->filter($resourceTypes, $options);
+
+        $this->assertCount(1, $resourceTypes->all());
+        $this->assertSame($resourceTypeNotDeletedId, $resourceTypes->firstOrFail()->get('id'));
+    }
+
     public function testResourceTypesFinderService_Contain_Resources_Count()
     {
         [$resourceType1, $resourceType2, $resourceType3] = ResourceTypeFactory::make(3)->persist();

@@ -49,7 +49,9 @@ class MetadataTypesSettingsForm extends Form
             ->addField('allow_creation_of_v4_resources', ['type' => 'boolean'])
             ->addField('allow_creation_of_v4_folders', ['type' => 'boolean'])
             ->addField('allow_creation_of_v4_tags', ['type' => 'boolean'])
-            ->addField('allow_creation_of_v4_comments', ['type' => 'boolean']);
+            ->addField('allow_creation_of_v4_comments', ['type' => 'boolean'])
+            ->addField('allow_v5_v4_downgrade', ['type' => 'boolean'])
+            ->addField('allow_v4_v5_upgrade', ['type' => 'boolean']);
     }
 
     /**
@@ -204,6 +206,10 @@ class MetadataTypesSettingsForm extends Form
             ->boolean('allow_v5_v4_downgrade', __('The setting should be a valid boolean.'))
             ->requirePresence('allow_v5_v4_downgrade', true, __('The setting is required.'));
 
+        $validator
+            ->boolean('allow_v4_v5_upgrade', __('The setting should be a valid boolean.'))
+            ->requirePresence('allow_v4_v5_upgrade', true, __('The setting is required.'));
+
         return $validator;
     }
 
@@ -237,6 +243,7 @@ class MetadataTypesSettingsForm extends Form
             'allow_creation_of_v4_comments' => $data['allow_creation_of_v4_comments'] ?? null,
             'allow_creation_of_v4_tags' => $data['allow_creation_of_v4_tags'] ?? null,
             'allow_v5_v4_downgrade' => $data['allow_v5_v4_downgrade'] ?? null,
+            'allow_v4_v5_upgrade' => $data['allow_v4_v5_upgrade'] ?? null,
         ];
 
         $booleanFields = [
@@ -249,6 +256,7 @@ class MetadataTypesSettingsForm extends Form
             'allow_creation_of_v4_comments',
             'allow_creation_of_v4_tags',
             'allow_v5_v4_downgrade',
+            'allow_v4_v5_upgrade',
         ];
         foreach ($data as $field => $value) {
             // Convert values like '1', '0' to boolean data type

@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Service;
+namespace Passbolt\Metadata\Test\TestCase\Service;
 
 use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\FormValidationException;

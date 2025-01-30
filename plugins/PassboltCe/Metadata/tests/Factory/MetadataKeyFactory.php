@@ -32,6 +32,7 @@ use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey|\Passbolt\Metadata\Model\Entity\MetadataKey[] persist()
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey getEntity()
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[] getEntities()
+ * @method static  \Passbolt\Metadata\Model\Entity\MetadataKey firstOrFail($conditions = null)
  */
 class MetadataKeyFactory extends CakephpBaseFactory
 {

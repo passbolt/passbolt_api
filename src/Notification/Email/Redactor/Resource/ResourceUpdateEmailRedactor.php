@@ -140,11 +140,16 @@ class ResourceUpdateEmailRedactor implements SubscribedEmailRedactorInterface
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
             function () use ($recipient, $owner, $resource, $isV5) {
+                $isRecipientPerformingTheAction = $recipient->id === $owner->id;
                 if ($isV5) {
-                    $subject = __('You edited a resource');
+                    if ($isRecipientPerformingTheAction) {
+                        $subject = __('You edited a resource');
+                    } else {
+                        $subject = __('{0} edited a resource', Purifier::clean($owner->profile->first_name));
+                    }
                 } else {
                     $resourceName = Purifier::clean($resource->name);
-                    if ($recipient->id === $owner->id) {
+                    if ($isRecipientPerformingTheAction) {
                         $subject = __('You edited the resource {0}', $resourceName);
                     } else {
                         $subject = __('{0} edited the resource {1}', Purifier::clean($owner->profile->first_name), $resourceName); // phpcs:ignore

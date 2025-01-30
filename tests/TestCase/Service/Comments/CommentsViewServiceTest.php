@@ -54,11 +54,11 @@ class CommentsViewServiceTest extends TestCase
         $this->assertGreaterThan(0, count($commentsArr));
 
         // Expected content.
-        $this->assertEquals(count($commentsArr[0]['children']), 1);
+        $this->assertEquals(1, count($commentsArr[0]['children']));
 
         // Not expected content.
-        $this->assertObjectNotHasAttribute('modifier', $commentsArr[0]);
-        $this->assertObjectNotHasAttribute('creator', $commentsArr[0]);
+        $this->assertObjectNotHasProperty('modifier', $commentsArr[0]);
+        $this->assertObjectNotHasProperty('creator', $commentsArr[0]);
     }
 
     public function testCommentsViewService_ErrorNotFound()

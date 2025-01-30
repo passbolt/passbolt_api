@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\ResourceTypes\Service;
 
 use Cake\Database\Expression\IdentifierExpression;
-use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -72,18 +71,11 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
      */
     public function filter(Query $query, array $options): void
     {
-        if (isset($options['filter']['is-deleted'])) {
-            $isDeleted = (bool)$options['filter']['is-deleted'];
-            $deletedField = $query->getRepository()->aliasField('deleted');
-            if ($isDeleted) {
-                $query->where(function (QueryExpression $exp) use ($deletedField) {
-                    return $exp->isNotNull($deletedField);
-                });
-            } else {
-                $query->where(function (QueryExpression $exp) use ($deletedField) {
-                    return $exp->isNull($deletedField);
-                });
-            }
+        $isDeleted = (bool)($options['filter']['is-deleted'] ?? false);
+        if ($isDeleted) {
+            $query->find('deleted');
+        } else {
+            $query->find('notDeleted');
         }
     }
 

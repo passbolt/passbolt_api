@@ -38,9 +38,9 @@ class ResourceShareDigestTemplate extends AbstractDigestTemplate
     /**
      * @inheritDoc
      */
-    public function getDigestSubjectIfRecipientIsNotTheOperator(): string
+    public function getDigestSubjectIfRecipientIsNotTheOperator(?string $operatorName = null): string
     {
-        return __('{0} shared several items with you', '{0}');
+        return __('{0} shared several items with you', $operatorName);
     }
 
     /**
