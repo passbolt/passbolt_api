@@ -31,6 +31,7 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
     public const ALLOW_CREATION_OF_V4_TAGS = 'allow_creation_of_v4_tags';
     public const ALLOW_CREATION_OF_V4_COMMENTS = 'allow_creation_of_v4_comments';
     public const ALLOW_V5_V4_DOWNGRADE = 'allow_v5_v4_downgrade';
+    public const ALLOW_V4_V5_UPGRADE = 'allow_v4_v5_upgrade';
     public const V4 = 'v4';
     public const V5 = 'v5';
 
@@ -48,6 +49,7 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
         self::ALLOW_CREATION_OF_V4_TAGS,
         self::ALLOW_CREATION_OF_V4_COMMENTS,
         self::ALLOW_V5_V4_DOWNGRADE,
+        self::ALLOW_V4_V5_UPGRADE,
     ];
 
     public const ENTITY_RESOURCE = 'resource';
@@ -76,6 +78,7 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
             self::ALLOW_CREATION_OF_V4_TAGS => $data[self::ALLOW_CREATION_OF_V4_TAGS] ?? null,
             self::ALLOW_CREATION_OF_V4_COMMENTS => $data[self::ALLOW_CREATION_OF_V4_COMMENTS] ?? null,
             self::ALLOW_V5_V4_DOWNGRADE => $data[self::ALLOW_V5_V4_DOWNGRADE] ?? null,
+            self::ALLOW_V4_V5_UPGRADE => $data[self::ALLOW_V4_V5_UPGRADE] ?? null,
         ];
     }
 
@@ -140,6 +143,15 @@ class MetadataTypesSettingsDto extends MetadataSettingsDto
     {
         return isset($this->data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE])
             && $this->data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE] === true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isV5UpgradeAllowed(): bool
+    {
+        return isset($this->data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE])
+            && $this->data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] === true;
     }
 
     /**

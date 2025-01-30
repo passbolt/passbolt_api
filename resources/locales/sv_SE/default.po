@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-11-12 08:33+0000\n"
-"PO-Revision-Date: 2024-11-12 11:09\n"
+"POT-Creation-Date: 2025-01-29 05:51+0000\n"
+"PO-Revision-Date: 2025-01-29 07:23\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -838,6 +838,9 @@ msgstr "Resurstypsidentifieraren bör vara ett giltigt UUID."
 msgid "A resource type identifier is required."
 msgstr "En resurstyp-identifierare krävs."
 
+msgid "The resource type should be one of the following: {0}."
+msgstr ""
+
 msgid "The permissions are required."
 msgstr "Behörigheterna krävs."
 
@@ -869,9 +872,6 @@ msgid "The metadata key type should be a valid UTF8 string."
 msgstr ""
 
 msgid "The metadata key type should be one of the following: {0}."
-msgstr ""
-
-msgid "The resource type should be one of the following: {0}."
 msgstr ""
 
 msgid "The resource type does not exist."
@@ -911,6 +911,9 @@ msgid "The resource metadata provided can not be decrypted."
 msgstr ""
 
 msgid "A resource of type personal cannot be shared with other users or a group."
+msgstr ""
+
+msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
 msgstr ""
 
 msgid "The resource should not be already soft deleted."
@@ -1005,6 +1008,9 @@ msgstr "Skapandedatum måste fastställas i det förflutna."
 
 msgid "The key should not already be expired."
 msgstr "Nyckeln bör inte redan ha gått ut."
+
+msgid "The date should not be set in the future."
+msgstr ""
 
 msgid "The date could not be parsed."
 msgstr ""
@@ -2695,6 +2701,9 @@ msgstr "Kunde inte validera hemlig åtkomstdata."
 msgid "Could not validate secret history data."
 msgstr "Kunde inte validera hemlig historikdata."
 
+msgid "Invalid pagination limit set for metadata endpoint."
+msgstr ""
+
 msgid "Could not validate the metadata key data."
 msgstr ""
 
@@ -2702,6 +2711,12 @@ msgid "The metadata key identifier should be a UUID."
 msgstr ""
 
 msgid "The private key identifier should be a UUID."
+msgstr ""
+
+msgid "Invalid pagination limit set for metadata upgrade endpoint."
+msgstr ""
+
+msgid "The missing_metadata_key_ids contain is only allowed for administrators."
 msgstr ""
 
 msgid "An object type is required."
@@ -2761,6 +2776,9 @@ msgstr ""
 msgid "The data should be a valid ASCII string."
 msgstr ""
 
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr ""
+
 msgid "The setting should be a valid boolean."
 msgstr ""
 
@@ -2768,9 +2786,6 @@ msgid "The setting is required."
 msgstr ""
 
 msgid "The data is required."
-msgstr ""
-
-msgid "The modified date should be a valid date."
 msgstr ""
 
 msgid "A modified date is required."
@@ -2792,6 +2807,39 @@ msgid "The content type needs to be enabled in order to be set as default."
 msgstr ""
 
 msgid "Both v4 and v5 settings cannot be disabled."
+msgstr ""
+
+msgid "The metadata key should not be deleted."
+msgstr ""
+
+msgid "A metadata key identifier is required."
+msgstr ""
+
+msgid "The metadata key identifier should not be empty."
+msgstr ""
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr ""
+
+msgid "A metadata key type is required."
+msgstr ""
+
+msgid "The metadata key type should not be empty."
+msgstr ""
+
+msgid "The metadata key type should be shared key."
+msgstr ""
+
+msgid "A metadata is required."
+msgstr ""
+
+msgid "A modified by is required."
+msgstr ""
+
+msgid "The modified by should not be empty."
+msgstr ""
+
+msgid "The modified by should be a valid UUID."
 msgstr ""
 
 msgid "Metadata settings endpoints are disabled."
@@ -2822,6 +2870,9 @@ msgid "False"
 msgstr ""
 
 msgid "Zero-knowledge key share"
+msgstr ""
+
+msgid "The metadata private key data must be an array."
 msgstr ""
 
 msgid "No resource type mapping for ID '{0}'"
@@ -2863,19 +2914,28 @@ msgstr ""
 msgid "The identifier of the user who created the metadata key should be a valid UUID."
 msgstr ""
 
+msgid "The creator is required."
+msgstr ""
+
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
+msgstr ""
+
+msgid "A expired date is required."
+msgstr ""
+
+msgid "The expired date should not be empty."
+msgstr ""
+
+msgid "The modifier is required."
 msgstr ""
 
 msgid "The fingerprint is already in use."
 msgstr ""
 
+msgid "Already two metadata keys are active."
+msgstr ""
+
 msgid "You cannot reuse the user key."
-msgstr ""
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr ""
-
-msgid "The metadata key identifier should not be empty."
 msgstr ""
 
 msgid "The user does not exist or is not active or is deleted."
@@ -2887,16 +2947,37 @@ msgstr ""
 msgid "The data is not valid. Please make sure it is encrypted for the correct key."
 msgstr ""
 
-msgid "{0} created a new metadata key."
+msgid "The entity must be an array."
 msgstr ""
 
-msgid "You created a new metadata key."
+msgid "Entity {0} not found."
 msgstr ""
 
-msgid "{0} edited the metadata settings."
+msgid "Could not validate the metadata key data for the entity with ID: {0}."
 msgstr ""
 
-msgid "You edited the metadata settings."
+msgid "{0} created a new metadata key"
+msgstr ""
+
+msgid "You created a new metadata key"
+msgstr ""
+
+msgid "{0} deleted a metadata key"
+msgstr ""
+
+msgid "You deleted a metadata key"
+msgstr ""
+
+msgid "{0} has expired a metadata key"
+msgstr ""
+
+msgid "You have expired a metadata key"
+msgstr ""
+
+msgid "{0} edited the metadata settings"
+msgstr ""
+
+msgid "You edited the metadata settings"
 msgstr ""
 
 msgid "No server metadata private key found."
@@ -2924,6 +3005,15 @@ msgid "The metadata key is still in use, migrate the remaining items to the new 
 msgstr ""
 
 msgid "The metadata key could not be deleted."
+msgstr ""
+
+msgid "The metadata key fingerprint is invalid."
+msgstr ""
+
+msgid "The metadata key is already marked as expired."
+msgstr ""
+
+msgid "The metadata key could not be updated."
 msgstr ""
 
 msgid "The metadata key could not be saved."
@@ -2971,7 +3061,7 @@ msgstr ""
 msgid "The server metadata private key is invalid."
 msgstr ""
 
-msgid "The metadata private key could not be updated."
+msgid "The metadata private key could not be created."
 msgstr ""
 
 msgid "Please try again later."
@@ -2986,10 +3076,19 @@ msgstr ""
 msgid "The metadata key is already shared with the user."
 msgstr ""
 
+msgid "The metadata private keys could not be created."
+msgstr ""
+
+msgid "The metadata private key data is not valid."
+msgstr ""
+
 msgid "The metadata private key does not exist or has been deleted."
 msgstr ""
 
 msgid "The metadata private key was already edited by the user."
+msgstr ""
+
+msgid "The metadata private key could not be updated."
 msgstr ""
 
 msgid "The metadata session key could not be saved."
@@ -3094,6 +3193,21 @@ msgstr ""
 msgid "The metadata armored key is not available or incomplete."
 msgstr ""
 
+msgid "The resource metadata key data could not be updated."
+msgstr ""
+
+msgid "The request data should not be empty."
+msgstr ""
+
+msgid "The request data is too large."
+msgstr ""
+
+msgid "The provided modified date does not match."
+msgstr ""
+
+msgid "The provided modified by does not match."
+msgstr ""
+
 msgid "The user identifier should be a UUID."
 msgstr ""
 
@@ -3124,7 +3238,28 @@ msgstr ""
 msgid "Tag creation/modification with cleartext metadata not allowed."
 msgstr ""
 
-msgid "{0} created a new metadata key"
+msgid "You created a new metadata key."
+msgstr ""
+
+msgid "{0} created a new metadata key."
+msgstr ""
+
+msgid "You deleted a metadata key."
+msgstr ""
+
+msgid "{0} deleted a metadata key."
+msgstr ""
+
+msgid "You have expired a metadata key."
+msgstr ""
+
+msgid "{0} has expired a metadata key."
+msgstr ""
+
+msgid "You edited the metadata settings."
+msgstr ""
+
+msgid "{0} edited the metadata settings."
 msgstr ""
 
 msgid "You have created a new folder."
@@ -4759,6 +4894,12 @@ msgstr "är nu gruppchef"
 msgid "is not anymore group manager"
 msgstr "är inte längre gruppchef"
 
+msgid "User Agent: "
+msgstr ""
+
+msgid "User IP: "
+msgstr ""
+
 msgid "Terms"
 msgstr "Villkor"
 
@@ -5010,6 +5151,9 @@ msgstr "Denna användare registrerade sig själv, eftersom den offentliga regist
 
 msgid "This user was invited by {0} {1}."
 msgstr "Den här användaren blev inbjuden av {0} {1}."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr ""
 
 msgid "view users"
 msgstr "visa användare"

@@ -19,6 +19,9 @@ namespace App\Test\TestCase\Service\Healthcheck\Environment;
 use App\Service\Healthcheck\Environment\DistributionHealthcheck;
 use Cake\TestSuite\TestCase;
 
+/**
+ * @covers \App\Service\Healthcheck\Environment\DistributionHealthcheck
+ */
 class DistributionHealthcheckTest extends TestCase
 {
     public function testHealthcheckDistributionIsPassed_Success(): void
@@ -26,5 +29,15 @@ class DistributionHealthcheckTest extends TestCase
         $service = new DistributionHealthcheck();
         $service->check();
         $this->assertTrue($service->isPassed());
+    }
+
+    public function testHealthcheckDistributionIsPassed_Fail(): void
+    {
+        $service = $this->getMockBuilder(DistributionHealthcheck::class)
+            ->onlyMethods(['detectDistribution'])
+            ->getMock();
+        $service->expects($this->once())->method('detectDistribution')->willReturn(null);
+        $service->check();
+        $this->assertFalse($service->isPassed());
     }
 }

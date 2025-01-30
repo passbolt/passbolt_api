@@ -82,10 +82,10 @@ class FoldersCreateService
      *
      * @param \App\Utility\UserAccessControl $uac The current user
      * @param \Passbolt\Metadata\Model\Dto\MetadataFolderDto $folderDto The folder DTO.
-     * @return \Passbolt\Folders\Model\Entity\Folder
+     * @return \Passbolt\Folders\Model\Entity\Folder|null
      * @throws \Exception If an unexpected error occurred
      */
-    public function create(UserAccessControl $uac, MetadataFolderDto $folderDto): Folder
+    public function create(UserAccessControl $uac, MetadataFolderDto $folderDto): ?Folder
     {
         $this->assertCreationAllowedByMetadataSettings($folderDto->isV5(), MetadataTypesSettingsDto::ENTITY_FOLDER);
 

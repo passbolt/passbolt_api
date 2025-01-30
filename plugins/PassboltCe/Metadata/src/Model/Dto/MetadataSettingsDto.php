@@ -21,7 +21,7 @@ class MetadataSettingsDto
     /**
      * @var array data
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Constructor.
