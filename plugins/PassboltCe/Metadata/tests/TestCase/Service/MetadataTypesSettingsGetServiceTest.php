@@ -38,6 +38,7 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = false;
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V5_COMMENTS] = true;
         $data[MetadataTypesSettingsDto::ALLOW_V5_V4_DOWNGRADE] = true;
+        $data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] = true;
         MetadataTypesSettingsFactory::make()->value(json_encode($data))->persist();
         $settings = MetadataTypesSettingsGetService::getSettings();
         $this->assertEquals($data, $settings->toArray());
@@ -48,6 +49,7 @@ class MetadataTypesSettingsGetServiceTest extends AppTestCaseV5
         $this->assertEquals(0, MetadataTypesSettingsFactory::count());
         $data = MetadataTypesSettingsFactory::getDefaultDataV4();
         $data[MetadataTypesSettingsDto::ALLOW_CREATION_OF_V4_COMMENTS] = '🔥';
+        $data[MetadataTypesSettingsDto::ALLOW_V4_V5_UPGRADE] = [];
         MetadataTypesSettingsFactory::make()->value(json_encode($data))->persist();
         $settings = MetadataTypesSettingsGetService::getSettings();
         $this->assertEquals(MetadataTypesSettingsFactory::getDefaultDataV4(), $settings->toArray());

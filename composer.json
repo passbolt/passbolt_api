@@ -97,18 +97,18 @@
         "duosecurity/duo_universal_php": "^1.0.2"
     },
     "require-dev": {
-        "phpstan/phpstan": "^1.11.0",
+        "phpstan/phpstan": "^1.12.10",
         "psy/psysh": "@stable",
         "cakephp/debug_kit": "^4.9.0",
         "cakephp/bake": "^2.3.0",
-        "phpunit/phpunit": "~9.5.2",
+        "phpunit/phpunit": "~9.6.20",
         "cakephp/cakephp-codesniffer": "^4.5",
         "passbolt/passbolt-selenium-api": "^4.5",
         "passbolt/passbolt-test-data": "^4.8",
         "vierge-noire/cakephp-fixture-factories": "^v2.9.3",
         "cakephp/localized": "4.0.0",
-        "vimeo/psalm": "^5.0.0",
-        "cakedc/cakephp-phpstan": "^2.0",
+        "vimeo/psalm": "^5.26.0",
+        "cakedc/cakephp-phpstan": "^2.1",
         "johnkary/phpunit-speedtrap": "^4.0"
     },
     "autoload": {

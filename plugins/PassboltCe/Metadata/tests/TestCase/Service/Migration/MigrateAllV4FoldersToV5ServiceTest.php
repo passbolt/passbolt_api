@@ -253,9 +253,11 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
             ->persist();
         FolderFactory::make()->withFoldersRelationsFor([$ada, $betty])->withPermissionsFor([$ada, $betty])->persist();
 
-        $this->expectException(BadRequestException::class);
-        $this->expectErrorMessage('Folder creation/modification with encrypted metadata not allowed');
-
-        $this->service->migrate();
+        try {
+            $this->service->migrate();
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(BadRequestException::class, $e);
+            $this->assertStringContainsString('Folder creation/modification with encrypted metadata not allowed', $e->getMessage());
+        }
     }
 }

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2024-11-12 08:33+0000\n"
-"PO-Revision-Date: 2024-11-13 03:34\n"
+"POT-Creation-Date: 2025-01-29 05:51+0000\n"
+"PO-Revision-Date: 2025-01-29 07:23\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -838,6 +838,9 @@ msgstr "리소스 유형 식별자는 유효한 UUID여야 합니다."
 msgid "A resource type identifier is required."
 msgstr "리소스 유형 식별자가 필요합니다."
 
+msgid "The resource type should be one of the following: {0}."
+msgstr "리소스 유형은 다음 중 하나여야 합니다: {0}."
+
 msgid "The permissions are required."
 msgstr "권한이 필요합니다."
 
@@ -870,9 +873,6 @@ msgstr "메타데이터 키 유형은 유효한 UTF8 문자열이어야합니다
 
 msgid "The metadata key type should be one of the following: {0}."
 msgstr "메타데이터 키 유형은 다음 중 하나여야 합니다: {0}."
-
-msgid "The resource type should be one of the following: {0}."
-msgstr "리소스 유형은 다음 중 하나여야 합니다: {0}."
 
 msgid "The resource type does not exist."
 msgstr "리소스 유형이 존재하지 않습니다."
@@ -912,6 +912,9 @@ msgstr "제공된 리소스 메타데이터를 복호화할 수 없습니다."
 
 msgid "A resource of type personal cannot be shared with other users or a group."
 msgstr "개인 유형의 리소스는 다른 사용자 또는 그룹과 공유할 수 없습니다."
+
+msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
+msgstr "관리자가 선택한 설정으로 인해 v4에서 v5로 업그레이드되지 않습니다."
 
 msgid "The resource should not be already soft deleted."
 msgstr "리소스를 임시로 삭제해서는 안 됩니다."
@@ -1005,6 +1008,9 @@ msgstr "생성 날짜는 과거 날짜로 설정해야 합니다."
 
 msgid "The key should not already be expired."
 msgstr "키가 이미 만료되지 않아야 합니다."
+
+msgid "The date should not be set in the future."
+msgstr "날짜를 미래로 설정할 수 없습니다."
 
 msgid "The date could not be parsed."
 msgstr "날짜를 읽을 수 없습니다."
@@ -2695,6 +2701,9 @@ msgstr "암호 접근 데이터를 검사할 수 없습니다."
 msgid "Could not validate secret history data."
 msgstr "암호 기록 데이터의 유효성을 검사할 수 없습니다."
 
+msgid "Invalid pagination limit set for metadata endpoint."
+msgstr "메타데이터 엔드포인트에 잘못된 페이징 제한이 설정되었습니다"
+
 msgid "Could not validate the metadata key data."
 msgstr "메타데이터 키 데이터를 검사할 수 없습니다."
 
@@ -2703,6 +2712,12 @@ msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
 
 msgid "The private key identifier should be a UUID."
 msgstr "개인 키 식별자는 UUID여야 합니다."
+
+msgid "Invalid pagination limit set for metadata upgrade endpoint."
+msgstr "메타데이터 업그레이드 엔드포인트에 잘못된 페이징 제한이 설정되었습니다."
+
+msgid "The missing_metadata_key_ids contain is only allowed for administrators."
+msgstr "missing_metadata_key_ids 포함은 관리자에게만 허용됩니다."
 
 msgid "An object type is required."
 msgstr "객체가 필요합니다."
@@ -2761,6 +2776,9 @@ msgstr "데이터는 비워둘 수 없습니다."
 msgid "The data should be a valid ASCII string."
 msgstr "데이터는 유효한 ASCII 문자열이어야 합니다."
 
+msgid "The modified date should be a valid ISO 80601 date."
+msgstr "수정된 날짜는 유효한 ISO 80601 날짜여야 합니다."
+
 msgid "The setting should be a valid boolean."
 msgstr "설정은 유효한 부울이어야 합니다."
 
@@ -2769,9 +2787,6 @@ msgstr "설정이 필요합니다."
 
 msgid "The data is required."
 msgstr "데이터가 필요합니다."
-
-msgid "The modified date should be a valid date."
-msgstr "수정 날짜는 유효한 날짜여야 합니다."
 
 msgid "A modified date is required."
 msgstr "수정 날짜가 필요합니다."
@@ -2793,6 +2808,39 @@ msgstr "기본값으로 설정하려면 콘텐츠 유형이 활성화되어 있�
 
 msgid "Both v4 and v5 settings cannot be disabled."
 msgstr "v4 및 v5 설정을 모두 비활성화할 수 없습니다."
+
+msgid "The metadata key should not be deleted."
+msgstr "메타데이터 키는 삭제될 수 없습니다."
+
+msgid "A metadata key identifier is required."
+msgstr "메타데이터 키 식별자가 필요합니다."
+
+msgid "The metadata key identifier should not be empty."
+msgstr "메타데이터 키 식별자는 비워 둘 수 없습니다."
+
+msgid "The metadata key identifier should be a valid UUID."
+msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
+
+msgid "A metadata key type is required."
+msgstr "메타데이터 키 유형이 필요합니다."
+
+msgid "The metadata key type should not be empty."
+msgstr "메타데이터 키 유형은 비워둘 수 없습니다."
+
+msgid "The metadata key type should be shared key."
+msgstr "메타데이터 키 유형은 공유 키여야 합니다."
+
+msgid "A metadata is required."
+msgstr "메타데이터가 필요합니다."
+
+msgid "A modified by is required."
+msgstr "수정한 사람이 필요합니다."
+
+msgid "The modified by should not be empty."
+msgstr "수정한 사람은 비워두면 안 됩니다."
+
+msgid "The modified by should be a valid UUID."
+msgstr "수정한 사람은 유효한 UUID여야 합니다."
 
 msgid "Metadata settings endpoints are disabled."
 msgstr "메타데이터 설정 엔드포인트를 사용할 수 없습니다."
@@ -2823,6 +2871,9 @@ msgstr "거짓"
 
 msgid "Zero-knowledge key share"
 msgstr "영지식 키 공유"
+
+msgid "The metadata private key data must be an array."
+msgstr "메타데이터 개인 키 데이터는 배열이어야 합니다."
 
 msgid "No resource type mapping for ID '{0}'"
 msgstr "ID '{0}'에 대한 리소스 유형 매핑이 없습니다."
@@ -2863,20 +2914,29 @@ msgstr "엔티티에 대한 권한을 찾을 수 없습니다: {0}"
 msgid "The identifier of the user who created the metadata key should be a valid UUID."
 msgstr "메타데이터 키를 만든 사용자의 식별자는 유효한 UUID여야 합니다."
 
+msgid "The creator is required."
+msgstr ""
+
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
 msgstr "메타데이터 키를 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
+
+msgid "A expired date is required."
+msgstr ""
+
+msgid "The expired date should not be empty."
+msgstr ""
+
+msgid "The modifier is required."
+msgstr ""
 
 msgid "The fingerprint is already in use."
 msgstr "지문이 이미 사용 중입니다."
 
+msgid "Already two metadata keys are active."
+msgstr ""
+
 msgid "You cannot reuse the user key."
 msgstr "사용자 키는 재사용할 수 없습니다."
-
-msgid "The metadata key identifier should be a valid UUID."
-msgstr "메타데이터 키 식별자는 유효한 UUID여야 합니다."
-
-msgid "The metadata key identifier should not be empty."
-msgstr "메타데이터 키 식별자는 비워 둘 수 없습니다."
 
 msgid "The user does not exist or is not active or is deleted."
 msgstr "사용자가 존재하지 않거나 활성 중이 아니거나 삭제되었습니다."
@@ -2887,17 +2947,38 @@ msgstr "메타데이터 키 id 및 사용자 id 조합이 이미 사용 중입�
 msgid "The data is not valid. Please make sure it is encrypted for the correct key."
 msgstr "데이터가 올바르지 않습니다. 올바른 키를 위해 암호화되어 있는지 확인하세요."
 
-msgid "{0} created a new metadata key."
-msgstr "{0}이(가) 새로운 메타데이터 키를 생성했습니다."
+msgid "The entity must be an array."
+msgstr ""
 
-msgid "You created a new metadata key."
-msgstr "새 메타데이터 키를 생성했습니다."
+msgid "Entity {0} not found."
+msgstr ""
 
-msgid "{0} edited the metadata settings."
-msgstr "{0}이(가) 새로운 메타데이터 키를 수정했습니다."
+msgid "Could not validate the metadata key data for the entity with ID: {0}."
+msgstr ""
 
-msgid "You edited the metadata settings."
-msgstr "메타데이터 설정을 수정했습니다."
+msgid "{0} created a new metadata key"
+msgstr "{0} 이(가) 새로운 메타데이터 키를 생성"
+
+msgid "You created a new metadata key"
+msgstr "새 메타데이터 키를 생성했습니다"
+
+msgid "{0} deleted a metadata key"
+msgstr ""
+
+msgid "You deleted a metadata key"
+msgstr ""
+
+msgid "{0} has expired a metadata key"
+msgstr ""
+
+msgid "You have expired a metadata key"
+msgstr ""
+
+msgid "{0} edited the metadata settings"
+msgstr "{0}이(가) 새로운 메타데이터 키를 수정했습니다"
+
+msgid "You edited the metadata settings"
+msgstr "메타데이터 설정을 수정했습니다"
 
 msgid "No server metadata private key found."
 msgstr "서버 메타데이터 개인 키를 찾을 수 없습니다."
@@ -2925,6 +3006,15 @@ msgstr "메타데이터 키가 여전히 사용 중이므로 나머지 항목을
 
 msgid "The metadata key could not be deleted."
 msgstr "메타데이터 키를 삭제할 수 없습니다."
+
+msgid "The metadata key fingerprint is invalid."
+msgstr ""
+
+msgid "The metadata key is already marked as expired."
+msgstr ""
+
+msgid "The metadata key could not be updated."
+msgstr ""
 
 msgid "The metadata key could not be saved."
 msgstr "메타데이터 키를 저장할 수 없습니다."
@@ -2971,8 +3061,8 @@ msgstr "서버 메타데이터 키 ID가 필요합니다."
 msgid "The server metadata private key is invalid."
 msgstr "서버 메타데이터 개인 키가 유효하지 않습니다."
 
-msgid "The metadata private key could not be updated."
-msgstr "메타데이터 개인 키를 업데이트할 수 없습니다."
+msgid "The metadata private key could not be created."
+msgstr ""
 
 msgid "Please try again later."
 msgstr "나중 후 다시 시도하세요."
@@ -2986,11 +3076,20 @@ msgstr "요청 데이터가 잘못되었습니다."
 msgid "The metadata key is already shared with the user."
 msgstr "메타데이터 키는 이미 사용자와 공유되었습니다."
 
+msgid "The metadata private keys could not be created."
+msgstr ""
+
+msgid "The metadata private key data is not valid."
+msgstr ""
+
 msgid "The metadata private key does not exist or has been deleted."
 msgstr "메타데이터 개인 키가 존재하지 않거나 삭제되었습니다."
 
 msgid "The metadata private key was already edited by the user."
 msgstr "메타데이터 개인 키는 이미 사용자에 의해 편집되었습니다."
+
+msgid "The metadata private key could not be updated."
+msgstr "메타데이터 개인 키를 업데이트할 수 없습니다."
 
 msgid "The metadata session key could not be saved."
 msgstr "메타데이터 세션 키를 저장할 수 없습니다."
@@ -3094,6 +3193,21 @@ msgstr "메타데이터 키 지문을 사용할 수 없거나 불완전합니다
 msgid "The metadata armored key is not available or incomplete."
 msgstr "메타데이터 아머드 키를 사용할 수 없거나 불완전합니다."
 
+msgid "The resource metadata key data could not be updated."
+msgstr ""
+
+msgid "The request data should not be empty."
+msgstr "요청 데이터는 비워둘 수 없습니다."
+
+msgid "The request data is too large."
+msgstr ""
+
+msgid "The provided modified date does not match."
+msgstr ""
+
+msgid "The provided modified by does not match."
+msgstr ""
+
 msgid "The user identifier should be a UUID."
 msgstr "사용자 식별자는 유효한 UUID여야 합니다."
 
@@ -3124,8 +3238,29 @@ msgstr "평문 메타데이터로 폴더를 생성/수정할 수 없습니다."
 msgid "Tag creation/modification with cleartext metadata not allowed."
 msgstr "평문 메타데이터로 태그를 생성/수정할 수 없습니다."
 
-msgid "{0} created a new metadata key"
-msgstr "{0} 이(가) 새로운 메타데이터 키를 생성"
+msgid "You created a new metadata key."
+msgstr "새 메타데이터 키를 생성했습니다."
+
+msgid "{0} created a new metadata key."
+msgstr "{0}이(가) 새로운 메타데이터 키를 생성했습니다."
+
+msgid "You deleted a metadata key."
+msgstr ""
+
+msgid "{0} deleted a metadata key."
+msgstr ""
+
+msgid "You have expired a metadata key."
+msgstr ""
+
+msgid "{0} has expired a metadata key."
+msgstr ""
+
+msgid "You edited the metadata settings."
+msgstr "메타데이터 설정을 수정했습니다."
+
+msgid "{0} edited the metadata settings."
+msgstr "{0}이(가) 새로운 메타데이터 키를 수정했습니다."
 
 msgid "You have created a new folder."
 msgstr "새 폴더가 생성되었습니다."
@@ -4759,6 +4894,12 @@ msgstr "이(가) 지금 그룹 관리자입니다."
 msgid "is not anymore group manager"
 msgstr "이(가) 더 이상 그룹 관리자가 아닙니다."
 
+msgid "User Agent: "
+msgstr ""
+
+msgid "User IP: "
+msgstr ""
+
 msgid "Terms"
 msgstr "약관"
 
@@ -5010,6 +5151,9 @@ msgstr "공개 등록이 활성화되었기 때문에 이 사용자가 직접 �
 
 msgid "This user was invited by {0} {1}."
 msgstr "{0} {1} 에서 이 사용자를 초대했습니다."
+
+msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
+msgstr ""
 
 msgid "view users"
 msgstr "사용자 보기"

@@ -16,12 +16,12 @@ declare(strict_types=1);
  */
 namespace App\Service\OpenPGP;
 
+use App\Utility\CommandRunner;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\InternalErrorException;
 use Symfony\Component\Process\Exception\ProcessFailedException;
-use Symfony\Component\Process\Process;
 
 class GenerateOpenPGPKeyService
 {
@@ -76,9 +76,8 @@ class GenerateOpenPGPKeyService
      */
     private function run(array $cmd): string
     {
-        $process = new Process($cmd);
-        $process->run();
-        if (!$process->isSuccessful()) {
+        $process = CommandRunner::run($cmd);
+        if (!$process || !$process->isSuccessful()) {
             throw new ProcessFailedException($process);
         }
         if ($this->debug) {

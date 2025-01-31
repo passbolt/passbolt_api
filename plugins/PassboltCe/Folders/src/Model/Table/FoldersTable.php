@@ -29,6 +29,7 @@ use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Rule\IsFolderV5ToV4DowngradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
+use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
@@ -271,6 +272,11 @@ class FoldersTable extends Table
                 'message' => __('A folder of type personal cannot be shared with other users or a group.'),
             ]
         );
+
+        $rules->addUpdate(new IsV4ToV5UpgradeAllowedRule(), 'v4_to_v5_upgrade_allowed', [
+            'errorField' => 'metadata',
+            'message' => __('The settings selected by your administrator prevent from upgrading v4 to v5.'),
+        ]);
 
         return $rules;
     }

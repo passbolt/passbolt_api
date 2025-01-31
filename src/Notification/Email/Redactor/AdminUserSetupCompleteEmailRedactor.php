@@ -30,6 +30,7 @@ use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Log\Model\Entity\EntityHistory;
+use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
 use RuntimeException;
 
 /**
@@ -160,19 +161,23 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             }
         );
 
+        $body = [
+            'user' => $userCompletedSetup,
+            'admin' => $admin,
+            'invitedBy' => $invitedBy,
+            'invitedWhen' => $invitedWhen,
+            'invitedByYou' => $invitedBy->id === $admin->id,
+        ];
+        if (Configure::read('passbolt.v5.enabled')) {
+            // Notify administrator that this newly joined user can't share. This is applicable only when zero knowledge key share is enabled.
+            $settings = MetadataKeysSettingsGetService::getSettings();
+            $body['missingMetadataKey'] = $settings->isKeyShareZeroKnowledge();
+        }
+
         return new Email(
             $admin,
             $subject,
-            [
-                'title' => $subject,
-                'body' => [
-                    'user' => $userCompletedSetup,
-                    'admin' => $admin,
-                    'invitedBy' => $invitedBy,
-                    'invitedWhen' => $invitedWhen,
-                    'invitedByYou' => $invitedBy->id === $admin->id,
-                ],
-            ],
+            ['title' => $subject, 'body' => $body],
             self::TEMPLATE
         );
     }

@@ -46,9 +46,9 @@ class PasswordExpiryPasswordMarkedExpiredDigestTemplate extends AbstractDigestTe
     /**
      * @inheritDoc
      */
-    public function getDigestSubjectIfRecipientIsNotTheOperator(): string
+    public function getDigestSubjectIfRecipientIsNotTheOperator(?string $operatorName = null): string
     {
-        return __('{0} marked several passwords as expired', '{0}');
+        return __('{0} marked several passwords as expired', $operatorName);
     }
 
     /**

@@ -41,12 +41,26 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCaseV5
     public function testResourceTypesIndexController_Success()
     {
         $this->loadFixtureScenario(ResourceTypesScenario::class);
+        ResourceTypeFactory::make()->deleted()->persist();
         $this->logInAsUser();
 
         $this->getJson('/resource-types.json?api-version=2');
 
         $this->assertSuccess();
-        $this->assertGreaterThan(1, count($this->_responseJsonBody));
+        $this->assertResourceTypeAttributes($this->_responseJsonBody[0]);
+        $this->assertCount(2, $this->_responseJsonBody);
+    }
+
+    public function testResourceTypesIndexController_Success_V4()
+    {
+        Configure::write('passbolt.v5.enabled', false);
+        $this->loadFixtureScenario(ResourceTypesScenario::class);
+        ResourceTypeFactory::make()->deleted()->persist();
+        $this->logInAsUser();
+
+        $this->getJson('/resource-types.json?api-version=2');
+
+        $this->assertSuccess();
         $this->assertResourceTypeAttributes($this->_responseJsonBody[0]);
         $this->assertCount(2, $this->_responseJsonBody);
     }
@@ -110,7 +124,6 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCaseV5
 
     public function testResourceTypesIndexController_Success_v4DoesntReturnV5Types()
     {
-        $v5Setting = Configure::read('passbolt.v5.enabled');
         Configure::write('passbolt.v5.enabled', false);
 
         ResourceTypeFactory::make()->v5PasswordString()->persist();
@@ -119,7 +132,5 @@ class ResourceTypesIndexControllerTest extends AppIntegrationTestCaseV5
         $this->getJson('/resource-types.json');
         $this->assertSuccess();
         $this->assertCount(0, $this->_responseJsonBody);
-
-        Configure::write('passbolt.v5.enabled', $v5Setting);
     }
 }
