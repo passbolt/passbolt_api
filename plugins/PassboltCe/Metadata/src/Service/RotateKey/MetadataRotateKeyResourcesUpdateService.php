@@ -30,6 +30,7 @@ use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Controller\Component\MetadataPaginationComponent;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchRotateKeyValidationService;
 
 class MetadataRotateKeyResourcesUpdateService
@@ -78,6 +79,10 @@ class MetadataRotateKeyResourcesUpdateService
             ]);
             $entity = $resourcesTable->patchEntity($resource, $values, [
                 'accessibleFields' => [
+                    'name' => true,
+                    'username' => true,
+                    'uri' => true,
+                    'description' => true,
                     'metadata_key_id' => true,
                     'metadata_key_type' => true,
                     'metadata' => true,
@@ -86,7 +91,9 @@ class MetadataRotateKeyResourcesUpdateService
                 ],
                 'validate' => 'v5',
             ]);
-
+            foreach (MetadataResourceDto::V4_META_PROPS as $prop) {
+                $entity->set($prop, null);
+            }
             /** @var \Cake\ORM\RulesChecker $rules */
             $rules = $resourcesTable->rulesChecker();
             $resourcesTable->buildRulesV5($rules);
