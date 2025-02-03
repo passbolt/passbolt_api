@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\OrganizationSettingFactory;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -26,6 +27,9 @@ use Passbolt\MultiFactorAuthentication\Test\Scenario\Duo\MfaDuoScenario;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
+/**
+ * @covers \Passbolt\MultiFactorAuthentication\Controller\Duo\DuoVerifyPromptPostController
+ */
 class DuoVerifyPromptPostControllerTest extends MfaIntegrationTestCase
 {
     public function testDuoVerifyPromptPostController_Error_NotAuthenticated()
@@ -104,5 +108,25 @@ class DuoVerifyPromptPostControllerTest extends MfaIntegrationTestCase
         $token = $authToken->get('token');
         $this->assertCookie($token, MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
         $this->assertCookieNotExpired(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
+    }
+
+    public function testDuoVerifyPromptPostController_Error_ServiceUnavailable(): void
+    {
+        $user = $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoScenario::class, $user, true, 'Bar');
+        $this->mockService(Client::class, function () use ($user) {
+            $mock = $this->createMock(Client::class);
+            $mock->expects($this->once())
+                ->method('healthCheck')
+                ->willThrowException(new ServiceUnavailableException());
+
+            return $mock;
+        });
+
+        $redirect = '/app/users';
+        $this->post('/mfa/verify/duo/prompt?redirect=' . $redirect);
+
+        $this->assertResponseCode(302);
+        $this->assertRedirectContains($redirect);
     }
 }
