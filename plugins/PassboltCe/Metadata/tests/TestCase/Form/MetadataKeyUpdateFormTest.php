@@ -48,7 +48,7 @@ class MetadataKeyUpdateFormTest extends TestCase
         return [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => FrozenTime::yesterday(),
+            'expired' => FrozenTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
         ];
     }
 
@@ -113,7 +113,7 @@ class MetadataKeyUpdateFormTest extends TestCase
         $data = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAF',
-            'expired' => FrozenTime::yesterday(),
+            'expired' => FrozenTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
         ];
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();
