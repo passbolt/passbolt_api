@@ -26,6 +26,7 @@ use Cake\Validation\Validation;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Entity\Folder;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 /**
  * Trait FoldersFindersTrait
@@ -152,6 +153,28 @@ trait FoldersFindersTrait
         }
 
         return $query;
+    }
+
+    /**
+     * Returns all folders with expired metadata key.
+     *
+     * @return \Cake\ORM\Query
+     */
+    public function findMetadataRotateKeyIndex(): Query
+    {
+        $query = $this->find();
+
+        return $query
+            ->where([
+                'Folders.metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                $query->newExpr()->isNotNull('Folders.metadata'),
+                $query->newExpr()->isNotNull('Folders.metadata_key_id'),
+            ])
+            ->innerJoin(['MetadataKeys' => 'metadata_keys'], [
+                'MetadataKeys.id' => new IdentifierExpression('Folders.metadata_key_id'),
+                $query->newExpr()->isNotNull('MetadataKeys.expired'),
+            ])
+            ->disableHydration();
     }
 
     /**

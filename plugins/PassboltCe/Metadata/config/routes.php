@@ -122,5 +122,12 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
                 ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesPost', 'action' => 'post']
             )
             ->setMethods(['POST']);
+
+        $routes
+            ->connect(
+                '/folders',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyFoldersIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
     });
 });
