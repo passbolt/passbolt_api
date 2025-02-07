@@ -127,6 +127,9 @@ class FoldersTable extends Table
                 'FoldersRelations.foreign_model' => 'Resource',
             ],
         ]);
+        $this->belongsTo('MetadataKeys', [
+            'className' => 'Passbolt/Metadata.MetadataKeys',
+        ]);
     }
 
     /**
