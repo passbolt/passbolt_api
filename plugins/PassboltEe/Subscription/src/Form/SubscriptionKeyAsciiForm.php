@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Subscription\Form;
 
-use App\Utility\OpenPGP\Backends\Gnupg;
+use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Form\Form;
@@ -43,7 +43,7 @@ class SubscriptionKeyAsciiForm extends Form
     /**
      * Gpg object.
      */
-    protected ?Gnupg $_gpg = null;
+    protected ?OpenPGPBackend $_gpg = null;
 
     /**
      * Subscription key schema.
@@ -200,9 +200,9 @@ class SubscriptionKeyAsciiForm extends Form
     }
 
     /**
-     * @return \App\Utility\OpenPGP\Backends\Gnupg
+     * @return \App\Utility\OpenPGP\OpenPGPBackend
      */
-    private function getGpg(): Gnupg
+    private function getGpg(): OpenPGPBackend
     {
         if (is_null($this->_gpg)) {
             $this->_gpg = OpenPGPBackendFactory::get();
