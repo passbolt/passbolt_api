@@ -56,7 +56,7 @@ class OpenPGPBackendFactory
     /**
      * Get a OpenPGP backend (Singleton pattern)
      *
-     * @return \App\Utility\OpenPGP\Backends\Gnupg
+     * @return \App\Utility\OpenPGP\OpenPGPBackend
      * @throws \Cake\Http\Exception\InternalErrorException if backend if not supported
      */
     public static function get()
