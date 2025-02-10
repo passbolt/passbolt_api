@@ -20,7 +20,7 @@ $(function () {
         'Setting up keys',
         'Collecting fairy dust',
         'Setting up SMTP',
-        'Locating Elon Musk\'s car. Don\'t panic.',
+        'Passwords so secret, even we didn\'t know we had them.',
         'Checking options',
         'Writing configuration file',
         'Brewing pale ale',
