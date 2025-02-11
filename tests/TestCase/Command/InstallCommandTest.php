@@ -162,7 +162,7 @@ class InstallCommandTest extends AppTestCase
         Configure::write('App.fullBaseUrl', 'foo');
         $this->exec('passbolt install --force -d test');
         $this->assertExitError();
-        $this->assertOutputContains('<error>App.fullBaseUrl does not validate. foo.</error>');
+        $this->assertOutputContains('<error>App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found "foo".</error>');
     }
 
     /**
