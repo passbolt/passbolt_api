@@ -22,6 +22,8 @@ use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
 
 class IsV4ToV5UpgradeAllowedRule
 {
+    private static bool $skipRule = false;
+
     /**
      * Checks if v5 resource is updated to v4, fails if settings doesn't allow it.
      *
@@ -31,6 +33,10 @@ class IsV4ToV5UpgradeAllowedRule
      */
     public function __invoke(Entity $entity, array $options): bool
     {
+        if (self::$skipRule) {
+            return true;
+        }
+
         $metadata = $entity->get('metadata');
         $oldMetadata = $entity->getOriginal('metadata');
 
@@ -53,5 +59,15 @@ class IsV4ToV5UpgradeAllowedRule
     public static function isV5Upgrade(?string $oldMetadata, ?string $metadata): bool
     {
         return is_null($oldMetadata) && !is_null($metadata);
+    }
+
+    /**
+     * Static method to disable the rule. This is necessary as rules cannot be removed from rules checker on the fly
+     *
+     * @return void
+     */
+    public static function skipRule(): void
+    {
+        self::$skipRule = true;
     }
 }

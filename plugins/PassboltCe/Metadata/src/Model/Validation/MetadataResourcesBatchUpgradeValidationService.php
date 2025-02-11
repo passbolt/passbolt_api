@@ -36,9 +36,9 @@ class MetadataResourcesBatchUpgradeValidationService extends MetadataBatchUpgrad
     {
         $resources = parent::queryEntitiesFromIds($entityIds);
 
-        return $resources->where([
-            'Resources.deleted' => false,
-        ]);
+        return $resources
+            ->selectAlso('metadata')
+            ->where(['Resources.deleted' => false]);
     }
 
     /**
