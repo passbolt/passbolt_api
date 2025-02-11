@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Service\Upgrade;
 use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpgradeValidationService;
 use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 
@@ -41,6 +42,8 @@ class MetadataUpgradeResourcesUpdateService extends MetadataRotateKeyResourcesUp
         $uac->assertIsAdmin();
         $this->assertRequestData($requestData);
         $metadataBatchValidationService = new MetadataResourcesBatchUpgradeValidationService();
+        // As this service is accessible to admins only, the upgrade v4 to v5 rule should be skipped, as it applies only to users
+        IsV4ToV5UpgradeAllowedRule::skipRule();
         $data = $metadataBatchValidationService->validateMany($requestData);
         $this->updateData($uac, $data, $metadataBatchValidationService->getEntities());
     }
