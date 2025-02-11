@@ -18,12 +18,12 @@ namespace App\Test\TestCase;
 
 use App\Application;
 use App\Middleware\ApiVersionMiddleware;
+use App\Middleware\AssertFullBaseUrlMiddleware;
 use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
-use App\Middleware\PreventHostHeaderFallbackMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
@@ -57,7 +57,7 @@ class ApplicationTest extends TestCase
             ValidCookieNameMiddleware::class,
             ContentSecurityPolicyMiddleware::class,
             ErrorHandlerMiddleware::class,
-            PreventHostHeaderFallbackMiddleware::class,
+            AssertFullBaseUrlMiddleware::class,
             SslForceMiddleware::class,
             AssetMiddleware::class,
             RoutingMiddleware::class,
