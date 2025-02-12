@@ -23,6 +23,7 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchRotateKeyValidationService;
 
 class MetadataRotateKeyResourcesUpdateService
@@ -98,7 +99,7 @@ class MetadataRotateKeyResourcesUpdateService
         }
 
         try {
-            $resourcesTable->saveManyOrFail($entities);
+            $resourcesTable->saveManyOrFail($entities, [IsV4ToV5UpgradeAllowedRule::SKIP_RULE_OPTION => true]);
         } catch (PersistenceFailedException $exception) { // @phpstan-ignore-line
             $this->handleSaveManyValidationException(
                 $exception,
