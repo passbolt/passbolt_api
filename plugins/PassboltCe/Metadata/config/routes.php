@@ -108,6 +108,13 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
                 ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeFoldersIndex', 'action' => 'index']
             )
             ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/folders',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeFoldersPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
     });
 
     /**

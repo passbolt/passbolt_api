@@ -18,19 +18,15 @@ namespace Passbolt\Metadata\Service\RotateKey;
 
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
-use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Exception\PersistenceFailedException;
-use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Validation\MetadataFoldersBatchRotateKeyValidationService;
 
 class MetadataRotateKeyFoldersUpdateService
 {
-    use EventDispatcherTrait;
-    use LocatorAwareTrait;
     use MetadataRotateKeyUpdateServiceTrait;
 
     /**

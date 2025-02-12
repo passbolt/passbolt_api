@@ -51,7 +51,7 @@ class MetadataUpgradeResourcesIndexController extends AppController
         $this->User->assertIsAdmin();
 
         // Retrieve and sanity the query options.
-        $whitelist = ['filter' => ['is-shared',],];
+        $whitelist = ['filter' => ['is-shared']];
         $options = $this->QueryString->get($whitelist);
 
         // Performance improvement: map query result datetime properties to string.

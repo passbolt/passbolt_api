@@ -12,33 +12,20 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.11.0
+ * @since         4.12.0
  */
 namespace Passbolt\Metadata\Model\Validation;
 
-use Cake\ORM\Query;
 use Passbolt\Metadata\Form\Upgrade\MetadataBatchUpgradeForm;
 
-class MetadataResourcesBatchUpgradeValidationService extends MetadataBatchUpgradeValidationService
+class MetadataFoldersBatchUpgradeValidationService extends MetadataBatchUpgradeValidationService
 {
     /**
      * @inheritDoc
      */
     public function getModel(): string
     {
-        return 'Resources';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function queryEntitiesFromIds(array $entityIds): Query
-    {
-        $resources = parent::queryEntitiesFromIds($entityIds);
-
-        return $resources
-            ->selectAlso('resource_type_id')
-            ->where(['Resources.deleted' => false]);
+        return 'Passbolt/Folders.Folders';
     }
 
     /**
