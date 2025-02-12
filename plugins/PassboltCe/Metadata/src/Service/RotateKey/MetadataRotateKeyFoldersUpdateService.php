@@ -23,6 +23,7 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
+use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Validation\MetadataFoldersBatchRotateKeyValidationService;
 
 class MetadataRotateKeyFoldersUpdateService
@@ -95,7 +96,7 @@ class MetadataRotateKeyFoldersUpdateService
         }
 
         try {
-            $foldersTable->saveManyOrFail($entities);
+            $foldersTable->saveManyOrFail($entities, [IsV4ToV5UpgradeAllowedRule::SKIP_RULE_OPTION => true]);
         } catch (PersistenceFailedException $exception) { // @phpstan-ignore-line
             $this->handleSaveManyValidationException(
                 $exception,
