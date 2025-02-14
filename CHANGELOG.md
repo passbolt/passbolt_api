@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.11.1-test.1] - 2025-02-14
+### Security
+- PB-39045 Fix empty fullBaseUrl leading to Host header injection attack
+
 ## [4.11.0] - 2025-01-30
 ### Added
 - PB-35761 As an administrator I receive an email if zero_knowledge_key_share is set to true and a new user completed the setup
