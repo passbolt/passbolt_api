@@ -58,10 +58,17 @@ class MetadataRotateKeyResourcesPostControllerTest extends AppIntegrationTestCas
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForMetadataKey(json_encode([])),
-        ])->persist();
+        $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])
+            ->patchData([
+                'metadata_key_id' => $expiredMetadataKey->get('id'),
+                'metadata' => $this->encryptForMetadataKey(json_encode([])),
+                'metadata_key_type' => 'shared_key',
+                // Set V4 fields to null
+                'name' => null,
+                'username' => null,
+                'uri' => null,
+                'description' => null,
+            ])->persist();
         // another user's resource returned
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -69,9 +76,15 @@ class MetadataRotateKeyResourcesPostControllerTest extends AppIntegrationTestCas
             ->active()
             ->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
-        $expiredResource2 = ResourceFactory::make()->withPermissionsFor([$user])->v5Fields(true, [
+        $expiredResource2 = ResourceFactory::make()->withPermissionsFor([$user])->patchData([
             'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForUser(json_encode([]), $user, $this->getAdaNoPassphraseKeyInfo()),
+            'metadata' => $this->encryptForMetadataKey(json_encode([])),
+            'metadata_key_type' => 'shared_key',
+            // Set V4 fields to null
+            'name' => null,
+            'username' => null,
+            'uri' => null,
+            'description' => null,
         ])->persist();
         // v4 resources
         ResourceFactory::make(2)->withPermissionsFor([$user])->persist();

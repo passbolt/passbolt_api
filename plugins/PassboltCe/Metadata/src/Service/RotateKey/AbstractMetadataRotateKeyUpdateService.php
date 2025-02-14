@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service\RotateKey;
 
 use App\Error\Exception\CustomValidationException;
+use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
 use Cake\Chronos\ChronosInterface;
 use Cake\Http\Exception\BadRequestException;
@@ -24,9 +25,37 @@ use Cake\Http\Exception\ConflictException;
 use Cake\ORM\Entity;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Passbolt\Metadata\Controller\Component\MetadataPaginationComponent;
+use Passbolt\Metadata\Model\Validation\MetadataBatchUpdateValidationService;
 
-trait MetadataRotateKeyUpdateServiceTrait
+abstract class AbstractMetadataRotateKeyUpdateService
 {
+    protected MetadataBatchUpdateValidationService $metadataBatchValidationService;
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac User access control.
+     * @param array $data Data to update
+     * @param \Cake\ORM\Entity[] $entitiesToUpdate entities to patch
+     * @return void
+     */
+    abstract protected function updateData(UserAccessControl $uac, array $data, array $entitiesToUpdate): void;
+
+    /**
+     * @param \App\Utility\UserAccessControl $uac UAC.
+     * @param array $requestData Request data.
+     * @return void
+     * @throws \Cake\Http\Exception\BadRequestException If data is invalid.
+     * @throws \App\Error\Exception\CustomValidationException If data is invalid.
+     * @throws \Cake\Http\Exception\NotFoundException If one or more resources are not found.
+     */
+    public function updateMany(UserAccessControl $uac, array $requestData): void
+    {
+        $uac->assertIsAdmin();
+        $this->assertRequestData($requestData);
+
+        $data = $this->metadataBatchValidationService->validateMany($requestData);
+        $this->updateData($uac, $data, $this->metadataBatchValidationService->getEntities());
+    }
+
     /**
      * Throw exception for the entity by preserving the array index of entity.
      *
@@ -78,11 +107,11 @@ trait MetadataRotateKeyUpdateServiceTrait
      * Checks for modified datetime and modified by to make sure it's not been changed by other user.
      *
      * @param array $values Values to assert.
-     * @param \Passbolt\Folders\Model\Entity\Folder|\App\Model\Entity\Resource $entity Existing entity.
+     * @param \Cake\ORM\Entity $entity Existing entity.
      * @return void
      * @throws \Cake\Http\Exception\ConflictException If provided values do not match with the ones present in the DB.
      */
-    private function assertConflict(array $values, Entity $entity): void
+    protected function assertConflict(array $values, Entity $entity): void
     {
         if (!$entity->has('modified_by') || !$entity->has('modified')) {
             return;

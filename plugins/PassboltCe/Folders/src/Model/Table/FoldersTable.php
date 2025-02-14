@@ -29,6 +29,7 @@ use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Rule\IsFolderV5ToV4DowngradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeSharedOnSharedItemRule;
+use Passbolt\Metadata\Model\Rule\IsSharedMetadataKeyUniqueActiveRule;
 use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
@@ -262,9 +263,14 @@ class FoldersTable extends Table
             'message' => __('The metadata key is marked as expired.'),
         ]);
 
+        $rules->add(new IsSharedMetadataKeyUniqueActiveRule(), 'isSharedMetadataKeyUniqueActive', [
+            'errorField' => 'metadata_key_id',
+            'message' => __('The shared metadata key should be unique.'),
+        ]);
+
         $rules->add(new IsValidEncryptedMetadataRule(), 'isValidEncryptedMetadata', [
             'errorField' => 'metadata',
-            'message' => __('The resource metadata provided can not be decrypted.'),
+            'message' => __('The folder metadata provided cannot be decrypted.'),
         ]);
 
         $rules->addUpdate(

@@ -16,28 +16,16 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service\Upgrade;
 
-use App\Utility\UserAccessControl;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpgradeValidationService;
 use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 
 class MetadataUpgradeResourcesUpdateService extends MetadataRotateKeyResourcesUpdateService
 {
     /**
-     * @param \App\Utility\UserAccessControl $uac UAC.
-     * @param array $requestData Request data.
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException If data is invalid.
-     * @throws \App\Error\Exception\CustomValidationException If data is invalid.
-     * @throws \Cake\Http\Exception\NotFoundException If one or more resources are not found.
+     * Instantiate the service.
      */
-    public function updateMany(UserAccessControl $uac, array $requestData): void
+    public function __construct()
     {
-        // Check that the upgrade is possible
-        $uac->assertIsAdmin();
-        $this->assertRequestData($requestData);
-        $metadataBatchValidationService = new MetadataResourcesBatchUpgradeValidationService();
-        // As this service is accessible to admins only, the upgrade v4 to v5 rule should be skipped, as it applies only to users
-        $data = $metadataBatchValidationService->validateMany($requestData);
-        $this->updateData($uac, $data, $metadataBatchValidationService->getEntities());
+        $this->metadataBatchValidationService = new MetadataResourcesBatchUpgradeValidationService();
     }
 }
