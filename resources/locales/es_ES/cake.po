@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2024-02-01 11:19\n"
+"PO-Revision-Date: 2025-02-14 10:59\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -31,7 +31,7 @@ msgstr "Ha ocurrido un error interno"
 
 #: Controller/Component/AuthComponent.php:462
 msgid "You are not authorized to access that location."
-msgstr "No estás autorizado a acceder a esa ubicación."
+msgstr "No está autorizado a acceder a esa ubicación."
 
 #: Error/ExceptionRenderer.php:304
 msgid "Not Found"
