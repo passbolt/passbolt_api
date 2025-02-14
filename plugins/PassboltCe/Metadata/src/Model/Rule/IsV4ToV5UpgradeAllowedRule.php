@@ -62,15 +62,6 @@ class IsV4ToV5UpgradeAllowedRule
     }
 
     /**
-     * Static method to disable the rule. This is necessary as rules cannot be removed from rules checker on the fly
-     *
-     * @return void
-     */
-    public static function skipRule(): void
-    {
-    }
-
-    /**
      * @param array $options options
      * @return bool
      */

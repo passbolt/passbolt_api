@@ -23,45 +23,31 @@ use Cake\I18n\FrozenTime;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Rule\IsSharedMetadataKeyUniqueActiveRule;
 use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchRotateKeyValidationService;
 
-class MetadataRotateKeyResourcesUpdateService
+class MetadataRotateKeyResourcesUpdateService extends AbstractMetadataRotateKeyUpdateService
 {
-    use MetadataRotateKeyUpdateServiceTrait;
-
     /**
-     * @param \App\Utility\UserAccessControl $uac UAC.
-     * @param array $requestData Request data.
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException If data is invalid.
-     * @throws \App\Error\Exception\CustomValidationException If data is invalid.
-     * @throws \Cake\Http\Exception\NotFoundException If one or more resources are not found.
+     * Instantiate the service.
      */
-    public function updateMany(UserAccessControl $uac, array $requestData): void
+    public function __construct()
     {
-        $uac->assertIsAdmin();
-        $this->assertRequestData($requestData);
-
-        $metadataBatchValidationService = new MetadataResourcesBatchRotateKeyValidationService();
-        $data = $metadataBatchValidationService->validateMany($requestData);
-        $this->updateData($uac, $data, $metadataBatchValidationService->getEntities());
+        $this->metadataBatchValidationService = new MetadataResourcesBatchRotateKeyValidationService();
     }
 
     /**
-     * @param \App\Utility\UserAccessControl $uac User access control.
-     * @param array $data Data to update
-     * @param \App\Model\Entity\Resource[] $resources Resource entities
-     * @return void
+     * @inheritDoc
      */
-    protected function updateData(UserAccessControl $uac, array $data, array $resources): void
+    protected function updateData(UserAccessControl $uac, array $data, array $entitiesToUpdate): void
     {
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
 
         $entities = [];
         foreach ($data as $i => $values) {
-            $resource = $resources[$values['id']];
+            $resource = $entitiesToUpdate[$values['id']];
 
             $this->assertConflict($values, $resource);
 
@@ -99,7 +85,10 @@ class MetadataRotateKeyResourcesUpdateService
         }
 
         try {
-            $resourcesTable->saveManyOrFail($entities, [IsV4ToV5UpgradeAllowedRule::SKIP_RULE_OPTION => true]);
+            $resourcesTable->saveManyOrFail($entities, [
+                IsV4ToV5UpgradeAllowedRule::SKIP_RULE_OPTION => true,
+                IsSharedMetadataKeyUniqueActiveRule::SKIP_RULE_OPTION => false,
+            ]);
         } catch (PersistenceFailedException $exception) { // @phpstan-ignore-line
             $this->handleSaveManyValidationException(
                 $exception,

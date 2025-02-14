@@ -318,4 +318,43 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
             $this->assertArrayHasKey('isMetadataKeyNotExpired', $errors[0]['metadata_key_id']);
         }
     }
+
+    public function testMetadataRotateKeyFoldersUpdateService_Error_Multiple_Active_Metadata_Keys(): void
+    {
+        $admin = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
+        // create metadata keys
+        [$activeMetadataKey] = MetadataKeyFactory::make(2)->withServerPrivateKey()->persist();
+        $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $folder = FolderFactory::make()
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
+
+        $uac = $this->mockAdminAccessControl();
+        $metadataToUpdateForF1 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::fromArray(['name' => 'f1 marketing updated'])->getClearTextMetadata()));
+        $data = [
+            [
+                'id' => $folder->get('id'),
+                'metadata_key_id' => $activeMetadataKey->get('id'),
+                'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                'metadata' => $metadataToUpdateForF1,
+                'modified' => $folder->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $folder->get('modified_by'),
+            ],
+        ];
+        try {
+            $this->service->updateMany($uac, $data);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(CustomValidationException::class, $e);
+            $errors = $e->getErrors();
+            $this->assertArrayHasKey('isSharedMetadataKeyUniqueActive', $errors[0]['metadata_key_id']);
+        }
+    }
 }
