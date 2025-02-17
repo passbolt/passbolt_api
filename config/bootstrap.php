@@ -154,6 +154,8 @@ if ($isCli) {
  * This URL is used as the base of all absolute links.
  */
 $fullBaseUrl = Configure::read('App.fullBaseUrl');
+// Store original full base url from config before it's been modified
+Configure::write('passbolt.originalFullBaseUrl', $fullBaseUrl);
 if (!$fullBaseUrl) {
     /*
      * When using proxies or load balancers, SSL/TLS connections might

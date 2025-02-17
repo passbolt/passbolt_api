@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-01-29 05:51+0000\n"
-"PO-Revision-Date: 2025-01-29 07:23\n"
+"POT-Creation-Date: 2025-02-14 07:10+0000\n"
+"PO-Revision-Date: 2025-02-14 11:55\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Korean\n"
 "MIME-Version: 1.0\n"
@@ -390,6 +390,9 @@ msgstr "사용자가 존재하지 않습니다."
 
 msgid "No admin were found in the database."
 msgstr "데이터베이스에서 관리자를 찾을 수 없습니다."
+
+msgid "The `{0}` configuration must be a valid non-empty string."
+msgstr "{0} 구성은 올바른 비어 있지 않은 문자열이어야 합니다."
 
 msgid "Invalid expiry time {0}."
 msgstr "만료 시간 {0} 이(가) 잘못되었습니다."
@@ -1102,6 +1105,9 @@ msgstr "{0} 에 의해 {1} 암호가 삭제됨"
 msgid "You edited a resource"
 msgstr "리소스가 수정됨"
 
+msgid "{0} edited a resource"
+msgstr "{0} 에 의해 리소스가 수정됨"
+
 msgid "You edited the resource {0}"
 msgstr "{0} 리소스를 수정함"
 
@@ -1495,11 +1501,14 @@ msgstr "{0}에서 security.salt를 편집하세요."
 msgid "App.fullBaseUrl validation OK."
 msgstr "App.fullBaseUrl 유효성 검사가 완료되었습니다."
 
-msgid "App.fullBaseUrl does not validate. {0}."
-msgstr "App.fullBaseUrl이 유효성을 검사하지 않습니다. {0}."
+msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
+msgstr "App.fullBaseUrl이 유효하지 않습니다. 유효한 URL/IP만 허용되지만 \"{0}\"이(가) 입력되었습니다."
 
 msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
 msgstr "http://www.ietf.org/rfc/rfc1035.txt의 섹션 2.3.1에 정의된 대로 유효한 도메인 이름을 선택하세요."
+
+msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
+msgstr "중요: 빈 App.fullBaseUrl을 사용하면 호스트 헤더 삽입 공격이 발생할 수 있습니다: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
 
 msgid "The application is able to connect to the database"
 msgstr "애플리케이션이 데이터베이스에 연결할 수 있습니다."
@@ -2915,25 +2924,25 @@ msgid "The identifier of the user who created the metadata key should be a valid
 msgstr "메타데이터 키를 만든 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "The creator is required."
-msgstr ""
+msgstr "작성자가 필요합니다."
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
 msgstr "메타데이터 키를 수정한 사용자의 식별자는 유효한 UUID여야 합니다."
 
 msgid "A expired date is required."
-msgstr ""
+msgstr "만료 날짜가 필요합니다."
 
 msgid "The expired date should not be empty."
-msgstr ""
+msgstr "만료 날짜는 비워둘 수 없습니다."
 
 msgid "The modifier is required."
-msgstr ""
+msgstr "수정자가 필요합니다."
 
 msgid "The fingerprint is already in use."
 msgstr "지문이 이미 사용 중입니다."
 
 msgid "Already two metadata keys are active."
-msgstr ""
+msgstr "이미 두 개의 메타데이터 키가 활성화되어 있습니다."
 
 msgid "You cannot reuse the user key."
 msgstr "사용자 키는 재사용할 수 없습니다."
@@ -2948,13 +2957,13 @@ msgid "The data is not valid. Please make sure it is encrypted for the correct k
 msgstr "데이터가 올바르지 않습니다. 올바른 키를 위해 암호화되어 있는지 확인하세요."
 
 msgid "The entity must be an array."
-msgstr ""
+msgstr "엔티티는 배열이어야 합니다."
 
 msgid "Entity {0} not found."
-msgstr ""
+msgstr "{0} 엔티티를 찾을 수 없습니다."
 
 msgid "Could not validate the metadata key data for the entity with ID: {0}."
-msgstr ""
+msgstr "다음 ID를 가진 엔티티의 메타데이터 키 데이터를 검증할 수 없습니다: {0}."
 
 msgid "{0} created a new metadata key"
 msgstr "{0} 이(가) 새로운 메타데이터 키를 생성"
@@ -2963,19 +2972,19 @@ msgid "You created a new metadata key"
 msgstr "새 메타데이터 키를 생성했습니다"
 
 msgid "{0} deleted a metadata key"
-msgstr ""
+msgstr "{0} 이(가) 메타데이터 키를 삭제함"
 
 msgid "You deleted a metadata key"
-msgstr ""
+msgstr "메타데이터 키를 삭제함"
 
 msgid "{0} has expired a metadata key"
-msgstr ""
+msgstr "{0} 이(가) 메타데이터 키를 만료시킴"
 
 msgid "You have expired a metadata key"
-msgstr ""
+msgstr "메타데이터 키를 만료시킴"
 
 msgid "{0} edited the metadata settings"
-msgstr "{0}이(가) 새로운 메타데이터 키를 수정했습니다"
+msgstr "{0} 이(가) 새로운 메타데이터 키를 수정했습니다"
 
 msgid "You edited the metadata settings"
 msgstr "메타데이터 설정을 수정했습니다"
@@ -3008,13 +3017,13 @@ msgid "The metadata key could not be deleted."
 msgstr "메타데이터 키를 삭제할 수 없습니다."
 
 msgid "The metadata key fingerprint is invalid."
-msgstr ""
+msgstr "메타데이터 키 지문이 유효하지 않습니다."
 
 msgid "The metadata key is already marked as expired."
-msgstr ""
+msgstr "메타데이터 키는 이미 만료된 것으로 표시되어 있습니다."
 
 msgid "The metadata key could not be updated."
-msgstr ""
+msgstr "메타데이터 키를 업데이트할 수 없습니다."
 
 msgid "The metadata key could not be saved."
 msgstr "메타데이터 키를 저장할 수 없습니다."
@@ -3062,7 +3071,7 @@ msgid "The server metadata private key is invalid."
 msgstr "서버 메타데이터 개인 키가 유효하지 않습니다."
 
 msgid "The metadata private key could not be created."
-msgstr ""
+msgstr "메타데이터 개인 키를 생성할 수 없습니다."
 
 msgid "Please try again later."
 msgstr "나중 후 다시 시도하세요."
@@ -3077,10 +3086,10 @@ msgid "The metadata key is already shared with the user."
 msgstr "메타데이터 키는 이미 사용자와 공유되었습니다."
 
 msgid "The metadata private keys could not be created."
-msgstr ""
+msgstr "메타데이터 개인 키를 생성할 수 없습니다."
 
 msgid "The metadata private key data is not valid."
-msgstr ""
+msgstr "메타데이터 개인 키 데이터가 유효하지 않습니다."
 
 msgid "The metadata private key does not exist or has been deleted."
 msgstr "메타데이터 개인 키가 존재하지 않거나 삭제되었습니다."
@@ -3194,19 +3203,19 @@ msgid "The metadata armored key is not available or incomplete."
 msgstr "메타데이터 아머드 키를 사용할 수 없거나 불완전합니다."
 
 msgid "The resource metadata key data could not be updated."
-msgstr ""
+msgstr "리소스 메타데이터 키 데이터를 업데이트할 수 없습니다."
 
 msgid "The request data should not be empty."
 msgstr "요청 데이터는 비워둘 수 없습니다."
 
 msgid "The request data is too large."
-msgstr ""
+msgstr "요청 데이터가 너무 큽니다."
 
 msgid "The provided modified date does not match."
-msgstr ""
+msgstr "제공된 수정 날짜가 일치하지 않습니다."
 
 msgid "The provided modified by does not match."
-msgstr ""
+msgstr "제공된 수정자가 일치하지 않습니다."
 
 msgid "The user identifier should be a UUID."
 msgstr "사용자 식별자는 유효한 UUID여야 합니다."
@@ -3242,25 +3251,25 @@ msgid "You created a new metadata key."
 msgstr "새 메타데이터 키를 생성했습니다."
 
 msgid "{0} created a new metadata key."
-msgstr "{0}이(가) 새로운 메타데이터 키를 생성했습니다."
+msgstr "{0} 이(가) 새로운 메타데이터 키를 생성했습니다."
 
 msgid "You deleted a metadata key."
-msgstr ""
+msgstr "메타데이터 키를 삭제했습니다."
 
 msgid "{0} deleted a metadata key."
-msgstr ""
+msgstr "{0} 이(가) 메타데이터 키를 삭제했습니다."
 
 msgid "You have expired a metadata key."
-msgstr ""
+msgstr "메타데이터 키를 만료시켰습니다."
 
 msgid "{0} has expired a metadata key."
-msgstr ""
+msgstr "{0} 이(가) 메타데이터 키를 만료시켰습니다."
 
 msgid "You edited the metadata settings."
 msgstr "메타데이터 설정을 수정했습니다."
 
 msgid "{0} edited the metadata settings."
-msgstr "{0}이(가) 새로운 메타데이터 키를 수정했습니다."
+msgstr "{0} 이(가) 새로운 메타데이터 키를 수정했습니다."
 
 msgid "You have created a new folder."
 msgstr "새 폴더가 생성되었습니다."
@@ -4895,10 +4904,10 @@ msgid "is not anymore group manager"
 msgstr "이(가) 더 이상 그룹 관리자가 아닙니다."
 
 msgid "User Agent: "
-msgstr ""
+msgstr "사용자 에이전트: "
 
 msgid "User IP: "
-msgstr ""
+msgstr "사용자 IP: "
 
 msgid "Terms"
 msgstr "약관"
@@ -5153,7 +5162,7 @@ msgid "This user was invited by {0} {1}."
 msgstr "{0} {1} 에서 이 사용자를 초대했습니다."
 
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr ""
+msgstr "이 사용자는 공유 리소스 메타데이터에 대한 암호화 키가 누락되었습니다. 로그인한 후 사용자 작업 공간으로 이동하여 키를 수동으로 공유해 주세요."
 
 msgid "view users"
 msgstr "사용자 보기"
