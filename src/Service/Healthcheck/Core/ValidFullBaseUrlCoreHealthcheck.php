@@ -41,7 +41,12 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
      */
     public function __construct($url = null)
     {
-        $this->url = $url ?? Configure::read('App.fullBaseUrl');
+        $fullBaseUrl = $url ?? Configure::read('App.fullBaseUrl');
+        if (!is_string($fullBaseUrl)) {
+            $fullBaseUrl = gettype($fullBaseUrl);
+        }
+
+        $this->url = $fullBaseUrl;
     }
 
     /**
@@ -94,7 +99,7 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
      */
     public function getFailureMessage(): string
     {
-        return __('App.fullBaseUrl does not validate. {0}.', Configure::read('App.fullBaseUrl'));
+        return __('App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found "{0}".', $this->url);
     }
 
     /**
@@ -105,6 +110,7 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
         return [
             __('Edit App.fullBaseUrl in {0}', CONFIG . 'passbolt.php'),
             __('Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt'),
+            __('IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection'), // phpcs:ignore
         ];
     }
 

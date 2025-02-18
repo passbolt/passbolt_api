@@ -42,6 +42,8 @@ return [
         // Edition.
         'edition' => 'pro',
         'featurePluginAdder' => \Passbolt\Ee\EeSolutionBootstrapper::class,
+        // set in bootstrap.php
+        'originalFullBaseUrl' => '',
         'v5' => [
             'enabled' => filter_var(env('PASSBOLT_V5_ENABLED', false), FILTER_VALIDATE_BOOLEAN),
         ],
@@ -447,7 +449,9 @@ return [
                 'secure' => filter_var(env('PASSBOLT_SECURITY_COOKIE_SECURE', true), FILTER_VALIDATE_BOOLEAN)
             ],
             'setHeaders' => filter_var(env('PASSBOLT_SECURITY_SET_HEADERS', true), FILTER_VALIDATE_BOOLEAN),
-            'preventHostHeaderFallback' => filter_var(env('PASSBOLT_SECURITY_PREVENT_HOST_HEADER_FALLBACK', false), FILTER_VALIDATE_BOOLEAN),
+            // By default, false (unsafe) for BC, will be true in v5.0
+            'fullBaseUrlEnforce' => filter_var(env('PASSBOLT_SECURITY_FULLBASEURL_ENFORCE', false), FILTER_VALIDATE_BOOLEAN),
+            'emptyFullBaseUrlWarn' => filter_var(env('PASSBOLT_SECURITY_EMPTY_FULLBASEURL_WARN', true), FILTER_VALIDATE_BOOLEAN),
             'csrfProtection' => [
                 'active' => true,
                 'unlockedActions' => [
