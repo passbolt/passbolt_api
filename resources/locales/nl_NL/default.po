@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
-"POT-Creation-Date: 2025-01-29 05:51+0000\n"
-"PO-Revision-Date: 2025-01-29 07:23\n"
+"POT-Creation-Date: 2025-02-14 07:10+0000\n"
+"PO-Revision-Date: 2025-02-14 10:59\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Dutch\n"
 "MIME-Version: 1.0\n"
@@ -390,6 +390,9 @@ msgstr "De gebruiker bestaat niet."
 
 msgid "No admin were found in the database."
 msgstr "Er zijn geen beheerders gevonden in de database."
+
+msgid "The `{0}` configuration must be a valid non-empty string."
+msgstr ""
 
 msgid "Invalid expiry time {0}."
 msgstr ""
@@ -1102,6 +1105,9 @@ msgstr "{0} heeft het wachtwoord {1} verwijderd"
 msgid "You edited a resource"
 msgstr ""
 
+msgid "{0} edited a resource"
+msgstr ""
+
 msgid "You edited the resource {0}"
 msgstr ""
 
@@ -1495,10 +1501,13 @@ msgstr ""
 msgid "App.fullBaseUrl validation OK."
 msgstr ""
 
-msgid "App.fullBaseUrl does not validate. {0}."
+msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
 msgstr ""
 
 msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
+msgstr ""
+
+msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
 msgstr ""
 
 msgid "The application is able to connect to the database"

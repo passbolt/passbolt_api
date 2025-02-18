@@ -12,29 +12,30 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.11.0
+ * @since         4.11.1
  */
 namespace App\Test\TestCase\Service\Healthcheck\Core;
 
-use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
+use App\Service\Healthcheck\Core\FullBaseUrlCoreHealthcheck;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
 
 /**
- * @covers \App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck
+ * @covers \App\Service\Healthcheck\Core\FullBaseUrlCoreHealthcheck
  */
-class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
+class FullBaseUrlCoreHealthcheckTest extends TestCase
 {
     /**
-     * @dataProvider validFullBaseUrlCoreHealthcheckUrlsProvider
+     * @dataProvider validFullBaseUrlCoreHealthcheckStringValuesProvider
      */
-    public function testValidFullBaseUrlCoreHealthcheck_IsPassed(string $url, bool $expectedResult): void
+    public function testFullBaseUrlCoreHealthcheck_Pass(string $url, bool $expectedResult): void
     {
-        $result = (new ValidFullBaseUrlCoreHealthcheck($url))->check()->isPassed();
+        Configure::write('App.fullBaseUrl', $url);
+        $result = (new FullBaseUrlCoreHealthcheck())->check()->isPassed();
         $this->assertSame($expectedResult, $result);
     }
 
-    public function validFullBaseUrlCoreHealthcheckUrlsProvider(): array
+    public function validFullBaseUrlCoreHealthcheckStringValuesProvider(): array
     {
         return [
             [
@@ -78,6 +79,10 @@ class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
                 'expected result' => true,
             ],
             [
+                'url' => 'http://127.0.0.1',
+                'expected result' => true,
+            ],
+            [
                 'url' => 'http://localhost',
                 'expected result' => true,
             ],
@@ -86,45 +91,25 @@ class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
                 'expected result' => true,
             ],
             [
-                'url' => 'htt://cloud.passbolt.com/workspace',
-                'expected result' => false,
-            ],
-            [
-                'url' => 'ftp://localhost:8080',
-                'expected result' => false,
-            ],
-            [
-                'url' => 'gopher://localhost:8080',
-                'expected result' => false,
-            ],
-            [
                 'url' => '🔥',
-                'expected result' => false,
+                'expected result' => true,
             ],
         ];
     }
 
-    public function testValidFullBaseUrlCoreHealthcheck_InvalidFullBaseUrl(): void
+    public function testFullBaseUrlCoreHealthcheck_Pass_Array(): void
     {
-        Configure::write('App.fullBaseUrl', false);
-        $healthcheck = new ValidFullBaseUrlCoreHealthcheck();
+        Configure::write('App.fullBaseUrl', []);
+        $healthcheck = new FullBaseUrlCoreHealthcheck();
         $result = $healthcheck->check()->isPassed();
-        $this->assertFalse($result);
-        $this->assertStringContainsString(
-            'IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection',
-            $healthcheck->getHelpMessage()[2]
-        );
+        $this->assertTrue($result);
+        $this->assertStringContainsString('Full base url is set to "array"', $healthcheck->getSuccessMessage());
     }
 
-    public function testValidFullBaseUrlCoreHealthcheck_InvalidTypeFullBaseUrl(): void
+    public function testFullBaseUrlCoreHealthcheck_Fail_NotSet(): void
     {
-        Configure::write('App.fullBaseUrl', new \stdClass());
-        $healthcheck = new ValidFullBaseUrlCoreHealthcheck();
-        $result = $healthcheck->check()->isPassed();
+        Configure::write('App.fullBaseUrl', null);
+        $result = (new FullBaseUrlCoreHealthcheck())->check()->isPassed();
         $this->assertFalse($result);
-        $this->assertStringContainsString(
-            'App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found "object".',
-            $healthcheck->getFailureMessage()
-        );
     }
 }
