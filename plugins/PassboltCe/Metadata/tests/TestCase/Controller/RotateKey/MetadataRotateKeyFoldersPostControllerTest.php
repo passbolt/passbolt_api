@@ -90,7 +90,7 @@ class MetadataRotateKeyFoldersPostControllerTest extends AppIntegrationTestCaseV
         $this->assertArrayEqualsCanonicalizing([
             'count' => 5,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 

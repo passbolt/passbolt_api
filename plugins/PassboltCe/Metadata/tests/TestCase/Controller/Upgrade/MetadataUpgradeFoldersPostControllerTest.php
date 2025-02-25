@@ -73,7 +73,7 @@ class MetadataUpgradeFoldersPostControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayEqualsCanonicalizing([
             'count' => 1,
             'page' => 1,
-            'limit' => null,
+            'limit' => 1,
         ], $headers['pagination']);
     }
 

@@ -48,7 +48,7 @@ class MetadataUpgradeFoldersIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -83,7 +83,7 @@ class MetadataUpgradeFoldersIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -115,7 +115,7 @@ class MetadataUpgradeFoldersIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayEqualsCanonicalizing([
             'count' => 1,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -140,7 +140,7 @@ class MetadataUpgradeFoldersIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
         // Assert that
         $this->assertEquals($folders[2]['id'], $response[0]['id']);

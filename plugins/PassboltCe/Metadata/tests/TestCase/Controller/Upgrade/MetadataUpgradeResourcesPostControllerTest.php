@@ -85,7 +85,7 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         $this->assertArrayEqualsCanonicalizing([
             'count' => 1,
             'page' => 1,
-            'limit' => null,
+            'limit' => 1,
         ], $headers['pagination']);
     }
 
