@@ -83,7 +83,7 @@ class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 33,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -120,7 +120,7 @@ class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 5,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 

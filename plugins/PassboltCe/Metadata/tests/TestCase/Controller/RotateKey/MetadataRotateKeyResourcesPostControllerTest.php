@@ -116,7 +116,7 @@ class MetadataRotateKeyResourcesPostControllerTest extends AppIntegrationTestCas
         $this->assertArrayEqualsCanonicalizing([
             'count' => 1,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
