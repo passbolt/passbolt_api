@@ -12,41 +12,29 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.11.0
+ * @since         4.12.0
  */
 
 namespace Passbolt\Metadata\Test\TestCase\Controller\Upgrade;
 
 use App\Test\Factory\GpgkeyFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
+use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
-use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
- * @uses \Passbolt\Metadata\Controller\Upgrade\MetadataUpgradeResourcesPostController
+ * @uses \Passbolt\Metadata\Controller\Upgrade\MetadataUpgradeFoldersPostController
  */
-class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV5
+class MetadataUpgradeFoldersPostControllerTest extends AppIntegrationTestCaseV5
 {
     use GpgMetadataKeysTestTrait;
 
-    /**
-     * @inheritDoc
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        ResourceTypeFactory::make()->default()->persist();
-        ResourceTypeFactory::make()->passwordAndDescription()->persist();
-    }
-
-    public function testMetadataUpgradeResourcesPostController_Success(): void
+    public function testMetadataUpgradeFoldersPostController_Success(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -56,26 +44,26 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         // create metadata key
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        [$resource] = ResourceFactory::make(2)->persist();
+        [$folder] = FolderFactory::make(2)->persist();
 
         Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', 1);
         $this->logInAsAdmin();
-        $this->postJson('/metadata/upgrade/resources.json', [
+        $this->postJson('/metadata/upgrade/folders.json', [
             [
-                'id' => $resource->get('id'),
+                'id' => $folder->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey(json_encode([])), // todo: use valid v5 json metadata format
-                'modified' => $resource->get('modified'),
-                'modified_by' => $resource->get('modified_by'),
+                'modified' => $folder->get('modified'),
+                'modified_by' => $folder->get('modified_by'),
             ],
         ]);
 
         $this->assertSuccess();
-        $updatedResource = ResourceFactory::get($resource->get('id'));
-        $this->assertSame($activeMetadataKey->get('id'), $updatedResource->get('metadata_key_id'));
-        $this->assertSame(MetadataKey::TYPE_SHARED_KEY, $updatedResource->get('metadata_key_type'));
-        $this->assertNotEmpty($updatedResource->get('metadata'));
+        $updatedFolder = FolderFactory::get($folder->get('id'));
+        $this->assertSame($activeMetadataKey->get('id'), $updatedFolder->get('metadata_key_id'));
+        $this->assertSame(MetadataKey::TYPE_SHARED_KEY, $updatedFolder->get('metadata_key_type'));
+        $this->assertNotEmpty($updatedFolder->get('metadata'));
         // assert response
         $response = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($response);
@@ -89,7 +77,7 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         ], $headers['pagination']);
     }
 
-    public function testMetadataUpgradeResourcesPostController_MetadataKey_Expired(): void
+    public function testMetadataUpgradeFoldersPostController_MetadataKey_Expired(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -102,21 +90,21 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
             ->withMetadataKey($expiredMetadataKey)
             ->withUserPrivateKey($admin->get('gpgkey'))
             ->persist();
-        [$resource] = ResourceFactory::make(2)->persist();
+        [$folder] = FolderFactory::make(2)->persist();
 
         $this->logInAsAdmin();
-        $this->postJson('/metadata/upgrade/resources.json', [
+        $this->postJson('/metadata/upgrade/folders.json', [
             [
-                'id' => $resource->get('id'),
+                'id' => $folder->get('id'),
                 'metadata_key_id' => $expiredMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey(json_encode([])), // todo: use valid v5 json metadata format
-                'modified' => $resource->get('modified'),
-                'modified_by' => $resource->get('modified_by'),
+                'modified' => $folder->get('modified'),
+                'modified_by' => $folder->get('modified_by'),
             ],
         ]);
         // assert response
-        $this->assertBadRequestError('The resource metadata key data could not be updated.');
+        $this->assertBadRequestError('The folder metadata key data could not be updated.');
         $response = $this->getResponseBodyAsArray();
         $this->assertSame([[
             'metadata_key_id' => [
@@ -125,32 +113,30 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         ]], $response);
     }
 
-    public function testMetadataUpgradeResourcesPostController_Error_NotJson(): void
+    public function testMetadataUpgradeFoldersPostController_Error_NotJson(): void
     {
         $this->logInAsUser();
-        $this->post('/metadata/upgrade/resources');
+        $this->post('/metadata/upgrade/folders');
         $this->assertResponseCode(404);
     }
 
-    public function testMetadataUpgradeResourcesPostController_Error_NotLoggedIn(): void
+    public function testMetadataUpgradeFoldersPostController_Error_NotLoggedIn(): void
     {
-        $this->postJson('/metadata/upgrade/resources.json', []);
+        $this->postJson('/metadata/upgrade/folders.json', []);
         $this->assertResponseCode(401);
     }
 
-    public function testMetadataUpgradeResourcesPostController_Error_NotAdmin(): void
+    public function testMetadataUpgradeFoldersPostController_Error_NotAdmin(): void
     {
-        $user = UserFactory::make()->user()->active()->persist();
-        $this->logInAs($user);
-        $this->postJson('/metadata/upgrade/resources.json');
+        $this->logInAsUser();
+        $this->postJson('/metadata/upgrade/folders.json');
         $this->assertResponseCode(403);
     }
 
-    public function testMetadataUpgradeResourcesPostController_Error_EmptyData(): void
+    public function testMetadataUpgradeFoldersPostController_Error_EmptyData(): void
     {
-        $admin = UserFactory::make()->admin()->active()->persist();
-        $this->logInAs($admin);
-        $this->postJson('/metadata/upgrade/resources.json', []);
+        $this->logInAsAdmin();
+        $this->postJson('/metadata/upgrade/folders.json', []);
         $this->assertBadRequestError('The request data can not be empty');
     }
 }

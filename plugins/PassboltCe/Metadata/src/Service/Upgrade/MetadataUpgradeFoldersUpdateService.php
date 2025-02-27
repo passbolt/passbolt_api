@@ -12,20 +12,20 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.11.0
+ * @since         4.12.0
  */
 namespace Passbolt\Metadata\Service\Upgrade;
 
-use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpgradeValidationService;
-use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
+use Passbolt\Metadata\Model\Validation\MetadataFoldersBatchUpgradeValidationService;
+use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyFoldersUpdateService;
 
-class MetadataUpgradeResourcesUpdateService extends MetadataRotateKeyResourcesUpdateService
+class MetadataUpgradeFoldersUpdateService extends MetadataRotateKeyFoldersUpdateService
 {
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        $this->metadataBatchValidationService = new MetadataResourcesBatchUpgradeValidationService();
+        $this->metadataBatchValidationService = new MetadataFoldersBatchUpgradeValidationService();
     }
 }

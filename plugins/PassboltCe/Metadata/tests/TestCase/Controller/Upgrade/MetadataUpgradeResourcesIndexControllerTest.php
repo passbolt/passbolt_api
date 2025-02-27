@@ -47,7 +47,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -75,7 +75,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -104,7 +104,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 1,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -129,7 +129,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
         // Assert that
         $this->assertEquals($resources[2]['id'], $response[0]['id']);

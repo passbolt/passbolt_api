@@ -12,30 +12,31 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.11.0
+ * @since         4.12.0
  */
 
 namespace Passbolt\Metadata\Test\TestCase\Controller\RotateKey;
 
 use App\Test\Factory\GpgkeyFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
 /**
- * @uses \Passbolt\Metadata\Controller\RotateKey\MetadataRotateKeyResourcesIndexController
+ * @uses \Passbolt\Metadata\Controller\RotateKey\MetadataRotateKeyFoldersIndexController
  */
-class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCaseV5
+class MetadataRotateKeyFoldersIndexControllerTest extends AppIntegrationTestCaseV5
 {
     use LocatorAwareTrait;
     use GpgMetadataKeysTestTrait;
 
-    public function testMetadataRotateKeyResourcesIndexController_Success(): void
+    public function testMetadataRotateKeyFoldersIndexController_Success(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -45,32 +46,34 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         // create expired metadata key
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        ResourceFactory::make(29)->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->id,
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
-        // resources shouldn't be returned
-        ResourceFactory::make()->persist(); // v4
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        FolderFactory::make(8)
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
+        // folder shouldn't be returned
+        FolderFactory::make(2)->persist(); // v4
+        // folder with active metadata key
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        ResourceFactory::make()->v5Fields(true, [
-            'metadata_key_id' => $activeMetadataKey->id,
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist(); // resource with active metadata key
-        // another user's resource returned
-        $user = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'active'])->getClearTextMetadata());
+        FolderFactory::make(2)
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $activeMetadataKey->id], true)
             ->persist();
-        MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
-        ResourceFactory::make()->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->id,
-            'metadata' => $this->encryptForUser(json_encode([]), $user, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
+        // another user's folder
+        $user = UserFactory::make()->user()->active()->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'betty folder'])->getClearTextMetadata());
+        FolderFactory::make(25)
+            ->withPermissionsFor([$user])
+            ->withFoldersRelationsFor([$user])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
 
         $this->logInAs($admin);
-        $this->getJson('/metadata/rotate-key/resources.json');
+        $this->getJson('/metadata/rotate-key/folders.json');
 
         $this->assertSuccess();
         $response = $this->getResponseBodyAsArray();
@@ -78,13 +81,18 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         $headers = $this->getHeadersAsArray();
         $this->assertArrayHasKey('pagination', $headers);
         $this->assertArrayEqualsCanonicalizing([
-            'count' => 30,
+            'count' => 33,
             'page' => 1,
             'limit' => 20,
         ], $headers['pagination']);
     }
 
-    public function testMetadataRotateKeyResourcesIndexController_Success_SetPageAndCount(): void
+    /**
+     * Setting pagination query params in the request shouldn't change the result.
+     *
+     * @return void
+     */
+    public function testMetadataRotateKeyFoldersIndexController_Success_SetPageAndCount(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -94,27 +102,29 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         // create expired metadata key
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        ResourceFactory::make(8)->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->id,
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        FolderFactory::make(5)
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
 
         $this->logInAs($admin);
-        $this->getJson('/metadata/rotate-key/resources.json?page=2&limit=2');
+        $this->getJson('/metadata/rotate-key/folders.json?page=2&limit=2');
 
         $this->assertSuccess();
         $response = $this->getResponseBodyAsArray();
-        $this->assertCount(8, $response);
+        $this->assertCount(5, $response);
         $headers = $this->getHeadersAsArray();
         $this->assertArrayHasKey('pagination', $headers);
         $this->assertArrayEqualsCanonicalizing([
-            'count' => 8,
+            'count' => 5,
             'page' => 1,
             'limit' => 20,
         ], $headers['pagination']);
     }
 
-    public function metadataRotateKeyResourcesIndexControllerPaginationLimitValuesProvider(): array
+    public function metadataRotateKeyFoldersIndexControllerPaginationLimitValuesProvider(): array
     {
         return [
             [
@@ -131,13 +141,13 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
     }
 
     /**
-     * @dataProvider metadataRotateKeyResourcesIndexControllerPaginationLimitValuesProvider
+     * @dataProvider metadataRotateKeyFoldersIndexControllerPaginationLimitValuesProvider
      * @param int $config Config value
-     * @param int $no No resources to create
+     * @param int $no No folders to create
      * @param int $expectedCount Expected records in response
      * @return void
      */
-    public function testMetadataRotateKeyResourcesIndexController_Success_PaginationMinMaxValues(int $config, int $no, int $expectedCount): void
+    public function testMetadataRotateKeyFoldersIndexController_Success_PaginationMinMaxValues(int $config, int $no, int $expectedCount): void
     {
         Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', $config);
         $admin = UserFactory::make()
@@ -148,46 +158,47 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         // create expired metadata key
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        ResourceFactory::make($no)->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->id,
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        FolderFactory::make($no)
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
 
         $this->logInAs($admin);
-        $this->getJson('/metadata/rotate-key/resources.json');
+        $this->getJson('/metadata/rotate-key/folders.json');
 
         $this->assertSuccess();
         $this->assertCount($expectedCount, $this->getResponseBodyAsArray());
     }
 
-    public function testMetadataRotateKeyResourcesIndexController_Error_NotJson(): void
+    public function testMetadataRotateKeyFoldersIndexController_Error_NotJson(): void
     {
         $user = UserFactory::make()->user()->active()->persist();
         $this->logInAs($user);
-        $this->get('/metadata/rotate-key/resources');
+        $this->get('/metadata/rotate-key/folders');
         $this->assertResponseCode(404);
     }
 
-    public function testMetadataRotateKeyResourcesIndexController_Error_NotLoggedIn(): void
+    public function testMetadataRotateKeyFoldersIndexController_Error_NotLoggedIn(): void
     {
-        $this->getJson('/metadata/rotate-key/resources.json');
+        $this->getJson('/metadata/rotate-key/folders.json');
         $this->assertResponseCode(401);
     }
 
-    public function testMetadataRotateKeyResourcesIndexController_Error_NotAdmin(): void
+    public function testMetadataRotateKeyFoldersIndexController_Error_NotAdmin(): void
     {
         $user = UserFactory::make()->user()->active()->persist();
         $this->logInAs($user);
-        $this->getJson('/metadata/rotate-key/resources.json');
+        $this->getJson('/metadata/rotate-key/folders.json');
         $this->assertResponseCode(403);
     }
 
-    public function testMetadataRotateKeyResourcesIndexController_Error_InvalidConfigValue(): void
+    public function testMetadataRotateKeyFoldersIndexController_Error_InvalidConfigValue(): void
     {
         Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', '🔥');
         $this->logInAsAdmin();
-        $this->getJson('/metadata/rotate-key/resources.json');
-
+        $this->getJson('/metadata/rotate-key/folders.json');
         $this->assertInternalError('Invalid pagination limit set for metadata endpoint');
     }
 }

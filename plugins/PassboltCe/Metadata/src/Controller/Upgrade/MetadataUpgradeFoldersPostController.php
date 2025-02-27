@@ -12,24 +12,21 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.11.0
+ * @since         4.12.0
  */
 namespace Passbolt\Metadata\Controller\Upgrade;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
-use Passbolt\Metadata\Service\MetadataResourcesRenderService;
-use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeResourcesUpdateService;
+use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
+use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeFoldersUpdateService;
 
-/**
- * @property \App\Controller\Component\ApiPaginationComponent $ApiPagination
- */
-class MetadataUpgradeResourcesPostController extends AppController
+class MetadataUpgradeFoldersPostController extends AppController
 {
     /**
-     * @var \App\Model\Table\ResourcesTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    protected $Resources;
+    protected $Folders;
 
     /**
      * @inheritDoc
@@ -37,11 +34,11 @@ class MetadataUpgradeResourcesPostController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        $this->Resources = $this->fetchTable('Resources');
+        $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
         $this->loadComponent('Passbolt/Metadata.MetadataPagination', [
-            'model' => 'Resources',
+            'model' => 'Folders',
             'order' => [
-                'Resources.id' => 'asc', // Default sorted field
+                'Folders.id' => 'asc', // Default sorted field
             ],
         ]);
     }
@@ -55,7 +52,7 @@ class MetadataUpgradeResourcesPostController extends AppController
         $this->User->assertIsAdmin();
         $this->assertNotEmptyArrayData();
 
-        (new MetadataUpgradeResourcesUpdateService())->updateMany(
+        (new MetadataUpgradeFoldersUpdateService())->updateMany(
             $this->User->getAccessControl(),
             $this->getRequest()->getData()
         );
@@ -66,12 +63,12 @@ class MetadataUpgradeResourcesPostController extends AppController
 
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
-        $resources = $this->Resources->findMetadataUpgradeIndex($options);
-        $this->paginate($resources);
-        $resources = $resources->all();
+        $folders = $this->Folders->findMetadataUpgradeIndex($options);
+        $this->paginate($folders);
+        $folders = $folders->all();
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
-        $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
-        $this->success(__('The operation was successful.'), $resources);
+        $folders = (new MetadataFoldersRenderService())->renderFolders($folders->toArray());
+        $this->success(__('The operation was successful.'), $folders);
     }
 }
