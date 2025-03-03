@@ -26,6 +26,7 @@ use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
@@ -44,6 +45,8 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
 
         ResourceTypeFactory::make()->default()->persist();
         ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
+        ResourceTypeFactory::make()->v5PasswordString()->persist();
     }
 
     public function testMetadataUpgradeResourcesPostController_Success(): void
@@ -76,6 +79,8 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource->get('metadata_key_id'));
         $this->assertSame(MetadataKey::TYPE_SHARED_KEY, $updatedResource->get('metadata_key_type'));
         $this->assertNotEmpty($updatedResource->get('metadata'));
+        $v5ResourceType = ResourceTypeFactory::find()->where(['slug' => ResourceType::SLUG_V5_DEFAULT])->firstOrFail();
+        $this->assertSame($v5ResourceType->get('id'), $updatedResource->get('resource_type_id'));
         // assert response
         $response = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($response);

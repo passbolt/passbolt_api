@@ -61,6 +61,7 @@ class MetadataRotateKeyResourcesUpdateService extends AbstractMetadataRotateKeyU
                     'username' => true,
                     'uri' => true,
                     'description' => true,
+                    'resource_type_id' => true, // required for upgrade
                     'metadata_key_id' => true,
                     'metadata_key_type' => true,
                     'metadata' => true,
