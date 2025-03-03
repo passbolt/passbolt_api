@@ -58,7 +58,7 @@ class MetadataUpgradeFoldersPostController extends AppController
         );
 
         // Retrieve and sanity the query options.
-        $whitelist = ['filter' => ['is-shared']];
+        $whitelist = ['filter' => ['is-shared'], 'contain' => ['permissions']];
         $options = $this->QueryString->get($whitelist);
 
         // Performance improvement: map query result datetime properties to string.
