@@ -63,7 +63,7 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
 
         Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', 1);
         $this->logInAsAdmin();
-        $this->postJson('/metadata/upgrade/resources.json', [
+        $this->postJson('/metadata/upgrade/resources.json?contain[permissions]=1', [
             [
                 'id' => $resource->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
@@ -92,6 +92,8 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
             'page' => 1,
             'limit' => 1,
         ], $headers['pagination']);
+        // Assert that permissions are not contained
+        $this->assertArrayHasKey('permissions', $response[0]);
     }
 
     public function testMetadataUpgradeResourcesPostController_MetadataKey_Expired(): void
