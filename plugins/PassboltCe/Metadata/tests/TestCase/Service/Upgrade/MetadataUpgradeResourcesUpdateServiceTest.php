@@ -31,6 +31,7 @@ use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeResourcesUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
@@ -52,6 +53,8 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
 
         ResourceTypeFactory::make()->default()->persist();
         ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
+        ResourceTypeFactory::make()->v5PasswordString()->persist();
     }
 
     /**
@@ -93,18 +96,21 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
         ];
         $this->service->updateMany($uac, $data);
 
+        $expectedResourceType = ResourceTypeFactory::find()->where(['slug' => ResourceType::SLUG_V5_DEFAULT])->firstOrFail();
         /** @var \App\Model\Entity\Resource $updatedResource1 */
         $updatedResource1 = ResourceFactory::get($resource1->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource1->get('metadata_key_id'));
         $this->assertSame($metadataForR1, $updatedResource1->get('metadata'));
         $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
         $this->assertSame($uac->getId(), $updatedResource1->get('modified_by'));
+        $this->assertSame($expectedResourceType->get('id'), $updatedResource1->get('resource_type_id'));
         /** @var \App\Model\Entity\Resource $updatedResource2 */
         $updatedResource2 = ResourceFactory::get($resource2->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource2->get('metadata_key_id'));
         $this->assertSame($metadataForR2, $updatedResource2->get('metadata'));
         $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource2->get('modified')->format('Y-m-d H:i'));
         $this->assertSame($uac->getId(), $updatedResource2->get('modified_by'));
+        $this->assertSame($expectedResourceType->get('id'), $updatedResource2->get('resource_type_id'));
     }
 
     public function testMetadataUpgradeResourcesUpdateService_Error_EmptyData(): void

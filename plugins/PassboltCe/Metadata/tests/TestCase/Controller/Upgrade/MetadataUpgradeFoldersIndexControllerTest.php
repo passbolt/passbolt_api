@@ -50,6 +50,35 @@ class MetadataUpgradeFoldersIndexControllerTest extends AppIntegrationTestCaseV5
             'page' => 1,
             'limit' => 20,
         ], $headers['pagination']);
+        $this->assertArrayNotHasKey('permissions', $response[0]);
+    }
+
+    public function testMetadataUpgradeFoldersIndexController_Success_Contain_Permissions(): void
+    {
+        // V4 folders
+        $nV4SharedFolders = 3;
+        // Shared with two users
+        FolderFactory::make()->withPermissionsFor(UserFactory::make(2)->persist())->persist();
+        // Shared with a group
+        FolderFactory::make()->withPermissionsFor([GroupFactory::make()->persist()])->persist();
+        // Shared with a group and a user
+        FolderFactory::make()
+            ->withPermissionsFor([
+                UserFactory::make()->persist(),
+                GroupFactory::make()->persist(),
+            ])->persist();
+        // Not shared
+        FolderFactory::make()->withPermissionsFor([UserFactory::make()->persist()])->persist();
+
+        $this->logInAsAdmin();
+        $this->getJson('/metadata/upgrade/folders.json?contain[permissions]=1');
+
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount($nV4SharedFolders + 1, $response);
+        // Assert that permissions are contained
+        $this->assertArrayHasKey('permissions', $response[0]);
+        $this->assertNotEmpty($response[0]['permissions']);
     }
 
     public function testMetadataUpgradeFoldersIndexController_Success_Filter_Is_Shared(): void

@@ -44,11 +44,11 @@ class MetadataUpgradeFoldersPostControllerTest extends AppIntegrationTestCaseV5
         // create metadata key
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        [$folder] = FolderFactory::make(2)->persist();
+        [$folder] = FolderFactory::make(2)->withPermissionsFor(UserFactory::make(2)->persist())->persist();
 
         Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', 1);
         $this->logInAsAdmin();
-        $this->postJson('/metadata/upgrade/folders.json', [
+        $this->postJson('/metadata/upgrade/folders.json?contain[permissions]=1', [
             [
                 'id' => $folder->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
@@ -75,6 +75,9 @@ class MetadataUpgradeFoldersPostControllerTest extends AppIntegrationTestCaseV5
             'page' => 1,
             'limit' => 1,
         ], $headers['pagination']);
+        // Assert that permissions are contained
+        $this->assertArrayHasKey('permissions', $response[0]);
+        $this->assertSame(2, count($response[0]['permissions']));
     }
 
     public function testMetadataUpgradeFoldersPostController_MetadataKey_Expired(): void

@@ -145,4 +145,21 @@ class MetadataResourcesTableTest extends TestCase
             $this->assertArrayHasKey($resource['id'], $resourcesNotShared);
         }
     }
+
+    public function testMetadataResourcesTable_findMetadataUpgradeIndex_Contain_Permissions(): void
+    {
+        // V4 resource shared with multiple users
+        ResourceFactory::make()->withPermissionsFor(UserFactory::make(2)->persist())->persist();
+
+        $resourcesShared = $this->Resources
+            ->findMetadataUpgradeIndex(['contain' => [
+                'permissions' => 1,
+            ]])
+            ->all()
+            ->toArray();
+        foreach ($resourcesShared as $resource) {
+            $this->assertIsArray($resource['permissions']);
+            $this->assertNotEmpty($resource['permissions']);
+        }
+    }
 }
