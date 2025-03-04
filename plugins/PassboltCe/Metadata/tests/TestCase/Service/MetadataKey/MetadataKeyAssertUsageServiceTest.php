@@ -41,31 +41,32 @@ class MetadataKeyAssertUsageServiceTest extends AppTestCaseV5
 
     public function testMetadataKeyAssertUsageService_Success_UsedByResources(): void
     {
-        $key = MetadataKeyFactory::make()->persist();
-        $id = $key->get('id');
-        ResourceFactory::make()->v5Fields(true)->setField('metadata_key_id', $id)->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->v5Fields(true)->with('MetadataKeys')->persist();
+        $metadataKeyId = $resource->metadata_key_id;
         $sut = new MetadataKeyAssertUsageService();
 
-        $this->assertTrue($sut->isKeyInUse($id));
-        $this->assertTrue($sut->isUsedByResources($id));
-        $this->assertFalse($sut->isUsedByFolders($id));
-        $this->assertFalse($sut->isUsedByTags($id));
+        $this->assertTrue($sut->isKeyInUse($metadataKeyId));
+        $this->assertTrue($sut->isUsedByResources($metadataKeyId));
+        $this->assertFalse($sut->isUsedByFolders($metadataKeyId));
+        $this->assertFalse($sut->isUsedByTags($metadataKeyId));
     }
 
     public function testMetadataKeyAssertUsageService_Success_UsedByFolders(): void
     {
         $this->enableFeaturePlugin(FoldersPlugin::class);
         $key = MetadataKeyFactory::make()->persist();
-        $id = $key->get('id');
-        ResourceFactory::make()->v5Fields(true)->setField('metadata_key_id', $id)->persist();
-        $folderData = ['metadata' => '-----BEGIN PGP MESSAGE-----', 'metadata_key_id' => $id];
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->v5Fields(true)->with('MetadataKeys')->persist();
+        $metadataKeyId = $resource->metadata_key_id;
+        $folderData = ['metadata' => '-----BEGIN PGP MESSAGE-----', 'metadata_key_id' => $metadataKeyId];
         FolderFactory::make()->v5Fields($folderData, true)->persist();
         $sut = new MetadataKeyAssertUsageService();
 
-        $this->assertTrue($sut->isKeyInUse($id));
-        $this->assertTrue($sut->isUsedByResources($id));
-        $this->assertTrue($sut->isUsedByFolders($id));
-        $this->assertFalse($sut->isUsedByTags($id));
+        $this->assertTrue($sut->isKeyInUse($metadataKeyId));
+        $this->assertTrue($sut->isUsedByResources($metadataKeyId));
+        $this->assertTrue($sut->isUsedByFolders($metadataKeyId));
+        $this->assertFalse($sut->isUsedByTags($metadataKeyId));
     }
 
     public function testMetadataKeyAssertUsageService_Success_UsedByTags(): void

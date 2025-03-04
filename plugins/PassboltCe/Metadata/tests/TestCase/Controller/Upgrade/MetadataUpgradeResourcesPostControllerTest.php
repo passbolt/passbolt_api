@@ -22,11 +22,11 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
-use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
@@ -34,7 +34,6 @@ use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
  */
 class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV5
 {
-    use LocatorAwareTrait;
     use GpgMetadataKeysTestTrait;
 
     /**
@@ -46,6 +45,8 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
 
         ResourceTypeFactory::make()->default()->persist();
         ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
+        ResourceTypeFactory::make()->v5PasswordString()->persist();
     }
 
     public function testMetadataUpgradeResourcesPostController_Success(): void
@@ -62,7 +63,7 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
 
         Configure::write('passbolt.plugins.metadata.defaultPaginationLimit', 1);
         $this->logInAsAdmin();
-        $this->postJson('/metadata/upgrade/resources.json', [
+        $this->postJson('/metadata/upgrade/resources.json?contain[permissions]=1', [
             [
                 'id' => $resource->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
@@ -78,6 +79,8 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource->get('metadata_key_id'));
         $this->assertSame(MetadataKey::TYPE_SHARED_KEY, $updatedResource->get('metadata_key_type'));
         $this->assertNotEmpty($updatedResource->get('metadata'));
+        $v5ResourceType = ResourceTypeFactory::find()->where(['slug' => ResourceType::SLUG_V5_DEFAULT])->firstOrFail();
+        $this->assertSame($v5ResourceType->get('id'), $updatedResource->get('resource_type_id'));
         // assert response
         $response = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($response);
@@ -87,8 +90,10 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
         $this->assertArrayEqualsCanonicalizing([
             'count' => 1,
             'page' => 1,
-            'limit' => null,
+            'limit' => 1,
         ], $headers['pagination']);
+        // Assert that permissions are not contained
+        $this->assertArrayHasKey('permissions', $response[0]);
     }
 
     public function testMetadataUpgradeResourcesPostController_MetadataKey_Expired(): void
@@ -129,9 +134,8 @@ class MetadataUpgradeResourcesPostControllerTest extends AppIntegrationTestCaseV
 
     public function testMetadataUpgradeResourcesPostController_Error_NotJson(): void
     {
-        $user = UserFactory::make()->user()->active()->persist();
-        $this->logInAs($user);
-        $this->post('/metadata/rotate-key/resources');
+        $this->logInAsUser();
+        $this->post('/metadata/upgrade/resources');
         $this->assertResponseCode(404);
     }
 

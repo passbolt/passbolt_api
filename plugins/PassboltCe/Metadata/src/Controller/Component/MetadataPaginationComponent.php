@@ -34,7 +34,9 @@ class MetadataPaginationComponent extends Component
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [];
+    protected $_defaultConfig = [
+        'maxLimit' => self::MAX_PAGINATION_LIMIT,
+    ];
 
     /**
      * Overwrites pagination limit with the one defined in configuration
@@ -46,20 +48,37 @@ class MetadataPaginationComponent extends Component
      */
     public function initialize(array $config): void
     {
-        $config = $this->setPaginationOptions($config);
         $this->getController()->loadComponent('ApiPagination', $config);
         $this->getController()->paginate['order'] = $config['order'] ?? [];
         $this->getController()->paginate['limit'] = $config['limit'] ?? [];
-        $this->unsetDisallowedPaginationParams();
+        $this->modifyPaginationOptionsInRequest();
     }
 
     /**
-     * Set pagination options.
+     * Remove/modify pagination query parameters, those are controlled by configuration for security reasons.
      *
-     * @param array $config component configuration
-     * @return array
+     * @return void
      */
-    private function setPaginationOptions(array $config): array
+    private function modifyPaginationOptionsInRequest(): void
+    {
+        $params = $this->getController()->getRequest()->getQueryParams();
+
+        // page is not allowed to be controlled
+        unset($params['page']);
+
+        // limit should be enforced via config
+        $limit = $this->getConfigurationLimit();
+        $params['limit'] = $limit;
+
+        $request = $this->getController()->getRequest()->withQueryParams($params);
+        $this->getController()->setRequest($request);
+    }
+
+    /**
+     * @throws \Cake\Http\Exception\InternalErrorException When config value is invalid.
+     * @return mixed
+     */
+    public function getConfigurationLimit()
     {
         $limit = Configure::read('passbolt.plugins.metadata.defaultPaginationLimit');
 
@@ -70,25 +89,6 @@ class MetadataPaginationComponent extends Component
             throw new InternalErrorException($message);
         }
 
-        $limit = max(min($limit, self::MAX_PAGINATION_LIMIT), self::MIN_PAGINATION_LIMIT);
-
-        return array_merge($config, [
-            'limit' => $limit,
-            'maxLimit' => self::MAX_PAGINATION_LIMIT,
-        ]);
-    }
-
-    /**
-     * Remove pagination query parameters, those are controlled by configuration for security reasons.
-     *
-     * @return void
-     */
-    private function unsetDisallowedPaginationParams(): void
-    {
-        $params = $this->getController()->getRequest()->getQueryParams();
-        unset($params['page']);
-        unset($params['limit']);
-        $request = $this->getController()->getRequest()->withQueryParams($params);
-        $this->getController()->setRequest($request);
+        return max(min($limit, self::MAX_PAGINATION_LIMIT), self::MIN_PAGINATION_LIMIT);
     }
 }

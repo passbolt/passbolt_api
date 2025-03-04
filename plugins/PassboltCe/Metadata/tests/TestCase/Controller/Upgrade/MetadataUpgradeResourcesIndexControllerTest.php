@@ -47,7 +47,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -75,8 +75,40 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
+        // Assert that permissions are not contained
+        $this->assertArrayNotHasKey('permissions', $response[0]);
+    }
+
+    public function testMetadataUpgradeResourcesIndexController_Contain_Permissions(): void
+    {
+        // V4 resources
+        $nV4SharedResources = 3;
+        ResourceFactory::make($nV4SharedResources)->withPermissionsFor(UserFactory::make(2)->persist())->persist();
+        ResourceFactory::make(3)->withPermissionsFor(UserFactory::make(2)->persist())
+            ->deleted()
+            ->persist();
+        ResourceFactory::make()->withPermissionsFor([UserFactory::make()->persist()])->persist();
+
+        // V5 resource
+        ResourceFactory::make()->v5Fields()->persist();
+
+        $this->logInAsAdmin();
+        $this->getJson('/metadata/upgrade/resources.json?filter[is-shared]=1&contain[permissions]=1');
+
+        $this->assertSuccess();
+        $response = $this->getResponseBodyAsArray();
+        $this->assertCount($nV4SharedResources, $response);
+        $headers = $this->getHeadersAsArray();
+        $this->assertArrayHasKey('pagination', $headers);
+        $this->assertArrayEqualsCanonicalizing([
+            'count' => 3,
+            'page' => 1,
+            'limit' => 20,
+        ], $headers['pagination']);
+        // Assert that permissions are contained
+        $this->assertArrayHasKey('permissions', $response[0]);
     }
 
     public function testMetadataUpgradeResourcesIndexController_Success_Is_Not_Shared(): void
@@ -104,7 +136,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 1,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -129,7 +161,7 @@ class MetadataUpgradeResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertArrayEqualsCanonicalizing([
             'count' => 3,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
         // Assert that
         $this->assertEquals($resources[2]['id'], $response[0]['id']);

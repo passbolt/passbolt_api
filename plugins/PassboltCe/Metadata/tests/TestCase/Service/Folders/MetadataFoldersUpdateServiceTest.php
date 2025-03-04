@@ -31,6 +31,7 @@ use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
+use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 
@@ -65,6 +66,8 @@ class MetadataFoldersUpdateServiceTest extends AppTestCaseV5
     {
         // Enable v5 settings
         MetadataTypesSettingsFactory::make()->v5()->persist();
+        // Create two metadata keys to ensure that IsSharedMetadataKeyUniqueActiveRule is skipped
+        MetadataKeyFactory::make(2)->withServerPrivateKey()->persist();
         /** @var \App\Model\Entity\User $user */
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
