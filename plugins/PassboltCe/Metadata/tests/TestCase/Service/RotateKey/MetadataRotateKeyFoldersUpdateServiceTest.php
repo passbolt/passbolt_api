@@ -12,14 +12,13 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.11.0
+ * @since         4.12.0
  */
 
 namespace Passbolt\Metadata\Test\TestCase\Service\RotateKey;
 
 use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\GpgkeyFactory;
-use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\UuidFactory;
@@ -28,24 +27,25 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\FrozenTime;
+use Passbolt\Folders\Test\Factory\FolderFactory;
+use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
-use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
+use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyFoldersUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
-use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
- * @covers \Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService
+ * @covers \Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyFoldersUpdateService
  */
-class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
+class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
 {
     use GpgMetadataKeysTestTrait;
 
     /**
-     * @var MetadataRotateKeyResourcesUpdateService|null
+     * @var MetadataRotateKeyFoldersUpdateService|null
      */
-    private ?MetadataRotateKeyResourcesUpdateService $service = null;
+    private ?MetadataRotateKeyFoldersUpdateService $service = null;
 
     /**
      * @inheritDoc
@@ -53,10 +53,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-        $this->service = new MetadataRotateKeyResourcesUpdateService();
-
-        ResourceTypeFactory::make()->default()->persist();
-        ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        $this->service = new MetadataRotateKeyFoldersUpdateService();
     }
 
     /**
@@ -68,7 +65,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         parent::tearDown();
     }
 
-    public function testMetadataRotateKeyResourcesUpdateService_Success(): void
+    public function testMetadataRotateKeyFoldersUpdateService_Success(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -79,17 +76,12 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])
-            ->patchData([
-                'metadata_key_id' => $expiredMetadataKey->get('id'),
-                'metadata' => $this->encryptForMetadataKey(json_encode([])),
-                'metadata_key_type' => 'shared_key',
-                // Set V4 fields to null
-                'name' => null,
-                'username' => null,
-                'uri' => null,
-                'description' => null,
-            ])->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $expiredFolder1 = FolderFactory::make()
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
         // another user's resource returned
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -97,62 +89,58 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
-        $expiredResource2 = ResourceFactory::make()->withPermissionsFor([$user])->patchData([
-            'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForMetadataKey(json_encode([])),
-            'metadata_key_type' => 'shared_key',
-            // Set V4 fields to null
-            'name' => null,
-            'username' => null,
-            'uri' => null,
-            'description' => null,
-        ])->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'customer support'])->getClearTextMetadata());
+        $expiredFolder2 = FolderFactory::make()
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
 
         $uac = $this->mockAdminAccessControl();
-        $metadataForR1 = $this->encryptForMetadataKey(json_encode([]));
-        $metadataForR2 = $this->encryptForMetadataKey(json_encode([]));
+        $metadataToUpdateForF1 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::fromArray(['name' => 'f1 marketing updated'])->getClearTextMetadata()));
+        $metadataToUpdateForF2 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::fromArray(['name' => 'f1 customer support updated'])->getClearTextMetadata()));
         $data = [
             [
-                'id' => $expiredResource1->get('id'),
+                'id' => $expiredFolder1->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
-                'metadata' => $metadataForR1,
-                'modified' => $expiredResource1->get('modified')->format('Y-m-d H:i:s'),
-                'modified_by' => $expiredResource1->get('modified_by'),
+                'metadata' => $metadataToUpdateForF1,
+                'modified' => $expiredFolder1->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $expiredFolder1->get('modified_by'),
             ],
             [
-                'id' => $expiredResource2->get('id'),
+                'id' => $expiredFolder2->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
-                'metadata' => $metadataForR2,
-                'modified' => $expiredResource2->get('modified')->format('Y-m-d H:i:s'),
-                'modified_by' => $expiredResource2->get('modified_by'),
+                'metadata' => $metadataToUpdateForF2,
+                'modified' => $expiredFolder2->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $expiredFolder2->get('modified_by'),
             ],
         ];
         $this->service->updateMany($uac, $data);
 
-        /** @var \App\Model\Entity\Resource $updatedResource1 */
-        $updatedResource1 = ResourceFactory::get($expiredResource1->get('id'));
-        $this->assertSame($activeMetadataKey->get('id'), $updatedResource1->get('metadata_key_id'));
-        $this->assertSame($metadataForR1, $updatedResource1->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
-        $this->assertSame($uac->getId(), $updatedResource1->get('modified_by'));
-        /** @var \App\Model\Entity\Resource $updatedResource2 */
-        $updatedResource2 = ResourceFactory::get($expiredResource2->get('id'));
-        $this->assertSame($activeMetadataKey->get('id'), $updatedResource2->get('metadata_key_id'));
-        $this->assertSame($metadataForR2, $updatedResource2->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource2->get('modified')->format('Y-m-d H:i'));
-        $this->assertSame($uac->getId(), $updatedResource2->get('modified_by'));
+        /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder1 */
+        $updatedFolder1 = FolderFactory::get($expiredFolder1->get('id'));
+        $this->assertSame($activeMetadataKey->get('id'), $updatedFolder1->get('metadata_key_id'));
+        $this->assertSame($metadataToUpdateForF1, $updatedFolder1->get('metadata'));
+        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
+        $this->assertSame($uac->getId(), $updatedFolder1->get('modified_by'));
+        /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder2 */
+        $updatedFolder2 = FolderFactory::get($expiredFolder2->get('id'));
+        $this->assertSame($activeMetadataKey->get('id'), $updatedFolder2->get('metadata_key_id'));
+        $this->assertSame($metadataToUpdateForF2, $updatedFolder2->get('metadata'));
+        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder2->get('modified')->format('Y-m-d H:i'));
+        $this->assertSame($uac->getId(), $updatedFolder2->get('modified_by'));
     }
 
-    public function testMetadataRotateKeyResourcesUpdateService_Error_EmptyData(): void
+    public function testMetadataRotateKeyFoldersUpdateService_Error_EmptyData(): void
     {
         $uac = $this->mockAdminAccessControl();
         $this->expectException(BadRequestException::class);
         $this->service->updateMany($uac, []);
     }
 
-    public function testMetadataRotateKeyResourcesUpdateService_Error_DataIsNotAnArray(): void
+    public function testMetadataRotateKeyFoldersUpdateService_Error_DataIsNotAnArray(): void
     {
         $uac = $this->mockAdminAccessControl();
         $this->expectException(BadRequestException::class);
@@ -172,7 +160,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
      * @param mixed $metadata Invalid metadata.
      * @return void
      */
-    public function testMetadataRotateKeyResourcesUpdateService_Error_InvalidMetadataEncryptedMessage($metadata): void
+    public function testMetadataRotateKeyFoldersUpdateService_Error_InvalidMetadataEncryptedMessage($metadata): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -181,19 +169,20 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $resource = ResourceFactory::make()->withPermissionsFor([$admin])->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
+        $folder = FolderFactory::make()
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
         $uac = $this->makeUac($admin);
         $data = [
             [
-                'id' => $resource->get('id'),
+                'id' => $folder->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $metadata,
-                'modified' => $resource->get('modified'),
-                'modified_by' => $resource->get('modified_by'),
+                'modified' => $folder->get('modified'),
+                'modified_by' => $folder->get('modified_by'),
             ],
         ];
 
@@ -206,7 +195,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         }
     }
 
-    public function testMetadataRotateKeyResourcesUpdateService_Error_ResourceNotFound(): void
+    public function testMetadataRotateKeyFoldersUpdateService_Error_FolderNotFound(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -215,12 +204,13 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->makeUac($admin);
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
         $data = [
             [
                 'id' => UuidFactory::uuid(),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
-                'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
+                'metadata' => $this->encryptForMetadataKey($metadata),
                 'modified' => FrozenTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
@@ -230,35 +220,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $this->service->updateMany($uac, $data);
     }
 
-    public function testMetadataRotateKeyResourcesUpdateService_Error_ResourceDeleted(): void
-    {
-        $admin = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->admin()
-            ->active()
-            ->persist();
-        $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
-        $resource = ResourceFactory::make()->withPermissionsFor([$admin])->deleted()->v5Fields(true, [
-            'metadata_key_id' => UuidFactory::uuid(),
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
-        $uac = $this->makeUac($admin);
-        $data = [
-            [
-                'id' => $resource->get('id'),
-                'metadata_key_id' => $activeMetadataKey->get('id'),
-                'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
-                'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => $resource->get('modified'),
-                'modified_by' => $resource->get('modified_by'),
-            ],
-        ];
-
-        $this->expectException(NotFoundException::class);
-        $this->service->updateMany($uac, $data);
-    }
-
-    public function testMetadataRotateKeyResourcesUpdateService_Error_ModifiedDateConflict(): void
+    public function testMetadataRotateKeyFoldersUpdateService_Error_ModifiedDateConflict(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -266,15 +228,17 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $folder = FolderFactory::make()
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->makeUac($admin);
         $data = [
             [
-                'id' => $resource->get('id'),
+                'id' => $folder->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
@@ -287,7 +251,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $this->service->updateMany($uac, $data);
     }
 
-    public function testMetadataRotateKeyResourcesUpdateService_Error_ModifiedByConflict(): void
+    public function testMetadataRotateKeyFoldersUpdateService_Error_ModifiedByConflict(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -295,19 +259,21 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $folder = FolderFactory::make()
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->makeUac($admin);
         $data = [
             [
-                'id' => $resource->get('id'),
+                'id' => $folder->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => $resource->get('modified'),
+                'modified' => $folder->get('modified'),
                 'modified_by' => UuidFactory::uuid(),
             ],
         ];
@@ -316,7 +282,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $this->service->updateMany($uac, $data);
     }
 
-    public function testMetadataRotateKeyResourcesUpdateService_Error_MetadataKeyIsExpired(): void
+    public function testMetadataRotateKeyFoldersUpdateService_Error_MetadataKeyIsExpired(): void
     {
         $admin = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -325,21 +291,24 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-        ])->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $folder = FolderFactory::make()
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
+            ->persist();
 
         try {
             $uac = $this->mockAdminAccessControl();
+            $metadataToUpdate = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing - updated'])->getClearTextMetadata());
             $data = [
                 [
-                    'id' => $expiredResource1->get('id'),
+                    'id' => $folder->get('id'),
                     'metadata_key_id' => $expiredMetadataKey->get('id'),
                     'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
-                    'metadata' => $this->encryptForMetadataKey(json_encode([])),
-                    'modified' => $expiredResource1->get('modified'),
-                    'modified_by' => $expiredResource1->get('modified_by'),
+                    'metadata' => $this->encryptForMetadataKey($metadataToUpdate),
+                    'modified' => $folder->get('modified'),
+                    'modified_by' => $folder->get('modified_by'),
                 ],
             ];
             $this->service->updateMany($uac, $data);
@@ -350,36 +319,36 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         }
     }
 
-    public function testMetadataRotateKeyResourcesUpdateService_Error_Multiple_Active_Metadata_Keys(): void
+    public function testMetadataRotateKeyFoldersUpdateService_Error_Multiple_Active_Metadata_Keys(): void
     {
+        $admin = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->admin()
+            ->active()
+            ->persist();
         // create metadata keys
         [$activeMetadataKey] = MetadataKeyFactory::make(2)->withServerPrivateKey()->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->persist();
-        $resource = ResourceFactory::make()->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForMetadataKey(json_encode([])),
-        ])->persist();
-        // another user's resource returned
-        $user = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
+        MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
+        $metadata = json_encode(MetadataFolderDto::fromArray(['name' => 'marketing'])->getClearTextMetadata());
+        $folder = FolderFactory::make()
+            ->withPermissionsFor([$admin])
+            ->withFoldersRelationsFor([$admin])
+            ->v5Fields(['metadata' => $this->encryptForMetadataKey($metadata), 'metadata_key_id' => $expiredMetadataKey->id], true)
             ->persist();
-        MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
 
-        $metadata = $this->encryptForMetadataKey(json_encode([]));
+        $uac = $this->mockAdminAccessControl();
+        $metadataToUpdateForF1 = $this->encryptForMetadataKey(json_encode(MetadataFolderDto::fromArray(['name' => 'f1 marketing updated'])->getClearTextMetadata()));
         $data = [
             [
-                'id' => $resource->get('id'),
+                'id' => $folder->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
-                'metadata' => $metadata,
-                'modified' => $resource->get('modified')->format('Y-m-d H:i:s'),
-                'modified_by' => $resource->get('modified_by'),
+                'metadata' => $metadataToUpdateForF1,
+                'modified' => $folder->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $folder->get('modified_by'),
             ],
         ];
-        $uac = $this->mockAdminAccessControl();
         try {
             $this->service->updateMany($uac, $data);
         } catch (\Exception $e) {

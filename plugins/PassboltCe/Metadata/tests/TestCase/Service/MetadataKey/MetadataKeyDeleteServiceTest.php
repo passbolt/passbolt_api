@@ -127,15 +127,18 @@ class MetadataKeyDeleteServiceTest extends AppTestCaseV5
 
     public function testMetadataKeyDeleteService_Error_KeyIsInUseByResources(): void
     {
-        $key = MetadataKeyFactory::make()->withServerPrivateKey()->expired()->persist();
-        $id = $key->get('id');
         $user = UserFactory::make()->admin()->persist();
-        ResourceFactory::make()->v5Fields(true)->setField('metadata_key_id', $id)->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->v5Fields(true)
+            ->with('MetadataKeys', MetadataKeyFactory::make()->withServerPrivateKey()->expired())
+            ->persist();
+        $metadataKeyId = $resource->metadata_key_id;
         $uac = $this->makeUac($user);
         $sut = new MetadataKeyDeleteService();
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('migrate the remaining items');
-        $sut->delete($uac, $id);
+        $sut->delete($uac, $metadataKeyId);
     }
 }

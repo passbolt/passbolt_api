@@ -39,6 +39,7 @@ class DuoSetupPromptPostController extends MfaSetupController
     {
         parent::initialize();
         $this->loadComponent('SanitizeUrl');
+        $this->loadComponent('Flash');
     }
 
     /**

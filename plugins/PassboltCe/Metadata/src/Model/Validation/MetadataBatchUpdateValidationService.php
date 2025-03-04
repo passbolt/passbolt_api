@@ -69,6 +69,7 @@ abstract class MetadataBatchUpdateValidationService
         $this->entities = Hash::combine($this->entities, '{n}.id', '{n}');
 
         $data = [];
+        $errors = [];
         foreach ($requestData as $i => $entity) {
             $entityId = $entity['id'];
             if (!array_key_exists($entityId, $this->entities)) {
@@ -84,7 +85,7 @@ abstract class MetadataBatchUpdateValidationService
 
             $form = $this->getForm();
             if (!$form->execute($entity)) {
-                $errors[] = $form->getErrors();
+                $errors[$i] = $form->getErrors();
                 throw new CustomValidationException(__('Could not validate the metadata key data for the entity with ID: {0}.', $entityId), $errors); // phpcs:ignore;
             }
             $data[$i] = $form->getData();
@@ -116,7 +117,6 @@ abstract class MetadataBatchUpdateValidationService
                 $Table->aliasField('id'),
                 $Table->aliasField('modified'),
                 $Table->aliasField('modified_by'),
-                $Table->aliasField('resource_type_id'),
                 'MetadataKeys.id',
                 'MetadataKeys.expired',
                 'MetadataKeys.deleted',

@@ -16,29 +16,17 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Model\Validation;
 
-use Cake\ORM\Query;
+use Passbolt\Metadata\Form\RotateKey\MetadataBatchRotateKeyForm;
 use Passbolt\Metadata\Form\Upgrade\MetadataBatchUpgradeForm;
 
-class MetadataResourcesBatchUpgradeValidationService extends MetadataBatchUpgradeValidationService
+class MetadataFoldersBatchRotateKeyValidationService extends MetadataBatchUpdateValidationService
 {
     /**
      * @inheritDoc
      */
     public function getModel(): string
     {
-        return 'Resources';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function queryEntitiesFromIds(array $entityIds): Query
-    {
-        $resources = parent::queryEntitiesFromIds($entityIds);
-
-        return $resources
-            ->selectAlso('resource_type_id')
-            ->where(['Resources.deleted' => false]);
+        return 'Passbolt/Folders.Folders';
     }
 
     /**
@@ -46,6 +34,6 @@ class MetadataResourcesBatchUpgradeValidationService extends MetadataBatchUpgrad
      */
     public function getForm(): MetadataBatchUpgradeForm
     {
-        return new MetadataBatchUpgradeForm();
+        return new MetadataBatchRotateKeyForm();
     }
 }

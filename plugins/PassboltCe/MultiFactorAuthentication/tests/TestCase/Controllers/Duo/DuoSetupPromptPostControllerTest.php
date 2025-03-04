@@ -18,6 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers\Duo;
 
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\OrganizationSettingFactory;
+use Cake\Http\Exception\ServiceUnavailableException;
 use Duo\DuoUniversal\Client;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
@@ -106,5 +107,25 @@ class DuoSetupPromptPostControllerTest extends MfaIntegrationTestCase
         $token = $authToken->get('token');
         $this->assertCookie($token, MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
         $this->assertCookieNotExpired(MfaDuoStateCookieService::MFA_COOKIE_DUO_STATE);
+    }
+
+    public function testDuoSetupPromptPostController_Error_ServiceUnavailable()
+    {
+        $this->logInAsUser();
+        $this->loadFixtureScenario(MfaDuoOrganizationOnlyScenario::class);
+        $this->mockService(Client::class, function () {
+            $mock = $this->createMock(Client::class);
+            $mock->expects($this->once())
+                ->method('healthCheck')
+                ->willThrowException(new ServiceUnavailableException());
+
+            return $mock;
+        });
+
+        $redirect = '/app/users';
+        $this->post('/mfa/setup/duo/prompt?redirect=' . $redirect);
+
+        $this->assertResponseCode(302);
+        $this->assertRedirectContains($redirect);
     }
 }

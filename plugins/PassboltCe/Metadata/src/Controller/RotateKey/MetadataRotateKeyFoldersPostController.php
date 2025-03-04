@@ -14,18 +14,22 @@ declare(strict_types=1);
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         4.11.0
  */
-namespace Passbolt\Metadata\Controller\Upgrade;
+namespace Passbolt\Metadata\Controller\RotateKey;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
-use Passbolt\Metadata\Service\MetadataResourcesRenderService;
+use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
+use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyFoldersUpdateService;
 
-class MetadataUpgradeResourcesIndexController extends AppController
+/**
+ * @property \App\Controller\Component\ApiPaginationComponent $ApiPagination
+ */
+class MetadataRotateKeyFoldersPostController extends AppController
 {
     /**
-     * @var \App\Model\Table\ResourcesTable
+     * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    protected $Resources;
+    protected $Folders;
 
     /**
      * @inheritDoc
@@ -33,11 +37,12 @@ class MetadataUpgradeResourcesIndexController extends AppController
     public function initialize(): void
     {
         parent::initialize();
-        $this->Resources = $this->fetchTable('Resources');
+
+        $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
         $this->loadComponent('Passbolt/Metadata.MetadataPagination', [
-            'model' => 'Resources',
+            'model' => 'Folders',
             'order' => [
-                'Resources.id' => 'asc', // Default sorted field
+                'Folders.id' => 'asc', // Default sorted field
             ],
         ]);
     }
@@ -45,23 +50,25 @@ class MetadataUpgradeResourcesIndexController extends AppController
     /**
      * @return void
      */
-    public function index()
+    public function post()
     {
         $this->assertJson();
         $this->User->assertIsAdmin();
+        $this->assertNotEmptyArrayData();
 
-        // Retrieve and sanity the query options.
-        $whitelist = ['filter' => ['is-shared'], 'contain' => ['permissions']];
-        $options = $this->QueryString->get($whitelist);
+        (new MetadataRotateKeyFoldersUpdateService())->updateMany(
+            $this->User->getAccessControl(),
+            $this->getRequest()->getData()
+        );
 
         // Performance improvement: map query result datetime properties to string.
         ISOFormatDateTimeType::mapDatetimeTypesToMe();
-        $resources = $this->Resources->findMetadataUpgradeIndex($options);
-        $this->paginate($resources);
-        $resources = $resources->all();
+        $folders = $this->Folders->findMetadataRotateKeyIndex();
+        $this->paginate($folders);
+        $folders = $folders->all();
         ISOFormatDateTimeType::remapDatetimeTypesToDefault();
 
-        $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
-        $this->success(__('The operation was successful.'), $resources);
+        $folders = (new MetadataFoldersRenderService())->renderFolders($folders->toArray());
+        $this->success(__('The operation was successful.'), $folders);
     }
 }

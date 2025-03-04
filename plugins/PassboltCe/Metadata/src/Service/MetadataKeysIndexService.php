@@ -47,9 +47,7 @@ class MetadataKeysIndexService
         if (is_array($contain) && !empty($contain)) {
             if (isset($contain['metadata_private_keys'])) {
                 $query->contain(['MetadataPrivateKeys' => function ($q) use ($userId) {
-                    return $q
-                        ->select(['metadata_key_id', 'user_id', 'data'])
-                        ->where(['MetadataPrivateKeys.user_id' => $userId]);
+                    return $q->where(['MetadataPrivateKeys.user_id' => $userId]);
                 }]);
             }
         }
