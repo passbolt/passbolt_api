@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Service\Upgrade;
 
 use App\Error\Exception\CustomValidationException;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
@@ -64,37 +66,46 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
         // create metadata keys
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->persist();
-        [$folder1, $folder2] = FolderFactory::make(2)->persist();
+        [$folderPersonal, $folderShared] = FolderFactory::make(2)->persist();
+
+        /** @var \App\Model\Entity\User $userWithPersonalFolder */
+        $userWithPersonalFolder = UserFactory::make()->withAdaKey()->persist();
+        $userKeyId = $userWithPersonalFolder->gpgkey->id;
+        $group = GroupFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $folderShared */
+        $folderShared = FolderFactory::make()->withPermissionsFor([$group])->persist();
+        /** @var \Passbolt\Folders\Model\Entity\Folder $folderPersonal */
+        $folderPersonal = FolderFactory::make()->withPermissionsFor([$userWithPersonalFolder])->persist();
 
         $uac = $this->mockAdminAccessControl();
-        $metadataForF1 = $this->encryptForMetadataKey(json_encode([]));
+        $metadataForF1 = $this->encryptForUser(json_encode([]), $userWithPersonalFolder, $this->getAdaNoPassphraseKeyInfo());
         $metadataForF2 = $this->encryptForMetadataKey(json_encode([]));
         $data = [
             [
-                'id' => $folder1->get('id'),
-                'metadata_key_id' => $activeMetadataKey->get('id'),
-                'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                'id' => $folderPersonal->get('id'),
+                'metadata_key_id' => $userKeyId,
+                'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
                 'metadata' => $metadataForF1,
-                'modified' => $folder1->get('modified')->format('Y-m-d H:i:s'),
-                'modified_by' => $folder1->get('modified_by'),
+                'modified' => $folderPersonal->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $folderPersonal->get('modified_by'),
             ],
             [
-                'id' => $folder2->get('id'),
+                'id' => $folderShared->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $metadataForF2,
-                'modified' => $folder2->get('modified')->format('Y-m-d H:i:s'),
-                'modified_by' => $folder2->get('modified_by'),
+                'modified' => $folderShared->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $folderShared->get('modified_by'),
             ],
         ];
         $this->service->updateMany($uac, $data);
 
-        $updatedFolder1 = FolderFactory::get($folder1->get('id'));
-        $this->assertSame($activeMetadataKey->get('id'), $updatedFolder1->get('metadata_key_id'));
+        $updatedFolder1 = FolderFactory::get($folderPersonal->get('id'));
+        $this->assertSame($userKeyId, $updatedFolder1->get('metadata_key_id'));
         $this->assertSame($metadataForF1, $updatedFolder1->get('metadata'));
         $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
         $this->assertSame($uac->getId(), $updatedFolder1->get('modified_by'));
-        $updatedFolder2 = FolderFactory::get($folder2->get('id'));
+        $updatedFolder2 = FolderFactory::get($folderShared->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedFolder2->get('metadata_key_id'));
         $this->assertSame($metadataForF2, $updatedFolder2->get('metadata'));
         $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder2->get('modified')->format('Y-m-d H:i'));
