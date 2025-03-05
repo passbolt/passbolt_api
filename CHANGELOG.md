@@ -11,7 +11,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - PB-37363 As an administrator I can rotate metadata keys encrypting folders metadata
 - PB-36582 As an administrator I cannot reuse a previously deleted metadata key
 
-### Fix
+### Fixed
 - PB-39512 Fix during metadata upgrade process, the resource_type_id field is now updated in the database
 - PB-39399 Adds missing fields to metadata private keys in index response
 - PB-39393 Fix limit value is null in pagination header response for rotate & upgrade endpoints
