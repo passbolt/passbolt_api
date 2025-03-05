@@ -464,6 +464,11 @@ trait ResourcesFindersTrait
     {
         $query = $this->find('v4')->disableHydration();
 
+        $containPermissions = (bool)($options['contain']['permissions'] ?? false);
+        if ($containPermissions) {
+            $query->contain('Permissions');
+        }
+
         if (!isset($options['filter']['is-shared'])) {
             return $query;
         }

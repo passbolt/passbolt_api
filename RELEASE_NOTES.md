@@ -1,9 +1,18 @@
-Release song: https://youtu.be/U16Xg_rQZkA?si=cVcmovGWluuo8oYj
+Release song: TBD
 
-Passbolt is pleased to announce the immediate availability of version v4.11.1. This version is a targeted security release of the API focusing on fixing the security issue reported by a security researcher.
+## [4.12.0-test.1] - 2025-03-05
+### Added
+- PB-39395 As an administrator I can contain permissions when upgrading folders to v5 format
+- PB-39394 As an administrator I can contain permissions when upgrading resources to v5 format
+- PB-38850 As an administrator I cannot rotate entities while two metadata keys are active
+- PB-37699 As an administrator I can upgrade folders to v5 format
+- PB-37363 As an administrator I can rotate metadata keys encrypting folders metadata
+- PB-36582 As an administrator I cannot reuse a previously deleted metadata key
 
-We would like to express our appreciation to the community for their assistance in making Passbolt more secure. Further details can be found in [the incident report](https://www.passbolt.com/incidents/host-header-injection-vulnerability).
-
-## [4.11.1] - 2025-02-17
-### Security
-- PB-39045 Fix empty fullBaseUrl leading to Host header injection attack
+### Fixed
+- PB-39512 Fix during metadata upgrade process, the resource_type_id field is now updated in the database
+- PB-39399 Adds missing fields to metadata private keys in index response
+- PB-39393 Fix limit value is null in pagination header response for rotate & upgrade endpoints
+- PB-38770 Fix email subject for delete resource email when resource is v
+- PB-38791 Fix 500 error on the duo MFA setup & verify page when duo service is unavailable
+- PB-38771 Fix unable to expire the metadata key due to expired datetime format

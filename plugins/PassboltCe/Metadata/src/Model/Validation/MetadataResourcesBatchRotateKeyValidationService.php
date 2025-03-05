@@ -37,9 +37,9 @@ class MetadataResourcesBatchRotateKeyValidationService extends MetadataBatchUpda
     {
         $resources = parent::queryEntitiesFromIds($entityIds);
 
-        return $resources->where([
-            'Resources.deleted' => false,
-        ]);
+        return $resources
+            ->select(['Resources.resource_type_id'])
+            ->where(['Resources.deleted' => false]);
     }
 
     /**
