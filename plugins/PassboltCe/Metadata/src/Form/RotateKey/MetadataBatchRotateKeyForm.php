@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Form\RotateKey;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
 use Passbolt\Metadata\Form\Upgrade\MetadataBatchUpgradeForm;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class MetadataBatchRotateKeyForm extends MetadataBatchUpgradeForm
 {
@@ -41,6 +42,13 @@ class MetadataBatchRotateKeyForm extends MetadataBatchUpgradeForm
     public function validationDefault(Validator $validator): Validator
     {
         parent::validationDefault($validator);
+
+        $validator->add('metadata_key_type', 'is_not_shared_key', [
+            'rule' => function ($value) {
+                return $value === MetadataKey::TYPE_SHARED_KEY;
+            },
+            'message' => __('The metadata key type should be shared key.'),
+        ]);
 
         $validator->array('metadata_key');
         $validator->addNested('metadata_key', $this->getMetadataKeyValidator());
