@@ -6,6 +6,6 @@ return [
     ],
     'php' => [
         'minVersion' => '7.4',
-        'nextMinVersion' => '8.1',
+        'nextMinVersion' => '8.2',
     ],
 ];
