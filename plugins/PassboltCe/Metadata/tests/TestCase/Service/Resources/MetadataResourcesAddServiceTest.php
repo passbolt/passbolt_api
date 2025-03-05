@@ -80,7 +80,8 @@ class MetadataResourcesAddServiceTest extends AppTestCaseV5
     public function testMetadataResourceAddService_Success_SharedKey()
     {
         $user = UserFactory::make()->user()->persist();
-        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
+        // Create two metadata keys to ensure that IsSharedMetadataKeyUniqueActiveRule is skipped
+        [$metadataKey] = MetadataKeyFactory::make(2)->withCreatorAndModifier($user)->withServerPrivateKey()->persist();
         $v4ResourceTypeId = ResourceTypeFactory::make()->default()->persist()->get('id');
         $resourceTypeId = ResourceTypeFactory::make()->v5Default()->persist()->get('id');
         $metadataKeyId = $metadataKey->get('id');

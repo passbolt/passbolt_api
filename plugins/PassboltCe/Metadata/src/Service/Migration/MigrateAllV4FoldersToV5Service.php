@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Service\Migration;
 
-use App\Model\Table\PermissionsTable;
 use App\Service\OpenPGP\OpenPGPCommonServerOperationsTrait;
 use App\Service\OpenPGP\OpenPGPCommonUserOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
@@ -25,7 +24,6 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Table\FoldersTable;
-use Passbolt\Folders\Model\Traits\Folders\FoldersFindersTrait;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
@@ -37,11 +35,8 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
     use OpenPGPCommonUserOperationsTrait;
     use OpenPGPCommonServerOperationsTrait;
     use MetadataSettingsAwareTrait;
-    use FoldersFindersTrait;
 
     private FoldersTable $Folders;
-
-    private PermissionsTable $Permissions;
 
     /**
      * Result of migration.
@@ -61,8 +56,6 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
     {
         /** @phpstan-ignore-next-line */
         $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
-        /** @phpstan-ignore-next-line */
-        $this->Permissions = $this->fetchTable('Permissions');
     }
 
     /**

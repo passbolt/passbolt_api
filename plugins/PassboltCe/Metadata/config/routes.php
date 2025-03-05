@@ -101,6 +101,20 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
                 ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeResourcesPost', 'action' => 'post']
             )
             ->setMethods(['POST']);
+
+        $routes
+            ->connect(
+                '/folders',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeFoldersIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/folders',
+                ['prefix' => 'Upgrade', 'controller' => 'MetadataUpgradeFoldersPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
     });
 
     /**
@@ -120,6 +134,20 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
             ->connect(
                 '/resources',
                 ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyResourcesPost', 'action' => 'post']
+            )
+            ->setMethods(['POST']);
+
+        $routes
+            ->connect(
+                '/folders',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyFoldersIndex', 'action' => 'index']
+            )
+            ->setMethods(['GET']);
+
+        $routes
+            ->connect(
+                '/folders',
+                ['prefix' => 'RotateKey', 'controller' => 'MetadataRotateKeyFoldersPost', 'action' => 'post']
             )
             ->setMethods(['POST']);
     });
