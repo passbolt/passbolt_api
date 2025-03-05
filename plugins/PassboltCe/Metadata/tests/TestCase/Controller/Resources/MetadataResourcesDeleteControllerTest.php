@@ -70,6 +70,6 @@ class MetadataResourcesDeleteControllerTest extends AppIntegrationTestCaseV5
         $this->assertSuccess();
         $this->assertEmailQueueCount(1);
         $this->assertEmailSubject($user->username, sprintf('%s deleted a password', Purifier::clean($owner->profile->first_name)));
-        $this->assertEmailInBatchContains(sprintf('%s deleted a password', Purifier::clean($owner->profile->full_name)), $user->username);
+        $this->assertEmailInBatchContains(sprintf('%s deleted a password', $owner->profile->full_name), $user->username);
     }
 }
