@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.12.0-test.1] - 2025-03-5
+## [4.12.0-test.1] - 2025-03-05
 ### Added
 - PB-39395 As an administrator I can contain permissions when upgrading folders to v5 format
 - PB-39394 As an administrator I can contain permissions when upgrading resources to v5 format
