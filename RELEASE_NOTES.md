@@ -1,4 +1,4 @@
-Release song: TBD
+Release song: https://www.youtube.com/watch?v=pBZs_Py-1_0
 
 ## [4.12.0-test.1] - 2025-03-05
 ### Added
@@ -16,3 +16,6 @@ Release song: TBD
 - PB-38770 Fix email subject for delete resource email when resource is v
 - PB-38791 Fix 500 error on the duo MFA setup & verify page when duo service is unavailable
 - PB-38771 Fix unable to expire the metadata key due to expired datetime format
+
+### Maintenance
+- PB-39629 Set next minimum PHP version to 8.2 as passbolt v5 will not support lower PHP versions
