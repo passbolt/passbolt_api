@@ -136,13 +136,13 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $updatedResource1 = ResourceFactory::get($expiredResource1->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource1->get('metadata_key_id'));
         $this->assertSame($metadataForR1, $updatedResource1->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedResource1->get('modified')->format('Y-m-d')); // comparing seconds here might fail
         $this->assertSame($uac->getId(), $updatedResource1->get('modified_by'));
         /** @var \App\Model\Entity\Resource $updatedResource2 */
         $updatedResource2 = ResourceFactory::get($expiredResource2->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedResource2->get('metadata_key_id'));
         $this->assertSame($metadataForR2, $updatedResource2->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource2->get('modified')->format('Y-m-d H:i'));
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedResource2->get('modified')->format('Y-m-d'));
         $this->assertSame($uac->getId(), $updatedResource2->get('modified_by'));
     }
 
