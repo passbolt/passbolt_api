@@ -87,7 +87,10 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
         if (isset($options['contain']['resources_count'])) {
             $containResourcesCount = (bool)$options['contain']['resources_count'];
             if ($containResourcesCount) {
-                $query->leftJoinWith('Resources')
+                $query
+                    ->leftJoinWith('Resources', function (Query $q) {
+                        return $q->where(['Resources.deleted' => false]);
+                    })
                     ->selectAlso([
                         'resources_count' => new IdentifierExpression('COUNT(Resources.id)'),
                     ])
