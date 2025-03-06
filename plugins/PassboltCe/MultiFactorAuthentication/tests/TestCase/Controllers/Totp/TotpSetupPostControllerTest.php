@@ -171,7 +171,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $otp = Factory::loadFromProvisioningUri($uri);
         $sessionId = 'some_session_id';
         $this->mockSessionId($sessionId);
-        $this->mockTotpMfaForm(TotpSetupForm::class);
+        $this->mockTotpMfaFormInterface(TotpSetupForm::class, $this->makeUac($user));
 
         $this->post('/mfa/setup/totp.json?api-version=v2', [
             'otpProvisioningUri' => $uri,
@@ -199,7 +199,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
         /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
-        $this->mockTotpMfaForm(TotpSetupForm::class);
+        $this->mockTotpMfaFormInterface(TotpSetupForm::class, $this->makeUac($user));
 
         $this->post('/mfa/setup/totp.json?api-version=v2', [
             'otpProvisioningUri' => $uri,

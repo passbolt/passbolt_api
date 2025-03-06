@@ -58,7 +58,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
         [$uri] = $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
-        $this->mockTotpMfaForm(TotpVerifyForm::class);
+        $this->mockTotpMfaFormInterface(TotpVerifyForm::class, $this->makeUac($user));
 
         $this->post('/mfa/verify/totp?redirect=' . $redirect, [
             'totp' => $otp->now(),
