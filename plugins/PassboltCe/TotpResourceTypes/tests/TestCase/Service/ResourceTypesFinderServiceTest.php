@@ -87,6 +87,7 @@ class ResourceTypesFinderServiceTest extends AppTestCase
         [$resourceType1, $resourceType2, $resourceType3] = ResourceTypeFactory::make(3)->persist();
         ResourceFactory::make(2)->with('ResourceTypes', $resourceType1)->persist();
         ResourceFactory::make(3)->with('ResourceTypes', $resourceType2)->persist();
+        ResourceFactory::make()->deleted()->with('ResourceTypes', $resourceType3)->persist();
 
         $resourceTypes = $this->service->find();
 
