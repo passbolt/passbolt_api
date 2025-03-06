@@ -60,7 +60,7 @@ class RefreshTokenController extends AppController
     protected function renewRefreshTokenAndSetInResponseAsSecureCookie(AuthenticationToken $oldRefreshToken): string
     {
         $accessToken = (new JwtTokenCreateService())->createToken($oldRefreshToken->user_id);
-        $refreshService = (new RefreshTokenRenewalService());
+        $refreshService = new RefreshTokenRenewalService();
         $refreshedToken = $refreshService->renewToken($this->getRequest(), $oldRefreshToken, $accessToken);
         $refreshHttpOnlySecureCookie = $refreshService->createHttpOnlySecureCookie($refreshedToken);
         $this->setResponse($this->getResponse()->withCookie($refreshHttpOnlySecureCookie));

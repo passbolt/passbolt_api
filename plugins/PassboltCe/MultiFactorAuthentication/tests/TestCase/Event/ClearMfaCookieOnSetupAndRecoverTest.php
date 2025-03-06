@@ -49,9 +49,9 @@ class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
 
     public function testClearMfaCookieOnSetupAndRecover_clearMfaCookieInResponse_Post_In_List_Should_Set_Expired_Cookie()
     {
-        $request = (new ServerRequest([
+        $request = new ServerRequest([
             'environment' => ['REQUEST_METHOD' => 'POST'],
-        ]));
+        ]);
         $controller = new UsersRegisterController($request);
         $event = new Event('Foo', $controller);
 
@@ -63,9 +63,9 @@ class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
 
     public function testClearMfaCookieOnSetupAndRecover_clearMfaCookieInResponse_Post_In_List_No_User_Component_Should_Not_Set_Expired_Cookie()
     {
-        $request = (new ServerRequest([
+        $request = new ServerRequest([
             'environment' => ['REQUEST_METHOD' => 'POST'],
-        ]));
+        ]);
         $controller = new UsersRegisterController($request);
         $event = new Event('Foo', $controller);
         unset($controller->User);
@@ -78,9 +78,9 @@ class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
 
     public function testClearMfaCookieOnSetupAndRecover_clearMfaCookieInResponse_GET_In_List_Should_Not_Set_Expired_Cookie()
     {
-        $request = (new ServerRequest([
+        $request = new ServerRequest([
             'environment' => ['REQUEST_METHOD' => 'GET'],
-        ]));
+        ]);
         $controller = new UsersRegisterController($request);
         $event = new Event('Foo', $controller);
 
@@ -92,9 +92,9 @@ class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
 
     public function testClearMfaCookieOnSetupAndRecover_clearMfaCookieInResponse_Post_Not_In_List_No_Cookie()
     {
-        $request = (new ServerRequest([
+        $request = new ServerRequest([
             'environment' => ['REQUEST_METHOD' => 'POST'],
-        ]));
+        ]);
         $controller = new ErrorController($request);
         $event = new Event('Foo', $controller);
 
