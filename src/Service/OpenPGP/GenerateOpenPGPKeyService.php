@@ -192,13 +192,13 @@ class GenerateOpenPGPKeyService
 
         // Loop through each line
         $lines = explode("\n", $output, PHP_MAXPATHLEN);
-        if ($lines === false) {
+        if (empty($lines)) {
             throw new InternalErrorException('Empty output.');
         }
         foreach ($lines as $line) {
             // Each line is colon-separated; split it into fields
             $fields = explode(':', $line);
-            if ($fields === false) {
+            if (empty($fields)) {
                 continue;
             }
             // If the line is a fingerprint line (indicated by 'fpr' in the first field)
