@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Utility\UserAction;
+use App\View\AjaxView;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Routing\Router;
+use Cake\View\JsonView;
 
 /**
  * Application Controller
@@ -48,9 +50,6 @@ class AppController extends Controller
     public function initialize(): void
     {
         parent::initialize();
-        $this->loadComponent('RequestHandler', [
-            'enableBeforeRedirect' => false,
-        ]);
         $this->loadComponent('User');
         $this->loadComponent('QueryString');
         $this->loadAuthenticationComponent();
@@ -69,6 +68,27 @@ class AppController extends Controller
         $this->set('safeMode', $safeMode);
 
         return parent::beforeFilter($event);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function viewClasses(): array
+    {
+        return [JsonView::class, AjaxView::class];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function beforeRender(EventInterface $event)
+    {
+        parent::beforeRender($event);
+
+        // Required to support automatic view switching for 'ajax', which was supported by deprecated RequestHandlerComponent
+        if ($this->request->is('ajax')) {
+            $this->viewBuilder()->setClassName('Ajax');
+        }
     }
 
     /**
