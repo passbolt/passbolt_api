@@ -100,7 +100,7 @@ class PasswordPoliciesUpdateSetSettingsServiceTest extends AppTestCase
         /** @var \Passbolt\PasswordPoliciesUpdate\Model\Dto\PasswordPoliciesUpdateSettingsDto $settingsDto */
         $result = $this->service->createOrUpdate($uac, $settingsDto->toArray());
 
-        $this->assertSame(1, PasswordPoliciesSettingFactory::find()->count());
+        $this->assertSame(1, PasswordPoliciesSettingFactory::find()->all()->count());
         $this->assertInstanceOf(PasswordPoliciesSettingsDto::class, $result);
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->created_by);
@@ -171,7 +171,7 @@ class PasswordPoliciesUpdateSetSettingsServiceTest extends AppTestCase
         /** @var \Passbolt\PasswordPoliciesUpdate\Model\Dto\PasswordPoliciesUpdateSettingsDto $settingsDto */
         $result = $this->service->createOrUpdate($uac, $settingsDto->toArray());
 
-        $this->assertSame(1, PasswordPoliciesSettingFactory::find()->count());
+        $this->assertSame(1, PasswordPoliciesSettingFactory::find()->all()->count());
         $this->assertInstanceOf(PasswordPoliciesSettingsDto::class, $result);
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->created_by);
@@ -232,7 +232,7 @@ class PasswordPoliciesUpdateSetSettingsServiceTest extends AppTestCase
         $result = $this->service->createOrUpdate($uac, $settingsDto->toArray());
 
         $this->assertInstanceOf(PasswordPoliciesSettingsDto::class, $result);
-        $this->assertSame(1, PasswordPoliciesSettingFactory::find()->count());
+        $this->assertSame(1, PasswordPoliciesSettingFactory::find()->all()->count());
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->modified_by);
         $this->assertArrayEqualsCanonicalizing(

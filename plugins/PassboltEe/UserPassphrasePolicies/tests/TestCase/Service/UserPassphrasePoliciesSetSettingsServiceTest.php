@@ -112,7 +112,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
 
         $result = $this->service->createOrUpdate($uac, $data);
 
-        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->count());
+        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->all()->count());
         $this->assertInstanceOf(UserPassphrasePoliciesSettingsDto::class, $result);
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->created_by);
@@ -138,7 +138,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
 
         $result = $this->service->createOrUpdate($uac, $data);
 
-        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->count());
+        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->all()->count());
         $this->assertInstanceOf(UserPassphrasePoliciesSettingsDto::class, $result);
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->created_by);
@@ -166,7 +166,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
         $result = $this->service->createOrUpdate($uac, $data);
 
         $this->assertInstanceOf(UserPassphrasePoliciesSettingsDto::class, $result);
-        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->count());
+        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->all()->count());
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->modified_by);
         $this->assertSame(UserPassphrasePoliciesSettingsDto::SOURCE_DATABASE, $result->source);

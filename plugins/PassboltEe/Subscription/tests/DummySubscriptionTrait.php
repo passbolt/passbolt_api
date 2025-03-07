@@ -168,12 +168,12 @@ trait DummySubscriptionTrait
 
     public function assertSubscriptionExists()
     {
-        $this->assertSame(1, $this->Subscriptions->find()->count());
+        $this->assertSame(1, $this->Subscriptions->find()->all()->count());
     }
 
     public function assertSubscriptionDoesNotExist()
     {
-        $this->assertSame(0, $this->Subscriptions->find()->count());
+        $this->assertSame(0, $this->Subscriptions->find()->all()->count());
     }
 
     public function persistSubscription(string $keyFileName): EntityInterface

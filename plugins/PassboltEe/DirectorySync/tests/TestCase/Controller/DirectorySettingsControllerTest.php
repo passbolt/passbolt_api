@@ -322,6 +322,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $this->assertSuccess();
         $directoryOrgSettingsCount = OrganizationSettingFactory::find()
             ->where(['property_id' => UuidFactory::uuid($settingsNamespace)])
+            ->all()
             ->count();
         $this->assertSame(1, $directoryOrgSettingsCount);
         $directoryOrgSettings = DirectoryOrgSettings::get();

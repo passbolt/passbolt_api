@@ -60,7 +60,7 @@ class ResourcesTagsAddControllerWithFactoriesTest extends TagPluginIntegrationTe
         $conditions = ['resource_id' => $resource->id, 'tag_id' => $tag1Id,];
         foreach ($users as $user) {
             $conditions['user_id'] = $user->id;
-            $this->assertSame(1, ResourcesTagFactory::find()->where($conditions)->count());
+            $this->assertSame(1, ResourcesTagFactory::find()->where($conditions)->all()->count());
         }
     }
 }

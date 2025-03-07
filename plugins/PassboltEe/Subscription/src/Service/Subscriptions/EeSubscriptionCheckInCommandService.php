@@ -113,7 +113,7 @@ class EeSubscriptionCheckInCommandService implements SubscriptionCheckInCommandS
             try {
                 // Should not break in case of database exception.
                 // This can happen when Passbolt is not configured and should not prevent licence validation.
-                $usersQty = $users->findActive()->count();
+                $usersQty = $users->findActive()->all()->count();
             } catch (\Exception $e) {
                 $usersQty = 0;
             }
