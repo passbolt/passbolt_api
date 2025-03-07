@@ -159,9 +159,9 @@ trait FoldersFindersTrait
     /**
      * Returns all folders with expired metadata key.
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findMetadataRotateKeyIndex(): Query
+    public function findMetadataRotateKeyIndex(): SelectQuery
     {
         $query = $this->find();
 
@@ -288,9 +288,9 @@ trait FoldersFindersTrait
      * Returns all resources in v4 format that need to be upgraded.
      *
      * @param array $options query options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findMetadataUpgradeIndex(array $options): Query
+    public function findMetadataUpgradeIndex(array $options): SelectQuery
     {
         $query = $this->find('v4')->disableHydration();
 
@@ -338,10 +338,10 @@ trait FoldersFindersTrait
     }
 
     /**
-     * @param \Cake\ORM\Query $query Query
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findV4(Query $query): Query
+    public function findV4(SelectQuery $query): SelectQuery
     {
         return $query->where([
             $query->newExpr()->isNull('Folders.metadata'),
