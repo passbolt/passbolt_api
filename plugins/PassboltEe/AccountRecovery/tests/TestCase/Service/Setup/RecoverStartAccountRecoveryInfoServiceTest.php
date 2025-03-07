@@ -36,7 +36,7 @@ class RecoverStartAccountRecoveryInfoServiceTest extends AccountRecoveryTestCase
     {
         parent::setUp();
 
-        $this->service = (new RecoverStartAccountRecoveryInfoService());
+        $this->service = new RecoverStartAccountRecoveryInfoService();
     }
 
     public function tearDown(): void

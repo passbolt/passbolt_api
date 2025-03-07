@@ -99,7 +99,7 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
 
         // Validate additional settings
         if ($this->isAccountRecoveryUserSettingProvided()) {
-            $userSettingService = (new AccountRecoveryUserSettingsSetService($this->uac));
+            $userSettingService = new AccountRecoveryUserSettingsSetService($this->uac);
             $userSetting = $userSettingService->patchEntity(
                 $this->request->getData('account_recovery_user_setting')
             );
