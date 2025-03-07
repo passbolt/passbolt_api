@@ -109,7 +109,7 @@
         "cakephp/localized": "4.0.0",
         "vimeo/psalm": "^5.26.0",
         "cakedc/cakephp-phpstan": "^2.1",
-        "johnkary/phpunit-speedtrap": "^4.0"
+        "ergebnis/phpunit-slow-test-detector": "^2.19"
     },
     "autoload": {
         "psr-4": {
