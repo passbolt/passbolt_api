@@ -108,7 +108,7 @@ class InstallCommandTest extends AppTestCase
 
         $this->assertSame(
             1,
-            TableRegistry::getTableLocator()->get('Avatars')->find()->count()
+            TableRegistry::getTableLocator()->get('Avatars')->find()->all()->count()
         );
     }
 
