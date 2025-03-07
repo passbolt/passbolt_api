@@ -52,8 +52,6 @@ class ResourcesDeleteNotificationTest extends AppIntegrationTestCase
         ResourceTypeFactory::make()->default()->persist();
         $r = ResourceFactory::make()->withPermissionsFor([$user, $user2, $disabled])->persist();
 
-        $this->disableErrorHandlerMiddleware();
-
         $this->logInAs($user);
         $this->deleteJson('/resources/' . $r->id . '.json');
         $this->assertSuccess();
