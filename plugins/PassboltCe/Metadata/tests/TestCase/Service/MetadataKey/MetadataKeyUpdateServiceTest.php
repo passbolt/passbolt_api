@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Service\MetadataKey;
+namespace Passbolt\Metadata\Test\TestCase\Service\MetadataKey;
 
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\Role;
