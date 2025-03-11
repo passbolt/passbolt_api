@@ -663,4 +663,23 @@ trait UsersFindersTrait
     {
         return $query->find('activeNotDeleted')->contain('Roles');
     }
+
+    /**
+     * Find non-disabled users to notify when group permissions are changed
+     *
+     * @param string $groupId group ID
+     * @return \Cake\ORM\Query
+     */
+    public function findGroupManagersToNotify(string $groupId): Query
+    {
+        return $this
+            ->find('locale')
+            ->find('notDisabled')
+            ->innerJoinWith('GroupsUsers', function (Query $q) use ($groupId) {
+                return $q->where([
+                    'GroupsUsers.group_id' => $groupId,
+                    'GroupsUsers.is_admin' => true,
+                ]);
+            });
+    }
 }
