@@ -125,7 +125,7 @@ abstract class MfaVerifyController extends MfaController
         $expiryAt = null;
         if ($rememberMeForAMonthSetting->isEnabled()) {
             $expiryAt = $this->request->getData('remember') ?
-                (new FrozenDate())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
+                (new \Cake\I18n\Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
                 null;
         }
 

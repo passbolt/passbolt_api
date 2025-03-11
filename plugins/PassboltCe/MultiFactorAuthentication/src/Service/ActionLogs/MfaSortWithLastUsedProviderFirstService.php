@@ -119,7 +119,7 @@ class MfaSortWithLastUsedProviderFirstService
                 'ActionLogs.action_id IN' => $actionIds,
                 'ActionLogs.status' => 1,
             ])
-            ->orderDesc('ActionLogs.created')
+            ->orderByDesc('ActionLogs.created')
             ->first();
 
         if (is_null($lastMfaRequestAction)) {

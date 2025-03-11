@@ -27,9 +27,9 @@ use Cake\ORM\Entity;
  * @property string $slug
  * @property string|null $definition
  * @property string|null $description
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
- * @property \Cake\I18n\FrozenTime|null $deleted
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
+ * @property \Cake\I18n\DateTime|null $deleted
  * @property \App\Model\Entity\Resource[] $resources
  */
 class ResourceType extends Entity
@@ -60,7 +60,7 @@ class ResourceType extends Entity
         self::SLUG_V5_DEFAULT_WITH_TOTP,
     ];
 
-    protected $_accessible = [
+    protected array $_accessible = [
         'name' => false,
         'slug' => false,
         'description' => false,

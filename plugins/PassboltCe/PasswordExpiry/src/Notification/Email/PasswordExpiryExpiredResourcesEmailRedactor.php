@@ -123,7 +123,7 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
-            ->order([], true); // Remove any order as it is not relevant here and breaks in MySQL
+            ->orderBy([], true); // Remove any order as it is not relevant here and breaks in MySQL
         if (!empty($userIdsToSkip)) {
             $usersToNotify->whereNotInList('Users.id', $userIdsToSkip);
         }

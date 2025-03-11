@@ -35,7 +35,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
     use TransfersModelTrait;
     use UsersModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
         'app.Base/Profiles',
         'app.Base/Roles',
@@ -178,7 +178,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
                 'token' => UuidFactory::uuid(),
                 'active' => true,
                 'type' => AuthenticationToken::TYPE_MOBILE_TRANSFER,
-                'created' => new FrozenDate('last year'),
+                'created' => new \Cake\I18n\Date('last year'),
             ],
         ]);
         $id = $transfer->id;
@@ -207,7 +207,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
                 'token' => UuidFactory::uuid(),
                 'active' => true,
                 'type' => AuthenticationToken::TYPE_RECOVER,
-                'created' => new FrozenDate('last year'),
+                'created' => new \Cake\I18n\Date('last year'),
             ],
         ]);
         $id = $transfer->id;

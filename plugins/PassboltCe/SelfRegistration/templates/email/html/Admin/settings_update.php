@@ -26,7 +26,7 @@ echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($modifier['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $modifier,
-        'datetime' => FrozenTime::now(),
+        'datetime' => \Cake\I18n\DateTime::now(),
         'text' => $subject
     ])
 ]);

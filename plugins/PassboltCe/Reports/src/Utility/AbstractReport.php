@@ -164,7 +164,7 @@ abstract class AbstractReport implements ReportInterface
             'type' => $this->getType(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
-            'created' => FrozenTime::now(),
+            'created' => \Cake\I18n\DateTime::now(),
             'data' => $this->getData(),
         ];
 

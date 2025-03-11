@@ -93,8 +93,8 @@ class MetadataKeyCreateFormTest extends TestCase
     public function testMetadataKeyForm_Error_ExpiredDeleteNotEmpty(): void
     {
         $data = [
-            'expired' => FrozenTime::yesterday()->format('Y-m-d H:i:s'),
-            'deleted' => FrozenTime::yesterday()->format('Y-m-d H:i:s'),
+            'expired' => \Cake\I18n\DateTime::yesterday()->format('Y-m-d H:i:s'),
+            'deleted' => \Cake\I18n\DateTime::yesterday()->format('Y-m-d H:i:s'),
         ];
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();

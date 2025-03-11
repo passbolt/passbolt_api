@@ -43,6 +43,6 @@ class IsDateInPastValidationRule extends PassboltValidationRule
             return false;
         }
 
-        return $value->lessThan(FrozenTime::now());
+        return $value->lessThan(\Cake\I18n\DateTime::now());
     }
 }

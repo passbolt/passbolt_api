@@ -92,7 +92,7 @@ trait FoldersFindersTrait
         if (isset($options['contain']['children_folders'])) {
             $query->contain('ChildrenFolders', function (Query $q) use ($userId) {
                 return $q->where(['FoldersRelations.user_id' => $userId])
-                    ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
+                    ->find(FolderizableBehavior::FINDER_NAME, user_id: $userId);
             });
         }
 
@@ -100,7 +100,7 @@ trait FoldersFindersTrait
         if (isset($options['contain']['children_resources'])) {
             $query->contain('ChildrenResources', function (Query $q) use ($userId) {
                 return $q->where(['FoldersRelations.user_id' => $userId])
-                    ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
+                    ->find(FolderizableBehavior::FINDER_NAME, user_id: $userId);
             });
         }
 

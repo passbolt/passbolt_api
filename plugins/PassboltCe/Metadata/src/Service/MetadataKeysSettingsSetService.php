@@ -60,7 +60,7 @@ class MetadataKeysSettingsSetService
             $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
             $serverKeysCount = $metadataPrivateKeysTable->find()
                 ->where(['user_id IS' => null])
-                ->order(['created' => 'DESC'])
+                ->orderBy(['created' => 'DESC'])
                 ->all()
                 ->count();
             if ($serverKeysCount === 0) {

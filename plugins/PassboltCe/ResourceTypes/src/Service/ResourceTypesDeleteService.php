@@ -77,7 +77,7 @@ class ResourceTypesDeleteService
             throw new BadRequestException($msg);
         }
 
-        $resourceType->deleted = FrozenTime::now();
+        $resourceType->deleted = \Cake\I18n\DateTime::now();
         if (!$resourcesTypesTable->save($resourceType)) {
             throw new InternalErrorException(__('The resource type could not be deleted.'));
         }

@@ -66,7 +66,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
             'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
             'metadata' => 'bar',
             'metadata_key_id' => $resource->metadata_key_id,
-            'modified' => FrozenTime::now(),
+            'modified' => \Cake\I18n\DateTime::now(),
             'modified_by' => UuidFactory::uuid(),
         ]];
 
@@ -88,7 +88,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
             'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
             'metadata' => 'bar',
             'metadata_key_id' => $resource->metadata_key_id,
-            'modified' => FrozenTime::now(),
+            'modified' => \Cake\I18n\DateTime::now(),
             'modified_by' => UuidFactory::uuid(),
         ]];
 

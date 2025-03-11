@@ -31,7 +31,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         AccountSettingsFixture::class,
         UsersFixture::class,
         RolesFixture::class,
@@ -97,7 +97,7 @@ class MfaUserSettingsDeleteControllerTest extends MfaIntegrationTestCase
     {
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO],
-            MfaSettings::PROVIDER_DUO => [MfaAccountSettings::VERIFIED => FrozenTime::now()],
+            MfaSettings::PROVIDER_DUO => [MfaAccountSettings::VERIFIED => \Cake\I18n\DateTime::now()],
         ];
         $this->mockMfaAccountSettings('ada', $data);
 

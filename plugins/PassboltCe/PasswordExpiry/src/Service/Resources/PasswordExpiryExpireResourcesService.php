@@ -127,7 +127,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
         /** @var \App\Model\Table\ResourcesTable $ResourcesTable */
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $ResourcesTable->updateAll(
-            [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => FrozenTime::now()->subSeconds(2)],
+            [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => \Cake\I18n\DateTime::now()->subSeconds(2)],
             ['Resources.id IN' => $resourceIds],
         );
     }

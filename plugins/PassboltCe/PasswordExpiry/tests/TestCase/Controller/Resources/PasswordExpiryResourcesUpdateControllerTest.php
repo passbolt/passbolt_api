@@ -52,7 +52,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->logInAs($operator);
 
         $data = [
-            'expired' => FrozenDate::tomorrow()->toAtomString(),
+            'expired' => \Cake\I18n\Date::tomorrow()->toAtomString(),
         ];
         $this->putJson("/resources/$resourceToUpdate->id.json", $data);
         $this->assertSuccess();
@@ -79,9 +79,9 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         ResourceTypeFactory::make()->default()->persist();
 
         if ($isResourceAlreadyExpired) {
-            $expiryDate = FrozenTime::yesterday();
+            $expiryDate = \Cake\I18n\DateTime::yesterday();
         } else {
-            $expiryDate = FrozenTime::tomorrow();
+            $expiryDate = \Cake\I18n\DateTime::tomorrow();
         }
         [$operator, $ownerWithAccess, $editorWithAccess] = UserFactory::make(4)->user()->persist();
         /** @var \App\Model\Entity\Resource $resourceToUpdate */
@@ -95,7 +95,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
 
         $data = [
             'name' => 'Foo updated',
-            'expired' => FrozenDate::yesterday()->toAtomString(),
+            'expired' => \Cake\I18n\Date::yesterday()->toAtomString(),
         ];
         $this->putJson("/resources/$resourceToUpdate->id.json", $data);
         $this->assertSuccess();

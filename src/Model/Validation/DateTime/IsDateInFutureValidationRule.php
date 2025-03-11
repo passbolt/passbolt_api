@@ -44,6 +44,6 @@ class IsDateInFutureValidationRule extends PassboltValidationRule
             return false;
         }
 
-        return $value->greaterThan(FrozenTime::now());
+        return $value->greaterThan(\Cake\I18n\DateTime::now());
     }
 }

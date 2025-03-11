@@ -48,7 +48,7 @@ class ResourcesIndexController extends AppController
         $this->Resources = $this->fetchTable('Resources');
     }
 
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'Resources.name',
             'Resources.username',

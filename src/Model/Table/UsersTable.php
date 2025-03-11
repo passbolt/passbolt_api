@@ -598,8 +598,8 @@ class UsersTable extends Table
         $entitiesChanges->pushDeletedEntities($secretsToConsiderAsDeleted);
 
         $this->updateAll([
-            'disabled' => FrozenTime::now(),
-            'modified' => FrozenTime::now(),
+            'disabled' => \Cake\I18n\DateTime::now(),
+            'modified' => \Cake\I18n\DateTime::now(),
             ], ['id' => $user->id]);
 
         return $entitiesChanges;

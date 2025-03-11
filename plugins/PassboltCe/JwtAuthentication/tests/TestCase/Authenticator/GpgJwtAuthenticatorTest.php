@@ -44,7 +44,7 @@ class GpgJwtAuthenticatorTest extends TestCase
     use GpgAdaSetupTrait;
     use TruncateDirtyTables;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Gpgkeys',
     ];
 

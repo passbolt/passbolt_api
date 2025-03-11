@@ -49,7 +49,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
     use GroupsUsersModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,

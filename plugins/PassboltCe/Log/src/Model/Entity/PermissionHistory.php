@@ -45,7 +45,7 @@ class PermissionHistory extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'aco' => false,
         'aco_foreign_key' => false,

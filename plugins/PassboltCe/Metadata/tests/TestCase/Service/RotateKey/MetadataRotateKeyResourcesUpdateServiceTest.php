@@ -221,7 +221,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -266,7 +266,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
+        $resource = ResourceFactory::make(['modified' => \Cake\I18n\DateTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->get('id'),
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();
@@ -278,7 +278,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -295,7 +295,7 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
-        $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
+        $resource = ResourceFactory::make(['modified' => \Cake\I18n\DateTime::yesterday()])->withPermissionsFor([$admin])->v5Fields(true, [
             'metadata_key_id' => $expiredMetadataKey->get('id'),
             'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
         ])->persist();

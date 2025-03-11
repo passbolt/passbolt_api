@@ -67,7 +67,7 @@ class JwtTokenCreateService extends JwtAbstractService
     {
         $expiryPeriod = $expirationPeriod ?? Configure::read(JwtTokenCreateService::JWT_EXPIRY_CONFIG_KEY);
         try {
-            return (int)(new FrozenTime('+' . $expiryPeriod))->toUnixString();
+            return (int)(new \Cake\I18n\DateTime('+' . $expiryPeriod))->toUnixString();
         } catch (\Throwable $e) {
             throw new InternalErrorException(
                 __('The configuration {0} is not correctly set.', JwtTokenCreateService::JWT_EXPIRY_CONFIG_KEY),

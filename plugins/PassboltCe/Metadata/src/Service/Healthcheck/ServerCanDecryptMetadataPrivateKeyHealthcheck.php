@@ -60,7 +60,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
                     return $q->where([$expr]);
                 })
                 ->where(['MetadataPrivateKeys.user_id IS' => null])
-                ->order(['MetadataPrivateKeys.created' => 'DESC'])
+                ->orderBy(['MetadataPrivateKeys.created' => 'DESC'])
                 ->firstOrFail();
         } catch (\PDOException | RecordNotFoundException $exception) {
             $this->errorMessage = __('No server metadata private key found.');

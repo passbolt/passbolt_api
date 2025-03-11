@@ -104,13 +104,13 @@ class ActionLogFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param string|FrozenTime $userId User ID
+     * @param string|\Cake\I18n\DateTime $userId User ID
      * @return $this
      */
     public function created($created)
     {
         if (is_string($created)) {
-            $created = FrozenTime::parse($created);
+            $created = \Cake\I18n\DateTime::parse($created);
         }
 
         return $this->setField('created', $created);

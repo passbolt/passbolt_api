@@ -42,7 +42,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
     use GroupsModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
     FavoritesFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,

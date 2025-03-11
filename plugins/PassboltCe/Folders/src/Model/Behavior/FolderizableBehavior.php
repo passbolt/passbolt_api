@@ -67,7 +67,7 @@ class FolderizableBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'implementedFinders' => [
             /** @uses findFolderParentId() */
             self::FINDER_NAME => 'findFolderParentId', // Make the finder available with the name "folder_parent"

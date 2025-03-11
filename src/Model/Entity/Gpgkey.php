@@ -16,11 +16,11 @@ use Cake\ORM\Entity;
  * @property string $key_id
  * @property string $fingerprint
  * @property string|null $type
- * @property \Cake\I18n\FrozenTime|null $expires
- * @property \Cake\I18n\FrozenTime|null $key_created
+ * @property \Cake\I18n\DateTime|null $expires
+ * @property \Cake\I18n\DateTime|null $key_created
  * @property bool $deleted
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \App\Model\Entity\User $user
  */
@@ -35,7 +35,7 @@ class Gpgkey extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'user_id' => false,
         'armored_key' => false,

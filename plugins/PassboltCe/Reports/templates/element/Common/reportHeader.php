@@ -24,7 +24,7 @@ if (!isset($report)) {
 }
 
 $reportName = Purifier::clean($report['name']);
-$reportCreated = $report['created'] ?? FrozenTime::now();
+$reportCreated = $report['created'] ?? \Cake\I18n\DateTime::now();
 $reportCreator = $report['creator']['profile']['first_name'] . ' ' . $report['creator']['profile']['last_name'];
 $reportCreator = Purifier::clean($reportCreator);
 ?>

@@ -182,7 +182,7 @@ class FoldersRelationsSortService
                 'folder_parent_id' => 'folder_parent_id',
             ])
             ->where($this->buildFoldersRelationsTupleComparisonExpression($foldersRelations))
-            ->group(['foreign_id', 'folder_parent_id'])
+            ->groupBy(['foreign_id', 'folder_parent_id'])
             ->all()
             ->combine([$this, 'getRelationDetailsKey'], function ($folderRelation) {
                 return $folderRelation->extract(['usage_count']);
@@ -237,7 +237,7 @@ class FoldersRelationsSortService
                 'created_oldest' => 'MIN(created)',
             ])
             ->where($this->buildFoldersRelationsTupleComparisonExpression($foldersRelations))
-            ->group(['foreign_id', 'folder_parent_id'])
+            ->groupBy(['foreign_id', 'folder_parent_id'])
             ->all()
             ->combine([$this, 'getRelationDetailsKey'], function ($folderRelation) {
                 return $folderRelation->extract(['created_oldest']);

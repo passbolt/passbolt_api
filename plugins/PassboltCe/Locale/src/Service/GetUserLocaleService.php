@@ -60,7 +60,7 @@ class GetUserLocaleService extends LocaleService
     {
         $setting = TableRegistry::getTableLocator()
             ->get('Passbolt/AccountSettings.AccountSettings')
-            ->find('byProperty', ['property' => static::SETTING_PROPERTY])
+            ->find('byProperty', property: static::SETTING_PROPERTY)
             ->innerJoinWith('Users', function (Query $q) use ($username) {
                 return $q->where([
                     'Users.username' => $username,

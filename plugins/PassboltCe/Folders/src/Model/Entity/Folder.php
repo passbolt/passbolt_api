@@ -26,8 +26,8 @@ use Cake\ORM\Entity;
  * @property string $metadata
  * @property string $metadata_key_id
  * @property string $metadata_key_type
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property string $created_by
  * @property string $modified_by
  * @property \App\Model\Entity\User|null $creator
@@ -51,7 +51,7 @@ class Folder extends Entity
      *
      * @var string[]
      */
-    protected $_hidden = [
+    protected array $_hidden = [
         '_joinData',
     ];
 
@@ -64,7 +64,7 @@ class Folder extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'name' => false,
         'created' => false,
         'modified' => false,

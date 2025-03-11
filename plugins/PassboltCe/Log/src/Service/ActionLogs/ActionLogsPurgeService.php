@@ -46,7 +46,7 @@ class ActionLogsPurgeService
                 'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id')->limit($limit),
             ]);
         } catch (\PDOException $exception) {
-            $createdBefore = FrozenDate::now()->subDays($retentionInDays);
+            $createdBefore = \Cake\I18n\Date::now()->subDays($retentionInDays);
             $entitiesHistory = $ActionLogsTable->getAssociation('EntitiesHistory')
                 ->subquery()
                 ->select('EntitiesHistory.action_log_id')
@@ -77,8 +77,8 @@ class ActionLogsPurgeService
                 'count' => 'COUNT(*)',
                 'action_id',
             ])
-            ->group('ActionLogs.action_id')
-            ->orderDesc('count');
+            ->groupBy('ActionLogs.action_id')
+            ->orderByDesc('count');
 
         $total->formatResults(function (CollectionInterface $results) {
             $actionsToPurge = $this->getActionUuidsToPurge();
@@ -104,7 +104,7 @@ class ActionLogsPurgeService
      */
     private function getActionLogsToPurge(int $retentionInDays): Query
     {
-        $createdBefore = FrozenDate::now()->subDays($retentionInDays);
+        $createdBefore = \Cake\I18n\Date::now()->subDays($retentionInDays);
         $ActionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
 
         return $ActionLogsTable->find()

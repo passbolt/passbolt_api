@@ -40,7 +40,7 @@ class FoldersIndexController extends AppController
         $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
     }
 
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'Folders.name',
             'Folders.created',

@@ -43,7 +43,7 @@ class MetadataSessionKeyUpdateControllerTest extends AppIntegrationTestCaseV5
         $sessionKey = MetadataSessionKeyFactory::make()->withUser($user)->persist();
         $sessionKey = MetadataSessionKeyFactory::get($sessionKey->get('id')); // needed to get exact modified time
         $sessionKeyId = $sessionKey->get('id');
-        $oldModified = new FrozenTime($sessionKey->get('modified'));
+        $oldModified = new \Cake\I18n\DateTime($sessionKey->get('modified'));
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->get('gpgkey'));
         $msg = $gpg->encrypt(MetadataSessionKeyFactory::getCleartextDataJson());

@@ -30,7 +30,7 @@ class SaveTest extends AppTestCase
 
     public $Transfers;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
     ];
 

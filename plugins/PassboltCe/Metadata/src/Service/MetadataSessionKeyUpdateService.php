@@ -79,7 +79,7 @@ class MetadataSessionKeyUpdateService
             throw new BadRequestException(__('The metadata session key data is identical.'));
         }
         // 409 if the modified date is not equal to the persisted session key one
-        $asserTime = (new FrozenTime($data['modified']))->equals($metadataSessionKey->get('modified'));
+        $asserTime = (new \Cake\I18n\DateTime($data['modified']))->equals($metadataSessionKey->get('modified'));
         if (!$asserTime) {
             throw new ConflictException(__('The metadata session key data has changed.'));
         }

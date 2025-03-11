@@ -91,7 +91,7 @@ class ShowQueuedEmailsCommand extends PassboltCommand
         $queueEmails = $emailQueueTable->find()
             ->select(['email', 'subject', 'error', 'created', 'sent'])
             ->limit($limit)
-            ->order([$emailQueueTable->aliasField('created') => $order]);
+            ->orderBy([$emailQueueTable->aliasField('created') => $order]);
 
         if ($failed) {
             $queueEmails->where([$emailQueueTable->aliasField('error') . ' IS NOT' => null]);

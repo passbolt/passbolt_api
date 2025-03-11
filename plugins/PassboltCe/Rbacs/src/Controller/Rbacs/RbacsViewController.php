@@ -29,7 +29,7 @@ class RbacsViewController extends AppController
     /**
      * @var array $paginate options
      */
-    public $paginate = [];
+    public array $paginate = [];
 
     /**
      * @inheritDoc

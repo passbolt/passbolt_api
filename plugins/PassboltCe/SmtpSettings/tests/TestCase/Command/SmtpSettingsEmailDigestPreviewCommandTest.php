@@ -49,7 +49,6 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->clearPlugins();
         $this->loadPlugins(['Passbolt/EmailDigest' => []]);
         EmailNotificationSettings::flushCache();
@@ -71,7 +70,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
 
         $nMails = 2;
         EmailQueueFactory::make($nMails)->persist();
-        $mails = EmailQueueFactory::find()->orderAsc('created');
+        $mails = EmailQueueFactory::find()->orderByAsc('created');
 
         $this->exec('passbolt email_digest preview');
         $this->assertExitSuccess();
@@ -101,7 +100,7 @@ class SmtpSettingsEmailDigestPreviewCommandTest extends TestCase
 
         $nMails = 2;
         EmailQueueFactory::make($nMails)->persist();
-        $mails = EmailQueueFactory::find()->orderAsc('created');
+        $mails = EmailQueueFactory::find()->orderByAsc('created');
 
         $this->exec('passbolt email_digest preview');
         $this->assertExitSuccess();

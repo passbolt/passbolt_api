@@ -72,21 +72,21 @@ class VerifyTokenCreateServiceTest extends TestCase
         // Old token for that user: should be deleted
         AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_VERIFY_TOKEN)
-            ->created(FrozenTime::now()->subHours(1)->subSeconds(1))
+            ->created(\Cake\I18n\DateTime::now()->subHours(1)->subSeconds(1))
             ->userId($userId)
             ->persist();
 
         // Old token for another user: should be deleted
         AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_VERIFY_TOKEN)
-            ->created(FrozenTime::now()->subHours(1)->subSeconds(1))
+            ->created(\Cake\I18n\DateTime::now()->subHours(1)->subSeconds(1))
             ->userId(UuidFactory::uuid())
             ->persist();
 
         // Valid token for that user of another type: should not be deleted
         AuthenticationTokenFactory::make()
             ->type('Foo')
-            ->created(FrozenTime::now()->addMinutes(1))
+            ->created(\Cake\I18n\DateTime::now()->addMinutes(1))
             ->userId($userId)
             ->persist();
 

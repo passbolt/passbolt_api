@@ -44,8 +44,8 @@ class PasswordExpiryResourcesTableTest extends AppTestCase
     public function dataProviderForSuccess(): array
     {
         return [
-            [FrozenDate::tomorrow()->toAtomString()],
-            [FrozenDate::tomorrow()->format('Y-m-d')],
+            [\Cake\I18n\Date::tomorrow()->toAtomString()],
+            [\Cake\I18n\Date::tomorrow()->format('Y-m-d')],
             [null],
         ];
     }

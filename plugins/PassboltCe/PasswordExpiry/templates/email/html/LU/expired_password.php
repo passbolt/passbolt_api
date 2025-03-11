@@ -31,7 +31,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_anonymous_text', [
         'title' => $title,
         'text' => __('You have been requested to change them'),
-        'datetime' => FrozenTime::now(),
+        'datetime' => \Cake\I18n\DateTime::now(),
     ]),
 ]);
 

@@ -176,7 +176,7 @@ class GpgkeysTable extends Table
     public function findIndex(Query $query, array $options): Query
     {
         if (isset($options['filter']['modified-after'])) {
-            $modified = new FrozenTime($options['filter']['modified-after']);
+            $modified = new \Cake\I18n\DateTime($options['filter']['modified-after']);
             $query->where(['modified >' => $modified->i18nFormat('yyyy-MM-dd HH:mm:ss')]);
         }
 
@@ -230,7 +230,7 @@ class GpgkeysTable extends Table
         // with a specific id requested
         return $query
             ->where(['user_id' => $options['user_id'], 'deleted' => false])
-            ->order('created DESC')
+            ->orderBy('created DESC')
             ->limit(1);
     }
 
@@ -292,12 +292,12 @@ class GpgkeysTable extends Table
             'uid' => $info['uid'],
             'armored_key' => $armoredKey,
             'deleted' => false,
-            'key_created' => new FrozenTime($info['key_created']),
+            'key_created' => new \Cake\I18n\DateTime($info['key_created']),
             'expires' => null,
         ];
 
         if (!empty($info['expires'])) {
-            $data['expires'] = new FrozenTime($info['expires']);
+            $data['expires'] = new \Cake\I18n\DateTime($info['expires']);
         }
 
         $gpgKey = $this->newEntity($data, ['accessibleFields' => [

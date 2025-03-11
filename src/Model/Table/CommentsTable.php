@@ -277,7 +277,7 @@ class CommentsTable extends Table
             'Comments.foreign_model' => $foreignModelName,
             'Comments.foreign_key' => $foreignKey,
         ]);
-        $query->order([
+        $query->orderBy([
             'Comments.modified' => 'DESC',
         ]);
 

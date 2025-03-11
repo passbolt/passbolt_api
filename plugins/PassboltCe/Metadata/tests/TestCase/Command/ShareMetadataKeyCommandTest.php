@@ -41,8 +41,6 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
     }
 
     public function testShareMetadataKeyCommand_Help()
@@ -114,7 +112,7 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
         $this->assertCount(0, $result);
 
         $metadataPrivateKeysInserted = MetadataPrivateKeyFactory::find()
-            ->where(['created >=' => FrozenDate::today()])
+            ->where(['created >=' => \Cake\I18n\Date::today()])
             ->all();
         $this->assertSame(3, $metadataPrivateKeysInserted->count());
         foreach ($metadataPrivateKeysInserted as $key) {

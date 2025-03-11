@@ -258,7 +258,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             ->withAuthenticationTokens(
                 MfaAuthenticationTokenFactory::make()
                     ->active()
-                    ->created((new FrozenDate())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS))
+                    ->created((new \Cake\I18n\Date())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS))
             )
             ->persist();
         $token = $user->authentication_tokens[0];
@@ -281,7 +281,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             'token' => UuidFactory::uuid(),
             'active' => true,
             'type' => AuthenticationToken::TYPE_MFA,
-            'created' => (new FrozenDate())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS),
+            'created' => (new \Cake\I18n\Date())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS),
             'data' => json_encode([
                 'provider' => MfaSettings::PROVIDER_TOTP,
                 'user_agent' => null,
@@ -307,7 +307,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             'token' => UuidFactory::uuid(),
             'active' => true,
             'type' => AuthenticationToken::TYPE_MFA,
-            'created' => (new FrozenDate())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS + 1),
+            'created' => (new \Cake\I18n\Date())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS + 1),
             'data' => json_encode([
                 'provider' => MfaSettings::PROVIDER_TOTP,
                 'user_agent' => null,

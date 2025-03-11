@@ -603,7 +603,7 @@ trait UsersFindersTrait
             return $where->or(function (QueryExpression $or) {
                 return $or
                     ->isNull($this->aliasField('disabled'))
-                    ->gt($this->aliasField('disabled'), FrozenTime::now());
+                    ->gt($this->aliasField('disabled'), \Cake\I18n\DateTime::now());
             });
         });
     }

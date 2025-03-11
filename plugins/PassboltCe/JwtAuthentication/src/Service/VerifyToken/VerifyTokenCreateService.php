@@ -64,7 +64,7 @@ class VerifyTokenCreateService
      */
     protected function cleanupAllExpiredTokens(): void
     {
-        $minTokenCreationTime = FrozenTime::now()
+        $minTokenCreationTime = \Cake\I18n\DateTime::now()
             ->modify('-' . Configure::read(VerifyTokenValidationService::VERIFY_TOKEN_EXPIRY_CONFIG_KEY));
 
         $this->AuthenticationTokens->deleteAll([

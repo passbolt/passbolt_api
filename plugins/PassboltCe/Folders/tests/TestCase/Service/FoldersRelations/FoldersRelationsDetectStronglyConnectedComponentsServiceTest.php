@@ -40,7 +40,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsServiceTest extends Folde
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         UsersFixture::class,
     ];
 

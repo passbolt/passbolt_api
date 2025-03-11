@@ -192,7 +192,7 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         if (!empty($groupsIds) && $groupUserDeleteRedactorEnabled) {
             $groupManagerIdsSubQuery = $this->Users
                 ->find('notDisabled')
-                ->group($this->Users->aliasField('id'))
+                ->groupBy($this->Users->aliasField('id'))
                 ->select('id')
                 ->matching('GroupsUsers', function (Query $q) use ($groupsIds) {
                     return $q->where([
