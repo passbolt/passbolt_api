@@ -48,8 +48,6 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
         // clear collector state to get proper results
         MigrateAllV4ToV5ServiceCollector::clear();
     }

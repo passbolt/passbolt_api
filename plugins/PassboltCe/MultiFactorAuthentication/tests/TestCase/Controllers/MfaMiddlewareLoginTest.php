@@ -25,7 +25,7 @@ use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 
 class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
         'app.Base/Gpgkeys', 'app.Base/GroupsUsers',
     ];

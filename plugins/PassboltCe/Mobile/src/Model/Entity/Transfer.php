@@ -67,7 +67,7 @@ class Transfer extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'current_page' => false,
         'total_pages' => false,

@@ -23,7 +23,7 @@ use Passbolt\Reports\Utility\AbstractSingleReport;
 
 class ReportsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups',
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments',
     ];

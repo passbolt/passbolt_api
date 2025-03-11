@@ -200,7 +200,7 @@ class FoldersRelationsAddItemsToUserTreeService
         $query->where(['folder_parent_id IN' => $userFolders]);
 
         return $query->select(['foreign_id', 'folder_parent_id'])
-            ->group(['foreign_id', 'folder_parent_id'])
+            ->groupBy(['foreign_id', 'folder_parent_id'])
             ->all()
             ->toArray();
     }
@@ -243,7 +243,7 @@ class FoldersRelationsAddItemsToUserTreeService
         $query->where(['foreign_id IN' => $userItems->select('foreign_id')]);
 
         $foldersRelations = $query->select(['foreign_id', 'folder_parent_id'])
-            ->group(['foreign_id', 'folder_parent_id'])
+            ->groupBy(['foreign_id', 'folder_parent_id'])
             ->all()
             ->toArray();
 

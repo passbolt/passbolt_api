@@ -41,7 +41,7 @@ class IsNotSoftDeletedRule
             $id = $entity->get($options['errorField']);
             $lookupEntity = $Table->get($id);
             $deleted = $lookupEntity->get('deleted');
-            if ($deleted instanceof FrozenTime) {
+            if ($deleted instanceof \Cake\I18n\DateTime) {
                 return $deleted->isFuture();
             }
 

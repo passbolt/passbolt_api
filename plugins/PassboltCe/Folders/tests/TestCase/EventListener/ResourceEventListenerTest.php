@@ -61,7 +61,7 @@ class ResourceEventListenerTest extends FoldersIntegrationTestCase
     use SecretsModelTrait;
     use EmailNotificationSettingsTestTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         GroupsFixture::class,

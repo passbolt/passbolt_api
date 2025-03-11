@@ -44,8 +44,6 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
         $this->enableFeaturePlugin(MetadataPlugin::class);
     }
 

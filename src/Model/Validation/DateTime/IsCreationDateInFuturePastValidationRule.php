@@ -49,7 +49,7 @@ class IsCreationDateInFuturePastValidationRule extends PassboltValidationRule
         }
 
         /** @var \Cake\Chronos\ChronosInterface $nowWithMargin */
-        $nowWithMargin = FrozenTime::now()->modify('+12 hours');
+        $nowWithMargin = \Cake\I18n\DateTime::now()->modify('+12 hours');
 
         return $value->lessThan($nowWithMargin);
     }

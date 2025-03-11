@@ -382,7 +382,7 @@ trait ResourcesFindersTrait
     public function notExpiredQueryExpression(): QueryExpression
     {
         $isNull = $this->find()->newExpr()->isNull('expired');
-        $isFuture = $this->find()->newExpr()->gt('expired', FrozenTime::now());
+        $isFuture = $this->find()->newExpr()->gt('expired', \Cake\I18n\DateTime::now());
 
         return $this->find()->newExpr()->or([
             $isNull,

@@ -62,7 +62,7 @@ abstract class RefreshTokenAbstractService
     public function createHttpOnlySecureCookie(AuthenticationToken $token): Cookie
     {
         $cookie = new Cookie(self::REFRESH_TOKEN_COOKIE, $token->token);
-        $expiry = new FrozenTime(
+        $expiry = new \Cake\I18n\DateTime(
             '+' . Configure::read(self::REFRESH_TOKEN_EXPIRY_CONFIG_KEY)
         );
 

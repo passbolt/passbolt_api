@@ -166,7 +166,7 @@ class MfaAccountSettings
      * Return verification date time as FrozenTime
      *
      * @param string $provider name of the provider
-     * @return \Cake\I18n\FrozenTime
+     * @return \Cake\I18n\DateTime
      */
     public function getVerifiedFrozenTime(string $provider)
     {
@@ -174,7 +174,7 @@ class MfaAccountSettings
             throw new RecordNotFoundException(__('MFA verification date is not set for this provider.'));
         }
 
-        return new FrozenTime($this->settings[$provider][MfaAccountSettings::VERIFIED]);
+        return new \Cake\I18n\DateTime($this->settings[$provider][MfaAccountSettings::VERIFIED]);
     }
 
     /**
@@ -187,7 +187,7 @@ class MfaAccountSettings
      */
     public static function enableProvider(UserAccessControl $uac, string $provider, ?array $data = [])
     {
-        $data['verified'] = FrozenTime::now();
+        $data['verified'] = \Cake\I18n\DateTime::now();
         try {
             /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
             $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');

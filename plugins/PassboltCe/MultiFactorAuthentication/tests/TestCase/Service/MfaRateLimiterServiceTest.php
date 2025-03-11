@@ -58,12 +58,12 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
         // 5 failed attempts
-        ActionLogFactory::make(['created' => FrozenTime::now()], 5)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 5)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -77,12 +77,12 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
         // 3 failed attempts
-        ActionLogFactory::make(['created' => FrozenTime::now()], 3)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 3)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -96,20 +96,20 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // Old actions
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()], 3)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 3)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
         // login action again
-        ActionLogFactory::make(['created' => FrozenTime::now()])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()])
             ->userId($user->id)
             ->loginAction()
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()], 2)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 2)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -125,12 +125,12 @@ class MfaRateLimiterServiceTest extends AppTestCase
         // Set max attempts to 1
         Configure::write('passbolt.security.mfa.maxAttempts', 1);
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
         // 2 failed attempts
-        ActionLogFactory::make(['created' => FrozenTime::now()], 2)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 2)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -146,12 +146,12 @@ class MfaRateLimiterServiceTest extends AppTestCase
         // Set max attempts to 0 (that means no limit for failed attempts), GO CRAZY!
         Configure::write('passbolt.security.mfa.maxAttempts', 0);
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->loginAction()
             ->persist();
         // any number of failed attempts
-        ActionLogFactory::make(['created' => FrozenTime::now()], 100)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 100)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -165,12 +165,12 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(2)])
             ->setActionId('JwtLogin.loginPost')
             ->userId($user->id)
             ->persist();
         // 5 failed attempts
-        ActionLogFactory::make(['created' => FrozenTime::now(), 'status' => 0], 5)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now(), 'status' => 0], 5)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -184,12 +184,12 @@ class MfaRateLimiterServiceTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->persist();
         // login action
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(2)])
             ->setActionId('JwtLogin.loginPost')
             ->userId($user->id)
             ->persist();
         // 3 failed attempts
-        ActionLogFactory::make(['created' => FrozenTime::now()], 3)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 3)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -224,13 +224,13 @@ class MfaRateLimiterServiceTest extends AppTestCase
         Configure::write('passbolt.security.mfa.maxAttempts', 2);
         // login action
         $actionId = $isJwtAuth ? 'JwtLogin.loginPost' : 'AuthLogin.loginPost';
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(2)])
             ->userId($user->id)
             ->setActionId($actionId)
             ->persist();
         // 2 failed attempts
         $status = $isJwtAuth ? 0 : 1;
-        ActionLogFactory::make(['created' => FrozenTime::now(), 'status' => $status], 2)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now(), 'status' => $status], 2)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();

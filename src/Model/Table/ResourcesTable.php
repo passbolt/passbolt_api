@@ -418,7 +418,7 @@ class ResourcesTable extends Table
         if (isset($data['expired']) && !empty($data['expired'])) {
             // Parse the expired date into a time object
             try {
-                $data['expired'] = FrozenTime::parse($data['expired']);
+                $data['expired'] = \Cake\I18n\DateTime::parse($data['expired']);
             } catch (\Throwable $e) {
                 // If the expired date cannot be parsed, let the validation
                 // handle the fail

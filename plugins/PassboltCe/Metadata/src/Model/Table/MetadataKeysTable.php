@@ -233,7 +233,7 @@ class MetadataKeysTable extends Table
             ->find()
             ->select(['id', 'fingerprint', 'armored_key'])
             ->where(['deleted IS NULL', 'expired IS NULL'])
-            ->order(['created' => 'DESC'])
+            ->orderBy(['created' => 'DESC'])
             ->firstOrFail();
     }
 }

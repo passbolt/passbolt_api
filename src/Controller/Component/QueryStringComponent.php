@@ -31,7 +31,7 @@ use Cake\Validation\Validation;
  */
 class QueryStringComponent extends Component
 {
-    public $components = ['ApiPagination'];
+    public array $components = ['ApiPagination'];
 
     /**
      * Get query Items

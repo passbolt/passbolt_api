@@ -211,7 +211,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey($metadata),
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -242,7 +242,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];

@@ -141,7 +141,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ->where([
                 'type' => AuthenticationToken::TYPE_MFA,
                 'user_id' => $user->id,
-            ])->orderDesc('created')->firstOrFail();
+            ])->orderByDesc('created')->firstOrFail();
 
         $this->assertTrue($mfaToken->checkSessionId($accessToken));
         $this->assertCookieIsSecure($mfaToken->get('token'), MfaVerifiedCookie::MFA_COOKIE_ALIAS);
@@ -162,7 +162,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ->userId($user->id)
             ->loginAction()
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()], 4)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 4)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -188,7 +188,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ->userId($user->id)
             ->loginAction()
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()], 4)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()], 4)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();
@@ -215,7 +215,7 @@ class TotpVerifyPostControllerTest extends MfaIntegrationTestCase
             ->userId($user->id)
             ->setActionId('JwtLogin.loginPost')
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now(), 'status' => 0], 4)
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now(), 'status' => 0], 4)
             ->setActionId('TotpVerifyPost.post')
             ->userId($user->id)
             ->persist();

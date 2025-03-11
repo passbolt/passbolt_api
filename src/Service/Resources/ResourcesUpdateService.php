@@ -232,7 +232,7 @@ class ResourcesUpdateService
         $data['modified_by'] = $uac->getId();
         // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
         // when a user updates only the secret.
-        $data['modified'] = new FrozenTime();
+        $data['modified'] = new \Cake\I18n\DateTime();
         if ($resourceDto->isV5()) {
             // clear v4 fields in case of v5 upgrade
             $data['name'] = null;

@@ -32,7 +32,7 @@ class FolderHistory extends Entity
      *
      * @var string[]
      */
-    protected $_hidden = [
+    protected array $_hidden = [
         '_joinData',
     ];
 
@@ -45,7 +45,7 @@ class FolderHistory extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'name' => false,
     ];
 }

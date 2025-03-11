@@ -24,16 +24,16 @@ class MetadataKeyUpdateDto
 
     public string $armoredKey;
 
-    public FrozenTime $expired;
+    public \Cake\I18n\DateTime $expired;
 
     /**
      * Constructor.
      *
      * @param string $fingerprint Fingerprint.
      * @param string $armoredKey Armored key.
-     * @param \Cake\I18n\FrozenTime $expired Expired time
+     * @param \Cake\I18n\DateTime $expired Expired time
      */
-    public function __construct(string $fingerprint, string $armoredKey, FrozenTime $expired)
+    public function __construct(string $fingerprint, string $armoredKey, \Cake\I18n\DateTime $expired)
     {
         $this->fingerprint = $fingerprint;
         $this->armoredKey = $armoredKey;
@@ -60,7 +60,7 @@ class MetadataKeyUpdateDto
     {
         if (is_string($data['expired'])) {
             // ISO-8601 format
-            $data['expired'] = FrozenTime::createFromFormat(\DateTime::ATOM, $data['expired']);
+            $data['expired'] = \Cake\I18n\DateTime::createFromFormat(\DateTime::ATOM, $data['expired']);
         }
 
         return new self($data['fingerprint'], $data['armored_key'], $data['expired']);

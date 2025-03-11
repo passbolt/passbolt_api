@@ -182,7 +182,7 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => 'foo',
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $uac->getId(),
             ],
         ];
@@ -213,7 +213,7 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
 
     public function testMetadataUpgradeResourcesUpdateService_Error_ModifiedDateConflict(): void
     {
-        $resource = ResourceFactory::make(['modified' => FrozenTime::yesterday()])->persist();
+        $resource = ResourceFactory::make(['modified' => \Cake\I18n\DateTime::yesterday()])->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->mockAdminAccessControl();
 
@@ -223,7 +223,7 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey(json_encode([])),
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $resource->get('modified_by'),
             ],
         ];
@@ -352,7 +352,7 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
                 'metadata' => $metadataForR1,
                 'modified' => $resource->get('modified'),
                 'modified_by' => $resource->get('modified_by'),
-                'expired' => FrozenTime::yesterday(),
+                'expired' => \Cake\I18n\DateTime::yesterday(),
             ],
         ];
         $this->service->updateMany($uac, $data);
@@ -382,7 +382,7 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
                 'metadata' => $metadataForR1,
                 'modified' => $resource->get('modified'),
                 'modified_by' => $resource->get('modified_by'),
-                'expired' => FrozenTime::yesterday(),
+                'expired' => \Cake\I18n\DateTime::yesterday(),
             ],
         ];
         $this->service->updateMany($uac, $data);

@@ -487,7 +487,7 @@ class FoldersRelationsTable extends Table
         return $this->find()
             ->select(['user_id'])
             ->where(['foreign_id IN' => $foreignIds])
-            ->group('user_id')
+            ->groupBy('user_id')
             ->having("count(user_id) = $itemsCount")
             ->all()
             ->extract('user_id')

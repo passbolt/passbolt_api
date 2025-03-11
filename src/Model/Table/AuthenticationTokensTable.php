@@ -341,7 +341,7 @@ class AuthenticationTokensTable extends Table
         }
         $token = $this->find('all')
             ->where($where)
-            ->order(['created' => 'DESC'])
+            ->orderBy(['created' => 'DESC'])
             ->first();
 
         return $token;
@@ -351,13 +351,13 @@ class AuthenticationTokensTable extends Table
      * getExpiryDate for a given type
      *
      * @param string $type type
-     * @return \Cake\I18n\FrozenTime
+     * @return \Cake\I18n\DateTime
      */
     private function getExpiryDate(string $type)
     {
         $expiryPeriod = $this->authTokenExpiry->getExpiryForTokenType($type);
 
-        return new FrozenTime($expiryPeriod . ' ago');
+        return new \Cake\I18n\DateTime($expiryPeriod . ' ago');
     }
 
     /**

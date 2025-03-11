@@ -34,7 +34,7 @@ echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($operator['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $operator,
-        'datetime' => FrozenTime::now(),
+        'datetime' => \Cake\I18n\DateTime::now(),
         'text' => $title,
     ]),
 ]);

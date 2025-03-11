@@ -38,7 +38,7 @@ class Action extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'name' => false,
     ];

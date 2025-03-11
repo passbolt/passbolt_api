@@ -75,7 +75,7 @@ class PasswordExpiryUsersEditDisableControllerTest extends AppIntegrationTestCas
         $this->logInAs($admin1);
         $data = [
             'id' => $userToDisable->id,
-            'disabled' => FrozenTime::now(),
+            'disabled' => \Cake\I18n\DateTime::now(),
         ];
         $this->postJson('/users/' . $userToDisable->id . '.json', $data);
         $this->assertSuccess();

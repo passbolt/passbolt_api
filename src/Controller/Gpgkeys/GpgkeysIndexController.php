@@ -40,7 +40,7 @@ class GpgkeysIndexController extends AppController
         $this->Gpgkeys = $this->fetchTable('Gpgkeys');
     }
 
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'Gpgkeys.key_id',
         ],

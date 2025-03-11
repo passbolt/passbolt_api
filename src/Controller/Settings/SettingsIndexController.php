@@ -80,7 +80,7 @@ class SettingsIndexController extends AppController
 
         if ($withHeader == false) {
             $this->set($settings);
-            $this->set('_serialize', array_keys($settings));
+            $this->viewBuilder()->setOption('serialize', array_keys($settings));
 
             return;
         }

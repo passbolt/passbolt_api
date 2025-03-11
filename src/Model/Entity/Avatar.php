@@ -23,8 +23,8 @@ use Psr\Http\Message\StreamInterface;
  * @property string $id
  * @property mixed $data
  * @property string $profile_id
- * @property \Cake\I18n\FrozenTime $created_at
- * @property \Cake\I18n\FrozenTime|null $updated_at
+ * @property \Cake\I18n\DateTime $created_at
+ * @property \Cake\I18n\DateTime|null $updated_at
  * @property \App\Model\Entity\Profile $profile
  */
 class Avatar extends Entity
@@ -34,7 +34,7 @@ class Avatar extends Entity
      *
      * @var string[]
      */
-    protected $_hidden = [
+    protected array $_hidden = [
         'data',
     ];
 
@@ -48,7 +48,7 @@ class Avatar extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         '*' => true,
     ];
 

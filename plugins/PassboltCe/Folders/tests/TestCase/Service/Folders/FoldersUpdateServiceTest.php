@@ -56,7 +56,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,

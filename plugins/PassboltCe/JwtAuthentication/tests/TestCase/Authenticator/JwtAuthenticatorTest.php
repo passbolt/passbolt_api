@@ -44,7 +44,7 @@ class JwtAuthenticatorTest extends JwtAuthenticationIntegrationTestCase
         $publicKey = (new JwksGetService())->getRawPublicKey();
 
         $head = '{"typ":"JWT","alg":"HS256"}';
-        $t = FrozenTime::now()->addHours(3)->toUnixString();
+        $t = \Cake\I18n\DateTime::now()->addHours(3)->toUnixString();
         $body = '{"iss":"' . $url . '","sub":"' . $userId . '","exp":' . $t . '}';
         $msg = $this->urlsafeB64Encode($head) . '.' . $this->urlsafeB64Encode($body);
         $hash = \hash_hmac('SHA256', $msg, $publicKey, true);

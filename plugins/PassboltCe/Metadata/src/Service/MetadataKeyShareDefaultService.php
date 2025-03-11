@@ -52,7 +52,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
         // (resource, folder, comments, tags)
         $serverMetadataPrivateKeys = $metadataPrivateKeysTable->find()
             ->where(['user_id IS' => null])
-            ->order(['created' => 'DESC'])
+            ->orderBy(['created' => 'DESC'])
             ->all();
 
         if ($serverMetadataPrivateKeys->isEmpty()) {
@@ -218,7 +218,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
             /** @var \App\Model\Entity\Gpgkey $userKey */
             $userKey = $usersTable->find()
                 ->where(['user_id' => $createdBy, 'deleted' => false])
-                ->order(['created' => 'DESC'])
+                ->orderBy(['created' => 'DESC'])
                 ->firstOrFail();
         } catch (\Exception $exception) {
             $msg = __('The OpenPGP user key cannot be found.') . ' ';

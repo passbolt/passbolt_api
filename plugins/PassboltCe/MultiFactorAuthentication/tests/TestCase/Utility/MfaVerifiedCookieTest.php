@@ -29,7 +29,7 @@ class MfaVerifiedCookieTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifiedCookieGet()
     {
-        $expiryAt = (new FrozenDate())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS);
+        $expiryAt = (new \Cake\I18n\Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS);
         $cookie = MfaVerifiedCookie::get(new ServerRequest(), 'test', $expiryAt);
         $this->assertTrue($cookie->isSecure());
         $this->assertEquals($cookie->getValue(), 'test');

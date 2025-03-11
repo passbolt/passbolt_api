@@ -52,7 +52,7 @@ class MetadataRotateKeyFoldersUpdateService extends AbstractMetadataRotateKeyUpd
             $this->assertConflict($values, $folder);
 
             $values = array_merge($values, [
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $uac->getId(),
             ]);
             $entity = $foldersTable->patchEntity($folder, $values, [

@@ -59,7 +59,7 @@ class MfaDuoStateCookieService
             ->withPath('/')
             ->withHttpOnly(true)
             ->withSecure($secure)
-            ->withExpiry((new FrozenTime())->addMinutes(self::MFA_COOKIE_DUO_STATE_EXPIRY_IN_MINUTES));
+            ->withExpiry((new \Cake\I18n\DateTime())->addMinutes(self::MFA_COOKIE_DUO_STATE_EXPIRY_IN_MINUTES));
     }
 
     /**

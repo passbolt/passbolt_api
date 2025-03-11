@@ -31,7 +31,7 @@ class UiActionsIndexController extends AppController
     /**
      * @var array $paginate options
      */
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'UiActions.name',
         ],

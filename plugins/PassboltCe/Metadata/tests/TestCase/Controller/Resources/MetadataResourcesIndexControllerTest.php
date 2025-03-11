@@ -30,12 +30,12 @@ class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5
         $user = $this->logInAsUser();
         ResourceFactory::make()
             ->withPermissionsFor([$user])
-            ->setField('modified', FrozenTime::yesterday())
+            ->setField('modified', \Cake\I18n\DateTime::yesterday())
             ->persist();
         ResourceFactory::make()
             ->withPermissionsFor([$user])
             ->v5Fields()
-            ->setField('modified', FrozenTime::now())
+            ->setField('modified', \Cake\I18n\DateTime::now())
             ->persist();
 
         $this->getJson('/resources.json?sort=Resources.modified&direction=asc');

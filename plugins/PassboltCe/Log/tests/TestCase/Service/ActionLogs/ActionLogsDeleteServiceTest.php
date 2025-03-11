@@ -77,20 +77,20 @@ class ActionLogsDeleteServiceTest extends AppTestCase
         // Actions to be kept
         ActionLogFactory::make($nToBeKept)
             ->setActionId($actionName)
-            ->setField('created', FrozenDate::today())
+            ->setField('created', \Cake\I18n\Date::today())
             ->persist();
 
         // Actions to be deleted
         ActionLogFactory::make($nToBeDeleted)
             ->setActionId($actionName)
-            ->setField('created', FrozenDate::yesterday())
+            ->setField('created', \Cake\I18n\Date::yesterday())
             ->persist();
 
         // Some random actions to be kept
         ActionLogFactory::make($nRandomActions)->persist();
 
         $service = new ActionLogsDeleteService();
-        $service->delete($actionName, FrozenDate::today());
+        $service->delete($actionName, \Cake\I18n\Date::today());
 
         $actionsLeft = ActionLogFactory::find()->where(['action_id' => UuidFactory::uuid($actionName)]);
         $this->assertSame($nRandomActions + $nToBeKept, ActionLogFactory::count());

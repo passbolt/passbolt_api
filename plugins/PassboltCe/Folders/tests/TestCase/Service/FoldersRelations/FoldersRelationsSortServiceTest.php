@@ -29,7 +29,7 @@ use Passbolt\Folders\Test\Lib\FoldersTestCase;
  */
 class FoldersRelationsSortServiceTest extends FoldersTestCase
 {
-    public $fixtures = [];
+    public array $fixtures = [];
 
     /**
      * @var FoldersRelationsSortService

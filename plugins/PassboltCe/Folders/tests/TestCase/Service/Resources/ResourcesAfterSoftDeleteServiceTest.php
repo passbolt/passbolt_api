@@ -43,7 +43,7 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
     use ResourcesModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GroupsFixture::class,
         PermissionsFixture::class,
         UsersFixture::class,

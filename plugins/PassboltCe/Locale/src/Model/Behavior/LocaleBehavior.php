@@ -52,7 +52,7 @@ class LocaleBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'implementedFinders' => [
             /** @uses findLocale() */
             self::FINDER_NAME => 'findLocale', // Make the finder available with the name "locale"

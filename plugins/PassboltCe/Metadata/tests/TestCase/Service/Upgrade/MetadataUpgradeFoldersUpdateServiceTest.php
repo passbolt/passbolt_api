@@ -174,7 +174,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => 'foo',
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $uac->getId(),
             ],
         ];
@@ -185,7 +185,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
 
     public function testMetadataUpgradeFoldersUpdateService_Error_ModifiedDateConflict(): void
     {
-        $folder = FolderFactory::make(['modified' => FrozenTime::yesterday()])->persist();
+        $folder = FolderFactory::make(['modified' => \Cake\I18n\DateTime::yesterday()])->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->mockAdminAccessControl();
 
@@ -195,7 +195,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey(json_encode([])),
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
                 'modified_by' => $folder->get('modified_by'),
             ],
         ];

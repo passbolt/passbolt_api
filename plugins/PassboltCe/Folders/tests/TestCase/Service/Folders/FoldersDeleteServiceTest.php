@@ -63,7 +63,7 @@ class FoldersDeleteServiceTest extends FoldersTestCase
     use PermissionsModelTrait;
     use ResourcesModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,

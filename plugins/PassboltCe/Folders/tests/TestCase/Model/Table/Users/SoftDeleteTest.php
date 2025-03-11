@@ -36,7 +36,7 @@ class SoftDeleteTest extends FoldersTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         FavoritesFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,

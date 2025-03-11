@@ -40,7 +40,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
     FavoritesFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,

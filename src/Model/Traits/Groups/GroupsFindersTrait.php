@@ -245,7 +245,7 @@ trait GroupsFindersTrait
         $subQuery = $GroupsUsers->find()
             ->select('GroupsUsers.group_id')
             ->where(['GroupsUsers.user_id IN' => $usersIds])
-            ->group('GroupsUsers.group_id')
+            ->groupBy('GroupsUsers.group_id')
             ->having([$having => count($usersIds)]);
 
         // If we want to retrieve only managers.

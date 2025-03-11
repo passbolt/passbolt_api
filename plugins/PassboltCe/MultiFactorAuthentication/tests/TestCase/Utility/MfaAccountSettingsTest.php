@@ -30,7 +30,7 @@ use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
 
 class MfaAccountSettingsTest extends MfaIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.Passbolt/AccountSettings.AccountSettings',
          'app.Base/Users',
         'app.Base/Roles',
@@ -84,7 +84,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
             MfaSettings::PROVIDER_TOTP => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => \Cake\I18n\DateTime::now(),
                 MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
             ],
         ];
@@ -95,7 +95,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $this->assertEquals($settings->getOtpProvisioningUri(), $uri);
         $this->assertTrue($settings->isProviderReady(MfaSettings::PROVIDER_TOTP));
         $this->assertJson($settings->toJson());
-        $this->assertInstanceOf(FrozenTime::class, $settings->getVerifiedFrozenTime(MfaSettings::PROVIDER_TOTP));
+        $this->assertInstanceOf(\Cake\I18n\DateTime::class, $settings->getVerifiedFrozenTime(MfaSettings::PROVIDER_TOTP));
     }
 
     /**
@@ -112,11 +112,11 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
                 MfaSettings::PROVIDER_YUBIKEY,
             ],
             MfaSettings::PROVIDER_TOTP => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => \Cake\I18n\DateTime::now(),
                 MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
             ],
             MfaSettings::PROVIDER_YUBIKEY => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => \Cake\I18n\DateTime::now(),
                 // missing YUBIKEY_ID
             ],
         ];
@@ -171,7 +171,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP],
             MfaSettings::PROVIDER_TOTP => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => \Cake\I18n\DateTime::now(),
             ],
         ];
         $this->mockMfaAccountSettings('ada', $data);
@@ -190,7 +190,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY],
             MfaSettings::PROVIDER_YUBIKEY => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => \Cake\I18n\DateTime::now(),
                 MfaAccountSettings::YUBIKEY_ID => 'something',
             ],
         ];
@@ -211,7 +211,7 @@ class MfaAccountSettingsTest extends MfaIntegrationTestCase
         $data = [
             MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY],
             MfaSettings::PROVIDER_YUBIKEY => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => \Cake\I18n\DateTime::now(),
             ],
         ];
         $this->mockMfaAccountSettings('ada', $data);

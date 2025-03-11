@@ -572,4 +572,26 @@ class UsersTable extends Table
 
         return $user;
     }
+
+    /**
+     * @param \App\Model\Entity\User $user user to disable
+     * @return \App\Model\Dto\EntitiesChangesDto
+     */
+    public function disableUser(User $user): EntitiesChangesDto
+    {
+        $entitiesChanges = new EntitiesChangesDto();
+        $Secrets = TableRegistry::getTableLocator()->get('Secrets');
+        $secretsToConsiderAsDeleted = $Secrets->find()
+            ->select(['id', 'user_id', 'resource_id'])
+            ->where(['user_id' => $user->id])
+            ->all()->toArray();
+        $entitiesChanges->pushDeletedEntities($secretsToConsiderAsDeleted);
+
+        $this->updateAll([
+            'disabled' => \Cake\I18n\DateTime::now(),
+            'modified' => \Cake\I18n\DateTime::now(),
+            ], ['id' => $user->id]);
+
+        return $entitiesChanges;
+    }
 }

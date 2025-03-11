@@ -56,7 +56,7 @@ class VerifyTokenValidationService
      */
     protected function validateTokenExpiry($verifyTokenExpiry): void
     {
-        $maxTokenExpiry = FrozenTime::now()
+        $maxTokenExpiry = \Cake\I18n\DateTime::now()
             ->modify('+' . Configure::read(self::VERIFY_TOKEN_EXPIRY_CONFIG_KEY))
             ->toUnixString();
         if (

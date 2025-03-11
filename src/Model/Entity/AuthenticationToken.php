@@ -33,8 +33,8 @@ use Cake\Utility\Hash;
  * @property string $type
  * @property string|null $data
  * @property bool $active
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \App\Model\Entity\User $user
  */
@@ -61,7 +61,7 @@ class AuthenticationToken extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'user_id' => false,
         'token' => false,
@@ -97,7 +97,7 @@ class AuthenticationToken extends Entity
             $expiryDuration = null;
         }
         $interval = $expiryDuration ?? $this->getExpiryDuration();
-        $expirationDate = FrozenTime::now()->modify('-' . $interval);
+        $expirationDate = \Cake\I18n\DateTime::now()->modify('-' . $interval);
 
         return $this->created->lessThan($expirationDate);
     }
@@ -111,11 +111,11 @@ class AuthenticationToken extends Entity
     }
 
     /**
-     * @return \Cake\I18n\FrozenTime
+     * @return \Cake\I18n\DateTime
      */
-    public function getExpiryTime(): FrozenTime
+    public function getExpiryTime(): \Cake\I18n\DateTime
     {
-        $expiryTime = (new FrozenTime($this->created))
+        $expiryTime = (new \Cake\I18n\DateTime($this->created))
             ->modify('+' . $this->getExpiryDuration());
 
         if ($expiryTime === false) {

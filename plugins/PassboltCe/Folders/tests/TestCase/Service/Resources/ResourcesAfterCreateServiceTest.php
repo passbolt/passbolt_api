@@ -48,7 +48,7 @@ class ResourcesAfterCreateServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
     use ResourcesModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GroupsUsersFixture::class,
         GroupsFixture::class,
         PermissionsFixture::class,

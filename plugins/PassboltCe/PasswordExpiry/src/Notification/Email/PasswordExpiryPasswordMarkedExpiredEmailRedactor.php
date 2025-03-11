@@ -141,7 +141,7 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
             ->find('active')
             ->find('locale')
             ->where(['Users.id !=' => $operator->id])
-            ->order([], true); // Remove any order as it is not relevant here and breaks in MySQL
+            ->orderBy([], true); // Remove any order as it is not relevant here and breaks in MySQL
 
         return $UsersTable->filterQueryByResourcesAccess($usersToNotify, [$expiringResourceId], [Permission::OWNER]);
     }

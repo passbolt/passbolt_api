@@ -255,9 +255,9 @@ class PublicKeyValidationService
             return false;
         }
 
-        $frozenTime = new FrozenTime($datetimeString);
+        $frozenTime = new \Cake\I18n\DateTime($datetimeString);
 
-        return $frozenTime->greaterThan(FrozenTime::now());
+        return $frozenTime->greaterThan(\Cake\I18n\DateTime::now());
     }
 
     /**

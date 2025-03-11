@@ -94,7 +94,7 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
                     ->selectAlso([
                         'resources_count' => new IdentifierExpression('COUNT(Resources.id)'),
                     ])
-                    ->group($query->getRepository()->aliasField('id'));
+                    ->groupBy($query->getRepository()->aliasField('id'));
                 $query->getSelectTypeMap()->addDefaults(['resources_count' => 'integer']);
             }
         }

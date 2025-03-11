@@ -43,7 +43,7 @@ class PermissionsCleanupTest extends FoldersTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         GroupsFixture::class,
         ResourceTypesFixture::class,
         SecretsFixture::class,

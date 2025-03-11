@@ -144,7 +144,7 @@ class FoldersShareService
     {
         /** @var \Passbolt\Folders\Model\Entity\Folder|null $folder */
         $folder = $this->foldersTable->findById($folderId)
-            ->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $uac->getId()])
+            ->find(FolderizableBehavior::FINDER_NAME, user_id: $uac->getId())
             ->first();
 
         if (empty($folder)) {
