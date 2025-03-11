@@ -45,6 +45,7 @@ use Cake\Validation\Validator;
 class ResourcesTagsTable extends Table
 {
     use TableCleanupTrait;
+    use TagsTableBackupAwareTrait;
 
     /**
      * Initialize method
@@ -56,7 +57,7 @@ class ResourcesTagsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('resources_tags');
+        $this->setTableNameBackupModeAware('resources_tags');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
