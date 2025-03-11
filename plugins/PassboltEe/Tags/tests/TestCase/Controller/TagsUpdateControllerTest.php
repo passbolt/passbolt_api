@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
 use Passbolt\Tags\Model\Table\ResourcesTagsTable;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
@@ -93,6 +95,15 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $tagId = UuidFactory::uuid('tag.id.nope');
         $this->putJson("/tags/$tagId.json?api-version=v2");
         $this->assertError(404, 'The tag does not exist.');
+    }
+
+    public function testTagUpdate_Read_Only_Mode()
+    {
+        Configure::write(TagsReadOnlyModeMiddleware::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE, true);
+        $this->logInAsUser();
+        $tagId = UuidFactory::uuid();
+        $this->putJson("/tags/$tagId.json?api-version=v2");
+        $this->assertForbiddenError('The tags plugin is in read-only mode.');
     }
 
     /**

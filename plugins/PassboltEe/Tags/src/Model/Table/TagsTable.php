@@ -47,7 +47,7 @@ use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
  * Tags Model
  *
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsToMany $Resources
- * @property \Cake\ORM\Table&\Cake\ORM\Association\HasMany $ResourcesTags
+ * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable&\Cake\ORM\Association\HasMany $ResourcesTags
  * @method \Passbolt\Tags\Model\Entity\Tag get($primaryKey, $options = [])
  * @method \Passbolt\Tags\Model\Entity\Tag newEntity(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\Tag[] newEntities(array $data, array $options = [])
@@ -66,6 +66,7 @@ use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 class TagsTable extends Table
 {
     use CaseSensitiveCompareValueTrait;
+    use TagsTableBackupAwareTrait;
 
     /**
      * Initialize method
@@ -77,7 +78,7 @@ class TagsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('tags');
+        $this->setTableNameBackupModeAware('tags');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
