@@ -32,7 +32,7 @@ class ActionLogsIndexController extends AppController
         ]);
     }
 
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'ActionLogs.created',
         ],

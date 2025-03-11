@@ -198,7 +198,7 @@ class AccountRecoveryOrganizationPoliciesTable extends Table
                 // Must have a non deleted public key
                 return $exp->isNull('AccountRecoveryOrganizationPublicKeys.deleted');
             })
-            ->order(['AccountRecoveryOrganizationPolicies.created' => 'DESC'])
+            ->orderBy(['AccountRecoveryOrganizationPolicies.created' => 'DESC'])
             ->firstOrFail();
 
         return $policy;

@@ -14,8 +14,8 @@ use Cake\ORM\Entity;
  * @property string $responder_foreign_model
  * @property string|null $data
  * @property string $status
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property string $created_by
  * @property string $modified_by
  * @property \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest $account_recovery_request
@@ -31,7 +31,7 @@ class AccountRecoveryResponse extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'responder_foreign_key' => false,
         'responder_foreign_model' => false,
         'data' => false,

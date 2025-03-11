@@ -120,7 +120,7 @@ class SsoSettingsGetService
             /** @var \Passbolt\Sso\Model\Entity\SsoSetting $ssoSettingEntity */
             $ssoSettingEntity = $ssoSettingsTable->find()
                 ->where($where)
-                ->order(['modified' => 'DESC'])
+                ->orderBy(['modified' => 'DESC'])
                 ->firstOrFail();
         } catch (RecordNotFoundException $exception) {
             throw new RecordNotFoundException(__('The SSO settings do not exist.'), 400, $exception);

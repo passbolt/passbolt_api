@@ -25,7 +25,7 @@ use Cake\Http\Exception\ForbiddenException;
  */
 class AccountRecoveryPrivateKeyPasswordsIndexController extends AppController
 {
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'AccountRecoveryPrivateKeyPasswords.created',
             'AccountRecoveryPrivateKeyPasswords.modified',

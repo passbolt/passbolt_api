@@ -238,7 +238,7 @@ class SsoStatesTable extends Table
     public function findActive(Query $query, array $options)
     {
         return $query->where(function (QueryExpression $exp) {
-            return $exp->gt('deleted', FrozenTime::now());
+            return $exp->gt('deleted', \Cake\I18n\DateTime::now());
         });
     }
 }

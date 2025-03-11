@@ -269,7 +269,7 @@ class AccountRecoveryResponsesCreateService
 
         if ($response->isApproved() && $token->isExpired()) {
             $token->setAccess('created', true);
-            $token->set('created', FrozenTime::now());
+            $token->set('created', \Cake\I18n\DateTime::now());
             $this->AccountRecoveryRequests->AuthenticationTokens->saveOrFail($token);
         } elseif ($response->isRejected()) {
             $token->setAccess('active', true);

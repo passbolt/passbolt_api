@@ -27,8 +27,8 @@ use Cake\ORM\Entity;
  * @property string $recipient_foreign_model
  * @property string $private_key_id
  * @property string $data
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property string $created_by
  * @property string $modified_by
  *
@@ -45,7 +45,7 @@ class AccountRecoveryPrivateKeyPassword extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'recipient_fingerprint' => false,
         'recipient_foreign_model' => false,
         'private_key_id' => false,

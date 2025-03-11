@@ -26,8 +26,8 @@ use Cake\ORM\Entity;
  * @property string $provider
  * @property string $data
  * @property string $status
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\DateTime|null $created
+ * @property \Cake\I18n\DateTime|null $modified
  * @property string $created_by
  * @property string $modified_by
  * @property \App\Model\Entity\User $creator
@@ -81,7 +81,7 @@ class SsoSetting extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'provider' => false,
         'status' => false,

@@ -132,7 +132,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
             'admin' => $admin,
             'clientIp' => $clientIp,
             'requestId' => $requestId,
-            'created' => FrozenTime::now(),
+            'created' => \Cake\I18n\DateTime::now(),
             'subject' => $subject,
         ], 'title' => $subject,];
 

@@ -61,7 +61,7 @@ class SsoStatesSetService
                     'user_id' => $uac->getId() ?? null,
                     'ip' => $uac->getUserIp(),
                     'user_agent' => $uac->getUserAgent(),
-                    'deleted' => FrozenTime::now()->modify('+' . SsoState::getExpiryDuration()),
+                    'deleted' => \Cake\I18n\DateTime::now()->modify('+' . SsoState::getExpiryDuration()),
                 ],
                 [
                     'accessibleFields' => [

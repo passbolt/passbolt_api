@@ -133,7 +133,7 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
             return __('Subscription invalid/expired ({0}).', $this->result['error']);
         }
 
-        /** @var \Cake\I18n\FrozenDate $expiry */
+        /** @var \Cake\I18n\Date $expiry */
         $expiry = $this->result['expiry'];
 
         if ($expiry->isPast()) {
@@ -224,7 +224,7 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
             return HealthcheckServiceCollector::LEVEL_ERROR;
         }
 
-        /** @var \Cake\I18n\FrozenDate $expiry */
+        /** @var \Cake\I18n\Date $expiry */
         $expiry = $result['expiry'];
         if ($expiry->isPast()) {
             return HealthcheckServiceCollector::LEVEL_ERROR;

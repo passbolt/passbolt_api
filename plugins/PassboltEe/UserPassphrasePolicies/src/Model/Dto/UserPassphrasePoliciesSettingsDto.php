@@ -58,7 +58,7 @@ class UserPassphrasePoliciesSettingsDto
     public $id;
 
     /**
-     * @var \Cake\I18n\FrozenTime|null
+     * @var \Cake\I18n\DateTime|null
      */
     public $created;
 
@@ -68,7 +68,7 @@ class UserPassphrasePoliciesSettingsDto
     public $created_by;
 
     /**
-     * @var \Cake\I18n\FrozenTime|null
+     * @var \Cake\I18n\DateTime|null
      */
     public $modified;
 
@@ -86,9 +86,9 @@ class UserPassphrasePoliciesSettingsDto
      * @param string|int|null $entropyMinimum Minimum entropy.
      * @param string|bool|null $externalDictionaryCheck External services check flag.
      * @param string|null $id ID.
-     * @param \Cake\I18n\FrozenTime|null $created Created time.
+     * @param \Cake\I18n\DateTime|null $created Created time.
      * @param string|null $createdBy Modified by.
-     * @param \Cake\I18n\FrozenTime|null $modified Modified time.
+     * @param \Cake\I18n\DateTime|null $modified Modified time.
      * @param string|null $modifiedBy Modified by.
      * @param string|null $source Source of these settings(can be db or default).
      */
@@ -96,9 +96,9 @@ class UserPassphrasePoliciesSettingsDto
         $entropyMinimum,
         $externalDictionaryCheck,
         ?string $id,
-        ?FrozenTime $created,
+        ?\Cake\I18n\DateTime $created,
         ?string $createdBy,
-        ?FrozenTime $modified,
+        ?\Cake\I18n\DateTime $modified,
         ?string $modifiedBy,
         ?string $source
     ) {

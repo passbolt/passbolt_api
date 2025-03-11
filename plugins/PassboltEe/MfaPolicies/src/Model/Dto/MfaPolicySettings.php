@@ -37,7 +37,7 @@ class MfaPolicySettings
     public $id;
 
     /**
-     * @var \Cake\I18n\FrozenTime|null
+     * @var \Cake\I18n\DateTime|null
      */
     public $created;
 
@@ -47,7 +47,7 @@ class MfaPolicySettings
     public $created_by;
 
     /**
-     * @var \Cake\I18n\FrozenTime|null
+     * @var \Cake\I18n\DateTime|null
      */
     public $modified;
 
@@ -62,18 +62,18 @@ class MfaPolicySettings
      * @param string|null $policy Policy.
      * @param bool|null $rememberMeForAMonth Remember me for a month.
      * @param string|null $id ID.
-     * @param \Cake\I18n\FrozenTime|null $created Created time.
+     * @param \Cake\I18n\DateTime|null $created Created time.
      * @param string|null $createdBy Created by.
-     * @param \Cake\I18n\FrozenTime|null $modified Modified time.
+     * @param \Cake\I18n\DateTime|null $modified Modified time.
      * @param string|null $modifiedBy Modified by.
      */
     public function __construct(
         ?string $policy,
         ?bool $rememberMeForAMonth,
         ?string $id,
-        ?FrozenTime $created,
+        ?\Cake\I18n\DateTime $created,
         ?string $createdBy,
-        ?FrozenTime $modified,
+        ?\Cake\I18n\DateTime $modified,
         ?string $modifiedBy
     ) {
         $this->policy = $policy;

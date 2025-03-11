@@ -108,7 +108,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
         $usersToNotify = $UsersTable
             ->find('notDisabled')
             ->find('activeNotDeleted')
-            ->order([], true); // Remove any order as it is not relevant here and breaks in MySQL
+            ->orderBy([], true); // Remove any order as it is not relevant here and breaks in MySQL
 
         return $UsersTable->filterQueryByResourcesAccess($usersToNotify, $expiringResourceIds, [Permission::OWNER]);
     }
@@ -126,8 +126,8 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
     ): Query {
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $expiredResources = $ResourcesTable->find();
-        $today = FrozenTime::today();
-        $tomorrow = FrozenTime::tomorrow();
+        $today = \Cake\I18n\DateTime::today();
+        $tomorrow = \Cake\I18n\DateTime::tomorrow();
         $aboutToExpireCondition = [
             'expired >=' => $today->addDays($expiresInDays ?? 0),
             'expired <' => $tomorrow->addDays($expiresInDays ?? 0),

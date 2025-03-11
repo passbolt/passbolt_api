@@ -220,7 +220,7 @@ class AccountRecoveryRequestsTable extends Table
         // Set all other pending requests to rejected
         $this->updateAll([
             'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
-            'modified' => FrozenTime::now(),
+            'modified' => \Cake\I18n\DateTime::now(),
             'modified_by' => $modifiedBy,
         ], [
             'id !=' => $request->id,

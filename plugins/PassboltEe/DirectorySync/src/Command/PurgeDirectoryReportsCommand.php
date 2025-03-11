@@ -76,7 +76,7 @@ class PurgeDirectoryReportsCommand extends DirectorySyncCommand
         parent::execute($args, $io);
 
         try {
-            $beforeDate = FrozenDate::createFromFormat('d-m-Y', $args->getOption('before'));
+            $beforeDate = \Cake\I18n\Date::createFromFormat('d-m-Y', $args->getOption('before'));
         } catch (\InvalidArgumentException $e) {
             $msg = __('Invalid before date provided.');
             $msg .= ' ' . $e->getMessage();
@@ -101,10 +101,10 @@ class PurgeDirectoryReportsCommand extends DirectorySyncCommand
     }
 
     /**
-     * @param \Cake\I18n\FrozenDate $date The before date.
+     * @param \Cake\I18n\Date $date The before date.
      * @return array
      */
-    private function getReportsToPurge(FrozenDate $date): array
+    private function getReportsToPurge(\Cake\I18n\Date $date): array
     {
         return $this->DirectoryReports
             ->find()

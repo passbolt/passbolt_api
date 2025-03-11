@@ -157,7 +157,7 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
 
         if (isset($data['data']['client_secret_expiry']) && is_string($data['data']['client_secret_expiry'])) {
             try {
-                $data['data']['client_secret_expiry'] = new FrozenTime($data['data']['client_secret_expiry']);
+                $data['data']['client_secret_expiry'] = new \Cake\I18n\DateTime($data['data']['client_secret_expiry']);
             } catch (\Exception $exception) {
                 $data['data']['client_secret_expiry'] = null;
             }

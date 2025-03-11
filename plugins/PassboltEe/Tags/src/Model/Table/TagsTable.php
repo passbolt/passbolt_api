@@ -227,7 +227,7 @@ class TagsTable extends Table
     public function findIndex(string $userId)
     {
         $query = $this->find()
-             ->order($this->aliasField('slug'))
+             ->orderBy($this->aliasField('slug'))
              ->distinct();
 
         // We here rebuild the associations manually to help CakePHP
@@ -293,14 +293,14 @@ class TagsTable extends Table
     {
         if (isset($options['contain']['all_tags'])) {
             $query->contain('Tags', function (Query $q) {
-                return $q->order(['slug']);
+                return $q->orderBy(['slug']);
             });
         } elseif (isset($options['contain']['tag'])) {
             // Display the user tags for a given resource
             $query
                 ->contain('Tags', function (Query $q) use ($userId) {
                     return $q
-                        ->order(['slug'])
+                        ->orderBy(['slug'])
                         ->where(function (QueryExpression $where) use ($userId) {
                             return $where->or(function (QueryExpression $or) use ($userId) {
                                 return $or

@@ -30,7 +30,7 @@ abstract class BaseLogsController extends AppController
      *
      * @var array
      */
-    public $paginate = [
+    public array $paginate = [
         'limit' => 5,
         'maxLimit' => 20,
         'whitelist' => ['limit', 'page'],

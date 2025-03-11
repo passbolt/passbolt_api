@@ -41,14 +41,14 @@ abstract class DirectoryEntry implements ArrayAccess
     /**
      * created date.
      *
-     * @var string|\Cake\I18n\FrozenTime
+     * @var string|\Cake\I18n\DateTime
      */
     public $created;
 
     /**
      * modified date.
      *
-     * @var string|\Cake\I18n\FrozenTime
+     * @var string|\Cake\I18n\DateTime
      */
     public $modified;
 
@@ -270,12 +270,12 @@ abstract class DirectoryEntry implements ArrayAccess
         $created = $this->getFieldValue('created');
 
         if (!empty($created)) {
-            $this->created = new FrozenTime($created);
+            $this->created = new \Cake\I18n\DateTime($created);
         }
 
         $modified = $this->getFieldValue('modified');
         if (!empty($modified)) {
-            $this->modified = new FrozenTime($modified);
+            $this->modified = new \Cake\I18n\DateTime($modified);
         }
 
         return $this;

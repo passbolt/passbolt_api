@@ -270,11 +270,11 @@ abstract class SyncAction
     private function formatDirectoryData()
     {
         foreach ($this->directoryData as $key => $data) {
-            if (get_class($data['directory_created']) !== FrozenTime::class) {
-                $this->directoryData[$key]['directory_created'] = new FrozenTime($data['directory_created']);
+            if (get_class($data['directory_created']) !== \Cake\I18n\DateTime::class) {
+                $this->directoryData[$key]['directory_created'] = new \Cake\I18n\DateTime($data['directory_created']);
             }
-            if (get_class($data['directory_modified']) !== FrozenTime::class) {
-                $this->directoryData[$key]['directory_modified'] = new FrozenTime($data['directory_modified']);
+            if (get_class($data['directory_modified']) !== \Cake\I18n\DateTime::class) {
+                $this->directoryData[$key]['directory_modified'] = new \Cake\I18n\DateTime($data['directory_modified']);
             }
         }
     }
@@ -692,7 +692,7 @@ abstract class SyncAction
             // Case when entity was suspended because it was deleted in ldap previously, now it is created again with same DN in ldap so we enable (un-suspend) it
             $this->getTable()->updateAll([
                 'disabled' => null,
-                'modified' => FrozenTime::now(),
+                'modified' => \Cake\I18n\DateTime::now(),
             ], ['id' => $existingEntity->id]);
             $this->DirectoryEntries->updateForeignKey($entry, $existingEntity->id);
             $reportData = $this->getTable()->get($existingEntity->id);

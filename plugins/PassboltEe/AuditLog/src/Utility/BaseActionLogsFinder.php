@@ -57,7 +57,7 @@ abstract class BaseActionLogsFinder
     protected function _getBaseQuery(array $options = []): Query
     {
         $query = $this->ActionLogs->find();
-        $query->group([
+        $query->groupBy([
             'ActionLogs.id',
             'Actions.name',
         ]);

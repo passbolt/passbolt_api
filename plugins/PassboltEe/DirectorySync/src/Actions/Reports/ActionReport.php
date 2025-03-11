@@ -47,7 +47,7 @@ class ActionReport
     protected $data;
 
     /**
-     * @var \Cake\Chronos\ChronosInterface|\Cake\I18n\FrozenTime
+     * @var \Cake\Chronos\ChronosInterface|\Cake\I18n\DateTime
      */
     protected $created;
 
@@ -85,7 +85,7 @@ class ActionReport
         $this->data = $data;
         $this->action = $action;
         $this->status = $status;
-        $this->created = FrozenTime::now();
+        $this->created = \Cake\I18n\DateTime::now();
     }
 
     /**

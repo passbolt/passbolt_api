@@ -115,7 +115,7 @@ class GroupSyncAction extends SyncAction
         $existingGroup = $this->Groups->find()
             ->select(['id', 'name', 'deleted', 'created', 'modified'])
             ->where(['name' => $groupName])
-            ->order(['Groups.modified' => 'DESC'])
+            ->orderBy(['Groups.modified' => 'DESC'])
             ->first();
 
         return $existingGroup;

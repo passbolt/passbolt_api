@@ -41,12 +41,12 @@ class SubscriptionKeyDto
     public $email;
 
     /**
-     * @var \Cake\I18n\FrozenDate $expiry the subscription expiry date
+     * @var \Cake\I18n\Date $expiry the subscription expiry date
      */
     public $expiry;
 
     /**
-     * @var \Cake\I18n\FrozenDate $created the subscription creation date
+     * @var \Cake\I18n\Date $created the subscription creation date
      */
     public $created;
 
@@ -63,8 +63,8 @@ class SubscriptionKeyDto
      * @param string $subscriptionId subscription id as provided on invoice
      * @param int $users number of users
      * @param string $email email linked to the subscription in the billing system
-     * @param \Cake\I18n\FrozenDate $expiry expiry date
-     * @param \Cake\I18n\FrozenDate $created creation date
+     * @param \Cake\I18n\Date $expiry expiry date
+     * @param \Cake\I18n\Date $created creation date
      */
     final public function __construct(
         string $data,
@@ -72,8 +72,8 @@ class SubscriptionKeyDto
         string $subscriptionId,
         int $users,
         string $email,
-        FrozenDate $expiry,
-        FrozenDate $created
+        \Cake\I18n\Date $expiry,
+        \Cake\I18n\Date $created
     ) {
         $this->data = $data;
         $this->customerId = $customerId;
@@ -112,8 +112,8 @@ class SubscriptionKeyDto
             $key['subscription_id'] ?? '',
             $key['users'] ?? 0,
             $key['email'] ?? '',
-            isset($key['expiry']) ? new FrozenDate($key['expiry']) : FrozenDate::now(),
-            isset($key['created']) ? new FrozenDate($key['created']) : FrozenDate::now(),
+            isset($key['expiry']) ? new \Cake\I18n\Date($key['expiry']) : \Cake\I18n\Date::now(),
+            isset($key['created']) ? new \Cake\I18n\Date($key['created']) : \Cake\I18n\Date::now(),
         );
     }
 }
