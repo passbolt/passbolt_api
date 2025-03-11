@@ -2,7 +2,7 @@
     "name": "passbolt/passbolt-test-data",
     "description": "Passbolt data test plugin.",
     "type": "cakephp-plugin",
-    "version": "4.8.0",
+    "version": "5.0.0",
     "keywords": [
         "password",
         "passbolt"
@@ -22,10 +22,10 @@
     },
     "require": {
         "ext-json" : "*",
-        "cakephp/cakephp": "^4.3"
+        "cakephp/cakephp": "^5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5 || ^9.3"
+        "phpunit/phpunit": "^10.1.0"
     },
     "autoload": {
         "psr-4": {
