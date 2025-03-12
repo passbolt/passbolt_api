@@ -116,8 +116,8 @@ class LowerCaseUuidTypeTest extends TestCase
                 'id' => $UUID,
                 'username' => 'Foo',
                 'role_id' => $UUID,
-                'created' => FrozenDate::now()->format('Y-m-d'),
-                'modified' => FrozenDate::now()->format('Y-m-d'),
+                'created' => \Cake\I18n\Date::now()->format('Y-m-d'),
+                'modified' => \Cake\I18n\Date::now()->format('Y-m-d'),
             ]);
 
         $userQueriedWithLowerCase = UserFactory::get($uuid);

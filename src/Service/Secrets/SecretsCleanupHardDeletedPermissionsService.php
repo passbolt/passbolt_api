@@ -136,6 +136,6 @@ class SecretsCleanupHardDeletedPermissionsService
             )
 
             WHERE ExpectedSecrets.resource_id IS NULL;
-        ")->count();
+        ")->rowCount();
     }
 }

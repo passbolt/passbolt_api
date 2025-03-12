@@ -21,6 +21,7 @@ use Cake\Chronos\Chronos;
 use Cake\Chronos\ChronosInterface;
 use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
+use DateTimeInterface;
 use Faker\Generator;
 
 /**
@@ -75,10 +76,10 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ChronosInterface $created token type
+     * @param DateTimeInterface $created token type
      * @return $this
      */
-    public function created(ChronosInterface $created)
+    public function created(DateTimeInterface $created)
     {
         return $this->patchData(compact('created'));
     }
@@ -88,7 +89,7 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
      */
     public function expired()
     {
-        return $this->created(new FrozenDate('5 years ago'));
+        return $this->created(new \Cake\I18n\DateTime('5 years ago'));
     }
 
     /**

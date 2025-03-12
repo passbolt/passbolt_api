@@ -64,7 +64,7 @@ class SubscribedRedactorPoolTest extends TestCase
     public function testThatIsSubscribedToCollectSubscribedEmailRedactorEvent()
     {
         $this->assertEquals(
-            [CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this->sut],
+            [CollectSubscribedEmailRedactorEvent::EVENT_NAME => 'subscribe'],
             $this->sut->implementedEvents()
         );
     }

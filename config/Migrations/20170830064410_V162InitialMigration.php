@@ -28,7 +28,7 @@ class V162InitialMigration extends AbstractMigration
     public function up()
     {
         $options = ($this->getAdapter()->getOptions());
-        $databaseName = $options['name'];
+        $databaseName = $options['database'];
 
         // Check if v1 tables are present
         $tables = [

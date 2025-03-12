@@ -41,7 +41,7 @@ class AddFolderizableBehavior implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            'Model.initialize' => $this,
+            'Model.initialize' => 'addFolderizableBehavior',
         ];
     }
 
@@ -49,7 +49,7 @@ class AddFolderizableBehavior implements EventListenerInterface
      * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
-    public function __invoke(EventInterface $event)
+    public function addFolderizableBehavior(EventInterface $event)
     {
         foreach (static::TABLES_TO_ADD as $allowed) {
             if ($event->getSubject() instanceof $allowed) {

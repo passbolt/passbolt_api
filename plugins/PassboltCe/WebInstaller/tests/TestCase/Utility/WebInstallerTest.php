@@ -20,7 +20,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\ORM\TableRegistry;
 use Passbolt\WebInstaller\Test\Lib\ConfigurationTrait;
 use Passbolt\WebInstaller\Test\Lib\DatabaseTrait;
@@ -144,7 +144,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         // Validate schema
         try {
             DatabaseConfiguration::validateSchema();
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->assertTrue(false);
         }
         $this->assertTrue(true);

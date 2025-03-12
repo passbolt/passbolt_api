@@ -56,7 +56,7 @@ class AuthenticationTokenIsExpiredTest extends TestCase
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = AuthenticationTokenFactory::make()
             ->type($type)
-            ->created(FrozenDate::yesterday())
+            ->created(\Cake\I18n\DateTime::yesterday())
             ->getEntity();
 
         $result = $this->AuthenticationTokens->isExpired($token);

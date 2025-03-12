@@ -209,7 +209,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseDefault(): void
     {
-        $user = UserFactory::make()->withAvatar()->user()->setField('created', FrozenDate::yesterday())->persist();
+        $user = UserFactory::make()->withAvatar()->user()->setField('created', \Cake\I18n\Date::yesterday())->persist();
 
         $this->postJson('/users/recover.json', ['username' => $user->username]);
         $this->assertSuccess();
@@ -219,7 +219,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseDefault2(): void
     {
-        $user = UserFactory::make()->withAvatar()->user()->setField('created', FrozenDate::yesterday())->persist();
+        $user = UserFactory::make()->withAvatar()->user()->setField('created', \Cake\I18n\Date::yesterday())->persist();
 
         $this->postJson('/users/recover.json', ['username' => $user->username, 'case' => 'default']);
         $this->assertSuccess();
@@ -239,7 +239,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->assertTextEquals('default', $email->template_vars['body']['case']);
 
         // Assert that the date displayed is now
-        $this->assertEmailInBatchContains(FrozenDate::now()->toFormattedDateString());
+        $this->assertEmailInBatchContains(\Cake\I18n\Date::now()->toFormattedDateString());
     }
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseError(): void

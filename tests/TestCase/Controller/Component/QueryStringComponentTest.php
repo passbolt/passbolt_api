@@ -21,7 +21,7 @@ use App\Controller\Component\QueryStringComponent;
 use App\Utility\UuidFactory;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
@@ -50,7 +50,7 @@ class QueryStringComponentTest extends TestCase
     public function testQueryStringComponent_ValidateFiltersError_NoValidationRuleDefined(): void
     {
         $filterName = 'non-existing-filter';
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->expectExceptionMessage(sprintf('No validation rule for filter %s. Please create one.', $filterName));
 
         $this->sut::validateFilters([$filterName => '']);
@@ -60,7 +60,7 @@ class QueryStringComponentTest extends TestCase
     {
         $filterName = 'filter-with-validation-callback';
 
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->expectExceptionMessage(sprintf('Filter %s is not valid.', $filterName));
 
         $this->sut::validateFilters(

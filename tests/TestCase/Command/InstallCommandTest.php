@@ -47,7 +47,6 @@ class InstallCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->emptyDirectory(CACHE . 'database' . DS);
         $this->loadNotificationSettings();
         $this->mockService(Client::class, function () {

@@ -91,14 +91,14 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
      */
     public function implementedEvents(): array
     {
-        return array_fill_keys($this->emailSubscriptionManager->getSubscribedEvents(), $this);
+        return array_fill_keys($this->emailSubscriptionManager->getSubscribedEvents(), 'dispatch');
     }
 
     /**
      * @param \Cake\Event\Event $event Event object to dispatch
      * @return void
      */
-    public function __invoke(Event $event)
+    public function __invoke(Event $event) // todo: remove
     {
         $this->dispatch($event);
     }

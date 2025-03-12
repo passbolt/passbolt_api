@@ -10,7 +10,7 @@ use Cake\ORM\TableRegistry;
 
 class FindViewTest extends AppTestCase
 {
-    public $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
+    public array $fixtures = ['app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers'];
 
     public $Groups;
 

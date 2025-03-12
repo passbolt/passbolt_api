@@ -20,7 +20,7 @@ use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Utility\OpenPGP\Backends\Gnupg;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\TestSuite\TestCase;
 
 abstract class OpenPGPBackendTest extends TestCase
@@ -60,13 +60,13 @@ abstract class OpenPGPBackendTest extends TestCase
 
     public function testOpenPGPBackendSetEncryptKeyError_NotAnArmoredKey(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->setEncryptKey('wrong');
     }
 
     public function testOpenPGPBackendSetEncryptKeyError_InvalidArmoredKey(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $invalidKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----
 Comment: GPGTools - https://gpgtools.org
 
@@ -97,25 +97,25 @@ zaZXtuDzZmnTOjWJm895TA==
 
     public function testOpenPGPBackendSetEncryptKeyFromFingerprintError_InvalidFingerprint(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->setEncryptKeyFromFingerprint('not a fingerprint');
     }
 
     public function testOpenPGPBackendSetEncryptKeyFromFingerprintError_NotFoundFingerprint(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->setEncryptKeyFromFingerprint('2FC8945833C51946E937F9FED47B0811573EE67F');
     }
 
     public function testOpenPGPBackendAssertGpgMarkerError_NoMarker(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->assertGpgMarker('not a marker', Gnupg::MESSAGE_MARKER);
     }
 
     public function testOpenPGPBackendAssertGpgMarkerError_NotSameMarker(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->assertGpgMarker('-----BEGIN PGP PRIVATE KEY BLOCK-----', Gnupg::MESSAGE_MARKER);
     }
 
@@ -127,7 +127,7 @@ zaZXtuDzZmnTOjWJm895TA==
 
     public function testOpenPGPBackendAssertDecryptKeyError(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->assertDecryptKey();
     }
 
@@ -157,7 +157,7 @@ p7hokpGnpTQXl9C5Oi/+uQ==
 
     public function testOpenPGPBackendAssertEncryptKeyError(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->assertEncryptKey();
     }
 
@@ -172,7 +172,7 @@ p7hokpGnpTQXl9C5Oi/+uQ==
 
     public function testOpenPGPBackendAssertSignKeyError(): void
     {
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->assertSignKey();
     }
 
@@ -210,7 +210,7 @@ p7hokpGnpTQXl9C5Oi/+uQ==
         $armoredSignedMessage = $this->getDummySignedMessage('betty');
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key');
         $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->setVerifyKeyFromFingerprint($fingerprint);
         $this->gnupg->verify($armoredSignedMessage);
     }
@@ -279,7 +279,7 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
     public function testOpenPGPBackendSignError(): void
     {
         $messageToSign = 'This is a test message.';
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->sign($messageToSign);
     }
 
@@ -400,7 +400,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
     public function testOpenPGPBackendCannotImportFutureKey(): void
     {
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'fry_public.key');
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->gnupg->importKeyIntoKeyring($armoredKey);
     }
 }

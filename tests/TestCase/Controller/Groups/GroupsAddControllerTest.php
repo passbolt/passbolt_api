@@ -27,7 +27,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 {
     public $Groups;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Roles',
 
     ];

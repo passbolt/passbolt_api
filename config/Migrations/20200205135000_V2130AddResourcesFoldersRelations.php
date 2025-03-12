@@ -25,12 +25,11 @@ class V2130AddResourcesFoldersRelations extends AbstractMigration
     public function up()
     {
         $getUsersIdsHavingAccessToServices = new PermissionsGetUsersIdsHavingAccessToService();
-        $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        $resources = $resourcesTable->find()->where(['deleted' => false])->toArray();
-
-        foreach($resources as $resource) {
-            $usersIdsHavingAccessTo = $getUsersIdsHavingAccessToServices->getUsersIdsHavingAccessTo($resource->id);
-            $this->addResourceFoldersRelations($resource->id, $usersIdsHavingAccessTo);
+        $stmt = $this->query("SELECT id FROM resources WHERE deleted=false");
+        $rows = $stmt->fetchAll(\PDO::FETCH_BOTH);
+        foreach($rows as $row) {
+            $usersIdsHavingAccessTo = $getUsersIdsHavingAccessToServices->getUsersIdsHavingAccessTo($row['id']);
+            $this->addResourceFoldersRelations($row['id'], $usersIdsHavingAccessTo);
         }
     }
 

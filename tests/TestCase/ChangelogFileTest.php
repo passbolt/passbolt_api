@@ -105,7 +105,7 @@ class ChangelogFileTest extends TestCase
 
         // The date should be in Y-M-d format
         $date = substr($line5, $closingBracketPosition + 4, 10);
-        $parsedDate = FrozenDate::parseDate($date, 'Y-M-d')->toDateString();
+        $parsedDate = \Cake\I18n\Date::parseDate($date, 'Y-M-d')->toDateString();
         $this->appendErrorIf($parsedDate !== $date, 'The date could not be parsed', $pointer);
 
         // Jump to line 6 where the changes block starts

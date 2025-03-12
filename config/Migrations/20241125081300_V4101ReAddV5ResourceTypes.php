@@ -69,7 +69,7 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
         ];
 
         $stmt = $this->query("SELECT slug FROM resource_types WHERE slug IN ('v5-password-string', 'v5-default', 'v5-totp-standalone', 'v5-default-with-totp')");
-        $rows = $stmt->fetchAll();
+        $rows = $stmt->fetchAll(\PDO::FETCH_BOTH);
         foreach ($rows as $row) {
             // Do not insert if already present
             if ($row['slug'] === 'v5-password-string') {

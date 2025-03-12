@@ -53,8 +53,8 @@ class SecretFactory extends CakephpBaseFactory
                 'user_id' => $faker->uuid(),
                 'resource_id' => $faker->uuid(),
                 'data' => $this->getValidSecret(),
-                'created' => FrozenDate::now()->subDays($faker->randomNumber(4)),
-                'modified' => FrozenDate::now()->subDays($faker->randomNumber(4)),
+                'created' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
+                'modified' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }
