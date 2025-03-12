@@ -62,10 +62,10 @@ class AccountRecoveryOrganizationPolicyFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param ?AccountRecoveryOrganizationPublicKeyFactory $factory factory
+     * @param array|AccountRecoveryOrganizationPublicKeyFactory $factory factory
      * @return $this
      */
-    public function withAccountRecoveryOrganizationPublicKey(?AccountRecoveryOrganizationPublicKeyFactory $factory = null)
+    public function withAccountRecoveryOrganizationPublicKey(array|AccountRecoveryOrganizationPublicKeyFactory $factory = [])
     {
         return $this->with('AccountRecoveryOrganizationPublicKeys', $factory);
     }

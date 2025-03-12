@@ -71,7 +71,7 @@ class DirectoryRelationFactory extends CakephpBaseFactory
 
     public function withGroup(?GroupFactory $groupFactory = null)
     {
-        if (!isset($groupFactory)) {
+        if (is_null($groupFactory)) {
             $groupFactory = GroupFactory::make();
         }
 
@@ -80,7 +80,7 @@ class DirectoryRelationFactory extends CakephpBaseFactory
 
     public function withUser(?UserFactory $userFactory = null)
     {
-        if (!isset($userFactory)) {
+        if (is_null($userFactory)) {
             $userFactory = UserFactory::make()->user();
         }
 
