@@ -17,31 +17,47 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service\Upgrade;
 
 use App\Utility\UserAccessControl;
-use Cake\Event\EventDispatcherTrait;
-use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\Http\Exception\InternalErrorException;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchUpgradeValidationService;
 use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
 class MetadataUpgradeResourcesUpdateService extends MetadataRotateKeyResourcesUpdateService
 {
-    use EventDispatcherTrait;
-    use LocatorAwareTrait;
+    /**
+     * Instantiate the service.
+     */
+    public function __construct()
+    {
+        $this->metadataBatchValidationService = new MetadataResourcesBatchUpgradeValidationService();
+    }
 
     /**
-     * @param \App\Utility\UserAccessControl $uac UAC.
-     * @param array $requestData Request data.
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException If data is invalid.
-     * @throws \App\Error\Exception\CustomValidationException If data is invalid.
-     * @throws \Cake\Http\Exception\NotFoundException If one or more resources are not found.
+     * @inheritDoc
      */
-    public function updateMany(UserAccessControl $uac, array $requestData): void
+    protected function updateData(UserAccessControl $uac, array $data, array $entitiesToUpdate): void
     {
-        // Check that the upgrade is possible
-        $uac->assertIsAdmin();
-        $this->assertRequestData($requestData);
-        $metadataBatchValidationService = new MetadataResourcesBatchUpgradeValidationService();
-        $data = $metadataBatchValidationService->validateMany($requestData);
-        $this->updateData($uac, $data, $metadataBatchValidationService->getEntities());
+        // Set mapped v5 resource type id
+        foreach ($data as $i => $value) {
+            $resource = $entitiesToUpdate[$value['id']];
+            $data[$i]['resource_type_id'] = $this->getV5ResourceType($resource->get('resource_type_id'));
+        }
+
+        parent::updateData($uac, $data, $entitiesToUpdate);
+    }
+
+    /**
+     * @param string $v4ResourceTypeId V4 Resource type identifier to get mapping from.
+     * @return string Mapped V5 resource type identifier.
+     * @throws \Cake\Http\Exception\InternalErrorException If mapping doesn't exist.
+     */
+    private function getV5ResourceType(string $v4ResourceTypeId): string
+    {
+        $mapping = ResourceType::getV5Mapping();
+        if (!isset($mapping[$v4ResourceTypeId])) {
+            throw new InternalErrorException(__('No resource type mapping for ID \'{0}\'', $v4ResourceTypeId));
+        }
+
+        return $mapping[$v4ResourceTypeId];
     }
 }

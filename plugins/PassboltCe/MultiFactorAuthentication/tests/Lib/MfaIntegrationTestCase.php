@@ -123,13 +123,18 @@ class MfaIntegrationTestCase extends AppIntegrationTestCase
      * Mock form to prevent failing verify call due timestamp mismatch.
      *
      * @param string $className Form class to mock.
+     * @param \App\Utility\UserAccessControl $uac User access control
      * @return void
      */
-    public function mockTotpMfaForm(string $className): void
+    public function mockTotpMfaFormInterface(string $className, UserAccessControl $uac): void
     {
-        $form = $this->createMock($className);
+        $mfaSettingsMock = $this->getMockBuilder(MfaSettings::class)->disableOriginalConstructor()->getMock();
+        $form = $this->getMockBuilder($className)
+            ->setConstructorArgs([$uac, $mfaSettingsMock])
+            ->onlyMethods(['isValidOtp'])
+            ->getMock();
         $form->method('isValidOtp')->willReturn(true);
-        $this->mockService($className, function () use ($form) {
+        $this->mockService(MfaFormInterface::class, function () use ($form) {
             return $form;
         });
     }

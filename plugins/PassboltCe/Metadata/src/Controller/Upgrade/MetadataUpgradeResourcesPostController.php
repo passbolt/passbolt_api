@@ -61,7 +61,7 @@ class MetadataUpgradeResourcesPostController extends AppController
         );
 
         // Retrieve and sanity the query options.
-        $whitelist = ['filter' => ['is-shared',],];
+        $whitelist = ['filter' => ['is-shared'], 'contain' => ['permissions']];
         $options = $this->QueryString->get($whitelist);
 
         // Performance improvement: map query result datetime properties to string.
@@ -73,22 +73,5 @@ class MetadataUpgradeResourcesPostController extends AppController
 
         $resources = (new MetadataResourcesRenderService())->renderResources($resources->toArray());
         $this->success(__('The operation was successful.'), $resources);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getDefaultPaginationConfigurationKey(): string
-    {
-        return 'passbolt.plugins.metadata.upgrade.defaultPaginationLimit';
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function getInvalidPaginationConfigurationMessage(): string
-    {
-        // To fix this, adjust `passbolt.plugins.metadata.upgrade.defaultPaginationLimit` or `PASSBOLT_PLUGINS_METADATA_ROTATE_KEY_DEFAULT_PAGINATION_LIMIT`
-        return __('Invalid pagination limit set for metadata upgrade endpoint.');
     }
 }
