@@ -20,7 +20,6 @@ use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
-use Passbolt\Metadata\Model\Entity\MetadataKey;
 
 class MetadataBatchUpgradeForm extends Form
 {
@@ -59,13 +58,7 @@ class MetadataBatchUpgradeForm extends Form
 
         $validator
             ->requirePresence('metadata_key_type', 'create', __('A metadata key type is required.'))
-            ->notEmptyString('metadata_key_type', __('The metadata key type should not be empty.'))
-            ->add('metadata_key_type', 'is_not_shared_key', [
-                'rule' => function ($value, $context) {
-                    return $value === MetadataKey::TYPE_SHARED_KEY;
-                },
-                'message' => __('The metadata key type should be shared key.'),
-            ]);
+            ->notEmptyString('metadata_key_type', __('The metadata key type should not be empty.'));
 
         $validator
             ->requirePresence('metadata', 'create', __('A metadata is required.'))

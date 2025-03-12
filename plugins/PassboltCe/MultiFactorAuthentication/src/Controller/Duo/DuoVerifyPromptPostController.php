@@ -40,6 +40,7 @@ class DuoVerifyPromptPostController extends MfaVerifyController
     {
         parent::initialize();
         $this->loadComponent('SanitizeUrl');
+        $this->loadComponent('Flash');
     }
 
     /**

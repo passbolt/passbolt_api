@@ -32,9 +32,9 @@ abstract class MetadataBatchUpgradeValidationService extends MetadataBatchUpdate
         return $Table->find('v4')
             ->select([
                 $Table->aliasField('id'),
+                $Table->aliasField('metadata'),
                 $Table->aliasField('modified'),
                 $Table->aliasField('modified_by'),
-                $Table->aliasField('resource_type_id'),
             ])
             ->where([
                 $Table->aliasField('id') . ' IN' => $entityIds,

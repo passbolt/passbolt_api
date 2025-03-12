@@ -17,59 +17,37 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service\RotateKey;
 
 use App\Error\Exception\CustomValidationException;
-use App\Model\Entity\Resource;
 use App\Utility\UserAccessControl;
-use Cake\Chronos\Chronos;
-use Cake\Chronos\ChronosInterface;
-use Cake\Event\EventDispatcherTrait;
-use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\FrozenTime;
 use Cake\ORM\Exception\PersistenceFailedException;
-use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
-use Passbolt\Metadata\Controller\Component\MetadataPaginationComponent;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Rule\IsSharedMetadataKeyUniqueActiveRule;
+use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchRotateKeyValidationService;
 
-class MetadataRotateKeyResourcesUpdateService
+class MetadataRotateKeyResourcesUpdateService extends AbstractMetadataRotateKeyUpdateService
 {
-    use EventDispatcherTrait;
-    use LocatorAwareTrait;
-
     /**
-     * @param \App\Utility\UserAccessControl $uac UAC.
-     * @param array $requestData Request data.
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException If data is invalid.
-     * @throws \App\Error\Exception\CustomValidationException If data is invalid.
-     * @throws \Cake\Http\Exception\NotFoundException If one or more resources are not found.
+     * Instantiate the service.
      */
-    public function updateMany(UserAccessControl $uac, array $requestData): void
+    public function __construct()
     {
-        $uac->assertIsAdmin();
-        $this->assertRequestData($requestData);
-
-        $metadataBatchValidationService = new MetadataResourcesBatchRotateKeyValidationService();
-        $data = $metadataBatchValidationService->validateMany($requestData);
-        $this->updateData($uac, $data, $metadataBatchValidationService->getEntities());
+        $this->metadataBatchValidationService = new MetadataResourcesBatchRotateKeyValidationService();
     }
 
     /**
-     * @param \App\Utility\UserAccessControl $uac User access control.
-     * @param array $data Data to update
-     * @param \App\Model\Entity\Resource[] $resources Resource entities
-     * @return void
+     * @inheritDoc
      */
-    protected function updateData(UserAccessControl $uac, array $data, array $resources): void
+    protected function updateData(UserAccessControl $uac, array $data, array $entitiesToUpdate): void
     {
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = TableRegistry::getTableLocator()->get('Resources');
 
         $entities = [];
         foreach ($data as $i => $values) {
-            $resource = $resources[$values['id']];
+            $resource = $entitiesToUpdate[$values['id']];
 
             $this->assertConflict($values, $resource);
 
@@ -83,6 +61,7 @@ class MetadataRotateKeyResourcesUpdateService
                     'username' => true,
                     'uri' => true,
                     'description' => true,
+                    'resource_type_id' => true, // required for upgrade
                     'metadata_key_id' => true,
                     'metadata_key_type' => true,
                     'metadata' => true,
@@ -107,80 +86,22 @@ class MetadataRotateKeyResourcesUpdateService
         }
 
         try {
-            $resourcesTable->saveManyOrFail($entities);
+            $resourcesTable->saveManyOrFail($entities, [
+                IsV4ToV5UpgradeAllowedRule::SKIP_RULE_OPTION => true,
+                IsSharedMetadataKeyUniqueActiveRule::SKIP_RULE_OPTION => false,
+            ]);
         } catch (PersistenceFailedException $exception) { // @phpstan-ignore-line
-            $this->handleSaveManyValidationException($exception, $entities);
+            $this->handleSaveManyValidationException(
+                $exception,
+                $entities,
+                __('The resource metadata key data could not be updated.')
+            );
         } catch (\Exception $exception) {
             throw new InternalErrorException(
                 __('The resource metadata key data could not be updated.'),
                 null,
                 $exception
             );
-        }
-    }
-
-    /**
-     * Throw exception for the entity by preserving the array index of entity.
-     *
-     * @param \Cake\ORM\Exception\PersistenceFailedException $exception Exception object.
-     * @param array $entities Entities were being stored.
-     * @return void
-     * @throws \App\Error\Exception\CustomValidationException
-     */
-    protected function handleSaveManyValidationException(PersistenceFailedException $exception, array $entities): void
-    {
-        $index = 0;
-
-        $failedEntity = $exception->getEntity();
-        // We find index by looping through each entity since cakephp doesn't provide us,
-        // and can't be done at early stage due being in buildRules.
-        foreach ($entities as $i => $entity) {
-            // @see https://www.php.net/manual/en/language.oop5.object-comparison.php
-            if ($failedEntity === $entity) {
-                $index = $i;
-                break;
-            }
-        }
-
-        $errors = [$index => $exception->getEntity()->getErrors()];
-        throw new CustomValidationException(__('The resource metadata key data could not be updated.'), $errors);
-    }
-
-    /**
-     * @param array $requestData Request data.
-     * @return void
-     * @throws \Cake\Http\Exception\BadRequestException If data could not be asserted.
-     */
-    protected function assertRequestData(array $requestData): void
-    {
-        if (empty($requestData)) {
-            throw new BadRequestException(__('The request data should not be empty.'));
-        }
-
-        if (count($requestData) > MetadataPaginationComponent::MAX_PAGINATION_LIMIT) {
-            throw new BadRequestException(__('The request data is too large.'));
-        }
-    }
-
-    /**
-     * Checks for modified datetime and modified by to make sure it's not been changed by other user.
-     *
-     * @param array $values Values to assert.
-     * @param \App\Model\Entity\Resource $resource Existing resource entity.
-     * @return void
-     * @throws \Cake\Http\Exception\ConflictException If provided values do not match with the ones present in the DB.
-     */
-    private function assertConflict(array $values, Resource $resource): void
-    {
-        // Assert modified date hasn't been changed
-        $modified = $values['modified'] instanceof ChronosInterface ? $values['modified'] : new Chronos($values['modified']); // phpcs:ignore
-        if ($modified->toDateTimeString() !== $resource->get('modified')->toDateTimeString()) { // we are comparing via toDateTimeString() to avoid microsecond difference
-            throw new ConflictException(__('The provided modified date does not match.'));
-        }
-
-        // Assert modified by hasn't been changed
-        if ($resource->get('modified_by') !== $values['modified_by']) {
-            throw new ConflictException(__('The provided modified by does not match.'));
         }
     }
 }

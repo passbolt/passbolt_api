@@ -18,7 +18,6 @@ namespace Passbolt\Metadata\Model\Table;
 
 use App\Model\Rule\IsNotServerKeyFingerprintRule;
 use App\Model\Rule\IsNotUserKeyFingerprintRule;
-use App\Model\Rule\IsUniqueIfNotSoftDeletedRule;
 use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\ArmoredKey\IsPublicKeyRevokedRule;
 use App\Model\Validation\ArmoredKey\IsPublicKeyValidStrictRule;
@@ -188,10 +187,13 @@ class MetadataKeysTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->addCreate(new IsUniqueIfNotSoftDeletedRule(), '_isUnique', [
-            'errorField' => 'fingerprint',
-            'message' => __('The fingerprint is already in use.'),
-        ]);
+        $rules->add(
+            $rules->isUnique(
+                ['fingerprint'],
+                __('The fingerprint is already in use.'),
+            ),
+            ['errorField' => 'fingerprint']
+        );
         $rules->addCreate(new MaxNoOfActiveMetadataKeysRule(), 'maxNoOfActiveKeys', [
             'errorField' => 'fingerprint',
             'message' => __('Already two metadata keys are active.'),

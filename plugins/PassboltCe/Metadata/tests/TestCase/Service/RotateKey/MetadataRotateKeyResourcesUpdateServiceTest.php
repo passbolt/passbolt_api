@@ -79,10 +79,17 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($admin->get('gpgkey'))->persist();
-        $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])->v5Fields(true, [
-            'metadata_key_id' => $expiredMetadataKey->get('id'),
-            'metadata' => $this->encryptForMetadataKey(json_encode([])),
-        ])->persist();
+        $expiredResource1 = ResourceFactory::make()->withPermissionsFor([$admin])
+            ->patchData([
+                'metadata_key_id' => $expiredMetadataKey->get('id'),
+                'metadata' => $this->encryptForMetadataKey(json_encode([])),
+                'metadata_key_type' => 'shared_key',
+                // Set V4 fields to null
+                'name' => null,
+                'username' => null,
+                'uri' => null,
+                'description' => null,
+            ])->persist();
         // another user's resource returned
         $user = UserFactory::make()
             ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
@@ -90,9 +97,15 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             ->active()
             ->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
-        $expiredResource2 = ResourceFactory::make()->withPermissionsFor([$user])->v5Fields(true, [
+        $expiredResource2 = ResourceFactory::make()->withPermissionsFor([$user])->patchData([
             'metadata_key_id' => $expiredMetadataKey->get('id'),
             'metadata' => $this->encryptForMetadataKey(json_encode([])),
+            'metadata_key_type' => 'shared_key',
+            // Set V4 fields to null
+            'name' => null,
+            'username' => null,
+            'uri' => null,
+            'description' => null,
         ])->persist();
 
         $uac = $this->mockAdminAccessControl();
@@ -334,6 +347,45 @@ class MetadataRotateKeyResourcesUpdateServiceTest extends AppTestCaseV5
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isMetadataKeyNotExpired', $errors[0]['metadata_key_id']);
+        }
+    }
+
+    public function testMetadataRotateKeyResourcesUpdateService_Error_Multiple_Active_Metadata_Keys(): void
+    {
+        // create metadata keys
+        [$activeMetadataKey] = MetadataKeyFactory::make(2)->withServerPrivateKey()->persist();
+        $expiredMetadataKey = MetadataKeyFactory::make()->withExpiredKey()->expired()->withServerPrivateKey()->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->persist();
+        $resource = ResourceFactory::make()->v5Fields(true, [
+            'metadata_key_id' => $expiredMetadataKey->get('id'),
+            'metadata' => $this->encryptForMetadataKey(json_encode([])),
+        ])->persist();
+        // another user's resource returned
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
+
+        $metadata = $this->encryptForMetadataKey(json_encode([]));
+        $data = [
+            [
+                'id' => $resource->get('id'),
+                'metadata_key_id' => $activeMetadataKey->get('id'),
+                'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                'metadata' => $metadata,
+                'modified' => $resource->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $resource->get('modified_by'),
+            ],
+        ];
+        $uac = $this->mockAdminAccessControl();
+        try {
+            $this->service->updateMany($uac, $data);
+        } catch (\Exception $e) {
+            $this->assertInstanceOf(CustomValidationException::class, $e);
+            $errors = $e->getErrors();
+            $this->assertArrayHasKey('isSharedMetadataKeyUniqueActive', $errors[0]['metadata_key_id']);
         }
     }
 }

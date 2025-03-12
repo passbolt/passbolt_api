@@ -85,16 +85,17 @@ class UsersIndexControllerPaginationTest extends AppIntegrationTestCase
         $page = 2;
         $expectedCurrent = 9;
 
+        $data = Hash::merge(
+            $this->getArrayOfDistinctRandomStrings($numberOfUsers, 'first_name'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfUsers, 'created')
+        );
+
         $admin = UserFactory::make()
             ->admin()
-            ->with('Profiles')
+            ->with('Profiles', array_shift($data))
             ->withLogIn(3)
             ->persist();
 
-        $data = Hash::merge(
-            $this->getArrayOfDistinctRandomStrings($numberOfUsers - 1, 'first_name'),
-            $this->getArrayOfDistinctRandomPastDates($numberOfUsers - 1, 'created')
-        );
         ProfileFactory::make($data)
             ->with('Users', UserFactory::make()->user()->without('Profiles')->withLogIn(3))
             ->persist();

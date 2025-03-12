@@ -80,7 +80,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         $this->assertArrayEqualsCanonicalizing([
             'count' => 30,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 
@@ -110,7 +110,7 @@ class MetadataRotateKeyResourcesIndexControllerTest extends AppIntegrationTestCa
         $this->assertArrayEqualsCanonicalizing([
             'count' => 8,
             'page' => 1,
-            'limit' => null,
+            'limit' => 20,
         ], $headers['pagination']);
     }
 

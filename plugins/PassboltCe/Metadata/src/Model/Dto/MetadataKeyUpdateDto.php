@@ -58,6 +58,11 @@ class MetadataKeyUpdateDto
      */
     public static function fromArray(array $data): self
     {
+        if (is_string($data['expired'])) {
+            // ISO-8601 format
+            $data['expired'] = FrozenTime::createFromFormat(\DateTime::ATOM, $data['expired']);
+        }
+
         return new self($data['fingerprint'], $data['armored_key'], $data['expired']);
     }
 }
