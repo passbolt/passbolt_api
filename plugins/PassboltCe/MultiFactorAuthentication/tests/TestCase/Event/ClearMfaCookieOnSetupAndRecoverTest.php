@@ -68,7 +68,7 @@ class ClearMfaCookieOnSetupAndRecoverTest extends MfaIntegrationTestCase
         ]);
         $controller = new UsersRegisterController($request);
         $event = new Event('Foo', $controller);
-        unset($controller->User);
+        $controller->User = null;
 
         (new ClearMfaCookieOnSetupAndRecover())->clearMfaCookieInResponse($event);
 

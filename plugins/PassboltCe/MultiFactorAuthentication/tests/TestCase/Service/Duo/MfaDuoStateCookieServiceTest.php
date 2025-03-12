@@ -21,6 +21,7 @@ use App\Utility\UuidFactory;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use InvalidArgumentException;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
 
 class MfaDuoStateCookieServiceTest extends TestCase
@@ -42,7 +43,7 @@ class MfaDuoStateCookieServiceTest extends TestCase
         $token = 'invalid-token';
         $service = new MfaDuoStateCookieService();
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('The authentication token should be a valid UUID.');
         $service->createDuoStateCookie($token, true);
     }
