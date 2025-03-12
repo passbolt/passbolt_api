@@ -31,7 +31,7 @@ class IsActiveUserRule
      */
     public function __invoke(EntityInterface $entity, array $options): bool
     {
-        if (!$entity->has('user_id')) {
+        if (!$entity->hasValue('user_id')) {
             return false;
         }
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
