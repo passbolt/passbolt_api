@@ -21,7 +21,7 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class ResourcesUpdateControllerTest extends TagPluginIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles',
         'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Resources', 'app.Base/Favorites',

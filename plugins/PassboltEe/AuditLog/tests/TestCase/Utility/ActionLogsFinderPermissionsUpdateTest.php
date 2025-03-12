@@ -35,7 +35,7 @@ class ActionLogsFinderPermissionsUpdateTest extends LogIntegrationTestCase
 {
     use ActionLogsOperationsTestTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
         'app.Base/Profiles',
         'app.Base/Resources',

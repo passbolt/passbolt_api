@@ -22,7 +22,7 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class ResourcesViewControllerTest extends TagPluginIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',

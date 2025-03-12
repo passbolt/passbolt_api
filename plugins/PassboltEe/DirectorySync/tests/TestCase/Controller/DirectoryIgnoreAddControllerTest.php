@@ -22,7 +22,7 @@ use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCa
 
 class DirectoryIgnoreAddControllerTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Secrets', 'app.Base/Roles',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'app.Base/Favorites',

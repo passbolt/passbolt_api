@@ -29,7 +29,7 @@ class UserSyncActionAddCaseSensitiveTest extends DirectorySyncDeprecatedIntegrat
     /**
      * @var array No fixtures in this test case, using factories
      */
-    public $fixtures = [];
+    public array $fixtures = [];
 
     public function setUp(): void
     {

@@ -40,7 +40,7 @@ abstract class DirectorySyncDeprecatedIntegrationTestCase extends AppIntegration
     use MockDirectoryTrait;
     use UserAccessControlTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
         'app.Base/Profiles',
         'app.Base/Groups',
