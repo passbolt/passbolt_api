@@ -38,10 +38,10 @@ class PermissionFactory extends \App\Test\Factory\PermissionFactory
     /**
      * Define the associated folder aco
      *
-     * @param FolderFactory|null $factory
+     * @param FolderFactory|array $factory
      * @return PermissionFactory
      */
-    public function withAcoFolder(?FolderFactory $factory = null): self
+    public function withAcoFolder(array|FolderFactory $factory = []): self
     {
         $this->patchData(['aco' => PermissionsTable::FOLDER_ACO]);
 
