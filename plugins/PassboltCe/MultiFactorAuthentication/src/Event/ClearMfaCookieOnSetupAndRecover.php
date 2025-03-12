@@ -75,7 +75,7 @@ class ClearMfaCookieOnSetupAndRecover implements EventListenerInterface
             return;
         } elseif (!$isPost) {
             return;
-        } elseif (!isset($controller->User) || !($controller->User instanceof UserComponent)) {
+        } elseif (!($controller->User instanceof UserComponent)) {
             Log::error('The User component is not set for ' . get_class($controller));
 
             return;
