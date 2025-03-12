@@ -113,7 +113,7 @@ abstract class AbstractMetadataRotateKeyUpdateService
      */
     protected function assertConflict(array $values, Entity $entity): void
     {
-        if (!$entity->has('modified_by') || !$entity->has('modified')) {
+        if (!$entity->hasValue('modified_by') || !$entity->hasValue('modified')) {
             return;
         }
         // Assert modified date hasn't been changed

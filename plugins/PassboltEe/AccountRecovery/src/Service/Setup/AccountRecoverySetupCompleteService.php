@@ -178,7 +178,7 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
                 );
             }
 
-            if ($user->has('account_recovery_private_key') && $user->get('account_recovery_private_key')->hasErrors()) {
+            if ($user->hasValue('account_recovery_private_key') && $user->get('account_recovery_private_key')->hasErrors()) {
                 throw new ValidationException(
                     'Could not save the account recovery private key.',
                     $user->get('account_recovery_private_key'),
