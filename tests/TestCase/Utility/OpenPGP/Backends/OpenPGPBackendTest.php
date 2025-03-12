@@ -19,52 +19,86 @@ namespace App\Test\TestCase\Utility\OpenPGP\Backends;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Utility\OpenPGP\Backends\Gnupg;
+use App\Utility\OpenPGP\OpenPGPBackend;
+use App\Utility\OpenPGP\OpenPGPBackendInterface;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\TestSuite\TestCase;
 
-abstract class OpenPGPBackendTest extends TestCase
+/**
+ * @covers \App\Utility\OpenPGP\OpenPGPBackend
+ */
+class OpenPGPBackendTest extends TestCase
 {
     use FormatValidationTrait;
     use GpgkeysModelTrait;
 
-    public $originalErrorSettings;
+    public string|false $originalErrorSettings;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->originalErrorSettings = ini_get('error_reporting');
+    }
+
+    public function tearDown(): void
+    {
+        $settings = ini_get('error_reporting');
+        if ($settings != $this->originalErrorSettings) {
+            ini_set('error_reporting', $this->originalErrorSettings);
+        }
+        parent::tearDown();
+    }
+
+    public static function openPGPBackendProvider(): array
+    {
+        return [
+            [new Gnupg()],
+        ];
+    }
 
     /**
-     * @var OpenPGPBackendInterface
+     * @dataProvider openPGPBackendProvider
      */
-    public $gnupg;
-
-    public function testOpenPGPBackendEncryptDecryptSuccess(): void
+    public function testOpenPGPBackendEncryptDecryptSuccess(OpenPGPBackend $gnupg): void
     {
         $keys = $this->getDummyGpgkey();
-        $this->gnupg->setEncryptKey($keys['public_key_armored']);
-        $this->gnupg->setSignKey($keys['private_key_armored'], '');
+        $gnupg->setEncryptKey($keys['public_key_armored']);
+        $gnupg->setSignKey($keys['private_key_armored'], '');
 
         $messageToEncrypt = 'This is a test message.';
-        $encryptedMessage = $this->gnupg->encrypt($messageToEncrypt, true);
-        $this->gnupg->setVerifyKeyFromFingerprint($keys['fingerprint']);
-        $this->gnupg->setDecryptKey($keys['private_key_armored'], '');
-        $decryptedMessage = $this->gnupg->decrypt($encryptedMessage, true);
+        $encryptedMessage = $gnupg->encrypt($messageToEncrypt, true);
+        $gnupg->setVerifyKeyFromFingerprint($keys['fingerprint']);
+        $gnupg->setDecryptKey($keys['private_key_armored'], '');
+        $decryptedMessage = $gnupg->decrypt($encryptedMessage, true);
 
         $this->assertEquals($messageToEncrypt, $decryptedMessage);
     }
 
-    public function testOpenPGPBackendSetEncryptKeySuccess(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendSetEncryptKeySuccess(OpenPGPBackend $gnupg): void
     {
         $secKeyPath = Configure::read('passbolt.gpg.serverKey.private');
         $armoredKey = file_get_contents($secKeyPath);
-        $result = $this->gnupg->setEncryptKey($armoredKey);
+        $result = $gnupg->setEncryptKey($armoredKey);
         $this->assertTrue($result);
     }
 
-    public function testOpenPGPBackendSetEncryptKeyError_NotAnArmoredKey(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendSetEncryptKeyError_NotAnArmoredKey(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
-        $this->gnupg->setEncryptKey('wrong');
+        $gnupg->setEncryptKey('wrong');
     }
 
-    public function testOpenPGPBackendSetEncryptKeyError_InvalidArmoredKey(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendSetEncryptKeyError_InvalidArmoredKey(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
         $invalidKey = '-----BEGIN PGP PRIVATE KEY BLOCK-----
@@ -92,49 +126,70 @@ zaZXtuDzZmnTOjWJm895TA==
 =DYFc
 -----END PGP PRIVATE KEY BLOCK-----
 ';
-        $this->gnupg->setEncryptKey($invalidKey);
+        $gnupg->setEncryptKey($invalidKey);
     }
 
-    public function testOpenPGPBackendSetEncryptKeyFromFingerprintError_InvalidFingerprint(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendSetEncryptKeyFromFingerprintError_InvalidFingerprint(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
-        $this->gnupg->setEncryptKeyFromFingerprint('not a fingerprint');
+        $gnupg->setEncryptKeyFromFingerprint('not a fingerprint');
     }
 
-    public function testOpenPGPBackendSetEncryptKeyFromFingerprintError_NotFoundFingerprint(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendSetEncryptKeyFromFingerprintError_NotFoundFingerprint(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
-        $this->gnupg->setEncryptKeyFromFingerprint('2FC8945833C51946E937F9FED47B0811573EE67F');
+        $gnupg->setEncryptKeyFromFingerprint('2FC8945833C51946E937F9FED47B0811573EE67F');
     }
 
-    public function testOpenPGPBackendAssertGpgMarkerError_NoMarker(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertGpgMarkerError_NoMarker(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
-        $this->gnupg->assertGpgMarker('not a marker', Gnupg::MESSAGE_MARKER);
+        $gnupg->assertGpgMarker('not a marker', Gnupg::MESSAGE_MARKER);
     }
 
-    public function testOpenPGPBackendAssertGpgMarkerError_NotSameMarker(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertGpgMarkerError_NotSameMarker(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
-        $this->gnupg->assertGpgMarker('-----BEGIN PGP PRIVATE KEY BLOCK-----', Gnupg::MESSAGE_MARKER);
+        $gnupg->assertGpgMarker('-----BEGIN PGP PRIVATE KEY BLOCK-----', Gnupg::MESSAGE_MARKER);
     }
 
-    public function testOpenPGPBackendAssertGpgMarkerSuccess(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertGpgMarkerSuccess(OpenPGPBackend $gnupg): void
     {
-        $result = $this->gnupg->assertGpgMarker('-----BEGIN PGP PRIVATE KEY BLOCK-----', Gnupg::PRIVATE_KEY_MARKER);
+        $result = $gnupg->assertGpgMarker('-----BEGIN PGP PRIVATE KEY BLOCK-----', Gnupg::PRIVATE_KEY_MARKER);
         $this->assertTrue($result);
     }
 
-    public function testOpenPGPBackendAssertDecryptKeyError(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertDecryptKeyError(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
-        $this->gnupg->assertDecryptKey();
+        $gnupg->assertDecryptKey();
     }
 
-    public function testOpenPGPBackendAssertDecryptKeySuccess(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertDecryptKeySuccess(OpenPGPBackend $gnupg): void
     {
         $keys = $this->getDummyGpgkey();
-        $this->gnupg->setDecryptKey($keys['private_key_armored'], '');
+        $gnupg->setDecryptKey($keys['private_key_armored'], '');
         $encrypted = '-----BEGIN PGP MESSAGE-----
 
 hQIMAxWrZ+ffF0kbAQ/7Bbn3FDqVhUygbt2GuT/zZYJWbHLpxzHKS0Thn5sZeusp
@@ -152,77 +207,104 @@ PwGOkDyjWQT0cvmL+P9lWaGwNwtqtxYtTiEoYS4fYK0sRjkFSrKsserkND3Ad/ol
 p7hokpGnpTQXl9C5Oi/+uQ==
 =lMs6
 -----END PGP MESSAGE-----';
-        $this->assertEquals('test', $this->gnupg->decrypt($encrypted));
+        $this->assertEquals('test', $gnupg->decrypt($encrypted));
     }
 
-    public function testOpenPGPBackendAssertEncryptKeyError(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertEncryptKeyError(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
-        $this->gnupg->assertEncryptKey();
+        $gnupg->assertEncryptKey();
     }
 
-    public function testOpenPGPBackendAssertEncryptKeySuccess(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertEncryptKeySuccess(OpenPGPBackend $gnupg): void
     {
         $keys = $this->getDummyGpgkey();
-        $this->gnupg->setEncryptKey($keys['public_key_armored']);
-        $encrypted = $this->gnupg->encrypt('test');
+        $gnupg->setEncryptKey($keys['public_key_armored']);
+        $encrypted = $gnupg->encrypt('test');
 
         $this->assertStringNotContainsString('test', $encrypted);
     }
 
-    public function testOpenPGPBackendAssertSignKeyError(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertSignKeyError(OpenPGPBackend $gnupg): void
     {
         $this->expectException(CakeException::class);
-        $this->gnupg->assertSignKey();
+        $gnupg->assertSignKey();
     }
 
-    public function testOpenPGPBackendAssertSignKeySuccess(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendAssertSignKeySuccess(OpenPGPBackend $gnupg): void
     {
         $keys = $this->getDummyGpgkey();
-        $this->gnupg->setSignKey($keys['private_key_armored'], '');
-        $signed = $this->gnupg->sign('test');
+        $gnupg->setSignKey($keys['private_key_armored'], '');
+        $signed = $gnupg->sign('test');
         $this->assertNotEquals('test', $signed);
         $this->assertStringContainsString('test', $signed);
     }
 
-    public function testOpenPGPBackendIsValidMessageError(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendIsValidMessageError(OpenPGPBackend $gnupg): void
     {
         $tests = self::getGpgMessageTestCases();
         foreach ($tests['test_cases'] as $value => $expect) {
-            $result = $this->gnupg->isValidMessage($value);
+            $result = $gnupg->isValidMessage($value);
             $this->assertEquals($expect, $result, __('Armored message test failed: {0}', $value));
         }
     }
 
-    public function testOpenPGPBackendVerifySuccess(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendVerifySuccess(OpenPGPBackend $gnupg): void
     {
         $armoredSignedMessage = $this->getDummySignedMessage('betty');
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key');
-        $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
+        $fingerprint = $gnupg->importKeyIntoKeyring($armoredKey);
         $message = '';
-        $this->gnupg->setVerifyKeyFromFingerprint($fingerprint);
-        $this->gnupg->verify($armoredSignedMessage, $message);
+        $gnupg->setVerifyKeyFromFingerprint($fingerprint);
+        $gnupg->verify($armoredSignedMessage, $message);
         $this->assertMatchesRegularExpression('/^Signed message/', $message);
     }
 
-    public function testOpenPGPBackendVerifyError(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendVerifyError(OpenPGPBackend $gnupg): void
     {
         $armoredSignedMessage = $this->getDummySignedMessage('betty');
         $armoredKey = file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'betty_public.key');
-        $fingerprint = $this->gnupg->importKeyIntoKeyring($armoredKey);
+        $fingerprint = $gnupg->importKeyIntoKeyring($armoredKey);
         $this->expectException(CakeException::class);
-        $this->gnupg->setVerifyKeyFromFingerprint($fingerprint);
-        $this->gnupg->verify($armoredSignedMessage);
+        $gnupg->setVerifyKeyFromFingerprint($fingerprint);
+        $gnupg->verify($armoredSignedMessage);
     }
 
-    public function testIsParsableArmoredSignedMessageSuccess(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testIsParsableArmoredSignedMessageSuccess(OpenPGPBackend $gnupg): void
     {
         $armoredSignedMessage = $this->getDummySignedMessage('betty');
-        $result = $this->gnupg->isParsableArmoredSignedMessage($armoredSignedMessage);
+        $result = $gnupg->isParsableArmoredSignedMessage($armoredSignedMessage);
         $this->assertTrue($result);
     }
 
-    public function testIsParsableArmoredSignedMessageError(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testIsParsableArmoredSignedMessageError(OpenPGPBackend $gnupg): void
     {
         $armoredSignedMessages = [
             'empty message' => '',
@@ -230,7 +312,7 @@ p7hokpGnpTQXl9C5Oi/+uQ==
         ];
 
         foreach ($armoredSignedMessages as $message) {
-            $result = $this->gnupg->isParsableArmoredSignedMessage($message);
+            $result = $gnupg->isParsableArmoredSignedMessage($message);
             $this->assertFalse($result);
         }
     }
@@ -260,30 +342,39 @@ gsv1OnsWRlfCzm417Nvg0mZ+uqTM3lC8B1T9zd6vTaVHyX0xs6qjDNhVuGncFUGW
 -----END PGP SIGNATURE-----';
     }
 
-    public function testOpenPGPBackendSignSuccess(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendSignSuccess(OpenPGPBackend $gnupg): void
     {
         $keys = $this->getDummyGpgkey();
-        $this->gnupg->setSignKey($keys['private_key_armored'], '');
-        $keyInfo = $this->gnupg->getKeyInfo($keys['private_key_armored']);
+        $gnupg->setSignKey($keys['private_key_armored'], '');
+        $keyInfo = $gnupg->getKeyInfo($keys['private_key_armored']);
 
         $messageToSign = 'This is a test message.';
-        $signedMessage = $this->gnupg->sign($messageToSign);
+        $signedMessage = $gnupg->sign($messageToSign);
 
         $messageUnsigned = null;
-        $this->gnupg->setVerifyKeyFromFingerprint($keyInfo['fingerprint']);
-        $this->gnupg->verify($signedMessage, $messageUnsigned);
+        $gnupg->setVerifyKeyFromFingerprint($keyInfo['fingerprint']);
+        $gnupg->verify($signedMessage, $messageUnsigned);
 
         $this->assertEquals($messageToSign . "\n", $messageUnsigned);
     }
 
-    public function testOpenPGPBackendSignError(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendSignError(OpenPGPBackend $gnupg): void
     {
         $messageToSign = 'This is a test message.';
         $this->expectException(CakeException::class);
-        $this->gnupg->sign($messageToSign);
+        $gnupg->sign($messageToSign);
     }
 
-    public function testOpenPGPBackendParsePublicECCKey(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendParsePublicECCKey(OpenPGPBackend $gnupg): void
     {
         // ECDH (Encrypt only) - curve25519
         // Algorithm 22?
@@ -318,27 +409,30 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
 =OtIW
 -----END PGP PUBLIC KEY BLOCK-----
 ';
-        $parsable = $this->gnupg->isParsableArmoredPublicKey($pkey);
+        $parsable = $gnupg->isParsableArmoredPublicKey($pkey);
         $this->assertTrue($parsable);
     }
 
-    public function testOpenPGPBackendReImportRevokedKeyDoesNotChange(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendReImportRevokedKeyDoesNotChange(OpenPGPBackend $gnupg): void
     {
-        $this->gnupg->deleteKey('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->deleteKey('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
 
         // Encrypt first with non revoked key
         $messageToEncrypt = 'PublicKeyCanEncryptCheckService check';
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
-        $this->gnupg->importKeyIntoKeyring($armoredKey);
-        $this->gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
-        $this->gnupg->encrypt($messageToEncrypt);
+        $gnupg->importKeyIntoKeyring($armoredKey);
+        $gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->encrypt($messageToEncrypt);
 
         // Import revoked key
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key');
-        $this->gnupg->importKeyIntoKeyring($armoredKey);
-        $this->gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->importKeyIntoKeyring($armoredKey);
+        $gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
         try {
-            $this->gnupg->encrypt($messageToEncrypt);
+            $gnupg->encrypt($messageToEncrypt);
             $this->assertTrue(false);
         } catch (\Exception $exception) {
             $this->assertTrue(true);
@@ -346,37 +440,40 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
 
         // Import non revoked key
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
-        $this->gnupg->importKeyIntoKeyring($armoredKey);
-        $this->gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->importKeyIntoKeyring($armoredKey);
+        $gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
         try {
-            $this->gnupg->encrypt($messageToEncrypt);
+            $gnupg->encrypt($messageToEncrypt);
             $this->assertTrue(false);
         } catch (\Exception $exception) {
             $this->assertTrue(true);
         }
 
         // Delete possible revoked key from keying
-        $this->gnupg->deleteKey('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->deleteKey('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
     }
 
-    public function testOpenPGPBackendReImportExpiredKeyDoesNotChange(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendReImportExpiredKeyDoesNotChange(OpenPGPBackend $gnupg): void
     {
         // Delete possible revoked key from keying
-        $this->gnupg->deleteKey('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->deleteKey('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
 
         // Encrypt first with non revoked key
         $messageToEncrypt = 'PublicKeyCanEncryptCheckService check';
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
-        $this->gnupg->importKeyIntoKeyring($armoredKey);
-        $this->gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
-        $this->gnupg->encrypt($messageToEncrypt);
+        $gnupg->importKeyIntoKeyring($armoredKey);
+        $gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->encrypt($messageToEncrypt);
 
         // Import expired key
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_expired_public.key');
-        $this->gnupg->importKeyIntoKeyring($armoredKey);
-        $this->gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->importKeyIntoKeyring($armoredKey);
+        $gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
         try {
-            $this->gnupg->encrypt($messageToEncrypt);
+            $gnupg->encrypt($messageToEncrypt);
             $this->assertTrue(false);
         } catch (\Exception $exception) {
             $this->assertTrue(true);
@@ -384,23 +481,26 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
 
         // Import non revoked key
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key');
-        $this->gnupg->importKeyIntoKeyring($armoredKey);
-        $this->gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->importKeyIntoKeyring($armoredKey);
+        $gnupg->setEncryptKeyFromFingerprint('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
         try {
-            $this->gnupg->encrypt($messageToEncrypt);
+            $gnupg->encrypt($messageToEncrypt);
             $this->assertTrue(false);
         } catch (\Exception $exception) {
             $this->assertTrue(true);
         }
 
         // Delete revoked key from keying
-        $this->gnupg->deleteKey('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
+        $gnupg->deleteKey('67BFFCB7B74AF4C85E81AB26508850525CD78BAA');
     }
 
-    public function testOpenPGPBackendCannotImportFutureKey(): void
+    /**
+     * @dataProvider openPGPBackendProvider
+     */
+    public function testOpenPGPBackendCannotImportFutureKey(OpenPGPBackend $gnupg): void
     {
         $armoredKey = file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'fry_public.key');
         $this->expectException(CakeException::class);
-        $this->gnupg->importKeyIntoKeyring($armoredKey);
+        $gnupg->importKeyIntoKeyring($armoredKey);
     }
 }

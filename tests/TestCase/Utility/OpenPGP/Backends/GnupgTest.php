@@ -20,7 +20,7 @@ use App\Utility\OpenPGP\Backends\Gnupg;
 
 class GnupgTest extends OpenPGPBackendTest
 {
-    public $originalErrorSettings;
+    public string|false $originalErrorSettings;
 
     /**
      * @var Gnupg
