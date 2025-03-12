@@ -49,7 +49,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
     use GroupsModelTrait;
     use SecretsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,

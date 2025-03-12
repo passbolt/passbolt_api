@@ -21,7 +21,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 
 class RolesIndexControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles'];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Roles'];
 
     public function testRolesIndexController_Success(): void
     {

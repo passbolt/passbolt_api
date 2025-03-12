@@ -55,11 +55,11 @@ class FindLastLoggedInTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->active()->persist();
         $userId = $user->get('id');
-        $actionLogOld = ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(1)])
+        $actionLogOld = ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(1)])
             ->loginAction()
             ->userId($userId)
             ->persist();
-        $actionLogLatest = ActionLogFactory::make(['created' => FrozenTime::now()])
+        $actionLogLatest = ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()])
             ->loginAction()
             ->userId($userId)
             ->persist();
@@ -76,20 +76,20 @@ class FindLastLoggedInTest extends AppTestCase
         $user = UserFactory::make()->user()->active()->persist();
         $userId = $user->get('id');
         // auth login logs
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMonths(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMonths(2)])
             ->loginAction()
             ->userId($userId)
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()->subDays(2)])
+        ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subDays(2)])
             ->loginAction()
             ->userId($userId)
             ->persist();
         // jwt login logs
-        $actionLogJwtOld = ActionLogFactory::make(['created' => FrozenTime::now()->subHours(2)])
+        $actionLogJwtOld = ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subHours(2)])
             ->setActionId('JwtLogin.loginPost')
             ->userId($userId)
             ->persist();
-        $actionLogJwtLatest = ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(1)])
+        $actionLogJwtLatest = ActionLogFactory::make(['created' => \Cake\I18n\DateTime::now()->subMinutes(1)])
             ->setActionId('JwtLogin.loginPost')
             ->userId($userId)
             ->persist();

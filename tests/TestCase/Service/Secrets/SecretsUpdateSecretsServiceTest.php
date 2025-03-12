@@ -35,7 +35,7 @@ use Cake\Utility\Hash;
  */
 class SecretsUpdateSecretsServiceTest extends AppTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Permissions',

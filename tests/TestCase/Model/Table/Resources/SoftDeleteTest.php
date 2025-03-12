@@ -29,7 +29,7 @@ class SoftDeleteTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers',
         'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
         'app.Base/Permissions'];

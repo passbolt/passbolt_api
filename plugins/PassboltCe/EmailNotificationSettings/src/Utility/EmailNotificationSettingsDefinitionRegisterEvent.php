@@ -37,9 +37,9 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
     /**
      * @param string $name Name of the event
      * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm|null $subject Subject of the dispatched event
-     * @param \ArrayAccess|array|null $data Data for the event
+     * @param \ArrayAccess|array $data Data for the event
      */
-    final public function __construct(string $name, $subject = null, $data = null)
+    final public function __construct(string $name, $subject = null, $data = [])
     {
         if (!$subject instanceof EmailNotificationSettingsForm) {
             $msg = '`subject` must be an instance of ' . EmailNotificationSettingsForm::class;

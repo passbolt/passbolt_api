@@ -29,7 +29,7 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public $Gpgkeys;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
     public function setUp(): void
     {

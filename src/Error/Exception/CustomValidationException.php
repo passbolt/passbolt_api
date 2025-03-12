@@ -32,7 +32,7 @@ class CustomValidationException extends HttpException implements
     /**
      * @inheritDoc
      */
-    protected $_defaultCode = 400;
+    protected int $_defaultCode = 400;
 
     /**
      * The validation errors.

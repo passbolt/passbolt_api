@@ -108,7 +108,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             'id' => $userId,
             'active' => 1,
             'deleted' => 1,
-            'disabled' => FrozenTime::now(),
+            'disabled' => \Cake\I18n\DateTime::now(),
             'created' => $date,
             'modified' => $date,
             'username' => 'aurore@passbolt.com',
@@ -128,7 +128,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEmpty($user->disabled);
-        $this->assertTrue($user->created->greaterThan(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertTrue($user->created->greaterThan(\Cake\I18n\DateTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersAddController_Success_EmailSent(): void

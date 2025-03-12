@@ -81,7 +81,7 @@ class GpgkeyFactory extends CakephpBaseFactory
      */
     public function expired()
     {
-        return $this->setField('expires', FrozenTime::yesterday());
+        return $this->setField('expires', \Cake\I18n\DateTime::yesterday());
     }
 
     /**
@@ -101,7 +101,7 @@ class GpgkeyFactory extends CakephpBaseFactory
      */
     public function modifiedYesterday()
     {
-        return $this->setField('modified', FrozenTime::yesterday());
+        return $this->setField('modified', \Cake\I18n\DateTime::yesterday());
     }
 
     /**

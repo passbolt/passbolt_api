@@ -27,7 +27,7 @@ class HasAccessTest extends AppTestCase
 {
     public $Resources;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions'];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions'];
 
     /**
      * @var \App\Model\Table\PermissionsTable

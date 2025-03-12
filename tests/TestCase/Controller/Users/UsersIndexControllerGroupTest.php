@@ -26,7 +26,7 @@ class UsersIndexControllerGroupTest extends AppIntegrationTestCase
 {
     use GroupsUsersModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/GroupsUsers',
     ];

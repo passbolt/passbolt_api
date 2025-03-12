@@ -56,7 +56,7 @@ class GpgAuthenticator extends SessionAuthenticator
      * @var array loaded from Configure::read('GPG')
      * @access protected
      */
-    protected $_config;
+    protected array $_config;
 
     /**
      * @var \App\Utility\OpenPGP\OpenPGPBackendInterface instance

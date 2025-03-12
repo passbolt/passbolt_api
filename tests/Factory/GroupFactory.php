@@ -57,8 +57,8 @@ class GroupFactory extends CakephpBaseFactory
                 'name' => $faker->text(64),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'created' => FrozenDate::now()->subDays($faker->randomNumber(4)),
-                'modified' => FrozenDate::now()->subDays($faker->randomNumber(4)),
+                'created' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
+                'modified' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }

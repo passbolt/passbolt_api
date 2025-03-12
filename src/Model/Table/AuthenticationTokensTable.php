@@ -406,7 +406,6 @@ class AuthenticationTokensTable extends Table
     public function setActiveExpiredTokenToInactive(string $type): void
     {
         $this->updateQuery()
-            ->update()
             ->set(['active' => false])
             ->where([
                 'active' => true,

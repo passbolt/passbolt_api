@@ -154,9 +154,9 @@ class ResourceFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
-    public function expired(?FrozenTime $expired = null)
+    public function expired(?\Cake\I18n\DateTime $expired = null)
     {
-        return $this->setField('expired', $expired ?? FrozenTime::now()->subMinutes(1));
+        return $this->setField('expired', $expired ?? \Cake\I18n\DateTime::now()->subMinutes(1));
     }
 
     /**

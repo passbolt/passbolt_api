@@ -25,7 +25,7 @@ use Cake\ORM\TableRegistry;
 
 class FindResourcesUserIsOwnerTest extends AppTestCase
 {
-    public $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources'];
+    public array $fixtures = ['app.Alt0/Permissions', 'app.Alt0/GroupsUsers', 'app.Base/Resources'];
 
     /**
      * Test subject

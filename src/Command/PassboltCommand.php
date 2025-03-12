@@ -61,7 +61,6 @@ class PassboltCommand extends Command implements PassboltCommandInterface
      */
     public function __construct(?CommandCollection $passboltCommandCollection = null)
     {
-        parent::__construct();
         $this->passboltCommandCollection = $passboltCommandCollection;
     }
 

@@ -39,7 +39,9 @@ trait EmailNotificationSettingsDefinitionTrait
     public function implementedEvents(): array
     {
         return [
-            EmailNotificationSettingsDefinitionRegisterEvent::EVENT_NAME => $this,
+            EmailNotificationSettingsDefinitionRegisterEvent::EVENT_NAME => function () {  // todo: refactor this to use method name (string)
+                return $this;
+            },
         ];
     }
 

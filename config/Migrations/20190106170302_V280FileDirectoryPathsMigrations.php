@@ -30,9 +30,13 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
     public function up()
     {
         $connectionName = 'default';
-        if ($this->input->getOption('connection')) {
-            $connectionName = $this->input->getOption('connection');
-        }
+        /**
+         * TODO: Fix error `Previous error: Symfony\Component\Console\Exception\InvalidArgumentException:
+         * The "connection" option does not exist.`
+         */
+//        if ($this->input->getOption('connection')) {
+//            $connectionName = $this->input->getOption('connection');
+//        }
         $connection = ConnectionManager::get($connectionName);
 
         $Avatars = TableRegistry::getTableLocator()->get('Avatars', ['connection' => $connection]);

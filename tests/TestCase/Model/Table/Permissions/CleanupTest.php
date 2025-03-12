@@ -160,7 +160,7 @@ class CleanupTest extends AppTestCase
     public function testCleanupPermissionsDuplicatedPermissions()
     {
         // Duplicated permissions to cleanup.
-        $duplicatedPermissionsForUser = PermissionFactory::make(['modified' => FrozenTime::now()])
+        $duplicatedPermissionsForUser = PermissionFactory::make(['modified' => \Cake\I18n\DateTime::now()])
             ->typeOwner()
             ->withAcoResource()
             ->withAroUser()
@@ -169,7 +169,7 @@ class CleanupTest extends AppTestCase
         // Duplicate permission to keep as it is the oldest.
         $duplicatedPermissionForUserMeta = $duplicatedPermissionsForUser->extractOriginal(['aco', 'aco_foreign_key', 'aro', 'aro_foreign_key', 'type']);
         $duplicatedPermissionToKeep = PermissionFactory::make($duplicatedPermissionForUserMeta)
-            ->patchData(['modified' => FrozenTime::now()->subDays(1)])->persist();
+            ->patchData(['modified' => \Cake\I18n\DateTime::now()->subDays(1)])->persist();
 
         $duplicatedPermissionsForGroup = PermissionFactory::make()
             ->typeRead()

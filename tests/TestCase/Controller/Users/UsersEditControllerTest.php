@@ -60,7 +60,7 @@ class UsersEditControllerTest extends AppIntegrationTestCase
             'id' => $user->id,
             'active' => false,
             'deleted' => true,
-            'disabled' => FrozenTime::yesterday(),
+            'disabled' => \Cake\I18n\DateTime::yesterday(),
             'profile' => [
                 'first_name' => 'ada edited',
             ],

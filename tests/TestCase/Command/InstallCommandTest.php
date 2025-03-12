@@ -49,7 +49,6 @@ class InstallCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->emptyDirectory(CACHE . 'database' . DS);
         $this->persistValidSubscription();
         $this->setUpPathAndPublicSubscriptionKey();

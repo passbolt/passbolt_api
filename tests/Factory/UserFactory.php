@@ -65,8 +65,8 @@ class UserFactory extends CakephpBaseFactory
                 'role_id' => $faker->uuid(),
                 'active' => true,
                 'deleted' => false,
-                'created' => FrozenDate::now()->subDays($faker->randomNumber(4)),
-                'modified' => FrozenDate::now()->subDays($faker->randomNumber(4)),
+                'created' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
+                'modified' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
 
@@ -136,13 +136,13 @@ class UserFactory extends CakephpBaseFactory
      */
     public function disabled()
     {
-        return $this->patchData(['disabled' => FrozenTime::yesterday()]);
+        return $this->patchData(['disabled' => \Cake\I18n\DateTime::yesterday()]);
     }
 
     /**
      * @return $this
      */
-    public function created(FrozenTime $created)
+    public function created(\Cake\I18n\DateTime $created)
     {
         return $this->setField('created', $created);
     }
@@ -152,7 +152,7 @@ class UserFactory extends CakephpBaseFactory
      */
     public function willDisable()
     {
-        return $this->patchData(['disabled' => FrozenTime::tomorrow()]);
+        return $this->patchData(['disabled' => \Cake\I18n\DateTime::tomorrow()]);
     }
 
     /**

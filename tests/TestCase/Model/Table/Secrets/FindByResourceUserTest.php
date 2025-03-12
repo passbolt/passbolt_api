@@ -24,7 +24,7 @@ use Cake\ORM\TableRegistry;
 
 class FindByResourceUserTest extends AppTestCase
 {
-    public $fixtures = ['app.Base/Secrets'];
+    public array $fixtures = ['app.Base/Secrets'];
 
     /**
      * Test subject

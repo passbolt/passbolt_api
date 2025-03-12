@@ -43,7 +43,7 @@ class UpdateTest extends AppTestCase
      */
     public $gpg;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys',
         'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
     ];

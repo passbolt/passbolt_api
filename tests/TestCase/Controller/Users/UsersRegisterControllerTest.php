@@ -38,7 +38,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions',
         'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Favorites', 'app.Base/Secrets',
     ];
@@ -143,7 +143,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
 
         // Check timezone displaying alongside the datetime
         $this->assertEmailInBatchContains(
-            sprintf('%s (%s)', FrozenTime::parse($user->get('created'))->nice(), $data['timezone']),
+            sprintf('%s (%s)', \Cake\I18n\DateTime::parse($user->get('created'))->nice(), $data['timezone']),
             $data['username']
         );
     }
@@ -181,7 +181,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEquals($user->role_id, $userRoleId);
-        $this->assertTrue($user->created->greaterThan(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertTrue($user->created->greaterThan(\Cake\I18n\DateTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersRegisterController_Error_FailValidation(): void

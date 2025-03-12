@@ -41,7 +41,6 @@ class RecoverUserCommandTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
     }
 
@@ -64,7 +63,7 @@ class RecoverUserCommandTest extends TestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
             ->active()
-            ->created(FrozenDate::parse('tomorrow - ' . $expirationDate))
+            ->created(\Cake\I18n\Date::parse('tomorrow - ' . $expirationDate))
             ->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
         $this->assertExitSuccess();
@@ -126,7 +125,7 @@ class RecoverUserCommandTest extends TestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
             ->active()
-            ->created(FrozenDate::now()->subDays(100))
+            ->created(\Cake\I18n\Date::now()->subDays(100))
             ->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
         $this->assertExitError();

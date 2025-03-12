@@ -63,6 +63,7 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
+use EmailQueue\Command\SenderCommand;
 use EmailQueue\Shell\SenderShell;
 use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
@@ -345,7 +346,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         // If the email digest plugin is disabled, fallback on the sender shell
         if (!$this->isFeaturePluginEnabled(EmailDigestPlugin::class)) {
-            $commands->add('passbolt email_digest send', SenderShell::class);
+            $commands->add('passbolt email_digest send', SenderCommand::class);
         }
 
         // Alias sql_export to mysql_export, this is to keep BC
