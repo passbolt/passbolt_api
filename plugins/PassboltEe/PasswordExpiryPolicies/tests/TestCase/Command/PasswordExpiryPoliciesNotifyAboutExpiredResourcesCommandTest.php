@@ -43,7 +43,6 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
     {
         $this->markTestSkipped();
         parent::setUp();
-        $this->useCommandRunner();
     }
 
     /**

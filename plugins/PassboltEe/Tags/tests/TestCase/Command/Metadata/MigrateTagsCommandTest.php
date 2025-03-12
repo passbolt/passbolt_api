@@ -46,7 +46,6 @@ class MigrateTagsCommandTest extends AppIntegrationTestCaseV5
     {
         parent::setUp();
 
-        $this->useCommandRunner();
         $this->enableFeaturePlugin(TagsPlugin::class);
         $this->enableFeaturePlugin(MetadataPlugin::class);
         // clear collector state to get proper results
