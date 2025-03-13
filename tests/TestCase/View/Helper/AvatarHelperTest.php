@@ -22,7 +22,9 @@ use App\Test\Factory\AvatarFactory;
 use App\Utility\UuidFactory;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
+use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 
 /**
@@ -102,19 +104,16 @@ class AvatarHelperTest extends TestCase
 
     public function testDefaultAvatarUrlIsNotBrokenWhenAppBaseIsSet()
     {
-        Configure::write('App.base', '/subdir');
+        Router::setRequest(new ServerRequest(['base' => '/subdir']));
 
         $result = AvatarHelper::getAvatarUrl();
 
         $this->assertSame("{$this->fullBaseUrl}/subdir/img/avatar/user.png", $result);
-
-        // Clean up
-        Configure::write('App.base', false);
     }
 
     public function testUserAvatarUrlWhenAppBaseIsSet()
     {
-        Configure::write('App.base', '/subdir');
+        Router::setRequest(new ServerRequest(['base' => '/subdir']));
         $avatar = AvatarFactory::make(['id' => UuidFactory::uuid()])->getEntity();
 
         $result = AvatarHelper::getAvatarUrl(['id' => $avatar->id]);
@@ -129,8 +128,5 @@ class AvatarHelperTest extends TestCase
             ),
             $result
         );
-
-        // Clean up
-        Configure::write('App.base', false);
     }
 }
