@@ -57,7 +57,7 @@ trait FoldersFindersTrait
         /** @phpstan-ignore-next-line */
         $query = $this->find();
 
-        $query->find(FolderizableBehavior::FINDER_NAME, ['user_id' => $userId]);
+        $query->find(FolderizableBehavior::FINDER_NAME, user_id: $userId);
 
         if (isset($options['filter']['has-id'])) {
             $this->filterByIds($query, $options['filter']['has-id']);
