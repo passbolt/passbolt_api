@@ -49,7 +49,7 @@ trait MetadataPopulateUserKeyIdTrait
             && !isset($data[MetadataDto::METADATA_KEY_ID])
         ) {
             $keyTable = TableRegistry::getTableLocator()->get('Gpgkeys');
-            $key = $keyTable->find('current', user_id: $userId)->firstOrFail();
+            $key = $keyTable->find('current', userId: $userId)->firstOrFail();
             $id = $key->get('id');
             if (Validation::uuid($id)) {
                 $data[MetadataDto::METADATA_KEY_ID] = $id;

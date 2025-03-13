@@ -456,7 +456,7 @@ trait UsersFindersTrait
             ->group('LOWER(Users.username)')
             ->having('count(*) > 1');
 
-        return $this->find('list', ['keyField' => 'id', 'valueField' => 'username'])
+        return $this->find('list', keyField: 'id', valueField: 'username')
             ->disableHydration()
             ->select(['id', 'username'])
             ->where([

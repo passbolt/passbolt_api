@@ -215,21 +215,21 @@ class GpgkeysTable extends Table
      * Find current gpgkey to use
      *
      * @param \Cake\ORM\Query $query a query instance
-     * @param array $options options
+     * @param  ?string $userId user ID
      * @return \Cake\ORM\Query
      * @throws \Cake\Core\Exception\CakeException if no user_id is specified
      */
-    public function findCurrent(Query $query, array $options): Query
+    public function findCurrent(Query $query, ?string $userId = null): Query
     {
         // Options must contain a user_id
-        if (!isset($options['user_id']) || !Validation::uuid($options['user_id'])) {
+        if (!isset($userId) || !Validation::uuid($userId)) {
             throw new CakeException('Gpgkey table findCurrent should have a user_id set in options.');
         }
 
         // Same rule than index apply
         // with a specific id requested
         return $query
-            ->where(['user_id' => $options['user_id'], 'deleted' => false])
+            ->where(['user_id' => $userId, 'deleted' => false])
             ->orderBy('created DESC')
             ->limit(1);
     }
