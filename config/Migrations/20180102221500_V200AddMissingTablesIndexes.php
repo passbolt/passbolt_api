@@ -55,14 +55,6 @@ class V200AddMissingTablesIndexes extends AbstractMigration
             ])
             ->save();
 
-        $this->table('gpgkeys')
-            ->addIndex(['user_id'])
-            ->save();
-
-        $this->table('profiles')
-            ->addIndex(['user_id'])
-            ->save();
-
         $this->table('resources')
             ->addIndex([
                 'created_by',
