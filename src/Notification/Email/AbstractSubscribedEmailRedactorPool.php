@@ -42,15 +42,6 @@ abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInter
     }
 
     /**
-     * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
-     * @return void
-     */
-    final public function __invoke(CollectSubscribedEmailRedactorEvent $event) // todo: remove
-    {
-        $this->subscribe($event);
-    }
-
-    /**
      * Return a list of subscribed redactors
      *
      * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]

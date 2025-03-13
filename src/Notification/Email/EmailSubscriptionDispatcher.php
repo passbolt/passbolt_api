@@ -95,15 +95,6 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     }
 
     /**
-     * @param \Cake\Event\Event $event Event object to dispatch
-     * @return void
-     */
-    public function __invoke(Event $event) // todo: remove
-    {
-        $this->dispatch($event);
-    }
-
-    /**
      * Check if the email redactor should send emails, based on its settings
      * If the path is null, we consider that this redactor cannot be configured, it is always enabled.
      *
