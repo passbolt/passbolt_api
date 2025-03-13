@@ -193,20 +193,19 @@ class GpgkeysTable extends Table
      * Find view
      *
      * @param \Cake\ORM\Query $query a query instance
-     * @param array $options options
+     * @param ?string $id ID
      * @return \Cake\ORM\Query
      * @throws \Cake\Core\Exception\CakeException if no id is specified
      */
-    public function findView(Query $query, array $options): Query
+    public function findView(Query $query, ?string $id): Query
     {
         // Options must contain an id
-        if (!isset($options['id'])) {
+        if (!isset($id)) {
             throw new CakeException('Gpgkey table findView should have an id set in options.');
         }
         // Same rule than index apply
         // with a specific id requested
-        $query = $this->findIndex($query, $options);
-        $query->where(['id' => $options['id']]);
+        $query->where(['id' => $id]);
 
         return $query;
     }

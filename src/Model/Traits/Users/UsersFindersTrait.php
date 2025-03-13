@@ -357,21 +357,21 @@ trait UsersFindersTrait
      * Build the query that fetches the user data during authentication
      *
      * @param \Cake\ORM\Query $query a query instance
-     * @param array $options options
+     * @param ?string $fingerprint fingerprint
      * @return \Cake\ORM\Query
      * @throws \Exception if fingerprint id is not set
      */
-    public function findAuth(Query $query, array $options)
+    public function findAuth(Query $query, ?string $fingerprint = null)
     {
         // Options must contain an id
-        if (!isset($options['fingerprint'])) {
+        if (!isset($fingerprint)) {
             throw new Exception('User table findAuth should have a fingerprint id set in options.');
         }
 
         // auth query is always done as guest
         // Use default index option (active:true, deleted:false) and contains
         $query = $this->findIndex(Role::GUEST)
-            ->where(['Gpgkeys.fingerprint' => $options['fingerprint']]);
+            ->where(['Gpgkeys.fingerprint' => $fingerprint]);
 
         return $query;
     }
