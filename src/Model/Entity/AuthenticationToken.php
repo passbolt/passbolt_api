@@ -20,7 +20,7 @@ use App\Error\Exception\AuthenticationTokenDataPropertyException;
 use App\Service\AuthenticationTokens\AuthenticationTokensSessionService;
 use App\Utility\AuthToken\AuthTokenExpiry;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 

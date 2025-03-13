@@ -20,7 +20,6 @@ namespace Passbolt\Log\Test\TestCase\Service\ActionLogs;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenDate;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Log\Service\ActionLogs\ActionLogsDeleteService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;

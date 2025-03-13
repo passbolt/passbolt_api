@@ -19,7 +19,6 @@ namespace Passbolt\Metadata\Test\TestCase\Command;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\I18n\FrozenDate;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;

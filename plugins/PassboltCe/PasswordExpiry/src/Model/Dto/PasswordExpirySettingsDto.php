@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\PasswordExpiry\Model\Dto;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\PasswordExpiry\Form\PasswordExpirySettingsForm;
 use Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting;
 

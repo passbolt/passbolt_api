@@ -23,7 +23,6 @@ use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenDate;
 use Cake\Utility\Security;
 use Passbolt\Mobile\Model\Entity\Transfer;
 use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;

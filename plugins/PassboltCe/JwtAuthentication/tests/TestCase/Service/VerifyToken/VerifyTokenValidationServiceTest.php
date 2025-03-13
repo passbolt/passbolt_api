@@ -23,7 +23,7 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\ConsumedVerifyTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\ExpiredVerifyTokenAccessException;

@@ -21,7 +21,6 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenDate;
 use Passbolt\Log\Service\ActionLogs\ActionLogsCreateService;
 use Passbolt\Log\Service\ActionLogs\ActionLogsPurgeService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;

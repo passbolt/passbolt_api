@@ -28,7 +28,7 @@ use App\Model\Validation\GpgkeyType\IsValidGpgkeyTypeValidationRule;
 use App\Model\Validation\KeyId\IsValidKeyIdValidationRule;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Core\Exception\CakeException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;

@@ -19,7 +19,7 @@ namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 use App\Model\Entity\AuthenticationToken;
 use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;

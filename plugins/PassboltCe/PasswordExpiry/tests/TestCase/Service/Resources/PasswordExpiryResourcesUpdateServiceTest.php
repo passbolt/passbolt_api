@@ -22,7 +22,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;

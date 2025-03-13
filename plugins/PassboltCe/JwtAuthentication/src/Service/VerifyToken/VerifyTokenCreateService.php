@@ -18,7 +18,7 @@ namespace Passbolt\JwtAuthentication\Service\VerifyToken;
 
 use App\Model\Entity\AuthenticationToken;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
 /**

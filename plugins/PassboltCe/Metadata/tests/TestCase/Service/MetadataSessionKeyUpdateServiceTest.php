@@ -27,7 +27,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Service\MetadataSessionKeyUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataSessionKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;

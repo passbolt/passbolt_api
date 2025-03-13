@@ -19,7 +19,7 @@ namespace App\Test\TestCase\Model\Entity;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 
@@ -56,7 +56,7 @@ class AuthenticationTokenIsExpiredTest extends TestCase
         /** @var \App\Model\Entity\AuthenticationToken $token */
         $token = AuthenticationTokenFactory::make()
             ->type($type)
-            ->created(\Cake\I18n\DateTime::yesterday())
+            ->created(DateTime::yesterday())
             ->getEntity();
 
         $result = $this->AuthenticationTokens->isExpired($token);

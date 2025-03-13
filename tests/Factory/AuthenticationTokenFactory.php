@@ -17,9 +17,7 @@ declare(strict_types=1);
 namespace App\Test\Factory;
 
 use App\Model\Entity\AuthenticationToken;
-use Cake\Chronos\Chronos;
-use Cake\Chronos\ChronosInterface;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use DateTimeInterface;
 use Faker\Generator;
@@ -60,23 +58,23 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
                 'type' => AuthenticationToken::TYPE_LOGIN,
                 'data' => null,
                 'active' => $faker->boolean(),
-                'created' => Chronos::now(),
-                'modified' => Chronos::now(),
+                'created' => DateTime::now(),
+                'modified' => DateTime::now(),
             ];
         });
     }
 
     /**
-     * @param ChronosInterface $modified token type
+     * @param \DateTimeInterface $modified token type
      * @return $this
      */
-    public function modified(ChronosInterface $modified)
+    public function modified(DateTimeInterface $modified)
     {
         return $this->patchData(compact('modified'));
     }
 
     /**
-     * @param DateTimeInterface $created token type
+     * @param \DateTimeInterface $created token type
      * @return $this
      */
     public function created(DateTimeInterface $created)
@@ -89,7 +87,7 @@ class AuthenticationTokenFactory extends CakephpBaseFactory
      */
     public function expired()
     {
-        return $this->created(new \Cake\I18n\DateTime('5 years ago'));
+        return $this->created(new DateTime('5 years ago'));
     }
 
     /**

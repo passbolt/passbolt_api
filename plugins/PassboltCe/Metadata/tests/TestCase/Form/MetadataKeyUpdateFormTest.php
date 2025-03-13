@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Form;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\Metadata\Form\MetadataKeyUpdateForm;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;

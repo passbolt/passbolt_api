@@ -14,7 +14,7 @@
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 $user = $body['user'];
 $ip = $body['ip'];

@@ -21,7 +21,7 @@ use App\Model\Entity\User;
 use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use App\Test\Factory\UserFactory;
 use Cake\Chronos\Chronos;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;

@@ -21,8 +21,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use Cake\I18n\FrozenDate;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
@@ -79,9 +78,9 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         ResourceTypeFactory::make()->default()->persist();
 
         if ($isResourceAlreadyExpired) {
-            $expiryDate = \Cake\I18n\DateTime::yesterday();
+            $expiryDate = DateTime::yesterday();
         } else {
-            $expiryDate = \Cake\I18n\DateTime::tomorrow();
+            $expiryDate = DateTime::tomorrow();
         }
         [$operator, $ownerWithAccess, $editorWithAccess] = UserFactory::make(4)->user()->persist();
         /** @var \App\Model\Entity\Resource $resourceToUpdate */

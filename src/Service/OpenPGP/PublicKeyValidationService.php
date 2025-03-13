@@ -20,7 +20,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 /**
  * Public Key Validation Service

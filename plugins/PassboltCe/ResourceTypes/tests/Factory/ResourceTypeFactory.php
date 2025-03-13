@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\ResourceTypes\Test\Factory;
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;

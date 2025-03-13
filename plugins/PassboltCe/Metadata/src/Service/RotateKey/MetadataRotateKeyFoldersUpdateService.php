@@ -19,7 +19,7 @@ namespace Passbolt\Metadata\Service\RotateKey;
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;

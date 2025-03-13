@@ -16,7 +16,7 @@
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 
 if (PHP_SAPI === 'cli') {

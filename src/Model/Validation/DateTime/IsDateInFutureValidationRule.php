@@ -19,7 +19,7 @@ namespace App\Model\Validation\DateTime;
 
 use App\Model\Validation\PassboltValidationRule;
 use Cake\Chronos\ChronosInterface;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 /**
  * Check if a key date is set in the future

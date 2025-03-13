@@ -19,7 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Service\Duo;
 
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\ServerRequest;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Validation\Validation;
 
 /**

@@ -19,7 +19,7 @@ namespace Passbolt\Log\Service\ActionLogs;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
@@ -46,7 +46,7 @@ class ActionLogsPurgeService
                 'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id')->limit($limit),
             ]);
         } catch (\PDOException $exception) {
-            $createdBefore = \Cake\I18n\Date::now()->subDays($retentionInDays);
+            $createdBefore = Date::now()->subDays($retentionInDays);
             $entitiesHistory = $ActionLogsTable->getAssociation('EntitiesHistory')
                 ->subquery()
                 ->select('EntitiesHistory.action_log_id')
@@ -104,7 +104,7 @@ class ActionLogsPurgeService
      */
     private function getActionLogsToPurge(int $retentionInDays): Query
     {
-        $createdBefore = \Cake\I18n\Date::now()->subDays($retentionInDays);
+        $createdBefore = Date::now()->subDays($retentionInDays);
         $ActionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
 
         return $ActionLogsTable->find()
