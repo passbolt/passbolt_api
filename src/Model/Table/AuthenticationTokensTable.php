@@ -365,22 +365,21 @@ class AuthenticationTokensTable extends Table
      * Requires a type to be provided
      *
      * @param \Cake\ORM\Query $query query
-     * @param array $options options
-     * @throws \InvalidArgumentException if type is missing in options
-     * @throws \Cake\Http\Exception\InternalErrorException if token type does not have expiry in config
+     * @param ?string $tokenType type
      * @return \Cake\ORM\Query
+     *@throws \Cake\Http\Exception\InternalErrorException if token type does not have expiry in config
+     * @throws \InvalidArgumentException if type is missing in options
      */
-    public function findExpiredByType(Query $query, array $options): Query
+    public function findExpiredByType(Query $query, ?string $tokenType = null): Query
     {
-        if (count($options) === 0 || !isset($options['type'])) {
+        if (!isset($tokenType)) {
             $msg = 'AuthenticationTokensTable::findExpiredByType error, a token type is required';
             throw new \InvalidArgumentException($msg);
         }
-        $type = $options['type'];
 
         return $query->where([
-            'type' => $type,
-            'created <' => $this->getExpiryDate($type),
+            'type' => $tokenType,
+            'created <' => $this->getExpiryDate($tokenType),
         ]);
     }
 
