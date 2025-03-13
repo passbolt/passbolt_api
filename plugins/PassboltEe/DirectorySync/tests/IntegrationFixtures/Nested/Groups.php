@@ -15,15 +15,15 @@ declare(strict_types=1);
  * @since         2.2.0
  */
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 return [
     // A new directory group that does not exist in passbolt
     [
         'id' => UuidFactory::uuid('ldap.group.id.administration'),
         'directory_name' => 'CN=Administration,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         'group' => [
             'name' => 'Administration',
             'members' => [
@@ -35,8 +35,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.group.id.managers'),
         'directory_name' => 'CN=Managers,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         'group' => [
             'name' => 'Managers',
             'members' => [
@@ -51,8 +51,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.group.id.clevel'),
         'directory_name' => 'CN=CLevel,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         'group' => [
             'name' => 'C Level',
             'members' => [
@@ -64,8 +64,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.group.id.developers'),
         'directory_name' => 'CN=Developers,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         'group' => [
             'name' => 'Developers',
             'members' => [
@@ -78,8 +78,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.group.id.invalidgroup1'),
         'directory_name' => 'CN=InvalidGroup1,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         // No name makes the group invalid
         'group' => [
             'members' => [

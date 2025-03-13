@@ -17,9 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Test\Factory;
 
 use App\Utility\UuidFactory;
-use Cake\Chronos\Chronos;
-use Cake\Chronos\ChronosInterface;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Sso\Model\Entity\SsoState;
@@ -61,26 +59,26 @@ class SsoAuthenticationTokenFactory extends CakephpBaseFactory
                 'data' => null,
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'created' => Chronos::now(),
-                'modified' => Chronos::now(),
+                'created' => DateTime::now(),
+                'modified' => DateTime::now(),
             ];
         });
     }
 
     /**
-     * @param ChronosInterface $modified token type
+     * @param \DateTimeInterface $modified token type
      * @return $this
      */
-    public function modified(ChronosInterface $modified)
+    public function modified(\DateTimeInterface $modified)
     {
         return $this->patchData(compact('modified'));
     }
 
     /**
-     * @param ChronosInterface $created token type
+     * @param \DateTimeInterface $created token type
      * @return $this
      */
-    public function created(ChronosInterface $created)
+    public function created(\DateTimeInterface $created)
     {
         return $this->patchData(compact('created'));
     }
@@ -90,7 +88,7 @@ class SsoAuthenticationTokenFactory extends CakephpBaseFactory
      */
     public function expired()
     {
-        return $this->created(new FrozenDate('5 years ago'));
+        return $this->created(new DateTime('5 years ago'));
     }
 
     /**

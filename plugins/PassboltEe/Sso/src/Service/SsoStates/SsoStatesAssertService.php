@@ -20,7 +20,7 @@ use App\Utility\ExtendedUserAccessControl;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 use Passbolt\Sso\Model\Entity\SsoState;

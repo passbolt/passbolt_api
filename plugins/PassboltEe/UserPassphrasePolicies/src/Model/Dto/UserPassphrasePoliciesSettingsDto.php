@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\UserPassphrasePolicies\Model\Dto;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting;
 
 class UserPassphrasePoliciesSettingsDto

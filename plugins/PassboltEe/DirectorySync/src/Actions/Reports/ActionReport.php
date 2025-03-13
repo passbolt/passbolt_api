@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Actions\Reports;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\DirectorySync\Utility\Alias;
 
 /**

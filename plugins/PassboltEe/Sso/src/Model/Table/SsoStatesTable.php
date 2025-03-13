@@ -21,7 +21,7 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Validation\User\IsValidIpValidationRule;
 use App\Model\Validation\User\IsValidUserAgentValidationRule;
 use Cake\Database\Expression\QueryExpression;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;

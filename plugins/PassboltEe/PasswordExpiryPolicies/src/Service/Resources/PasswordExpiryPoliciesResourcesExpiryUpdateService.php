@@ -24,7 +24,7 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 

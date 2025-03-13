@@ -23,7 +23,7 @@ use App\Model\Entity\Secret;
 use App\Model\Table\UsersTable;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Table;

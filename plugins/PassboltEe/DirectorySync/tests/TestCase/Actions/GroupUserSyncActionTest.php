@@ -25,7 +25,7 @@ use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Event\EventManager;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
@@ -90,7 +90,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'lovelace', 'foreign_key' => UuidFactory::uuid('user.id.ada')]);
         $this->mockDirectoryRelationGroupUser('network', 'ada');
         $relationAccounting = $this->mockDirectoryRelationGroupUser('accounting', 'ada');
-        $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com', new FrozenTime('now'), new FrozenTime('now'));
+        $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com', new DateTime('now'), new DateTime('now'));
         $this->mockDirectoryGroupData('network');
         $this->mockDirectoryGroupData('accounting', [
             'group_users' => [
@@ -185,7 +185,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
         $this->mockDirectoryEntryGroup('accounting', null, null, null, null, UuidFactory::uuid('group.id.accounting'));
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'ada', 'lname' => 'lovelace', 'foreign_key' => UuidFactory::uuid('user.id.ada')]);
         $relation = $this->mockDirectoryRelationGroupUser('accounting', 'ada');
-        $userData = $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com', new FrozenTime('now'), new FrozenTime('now'));
+        $userData = $this->mockDirectoryUserData('ada', 'lovelace', 'ada@passbolt.com', new DateTime('now'), new DateTime('now'));
         $groupData = $this->mockDirectoryGroupData('accounting');
 
         $reports = $this->action->execute();
@@ -311,7 +311,7 @@ class GroupUserSyncActionTest extends DirectorySyncDeprecatedIntegrationTestCase
         $this->mockDirectoryEntryGroup('accounting', null, null, null, null, UuidFactory::uuid('group.id.accounting'));
         $userEntry = $this->mockDirectoryEntryUser(['fname' => 'betty', 'lname' => 'betty', 'foreign_key' => UuidFactory::uuid('user.id.betty')]);
         $relation = $this->mockDirectoryRelationGroupUser('accounting', 'betty');
-        $userData = $this->mockDirectoryUserData('betty', 'betty', 'betty@passbolt.com', new FrozenTime('now'), new FrozenTime('now'));
+        $userData = $this->mockDirectoryUserData('betty', 'betty', 'betty@passbolt.com', new DateTime('now'), new DateTime('now'));
         $groupData = $this->mockDirectoryGroupData('accounting');
 
         $reports = $this->action->execute();

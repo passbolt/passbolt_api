@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Form;
 
 use App\Model\Validation\DateTime\IsDateInFutureValidationRule;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Validation\Validator;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 

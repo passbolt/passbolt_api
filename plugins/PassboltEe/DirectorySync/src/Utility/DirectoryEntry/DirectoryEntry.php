@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
 use ArrayAccess;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use LdapRecord\Models\Entry;
 use LdapRecord\Utilities;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;

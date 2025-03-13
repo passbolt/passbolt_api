@@ -21,7 +21,7 @@ use App\Model\Entity\Permission;
 use App\Model\Table\AvatarsTable;
 use Cake\Console\Exception\StopException;
 use Cake\Event\EventDispatcherTrait;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;

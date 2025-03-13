@@ -23,7 +23,7 @@ use App\Utility\ExtendedUserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Sso\AbstractSsoService;
@@ -122,14 +122,14 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
         $this->createAzureSettingsFromConfig($user);
         $ssoState = SsoStateFactory::make([
             'nonce' => $nonce,
-            'created' => FrozenTime::now()->subMinutes(2),
+            'created' => DateTime::now()->subMinutes(2),
         ])->withTypeSsoGetKey()->persist();
         // Mock resource owner object
         $resourceOwner = $this->mockAzureResourceOwner([
             'oid' => UuidFactory::uuid(),
             'email' => 'ada@passbolt.com',
             'nonce' => $nonce,
-            'auth_time' => FrozenTime::now()->getTimestamp(),
+            'auth_time' => DateTime::now()->getTimestamp(),
         ]);
 
         $sut = new SsoAzureService(new DefaultSecureCookieService());
@@ -145,14 +145,14 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
         $this->createAzureSettingsFromConfig($user);
         $ssoState = SsoStateFactory::make([
             'nonce' => $nonce,
-            'created' => FrozenTime::now()->subMinutes(2),
+            'created' => DateTime::now()->subMinutes(2),
         ])->withTypeSsoGetKey()->persist();
         // Mock resource owner object
         $resourceOwner = $this->mockAzureResourceOwner([
             'oid' => UuidFactory::uuid(),
             'email' => 'ada@passbolt.com',
             'nonce' => $nonce,
-            'auth_time' => FrozenTime::now()->getTimestamp(),
+            'auth_time' => DateTime::now()->getTimestamp(),
         ]);
 
         $sut = new SsoAzureService(new DefaultSecureCookieService());
@@ -167,14 +167,14 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
         $this->createAzureSettingsFromConfig($user);
         $ssoState = SsoStateFactory::make([
             'nonce' => SsoState::generate(),
-            'created' => FrozenTime::now()->subMinutes(2),
+            'created' => DateTime::now()->subMinutes(2),
         ])->withTypeSsoGetKey()->persist();
         // Mock resource owner object
         $resourceOwner = $this->mockAzureResourceOwner([
             'oid' => UuidFactory::uuid(),
             'email' => 'ada@passbolt.com',
             'nonce' => SsoState::generate(), // different nonce value than sso state
-            'auth_time' => FrozenTime::now()->getTimestamp(),
+            'auth_time' => DateTime::now()->getTimestamp(),
         ]);
 
         $this->expectException(BadRequestException::class);
@@ -191,14 +191,14 @@ class SsoAzureServiceTest extends SsoIntegrationTestCase
         $settings = $this->createAzureSettingsFromConfig($user);
         $ssoState = SsoStateFactory::make([
             'nonce' => $nonce,
-            'created' => FrozenTime::now(),
+            'created' => DateTime::now(),
         ])->withTypeSsoGetKey()->persist();
         // Mock resource owner object
         $resourceOwner = $this->mockAzureResourceOwner([
             'oid' => UuidFactory::uuid(),
             'email' => 'ada@passbolt.com',
             'nonce' => $nonce,
-            'auth_time' => FrozenTime::now()->subMinutes(5)->getTimestamp(), // less than sso state create date time
+            'auth_time' => DateTime::now()->subMinutes(5)->getTimestamp(), // less than sso state create date time
         ]);
 
         // Make sure prompt is "login", the error will only throw if prompt is "login"

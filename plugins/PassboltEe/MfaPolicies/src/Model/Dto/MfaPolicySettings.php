@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MfaPolicies\Model\Dto;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting;
 
 class MfaPolicySettings

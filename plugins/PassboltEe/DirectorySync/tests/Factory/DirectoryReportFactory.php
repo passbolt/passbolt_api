@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\Factory;
 
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
@@ -52,8 +52,8 @@ class DirectoryReportFactory extends CakephpBaseFactory
             return [
                 'parent_id' => null,
                 'status' => DirectoryReport::STATUS_DONE,
-                'created' => FrozenDate::now()->subDays($faker->randomNumber(1)),
-                'modified' => FrozenDate::now()->subDays($faker->randomNumber(1)),
+                'created' => DateTime::now()->subDays($faker->randomNumber(1)),
+                'modified' => DateTime::now()->subDays($faker->randomNumber(1)),
             ];
         });
     }

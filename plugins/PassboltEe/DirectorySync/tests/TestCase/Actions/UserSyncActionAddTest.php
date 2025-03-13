@@ -18,7 +18,7 @@ namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
@@ -311,7 +311,7 @@ class UserSyncActionAddTest extends DirectorySyncDeprecatedIntegrationTestCase
      */
     public function testDirectorySyncUserAdd_Case23a_Valid_Error_Ignore_OK()
     {
-        $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', new FrozenTime('now'), new FrozenTime('now'));
+        $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', new DateTime('now'), new DateTime('now'));
         $this->mockOrphanDirectoryEntryUser(['fname' => 'ada']);
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.ada'), Alias::MODEL_USERS);
         $reports = $this->action->execute();
@@ -1037,7 +1037,7 @@ class UserSyncActionAddTest extends DirectorySyncDeprecatedIntegrationTestCase
      */
     public function testDirectorySyncUserAdd_Case43_Invalid_Success_Ignore()
     {
-        $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', new FrozenTime('now'), new FrozenTime('now'));
+        $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', new DateTime('now'), new DateTime('now'));
         $this->mockDirectoryEntryUser(['fname' => 'ada']);
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.ada'), Alias::MODEL_USERS);
         $reports = $this->action->execute();
@@ -1195,7 +1195,7 @@ class UserSyncActionAddTest extends DirectorySyncDeprecatedIntegrationTestCase
      */
     public function testDirectorySyncUserAdd_Case47b_Invalid_Ignore_DeletedIgnore()
     {
-        $data = $this->mockDirectoryUserData('sofia', null, 'sofia@passbolt.com', new FrozenTime('now'), new FrozenTime('now'));
+        $data = $this->mockDirectoryUserData('sofia', null, 'sofia@passbolt.com', new DateTime('now'), new DateTime('now'));
         $this->mockDirectoryIgnore(UuidFactory::uuid('user.id.sofia'), Alias::MODEL_USERS);
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.sofia'), Alias::MODEL_DIRECTORY_ENTRIES);
         $reports = $this->action->execute();

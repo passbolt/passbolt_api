@@ -21,7 +21,7 @@ use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Response;
@@ -175,7 +175,7 @@ class BaseIdTokenTest extends AppTestCase
         ]);
         new BaseIdToken([
             'id_token' => $idToken,
-            'expires_in' => FrozenTime::now()->addHours(1)->getTimestamp(),
+            'expires_in' => DateTime::now()->addHours(1)->getTimestamp(),
             'access_token' => 'access_token',
             'resource_owner_id' => 'resource_owner_id',
             'refresh_token' => 'refresh_token',
@@ -347,7 +347,7 @@ class BaseIdTokenTest extends AppTestCase
     {
         return [
             'id_token' => $idToken,
-            'expires_in' => FrozenTime::now()->addHours(1)->getTimestamp(),
+            'expires_in' => DateTime::now()->addHours(1)->getTimestamp(),
             'access_token' => 'access_token',
             'resource_owner_id' => 'resource_owner_id',
             'refresh_token' => 'refresh_token',
