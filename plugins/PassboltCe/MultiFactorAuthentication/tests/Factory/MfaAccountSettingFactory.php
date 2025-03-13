@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\Factory;
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;

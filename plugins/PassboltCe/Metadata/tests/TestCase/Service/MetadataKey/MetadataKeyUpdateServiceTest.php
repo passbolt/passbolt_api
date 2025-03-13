@@ -26,7 +26,7 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Dto\MetadataKeyUpdateDto;
 use Passbolt\Metadata\Service\MetadataKey\MetadataKeyUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;

@@ -23,7 +23,6 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenDate;
 use Cake\Routing\Router;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\SelfRegistration\SelfRegistrationPlugin;

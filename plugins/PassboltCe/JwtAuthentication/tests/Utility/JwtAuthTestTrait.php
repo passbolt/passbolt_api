@@ -20,7 +20,7 @@ use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use Authentication\Identifier\IdentifierInterface;
 use Cake\Http\ServerRequest;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;

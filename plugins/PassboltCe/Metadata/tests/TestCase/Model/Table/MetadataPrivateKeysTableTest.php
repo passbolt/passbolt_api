@@ -21,7 +21,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\MetadataPlugin;

@@ -20,7 +20,7 @@ namespace App\Test\TestCase\Model\Table\Users\Finders;
 use App\Model\Table\UsersTable;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;

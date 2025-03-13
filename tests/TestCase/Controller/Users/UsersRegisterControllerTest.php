@@ -23,7 +23,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\GetUserLocaleService;

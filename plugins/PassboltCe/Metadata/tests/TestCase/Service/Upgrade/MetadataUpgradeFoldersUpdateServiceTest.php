@@ -26,7 +26,7 @@ use Cake\Chronos\Chronos;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeFoldersUpdateService;

@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\PasswordExpiry\Test\TestCase\Model\Table;
 
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenDate;
 use Cake\ORM\TableRegistry;
 
 class PasswordExpiryResourcesTableTest extends AppTestCase

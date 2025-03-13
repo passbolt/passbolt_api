@@ -20,7 +20,7 @@ namespace Passbolt\Metadata\Test\TestCase\Controller\Resources;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
 class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5

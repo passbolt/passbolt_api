@@ -23,7 +23,6 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\GroupsUsersModelTrait;
 use App\Test\Lib\Utility\PaginationTestTrait;
-use Cake\I18n\FrozenDate;
 
 class UsersIndexControllerOrderTest extends AppIntegrationTestCase
 {

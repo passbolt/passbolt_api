@@ -19,7 +19,7 @@ namespace Passbolt\Log\Test\Factory;
 
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 

@@ -19,7 +19,6 @@ namespace Passbolt\Log\Test\TestCase\Command;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\I18n\FrozenDate;
 use Passbolt\Log\LogPlugin;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 

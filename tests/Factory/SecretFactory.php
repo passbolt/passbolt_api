@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Test\Factory;
 
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -53,8 +53,8 @@ class SecretFactory extends CakephpBaseFactory
                 'user_id' => $faker->uuid(),
                 'resource_id' => $faker->uuid(),
                 'data' => $this->getValidSecret(),
-                'created' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
-                'modified' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
+                'created' => Date::now()->subDays($faker->randomNumber(4)),
+                'modified' => Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }

@@ -16,7 +16,7 @@
  */
 use App\Utility\Purifier;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 
 if (!isset($report)) {

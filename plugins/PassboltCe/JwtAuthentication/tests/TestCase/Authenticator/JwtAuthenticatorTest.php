@@ -18,7 +18,7 @@ namespace Passbolt\JwtAuthentication\Test\TestCase\Authenticator;
 
 use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
 

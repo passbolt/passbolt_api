@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Test\Factory;
 
 use App\Model\Entity\Role;
-use Cake\I18n\FrozenDate;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Log\Model\Entity\Action;

@@ -18,7 +18,7 @@ namespace Passbolt\Reports\Utility;
 
 use App\Model\Entity\User;
 use App\Model\Table\Dto\FindIndexOptions;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 abstract class AbstractReport implements ReportInterface
 {

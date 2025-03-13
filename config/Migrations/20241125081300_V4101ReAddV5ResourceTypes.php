@@ -15,7 +15,7 @@ declare(strict_types=1);
  */
 // @codingStandardsIgnoreStart
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Migrations\AbstractMigration;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 
@@ -36,8 +36,8 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
                 'name' => 'Simple Password (Deprecated)',
                 'description' => 'The original passbolt resource type, kept for backward compatibility reasons.',
                 'definition' => json_encode([]),
-                'created' => (new FrozenTime())->toDateTimeString(),
-                'modified' => (new FrozenTime())->toDateTimeString(),
+                'created' => (new DateTime())->toDateTimeString(),
+                'modified' => (new DateTime())->toDateTimeString(),
             ],
             'v5-default' => [
                 'id' => UuidFactory::uuid('resource-types.id.v5-default'),
@@ -45,8 +45,8 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
                 'name' => 'Default resource type',
                 'description' => 'The new default resource type introduced with v5.',
                 'definition' => json_encode([]),
-                'created' => (new FrozenTime())->toDateTimeString(),
-                'modified' => (new FrozenTime())->toDateTimeString(),
+                'created' => (new DateTime())->toDateTimeString(),
+                'modified' => (new DateTime())->toDateTimeString(),
             ],
             'v5-totp-standalone' => [
                 'id' => UuidFactory::uuid('resource-types.id.v5-totp-standalone'),
@@ -54,8 +54,8 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
                 'name' => 'Standalone TOTP',
                 'description' => 'The new standalone TOTP resource type introduced with v5.',
                 'definition' => json_encode([]),
-                'created' => (new FrozenTime())->toDateTimeString(),
-                'modified' => (new FrozenTime())->toDateTimeString(),
+                'created' => (new DateTime())->toDateTimeString(),
+                'modified' => (new DateTime())->toDateTimeString(),
             ],
             'v5-default-with-totp' => [
                 'id' => UuidFactory::uuid('resource-types.id.v5-default-with-totp'),
@@ -63,8 +63,8 @@ class V4101ReAddV5ResourceTypes extends AbstractMigration
                 'name' => 'Default resource type with TOTP',
                 'description' => 'The new default resource type with a TOTP introduced with v5.',
                 'definition' => json_encode([]),
-                'created' => (new FrozenTime())->toDateTimeString(),
-                'modified' => (new FrozenTime())->toDateTimeString(),
+                'created' => (new DateTime())->toDateTimeString(),
+                'modified' => (new DateTime())->toDateTimeString(),
             ],
         ];
 

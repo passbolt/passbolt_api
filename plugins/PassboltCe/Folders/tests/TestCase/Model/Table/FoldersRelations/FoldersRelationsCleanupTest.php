@@ -19,7 +19,7 @@ namespace Passbolt\Folders\Test\TestCase\Model\Table\FoldersRelations;
 
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\CleanupTrait;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Factory\FoldersRelationFactory;

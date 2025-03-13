@@ -21,7 +21,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\Purifier;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 /**
  * @covers \App\Controller\Users\UsersEditController

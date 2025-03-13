@@ -19,8 +19,8 @@ namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenDate;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 
 class SaveTest extends AppTestCase
@@ -150,8 +150,8 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationExpires()
     {
         $fails = [
-            'yesterday' => \Cake\I18n\DateTime::yesterday(),
-            'now' => \Cake\I18n\DateTime::now(),
+            'yesterday' => DateTime::yesterday(),
+            'now' => DateTime::now(),
         ];
         foreach ($fails as $case => $value) {
             $entity = $this->Gpgkeys->newEntity(['expires' => $value]);
@@ -168,9 +168,9 @@ class SaveTest extends AppTestCase
         }
 
         $successes = [
-            'tomorrow' => \Cake\I18n\DateTime::tomorrow(),
-            'tomorrow as time' => \Cake\I18n\Date::tomorrow(),
-            'way later' => \Cake\I18n\DateTime::createFromDate(2030),
+            'tomorrow' => DateTime::tomorrow(),
+            'tomorrow as time' => Date::tomorrow(),
+            'way later' => DateTime::createFromDate(2030),
         ];
         foreach ($successes as $case => $value) {
             $entity = $this->Gpgkeys->newEntity(['expires' => $value]);
@@ -183,9 +183,9 @@ class SaveTest extends AppTestCase
     public function testGpgkeysValidationIsInFuturePast()
     {
         $fails = [
-            'future' => \Cake\I18n\DateTime::createFromDate(2030),
-            'more than half a day' => \Cake\I18n\DateTime::now()->modify('+13 hours'),
-            'tomorrow as time' => \Cake\I18n\DateTime::now()->modify('+24 hours'),
+            'future' => DateTime::createFromDate(2030),
+            'more than half a day' => DateTime::now()->modify('+13 hours'),
+            'tomorrow as time' => DateTime::now()->modify('+24 hours'),
         ];
         foreach ($fails as $case => $value) {
             $entity = $this->Gpgkeys->newEntity(['key_created' => $value]);
@@ -199,9 +199,9 @@ class SaveTest extends AppTestCase
         }
 
         $successes = [
-            'yesterday' => \Cake\I18n\DateTime::yesterday(),
-            'now' => \Cake\I18n\DateTime::now(),
-            'almost half a day' => \Cake\I18n\DateTime::now()->modify('+11 hours'),
+            'yesterday' => DateTime::yesterday(),
+            'now' => DateTime::now(),
+            'almost half a day' => DateTime::now()->modify('+11 hours'),
         ];
         foreach ($successes as $case => $value) {
             $entity = $this->Gpgkeys->newEntity(['key_created' => $value]);

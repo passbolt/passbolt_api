@@ -22,7 +22,7 @@ use Cake\Core\Configure;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\ServerRequest;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenAbstractService;

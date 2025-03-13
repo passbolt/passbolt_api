@@ -19,7 +19,7 @@ namespace App\Test\TestCase\Controller\Gpgkeys;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 
 class GpgkeysIndexControllerTest extends AppIntegrationTestCase

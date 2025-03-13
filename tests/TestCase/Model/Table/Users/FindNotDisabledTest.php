@@ -20,7 +20,7 @@ namespace App\Test\TestCase\Model\Table\Users;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 
 class FindNotDisabledTest extends AppTestCase
