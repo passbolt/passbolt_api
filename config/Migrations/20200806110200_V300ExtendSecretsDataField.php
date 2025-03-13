@@ -24,7 +24,7 @@ class V300ExtendSecretsDataField extends AbstractMigration
      */
     public function up()
     {
-        switch($this->getAdapter()->getOptions()["adapter"]) {
+        switch($this->getAdapter()->getAdapterType()) {
         case "pgsql": {
             $this->execute('ALTER TABLE secrets ALTER COLUMN data TYPE TEXT;');
             break;
