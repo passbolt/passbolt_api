@@ -80,50 +80,18 @@ class LocaleBehavior extends Behavior
      */
     public function findLocale(Query $query): Query
     {
-        $query->contain('Locale');
-        $this->formatResults($query);
+        $query->leftJoinWith('Locale', function (Query $q) {
+            $organizationLocale = GetOrgLocaleService::getLocale();
+            $locale = $q->expr()->case()
+                ->when($q->expr()->isNotNull('Locale.value'))
+                ->then($q->identifier('Locale.value'))
+                ->else($organizationLocale);
+
+            return $q->select([
+                self::LOCALE_PROPERTY => $locale
+            ]);
+        });
 
         return $query;
-    }
-
-    /**
-     * Format a query result and associate to each item its locale.
-     * The locale is either found in the association, or if not
-     * the organization locale is taken.
-     *
-     * @param \Cake\ORM\Query $query The target query.
-     * @return \Cake\ORM\Query
-     */
-    public function formatResults(Query $query): Query
-    {
-        return $query->formatResults(function (CollectionInterface $results) {
-            return $results->map(function ($entity) {
-                if (is_null($entity)) {
-                    return null;
-                }
-                if (is_null($entity->locale)) {
-                    $locale = GetOrgLocaleService::getLocale();
-                } else {
-                    $locale = $entity->locale->value;
-                }
-
-                return $this->addLocalePropertyToEntity($entity, $locale);
-            });
-        });
-    }
-
-    /**
-     * Add the locale property to an entity
-     *
-     * @param \Cake\Datasource\EntityInterface $entity The target entity
-     * @param string|null $locale The locale
-     * @return \Cake\Datasource\EntityInterface
-     */
-    private function addLocalePropertyToEntity(EntityInterface $entity, ?string $locale = null): EntityInterface
-    {
-        $entity->setVirtual([self::LOCALE_PROPERTY], true);
-        $entity->set(self::LOCALE_PROPERTY, $locale);
-
-        return $entity;
     }
 }
