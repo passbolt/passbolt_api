@@ -45,8 +45,6 @@ class EmailSubscriptionDispatcherTest extends TestCase
 
     public function testEmailSubscriptionDispatcher()
     {
-        $this->markTestSkipped('TODO: Fix');
-
         $event = 'foo';
         $settingActivated = 'send.comment.add';
         $this->setEmailNotificationSetting($settingActivated, true);
