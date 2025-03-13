@@ -55,7 +55,7 @@ trait SubscribedEmailRedactorTrait
     public function implementedEvents(): array
     {
         return [
-            CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this,
+            CollectSubscribedEmailRedactorEvent::EVENT_NAME => 'subscribe',
         ];
     }
 
@@ -67,14 +67,5 @@ trait SubscribedEmailRedactorTrait
     {
         /** @var \App\Notification\Email\SubscribedEmailRedactorInterface $this */
         $event->getManager()->addNewSubscription($this);
-    }
-
-    /**
-     * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
-     * @return void
-     */
-    public function __invoke(CollectSubscribedEmailRedactorEvent $event)
-    {
-        $this->subscribe($event);
     }
 }

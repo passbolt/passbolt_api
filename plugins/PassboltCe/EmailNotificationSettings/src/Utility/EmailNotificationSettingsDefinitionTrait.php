@@ -39,9 +39,7 @@ trait EmailNotificationSettingsDefinitionTrait
     public function implementedEvents(): array
     {
         return [
-            EmailNotificationSettingsDefinitionRegisterEvent::EVENT_NAME => function () {  // todo: refactor this to use method name (string)
-                return $this;
-            },
+            EmailNotificationSettingsDefinitionRegisterEvent::EVENT_NAME => 'invoke',
         ];
     }
 
@@ -51,7 +49,7 @@ trait EmailNotificationSettingsDefinitionTrait
      * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm $emailNotificationSettingsForm An instance instance of EmailNotificationSettingsForm.
      * @return void
      */
-    public function addEmailNotificationSettingsDefinition(EmailNotificationSettingsForm $emailNotificationSettingsForm)
+    private function addEmailNotificationSettingsDefinition(EmailNotificationSettingsForm $emailNotificationSettingsForm)
     {
         $emailNotificationSettingsForm->addEmailNotificationSettingsDefinition($this);
     }
@@ -60,7 +58,7 @@ trait EmailNotificationSettingsDefinitionTrait
      * @param \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionRegisterEvent $event An instance of the event
      * @return void
      */
-    public function __invoke(EmailNotificationSettingsDefinitionRegisterEvent $event)
+    public function invoke(EmailNotificationSettingsDefinitionRegisterEvent $event)
     {
         $this->addEmailNotificationSettingsDefinition($event->getEmailNotificationSettingsForm());
     }
