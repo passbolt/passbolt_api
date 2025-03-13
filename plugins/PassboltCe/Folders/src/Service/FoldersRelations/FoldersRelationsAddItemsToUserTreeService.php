@@ -334,7 +334,7 @@ class FoldersRelationsAddItemsToUserTreeService
         if (!empty($changesToCancel)) {
             $this->foldersRelationsTable->updateAll([
                 'folder_parent_id' => FoldersRelation::ROOT,
-            ], $this->buildFoldersRelationsTupleComparisonExpression($changesToCancel));
+            ], [$this->buildFoldersRelationsTupleComparisonExpression($changesToCancel)]);
         }
 
         // Apply the changes to the user tree.
