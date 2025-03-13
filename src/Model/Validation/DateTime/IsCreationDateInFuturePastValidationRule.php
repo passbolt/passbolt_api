@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace App\Model\Validation\DateTime;
 
 use App\Model\Validation\PassboltValidationRule;
-use Cake\Chronos\ChronosInterface;
+use Cake\Chronos\Chronos;
 use Cake\I18n\FrozenTime;
 
 /**
@@ -44,11 +44,10 @@ class IsCreationDateInFuturePastValidationRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
-        if (!($value instanceof ChronosInterface)) {
+        if (!($value instanceof Chronos)) {
             return false;
         }
 
-        /** @var \Cake\Chronos\ChronosInterface $nowWithMargin */
         $nowWithMargin = \Cake\I18n\DateTime::now()->modify('+12 hours');
 
         return $value->lessThan($nowWithMargin);
