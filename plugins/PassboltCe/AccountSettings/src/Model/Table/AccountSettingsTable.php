@@ -173,7 +173,7 @@ class AccountSettingsTable extends Table
         }
 
         /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $entity */
-        $entity = $this->find('byProperty', compact('property'))
+        $entity = $this->find('byProperty', property: $property)
             ->where([$this->aliasField('user_id') => $userId])
             ->firstOrFail();
 
@@ -249,7 +249,7 @@ class AccountSettingsTable extends Table
     public function getByProperty(string $userId, string $property)
     {
         return $this->find()
-            ->find('byProperty', compact('property'))
+            ->find('byProperty', property: $property)
             ->where([$this->aliasField('user_id') => $userId])
             ->first();
     }
@@ -269,16 +269,14 @@ class AccountSettingsTable extends Table
      * Find setting per property
      *
      * @param \Cake\ORM\Query $query Query
-     * @param array $options Option with property
+     * @param ?string $property Property
      * @return \Cake\ORM\Query
      */
-    public function findByProperty(Query $query, array $options): Query
+    public function findByProperty(Query $query, ?string $property = null): Query
     {
-        if (!isset($options['property'])) {
+        if (!isset($property)) {
             throw new InternalErrorException(__('The parameter {0} is not set.', 'property'));
         }
-
-        $property = $options['property'];
 
         return $query->where([$this->aliasField('property_id') => $this->propertyToPropertyId($property)]);
     }
