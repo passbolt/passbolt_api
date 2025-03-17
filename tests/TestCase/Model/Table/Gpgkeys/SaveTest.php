@@ -169,7 +169,7 @@ class SaveTest extends AppTestCase
 
         $successes = [
             'tomorrow' => DateTime::tomorrow(),
-            'tomorrow as time' => Date::tomorrow(),
+            'tomorrow as time' => DateTime::tomorrow(),
             'way later' => DateTime::createFromDate(2030),
         ];
         foreach ($successes as $case => $value) {
