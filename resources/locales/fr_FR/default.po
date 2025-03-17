@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-02-14 10:59\n"
+"PO-Revision-Date: 2025-03-06 14:57\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -869,7 +869,7 @@ msgid "The metadata should be a valid ASCII string."
 msgstr ""
 
 msgid "The metadata should not be empty."
-msgstr ""
+msgstr "Les métadonnées ne doivent pas être vides."
 
 msgid "The metadata key type should be a valid UTF8 string."
 msgstr ""
@@ -1097,7 +1097,7 @@ msgid "You added the password {0}"
 msgstr "Vous avez ajouté le mot de passe {0}"
 
 msgid "You added a new password"
-msgstr ""
+msgstr "Vous avez ajouté un nouveau mot de passe"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} a supprimé le mot de passe {1}"
@@ -1112,16 +1112,16 @@ msgid "You edited the resource {0}"
 msgstr ""
 
 msgid "{0} edited the resource {1}"
-msgstr ""
+msgstr "{0} a modifié la ressource {1}"
 
 msgid "{0} can not complete the account recovery process!"
 msgstr "{0} ne peut pas compléter le processus de récupération de compte !"
 
 msgid "{0} shared the resource {1}"
-msgstr ""
+msgstr "{0} a partagé la ressource {1}"
 
 msgid "{0} shared a resource"
-msgstr ""
+msgstr "{0} a partagé une ressource"
 
 msgid "You deleted administrator {0}"
 msgstr "Vous avez supprimé l'administrateur {0}"
@@ -1553,16 +1553,16 @@ msgid "No table found."
 msgstr "Aucune table trouvée."
 
 msgid "Cannot detect your system distribution details."
-msgstr ""
+msgstr "Impossible de détecter les détails de votre distribution système."
 
 msgid "See `{0}`."
-msgstr ""
+msgstr "Voir `{0}`."
 
 msgid "Cannot detect your `gpg` or `libgcrypt` version."
-msgstr ""
+msgstr "Impossible de détecter votre version de `gpg` ou `libgcrypt`."
 
 msgid "See `{0}` and `{1}`."
-msgstr ""
+msgstr "Voir `{0}` et `{1}`."
 
 msgid "GD or Imagick extension is installed."
 msgstr "L'extension GD ou Imagick est installée."
@@ -1571,10 +1571,10 @@ msgid "You must enable the gd or imagick extensions to use Passbolt."
 msgstr "Vous devez activer les extensions Gd ou Imagick pour utiliser Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "Voir https://secure.php.net/manual/en/book.image.php"
 
 msgid "See: https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "Voir https://secure.php.net/manual/en/book.imagick.php"
 
 msgid "Intl extension is installed."
 msgstr "L'extension Intl est installée."
@@ -1583,7 +1583,7 @@ msgid "You must enable the intl extension to use Passbolt."
 msgstr "Vous devez activer l'extension intl pour utiliser Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "Voir https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory and its content are writable."
 msgstr "Le répertoire des logs et son contenu sont accessibles en écriture."
@@ -1592,7 +1592,7 @@ msgid "The logs directory and its content are not writable."
 msgstr "Le répertoire des logs et son contenu ne sont pas accessibles en écriture."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "Assurez-vous que le répertoire des logs et son contenu sont accessibles en écriture par l'utilisateur du serveur web."
 
 msgid "You can try:"
 msgstr "Vous pouvez essayer :"
@@ -1604,7 +1604,7 @@ msgid "You must enable the mbstring extension to use Passbolt."
 msgstr "Vous devez activer l'extension mbstring pour utiliser Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "Voir https://secure.php.net/manual/en/book.mbstring.php"
 
 msgid "PHP version is {0} or above."
 msgstr "La version de PHP est {0} ou supérieure."
@@ -1613,13 +1613,13 @@ msgid "PHP version less than {0} will soon be not supported by passbolt, so cons
 msgstr "La version de PHP inférieure à {0} ne sera bientôt plus supportée par Passbolt. Envisagez de mettre à jour votre système d'exploitation ou votre environnement PHP."
 
 msgid "64-bit architecture system detected."
-msgstr ""
+msgstr "Système d'architecture 64 bits détecté."
 
 msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
-msgstr ""
+msgstr "Système d'architecture 32 bits détecté, cet environnement n'est plus pris en charge depuis Passbolt v5+."
 
 msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
-msgstr ""
+msgstr "Voir PHP_INT_MAX - https://www.php.net/manual/fr/language.types.integer.php"
 
 msgid "PCRE compiled with unicode support."
 msgstr "PCRE compilé avec le support Unicode."
@@ -1637,22 +1637,22 @@ msgid "PHP version is too low, passbolt need PHP {0} or higher."
 msgstr "La version de PHP est trop basse, Passbolt a besoin de PHP {0} ou supérieur."
 
 msgid "System clock is synchronized and NTP service is active."
-msgstr ""
+msgstr "L'horloge système est synchronisée et le service NTP est actif."
 
 msgid "System clock and NTP service information cannot be found."
-msgstr ""
+msgstr "L'horloge système et le service NTP sont introuvables."
 
 msgid "NTP service is active but the system clock is not synchronized."
-msgstr ""
+msgstr "Le service NTP est actif mais l'horloge système n'est pas synchronisée."
 
 msgid "System clock is synchronized but NTP service is inactive."
-msgstr ""
+msgstr "L'horloge système est synchronisée mais le service NTP est inactif."
 
 msgid "System clock is not synchronized and NTP service is inactive."
-msgstr ""
+msgstr "L'horloge système n'est pas synchronisée et le service NTP est inactif."
 
 msgid "That generally means the NTP service is failing to contact any NTP servers."
-msgstr ""
+msgstr "Cela signifie généralement que le service NTP ne parvient pas à contacter les serveurs NTP."
 
 msgid "See `{0}`. More information: {1}"
 msgstr ""
@@ -1892,10 +1892,10 @@ msgid "SSL peer certificate does not validate."
 msgstr ""
 
 msgid "The keyring is not defined."
-msgstr ""
+msgstr "Le trousseau n'est pas défini."
 
 msgid "The keyring directory is not accessible by the current user: {0}"
-msgstr ""
+msgstr "Le répertoire du trousseau n'est pas accessible par l'utilisateur courant : {0}"
 
 msgid "Could not validate sub key data."
 msgstr "Impossible de valider les données de la sous-clé."
@@ -1946,13 +1946,13 @@ msgid "The config for the server private key passphrase is invalid."
 msgstr "La configuration du mot de passe de la clé privée du serveur est invalide."
 
 msgid "The user public key is not available or incomplete."
-msgstr ""
+msgstr "La clé publique de l'utilisateur n'est pas disponible ou incomplète."
 
 msgid "The user public key fingerprint is not available or incomplete."
 msgstr ""
 
 msgid "The user armored key is not available or incomplete."
-msgstr ""
+msgstr "La clé privée de l'utilisateur n'est pas disponible ou incomplète."
 
 msgid "The algorithm is invalid."
 msgstr "L'algorithme est invalide."
@@ -2765,13 +2765,13 @@ msgid "A domain is required."
 msgstr "Un domaine est requis."
 
 msgid "The domain should not be empty."
-msgstr ""
+msgstr "Le nom de domaine ne doit pas être vide."
 
 msgid "The domain should match current instance URL."
-msgstr ""
+msgstr "Le domaine doit correspondre à l'URL de l'instance actuelle."
 
 msgid "Private keys are required."
-msgstr ""
+msgstr "Les clés privées sont requises."
 
 msgid "Need at least one metadata private key."
 msgstr ""
@@ -2855,28 +2855,28 @@ msgid "Metadata settings endpoints are disabled."
 msgstr ""
 
 msgid "Folder can not be shared"
-msgstr ""
+msgstr "Le répertoire ne peut pas être partagé"
 
 msgid "Few fields are missing for the V5."
 msgstr ""
 
 msgid "Missing fields: {0}"
-msgstr ""
+msgstr "Champs manquants : {0}"
 
 msgid "V4 related fields are not supported for V5."
 msgstr ""
 
 msgid "Superfluous fields: {0}"
-msgstr ""
+msgstr "Champs superflus : {0}"
 
 msgid "Allow usage of personal keys"
 msgstr ""
 
 msgid "True"
-msgstr ""
+msgstr "Vrai"
 
 msgid "False"
-msgstr ""
+msgstr "Faux"
 
 msgid "Zero-knowledge key share"
 msgstr ""
@@ -2897,7 +2897,7 @@ msgid "Default comment type"
 msgstr ""
 
 msgid "Allow creation of V5 resources"
-msgstr ""
+msgstr "Autoriser la création de ressources V5"
 
 msgid "Allow creation of V5 folders"
 msgstr ""
@@ -3914,13 +3914,13 @@ msgid "The passphrase generator words should be between {0} and {1}."
 msgstr ""
 
 msgid "The passphrase generator word separator is required."
-msgstr ""
+msgstr "Un séparateur des mots de la phrase de passe est nécessaire."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
 msgstr ""
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr ""
+msgstr "Le séparateur de mots du générateur de phrases de passe devrait être, au maximum, de {0} caractères."
 
 msgid "The passphrase generator word case is required."
 msgstr ""
@@ -3929,10 +3929,10 @@ msgid "The passphrase generator word case should be one of the following: {0}."
 msgstr ""
 
 msgid "The password generator length should be between {0} and {1}."
-msgstr ""
+msgstr "La longueur d'un mot de passe créé par le générateur de mots de passe doit être comprise entre {0} et {1}."
 
 msgid "The password generator length is required."
-msgstr ""
+msgstr "La longueur du générateur de mot de passe est obligatoire."
 
 msgid "The password generator mask upper is required."
 msgstr "Un critère de génération de mot de passe est nécessaire."
@@ -4010,7 +4010,7 @@ msgid "The request data is invalid: expected a collection."
 msgstr ""
 
 msgid "The request data is invalid: invalid fields."
-msgstr ""
+msgstr "Les données de la requête sont invalides : champs invalides."
 
 msgid "The request data is invalid: id missing."
 msgstr ""
@@ -4028,7 +4028,7 @@ msgid "The request data is invalid: ids must be unique."
 msgstr "Les données de la requête sont invalides : les identifiants doivent être uniques."
 
 msgid "An action identifier should be a valid UUID."
-msgstr ""
+msgstr "L'identifiant de l'action doit être un UUID valide."
 
 msgid "The foreign model should be a valid ASCII string."
 msgstr ""

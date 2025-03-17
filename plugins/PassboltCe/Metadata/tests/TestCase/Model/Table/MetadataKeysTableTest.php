@@ -211,18 +211,13 @@ class MetadataKeysTableTest extends AppTestCaseV5
      */
     public function testMetadataKeysTable_BuildRules_UniqueFingerPrintActive(): void
     {
-        $user = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
-            ->persist();
-        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($user)->persist();
+        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
 
         $entity = $this->buildEntity([
             'fingerprint' => $metadataKey->get('fingerprint'),
             'armored_key' => $metadataKey->get('armored_key'),
-            'created_by' => $user['id'],
-            'modified_by' => $user['id'],
+            'created_by' => $metadataKey->get('created_by'),
+            'modified_by' => $metadataKey->get('modified_by'),
         ]);
         $result = $this->MetadataKeys->save($entity);
 
@@ -238,23 +233,20 @@ class MetadataKeysTableTest extends AppTestCaseV5
      */
     public function testMetadataKeysTable_BuildRules_UniqueFingerPrintDeleted(): void
     {
-        $user = UserFactory::make()
-            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
-            ->user()
-            ->active()
-            ->persist();
-        $metadataKey = MetadataKeyFactory::make()->deleted()->withCreatorAndModifier($user)->persist();
+        $metadataKey = MetadataKeyFactory::make()->deleted()->withCreatorAndModifier()->persist();
 
         $entity = $this->buildEntity([
             'fingerprint' => $metadataKey->get('fingerprint'),
             'armored_key' => $metadataKey->get('armored_key'),
-            'created_by' => $user['id'],
-            'modified_by' => $user['id'],
+            'created_by' => $metadataKey->get('created_by'),
+            'modified_by' => $metadataKey->get('modified_by'),
         ]);
         $result = $this->MetadataKeys->save($entity);
 
-        $this->assertInstanceOf(MetadataKey::class, $result);
-        $this->assertEmpty($entity->getErrors());
+        $this->assertFalse($result);
+        $this->assertNotEmpty($entity->getErrors());
+        $this->assertCount(1, $entity->getErrors()['fingerprint']);
+        $this->assertArrayHasKey('_isUnique', $entity->getErrors()['fingerprint']);
     }
 
     /**

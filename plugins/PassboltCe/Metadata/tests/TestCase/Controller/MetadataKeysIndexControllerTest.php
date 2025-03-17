@@ -56,6 +56,7 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
     {
         $user = UserFactory::make()->user()->active()->persist();
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier()->persist();
+        /** @var \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $metadataPrivateKey */
         $metadataPrivateKey = MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser($user)->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUser()->persist();
         $this->logInAs($user);
@@ -72,9 +73,14 @@ class MetadataKeysIndexControllerTest extends AppIntegrationTestCaseV5
         $this->assertCount(1, $response[0]['metadata_private_keys']);
         $this->assertEqualsCanonicalizing([
             [
+                'id' => $metadataPrivateKey->id,
                 'metadata_key_id' => $metadataKey->get('id'),
                 'user_id' => $user->get('id'),
                 'data' => $metadataPrivateKey->get('data'),
+                'created' => $metadataPrivateKey->created->toIso8601String(),
+                'modified' => $metadataPrivateKey->modified->toIso8601String(),
+                'created_by' => $metadataPrivateKey->created_by,
+                'modified_by' => $metadataPrivateKey->modified_by,
             ],
         ], $response[0]['metadata_private_keys']);
     }

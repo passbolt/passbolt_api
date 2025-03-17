@@ -29,12 +29,15 @@ use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
+use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 
 class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 {
     use SubscribedEmailRedactorTrait;
 
     public const TEMPLATE = 'LU/resource_delete';
+
+    public const TEMPLATE_V5 = 'Passbolt/Metadata.LU/resource_delete_v5';
 
     /**
      * @var \App\Model\Table\UsersTable
@@ -81,9 +84,10 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
         /** @var \App\Model\Entity\Resource $resource */
         $resource = $event->getData('resource');
+        $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
         /** @var string $deletedBy */
         $deletedBy = $event->getData('deletedBy');
-        /** @var \Cake\ORM\Query $users */
+        /** @var \Cake\ORM\ResultSet $users */
         $users = $event->getData('users');
 
         // if there is nobody, give it up. The deleter has already been removed from $users.
@@ -93,11 +97,12 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
         $owner = $this->usersTable->findFirstForEmail($deletedBy);
 
+        /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             if ($user->isDisabled()) {
                 continue;
             }
-            $emailCollection->addEmail($this->createDeleteEmail($user, $owner, $resource));
+            $emailCollection->addEmail($this->createDeleteEmail($user, $owner, $resource, $resourceDto->isV5()));
         }
 
         return $emailCollection;
@@ -107,20 +112,27 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\User $recipient Email of the recipient user
      * @param \App\Model\Entity\User $owner User who executed the action
      * @param \App\Model\Entity\Resource $resource Resource
+     * @param bool $isV5 Is resource v5 or not
      * @return \App\Notification\Email\Email
      */
-    private function createDeleteEmail(User $recipient, User $owner, Resource $resource): Email
+    private function createDeleteEmail(User $recipient, User $owner, Resource $resource, bool $isV5): Email
     {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,
-            function () use ($owner, $resource) {
-                return __(
+            function () use ($owner, $resource, $isV5) {
+                $sub = __(
                     '{0} deleted the password {1}',
                     Purifier::clean($owner->profile->first_name),
                     Purifier::clean($resource->name)
                 );
+                if ($isV5) {
+                    $sub = __('{0} deleted a password', Purifier::clean($owner->profile->first_name));
+                }
+
+                return $sub;
             }
         );
+
         $data = [
             'body' => [
                 'user' => $owner,
@@ -133,6 +145,8 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
             'title' => $subject,
         ];
 
-        return new Email($recipient, $subject, $data, self::TEMPLATE);
+        $template = $isV5 ? self::TEMPLATE_V5 : self::TEMPLATE;
+
+        return new Email($recipient, $subject, $data, $template);
     }
 }

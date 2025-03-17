@@ -1,9 +1,11 @@
-Release song: https://youtu.be/U16Xg_rQZkA?si=cVcmovGWluuo8oYj
+Release song: https://youtu.be/NUTGr5t3MoY?si=1hitMfMv8PDn1Wf2
 
-Passbolt is pleased to announce the immediate availability of version v4.11.1. This version is a targeted security release of the API focusing on fixing the security issue reported by a security researcher.
+This is a maintenance release. It fixes a reported issue when notifying group administrators that a user
+should be added to a group. The issue occurred when a group administrator had been disabled.
 
-We would like to express our appreciation to the community for their assistance in making Passbolt more secure. Further details can be found in [the incident report](https://www.passbolt.com/incidents/host-header-injection-vulnerability).
+Thank you to the community for the valuable feedback!
 
-## [4.11.1] - 2025-02-17
-### Security
-- PB-39045 Fix empty fullBaseUrl leading to Host header injection attack
+
+## [4.12.1-test.1] - 2025-03-14
+### Fixed
+- PB-39965 Fixes an issue when fetching the locale of disabled users when queried in a sub-query

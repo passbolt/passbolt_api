@@ -18,7 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Service\Upgrade;
 
 use App\Error\Exception\CustomValidationException;
+use App\Test\Factory\GroupFactory;
 use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
@@ -31,6 +33,7 @@ use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeResourcesUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
@@ -52,6 +55,8 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
 
         ResourceTypeFactory::make()->default()->persist();
         ResourceTypeFactory::make()->passwordAndDescription()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
+        ResourceTypeFactory::make()->v5PasswordString()->persist();
     }
 
     /**
@@ -68,43 +73,51 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
         // create metadata keys
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($activeMetadataKey)->persist();
-        [$resource1, $resource2] = ResourceFactory::make(2)->persist();
+        /** @var \App\Model\Entity\User $userWithPersonalResource */
+        $userWithPersonalResource = UserFactory::make()->withAdaKey()->persist();
+        $userKeyId = $userWithPersonalResource->gpgkey->id;
+        $group = GroupFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resourceShared */
+        $resourceShared = ResourceFactory::make()->withPermissionsFor([$group])->persist();
+        /** @var \App\Model\Entity\Resource $resourcePersonal */
+        $resourcePersonal = ResourceFactory::make()->withPermissionsFor([$userWithPersonalResource])->persist();
 
         $uac = $this->mockAdminAccessControl();
-        $metadataForR1 = $this->encryptForMetadataKey(json_encode([]));
+        $metadataForR1 = $this->encryptForUser(json_encode([]), $userWithPersonalResource, $this->getAdaNoPassphraseKeyInfo());
         $metadataForR2 = $this->encryptForMetadataKey(json_encode([]));
         $data = [
             [
-                'id' => $resource1->get('id'),
-                'metadata_key_id' => $activeMetadataKey->get('id'),
-                'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
+                'id' => $resourcePersonal->get('id'),
+                'metadata_key_id' => $userKeyId,
+                'metadata_key_type' => MetadataKey::TYPE_USER_KEY,
                 'metadata' => $metadataForR1,
-                'modified' => $resource1->get('modified')->format('Y-m-d H:i:s'),
-                'modified_by' => $resource1->get('modified_by'),
+                'modified' => $resourcePersonal->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $resourcePersonal->get('modified_by'),
             ],
             [
-                'id' => $resource2->get('id'),
+                'id' => $resourceShared->get('id'),
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $metadataForR2,
-                'modified' => $resource2->get('modified')->format('Y-m-d H:i:s'),
-                'modified_by' => $resource2->get('modified_by'),
+                'modified' => $resourceShared->get('modified')->format('Y-m-d H:i:s'),
+                'modified_by' => $resourceShared->get('modified_by'),
             ],
         ];
         $this->service->updateMany($uac, $data);
 
-        /** @var \App\Model\Entity\Resource $updatedResource1 */
-        $updatedResource1 = ResourceFactory::get($resource1->get('id'));
-        $this->assertSame($activeMetadataKey->get('id'), $updatedResource1->get('metadata_key_id'));
-        $this->assertSame($metadataForR1, $updatedResource1->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
-        $this->assertSame($uac->getId(), $updatedResource1->get('modified_by'));
-        /** @var \App\Model\Entity\Resource $updatedResource2 */
-        $updatedResource2 = ResourceFactory::get($resource2->get('id'));
-        $this->assertSame($activeMetadataKey->get('id'), $updatedResource2->get('metadata_key_id'));
-        $this->assertSame($metadataForR2, $updatedResource2->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedResource2->get('modified')->format('Y-m-d H:i'));
-        $this->assertSame($uac->getId(), $updatedResource2->get('modified_by'));
+        $expectedResourceType = ResourceTypeFactory::find()->where(['slug' => ResourceType::SLUG_V5_DEFAULT])->firstOrFail();
+        $updatedPersonalResource = ResourceFactory::get($resourcePersonal->get('id'));
+        $this->assertSame($userKeyId, $updatedPersonalResource->get('metadata_key_id'));
+        $this->assertSame($metadataForR1, $updatedPersonalResource->get('metadata'));
+        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedPersonalResource->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
+        $this->assertSame($uac->getId(), $updatedPersonalResource->get('modified_by'));
+        $this->assertSame($expectedResourceType->get('id'), $updatedPersonalResource->get('resource_type_id'));
+        $updatedSharedResource = ResourceFactory::get($resourceShared->get('id'));
+        $this->assertSame($activeMetadataKey->get('id'), $updatedSharedResource->get('metadata_key_id'));
+        $this->assertSame($metadataForR2, $updatedSharedResource->get('metadata'));
+        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedSharedResource->get('modified')->format('Y-m-d H:i'));
+        $this->assertSame($uac->getId(), $updatedSharedResource->get('modified_by'));
+        $this->assertSame($expectedResourceType->get('id'), $updatedSharedResource->get('resource_type_id'));
     }
 
     public function testMetadataUpgradeResourcesUpdateService_Error_EmptyData(): void
