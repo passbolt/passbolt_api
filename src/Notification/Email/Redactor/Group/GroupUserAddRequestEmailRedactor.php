@@ -19,7 +19,6 @@ namespace App\Notification\Email\Redactor\Group;
 
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
-use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
@@ -27,7 +26,6 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 
@@ -45,18 +43,11 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
     private $usersTable;
 
     /**
-     * @var \App\Model\Table\GroupsUsersTable
-     */
-    private $groupsUsersTable;
-
-    /**
      * @param \App\Model\Table\UsersTable|null $usersTable Users Table
-     * @param \App\Model\Table\GroupsUsersTable|null $groupsUsersTable Groups Users Table
      */
-    public function __construct(?UsersTable $usersTable = null, ?GroupsUsersTable $groupsUsersTable = null)
+    public function __construct(?UsersTable $usersTable = null)
     {
         $this->usersTable = $usersTable ?? TableRegistry::getTableLocator()->get('Users');
-        $this->groupsUsersTable = $groupsUsersTable ?? TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
     /**
@@ -97,34 +88,17 @@ class GroupUserAddRequestEmailRedactor implements SubscribedEmailRedactorInterfa
         }
 
         // Get group managers of group.
-        $groupManagers = $this->getGroupManagers($group->id);
+        $groupManagers = $this->usersTable->findGroupManagersToNotify($group->id);
         $admin = $this->usersTable->findFirstForEmail($accessControl->getId());
 
         // Send to all group managers.
         foreach ($groupManagers as $groupManager) {
             $emailCollection->addEmail(
-                $this->createGroupUserAddEmail($groupManager->user, $admin, $group, $requestedGroupUsers)
+                $this->createGroupUserAddEmail($groupManager, $admin, $group, $requestedGroupUsers)
             );
         }
 
         return $emailCollection;
-    }
-
-    /**
-     * @param string $groupId Group for which to get group managers
-     * @return \Cake\ORM\Query
-     */
-    private function getGroupManagers(string $groupId): Query
-    {
-        return $this->groupsUsersTable->find()
-            ->where([
-                $this->groupsUsersTable->aliasField('group_id') => $groupId,
-                $this->groupsUsersTable->aliasField('is_admin') => true,
-            ])
-            ->contain('Users', function (Query $q) {
-                return $q->find('locale')
-                    ->find('notDisabled');
-            });
     }
 
     /**

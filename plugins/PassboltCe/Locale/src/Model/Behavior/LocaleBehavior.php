@@ -98,6 +98,9 @@ class LocaleBehavior extends Behavior
     {
         return $query->formatResults(function (CollectionInterface $results) {
             return $results->map(function ($entity) {
+                if (is_null($entity)) {
+                    return null;
+                }
                 if (is_null($entity->locale)) {
                     $locale = GetOrgLocaleService::getLocale();
                 } else {
