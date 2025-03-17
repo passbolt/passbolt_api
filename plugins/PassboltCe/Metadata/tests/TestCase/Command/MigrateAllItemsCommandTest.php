@@ -158,7 +158,7 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('Entity');
         $this->assertOutputContains('Error message');
         $this->assertOutputContains('folders');
-        $this->assertOutputContains('Record not found in table \"metadata_keys\"');
+        $this->assertOutputContains('Record not found in table `metadata_keys`');
         $this->assertOutputContains('See migrated items summary below');
         $this->assertOutputContains('Total');
         $this->assertOutputContains('1');
