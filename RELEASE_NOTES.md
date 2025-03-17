@@ -6,6 +6,6 @@ should be added to a group. The issue occurred when a group administrator had be
 Thank you to the community for the valuable feedback!
 
 
-## [4.12.1-test.1] - 2025-03-14
+## [4.12.1] - 2025-03-17
 ### Fixed
-- PB-39965 Fixes an issue when fetching the locale of disabled users when queried in a sub-query
+- PB-39959 Fixes an issue when fetching the locale of disabled users when queried in a sub-query
