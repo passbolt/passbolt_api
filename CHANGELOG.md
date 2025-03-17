@@ -4,7 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.12.1] - 2025-03-17
 ### Fixed
-- PB-39959 Fixes an issue when fetching the locale of disabled users when queried in a sub-query
+- PB-39959 Fixes an issue when fetching the locale of suspended users when queried in a sub-query
 
 ## [4.12.1-test.1] - 2025-03-14
 ### Fixed
