@@ -17,9 +17,6 @@ require dirname(__DIR__) . '/config/bootstrap.php';
 
 $_SERVER['PHP_SELF'] = '/';
 
-// Fixate now to avoid one-second-leap-issues
-Chronos::setTestNow(Chronos::now());
-
 // Fixate sessionid early on, as php7.2+
 // does not allow the sessionid to be set after stdout
 // has been written to.
