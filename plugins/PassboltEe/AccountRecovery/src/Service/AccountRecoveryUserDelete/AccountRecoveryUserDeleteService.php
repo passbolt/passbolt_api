@@ -112,7 +112,6 @@ class AccountRecoveryUserDeleteService
 
         // Update pending requests
         $this->AccountRecoveryRequests->updateQuery()
-            ->update()
             ->set([
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
                 'modified_by' => $userId, // TODO - Get UAC from event
@@ -128,7 +127,6 @@ class AccountRecoveryUserDeleteService
 
         // Deactivate all previous active tokens
         $this->AuthenticationTokens->updateQuery()
-            ->update()
             ->set([
                 'active' => false,
             ])

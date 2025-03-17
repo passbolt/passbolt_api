@@ -236,7 +236,6 @@ class AccountRecoveryRequestsTable extends Table
     public function rejectAllNonCompleted(UserAccessControl $userAccessControl): void
     {
         $this->updateQuery()
-            ->update()
             ->set([
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
                 'modified_by' => $userAccessControl->getId(),
