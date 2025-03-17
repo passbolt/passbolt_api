@@ -1,8 +1,8 @@
 <?php
 return [
     'passbolt' => [
-        'version' => '4.12.0',
-        'name' => 'Rusty Cage',
+        'version' => '4.12.1',
+        'name' => 'Basket Case',
     ],
     'php' => [
         'minVersion' => '7.4',
