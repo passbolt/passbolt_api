@@ -202,7 +202,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
 
         $this->assertFalse($result['success']);
         $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Record not found in table "metadata_keys"', $result['errors'][0]['error_message']);
+        $this->assertStringContainsString('Record not found in table `metadata_keys`', $result['errors'][0]['error_message']);
     }
 
     public function testMigrateAllV4FoldersToV5Service_Error_FolderIsAlreadyV5(): void

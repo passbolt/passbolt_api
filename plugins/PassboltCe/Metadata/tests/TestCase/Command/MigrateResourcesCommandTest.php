@@ -141,7 +141,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('<success>1 resources were migrated.</success>');
         $this->assertOutputContains('All resources could not migrated.');
         $this->assertOutputContains('See errors:');
-        $this->assertOutputContains('Record not found in table "metadata_keys"');
+        $this->assertOutputContains('Record not found in table `metadata_keys`');
         // Make sure v5 fields are updated
         $updatedResource = ResourceFactory::get($personalResource->id);
         $this->assertionsForPersonalResource($updatedResource, $personalResource, $user->gpgkey, [

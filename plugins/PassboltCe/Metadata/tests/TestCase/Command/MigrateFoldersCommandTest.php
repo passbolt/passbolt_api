@@ -141,7 +141,7 @@ class MigrateFoldersCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('<success>1 folders were migrated.</success>');
         $this->assertOutputContains('All folders could not migrated.');
         $this->assertOutputContains('See errors:');
-        $this->assertOutputContains('Record not found in table "metadata_keys"');
+        $this->assertOutputContains('Record not found in table `metadata_keys`');
         /** @var \Passbolt\Folders\Model\Entity\Folder $updatedFolder */
         $updatedFolder = FolderFactory::get($personalFolder->get('id'));
         $this->assertionsForPersonalFolder($updatedFolder, $personalFolder, $ada->gpgkey, [

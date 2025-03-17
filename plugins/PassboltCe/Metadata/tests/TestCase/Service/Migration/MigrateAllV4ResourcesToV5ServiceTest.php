@@ -227,7 +227,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
         $this->assertFalse($result['success']);
         $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Record not found in table "metadata_keys"', $result['errors'][0]['error_message']);
+        $this->assertStringContainsString('Record not found in table `metadata_keys`', $result['errors'][0]['error_message']);
     }
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Error_ResourceIsAlreadyV5(): void
