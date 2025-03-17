@@ -29,7 +29,7 @@ trait DatabaseTrait
         $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
         foreach ($tables as $table) {
             $quotedTableName = $connection->getDriver()->quoteIdentifier($table);
-            $connection->query("DROP TABLE {$quotedTableName}");
+            $connection->execute("DROP TABLE {$quotedTableName}");
         }
     }
 }
