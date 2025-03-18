@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13e89bc74affcac333d9d61eef3e17e8",
+    "content-hash": "5aa993eb4ecbe7853e7a99c1d98cdfb9",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -9064,6 +9064,63 @@
                 }
             ],
             "time": "2023-02-07T11:34:05+00:00"
+        },
+        {
+            "name": "seec/phpunit-consecutive-params",
+            "version": "1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nopenopenope/phpunit-consecutive-params.git",
+                "reference": "5575488a9af675c6d23299d4f3317d236b002641"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nopenopenope/phpunit-consecutive-params/zipball/5575488a9af675c6d23299d4f3317d236b002641",
+                "reference": "5575488a9af675c6d23299d4f3317d236b002641",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^9|^10",
+                "psalm/plugin-phpunit": "^0.18",
+                "symplify/easy-coding-standard": "^11.3",
+                "vimeo/psalm": "^5.18"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SEEC\\PhpUnit\\Helper\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0-or-later"
+            ],
+            "authors": [
+                {
+                    "name": "Maximilian Graf Schimmelmann",
+                    "email": "max@schimmelmann.org",
+                    "homepage": "https://www.schimmelmann.org",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Drop-in Trait to use removed ConsecutiveParams from PhpUnit",
+            "homepage": "https://github.com/nopenopenope/behat-test-runner",
+            "keywords": [
+                "TDD",
+                "consecutive params",
+                "phpunit",
+                "unit testing",
+                "variadic"
+            ],
+            "support": {
+                "issues": "https://github.com/nopenopenope/phpunit-consecutive-params/issues",
+                "source": "https://github.com/nopenopenope/phpunit-consecutive-params/tree/1.1.4"
+            },
+            "time": "2023-12-18T22:50:18+00:00"
         },
         {
             "name": "slevomat/coding-standard",
