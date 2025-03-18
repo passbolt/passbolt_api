@@ -60,7 +60,7 @@ class GpgKeysTableFindTest extends AppTestCase
         GpgkeyFactory::make()->withAdaKey()->setField('user_id', $user->get('id'))->persist();
 
         $this->expectException(CakeException::class);
-        $this->Gpgkeys->find('current', userId: $user->get('id'))->first();
+        $this->Gpgkeys->find('current', id: $user->get('id'))->first();
     }
 
     public function testGpgKeysTableFindCurrent_Error_NoKeys(): void
