@@ -18,11 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Controller\UiActions;
 
 use App\Controller\AppController;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\Rbacs\Model\Entity\UiAction;
 
 class UiActionsIndexController extends AppController
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * @var \Passbolt\Rbacs\Model\Table\UiActionsTable $UiActions
      */

@@ -23,6 +23,7 @@ use App\Model\Table\Dto\FindIndexOptions;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\Application\FeaturePluginAwareTrait;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
@@ -34,6 +35,7 @@ use Passbolt\MultiFactorAuthentication\Service\Query\IsMfaEnabledQueryService;
  */
 class UsersIndexController extends AppController
 {
+    use PaginatePropertyAwareTrait;
     use FeaturePluginAwareTrait;
 
     public array $paginate = [

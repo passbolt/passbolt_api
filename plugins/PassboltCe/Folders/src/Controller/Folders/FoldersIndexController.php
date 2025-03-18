@@ -19,12 +19,15 @@ namespace Passbolt\Folders\Controller\Folders;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 
 class FoldersIndexController extends AppController
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * @inheritDoc
      */

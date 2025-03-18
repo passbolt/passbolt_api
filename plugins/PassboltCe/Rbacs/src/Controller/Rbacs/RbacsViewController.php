@@ -18,18 +18,16 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Controller\Rbacs;
 
 use App\Controller\AppController;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 
 class RbacsViewController extends AppController
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * @var \Passbolt\Rbacs\Model\Table\RbacsTable $Rbacs
      */
     protected $Rbacs;
-
-    /**
-     * @var array $paginate options
-     */
-    public array $paginate = [];
 
     /**
      * @inheritDoc

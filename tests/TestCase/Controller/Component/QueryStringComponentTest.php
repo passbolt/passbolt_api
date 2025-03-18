@@ -241,8 +241,7 @@ class QueryStringComponentTest extends TestCase
         $url = '/?' . $query;
 
         $request = new ServerRequest(compact('url'));
-        $response = new Response();
-        $controller = new Controller($request, $response);
+        $controller = new Controller($request);
         $registry = new ComponentRegistry($controller);
         $component = new QueryStringComponent($registry);
 
