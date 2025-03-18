@@ -19,6 +19,7 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
@@ -31,6 +32,8 @@ use Passbolt\Metadata\Service\MetadataResourcesRenderService;
  */
 class ResourcesIndexController extends AppController
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * @var \App\Model\Table\ResourcesTable
      */

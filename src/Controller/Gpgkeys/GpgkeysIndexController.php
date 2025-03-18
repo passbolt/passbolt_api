@@ -17,12 +17,15 @@ declare(strict_types=1);
 namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 
 /**
  * GpgkeysIndexController Class
  */
 class GpgkeysIndexController extends AppController
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * @var \App\Model\Table\GpgkeysTable
      */
