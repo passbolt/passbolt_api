@@ -112,7 +112,7 @@ class MigrateTagsCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('<success>1 tags were migrated.</success>');
         $this->assertOutputContains('All tags could not be migrated.');
         $this->assertOutputContains('See errors:');
-        $this->assertOutputContains('Record not found in table "metadata_keys"');
+        $this->assertOutputContains('Record not found in table `metadata_keys`');
         // assert values in db
         $tags = TagFactory::find()->toArray();
         $this->assertCount(2, $tags);
