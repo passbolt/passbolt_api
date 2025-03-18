@@ -109,7 +109,7 @@ class SsoSettingsSetServiceTest extends SsoTestCase
             Configure::read('passbolt.gpg.serverKey.passphrase')
         );
         $decryptedData = json_decode($gpg->decrypt($ssoSettingEntity->data), true);
-        $this->assertEquals($data['data'], $decryptedData);
+        $this->assertEquals(json_decode(json_encode($data['data']), true), $decryptedData);
     }
 
     /**
