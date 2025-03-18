@@ -50,7 +50,7 @@ class SetupCompleteServiceTest extends AppTestCase
 
         (new SetupCompleteService($request))->complete($user->id);
 
-        $updatedUser = UserFactory::get($user->id, ['contain' => ['Gpgkeys']]);
+        $updatedUser = UserFactory::get($user->id, contain: ['Gpgkeys']);
         $this->assertTrue($updatedUser->active);
         $this->assertSame($key, $updatedUser->gpgkey->armored_key);
 

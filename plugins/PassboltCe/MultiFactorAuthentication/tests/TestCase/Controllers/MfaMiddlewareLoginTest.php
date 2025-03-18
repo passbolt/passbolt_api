@@ -57,7 +57,7 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
     public function testMfaMiddlewareLoginSuccess200()
     {
         $adaId = 'f848277c-5398-58f8-a82a-72397af2d450';
-        $user = UserFactory::get($adaId, ['contain' => 'Roles']);
+        $user = UserFactory::get($adaId, contain: 'Roles');
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $this->gpgSetup();
         $this->postJson('/auth/login.json', [
