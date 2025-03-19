@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Controller\RotateKey;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyFoldersUpdateService;
 
@@ -26,6 +27,8 @@ use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyFoldersUpdateService;
  */
 class MetadataRotateKeyFoldersPostController extends AppController
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */

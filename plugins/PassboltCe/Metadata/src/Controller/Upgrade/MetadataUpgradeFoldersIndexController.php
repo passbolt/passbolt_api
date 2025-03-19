@@ -18,10 +18,13 @@ namespace Passbolt\Metadata\Controller\Upgrade;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 
 class MetadataUpgradeFoldersIndexController extends AppController
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
