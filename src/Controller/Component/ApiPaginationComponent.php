@@ -33,6 +33,12 @@ class ApiPaginationComponent extends BaseApiComponent
             'limit',
             'page',
         ],
+        'aliases' => [
+            'currentPage' => 'page',
+            'pageCount' => 'pages',
+            'count' => 'current',
+            'totalCount' => 'count',
+        ],
     ];
 
     /**

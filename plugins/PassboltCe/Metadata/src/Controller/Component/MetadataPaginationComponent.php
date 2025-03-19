@@ -16,13 +16,16 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Controller\Component;
 
+use App\Controller\Component\ApiPaginationComponent;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 
 /**
  * MetadataPagination component
+ * @property ApiPaginationComponent $ApiPagination
  */
 class MetadataPaginationComponent extends Component
 {
@@ -39,6 +42,11 @@ class MetadataPaginationComponent extends Component
     ];
 
     /**
+     * @var array|string[]
+     */
+    protected array $components = ['ApiPagination'];
+
+    /**
      * Overwrites pagination limit with the one defined in configuration
      * Unsets in the query the limit and page options
      *
@@ -48,10 +56,21 @@ class MetadataPaginationComponent extends Component
      */
     public function initialize(array $config): void
     {
-        $this->getController()->loadComponent('ApiPagination', $config);
-        $this->getController()->paginate['order'] = $config['order'] ?? [];
-        $this->getController()->paginate['limit'] = $config['limit'] ?? [];
+        parent::initialize($config);
+
+        $this->ApiPagination->initialize($config);
+
+        $this->getController()->setPaginateValue('order', $config['order'] ?? []);
+        $this->getController()->setPaginateValue('limit', $config['limit'] ?? []);
         $this->modifyPaginationOptionsInRequest();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function beforeRender(Event $event): void
+    {
+        $this->ApiPagination->beforeRender($event);
     }
 
     /**

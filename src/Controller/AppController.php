@@ -21,6 +21,9 @@ use App\Utility\UserAction;
 use App\View\AjaxView;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Datasource\Paging\PaginatedInterface;
+use Cake\Datasource\QueryInterface;
+use Cake\Datasource\RepositoryInterface;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -210,5 +213,21 @@ class AppController extends Controller
         if (!is_array($data) || !count($data)) {
             throw new BadRequestException(__('The request data can not be empty.'));
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function paginate(
+        RepositoryInterface|QueryInterface|string|null $object = null,
+        array $settings = []
+    ): PaginatedInterface {
+        $paginatedResults = parent::paginate($object, $settings);
+
+        // Cake4 way of working with paging parameters
+        $paging = [$paginatedResults->pagingParam('alias') => $paginatedResults->pagingParams()];
+        $this->setRequest($this->request->withAttribute('paging', $paging));
+
+        return $paginatedResults;
     }
 }

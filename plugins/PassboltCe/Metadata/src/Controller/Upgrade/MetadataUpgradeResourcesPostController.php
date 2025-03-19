@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Controller\Upgrade;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeResourcesUpdateService;
 
@@ -26,6 +27,8 @@ use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeResourcesUpdateService;
  */
 class MetadataUpgradeResourcesPostController extends AppController
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * @var \App\Model\Table\ResourcesTable
      */
