@@ -22,6 +22,7 @@ use App\Service\Resources\ResourcesAddService;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
+use Cake\Chronos\Chronos;
 use Cake\Chronos\ChronosInterface;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
@@ -82,7 +83,7 @@ class PasswordExpiryResourcesAddServiceTest extends AppTestCase
             if (empty($expired)) {
                 $this->assertNull($resource->expired);
             } else {
-                $this->assertInstanceOf(ChronosInterface::class, $resource->get('expired'));
+                $this->assertInstanceOf(Chronos::class, $resource->get('expired'));
             }
         }
         $this->assertSame(count($valuesParsable), ResourceFactory::count());
