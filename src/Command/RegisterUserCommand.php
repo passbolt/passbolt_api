@@ -36,7 +36,7 @@ class RegisterUserCommand extends PassboltCommand
     /**
      * Number of interaction with the console.
      */
-    public const DEFAULT_INTERACTIVE_LOOP = 3;
+    public const DEFAULT_INTERACTIVE_LOOP = '3';
 
     /**
      * @var \App\Model\Table\UsersTable

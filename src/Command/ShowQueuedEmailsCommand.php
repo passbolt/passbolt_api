@@ -43,7 +43,7 @@ class ShowQueuedEmailsCommand extends PassboltCommand
         $parser->addOption('limit', [
             'short' => 'l',
             'help' => __('Number of records to show.'),
-            'default' => 15,
+            'default' => '15',
         ]);
 
         $parser->addOption('failed', [

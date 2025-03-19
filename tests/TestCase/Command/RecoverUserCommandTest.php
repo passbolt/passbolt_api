@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -62,7 +63,7 @@ class RecoverUserCommandTest extends TestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
             ->active()
-            ->created(\Cake\I18n\Date::parse('tomorrow - ' . $expirationDate))
+            ->created(DateTime::parse('tomorrow - ' . $expirationDate))
             ->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
         $this->assertExitSuccess();
@@ -124,7 +125,7 @@ class RecoverUserCommandTest extends TestCase
             ->type(AuthenticationToken::TYPE_RECOVER)
             ->userId($user->id)
             ->active()
-            ->created(\Cake\I18n\Date::now()->subDays(100))
+            ->created(DateTime::now()->subDays(100))
             ->persist();
         $this->exec('passbolt recover_user -u ' . $user->username);
         $this->assertExitError();
