@@ -66,12 +66,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/ishanvyas22/cakephp-api-pagination.git",
-                "reference": "71965256ce55569dfa93b06fcb6851f6bab3adca"
+                "reference": "bbf48a2e5a7c496f980007334be0eaa144a855b9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ishanvyas22/cakephp-api-pagination/zipball/71965256ce55569dfa93b06fcb6851f6bab3adca",
-                "reference": "71965256ce55569dfa93b06fcb6851f6bab3adca",
+                "url": "https://api.github.com/repos/ishanvyas22/cakephp-api-pagination/zipball/bbf48a2e5a7c496f980007334be0eaa144a855b9",
+                "reference": "bbf48a2e5a7c496f980007334be0eaa144a855b9",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
                 "cakephp5",
                 "pagination"
             ],
-            "time": "2025-03-06T06:39:53+00:00"
+            "time": "2025-03-19T10:07:11+00:00"
         },
         {
             "name": "beberlei/assert",
