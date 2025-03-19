@@ -121,9 +121,7 @@ class PassboltCommand extends Command implements PassboltCommandInterface
                 $help = $commandFQN::getCommandDescription();
             } elseif (is_a($commandFQN, BaseCommand::class, true)) {
                 /** @var \Cake\Console\BaseCommand $command */
-                $command = new $commandFQN();
-                $parser = $command->getOptionParser();
-                $help = $parser->getDescription();
+                $help = (new $commandFQN())->getOptionParser()->getDescription();
             } else {
                 continue;
             }
