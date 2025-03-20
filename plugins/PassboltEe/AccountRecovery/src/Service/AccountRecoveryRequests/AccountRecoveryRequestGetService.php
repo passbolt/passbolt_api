@@ -81,7 +81,7 @@ class AccountRecoveryRequestGetService
     public function __construct()
     {
         /** @phpstan-ignore-next-line */
-        $this->AuthenticationTokens = $this->fetchTable('Users');
+        $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
         /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
         /** @phpstan-ignore-next-line */

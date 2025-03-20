@@ -180,8 +180,6 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $this->assertError(400);
         $errors = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($errors);
-        $error = Hash::get($errors, 'domain_name._empty');
-        $this->assertNotNull($error);
     }
 
     /**

@@ -37,9 +37,9 @@ class UserEntry extends DirectoryEntry
     /**
      * Object type (user).
      *
-     * @var string
+     * @var string|null
      */
-    public string $type = DirectoryInterface::ENTRY_TYPE_USER;
+    public ?string $type = DirectoryInterface::ENTRY_TYPE_USER;
 
     /**
      * @var int|null

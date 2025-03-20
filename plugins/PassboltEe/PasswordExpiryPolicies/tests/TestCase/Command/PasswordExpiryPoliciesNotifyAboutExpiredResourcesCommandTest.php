@@ -35,21 +35,11 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
     use EmailQueueTrait;
 
     /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        $this->markTestSkipped();
-        parent::setUp();
-    }
-
-    /**
      * Basic help test
      */
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandHelp()
     {
+        $this->markTestSkipped();
         $mock = $this
             ->getMockBuilder(PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService::class)
             ->disableOriginalConstructor()
@@ -69,6 +59,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
      */
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand_No_Settings()
     {
+        $this->markTestSkipped();
         $this->exec('passbolt notify_about_expired_resources');
         $this->assertExitSuccess();
         $this->assertOutputContains('Password expiry is not activated.');
@@ -79,6 +70,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
      */
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand_Notify_Users_Of_Password_Expiring_In_The_Future_Or_Expired()
     {
+        $this->markTestSkipped();
         $nDays = rand(2, 100);
         PasswordExpiryPoliciesSettingFactory::make()
             ->setField('value.expiry_notification', $nDays) // Notify about passwords expiring in N days

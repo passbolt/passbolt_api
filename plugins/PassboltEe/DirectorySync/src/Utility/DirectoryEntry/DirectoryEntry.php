@@ -29,16 +29,16 @@ abstract class DirectoryEntry implements ArrayAccess
     /**
      * id
      *
-     * @var string
+     * @var string|null
      */
-    public string $id;
+    public ?string $id = null;
 
     /**
      * DN (directory name)
      *
-     * @var string
+     * @var string|null
      */
-    public string $dn;
+    public ?string $dn = null;
 
     /**
      * created date.

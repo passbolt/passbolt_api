@@ -95,11 +95,11 @@ class SubscriptionKeyDtoForm extends Form
     /**
      * Check if a subscription key details is within the range of users allowed.
      *
-     * @param string $value The subscription key details
+     * @param string|int $value The subscription key details
      * @param array|null $context not in use
      * @return bool
      */
-    public function checkUsersLimitIsInRange(string $value, ?array $context = null): bool
+    public function checkUsersLimitIsInRange(string|int $value, ?array $context = null): bool
     {
         try {
             /** @var \App\Model\Table\UsersTable $Users */

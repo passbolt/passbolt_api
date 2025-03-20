@@ -201,9 +201,9 @@ class DirectoryOrgSettings
      * Retrieve custom object path.
      *
      * @param string $objectType The type of object to retrieve the path for
-     * @return string
+     * @return string|null
      */
-    public function getObjectPath(string $objectType): string
+    public function getObjectPath(string $objectType): ?string
     {
         return Hash::get($this->settings, "{$objectType}Path");
     }
@@ -231,9 +231,9 @@ class DirectoryOrgSettings
     /**
      * Get the default parent group for users.
      *
-     * @return string
+     * @return string|null
      */
-    public function getUsersParentGroup(): string
+    public function getUsersParentGroup(): ?string
     {
         return Hash::get($this->settings, 'usersParentGroup');
     }
@@ -241,9 +241,9 @@ class DirectoryOrgSettings
     /**
      * Get the default parent group for groups.
      *
-     * @return string
+     * @return string|null
      */
-    public function getGroupsParentGroup(): string
+    public function getGroupsParentGroup(): ?string
     {
         return Hash::get($this->settings, 'groupsParentGroup');
     }
@@ -291,9 +291,9 @@ class DirectoryOrgSettings
     /**
      * Get the ldap configuration
      *
-     * @return array
+     * @return array|null
      */
-    public function getLdapSettings(): array
+    public function getLdapSettings(): ?array
     {
         $ldapSettings = Hash::get($this->settings, 'ldap.domains');
 

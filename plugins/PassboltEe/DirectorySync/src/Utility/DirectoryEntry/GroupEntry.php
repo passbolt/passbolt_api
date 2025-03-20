@@ -43,9 +43,9 @@ class GroupEntry extends DirectoryEntry
     /**
      * Type of object (group).
      *
-     * @var string
+     * @var string|null
      */
-    public string $type = DirectoryInterface::ENTRY_TYPE_GROUP;
+    public ?string $type = DirectoryInterface::ENTRY_TYPE_GROUP;
 
     /**
      * Build a groupEntry from a ldap object.

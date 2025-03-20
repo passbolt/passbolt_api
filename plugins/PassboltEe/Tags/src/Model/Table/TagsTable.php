@@ -203,23 +203,24 @@ class TagsTable extends Table
      * @param \Cake\Datasource\EntityInterface $entity Entity object.
      * @param \ArrayObject $options Options array.
      * @param string $operation Create/update operation.
-     * @return true|void Return result when event is stopped, void otherwise.
+     * @return bool Return result when event is stopped, void otherwise.
      */
     public function beforeRules(
         EventInterface $event,
         EntityInterface $entity,
         ArrayObject $options,
         string $operation
-    ): ?bool {
+    ): bool {
         $dto = MetadataTagDto::fromArray($entity->toArray());
 
-        if (!$dto->isV5()) {
+        if ($dto->isV5()) {
             // This is little hack to not call `buildRulesV5` rules,
             // Because these are saved as belongsToMany association along with resources, it tries to call build rules even for V4 tags.
             $event->stopPropagation();
-
-            return true;
+            $event->setResult(true);
         }
+
+        return true;
     }
 
     /**

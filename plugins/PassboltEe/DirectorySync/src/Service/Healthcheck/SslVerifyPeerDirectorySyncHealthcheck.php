@@ -91,7 +91,7 @@ class SslVerifyPeerDirectorySyncHealthcheck implements HealthcheckServiceInterfa
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Disabling the ssl verify check can lead to security attacks.'),

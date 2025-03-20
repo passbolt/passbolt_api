@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Model\Dto;
 
-use Cake\Chronos\ChronosInterface;
+use Cake\Chronos\Chronos;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 
@@ -42,9 +42,9 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
     public string $client_secret;
 
     /**
-     * @var \Cake\Chronos\ChronosInterface|string
+     * @var \Cake\Chronos\Chronos|string
      */
-    public string|ChronosInterface $client_secret_expiry;
+    public string|Chronos $client_secret_expiry;
 
     /**
      * @var string $tenant_id

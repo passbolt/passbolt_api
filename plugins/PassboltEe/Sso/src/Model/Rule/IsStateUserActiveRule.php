@@ -26,7 +26,7 @@ class IsStateUserActiveRule extends IsActiveRule
     /**
      * @inheritDoc
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
         // Do not apply rule for sso_recover
         if ($entity->get('type') === SsoState::TYPE_SSO_RECOVER) {

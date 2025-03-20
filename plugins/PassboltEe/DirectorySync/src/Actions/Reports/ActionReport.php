@@ -243,10 +243,10 @@ class ActionReport
     /**
      * Is valid data
      *
-     * @param array $data data
+     * @param mixed $data data
      * @return bool
      */
-    public static function isValidData(array $data): bool
+    public static function isValidData(mixed $data): bool
     {
         return is_object($data) || is_array($data);
     }

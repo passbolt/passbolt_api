@@ -166,7 +166,7 @@ class SubscriptionKeyApplicationHealthcheck implements HealthcheckServiceInterfa
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

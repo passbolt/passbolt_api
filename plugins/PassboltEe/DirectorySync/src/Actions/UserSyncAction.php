@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Actions;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
@@ -183,7 +184,7 @@ class UserSyncAction extends SyncAction
     /**
      * @inheritDoc
      */
-    protected function deleteOrDisableEntity(Entity $entity)
+    protected function deleteOrDisableEntity(Entity $entity): bool|EntitiesChangesDto
     {
         if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
             return $this->getTable()->disableUser($entity);

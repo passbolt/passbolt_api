@@ -89,6 +89,7 @@ class AccountRecoveryContinueControllerTest extends AccountRecoveryIntegrationTe
 
     public function testAccountRecoveryContinueController_Success()
     {
+        $this->disableErrorHandlerMiddleware();
         $user = UserFactory::make()
             ->setField('id', UuidFactory::uuid('user.id.ada'))
             ->active()

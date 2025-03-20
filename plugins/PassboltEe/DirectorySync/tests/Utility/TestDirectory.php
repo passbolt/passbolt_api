@@ -58,7 +58,7 @@ class TestDirectory implements DirectoryInterface
      * @return mixed
      * @throws \Exception
      */
-    public function getGroups()
+    public function getGroups(): mixed
     {
         if (!isset($this->groups)) {
             $this->groups = $this->getGroupsFixtures();
@@ -73,7 +73,7 @@ class TestDirectory implements DirectoryInterface
      * @return mixed
      * @throws \Exception
      */
-    public function getUsers()
+    public function getUsers(): mixed
     {
         $this->getFilteredDirectoryResults();
         if (!isset($this->users)) {
@@ -91,7 +91,7 @@ class TestDirectory implements DirectoryInterface
      * @return DirectoryResults directory results
      * @throws \Exception
      */
-    public function getFilteredDirectoryResults()
+    public function getFilteredDirectoryResults(): mixed
     {
         if (!isset($this->users)) {
             $this->users = $this->getUsersFixtures();
