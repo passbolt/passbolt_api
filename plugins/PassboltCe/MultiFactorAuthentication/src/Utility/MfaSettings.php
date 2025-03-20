@@ -34,9 +34,9 @@ class MfaSettings
     public const ACCOUNT_SETTINGS = 'MfaAccountSettings';
 
     /**
-     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
+     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings|null
      */
-    protected MfaAccountSettings $accountSettings;
+    protected ?MfaAccountSettings $accountSettings = null;
 
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings

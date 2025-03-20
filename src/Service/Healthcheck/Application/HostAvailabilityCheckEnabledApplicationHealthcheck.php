@@ -85,7 +85,7 @@ class HostAvailabilityCheckEnabledApplicationHealthcheck implements HealthcheckS
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Make sure this instance is not publicly available on the internet.'),

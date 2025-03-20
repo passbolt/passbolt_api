@@ -32,7 +32,7 @@ class ResourceTypesTrimSpacesService
     public function __construct()
     {
         /** @phpstan-ignore-next-line */
-        $this->resourceTypesTable = TableRegistry::getTableLocator()->get('ResourceTypes');
+        $this->resourceTypesTable = TableRegistry::getTableLocator()->get('Passbolt/ResourceTypes.ResourceTypes');
     }
 
     /**

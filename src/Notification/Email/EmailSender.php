@@ -46,9 +46,9 @@ class EmailSender
     private string $appFullBaseUrl;
 
     /**
-     * @var string
+     * @var string|bool
      */
-    private string $purifySubject;
+    private string|bool $purifySubject;
 
     /**
      * @param \EmailQueue\Model\Table\EmailQueueTable|null $emailQueue Email Queue Table instance

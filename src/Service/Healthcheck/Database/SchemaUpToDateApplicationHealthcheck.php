@@ -119,7 +119,7 @@ class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterfac
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Run the migration scripts:'),

@@ -176,7 +176,7 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         $msg = __('See https://www.passbolt.com/help/tech/update');
         if ($this->exceptionThrown) {

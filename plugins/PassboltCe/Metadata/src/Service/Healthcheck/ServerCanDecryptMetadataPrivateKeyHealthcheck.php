@@ -145,7 +145,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

@@ -40,7 +40,7 @@ class ResourceTypeFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'ResourceTypes';
+        return 'Passbolt/ResourceTypes.ResourceTypes';
     }
 
     /**
