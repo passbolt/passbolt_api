@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Notification\Request;
 
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -44,7 +45,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * AccountRecoveryGetBadRequestAdminEmailRedactor Constructor
@@ -132,7 +133,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
             'admin' => $admin,
             'clientIp' => $clientIp,
             'requestId' => $requestId,
-            'created' => \Cake\I18n\DateTime::now(),
+            'created' => DateTime::now(),
             'subject' => $subject,
         ], 'title' => $subject,];
 

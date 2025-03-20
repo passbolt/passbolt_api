@@ -32,19 +32,19 @@ class UserEntry extends DirectoryEntry
      *
      * @var array
      */
-    public $user;
+    public array $user;
 
     /**
      * Object type (user).
      *
      * @var string
      */
-    public $type = DirectoryInterface::ENTRY_TYPE_USER;
+    public string $type = DirectoryInterface::ENTRY_TYPE_USER;
 
     /**
      * @var int|null
      */
-    public $level = null;
+    public ?int $level = null;
 
     /**
      * Build user entry from ldap object.
@@ -79,8 +79,11 @@ class UserEntry extends DirectoryEntry
      * @return \Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry user entry.
      * @throws \Exception
      */
-    public static function fromLdapObject(Entry $ldapObject, array $mappingRules, ?array $fallbackFields = null)
-    {
+    public static function fromLdapObject(
+        Entry $ldapObject,
+        array $mappingRules,
+        ?array $fallbackFields = null
+    ): UserEntry {
         $userEntry = new UserEntry([]);
         $userEntry->buildFromLdapObject($ldapObject, $mappingRules, $fallbackFields);
 

@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Notification\Request;
 
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -44,7 +45,7 @@ class AccountRecoveryRequestCreatedAdminEmailRedactor implements SubscribedEmail
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * AccountRecoveryRequestCreatedAdminEmailRedactor Constructor

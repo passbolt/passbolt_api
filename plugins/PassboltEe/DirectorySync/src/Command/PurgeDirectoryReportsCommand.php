@@ -20,8 +20,10 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Database\Expression\QueryExpression;
+use Cake\I18n\Date;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use InvalidArgumentException;
 use Passbolt\DirectorySync\Model\Entity\DirectoryReport;
 use Passbolt\DirectorySync\Model\Table\DirectoryReportsItemsTable;
 use Passbolt\DirectorySync\Model\Table\DirectoryReportsTable;
@@ -75,8 +77,8 @@ class PurgeDirectoryReportsCommand extends DirectorySyncCommand
         parent::execute($args, $io);
 
         try {
-            $beforeDate = \Cake\I18n\Date::createFromFormat('d-m-Y', $args->getOption('before'));
-        } catch (\InvalidArgumentException $e) {
+            $beforeDate = Date::createFromFormat('d-m-Y', $args->getOption('before'));
+        } catch (InvalidArgumentException $e) {
             $msg = __('Invalid before date provided.');
             $msg .= ' ' . $e->getMessage();
             $this->error($msg, $io);
@@ -103,7 +105,7 @@ class PurgeDirectoryReportsCommand extends DirectorySyncCommand
      * @param \Cake\I18n\Date $date The before date.
      * @return array
      */
-    private function getReportsToPurge(\Cake\I18n\Date $date): array
+    private function getReportsToPurge(Date $date): array
     {
         return $this->DirectoryReports
             ->find()

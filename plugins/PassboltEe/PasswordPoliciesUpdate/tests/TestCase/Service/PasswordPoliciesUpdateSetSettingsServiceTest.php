@@ -25,6 +25,7 @@ use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
+use Exception;
 use Passbolt\PasswordPolicies\Model\Dto\PassphraseGeneratorSettingsDto;
 use Passbolt\PasswordPolicies\Model\Dto\PasswordGeneratorSettingsDto;
 use Passbolt\PasswordPolicies\Model\Dto\PasswordPoliciesSettingsDto;
@@ -74,7 +75,7 @@ class PasswordPoliciesUpdateSetSettingsServiceTest extends AppTestCase
 
         try {
             $this->service->createOrUpdate($uac, []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ForbiddenException::class, $e);
             $this->assertStringContainsString('Only administrators are allowed', $e->getMessage());
         }
@@ -86,7 +87,7 @@ class PasswordPoliciesUpdateSetSettingsServiceTest extends AppTestCase
 
         try {
             $this->service->createOrUpdate($uac, []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ForbiddenException::class, $e);
             $this->assertStringContainsString('Only administrators are allowed', $e->getMessage());
         }

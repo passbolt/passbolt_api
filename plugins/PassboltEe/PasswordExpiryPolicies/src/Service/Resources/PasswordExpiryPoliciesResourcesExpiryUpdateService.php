@@ -91,7 +91,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
             if (array_key_exists($resourceId, $dataSanitized)) {
                 throw new BadRequestException(__('The identifier should be unique: {0}.', $resourceId));
             }
-            $dataSanitized[$resourceId] = is_null($expiryDate) ? $expiryDate : new \Cake\I18n\DateTime($expiryDate);
+            $dataSanitized[$resourceId] = is_null($expiryDate) ? $expiryDate : new DateTime($expiryDate);
         }
         if (empty($dataSanitized)) {
             throw new BadRequestException(__('The data should not be empty.'));
@@ -106,7 +106,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the user does not have update rights on one of the resources
      */
-    protected function validateUacPermissions(UserAccessControl $uac, array $resourceIds)
+    protected function validateUacPermissions(UserAccessControl $uac, array $resourceIds): void
     {
         /** @var \App\Model\Table\PermissionsTable $PermissionsTable */
         $PermissionsTable = TableRegistry::getTableLocator()->get('Permissions');

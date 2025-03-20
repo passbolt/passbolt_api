@@ -133,7 +133,7 @@ class DirectoryEntriesTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         return $rules;
     }
@@ -144,7 +144,7 @@ class DirectoryEntriesTable extends Table
      * @param array $data data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): DirectoryEntry
     {
         return $this->newEntity($data, [
             'accessibleFields' => [
@@ -165,7 +165,7 @@ class DirectoryEntriesTable extends Table
      * @param string $foreignKey uuid
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|bool
      */
-    public function updateForeignKey(DirectoryEntry $entity, ?string $foreignKey = null)
+    public function updateForeignKey(DirectoryEntry $entity, ?string $foreignKey = null): DirectoryEntry|bool
     {
         $entity->foreign_key = $foreignKey;
 
@@ -179,7 +179,7 @@ class DirectoryEntriesTable extends Table
      * @param string $directoryName DN or equivalent
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|bool
      */
-    public function updateDirectoryName(DirectoryEntry $entity, ?string $directoryName = null)
+    public function updateDirectoryName(DirectoryEntry $entity, ?string $directoryName = null): DirectoryEntry|bool
     {
         $entity = $this->get($entity->id);
         $this->patchEntity($entity, ['directory_name' => $directoryName], [
@@ -201,7 +201,7 @@ class DirectoryEntriesTable extends Table
      * @param array $data data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry
      */
-    public function buildEntityFromData(array $data)
+    public function buildEntityFromData(array $data): DirectoryEntry
     {
         if (strlen($data['directory_name']) > self::DN_MAX_LENGTH) {
             $data['directory_name'] = substr($data['directory_name'], 0, self::DN_MAX_LENGTH - 1);
@@ -216,9 +216,9 @@ class DirectoryEntriesTable extends Table
      * Create a new directory entry.
      *
      * @param array $data data
-     * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryEntry
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|bool
      */
-    public function create(array $data)
+    public function create(array $data): bool|DirectoryEntry
     {
         // Check validation rules.
         $directoryEntry = $this->buildEntityFromData($data);
@@ -247,9 +247,9 @@ class DirectoryEntriesTable extends Table
      *
      * @param array $data data
      * @param string $model model
-     * @return array|bool|\Passbolt\DirectorySync\Model\Entity\DirectoryEntry
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|array|bool
      */
-    public function updateOrCreate(array $data, string $model)
+    public function updateOrCreate(array $data, string $model): array|bool|DirectoryEntry
     {
         try {
             $entry = $this->get($data['id'], contain: [$model]);
@@ -278,7 +278,7 @@ class DirectoryEntriesTable extends Table
      * @param ?array $directoryIds directory ids list
      * @return mixed
      */
-    public function lookupEntriesForDeletion(string $model, ?array $directoryIds = null)
+    public function lookupEntriesForDeletion(string $model, ?array $directoryIds = null): mixed
     {
         $query = $this->find()
             ->select()

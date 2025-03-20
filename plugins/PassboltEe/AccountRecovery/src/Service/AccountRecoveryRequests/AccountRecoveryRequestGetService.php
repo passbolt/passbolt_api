@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryRequests;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\UsersTable;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\Users\UserGetService;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -29,6 +31,9 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryResponsesTable;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\AccountRecoveryUserSettingsGetService;
 
@@ -48,27 +53,27 @@ class AccountRecoveryRequestGetService
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable
      */
-    protected $AccountRecoveryRequests;
+    protected AccountRecoveryRequestsTable $AccountRecoveryRequests;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable
      */
-    protected $AccountRecoveryPrivateKeys;
+    protected AccountRecoveryPrivateKeysTable $AccountRecoveryPrivateKeys;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryResponsesTable
      */
-    protected $AccountRecoveryResponses;
+    protected AccountRecoveryResponsesTable $AccountRecoveryResponses;
 
     /**
      * AccountRecoveryRequestGetService constructor.

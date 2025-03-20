@@ -661,7 +661,7 @@ class UserSyncActionAddTest extends DirectorySyncDeprecatedIntegrationTestCase
      */
     public function testDirectorySyncUserAdd_Case29c_Valid_Ignore_Null()
     {
-        $data = $this->mockDirectoryUserData('neil', 'armstrong', 'neil@passbolt.com');
+        $this->mockDirectoryUserData('neil', 'armstrong', 'neil@passbolt.com');
         $this->mockDirectoryEntryUser(['fname' => 'neil']);
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.user.id.neil'), Alias::MODEL_DIRECTORY_ENTRIES);
         $reports = $this->action->execute();
@@ -963,7 +963,7 @@ class UserSyncActionAddTest extends DirectorySyncDeprecatedIntegrationTestCase
      */
     public function testDirectorySyncUserAdd_Case38_Invalid_Error_Active()
     {
-        $data = $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', '2018-07-07 03:56:42', '2018-07-07 03:56:42');
+        $this->mockDirectoryUserData('ada', null, 'ada@passbolt.com', '2018-07-07 03:56:42', '2018-07-07 03:56:42');
         $this->mockOrphanDirectoryEntryUser(['fname' => 'ada']);
         $reports = $this->action->execute();
         $this->assertReportNotEmpty($reports);

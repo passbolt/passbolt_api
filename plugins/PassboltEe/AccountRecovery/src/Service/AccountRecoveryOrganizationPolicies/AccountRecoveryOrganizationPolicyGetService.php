@@ -24,6 +24,7 @@ use Cake\Http\ServerRequest;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable;
 
 /**
  * Class AccountRecoveryOrganizationPolicyGetService
@@ -35,12 +36,12 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
     /**
      * @var \Cake\Http\ServerRequest
      */
-    protected $request;
+    protected ServerRequest $request;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable
      */
-    protected $AccountRecoveryOrganizationPolicies;
+    protected AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicies;
 
     /**
      * AccountRecoveryOrganizationPolicyGetService constructor.

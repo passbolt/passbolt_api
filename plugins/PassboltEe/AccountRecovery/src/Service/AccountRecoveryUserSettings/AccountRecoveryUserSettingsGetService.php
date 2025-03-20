@@ -22,6 +22,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable;
 
 /**
  * Class AccountRecoveryUserSettingsGetService
@@ -33,7 +34,7 @@ class AccountRecoveryUserSettingsGetService
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable
      */
-    protected $AccountRecoveryUserSettings;
+    protected AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings;
 
     /**
      * @return void

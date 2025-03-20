@@ -23,6 +23,8 @@ use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\DirectorySync\Service\DirectorySettings\FixDirectorySyncLegacyFieldsMappingService;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
+use Throwable;
+use UnexpectedValueException;
 
 /**
  * @covers \Passbolt\DirectorySync\Service\DirectorySettings\FixDirectorySyncLegacyFieldsMappingService
@@ -115,10 +117,10 @@ class FixDirectorySyncLegacyFieldsMappingServiceTest extends AppTestCase
 
         try {
             $this->service->fix();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
-        $this->assertInstanceOf(\UnexpectedValueException::class, $th);
+        $this->assertInstanceOf(UnexpectedValueException::class, $th);
         $this->assertTextContains('Customized v3 directory sync settings fields mapping are not supported:', $th->getMessage());
     }
 

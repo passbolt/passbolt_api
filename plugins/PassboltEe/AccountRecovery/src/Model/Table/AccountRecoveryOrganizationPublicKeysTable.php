@@ -207,7 +207,7 @@ class AccountRecoveryOrganizationPublicKeysTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options): void
     {
         if (isset($data['fingerprint']) && is_string($data['fingerprint'])) {
             $data['fingerprint'] = strtoupper(str_replace(' ', '', $data['fingerprint']));

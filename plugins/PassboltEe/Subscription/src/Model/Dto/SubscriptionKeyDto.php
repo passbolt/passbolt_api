@@ -23,37 +23,37 @@ class SubscriptionKeyDto
     /**
      * @var string $customerId customer uuid
      */
-    public $customerId;
+    public string $customerId;
 
     /**
      * @var string $subscriptionId subscription uuid
      */
-    public $subscriptionId;
+    public string $subscriptionId;
 
     /**
      * @var int $users number of user the subscription is valid for
      */
-    public $users;
+    public int $users;
 
     /**
      * @var string $email the subscription contact email
      */
-    public $email;
+    public string $email;
 
     /**
-     * @var Date $expiry the subscription expiry date
+     * @var \Cake\I18n\Date $expiry the subscription expiry date
      */
-    public $expiry;
+    public Date $expiry;
 
     /**
-     * @var Date $created the subscription creation date
+     * @var \Cake\I18n\Date $created the subscription creation date
      */
-    public $created;
+    public Date $created;
 
     /**
      * @var string $data Base64 encoded subscription, the original subscription key
      */
-    public $data;
+    public string $data;
 
     /**
      * SubscriptionKeyDto constructor.
@@ -63,8 +63,8 @@ class SubscriptionKeyDto
      * @param string $subscriptionId subscription id as provided on invoice
      * @param int $users number of users
      * @param string $email email linked to the subscription in the billing system
-     * @param Date $expiry expiry date
-     * @param Date $created creation date
+     * @param \Cake\I18n\Date $expiry expiry date
+     * @param \Cake\I18n\Date $created creation date
      */
     final public function __construct(
         string $data,
@@ -87,7 +87,7 @@ class SubscriptionKeyDto
     /**
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'customer_id' => $this->customerId,
@@ -102,9 +102,9 @@ class SubscriptionKeyDto
 
     /**
      * @param array $key subscription key data
-     * @return \Passbolt\Subscription\Model\Dto\SubscriptionKeyDto
+     * @return self
      */
-    public static function createFromArray(array $key)
+    public static function createFromArray(array $key): SubscriptionKeyDto
     {
         return new static(
             $key['data'] ?? '',

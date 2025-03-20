@@ -30,6 +30,7 @@ use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validation;
+use Exception;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Actions\Reports\ActionReportCollection;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
@@ -38,10 +39,12 @@ use Passbolt\DirectorySync\Model\Table\DirectoryEntriesTable;
 use Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable;
 use Passbolt\DirectorySync\Model\Table\DirectoryRelationsTable;
 use Passbolt\DirectorySync\Model\Table\DirectoryReportsTable;
+use Passbolt\DirectorySync\Test\Utility\TestDirectory;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
+use Passbolt\DirectorySync\Utility\LdapDirectory;
 use Passbolt\DirectorySync\Utility\SyncError;
 
 /**
@@ -55,19 +58,19 @@ abstract class SyncAction
 
     private ?string $parentId;
     /**
-     * @var array|\Cake\Datasource\EntityInterface|mixed|null
+     * @var \Cake\Datasource\EntityInterface|mixed|array|null
      */
-    protected $defaultAdmin;
+    protected mixed $defaultAdmin = null;
 
     protected DirectoryOrgSettings $directoryOrgSettings;
     /**
      * @var \Passbolt\DirectorySync\Test\Utility\TestDirectory|\Passbolt\DirectorySync\Utility\LdapDirectory
      */
-    private $directory;
+    private TestDirectory|LdapDirectory $directory;
     /**
-     * @var array|mixed
+     * @var mixed|array
      */
-    protected $directoryData;
+    protected mixed $directoryData;
 
     private bool $dryRun = false;
 
@@ -94,16 +97,16 @@ abstract class SyncAction
     /**
      * Store entities (users or groups) to ignore.
      *
-     * @var array|mixed
+     * @var mixed|array
      */
-    private $entitiesToIgnore;
+    private mixed $entitiesToIgnore;
 
     /**
      * Store directoryEntries to ignore.
      *
-     * @var array|mixed
+     * @var mixed|array
      */
-    private $entriesToIgnore;
+    private mixed $entriesToIgnore;
 
     /**
      * Get the entity type being synchronized, Users or Groups
@@ -189,10 +192,10 @@ abstract class SyncAction
         $this->summary = new ActionReportCollection();
         $this->defaultAdmin = $this->getDefaultAdmin();
         if (empty($this->defaultAdmin)) {
-            throw new \Exception('Configuration issue. A default admin user cannot be found.');
+            throw new Exception('Configuration issue. A default admin user cannot be found.');
         }
         if (isset($parentId) && !Validation::uuid($parentId)) {
-            throw new \Exception('The parent task identifier should be a valid UUID.');
+            throw new Exception('The parent task identifier should be a valid UUID.');
         }
         $this->parentId = $parentId;
     }
@@ -210,7 +213,7 @@ abstract class SyncAction
         if ($this->isDryRun()) {
             $conn = $this->Users->getConnection();
             $conn->begin();
-            $conn->transactional(function () {
+            $conn->transactional(function (): void {
                 $this->_execute();
             });
             $conn->rollback();
@@ -267,14 +270,14 @@ abstract class SyncAction
      *
      * @return void
      */
-    private function formatDirectoryData()
+    private function formatDirectoryData(): void
     {
         foreach ($this->directoryData as $key => $data) {
-            if (get_class($data['directory_created']) !== \Cake\I18n\DateTime::class) {
-                $this->directoryData[$key]['directory_created'] = new \Cake\I18n\DateTime($data['directory_created']);
+            if (get_class($data['directory_created']) !== DateTime::class) {
+                $this->directoryData[$key]['directory_created'] = new DateTime($data['directory_created']);
             }
-            if (get_class($data['directory_modified']) !== \Cake\I18n\DateTime::class) {
-                $this->directoryData[$key]['directory_modified'] = new \Cake\I18n\DateTime($data['directory_modified']);
+            if (get_class($data['directory_modified']) !== DateTime::class) {
+                $this->directoryData[$key]['directory_modified'] = new DateTime($data['directory_modified']);
             }
         }
     }
@@ -342,7 +345,7 @@ abstract class SyncAction
      * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return void
      */
-    private function handleDeletedIgnoredEntity(DirectoryEntry $entry)
+    private function handleDeletedIgnoredEntity(DirectoryEntry $entry): void
     {
         $entity = $entry->getAssociatedEntity();
         $this->DirectoryEntries->delete($entry);
@@ -430,7 +433,7 @@ abstract class SyncAction
      * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry $entry entry
      * @return void
      */
-    private function handleNotPossibleDelete(DirectoryEntry $entry)
+    private function handleNotPossibleDelete(DirectoryEntry $entry): void
     {
         $entity = $entry->getAssociatedEntity();
         $errors = $entity->getErrors();
@@ -492,7 +495,7 @@ abstract class SyncAction
      * @param \Cake\Http\Exception\InternalErrorException $exception exception
      * @return void
      */
-    private function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception)
+    private function handleInternalErrorDelete(DirectoryEntry $entry, InternalErrorException $exception): void
     {
         $entity = $entry->getAssociatedEntity();
         if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
@@ -523,7 +526,7 @@ abstract class SyncAction
      *
      * @return void
      */
-    private function processEntriesToCreate()
+    private function processEntriesToCreate(): void
     {
         $isSyncOperationOnCreateEnabled = $this->directoryOrgSettings
             ->isSyncOperationEnabled($this->getEntityType(), 'create');
@@ -692,7 +695,7 @@ abstract class SyncAction
             // Case when entity was suspended because it was deleted in ldap previously, now it is created again with same DN in ldap so we enable (un-suspend) it
             $this->getTable()->updateAll([
                 'disabled' => null,
-                'modified' => \Cake\I18n\DateTime::now(),
+                'modified' => DateTime::now(),
             ], ['id' => $existingEntity->id]);
             $this->DirectoryEntries->updateForeignKey($entry, $existingEntity->id);
             $reportData = $this->getTable()->get($existingEntity->id);
@@ -744,7 +747,7 @@ abstract class SyncAction
      * @param \App\Model\Entity\User|\App\Model\Entity\Group $existingEntity (User or Group)
      * @return void
      */
-    private function handleAddExist(array $data, ?DirectoryEntry $entry, Entity $existingEntity)
+    private function handleAddExist(array $data, ?DirectoryEntry $entry, Entity $existingEntity): void
     {
         // Do not overly report already successfully synced entities
         if (isset($entry) && !isset($entry->foreign_key)) {
@@ -770,7 +773,7 @@ abstract class SyncAction
                     $this->getSingularLoweredEntityType(),
                     $this->getEntityName($existingEntity)
                 );
-                $reportData = new SyncError($entry, new \Exception($msg));
+                $reportData = new SyncError($entry, new Exception($msg));
                 $this->addReportItem(new ActionReport(
                     $msg,
                     $this->getEntityType(),
@@ -847,9 +850,9 @@ abstract class SyncAction
     /**
      * Get default admin.
      *
-     * @return array|\Cake\Datasource\EntityInterface|mixed|null
+     * @return \Cake\Datasource\EntityInterface|mixed|array|null
      */
-    private function getDefaultAdmin()
+    private function getDefaultAdmin(): mixed
     {
         $defaultUser = $this->directoryOrgSettings->getDefaultUser();
         if (!empty($defaultUser)) {
@@ -943,7 +946,7 @@ abstract class SyncAction
      * @param \App\Model\Entity\Group|\App\Model\Entity\User $entity group or user to delete or disable
      * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      */
-    protected function deleteOrDisableEntity(Entity $entity)
+    protected function deleteOrDisableEntity(Entity $entity): EntitiesChangesDto|bool
     {
         return $this->getTable()->softDelete($entity);
     }

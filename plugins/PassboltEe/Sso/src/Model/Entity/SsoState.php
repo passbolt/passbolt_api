@@ -117,7 +117,7 @@ class SsoState extends Entity
     /**
      * @return \Cake\I18n\DateTime
      */
-    public function getExpiryTime(): \Cake\I18n\DateTime
+    public function getExpiryTime(): DateTime
     {
         return $this->deleted;
     }

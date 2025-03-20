@@ -18,7 +18,7 @@ use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/DirectorySync', ['path' => '/directorysync'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
     $routes->registerMiddleware(
         DirectorySyncEndpointsSecurityMiddleware::class,

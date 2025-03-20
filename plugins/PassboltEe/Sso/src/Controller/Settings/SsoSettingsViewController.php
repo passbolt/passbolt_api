@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Exception;
 use Passbolt\Sso\Service\SsoSettings\SsoSettingsGetService;
 
 class SsoSettingsViewController extends AppController
@@ -39,7 +40,7 @@ class SsoSettingsViewController extends AppController
 
         try {
             $serviceSettingsDto = (new SsoSettingsGetService())->getByIdOrFail($id);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new NotFoundException(__('The SSO setting does not exist.'), 404, $exception);
         }
 

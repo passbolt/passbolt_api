@@ -18,10 +18,17 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryUserDelete;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
+use Cake\Http\ServerRequest;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable;
 
 /**
  * Class AccountRecoveryUserDeleteService
@@ -33,32 +40,32 @@ class AccountRecoveryUserDeleteService
     /**
      * @var \Cake\Http\ServerRequest
      */
-    protected $request;
+    protected ServerRequest $request;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable
      */
-    protected $AccountRecoveryPrivateKeys;
+    protected AccountRecoveryPrivateKeysTable $AccountRecoveryPrivateKeys;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable
      */
-    protected $AccountRecoveryPrivateKeyPasswords;
+    protected AccountRecoveryPrivateKeyPasswordsTable $AccountRecoveryPrivateKeyPasswords;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable
      */
-    protected $AccountRecoveryRequests;
+    protected AccountRecoveryRequestsTable $AccountRecoveryRequests;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable
      */
-    protected $AccountRecoveryUserSettings;
+    protected AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings;
 
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * AccountRecoveryUserDeleteService constructor.
@@ -87,7 +94,7 @@ class AccountRecoveryUserDeleteService
     public function deleteInfo(string $userId): void
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user id must be a uuid.');
+            throw new InvalidArgumentException('The user id must be a uuid.');
         }
 
         // Delete user settings

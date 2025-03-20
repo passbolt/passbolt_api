@@ -28,7 +28,7 @@ class SsoSettingsAdfsDataDto extends SsoSettingsOAuth2DataDto
     /**
      * @var string
      */
-    public $email_claim;
+    public string $email_claim;
 
     /**
      * Constructor.

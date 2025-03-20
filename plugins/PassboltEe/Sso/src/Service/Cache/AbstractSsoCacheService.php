@@ -41,7 +41,7 @@ abstract class AbstractSsoCacheService
      * @param string $key Cache key.
      * @return mixed Returns `null` if cache is empty.
      */
-    public function read(string $key)
+    public function read(string $key): mixed
     {
         if (!self::isEngineConfigured()) {
             self::configureEngine();
@@ -55,7 +55,7 @@ abstract class AbstractSsoCacheService
      * @param mixed $value Value to write to the cache - anything except a resource.
      * @return bool True if the data was successfully cached, false on failure
      */
-    public function write(string $key, $value): bool
+    public function write(string $key, mixed $value): bool
     {
         if (!self::isEngineConfigured()) {
             self::configureEngine();

@@ -24,37 +24,37 @@ class MfaPolicySettings
     /**
      * @var string|null
      */
-    public $policy;
+    public ?string $policy = null;
 
     /**
      * @var bool|null
      */
-    public $remember_me_for_a_month;
+    public ?bool $remember_me_for_a_month = null;
 
     /**
      * @var string|null
      */
-    public $id;
+    public ?string $id = null;
 
     /**
      * @var \Cake\I18n\DateTime|null
      */
-    public $created;
+    public ?DateTime $created = null;
 
     /**
      * @var string|null
      */
-    public $created_by;
+    public ?string $created_by = null;
 
     /**
      * @var \Cake\I18n\DateTime|null
      */
-    public $modified;
+    public ?DateTime $modified = null;
 
     /**
      * @var string|null
      */
-    public $modified_by;
+    public ?string $modified_by = null;
 
     /**
      * Constructor.
@@ -71,9 +71,9 @@ class MfaPolicySettings
         ?string $policy,
         ?bool $rememberMeForAMonth,
         ?string $id,
-        ?\Cake\I18n\DateTime $created,
+        ?DateTime $created,
         ?string $createdBy,
-        ?\Cake\I18n\DateTime $modified,
+        ?DateTime $modified,
         ?string $modifiedBy
     ) {
         $this->policy = $policy;

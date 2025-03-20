@@ -17,52 +17,54 @@ declare(strict_types=1);
 
 namespace Passbolt\Sso\Model\Dto;
 
+use Cake\Chronos\ChronosInterface;
+
 abstract class AbstractSsoSettingsDto implements SsoSettingsDtoInterface
 {
     /**
      * @var array SsoSetting::ALLOWED_PROVIDERS
      */
-    public $providers;
+    public array $providers;
 
     /**
      * @var string|null $provider
      */
-    public $provider;
+    public ?string $provider = null;
 
     /**
      * @var string|null $id uuid
      */
-    public $id;
+    public ?string $id = null;
 
     /**
      * @var string|null $status
      */
-    public $status;
+    public ?string $status = null;
 
     /**
      * @var \Passbolt\Sso\Model\Dto\SsoSettingsDataDtoInterface|null $data
      */
-    public $data;
+    public ?SsoSettingsDataDtoInterface $data = null;
 
     /**
      * @var \Cake\Chronos\ChronosInterface|string|null
      */
-    public $created;
+    public ChronosInterface|string|null $created = null;
 
     /**
      * @var \Cake\Chronos\ChronosInterface|string|null
      */
-    public $modified;
+    public ChronosInterface|string|null $modified = null;
 
     /**
      * @var string|null $created_by uuid
      */
-    public $created_by;
+    public ?string $created_by = null;
 
     /**
      * @var string|null $modified_by uuid
      */
-    public $modified_by;
+    public ?string $modified_by = null;
 
     /**
      * @return string|null

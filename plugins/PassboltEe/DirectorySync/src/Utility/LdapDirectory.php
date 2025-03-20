@@ -20,6 +20,8 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Utility\Hash;
+use Exception;
+use InvalidArgumentException;
 use LdapRecord\Configuration\DomainConfiguration;
 use LdapRecord\Connection;
 use LdapRecord\Container;
@@ -31,6 +33,12 @@ use LdapRecord\Query\Filter\Parser;
 use LdapRecord\Query\Filter\ParserException;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
+use RuntimeException;
+use const LDAP_OPT_X_TLS_CACERTDIR;
+use const LDAP_OPT_X_TLS_CACERTFILE;
+use const LDAP_OPT_X_TLS_HARD;
+use const LDAP_OPT_X_TLS_NEVER;
+use const LDAP_OPT_X_TLS_REQUIRE_CERT;
 
 /**
  * Directory factory class
@@ -42,32 +50,32 @@ class LdapDirectory implements DirectoryInterface
     /**
      * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
      */
-    private $directorySettings;
+    private DirectoryOrgSettings $directorySettings;
 
     /**
      * @var mixed
      */
-    private $mappingRules;
+    private mixed $mappingRules;
 
     /**
      * @var array
      */
-    private $fieldFallbacks;
+    private array $fieldFallbacks;
 
     /**
-     * @var string[]|null
+     * @var array<string>|null
      */
-    private $directoryTypes;
+    private ?array $directoryTypes = null;
 
     /**
      * @var string|null
      */
-    private $defaultDomain;
+    private ?string $defaultDomain = null;
 
     /**
      * @var \Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults
      */
-    private $directoryResults;
+    private DirectoryResults $directoryResults;
 
     /**
      * LdapDirectory constructor.
@@ -166,7 +174,7 @@ class LdapDirectory implements DirectoryInterface
                 if ($error) {
                     $errorMessage = $error->getErrorMessage();
                 }
-                throw new \RuntimeException($errorMessage, 0, $lre);
+                throw new RuntimeException($errorMessage, 0, $lre);
             }
         }
 
@@ -187,7 +195,7 @@ class LdapDirectory implements DirectoryInterface
 
         if ($configSslVerifyPeer === false) {
             // By pass verification - discouraged
-            return [\LDAP_OPT_X_TLS_REQUIRE_CERT => \LDAP_OPT_X_TLS_NEVER];
+            return [LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_NEVER];
         }
 
         $configSslCadir = Configure::read('passbolt.plugins.directorySync.security.sslCustomOptions.cadir');
@@ -211,9 +219,9 @@ class LdapDirectory implements DirectoryInterface
         }
 
         return [
-            \LDAP_OPT_X_TLS_REQUIRE_CERT => \LDAP_OPT_X_TLS_HARD,
-            \LDAP_OPT_X_TLS_CACERTDIR => $configSslCadir,
-            \LDAP_OPT_X_TLS_CACERTFILE => $configSslCafile,
+            LDAP_OPT_X_TLS_REQUIRE_CERT => LDAP_OPT_X_TLS_HARD,
+            LDAP_OPT_X_TLS_CACERTDIR => $configSslCadir,
+            LDAP_OPT_X_TLS_CACERTFILE => $configSslCafile,
         ];
     }
 
@@ -253,7 +261,7 @@ class LdapDirectory implements DirectoryInterface
                 $directoryTypeName = DirectoryInterface::TYPE_NAME_FREEIPA;
                 break;
             default:
-                throw new \InvalidArgumentException(__('Invalid directory type for domain: {0}', $domain));
+                throw new InvalidArgumentException(__('Invalid directory type for domain: {0}', $domain));
         }
 
         return $directoryTypeName;
@@ -273,7 +281,7 @@ class LdapDirectory implements DirectoryInterface
         }
 
         if (!isset($this->directoryTypes[$domain])) {
-            throw new \InvalidArgumentException(__('Directory type could not be found for domain: {0}', $domain));
+            throw new InvalidArgumentException(__('Directory type could not be found for domain: {0}', $domain));
         }
 
         return $this->directoryTypes[$domain];
@@ -289,7 +297,7 @@ class LdapDirectory implements DirectoryInterface
     {
         $type = $this->getDirectoryType();
         if (!in_array($type, LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)) {
-                throw new \Exception(__(
+                throw new Exception(__(
                     'The directory type should be one of the following: {0}.',
                     implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)
                 ));
@@ -308,7 +316,7 @@ class LdapDirectory implements DirectoryInterface
     {
         $type = $this->getDirectoryType();
         if (!in_array($type, LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)) {
-            throw new \Exception(__(
+            throw new Exception(__(
                 'The directory type should be one of the following: {0}.',
                 implode(', ', LdapConfigurationForm::SUPPORTED_DIRECTORY_TYPE)
             ));
@@ -387,7 +395,7 @@ class LdapDirectory implements DirectoryInterface
                 $filter = Parser::parse(DirectoryInterface::AD_ENABLED_USERS_FILTER);
                 $usersQuery->rawFilter(Parser::assemble($filter));
             } catch (ParserException $pe) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     'An error has occurred parsing enabledUsersOnly filter: ' . $pe->getMessage(),
                     $pe->getCode(),
                     $pe
@@ -414,7 +422,7 @@ class LdapDirectory implements DirectoryInterface
         $className = "\LdapRecord\Models\\$directoryTypeName\\" . ucfirst($entryType);
         $objectClass = $this->directorySettings->getObjectClass($entryType);
         if (!class_exists($className)) {
-            throw new \RuntimeException(__('LDAP Object class could not be found: {0}', $className));
+            throw new RuntimeException(__('LDAP Object class could not be found: {0}', $className));
         }
         /**
          * Every LdapRecord model class has default objectClasses declared.
@@ -537,7 +545,7 @@ class LdapDirectory implements DirectoryInterface
     {
         $userCustomFilter = $this->directorySettings->getUserCustomFilters();
         if (is_callable($userCustomFilter)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Using callbacks for userCustomFilter is not supported anymore. Please use LDAP search filter instead.'
             );
         } elseif (is_string($userCustomFilter)) {
@@ -545,7 +553,7 @@ class LdapDirectory implements DirectoryInterface
                 $filter = Parser::parse($userCustomFilter);
                 $query->rawFilter(Parser::assemble($filter));
             } catch (ParserException $pe) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     'An error has occurred parsing userCustomFilter: ' . $pe->getMessage()
                 );
             }
@@ -566,7 +574,7 @@ class LdapDirectory implements DirectoryInterface
     {
         $groupCustomFilter = $this->directorySettings->getGroupCustomFilters();
         if (is_callable($groupCustomFilter)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Using callbacks for groupCustomFilter is not supported anymore. Please use LDAP search filter instead.'
             );
         } elseif (is_string($groupCustomFilter)) {
@@ -574,7 +582,7 @@ class LdapDirectory implements DirectoryInterface
                 $filter = Parser::parse($groupCustomFilter);
                 $query->rawFilter(Parser::assemble($filter));
             } catch (ParserException $pe) {
-                throw new \InvalidArgumentException(
+                throw new InvalidArgumentException(
                     'An error has occurred parsing groupCustomFilter: ' . $pe->getMessage()
                 );
             }

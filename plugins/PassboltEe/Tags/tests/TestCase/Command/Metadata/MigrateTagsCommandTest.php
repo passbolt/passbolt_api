@@ -104,7 +104,7 @@ class MigrateTagsCommandTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         $personalTag = TagFactory::make(['slug' => 'special'])->isPersonalFor($resource, $ada)->persist();
         // Shared tag
-        $sharedTag = TagFactory::make(['slug' => 'marketing'])->isSharedFor($resource)->isShared()->persist();
+        TagFactory::make(['slug' => 'marketing'])->isSharedFor($resource)->isShared()->persist();
 
         $this->exec('passbolt metadata migrate_tags');
 

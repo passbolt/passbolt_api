@@ -89,7 +89,7 @@ class AzureSsoSecretExpiryNotifyRedactor implements SubscribedEmailRedactorInter
         $ssoSettings = $ssoService->getSettings()->getData();
         $secretExpiry = $ssoSettings->client_secret_expiry;
         if (is_string($secretExpiry)) {
-            $secretExpiry = new \Cake\I18n\DateTime($secretExpiry);
+            $secretExpiry = new DateTime($secretExpiry);
         }
 
         if (!$secretExpiry->isWithinNext('10 days')) {

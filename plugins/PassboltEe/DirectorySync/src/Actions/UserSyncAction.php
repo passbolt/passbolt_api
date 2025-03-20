@@ -23,6 +23,7 @@ use App\Utility\UserAccessControl;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -139,7 +140,7 @@ class UserSyncAction extends SyncAction
                     $msg = __('Could not validate user data.');
                     throw new ValidationException($msg, $user, $this->Users);
                 }
-                throw new \Exception('User could not be updated.');
+                throw new Exception('User could not be updated.');
             }
             // Send report.
             $this->addReportItem(new ActionReport(
@@ -154,7 +155,7 @@ class UserSyncAction extends SyncAction
                 Alias::STATUS_SUCCESS,
                 $user
             ));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $error = new SyncError($existingUser, $exception);
             $this->addReportItem(new ActionReport(
                 __(

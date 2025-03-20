@@ -42,7 +42,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryResponsesCreateService_Success_Approved()
     {
-        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class); // phpcs:ignore
         $uac = UserFactory::make()->admin()->active()->persistedUAC();
         $password = $this->encrypt($request->fingerprint, $request->armored_key);
         $data = [
@@ -86,7 +86,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryResponsesCreateService_SuccessRejected()
     {
-        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class); // phpcs:ignore
         $uac = UserFactory::make()->admin()->active()->persistedUAC();
         $data = [
             'account_recovery_request_id' => $request->id,
@@ -571,7 +571,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryResponsesCreateService_ExpiredToken()
     {
-        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        [$request, $policy, $user, $authenticationToken] = $this->loadFixtureScenario(ResponseCreateScenario::class); // phpcs:ignore
         AuthenticationTokenFactory::make($authenticationToken)->expired()->persist();
         $this->assertTrue(AuthenticationTokenFactory::get($authenticationToken->id)->isExpired());
 
@@ -586,7 +586,7 @@ class AccountRecoveryResponsesCreateServiceTest extends AccountRecoveryTestCase
         ];
 
         try {
-            $results = (new AccountRecoveryResponsesCreateService())->create($uac, $data);
+            (new AccountRecoveryResponsesCreateService())->create($uac, $data);
         } catch (ValidationException | CustomValidationException $exception) {
             $this->fail($exception->getMessage());
         }

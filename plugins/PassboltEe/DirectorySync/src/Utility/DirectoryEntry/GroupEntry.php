@@ -31,21 +31,21 @@ class GroupEntry extends DirectoryEntry
      *
      * @var array
      */
-    public $group;
+    public array $group;
 
     /**
      * Level.
      *
      * @var int
      */
-    public $level;
+    public int $level;
 
     /**
      * Type of object (group).
      *
      * @var string
      */
-    public $type = DirectoryInterface::ENTRY_TYPE_GROUP;
+    public string $type = DirectoryInterface::ENTRY_TYPE_GROUP;
 
     /**
      * Build a groupEntry from a ldap object.
@@ -236,7 +236,7 @@ class GroupEntry extends DirectoryEntry
      *
      * @return mixed
      */
-    public function getGroupMembers()
+    public function getGroupMembers(): mixed
     {
         return $this->group['members'];
     }
@@ -246,7 +246,7 @@ class GroupEntry extends DirectoryEntry
      *
      * @return mixed
      */
-    public function getGroupGroups()
+    public function getGroupGroups(): mixed
     {
         return $this->group['groups'];
     }
@@ -256,7 +256,7 @@ class GroupEntry extends DirectoryEntry
      *
      * @return mixed
      */
-    public function getGroupUsers()
+    public function getGroupUsers(): mixed
     {
         return $this->group['users'];
     }

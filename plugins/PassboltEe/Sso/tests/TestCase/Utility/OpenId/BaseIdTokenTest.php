@@ -29,6 +29,7 @@ use Passbolt\Sso\Test\Lib\SsoProviderTestTrait;
 use Passbolt\Sso\Utility\Adfs\Provider\AdfsProvider;
 use Passbolt\Sso\Utility\OAuth2\Provider\OAuth2Provider;
 use Passbolt\Sso\Utility\OpenId\BaseIdToken;
+use stdClass;
 
 /**
  * @see \Passbolt\Sso\Utility\OpenId\BaseIdToken
@@ -118,7 +119,7 @@ class BaseIdTokenTest extends AppTestCase
             ],
             [
                 // Invalid configuration type
-                'configValue' => new \stdClass(),
+                'configValue' => new stdClass(),
                 'expectedErrorMessage' => 'configuration value should be a string or NULL',
             ],
             [

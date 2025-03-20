@@ -30,6 +30,7 @@ use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Tags\TagsPlugin;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
+use stdClass;
 
 /**
  * @covers \Passbolt\Tags\Controller\Tags\ResourcesTagsAddController
@@ -259,7 +260,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $data = [
             'tags' => [
                 ['foo' => 'bar'],
-                ['metadata' => new \stdClass()],
+                ['metadata' => new stdClass()],
                 [
                     'metadata' => '🔥🔥🔥',
                     'metadata_key_id' => 'invalid value',
@@ -459,7 +460,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         // Create a shared tag
-        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         // note: encrypt metadata using metadata key
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);

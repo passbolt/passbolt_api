@@ -46,7 +46,6 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $resourceId = UuidFactory::uuid('resource.id.nope');
         $data = ['tags' => []];
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
-        $response = json_decode($this->_getBodyAsString());
         $this->assertError(404);
     }
 

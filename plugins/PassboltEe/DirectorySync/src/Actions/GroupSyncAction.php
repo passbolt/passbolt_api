@@ -35,6 +35,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -49,9 +50,9 @@ class GroupSyncAction extends SyncAction
     private GroupsUsersTable $GroupsUsers;
 
     /**
-     * @var array|mixed
+     * @var mixed|array
      */
-    private $defaultGroupAdmin;
+    private mixed $defaultGroupAdmin;
 
     /**
      * @inheritDoc
@@ -124,9 +125,9 @@ class GroupSyncAction extends SyncAction
     /**
      * Get default group administrator
      *
-     * @return array|\Cake\Datasource\EntityInterface|mixed|null
+     * @return \Cake\Datasource\EntityInterface|mixed|array|null
      */
-    private function getDefaultGroupAdmin()
+    private function getDefaultGroupAdmin(): mixed
     {
         $groupAdmin = $this->directoryOrgSettings->getDefaultGroupAdminUser();
         if (!empty($groupAdmin)) {
@@ -283,7 +284,7 @@ class GroupSyncAction extends SyncAction
      * @param \App\Model\Entity\Group $existingGroup existing group
      * @return mixed
      */
-    private function findGroupWithGroupUsers(Group $existingGroup)
+    private function findGroupWithGroupUsers(Group $existingGroup): mixed
     {
         $group = $this->Groups
             ->find()
@@ -473,7 +474,7 @@ class GroupSyncAction extends SyncAction
                 /** @var \App\Model\Entity\GroupsUser|null $groupUser */
                 $groupUser = $entitiesChangesDto->getAddedEntities(GroupsUser::class)[0] ?? null;
                 if (is_null($groupUser)) {
-                    throw new \Exception('A GroupUser entity should be present in the DTO');
+                    throw new Exception('A GroupUser entity should be present in the DTO');
                 }
                 $this->DirectoryRelations->createFromGroupUser($groupUser);
                 $this->addReportItem(new ActionReport(
@@ -501,7 +502,7 @@ class GroupSyncAction extends SyncAction
                     Alias::STATUS_IGNORE,
                     $group
                 ));
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be added to the group {1} because of an internal error.', $user->username, $group->name),//phpcs:ignore
@@ -580,7 +581,7 @@ class GroupSyncAction extends SyncAction
      * @param array $groupUserIdsToRemove list of groupUsers Ids
      * @return void
      */
-    private function removeGroupUsers(Group $group, array $groupUserIdsToRemove)
+    private function removeGroupUsers(Group $group, array $groupUserIdsToRemove): void
     {
         $uac = new UserAccessControl(Role::ADMIN, $this->defaultAdmin->get('id'));
         $groupUserDeleteService = new GroupsUsersDeleteService();
@@ -644,7 +645,7 @@ class GroupSyncAction extends SyncAction
                 }
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport($msg, Alias::MODEL_GROUPS_USERS, Alias::ACTION_DELETE, Alias::STATUS_ERROR, $error));//phpcs:ignore
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $error = new SyncError($group, $exception);
                 $this->addReportItem(new ActionReport(
                     __('The user {0} could not be removed from the group {1} because of an internal error.', $username, $group->name),//phpcs:ignore
@@ -664,7 +665,7 @@ class GroupSyncAction extends SyncAction
      * @param array $toSync list of groupuserIds to be synced.
      * @return void
      */
-    private function syncGroupUsers(Group $group, array $toSync)
+    private function syncGroupUsers(Group $group, array $toSync): void
     {
         foreach ($toSync as $groupUser) {
             $directoryRelation = $this->DirectoryRelations->createFromGroupUser($groupUser);
@@ -723,7 +724,7 @@ class GroupSyncAction extends SyncAction
 
     /**
      * @param string $dn Dn to check.
-     * @param \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] $directoryEntries Directory entry entities.
+     * @param array<\Passbolt\DirectorySync\Model\Entity\DirectoryEntry> $directoryEntries Directory entry entities.
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|null Returns entity if exists, `null` otherwise.
      */
     private function lookupDnInDirectoryEntries(string $dn, array $directoryEntries): ?DirectoryEntry
@@ -768,7 +769,7 @@ class GroupSyncAction extends SyncAction
      * @param \App\Model\Entity\Group $group group
      * @return void
      */
-    private function handleGroupUsersAfterGroupCreate(array $data, Group $group)
+    private function handleGroupUsersAfterGroupCreate(array $data, Group $group): void
     {
         if (!isset($group->groups_users)) {
             $group = $this->findGroupWithGroupUsers($group);
@@ -804,7 +805,7 @@ class GroupSyncAction extends SyncAction
                 Alias::STATUS_SUCCESS,
                 $group
             ));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $error = new SyncError($existingGroup, $exception);
             $this->addReportItem(new ActionReport(
                 __('The group {0} could not be renamed to {1}.', $existingGroup->name, $groupName),

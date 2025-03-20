@@ -27,6 +27,7 @@ use App\Model\Validation\ArmoredKey\IsParsableArmoredKeyValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Utility\UserAccessControl;
+use ArrayObject;
 use Cake\Chronos\Chronos;
 use Cake\Core\Exception\CakeException;
 use Cake\Event\EventInterface;
@@ -207,7 +208,7 @@ class AccountRecoveryRequestsTable extends Table
      * @param \ArrayObject $options Options
      * @return void
      */
-    public function afterSave(EventInterface $event, AccountRecoveryRequest $request, \ArrayObject $options)
+    public function afterSave(EventInterface $event, AccountRecoveryRequest $request, ArrayObject $options): void
     {
         if (isset($options['uac'])) {
             /** @var \App\Utility\UserAccessControl $uac */
@@ -220,7 +221,7 @@ class AccountRecoveryRequestsTable extends Table
         // Set all other pending requests to rejected
         $this->updateAll([
             'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
-            'modified' => \Cake\I18n\DateTime::now(),
+            'modified' => DateTime::now(),
             'modified_by' => $modifiedBy,
         ], [
             'id !=' => $request->id,

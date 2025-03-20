@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Utility\ExtendedUserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
+use Exception;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\SsoStates\SsoStatesSetService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
@@ -134,7 +135,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
 
         try {
             $this->service->create($nonce, $state, SsoState::TYPE_SSO_GET_KEY, $ssoSettingId, $uac);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(InternalErrorException::class, $e);
             $this->assertStringContainsString('Could not save the SSO state, please try again later.', $e->getMessage());
         }
@@ -156,7 +157,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
 
         try {
             $this->service->create($nonce, $state, SsoState::TYPE_SSO_GET_KEY, $ssoSettingId, $uac);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('invalid nonce', $e->getMessage());
         }
@@ -192,7 +193,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
                 $ssoSettingId,
                 $uac
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(InternalErrorException::class, $e);
             $this->assertStringContainsString('Could not save the SSO state', $e->getMessage());
         }
@@ -228,7 +229,7 @@ class SsoStatesSetServiceTest extends SsoTestCase
                 $ssoSettingId,
                 $uac
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(InternalErrorException::class, $e);
             $this->assertStringContainsString('Could not save the SSO state', $e->getMessage());
         }

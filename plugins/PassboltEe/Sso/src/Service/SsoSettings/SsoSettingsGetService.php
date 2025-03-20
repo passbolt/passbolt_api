@@ -24,6 +24,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Exception;
 use Passbolt\Sso\Model\Dto\AbstractSsoSettingsDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsDefaultDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
@@ -65,7 +66,7 @@ class SsoSettingsGetService
             return $this->getActiveOrFail($withData);
         } catch (RecordNotFoundException $exception) {
             return new SsoSettingsDefaultDto();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error($exception->getMessage());
             Log::error($exception->getTraceAsString());
 
@@ -148,11 +149,11 @@ class SsoSettingsGetService
 
         try {
             $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
                 $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);
@@ -161,7 +162,7 @@ class SsoSettingsGetService
 
         try {
             $decryptedData = $gpg->decrypt($data);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException(__('The SSO setting cannot be decrypted.'), 500, $exception);
         }
 

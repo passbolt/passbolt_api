@@ -21,6 +21,7 @@ use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validator;
+use Exception;
 
 /**
  * Class SubscriptionKeyDtoForm
@@ -41,7 +42,7 @@ class SubscriptionKeyDtoForm extends Form
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('customer_id', 'string')
@@ -98,14 +99,14 @@ class SubscriptionKeyDtoForm extends Form
      * @param array|null $context not in use
      * @return bool
      */
-    public function checkUsersLimitIsInRange($value, ?array $context = null): bool
+    public function checkUsersLimitIsInRange(string $value, ?array $context = null): bool
     {
         try {
             /** @var \App\Model\Table\UsersTable $Users */
             $Users = TableRegistry::getTableLocator()->get('Users');
 
             return $Users->findActive()->all()->count() <= $value;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Return true in case of exception (in this case, it will mainly be a database exception).
             // This can happen when Passbolt is not configured and should not prevent subscription validation.
             return true;

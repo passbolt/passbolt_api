@@ -38,7 +38,8 @@ class UsersDeleteControllerTest extends AccountRecoveryIntegrationTestCase
 
     public function testUsersDeleteController_DeleteAccountRecoveryInfo_Success(): void
     {
-        [$request, $policy, $user] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        $fixtures = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        $user = $fixtures[2];
 
         $this->logInAsAdmin();
         $this->deleteJson('/users/' . $user->id . '.json');

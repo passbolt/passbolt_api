@@ -16,7 +16,9 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Actions\Reports;
 
+use Cake\Chronos\ChronosInterface;
 use Cake\I18n\DateTime;
+use InvalidArgumentException;
 use Passbolt\DirectorySync\Utility\Alias;
 
 /**
@@ -29,32 +31,32 @@ class ActionReport
     /**
      * @var string
      */
-    protected $model;
+    protected string $model;
 
     /**
      * @var string
      */
-    protected $action;
+    protected string $action;
 
     /**
      * @var string
      */
-    protected $status;
+    protected string $status;
 
     /**
      * @var mixed
      */
-    protected $data;
+    protected mixed $data;
 
     /**
      * @var \Cake\Chronos\ChronosInterface|\Cake\I18n\DateTime
      */
-    protected $created;
+    protected ChronosInterface|DateTime $created;
 
     /**
      * @var string
      */
-    protected $message;
+    protected string $message;
 
     /**
      * ActionReport constructor.
@@ -66,26 +68,26 @@ class ActionReport
      * @param mixed $data Array or Entity, Exception
      * @throws \InvalidArgumentException
      */
-    public function __construct(string $message, string $model, string $action, string $status, $data)
+    public function __construct(string $message, string $model, string $action, string $status, mixed $data)
     {
         if (!self::isValidModel($model)) {
-            throw new \InvalidArgumentException('This is not a valid action report. Invalid Model.');
+            throw new InvalidArgumentException('This is not a valid action report. Invalid Model.');
         }
         if (!self::isValidAction($action)) {
-            throw new \InvalidArgumentException('This is not a valid action report. Invalid Action.');
+            throw new InvalidArgumentException('This is not a valid action report. Invalid Action.');
         }
         if (!self::isValidStatus($status)) {
-            throw new \InvalidArgumentException('This is not a valid action report. Invalid Status.');
+            throw new InvalidArgumentException('This is not a valid action report. Invalid Status.');
         }
         if (!self::isValidData($data)) {
-            throw new \InvalidArgumentException('This is not a valid action report. Invalid Data.');
+            throw new InvalidArgumentException('This is not a valid action report. Invalid Data.');
         }
         $this->message = $message;
         $this->model = $model;
         $this->data = $data;
         $this->action = $action;
         $this->status = $status;
-        $this->created = \Cake\I18n\DateTime::now();
+        $this->created = DateTime::now();
     }
 
     /**
@@ -126,7 +128,7 @@ class ActionReport
      *
      * @return array the action report transformed.
      */
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'message' => $this->message,
@@ -144,7 +146,7 @@ class ActionReport
      *
      * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -154,7 +156,7 @@ class ActionReport
      *
      * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -164,7 +166,7 @@ class ActionReport
      *
      * @return string
      */
-    public function getModel()
+    public function getModel(): string
     {
         return $this->model;
     }
@@ -174,7 +176,7 @@ class ActionReport
      *
      * @return string
      */
-    public function getAction()
+    public function getAction(): string
     {
         return $this->action;
     }
@@ -184,7 +186,7 @@ class ActionReport
      *
      * @return mixed
      */
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }
@@ -194,7 +196,7 @@ class ActionReport
      *
      * @return mixed
      */
-    public function getCreated()
+    public function getCreated(): mixed
     {
         return $this->created;
     }
@@ -205,7 +207,7 @@ class ActionReport
      * @param string $action action
      * @return bool
      */
-    public static function isValidAction(string $action)
+    public static function isValidAction(string $action): bool
     {
         return $action === Alias::ACTION_CREATE || $action === Alias::ACTION_UPDATE || $action === Alias::ACTION_DELETE;
     }
@@ -216,7 +218,7 @@ class ActionReport
      * @param string $status status
      * @return bool
      */
-    public static function isValidStatus(string $status)
+    public static function isValidStatus(string $status): bool
     {
         return $status === Alias::STATUS_SUCCESS
             || $status === Alias::STATUS_ERROR
@@ -231,7 +233,7 @@ class ActionReport
      * @param string $model model
      * @return bool
      */
-    public static function isValidModel(string $model)
+    public static function isValidModel(string $model): bool
     {
         return $model === Alias::MODEL_USERS
             || $model === Alias::MODEL_GROUPS
@@ -244,7 +246,7 @@ class ActionReport
      * @param array $data data
      * @return bool
      */
-    public static function isValidData($data)
+    public static function isValidData(array $data): bool
     {
         return is_object($data) || is_array($data);
     }

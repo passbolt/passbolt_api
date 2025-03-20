@@ -18,6 +18,8 @@ namespace Passbolt\DirectorySync\Service\DirectorySettings;
 
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
+use RuntimeException;
+use UnexpectedValueException;
 
 class UpdateDirectorySettingsService
 {
@@ -46,7 +48,7 @@ class UpdateDirectorySettingsService
 
         $value = json_decode($directorySyncSettings['value'], true);
         if (!$value || !is_array($value)) {
-            throw new \UnexpectedValueException(
+            throw new UnexpectedValueException(
                 __('Directory Settings are invalid. Please check your config and try again.')
             );
         }
@@ -70,7 +72,7 @@ class UpdateDirectorySettingsService
         $result = $OrganizationSettings
             ->save($directorySyncSettings);
         if (!$result) {
-            throw new \RuntimeException(__('New directory settings could not be saved.'));
+            throw new RuntimeException(__('New directory settings could not be saved.'));
         }
     }
 }

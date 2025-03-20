@@ -68,7 +68,7 @@ class DirectoryIgnoreController extends DirectoryController
         $ignored = null;
         try {
             $ignored = $this->DirectoryIgnore->get($foreignKey);
-            $result = $this->DirectoryIgnore->delete($ignored);
+            $this->DirectoryIgnore->delete($ignored);
         } catch (RecordNotFoundException $exception) {
         }
         $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);

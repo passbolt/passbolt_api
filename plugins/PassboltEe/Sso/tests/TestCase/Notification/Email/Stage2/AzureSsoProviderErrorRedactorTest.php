@@ -22,10 +22,12 @@ use App\Test\Lib\AppTestCase;
 use Cake\Cache\Cache;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
+use InvalidArgumentException;
 use Passbolt\Sso\Controller\AbstractSso2Stage2Controller;
 use Passbolt\Sso\Error\Exception\AzureException;
 use Passbolt\Sso\Notification\Email\Stage2\AzureSsoProviderErrorRedactor;
 use Passbolt\Sso\Service\Cache\SsoProviderErrorCacheService;
+use stdClass;
 
 /**
  * @covers \Passbolt\Sso\Notification\Email\Stage2\AzureSsoProviderErrorRedactor
@@ -147,9 +149,9 @@ class AzureSsoProviderErrorRedactorTest extends AppTestCase
     public function testAzureSsoProviderErrorRedactor_Error_InvalidExceptionSetInTheEventData()
     {
         $event = new Event(AbstractSso2Stage2Controller::EVENT_PROVIDER_ERROR_RESOURCE_OWNER);
-        $event->setData(['exception' => new \stdClass()]);
+        $event->setData(['exception' => new stdClass()]);
 
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
 
         $this->sut->onSubscribedEvent($event);
     }

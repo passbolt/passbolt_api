@@ -22,6 +22,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Exception;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\Migration\V4ToV5MigrationServiceInterface;
 use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
@@ -108,7 +109,7 @@ class MigrateAllV4TagsToV5Service implements V4ToV5MigrationServiceInterface
                 }
 
                 $this->addMigrated($tag);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Continue with next resource if any error
                 $error = ['tag_id' => $tag->id, 'error_message' => $e->getMessage()];
                 if (Configure::read('debug')) {
@@ -171,7 +172,7 @@ class MigrateAllV4TagsToV5Service implements V4ToV5MigrationServiceInterface
             $gpg = $this->setEncryptKeyWithMetadataKey($gpg, $metadataKey);
             $metadataClearText = json_encode($metadataArray, JSON_THROW_ON_ERROR);
             $metadataEncrypted = $gpg->encrypt($metadataClearText, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The metadata could not be encrypted with the metadata key id: {0}.', $metadataKey->id);
             throw new InternalErrorException($msg, 500, $exception);
@@ -218,7 +219,7 @@ class MigrateAllV4TagsToV5Service implements V4ToV5MigrationServiceInterface
             $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->gpgkey);
             $metadataClearText = json_encode($metadataArray, JSON_THROW_ON_ERROR);
             $metadataEncrypted = $gpg->encrypt($metadataClearText, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The metadata could not be encrypted with the user id: {0}.', $user->id);
             throw new InternalErrorException($msg, 500, $exception);
@@ -237,7 +238,7 @@ class MigrateAllV4TagsToV5Service implements V4ToV5MigrationServiceInterface
      * @return \Passbolt\Metadata\Model\Entity\MetadataKey
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no metadata key record.
      */
-    private function getMetadataKeyForEncryption()
+    private function getMetadataKeyForEncryption(): MetadataKey
     {
         /** @var \Passbolt\Metadata\Model\Table\MetadataKeysTable $metadataKeysTable */
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
@@ -269,7 +270,7 @@ class MigrateAllV4TagsToV5Service implements V4ToV5MigrationServiceInterface
                 'validate' => 'v5',
             ]);
             $this->Tags->saveOrFail($tag, ['checkRules' => false]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('Unable to migrate tag id: {0} to V5.', $tag->id);
             $msg .= ' ' . $exception->getMessage();
             throw new InternalErrorException($msg, 500, $exception);

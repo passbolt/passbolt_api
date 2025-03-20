@@ -21,6 +21,7 @@ use App\Test\Factory\UserFactory;
 use Cake\I18n\Date;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Exception;
 use Passbolt\Subscription\Model\Dto\SubscriptionKeyDto;
 use Passbolt\Subscription\Service\Healthcheck\Application\SubscriptionKeyApplicationHealthcheck;
 use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyGetService;
@@ -60,7 +61,7 @@ class SubscriptionKeyApplicationHealthcheckTest extends TestCase
             ->onlyMethods(['get'])
             ->getMock();
         $msg = 'Exception message';
-        $subscriptionService->method('get')->willThrowException(new \Exception($msg));
+        $subscriptionService->method('get')->willThrowException(new Exception($msg));
         $service = new SubscriptionKeyApplicationHealthcheck($subscriptionService);
 
         $service->check();

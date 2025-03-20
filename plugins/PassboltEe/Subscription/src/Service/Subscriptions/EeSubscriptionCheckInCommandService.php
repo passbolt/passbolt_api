@@ -25,6 +25,7 @@ use Cake\Chronos\ChronosDate;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionSignatureException;
@@ -77,7 +78,7 @@ class EeSubscriptionCheckInCommandService implements SubscriptionCheckInCommandS
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayErrorFooter(PassboltCommand $command, ConsoleIo $io)
+    protected function displayErrorFooter(PassboltCommand $command, ConsoleIo $io): void
     {
         $command->error(__('It looks like you could use some help.'), $io);
         $command->error(__('We are here for you. You can contact us at sales@passbolt.com'), $io);
@@ -91,7 +92,7 @@ class EeSubscriptionCheckInCommandService implements SubscriptionCheckInCommandS
      * @return void
      * @throws \Exception
      */
-    protected function displayInfo(SubscriptionKeyDto $subscription, ConsoleIo $io)
+    protected function displayInfo(SubscriptionKeyDto $subscription, ConsoleIo $io): void
     {
         $data = $subscription->toArray();
         /** @var \App\Model\Table\UsersTable $users */
@@ -114,7 +115,7 @@ class EeSubscriptionCheckInCommandService implements SubscriptionCheckInCommandS
                 // Should not break in case of database exception.
                 // This can happen when Passbolt is not configured and should not prevent licence validation.
                 $usersQty = $users->findActive()->all()->count();
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $usersQty = 0;
             }
 
@@ -152,7 +153,7 @@ class EeSubscriptionCheckInCommandService implements SubscriptionCheckInCommandS
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayValidFooter(ConsoleIo $io)
+    protected function displayValidFooter(ConsoleIo $io): void
     {
         $io->out(__('For any question / feedback / subscription renewal,'));
         $io->out(__('kindly contact us at <info>sales@passbolt.com</info>'));

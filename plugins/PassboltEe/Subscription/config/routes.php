@@ -24,7 +24,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/Subscription', ['path' => '/ee'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Subscription', ['path' => '/ee'], function (RouteBuilder $routes): void {
  // BC?
     $routes->setExtensions(['json']);
 

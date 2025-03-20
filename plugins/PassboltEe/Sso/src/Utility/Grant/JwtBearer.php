@@ -34,7 +34,7 @@ class JwtBearer extends AbstractGrant
     /**
      * @return string grant type
      */
-    protected function getName()
+    protected function getName(): string
     {
         return 'urn:ietf:params:oauth:grant-type:jwt-bearer';
     }
@@ -42,7 +42,7 @@ class JwtBearer extends AbstractGrant
     /**
      * @return array of string
      */
-    protected function getRequiredRequestParameters()
+    protected function getRequiredRequestParameters(): array
     {
         return [
             'requested_token_use',

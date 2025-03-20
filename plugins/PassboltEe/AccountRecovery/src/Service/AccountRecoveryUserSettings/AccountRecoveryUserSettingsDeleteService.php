@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings;
 
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable;
 
 class AccountRecoveryUserSettingsDeleteService
 {
@@ -27,7 +28,7 @@ class AccountRecoveryUserSettingsDeleteService
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings
      */
-    private $AccountRecoveryUserSettings;
+    private AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings;
 
     /**
      * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting|null
@@ -41,7 +42,7 @@ class AccountRecoveryUserSettingsDeleteService
     /**
      * @return iterable<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting>|false Entities list on success, false on failure.
      */
-    public function deleteAllRejected()
+    public function deleteAllRejected(): iterable|false
     {
         $entities = $this->AccountRecoveryUserSettings->find()
             ->where(['status' => AccountRecoveryUserSetting::ACCOUNT_RECOVERY_USER_SETTING_REJECTED])

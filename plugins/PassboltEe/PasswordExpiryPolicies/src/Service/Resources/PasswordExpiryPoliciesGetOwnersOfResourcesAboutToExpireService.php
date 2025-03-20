@@ -90,7 +90,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
     /**
      * Query on UsersTable to retrieve all owners
      *
-     * @param null|int $expiryNotificationInDays send notification N days prior to expiry
+     * @param int|null $expiryNotificationInDays send notification N days prior to expiry
      * @param bool $notifyIfExpiresToday email notification setting
      * @return \Cake\ORM\Query
      */
@@ -126,8 +126,8 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
     ): Query {
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $expiredResources = $ResourcesTable->find();
-        $today = \Cake\I18n\DateTime::today();
-        $tomorrow = \Cake\I18n\DateTime::tomorrow();
+        $today = DateTime::today();
+        $tomorrow = DateTime::tomorrow();
         $aboutToExpireCondition = [
             'expired >=' => $today->addDays($expiresInDays ?? 0),
             'expired <' => $tomorrow->addDays($expiresInDays ?? 0),

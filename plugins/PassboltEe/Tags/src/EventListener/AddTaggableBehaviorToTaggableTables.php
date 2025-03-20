@@ -49,7 +49,7 @@ class AddTaggableBehaviorToTaggableTables implements EventListenerInterface
      * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
-    public function addTaggableBehavior(EventInterface $event)
+    public function addTaggableBehavior(EventInterface $event): void
     {
         foreach (static::TABLES_TO_ADD as $allowed) {
             if ($event->getSubject() instanceof $allowed) {

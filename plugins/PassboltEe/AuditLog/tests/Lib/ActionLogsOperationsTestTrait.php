@@ -19,6 +19,7 @@ use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Log\Model\Entity\EntityHistory;
 
 trait ActionLogsOperationsTestTrait
@@ -147,7 +148,7 @@ trait ActionLogsOperationsTestTrait
             ])->first();
 
             if (!$secret) {
-                throw new \Exception('Could not retrieve the secret for the given resource and user');
+                throw new Exception('Could not retrieve the secret for the given resource and user');
             }
 
             $sa = $SecretAccesses->createFromSecretEntity($uac, $secret);

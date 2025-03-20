@@ -163,7 +163,7 @@ class SsoStatesAssertService
         /** @var \Passbolt\Sso\Model\Table\SsoStatesTable $ssoStatesTable */
         $ssoStatesTable = $this->fetchTable('Passbolt/Sso.SsoStates');
 
-        $ssoState->deleted = \Cake\I18n\DateTime::now();
+        $ssoState->deleted = DateTime::now();
 
         if (!$ssoStatesTable->save($ssoState)) {
             throw new InternalErrorException(__('The SSO state could not be saved.'));

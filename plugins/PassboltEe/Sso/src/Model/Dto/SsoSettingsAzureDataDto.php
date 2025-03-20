@@ -29,37 +29,37 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
     /**
      * @var string $url
      */
-    public $url;
+    public string $url;
 
     /**
      * @var string $client_id uuid
      */
-    public $client_id;
+    public string $client_id;
 
     /**
      * @var string $client_secret
      */
-    public $client_secret;
+    public string $client_secret;
 
     /**
-     * @var string|\Cake\Chronos\ChronosInterface
+     * @var \Cake\Chronos\ChronosInterface|string
      */
-    public $client_secret_expiry;
+    public string|ChronosInterface $client_secret_expiry;
 
     /**
      * @var string $tenant_id
      */
-    public $tenant_id;
+    public string $tenant_id;
 
     /**
      * @var string
      */
-    public $prompt;
+    public string $prompt;
 
     /**
      * @var string
      */
-    public $email_claim;
+    public string $email_claim;
 
     /**
      * @param array $data with

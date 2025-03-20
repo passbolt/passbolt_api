@@ -26,8 +26,15 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable;
 
 /**
  * AbstractAccountRecoveryOrganizationPolicySetService Class
@@ -43,47 +50,47 @@ class AbstractAccountRecoveryOrganizationPolicySetService
     /**
      * @var array $data user provider data
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @var \Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetServiceInterface $getService
      */
-    protected $getService;
+    protected AccountRecoveryOrganizationPolicyGetServiceInterface $getService;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy|null $currentPolicy
      */
-    protected $currentPolicy = null;
+    protected ?AccountRecoveryOrganizationPolicy $currentPolicy = null;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPoliciesTable
      */
-    protected $AccountRecoveryOrganizationPolicies;
+    protected AccountRecoveryOrganizationPoliciesTable $AccountRecoveryOrganizationPolicies;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryOrganizationPublicKeysTable
      */
-    protected $AccountRecoveryOrganizationPublicKeys;
+    protected AccountRecoveryOrganizationPublicKeysTable $AccountRecoveryOrganizationPublicKeys;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable
      */
-    protected $AccountRecoveryPrivateKeys;
+    protected AccountRecoveryPrivateKeysTable $AccountRecoveryPrivateKeys;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable
      */
-    protected $AccountRecoveryPrivateKeyPasswords;
+    protected AccountRecoveryPrivateKeyPasswordsTable $AccountRecoveryPrivateKeyPasswords;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable
      */
-    protected $AccountRecoveryRequests;
+    protected AccountRecoveryRequestsTable $AccountRecoveryRequests;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable
      */
-    protected $AccountRecoveryUserSettings;
+    protected AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings;
 
     /**
      * AbstractCompleteService constructor
@@ -149,7 +156,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      * @param string|null $name Dot separated name of the value to read. Or null to read all data.
      * @return mixed The value being read.
      */
-    protected function getData(?string $name = null)
+    protected function getData(?string $name = null): mixed
     {
         if ($name === null) {
             return $this->data;
@@ -273,7 +280,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
             throw new CustomValidationException(__('Could not validate policy data.'), [
                 'account_recovery_organization_public_key' => $exception->getErrors(),
             ]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new CustomValidationException(__('Could not validate policy data.'), [
                 'account_recovery_organization_public_key' => [
                     'armored_key' => [
@@ -309,7 +316,7 @@ class AbstractAccountRecoveryOrganizationPolicySetService
             throw new CustomValidationException(__('Could not validate key revocation.'), [
                 'account_recovery_organization_revoked_key' => $exception->getErrors(),
             ]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new CustomValidationException(__('Could not validate key revocation.'), [
                 'account_recovery_organization_revoked_key' => [
                     'armored_key' => [

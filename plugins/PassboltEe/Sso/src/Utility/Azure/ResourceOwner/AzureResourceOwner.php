@@ -27,12 +27,12 @@ class AzureResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInte
      *
      * @var array
      */
-    private $data;
+    private array $data;
 
     /**
      * @var string
      */
-    private $emailAliasField;
+    private string $emailAliasField;
 
     /**
      * Creates new azure resource owner.
@@ -40,7 +40,7 @@ class AzureResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInte
      * @param array $data user data
      * @param string $emailAliasField Field to use as an email.
      */
-    public function __construct($data, $emailAliasField)
+    public function __construct(array $data, string $emailAliasField)
     {
         $this->data = $data;
         $this->emailAliasField = $emailAliasField;
@@ -51,7 +51,7 @@ class AzureResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInte
      *
      * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->data['oid'] ?? null;
     }
@@ -78,7 +78,7 @@ class AzureResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInte
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->data;
     }

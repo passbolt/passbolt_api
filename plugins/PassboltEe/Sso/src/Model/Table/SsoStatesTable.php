@@ -235,10 +235,10 @@ class SsoStatesTable extends Table
      * @param array $options Options.
      * @return \Cake\ORM\Query
      */
-    public function findActive(Query $query, array $options)
+    public function findActive(Query $query, array $options): Query
     {
         return $query->where(function (QueryExpression $exp) {
-            return $exp->gt('deleted', \Cake\I18n\DateTime::now());
+            return $exp->gt('deleted', DateTime::now());
         });
     }
 }

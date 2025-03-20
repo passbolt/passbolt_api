@@ -27,14 +27,14 @@ class OAuth2Exception extends CakeException
      *
      * @var string
      */
-    protected $error;
+    protected string $error;
 
     /**
      * Error description.
      *
      * @var string
      */
-    protected $errorDescription;
+    protected string $errorDescription;
 
     /**
      * @inheritDoc
@@ -73,7 +73,7 @@ class OAuth2Exception extends CakeException
 
     /**
      * @see https://openid.net/specs/openid-connect-core-1_0.html#AuthError
-     * @return string[]
+     * @return array<string>
      */
     public function allowedErrors(): array
     {

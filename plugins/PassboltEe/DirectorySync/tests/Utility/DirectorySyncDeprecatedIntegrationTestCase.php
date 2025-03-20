@@ -20,6 +20,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Exception;
 use LdapRecord\Models\ActiveDirectory\Group;
 use LdapRecord\Models\ActiveDirectory\User;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertDirectoryTrait;
@@ -70,7 +71,7 @@ abstract class DirectorySyncDeprecatedIntegrationTestCase extends AppIntegration
     {
         parent::setUp();
         if (file_exists(CONFIG . 'ldap.php')) {
-            throw new \Exception('The directory_sync tests should not run with the ldap.php configuration file enabled');
+            throw new Exception('The directory_sync tests should not run with the ldap.php configuration file enabled');
         }
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
         $this->Users = TableRegistry::getTableLocator()->get('Users');

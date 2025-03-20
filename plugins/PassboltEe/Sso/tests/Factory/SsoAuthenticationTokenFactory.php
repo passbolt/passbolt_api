@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Test\Factory;
 use App\Utility\UuidFactory;
 use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
+use DateTimeInterface;
 use Faker\Generator;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Model\Table\SsoAuthenticationTokensTable;
@@ -69,7 +70,7 @@ class SsoAuthenticationTokenFactory extends CakephpBaseFactory
      * @param \DateTimeInterface $modified token type
      * @return $this
      */
-    public function modified(\DateTimeInterface $modified)
+    public function modified(DateTimeInterface $modified)
     {
         return $this->patchData(compact('modified'));
     }
@@ -78,7 +79,7 @@ class SsoAuthenticationTokenFactory extends CakephpBaseFactory
      * @param \DateTimeInterface $created token type
      * @return $this
      */
-    public function created(\DateTimeInterface $created)
+    public function created(DateTimeInterface $created)
     {
         return $this->patchData(compact('created'));
     }

@@ -9,7 +9,7 @@ declare(strict_types=1);
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
  * @since         2.0.0
@@ -37,7 +37,7 @@ class ResourcesUpdateControllerTest extends TagPluginIntegrationTestCase
             'resource' => [], // Nothing to update for now, we just check the update controller return value.
         ];
 
-        foreach ($success as $case => $data) {
+        foreach ($success as $data) {
             $this->putJson("/resources/$resourceId.json?api-version=2", $data);
             $this->assertSuccess();
 

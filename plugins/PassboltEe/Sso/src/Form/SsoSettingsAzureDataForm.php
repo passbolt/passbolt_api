@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Form;
 use App\Model\Validation\DateTime\IsDateInFutureValidationRule;
 use Cake\I18n\DateTime;
 use Cake\Validation\Validator;
+use Exception;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 
 class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
@@ -157,8 +158,8 @@ class SsoSettingsAzureDataForm extends BaseSsoSettingsForm
 
         if (isset($data['data']['client_secret_expiry']) && is_string($data['data']['client_secret_expiry'])) {
             try {
-                $data['data']['client_secret_expiry'] = new \Cake\I18n\DateTime($data['data']['client_secret_expiry']);
-            } catch (\Exception $exception) {
+                $data['data']['client_secret_expiry'] = new DateTime($data['data']['client_secret_expiry']);
+            } catch (Exception $exception) {
                 $data['data']['client_secret_expiry'] = null;
             }
         }

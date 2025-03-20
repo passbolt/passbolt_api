@@ -18,7 +18,7 @@ use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/Tags', ['path' => '/tags'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Tags', ['path' => '/tags'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
     $routes->registerMiddleware(TagsReadOnlyModeMiddleware::class, new TagsReadOnlyModeMiddleware());
 

@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Notification\OrganizationPolicies;
 
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -38,7 +39,7 @@ abstract class AbstractAccountRecoveryOrganizationPolicyEmailRedactor implements
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * AccountRecoveryGetBadRequestAdminEmailRedactor Constructor

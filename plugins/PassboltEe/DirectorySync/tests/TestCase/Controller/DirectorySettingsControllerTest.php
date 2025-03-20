@@ -181,6 +181,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         $errors = $this->getResponseBodyAsArray();
         $this->assertNotEmpty($errors);
         $error = Hash::get($errors, 'domain_name._empty');
+        $this->assertNotNull($error);
     }
 
     /**
@@ -235,9 +236,7 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         // Disable the directory integration
         $this->deleteJson('/directorysync/settings.json?api-version=2');
         $this->assertSuccess();
-        $OrganizationSettings = TableRegistry::getTableLocator()->get('OrganizationSettings');
         $this->expectException(RecordNotFoundException::class);
-        $settings = json_decode($OrganizationSettings->getFirstSettingOrFail(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY)->value, true);
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertFalse($directoryOrgSettings->isEnabled());
         // Check for fallback fields
