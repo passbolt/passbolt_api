@@ -137,7 +137,7 @@ class FullBaseUrlReachableCoreHealthcheck implements HealthcheckServiceInterface
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Check that the domain name is correct in {0}', CONFIG . 'passbolt.php'),

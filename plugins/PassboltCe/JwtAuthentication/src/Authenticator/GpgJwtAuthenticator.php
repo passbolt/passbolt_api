@@ -57,10 +57,10 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
     public const JWT_AUTHENTICATION_AFTER_IDENTIFY = 'jwt_authentication_after_identify';
 
     /**
-     * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg gpg backend
+     * @var \App\Utility\OpenPGP\OpenPGPBackend|null $gpg gpg backend
      * @access protected
      */
-    protected OpenPGPBackend $gpg;
+    protected ?OpenPGPBackend $gpg = null;
 
     /**
      * @var \Cake\Http\ServerRequest $request request

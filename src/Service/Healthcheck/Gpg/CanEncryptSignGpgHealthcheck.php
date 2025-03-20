@@ -82,7 +82,7 @@ class CanEncryptSignGpgHealthcheck extends AbstractGpgHealthcheck implements Ski
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

@@ -27,9 +27,9 @@ class EmailController extends WebInstallerController
     /**
      * Contains the email class.
      *
-     * @var \Cake\Mailer\Mailer
+     * @var \Cake\Mailer\Mailer|null
      */
-    protected Mailer $email = null;
+    protected ?Mailer $email = null;
 
     /**
      * Initialize.

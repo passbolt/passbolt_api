@@ -81,9 +81,9 @@ class GpgAuthenticator extends SessionAuthenticator
     protected ?array $_data = null;
 
     /**
-     * @var \App\Model\Entity\User
+     * @var \App\Model\Entity\User|null
      */
-    protected User $_user;
+    protected ?User $_user;
 
     /**
      * When an unauthenticated user tries to access a protected page this method is called

@@ -100,7 +100,7 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Edit App.fullBaseUrl in {0}', CONFIG . 'passbolt.php'),

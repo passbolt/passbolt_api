@@ -70,16 +70,16 @@ interface ReportInterface
     /**
      * Return the name of the report
      *
-     * @return string
+     * @return string|null
      */
-    public function getName(): string;
+    public function getName(): ?string;
 
     /**
      * Return a brief description of the generated report.
      *
-     * @return string
+     * @return string|null
      */
-    public function getDescription(): string;
+    public function getDescription(): ?string;
 
     /**
      * Return the template associated to the generated report by the report generator.
@@ -98,9 +98,9 @@ interface ReportInterface
     /**
      * Return the report slug
      *
-     * @return string the report slug
+     * @return string|null the report slug
      */
-    public function getSlug(): string;
+    public function getSlug(): ?string;
 
     /**
      * Return a list of filters, order, contain available for the given report service.

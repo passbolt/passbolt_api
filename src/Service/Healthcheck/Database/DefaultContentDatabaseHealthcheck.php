@@ -61,7 +61,7 @@ class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Run the install script to install the database tables'),

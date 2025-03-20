@@ -75,7 +75,7 @@ class GopengpgPublicKeyFormatGpgHealthcheck extends AbstractGpgHealthcheck imple
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return 'Remove all empty new lines above the end block line.';
     }

@@ -106,7 +106,7 @@ class TmpFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Ensure the temporary directory and its content are writable by the webserver user.'),

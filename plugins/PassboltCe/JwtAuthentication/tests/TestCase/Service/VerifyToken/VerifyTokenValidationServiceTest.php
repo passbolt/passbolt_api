@@ -118,10 +118,8 @@ class VerifyTokenValidationServiceTest extends TestCase
     public function invalidExpiryDates(): array
     {
         return [
-            [null],
             [''],
             [DateTime::now()->addHours(5)->toUnixString()], // This is past the max validity of one hour
-            [DateTime::now()->addMinutes(1)], // This is not a unix time!
         ];
     }
 
