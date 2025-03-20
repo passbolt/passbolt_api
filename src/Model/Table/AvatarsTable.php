@@ -22,8 +22,10 @@ use App\Service\Avatars\AvatarsCacheService;
 use App\Service\Avatars\AvatarsConfigurationService;
 use App\Utility\AvatarProcessing;
 use App\View\Helper\AvatarHelper;
+use ArrayObject;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
+use Cake\Datasource\EntityInterface;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
@@ -34,6 +36,7 @@ use Cake\Validation\Validator;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
 use Psr\Http\Message\UploadedFileInterface;
+use Throwable;
 
 /**
  * @property \App\Model\Table\ProfilesTable&\Cake\ORM\Association\BelongsTo $Profiles
@@ -137,7 +140,7 @@ class AvatarsTable extends Table
      * @param \App\Model\Entity\Avatar $avatar entity
      * @return \Cake\Datasource\EntityInterface|bool
      */
-    public function beforeSave(Event $event, Avatar $avatar)
+    public function beforeSave(Event $event, Avatar $avatar): EntityInterface|bool
     {
         if (!$this->setData($avatar)) {
             $avatar->setError('data', __('Could not save the data in {0} format.', AvatarHelper::IMAGE_EXTENSION));
@@ -159,7 +162,7 @@ class AvatarsTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function afterSave(Event $event, Avatar $avatar, \ArrayObject $options)
+    public function afterSave(Event $event, Avatar $avatar, ArrayObject $options): void
     {
         $filesystemAdapter = $this->getFilesystemFromOptions($options);
         (new AvatarsCacheService($filesystemAdapter))->storeInCache($avatar);
@@ -183,12 +186,12 @@ class AvatarsTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function afterDelete(Event $event, Avatar $avatar, \ArrayObject $options)
+    public function afterDelete(Event $event, Avatar $avatar, ArrayObject $options): void
     {
         $filesystemAdapter = $this->getFilesystemFromOptions($options);
         try {
             $filesystemAdapter->deleteDirectory($avatar->get('id'));
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             Log::warning($exception->getMessage());
         }
     }
@@ -198,7 +201,7 @@ class AvatarsTable extends Table
      * @return \League\Flysystem\FilesystemAdapter
      * @throws \Cake\Http\Exception\InternalErrorException if the developer did not pass the adapter in the saving options
      */
-    public function getFilesystemFromOptions(\ArrayObject $options): FilesystemAdapter
+    public function getFilesystemFromOptions(ArrayObject $options): FilesystemAdapter
     {
         $adapter = $options[self::FILESYSTEM_ADAPTER_OPTION];
         if (!($adapter instanceof FilesystemAdapter)) {
@@ -216,7 +219,7 @@ class AvatarsTable extends Table
      * @param bool $isHydrationEnabled if hydration is enabled, return an Avatar object, otherwise an array
      * @return mixed
      */
-    private static function formatResults(CollectionInterface $avatars, bool $isHydrationEnabled)
+    private static function formatResults(CollectionInterface $avatars, bool $isHydrationEnabled): mixed
     {
         return $avatars->map(function ($avatar) use ($isHydrationEnabled) {
             $sizes = Configure::read('FileStorage.imageSizes.Avatar');
@@ -285,7 +288,7 @@ class AvatarsTable extends Table
         } elseif ($file instanceof UploadedFileInterface) {
             try {
                 $content = $file->getStream()->getContents();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 Log::error($e->getMessage());
 
                 return false;
@@ -301,7 +304,7 @@ class AvatarsTable extends Table
                 Configure::readOrFail('FileStorage.imageSizes.Avatar.medium.thumbnail.height')
             );
             $avatar->set('data', $img);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::error($e->getMessage());
 
             return false;

@@ -28,6 +28,7 @@ use Cake\I18n\DateTime;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
+use Exception;
 use Passbolt\Metadata\Form\MetadataSessionKeyUpdateForm;
 use Passbolt\Metadata\Model\Entity\MetadataSessionKey;
 
@@ -79,7 +80,7 @@ class MetadataSessionKeyUpdateService
             throw new BadRequestException(__('The metadata session key data is identical.'));
         }
         // 409 if the modified date is not equal to the persisted session key one
-        $asserTime = (new \Cake\I18n\DateTime($data['modified']))->equals($metadataSessionKey->get('modified'));
+        $asserTime = (new DateTime($data['modified']))->equals($metadataSessionKey->get('modified'));
         if (!$asserTime) {
             throw new ConflictException(__('The metadata session key data has changed.'));
         }
@@ -99,7 +100,7 @@ class MetadataSessionKeyUpdateService
                 __('The metadata session key could not be saved.'),
                 $exception->getEntity()->getErrors()
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // 500 entry could not be deleted because of some internal error
             throw new InternalErrorException(
                 __('Could not save the metadata session keys, please try again later.'),

@@ -76,7 +76,7 @@ class MetadataRotateKeyResourcesPostControllerTest extends AppIntegrationTestCas
             ->active()
             ->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($expiredMetadataKey)->withUserPrivateKey($user->get('gpgkey'))->persist();
-        $expiredResource2 = ResourceFactory::make()->withPermissionsFor([$user])->patchData([
+        ResourceFactory::make()->withPermissionsFor([$user])->patchData([
             'metadata_key_id' => $expiredMetadataKey->get('id'),
             'metadata' => $this->encryptForMetadataKey(json_encode([])),
             'metadata_key_type' => 'shared_key',

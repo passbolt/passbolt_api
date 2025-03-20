@@ -33,7 +33,7 @@ trait MetadataPopulateUserKeyIdTrait
      * @param mixed $data request data
      * @return array
      */
-    public function populatedMetadataUserKeyId(string $userId, $data): array
+    public function populatedMetadataUserKeyId(string $userId, mixed $data): array
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException(__('Invalid user ID format.'));

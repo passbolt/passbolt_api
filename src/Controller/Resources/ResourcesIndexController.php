@@ -19,11 +19,13 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Model\Table\ResourcesTable;
 use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
@@ -37,7 +39,7 @@ class ResourcesIndexController extends AppController
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @inheritDoc
@@ -136,7 +138,7 @@ class ResourcesIndexController extends AppController
                         Hash::get($secret, 'resource_id'),
                         Hash::get($secret, 'id'),
                     );
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     throw new InternalErrorException('Could not log secret access entry.', 500, $e);
                 }
             }

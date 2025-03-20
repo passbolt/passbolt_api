@@ -17,12 +17,14 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
 use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
 use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
@@ -44,7 +46,7 @@ abstract class RefreshTokenAbstractService
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * RefreshTokenCreateService constructor.
@@ -62,7 +64,7 @@ abstract class RefreshTokenAbstractService
     public function createHttpOnlySecureCookie(AuthenticationToken $token): Cookie
     {
         $cookie = new Cookie(self::REFRESH_TOKEN_COOKIE, $token->token);
-        $expiry = new \Cake\I18n\DateTime(
+        $expiry = new DateTime(
             '+' . Configure::read(self::REFRESH_TOKEN_EXPIRY_CONFIG_KEY)
         );
 
@@ -99,10 +101,10 @@ abstract class RefreshTokenAbstractService
      * @return void
      * @throws \InvalidArgumentException if the $token is not valid
      */
-    public function validateRefreshToken($token): void
+    public function validateRefreshToken(mixed $token): void
     {
         if (!Validation::uuid($token)) {
-            throw new \InvalidArgumentException(__('The refresh token should be a valid UUID.'));
+            throw new InvalidArgumentException(__('The refresh token should be a valid UUID.'));
         }
     }
 
@@ -111,10 +113,10 @@ abstract class RefreshTokenAbstractService
      * @return void
      * @throws \InvalidArgumentException if the $id is not valid
      */
-    public function validateUserId($userId): void
+    public function validateUserId(mixed $userId): void
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user ID should be a valid UUID.'));
+            throw new InvalidArgumentException(__('The user ID should be a valid UUID.'));
         }
     }
 

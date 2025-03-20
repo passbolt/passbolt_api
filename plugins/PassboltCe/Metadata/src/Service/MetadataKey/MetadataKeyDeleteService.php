@@ -26,6 +26,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
+use Exception;
 
 class MetadataKeyDeleteService
 {
@@ -78,7 +79,7 @@ class MetadataKeyDeleteService
 
         // Patch the key deleted field with the current time
         $options['accessibleFields'] = ['deleted' => true, 'modified_by' => true];
-        $patch = ['deleted' => \Cake\I18n\DateTime::now(), 'modified_by' => $uac->getId()];
+        $patch = ['deleted' => DateTime::now(), 'modified_by' => $uac->getId()];
         $metadataKey = $metadataKeysTable->patchEntity($metadataKey, $patch, $options);
         if ($metadataKey->getErrors()) {
             $msg = __('The metadata key could not be deleted.');
@@ -87,13 +88,13 @@ class MetadataKeyDeleteService
 
         // Save and delete the private key
         try {
-            $metadataKeysTable->getConnection()->transactional(function () use ($metadataKeysTable, $metadataKey) {
+            $metadataKeysTable->getConnection()->transactional(function () use ($metadataKeysTable, $metadataKey): void { // phpcs:ignore
                 $metadataKeysTable->saveOrFail($metadataKey, ['atomic' => false]);
                 $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys')->deleteAll([
                     'metadata_key_id' => $metadataKey->get('id'),
                 ]);
             });
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('The metadata key could not be deleted.');
             throw new InternalErrorException($msg, 500, $exception);
         }

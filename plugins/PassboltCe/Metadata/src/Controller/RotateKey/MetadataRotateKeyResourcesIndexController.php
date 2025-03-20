@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Controller\RotateKey;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Model\Table\ResourcesTable;
 use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 
@@ -28,7 +29,7 @@ class MetadataRotateKeyResourcesIndexController extends AppController
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @inheritDoc

@@ -21,6 +21,7 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use Cake\Http\Exception\BadRequestException;
+use Exception;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4FoldersToV5Service;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
@@ -255,7 +256,7 @@ class MigrateAllV4FoldersToV5ServiceTest extends AppTestCaseV5
 
         try {
             $this->service->migrate();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('Folder creation/modification with encrypted metadata not allowed', $e->getMessage());
         }

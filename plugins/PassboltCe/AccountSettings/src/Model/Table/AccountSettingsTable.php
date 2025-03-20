@@ -19,6 +19,7 @@ namespace Passbolt\AccountSettings\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UuidFactory;
+use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Query;
@@ -117,7 +118,7 @@ class AccountSettingsTable extends Table
      * @param array|null $context not in use
      * @return bool
      */
-    public function isValidProperty(string $value, ?array $context = null)
+    public function isValidProperty(string $value, ?array $context = null): bool
     {
         return in_array($value, AccountSetting::SUPPORTED_PROPERTIES);
     }
@@ -143,14 +144,14 @@ class AccountSettingsTable extends Table
      * @param array $whitelist example ['theme']
      * @return \Cake\ORM\Query
      */
-    public function findIndex(string $userId, array $whitelist)
+    public function findIndex(string $userId, array $whitelist): Query
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
 
         $props = [];
-        foreach ($whitelist as $i => $item) {
+        foreach ($whitelist as $item) {
             $props[] = $this->propertyToPropertyId($item);
         }
 
@@ -229,7 +230,7 @@ class AccountSettingsTable extends Table
      * @param string $property user property
      * @return bool
      */
-    public function deleteByProperty(string $userId, string $property)
+    public function deleteByProperty(string $userId, string $property): bool
     {
         $settingItem = $this->getByProperty($userId, $property);
         if ($settingItem !== null) {
@@ -246,7 +247,7 @@ class AccountSettingsTable extends Table
      * @param string $property user property
      * @return \Cake\Datasource\EntityInterface|array|null
      */
-    public function getByProperty(string $userId, string $property)
+    public function getByProperty(string $userId, string $property): EntityInterface|array|null
     {
         return $this->find()
             ->find('byProperty', property: $property)

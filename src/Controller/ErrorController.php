@@ -25,6 +25,7 @@ use Cake\Event\EventInterface;
 use Cake\Log\Log;
 use Cake\Routing\Router;
 use Cake\View\JsonView;
+use Exception;
 
 /**
  * Error Handling Controller
@@ -32,8 +33,8 @@ use Cake\View\JsonView;
  * Controller used by ExceptionRenderer to render error responses.
  *
  * Note: We are not extending from AppController because it can cause problems when loading Authentication component.
- * @see: https://github.com/cakephp/cakephp/issues/17655
  *
+ * @see: https://github.com/cakephp/cakephp/issues/17655
  * @property \App\Controller\Component\UserComponent $User
  * @property \App\Controller\Component\QueryStringComponent $QueryString
  */
@@ -79,7 +80,7 @@ class ErrorController extends Controller
             if ($error instanceof ExceptionWithErrorsDetailInterface) {
                 $body = $error->getErrors();
             }
-            $is500Exception = ($error instanceof \Exception) && ($error->getCode() === 500);
+            $is500Exception = ($error instanceof Exception) && ($error->getCode() === 500);
             if ($is500Exception) {
                 Log::error(
                     $error->getMessage(),

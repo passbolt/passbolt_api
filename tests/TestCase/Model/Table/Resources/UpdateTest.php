@@ -149,7 +149,6 @@ class UpdateTest extends AppTestCase
         // Check that the resource and its sub-models are saved as expected.
         $resource = $this->Resources->get($resourceId, contain: ['Creator', 'Modifier', 'Secrets']);
 
-
         // Check the resource attributes.
         $this->assertResourceAttributes($resource);
         $this->assertEquals($data['name'], $resource->name);

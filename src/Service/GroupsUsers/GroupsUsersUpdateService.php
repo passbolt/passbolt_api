@@ -19,6 +19,7 @@ namespace App\Service\GroupsUsers;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\GroupsUser;
+use App\Model\Table\GroupsUsersTable;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
@@ -28,7 +29,7 @@ class GroupsUsersUpdateService
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private GroupsUsersTable $groupsUsersTable;
 
     /**
      * GroupsUsersUpdateService constructor.

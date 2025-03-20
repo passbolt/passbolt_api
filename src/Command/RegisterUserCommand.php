@@ -19,6 +19,9 @@ namespace App\Command;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\RolesTable;
+use App\Model\Table\UsersTable;
 use App\Service\Command\ProcessUserService;
 use App\Utility\UserAccessControl;
 use Cake\Console\Arguments;
@@ -41,17 +44,17 @@ class RegisterUserCommand extends PassboltCommand
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @var \App\Model\Table\RolesTable
      */
-    protected $Roles;
+    protected RolesTable $Roles;
 
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * @var \App\Service\Command\ProcessUserService
@@ -190,10 +193,10 @@ class RegisterUserCommand extends PassboltCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayValidationError($errors, ConsoleIo $io): void
+    protected function displayValidationError(array $errors, ConsoleIo $io): void
     {
         foreach ($errors as $fieldname => $error) {
-            foreach ($error as $rule => $message) {
+            foreach ($error as $message) {
                 if (is_array($message)) {
                     $this->displayValidationError($error, $io);
                     break;
@@ -257,7 +260,7 @@ class RegisterUserCommand extends PassboltCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function notifyUser(User $user, ConsoleIo $io)
+    protected function notifyUser(User $user, ConsoleIo $io): void
     {
         // Display the token in console for convenience
         $token = $this->AuthenticationTokens->getByUserId($user->id);

@@ -20,6 +20,7 @@ use Cake\Database\Driver;
 use Cake\Database\Type\DateTimeFractionalType;
 use Cake\Database\Type\DateTimeType;
 use Cake\Database\TypeFactory;
+use DateTimeInterface;
 
 /**
  * Formats dates in ISO format.
@@ -39,7 +40,7 @@ class ISOFormatDateTimeType extends DateTimeType
                 continue;
             }
 
-            $values[$field] = date(\DateTimeInterface::ATOM, strtotime($values[$field]));
+            $values[$field] = date(DateTimeInterface::ATOM, strtotime($values[$field]));
         }
 
         return $values;

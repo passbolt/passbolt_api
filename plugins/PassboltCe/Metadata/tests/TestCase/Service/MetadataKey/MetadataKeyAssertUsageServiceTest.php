@@ -20,6 +20,7 @@ namespace Passbolt\Metadata\Test\TestCase\Service\MetadataKey;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Model\ResourcesModelTrait;
+use InvalidArgumentException;
 use Passbolt\Folders\FoldersPlugin;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Service\MetadataKey\MetadataKeyAssertUsageService;
@@ -55,7 +56,7 @@ class MetadataKeyAssertUsageServiceTest extends AppTestCaseV5
     public function testMetadataKeyAssertUsageService_Success_UsedByFolders(): void
     {
         $this->enableFeaturePlugin(FoldersPlugin::class);
-        $key = MetadataKeyFactory::make()->persist();
+        MetadataKeyFactory::make()->persist();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->v5Fields(true)->with('MetadataKeys')->persist();
         $metadataKeyId = $resource->metadata_key_id;
@@ -77,7 +78,7 @@ class MetadataKeyAssertUsageServiceTest extends AppTestCaseV5
     public function testMetadataKeyAssertUsageService_Error_NotUuid(): void
     {
         $sut = new MetadataKeyAssertUsageService();
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $sut->isKeyInUse('🔥');
     }
 }

@@ -29,6 +29,7 @@ use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Exception;
 
 class GpgkeysHealthcheckService extends AbstractHealthcheckService
 {
@@ -43,17 +44,17 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\GpgkeysTable
      */
-    private $table;
+    private GpgkeysTable $table;
 
     /**
      * @var \App\Utility\OpenPGP\OpenPGPBackend
      */
-    private $gpg;
+    private OpenPGPBackend $gpg;
 
     /**
      * @var \App\Model\Rule\Gpgkeys\GopengpgFormatRule
      */
-    private $gopengpgFormatRule;
+    private GopengpgFormatRule $gopengpgFormatRule;
 
     /**
      * Service constructor.
@@ -138,7 +139,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
             $json = json_encode($exception->getErrors());
             $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $json);
             $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('Validation failed for key {0}. {1}', $gpgkey->fingerprint, $exception->getMessage());
             $this->checks[self::CHECK_VALIDATES]->fail()->addDetail($msg, Healthcheck::STATUS_ERROR);
         }

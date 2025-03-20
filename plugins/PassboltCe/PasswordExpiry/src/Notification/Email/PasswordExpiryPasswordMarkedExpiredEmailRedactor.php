@@ -30,6 +30,7 @@ use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\PasswordExpiry\Event\PasswordExpiryResourceMarkedAsExpiredEventListener;
@@ -156,7 +157,7 @@ class PasswordExpiryPasswordMarkedExpiredEmailRedactor implements SubscribedEmai
     {
         try {
             $resourceDto = MetadataResourceDto::fromArray($resource->toArray());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

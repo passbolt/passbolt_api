@@ -19,6 +19,7 @@ namespace App\Error\Exception;
 use Cake\Http\Exception\HttpException;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
+use Exception;
 
 /**
  * Exception raised when a validation rule is not satisfied in a Controller.
@@ -35,21 +36,21 @@ class ValidationException extends HttpException implements
     /**
      * @var int
      */
-    protected $code = 400;
+    protected int $code = 400;
 
     /**
      * The validated entity.
      *
      * @var \Cake\ORM\Entity|null
      */
-    protected $_entity = null;
+    protected ?Entity $_entity = null;
 
     /**
      * The table that throw the validation exception.
      *
      * @var \Cake\ORM\Table|null
      */
-    protected $_table = null;
+    protected ?Table $_table = null;
 
     /**
      * Constructor.
@@ -65,7 +66,7 @@ class ValidationException extends HttpException implements
         ?Entity $entity = null,
         ?Table $table = null,
         ?int $code = null,
-        ?\Exception $previous = null
+        ?Exception $previous = null
     ) {
         parent::__construct($message, $code, $previous);
         $this->_entity = $entity;

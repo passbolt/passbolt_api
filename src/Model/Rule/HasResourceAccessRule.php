@@ -32,7 +32,7 @@ class HasResourceAccessRule
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
         if (!isset($options['resourceField']) && !isset($options['userField'])) {
             return false;

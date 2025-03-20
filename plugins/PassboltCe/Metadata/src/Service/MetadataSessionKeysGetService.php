@@ -25,7 +25,7 @@ class MetadataSessionKeysGetService
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC.
-     * @return \Passbolt\Metadata\Model\Entity\MetadataSessionKey[]
+     * @return array<\Passbolt\Metadata\Model\Entity\MetadataSessionKey>
      */
     public function get(UserAccessControl $uac): array
     {

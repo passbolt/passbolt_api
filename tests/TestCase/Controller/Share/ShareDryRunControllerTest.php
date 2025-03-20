@@ -160,7 +160,7 @@ class ShareDryRunControllerTest extends AppIntegrationTestCase
         ];
 
         $this->authenticateAs('ada');
-        foreach ($testCases as $caseLabel => $case) {
+        foreach ($testCases as $case) {
             $this->postJson("/share/simulate/resource/$resourceId.json", ['permissions' => $case['data']]);
             $this->assertError();
             $errors = $this->getResponseBodyAsArray();

@@ -16,11 +16,13 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Authenticator;
 
+use App\Authenticator\GpgAuthenticatorTrait;
 use App\Middleware\ContainerAwareMiddlewareTrait;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\Exceptions\InvalidSignatureException;
+use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Authentication\Authenticator\AbstractAuthenticator;
 use Authentication\Authenticator\Result;
@@ -37,6 +39,8 @@ use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Validation\Validation;
+use Exception;
+use InvalidArgumentException;
 use Passbolt\JwtAuthentication\Error\Exception\Challenge\InvalidDomainException;
 use Passbolt\JwtAuthentication\Error\Exception\Challenge\InvalidUserSignatureException;
 use Passbolt\JwtAuthentication\Service\VerifyToken\VerifyTokenValidationService;
@@ -46,7 +50,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
 {
     use ContainerAwareMiddlewareTrait;
     use EventDispatcherTrait;
-    use \App\Authenticator\GpgAuthenticatorTrait;
+    use GpgAuthenticatorTrait;
 
     public const PROTOCOL_VERSION = '1.0.0';
 
@@ -56,19 +60,19 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @var \App\Utility\OpenPGP\OpenPGPBackend $gpg gpg backend
      * @access protected
      */
-    protected $gpg;
+    protected OpenPGPBackend $gpg;
 
     /**
      * @var \Cake\Http\ServerRequest $request request
      * @access protected
      */
-    protected $request;
+    protected ServerRequest $request;
 
     /**
      * @var \App\Model\Entity\User $user user
      * @access protected
      */
-    protected $user;
+    protected User $user;
 
     /**
      * When an unauthenticated user tries to access a protected page this method is called
@@ -78,7 +82,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @throws \Cake\Http\Exception\ForbiddenException
      * @return void
      */
-    public function unauthenticated(ServerRequest $request, Response $response)
+    public function unauthenticated(ServerRequest $request, Response $response): void
     {
         // If it's JSON we show an error message
         if ($request->is('json')) {
@@ -103,13 +107,13 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
             $verifyToken = $this->verifyChallenge();
 
             return $this->successResult($verifyToken);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             return $this->errorResult($exception, ResultInterface::FAILURE_CREDENTIALS_MISSING);
         } catch (NotFoundException $exception) {
             return $this->errorResult($exception, ResultInterface::FAILURE_IDENTITY_NOT_FOUND);
         } catch (BadRequestException $exception) {
             return $this->errorResult($exception, ResultInterface::FAILURE_CREDENTIALS_INVALID);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return $this->errorResult($exception, ResultInterface::FAILURE_OTHER);
         }
     }
@@ -171,7 +175,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @return \Authentication\Authenticator\Result
      * @access private
      */
-    public function errorResult(\Exception $exception, string $reason): Result
+    public function errorResult(Exception $exception, string $reason): Result
     {
         Log::error($exception->getMessage());
 
@@ -205,12 +209,12 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
         try {
             $this->gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
             $this->gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 $this->gpg->importServerKeyInKeyring();
                 $this->gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
                 $this->gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);
@@ -230,13 +234,13 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
         try {
             $this->gpg->setVerifyKeyFromFingerprint($this->user->gpgkey->fingerprint);
             $this->gpg->setEncryptKeyFromFingerprint($this->user->gpgkey->fingerprint);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Try to import the key in keyring again
             try {
                 $this->gpg->importKeyIntoKeyring($this->user->gpgkey->armored_key);
                 $this->gpg->setVerifyKeyFromFingerprint($this->user->gpgkey->fingerprint);
                 $this->gpg->setEncryptKeyFromFingerprint($this->user->gpgkey->fingerprint);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('Could not import the user OpenPGP key.');
                 throw new InternalErrorException($msg, 500, $exception);
             }
@@ -275,7 +279,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
             $userData = $Users->findView($userId, Role::GUEST)
                 ->contain('Gpgkeys')
                 ->first();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error($exception->getMessage());
             throw new NotFoundException(__('The user does not exist or has been deleted.'));
         }
@@ -308,7 +312,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
         } catch (InvalidSignatureException $exception) {
             Log::error($exception->getMessage());
             throw new InvalidUserSignatureException(__('The user signature could not be verified.'));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error($exception->getMessage());
             throw new BadRequestException(__('The challenge cannot be decrypted.'));
         }
@@ -322,7 +326,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
                 'verify_token' => $verifyToken,
                 'verify_token_expiry' => $verifyTokenExpiry,
             ] = $jsonChallenge;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error($exception->getMessage() . "\n" . $clearTextChallenge);
             throw new BadRequestException(__('The challenge is invalid. Deserialization failed.'));
         }
@@ -338,7 +342,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
                 $verifyToken,
                 $this->request->getData('user_id')
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error($exception->getMessage() . "\n" . $clearTextChallenge);
             throw new BadRequestException(__('The challenge is invalid. Validation Failed.'));
         }
@@ -351,7 +355,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @throws \Cake\Http\Exception\InternalErrorException
      * @return void
      */
-    public function assertServerFingerprint($fingerprint): void
+    public function assertServerFingerprint(mixed $fingerprint): void
     {
         if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
             $msg = __('The config for the server private key fingerprint is not available or incomplete.');
@@ -364,7 +368,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @throws \Cake\Http\Exception\InternalErrorException
      * @return void
      */
-    public function assertServerPassphrase($passphrase): void
+    public function assertServerPassphrase(mixed $passphrase): void
     {
         if (!is_string($passphrase)) {
             $msg = __('The config for the server private key passphrase is invalid.');
@@ -377,7 +381,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
-    public function assertUserId($userId): void
+    public function assertUserId(mixed $userId): void
     {
         if (!is_string($userId) || !Validation::uuid($userId)) {
             $msg = __('The user id is missing or invalid.');
@@ -390,7 +394,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @throws \Cake\Http\Exception\BadRequestException
      * @return void
      */
-    public function assertUserData($userData): void
+    public function assertUserData(mixed $userData): void
     {
         if (
             !isset($userData->gpgkey) ||
@@ -410,7 +414,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @throws \InvalidArgumentException if armored challenge is invalid
      * @return void
      */
-    public function assertArmoredChallenge($armoredChallenge): void
+    public function assertArmoredChallenge(mixed $armoredChallenge): void
     {
         $this->assertGpgMessageIsValid($this->gpg, $armoredChallenge, __('The user challenge is missing or invalid.'));
     }
@@ -420,10 +424,10 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @throws \Exception if version is not supported
      * @return void
      */
-    public function assertVersion($version): void
+    public function assertVersion(mixed $version): void
     {
         if (!isset($version) || !is_string($version) || $version !== self::PROTOCOL_VERSION) {
-            throw new \Exception(__('The version is invalid.'));
+            throw new Exception(__('The version is invalid.'));
         }
     }
 
@@ -434,7 +438,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
      * @return void
      * @throws \Passbolt\JwtAuthentication\Error\Exception\Challenge\InvalidDomainException if domain is invalid
      */
-    public function assertDomain($domain): void
+    public function assertDomain(mixed $domain): void
     {
         if (!isset($domain) || !is_string($domain)) {
             throw new InvalidDomainException(__('The domain is invalid.'));
@@ -450,7 +454,7 @@ class GpgJwtAuthenticator extends AbstractAuthenticator
     /**
      * @return \App\Utility\OpenPGP\OpenPGPBackend
      */
-    public function getGpg(): \App\Utility\OpenPGP\OpenPGPBackend
+    public function getGpg(): OpenPGPBackend
     {
         return $this->gpg;
     }

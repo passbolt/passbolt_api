@@ -34,7 +34,7 @@ class MfaSortWithLastUsedProviderFirstService
      *
      * @var \Passbolt\Log\Model\Entity\ActionLog|false|null
      */
-    protected $lastProviderIfFoundOrFalse = null;
+    protected ActionLog|false|null $lastProviderIfFoundOrFalse = null;
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC

@@ -80,7 +80,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     public function deleted()
     {
-        return $this->setField('deleted', \Cake\I18n\DateTime::yesterday());
+        return $this->setField('deleted', DateTime::yesterday());
     }
 
     /**
@@ -90,7 +90,7 @@ class MetadataKeyFactory extends CakephpBaseFactory
      */
     public function expired()
     {
-        return $this->setField('expired', \Cake\I18n\DateTime::yesterday());
+        return $this->setField('expired', DateTime::yesterday());
     }
 
     /**

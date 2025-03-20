@@ -39,12 +39,12 @@ class PassboltCommand extends Command implements PassboltCommandInterface
      *
      * @var bool
      */
-    public static $welcomeBannerWasAlreadyShown = false;
+    public static bool $welcomeBannerWasAlreadyShown = false;
 
     /**
      * List of popular webserver usernames.
      *
-     * @var string[]
+     * @var array<string>
      */
     public const KNOWN_WEBSERVER_USERS = [
         'www-data',
@@ -138,7 +138,7 @@ class PassboltCommand extends Command implements PassboltCommandInterface
      *
      * @param \Cake\Console\Arguments $args The command arguments.
      * @param \Cake\Console\ConsoleIo $io The console io
-     * @return null|int The exit code or null for success
+     * @return int|null The exit code or null for success
      */
     public function execute(Arguments $args, ConsoleIo $io): ?int
     {
@@ -210,7 +210,7 @@ class PassboltCommand extends Command implements PassboltCommandInterface
      * @param \App\Service\Command\ProcessUserService $processUserService process user service
      * @return void
      */
-    protected function assertCurrentProcessUser(ConsoleIo $io, ProcessUserService $processUserService)
+    protected function assertCurrentProcessUser(ConsoleIo $io, ProcessUserService $processUserService): void
     {
         if (!$this->assertNotRoot($processUserService, $io)) {
             $this->error(__('aborting'), $io);

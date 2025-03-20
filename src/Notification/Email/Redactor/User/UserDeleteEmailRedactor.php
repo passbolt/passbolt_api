@@ -19,6 +19,7 @@ namespace App\Notification\Email\Redactor\User;
 
 use App\Controller\Users\UsersDeleteController;
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -40,7 +41,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @inheritDoc
@@ -113,7 +114,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\User $recipient User recipient
      * @param \App\Model\Entity\User $user User
-     * @param \App\Model\Entity\Group[] $groups Groups
+     * @param array<\App\Model\Entity\Group> $groups Groups
      * @param \App\Model\Entity\User $deletedBy User admin who deleted the user
      * @return \App\Notification\Email\Email
      */

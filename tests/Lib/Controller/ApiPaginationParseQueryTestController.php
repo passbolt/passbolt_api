@@ -16,16 +16,8 @@ declare(strict_types=1);
  */
 namespace App\Test\Lib\Controller;
 
-use App\Error\Exception\ExceptionWithErrorsDetailInterface;
-use App\Log\Formatter\JsonTraceFormatter;
 use App\Utility\Pagination\PaginatePropertyAwareTrait;
-use App\Utility\UserAction;
-use App\View\AjaxView;
 use Cake\Controller\Controller;
-use Cake\Event\EventInterface;
-use Cake\Log\Log;
-use Cake\Routing\Router;
-use Cake\View\JsonView;
 
 class ApiPaginationParseQueryTestController extends Controller
 {

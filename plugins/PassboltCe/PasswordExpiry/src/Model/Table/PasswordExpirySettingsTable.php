@@ -80,7 +80,7 @@ class PasswordExpirySettingsTable extends OrganizationSettingsTable
      * Filter organization settings by property.
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
-     * @param  \Cake\ORM\Query $query Any query performed on the present table.
+     * @param \Cake\ORM\Query $query Any query performed on the present table.
      * @return \Cake\ORM\Query
      */
     public function beforeFind(Event $event, Query $query): Query
@@ -98,7 +98,7 @@ class PasswordExpirySettingsTable extends OrganizationSettingsTable
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         $data['property'] = $this->getProperty();
         $data['property_id'] = $this->getPropertyId();

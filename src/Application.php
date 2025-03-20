@@ -64,7 +64,6 @@ use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
 use EmailQueue\Command\SenderCommand;
-use EmailQueue\Shell\SenderShell;
 use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
@@ -77,7 +76,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     /**
      * @var \App\BaseSolutionBootstrapper|null
      */
-    private $solutionBootstrapper;
+    private ?BaseSolutionBootstrapper $solutionBootstrapper = null;
 
     /**
      * Setup the PSR-7 middleware passbolt application will use.

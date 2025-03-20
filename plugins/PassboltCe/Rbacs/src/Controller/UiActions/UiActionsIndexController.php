@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\Rbacs\Model\Entity\UiAction;
+use Passbolt\Rbacs\Model\Table\UiActionsTable;
 
 class UiActionsIndexController extends AppController
 {
@@ -29,7 +30,7 @@ class UiActionsIndexController extends AppController
     /**
      * @var \Passbolt\Rbacs\Model\Table\UiActionsTable $UiActions
      */
-    protected $UiActions;
+    protected UiActionsTable $UiActions;
 
     /**
      * @var array $paginate options
@@ -72,7 +73,7 @@ class UiActionsIndexController extends AppController
     }
 
     /**
-     * @param \Passbolt\Rbacs\Model\Entity\UiAction[] $uiActions Array of UI actions entity.
+     * @param array<\Passbolt\Rbacs\Model\Entity\UiAction> $uiActions Array of UI actions entity.
      * @return array
      * @throws \Cake\Http\Exception\InternalErrorException When control function mapping for UI action is not defined
      */

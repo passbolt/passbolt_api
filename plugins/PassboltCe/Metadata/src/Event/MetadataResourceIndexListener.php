@@ -41,7 +41,7 @@ class MetadataResourceIndexListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function filterResources(Event $event)
+    public function filterResources(Event $event): void
     {
         $query = $event->getData('query');
         /** @var \App\Model\Table\Dto\FindIndexOptions $options */

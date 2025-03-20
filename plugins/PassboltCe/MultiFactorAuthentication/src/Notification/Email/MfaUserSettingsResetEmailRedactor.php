@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Notification\Email;
 
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -41,7 +42,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * MfaUserSettingsResetEmailRedactor constructor.
@@ -65,7 +66,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
      * @param \App\Utility\UserAccessControl $uac of user who deleted the settings
      * @return \App\Notification\Email\Email
      */
-    public function createEmail(User $user, UserAccessControl $uac)
+    public function createEmail(User $user, UserAccessControl $uac): Email
     {
         if ($user->id !== $uac->getId()) {
             return $this->createEmailAdminDelete($user, $uac);
@@ -78,7 +79,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
      * @param \App\Model\Entity\User $user user who deleted their own settings
      * @return \App\Notification\Email\Email
      */
-    private function createEmailSelfDelete(User $user)
+    private function createEmailSelfDelete(User $user): Email
     {
         $localeService = new LocaleService();
         $subject = $localeService->translateString(
@@ -110,7 +111,7 @@ class MfaUserSettingsResetEmailRedactor implements SubscribedEmailRedactorInterf
      * @param \App\Utility\UserAccessControl $uac of user who deleted the settings
      * @return \App\Notification\Email\Email
      */
-    private function createEmailAdminDelete(User $user, UserAccessControl $uac)
+    private function createEmailAdminDelete(User $user, UserAccessControl $uac): Email
     {
         $admin = $this->Users->findFirstForEmail($uac->getId());
         $localeService = new LocaleService();

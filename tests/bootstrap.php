@@ -8,7 +8,6 @@ declare(strict_types=1);
  * unit tests in this file.
  */
 
-use Cake\Chronos\Chronos;
 use Cake\TestSuite\ConnectionHelper;
 use Migrations\TestSuite\Migrator;
 

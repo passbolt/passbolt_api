@@ -29,17 +29,17 @@ class TableFindIndexBefore extends Event
     /**
      * @var \App\Model\Table\Dto\FindIndexOptions
      */
-    private $options;
+    private FindIndexOptions $options;
 
     /**
      * @var \Cake\ORM\Query
      */
-    private $query;
+    private Query $query;
 
     /**
      * @var \Cake\ORM\Table
      */
-    private $table;
+    private Table $table;
 
     /**
      * @param string $name Name
@@ -105,7 +105,7 @@ class TableFindIndexBefore extends Event
     /**
      * @return \Cake\ORM\Table
      */
-    public function getTable()
+    public function getTable(): Table
     {
         return $this->table;
     }
@@ -113,7 +113,7 @@ class TableFindIndexBefore extends Event
     /**
      * @return \App\Model\Table\Dto\FindIndexOptions
      */
-    public function getOptions()
+    public function getOptions(): FindIndexOptions
     {
         return $this->options;
     }
@@ -121,7 +121,7 @@ class TableFindIndexBefore extends Event
     /**
      * @return \Cake\ORM\Query
      */
-    public function getQuery()
+    public function getQuery(): Query
     {
         return $this->query;
     }

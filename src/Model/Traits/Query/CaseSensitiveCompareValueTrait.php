@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Model\Traits\Query;
 
 use Cake\Database\Driver\Mysql;
+use Cake\Database\Expression\QueryExpression;
 use Cake\ORM\Query;
 
 /**
@@ -30,7 +31,7 @@ trait CaseSensitiveCompareValueTrait
      * @param mixed $col Column value to convert into case-sensitive binary.
      * @return \Cake\Database\Expression\QueryExpression|string
      */
-    public function getCaseSensitiveValue(Query $query, $col)
+    public function getCaseSensitiveValue(Query $query, mixed $col): QueryExpression|string
     {
         /**
          * Mysql is case-insensitive by default, so have to make case-sensitive comparison via explicitly specifying charset.
@@ -81,7 +82,7 @@ trait CaseSensitiveCompareValueTrait
      * @param mixed $value Value from the type needs to be interpreted.
      * @return string
      */
-    public function getBindType($value): string
+    public function getBindType(mixed $value): string
     {
         $type = 'string';
         if (is_int($value)) {

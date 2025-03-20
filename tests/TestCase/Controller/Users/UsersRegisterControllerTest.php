@@ -143,7 +143,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
 
         // Check timezone displaying alongside the datetime
         $this->assertEmailInBatchContains(
-            sprintf('%s (%s)', \Cake\I18n\DateTime::parse($user->get('created'))->nice(), $data['timezone']),
+            sprintf('%s (%s)', DateTime::parse($user->get('created'))->nice(), $data['timezone']),
             $data['username']
         );
     }
@@ -181,7 +181,7 @@ class UsersRegisterControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEquals($user->role_id, $userRoleId);
-        $this->assertTrue($user->created->greaterThan(\Cake\I18n\DateTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertTrue($user->created->greaterThan(DateTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersRegisterController_Error_FailValidation(): void

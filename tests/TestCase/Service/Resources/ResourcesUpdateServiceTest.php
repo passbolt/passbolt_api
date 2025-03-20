@@ -196,7 +196,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesError_UpdateResourceSecrets_ValidationError()
     {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_UpdateResourceSecrets_ValidationError();
+        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_UpdateResourceSecrets_ValidationError(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $r1EncryptedSecretA = $this->encryptMessageFor($userAId, 'R1 secret updated');
@@ -236,7 +236,7 @@ class ResourcesUpdateServiceTest extends AppTestCase
 
     public function testUpdateResourcesError_InsufficientPermission()
     {
-        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourcesError_InsufficientPermission();
+        [$r1, $userAId, $userBId] = $this->insertFixture_UpdateResourcesError_InsufficientPermission(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             'name' => 'R1 updated',

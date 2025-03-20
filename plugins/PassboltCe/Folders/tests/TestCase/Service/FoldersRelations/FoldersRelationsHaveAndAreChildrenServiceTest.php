@@ -153,7 +153,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_NoChildrenNoParent_RootFolderHavingChildrenInMultipleTrees()
     {
-        [$folderA, $folderB, $userA, $userB] = $this->providerRootFolderHavingChildrenHavingChildrenInMultipleTrees();
+        [$folderA, $folderB, $userA, $userB] = $this->providerRootFolderHavingChildrenHavingChildrenInMultipleTrees(); // phpcs:ignore
         // Check the whole graph.
         $this->assertFalse($this->service->haveAndAreChildren([$folderA->id]));
         // Check for the given user A.
@@ -174,7 +174,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_NoChildrenNoParent_ChildFolderHavingNoChildren()
     {
-        [$folderA, $folderB, $userA, $userB] = $this->providerRootFolderHavingChildrenHavingChildrenInMultipleTrees();
+        [$folderA, $folderB, $userA, $userB] = $this->providerRootFolderHavingChildrenHavingChildrenInMultipleTrees(); // phpcs:ignore
         // Check the whole graph.
         $this->assertFalse($this->service->haveAndAreChildren([$folderB->id]));
         // Check for the given user A.
@@ -185,7 +185,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_NoChildrenNoParent_RootFolderHavingChildrenInOneTreeOnly()
     {
-        [$folderA, $folderB, $userA, $userB] = $this->providerRootFolderHavingChildrenInOneTreeOnly();
+        [$folderA, $folderB, $userA, $userB] = $this->providerRootFolderHavingChildrenInOneTreeOnly(); // phpcs:ignore
         // Check the whole graph.
         $this->assertFalse($this->service->haveAndAreChildren([$folderA->id]));
         // Check for the given user A.
@@ -206,7 +206,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_NoChildrenNoParent_ChildHavingParentInOneTreeOnly()
     {
-        [$folderA, $folderB, $userA, $userB] = $this->providerRootFolderHavingChildrenInOneTreeOnly();
+        [$folderA, $folderB, $userA, $userB] = $this->providerRootFolderHavingChildrenInOneTreeOnly(); // phpcs:ignore
         // Check the whole graph.
         $this->assertFalse($this->service->haveAndAreChildren([$folderB->id]));
         // Check for the given user A.
@@ -274,7 +274,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_ChildrenAndParent_ChildAndParent()
     {
-        [$folderA, $folderB, $folderC, $userA] = $this->providerChildAndParent();
+        [$folderA, $folderB, $folderC, $userA] = $this->providerChildAndParent(); // phpcs:ignore
         // Check the whole graph.
         $this->assertTrue($this->service->haveAndAreChildren([$folderB->id]));
         // Check for the given user A.
@@ -293,7 +293,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_ChildrenAndParent_ChildAndParentInMultipleTrees()
     {
-        [$folderA, $folderB, $folderC, $userA, $userB] = $this->providerChildAndParentInMultipleTrees();
+        [$folderA, $folderB, $folderC, $userA, $userB] = $this->providerChildAndParentInMultipleTrees(); // phpcs:ignore
         // Check the whole graph.
         $this->assertTrue($this->service->haveAndAreChildren([$folderB->id]));
         // Check for the given user A.
@@ -315,7 +315,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_ChildrenAndParent_ChildAndParentInOnlyOneTree()
     {
-        [$folderA, $folderB, $folderC, $userA, $userB] = $this->providerChildAndParentInOnlyOneTree();
+        [$folderA, $folderB, $folderC, $userA, $userB] = $this->providerChildAndParentInOnlyOneTree(); // phpcs:ignore
         // Check the whole graph.
         $this->assertTrue($this->service->haveAndAreChildren([$folderB->id]));
         // Check for the given user A.
@@ -338,7 +338,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_ChildrenAndParent_ChildInOneTreeParentInAnotherOne()
     {
-        [$folderA, $folderB, $folderC, $userA, $userB] = $this->providerChildInOneTreeParentInAnotherOne();
+        [$folderA, $folderB, $folderC, $userA, $userB] = $this->providerChildInOneTreeParentInAnotherOne(); // phpcs:ignore
         // Check the whole graph.
         $this->assertTrue($this->service->haveAndAreChildren([$folderB->id]));
         // Check for the given user A.
@@ -365,7 +365,7 @@ class FoldersRelationsHaveAndAreChildrenServiceTest extends FoldersTestCase
 
     public function testFoldersRelationsHaveAndAreChildrenService_ChildrenAndParent_MultipleChildrenAndParent()
     {
-        [$folderA, $folderB, $folderC, $folderD, $userA] = $this->providerMultipleChildrenAndParent();
+        [$folderA, $folderB, $folderC, $folderD, $userA] = $this->providerMultipleChildrenAndParent(); // phpcs:ignore
         // Check the whole graph.
         $this->assertTrue($this->service->haveAndAreChildren([$folderB->id, $folderC->id]));
         // Check for the given user A.

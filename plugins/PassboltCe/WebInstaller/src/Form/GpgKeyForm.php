@@ -22,6 +22,7 @@ use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Exception;
 
 class GpgKeyForm extends Form
 {
@@ -180,7 +181,7 @@ class GpgKeyForm extends Form
             $messageToEncrypt = 'open source password manager for teams';
             $fingerprint = $gpg->importKeyIntoKeyring($check);
             $gpg->setEncryptKeyFromFingerprint($fingerprint);
-            $encryptedMessage = $gpg->encrypt($messageToEncrypt);
+            $gpg->encrypt($messageToEncrypt);
         } catch (CakeException $e) {
             return false;
         }
@@ -244,7 +245,7 @@ class GpgKeyForm extends Form
             $privateKeyFingerprint = Hash::get($privateKeyInfo, 'fingerprint', '');
             $publicKeyInfo = $gpg->getKeyInfo($publicKeyArmored);
             $publicKeyFingerprint = Hash::get($publicKeyInfo, 'fingerprint', '');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

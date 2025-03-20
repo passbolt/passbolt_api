@@ -29,6 +29,7 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use UnexpectedValueException;
 
 /**
@@ -86,7 +87,7 @@ class FolderizableBehavior extends Behavior
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * List of the events for which the behavior must be triggered.
@@ -199,12 +200,14 @@ class FolderizableBehavior extends Behavior
     /**
      * Add the folder_parent_id property to an entity
      *
-     * @param array|\Cake\Datasource\EntityInterface $entity The target entity
+     * @param \Cake\Datasource\EntityInterface|array $entity The target entity
      * @param string|null $folderParentId The folder parent id
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      */
-    private function addFolderParentIdProperty($entity, ?string $folderParentId = null)
-    {
+    private function addFolderParentIdProperty(
+        array|EntityInterface $entity,
+        ?string $folderParentId = null
+    ): array|EntityInterface {
         if ($entity instanceof EntityInterface) {
             $entity->setVirtual([self::FOLDER_PARENT_ID_PROPERTY], true);
             $entity->set(self::FOLDER_PARENT_ID_PROPERTY, $folderParentId);
@@ -218,11 +221,11 @@ class FolderizableBehavior extends Behavior
     /**
      * Add the personal status property to an entity
      *
-     * @param array|\Cake\Datasource\EntityInterface $entity The target entity
+     * @param \Cake\Datasource\EntityInterface|array $entity The target entity
      * @param bool $isPersonal The status
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      */
-    private function addPersonalStatusProperty($entity, bool $isPersonal)
+    private function addPersonalStatusProperty(array|EntityInterface $entity, bool $isPersonal): array|EntityInterface
     {
         if ($entity instanceof EntityInterface) {
             $entity->setVirtual([self::PERSONAL_PROPERTY], true);
@@ -243,7 +246,7 @@ class FolderizableBehavior extends Behavior
      * @return void
      * @see implementedEvents()
      */
-    public function handleEvent(Event $event, $data, $options)
+    public function handleEvent(Event $event, mixed $data, mixed $options): void
     {
         switch ($event->getName()) {
             case TableFindIndexBefore::EVENT_NAME:
@@ -261,11 +264,11 @@ class FolderizableBehavior extends Behavior
      * @param \Cake\Datasource\EntityInterface $entity The target entity
      * @return void
      */
-    private function handleAfterSave(EntityInterface $entity)
+    private function handleAfterSave(EntityInterface $entity): void
     {
         $events = $this->_config['events'];
         $new = $entity->isNew() !== false;
-        foreach ($events['Model.afterSave'] as $field => $when) {
+        foreach ($events['Model.afterSave'] as $when) {
             if (!in_array($when, ['always', 'new', 'existing'])) {
                 $msg = 'When should be one of "always", "new" or "existing". The passed value "{0}" is invalid';
                 throw new UnexpectedValueException($msg);

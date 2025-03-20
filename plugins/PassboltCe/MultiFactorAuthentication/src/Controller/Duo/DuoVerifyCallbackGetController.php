@@ -35,6 +35,7 @@ use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoLoginService;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStateCookieService;
 use Passbolt\MultiFactorAuthentication\Service\MfaVerifiedCookieService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Throwable;
 
 class DuoVerifyCallbackGetController extends MfaVerifyController
 {
@@ -103,7 +104,7 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
      * @return \Cake\Http\Response|null
      */
     private function handleErrorFeedback(
-        \Throwable $e,
+        Throwable $e,
         string $token,
         UserAccessControl $uac
     ): ?Response {
@@ -205,7 +206,7 @@ class DuoVerifyCallbackGetController extends MfaVerifyController
                 $sessionIdentificationService,
                 $this->getRequest()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InternalErrorException('Could not create MFA verified cookie.', null, $e);
         }
 

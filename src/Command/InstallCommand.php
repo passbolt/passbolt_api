@@ -355,7 +355,7 @@ class InstallCommand extends PassboltCommand
     }
 
     /**
-     * @return \App\Service\Healthcheck\HealthcheckServiceInterface[]
+     * @return array<\App\Service\Healthcheck\HealthcheckServiceInterface>
      */
     protected function getInstallCheckHealthcheckServices(): array
     {

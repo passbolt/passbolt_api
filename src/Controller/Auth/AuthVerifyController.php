@@ -18,6 +18,7 @@ namespace App\Controller\Auth;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\InternalErrorException;
 
 class AuthVerifyController extends AppController
@@ -25,7 +26,7 @@ class AuthVerifyController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated(['verifyGet']);
 

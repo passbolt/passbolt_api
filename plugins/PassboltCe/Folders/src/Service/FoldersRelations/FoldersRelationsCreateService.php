@@ -20,6 +20,7 @@ namespace Passbolt\Folders\Service\FoldersRelations;
 use App\Error\Exception\ValidationException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsCreateService
 {
@@ -28,7 +29,7 @@ class FoldersRelationsCreateService
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * Instantiate the service.

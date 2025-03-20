@@ -20,6 +20,7 @@ namespace App\Service\Healthcheck\Database;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Database\Exception\MissingConnectionException;
 use Cake\Datasource\ConnectionManager;
+use PDOException;
 
 class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
 {
@@ -35,7 +36,7 @@ class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
                 ->from('roles')
                 ->rowCountAndClose();
             $this->status = ($nRoles >= 3);
-        } catch (MissingConnectionException | \PDOException $e) {
+        } catch (MissingConnectionException | PDOException $e) {
         }
 
         return $this;

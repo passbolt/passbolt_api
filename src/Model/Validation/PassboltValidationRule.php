@@ -28,7 +28,7 @@ abstract class PassboltValidationRule extends ValidationRule
      * @param mixed $context Context
      * @return bool
      */
-    abstract public function rule($value, $context): bool;
+    abstract public function rule(mixed $value, mixed $context): bool;
 
     /**
      * The error displayed
@@ -37,7 +37,7 @@ abstract class PassboltValidationRule extends ValidationRule
      * @param mixed $context Context
      * @return string
      */
-    abstract public function defaultErrorMessage($value, $context): string;
+    abstract public function defaultErrorMessage(mixed $value, mixed $context): string;
 
     /**
      * Set the error message

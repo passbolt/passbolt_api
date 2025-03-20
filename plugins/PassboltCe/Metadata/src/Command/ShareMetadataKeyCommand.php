@@ -25,6 +25,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\Metadata\Model\Entity\MetadataPrivateKey;
 use Passbolt\Metadata\Service\MetadataKeyShareDefaultService;
 use Passbolt\Metadata\Service\MetadataKeysSettingsGetService;
@@ -77,7 +78,7 @@ class ShareMetadataKeyCommand extends PassboltCommand
         $error = false;
         $usersResultSet
             ->chunk(50)
-            ->each(function ($usersBatch) use ($admin, $metadataKeys, $io, &$error) {
+            ->each(function ($usersBatch) use ($admin, $metadataKeys, $io, &$error): void {
                 $this->shareMetadataKeyWithUsers($admin, $usersBatch, $metadataKeys, $io, $error);
             });
 
@@ -87,7 +88,7 @@ class ShareMetadataKeyCommand extends PassboltCommand
     /**
      * Returns all not deleted metadata keys.
      *
-     * @return \Passbolt\Metadata\Model\Entity\MetadataKey[]
+     * @return array<\Passbolt\Metadata\Model\Entity\MetadataKey>
      */
     private function getMetadataKeys(): array
     {
@@ -138,7 +139,7 @@ class ShareMetadataKeyCommand extends PassboltCommand
 
     /**
      * @param \App\Model\Entity\User $admin admin populating the created_by and modified_by fields.
-     * @param \App\Model\Entity\User[] $users Users to share metadata key with.
+     * @param array<\App\Model\Entity\User> $users Users to share metadata key with.
      * @param array $metadataKeys Existing metadata keys with associated private key.
      * @param \Cake\Console\ConsoleIo $io I/O object.
      * @param bool $error Set it to true in case of any error occurrence.
@@ -170,7 +171,7 @@ class ShareMetadataKeyCommand extends PassboltCommand
 
             try {
                 $metadataKeyShareService->shareMetadataKeyWithUser($user, $metadataPrivateKey, $admin->id);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $msg = __('The metadata key {0} could not be shared with user {1}.', $missingMetadataKeyId, $user->username); // phpcs:ignore
                 $msg .= ' ' . $e->getMessage();
                 $this->error($msg, $io);

@@ -19,6 +19,7 @@ namespace Passbolt\WebInstaller\Form;
 use Cake\Form\Form;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
+use Exception;
 use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyValidateService;
 
 class SubscriptionForm extends Form
@@ -34,7 +35,7 @@ class SubscriptionForm extends Form
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('subscription_key', 'text');
@@ -67,12 +68,12 @@ class SubscriptionForm extends Form
      * @param array|null $context not in use
      * @return string|bool
      */
-    public function checkSubscriptionIsValid(string $value, ?array $context = null)
+    public function checkSubscriptionIsValid(string $value, ?array $context = null): string|bool
     {
         try {
             $service = new SubscriptionKeyValidateService();
             $service->validate($value);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->_lastError = $e->getMessage();
 
             return false;

@@ -23,6 +23,7 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Secrets\SecretsUpdateSecretsService;
 use App\Utility\UserAccessControl;
@@ -51,22 +52,22 @@ class ResourcesUpdateService
     /**
      * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
      */
-    private $getUsersIdsHavingAccessToService;
+    private PermissionsGetUsersIdsHavingAccessToService $getUsersIdsHavingAccessToService;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $Permissions;
+    private PermissionsTable $Permissions;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $Resources;
+    private ResourcesTable $Resources;
 
     /**
      * @var \App\Service\Secrets\SecretsUpdateSecretsService
      */
-    private $secretsUpdateSecretsService;
+    private SecretsUpdateSecretsService $secretsUpdateSecretsService;
 
     /**
      * Instantiate the service.
@@ -105,7 +106,7 @@ class ResourcesUpdateService
         }
 
         $this->Resources->getConnection()->transactional(
-            function () use (&$resource, $uac, $meta, $secrets, $resourceDto) {
+            function () use (&$resource, $uac, $meta, $secrets, $resourceDto): void {
                 $this->updateResourceMeta($uac, $resource, $meta, $resourceDto);
 
                 $updatedSecrets = [];
@@ -232,7 +233,7 @@ class ResourcesUpdateService
         $data['modified_by'] = $uac->getId();
         // Force the modified field to be updated to ensure the field is updated even if no meta are. It's the case
         // when a user updates only the secret.
-        $data['modified'] = new \Cake\I18n\DateTime();
+        $data['modified'] = new DateTime();
         if ($resourceDto->isV5()) {
             // clear v4 fields in case of v5 upgrade
             $data['name'] = null;
@@ -278,7 +279,7 @@ class ResourcesUpdateService
      * @param \App\Utility\UserAccessControl $uac The operator
      * @param \App\Model\Entity\Resource $resource The target resource
      * @param array $data The list of secrets to update
-     * @return \App\Model\Entity\Secret[]
+     * @return array<\App\Model\Entity\Secret>
      * @throws \Exception If an unexpected error occurred
      */
     private function updateResourceSecrets(UserAccessControl $uac, Resource $resource, array $data): array
@@ -297,7 +298,7 @@ class ResourcesUpdateService
 
         try {
             $entitiesChanges = $this->secretsUpdateSecretsService->updateSecrets($uac, $resource->id, $data);
-            /** @var \App\Model\Entity\Secret[] $secrets */
+            /** @var array<\App\Model\Entity\Secret> $secrets */
             $secrets = $entitiesChanges->getUpdatedEntities(Secret::class);
         } catch (CustomValidationException $e) {
             $resource->setError('secrets', $e->getErrors());
@@ -312,7 +313,7 @@ class ResourcesUpdateService
      *
      * @param \App\Utility\UserAccessControl $uac UserAccessControl updating the resource
      * @param \App\Model\Entity\Resource $resource The updated resource
-     * @param \App\Model\Entity\Secret[] $secrets The secrets
+     * @param array<\App\Model\Entity\Secret> $secrets The secrets
      * @param \Passbolt\Metadata\Model\Dto\MetadataResourceDto $resourceDto Resource DTO.
      * @return void
      */

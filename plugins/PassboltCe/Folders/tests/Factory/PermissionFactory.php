@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\Factory;
 
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\PermissionFactory as AppPermissionFactory;
 use Passbolt\Folders\FoldersPlugin;
 use Passbolt\Folders\Model\Entity\Folder;
 
@@ -27,7 +28,7 @@ use Passbolt\Folders\Model\Entity\Folder;
  * @method \App\Model\Entity\Permission getEntity()
  * @method \App\Model\Entity\Permission[] getEntities()
  */
-class PermissionFactory extends \App\Test\Factory\PermissionFactory
+class PermissionFactory extends AppPermissionFactory
 {
     public function initialize(): void
     {

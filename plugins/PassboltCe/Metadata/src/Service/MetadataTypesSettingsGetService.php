@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Service;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 
 class MetadataTypesSettingsGetService
@@ -86,12 +87,12 @@ class MetadataTypesSettingsGetService
 
             // Deserialize and revalidate the settings
             if (!isset($setting->value) || !is_string($setting->value)) {
-                throw new \Exception('Invalid setting type');
+                throw new Exception('Invalid setting type');
             }
             $data = json_decode($setting->value, true, 2, JSON_THROW_ON_ERROR);
 
             self::$settings = (new MetadataTypesSettingsAssertService())->assert($data);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             Log::error($exception->getMessage());
 
             self::$settings = self::getDefaultSettings();

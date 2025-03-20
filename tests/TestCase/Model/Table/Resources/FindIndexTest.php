@@ -27,6 +27,7 @@ use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use InvalidArgumentException;
 use PassboltTestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
@@ -299,7 +300,7 @@ class FindIndexTest extends AppTestCase
     {
         try {
             $this->Resources->findIndex('not-valid');
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
         $this->fail('Expect an exception');

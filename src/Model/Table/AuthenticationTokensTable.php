@@ -21,12 +21,14 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Utility\AuthToken\AuthTokenExpiry;
 use App\Utility\UuidFactory;
+use Cake\Datasource\EntityInterface;
 use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 
 /**
  * AuthenticationTokens Model
@@ -65,7 +67,7 @@ class AuthenticationTokensTable extends Table
     /**
      * @var \App\Utility\AuthToken\AuthTokenExpiry
      */
-    private $authTokenExpiry;
+    private AuthTokenExpiry $authTokenExpiry;
 
     /**
      * @return array self::ALLOWED_TYPES
@@ -154,7 +156,7 @@ class AuthenticationTokensTable extends Table
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function isValidAuthenticationTokenType($check, array $context)
+    public function isValidAuthenticationTokenType(mixed $check, array $context): bool
     {
         return is_string($check) && (in_array($check, $this->getAllowedTypes()));
     }
@@ -165,7 +167,7 @@ class AuthenticationTokensTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRegister(Validator $validator)
+    public function validationRegister(Validator $validator): Validator
     {
         return self::validationDefault($validator);
     }
@@ -304,7 +306,7 @@ class AuthenticationTokensTable extends Table
     public function setInactive(string $tokenValue): bool
     {
         if (!Validation::uuid($tokenValue)) {
-            throw new \InvalidArgumentException('The token should be a valid UUID.');
+            throw new InvalidArgumentException('The token should be a valid UUID.');
         }
         $token = $this->find('all')
             ->where(['token' => $tokenValue, 'active' => true ])
@@ -328,12 +330,12 @@ class AuthenticationTokensTable extends Table
      * @param string $userId uuid
      * @param string|null $type token type
      * @throws \InvalidArgumentException is the token is not a valid uuid
-     * @return array|\Cake\Datasource\EntityInterface|null
+     * @return \Cake\Datasource\EntityInterface|array|null
      */
-    public function getByUserId(string $userId, $type = null)
+    public function getByUserId(string $userId, ?string $type = null): array|EntityInterface|null
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         $where = ['user_id' => $userId, 'active' => true ];
         if ($type !== null) {
@@ -353,11 +355,11 @@ class AuthenticationTokensTable extends Table
      * @param string $type type
      * @return \Cake\I18n\DateTime
      */
-    private function getExpiryDate(string $type)
+    private function getExpiryDate(string $type): DateTime
     {
         $expiryPeriod = $this->authTokenExpiry->getExpiryForTokenType($type);
 
-        return new \Cake\I18n\DateTime($expiryPeriod . ' ago');
+        return new DateTime($expiryPeriod . ' ago');
     }
 
     /**
@@ -367,14 +369,14 @@ class AuthenticationTokensTable extends Table
      * @param \Cake\ORM\Query $query query
      * @param ?string $tokenType type
      * @return \Cake\ORM\Query
-     *@throws \Cake\Http\Exception\InternalErrorException if token type does not have expiry in config
+     * @throws \Cake\Http\Exception\InternalErrorException if token type does not have expiry in config
      * @throws \InvalidArgumentException if type is missing in options
      */
     public function findExpiredByType(Query $query, ?string $tokenType = null): Query
     {
         if (!isset($tokenType)) {
             $msg = 'AuthenticationTokensTable::findExpiredByType error, a token type is required';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
 
         return $query->where([

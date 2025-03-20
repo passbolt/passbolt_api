@@ -22,18 +22,19 @@ use App\Model\Table\PermissionsTable;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class HandleGroupUserDeletedService
 {
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * Instantiate the service.
@@ -52,7 +53,7 @@ class HandleGroupUserDeletedService
      * @return void
      * @throws \Exception
      */
-    public function handle(GroupsUser $groupUser)
+    public function handle(GroupsUser $groupUser): void
     {
         $this->removeLostAccessesResourcesFromUserTree($groupUser);
         $this->removeLostAccessesFoldersFromUserTree($groupUser);

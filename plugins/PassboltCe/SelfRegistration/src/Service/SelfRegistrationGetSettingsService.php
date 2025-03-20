@@ -59,7 +59,7 @@ class SelfRegistrationGetSettingsService extends SelfRegistrationBaseSettingsSer
     }
 
     /**
-     * @return null[]
+     * @return array<null>
      */
     protected function getDefaultSettings(): array
     {

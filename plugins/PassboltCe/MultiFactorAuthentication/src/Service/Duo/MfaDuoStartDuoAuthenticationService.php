@@ -24,10 +24,12 @@ use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
+use InvalidArgumentException;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoAuthenticationRequestDto;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Throwable;
 
 /**
  * Class MfaDuoStartDuoAuthenticationService
@@ -39,12 +41,12 @@ class MfaDuoStartDuoAuthenticationService
     /**
      * @var \Duo\DuoUniversal\Client
      */
-    protected $duoClient;
+    protected Client $duoClient;
 
     /**
      * @var string
      */
-    protected $authTokenType;
+    protected string $authTokenType;
 
     /**
      * Constructor.
@@ -62,7 +64,7 @@ class MfaDuoStartDuoAuthenticationService
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
                 $authenticationTokenType
             );
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new ServiceUnavailableException(__('Could not enable Duo MFA provider.'), null, $th);
         }
     }
@@ -106,7 +108,7 @@ class MfaDuoStartDuoAuthenticationService
     {
         try {
             $this->duoClient->healthCheck();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new ServiceUnavailableException(__('Unable to connect to Duo services.'), null, $th);
         }
     }
@@ -126,7 +128,7 @@ class MfaDuoStartDuoAuthenticationService
         if (!$isValid) {
             $readableAllowedTokenTypes = implode(', ', MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES);
             $msg = 'The authentication token type should be one of the following: ' . $readableAllowedTokenTypes . '.';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
     }
 
@@ -155,7 +157,7 @@ class MfaDuoStartDuoAuthenticationService
 
         try {
             return $authenticationTable->generate($uac->getId(), $this->authTokenType, null, $data);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $msg = 'Unable to create the Duo callback authentication token.';
             throw new InternalErrorException($msg, null, $th);
         }
@@ -180,7 +182,7 @@ class MfaDuoStartDuoAuthenticationService
                 $uac->getUsername(),
                 $authenticationToken->getDataValue('state')
             );
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new InternalErrorException('Unable to create the Duo authentication URL.', null, $th);
         }
     }

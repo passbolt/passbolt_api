@@ -22,6 +22,7 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 
 trait GroupsFindersTrait
 {
@@ -40,7 +41,7 @@ trait GroupsFindersTrait
      * @param string $resourceId The resource to search potential groups for.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryByHasNotPermission(Query $query, string $resourceId)
+    private function _filterQueryByHasNotPermission(Query $query, string $resourceId): Query
     {
         $permissionQuery = $this->getAssociation('Permissions')
             ->find()
@@ -79,7 +80,7 @@ trait GroupsFindersTrait
      * @param array|null $options options
      * @return \Cake\ORM\Query
      */
-    public function findIndex(?array $options = [])
+    public function findIndex(?array $options = []): Query
     {
         $query = $this->find();
 
@@ -203,7 +204,7 @@ trait GroupsFindersTrait
      * @param \Cake\ORM\Query $query The query to augment.
      * @return \Cake\ORM\Query
      */
-    private function _containUserCount(Query $query)
+    private function _containUserCount(Query $query): Query
     {
         // Count the members of the groups in a subquery.
         $subQuery = $this->getAssociation('GroupsUsers')->find();
@@ -280,7 +281,7 @@ trait GroupsFindersTrait
     public function findView(string $groupId, ?array $options = []): Query
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException('The parameter groupId should be a valid UUID.');
+            throw new InvalidArgumentException('The parameter groupId should be a valid UUID.');
         }
 
         return $this->findIndex($options)->where(['Groups.id' => $groupId]);
@@ -296,11 +297,11 @@ trait GroupsFindersTrait
     public function findAllByIds(array $groupsIds, ?array $options = []): Query
     {
         if (empty($groupsIds)) {
-            throw new \InvalidArgumentException('The parameter groupIds cannot be empty.');
+            throw new InvalidArgumentException('The parameter groupIds cannot be empty.');
         }
         foreach ($groupsIds as $groupId) {
             if (!Validation::uuid($groupId)) {
-                throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
+                throw new InvalidArgumentException('The group identifier should be a valid UUID.');
             }
         }
 

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Service\Permissions;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\PermissionsTable;
 use Cake\ORM\TableRegistry;
 
 class PermissionsAcoHasOwnerService
@@ -25,7 +26,7 @@ class PermissionsAcoHasOwnerService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * Instantiate the service.

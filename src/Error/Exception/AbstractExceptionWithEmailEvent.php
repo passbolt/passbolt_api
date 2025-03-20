@@ -17,9 +17,7 @@ declare(strict_types=1);
 
 namespace App\Error\Exception;
 
-use App\Controller\AppController;
 use App\Controller\ErrorController;
-use Cake\Controller\Controller;
 use Cake\Event\Event;
 use Cake\Event\EventInterface;
 use Cake\Event\EventManager;
@@ -32,7 +30,7 @@ abstract class AbstractExceptionWithEmailEvent extends BadRequestException
     /**
      * @var \App\Controller\ErrorController
      */
-    protected $controller;
+    protected ErrorController $controller;
 
     /**
      * Name of the event triggered.
@@ -68,7 +66,7 @@ abstract class AbstractExceptionWithEmailEvent extends BadRequestException
      */
     protected function dispatchEmailEvent(): void
     {
-        EventManager::instance()->on('Controller.beforeRender', function (EventInterface $event) {
+        EventManager::instance()->on('Controller.beforeRender', function (EventInterface $event): void {
             $this->controller = $event->getSubject();
             $event = new Event($this->getEventName(), $this);
             $this->getController()->getEventManager()->dispatch($event);

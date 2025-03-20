@@ -20,6 +20,8 @@ namespace App\Service\Resources;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\UsersTable;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -31,6 +33,7 @@ use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
+use PDOException;
 
 /**
  * Class ResourcesAddService.
@@ -53,12 +56,12 @@ class ResourcesAddService
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * ResourcesAddService constructor.
@@ -98,7 +101,7 @@ class ResourcesAddService
                 $this->Resources->save($resource);
                 $this->handleValidationError($resource);
                 break;
-            } catch (\PDOException $e) {
+            } catch (PDOException $e) {
                 Log::error(get_class($e) . ' --- attempt #' . $attempts . ' --- ' . $e->getMessage());
                 $attempts++;
             }
@@ -219,7 +222,7 @@ class ResourcesAddService
         $this->Resources->getEventManager()->on(
             'Model.afterSave',
             ['priority' => 1],
-            function (EventInterface $event, $resource) use ($uac, $resourceDto) {
+            function (EventInterface $event, $resource) use ($uac, $resourceDto): void {
                 $this->afterSave(
                     $resource,
                     $uac,

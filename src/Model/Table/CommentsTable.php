@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\Comment;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\HasValidParentRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
@@ -31,6 +32,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 
 /**
  * Comments Model
@@ -255,12 +257,12 @@ class CommentsTable extends Table
     ): Query {
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {
-            throw new \InvalidArgumentException('The parameter foreignModel provided is not supported');
+            throw new InvalidArgumentException('The parameter foreignModel provided is not supported');
         }
 
         // Check uuid format.
         if (!Validation::uuid($foreignKey)) {
-            throw new \InvalidArgumentException('The parameter groupId should be a valid UUID.');
+            throw new InvalidArgumentException('The parameter groupId should be a valid UUID.');
         }
 
         // Retrieve the resource.
@@ -306,7 +308,7 @@ class CommentsTable extends Table
      *   Comments.user_id should be provided so that the check can be done.
      * @return bool
      */
-    public function ruleIsOwner(\App\Model\Entity\Comment $entity, ?array $options = []): bool
+    public function ruleIsOwner(Comment $entity, ?array $options = []): bool
     {
         if (!isset($options['Comments.user_id'])) {
             throw new BadRequestException('The parameter Comments.user_id should be provided');

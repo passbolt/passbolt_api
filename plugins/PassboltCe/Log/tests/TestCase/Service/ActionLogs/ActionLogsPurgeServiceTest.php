@@ -21,6 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
+use Cake\I18n\Date;
 use Passbolt\Log\Service\ActionLogs\ActionLogsCreateService;
 use Passbolt\Log\Service\ActionLogs\ActionLogsPurgeService;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
@@ -57,7 +58,7 @@ class ActionLogsPurgeServiceTest extends AppTestCase
             $toDelete = rand(1, 5);
             ActionLogFactory::make($toDelete)
                 ->setActionId($action)
-                ->created(\Cake\I18n\Date::now()->subDays($retentionPeriodInDays + $toDelete))
+                ->created(Date::now()->subDays($retentionPeriodInDays + $toDelete))
                 ->persist();
             $totalCountToDelete += $toDelete;
 
@@ -65,14 +66,14 @@ class ActionLogsPurgeServiceTest extends AppTestCase
             $toIgnore = rand(1, 5);
             ActionLogFactory::make($toIgnore)
                 ->setActionId($action)
-                ->created(\Cake\I18n\Date::now()->subDays($toIgnore))
+                ->created(Date::now()->subDays($toIgnore))
                 ->persist();
             $totalCountToIgnore += $toIgnore;
 
             // Skip actions associated to some entity history
             ActionLogFactory::make()
                 ->setActionId($action)
-                ->created(\Cake\I18n\Date::now()->subDays($retentionPeriodInDays + $toDelete))
+                ->created(Date::now()->subDays($retentionPeriodInDays + $toDelete))
                 ->with('EntitiesHistory')
                 ->persist();
             $totalCountToIgnore++;
@@ -106,13 +107,13 @@ class ActionLogsPurgeServiceTest extends AppTestCase
         [$toBeDeletedActionLog1, $toBeDeletedActionLog2] = ActionLogFactory::make(2)
             ->setActionId('ResourcesView.view')
             ->userId($user->get('id'))
-            ->created(\Cake\I18n\Date::now()->subMonths(6))
+            ->created(Date::now()->subMonths(6))
             ->persist();
         // after retention days
         $notToBeDeletedActionLog = ActionLogFactory::make(1)
             ->setActionId('ResourcesView.view')
             ->userId($user->get('id'))
-            ->created(\Cake\I18n\Date::now())
+            ->created(Date::now())
             ->persist();
         // Create entity histories related to action logs
         EntitiesHistoryFactory::make()

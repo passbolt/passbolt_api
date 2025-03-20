@@ -36,17 +36,17 @@ class MfaSettings
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
      */
-    protected $accountSettings;
+    protected MfaAccountSettings $accountSettings;
 
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings
      */
-    protected $orgSettings;
+    protected MfaOrgSettings $orgSettings;
 
     /**
      * @var \App\Utility\UserAccessControl
      */
-    protected $uac;
+    protected UserAccessControl $uac;
 
     /**
      * @var \Passbolt\MultiFactorAuthentication\Service\ActionLogs\MfaSortWithLastUsedProviderFirstService
@@ -56,7 +56,7 @@ class MfaSettings
     /**
      * @var self|null
      */
-    protected static $instance;
+    protected static ?self $instance = null;
 
     /**
      * MfaSettings constructor.
@@ -131,7 +131,7 @@ class MfaSettings
     /**
      * Get an array of all possible providers
      *
-     * @return string[]
+     * @return array<string>
      */
     public static function getProviders(): array
     {
@@ -151,7 +151,7 @@ class MfaSettings
     {
         $result = $default = [];
         $providers = self::getProviders();
-        foreach ($providers as $i => $provider) {
+        foreach ($providers as $provider) {
             $default[$provider] = false;
         }
         if ($this->orgSettings === null) {
@@ -175,7 +175,7 @@ class MfaSettings
      * user = ['totp', 'duo']
      * result = ['totp']
      *
-     * @return string[] of provider names
+     * @return array<string> of provider names
      */
     public function getEnabledProviders(): array
     {

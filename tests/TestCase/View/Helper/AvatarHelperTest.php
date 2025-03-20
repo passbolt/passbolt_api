@@ -26,6 +26,7 @@ use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use RuntimeException;
 
 /**
  * @covers \App\View\Helper\AvatarHelper
@@ -70,7 +71,7 @@ class AvatarHelperTest extends TestCase
             AvatarHelper::getAvatarUrl(null, AvatarsConfigurationService::FORMAT_MEDIUM)
         );
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         AvatarHelper::getAvatarUrl(null, 'large');
     }
 

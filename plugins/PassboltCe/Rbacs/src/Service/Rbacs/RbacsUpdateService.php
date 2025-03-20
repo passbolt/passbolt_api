@@ -24,6 +24,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Rbacs\Model\Dto\RbacsUpdateDtoCollection;
 use Passbolt\Rbacs\Model\Table\RbacsTable;
 
@@ -63,7 +64,7 @@ class RbacsUpdateService
                 __('The RBAC settings could not be updated.'),
                 $buildRulesErrors
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException(
                 __('The RBAC settings could not be updated.'),
                 null,
@@ -103,7 +104,7 @@ class RbacsUpdateService
      * @param \Passbolt\Rbacs\Model\Dto\RbacsUpdateDtoCollection $dtoCollection changes collection
      * @return void
      */
-    public function assertUpdateRecordExists(ResultSetInterface $rbacs, RbacsUpdateDtoCollection $dtoCollection)
+    public function assertUpdateRecordExists(ResultSetInterface $rbacs, RbacsUpdateDtoCollection $dtoCollection): void
     {
         if (!count($rbacs)) {
             throw new NotFoundException(__('No data found.'));
@@ -123,7 +124,7 @@ class RbacsUpdateService
         UserAccessControl $uac,
         ResultSetInterface $rbacs,
         RbacsUpdateDtoCollection $dtoCollection
-    ) {
+    ): array {
         $updateEntities = [];
 
         foreach ($rbacs as $i => $rbac) {

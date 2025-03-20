@@ -20,7 +20,10 @@ namespace App\Service\GroupsUsers;
 use App\Error\Exception\ValidationException;
 use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\GroupsUser;
+use App\Model\Table\FavoritesTable;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\SecretsTable;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
 use Cake\ORM\Query;
@@ -33,22 +36,22 @@ class GroupsUsersDeleteService
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private GroupsUsersTable $groupsUsersTable;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $secretsTable;
+    private SecretsTable $secretsTable;
 
     /**
      * @var \App\Model\Table\FavoritesTable
      */
-    private $favoritesTable;
+    private FavoritesTable $favoritesTable;
 
     /**
      * GroupsUsersRemoveService constructor.

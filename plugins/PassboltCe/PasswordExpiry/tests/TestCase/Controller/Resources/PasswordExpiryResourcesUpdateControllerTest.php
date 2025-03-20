@@ -21,6 +21,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
+use Cake\I18n\Date;
 use Cake\I18n\DateTime;
 use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
@@ -51,7 +52,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
         $this->logInAs($operator);
 
         $data = [
-            'expired' => \Cake\I18n\Date::tomorrow()->toAtomString(),
+            'expired' => Date::tomorrow()->toAtomString(),
         ];
         $this->putJson("/resources/$resourceToUpdate->id.json", $data);
         $this->assertSuccess();
@@ -94,7 +95,7 @@ class PasswordExpiryResourcesUpdateControllerTest extends AppIntegrationTestCase
 
         $data = [
             'name' => 'Foo updated',
-            'expired' => \Cake\I18n\Date::yesterday()->toAtomString(),
+            'expired' => Date::yesterday()->toAtomString(),
         ];
         $this->putJson("/resources/$resourceToUpdate->id.json", $data);
         $this->assertSuccess();

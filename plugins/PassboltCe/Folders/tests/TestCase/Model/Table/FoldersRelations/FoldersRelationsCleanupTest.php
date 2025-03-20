@@ -241,17 +241,17 @@ class FoldersRelationsCleanupTest extends FoldersTestCase
     public function testCleanupDuplicatedFoldersRelations()
     {
         // Original folders relations to keep.
-        $originalFolderFolderRelationToKeep = FoldersRelationFactory::make(['modified' => \Cake\I18n\DateTime::now()->subDays(1)])->withForeignModelFolder()->withUser()->withFolderParent()->persist();
+        $originalFolderFolderRelationToKeep = FoldersRelationFactory::make(['modified' => DateTime::now()->subDays(1)])->withForeignModelFolder()->withUser()->withFolderParent()->persist();
         $originalFolderRelationToKeepMeta = $originalFolderFolderRelationToKeep->extractOriginal(['foreign_model', 'foreign_id', 'user_id', 'folder_parent_id', 'modified']);
-        $originalResourceFolderRelationToKeep = FoldersRelationFactory::make(['modified' => \Cake\I18n\DateTime::now()->subDays(1)])->withForeignModelResource()->withUser()->withFolderParent()->persist();
+        $originalResourceFolderRelationToKeep = FoldersRelationFactory::make(['modified' => DateTime::now()->subDays(1)])->withForeignModelResource()->withUser()->withFolderParent()->persist();
         $originalResourceRelationToKeepMeta = $originalResourceFolderRelationToKeep->extractOriginal(['foreign_model', 'foreign_id', 'user_id', 'folder_parent_id', 'modified']);
-        $originalResourceFolderRelationAtRootToKeep = FoldersRelationFactory::make(['modified' => \Cake\I18n\DateTime::now()->subDays(1)])->withForeignModelResource()->withUser()->folderParent(FoldersRelation::ROOT)->persist();
+        $originalResourceFolderRelationAtRootToKeep = FoldersRelationFactory::make(['modified' => DateTime::now()->subDays(1)])->withForeignModelResource()->withUser()->folderParent(FoldersRelation::ROOT)->persist();
         $originalResourceRelationAtRootMeta = $originalResourceFolderRelationAtRootToKeep->extractOriginal(['foreign_model', 'foreign_id', 'user_id', 'folder_parent_id', 'modified']);
 
         // Duplicated foldersRelations to cleanup.
-        FoldersRelationFactory::make($originalFolderRelationToKeepMeta, 2)->setField('modified', \Cake\I18n\DateTime::now())->persist();
-        FoldersRelationFactory::make($originalResourceRelationToKeepMeta, 2)->setField('modified', \Cake\I18n\DateTime::now())->persist();
-        FoldersRelationFactory::make($originalResourceRelationAtRootMeta, 2)->setField('modified', \Cake\I18n\DateTime::now())->persist();
+        FoldersRelationFactory::make($originalFolderRelationToKeepMeta, 2)->setField('modified', DateTime::now())->persist();
+        FoldersRelationFactory::make($originalResourceRelationToKeepMeta, 2)->setField('modified', DateTime::now())->persist();
+        FoldersRelationFactory::make($originalResourceRelationAtRootMeta, 2)->setField('modified', DateTime::now())->persist();
 
         // Witness folders relations to not cleanup:
         // - A folder relation including a resource involved in the cleanup

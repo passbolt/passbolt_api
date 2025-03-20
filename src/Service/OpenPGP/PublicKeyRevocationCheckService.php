@@ -18,6 +18,10 @@ namespace App\Service\OpenPGP;
 
 use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Http\Exception\InternalErrorException;
+use OpenPGP;
+use OpenPGP_Crypt_RSA;
+use OpenPGP_Message;
+use OpenPGP_SignaturePacket;
 
 /**
  * Public Key revocation check service
@@ -41,8 +45,8 @@ class PublicKeyRevocationCheckService
 
         // Check revocation packet signature
         if ($keyInfo['type'] === 'RSA') {
-            $publicKey = \OpenPGP_Message::parse(\OpenPGP::unarmor($armoredKey));
-            $toVerify = new \OpenPGP_Crypt_RSA($publicKey);
+            $publicKey = OpenPGP_Message::parse(OpenPGP::unarmor($armoredKey));
+            $toVerify = new OpenPGP_Crypt_RSA($publicKey);
             $signatures = $toVerify->verify($publicKey);
 
             return self::searchForRevocation($signatures, $keyInfo['key_id']);
@@ -65,7 +69,7 @@ class PublicKeyRevocationCheckService
                     return true;
                 }
             }
-            if ($signature instanceof \OpenPGP_SignaturePacket) {
+            if ($signature instanceof OpenPGP_SignaturePacket) {
                 if (OpenPGPBackend::containsRevocationSignature($signature, $longKeyId)) {
                     return true;
                 }

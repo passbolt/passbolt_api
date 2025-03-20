@@ -23,6 +23,7 @@ use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Test\Lib\Model\ProfilesModelTrait;
 use App\Test\Lib\Model\UsersModelTrait;
 use App\Utility\UuidFactory;
+use Cake\I18n\Date;
 use Cake\Utility\Security;
 use Passbolt\Mobile\Model\Entity\Transfer;
 use Passbolt\Mobile\Test\Lib\Model\TransfersModelTrait;
@@ -177,7 +178,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
                 'token' => UuidFactory::uuid(),
                 'active' => true,
                 'type' => AuthenticationToken::TYPE_MOBILE_TRANSFER,
-                'created' => new \Cake\I18n\Date('last year'),
+                'created' => new Date('last year'),
             ],
         ]);
         $id = $transfer->id;
@@ -206,7 +207,7 @@ class TransfersUpdateControllerTest extends AppIntegrationTestCase
                 'token' => UuidFactory::uuid(),
                 'active' => true,
                 'type' => AuthenticationToken::TYPE_RECOVER,
-                'created' => new \Cake\I18n\Date('last year'),
+                'created' => new Date('last year'),
             ],
         ]);
         $id = $transfer->id;

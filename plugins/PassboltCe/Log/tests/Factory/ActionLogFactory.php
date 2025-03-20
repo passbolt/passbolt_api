@@ -110,7 +110,7 @@ class ActionLogFactory extends CakephpBaseFactory
     public function created($created)
     {
         if (is_string($created)) {
-            $created = \Cake\I18n\DateTime::parse($created);
+            $created = DateTime::parse($created);
         }
 
         return $this->setField('created', $created);

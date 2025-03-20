@@ -19,6 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Service;
 
 use App\Model\Entity\User;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsGetService;
+use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Throwable;
 
 class IsMfaEnabledService
@@ -26,12 +27,12 @@ class IsMfaEnabledService
     /**
      * @var \Passbolt\MultiFactorAuthentication\Service\GetMfaAccountSettingsService
      */
-    private $getMfaAccountSettingsService;
+    private GetMfaAccountSettingsService $getMfaAccountSettingsService;
 
     /**
      * @var \Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsGetService
      */
-    private $getMfaOrgSettingsService;
+    private MfaOrgSettingsGetService $getMfaOrgSettingsService;
 
     /**
      * @param \Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsGetService|null $getMfaOrgSettingsService Service to retrieve MfaOrgSettings
@@ -50,7 +51,7 @@ class IsMfaEnabledService
      * @return bool
      * @throws \Exception
      */
-    public function isEnabledForUser(User $user)
+    public function isEnabledForUser(User $user): bool
     {
         $mfaOrgSettings = $this->getMfaOrgSettingsService->get();
 
@@ -75,7 +76,7 @@ class IsMfaEnabledService
      * @return \Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings
      * @throws \Exception
      */
-    private function getMfaAccountSettings(User $user)
+    private function getMfaAccountSettings(User $user): MfaAccountSettings
     {
         return $this->getMfaAccountSettingsService->getSettingsForUser($user);
     }

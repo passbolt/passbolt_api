@@ -38,6 +38,6 @@ class IsParsableDateTimeValidationRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
-        return is_null($value) || is_a($value, \Cake\I18n\DateTime::class);
+        return is_null($value) || is_a($value, DateTime::class);
     }
 }

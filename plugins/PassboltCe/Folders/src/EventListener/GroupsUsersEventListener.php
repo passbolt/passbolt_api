@@ -51,7 +51,7 @@ class GroupsUsersEventListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function handleGroupUserAddedEvent(Event $event)
+    public function handleGroupUserAddedEvent(Event $event): void
     {
         $uac = $event->getData('accessControl');
         $groupUser = $event->getData('groupUser');
@@ -66,7 +66,7 @@ class GroupsUsersEventListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function handleGroupUserDeletedEvent(Event $event)
+    public function handleGroupUserDeletedEvent(Event $event): void
     {
         $groupUser = $event->getData('groupUser');
         $service = new HandleGroupUserDeletedService();

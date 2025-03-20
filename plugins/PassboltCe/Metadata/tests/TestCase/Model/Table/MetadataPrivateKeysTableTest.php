@@ -90,8 +90,8 @@ class MetadataPrivateKeysTableTest extends AppTestCaseV5
         $this->assertNotEmpty($result->get('data'));
         $this->assertSame($metadataKey->get('id'), $result->get('metadata_key_id'));
         $this->assertSame($possibleUserIds[$randomUserKey], $result->get('user_id'));
-        $this->assertInstanceOf(\Cake\I18n\DateTime::class, $result->get('created'));
-        $this->assertInstanceOf(\Cake\I18n\DateTime::class, $result->get('modified'));
+        $this->assertInstanceOf(DateTime::class, $result->get('created'));
+        $this->assertInstanceOf(DateTime::class, $result->get('modified'));
     }
 
     /**

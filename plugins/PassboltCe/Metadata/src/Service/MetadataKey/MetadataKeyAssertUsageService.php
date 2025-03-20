@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Service\MetadataKey;
 use Cake\Core\Configure;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 
 class MetadataKeyAssertUsageService
 {
@@ -33,7 +34,7 @@ class MetadataKeyAssertUsageService
     private function assertKeyId(string $metadataKeyId, bool $assertKeyId = true): void
     {
         if ($assertKeyId && !Validation::uuid($metadataKeyId)) {
-            throw new \InvalidArgumentException(__('The metadata key ID should be a valid UUID.'));
+            throw new InvalidArgumentException(__('The metadata key ID should be a valid UUID.'));
         }
     }
 

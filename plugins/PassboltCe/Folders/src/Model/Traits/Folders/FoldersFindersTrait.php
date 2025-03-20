@@ -48,7 +48,7 @@ trait FoldersFindersTrait
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findIndex(string $userId, ?array $options = [])
+    public function findIndex(string $userId, ?array $options = []): Query
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -199,7 +199,7 @@ trait FoldersFindersTrait
      * @param string $userId The user to check the permissions for.
      * @return \Cake\ORM\Query
      */
-    private function _filterQueryByPermissions(Query $query, string $userId)
+    private function _filterQueryByPermissions(Query $query, string $userId): Query
     {
         $subQueryOptions = [
             'checkGroupsUsers' => true,
@@ -220,9 +220,9 @@ trait FoldersFindersTrait
      *
      * @param \Cake\ORM\Query $query Query to filter on
      * @param array $folderIds array of folders ids
-     * @return \Cake\ORM\Query|\Passbolt\Folders\Model\Entity\Folder[]
+     * @return \Cake\ORM\Query|array<\Passbolt\Folders\Model\Entity\Folder>
      */
-    public function filterByIds(Query $query, array $folderIds)
+    public function filterByIds(Query $query, array $folderIds): Query|array
     {
         return $query->where(['Folders.id IN' => $folderIds]);
     }

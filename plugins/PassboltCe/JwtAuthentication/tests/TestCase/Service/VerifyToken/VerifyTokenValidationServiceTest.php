@@ -66,7 +66,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         $this->expectNotToPerformAssertions();
 
-        $expiry = \Cake\I18n\DateTime::now()->addMinutes(1)->toUnixString();
+        $expiry = DateTime::now()->addMinutes(1)->toUnixString();
         $this->service->validateToken($expiry, UuidFactory::uuid(), UuidFactory::uuid());
         $this->service->validateToken((int)$expiry, UuidFactory::uuid(), UuidFactory::uuid());
     }
@@ -99,7 +99,7 @@ class VerifyTokenValidationServiceTest extends TestCase
     {
         $this->expectException(InvalidVerifyTokenException::class);
         $this->expectExceptionMessage('Invalid verify token format.');
-        $this->service->validateToken(\Cake\I18n\DateTime::now()->addMinutes(1)->toUnixString(), $token, 'Bar');
+        $this->service->validateToken(DateTime::now()->addMinutes(1)->toUnixString(), $token, 'Bar');
     }
 
     public function testVerifyTokenValidationService_IsNotNonce()
@@ -111,7 +111,7 @@ class VerifyTokenValidationServiceTest extends TestCase
         $token = $existingToken->token;
         $this->expectException(ConsumedVerifyTokenAccessException::class);
         $this->expectExceptionMessage('Verify token has been already used in the past.');
-        $this->service->validateToken(\Cake\I18n\DateTime::now()->addMinutes(1)->toUnixString(), $token, $userId);
+        $this->service->validateToken(DateTime::now()->addMinutes(1)->toUnixString(), $token, $userId);
         $this->assertEventFired(ConsumedVerifyTokenAccessException::class);
     }
 
@@ -120,16 +120,16 @@ class VerifyTokenValidationServiceTest extends TestCase
         return [
             [null],
             [''],
-            [\Cake\I18n\DateTime::now()->addHours(5)->toUnixString()], // This is past the max validity of one hour
-            [\Cake\I18n\DateTime::now()->addMinutes(1)], // This is not a unix time!
+            [DateTime::now()->addHours(5)->toUnixString()], // This is past the max validity of one hour
+            [DateTime::now()->addMinutes(1)], // This is not a unix time!
         ];
     }
 
     public function expiredExpiryDates(): array
     {
         return [
-            [\Cake\I18n\DateTime::yesterday()->toUnixString()],
-            [\Cake\I18n\DateTime::now()->subSeconds(1)->toUnixString()],
+            [DateTime::yesterday()->toUnixString()],
+            [DateTime::now()->subSeconds(1)->toUnixString()],
         ];
     }
 

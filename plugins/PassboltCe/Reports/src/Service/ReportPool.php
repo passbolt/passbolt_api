@@ -31,21 +31,21 @@ class ReportPool
      *
      * @var \Passbolt\Reports\Service\ReportPool|null
      */
-    private static $instance;
+    private static ?ReportPool $instance = null;
 
     /**
      * Reports list.
      *
      * @var array
      */
-    private static $reports = [];
+    private static array $reports = [];
 
     /**
      * Get ReportPool singleton.
      *
-     * @return \Passbolt\Reports\Service\ReportPool
+     * @return self
      */
-    public static function getInstance()
+    public static function getInstance(): ReportPool
     {
         if (!isset(self::$instance)) {
             self::$instance = new ReportPool();
@@ -58,9 +58,9 @@ class ReportPool
      * Add a report in the report pool.
      *
      * @param \Passbolt\Reports\Utility\AbstractReport $report The report to add
-     * @return \Passbolt\Reports\Utility\AbstractReport[] list of reports
+     * @return array<\Passbolt\Reports\Utility\AbstractReport> list of reports
      */
-    public function addReport(AbstractReport $report)
+    public function addReport(AbstractReport $report): array
     {
         self::$reports[$report->getSlug()] = $report;
 
@@ -70,7 +70,7 @@ class ReportPool
     /**
      * Add reports in the report pool.
      *
-     * @param Callable[] $reports list of callable Reports (AbstractReport)
+     * @param array<Callable> $reports list of callable Reports (AbstractReport)
      *
      * Example:
      * [
@@ -88,9 +88,9 @@ class ReportPool
      *        ->addReport(new NonActiveUsersCountReport());
      *    },
      * ];
-     * @return Callable[] list of callable reports (AbstractReport)
+     * @return array<Callable> list of callable reports (AbstractReport)
      */
-    public function addReports(array $reports)
+    public function addReports(array $reports): array
     {
         self::$reports = array_merge(self::$reports, $reports);
 
@@ -102,9 +102,9 @@ class ReportPool
      * Each Report is created callable to avoid to instantiate a report collection when it will
      * not be used, but still maintain of a list of the report somewhere
      *
-     * @return callable[]
+     * @return array<callable>
      */
-    public function getReports()
+    public function getReports(): array
     {
         return self::$reports;
     }

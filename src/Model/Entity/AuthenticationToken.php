@@ -97,7 +97,7 @@ class AuthenticationToken extends Entity
             $expiryDuration = null;
         }
         $interval = $expiryDuration ?? $this->getExpiryDuration();
-        $expirationDate = \Cake\I18n\DateTime::now()->modify('-' . $interval);
+        $expirationDate = DateTime::now()->modify('-' . $interval);
 
         return $this->created->lessThan($expirationDate);
     }
@@ -113,9 +113,9 @@ class AuthenticationToken extends Entity
     /**
      * @return \Cake\I18n\DateTime
      */
-    public function getExpiryTime(): \Cake\I18n\DateTime
+    public function getExpiryTime(): DateTime
     {
-        $expiryTime = (new \Cake\I18n\DateTime($this->created))
+        $expiryTime = (new DateTime($this->created))
             ->modify('+' . $this->getExpiryDuration());
 
         if ($expiryTime === false) {
@@ -197,7 +197,7 @@ class AuthenticationToken extends Entity
      * @param \App\Model\Entity\AuthenticationToken|string|null $sessionIdentifier Session ID to check
      * @return bool
      */
-    public function checkSessionId($sessionIdentifier): bool
+    public function checkSessionId(AuthenticationToken|string|null $sessionIdentifier): bool
     {
         return (new AuthenticationTokensSessionService())->checkSession($this, $sessionIdentifier);
     }

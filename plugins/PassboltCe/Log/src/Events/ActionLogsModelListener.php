@@ -48,7 +48,7 @@ class ActionLogsModelListener implements EventListenerInterface
      * @param \Cake\Event\Event $event the event
      * @return void
      */
-    public function entityAssociationsInitialize(Event $event)
+    public function entityAssociationsInitialize(Event $event): void
     {
         $table = $event->getSubject();
         $modelName = $table->getAlias();
@@ -96,7 +96,7 @@ class ActionLogsModelListener implements EventListenerInterface
      * @param \Cake\Event\Event $event the event
      * @return void
      */
-    public function logEntityHistory(Event $event)
+    public function logEntityHistory(Event $event): void
     {
         $entitiesHistoryService = new EntitiesHistoryCreateService();
         $entitiesHistoryService->logEntityHistory($event);

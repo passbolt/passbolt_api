@@ -61,7 +61,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
-        $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
+        ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
         // Shared resource.
         /** @var \App\Model\Entity\Resource $resource */
         $sharedResource = ResourceFactory::make()
@@ -110,7 +110,7 @@ class MigrateResourcesCommandTest extends AppIntegrationTestCaseV5
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
-        $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
+        ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
         // Shared resource.
         /** @var \App\Model\Entity\Resource $sharedResource */
         $sharedResource = ResourceFactory::make()

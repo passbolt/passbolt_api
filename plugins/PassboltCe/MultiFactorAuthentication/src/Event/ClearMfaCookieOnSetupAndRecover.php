@@ -43,7 +43,7 @@ class ClearMfaCookieOnSetupAndRecover implements EventListenerInterface
     /**
      * The controllers concerned
      *
-     * @return string[]
+     * @return array<string>
      */
     public function getListOfControllers(): array
     {

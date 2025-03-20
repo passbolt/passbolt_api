@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Core\Exception\CakeException;
+use Exception;
 use Passbolt\WebInstaller\Form\SubscriptionForm;
 
 class SubscriptionKeyController extends WebInstallerController
@@ -59,7 +60,7 @@ class SubscriptionKeyController extends WebInstallerController
         $data = $this->request->getData();
         try {
             $this->validateData($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->_error($e->getMessage());
 
             return;
@@ -76,7 +77,7 @@ class SubscriptionKeyController extends WebInstallerController
      * @throws \Cake\Core\Exception\CakeException The subscription is not valid.
      * @return void
      */
-    protected function validateData($data)
+    protected function validateData(array $data)
     {
         $form = new SubscriptionForm();
         $confIsValid = $form->execute($data);

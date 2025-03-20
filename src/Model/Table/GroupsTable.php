@@ -304,7 +304,7 @@ class GroupsTable extends Table
      * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      * @see PasswordExpiryOnDeleteGroupEventListener::expireResourcesOnDeletedGroup
      */
-    public function softDelete(Group $group, ?array $options = null)
+    public function softDelete(Group $group, ?array $options = null): EntitiesChangesDto|bool
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {

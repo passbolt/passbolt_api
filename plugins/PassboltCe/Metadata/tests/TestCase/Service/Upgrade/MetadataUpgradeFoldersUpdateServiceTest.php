@@ -27,6 +27,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\I18n\DateTime;
+use Exception;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeFoldersUpdateService;
@@ -174,7 +175,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => 'foo',
-                'modified' => \Cake\I18n\DateTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $uac->getId(),
             ],
         ];
@@ -185,7 +186,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
 
     public function testMetadataUpgradeFoldersUpdateService_Error_ModifiedDateConflict(): void
     {
-        $folder = FolderFactory::make(['modified' => \Cake\I18n\DateTime::yesterday()])->persist();
+        $folder = FolderFactory::make(['modified' => DateTime::yesterday()])->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->mockAdminAccessControl();
 
@@ -195,7 +196,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey(json_encode([])),
-                'modified' => \Cake\I18n\DateTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $folder->get('modified_by'),
             ],
         ];
@@ -243,7 +244,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 ],
             ];
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isMetadataKeyNotExpired', $errors[0]['metadata_key_id']);
@@ -270,7 +271,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 ],
             ];
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertSame(

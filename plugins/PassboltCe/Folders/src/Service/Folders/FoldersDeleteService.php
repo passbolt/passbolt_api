@@ -19,6 +19,7 @@ namespace Passbolt\Folders\Service\Folders;
 
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
@@ -29,6 +30,8 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Model\Table\FoldersTable;
 
 class FoldersDeleteService
 {
@@ -39,32 +42,32 @@ class FoldersDeleteService
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    private $foldersTable;
+    private FoldersTable $foldersTable;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
      */
-    private $getUsersIdsHavingAccessToService;
+    private PermissionsGetUsersIdsHavingAccessToService $getUsersIdsHavingAccessToService;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $resourcesTable;
+    private ResourcesTable $resourcesTable;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
      */
-    private $userHasPermissionService;
+    private UserHasPermissionService $userHasPermissionService;
 
     /**
      * Instantiate the service.
@@ -95,7 +98,7 @@ class FoldersDeleteService
             throw new ForbiddenException(__('You are not allowed to delete this folder.'));
         }
 
-        $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $cascade) {
+        $this->foldersTable->getConnection()->transactional(function () use ($uac, $folder, $cascade): void {
             $usersIds = $this->getUsersIdsHavingAccessToService->getUsersIdsHavingAccessTo($folder->id);
             $this->deleteFolder($uac, $folder, $cascade);
             $this->dispatchEvent(self::FOLDERS_DELETE_FOLDER_EVENT, [

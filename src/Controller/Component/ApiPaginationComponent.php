@@ -209,7 +209,7 @@ class ApiPaginationComponent extends BaseApiComponent
      * Parse a single legacy order.
      *
      * @param string $order Single field order.
-     * @return string[]
+     * @return array<string>
      */
     private function processLegacyOrder(string $order): array
     {

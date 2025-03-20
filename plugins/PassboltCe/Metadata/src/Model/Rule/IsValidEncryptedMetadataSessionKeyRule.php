@@ -71,7 +71,7 @@ class IsValidEncryptedMetadataSessionKeyRule
      * @return string|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When user is not found.
      */
-    private function getArmoredKey(?string $userId)
+    private function getArmoredKey(?string $userId): ?string
     {
         $usersTable = TableRegistry::getTableLocator()->get('Users');
         /** @var \App\Model\Entity\User $user */

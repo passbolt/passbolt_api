@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Service\Secrets;
 
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\SecretsTable;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\Expression\TupleComparison;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use TypeError;
 
 class SecretsFindSecretsAccessibleViaGroupOnlyService
 {
@@ -32,12 +34,12 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $secretsTable;
+    private SecretsTable $secretsTable;
 
     /**
      * Instantiate the service
@@ -61,12 +63,12 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
     public function find(string $groupId, array $usersIds, ?string $acoType = null): Query
     {
         if (!Validation::uuid($groupId)) {
-            throw new \TypeError(__('The group id should be a valid UUID.'));
+            throw new TypeError(__('The group id should be a valid UUID.'));
         }
 
         foreach ($usersIds as $usersId) {
             if (!Validation::uuid($usersId)) {
-                throw new \TypeError(__('The users ids array should contain only valid UUIDs.'));
+                throw new TypeError(__('The users ids array should contain only valid UUIDs.'));
             }
         }
 
@@ -183,12 +185,12 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
     public function findWithExists(string $groupId, array $usersIds, ?string $acoType = null): Query
     {
         if (!Validation::uuid($groupId)) {
-            throw new \TypeError(__('The group id should be a valid UUID.'));
+            throw new TypeError(__('The group id should be a valid UUID.'));
         }
 
         foreach ($usersIds as $usersId) {
             if (!Validation::uuid($usersId)) {
-                throw new \TypeError(__('The users ids array should contain only valid UUIDs.'));
+                throw new TypeError(__('The users ids array should contain only valid UUIDs.'));
             }
         }
 

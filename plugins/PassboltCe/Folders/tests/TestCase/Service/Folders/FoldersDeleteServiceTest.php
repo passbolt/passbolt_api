@@ -132,7 +132,9 @@ class FoldersDeleteServiceTest extends FoldersTestCase
 
     public function testFolderDelete_CommonSuccess2_NotifyUsersAfterDelete()
     {
-        [$folderA, $folderB, $userAId, $userBId] = $this->insertSharedSuccess2Fixture();
+        $fixtures = $this->insertSharedSuccess2Fixture();
+        $folderA = $fixtures[0];
+        $userAId = $fixtures[2];
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $this->service->delete($uac, $folderA->id);

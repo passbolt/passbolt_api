@@ -20,7 +20,10 @@ use App\Error\Exception\ValidationException;
 use Cake\Form\Schema;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 use OTPHP\Factory;
+use OTPHP\HOTPInterface;
+use OTPHP\OTPInterface;
 use Passbolt\MultiFactorAuthentication\Form\MfaForm;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
@@ -30,7 +33,7 @@ class TotpSetupForm extends MfaForm
     /**
      * @var \OTPHP\OTPInterface|\OTPHP\HOTPInterface
      */
-    protected $otp;
+    protected OTPInterface|HOTPInterface $otp;
 
     /**
      * Build form schema
@@ -38,7 +41,7 @@ class TotpSetupForm extends MfaForm
      * @param \Cake\Form\Schema $schema schema
      * @return \Cake\Form\Schema
      */
-    protected function _buildSchema(Schema $schema): \Cake\Form\Schema
+    protected function _buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('otpProvisioningUri', ['type' => 'string'])
@@ -78,11 +81,11 @@ class TotpSetupForm extends MfaForm
      * @param string $value otp provisioning uri
      * @return bool
      */
-    public function isValidOtpProvisioningUri(string $value)
+    public function isValidOtpProvisioningUri(string $value): bool
     {
         try {
             $this->otp = Factory::loadFromProvisioningUri($value);
-        } catch (\InvalidArgumentException $exception) {
+        } catch (InvalidArgumentException $exception) {
             return false;
         }
 
@@ -95,7 +98,7 @@ class TotpSetupForm extends MfaForm
      * @param string $value otp provisioning uri
      * @return bool
      */
-    public function isValidOtp(string $value)
+    public function isValidOtp(string $value): bool
     {
         if (!is_object($this->otp) || !is_numeric($value)) {
             return false;

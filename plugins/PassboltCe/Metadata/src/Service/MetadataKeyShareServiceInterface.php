@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service;
 
 use App\Model\Entity\User;
+use Exception;
 
 interface MetadataKeyShareServiceInterface
 {
@@ -33,5 +34,5 @@ interface MetadataKeyShareServiceInterface
      * @param \Exception $exception exception from shareMetadataKeyWithUser
      * @return void
      */
-    public function onFailure(\Exception $exception): void;
+    public function onFailure(Exception $exception): void;
 }

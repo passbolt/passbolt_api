@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Notification\Email;
 
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -44,7 +45,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * Email redactor constructor
@@ -124,7 +125,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $recipient, User $operator, Folder $folder)
+    private function createEmail(User $recipient, User $operator, Folder $folder): Email
     {
         $isOperator = $recipient->id === $operator->id;
         $userFirstName = Purifier::clean($operator->profile->first_name);

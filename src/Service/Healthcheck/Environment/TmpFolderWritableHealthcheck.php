@@ -21,6 +21,8 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Utility\Filesystem\DirectoryUtility;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class TmpFolderWritableHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -40,10 +42,10 @@ class TmpFolderWritableHealthcheck implements HealthcheckServiceInterface, Healt
 
         $this->status = true;
 
-        /** @var \SplFileInfo[] $iterator */
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator(TMP),
-            \RecursiveIteratorIterator::SELF_FIRST
+        /** @var array<\SplFileInfo> $iterator */
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator(TMP),
+            RecursiveIteratorIterator::SELF_FIRST
         );
         foreach ($iterator as $name => $fileInfo) {
             if (in_array($fileInfo->getFilename(), ['.', '..', 'empty'])) {

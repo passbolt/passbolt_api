@@ -22,6 +22,7 @@ use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
@@ -135,13 +136,13 @@ class UserFactory extends CakephpBaseFactory
      */
     public function disabled()
     {
-        return $this->patchData(['disabled' => \Cake\I18n\DateTime::yesterday()]);
+        return $this->patchData(['disabled' => DateTime::yesterday()]);
     }
 
     /**
      * @return $this
      */
-    public function created(\Cake\I18n\DateTime $created)
+    public function created(DateTime $created)
     {
         return $this->setField('created', $created);
     }
@@ -151,7 +152,7 @@ class UserFactory extends CakephpBaseFactory
      */
     public function willDisable()
     {
-        return $this->patchData(['disabled' => \Cake\I18n\DateTime::tomorrow()]);
+        return $this->patchData(['disabled' => DateTime::tomorrow()]);
     }
 
     /**

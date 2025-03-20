@@ -23,9 +23,9 @@ use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
 use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
+use Exception;
 
 class QueryStringComponentTest extends TestCase
 {
@@ -107,7 +107,7 @@ class QueryStringComponentTest extends TestCase
             try {
                 $this->sut::validateFilterDateTime($testCaseValue, $filterName);
                 $this->assertFalse(true, __('The case {0} should not validate', $testCaseName));
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->assertTrue(true);
             }
         }
@@ -135,7 +135,7 @@ class QueryStringComponentTest extends TestCase
             try {
                 $this->sut::validateFilterInteger($testCaseValue, $filterName);
                 $this->assertFalse(true, __('The case {0} should not validate', $testCaseName));
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->assertTrue(true);
             }
         }
@@ -159,7 +159,7 @@ class QueryStringComponentTest extends TestCase
             $this->assertEquals(42, $normalizedValue, __('The case {0} is not normalized as expected', $testCaseName));
         }
 
-        foreach ($errorTestCases as $testCaseName => $testCaseValue) {
+        foreach ($errorTestCases as $testCaseValue) {
             $normalizedValue = $this->sut::normalizeInteger($testCaseValue);
             $this->assertTrue($normalizedValue === 0 || $normalizedValue === false);
         }

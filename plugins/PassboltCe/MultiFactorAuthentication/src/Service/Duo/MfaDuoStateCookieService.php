@@ -21,6 +21,7 @@ use Cake\Http\Cookie\Cookie;
 use Cake\Http\ServerRequest;
 use Cake\I18n\DateTime;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 
 /**
  * Class MfaDuoStateCookieService
@@ -51,7 +52,7 @@ class MfaDuoStateCookieService
     public function createDuoStateCookie(string $token, bool $secure): Cookie
     {
         if (!Validation::uuid($token)) {
-            throw new \InvalidArgumentException('The authentication token should be a valid UUID.');
+            throw new InvalidArgumentException('The authentication token should be a valid UUID.');
         }
 
         return (new Cookie(self::MFA_COOKIE_DUO_STATE))
@@ -59,7 +60,7 @@ class MfaDuoStateCookieService
             ->withPath('/')
             ->withHttpOnly(true)
             ->withSecure($secure)
-            ->withExpiry((new \Cake\I18n\DateTime())->addMinutes(self::MFA_COOKIE_DUO_STATE_EXPIRY_IN_MINUTES));
+            ->withExpiry((new DateTime())->addMinutes(self::MFA_COOKIE_DUO_STATE_EXPIRY_IN_MINUTES));
     }
 
     /**
@@ -68,7 +69,7 @@ class MfaDuoStateCookieService
      * @param \Cake\Http\ServerRequest $request Server request
      * @return array|string|null The cookie value
      */
-    public function readDuoStateCookieValue(ServerRequest $request)
+    public function readDuoStateCookieValue(ServerRequest $request): array|string|null
     {
         return $request->getCookie(self::MFA_COOKIE_DUO_STATE);
     }

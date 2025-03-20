@@ -21,6 +21,7 @@ use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\UnaryExpression;
 use Cake\ORM\Query;
 use Cake\Utility\Hash;
+use Exception;
 
 trait TableCleanupTrait
 {
@@ -94,7 +95,7 @@ trait TableCleanupTrait
     {
         $tableColumns = $this->getSchema()->columns();
         if (array_search('id', $tableColumns) === false) {
-            throw new \Exception('Cannot run cleanup duplicates operation on a table not having an "id" column.');
+            throw new Exception('Cannot run cleanup duplicates operation on a table not having an "id" column.');
         }
 
         /*

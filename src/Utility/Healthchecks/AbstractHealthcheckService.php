@@ -21,19 +21,19 @@ abstract class AbstractHealthcheckService
     /**
      * @var string $serviceName
      */
-    protected $serviceName;
+    protected string $serviceName;
 
     /**
      * @var string $serviceCategory
      */
-    protected $serviceCategory;
+    protected string $serviceCategory;
 
     /**
     /**
      *
      * @var array of Healthchecks
      */
-    protected $checks;
+    protected array $checks;
 
     /**
      * Health check service constructor
@@ -70,7 +70,7 @@ abstract class AbstractHealthcheckService
     // =======================================================
 
     /**
-     * @return array[]
+     * @return array<array>
      */
     protected function getHealthchecks(): array
     {

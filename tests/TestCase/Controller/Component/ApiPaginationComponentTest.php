@@ -22,7 +22,6 @@ use App\Test\Lib\Controller\ApiPaginationParseQueryTestController;
 use Cake\Controller\ComponentRegistry;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
-use ReflectionClass;
 
 class ApiPaginationComponentTest extends TestCase
 {

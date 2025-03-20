@@ -29,12 +29,12 @@ final class EmailValidationRule extends PassboltValidationRule
     /**
      * @var bool
      */
-    private $skipMxCheck = false;
+    private bool $skipMxCheck = false;
 
     /**
      * @var bool
      */
-    private $skipRegexCheck = false;
+    private bool $skipRegexCheck = false;
 
     /**
      * @inheritDoc
@@ -53,7 +53,7 @@ final class EmailValidationRule extends PassboltValidationRule
      * @return bool
      * @throws \Cake\Http\Exception\InternalErrorException if the regex defined in config is not valid
      */
-    public static function check($email, ?bool $skipMxCheck = false, ?bool $skipRegexCheck = false): bool
+    public static function check(mixed $email, ?bool $skipMxCheck = false, ?bool $skipRegexCheck = false): bool
     {
         $instance = new self();
         if ($skipMxCheck) {

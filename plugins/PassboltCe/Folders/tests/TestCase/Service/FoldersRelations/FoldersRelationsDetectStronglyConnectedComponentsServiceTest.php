@@ -83,7 +83,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsServiceTest extends Folde
 
     public function testFoldersRelationsDetectStronglyConnectedComponentsService_SCCFound_InOnUserTree_Ada_ABA_Betty_A_Carole_B()
     {
-        [$folderA, $folderB, $userA, $userB, $userC] = $this->insertFixture_Ada_ABA_Betty_A_Carole_B();
+        [$folderA, $folderB, $userA, $userB, $userC] = $this->insertFixture_Ada_ABA_Betty_A_Carole_B(); // phpcs:ignore
         $expectedScc = [
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $folderB->id),
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id),
@@ -122,7 +122,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsServiceTest extends Folde
 
     public function testFoldersRelationsDetectStronglyConnectedComponentsService_SCCFound_InOnUserTreeReturnSmallest_Ada_ABA_ABCA_Betty_A_Carole_B_Dame_C()
     {
-        [$folderA, $folderB, $folderC, $userA, $userB, $userC, $userD] = $this->insertFixture_Ada_ABA_ABCA_Betty_A_Carole_B_Dame_C();
+        [$folderA, $folderB, $folderC, $userA, $userB, $userC, $userD] = $this->insertFixture_Ada_ABA_ABCA_Betty_A_Carole_B_Dame_C(); // phpcs:ignore
         $expectedScc = [
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $folderB->id),
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id),
@@ -171,7 +171,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsServiceTest extends Folde
 
     public function testFoldersRelationsDetectStronglyConnectedComponentsService_SCCFound_InTwoUserTreesWithoutNotCommonIntermediaryFolders_Ada_AB_Betty_BA()
     {
-        [$folderA, $folderB, $userA, $userB] = $this->insertFixture_Ada_AB_Betty_BA();
+        [$folderA, $folderB, $userA, $userB] = $this->insertFixture_Ada_AB_Betty_BA(); // phpcs:ignore
         $expectedScc = [
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $folderB->id),
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id),
@@ -213,7 +213,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsServiceTest extends Folde
 
     public function testFoldersRelationsDetectStronglyConnectedComponentsService_SCCFound_InTwoUserTreesWithOneNotCommonIntermediaryFolders_Ada_ABC_Betty_CA_Carole_B()
     {
-        [$folderA, $folderB, $folderC, $userA, $userB] = $this->insertFixture_Ada_ABC_Betty_CA_Carole_B();
+        [$folderA, $folderB, $folderC, $userA, $userB] = $this->insertFixture_Ada_ABC_Betty_CA_Carole_B(); // phpcs:ignore
         $expectedScc = [
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $folderC->id),
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id),
@@ -259,7 +259,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsServiceTest extends Folde
 
     public function testFoldersRelationsDetectStronglyConnectedComponentsService_SCCFound_InTwoUserTreesWithTwoNotCommonIntermediaryFolders_Ada_ABC_Betty_CDA_Carole_B_D()
     {
-        [$folderA, $folderB, $folderC, $folderD, $userA, $userB, $userC] = $this->insertFixture_Ada_ABC_Betty_CDA_Carole_B_D();
+        [$folderA, $folderB, $folderC, $folderD, $userA, $userB, $userC] = $this->insertFixture_Ada_ABC_Betty_CDA_Carole_B_D(); // phpcs:ignore
         $expectedScc = [
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderA->id, $folderC->id),
             new FolderRelationDto(FoldersRelation::FOREIGN_MODEL_FOLDER, $folderB->id, $folderA->id),

@@ -144,7 +144,7 @@ class EntitiesHistoryTable extends Table
      * @param array $data entity data
      * @return \Passbolt\Log\Model\Entity\EntityHistory
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): EntityHistory
     {
         return $this->newEntity($data, [
             'accessibleFields' => [
@@ -182,7 +182,7 @@ class EntitiesHistoryTable extends Table
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(array $data, UserAction $userAction)
+    public function create(array $data, UserAction $userAction): EntityHistory
     {
         $defaultData = [
             'action_log_id' => $userAction->getUserActionId(),

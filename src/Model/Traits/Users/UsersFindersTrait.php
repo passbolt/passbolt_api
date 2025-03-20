@@ -51,7 +51,7 @@ trait UsersFindersTrait
      * @param bool $areManager (optional) Should the users be only managers ? Default false.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryByGroupsUsers(Query $query, array $groupsIds, bool $areManager = false)
+    private function _filterQueryByGroupsUsers(Query $query, array $groupsIds, bool $areManager = false): Query
     {
         // If there is only one group use a left join
         if (count($groupsIds) == 1) {
@@ -113,11 +113,11 @@ trait UsersFindersTrait
 
     /**
      * @param \Cake\ORM\Query $query Users query
-     * @param array|\Cake\ORM\Query $resourceIds Resource IDs the users should have access to
+     * @param \Cake\ORM\Query|array $resourceIds Resource IDs the users should have access to
      * @param array $permissionTypes array of permission type to filter along (OWNER, UPDATE or READ). If empty do not filter vy permission type
      * @return \Cake\ORM\Query
      */
-    public function filterQueryByResourcesAccess(Query $query, $resourceIds, array $permissionTypes = []): Query
+    public function filterQueryByResourcesAccess(Query $query, array|Query $resourceIds, array $permissionTypes = []): Query // phpcs:ignore
     {
         if (is_array($resourceIds) && empty($resourceIds)) {
             return $query;
@@ -173,7 +173,7 @@ trait UsersFindersTrait
      * @param string $search The string to search.
      * @return \Cake\ORM\Query $query
      */
-    private function _filterQueryBySearch(Query $query, string $search)
+    private function _filterQueryBySearch(Query $query, string $search): Query
     {
         return $this->searchCaseInsensitiveOnMultipleFields($query, [
             'Users.username',
@@ -196,7 +196,7 @@ trait UsersFindersTrait
      * @return \Cake\ORM\Query $query
      * @throws \InvalidArgumentException if the resource id is not a valid uuid
      */
-    private function _filterQueryByHasNotPermission(Query $query, string $resourceId)
+    private function _filterQueryByHasNotPermission(Query $query, string $resourceId): Query
     {
         if (!Validation::uuid($resourceId)) {
             throw new InvalidArgumentException('The resource identifier should be a valid UUID.');
@@ -221,7 +221,7 @@ trait UsersFindersTrait
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if no role is specified
      */
-    public function findIndex(string $role, ?array $options = [])
+    public function findIndex(string $role, ?array $options = []): Query
     {
         $query = $this->find();
 
@@ -320,7 +320,7 @@ trait UsersFindersTrait
      * @throws \Exception
      * @throws \InvalidArgumentException if the role name or user id are not valid
      */
-    public function findView(string $userId, string $roleName)
+    public function findView(string $userId, string $roleName): Query
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -341,7 +341,7 @@ trait UsersFindersTrait
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the role name or user id are not valid
      */
-    public function findDelete(string $userId, string $roleName)
+    public function findDelete(string $userId, string $roleName): Query
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -361,7 +361,7 @@ trait UsersFindersTrait
      * @return \Cake\ORM\Query
      * @throws \Exception if fingerprint id is not set
      */
-    public function findAuth(Query $query, ?string $fingerprint = null)
+    public function findAuth(Query $query, ?string $fingerprint = null): Query
     {
         // Options must contain an id
         if (!isset($fingerprint)) {
@@ -385,7 +385,7 @@ trait UsersFindersTrait
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the username is not an email
      */
-    public function findByUsername(string $username, ?array $options = [])
+    public function findByUsername(string $username, ?array $options = []): Query
     {
         if (!EmailValidationRule::check($username)) {
             throw new InvalidArgumentException('The username should be a valid email.');
@@ -497,7 +497,7 @@ trait UsersFindersTrait
      * @throws \InvalidArgumentException if the user id is not a valid uuid
      * @return \App\Model\Entity\User|null
      */
-    public function findFirstForEmail(string $userId)
+    public function findFirstForEmail(string $userId): ?User
     {
         if (!Validation::uuid($userId)) {
             throw new InvalidArgumentException('The user identifier should be a valid UUID.');
@@ -581,7 +581,7 @@ trait UsersFindersTrait
      *
      * @return \Cake\ORM\Query
      */
-    public function findActive()
+    public function findActive(): Query
     {
         return $this->find()
              ->where([
@@ -603,7 +603,7 @@ trait UsersFindersTrait
             return $where->or(function (QueryExpression $or) {
                 return $or
                     ->isNull($this->aliasField('disabled'))
-                    ->gt($this->aliasField('disabled'), \Cake\I18n\DateTime::now());
+                    ->gt($this->aliasField('disabled'), DateTime::now());
             });
         });
     }
@@ -614,7 +614,7 @@ trait UsersFindersTrait
      * @param \Cake\ORM\Query $query query
      * @return \Cake\ORM\Query
      */
-    public function findlastLoggedIn(Query $query)
+    public function findlastLoggedIn(Query $query): Query
     {
         // Retrieve the last logged in date for each user, based on the action_logs table.
         $loginActionIds = [

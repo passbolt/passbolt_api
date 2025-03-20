@@ -24,6 +24,7 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\Service\Secrets\SecretsCleanupHardDeletedPermissionsService;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -116,7 +117,7 @@ class SecretsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationSaveResource(Validator $validator)
+    public function validationSaveResource(Validator $validator): Validator
     {
         $validator = $this->validationDefault($validator);
 
@@ -177,7 +178,7 @@ class SecretsTable extends Table
      * @param string $userId The user to find the secret for
      * @return \Cake\ORM\Query
      */
-    public function findByResourceUser(string $resourceId, string $userId)
+    public function findByResourceUser(string $resourceId, string $userId): Query
     {
         return $this->find()
             ->where([

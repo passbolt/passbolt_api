@@ -26,6 +26,7 @@ use Passbolt\Folders\Test\Factory\ResourceFactory;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Model\Validation\MetadataResourcesBatchRotateKeyValidationService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
+use stdClass;
 
 class MetadataResourcesBatchValidationServiceTest extends TestCase
 {
@@ -66,7 +67,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
             'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
             'metadata' => 'bar',
             'metadata_key_id' => $resource->metadata_key_id,
-            'modified' => \Cake\I18n\DateTime::now(),
+            'modified' => DateTime::now(),
             'modified_by' => UuidFactory::uuid(),
         ]];
 
@@ -88,7 +89,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
             'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
             'metadata' => 'bar',
             'metadata_key_id' => $resource->metadata_key_id,
-            'modified' => \Cake\I18n\DateTime::now(),
+            'modified' => DateTime::now(),
             'modified_by' => UuidFactory::uuid(),
         ]];
 
@@ -102,7 +103,7 @@ class MetadataResourcesBatchValidationServiceTest extends TestCase
         return [
             [
                 ['🔥'],
-                [new \stdClass()],
+                [new stdClass()],
                 [[]],
                 [['id' => 'not-a-valid-uuid']],
             ],
