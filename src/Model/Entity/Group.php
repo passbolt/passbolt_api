@@ -62,10 +62,10 @@ class Group extends Entity
     /**
      * Check whether a group contains a user based on its groups users.
      *
-     * @param array|\App\Model\Entity\User $user the user object or array.
+     * @param \App\Model\Entity\User|array $user the user object or array.
      * @return \App\Model\Entity\GroupsUser|bool groupUser if found, false otherwise
      */
-    public function hasUser($user)
+    public function hasUser(array|User $user): GroupsUser|bool
     {
         if (!isset($this->groups_users)) {
             return false;

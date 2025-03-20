@@ -17,9 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Model\Behavior;
 
-use Cake\Collection\CollectionInterface;
 use Cake\Core\InstanceConfigTrait;
-use Cake\Datasource\EntityInterface;
 use Cake\ORM\Behavior;
 use Cake\ORM\Query;
 use Passbolt\Locale\Service\GetOrgLocaleService;

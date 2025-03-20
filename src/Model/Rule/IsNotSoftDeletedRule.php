@@ -20,6 +20,7 @@ namespace App\Model\Rule;
 use Cake\Datasource\EntityInterface;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
+use Exception;
 
 class IsNotSoftDeletedRule
 {
@@ -30,7 +31,7 @@ class IsNotSoftDeletedRule
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
         if (!isset($options['errorField']) || !isset($options['table'])) {
             return false;
@@ -41,12 +42,12 @@ class IsNotSoftDeletedRule
             $id = $entity->get($options['errorField']);
             $lookupEntity = $Table->get($id);
             $deleted = $lookupEntity->get('deleted');
-            if ($deleted instanceof \Cake\I18n\DateTime) {
+            if ($deleted instanceof DateTime) {
                 return $deleted->isFuture();
             }
 
             return $lookupEntity->get('deleted') !== true;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return false;

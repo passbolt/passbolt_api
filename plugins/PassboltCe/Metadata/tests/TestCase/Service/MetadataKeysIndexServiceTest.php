@@ -95,7 +95,7 @@ class MetadataKeysIndexServiceTest extends AppTestCaseV5
         $this->assertNotEmpty($result->toArray());
         $this->assertCount(2, $result->toArray());
         foreach ($result->toArray() as $metadataKey) {
-            $this->assertInstanceOf(\Cake\I18n\DateTime::class, $metadataKey['deleted']);
+            $this->assertInstanceOf(DateTime::class, $metadataKey['deleted']);
         }
     }
 

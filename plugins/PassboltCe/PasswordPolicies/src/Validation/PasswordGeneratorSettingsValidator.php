@@ -158,7 +158,7 @@ class PasswordGeneratorSettingsValidator extends Validator
      * @param array|string $value Value to check.
      * @return bool
      */
-    public static function checkAtLeastOneMaskIsSelected($value): bool
+    public static function checkAtLeastOneMaskIsSelected(array|string $value): bool
     {
         $fields = [
             'mask_upper',

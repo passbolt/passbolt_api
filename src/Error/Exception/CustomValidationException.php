@@ -19,6 +19,7 @@ namespace App\Error\Exception;
 
 use Cake\Http\Exception\HttpException;
 use Cake\ORM\Table;
+use Exception;
 
 /**
  * Exception raised when a validation rule is not satisfied in a Controller.
@@ -39,14 +40,14 @@ class CustomValidationException extends HttpException implements
      *
      * @var array|null
      */
-    protected $_errors = null;
+    protected ?array $_errors = null;
 
     /**
      * The table that throw the validation exception.
      *
      * @var \Cake\ORM\Table|null
      */
-    protected $_table = null;
+    protected ?Table $_table = null;
 
     /**
      * Constructor.
@@ -58,11 +59,11 @@ class CustomValidationException extends HttpException implements
      * @param \Exception|null $previous the previous exception.
      */
     public function __construct(
-        $message,
-        $errors = null,
+        string $message,
+        mixed $errors = null,
         ?Table $table = null,
         ?int $code = null,
-        ?\Exception $previous = null
+        ?Exception $previous = null
     ) {
         parent::__construct($message, $code, $previous);
         $this->_errors = $errors;

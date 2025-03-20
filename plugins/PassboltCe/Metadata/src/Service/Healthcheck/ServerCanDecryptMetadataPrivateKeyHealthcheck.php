@@ -25,6 +25,8 @@ use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
+use Exception;
+use PDOException;
 
 class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServiceInterface
 {
@@ -62,7 +64,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
                 ->where(['MetadataPrivateKeys.user_id IS' => null])
                 ->orderBy(['MetadataPrivateKeys.created' => 'DESC'])
                 ->firstOrFail();
-        } catch (\PDOException | RecordNotFoundException $exception) {
+        } catch (PDOException | RecordNotFoundException $exception) {
             $this->errorMessage = __('No server metadata private key found.');
             if (Configure::read('debug')) {
                 $this->errorMessage .= ' ' . $exception->getMessage();
@@ -87,7 +89,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
 
             // mark as succeed if able to decrypt
             $this->status = true;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // failure
             $this->errorMessage = __('Unable to decrypt the metadata private key data.') . ' ';
             $this->errorMessage .= $exception->getMessage();

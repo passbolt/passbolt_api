@@ -25,7 +25,7 @@ class MfaForm extends Form implements MfaFormInterface
     /**
      * @var \App\Utility\UserAccessControl
      */
-    protected $uac;
+    protected UserAccessControl $uac;
 
     /**
      * TotpSettingsForm constructor.

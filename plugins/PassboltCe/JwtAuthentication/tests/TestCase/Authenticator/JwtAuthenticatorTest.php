@@ -21,6 +21,9 @@ use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
 use Passbolt\JwtAuthentication\Test\Utility\JwtAuthenticationIntegrationTestCase;
+use function base64_encode;
+use function hash_hmac;
+use function strtr;
 
 class JwtAuthenticatorTest extends JwtAuthenticationIntegrationTestCase
 {
@@ -44,10 +47,10 @@ class JwtAuthenticatorTest extends JwtAuthenticationIntegrationTestCase
         $publicKey = (new JwksGetService())->getRawPublicKey();
 
         $head = '{"typ":"JWT","alg":"HS256"}';
-        $t = \Cake\I18n\DateTime::now()->addHours(3)->toUnixString();
+        $t = DateTime::now()->addHours(3)->toUnixString();
         $body = '{"iss":"' . $url . '","sub":"' . $userId . '","exp":' . $t . '}';
         $msg = $this->urlsafeB64Encode($head) . '.' . $this->urlsafeB64Encode($body);
-        $hash = \hash_hmac('SHA256', $msg, $publicKey, true);
+        $hash = hash_hmac('SHA256', $msg, $publicKey, true);
         $hackedToken = $msg . '.' . $this->urlsafeB64Encode($hash) . "\n";
 
         $this->setJwtTokenInHeader($hackedToken);
@@ -57,6 +60,6 @@ class JwtAuthenticatorTest extends JwtAuthenticationIntegrationTestCase
 
     public function urlsafeB64Encode($input)
     {
-        return str_replace('=', '', \strtr(\base64_encode($input), '+/', '-_'));
+        return str_replace('=', '', strtr(base64_encode($input), '+/', '-_'));
     }
 }

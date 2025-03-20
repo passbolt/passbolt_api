@@ -22,6 +22,7 @@ use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Laminas\Diactoros\UploadedFile;
+use const UPLOAD_ERR_OK;
 
 /**
  * App\Model\Table\FileStorageTable Test Case
@@ -89,7 +90,7 @@ class AvatarsValidationTest extends TestCase
         $file = new UploadedFile(
             FIXTURES . 'Avatar' . DS . 'ada.' . $extension,
             170049,
-            \UPLOAD_ERR_OK,
+            UPLOAD_ERR_OK,
             'ada.' . $extension,
             'image/' . $extension
         );

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\VerifyToken;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
 use Cake\Core\Configure;
 use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -31,7 +32,7 @@ class VerifyTokenCreateService
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * VerifyTokenCreateService constructor.
@@ -64,7 +65,7 @@ class VerifyTokenCreateService
      */
     protected function cleanupAllExpiredTokens(): void
     {
-        $minTokenCreationTime = \Cake\I18n\DateTime::now()
+        $minTokenCreationTime = DateTime::now()
             ->modify('-' . Configure::read(VerifyTokenValidationService::VERIFY_TOKEN_EXPIRY_CONFIG_KEY));
 
         $this->AuthenticationTokens->deleteAll([

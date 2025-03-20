@@ -100,7 +100,10 @@ class ResourcesAfterAccessRevokedServiceTest extends FoldersTestCase
 
     public function testResourceAfterAccessRevokedSuccess_GroupPermissionRevoked()
     {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_GroupPermissionRevoked();
+        $fixtures = $this->insertFixture_GroupPermissionRevoked();
+        $r1 = $fixtures[0];
+        $g1 = $fixtures[1];
+        $userAId = $fixtures[2];
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         /** @var \App\Model\Entity\Permission $permission */

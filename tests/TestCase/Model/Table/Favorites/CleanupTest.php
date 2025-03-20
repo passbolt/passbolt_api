@@ -116,12 +116,12 @@ class CleanupTest extends AppTestCase
             'user_id' => UuidFactory::uuid(),
             'foreign_key' => UuidFactory::uuid(),
             'foreign_model' => 'Resource',
-            'modified' => \Cake\I18n\DateTime::now(),
+            'modified' => DateTime::now(),
         ];
         FavoriteFactory::make($duplicateFavoriteMeta)->persist();
 
         // Duplicate favorite to keep as it is the oldest.
-        $duplicateFavoriteToKeep = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['modified' => \Cake\I18n\DateTime::now()->subDays(1)])->persist();
+        $duplicateFavoriteToKeep = FavoriteFactory::make($duplicateFavoriteMeta)->patchData(['modified' => DateTime::now()->subDays(1)])->persist();
 
         // Witness favorites to not cleanup:
         // - A favorite including a user involved in the cleanup

@@ -48,11 +48,11 @@ class MfaAccountSettingFactory extends AccountSettingFactory
      * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
-    public function totp(string $uri = 'Foo', ?\Cake\I18n\DateTime $verified = null): self
+    public function totp(string $uri = 'Foo', ?DateTime $verified = null): self
     {
         $settings = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP]];
         $settings[MfaSettings::PROVIDER_TOTP] = [
-            MfaAccountSettings::VERIFIED => $verified ?? \Cake\I18n\DateTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
             MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
         ];
         $value = json_encode($settings);
@@ -65,12 +65,12 @@ class MfaAccountSettingFactory extends AccountSettingFactory
      * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
-    public function yubikey(?string $yubikeyId = null, ?\Cake\I18n\DateTime $verified = null): self
+    public function yubikey(?string $yubikeyId = null, ?DateTime $verified = null): self
     {
         $yubikeyId = $yubikeyId ?? $this->getFaker()->sentence;
         $settings = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY]];
         $settings[MfaSettings::PROVIDER_YUBIKEY] = [
-            MfaAccountSettings::VERIFIED => $verified ?? \Cake\I18n\DateTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
             MfaAccountSettings::YUBIKEY_ID => $yubikeyId,
         ];
         $value = json_encode($settings);
@@ -82,11 +82,11 @@ class MfaAccountSettingFactory extends AccountSettingFactory
      * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
-    public function duo(?\Cake\I18n\DateTime $verified = null): self
+    public function duo(?DateTime $verified = null): self
     {
         $settings = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO]];
         $settings[MfaSettings::PROVIDER_DUO] = [
-            MfaAccountSettings::VERIFIED => $verified ?? \Cake\I18n\DateTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
         ];
         $value = json_encode($settings);
 
@@ -97,17 +97,17 @@ class MfaAccountSettingFactory extends AccountSettingFactory
      * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
-    public function duoWithTotp(string $uri = 'Foo', ?\Cake\I18n\DateTime $verified = null): self
+    public function duoWithTotp(string $uri = 'Foo', ?DateTime $verified = null): self
     {
         $settings = [MfaSettings::PROVIDERS => [
             MfaSettings::PROVIDER_DUO,
             MfaSettings::PROVIDER_TOTP,
         ]];
         $settings[MfaSettings::PROVIDER_DUO] = [
-            MfaAccountSettings::VERIFIED => $verified ?? \Cake\I18n\DateTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
         ];
         $settings[MfaSettings::PROVIDER_TOTP] = [
-            MfaAccountSettings::VERIFIED => $verified ?? \Cake\I18n\DateTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
             MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
         ];
         $value = json_encode($settings);

@@ -79,7 +79,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
      */
     public function testFoldersIndexFilterByIdSuccess()
     {
-        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2();
+        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2(); // phpcs:ignore
 
         $this->authenticateAs('ada');
 
@@ -98,7 +98,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
      */
     public function testFoldersIndexFilterByIdSuccessOnOneId()
     {
-        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2();
+        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2(); // phpcs:ignore
 
         $this->authenticateAs('ada');
 

@@ -20,6 +20,8 @@ namespace App\Controller\Share;
 use App\Controller\AppController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\UsersTable;
 use Cake\Collection\CollectionInterface;
 use Cake\ORM\Query;
 
@@ -31,12 +33,12 @@ class ShareSearchController extends AppController
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    protected $Groups;
+    protected GroupsTable $Groups;
 
     /**
      * Limits the query results to this number.

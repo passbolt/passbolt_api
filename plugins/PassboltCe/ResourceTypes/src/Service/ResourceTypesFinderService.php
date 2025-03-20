@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\ResourceTypes\Service;
 
 use Cake\Database\Expression\IdentifierExpression;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -57,9 +58,9 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
      *
      * @param string $id uuid
      * @throws \Cake\Datasource\Exception\RecordNotFoundException if resource type is not present
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      */
-    public function get(string $id)
+    public function get(string $id): array|EntityInterface
     {
         return $this->find()
             ->where(['id' => $id])

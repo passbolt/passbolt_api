@@ -45,7 +45,7 @@ class PermissionsModelInitializeEventListener implements EventListenerInterface
      * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
-    public function addPermissionsCleanupBehavior(EventInterface $event)
+    public function addPermissionsCleanupBehavior(EventInterface $event): void
     {
         if ($event->getSubject() instanceof PermissionsTable) {
             /** @var \Cake\ORM\Table $table */

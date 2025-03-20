@@ -19,6 +19,7 @@ namespace Passbolt\Rbacs\Controller\Rbacs;
 
 use App\Controller\AppController;
 use App\Utility\Pagination\PaginatePropertyAwareTrait;
+use Passbolt\Rbacs\Model\Table\RbacsTable;
 
 class RbacsIndexController extends AppController
 {
@@ -27,7 +28,7 @@ class RbacsIndexController extends AppController
     /**
      * @var \Passbolt\Rbacs\Model\Table\RbacsTable $Rbacs
      */
-    protected $Rbacs;
+    protected RbacsTable $Rbacs;
 
     /**
      * @inheritDoc

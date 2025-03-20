@@ -17,7 +17,7 @@ use Cake\Routing\RouteBuilder;
 use Passbolt\Metadata\Middleware\MetadataSettingsSecurityMiddleware;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
-$routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
     $routes->registerMiddleware(MetadataSettingsSecurityMiddleware::class, new MetadataSettingsSecurityMiddleware());
 
@@ -85,7 +85,7 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     /**
      * Resources upgrade endpoints.
      */
-    $routes->scope('/upgrade', function (RouteBuilder $routes) {
+    $routes->scope('/upgrade', function (RouteBuilder $routes): void {
         $routes->setExtensions(['json']);
 
         $routes
@@ -120,7 +120,7 @@ $routes->plugin('Passbolt/Metadata', ['path' => '/metadata'], function (RouteBui
     /**
      * Key rotation endpoints.
      */
-    $routes->scope('/rotate-key', function (RouteBuilder $routes) {
+    $routes->scope('/rotate-key', function (RouteBuilder $routes): void {
         $routes->setExtensions(['json']);
 
         $routes

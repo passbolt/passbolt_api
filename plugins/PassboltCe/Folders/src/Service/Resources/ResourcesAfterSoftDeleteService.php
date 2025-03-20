@@ -27,7 +27,7 @@ class ResourcesAfterSoftDeleteService
      * @return void
      * @throws \Exception
      */
-    public function afterSoftDelete(Resource $resource)
+    public function afterSoftDelete(Resource $resource): void
     {
         TableRegistry::getTableLocator()
             ->get('Passbolt/Folders.FoldersRelations')

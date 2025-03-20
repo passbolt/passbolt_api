@@ -27,7 +27,7 @@ class AuthenticationTokensSessionService
      * @param \App\Model\Entity\AuthenticationToken|string|null $sessionIdentifier The string or authentication token to match.
      * @return bool
      */
-    public function checkSession(AuthenticationToken $tokenToCheck, $sessionIdentifier): bool
+    public function checkSession(AuthenticationToken $tokenToCheck, AuthenticationToken|string|null $sessionIdentifier): bool // phpcs:ignore
     {
         // The hashed session that generated the authentication token being checked
         $hashedSessionIdToCheck = $tokenToCheck->getHashedSessionId();
@@ -49,9 +49,9 @@ class AuthenticationTokensSessionService
 
     /**
      * @param string $string String to hash
-     * @return false|string
+     * @return string|false
      */
-    public function hash(string $string)
+    public function hash(string $string): false|string
     {
         return hash(self::HASH_ALGO, $string);
     }

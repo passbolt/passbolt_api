@@ -282,8 +282,8 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                     'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
                 ],
             ],
-            'deleted' => \Cake\I18n\DateTime::yesterday()->format('Y-m-d H:i:s'),
-            'expired' => \Cake\I18n\DateTime::yesterday()->format('Y-m-d H:i:s'),
+            'deleted' => DateTime::yesterday()->format('Y-m-d H:i:s'),
+            'expired' => DateTime::yesterday()->format('Y-m-d H:i:s'),
         ]);
 
         $this->assertResponseCode(400);

@@ -25,32 +25,32 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @var string $name report name
      */
-    protected $name;
+    protected string $name;
 
     /**
      * @var string $slug report slug
      */
-    protected $slug;
+    protected string $slug;
 
     /**
      * @var string $description report description
      */
-    protected $description;
+    protected string $description;
 
     /**
      * @var string $template report template
      */
-    protected $template;
+    protected string $template;
 
     /**
      * @var \App\Model\Table\Dto\FindIndexOptions $options find options (optional)
      */
-    protected $options;
+    protected FindIndexOptions $options;
 
     /**
      * @var \App\Model\Entity\User $creator
      */
-    protected $creator;
+    protected User $creator;
 
     /**
      * @inheritDoc
@@ -148,7 +148,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @return \App\Model\Entity\User|null
      */
-    public function getCreator()
+    public function getCreator(): ?User
     {
         /** @psalm-suppress RedundantPropertyInitializationCheck */
         return $this->creator ?? null;
@@ -164,7 +164,7 @@ abstract class AbstractReport implements ReportInterface
             'type' => $this->getType(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
-            'created' => \Cake\I18n\DateTime::now(),
+            'created' => DateTime::now(),
             'data' => $this->getData(),
         ];
 
@@ -180,9 +180,9 @@ abstract class AbstractReport implements ReportInterface
     /**
      * Used by controller to render object
      *
-     * @return array|mixed
+     * @return mixed|array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->createReport();
     }

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Test\Factory;
 
 use App\Model\Entity\Role;
+use Cake\I18n\Date;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Log\Model\Entity\Action;
@@ -60,8 +61,8 @@ class RbacFactory extends CakephpBaseFactory
                 'foreign_id' => $faker->uuid(),
                 'created_by' => $faker->uuid(),
                 'modified_by' => $faker->uuid(),
-                'created' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
-                'modified' => \Cake\I18n\Date::now()->subDays($faker->randomNumber(4)),
+                'created' => Date::now()->subDays($faker->randomNumber(4)),
+                'modified' => Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }

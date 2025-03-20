@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Utility\Filesystem;
 
 use Cake\Log\Log;
+use RuntimeException;
 
 class DirectoryUtility
 {
@@ -77,7 +78,7 @@ class DirectoryUtility
     public static function isExecutable(string $path): bool
     {
         if (!file_exists($path)) {
-            throw new \RuntimeException("The file $path could not be found.");
+            throw new RuntimeException("The file $path could not be found.");
         }
         $code = str_split(decoct(fileperms($path) & 0777));
         foreach ($code as $perm) {

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Notification\Email;
 
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -47,12 +48,12 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
      */
-    private $getUsersIdsHavingAccessToService;
+    private PermissionsGetUsersIdsHavingAccessToService $getUsersIdsHavingAccessToService;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * Email redactor constructor.
@@ -134,7 +135,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * @param bool $isV5 Folder entity format is V5 or not.
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $recipient, User $operator, Folder $folder, bool $isV5)
+    private function createEmail(User $recipient, User $operator, Folder $folder, bool $isV5): Email
     {
         $isOperator = $recipient->id === $operator->id;
         $userFirstName = Purifier::clean($operator->profile->first_name);

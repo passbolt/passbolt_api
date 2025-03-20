@@ -35,7 +35,7 @@ use Passbolt\EmailDigest\Utility\Digest\DigestTemplateRegistry;
 class DigestsCollection extends AbstractDigestCollection
 {
     /**
-     * @var \Passbolt\EmailDigest\Utility\Digest\Digest[]
+     * @var array<\Passbolt\EmailDigest\Utility\Digest\Digest>
      */
     private array $digests = [];
 
@@ -44,7 +44,7 @@ class DigestsCollection extends AbstractDigestCollection
      * check if it can digest the email entity, if yes add emails data to it.
      * The first digest to be picked in the list, if can be used, will be the first and ONLY one digest served for the email.
      *
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
+     * @return array<\Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface>
      */
     public function marshalEmails(): array
     {

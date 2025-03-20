@@ -18,6 +18,7 @@ namespace Passbolt\EmailDigest\Controller\EmailDigest;
 
 use App\Controller\AppController;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\NotFoundException;
 use Passbolt\EmailDigest\Service\PreviewEmailBatchService;
 
@@ -26,7 +27,7 @@ class PreviewNextEmailsBatchController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         if (Configure::read('debug') && Configure::read('passbolt.selenium.active')) {
             $this->Authentication->allowUnauthenticated(['preview']);

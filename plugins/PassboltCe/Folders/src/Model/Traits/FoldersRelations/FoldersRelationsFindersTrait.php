@@ -31,7 +31,7 @@ trait FoldersRelationsFindersTrait
      * @param \Cake\ORM\Query $query The folders relations query to decorate
      * @return \Cake\ORM\Query
      */
-    public function filterQueryByIsNotPersonalFolder(Query $query)
+    public function filterQueryByIsNotPersonalFolder(Query $query): Query
     {
         $foldersIdsNotPersonalQuery = $this->find()
             ->select(['foreign_id'])
@@ -49,7 +49,7 @@ trait FoldersRelationsFindersTrait
      * @param array $usersIds The list of users ids
      * @return \Cake\ORM\Query
      */
-    public function filterByUsersIds(Query $query, array $usersIds)
+    public function filterByUsersIds(Query $query, array $usersIds): Query
     {
         return $query->where([
             'user_id IN' => $usersIds,
@@ -63,7 +63,7 @@ trait FoldersRelationsFindersTrait
      * @param string $foreignModel The foreign model to filter on
      * @return \Cake\ORM\Query
      */
-    public function filterByForeignModel(Query $query, string $foreignModel)
+    public function filterByForeignModel(Query $query, string $foreignModel): Query
     {
         return $query->where([
             'foreign_model' => $foreignModel,
@@ -75,7 +75,7 @@ trait FoldersRelationsFindersTrait
      *
      * @return \Cake\ORM\Query
      */
-    public function findByDeletedFolderParent()
+    public function findByDeletedFolderParent(): Query
     {
         return $this->find()
             ->leftJoinWith('FoldersParents')

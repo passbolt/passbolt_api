@@ -18,7 +18,10 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Service\Resources;
 
 use App\Model\Entity\Permission;
+use App\Model\Entity\Resource;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\UserHasPermissionService;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -34,22 +37,22 @@ class ResourcesAfterAccessRevokedService
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService
      */
-    private $foldersRelationsRemoveItemFromUserTree;
+    private FoldersRelationsRemoveItemFromUserTreeService $foldersRelationsRemoveItemFromUserTree;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $GroupsUsers;
+    private GroupsUsersTable $GroupsUsers;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $Resources;
+    private ResourcesTable $Resources;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
      */
-    private $userHasPermissionService;
+    private UserHasPermissionService $userHasPermissionService;
 
     /**
      * Instantiate the service.
@@ -72,7 +75,7 @@ class ResourcesAfterAccessRevokedService
      * @return void
      * @throws \Exception
      */
-    public function afterAccessRevoked(UserAccessControl $uac, Permission $permission)
+    public function afterAccessRevoked(UserAccessControl $uac, Permission $permission): void
     {
         $resource = $this->getResource($uac, $permission->aco_foreign_key);
 
@@ -91,12 +94,14 @@ class ResourcesAfterAccessRevokedService
      * @return \App\Model\Entity\Resource
      * @throws \Cake\Http\Exception\NotFoundException If the resource does not exist.
      */
-    private function getResource(UserAccessControl $uac, string $resourceId)
+    private function getResource(UserAccessControl $uac, string $resourceId): Resource
     {
         try {
-            return $this->Resources->get($resourceId,
-            finder: FolderizableBehavior::FINDER_NAME,
-            user_id: $uac->getId());
+            return $this->Resources->get(
+                $resourceId,
+                finder: FolderizableBehavior::FINDER_NAME,
+                user_id: $uac->getId()
+            );
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }
@@ -110,7 +115,7 @@ class ResourcesAfterAccessRevokedService
      * @return void
      * @throws \Exception
      */
-    private function removeResourceFromGroupUsersTrees(\App\Model\Entity\Resource $resource, string $groupId)
+    private function removeResourceFromGroupUsersTrees(Resource $resource, string $groupId): void
     {
         $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)
             ->all()
@@ -129,7 +134,7 @@ class ResourcesAfterAccessRevokedService
      * @return void
      * @throws \Exception
      */
-    private function removeResourceFromUserTree(\App\Model\Entity\Resource $resource, string $userId)
+    private function removeResourceFromUserTree(Resource $resource, string $userId): void
     {
         // If the user still has access to the resource, don't alter the user tree.
         $hasAccess = $this->userHasPermissionService->check(PermissionsTable::RESOURCE_ACO, $resource->id, $userId);

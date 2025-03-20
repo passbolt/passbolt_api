@@ -28,6 +28,7 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
@@ -45,10 +46,10 @@ trait ResourcesFindersTrait
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findIndex(string $userId, ?array $options = [])
+    public function findIndex(string $userId, ?array $options = []): Query
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         $query = $this->find();
@@ -204,13 +205,13 @@ trait ResourcesFindersTrait
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findView(string $userId, string $resourceId, ?array $options = [])
+    public function findView(string $userId, string $resourceId, ?array $options = []): Query
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The parameter userId should be a valid UUID.');
+            throw new InvalidArgumentException('The parameter userId should be a valid UUID.');
         }
         if (!Validation::uuid($resourceId)) {
-            throw new \InvalidArgumentException('The parameter resourceId should be a valid UUID.');
+            throw new InvalidArgumentException('The parameter resourceId should be a valid UUID.');
         }
 
         $query = $this->findIndex($userId, $options)
@@ -228,7 +229,7 @@ trait ResourcesFindersTrait
     public function findAllByGroupAccess(string $groupId): Query
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The group identifier should be a valid UUID.');
         }
 
         $query = $this->find()
@@ -248,18 +249,18 @@ trait ResourcesFindersTrait
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findAllByIds(string $userId, array $resourceIds = [], ?array $options = [])
+    public function findAllByIds(string $userId, array $resourceIds = [], ?array $options = []): Query
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if (empty($resourceIds)) {
-            throw new \InvalidArgumentException('The resources ids array can not be empty.');
+            throw new InvalidArgumentException('The resources ids array can not be empty.');
         } else {
             foreach ($resourceIds as $resourceId) {
                 if (!Validation::uuid($resourceId)) {
                     $msg = 'The array of resources identifiers should contain only valid UUID.';
-                    throw new \InvalidArgumentException($msg);
+                    throw new InvalidArgumentException($msg);
                 }
             }
         }
@@ -309,7 +310,7 @@ trait ResourcesFindersTrait
      * @param string $userId The user identifier to filter on.
      * @return \Cake\ORM\Query
      */
-    private function _filterQueryIsOwnedByUser(Query $query, string $userId)
+    private function _filterQueryIsOwnedByUser(Query $query, string $userId): Query
     {
         $resourcesUserIsOwnerSubQueryOptions = ['checkGroupsUsers' => true];
         $resourcesUserIsOwnerSubQuery = $this->Permissions
@@ -328,7 +329,7 @@ trait ResourcesFindersTrait
      * @param string $userId The user identifier to filter on.
      * @return \Cake\ORM\Query
      */
-    private function _filterQuerySharedWithUser(Query $query, string $userId)
+    private function _filterQuerySharedWithUser(Query $query, string $userId): Query
     {
         $resourcesUserIsOwnerSubQueryOptions = ['checkGroupsUsers' => true];
         $resourcesUserIsOwnerSubQuery = $this->Permissions
@@ -346,10 +347,10 @@ trait ResourcesFindersTrait
      * @return \Cake\ORM\Query
      * @throws \InvalidArgumentException if the group id is not a uuid
      */
-    private function _filterQuerySharedWithGroup(Query $query, string $groupId)
+    private function _filterQuerySharedWithGroup(Query $query, string $groupId): Query
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The group identifier should be a valid UUID.');
         }
 
         $resourcesSharedWithGroupSubQuery = $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $groupId)
@@ -382,7 +383,7 @@ trait ResourcesFindersTrait
     public function notExpiredQueryExpression(): QueryExpression
     {
         $isNull = $this->find()->newExpr()->isNull('expired');
-        $isFuture = $this->find()->newExpr()->gt('expired', \Cake\I18n\DateTime::now());
+        $isFuture = $this->find()->newExpr()->gt('expired', DateTime::now());
 
         return $this->find()->newExpr()->or([
             $isNull,

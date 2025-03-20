@@ -92,8 +92,7 @@ class FoldersRelationsSortServiceTest extends FoldersTestCase
 
         $folderRelationAForAda = FoldersRelationFactory::make()->user($userA)
             ->foreignModelFolder($folderA)->folderParent($folderB)->persist();
-        $folderRelationBForAda = FoldersRelationFactory::make()->user($userB)
-            ->foreignModelFolder($folderA)->folderParent($folderB)->persist();
+        FoldersRelationFactory::make()->user($userB)->foreignModelFolder($folderA)->folderParent($folderB)->persist();
         $folderRelationB = FoldersRelationFactory::make()->user($userA)->persist();
         $folderRelationC = FoldersRelationFactory::make()->persist();
         $foldersRelations = [$folderRelationB, $folderRelationC, $folderRelationAForAda];
@@ -122,15 +121,12 @@ class FoldersRelationsSortServiceTest extends FoldersTestCase
         $folderB = FolderFactory::make()->persist();
         $folderRelationAForAda = FoldersRelationFactory::make()->user($userA)
             ->foreignModelFolder($folderA)->folderParent($folderB)->persist();
-        $folderRelationBForBetty = FoldersRelationFactory::make()->user($userB)
-            ->foreignModelFolder($folderA)->folderParent($folderB)->persist();
+        FoldersRelationFactory::make()->user($userB)->foreignModelFolder($folderA)->folderParent($folderB)->persist();
 
         $folderC = FolderFactory::make()->persist();
         $folderD = FolderFactory::make()->persist();
-        $folderRelationBForAda = FoldersRelationFactory::make()->user($userA)
-            ->foreignModelFolder($folderC)->folderParent($folderD)->persist();
-        $folderRelationBForOther = FoldersRelationFactory::make()
-            ->foreignModelFolder($folderC)->folderParent($folderD)->persist();
+        FoldersRelationFactory::make()->user($userA)->foreignModelFolder($folderC)->folderParent($folderD)->persist();
+        FoldersRelationFactory::make()->foreignModelFolder($folderC)->folderParent($folderD)->persist();
 
         $folderRelationB = FoldersRelationFactory::make()->user($userA)->persist();
         $folderRelationC = FoldersRelationFactory::make()->persist();
@@ -220,8 +216,7 @@ class FoldersRelationsSortServiceTest extends FoldersTestCase
         $folderB = FolderFactory::make()->persist();
         $folderRelationAForBetty = FoldersRelationFactory::make()
             ->foreignModelFolder($folderA)->folderParent($folderB)->user($userB)->persist();
-        $folderRelationAForOther = FoldersRelationFactory::make()
-            ->foreignModelFolder($folderA)->folderParent($folderB)->persist();
+        FoldersRelationFactory::make()->foreignModelFolder($folderA)->folderParent($folderB)->persist();
 
         $folderC = FolderFactory::make()->persist();
         $folderD = FolderFactory::make()->persist();
@@ -248,14 +243,14 @@ class FoldersRelationsSortServiceTest extends FoldersTestCase
     public function testSortByPriorityMostUsed_CombinedGrandPa()
     {
         $userA = UserFactory::make()->persist();
-        $userB = UserFactory::make()->persist();
+        UserFactory::make()->persist();
         $uac = new UserAccessControl($userA->role->name, $userA->id);
 
         $folderA = FolderFactory::make()->persist();
         $folderB = FolderFactory::make()->persist();
         $folderRelationAForOther1 = FoldersRelationFactory::make(['created' => '1970-01-01 00:00:00'])
             ->foreignModelFolder($folderA)->folderParent($folderB)->persist();
-        $folderRelationAForOther2 = FoldersRelationFactory::make(['created' => '1970-01-01 00:00:00'])
+        FoldersRelationFactory::make(['created' => '1970-01-01 00:00:00'])
             ->foreignModelFolder($folderA)->folderParent($folderB)->persist();
 
         $folderC = FolderFactory::make()->persist();

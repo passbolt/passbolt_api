@@ -579,7 +579,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder()
     {
-        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoSharedFolder_InsufficientPermissionMovedFolder(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -609,7 +609,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission()
     {
-        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -639,7 +639,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermission()
     {
-        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermissionShared_InsufficientPermissionOnOriginalParentFolder();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermissionShared_InsufficientPermissionOnOriginalParentFolder(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -671,7 +671,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder()
     {
-        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_Folder_SharedWithUser_CannotMoveOutOfFolder_InsufficientPermissionMovedFolder(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -765,7 +765,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Folder_SelfOrganize_CannotCreateCycle()
     {
-        [$folderA, $folderB, $folderC, $userAId, $userBId] = $this->insertFixture_Folder_SelfOrganize_CannotCreateCycle();
+        [$folderA, $folderB, $folderC, $userAId, $userBId] = $this->insertFixture_Folder_SelfOrganize_CannotCreateCycle(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -909,7 +909,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeSuccess_Resource_SharedWithGroup_MoveFromRoot()
     {
-        [$folderA, $resource, $g1, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithGroup_MoveFromRoot();
+        [$folderA, $resource, $g1, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithGroup_MoveFromRoot(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $this->service->move($uac, FoldersRelation::FOREIGN_MODEL_RESOURCE, $resource->id, $folderA->id);
@@ -1134,7 +1134,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Resource_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission()
     {
-        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission();
+        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_CannotMoveIntoFolderWithInsufficientPermission(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {
@@ -1163,7 +1163,7 @@ class FoldersRelationsMoveItemInUserTreeServiceTest extends FoldersTestCase
 
     public function testMoveItemInUserTreeError_Resource_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermission()
     {
-        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermissionShared_InsufficientPermissionOnOriginalParentFolder();
+        [$folderA, $resource, $userAId, $userBId] = $this->insertFixture_Resource_SharedWithUser_CannotMoveOutOfFolderWithInsufficientPermissionShared_InsufficientPermissionOnOriginalParentFolder(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         try {

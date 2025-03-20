@@ -19,6 +19,8 @@ namespace Passbolt\Rbacs\Controller\Rbacs;
 
 use App\Controller\AppController;
 use App\Utility\Pagination\PaginatePropertyAwareTrait;
+use Cake\Event\EventInterface;
+use Passbolt\Rbacs\Model\Table\RbacsTable;
 
 class RbacsViewController extends AppController
 {
@@ -27,7 +29,7 @@ class RbacsViewController extends AppController
     /**
      * @var \Passbolt\Rbacs\Model\Table\RbacsTable $Rbacs
      */
-    protected $Rbacs;
+    protected RbacsTable $Rbacs;
 
     /**
      * @inheritDoc
@@ -44,7 +46,7 @@ class RbacsViewController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated([
             'viewForCurrentRole',

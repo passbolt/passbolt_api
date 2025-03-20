@@ -25,10 +25,12 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use ArrayObject;
 use Cake\Event\Event;
+use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 
 /**
  * GroupsUsers Model
@@ -118,7 +120,7 @@ class GroupsUsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationSaveGroup(Validator $validator)
+    public function validationSaveGroup(Validator $validator): Validator
     {
         $validator = $this->validationDefault($validator);
 
@@ -175,10 +177,10 @@ class GroupsUsersTable extends Table
      * @param string $userId user uuid
      * @return \Cake\ORM\Query
      */
-    public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId)
+    public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId): Query
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the non empty groups where the user given as parameter is the sole manager
@@ -206,10 +208,10 @@ class GroupsUsersTable extends Table
      * @param string $userId user uuid
      * @return \Cake\ORM\Query
      */
-    public function findGroupsWhereUserIsSoleManager(string $userId)
+    public function findGroupsWhereUserIsSoleManager(string $userId): Query
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the sole manager
@@ -259,10 +261,10 @@ class GroupsUsersTable extends Table
      * @param string $userId user uuid
      * @return \Cake\ORM\Query
      */
-    public function findGroupsWhereUserOnlyMember(string $userId)
+    public function findGroupsWhereUserOnlyMember(string $userId): Query
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the only member
@@ -308,10 +310,10 @@ class GroupsUsersTable extends Table
      * @param string $userId user uuid
      * @return \Cake\ORM\Query
      */
-    public function findGroupsWhereUserNotOnlyMember(string $userId)
+    public function findGroupsWhereUserNotOnlyMember(string $userId): Query
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the only member
@@ -349,7 +351,7 @@ class GroupsUsersTable extends Table
      * @param string $groupId uuid
      * @return bool true if user is marked as admin
      */
-    public function isManager(string $userId, string $groupId)
+    public function isManager(string $userId, string $groupId): bool
     {
         if (!Validation::uuid($userId) || !Validation::uuid($groupId)) {
             return false;
@@ -397,7 +399,7 @@ class GroupsUsersTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         if (!isset($data['is_admin'])) {
             $data['is_admin'] = false;
@@ -410,7 +412,7 @@ class GroupsUsersTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupSoftDeletedGroups($dryRun = false)
+    public function cleanupSoftDeletedGroups(bool $dryRun = false): int
     {
         return $this->cleanupSoftDeleted('Groups', $dryRun);
     }
@@ -421,7 +423,7 @@ class GroupsUsersTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupHardDeletedGroups($dryRun = false)
+    public function cleanupHardDeletedGroups(bool $dryRun = false): int
     {
         return $this->cleanupHardDeleted('Groups', $dryRun);
     }

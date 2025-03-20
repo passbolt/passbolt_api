@@ -21,6 +21,7 @@ use App\Utility\UserAccessControl;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Throwable;
 
 class PasswordExpiryDeleteSettingsService
 {
@@ -43,7 +44,7 @@ class PasswordExpiryDeleteSettingsService
 
         try {
             $setting = $passwordExpirySettingsTable->get($id);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new NotFoundException(__('The password expiry setting does not exist.'));
         }
 

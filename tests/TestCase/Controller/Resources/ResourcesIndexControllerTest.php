@@ -50,7 +50,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         // Assert that the created date is in the right format
         $format = "yyyy-MM-dd'T'HH':'mm':'ssxxx";
         $created = $this->_responseJsonBody[0]->created;
-        $createdParsed = \Cake\I18n\DateTime::parse($this->_responseJsonBody[0]->created)->i18nFormat($format);
+        $createdParsed = DateTime::parse($this->_responseJsonBody[0]->created)->i18nFormat($format);
         $this->assertSame($createdParsed, $created, "The created date $created is not in $format format");
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody[0]);

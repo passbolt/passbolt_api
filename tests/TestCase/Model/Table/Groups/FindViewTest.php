@@ -7,6 +7,7 @@ use App\Model\Table\GroupsTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Exception;
 
 class FindViewTest extends AppTestCase
 {
@@ -39,7 +40,7 @@ class FindViewTest extends AppTestCase
     {
         try {
             $this->Groups->findView('not-valid');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->assertTrue(true);
         }
         $this->fail('Expect an exception');

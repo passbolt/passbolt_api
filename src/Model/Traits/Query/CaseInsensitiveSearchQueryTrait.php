@@ -37,7 +37,7 @@ trait CaseInsensitiveSearchQueryTrait
 
     /**
      * @param \Cake\ORM\Query $query Reference query object.
-     * @param string[] $aliases fields to search along
+     * @param array<string> $aliases fields to search along
      * @param string $string to be searched
      * @return \Cake\ORM\Query
      */

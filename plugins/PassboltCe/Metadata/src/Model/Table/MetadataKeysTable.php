@@ -25,6 +25,7 @@ use App\Model\Validation\DateTime\IsDateInPastValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Model\Validation\IsNullOnCreateRule;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -224,10 +225,10 @@ class MetadataKeysTable extends Table
     }
 
     /**
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getLatestActiveKey()
+    public function getLatestActiveKey(): array|EntityInterface
     {
         return $this
             ->find()

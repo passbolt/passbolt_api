@@ -20,9 +20,12 @@ use App\Controller\AppController;
 use App\Model\Entity\Role;
 use App\Model\Table\AvatarsTable;
 use App\Utility\UserAccessControl;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\Validation\Validation;
+use Passbolt\Mobile\Model\Entity\Transfer;
+use Passbolt\Mobile\Model\Table\TransfersTable;
 use Passbolt\Mobile\Service\Transfers\TransfersUpdateService;
 
 /**
@@ -35,17 +38,17 @@ class TransfersUpdateController extends AppController
     /**
      * @var \Passbolt\Mobile\Model\Entity\Transfer $transfer
      */
-    protected $transfer;
+    protected Transfer $transfer;
 
     /**
      * @var \Passbolt\Mobile\Model\Table\TransfersTable
      */
-    protected $Transfers;
+    protected TransfersTable $Transfers;
 
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated(['updateNoSession']);
         $this->Transfers = $this->fetchTable('Passbolt/Mobile.Transfers');

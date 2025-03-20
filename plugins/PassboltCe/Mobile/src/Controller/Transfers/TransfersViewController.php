@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use App\Model\Table\AvatarsTable;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Validation\Validation;
+use Passbolt\Mobile\Model\Table\TransfersTable;
 
 /**
  * Class TransfersViewController
@@ -32,7 +33,7 @@ class TransfersViewController extends AppController
     /**
      * @var \Passbolt\Mobile\Model\Table\TransfersTable
      */
-    protected $Transfers;
+    protected TransfersTable $Transfers;
 
     /**
      * @inheritDoc

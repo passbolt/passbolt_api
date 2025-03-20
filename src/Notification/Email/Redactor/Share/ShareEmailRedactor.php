@@ -26,6 +26,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Resources\ResourcesShareService;
 use Cake\Event\Event;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Locale\Service\LocaleService;
@@ -41,7 +42,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param array|null $config Configuration for redactor
@@ -114,7 +115,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      * @param array $userIds A list of user ids
      * @return \Cake\ORM\Query
      */
-    private function getUserFromIds(array $userIds)
+    private function getUserFromIds(array $userIds): Query
     {
         return $this->usersTable
             ->find('locale')

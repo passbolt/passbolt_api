@@ -22,7 +22,10 @@ use App\Model\Entity\Group;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Model\Entity\Secret;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -47,22 +50,22 @@ class GroupsDeleteController extends AppController
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    protected $Groups;
+    protected GroupsTable $Groups;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    protected $GroupsUsers;
+    protected GroupsUsersTable $GroupsUsers;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    protected $Permissions;
+    protected PermissionsTable $Permissions;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @inheritDoc
@@ -283,7 +286,7 @@ class GroupsDeleteController extends AppController
     /**
      * Formats resource array fields according to V4/V5.
      *
-     * @param \App\Model\Entity\Resource[] $resources Resources array to format.
+     * @param array<\App\Model\Entity\Resource> $resources Resources array to format.
      * @return array
      */
     private function formatResources(array $resources): array

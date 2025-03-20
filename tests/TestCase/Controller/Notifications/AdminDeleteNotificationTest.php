@@ -99,8 +99,7 @@ class AdminDeleteNotificationTest extends AppIntegrationTestCase
         $admin = UserFactory::make()->admin()->active()->persist();
         /** @var \App\Model\Entity\User $operator */
         $operator = UserFactory::make()->admin()->active()->persist();
-        /** @var \App\Model\Entity\User $johnAdmin */
-        $johnAdmin = UserFactory::make()->admin()->active()->persist();
+        UserFactory::make()->admin()->active()->persist();
         // Turn off notification
         Configure::write(AdminDeleteEmailRedactor::CONFIG_KEY_EMAIL_ENABLED, false);
 

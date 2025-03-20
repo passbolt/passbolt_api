@@ -25,28 +25,29 @@ use App\Utility\UserAccessControl;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsMoveItemInUserTreeService
 {
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDetectStronglyConnectedComponentsService
      */
-    private $folderRelationsDetectStronglyConnectedComponents;
+    private FoldersRelationsDetectStronglyConnectedComponentsService $folderRelationsDetectStronglyConnectedComponents;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRepairStronglyConnectedComponentsService
      */
-    private $foldersRelationsRepairStronglyConnectedComponents;
+    private FoldersRelationsRepairStronglyConnectedComponentsService $foldersRelationsRepairStronglyConnectedComponents;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
      */
-    private $userHasPermissionService;
+    private UserHasPermissionService $userHasPermissionService;
 
     /**
      * Instantiate the service.
@@ -83,7 +84,7 @@ class FoldersRelationsMoveItemInUserTreeService
         $this->assertUserCanMoveInFolder($uac, $foreignModel, $foreignId, $folderParentId);
 
         $this->foldersRelationsTable->getConnection()->transactional(
-            function () use ($uac, $foreignModel, $foreignId, $originalFolderParentId, $folderParentId) {
+            function () use ($uac, $foreignModel, $foreignId, $originalFolderParentId, $folderParentId): void {
                 $this->performMove($uac, $foreignModel, $foreignId, $originalFolderParentId, $folderParentId);
             }
         );

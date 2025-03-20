@@ -28,12 +28,15 @@ use App\Model\Validation\GpgkeyType\IsValidGpgkeyTypeValidationRule;
 use App\Model\Validation\KeyId\IsValidKeyIdValidationRule;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use Cake\Core\Exception\CakeException;
+use Cake\Datasource\EntityInterface;
 use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Exception;
+use InvalidArgumentException;
 
 /**
  * Model to store and validate OpenPGP public keys
@@ -176,7 +179,7 @@ class GpgkeysTable extends Table
     public function findIndex(Query $query, array $options): Query
     {
         if (isset($options['filter']['modified-after'])) {
-            $modified = new \Cake\I18n\DateTime($options['filter']['modified-after']);
+            $modified = new DateTime($options['filter']['modified-after']);
             $query->where(['modified >' => $modified->i18nFormat('yyyy-MM-dd HH:mm:ss')]);
         }
 
@@ -214,7 +217,7 @@ class GpgkeysTable extends Table
      * Find current gpgkey to use
      *
      * @param \Cake\ORM\Query $query a query instance
-     * @param  ?string $userId user ID
+     * @param ?string $userId user ID
      * @return \Cake\ORM\Query
      * @throws \Cake\Core\Exception\CakeException if no user_id is specified
      */
@@ -239,15 +242,15 @@ class GpgkeysTable extends Table
      * @param string $fingerprint char40
      * @param string $userId uuid
      * @throws \InvalidArgumentException if the user id or fingerprint are not valid
-     * @return array|\Cake\Datasource\EntityInterface|null
+     * @return \Cake\Datasource\EntityInterface|array|null
      */
-    public function getByFingerprintAndUserId(string $fingerprint, string $userId)
+    public function getByFingerprintAndUserId(string $fingerprint, string $userId): array|EntityInterface|null
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if (!PublicKeyValidationService::isValidFingerprint($fingerprint)) {
-            throw new \InvalidArgumentException('The fingerprint should be a valid hexadecimal string.');
+            throw new InvalidArgumentException('The fingerprint should be a valid hexadecimal string.');
         }
 
         return $this->find()
@@ -270,11 +273,11 @@ class GpgkeysTable extends Table
     public function buildEntityFromArmoredKey(string $armoredKey, string $userId): Gpgkey
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         try {
             $info = PublicKeyValidationService::getPublicKeyInfo($armoredKey);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new CustomValidationException(__('A valid OpenPGP key must be provided.'), [
                 'armored_key' => [
                     'isParsable' => __('The OpenPGP armored key could not be parsed.'),
@@ -291,12 +294,12 @@ class GpgkeysTable extends Table
             'uid' => $info['uid'],
             'armored_key' => $armoredKey,
             'deleted' => false,
-            'key_created' => new \Cake\I18n\DateTime($info['key_created']),
+            'key_created' => new DateTime($info['key_created']),
             'expires' => null,
         ];
 
         if (!empty($info['expires'])) {
-            $data['expires'] = new \Cake\I18n\DateTime($info['expires']);
+            $data['expires'] = new DateTime($info['expires']);
         }
 
         $gpgKey = $this->newEntity($data, ['accessibleFields' => [

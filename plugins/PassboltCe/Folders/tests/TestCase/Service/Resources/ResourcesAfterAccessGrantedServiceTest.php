@@ -92,7 +92,7 @@ class ResourcesAfterAccessGrantedServiceTest extends FoldersTestCase
 
     public function testResourceAfterAccessGrantedSuccess_UserPermissionAdded_GroupUserAlreadyHavingAccess()
     {
-        [$r1, $g1, $userAId] = $this->insertFixture_UserPermissionAdded_GroupUserAlreadyHavingAccess();
+        [$r1, $g1, $userAId] = $this->insertFixture_UserPermissionAdded_GroupUserAlreadyHavingAccess(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $permission = $this->addPermission(PermissionsTable::RESOURCE_ACO, $r1->id, PermissionsTable::USER_ARO, $userAId);

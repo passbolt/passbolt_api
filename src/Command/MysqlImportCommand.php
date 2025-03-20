@@ -20,6 +20,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Datasource\ConnectionManager;
+use Exception;
 
 class MysqlImportCommand extends PassboltCommand
 {
@@ -78,7 +79,7 @@ class MysqlImportCommand extends PassboltCommand
             $datasource = $args->getOption('datasource');
             $connection = ConnectionManager::get($datasource);
             $connection->execute($sql);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error('Error: Something went wrong when importing the SQL file', $io);
             $this->error($e->getMessage(), $io);
 

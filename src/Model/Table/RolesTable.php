@@ -20,6 +20,7 @@ use App\Model\Entity\Role;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 
 /**
  * Roles Model
@@ -130,7 +131,7 @@ class RolesTable extends Table
     {
         if (!$this->isValidRoleName($roleName)) {
             $msg = __('The role name should be from the list of allowed role names.');
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
         $role = $this->find('all')
             ->where(['name' => $roleName])

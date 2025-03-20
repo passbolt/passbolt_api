@@ -129,7 +129,7 @@ class SqlExportCommand extends PassboltCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return bool
      */
-    protected function dump(Connection $connection, $dir, $file, ConsoleIo $io): bool
+    protected function dump(Connection $connection, string $dir, string $file, ConsoleIo $io): bool
     {
         $io->info('Saving backup file: ' . $dir . $file);
 
@@ -244,7 +244,7 @@ class SqlExportCommand extends PassboltCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function clearPrevious($dir, $newFile, ConsoleIo $io): void
+    protected function clearPrevious(string $dir, string $newFile, ConsoleIo $io): void
     {
         $files = glob($dir . '*');
         foreach ($files as $file) {
@@ -266,7 +266,7 @@ class SqlExportCommand extends PassboltCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return string|null
      */
-    protected function getFile($dir, Arguments $args, ConsoleIo $io): ?string
+    protected function getFile(string $dir, Arguments $args, ConsoleIo $io): ?string
     {
         $file = $args->getOption('file');
         if (!is_string($file) || empty($file)) {

@@ -37,7 +37,7 @@ interface SessionIdentificationServiceInterface
      * @param \Cake\Http\ServerRequest $request Request
      * @return \App\Model\Entity\AuthenticationToken|string|null
      */
-    public function getSessionIdentifier(ServerRequest $request);
+    public function getSessionIdentifier(ServerRequest $request): AuthenticationToken|string|null;
 
     /**
      * Compares a provided authentication token with the session identification.

@@ -66,9 +66,9 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
     public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
-        /** @var string[] $resourceIds */
+        /** @var array<string> $resourceIds */
         $resourceIds = $event->getData('resourceIds');
-        /** @var string[] $userIdsToSkip */
+        /** @var array<string> $userIdsToSkip */
         $userIdsToSkip = $event->getData('userIdsToSkip') ?? [];
         $usersToNotify = $this->findUsersToNotify($resourceIds, $userIdsToSkip);
 

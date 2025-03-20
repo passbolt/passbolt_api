@@ -25,7 +25,9 @@ use App\Utility\UuidFactory;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
+use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\OpenPGP\OpenPGPCommonMetadataOperationsTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -84,7 +86,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
             UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_STANDALONE_TOTP),
             UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_PASSWORD_DESCRIPTION_TOTP),
         ];
-        /** @var \App\Model\Entity\Resource[] $resources */
+        /** @var array<\App\Model\Entity\Resource> $resources */
         $resources = $this->Resources
             ->find()
             ->contain(['Permissions.Users.Gpgkeys', 'Creator.Gpgkeys'])
@@ -116,7 +118,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
                     $this->migrateShared($dto, $resource);
                 }
                 $this->addMigrated($resource);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 // Continue with next resource if any error
                 $error = ['resource_id' => $resource->id, 'error_message' => $e->getMessage()];
                 if (Configure::read('debug')) {
@@ -172,7 +174,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
             $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->gpgkey);
             $metadataClearText = json_encode($metadataArray, JSON_THROW_ON_ERROR);
             $metadataEncrypted = $gpg->encrypt($metadataClearText, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The metadata could not be encrypted with the user id: {0}.', $user->id);
             throw new InternalErrorException($msg, 500, $exception);
@@ -209,7 +211,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
             $gpg = $this->setEncryptKeyWithMetadataKey($gpg, $metadataKey);
             $metadataClearText = json_encode($metadataArray, JSON_THROW_ON_ERROR);
             $metadataEncrypted = $gpg->encrypt($metadataClearText, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The metadata could not be encrypted with the metadata key id: {0}.', $metadataKey->id);
             throw new InternalErrorException($msg, 500, $exception);
@@ -269,7 +271,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
                 'validate' => 'v5',
             ]);
             $this->Resources->saveOrFail($resource, ['checkRules' => false]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('Unable to migrate resource ID: {0} to V5.', $resource->id);
             $msg .= ' ' . $exception->getMessage();
             throw new InternalErrorException($msg, 500, $exception);
@@ -280,7 +282,7 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
      * @return \Passbolt\Metadata\Model\Entity\MetadataKey
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no metadata key record.
      */
-    private function getMetadataKeyForEncryption()
+    private function getMetadataKeyForEncryption(): MetadataKey
     {
         /** @var \Passbolt\Metadata\Model\Table\MetadataKeysTable $metadataKeysTable */
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');

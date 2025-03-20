@@ -16,6 +16,7 @@ declare(strict_types=1);
 namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Entity\Secret;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Table;
@@ -134,9 +135,9 @@ class SecretAccessesTable extends Table
      *
      * @param \App\Utility\UserAccessControl $uac user access control object
      * @param \App\Model\Entity\Secret|array $secret the secret entity
-     * @return bool|\Cake\Datasource\EntityInterface|false|mixed
+     * @return \Cake\Datasource\EntityInterface|mixed|bool|false
      */
-    public function createFromSecretEntity(UserAccessControl $uac, $secret)
+    public function createFromSecretEntity(UserAccessControl $uac, Secret|array $secret): mixed
     {
         return $this->createFromSecretDetails($uac, $secret['resource_id'], $secret['id']);
     }
@@ -147,10 +148,10 @@ class SecretAccessesTable extends Table
      * @param \App\Utility\UserAccessControl $uac user access control object
      * @param string $resourceId The resource identifier
      * @param string $secretId The secret identifier
-     * @return bool|\Cake\Datasource\EntityInterface|false|mixed
+     * @return \Cake\Datasource\EntityInterface|mixed|bool|false
      * @throws \App\Error\Exception\ValidationException
      */
-    public function createFromSecretDetails(UserAccessControl $uac, string $resourceId, string $secretId)
+    public function createFromSecretDetails(UserAccessControl $uac, string $resourceId, string $secretId): mixed
     {
         $data = [
             'user_id' => $uac->getId(),

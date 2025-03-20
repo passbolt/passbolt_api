@@ -44,8 +44,8 @@ class EmailNotificationSettingFactory extends OrganizationSettingFactory
             'property' => $property,
             'property_id' => UuidFactory::uuid($property),
             'value' => json_encode(self::getDefaultEmailNotificationConfig()),
-            'created' => \Cake\I18n\DateTime::now(),
-            'modified' => \Cake\I18n\DateTime::now(),
+            'created' => DateTime::now(),
+            'modified' => DateTime::now(),
             'created_by' => UuidFactory::uuid(),
             'modified_by' => UuidFactory::uuid(),
         ]);

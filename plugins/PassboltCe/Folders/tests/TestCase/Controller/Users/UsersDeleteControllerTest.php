@@ -75,7 +75,7 @@ class UsersDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUsersDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
-        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
+        [$folderA, $folderB, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser(); // phpcs:ignore
         $this->authenticateAs('admin');
 
         $this->deleteJson("/users/$userAId.json?api-version=v2");

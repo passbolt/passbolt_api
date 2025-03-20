@@ -21,6 +21,9 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Gpgkey;
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\GpgkeysTable;
+use App\Model\Table\UsersTable;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
@@ -40,22 +43,22 @@ abstract class AbstractCompleteService
     /**
      * @var \Cake\Http\ServerRequest
      */
-    protected $request;
+    protected ServerRequest $request;
 
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * @var \App\Model\Table\GpgkeysTable
      */
-    protected $Gpgkeys;
+    protected GpgkeysTable $Gpgkeys;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * AbstractCompleteService constructor

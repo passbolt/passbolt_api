@@ -23,6 +23,7 @@ use Cake\I18n\Date;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
+use PDOException;
 
 class ActionLogsPurgeService
 {
@@ -45,7 +46,7 @@ class ActionLogsPurgeService
             return $ActionLogsTable->deleteAll([
                 'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id')->limit($limit),
             ]);
-        } catch (\PDOException $exception) {
+        } catch (PDOException $exception) {
             $createdBefore = Date::now()->subDays($retentionInDays);
             $entitiesHistory = $ActionLogsTable->getAssociation('EntitiesHistory')
                 ->subquery()
@@ -130,7 +131,7 @@ class ActionLogsPurgeService
     /**
      * List of actions to be purged
      *
-     * @return string[]
+     * @return array<string>
      */
     public function getActionList(): array
     {

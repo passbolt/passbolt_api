@@ -296,7 +296,7 @@ class FoldersTable extends Table
      * @param string $id The folder id
      * @return string
      */
-    public function getCreatedDate(string $id)
+    public function getCreatedDate(string $id): string
     {
         return $this->findById($id)
             ->select('created')

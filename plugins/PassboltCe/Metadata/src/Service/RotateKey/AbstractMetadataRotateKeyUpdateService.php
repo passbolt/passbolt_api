@@ -34,7 +34,7 @@ abstract class AbstractMetadataRotateKeyUpdateService
     /**
      * @param \App\Utility\UserAccessControl $uac User access control.
      * @param array $data Data to update
-     * @param \Cake\ORM\Entity[] $entitiesToUpdate entities to patch
+     * @param array<\Cake\ORM\Entity> $entitiesToUpdate entities to patch
      * @return void
      */
     abstract protected function updateData(UserAccessControl $uac, array $data, array $entitiesToUpdate): void;

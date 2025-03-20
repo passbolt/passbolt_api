@@ -110,7 +110,7 @@ class FoldersRelationsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator): \Cake\Validation\Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id', __('The identifier should be a valid UUID.'))
@@ -148,7 +148,7 @@ class FoldersRelationsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->addCreate(
             $rules->isUnique(
@@ -277,7 +277,7 @@ class FoldersRelationsTable extends Table
      * @param bool $dryRun false
      * @return int of affected records
      */
-    private function cleanupHardDeletedForeignId(string $modelName, $dryRun = false): int
+    private function cleanupHardDeletedForeignId(string $modelName, bool $dryRun = false): int
     {
         $query = $this->selectQuery()
             ->select(['id'])

@@ -33,12 +33,12 @@ class ExtendedUserAccessControl extends UserAccessControl
     /**
      * @var string
      */
-    private $userIp;
+    private string $userIp;
 
     /**
      * @var string
      */
-    private $userAgent;
+    private string $userAgent;
 
     /**
      * UserAccessControl constructor.

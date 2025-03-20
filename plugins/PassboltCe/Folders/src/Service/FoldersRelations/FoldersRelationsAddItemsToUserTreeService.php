@@ -24,38 +24,39 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Collection\FolderRelationDtoCollection;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsAddItemsToUserTreeService
 {
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTables;
+    private PermissionsTable $permissionsTables;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsSortService
      */
-    private $foldersRelationsSortService;
+    private FoldersRelationsSortService $foldersRelationsSortService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService
      */
-    private $foldersRelationsCreateService;
+    private FoldersRelationsCreateService $foldersRelationsCreateService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDetectStronglyConnectedComponentsService
      */
-    private $folderRelationsDetectSCCsService;
+    private FoldersRelationsDetectStronglyConnectedComponentsService $folderRelationsDetectSCCsService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRepairStronglyConnectedComponentsService
      */
-    private $foldersRelationsRepairSCCsService;
+    private FoldersRelationsRepairStronglyConnectedComponentsService $foldersRelationsRepairSCCsService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsHaveAndAreChildrenService
@@ -293,7 +294,7 @@ class FoldersRelationsAddItemsToUserTreeService
      * @return void
      * @throws \Exception If a folder relation cannot be created
      */
-    private function insertItemsInUserRootTree(string $userId, FolderRelationDtoCollection $items)
+    private function insertItemsInUserRootTree(string $userId, FolderRelationDtoCollection $items): void
     {
         foreach ($items as $item) {
             $folderRelationToCreate = $item->clone();

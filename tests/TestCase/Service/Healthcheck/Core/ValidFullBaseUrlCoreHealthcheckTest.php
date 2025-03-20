@@ -17,7 +17,9 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Service\Healthcheck\Core;
 
 use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
+use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use stdClass;
 
 /**
  * @covers \App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck
@@ -101,5 +103,29 @@ class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
                 'expected result' => false,
             ],
         ];
+    }
+
+    public function testValidFullBaseUrlCoreHealthcheck_InvalidFullBaseUrl(): void
+    {
+        Configure::write('App.fullBaseUrl', false);
+        $healthcheck = new ValidFullBaseUrlCoreHealthcheck();
+        $result = $healthcheck->check()->isPassed();
+        $this->assertFalse($result);
+        $this->assertStringContainsString(
+            'IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection',
+            $healthcheck->getHelpMessage()[2]
+        );
+    }
+
+    public function testValidFullBaseUrlCoreHealthcheck_InvalidTypeFullBaseUrl(): void
+    {
+        Configure::write('App.fullBaseUrl', new stdClass());
+        $healthcheck = new ValidFullBaseUrlCoreHealthcheck();
+        $result = $healthcheck->check()->isPassed();
+        $this->assertFalse($result);
+        $this->assertStringContainsString(
+            'App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found "object".',
+            $healthcheck->getFailureMessage()
+        );
     }
 }

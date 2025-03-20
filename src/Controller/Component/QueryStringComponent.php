@@ -21,6 +21,8 @@ use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Utility\Inflector;
 use Cake\Validation\Validation;
+use DateTime;
+use Exception;
 
 /**
  * Query String Component
@@ -37,7 +39,7 @@ class QueryStringComponent extends Component
      * Get query Items
      *
      * @param array $allowedQueryItems whitelist
-     * @param callable[] $filterValidators Filters validator callable
+     * @param array<callable> $filterValidators Filters validator callable
      * @return array
      */
     public function get(array $allowedQueryItems, array $filterValidators = [])
@@ -129,8 +131,8 @@ class QueryStringComponent extends Component
                     }
                 } elseif ($filterName === 'from') {
                     try {
-                        $query['filter']['from'] = new \DateTime($query['filter']['from']);
-                    } catch (\Exception $e) {
+                        $query['filter']['from'] = new DateTime($query['filter']['from']);
+                    } catch (Exception $e) {
                         $query['filter']['from'] = false;
                     }
                 } elseif ($filterName === 'frequency') {
@@ -180,7 +182,7 @@ class QueryStringComponent extends Component
     /**
      * Defines the filters which values should by all mean be converted to arrays.
      *
-     * @return string[]
+     * @return array<string>
      */
     protected static function mustBeArrayFilters(): array
     {
@@ -227,7 +229,7 @@ class QueryStringComponent extends Component
      *
      * @param array $query items to validate
      * @param array $allowedQueryItems whitelisted items
-     * @param callable[] $filterValidators Filters validator callable
+     * @param array<callable> $filterValidators Filters validator callable
      * @return bool true if validate
      * @throws \Cake\Http\Exception\BadRequestException if a validation error occurs
      */
@@ -281,7 +283,7 @@ class QueryStringComponent extends Component
      * - is-owned-by-me: bool
      * - is-shared-with-me: bool
      * - is-success: bool
-     * @param callable[] $filterValidators Filter validators callable
+     * @param array<callable> $filterValidators Filter validators callable
      * @return bool true if valid
      * @throws \Cake\Core\Exception\CakeException if one of the filters is not supported / not in the list
      */
@@ -367,7 +369,7 @@ class QueryStringComponent extends Component
      * @throw CakeException if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterString($value, string $filtername)
+    public static function validateFilterString(mixed $value, string $filtername)
     {
         if (empty($value) || !is_string($value)) {
             throw new CakeException(__('"{0}" is not a valid value for filter {1}.', $value, $filtername));
@@ -384,7 +386,7 @@ class QueryStringComponent extends Component
      * @throw CakeException if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterBoolean($values, string $filterName): bool
+    public static function validateFilterBoolean(mixed $values, string $filterName): bool
     {
         if (!is_bool($values)) {
             throw new CakeException(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
@@ -401,7 +403,7 @@ class QueryStringComponent extends Component
      * @throw CakeException if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterInteger($values, string $filterName): bool
+    public static function validateFilterInteger(mixed $values, string $filterName): bool
     {
         if (!is_int($values)) {
             throw new CakeException(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
@@ -419,7 +421,7 @@ class QueryStringComponent extends Component
      * @throw CakeException if the filter is not valid
      * @return bool true if the filter is valid
      */
-    public static function validateFilterInList($values, string $filterName, array $acceptedValues): bool
+    public static function validateFilterInList(mixed $values, string $filterName, array $acceptedValues): bool
     {
         if (!in_array($values, $acceptedValues)) {
             throw new CakeException(__('"{0}" is not a valid value for filter {1}.', $values, $filterName));
@@ -528,7 +530,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool true if validate
      */
-    public static function validateFilterParentFolders(array $values, $filtername)
+    public static function validateFilterParentFolders(array $values, string|bool $filtername)
     {
         foreach ($values as $i => $parentId) {
             if (!is_int($i)) {
@@ -583,7 +585,7 @@ class QueryStringComponent extends Component
      * @throw CakeException if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterGroup($groupId, string $filterName): bool
+    public static function validateFilterGroup(mixed $groupId, string $filterName): bool
     {
         if (!Validation::uuid($groupId)) {
             throw new CakeException(
@@ -606,7 +608,7 @@ class QueryStringComponent extends Component
      * @throw Exception if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterParentFolder($parentId, string $filtername)
+    public static function validateFilterParentFolder(string|false $parentId, string $filtername)
     {
         if (!Validation::uuid($parentId) && $parentId != false) {
             throw new CakeException(__('"{0}" is not a valid parent id for filter {1}.', $parentId, $filtername));
@@ -623,7 +625,7 @@ class QueryStringComponent extends Component
      * @throw CakeException if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterTimestamp($values, string $filterName): bool
+    public static function validateFilterTimestamp(mixed $values, string $filterName): bool
     {
         $timestamp = $values;
         if (!self::isTimestamp($timestamp)) {
@@ -643,14 +645,14 @@ class QueryStringComponent extends Component
      * @throw CakeException if the filter is not valid
      * @return bool if validate
      */
-    public static function validateFilterDateTime($values, string $filterName): bool
+    public static function validateFilterDateTime(mixed $values, string $filterName): bool
     {
         if (!is_string($values)) {
             throw new CakeException(__('"{0}" is not a valid datetime for filter {1}.', $values, $filterName));
         }
         try {
-            new \DateTime($values);
-        } catch (\Exception $e) {
+            new DateTime($values);
+        } catch (Exception $e) {
             throw new CakeException(__('"{0}" is not a valid datetime for filter {1}.', $values, $filterName));
         }
 
@@ -669,7 +671,7 @@ class QueryStringComponent extends Component
     public static function validateOrders(?array $orders = null, ?array $allowedQueryItems = null): bool
     {
         if (isset($orders)) {
-            foreach ($orders as $i => $orderName) {
+            foreach ($orders as $orderName) {
                 if (!self::isOrder($orderName)) {
                     throw new CakeException(__('"{0}" is not a valid order.', $orderName));
                 }
@@ -693,7 +695,7 @@ class QueryStringComponent extends Component
     public static function validateContain(?array $contain = null): bool
     {
         if (isset($contain)) {
-            foreach ($contain as $item => $value) {
+            foreach ($contain as $value) {
                 if (!is_bool($value)) {
                     throw new CakeException(__('"{0}" is not a valid contain value.', $value));
                 }
@@ -709,9 +711,9 @@ class QueryStringComponent extends Component
      * 'FALSE', 'False', 'false', '0' becomes false
      *
      * @param mixed $str the string to normalize
-     * @return bool|string if original string is not bool
+     * @return string|bool if original string is not bool
      */
-    public static function normalizeBoolean($str)
+    public static function normalizeBoolean(mixed $str)
     {
         if (is_bool($str)) {
             return $str;
@@ -732,9 +734,9 @@ class QueryStringComponent extends Component
      * Normalize string to integer if it is a scalar
      *
      * @param mixed $str the string to normalize
-     * @return false|int false if non scalar type, integer value of $str otherwise
+     * @return int|false false if non scalar type, integer value of $str otherwise
      */
-    public static function normalizeInteger($str)
+    public static function normalizeInteger(mixed $str)
     {
         if (!is_scalar($str)) {
             return false;
@@ -778,7 +780,7 @@ class QueryStringComponent extends Component
      * @param mixed $timestamp unixtimestamp
      * @return bool true if unix timestamp
      */
-    public static function isTimestamp($timestamp): bool
+    public static function isTimestamp(mixed $timestamp): bool
     {
         if (!is_scalar($timestamp)) {
             return false;
@@ -794,7 +796,7 @@ class QueryStringComponent extends Component
      * @deprecated Order is now handled by the ApiPaginationComponent
      * @return bool true if valid order
      */
-    public static function isOrder($orderName): bool
+    public static function isOrder(mixed $orderName): bool
     {
         if (!is_string($orderName)) {
             return false;

@@ -23,7 +23,9 @@ use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Secret;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
@@ -45,29 +47,29 @@ class ResourcesShareService
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $GroupsUsers;
+    private GroupsUsersTable $GroupsUsers;
 
     protected PermissionsGetUsersIdsHavingAccessToService $permissionsGetUsersIdsHavingAccessToService;
 
     /**
      * @var \App\Service\Permissions\PermissionsUpdatePermissionsService
      */
-    private $permissionsUpdatePermissionsService;
+    private PermissionsUpdatePermissionsService $permissionsUpdatePermissionsService;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $Resources;
+    private ResourcesTable $Resources;
 
     /**
      * @var \App\Service\Secrets\SecretsUpdateSecretsService
      */
-    private $secretsUpdateSecretsService;
+    private SecretsUpdateSecretsService $secretsUpdateSecretsService;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
      */
-    private $userHasPermissionService;
+    private UserHasPermissionService $userHasPermissionService;
 
     /**
      * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
@@ -112,7 +114,7 @@ class ResourcesShareService
         $resource = $this->getResource($resourceId);
 
         $this->Resources->getConnection()->transactional(
-            function () use ($uac, $resource, $changes, $secrets) {
+            function () use ($uac, $resource, $changes, $secrets): void {
                 $entitiesChanges = $this->updatePermissions($uac, $resource, $changes);
                 $entitiesChanges->merge($this->updateSecrets($uac, $resource, $secrets));
                 $this->postAccessesGranted($uac, $entitiesChanges->getAddedEntities(Permission::class));
@@ -182,7 +184,7 @@ class ResourcesShareService
      * @return void
      * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(Resource $resource)
+    private function handleValidationErrors(Resource $resource): void
     {
         $errors = $resource->getErrors();
         if (!empty($errors)) {
@@ -220,7 +222,7 @@ class ResourcesShareService
      * @param array $addedPermissions The list of added permissions
      * @return void
      */
-    private function postAccessesGranted(UserAccessControl $uac, array $addedPermissions = [])
+    private function postAccessesGranted(UserAccessControl $uac, array $addedPermissions = []): void
     {
         foreach ($addedPermissions as $addedPermission) {
             $this->notifyAccessGranted($uac, $addedPermission);
@@ -234,7 +236,7 @@ class ResourcesShareService
      * @param \App\Model\Entity\Permission $permission The granted permission
      * @return void
      */
-    private function notifyAccessGranted(UserAccessControl $uac, Permission $permission)
+    private function notifyAccessGranted(UserAccessControl $uac, Permission $permission): void
     {
         $eventData = ['permission' => $permission, 'accessControl' => $uac];
         $event = new Event('Service.ResourcesShare.afterAccessGranted', $this, $eventData);
@@ -249,7 +251,7 @@ class ResourcesShareService
      * @param array $deletedPermissions The list of deleted permissions
      * @return void
      */
-    private function postAccessesRevoked(UserAccessControl $uac, Resource $resource, array $deletedPermissions = [])
+    private function postAccessesRevoked(UserAccessControl $uac, Resource $resource, array $deletedPermissions = []): void // phpcs:ignore
     {
         foreach ($deletedPermissions as $deletedPermission) {
             $this->notifyAccessRevoked($uac, $deletedPermission);
@@ -268,7 +270,7 @@ class ResourcesShareService
      * @param \App\Model\Entity\Permission $permission The revoked permission
      * @return void
      */
-    private function notifyAccessRevoked(UserAccessControl $uac, Permission $permission)
+    private function notifyAccessRevoked(UserAccessControl $uac, Permission $permission): void
     {
         $eventData = ['permission' => $permission, 'accessControl' => $uac];
         $event = new Event(self::AFTER_ACCESS_REVOKED_EVENT_NAME, $this, $eventData);
@@ -283,7 +285,7 @@ class ResourcesShareService
      * @return void
      * @throws \Exception
      */
-    private function postGroupAccessRevoked(Resource $resource, string $groupId)
+    private function postGroupAccessRevoked(Resource $resource, string $groupId): void
     {
         $grousUsersIds = $this->GroupsUsers->findByGroupId($groupId)->all()->extract('user_id')->toArray();
         foreach ($grousUsersIds as $groupUserId) {
@@ -301,7 +303,7 @@ class ResourcesShareService
      * @param string $userId The target user
      * @return void
      */
-    private function postUserAccessRevoked(Resource $resource, string $userId)
+    private function postUserAccessRevoked(Resource $resource, string $userId): void
     {
         // If the user still has access to the folder, don't alter the user tree.
         $hasAccess = $this->userHasPermissionService->check(PermissionsTable::FOLDER_ACO, $resource->id, $userId);

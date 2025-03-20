@@ -26,6 +26,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Query;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use DateTime;
 use Passbolt\Log\Model\Entity\ActionLog;
 
 /**
@@ -124,7 +125,7 @@ class ActionLogsTable extends Table
      * @throws \App\Error\Exception\ValidationException
      * @throws \Cake\Http\Exception\InternalErrorException
      */
-    public function create(UserAction $userAction, int $status)
+    public function create(UserAction $userAction, int $status): ActionLog|bool
     {
         // Create corresponding action.
         $action = $this->Actions->findOrCreateAction($userAction->getActionId(), $userAction->getActionName());
@@ -246,7 +247,7 @@ class ActionLogsTable extends Table
                 return $exp->lte($this->aliasField('created'), $to);
             });
         }
-        if (!is_null($from) && !is_null($to) && (new \DateTime($from) > new \DateTime($to))) {
+        if (!is_null($from) && !is_null($to) && (new DateTime($from) > new DateTime($to))) {
             throw new BadRequestException(
                 __('The date {0} should be after the date {1}.', 'created-after', 'created-before')
             );

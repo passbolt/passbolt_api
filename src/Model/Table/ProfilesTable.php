@@ -98,7 +98,7 @@ class ProfilesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRegister(Validator $validator)
+    public function validationRegister(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }
@@ -109,7 +109,7 @@ class ProfilesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationUpdate(Validator $validator)
+    public function validationUpdate(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }

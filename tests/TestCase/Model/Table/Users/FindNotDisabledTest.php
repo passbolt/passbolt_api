@@ -45,9 +45,9 @@ class FindNotDisabledTest extends AppTestCase
 
     public function testFindNotDisabledSuccess()
     {
-        UserFactory::make()->user()->disabled()->created(\Cake\I18n\DateTime::now()->subDays(1))->persist();
-        UserFactory::make()->user()->notDisabled()->created(\Cake\I18n\DateTime::now()->subDays(1))->persist();
-        UserFactory::make()->user()->willDisable()->created(\Cake\I18n\DateTime::now()->subDays(2))->persist();
+        UserFactory::make()->user()->disabled()->created(DateTime::now()->subDays(1))->persist();
+        UserFactory::make()->user()->notDisabled()->created(DateTime::now()->subDays(1))->persist();
+        UserFactory::make()->user()->willDisable()->created(DateTime::now()->subDays(2))->persist();
 
         $result = $this->Users->find('notDisabled')->orderBy(['created' => 'DESC'])->all()->toArray();
         $this->assertEquals(2, count($result));

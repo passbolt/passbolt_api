@@ -20,6 +20,7 @@ namespace Passbolt\Folders\Test\Lib\Model;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use DateTime;
 
 trait FoldersModelTrait
 {
@@ -61,8 +62,8 @@ trait FoldersModelTrait
     {
         $entityContent = [
             'name' => UuidFactory::uuid('folder.id.name'),
-            'created' => (new \DateTime())->format('Y-m-d H:i:s'),
-            'modified' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'created' => (new DateTime())->format('Y-m-d H:i:s'),
+            'modified' => (new DateTime())->format('Y-m-d H:i:s'),
             'created_by' => UuidFactory::uuid('user.id.username'),
             'modified_by' => UuidFactory::uuid('user.id.username'),
         ];

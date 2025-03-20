@@ -29,12 +29,12 @@ class SmtpSettingsTestEmailService
     /**
      * @var array
      */
-    private $smtpSettings = [];
+    private array $smtpSettings = [];
 
     /**
      * @var \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService
      */
-    private $mailerService;
+    private SmtpSettingsSendTestMailerService $mailerService;
 
     /**
      * @param \Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService $mailerService service.
@@ -96,7 +96,7 @@ class SmtpSettingsTestEmailService
      * @param string $str string where to remove the credentials
      * @return array|string
      */
-    protected function removeCredentials(string $str)
+    protected function removeCredentials(string $str): array|string
     {
         $toReplace = [];
         $replaceMask = '*****';

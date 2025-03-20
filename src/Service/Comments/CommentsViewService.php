@@ -19,21 +19,23 @@ namespace App\Service\Comments;
 
 use App\Model\Table\CommentsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
 class CommentsViewService
 {
-    use \Cake\ORM\Locator\LocatorAwareTrait;
-    use \Cake\Event\EventDispatcherTrait;
+    use LocatorAwareTrait;
+    use EventDispatcherTrait;
 
     /**
      * @var \App\Model\Table\CommentsTable
      */
-    private $Comments;
+    private CommentsTable $Comments;
 
     /**
      * CommentsAddService constructor.

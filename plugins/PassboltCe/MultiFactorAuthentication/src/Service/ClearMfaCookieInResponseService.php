@@ -25,7 +25,7 @@ class ClearMfaCookieInResponseService
     /**
      * @var \Cake\Controller\Controller
      */
-    private $controller;
+    private Controller $controller;
 
     /**
      * @param \Cake\Controller\Controller $controller the controller in action

@@ -16,13 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\JwtAuthentication\Test\TestCase\Authenticator;
 
+use App\Authenticator\GpgAuthenticatorTrait;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\TestSuite\TestCase;
 
 class GpgAuthenticatorTraitTest extends TestCase
 {
-    use \App\Authenticator\GpgAuthenticatorTrait;
+    use GpgAuthenticatorTrait;
 
     protected $gpg;
 

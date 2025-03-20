@@ -32,7 +32,7 @@ class IsControlFunctionAllowedRule
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
         if ($entity->get('control_function') === null || $entity->get('foreign_id') === null) {
             return false;

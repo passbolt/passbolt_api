@@ -34,12 +34,12 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
     /**
      * @var mixed $url
      */
-    private $url;
+    private mixed $url;
 
     /**
      * @param mixed $url url
      */
-    public function __construct($url = null)
+    public function __construct(mixed $url = null)
     {
         $this->url = $url ?? Configure::read('App.fullBaseUrl');
     }

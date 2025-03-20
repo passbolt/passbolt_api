@@ -84,7 +84,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      * @param \App\Model\Entity\User $userWhoCompletedSetup User who completed the setup
      * @return \App\Notification\Email\EmailCollection
      */
-    private function createEmailCollection(User $userWhoCompletedSetup)
+    private function createEmailCollection(User $userWhoCompletedSetup): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -108,7 +108,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
 
         if (!isset($userWhoCompletedSetup->entities_history) || !isset($userWhoCompletedSetup->entities_history[0])) {
             // If there is no created history
-            $invitedWhen = \Cake\I18n\DateTime::now();
+            $invitedWhen = DateTime::now();
             $invitedBy = $userWhoCompletedSetup;
         } else {
             $createdHistory = $userWhoCompletedSetup->entities_history[0];
@@ -120,7 +120,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             }
         }
 
-        /** @var \App\Model\Entity\User[] $admins */
+        /** @var array<\App\Model\Entity\User> $admins */
         $admins = $UsersTable->findAdmins()
             ->find('locale')
             ->find('notDisabled')
@@ -143,7 +143,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      * @param \Cake\I18n\DateTime $invitedWhen When user was invited
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $admin, User $userCompletedSetup, User $invitedBy, \Cake\I18n\DateTime $invitedWhen): Email
+    private function createEmail(User $admin, User $userCompletedSetup, User $invitedBy, DateTime $invitedWhen): Email
     {
         /** @var \App\Model\Entity\Profile $profile */
         $profile = $userCompletedSetup->profile;

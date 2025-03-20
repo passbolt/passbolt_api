@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Service;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
@@ -31,7 +32,7 @@ class UpdateMfaTokenSessionIdService
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * UpdateMfaTokenSessionIdService constructor.

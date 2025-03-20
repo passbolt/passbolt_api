@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Permission;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use App\Service\Permissions\PermissionsUpdatePermissionsService;
 use App\Service\Permissions\UserHasPermissionService;
@@ -34,6 +35,8 @@ use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Dto\FolderRelationDto;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
+use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTreeService;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
@@ -47,37 +50,37 @@ class FoldersShareService
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    private $foldersTable;
+    private FoldersTable $foldersTable;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTreeService
      */
-    private $foldersRelationsAddItemsToUserTreeService;
+    private FoldersRelationsAddItemsToUserTreeService $foldersRelationsAddItemsToUserTreeService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRemoveItemFromUserTreeService
      */
-    private $foldersRelationsRemoveItemFromUserTreeService;
+    private FoldersRelationsRemoveItemFromUserTreeService $foldersRelationsRemoveItemFromUserTreeService;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private GroupsUsersTable $groupsUsersTable;
 
     /**
      * @var \App\Service\Permissions\PermissionsUpdatePermissionsService
      */
-    private $permissionsUpdatePermissionsService;
+    private PermissionsUpdatePermissionsService $permissionsUpdatePermissionsService;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
      */
-    private $userHasPermissionService;
+    private UserHasPermissionService $userHasPermissionService;
 
     /**
      * Instantiate the service.

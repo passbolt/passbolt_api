@@ -74,7 +74,7 @@ class AdminDisableEmailRedactor implements SubscribedEmailRedactorInterface
         $recipient = $UsersTable->findFirstForEmail($user->id);
         // Set the disabled field to the future so the email is well sent
         // as the Email class will not send mails to disabled users
-        $recipient->set('disabled', \Cake\I18n\DateTime::tomorrow());
+        $recipient->set('disabled', DateTime::tomorrow());
 
         $email = $this->createEmail($recipient, $operator);
 

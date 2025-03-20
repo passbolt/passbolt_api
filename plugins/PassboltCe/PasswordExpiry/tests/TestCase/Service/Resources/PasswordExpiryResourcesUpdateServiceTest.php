@@ -85,14 +85,12 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
         // Arrange
         $owner = UserFactory::make()->user()->persist();
         // Create an expired resource
-        $originalExpiryDate = $isExpiredBefore ? \Cake\I18n\DateTime::yesterday() : \Cake\I18n\DateTime::tomorrow();
+        $originalExpiryDate = $isExpiredBefore ? DateTime::yesterday() : DateTime::tomorrow();
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()
             ->expired($originalExpiryDate)
             ->withPermissionsFor([$owner])
             ->persist();
-
-        $originalExpiryDate = $resource->expired;
 
         $newName = 'Nouveau nom de resource privée';
         $payload = [
@@ -110,7 +108,7 @@ class PasswordExpiryResourcesUpdateServiceTest extends AppTestCase
         if (!$isExpiredAfter) {
             $this->assertNull($resource->expired);
         } else {
-            $this->assertEquals(\Cake\I18n\DateTime::parse($expiredFieldInPayload), $resource->expired);
+            $this->assertEquals(DateTime::parse($expiredFieldInPayload), $resource->expired);
         }
     }
 }

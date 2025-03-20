@@ -33,6 +33,7 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Exception;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeInterface;
 use Passbolt\JwtAuthentication\Authenticator\JwtArmoredChallengeService;
@@ -379,19 +380,19 @@ class GpgJwtAuthenticatorTest extends TestCase
 
     public function testGpgJwtAuthenticatorAssertVersion_EmptyError()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->sut->assertVersion(null);
     }
 
     public function testGpgJwtAuthenticatorAssertVersion_NotStringError()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->sut->assertVersion([]);
     }
 
     public function testGpgJwtAuthenticatorAssertVersion_NotSemverError()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->sut->assertVersion('test');
     }
 
@@ -405,25 +406,25 @@ class GpgJwtAuthenticatorTest extends TestCase
 
     public function testGpgJwtAuthenticatorAssertDomain_EmptyError()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->sut->assertDomain(null);
     }
 
     public function testGpgJwtAuthenticatorAssertDomain_NotStringError()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->sut->assertDomain([]);
     }
 
     public function testGpgJwtAuthenticatorAssertDomain_NotDomainError()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->sut->assertDomain('nope');
     }
 
     public function testGpgJwtAuthenticatorAssertDomain_WrongDomainError()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->sut->assertDomain('https://www.google.com');
     }
 

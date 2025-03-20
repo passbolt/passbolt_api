@@ -42,7 +42,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param \App\Model\Table\UsersTable|null $usersTable Users Table
@@ -122,7 +122,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\Group $group Group which was created
      * @return array
      */
-    private function createGroupCreatedEmail(Group $group)
+    private function createGroupCreatedEmail(Group $group): array
     {
         $emails = [];
 
@@ -158,7 +158,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\User $modifiedBy person who did the change
      * @return array
      */
-    public function createGroupUserAddedUpdateEmails(Group $group, array $addedGroupsUsers, User $modifiedBy)
+    public function createGroupUserAddedUpdateEmails(Group $group, array $addedGroupsUsers, User $modifiedBy): array
     {
         $emails = [];
 

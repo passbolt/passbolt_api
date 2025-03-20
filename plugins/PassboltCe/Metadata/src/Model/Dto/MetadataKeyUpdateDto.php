@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Model\Dto;
 
 use Cake\I18n\DateTime;
+use DateTimeInterface;
 
 class MetadataKeyUpdateDto
 {
@@ -24,7 +25,7 @@ class MetadataKeyUpdateDto
 
     public string $armoredKey;
 
-    public \Cake\I18n\DateTime $expired;
+    public DateTime $expired;
 
     /**
      * Constructor.
@@ -33,7 +34,7 @@ class MetadataKeyUpdateDto
      * @param string $armoredKey Armored key.
      * @param \Cake\I18n\DateTime $expired Expired time
      */
-    public function __construct(string $fingerprint, string $armoredKey, \Cake\I18n\DateTime $expired)
+    public function __construct(string $fingerprint, string $armoredKey, DateTime $expired)
     {
         $this->fingerprint = $fingerprint;
         $this->armoredKey = $armoredKey;
@@ -60,7 +61,7 @@ class MetadataKeyUpdateDto
     {
         if (is_string($data['expired'])) {
             // ISO-8601 format
-            $data['expired'] = \Cake\I18n\DateTime::createFromFormat(\DateTime::ATOM, $data['expired']);
+            $data['expired'] = DateTime::createFromFormat(DateTimeInterface::ATOM, $data['expired']);
         }
 
         return new self($data['fingerprint'], $data['armored_key'], $data['expired']);

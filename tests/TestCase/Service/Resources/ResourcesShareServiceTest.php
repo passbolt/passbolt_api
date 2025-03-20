@@ -293,7 +293,7 @@ hcciUFw5
             ],
         ];
 
-        foreach ($testCases as $caseLabel => $case) {
+        foreach ($testCases as $case) {
             $permissions = Hash::get($case, 'data.permissions', []);
             $secrets = Hash::get($case, 'data.secrets', []);
             try {
@@ -448,7 +448,7 @@ hcciUFw5
             ],
         ];
 
-        foreach ($testCases as $caseLabel => $case) {
+        foreach ($testCases as $case) {
             try {
                 $this->service->shareDryRun($uac, $resourceApacheId, $case['data']);
             } catch (ValidationException $e) {

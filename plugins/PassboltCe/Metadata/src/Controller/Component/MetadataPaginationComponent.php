@@ -16,7 +16,6 @@ declare(strict_types=1);
  */
 namespace Passbolt\Metadata\Controller\Component;
 
-use App\Controller\Component\ApiPaginationComponent;
 use Cake\Controller\Component;
 use Cake\Core\Configure;
 use Cake\Event\Event;
@@ -25,7 +24,8 @@ use Cake\Log\Log;
 
 /**
  * MetadataPagination component
- * @property ApiPaginationComponent $ApiPagination
+ *
+ * @property \Passbolt\Metadata\Controller\Component\ApiPaginationComponent $ApiPagination
  */
 class MetadataPaginationComponent extends Component
 {
@@ -42,7 +42,7 @@ class MetadataPaginationComponent extends Component
     ];
 
     /**
-     * @var array|string[]
+     * @var array|array<string>
      */
     protected array $components = ['ApiPagination'];
 

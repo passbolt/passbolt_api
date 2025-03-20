@@ -18,11 +18,13 @@ namespace Passbolt\JwtAuthentication\Command;
 
 use App\Command\PassboltCommand;
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
+use Throwable;
 
 /**
  * Class JwtCreateTokenCommand
@@ -32,7 +34,7 @@ class CreateAccessTokenCommand extends PassboltCommand
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @inheritDoc
@@ -89,7 +91,7 @@ class CreateAccessTokenCommand extends PassboltCommand
         $user = null;
         try {
             $user = $this->getUserId($args, $io);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $io->abort($e->getMessage());
         }
         $token = (new JwtTokenCreateService())->createToken($user->id, $expiry);

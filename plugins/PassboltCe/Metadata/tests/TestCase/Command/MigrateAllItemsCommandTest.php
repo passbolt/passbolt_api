@@ -200,12 +200,12 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
         // Create resources
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
-        $personalResource = ResourceFactory::make()
+        ResourceFactory::make()
             ->with('ResourceTypes', $totpStandalone)
             ->withCreatorAndPermission($ada)
             ->persist();
         // Create folders
-        $personalFolder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
+        FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
 
         $this->exec('passbolt metadata migrate_all_items');
 

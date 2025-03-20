@@ -49,7 +49,7 @@ class Folder extends Entity
      * List of property names that should **not** be included in JSON or Array
      * representations of this Entity.
      *
-     * @var string[]
+     * @var array<string>
      */
     protected array $_hidden = [
         '_joinData',

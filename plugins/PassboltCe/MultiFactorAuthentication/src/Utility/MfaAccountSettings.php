@@ -22,6 +22,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
+use Passbolt\AccountSettings\Model\Table\AccountSettingsTable;
 
 class MfaAccountSettings
 {
@@ -37,17 +38,17 @@ class MfaAccountSettings
     /**
      * @var array|null
      */
-    protected $settings;
+    protected ?array $settings = null;
 
     /**
      * @var \App\Utility\UserAccessControl
      */
-    protected $uac;
+    protected UserAccessControl $uac;
 
     /**
      * @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable
      */
-    protected $AccountSettings;
+    protected AccountSettingsTable $AccountSettings;
 
     /**
      * Get MfaSettings (Singleton)
@@ -91,7 +92,7 @@ class MfaAccountSettings
      * @param string $provider name of the provider
      * @return bool
      */
-    public function isProviderReady(string $provider)
+    public function isProviderReady(string $provider): bool
     {
         if (!isset($this->settings[MfaSettings::PROVIDERS]) || !count($this->settings[MfaSettings::PROVIDERS])) {
             return false;
@@ -123,7 +124,7 @@ class MfaAccountSettings
      *
      * @return string
      */
-    public function toJson()
+    public function toJson(): string
     {
         return json_encode($this->settings);
     }
@@ -134,7 +135,7 @@ class MfaAccountSettings
      * @throws \Cake\Datasource\Exception\RecordNotFoundException if there is no provider set
      * @return array list of providers
      */
-    protected function getProviders()
+    protected function getProviders(): array
     {
         if (!isset($this->settings[self::PROVIDERS])) {
             throw new RecordNotFoundException(__('No MFA provider set.'));
@@ -149,7 +150,7 @@ class MfaAccountSettings
      * @throws \Cake\Datasource\Exception\RecordNotFoundException
      * @return array
      */
-    public function getEnabledProviders()
+    public function getEnabledProviders(): array
     {
         $result = [];
         $providers = $this->getProviders();
@@ -168,13 +169,13 @@ class MfaAccountSettings
      * @param string $provider name of the provider
      * @return \Cake\I18n\DateTime
      */
-    public function getVerifiedFrozenTime(string $provider)
+    public function getVerifiedFrozenTime(string $provider): DateTime
     {
         if (!isset($this->settings[$provider][self::VERIFIED])) {
             throw new RecordNotFoundException(__('MFA verification date is not set for this provider.'));
         }
 
-        return new \Cake\I18n\DateTime($this->settings[$provider][MfaAccountSettings::VERIFIED]);
+        return new DateTime($this->settings[$provider][MfaAccountSettings::VERIFIED]);
     }
 
     /**
@@ -185,9 +186,9 @@ class MfaAccountSettings
      * @param array|null $data data
      * @return void
      */
-    public static function enableProvider(UserAccessControl $uac, string $provider, ?array $data = [])
+    public static function enableProvider(UserAccessControl $uac, string $provider, ?array $data = []): void
     {
-        $data['verified'] = \Cake\I18n\DateTime::now();
+        $data['verified'] = DateTime::now();
         try {
             /** @var \Passbolt\AccountSettings\Model\Table\AccountSettingsTable $AccountSettings */
             $AccountSettings = TableRegistry::getTableLocator()->get('Passbolt/AccountSettings.AccountSettings');
@@ -213,7 +214,7 @@ class MfaAccountSettings
      * @throws \Cake\Http\Exception\InternalErrorException if save operation saved for another reason
      * @return void
      */
-    public function save()
+    public function save(): void
     {
         $this->AccountSettings->createOrUpdateSetting($this->uac->getId(), MfaSettings::MFA, $this->toJson());
     }
@@ -223,7 +224,7 @@ class MfaAccountSettings
      *
      * @return bool true if successful
      */
-    public function delete()
+    public function delete(): bool
     {
         MfaVerifiedToken::setAllInactive($this->uac);
 
@@ -236,7 +237,7 @@ class MfaAccountSettings
      * @param string $providerToDisable name of the provider
      * @return void
      */
-    public function disableProvider(string $providerToDisable)
+    public function disableProvider(string $providerToDisable): void
     {
         $providers = $this->getProviders();
         foreach ($providers as $i => $provider) {
@@ -262,11 +263,11 @@ class MfaAccountSettings
      *
      * @return array
      */
-    public function getProvidersStatus()
+    public function getProvidersStatus(): array
     {
         $status = [];
         $possibleProviders = MfaSettings::getProviders();
-        foreach ($possibleProviders as $i => $provider) {
+        foreach ($possibleProviders as $provider) {
             $status[$provider] = false;
         }
         try {
@@ -274,7 +275,7 @@ class MfaAccountSettings
         } catch (RecordNotFoundException $exception) {
             return $status;
         }
-        foreach ($possibleProviders as $i => $provider) {
+        foreach ($possibleProviders as $provider) {
             $status[$provider] = in_array($provider, $accountProviders);
         }
 

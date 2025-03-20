@@ -86,8 +86,8 @@ class MetadataSessionKeysTableTest extends AppTestCaseV5
         $this->assertNotEmpty($result->get('id'));
         $this->assertNotEmpty($result->get('data'));
         $this->assertSame($user->get('id'), $result->get('user_id'));
-        $this->assertInstanceOf(\Cake\I18n\DateTime::class, $result->get('created'));
-        $this->assertInstanceOf(\Cake\I18n\DateTime::class, $result->get('modified'));
+        $this->assertInstanceOf(DateTime::class, $result->get('created'));
+        $this->assertInstanceOf(DateTime::class, $result->get('modified'));
         $this->assertCount(1, MetadataSessionKeyFactory::find()->toArray());
     }
 

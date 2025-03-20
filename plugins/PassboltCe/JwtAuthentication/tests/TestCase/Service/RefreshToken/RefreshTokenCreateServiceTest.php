@@ -45,7 +45,7 @@ class RefreshTokenCreateServiceTest extends TestCase
     {
         $cookieExpirationTime = '15 days';
         Configure::write(RefreshTokenAbstractService::REFRESH_TOKEN_EXPIRY_CONFIG_KEY, $cookieExpirationTime);
-        $expectedExpiration = (new \Cake\I18n\DateTime('+' . $cookieExpirationTime))->toUnixString();
+        $expectedExpiration = (new DateTime('+' . $cookieExpirationTime))->toUnixString();
         $userId = UserFactory::make()->persist()->id;
         $accessToken = 'Foo';
 

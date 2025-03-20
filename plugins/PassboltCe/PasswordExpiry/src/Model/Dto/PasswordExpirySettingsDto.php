@@ -34,9 +34,9 @@ class PasswordExpirySettingsDto
     protected ?int $default_expiry_period;
     protected ?int $expiry_notification;
     public ?string $id;
-    public ?\Cake\I18n\DateTime $created;
+    public ?DateTime $created;
     public ?string $created_by;
-    public ?\Cake\I18n\DateTime $modified;
+    public ?DateTime $modified;
     public ?string $modified_by;
 
     /**
@@ -60,9 +60,9 @@ class PasswordExpirySettingsDto
         ?int $defaultPasswordExpiryPeriodInDays = null,
         ?int $expiryNotificationInDays = null,
         ?string $id = null,
-        ?\Cake\I18n\DateTime $created = null,
+        ?DateTime $created = null,
         ?string $createdBy = null,
-        ?\Cake\I18n\DateTime $modified = null,
+        ?DateTime $modified = null,
         ?string $modifiedBy = null
     ) {
         $this->automatic_expiry = $automaticExpiry;

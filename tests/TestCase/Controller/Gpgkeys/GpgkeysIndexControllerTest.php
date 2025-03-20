@@ -43,9 +43,9 @@ class GpgkeysIndexControllerTest extends AppIntegrationTestCase
         $Gpgkeys = TableRegistry::getTableLocator()->get('Gpgkeys');
 
         // Find a key at a given time and modify it
-        $t = \Cake\I18n\DateTime::today();
+        $t = DateTime::today();
         $gpgkey = $Gpgkeys->find('all')->first();
-        $gpgkey->modified = \Cake\I18n\DateTime::now();
+        $gpgkey->modified = DateTime::now();
         $Gpgkeys->save($gpgkey);
 
         // Find the keys modified since then

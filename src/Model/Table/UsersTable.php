@@ -27,6 +27,7 @@ use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
+use ArrayObject;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
@@ -262,7 +263,7 @@ class UsersTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options): void
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         if ($this->isUsernameLowerCase() && is_string($data['username'] ?? null)) {
             $data['username'] = mb_strtolower($data['username']);
@@ -425,7 +426,7 @@ class UsersTable extends Table
      * @param array|null $options additional delete options such as ['checkRules' => true]
      * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      */
-    public function softDelete(User $user, ?array $options = null)
+    public function softDelete(User $user, ?array $options = null): EntitiesChangesDto|bool
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {
@@ -589,8 +590,8 @@ class UsersTable extends Table
         $entitiesChanges->pushDeletedEntities($secretsToConsiderAsDeleted);
 
         $this->updateAll([
-            'disabled' => \Cake\I18n\DateTime::now(),
-            'modified' => \Cake\I18n\DateTime::now(),
+            'disabled' => DateTime::now(),
+            'modified' => DateTime::now(),
             ], ['id' => $user->id]);
 
         return $entitiesChanges;

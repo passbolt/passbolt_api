@@ -102,7 +102,7 @@ class AppController extends Controller
      * @param mixed $body data for the body section
      * @return void
      */
-    protected function success(?string $message = null, $body = null): void
+    protected function success(?string $message = null, mixed $body = null): void
     {
         $header = [
             'id' => UserAction::getInstance()->getUserActionId(),
@@ -126,7 +126,7 @@ class AppController extends Controller
      * @param int|null $errorCode optional http error code
      * @return void
      */
-    protected function error(?string $message = null, $body = null, ?int $errorCode = 400): void
+    protected function error(?string $message = null, mixed $body = null, ?int $errorCode = 400): void
     {
         $this->response = $this->response->withStatus($errorCode);
 

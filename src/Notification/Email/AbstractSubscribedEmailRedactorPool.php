@@ -24,7 +24,7 @@ abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInter
      * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
-    public function subscribe(CollectSubscribedEmailRedactorEvent $event)
+    public function subscribe(CollectSubscribedEmailRedactorEvent $event): void
     {
         foreach ($this->getSubscribedRedactors() as $redactor) {
             $redactor->subscribe($event);
@@ -44,7 +44,7 @@ abstract class AbstractSubscribedEmailRedactorPool implements EventListenerInter
     /**
      * Return a list of subscribed redactors
      *
-     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
+     * @return array<\App\Notification\Email\SubscribedEmailRedactorInterface>
      */
-    abstract public function getSubscribedRedactors();
+    abstract public function getSubscribedRedactors(): array;
 }

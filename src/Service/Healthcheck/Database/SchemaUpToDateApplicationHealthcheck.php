@@ -21,6 +21,7 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Datasource\ConnectionManager;
+use Exception;
 use Migrations\Migrations;
 
 class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
@@ -39,7 +40,7 @@ class SchemaUpToDateApplicationHealthcheck implements HealthcheckServiceInterfac
     {
         try {
             $this->status = !$this->needMigration();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Do nothing
         }
 

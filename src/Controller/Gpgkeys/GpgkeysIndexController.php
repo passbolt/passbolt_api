@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
+use App\Model\Table\GpgkeysTable;
 use App\Utility\Pagination\PaginatePropertyAwareTrait;
 
 /**
@@ -29,7 +30,7 @@ class GpgkeysIndexController extends AppController
     /**
      * @var \App\Model\Table\GpgkeysTable
      */
-    protected $Gpgkeys;
+    protected GpgkeysTable $Gpgkeys;
 
     /**
      * @inheritDoc

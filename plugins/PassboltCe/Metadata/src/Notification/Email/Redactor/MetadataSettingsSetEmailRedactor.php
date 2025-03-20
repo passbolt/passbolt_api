@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Notification\Email\Redactor;
 
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -43,7 +44,7 @@ class MetadataSettingsSetEmailRedactor implements SubscribedEmailRedactorInterfa
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * MetadataSettingsSetEmailRedactor constructor.

@@ -26,6 +26,7 @@ use Passbolt\Mobile\MobilePlugin;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SmtpSettings\SmtpSettingsPlugin;
+use TypeError;
 
 /**
  * BasePluginAdderTest class
@@ -275,7 +276,7 @@ class BaseSolutionBootstrapperTest extends SolutionBootstrapperTestCase
             return 'Foo';
         };
 
-        $this->expectException(\TypeError::class);
+        $this->expectException(TypeError::class);
         $this->app->getSolutionBootstrapper()->addFeaturePluginIfEnabled($this->app, 'Bar', [], $callable);
     }
 

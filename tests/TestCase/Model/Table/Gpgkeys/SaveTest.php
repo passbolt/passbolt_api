@@ -19,7 +19,6 @@ namespace App\Test\TestCase\Model\Table\Gpgkeys;
 
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
-use Cake\I18n\Date;
 use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 

@@ -22,6 +22,7 @@ use App\Test\Lib\Model\CommentsModelTrait;
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 
 class FindViewForeignCommentsTest extends AppTestCase
 {
@@ -85,7 +86,7 @@ class FindViewForeignCommentsTest extends AppTestCase
     {
         try {
             $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'UnsupportedModel', UuidFactory::uuid('resource.id.apache'));
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
         $this->fail('Calling findViewForeignComments with a wrong model name should have triggered an exception');
@@ -95,7 +96,7 @@ class FindViewForeignCommentsTest extends AppTestCase
     {
         try {
             $this->Comments->findViewForeignComments(UuidFactory::uuid('user.id.ada'), 'Resource', 'wrong-uuid');
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
         $this->fail('Calling findViewForeignComments with a incorrectly formatted uuid should have triggered an exception');

@@ -22,6 +22,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 
 class SoftDeleteTest extends AppTestCase
 {
@@ -87,7 +88,7 @@ class SoftDeleteTest extends AppTestCase
         $resource = $this->Resources->get($resourceId);
         try {
             $this->Resources->softDelete($userId, $resource);
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
     }

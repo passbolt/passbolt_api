@@ -38,17 +38,17 @@ class EmailSender
     /**
      * @var \EmailQueue\Model\Table\EmailQueueTable
      */
-    private $emailQueue;
+    private EmailQueueTable $emailQueue;
 
     /**
      * @var string
      */
-    private $appFullBaseUrl;
+    private string $appFullBaseUrl;
 
     /**
      * @var string
      */
-    private $purifySubject;
+    private string $purifySubject;
 
     /**
      * @param \EmailQueue\Model\Table\EmailQueueTable|null $emailQueue Email Queue Table instance

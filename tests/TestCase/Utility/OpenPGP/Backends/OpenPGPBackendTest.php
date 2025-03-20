@@ -20,10 +20,10 @@ use App\Test\Lib\Model\FormatValidationTrait;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Utility\OpenPGP\Backends\Gnupg;
 use App\Utility\OpenPGP\OpenPGPBackend;
-use App\Utility\OpenPGP\OpenPGPBackendInterface;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\TestSuite\TestCase;
+use Exception;
 
 /**
  * @covers \App\Utility\OpenPGP\OpenPGPBackend
@@ -434,7 +434,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
         try {
             $gnupg->encrypt($messageToEncrypt);
             $this->assertTrue(false);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->assertTrue(true);
         }
 
@@ -445,7 +445,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
         try {
             $gnupg->encrypt($messageToEncrypt);
             $this->assertTrue(false);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->assertTrue(true);
         }
 
@@ -475,7 +475,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
         try {
             $gnupg->encrypt($messageToEncrypt);
             $this->assertTrue(false);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->assertTrue(true);
         }
 
@@ -486,7 +486,7 @@ eZOICKSe4NoPeN03QbqyJsSV1vynpafS+G+AFfbCGnj0dy6DvWldiSR6kA==
         try {
             $gnupg->encrypt($messageToEncrypt);
             $this->assertTrue(false);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->assertTrue(true);
         }
 

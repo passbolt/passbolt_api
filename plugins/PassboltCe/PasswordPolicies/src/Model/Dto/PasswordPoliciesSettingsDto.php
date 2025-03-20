@@ -86,52 +86,52 @@ class PasswordPoliciesSettingsDto
     /**
      * @var string|null
      */
-    public $default_generator;
+    public ?string $default_generator = null;
 
     /**
      * @var bool|null
      */
-    public $external_dictionary_check;
+    public ?bool $external_dictionary_check = null;
 
     /**
      * @var \Passbolt\PasswordPolicies\Model\Dto\PasswordGeneratorSettingsDto|null
      */
-    public $password_generator_settings;
+    public ?PasswordGeneratorSettingsDto $password_generator_settings = null;
 
     /**
      * @var \Passbolt\PasswordPolicies\Model\Dto\PassphraseGeneratorSettingsDto|null
      */
-    public $passphrase_generator_settings;
+    public ?PassphraseGeneratorSettingsDto $passphrase_generator_settings = null;
 
     /**
      * @var string|null
      */
-    public $id;
+    public ?string $id = null;
 
     /**
      * @var \Cake\I18n\DateTime|null
      */
-    public $created;
+    public ?DateTime $created = null;
 
     /**
      * @var string|null
      */
-    public $created_by;
+    public ?string $created_by = null;
 
     /**
      * @var \Cake\I18n\DateTime|null
      */
-    public $modified;
+    public ?DateTime $modified = null;
 
     /**
      * @var string|null
      */
-    public $modified_by;
+    public ?string $modified_by = null;
 
     /**
      * @var string|null
      */
-    public $source;
+    public ?string $source = null;
 
     /**
      * @param string|null $defaultGenerator Default password generator type.
@@ -147,13 +147,13 @@ class PasswordPoliciesSettingsDto
      */
     final public function __construct(
         ?string $defaultGenerator,
-        $externalDictionaryCheck,
+        mixed $externalDictionaryCheck,
         ?array $passwordGeneratorSettings,
         ?array $passphraseGeneratorSettings,
         ?string $id,
-        ?\Cake\I18n\DateTime $created,
+        ?DateTime $created,
         ?string $createdBy,
-        ?\Cake\I18n\DateTime $modified,
+        ?DateTime $modified,
         ?string $modifiedBy,
         ?string $source
     ) {
@@ -176,7 +176,7 @@ class PasswordPoliciesSettingsDto
      * @param array $data Data.
      * @return static
      */
-    public static function createFromArray(array $data)
+    public static function createFromArray(array $data): static
     {
         return new static(
             $data['default_generator'] ?? null,

@@ -26,7 +26,6 @@ use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
 use Cake\Core\Configure;
 use Cake\I18n\I18n;
 use Cake\Mailer\Mailer;
-use Cake\Routing\Router;
 use Passbolt\EmailDigest\Command\PreviewCommand;
 use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;

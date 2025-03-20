@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\Favorite;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Traits\Cleanup\ResourcesCleanupTrait;
@@ -172,7 +173,7 @@ class FavoritesTable extends Table
      * @param array|null $options options
      * @return bool
      */
-    public function isOwnerRule(\App\Model\Entity\Favorite $entity, ?array $options = [])
+    public function isOwnerRule(Favorite $entity, ?array $options = []): bool
     {
         if ($options['Favorites.user_id'] != $entity->user_id) {
             return false;

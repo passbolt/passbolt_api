@@ -21,6 +21,7 @@ use App\Model\Entity\Comment;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
@@ -29,7 +30,7 @@ class CommentsDeleteService
     /**
      * @var \Cake\ORM\Table
      */
-    private $Comments;
+    private Table $Comments;
 
     /**
      * CommentsAddService constructor.
@@ -48,7 +49,7 @@ class CommentsDeleteService
      * @throws \Cake\Http\Exception\NotFoundException
      * @return void
      */
-    public function delete(string $id, ?string $userId = null)
+    public function delete(string $id, ?string $userId = null): void
     {
         // Check request sanity
         if (!Validation::uuid($id)) {
@@ -79,7 +80,7 @@ class CommentsDeleteService
      * @param \App\Model\Entity\Comment $comment comment
      * @return void
      */
-    private function _handleDeleteErrors(Comment $comment)
+    private function _handleDeleteErrors(Comment $comment): void
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {

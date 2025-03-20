@@ -28,22 +28,22 @@ class Healthcheck
     /**
      * @var string $name
      */
-    protected $name;
+    protected string $name;
 
     /**
      * @var string $category
      */
-    protected $category;
+    protected string $category;
 
     /**
      * @var bool $success
      */
-    protected $success;
+    protected bool $success;
 
     /**
      * @var array $details additional details
      */
-    protected $details;
+    protected array $details;
 
     /**
      * Health check constructor
