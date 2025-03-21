@@ -34,7 +34,7 @@ class TableFindIndexBefore extends Event
     /**
      * @var \Cake\ORM\Query\SelectQuery
      */
-    private Query $query;
+    private SelectQuery $query;
 
     /**
      * @var \Cake\ORM\Table
@@ -121,7 +121,7 @@ class TableFindIndexBefore extends Event
     /**
      * @return \Cake\ORM\Query\SelectQuery
      */
-    public function getQuery(): Query
+    public function getQuery(): SelectQuery
     {
         return $this->query;
     }

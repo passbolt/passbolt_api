@@ -119,7 +119,7 @@ class UpdateFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * Find the users the email has to be sent to.
      *
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The updated folder
-     * @return  \Cake\ORM\Query\SelectQuery The list of users username
+     * @return \Cake\ORM\Query\SelectQuery The list of users username
      */
     private function findUsersUsernameToSendEmailTo(Folder $folder): SelectQuery
     {

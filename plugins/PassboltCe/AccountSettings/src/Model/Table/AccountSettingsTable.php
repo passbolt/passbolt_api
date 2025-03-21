@@ -269,7 +269,7 @@ class AccountSettingsTable extends Table
     /**
      * Find setting per property
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
      * @param ?string $property Property
      * @return \Cake\ORM\Query\SelectQuery
      */

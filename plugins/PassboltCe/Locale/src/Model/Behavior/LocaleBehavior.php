@@ -75,7 +75,7 @@ class LocaleBehavior extends Behavior
     /**
      * Finder to find the locale associated to the users.
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query The target query.
+     * @param \Cake\ORM\Query\SelectQuery $query The target query.
      * @return \Cake\ORM\Query\SelectQuery
      */
     public function findLocale(SelectQuery $query): SelectQuery
@@ -91,8 +91,8 @@ class LocaleBehavior extends Behavior
      * The locale is either found in the association, or if not
      * the organization locale is taken.
      *
-     * @param \Cake\ORM\SelectQuery $query The target query.
-     * @return \Cake\ORM\SelectQuery
+     * @param \Cake\ORM\Query\SelectQuery $query The target query.
+     * @return \Cake\ORM\Query\SelectQuery
      */
     public function formatResults(SelectQuery $query): SelectQuery
     {

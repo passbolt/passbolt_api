@@ -28,7 +28,7 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter out personal folders from a query.
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query The folders relations query to decorate
+     * @param \Cake\ORM\Query\SelectQuery $query The folders relations query to decorate
      * @return \Cake\ORM\Query\SelectQuery
      */
     public function filterQueryByIsNotPersonalFolder(SelectQuery $query): SelectQuery
@@ -45,7 +45,7 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter a query by users ids
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query The query to decorate
+     * @param \Cake\ORM\Query\SelectQuery $query The query to decorate
      * @param array $usersIds The list of users ids
      * @return \Cake\ORM\Query\SelectQuery
      */
@@ -59,11 +59,11 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter a query by foreign model
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query The query to decorate
+     * @param \Cake\ORM\Query\SelectQuery $query The query to decorate
      * @param string $foreignModel The foreign model to filter on
      * @return \Cake\ORM\Query\SelectQuery
      */
-    public function filterByForeignModel(SelectQuery $query, string $foreignModel):SelectQuery
+    public function filterByForeignModel(SelectQuery $query, string $foreignModel): SelectQuery
     {
         return $query->where([
             'foreign_model' => $foreignModel,

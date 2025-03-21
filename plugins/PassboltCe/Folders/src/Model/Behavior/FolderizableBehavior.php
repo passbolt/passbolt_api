@@ -115,7 +115,7 @@ class FolderizableBehavior extends Behavior
     /**
      * Finder method
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query The target query.
+     * @param \Cake\ORM\Query\SelectQuery $query The target query.
      * @param array $options Options
      * @return \Cake\ORM\Query\SelectQuery
      * @see $_defaultConfig
@@ -128,7 +128,7 @@ class FolderizableBehavior extends Behavior
     /**
      * Format a query result and associate to each item its folder parent id and its personal status.
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query The target query.
+     * @param \Cake\ORM\Query\SelectQuery $query The target query.
      * @param string $userId The user id for whom the request has been executed.
      * @return \Cake\ORM\Query\SelectQuery
      */

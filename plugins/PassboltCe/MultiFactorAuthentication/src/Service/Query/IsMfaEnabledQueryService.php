@@ -32,7 +32,7 @@ class IsMfaEnabledQueryService
     public const MFA_SETTINGS_PROPERTY = 'mfa_settings';
 
     /**
-     * @param  \Cake\ORM\Query\SelectQuery $query Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
      * @param \App\Utility\UserAccessControl $uac User Access Control
      * @param array $options Query Options
      * @return void
@@ -62,7 +62,7 @@ class IsMfaEnabledQueryService
      *  - by an admin
      *  - or the user being viewed
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
      * @param \App\Utility\UserAccessControl $uac UAC
      * @param string $userId ID of the user viewed
      * @return void
@@ -75,12 +75,12 @@ class IsMfaEnabledQueryService
     }
 
     /**
-     * @param  \Cake\ORM\Query\SelectQuery $query Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
      * @param bool $isMfaEnabledFilter filter users by mfa enable if true, and mfa disabled if false
      * @param bool $containIsMfaEnabledProperty if true, append the is_mfa_enabled field to the query result
      * @return void
      */
-    private function filterByMfaEnabled(SelectQuery $query, bool $isMfaEnabledFilter, bool $containIsMfaEnabledProperty): void
+    private function filterByMfaEnabled(SelectQuery $query, bool $isMfaEnabledFilter, bool $containIsMfaEnabledProperty): void // phpcs:ignore
     {
         $query->leftJoinWith('MfaSettings');
 
@@ -123,7 +123,7 @@ class IsMfaEnabledQueryService
     }
 
     /**
-     * @param  \Cake\ORM\Query\SelectQuery $query Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
      * @return void
      */
     private function addIsMfaEnabledPropertyToQuery(SelectQuery $query): void

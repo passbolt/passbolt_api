@@ -53,7 +53,7 @@ class MetadataResourceIndexListener implements EventListenerInterface
     }
 
     /**
-     * @param  \Cake\ORM\Query\SelectQuery $query Query to filter
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter
      * @param string $metadataKeyType filter value
      * @return void
      */
