@@ -117,7 +117,7 @@ trait UsersFindersTrait
 
     /**
      * @param \Cake\ORM\Query\SelectQuery $query Users query
-     * @param array|\Cake\ORM\Query\SelectQuery $resourceIds Resource IDs the users should have access to
+     * @param \Cake\ORM\Query\SelectQuery|array $resourceIds Resource IDs the users should have access to
 \     * @param array $permissionTypes array of permission type to filter along (OWNER, UPDATE or READ). If empty do not filter vy permission type
      * @return \Cake\ORM\Query\SelectQuery
      */

@@ -110,7 +110,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * Find the users the email has to be sent to.
      *
      * @param array $usersIds The list of users id to send the email to.
-     * @return  \Cake\ORM\Query\SelectQuery The list of users username
+     * @return \Cake\ORM\Query\SelectQuery The list of users username
      */
     private function findUsersUsernameToSendEmailTo(array $usersIds): SelectQuery
     {

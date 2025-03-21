@@ -195,7 +195,7 @@ trait FoldersFindersTrait
     /**
      * Filter a folders query to return only folders the user has access to.
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query The query to filter.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to filter.
      * @param string $userId The user to check the permissions for.
      * @return \Cake\ORM\Query\SelectQuery
      */
@@ -218,7 +218,7 @@ trait FoldersFindersTrait
     /**
      * Filter a query to retrieve folders on their ids with the given list of ids
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query Query to filter on
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter on
      * @param array $folderIds array of folders ids
      * @return \Cake\ORM\Query|array<\Passbolt\Folders\Model\Entity\Folder>
      */
@@ -250,7 +250,7 @@ trait FoldersFindersTrait
     /**
      * Filter a query by parents ids.
      *
-     * @param  \Cake\ORM\Query\SelectQuery $query Query to filter on
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter on
      * @param array $parentIds Array of parent ids
      * @return \Cake\ORM\Query\SelectQuery
      */

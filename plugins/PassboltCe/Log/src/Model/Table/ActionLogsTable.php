@@ -195,7 +195,7 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * @param  \Cake\ORM\Query\SelectQuery $query Logs
+     * @param \Cake\ORM\Query\SelectQuery $query Logs
      * @param array $options options
      * @return void
      */
@@ -212,7 +212,7 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * @param  \Cake\ORM\Query\SelectQuery $logs Logs
+     * @param \Cake\ORM\Query\SelectQuery $logs Logs
      * @param array $options options
      * @return void
      */
@@ -229,7 +229,7 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * @param  \Cake\ORM\Query\SelectQuery $logs Logs
+     * @param \Cake\ORM\Query\SelectQuery $logs Logs
      * @param array $options options
      * @return void
      */
@@ -255,7 +255,7 @@ class ActionLogsTable extends Table
     }
 
     /**
-     * @param  \Cake\ORM\Query\SelectQuery $logs Logs
+     * @param \Cake\ORM\Query\SelectQuery $logs Logs
      * @param array $options options
      * @return void
      */

@@ -31,7 +31,7 @@ trait CaseSensitiveCompareValueTrait
      * @param mixed $col Column value to convert into case-sensitive binary.
      * @return \Cake\Database\Expression\QueryExpression|string
      */
-    public function getCaseSensitiveValue(SelectQuery $query, $col): QueryExpression|string
+    public function getCaseSensitiveValue(SelectQuery $query, mixed $col): QueryExpression|string
     {
         /**
          * Mysql is case-insensitive by default, so have to make case-sensitive comparison via explicitly specifying charset.

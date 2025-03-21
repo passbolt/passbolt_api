@@ -26,7 +26,6 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 
