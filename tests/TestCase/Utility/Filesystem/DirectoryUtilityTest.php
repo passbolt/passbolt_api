@@ -80,7 +80,7 @@ class DirectoryUtilityTest extends TestCase
         $file = TMP . 'tests' . DS . 'directory.test';
         file_put_contents($file, 'foo');
 
-        $perms = [0666, 0662, 0422, 626, 0242];
+        $perms = [0666, 0662, 0422, 0626, 0242];
         foreach ($perms as $perm) {
             chmod($file, $perm);
             $res = DirectoryUtility::isExecutable($file);
