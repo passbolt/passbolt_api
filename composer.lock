@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac0c77f2221d31b4727e2f91787b7916",
+    "content-hash": "bfa21c41e20e2800b63b8327fd05bb16",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -331,16 +331,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "5.0.11",
+            "version": "dev-fix-uri-type-error-patch-v5.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/cakephp/cakephp.git",
-                "reference": "19af8494b1f2fdef1ab405385a6fed0db7699ef7"
+                "url": "https://github.com/passbolt/cakephp.git",
+                "reference": "f23f2ac7b261631d549a2ef2abeb6eb84e257f66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/cakephp/zipball/19af8494b1f2fdef1ab405385a6fed0db7699ef7",
-                "reference": "19af8494b1f2fdef1ab405385a6fed0db7699ef7",
+                "url": "https://api.github.com/repos/passbolt/cakephp/zipball/f23f2ac7b261631d549a2ef2abeb6eb84e257f66",
+                "reference": "f23f2ac7b261631d549a2ef2abeb6eb84e257f66",
                 "shasum": ""
             },
             "require": {
@@ -406,6 +406,9 @@
             },
             "type": "library",
             "autoload": {
+                "psr-4": {
+                    "Cake\\": "src/"
+                },
                 "files": [
                     "src/Core/functions.php",
                     "src/Error/functions.php",
@@ -414,12 +417,68 @@
                     "src/ORM/bootstrap.php",
                     "src/Routing/functions.php",
                     "src/Utility/bootstrap.php"
-                ],
+                ]
+            },
+            "autoload-dev": {
                 "psr-4": {
-                    "Cake\\": "src/"
+                    "Cake\\PHPStan\\": "tests/PHPStan/",
+                    "Cake\\Test\\": "tests/",
+                    "TestApp\\": "tests/test_app/TestApp/",
+                    "TestApp\\Test\\": "tests/test_app/TestApp/tests/",
+                    "TestPlugin\\": "tests/test_app/Plugin/TestPlugin/src/",
+                    "TestPlugin\\Test\\": "tests/test_app/Plugin/TestPlugin/tests/",
+                    "TestPluginTwo\\": "tests/test_app/Plugin/TestPluginTwo/src/",
+                    "Company\\TestPluginThree\\": "tests/test_app/Plugin/Company/TestPluginThree/src/",
+                    "Company\\TestPluginThree\\Test\\": "tests/test_app/Plugin/Company/TestPluginThree/tests/",
+                    "Named\\": "tests/test_app/Plugin/Named/src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "scripts": {
+                "check": [
+                    "@cs-check",
+                    "@test"
+                ],
+                "cs-check": [
+                    "phpcs --colors --parallel=16 -p"
+                ],
+                "cs-fix": [
+                    "phpcbf --colors --parallel=16 -p"
+                ],
+                "phpstan": [
+                    "phpstan analyse"
+                ],
+                "psalm": [
+                    "tools/psalm --show-info=false"
+                ],
+                "stan": [
+                    "@phpstan",
+                    "@psalm"
+                ],
+                "phpstan-tests": [
+                    "phpstan analyze -c tests/phpstan.neon"
+                ],
+                "phpstan-baseline": [
+                    "phpstan --generate-baseline"
+                ],
+                "psalm-baseline": [
+                    "tools/psalm  --set-baseline=psalm-baseline.xml"
+                ],
+                "stan-setup": [
+                    "phive install"
+                ],
+                "lowest": [
+                    "validate-prefer-lowest"
+                ],
+                "lowest-setup": [
+                    "composer update --prefer-lowest --prefer-stable --prefer-dist --no-interaction && cp composer.json composer.backup && composer require --dev dereuromark/composer-prefer-lowest && mv composer.backup composer.json"
+                ],
+                "test": [
+                    "phpunit"
+                ],
+                "test-coverage": [
+                    "phpunit --coverage-clover=clover.xml"
+                ]
+            },
             "license": [
                 "MIT"
             ],
@@ -443,11 +502,11 @@
                 "validation"
             ],
             "support": {
-                "forum": "https://discourse.cakephp.org/",
                 "issues": "https://github.com/cakephp/cakephp/issues",
+                "forum": "https://discourse.cakephp.org/",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2024-09-13T01:59:54+00:00"
+            "time": "2025-03-20T14:10:59+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -8807,9 +8866,17 @@
             "time": "2022-06-03T18:03:27+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "cakephp/cakephp",
+            "version": "dev-fix-uri-type-error-patch-v5.0",
+            "alias": "5.0.11",
+            "alias_normalized": "5.0.11.0"
+        }
+    ],
     "minimum-stability": "stable",
     "stability-flags": {
+        "cakephp/cakephp": 20,
         "lorenzo/cakephp-email-queue": 20,
         "bcrowe/cakephp-api-pagination": 20,
         "psy/psysh": 0,
