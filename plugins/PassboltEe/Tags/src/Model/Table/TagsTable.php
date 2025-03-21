@@ -213,7 +213,7 @@ class TagsTable extends Table
     ): bool {
         $dto = MetadataTagDto::fromArray($entity->toArray());
 
-        if ($dto->isV5()) {
+        if (!$dto->isV5()) {
             // This is little hack to not call `buildRulesV5` rules,
             // Because these are saved as belongsToMany association along with resources, it tries to call build rules even for V4 tags.
             $event->stopPropagation();
