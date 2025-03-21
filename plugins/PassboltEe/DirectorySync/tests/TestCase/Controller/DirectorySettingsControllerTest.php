@@ -23,11 +23,11 @@ use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Middleware\DirectorySyncEndpointsSecurityMiddleware;
+use Passbolt\DirectorySync\Test\Factory\DirectoryOrgSettingFactory;
 use Passbolt\DirectorySync\Test\TestCase\Utility\DirectoryOrgSettingsTest;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\LdapConfigurationTestUtility;
@@ -225,24 +225,16 @@ class DirectorySettingsControllerTest extends DirectorySyncDeprecatedIntegration
         // Enable the directory integration
         $formData = LdapConfigurationTestUtility::getDummyFormData();
         $formData['field_fallbacks']['ad']['username'] = 'userPrincipalName';
-
         $this->putJson('/directorysync/settings.json?api-version=2', $formData);
-
         $this->assertSuccess();
         $directoryOrgSettings = DirectoryOrgSettings::get();
         $this->assertTrue($directoryOrgSettings->isEnabled());
+
         // Disable the directory integration
         $this->deleteJson('/directorysync/settings.json?api-version=2');
         $this->assertSuccess();
-        $this->expectException(RecordNotFoundException::class);
-        $directoryOrgSettings = DirectoryOrgSettings::get();
-        $this->assertFalse($directoryOrgSettings->isEnabled());
-        // Check for fallback fields
-        $directoryOrgSettingsArray = $directoryOrgSettings->toArray();
-        $this->assertArrayHasKey('fieldFallbacks', $directoryOrgSettingsArray);
-        $this->assertEqualsCanonicalizing([
-            'ad' => ['username' => 'userPrincipalName'],
-        ], $directoryOrgSettingsArray['fieldFallbacks']);
+        // Make sure settings are deleted from the database
+        $this->assertEmpty(DirectoryOrgSettingFactory::find()->all()->toArray());
     }
 
     /**
