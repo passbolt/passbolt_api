@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-03-22 01:54\n"
+"PO-Revision-Date: 2025-03-22 08:44\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -1499,7 +1499,7 @@ msgid "Edit the security.salt in {0}"
 msgstr "Modifier le fichier security.salt dans {0}"
 
 msgid "App.fullBaseUrl validation OK."
-msgstr "La validation de App.fullBaseUrl est OK."
+msgstr "La validation de app.fullBaseUrl est OK."
 
 msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
 msgstr "App.fullBaseUrl n'est pas valide. Une URL/IP valide est acceptée, mais \"{0}\" a été trouvé."
@@ -1793,7 +1793,7 @@ msgid "Ensure the private key file is defined by the variable passbolt.gpg.serve
 msgstr "Assurez-vous que le fichier de clé privée est défini par la variable passbolt.gpg.serverKey.private dans {0}."
 
 msgid "Ensure there is a private key armored block in the key file."
-msgstr "Assurez-vous qu'il y ait un bloc de clé privée armuré dans le fichier de clé."
+msgstr "Assurez-vous qu'il y ait un bloc ASCII-armored de clé privée dans le fichier de clé."
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
 msgstr "Assurez-vous que la clé privée définie dans {0} existe et est accessible par l'utilisateur du serveur web."
@@ -1823,7 +1823,7 @@ msgid "Ensure the public key file is defined by the variable passbolt.gpg.server
 msgstr "Assurez-vous que le fichier de clé publique est défini par la variable passbolt.gpg.serverKey.public dans {0}."
 
 msgid "Ensure there is a public key armored block in the key file."
-msgstr "Assurez-vous qu'il y ait un bloc de clé publique armuré dans le fichier de clé."
+msgstr "Assurez-vous qu'il y ait un bloc ASCII-armored de clé publique dans le fichier de clé."
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
 msgstr "Assurez-vous que la clé publique définie dans {0} existe et est accessible par l'utilisateur du serveur web."
