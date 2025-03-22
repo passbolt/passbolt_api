@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2024-09-06 11:49\n"
+"PO-Revision-Date: 2025-03-22 01:54\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Italian\n"
 "MIME-Version: 1.0\n"
@@ -51,7 +51,7 @@ msgstr "Cookie CSRF mancante o non valido."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:311
 msgid "CSRF token from either the request body or request headers did not match or is missing."
-msgstr ""
+msgstr "Il token CSRF dal corpo della richiesta o dalle intestazioni della richiesta non corrisponde o è mancante."
 
 #: Http/Response.php:1490
 msgid "The requested file contains `..` and will not be read."
@@ -85,7 +85,7 @@ msgstr[1] "{0,number,integer} byte"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} from now"
-msgstr ""
+msgstr "tra {0}"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} ago"
@@ -150,7 +150,7 @@ msgstr "tra circa un'ora"
 #: I18n/RelativeTimeFormatter.php:177
 #: I18n/RelativeTimeFormatter.php:384
 msgid "in about a day"
-msgstr ""
+msgstr "tra un giorno circa"
 
 #: I18n/RelativeTimeFormatter.php:178
 #: I18n/RelativeTimeFormatter.php:385
@@ -165,7 +165,7 @@ msgstr "tra un mese circa"
 #: I18n/RelativeTimeFormatter.php:180
 #: I18n/RelativeTimeFormatter.php:387
 msgid "in about a year"
-msgstr ""
+msgstr "tra un anno circa"
 
 #: I18n/RelativeTimeFormatter.php:342
 msgid "today"
