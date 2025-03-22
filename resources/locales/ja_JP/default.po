@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 06:14+0000\n"
-"PO-Revision-Date: 2025-02-14 10:59\n"
+"PO-Revision-Date: 2025-03-22 01:57\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Japanese\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgid "You need to login to access this location."
 msgstr "この場所にアクセスするにはログインする必要があります。"
 
 msgid "The server verify token is missing or invalid."
-msgstr ""
+msgstr "サーバー検証トークンが見つからないか無効です。"
 
 msgid "Decryption failed."
 msgstr "復号に失敗しました。"
@@ -41,7 +41,7 @@ msgid "Could not import the user OpenPGP key."
 msgstr "ユーザーのOpenPGP鍵をインポートできませんでした。"
 
 msgid "Invalid verify token type."
-msgstr ""
+msgstr "無効な検証トークンタイプです。"
 
 msgid "Invalid verify token format, "
 msgstr "トークンの検証形式が無効です。 "
@@ -68,19 +68,19 @@ msgid "Page not found."
 msgstr "ページが見つかりません。"
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr ""
+msgstr ".json拡張子をURLに使用するか、application/jsonを受け入れてください。"
 
 msgid "The request data can not be empty."
-msgstr ""
+msgstr "リクエストデータを空にすることはできません。"
 
 msgid "You are successfully logged in."
 msgstr "正常にログインしました。"
 
 msgid "You are successfully logged out."
-msgstr ""
+msgstr "正常にログアウトしました。"
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "ログアウトルートにはPOSTメソッドでのみアクセスできます。"
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "OpenPGP の公開鍵情報が config に見つかりませんでした。"
@@ -188,10 +188,10 @@ msgid "Access restricted to administrators."
 msgstr "アクセスは管理者に制限されています。"
 
 msgid "Access restricted to unauthenticated users."
-msgstr ""
+msgstr "アクセスは未認証ユーザーに制限されています。"
 
 msgid "The user should not be logged in."
-msgstr ""
+msgstr "ユーザーはログインしていない必要があります。"
 
 msgid "This feature is not supported by your version of passbolt."
 msgstr "この機能は、お使いのバージョンのパスボルトではサポートされていません。"
@@ -248,7 +248,7 @@ msgid "All checks ran successfully!"
 msgstr "すべてのチェックが正常に実行されました！"
 
 msgid "Healthcheck security index endpoint disabled."
-msgstr ""
+msgstr "ヘルスチェックセキュリティインデックスエンドポイントは無効です。"
 
 msgid "OK"
 msgstr "OK"
@@ -278,34 +278,34 @@ msgid "The secret does not exist."
 msgstr "秘密は存在しません。"
 
 msgid "Only guests are allowed to abort recovery process."
-msgstr ""
+msgstr "ゲストのみがリカバリープロセスを中断できます。"
 
 msgid "An authentication token must be provided."
-msgstr ""
+msgstr "認証トークンを提供する必要があります。"
 
 msgid "The recovery process was aborted."
-msgstr ""
+msgstr "復旧プロセスが中止されました。"
 
 msgid "Only guests are allowed to complete setup."
-msgstr ""
+msgstr "ゲストのみがセットアップを完了できます。"
 
 msgid "The recovery was completed successfully."
 msgstr "復旧が正常に完了しました。"
 
 msgid "Only guests are allowed to proceed with account recovery."
-msgstr ""
+msgstr "ゲストのみがアカウント復旧を続行できます。"
 
 msgid "The setup was completed successfully."
 msgstr "セットアップは正常に完了しました。"
 
 msgid "Only guests are allowed to start setup."
-msgstr ""
+msgstr "ゲストのみがセットアップを開始できます。"
 
 msgid "You are not authorized to share this resource."
 msgstr "このリソースを共有する権限がありません。"
 
 msgid "Resource metadata key type is invalid."
-msgstr ""
+msgstr "リソースメタデータのキータイプが無効です。"
 
 msgid "Only administrators can add new users."
 msgstr "管理者のみが新しいユーザーを追加できます。"
@@ -359,28 +359,28 @@ msgid "You are not authorized to edit the role."
 msgstr "ロールを編集する権限がありません。"
 
 msgid "Multiple has-access filters are not supported."
-msgstr ""
+msgstr "複数のhas-accessフィルターはサポートされていません。"
 
 msgid "This operation is not allowed for this user."
 msgstr "この操作はこのユーザーには許可されていません。"
 
 msgid "Only guests are allowed to recover an account. Please logout first."
-msgstr ""
+msgstr "ゲストのみアカウントを復旧できます。まずログアウトしてください。"
 
 msgid "Recovery process started, check your email."
 msgstr "復旧処理が開始されました。メールを確認してください。"
 
 msgid "Only guests are allowed to register."
-msgstr ""
+msgstr "ゲストのみが登録できます。"
 
 msgid "Registration is not opened to public."
-msgstr ""
+msgstr "登録は公開されていません。"
 
 msgid "Please contact your administrator."
 msgstr "管理者に問い合わせてください。"
 
 msgid "This is due to a security setting."
-msgstr ""
+msgstr "これはセキュリティ設定によるものです。"
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "ユーザー識別子は有効なUUIDか\"me\" である必要があります。"
@@ -389,13 +389,13 @@ msgid "The user does not exist."
 msgstr "ユーザーは存在しません。"
 
 msgid "No admin were found in the database."
-msgstr ""
+msgstr "データベースに管理者が見つかりませんでした。"
 
 msgid "The `{0}` configuration must be a valid non-empty string."
-msgstr ""
+msgstr "`{0}` の設定は有効な空でない文字列でなければなりません。"
 
 msgid "Invalid expiry time {0}."
-msgstr ""
+msgstr "有効期限 {0} が無効です。"
 
 msgid "The identifier should not be empty."
 msgstr "識別子は空にしないでください。"
@@ -608,16 +608,16 @@ msgid "The user identifier should not be empty"
 msgstr "ユーザー識別子は空にしないでください"
 
 msgid "You cannot reuse the server keys."
-msgstr ""
+msgstr "サーバーキーを再利用することはできません。"
 
 msgid "A valid OpenPGP key must be provided."
 msgstr "有効な OpenPGP鍵を提供する必要があります。"
 
 msgid "The OpenPGP armored key could not be parsed."
-msgstr ""
+msgstr "OpenPGPアーマーされたキーを解析できませんでした。"
 
 msgid "The OpenPGP armored key could not be validated."
-msgstr ""
+msgstr "OpenPGPアーマーされたキーを検証できませんでした。"
 
 msgid "The name should be a valid UTF8 string."
 msgstr "名前は有効なUTF8文字列でなければなりません。"
@@ -695,7 +695,7 @@ msgid "The property should not be empty."
 msgstr "プロパティは空にしないでください。"
 
 msgid "The property should be an alphabetical string and only dot is accepted as special characters."
-msgstr ""
+msgstr "プロパティはアルファベット順の文字列で、ドット(.)のみが特殊文字として受け付けられます。"
 
 msgid "The property identifier should be a valid UUID."
 msgstr "プロパティ識別子は有効なUUIDでなければなりません。"
@@ -842,7 +842,7 @@ msgid "A resource type identifier is required."
 msgstr "リソース型識別子が必要です。"
 
 msgid "The resource type should be one of the following: {0}."
-msgstr ""
+msgstr "リソースタイプは次のいずれかでなければなりません: {0}。"
 
 msgid "The permissions are required."
 msgstr "パーミッションが必要です。"
@@ -863,19 +863,19 @@ msgid "The secrets should contain only the secret of the owner."
 msgstr "秘密は所有者の秘密のみを含める必要があります。"
 
 msgid "The metadata key ID should be a valid UUID."
-msgstr ""
+msgstr "メタデータキーIDは有効なUUIDである必要があります。"
 
 msgid "The metadata should be a valid ASCII string."
-msgstr ""
+msgstr "メタデータは有効なASCII文字列である必要があります。"
 
 msgid "The metadata should not be empty."
-msgstr ""
+msgstr "メタデータを空にできません。"
 
 msgid "The metadata key type should be a valid UTF8 string."
-msgstr ""
+msgstr "メタデータのキータイプは有効なUTF8文字列である必要があります。"
 
 msgid "The metadata key type should be one of the following: {0}."
-msgstr ""
+msgstr "メタデータのキータイプは次のいずれかでなければなりません: {0}。"
 
 msgid "The resource type does not exist."
 msgstr "リソース型が存在しません。"
@@ -893,31 +893,31 @@ msgid "The permissions should contain at least the owner permission."
 msgstr "パーミッションには少なくとも所有者のパーミッションを含める必要があります。"
 
 msgid "The settings selected by your administrator prevent from downgrading resource type."
-msgstr ""
+msgstr "管理者が選択した設定により、リソースタイプのダウングレードはできません。"
 
 msgid "The settings selected by your administrator prevent from using that key type."
-msgstr ""
+msgstr "管理者が選択した設定により、そのキータイプの使用はできません。"
 
 msgid "The metadata key does not exist or was deleted."
-msgstr ""
+msgstr "メタデータキーが存在しないか、削除されました。"
 
 msgid "The metadata key is marked as expired."
-msgstr ""
+msgstr "メタデータキーは期限切れとしてマークされています。"
 
 msgid "It is not allowed to create v5-password-string resource types."
-msgstr ""
+msgstr "V5-password-string リソースタイプの作成は許可されていません。"
 
 msgid "The resource type should not be deleted."
-msgstr ""
+msgstr "リソースタイプを削除できません。"
 
 msgid "The resource metadata provided can not be decrypted."
-msgstr ""
+msgstr "提供されたリソースメタデータを復号できませんでした。"
 
 msgid "A resource of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "Personalタイプのリソースは、他のユーザーやグループと共有できません。"
 
 msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
-msgstr ""
+msgstr "管理者が選択した設定により、v4をv5にアップグレードできません。"
 
 msgid "The resource should not be already soft deleted."
 msgstr "そのリソースはまだソフトデリート（論理削除）されていないはずです。"
@@ -971,7 +971,7 @@ msgid "A role identifier is required."
 msgstr "ロール識別子が必要です。"
 
 msgid "The disabled date should be a valid date."
-msgstr ""
+msgstr "無効化された日付は有効な日付である必要があります。"
 
 msgid "The profile should not be empty."
 msgstr "プロファイルは空にしないでください。"
@@ -1001,10 +1001,10 @@ msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr "アーマー（暗号化）されたキーは有効なASCIIアーマーされたOpenPGPキーでなければなりません。"
 
 msgid "The armored key is not valid."
-msgstr ""
+msgstr "アーマードキーが無効です。"
 
 msgid "The message should be a valid ASCII-armored OpenPGP message."
-msgstr ""
+msgstr "メッセージは有効なASCIIアーマーされたOpenPGPメッセージである必要があります。"
 
 msgid "The creation date should be set in the past."
 msgstr "作成日は過去に設定する必要があります。"
@@ -1013,49 +1013,49 @@ msgid "The key should not already be expired."
 msgstr "キーの有効期限はまだ切れていないはずです。"
 
 msgid "The date should not be set in the future."
-msgstr ""
+msgstr "日付を未来に設定することはできません。"
 
 msgid "The date could not be parsed."
-msgstr ""
+msgstr "日付を解析できませんでした。"
 
 msgid "The email should be a valid email address."
 msgstr "メールアドレスは有効なメールアドレスにしてください。"
 
 msgid "The regular expression should be a valid string."
-msgstr ""
+msgstr "正規表現は有効な文字列である必要があります。"
 
 msgid "The fingerprint does not match the one of the armored key."
-msgstr ""
+msgstr "指紋がアーマーされたキーのものと一致しません。"
 
 msgid "The fingerprint should be a string of 40 hexadecimal characters."
 msgstr "指紋は40文字の16進数である必要があります。"
 
 msgid "The type should be one of the following: RSA, ECC, ECDSA, DH."
-msgstr ""
+msgstr "型は以下のいずれかでなければなりません: RSA、ECC、ECDSA、DH。"
 
 msgid "The delete status should be a valid boolean."
-msgstr ""
+msgstr "削除ステータスは有効なブール値である必要があります。"
 
 msgid "The field must be null when creating a new record."
-msgstr ""
+msgstr "新しいレコードを作成するとき、そのフィールドは null でなければなりません。"
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "キー識別子は8文字の16進数でなければなりません。"
 
 msgid "The provided IP is invalid."
-msgstr ""
+msgstr "提供されたIPは無効です。"
 
 msgid "The provided user agent is invalid."
-msgstr ""
+msgstr "提供されたユーザーエージェントが無効です。"
 
 msgid "{0} updated your memberships in several groups"
 msgstr "{0} さんが複数のグループのあなたのメンバーシップを更新しました"
 
 msgid "{0} deleted several group memberships"
-msgstr ""
+msgstr "{0} さんが複数のグループメンバーシップを削除しました"
 
 msgid "You made changes on several resources"
-msgstr ""
+msgstr "複数のリソースで変更を行いました"
 
 msgid "{0} has made changes on several resources"
 msgstr "{0} さんが複数のリソースで変更を行いました"
@@ -1082,7 +1082,7 @@ msgid "{0} requested you to add members to {1}"
 msgstr "{0} さんがあなたに、メンバーを{1} に追加するようにリクエストしました"
 
 msgid "You have been requested to add members to {0}"
-msgstr ""
+msgstr "メンバーを {0} に追加するようリクエストされました"
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} さんがグループ {1} からあなたを削除しました"
@@ -1091,10 +1091,10 @@ msgid "{0} updated your membership in the group {1}"
 msgstr "{0} さんがグループ {1} のあなたのメンバーシップを更新しました"
 
 msgid "{0} just completed the account recovery process"
-msgstr ""
+msgstr "{0} がアカウントの復旧プロセスを完了しました"
 
 msgid "You just completed the account recovery process!"
-msgstr ""
+msgstr "アカウントの復旧プロセスを完了しました！"
 
 msgid "Your account recovery, {0}!"
 msgstr "アカウントが復旧しました、{0} さん！"
@@ -1103,55 +1103,55 @@ msgid "You added the password {0}"
 msgstr "あなたはパスワード {0} を追加しました"
 
 msgid "You added a new password"
-msgstr ""
+msgstr "新しいパスワードを追加しました"
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} さんがパスワード {1} を削除しました"
 
 msgid "You edited a resource"
-msgstr ""
+msgstr "リソースを編集しました"
 
 msgid "{0} edited a resource"
-msgstr ""
+msgstr "{0} がリソースを編集しました"
 
 msgid "You edited the resource {0}"
-msgstr ""
+msgstr "リソース {0} を編集しました"
 
 msgid "{0} edited the resource {1}"
-msgstr ""
+msgstr "{0}さんがリソース {1} を編集しました"
 
 msgid "{0} can not complete the account recovery process!"
-msgstr ""
+msgstr "{0} はアカウントの復旧プロセスを完了できません！"
 
 msgid "{0} shared the resource {1}"
-msgstr ""
+msgstr "{0}さんがリソース {1} を共有しました"
 
 msgid "{0} shared a resource"
-msgstr ""
+msgstr "{0}さんがリソースを共有しました"
 
 msgid "You deleted administrator {0}"
-msgstr ""
+msgstr "管理者 {0} を削除しました"
 
 msgid "{0} deleted your account"
-msgstr ""
+msgstr "{0} さんがあなたのアカウントを削除しました"
 
 msgid "{0} deleted administrator {1}"
-msgstr ""
+msgstr "{0} さんが管理者 {1} を削除しました"
 
 msgid "Your account has been suspended"
-msgstr ""
+msgstr "あなたのアカウントは停止されました"
 
 msgid "Your admin role has been revoked"
-msgstr ""
+msgstr "あなたの管理者ロールは取り消されました"
 
 msgid "{0}'s admin role has been revoked"
-msgstr ""
+msgstr "{0} さんの管理者ロールは取り消されました"
 
 msgid "{0} deleted user {1}"
 msgstr "{0} さんがユーザー {1} を削除しました"
 
 msgid "{0} has been suspended"
-msgstr ""
+msgstr "{0} は停止されました"
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "パスボルトへようこそ、 {0} さん！"
@@ -1178,13 +1178,13 @@ msgid "The send on user setup completed setting should be a boolean."
 msgstr "ユーザーセットアップ完了時に送信する設定はブール値である必要があります。"
 
 msgid "The send on user recover abort setting should be a boolean."
-msgstr ""
+msgstr "ユーザー復元中止時に送信する設定はブール値でなければなりません。"
 
 msgid "The send on user disabled setting should be a boolean."
-msgstr ""
+msgstr "ユーザー無効化時に送信する設定はブール値でなければなりません。"
 
 msgid "The send on admin disabled setting should be a boolean."
-msgstr ""
+msgstr "管理者による無効化時に送信する設定はブール値でなければなりません。"
 
 msgid "The send on comment added setting should be a boolean."
 msgstr "コメント追加時に送信する設定はブール値である必要があります。"
@@ -1205,7 +1205,7 @@ msgid "The send on group manager updated setting should be a boolean."
 msgstr "グループマネージャー更新時に送信する設定はブール値である必要があります。"
 
 msgid "The send on group manager request add user should be a boolean."
-msgstr ""
+msgstr "グループマネージャーのユーザー追加リクエストに送信する設定はブール値である必要があります。"
 
 msgid "The send on password created setting should be a boolean."
 msgstr "パスワード作成時に送信する設定はブール値でなければなりません。"
@@ -1232,10 +1232,10 @@ msgid "The authentication token is not valid."
 msgstr "認証トークンが有効ではありません。"
 
 msgid "The authentication token could not be found."
-msgstr ""
+msgstr "認証トークンが見つかりませんでした。"
 
 msgid "The token is already consumed."
-msgstr ""
+msgstr "トークンは既に使用されています。"
 
 msgid "Validation failed for authenticationToken {0}. {1}"
 msgstr "認証トークン {0} の検証に失敗しました。 {1}"
@@ -1256,7 +1256,7 @@ msgid "Could not validate comment data."
 msgstr "コメントデータを検証できませんでした。"
 
 msgid "The comment userId is not valid."
-msgstr ""
+msgstr "コメントのユーザーIDが有効ではありません。"
 
 msgid "The comment does not exist."
 msgstr "コメントが存在しません。"
@@ -1307,10 +1307,10 @@ msgid "Failed to encrypt with key {0}. {1}"
 msgstr "鍵 {0} の暗号化に失敗しました。 {1}"
 
 msgid "Key expired: {0}."
-msgstr ""
+msgstr "キーの有効期限が切れています: {0}。"
 
 msgid "Expiration date valid for key {0}."
-msgstr ""
+msgstr "キー {0} の有効期限は有効です。"
 
 msgid "Validation failed for group {0}. {1}"
 msgstr "グループ {0} の検証に失敗しました。 {1}"
@@ -1322,532 +1322,532 @@ msgid "Could not validate group user data."
 msgstr "グループユーザーデータを検証できませんでした。"
 
 msgid "All email notifications will be sent."
-msgstr ""
+msgstr "すべてのメール通知が送信されます。"
 
 msgid "Some email notifications are disabled by the administrator."
-msgstr ""
+msgstr "管理者により一部のメール通知が無効化されています。"
 
 msgid "Host availability will be checked."
-msgstr ""
+msgstr "ホスト可用性を確認します。"
 
 msgid "Host availability checking is disabled."
-msgstr ""
+msgstr "ホスト可用性チェックは無効です。"
 
 msgid "Make sure this instance is not publicly available on the internet."
-msgstr ""
+msgstr "このインスタンスがインターネット上で公開されていないことを確認してください。"
 
 msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
-msgstr ""
+msgstr "あるいはPASSBOLT_EMAIL_VALIDATE_MX 環境変数を true に設定してください。"
 
 msgid "Or set passbolt.email.validate.mx to true in {0}."
-msgstr ""
+msgstr "あるいは {0} の passbolt.email.validate.mx を true に設定してください。"
 
 msgid "Serving the compiled version of the javascript app."
-msgstr ""
+msgstr "JavaScriptアプリのコンパイル版を提供しています。"
 
 msgid "Using non-compiled Javascript. Passbolt will be slower."
-msgstr ""
+msgstr "コンパイルされていないJavaScriptを使用します。パスボルトの動作が遅くなります。"
 
 msgid "Set passbolt.js.build to production in {0}"
-msgstr ""
+msgstr "{0} の passbolt.js.build を production に設定してください"
 
 msgid "undefined"
-msgstr ""
+msgstr "未定義"
 
 msgid "Could not read tag information on github repository"
 msgstr "Githubリポジトリのタグ情報を読み取ることができませんでした"
 
 msgid "Using latest passbolt version ({0})."
-msgstr ""
+msgstr "最新のパスボルトバージョン({0})を使用しています。"
 
 msgid "Could connect to passbolt repository to check versions."
-msgstr ""
+msgstr "バージョンを確認するためにパスボルトのリポジトリに接続できました。"
 
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
-msgstr ""
+msgstr "このインストールは最新ではありません。現在は {0} を使用しており、{1} である必要があります。"
 
 msgid "Could not connect to passbolt repository to check versions."
-msgstr ""
+msgstr "パスボルトのリポジトリに接続してバージョンを確認できませんでした。"
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "バージョンが最新かどうかを確認できません。"
 
 msgid "See https://www.passbolt.com/help/tech/update"
-msgstr ""
+msgstr "https://www.passbolt.com/help/tech/update を参照してください"
 
 msgid "Check the network configuration to allow this script to check for updates."
-msgstr ""
+msgstr "このスクリプトがアップデートを確認できるよう、ネットワーク構成を確認してください。"
 
 msgid "Search engine robots are told not to index content."
-msgstr ""
+msgstr "検索エンジンのクローラーにコンテンツをインデックスしないよう設定されています。"
 
 msgid "Search engine robots are not told not to index content."
-msgstr ""
+msgstr "検索エンジンのクローラーにコンテンツをインデックスしないよう設定されていません。"
 
 msgid "Set passbolt.meta.robots to false in {0}."
-msgstr ""
+msgstr "{0} の passbolt.meta.robots を false に設定してください。"
 
 msgid "Selenium API endpoints are disabled."
-msgstr ""
+msgstr "Selenium APIエンドポイントは無効です。"
 
 msgid "Selenium API endpoints are active. This setting should be used for testing only."
-msgstr ""
+msgstr "Selenium APIエンドポイントが有効です。この設定はテスト目的のみで使用してください。"
 
 msgid "Set passbolt.selenium.active to false in {0}."
-msgstr ""
+msgstr "{0} の passbolt.selenium.active を false に設定してください。"
 
 msgid "The Self Registration plugin is enabled."
-msgstr ""
+msgstr "セルフ登録プラグインが有効です。"
 
 msgid "The Self Registration plugin is disabled."
-msgstr ""
+msgstr "セルフ登録プラグインは無効です。"
 
 msgid "Enable the plugin in order to define self registration settings."
-msgstr ""
+msgstr "セルフ登録設定を定義するにはプラグインを有効にしてください。"
 
 msgid "Registration is closed, only administrators can add users."
-msgstr ""
+msgstr "登録は閉じられています。管理者のみがユーザーを追加できます。"
 
 msgid "The self registration provider is: {0}."
-msgstr ""
+msgstr "セルフ登録プロバイダ: {0}。"
 
 msgid "The deprecated self registration public setting was not found in {0}."
-msgstr ""
+msgstr "{0} に古いセルフ登録public設定が見つかりませんでした。"
 
 msgid "The deprecated self registration public setting was found in {0}."
-msgstr ""
+msgstr "{0} に古いセルフ登録public設定が見つかりました。"
 
 msgid "You may remove the \"passbolt.registration.public\" setting."
-msgstr ""
+msgstr "\"passbolt.registration.public\" 設定を削除してもかまいません。"
 
 msgid "Passbolt is configured to force SSL use."
-msgstr ""
+msgstr "パスボルトはSSL使用を強制するように設定されています。"
 
 msgid "Passbolt is not configured to force SSL use."
-msgstr ""
+msgstr "パスボルトはSSL使用を強制するように設定されていません。"
 
 msgid "Set passbolt.ssl.force to true in {0}."
-msgstr ""
+msgstr "{0} の passbolt.ssl.force を true に設定してください。"
 
 msgid "App.fullBaseUrl is set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl はHTTPSに設定されています。"
 
 msgid "App.fullBaseUrl is not set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl はHTTPSに設定されていません。"
 
 msgid "Check App.fullBaseUrl url scheme in {0}."
-msgstr ""
+msgstr "{0} の App.fullBaseUrl のスキームを確認してください。"
 
 msgid "The application config file is present"
-msgstr ""
+msgstr "アプリケーションの設定ファイルが存在します"
 
 msgid "The application config file is missing in {0}"
-msgstr ""
+msgstr "{0} にアプリケーションの設定ファイルがありません"
 
 msgid "Copy {0} to {1}"
-msgstr ""
+msgstr "{0} を {1} にコピーしてください"
 
 msgid "The passbolt config file is present"
-msgstr ""
+msgstr "パスボルトの設定ファイルが存在します"
 
 msgid "The passbolt config file is missing in {0}"
-msgstr ""
+msgstr "{0} にパスボルトの設定ファイルがありません"
 
 msgid "The passbolt config file is not required if passbolt is configured with environment variables"
-msgstr ""
+msgstr "パスボルトが環境変数で構成されている場合、パスボルトの設定ファイルは必要ありません"
 
 msgid "Cache is working."
-msgstr ""
+msgstr "キャッシュは動作しています。"
 
 msgid "Cache is NOT working."
-msgstr ""
+msgstr "キャッシュは動作していません。"
 
 msgid "Check the settings in {0}"
-msgstr ""
+msgstr "{0} の設定を確認してください"
 
 msgid "Debug mode is off."
-msgstr ""
+msgstr "デバッグモードはオフです。"
 
 msgid "Debug mode is on."
-msgstr ""
+msgstr "デバッグモードはオンです。"
 
 msgid "Set debug to false in {0}"
-msgstr ""
+msgstr "{0} の debug を false に設定してください"
 
 msgid "Full base url is set to {0}"
-msgstr ""
+msgstr "Full base url が {0} に設定されています"
 
 msgid "Full base url is not set. The application is using: {0}."
-msgstr ""
+msgstr "Full base url が設定されていません。アプリケーションは {0} を使用しています。"
 
 msgid "Edit App.fullBaseUrl in {0}"
-msgstr ""
+msgstr "{0} の App.fullBaseUrl を編集してください"
 
 msgid "/healthcheck/status is reachable."
-msgstr ""
+msgstr "/healthcheck/status にアクセスできます。"
 
 msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
-msgstr ""
+msgstr "App.fullBaseUrl で指定したURLにより /healthcheck/status に到達できませんでした"
 
 msgid "Check that the domain name is correct in {0}"
-msgstr ""
+msgstr "{0} のドメイン名が正しいか確認してください"
 
 msgid "Check the network settings"
-msgstr ""
+msgstr "ネットワークの設定を確認してください"
 
 msgid "Unique value set for security.salt"
-msgstr ""
+msgstr "security.salt にユニークな値が設定されています"
 
 msgid "Default value found for security.salt"
-msgstr ""
+msgstr "security.salt にデフォルト値が見つかりました"
 
 msgid "Edit the security.salt in {0}"
-msgstr ""
+msgstr "{0} の security.salt を編集してください"
 
 msgid "App.fullBaseUrl validation OK."
-msgstr ""
+msgstr "App.fullBaseUrl の検証はOKです。"
 
 msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
-msgstr ""
+msgstr "App.fullBaseUrlが無効です。有効なURL/IPアドレスのみ許可されますが、実際には「{0}」が検出されました。"
 
 msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
-msgstr ""
+msgstr "http://www.ietf.org/rfc/rfc1035.txt のセクション2.3.1で定義されている有効なドメイン名を選択してください"
 
 msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
-msgstr ""
+msgstr "重要: App.fullBaseUrlを空のまま使用すると、ホストヘッダーインジェクション攻撃の可能性があります: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
 
 msgid "The application is able to connect to the database"
-msgstr ""
+msgstr "アプリケーションはデータベースに接続できます"
 
 msgid "The driver defined in the database configuration is not supported."
-msgstr ""
+msgstr "データベース構成で定義されているドライバーはサポートされていません。"
 
 msgid "The application is not able to connect to the database."
-msgstr ""
+msgstr "アプリケーションはデータベースに接続できません。"
 
 msgid "Ensure that the driver defined in {0} is one of the following: {1}."
-msgstr ""
+msgstr "{0} で定義されたドライバーが次のいずれかであることを確認してください: {1}。"
 
 msgid "Double check the host, database name, username and password in {0}."
-msgstr ""
+msgstr "{0} でホスト名、データベース名、ユーザー名、パスワードを再度確認してください。"
 
 msgid "Make sure the database exists and is accessible for the given database user."
-msgstr ""
+msgstr "指定されたデータベースユーザーがアクセスできるように、データベースが存在することを確認してください。"
 
 msgid "Some default content is present."
-msgstr ""
+msgstr "いくつかのデフォルトコンテンツが存在します。"
 
 msgid "No default content found."
-msgstr ""
+msgstr "デフォルトコンテンツが見つかりません。"
 
 msgid "Run the install script to install the database tables"
-msgstr ""
+msgstr "インストールスクリプトを実行してデータベーステーブルをインストールしてください"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "データベーススキーマは最新です。"
 
 msgid "The database schema is not up to date."
-msgstr ""
+msgstr "データベーススキーマが最新ではありません。"
 
 msgid "Run the migration scripts:"
-msgstr ""
+msgstr "マイグレーションスクリプトを実行してください："
 
 msgid "{0} tables found."
-msgstr ""
+msgstr "{0} 件のテーブルが見つかりました。"
 
 msgid "No table found."
-msgstr ""
+msgstr "テーブルが見つかりません。"
 
 msgid "Cannot detect your system distribution details."
-msgstr ""
+msgstr "システムのディストリビューション情報を検出できません。"
 
 msgid "See `{0}`."
-msgstr ""
+msgstr "`{0}` を参照してください。"
 
 msgid "Cannot detect your `gpg` or `libgcrypt` version."
-msgstr ""
+msgstr "`gpg` または `libgcrypt` のバージョンを検出できません。"
 
 msgid "See `{0}` and `{1}`."
-msgstr ""
+msgstr "`{0}` と `{1}` を参照してください。"
 
 msgid "GD or Imagick extension is installed."
-msgstr ""
+msgstr "GDまたはImagick拡張がインストールされています。"
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr ""
+msgstr "パスボルトを使用するには gd または imagick 拡張機能を有効にする必要があります。"
 
 msgid "See: https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "参照: https://secure.php.net/manual/en/book.image.php"
 
 msgid "See: https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "参照: https://secure.php.net/manual/en/book.imagick.php"
 
 msgid "Intl extension is installed."
-msgstr ""
+msgstr "Intl拡張がインストールされています。"
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr ""
+msgstr "パスボルトを使用するには intl 拡張機能を有効にする必要があります。"
 
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "参照: https://secure.php.net/manual/en/book.intl.php"
 
 msgid "The logs directory and its content are writable."
-msgstr ""
+msgstr "ログディレクトリとその内容に書き込み可能です。"
 
 msgid "The logs directory and its content are not writable."
-msgstr ""
+msgstr "ログディレクトリとその内容に書き込みできません。"
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "ログディレクトリとその内容がウェブサーバーユーザーによって書き込み可能であることを確認してください。"
 
 msgid "You can try:"
 msgstr "以下を試せます："
 
 msgid "Mbstring extension is installed."
-msgstr ""
+msgstr "Mbstring拡張がインストールされています。"
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr ""
+msgstr "パスボルトを使用するには mbstring 拡張機能を有効にする必要があります。"
 
 msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "参照: https://secure.php.net/manual/en/book.mbstring.php"
 
 msgid "PHP version is {0} or above."
-msgstr ""
+msgstr "PHPバージョンが{0}以上です。"
 
 msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
-msgstr ""
+msgstr "PHPバージョンが{0}未満の場合、まもなくパスボルトではサポートされなくなるため、OSまたはPHP環境のアップグレードを検討してください。"
 
 msgid "64-bit architecture system detected."
-msgstr ""
+msgstr "<b>64</b>ビットアーキテクチャのシステムが検出されました。"
 
 msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
-msgstr ""
+msgstr "<b>32</b>ビットアーキテクチャのシステムが検出されましたが、この環境はパスボルト v5以降ではサポートされません。"
 
 msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
-msgstr ""
+msgstr "参照: PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
 
 msgid "PCRE compiled with unicode support."
-msgstr ""
+msgstr "Unicodeサポート付きでPCREがコンパイルされています。"
 
 msgid "PCRE has not been compiled with Unicode support."
-msgstr ""
+msgstr "PCREはUnicodeサポート付きでコンパイルされていません。"
 
 msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
-msgstr ""
+msgstr "PCREを再コンパイルする際に --enable-unicode-properties を追加して、Unicodeサポートを有効にしてください。"
 
 msgid "PHP version {0}."
-msgstr ""
+msgstr "PHPバージョン {0}。"
 
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr ""
+msgstr "PHPバージョンが低すぎます。パスボルトはPHP {0}以上が必要です。"
 
 msgid "System clock is synchronized and NTP service is active."
-msgstr ""
+msgstr "システムクロックが同期され、NTPサービスがアクティブです。"
 
 msgid "System clock and NTP service information cannot be found."
-msgstr ""
+msgstr "システムクロックとNTPサービスの情報が見つかりません。"
 
 msgid "NTP service is active but the system clock is not synchronized."
-msgstr ""
+msgstr "NTPサービスはアクティブですが、システムクロックは同期されていません。"
 
 msgid "System clock is synchronized but NTP service is inactive."
-msgstr ""
+msgstr "システムクロックは同期されていますが、NTPサービスはアクティブではありません。"
 
 msgid "System clock is not synchronized and NTP service is inactive."
-msgstr ""
+msgstr "システムクロックが同期されておらず、NTPサービスもアクティブではありません。"
 
 msgid "That generally means the NTP service is failing to contact any NTP servers."
-msgstr ""
+msgstr "これは通常、NTPサービスがNTPサーバーに接続できていないことを意味します。"
 
 msgid "See `{0}`. More information: {1}"
-msgstr ""
+msgstr "`{0}` を参照してください。詳細: {1}"
 
 msgid "The temporary directory and its content are writable and not executable."
-msgstr ""
+msgstr "一時ディレクトリとその内容は書き込み可能であり、実行可能ではありません。"
 
 msgid "The temporary directory and its content are not writable, or are executable."
-msgstr ""
+msgstr "一時ディレクトリとその内容に書き込めないか、もしくは実行可能になっています。"
 
 msgid "Ensure the temporary directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "一時ディレクトリとその内容がウェブサーバーユーザーによって書き込み可能であることを確認してください。"
 
 msgid "you can try:"
 msgstr "以下を試せます："
 
 msgid "The private key can be used to decrypt a message."
-msgstr ""
+msgstr "秘密鍵を使用してメッセージを復号できます。"
 
 msgid "The private key cannot be used to decrypt a message"
-msgstr ""
+msgstr "秘密鍵を使用してメッセージを復号できません"
 
 msgid "The private key can be used to decrypt and verify a message."
-msgstr ""
+msgstr "秘密鍵を使用してメッセージを復号し、検証できます。"
 
 msgid "The private key cannot be used to decrypt and verify a message"
-msgstr ""
+msgstr "秘密鍵を使用してメッセージを復号および検証できません"
 
 msgid "The public key can be used to encrypt a message."
-msgstr ""
+msgstr "公開鍵を使用してメッセージを暗号化できます。"
 
 msgid "The public key cannot be used to encrypt a message"
-msgstr ""
+msgstr "公開鍵を使用してメッセージを暗号化できません"
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr ""
+msgstr "サーバーの秘密鍵が有効で、パスフレーズが設定されていないことを確認してください。"
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "ウェブサーバーユーザーのキーリングにサーバーの秘密鍵をインポートしていることを確認してください。"
 
 msgid "The public and private keys can be used to encrypt and sign a message."
-msgstr ""
+msgstr "公開鍵と秘密鍵を使用してメッセージを暗号化および署名できます。"
 
 msgid "The public and private keys cannot be used to encrypt and sign a message"
-msgstr ""
+msgstr "公開鍵と秘密鍵を使用してメッセージを暗号化および署名できません"
 
 msgid "The private key can be used to sign a message."
-msgstr ""
+msgstr "秘密鍵を使用してメッセージに署名できます。"
 
 msgid "The private key cannot be used to sign a message"
-msgstr ""
+msgstr "秘密鍵を使用してメッセージに署名できません"
 
 msgid "The public key can be used to verify a signature."
-msgstr ""
+msgstr "公開鍵を使用して署名を検証できます。"
 
 msgid "The public key cannot be used to verify a signature."
-msgstr ""
+msgstr "公開鍵を使用して署名を検証できません。"
 
 msgid "The server key fingerprint matches the one defined in {0}."
-msgstr ""
+msgstr "サーバーキーのフィンガープリントが {0} に定義されているものと一致します。"
 
 msgid "The server key fingerprint doesn't match the one defined in {0}."
-msgstr ""
+msgstr "サーバーキーのフィンガープリントが {0} に定義されているものと一致しません。"
 
 msgid "Double check the key fingerprint, example: "
-msgstr ""
+msgstr "キーのフィンガープリントを再度確認してください。例: "
 
 msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
-msgstr ""
+msgstr "SERVER_KEY_EMAIL: サーバーキー生成時に使用したメールアドレスです。"
 
 msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
-msgstr ""
+msgstr "参照: https://www.passbolt.com/help/tech/install#toc_gpg"
 
 msgid "The server private key format is Gopengpg compatible."
-msgstr ""
+msgstr "サーバーの秘密鍵フォーマットはGopengpgに対応しています。"
 
 msgid "The server private key format is not Gopengpg compatible."
-msgstr ""
+msgstr "サーバーの秘密鍵フォーマットはGopengpgに対応していません。"
 
 msgid "The server public key format is Gopengpg compatible."
-msgstr ""
+msgstr "サーバーの公開鍵フォーマットはGopengpgに対応しています。"
 
 msgid "The server public key format is not Gopengpg compatible."
-msgstr ""
+msgstr "サーバーの公開鍵フォーマットはGopengpgに対応していません。"
 
 msgid "The environment variable GNUPGHOME is set to {0}."
-msgstr ""
+msgstr "環境変数GNUPGHOMEは{0}に設定されています。"
 
 msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
-msgstr ""
+msgstr "環境変数GNUPGHOMEは{0}に設定されていますが、そのディレクトリは存在しません。"
 
 msgid "Ensure the keyring location exists and is accessible by the webserver user."
-msgstr ""
+msgstr "キーリングの場所が存在し、ウェブサーバーユーザーがアクセス可能であることを確認してください。"
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr ""
+msgstr "{0} の GPG.env.setenv および GPG.env.home 変数を編集してキーリングの場所を変更できます。"
 
 msgid "The directory {0} containing the keyring is writable by the webserver user."
-msgstr ""
+msgstr "ウェブサーバーユーザーがキーリングを含むディレクトリ {0} に書き込み可能です。"
 
 msgid "The directory {0} containing the keyring is not writable by the webserver user."
-msgstr ""
+msgstr "ウェブサーバーユーザーがキーリングを含むディレクトリ {0} に書き込みできません。"
 
 msgid "Ensure the keyring location is accessible by the webserver user."
-msgstr ""
+msgstr "キーリングの場所がウェブサーバーユーザーからアクセス可能であることを確認してください。"
 
 msgid "The server OpenPGP key is not the default one."
-msgstr ""
+msgstr "サーバーのOpenPGPキーはデフォルトのものではありません。"
 
 msgid "Do not use the default OpenPGP key for the server."
-msgstr ""
+msgstr "サーバーにデフォルトのOpenPGPキーを使用しないでください。"
 
 msgid "The server OpenPGP key is not set."
-msgstr ""
+msgstr "サーバーのOpenPGPキーが設定されていません。"
 
 msgid "Create a key, export it and add the fingerprint to {0}"
-msgstr ""
+msgstr "キーを作成してエクスポートし、そのフィンガープリントを{0}に追加してください"
 
 msgid "PHP GPG Module is installed and loaded."
-msgstr ""
+msgstr "PHP GPGモジュールがインストールされ、読み込まれています。"
 
 msgid "PHP GPG Module is not installed or loaded."
-msgstr ""
+msgstr "PHP GPGモジュールがインストールまたは読み込まれていません。"
 
 msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
-msgstr ""
+msgstr "php-gnupg をインストールしてください。詳細: http://php.net/manual/en/gnupg.installation.php"
 
 msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
-msgstr ""
+msgstr "php-cli と php の双方の php.ini ファイルに extension=gnupg.so を追加してください。"
 
 msgid "The private key file is defined in {0} and readable."
-msgstr ""
+msgstr "秘密鍵ファイルは {0} で定義されており、読み取り可能です。"
 
 msgid "The private key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "秘密鍵ファイルが {0} で定義されていないか、読み取れません。"
 
 msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
-msgstr ""
+msgstr "{0} の変数 passbolt.gpg.serverKey.private で秘密鍵ファイルが定義されていることを確認してください。"
 
 msgid "Ensure there is a private key armored block in the key file."
-msgstr ""
+msgstr "鍵ファイルに秘密鍵のアーマーブロックが含まれていることを確認してください。"
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "{0} で定義されている秘密鍵が存在し、ウェブサーバーユーザーからアクセス可能であることを確認してください。"
 
 msgid "There is a valid email id defined for the server key."
-msgstr ""
+msgstr "サーバーキーに有効なメールアドレスが定義されています。"
 
 msgid "The server key does not have a valid email id."
-msgstr ""
+msgstr "サーバーキーに有効なメールアドレスがありません。"
 
 msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr ""
+msgstr "{0}（または環境変数）で定義されているサーバーの公開鍵がキーリングに含まれています。"
 
 msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr ""
+msgstr "{0}（または環境変数）で定義されているサーバーの公開鍵はキーリングに含まれていません"
 
 msgid "Import the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "ウェブサーバーユーザーのキーリングにサーバーの秘密鍵をインポートしてください。"
 
 msgid "The public key file is defined in {0} and readable."
-msgstr ""
+msgstr "公開鍵ファイルは {0} で定義されており、読み取り可能です。"
 
 msgid "The public key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "公開鍵ファイルが {0} で定義されていないか、読み取れません。"
 
 msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
-msgstr ""
+msgstr "{0} の変数 passbolt.gpg.serverKey.public で公開鍵ファイルが定義されていることを確認してください。"
 
 msgid "Ensure there is a public key armored block in the key file."
-msgstr ""
+msgstr "鍵ファイルに公開鍵のアーマーブロックが含まれていることを確認してください。"
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "{0} で定義されている公開鍵が存在し、ウェブサーバーユーザーからアクセス可能であることを確認してください。"
 
 msgid "Environment"
-msgstr ""
+msgstr "環境"
 
 msgid "Config files"
-msgstr ""
+msgstr "構成ファイル"
 
 msgid "Core config"
-msgstr ""
+msgstr "コア構成"
 
 msgid "SMTP settings"
-msgstr ""
+msgstr "SMTP設定"
 
 msgid "Application configuration"
-msgstr ""
+msgstr "アプリケーション構成"
 
 msgid "Database"
 msgstr "データベース"
@@ -1856,28 +1856,28 @@ msgid "GPG Configuration"
 msgstr "GPG設定"
 
 msgid "JWT Authentication"
-msgstr ""
+msgstr "JWT認証"
 
 msgid "SSL Certificate"
-msgstr ""
+msgstr "SSL証明書"
 
 msgid "The {0} plugin is enabled."
-msgstr ""
+msgstr "{0} プラグインが有効です。"
 
 msgid "The {0} plugin is disabled."
-msgstr ""
+msgstr "{0} プラグインが無効です。"
 
 msgid "Set the environment variable {0} to true"
-msgstr ""
+msgstr "環境変数 {0} を true に設定してください"
 
 msgid "Enable the plugin in order to define SMTP settings in the database."
-msgstr ""
+msgstr "データベースでSMTP設定を定義するにはプラグインを有効にしてください。"
 
 msgid "Hostname is matching in SSL certificate."
-msgstr ""
+msgstr "SSL証明書でホスト名が一致しています。"
 
 msgid "Hostname does not match when validating certificates."
-msgstr ""
+msgstr "証明書検証時にホスト名が一致しません。"
 
 msgid "SSL access is enabled."
 msgstr "SSLアクセスが有効になっています。"
@@ -1886,64 +1886,64 @@ msgid "SSL access is not enabled. You can still proceed, but it is highly recomm
 msgstr "SSLアクセスが有効になっていません。続行することはできますが、続行する前にウェブサーバーをHTTPSを使用するように設定することを強くお勧めします。"
 
 msgid "Not using a self-signed certificate."
-msgstr ""
+msgstr "自己署名証明書は使用していません。"
 
 msgid "Using a self-signed certificate."
-msgstr ""
+msgstr "自己署名証明書を使用しています。"
 
 msgid "SSL peer certificate validates."
-msgstr ""
+msgstr "SSLピア証明書が有効です。"
 
 msgid "SSL peer certificate does not validate."
-msgstr ""
+msgstr "SSLピア証明書が有効ではありません。"
 
 msgid "The keyring is not defined."
-msgstr ""
+msgstr "キーリングが定義されていません。"
 
 msgid "The keyring directory is not accessible by the current user: {0}"
-msgstr ""
+msgstr "キーリングディレクトリは現在のユーザーがアクセスできません: {0}"
 
 msgid "Could not validate sub key data."
-msgstr ""
+msgstr "サブキーのデータを検証できませんでした。"
 
 msgid "Public key sub key id could not be found."
-msgstr ""
+msgstr "公開鍵のサブキーIDが見つかりませんでした。"
 
 msgid "Could not validate message data."
-msgstr ""
+msgstr "メッセージデータを検証できませんでした。"
 
 msgid "Recipient information could not be found."
-msgstr ""
+msgstr "受信者情報が見つかりませんでした。"
 
 msgid "The public key could not be parsed."
-msgstr ""
+msgstr "公開鍵を解析できませんでした。"
 
 msgid "The armored message must not contain an extra line before the end block."
-msgstr ""
+msgstr "アーマーされたメッセージには、終了ブロックの前に余分な改行を含めてはなりません。"
 
 msgid "The message must contain an asymmetric packet."
-msgstr ""
+msgstr "メッセージには非対称パケットが含まれている必要があります。"
 
 msgid "The message must contain a symmetric packet."
-msgstr ""
+msgstr "メッセージには対称パケットが含まれている必要があります。"
 
 msgid "The message must contain only one recipient."
-msgstr ""
+msgstr "メッセージには1人の受信者のみが含まれている必要があります。"
 
 msgid "Unknown key validation rule: {0}"
-msgstr ""
+msgstr "不明な鍵の検証ルールです: {0}"
 
 msgid "The armored message could not be validated."
-msgstr ""
+msgstr "アーマーされたメッセージを検証できませんでした。"
 
 msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
-msgstr ""
+msgstr "設定で定義されたOpenPGPサーバーキーを暗号化に使用できません。"
 
 msgid "The OpenPGP server key defined in the config cannot be used to verify signature."
-msgstr ""
+msgstr "設定で定義されたOpenPGPサーバーキーは署名の検証に使用できません。"
 
 msgid "The OpenPGP server key defined in the config cannot be used to sign."
-msgstr ""
+msgstr "設定で定義されたOpenPGPサーバーキーは署名に使用できません。"
 
 msgid "The config for the server private key fingerprint is not available or incomplete."
 msgstr "サーバーの秘密鍵指紋設定は使用できないか、不完全です。"
@@ -1952,52 +1952,52 @@ msgid "The config for the server private key passphrase is invalid."
 msgstr "サーバーの秘密鍵パスフレーズの設定が無効です。"
 
 msgid "The user public key is not available or incomplete."
-msgstr ""
+msgstr "ユーザーの公開鍵が利用できないか、不完全です。"
 
 msgid "The user public key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "ユーザーの公開鍵フィンガープリントが利用できないか、不完全です。"
 
 msgid "The user armored key is not available or incomplete."
-msgstr ""
+msgstr "ユーザーのアーマードキーが利用できないか、不完全です。"
 
 msgid "The algorithm is invalid."
-msgstr ""
+msgstr "アルゴリズムが無効です。"
 
 msgid "The fingerprint id is invalid."
-msgstr ""
+msgstr "指紋IDが無効です。"
 
 msgid "The public key id is invalid."
-msgstr ""
+msgstr "公開鍵IDが無効です。"
 
 msgid "The key size is not valid."
-msgstr ""
+msgstr "鍵サイズが無効です。"
 
 msgid "The key size must match security recommendations."
-msgstr ""
+msgstr "鍵サイズはセキュリティ推奨と一致している必要があります。"
 
 msgid "The key creation date must not be in the future."
-msgstr ""
+msgstr "キーの作成日時は未来であってはなりません。"
 
 msgid "The key must not be expired."
-msgstr ""
+msgstr "キーは期限切れであってはなりません。"
 
 msgid "The key must not include an expiry date."
-msgstr ""
+msgstr "キーに有効期限を含めてはいけません。"
 
 msgid "The key must be revoked."
-msgstr ""
+msgstr "キーは失効状態でなければなりません。"
 
 msgid "The key must not be revoked."
-msgstr ""
+msgstr "キーは失効状態であってはなりません。"
 
 msgid "The armored key must not contain an extra line before the end block."
-msgstr ""
+msgstr "アーマーされたキーには、終了ブロックの前に余分な改行を含めてはなりません。"
 
 msgid "The armored key must not contain multiple keys."
-msgstr ""
+msgstr "アーマーされたキーに複数の鍵を含めてはなりません。"
 
 msgid "The public key could not be validated."
-msgstr ""
+msgstr "公開鍵を検証できませんでした。"
 
 msgid "Could not validate permission data."
 msgstr "パーミッションデータを検証できませんでした。"
@@ -2021,7 +2021,7 @@ msgid "Could not validate resource data."
 msgstr "リソースデータを検証できませんでした。"
 
 msgid "An unexpected error occurred, please contact an administrator."
-msgstr ""
+msgstr "予期しないエラーが発生しました。管理者に連絡してください。"
 
 msgid "The server returned the following error:"
 msgstr "サーバーは次のエラーを返しました:"
@@ -2051,10 +2051,10 @@ msgid "Could not validate secret data."
 msgstr "秘密データを検証できませんでした。"
 
 msgid "The group id should be a valid UUID."
-msgstr ""
+msgstr "グループIDは有効なUUIDである必要があります。"
 
 msgid "The users ids array should contain only valid UUIDs."
-msgstr ""
+msgstr "ユーザーIDの配列は有効なUUIDのみを含める必要があります。"
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "秘密 {0} の検証に失敗しました。 {1}"
@@ -2078,40 +2078,40 @@ msgid "An OpenPGP key must be provided."
 msgstr "OpenPGP の鍵を提供する必要があります。"
 
 msgid "The authentication token could not be saved."
-msgstr ""
+msgstr "認証トークンを保存できませんでした。"
 
 msgid "The user does not exist, has not completed the setup or was deleted."
 msgstr "ユーザーが存在しないか、設定が完了していないか、削除されました。"
 
 msgid "Could not update the authentication token data."
-msgstr ""
+msgstr "認証トークンのデータを更新できませんでした。"
 
 msgid "The key provided does not belong to given user."
 msgstr "提供されたキーは、指定されたユーザーのものではありません。"
 
 msgid "The user does not exist or is not active or is disabled."
-msgstr ""
+msgstr "そのユーザーは存在しないか、アクティブでないか、あるいは無効です。"
 
 msgid "The OpenPGP key data is not valid."
 msgstr "OpenPGP の鍵データが有効ではありません。"
 
 msgid "The OpenPGP key can not be used to encrypt."
-msgstr ""
+msgstr "OpenPGP鍵は暗号化に使用できません。"
 
 msgid "The user does not exist, is already active or has been deleted."
 msgstr "そのユーザーは存在しないか、すでにアクティブか削除されています。"
 
 msgid "The user does not exist or is already active or is disabled."
-msgstr ""
+msgstr "そのユーザーは存在しないか、すでにアクティブであるか、あるいは無効です。"
 
 msgid "The user should not be a guest."
-msgstr ""
+msgstr "ユーザーはゲストであってはなりません。"
 
 msgid "Account recovery case must be a string."
-msgstr ""
+msgstr "アカウントの復旧ケースは文字列でなければなりません。"
 
 msgid "Account recovery reason not supported."
-msgstr ""
+msgstr "アカウント復旧の理由はサポートされていません。"
 
 msgid "Please provide a valid email address."
 msgstr "有効なメールアドレスを入力してください。"
@@ -2123,10 +2123,10 @@ msgid "Please register and complete the setup first."
 msgstr "最初に登録して、セットアップを完了してください。"
 
 msgid "This user has been disabled."
-msgstr ""
+msgstr "このユーザーは無効化されました。"
 
 msgid "The username {0} is a duplicate."
-msgstr ""
+msgstr "ユーザー名 {0} は重複しています。"
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "ユーザー {0} の検証に失敗しました。 {1}"
@@ -2135,7 +2135,7 @@ msgid "Validation success for user {0}"
 msgstr "ユーザー {0} の検証に成功しました"
 
 msgid "The directory {0} cannot be deleted"
-msgstr ""
+msgstr "ディレクトリ {0} を削除できません"
 
 msgid "The key {0} cannot be used to encrypt."
 msgstr "鍵 {0} は暗号化に使用できません。"
@@ -2195,10 +2195,10 @@ msgid "Invalid key. No user ID found."
 msgstr "鍵が無効です。ユーザーIDが見つかりません。"
 
 msgid "Unsupported algorithm."
-msgstr ""
+msgstr "サポートされていないアルゴリズムです。"
 
 msgid "Invalid key. No OpenPGP package found."
-msgstr ""
+msgstr "鍵が無効です。OpenPGPパッケージが見つかりませんでした。"
 
 msgid "This is not a valid OpenPGP armored marker."
 msgstr "これは有効なOpenPGPアーマー（暗号化）されたマーカーではありません。"
@@ -2348,22 +2348,22 @@ msgid "The identifier of the user who modified the folder should not be empty."
 msgstr "フォルダを修正したユーザーの識別子は空にしないでください。"
 
 msgid "The settings selected by your administrator prevent from downgrading folder."
-msgstr ""
+msgstr "管理者が選択した設定により、フォルダーのダウングレードはできません。"
 
 msgid "The metadata key does not exist."
-msgstr ""
+msgstr "メタデータキーが存在しません。"
 
 msgid "A folder of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "Personalタイプのフォルダーは他のユーザーやグループと共有できません。"
 
 msgid "You added the folder {0}"
 msgstr "フォルダ {0} を追加しました"
 
 msgid "You added a new folder"
-msgstr ""
+msgstr "新しいフォルダーを追加しました"
 
 msgid "You deleted the folder {0}"
-msgstr ""
+msgstr "フォルダ {0} を削除しました"
 
 msgid "{0} deleted the folder {1}"
 msgstr "{0}さんがフォルダ {1} を削除しました"
@@ -2372,13 +2372,13 @@ msgid "{0} shared the folder {1}"
 msgstr "{0}さんがフォルダ {1} を共有しました"
 
 msgid "{0} shared a folder"
-msgstr ""
+msgstr "{0}さんがフォルダーを共有しました"
 
 msgid "{0} edited the folder"
-msgstr ""
+msgstr "{0}さんがフォルダーを編集しました"
 
 msgid "You edited the folder"
-msgstr ""
+msgstr "フォルダーを編集しました"
 
 msgid "An email notification setting should be a boolean."
 msgstr "メール通知設定はブール値でなければなりません。"
@@ -2387,7 +2387,7 @@ msgid "Could not validate folder data."
 msgstr "フォルダデータを検証できませんでした。"
 
 msgid "The folder parent id should be a valid UUID."
-msgstr ""
+msgstr "フォルダの親IDは有効なUUIDである必要があります。"
 
 msgid "The folder parent must exist."
 msgstr "フォルダの親が存在する必要があります。"
@@ -2438,25 +2438,25 @@ msgid "View it in passbolt"
 msgstr "パスボルトで表示"
 
 msgid "You deleted a folder"
-msgstr ""
+msgstr "フォルダを削除しました"
 
 msgid "{0} deleted a folder"
-msgstr ""
+msgstr "{0} さんがフォルダを削除しました"
 
 msgid "log in passbolt"
 msgstr "パスボルトにログイン"
 
 msgid "{0} shared a folder with you"
-msgstr ""
+msgstr "{0} さんがあなたとフォルダを共有しました"
 
 msgid "You edited a folder"
-msgstr ""
+msgstr "フォルダを編集しました"
 
 msgid "{0} edited a folder"
-msgstr ""
+msgstr "{0} さんがフォルダを編集しました"
 
 msgid "The user signature could not be verified."
-msgstr ""
+msgstr "ユーザー署名を検証できませんでした。"
 
 msgid "The challenge cannot be decrypted."
 msgstr "チャレンジは復号できません。"
@@ -2486,7 +2486,7 @@ msgid "The domain is invalid. Expected: {0} and got {1}"
 msgstr "ドメインが無効です。期待されたものは {0} ですが、{1} を得ました。"
 
 msgid "The following file could not be read: {0}."
-msgstr ""
+msgstr "次のファイルを読み込めませんでした: {0}。"
 
 msgid "The authentication was a success."
 msgstr "認証は成功しました。"
@@ -2507,16 +2507,16 @@ msgid "An internal error occurred."
 msgstr "内部エラーが発生しました。"
 
 msgid "Authentication security alert"
-msgstr ""
+msgstr "認証セキュリティ警告"
 
 msgid "No active refresh token matching the request could be found."
 msgstr "リクエストに一致するアクティブなリフレッシュトークンが見つかりませんでした。"
 
 msgid "The user is not activated or disabled."
-msgstr ""
+msgstr "そのユーザーはアクティブではないか、または無効になっています。"
 
 msgid "The user is deleted."
-msgstr ""
+msgstr "ユーザーは削除されています。"
 
 msgid "The verify token is invalid."
 msgstr "検証トークンが無効です。"
@@ -2525,13 +2525,13 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "ルート {0} はJWT認証では許可されていません。"
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "JWT公開鍵を抽出できませんでした。"
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "JWT公開鍵の詳細を読み取れませんでした。"
 
 msgid "The key pair for JWT Authentication is not complete."
-msgstr ""
+msgstr "JWT認証の鍵ペアが不完全です。"
 
 msgid "The JWT public key could not be read or is not valid."
 msgstr "JWT公開鍵を読み取ることができなかったか、有効ではありません。"
@@ -2543,25 +2543,25 @@ msgid "The configuration {0} is not correctly set."
 msgstr "設定 {0} が正しく設定されていません。"
 
 msgid "The {0} directory is not writable."
-msgstr ""
+msgstr "{0} ディレクトリに書き込みできません。"
 
 msgid "The {0} directory should not be writable."
-msgstr ""
+msgstr "{0} ディレクトリは書き込み可能であってはなりません。"
 
 msgid "A valid JWT key pair was found."
-msgstr ""
+msgstr "有効なJWT鍵ペアが見つかりました。"
 
 msgid "A valid JWT key pair is missing."
-msgstr ""
+msgstr "有効なJWT鍵ペアが見つかりません。"
 
 msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
-msgstr ""
+msgstr "有効なJWT秘密鍵と公開鍵のペアを作成するには、create JWT keysスクリプトを実行してください："
 
 msgid "The refresh token should be a valid UUID."
 msgstr "リフレッシュトークンは有効なUUIDでなければなりません。"
 
 msgid "The user ID should be a valid UUID."
-msgstr ""
+msgstr "ユーザーIDは有効なUUIDである必要があります。"
 
 msgid "The refresh token provided was already used."
 msgstr "指定されたリフレッシュトークンはすでに使用されています。"
@@ -2600,7 +2600,7 @@ msgid "An unknown user with IP: {0}  attempted to steal your login data."
 msgstr "IP: {0} を持つ不明なユーザーがあなたのログインデータを盗もうとしました。"
 
 msgid "Please get in touch with one of your administrators."
-msgstr ""
+msgstr "管理者に連絡してください。"
 
 msgid "This is not a valid locale."
 msgstr "これは有効なロケールではありません。"
@@ -2609,10 +2609,10 @@ msgid "This is not a valid {0}."
 msgstr "これは有効な {0} ではありません。"
 
 msgid "The locale should be a string."
-msgstr ""
+msgstr "ロケールは文字列である必要があります。"
 
 msgid "The strategy should extend the class: {0}"
-msgstr ""
+msgstr "ストラテジーはクラス {0} を継承する必要があります"
 
 msgid "The action log identifier should be a valid UUID."
 msgstr "アクションログの識別子は有効 UUIDでなければなりません。"
@@ -2645,7 +2645,7 @@ msgid "Could not validate action log data."
 msgstr "アクションログデータを検証できませんでした。"
 
 msgid "The date {0} should be after the date {1}."
-msgstr ""
+msgstr "日付 {0} は日付 {1} より後である必要があります。"
 
 msgid "The identifier should be not be empty."
 msgstr "識別子は空にしないでください。"
@@ -2717,589 +2717,589 @@ msgid "Could not validate secret history data."
 msgstr "秘密履歴データを検証できませんでした。"
 
 msgid "Invalid pagination limit set for metadata endpoint."
-msgstr ""
+msgstr "メタデータエンドポイントで無効なページネーション制限が設定されました。"
 
 msgid "Could not validate the metadata key data."
-msgstr ""
+msgstr "メタデータキー データを検証できませんでした。"
 
 msgid "The metadata key identifier should be a UUID."
-msgstr ""
+msgstr "メタデータキーの識別子はUUIDである必要があります。"
 
 msgid "The private key identifier should be a UUID."
-msgstr ""
+msgstr "秘密鍵の識別子はUUIDである必要があります。"
 
 msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr ""
+msgstr "メタデータアップグレードエンドポイントで無効なページネーション制限が設定されました。"
 
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
-msgstr ""
+msgstr "missing_metadata_key_ids は管理者のみが使用できます。"
 
 msgid "An object type is required."
 msgstr "オブジェクト型が必要です。"
 
 msgid "The object type is invalid."
-msgstr ""
+msgstr "オブジェクトの種類が無効です。"
 
 msgid "A passphrase is required."
-msgstr ""
+msgstr "パスフレーズが必要です。"
 
 msgid "The passphrase should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "パスフレーズは有効なBMP-UTF8文字列でなければなりません。"
 
 msgid "A fingerprint is required."
 msgstr "指紋が必要です。"
 
 msgid "A fingerprint should not be greater than 51 characters."
-msgstr ""
+msgstr "指紋は<b>51</b>文字を超えてはいけません。"
 
 msgid "A fingerprint should not be empty."
-msgstr ""
+msgstr "指紋は空にしないでください。"
 
 msgid "The fingerprint should be a valid alphanumeric string."
 msgstr "指紋は有効な英数字の文字列である必要があります。"
 
 msgid "The armored key should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "アーマードキーは有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The value is not a valid OpenPGP private key."
 msgstr "値は有効なOpenPGP秘密鍵ではありません。"
 
 msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
-msgstr ""
+msgstr "指紋が、OpenPGP秘密鍵の指紋と一致しません。"
 
 msgid "A domain is required."
-msgstr ""
+msgstr "ドメインが必要です。"
 
 msgid "The domain should not be empty."
-msgstr ""
+msgstr "ドメインは空にしないでください。"
 
 msgid "The domain should match current instance URL."
-msgstr ""
+msgstr "ドメインは現在のインスタンスURLと一致しなければなりません。"
 
 msgid "Private keys are required."
-msgstr ""
+msgstr "秘密鍵が必要です。"
 
 msgid "Need at least one metadata private key."
-msgstr ""
+msgstr "メタデータの秘密鍵が少なくとも1つ必要です。"
 
 msgid "A data is required."
-msgstr ""
+msgstr "データが必要です。"
 
 msgid "The data should not be empty."
-msgstr ""
+msgstr "データは空にしないでください。"
 
 msgid "The data should be a valid ASCII string."
-msgstr ""
+msgstr "データは有効なASCII文字列である必要があります。"
 
 msgid "The modified date should be a valid ISO 80601 date."
-msgstr ""
+msgstr "変更日は有効なISO 80601日付である必要があります。"
 
 msgid "The setting should be a valid boolean."
-msgstr ""
+msgstr "設定は有効なブール値でなければなりません。"
 
 msgid "The setting is required."
-msgstr ""
+msgstr "設定が必要です。"
 
 msgid "The data is required."
-msgstr ""
+msgstr "データが必要です。"
 
 msgid "A modified date is required."
-msgstr ""
+msgstr "変更日が必要です。"
 
 msgid "The modified date should not be empty."
-msgstr ""
+msgstr "変更日は空にしないでください。"
 
 msgid "The setting should not be empty."
-msgstr ""
+msgstr "設定は空にしないでください。"
 
 msgid "The setting should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "設定は有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The setting should be one of the following: {0}."
-msgstr ""
+msgstr "設定は次のいずれかでなければなりません: {0}。"
 
 msgid "The content type needs to be enabled in order to be set as default."
-msgstr ""
+msgstr "コンテンツタイプをデフォルトに設定するには、有効にする必要があります。"
 
 msgid "Both v4 and v5 settings cannot be disabled."
-msgstr ""
+msgstr "v4 と v5 の両方の設定を無効にすることはできません。"
 
 msgid "The metadata key should not be deleted."
-msgstr ""
+msgstr "メタデータ鍵を削除すべきではありません。"
 
 msgid "A metadata key identifier is required."
-msgstr ""
+msgstr "メタデータ鍵の識別子が必要です。"
 
 msgid "The metadata key identifier should not be empty."
-msgstr ""
+msgstr "メタデータ鍵の識別子は空にしないでください。"
 
 msgid "The metadata key identifier should be a valid UUID."
-msgstr ""
+msgstr "メタデータ鍵の識別子は有効なUUIDでなければなりません。"
 
 msgid "A metadata key type is required."
-msgstr ""
+msgstr "メタデータ鍵のタイプが必要です。"
 
 msgid "The metadata key type should not be empty."
-msgstr ""
+msgstr "メタデータ鍵のタイプは空にしないでください。"
 
 msgid "The metadata key type should be shared key."
-msgstr ""
+msgstr "メタデータ鍵のタイプは共有鍵である必要があります。"
 
 msgid "A metadata is required."
-msgstr ""
+msgstr "メタデータが必要です。"
 
 msgid "A modified by is required."
-msgstr ""
+msgstr "変更者が必要です。"
 
 msgid "The modified by should not be empty."
-msgstr ""
+msgstr "変更者は空にしないでください。"
 
 msgid "The modified by should be a valid UUID."
-msgstr ""
+msgstr "変更者は有効なUUIDである必要があります。"
 
 msgid "Metadata settings endpoints are disabled."
-msgstr ""
+msgstr "メタデータ設定のエンドポイントは無効になっています。"
 
 msgid "Folder can not be shared"
-msgstr ""
+msgstr "フォルダは共有できません"
 
 msgid "Few fields are missing for the V5."
-msgstr ""
+msgstr "V5に不足しているフィールドがあります。"
 
 msgid "Missing fields: {0}"
-msgstr ""
+msgstr "不足しているフィールド: {0}"
 
 msgid "V4 related fields are not supported for V5."
-msgstr ""
+msgstr "V5ではV4関連のフィールドはサポートされていません。"
 
 msgid "Superfluous fields: {0}"
-msgstr ""
+msgstr "不要なフィールド: {0}"
 
 msgid "Allow usage of personal keys"
-msgstr ""
+msgstr "個人用鍵の使用を許可する"
 
 msgid "True"
-msgstr ""
+msgstr "有効"
 
 msgid "False"
-msgstr ""
+msgstr "無効"
 
 msgid "Zero-knowledge key share"
-msgstr ""
+msgstr "ゼロナレッジ鍵共有"
 
 msgid "The metadata private key data must be an array."
-msgstr ""
+msgstr "メタデータ秘密鍵データは配列である必要があります。"
 
 msgid "No resource type mapping for ID '{0}'"
-msgstr ""
+msgstr "ID「{0}」に対するリソースタイプのマッピングがありません"
 
 msgid "Default resource types"
-msgstr ""
+msgstr "デフォルトのリソースタイプ"
 
 msgid "Default folder type"
-msgstr ""
+msgstr "デフォルトのフォルダタイプ"
 
 msgid "Default comment type"
-msgstr ""
+msgstr "デフォルトのコメントタイプ"
 
 msgid "Allow creation of V5 resources"
-msgstr ""
+msgstr "V5リソースの作成を許可する"
 
 msgid "Allow creation of V5 folders"
-msgstr ""
+msgstr "V5フォルダの作成を許可する"
 
 msgid "Allow creation of V5 tags"
-msgstr ""
+msgstr "V5タグの作成を許可する"
 
 msgid "Allow creation of V5 comments"
-msgstr ""
+msgstr "V5コメントの作成を許可する"
 
 msgid "Allow creation of V4 resources"
-msgstr ""
+msgstr "V4リソースの作成を許可する"
 
 msgid "Allow creation of V4 folders"
-msgstr ""
+msgstr "V4フォルダの作成を許可する"
 
 msgid "Allow creation of V4 tags"
-msgstr ""
+msgstr "V4タグの作成を許可する"
 
 msgid "No permission found for the entity: {0}"
-msgstr ""
+msgstr "エンティティ「{0}」の権限が見つかりません"
 
 msgid "The identifier of the user who created the metadata key should be a valid UUID."
-msgstr ""
+msgstr "メタデータ鍵を作成したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The creator is required."
-msgstr ""
+msgstr "作成者が必要です。"
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
-msgstr ""
+msgstr "メタデータ鍵を修正したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "A expired date is required."
-msgstr ""
+msgstr "有効期限が必要です。"
 
 msgid "The expired date should not be empty."
-msgstr ""
+msgstr "有効期限は空にしないでください。"
 
 msgid "The modifier is required."
-msgstr ""
+msgstr "変更者が必要です。"
 
 msgid "The fingerprint is already in use."
-msgstr ""
+msgstr "この指紋はすでに使用されています。"
 
 msgid "Already two metadata keys are active."
-msgstr ""
+msgstr "すでに2つのメタデータ鍵がアクティブです。"
 
 msgid "You cannot reuse the user key."
-msgstr ""
+msgstr "ユーザー鍵を再利用することはできません。"
 
 msgid "The user does not exist or is not active or is deleted."
-msgstr ""
+msgstr "ユーザーが存在しないか、アクティブでないか、削除されています。"
 
 msgid "The metadata key id & user id combination is already in use."
-msgstr ""
+msgstr "メタデータ鍵IDとユーザーIDの組み合わせは既に使用されています。"
 
 msgid "The data is not valid. Please make sure it is encrypted for the correct key."
-msgstr ""
+msgstr "データが有効ではありません。正しい鍵に対して暗号化されていることを確認してください。"
 
 msgid "The entity must be an array."
-msgstr ""
+msgstr "エンティティは配列である必要があります。"
 
 msgid "Entity {0} not found."
-msgstr ""
+msgstr "エンティティ {0} が見つかりません。"
 
 msgid "Could not validate the metadata key data for the entity with ID: {0}."
-msgstr ""
+msgstr "エンティティID {0} のメタデータ鍵データを検証できませんでした。"
 
 msgid "{0} created a new metadata key"
-msgstr ""
+msgstr "{0} が新しいメタデータ鍵を作成しました"
 
 msgid "You created a new metadata key"
-msgstr ""
+msgstr "新しいメタデータ鍵を作成しました"
 
 msgid "{0} deleted a metadata key"
-msgstr ""
+msgstr "{0} がメタデータ鍵を削除しました"
 
 msgid "You deleted a metadata key"
-msgstr ""
+msgstr "メタデータ鍵を削除しました"
 
 msgid "{0} has expired a metadata key"
-msgstr ""
+msgstr "{0} がメタデータ鍵を期限切れにしました"
 
 msgid "You have expired a metadata key"
-msgstr ""
+msgstr "メタデータ鍵を期限切れにしました"
 
 msgid "{0} edited the metadata settings"
-msgstr ""
+msgstr "{0} がメタデータ設定を編集しました"
 
 msgid "You edited the metadata settings"
-msgstr ""
+msgstr "メタデータ設定を編集しました"
 
 msgid "No server metadata private key found."
-msgstr ""
+msgstr "サーバのメタデータ秘密鍵が見つかりません。"
 
 msgid "Unable to decrypt the metadata private key data."
-msgstr ""
+msgstr "メタデータ秘密鍵データを復号できません。"
 
 msgid "The server is able to decrypt the metadata private key."
-msgstr ""
+msgstr "サーバはメタデータ秘密鍵を復号できます。"
 
 msgid "Unable to decrypt the metadata private key."
-msgstr ""
+msgstr "メタデータ秘密鍵を復号できません。"
 
 msgid "The metadata key does not exist or has been deleted."
-msgstr ""
+msgstr "メタデータ鍵が存在しないか、削除されています。"
 
 msgid "The metadata key has already been deleted."
-msgstr ""
+msgstr "メタデータ鍵はすでに削除されています。"
 
 msgid "The metadata key should be marked as expired first."
-msgstr ""
+msgstr "メタデータ鍵は先に期限切れとしてマークされる必要があります。"
 
 msgid "The metadata key is still in use, migrate the remaining items to the new key first."
-msgstr ""
+msgstr "メタデータ鍵はまだ使用中です。残りの項目を新しい鍵に移行してください。"
 
 msgid "The metadata key could not be deleted."
-msgstr ""
+msgstr "メタデータ鍵を削除できませんでした。"
 
 msgid "The metadata key fingerprint is invalid."
-msgstr ""
+msgstr "メタデータ鍵の指紋が無効です。"
 
 msgid "The metadata key is already marked as expired."
-msgstr ""
+msgstr "メタデータ鍵はすでに期限切れとしてマークされています。"
 
 msgid "The metadata key could not be updated."
-msgstr ""
+msgstr "メタデータ鍵を更新できませんでした。"
 
 msgid "The metadata key could not be saved."
-msgstr ""
+msgstr "メタデータ鍵を保存できませんでした。"
 
 msgid "Could not save the metadata key, please try again later."
-msgstr ""
+msgstr "メタデータ鍵を保存できませんでした。後でもう一度試してください。"
 
 msgid "Server metadata private key was not found."
-msgstr ""
+msgstr "サーバのメタデータ秘密鍵が見つかりませんでした。"
 
 msgid "Metadata key could not be shared with user id: {0}."
-msgstr ""
+msgstr "メタデータ鍵をユーザーID「{0}」と共有できませんでした。"
 
 msgid "The data could not be validated."
-msgstr ""
+msgstr "データを検証できませんでした。"
 
 msgid "The data could not be saved."
-msgstr ""
+msgstr "データを保存できませんでした。"
 
 msgid "The metadata private key should not be empty."
-msgstr ""
+msgstr "メタデータ秘密鍵は空にしないでください。"
 
 msgid "The metadata private key cleartext data should be in JSON format."
-msgstr ""
+msgstr "メタデータ秘密鍵の平文データはJSON形式である必要があります。"
 
 msgid "The metadata private key cleartext data should not be empty."
-msgstr ""
+msgstr "メタデータ秘密鍵の平文データは空にしないでください。"
 
 msgid "The metadata private key cleartext data is not valid."
-msgstr ""
+msgstr "メタデータ秘密鍵の平文データが有効ではありません。"
 
 msgid "The OpenPGP user key cannot be found."
-msgstr ""
+msgstr "OpenPGPユーザー鍵が見つかりません。"
 
 msgid "Could not validate the settings."
-msgstr ""
+msgstr "設定を検証できませんでした。"
 
 msgid "The server metadata private key is required to enable these settings."
-msgstr ""
+msgstr "これらの設定を有効にするにはサーバのメタデータ秘密鍵が必要です。"
 
 msgid "The server metadata key id is required."
-msgstr ""
+msgstr "サーバのメタデータ鍵IDが必要です。"
 
 msgid "The server metadata private key is invalid."
-msgstr ""
+msgstr "サーバのメタデータ秘密鍵が無効です。"
 
 msgid "The metadata private key could not be created."
-msgstr ""
+msgstr "メタデータ秘密鍵を作成できませんでした。"
 
 msgid "Please try again later."
-msgstr ""
+msgstr "後でもう一度お試しください。"
 
 msgid "The metadata private key could not be validated."
-msgstr ""
+msgstr "メタデータ秘密鍵を検証できませんでした。"
 
 msgid "The request data is invalid."
-msgstr ""
+msgstr "リクエストデータが無効です。"
 
 msgid "The metadata key is already shared with the user."
-msgstr ""
+msgstr "メタデータ鍵はすでにそのユーザーと共有されています。"
 
 msgid "The metadata private keys could not be created."
-msgstr ""
+msgstr "メタデータ秘密鍵を作成できませんでした。"
 
 msgid "The metadata private key data is not valid."
-msgstr ""
+msgstr "メタデータ秘密鍵データが有効ではありません。"
 
 msgid "The metadata private key does not exist or has been deleted."
-msgstr ""
+msgstr "メタデータ秘密鍵が存在しないか、削除されています。"
 
 msgid "The metadata private key was already edited by the user."
-msgstr ""
+msgstr "メタデータ秘密鍵はすでにそのユーザーによって編集されています。"
 
 msgid "The metadata private key could not be updated."
-msgstr ""
+msgstr "メタデータ秘密鍵を更新できませんでした。"
 
 msgid "The metadata session key could not be saved."
-msgstr ""
+msgstr "メタデータセッション鍵を保存できませんでした。"
 
 msgid "Could not save the metadata session key, please try again later."
-msgstr ""
+msgstr "メタデータセッション鍵を保存できませんでした。後でもう一度試してください。"
 
 msgid "The data must be a string."
-msgstr ""
+msgstr "データは文字列でなければなりません。"
 
 msgid "The metadata session key identifier should be a UUID."
-msgstr ""
+msgstr "メタデータセッション鍵の識別子はUUIDである必要があります。"
 
 msgid "The metadata session key does not exist or does not belong to this user."
-msgstr ""
+msgstr "メタデータセッション鍵が存在しないか、このユーザーのものではありません。"
 
 msgid "The metadata session key could not be deleted."
-msgstr ""
+msgstr "メタデータセッション鍵を削除できませんでした。"
 
 msgid "Could not validate the data."
-msgstr ""
+msgstr "データを検証できませんでした。"
 
 msgid "The metadata session key data is identical."
-msgstr ""
+msgstr "メタデータセッション鍵のデータは同一です。"
 
 msgid "The metadata session key data has changed."
-msgstr ""
+msgstr "メタデータセッション鍵のデータが変更されました。"
 
 msgid "Could not save the metadata session keys, please try again later."
-msgstr ""
+msgstr "メタデータセッション鍵を保存できませんでした。後でもう一度試してください。"
 
 msgid "Could not prepare private key for server key."
-msgstr ""
+msgstr "サーバ鍵用の秘密鍵を準備できませんでした。"
 
 msgid "User key not found."
-msgstr ""
+msgstr "ユーザー鍵が見つかりません。"
 
 msgid "Could not prepare private key for user id {0}."
-msgstr ""
+msgstr "ユーザーID {0} の秘密鍵を準備できませんでした。"
 
 msgid "No folders to migrate."
-msgstr ""
+msgstr "移行するフォルダはありません。"
 
 msgid "Folder ID \"{0}\" is already V5"
-msgstr ""
+msgstr "フォルダID \"{0}\" はすでにV5です"
 
 msgid "No permission found for folder ID {0}"
-msgstr ""
+msgstr "フォルダID {0} の権限が見つかりません"
 
 msgid "No user provided."
-msgstr ""
+msgstr "ユーザーが指定されていません。"
 
 msgid "The metadata could not be encrypted for permission id: {0}."
-msgstr ""
+msgstr "パーミッションID「{0}」についてメタデータを暗号化できませんでした。"
 
 msgid "No OpenPGP key found for the user."
-msgstr ""
+msgstr "そのユーザーのOpenPGP鍵が見つかりません。"
 
 msgid "The metadata could not be encrypted with the user id: {0}."
-msgstr ""
+msgstr "ユーザーID「{0}」でメタデータを暗号化できませんでした。"
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
-msgstr ""
+msgstr "メタデータ鍵ID「{0}」でメタデータを暗号化できませんでした。"
 
 msgid "Unable to migrate folder ID: {0} to V5."
-msgstr ""
+msgstr "フォルダID {0} をV5に移行できませんでした。"
 
 msgid "Migrating {0}..."
-msgstr ""
+msgstr "{0} を移行中…"
 
 msgid "Errors (encoded): {0}"
-msgstr ""
+msgstr "エラー（エンコード済）: {0}"
 
 msgid "Migration process for {0} finished."
-msgstr ""
+msgstr "{0} の移行が完了しました。"
 
 msgid "No resources to migrate."
-msgstr ""
+msgstr "移行するリソースはありません。"
 
 msgid "Resource ID \"{0}\" is already V5"
-msgstr ""
+msgstr "リソースID \"{0}\" はすでにV5です"
 
 msgid "No permission found for resource ID {0}"
-msgstr ""
+msgstr "リソースID {0} の権限が見つかりません"
 
 msgid "Unable to migrate resource ID: {0} to V5."
-msgstr ""
+msgstr "リソースID {0} をV5に移行できませんでした。"
 
 msgid "Could not validate metadata key data."
-msgstr ""
+msgstr "メタデータ鍵データを検証できませんでした。"
 
 msgid "Could not import the metadata OpenPGP key."
-msgstr ""
+msgstr "メタデータ用OpenPGP鍵をインポートできませんでした。"
 
 msgid "The metadata key is not available or incomplete."
-msgstr ""
+msgstr "メタデータ鍵が利用できないか、不完全です。"
 
 msgid "The metadata key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "メタデータ鍵の指紋が利用できないか、不完全です。"
 
 msgid "The metadata armored key is not available or incomplete."
-msgstr ""
+msgstr "メタデータのアーマード鍵が利用できないか、不完全です。"
 
 msgid "The resource metadata key data could not be updated."
-msgstr ""
+msgstr "リソースのメタデータ鍵データを更新できませんでした。"
 
 msgid "The request data should not be empty."
-msgstr ""
+msgstr "リクエストデータは空にしないでください。"
 
 msgid "The request data is too large."
-msgstr ""
+msgstr "リクエストデータが大きすぎます。"
 
 msgid "The provided modified date does not match."
-msgstr ""
+msgstr "指定された変更日が一致しません。"
 
 msgid "The provided modified by does not match."
-msgstr ""
+msgstr "指定された変更者が一致しません。"
 
 msgid "The user identifier should be a UUID."
-msgstr ""
+msgstr "ユーザー識別子はUUIDでなければなりません。"
 
 msgid "The user metadata private keys could not be deleted."
-msgstr ""
+msgstr "ユーザーのメタデータ秘密鍵を削除できませんでした。"
 
 msgid "The user metadata session keys could not be deleted."
-msgstr ""
+msgstr "ユーザーのメタデータセッション鍵を削除できませんでした。"
 
 msgid "V5 metadata format is not enabled."
-msgstr ""
+msgstr "V5メタデータ形式は有効になっていません。"
 
 msgid "Resource creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "暗号化されたメタデータでのリソース作成・変更は許可されていません。"
 
 msgid "Folder creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "暗号化されたメタデータでのフォルダ作成・変更は許可されていません。"
 
 msgid "Tag creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "暗号化されたメタデータでのタグ作成・変更は許可されていません。"
 
 msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "平文メタデータでのリソース作成・変更は許可されていません。"
 
 msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "平文メタデータでのフォルダ作成・変更は許可されていません。"
 
 msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "平文メタデータでのタグ作成・変更は許可されていません。"
 
 msgid "You created a new metadata key."
-msgstr ""
+msgstr "新しいメタデータ鍵を作成しました。"
 
 msgid "{0} created a new metadata key."
-msgstr ""
+msgstr "{0} が新しいメタデータ鍵を作成しました。"
 
 msgid "You deleted a metadata key."
-msgstr ""
+msgstr "メタデータ鍵を削除しました。"
 
 msgid "{0} deleted a metadata key."
-msgstr ""
+msgstr "{0} がメタデータ鍵を削除しました。"
 
 msgid "You have expired a metadata key."
-msgstr ""
+msgstr "メタデータ鍵を期限切れにしました。"
 
 msgid "{0} has expired a metadata key."
-msgstr ""
+msgstr "{0} がメタデータ鍵を期限切れにしました。"
 
 msgid "You edited the metadata settings."
-msgstr ""
+msgstr "メタデータ設定を編集しました。"
 
 msgid "{0} edited the metadata settings."
-msgstr ""
+msgstr "{0} がメタデータ設定を編集しました。"
 
 msgid "You have created a new folder."
 msgstr "新しいフォルダを作成しました."
 
 msgid "{0} has shared a folder with you."
-msgstr ""
+msgstr "{0} さんがフォルダを共有しました。"
 
 msgid "You have edited a folder."
-msgstr ""
+msgstr "フォルダを編集しました。"
 
 msgid "You have saved a new password"
 msgstr "新しいパスワードを保存しました"
 
 msgid "You have created a new password."
-msgstr ""
+msgstr "新しいパスワードを作成しました。"
 
 msgid "{0} shared a resource with you"
-msgstr ""
+msgstr "{0} さんがリソースを共有しました"
 
 msgid "{0} shared a resource with you."
-msgstr ""
+msgstr "{0} さんがリソースを共有しました。"
 
 msgid "You have edited a resource."
-msgstr ""
+msgstr "リソースを編集しました。"
 
 msgid "Information about the transfer is required."
 msgstr "転送に関する情報が必要です。"
@@ -3347,7 +3347,7 @@ msgid "The current page cannot be greater than {0}"
 msgstr "現在のページは{0}より大きくすることはできません"
 
 msgid "The total number of pages should be a non negative integer."
-msgstr ""
+msgstr "総ページ数は負でない整数である必要があります。"
 
 msgid "The total number of pages is required."
 msgstr "総ページ数が必要です。"
@@ -3410,22 +3410,22 @@ msgid "The authentication token is expired."
 msgstr "認証トークンが期限切れです。"
 
 msgid "Unable to authenticate to Duo."
-msgstr ""
+msgstr "Duo に対して認証できません。"
 
 msgid "Unable to validate the Duo callback data."
-msgstr ""
+msgstr "Duo コールバックデータを検証できませんでした。"
 
 msgid "A Duo state cookie is required."
-msgstr ""
+msgstr "Duo stateクッキーが必要です。"
 
 msgid "The Duo state cookie value should be a string."
-msgstr ""
+msgstr "Duo stateクッキーの値は文字列である必要があります。"
 
 msgid "The Duo state cookie should be a valid UUID."
-msgstr ""
+msgstr "Duo stateクッキーは有効なUUIDである必要があります。"
 
 msgid "This entrypoint is not available anymore."
-msgstr ""
+msgstr "このエンドポイントはもう利用できません。"
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "この認証プロバイダーはあなたの組織では有効になっていません。"
@@ -3446,7 +3446,7 @@ msgid "The multi-factor authentication is not required."
 msgstr "多要素認証は必要ありません。"
 
 msgid "No valid multi-factor authentication settings found."
-msgstr ""
+msgstr "有効な多要素認証の設定が見つかりませんでした。"
 
 msgid "No valid multi-factor authentication settings found for this provider."
 msgstr "このプロバイダーに有効な多要素認証設定が見つかりません。"
@@ -3464,7 +3464,7 @@ msgid "Please provide the one-time password."
 msgstr "ワンタイムパスワードを入力してください。"
 
 msgid "You have been logged out due to too many failed attempts."
-msgstr ""
+msgstr "失敗回数が多すぎるためログアウトさせられました。"
 
 msgid "The user id is not valid."
 msgstr "ユーザーIDが有効ではありません。"
@@ -3479,28 +3479,28 @@ msgid "Please setup the Yubikey settings."
 msgstr "YubiKey設定を設定してください。"
 
 msgid "A state is required."
-msgstr ""
+msgstr "State が必要です。"
 
 msgid "The state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "State は有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The state should not be empty."
-msgstr ""
+msgstr "State を空にすることはできません。"
 
 msgid "A duo code is required."
-msgstr ""
+msgstr "Duoコードが必要です。"
 
 msgid "The duo code state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Duoコードのstateは有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The duo code should not be empty."
-msgstr ""
+msgstr "Duoコードを空にすることはできません。"
 
 msgid "The error description should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "エラーの説明は有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The error description state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "エラー説明のstateは有効なBMP-UTF8文字列である必要があります。"
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "ワンタイムパスワードの検証中に問題が発生しました。"
@@ -3527,10 +3527,10 @@ msgid "This yubikey is not associated with this user."
 msgstr "このyubikeyはこのユーザーに関連付けられていません。"
 
 msgid "No Duo error provided"
-msgstr ""
+msgstr "Duoエラーが提供されませんでした"
 
 msgid "No Duo error description provided"
-msgstr ""
+msgstr "Duoエラーの説明が提供されませんでした"
 
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "あなたの多要素認証の設定はあなたによってリセットされました。"
@@ -3542,64 +3542,64 @@ msgid "Your multi-factor authentication settings were reset by an administrator.
 msgstr "あなたの多要素認証設定は管理者によってリセットされました。"
 
 msgid "The token should reference an active Duo callback authentication token."
-msgstr ""
+msgstr "トークンはアクティブなDuoコールバック認証トークンを参照する必要があります。"
 
 msgid "An authentication token state is required."
-msgstr ""
+msgstr "認証トークンのstateが必要です。"
 
 msgid "The Duo state should match the authentication token state."
-msgstr ""
+msgstr "Duo stateは認証トークンのstateと一致している必要があります。"
 
 msgid "Could not enable Duo MFA provider."
-msgstr ""
+msgstr "Duo MFAプロバイダを有効にできませんでした。"
 
 msgid "Unable to verify Duo authentication."
-msgstr ""
+msgstr "Duo認証を検証できません。"
 
 msgid "Could not validate the Duo settings."
-msgstr ""
+msgstr "Duoの設定を検証できませんでした。"
 
 msgid "Could not login using Duo MFA provider."
-msgstr ""
+msgstr "Duo MFAプロバイダを使用してログインできませんでした。"
 
 msgid "Unable to connect to Duo services."
-msgstr ""
+msgstr "Duoサービスに接続できません。"
 
 msgid "Unable to verify Duo code against Duo service."
-msgstr ""
+msgstr "DuoサービスでDuoコードを確認できません。"
 
 msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
-msgstr ""
+msgstr "Duo認証の呼び出し元エンドポイントが組織設定のDuoホスト名と一致しません。"
 
 msgid "The duo authentication subscriber does not match the operator username."
-msgstr ""
+msgstr "Duo認証のサブスクライバーがオペレーターのユーザー名と一致しません。"
 
 msgid "No configuration set for Duo client ID."
-msgstr ""
+msgstr "DuoクライアントIDに設定されている構成がありません。"
 
 msgid "No configuration set for Duo API hostname."
-msgstr ""
+msgstr "Duo APIホスト名に設定されている構成がありません。"
 
 msgid "No configuration set for Duo client secret."
-msgstr ""
+msgstr "Duoクライアント秘密鍵に設定されている構成がありません。"
 
 msgid "This is not a valid Duo client secret."
-msgstr ""
+msgstr "これは有効なDuoクライアント秘密鍵ではありません。"
 
 msgid "This is not a valid Duo API hostname."
-msgstr ""
+msgstr "これは有効なDuo APIホスト名ではありません。"
 
 msgid "This is not a valid Duo client ID."
-msgstr ""
+msgstr "これは有効なDuoクライアントIDではありません。"
 
 msgid "Cannot verify Duo settings."
-msgstr ""
+msgstr "Duo設定を確認できません。"
 
 msgid "Could not validate Duo configuration"
 msgstr "Duoの設定を検証できませんでした"
 
 msgid "The property {0} is visible by administrators only."
-msgstr ""
+msgstr "プロパティ {0} は管理者のみが閲覧できます。"
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "指定されたMFAトークンが存在しないか、非アクティブです。"
@@ -3644,7 +3644,7 @@ msgid "Could not validate Yubikey configuration."
 msgstr "Yubikey設定を検証できませんでした。"
 
 msgid "Duo Multi Factor Authentication"
-msgstr ""
+msgstr "Duo 多要素認証"
 
 msgid "Something went wrong."
 msgstr "何か問題が発生しました！"
@@ -3653,13 +3653,13 @@ msgid "Please try again later or contact your administrator."
 msgstr "後でもう一度試すか、管理者に問い合わせてください。"
 
 msgid "Logs"
-msgstr ""
+msgstr "ログ"
 
 msgid "Retry"
-msgstr ""
+msgstr "再試行"
 
 msgid "Getting started with Duo"
-msgstr ""
+msgstr "Duo の使い始め"
 
 msgid "How does it work?"
 msgstr "仕組みは？"
@@ -3668,28 +3668,28 @@ msgid "You sign in to passbolt just like you normally do."
 msgstr "普段と同じようにパスボルトにサインインします。"
 
 msgid "Use you 2FA device to authenticate."
-msgstr ""
+msgstr "2FAデバイスを使用して認証してください。"
 
 msgid "Follow the procedure to login."
-msgstr ""
+msgstr "手順に従ってログインしてください。"
 
 msgid "Cancel"
 msgstr "キャンセル"
 
 msgid "Get started"
-msgstr ""
+msgstr "始める"
 
 msgid "Requirements"
 msgstr "要件"
 
 msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr ""
+msgstr "続行するには、Duoモバイルアプリケーションをインストールするか、Duoがサポートする認証用デバイスを用意する必要があります。"
 
 msgid "For the list of supported devices, see:"
-msgstr ""
+msgstr "サポートされているデバイスのリストについては、次を参照してください："
 
 msgid "Duo authentication methods"
-msgstr ""
+msgstr "Duo認証方法"
 
 msgid "Learn more"
 msgstr "詳細情報"
@@ -3707,10 +3707,10 @@ msgid "Multi factor authentication verification"
 msgstr "多要素認証の検証"
 
 msgid "Multi Factor Authentication Required"
-msgstr ""
+msgstr "多要素認証が必要です"
 
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
-msgstr ""
+msgstr "Duo を使用した追加認証が必要です。確認のためDuoにリダイレクトされます。"
 
 msgid "Multi factor authentication"
 msgstr "多要素認証"
@@ -3788,7 +3788,7 @@ msgid "verify"
 msgstr "検証"
 
 msgid "Sign-in with Duo"
-msgstr ""
+msgstr "Duoでサインイン"
 
 msgid "Or try with another provider"
 msgstr "または別のプロバイダを試してみてください"
@@ -3812,46 +3812,46 @@ msgid "Log in passbolt"
 msgstr "パスボルトにログイン"
 
 msgid "The automatic_expiry field must be true."
-msgstr ""
+msgstr "automatic_expiry フィールドは true でなければなりません。"
 
 msgid "The automatic_update field must be true."
-msgstr ""
+msgstr "automatic_update フィールドは true でなければなりません。"
 
 msgid "The value should be an array."
-msgstr ""
+msgstr "値は配列である必要があります。"
 
 msgid "{0} marked several passwords as expired"
-msgstr ""
+msgstr "{0} さんが複数のパスワードを期限切れとしてマークしました"
 
 msgid "Some of your passwords expired"
-msgstr ""
+msgstr "あなたのパスワードの一部が期限切れになりました"
 
 msgid "{0} marked the password {1} as expired"
-msgstr ""
+msgstr "{0} さんがパスワード {1} を期限切れとしてマークしました"
 
 msgid "{0} marked a password as expired"
-msgstr ""
+msgstr "{0} さんがパスワードを期限切れとしてマークしました"
 
 msgid "You edited the password expiry settings"
-msgstr ""
+msgstr "パスワード有効期限の設定を編集しました"
 
 msgid "{0} edited the password expiry settings"
-msgstr ""
+msgstr "{0} さんがパスワード有効期限の設定を編集しました"
 
 msgid "The send password expire setting should be a boolean."
-msgstr ""
+msgstr "パスワード期限切れ通知の設定はブール値である必要があります。"
 
 msgid "The password expiry setting does not exist."
-msgstr ""
+msgstr "パスワード有効期限の設定が存在しません。"
 
 msgid "Could not validate the password expiry settings."
-msgstr ""
+msgstr "パスワード有効期限の設定を検証できませんでした。"
 
 msgid "The password expiry settings have been updated."
-msgstr ""
+msgstr "パスワード有効期限の設定が更新されました。"
 
 msgid "View them in passbolt"
-msgstr ""
+msgstr "パスボルトで表示する"
 
 msgid "{0} resources were affected."
 msgstr "{0}個のリソースが影響を受けました。"
@@ -3860,244 +3860,244 @@ msgid "It would be too much to list them here, but you can go check them on pass
 msgstr "ここではご紹介しきれないほどですが、パスボルト上でご確認いただけます。"
 
 msgid "Change them in passbolt"
-msgstr ""
+msgstr "パスボルトで変更する"
 
 msgid "You have been requested to change them"
-msgstr ""
+msgstr "それらを変更するようリクエストされました"
 
 msgid "Access for users to your shared passwords have been revoked."
-msgstr ""
+msgstr "共有していたパスワードへのユーザーアクセスが取り消されました。"
 
 msgid "These passwords are now marked as expired."
-msgstr ""
+msgstr "これらのパスワードは期限切れとしてマークされました。"
 
 msgid "Please rotate them to ensure continued security."
-msgstr ""
+msgstr "セキュリティを維持するために、それらを更新してください。"
 
 msgid "Please rotate it to ensure continued security."
-msgstr ""
+msgstr "セキュリティを維持するために、それを更新してください。"
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "パスボルトで変更 "
 
 msgid "Could not retrieve the password policies."
-msgstr ""
+msgstr "パスワードポリシーを取得できませんでした。"
 
 msgid "The default generator is required."
-msgstr ""
+msgstr "デフォルトジェネレータが必要です。"
 
 msgid "The default generator should be one of the following: {0}."
-msgstr ""
+msgstr "デフォルトジェネレータは次のいずれかである必要があります: {0}。"
 
 msgid "The external dictionary check is required."
-msgstr ""
+msgstr "外部辞書チェックが必要です。"
 
 msgid "The external dictionary check should be a boolean."
-msgstr ""
+msgstr "外部辞書チェックはブール値でなければなりません。"
 
 msgid "The password generator settings is required."
-msgstr ""
+msgstr "パスワードジェネレータ設定が必要です。"
 
 msgid "The password generator settings should not be empty."
-msgstr ""
+msgstr "パスワードジェネレータ設定を空にすることはできません。"
 
 msgid "The password generator settings should have at least one mask selected."
-msgstr ""
+msgstr "パスワードジェネレータ設定では少なくとも1つのマスクが選択されている必要があります。"
 
 msgid "The passphrase generator settings is required."
-msgstr ""
+msgstr "パスフレーズジェネレータ設定が必要です。"
 
 msgid "The passphrase generator settings should not be empty."
-msgstr ""
+msgstr "パスフレーズジェネレータ設定を空にすることはできません。"
 
 msgid "Could not validate the password policies settings."
-msgstr ""
+msgstr "パスワードポリシー設定を検証できませんでした。"
 
 msgid "The passphrase generator words is required."
-msgstr ""
+msgstr "パスフレーズジェネレータの単語数が必要です。"
 
 msgid "The passphrase generator words should be between {0} and {1}."
-msgstr ""
+msgstr "パスフレーズジェネレータの単語数は {0}～{1} の範囲である必要があります。"
 
 msgid "The passphrase generator word separator is required."
-msgstr ""
+msgstr "パスフレーズジェネレータの単語区切りが必要です。"
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
-msgstr ""
+msgstr "パスフレーズジェネレータの単語区切りは有効なUTF8文字列である必要があります。"
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr ""
+msgstr "パスフレーズジェネレータの単語区切りは最大 {0} 文字までです。"
 
 msgid "The passphrase generator word case is required."
-msgstr ""
+msgstr "パスフレーズジェネレータの単語の大文字小文字設定が必要です。"
 
 msgid "The passphrase generator word case should be one of the following: {0}."
-msgstr ""
+msgstr "パスフレーズジェネレータの単語の大文字小文字設定は次のいずれかである必要があります: {0}。"
 
 msgid "The password generator length should be between {0} and {1}."
-msgstr ""
+msgstr "パスワードジェネレータの長さは {0}～{1} の範囲である必要があります。"
 
 msgid "The password generator length is required."
-msgstr ""
+msgstr "パスワードジェネレータの長さが必要です。"
 
 msgid "The password generator mask upper is required."
-msgstr ""
+msgstr "パスワードジェネレータの大文字マスクが必要です。"
 
 msgid "The password generator mask upper should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータの大文字マスクはブール型である必要があります。"
 
 msgid "The password generator mask lower is required."
-msgstr ""
+msgstr "パスワードジェネレータの小文字マスクが必要です。"
 
 msgid "The password generator mask lower should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータの小文字マスクはブール型である必要があります。"
 
 msgid "The password generator mask digit is required."
-msgstr ""
+msgstr "パスワードジェネレータの数字マスクが必要です。"
 
 msgid "The password generator mask digit should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータの数字マスクはブール型である必要があります。"
 
 msgid "The password generator mask parenthesis is required."
-msgstr ""
+msgstr "パスワードジェネレータの括弧マスクが必要です。"
 
 msgid "The password generator mask parenthesis should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータの括弧マスクはブール型である必要があります。"
 
 msgid "The password generator mask emoji is required."
-msgstr ""
+msgstr "パスワードジェネレータの絵文字マスクが必要です。"
 
 msgid "The password generator mask emoji should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータの絵文字マスクはブール型である必要があります。"
 
 msgid "The password generator mask char1 is required."
-msgstr ""
+msgstr "パスワードジェネレータのchar1マスクが必要です。"
 
 msgid "The password generator mask char1 should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータのchar1マスクはブール型である必要があります。"
 
 msgid "The password generator mask char2 is required."
-msgstr ""
+msgstr "パスワードジェネレータのchar2マスクが必要です。"
 
 msgid "The password generator mask char2 should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータのchar2マスクはブール型である必要があります。"
 
 msgid "The password generator mask char3 is required."
-msgstr ""
+msgstr "パスワードジェネレータのchar3マスクが必要です。"
 
 msgid "The password generator mask char3 should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータのchar3マスクはブール型である必要があります。"
 
 msgid "The password generator mask char4 is required."
-msgstr ""
+msgstr "パスワードジェネレータのchar4マスクが必要です。"
 
 msgid "The password generator mask char4 should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータのchar4マスクはブール型である必要があります。"
 
 msgid "The password generator mask char5 is required."
-msgstr ""
+msgstr "パスワードジェネレータのchar5マスクが必要です。"
 
 msgid "The password generator mask char5 should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータのchar5マスクはブール型である必要があります。"
 
 msgid "The password generator exclude look alike chars is required."
-msgstr ""
+msgstr "パスワードジェネレータの類似文字除外設定が必要です。"
 
 msgid "The password generator exclude look alike chars should be a boolean type."
-msgstr ""
+msgstr "パスワードジェネレータの類似文字除外設定はブール型である必要があります。"
 
 msgid "Record not found"
-msgstr ""
+msgstr "レコードが見つかりません"
 
 msgid "The request data is empty."
-msgstr ""
+msgstr "リクエストデータが空です。"
 
 msgid "The request data is invalid: expected a collection."
-msgstr ""
+msgstr "リクエストデータが無効です: コレクション形式が必要です。"
 
 msgid "The request data is invalid: invalid fields."
-msgstr ""
+msgstr "リクエストデータが無効です: 不正なフィールドが含まれています。"
 
 msgid "The request data is invalid: id missing."
-msgstr ""
+msgstr "リクエストデータが無効です: id がありません。"
 
 msgid "The request data is invalid: id invalid."
-msgstr ""
+msgstr "リクエストデータが無効です: id が不正です。"
 
 msgid "The request data is invalid: control_function missing."
-msgstr ""
+msgstr "リクエストデータが無効です: control_function がありません。"
 
 msgid "The request data is invalid: control_function invalid."
-msgstr ""
+msgstr "リクエストデータが無効です: control_function が不正です。"
 
 msgid "The request data is invalid: ids must be unique."
-msgstr ""
+msgstr "リクエストデータが無効です: id はユニークでなければなりません。"
 
 msgid "An action identifier should be a valid UUID."
-msgstr ""
+msgstr "アクション識別子は有効なUUIDである必要があります。"
 
 msgid "The foreign model should be a valid ASCII string."
-msgstr ""
+msgstr "foreign model は有効なASCII文字列である必要があります。"
 
 msgid "The foreign model should be one of the following: {0}."
-msgstr ""
+msgstr "foreign model は以下のいずれかである必要があります: {0}。"
 
 msgid "The foreign model name used length should be maximum {0} characters."
-msgstr ""
+msgstr "foreign model名の長さは最大 {0} 文字までです。"
 
 msgid "A foreign model is required."
-msgstr ""
+msgstr "foreign model が必要です。"
 
 msgid "The foreign model should not be empty."
-msgstr ""
+msgstr "foreign model を空にすることはできません。"
 
 msgid "The control function should be a valid UTF8 string."
-msgstr ""
+msgstr "control function は有効なUTF8文字列である必要があります。"
 
 msgid "The control function name used length should be maximum {0} characters."
-msgstr ""
+msgstr "control function名の長さは最大 {0} 文字までです。"
 
 msgid "The control function is not supported."
-msgstr ""
+msgstr "control function はサポートされていません。"
 
 msgid "A control function is required."
-msgstr ""
+msgstr "control function が必要です。"
 
 msgid "The control function should not be empty."
-msgstr ""
+msgstr "control function を空にすることはできません。"
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
-msgstr ""
+msgstr "Rbacを作成したユーザーの識別子は有効なUUIDである必要があります。"
 
 msgid "The identifier of the user who modified the Rbac should be a valid UUID."
-msgstr ""
+msgstr "Rbacを修正したユーザーの識別子は有効なUUIDである必要があります。"
 
 msgid "The identifier of the user who modified the Rbac should not be empty."
-msgstr ""
+msgstr "Rbacを修正したユーザーの識別子を空にすることはできません。"
 
 msgid "An RBAC entry already exists for the given id."
-msgstr ""
+msgstr "指定されたidのRBACエントリはすでに存在します。"
 
 msgid "An entry already exists for the given role and action ids."
-msgstr ""
+msgstr "指定されたロールIDとアクションIDのエントリはすでに存在します。"
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "このUIアクションではcontrol functionは許可されていません。"
 
 msgid "An action already exists for the given name."
-msgstr ""
+msgstr "指定された名前のアクションはすでに存在します。"
 
 msgid "The RBAC settings could not be updated."
-msgstr ""
+msgstr "RBAC設定を更新できませんでした。"
 
 msgid "No data found."
-msgstr ""
+msgstr "データが見つかりません。"
 
 msgid "Some data not found."
-msgstr ""
+msgstr "一部のデータが見つかりません。"
 
 msgid "The UI actions data could not be validated."
-msgstr ""
+msgstr "UIアクションデータを検証できませんでした。"
 
 msgid "5 minutes"
 msgstr "5分"
@@ -4157,10 +4157,10 @@ msgid "No"
 msgstr "いいえ"
 
 msgid "The deleted field must be set to null."
-msgstr ""
+msgstr "deletedフィールドは null に設定しなければなりません。"
 
 msgid "It is not allowed to update these resource type properties."
-msgstr ""
+msgstr "これらのリソースタイプのプロパティを更新することは許可されていません。"
 
 msgid "The name should be a valid BMP-UTF8 string."
 msgstr "名前は有効なBMP-UTF8文字列でなければなりません。"
@@ -4196,103 +4196,103 @@ msgid "A resource type already exists with this definition."
 msgstr "この定義を持つリソース型はすでに存在します。"
 
 msgid "The resource type identifier should be a UUID."
-msgstr ""
+msgstr "リソースタイプの識別子はUUIDである必要があります。"
 
 msgid "The resource type is already deleted."
-msgstr ""
+msgstr "このリソースタイプはすでに削除されています。"
 
 msgid "You cannot delete the last resource type of the default version."
-msgstr ""
+msgstr "デフォルトバージョンの最後のリソースタイプは削除できません。"
 
 msgid "You cannot delete the last resource type available."
-msgstr ""
+msgstr "利用可能な最後のリソースタイプは削除できません。"
 
 msgid "The resource type can not be deleted as resources of this type still exist."
-msgstr ""
+msgstr "このリソースタイプはまだこのタイプのリソースが存在するため削除できません。"
 
 msgid "The resource type could not be deleted."
-msgstr ""
+msgstr "リソースタイプを削除できませんでした。"
 
 msgid "The resource type is not deleted."
-msgstr ""
+msgstr "そのリソースタイプは削除されていません。"
 
 msgid "The self registration setting id should be a valid UUID."
-msgstr ""
+msgstr "セルフ登録設定IDは有効なUUIDである必要があります。"
 
 msgid "An email is required."
 msgstr "メールアドレスが必要です。"
 
 msgid "The provider should not be empty."
-msgstr ""
+msgstr "プロバイダーを空にすることはできません。"
 
 msgid "The provider should be part of the supported list: {0}."
-msgstr ""
+msgstr "プロバイダはサポートされているリストに含まれている必要があります: {0}。"
 
 msgid "The list of allowed domains should not be empty."
-msgstr ""
+msgstr "許可されたドメインのリストは空にできません。"
 
 msgid "The list of allowed domains should be an array of strings."
-msgstr ""
+msgstr "許可されたドメインのリストは文字列の配列である必要があります。"
 
 msgid "The domain #{0} should be a valid domain."
-msgstr ""
+msgstr "ドメイン #{0} は有効なドメインである必要があります。"
 
 msgid "Allowed domains: {0}"
-msgstr ""
+msgstr "許可ドメイン: {0}"
 
 msgid "{0} edited the self registration settings."
-msgstr ""
+msgstr "{0} さんがセルフ登録設定を編集しました。"
 
 msgid "You edited the self registration settings."
-msgstr ""
+msgstr "セルフ登録設定を編集しました。"
 
 msgid "{0} just created an account on passbolt!"
-msgstr ""
+msgstr "{0} さんがパスボルトでアカウントを作成しました！"
 
 msgid "The email is already registered."
-msgstr ""
+msgstr "そのメールアドレスはすでに登録されています。"
 
 msgid "The self registration plugin is not enabled."
-msgstr ""
+msgstr "セルフ登録プラグインが有効になっていません。"
 
 msgid "The self registration data could not be validated."
-msgstr ""
+msgstr "セルフ登録データを検証できませんでした。"
 
 msgid "The self registration is disabled."
-msgstr ""
+msgstr "セルフ登録は無効です。"
 
 msgid "The domain is not supported for self-registration."
-msgstr ""
+msgstr "このドメインではセルフ登録をサポートしていません。"
 
 msgid "Email domain safe list"
-msgstr ""
+msgstr "メールドメインの安全リスト"
 
 msgid "Could not parse the self registration settings found in database."
-msgstr ""
+msgstr "データベースで見つかったセルフ登録設定を解析できませんでした。"
 
 msgid "Could not validate the self registration settings found in database."
-msgstr ""
+msgstr "データベースで見つかったセルフ登録設定を検証できませんでした。"
 
 msgid "Could not validate the self registration settings."
-msgstr ""
+msgstr "セルフ登録設定を検証できませんでした。"
 
 msgid "{0} updated the self registration settings"
-msgstr ""
+msgstr "{0} さんがセルフ登録設定を更新しました"
 
 msgid "Status: {0}"
-msgstr ""
+msgstr "ステータス: {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
-msgstr ""
+msgstr "SslVerifyPeer の設定はブール値である必要があります。"
 
 msgid "The sslVerifyPeerName configuration should be a boolean."
-msgstr ""
+msgstr "SslVerifyPeerName の設定はブール値である必要があります。"
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr ""
+msgstr "SslAllowSelfSigned の設定はブール値である必要があります。"
 
 msgid "The sslCafile configuration should be NULL or string."
-msgstr ""
+msgstr "SslCafile の設定はNULLまたは文字列である必要があります。"
 
 msgid "A sender name is required."
 msgstr "送信者名が必要です。"
@@ -4325,7 +4325,7 @@ msgid "A TLS setting is required."
 msgstr "TLS 設定が必要です。"
 
 msgid "The TLS setting should be \"true\" or NULL."
-msgstr ""
+msgstr "TLS 設定は \"true\" または NULL である必要があります。"
 
 msgid "A port number is required."
 msgstr "ポート番号が必要です。"
@@ -4349,85 +4349,85 @@ msgid "The test email should be a valid email address."
 msgstr "テストメールアドレスは有効なメールアドレスである必要があります。"
 
 msgid "The authentication method is required."
-msgstr ""
+msgstr "認証方法が必要です。"
 
 msgid "The authentication method should be one of the following: {0}."
-msgstr ""
+msgstr "認証方法は次のいずれかでなければなりません: {0}。"
 
 msgid "The sender email should be a valid email address."
 msgstr "送信者のメールアドレスは有効なメールアドレスでなければなりません。"
 
 msgid "A test recipient is required."
-msgstr ""
+msgstr "テスト受信者が必要です。"
 
 msgid "SMTP settings endpoints disabled."
-msgstr ""
+msgstr "SMTP設定のエンドポイントが無効です。"
 
 msgid "The client should be a valid IP or a valid domain."
-msgstr ""
+msgstr "クライアントは有効なIPアドレスまたは有効なドメインである必要があります。"
 
 msgid "No custom SSL configuration for SMTP server."
-msgstr ""
+msgstr "SMTPサーバーのカスタムSSL設定はありません。"
 
 msgid "Custom SSL certificate options for SMTP server is in use."
-msgstr ""
+msgstr "SMTPサーバーのカスタムSSL証明書オプションが使用中です。"
 
 msgid "Custom SSL configuration options set are invalid."
-msgstr ""
+msgstr "カスタムSSL設定のオプションが無効です。"
 
 msgid "SSL certification validation for SMTP server is disabled."
-msgstr ""
+msgstr "SMTPサーバーのSSL証明書検証は無効化されています。"
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
-msgstr ""
+msgstr "SMTP設定は整合しています。テストメールを送信して検証することができます。"
 
 msgid "SMTP Setting errors: {0}"
-msgstr ""
+msgstr "SMTP設定エラー: {0}"
 
 msgid "The {0} plugin endpoints are disabled."
-msgstr ""
+msgstr "{0} プラグインのエンドポイントは無効化されています。"
 
 msgid "The {0} plugin endpoints are enabled."
-msgstr ""
+msgstr "{0} プラグインのエンドポイントは有効化されています。"
 
 msgid "It is recommended to disable the plugin endpoints."
-msgstr ""
+msgstr "プラグインのエンドポイントを無効化することが推奨されます。"
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "環境変数 PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED を true に設定してください。"
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
-msgstr ""
+msgstr "あるいは {0} の passbolt.security.smtpSettings.endpointsDisabled を true に設定してください。"
 
 msgid "not found"
-msgstr ""
+msgstr "見つかりません"
 
 msgid "The SMTP Settings source is: {0}."
-msgstr ""
+msgstr "SMTP設定のソースは: {0}。"
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
-msgstr ""
+msgstr "SMTP設定は管理セクションを介してデータベースに設定することが推奨されます。"
 
 msgid "database"
 msgstr "データベース"
 
 msgid "env variables"
-msgstr ""
+msgstr "環境変数"
 
 msgid "Could not validate the smtp settings."
-msgstr ""
+msgstr "smtp設定を検証できませんでした。"
 
 msgid "Could not validate the smtp settings found in database."
-msgstr ""
+msgstr "データベースで見つかったSMTP設定を検証できませんでした。"
 
 msgid "The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database."
-msgstr ""
+msgstr "OpenPGPサーバーキーでは、データベースに保存されているSMTP設定を復号できません。"
 
 msgid "To fix this problem, you need to configure the SMTP server again."
-msgstr ""
+msgstr "この問題を解決するには、SMTPサーバーを再度構成してください。"
 
 msgid "Passbolt test email"
-msgstr ""
+msgstr "パスボルトテストメール"
 
 msgid "Congratulations!"
 msgstr "おめでとうございます！"
@@ -4436,7 +4436,7 @@ msgid "If you receive this email, it means that your passbolt smtp configuration
 msgstr "このメールが届いた場合は、パスボルトのsmtp設定が正常に動作していることを意味します。"
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
-msgstr ""
+msgstr "無効な `passbolt.plugins.smtpSettings.security` 設定値です。"
 
 msgid "Errors: "
 msgstr "エラー: "
@@ -4481,13 +4481,13 @@ msgid "That's it!"
 msgstr "以上です！"
 
 msgid "A driver name is required."
-msgstr ""
+msgstr "ドライバ名が必要です。"
 
 msgid "The driver name should not be empty."
-msgstr ""
+msgstr "ドライバ名を空にすることはできません。"
 
 msgid "The database driver should be one of the following: {0}."
-msgstr ""
+msgstr "データベースドライバは以下のいずれかである必要があります: {0}。"
 
 msgid "The password should not contain quotes."
 msgstr "パスワードには引用符を含めないでください。"
@@ -4505,10 +4505,10 @@ msgid "The database name should not contain dashes."
 msgstr "データベース名にダッシュを含めないでください。"
 
 msgid "The schema is required on PostgreSQL"
-msgstr ""
+msgstr "PostgreSQLではスキーマが必須です"
 
 msgid "The schema should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "スキーマは有効なBMP-UTF8文字列である必要があります。"
 
 msgid "An OpenPGP public key is required."
 msgstr "OpenPGP 公開鍵が必要です。"
@@ -4664,10 +4664,10 @@ msgid "Database name"
 msgstr "データベース名"
 
 msgid "schema"
-msgstr ""
+msgstr "スキーマ"
 
 msgid "Schema"
-msgstr ""
+msgstr "スキーマ"
 
 msgid "Enter your SMTP server settings."
 msgstr "SMTPサーバーの設定を入力します。"
@@ -4703,13 +4703,13 @@ msgid "Port"
 msgstr "ポート"
 
 msgid "Authentication method"
-msgstr ""
+msgstr "認証方法"
 
 msgid "client"
-msgstr ""
+msgstr "クライアント"
 
 msgid "Client"
-msgstr ""
+msgstr "クライアント"
 
 msgid "Passbolt is not configured."
 msgstr "パスボルトが設定されていません。"
@@ -4886,523 +4886,523 @@ msgid "The subscription key is a file that was sent to you when you purchased Pa
 msgstr "サブスクリプションキーは、パスボルトProをご購入いただいた際に送付されたファイルです。パスボルトの各種Pro機能を有効にするには、サブスクリプションキーが必要です。"
 
 msgid "The user id is invalid."
-msgstr ""
+msgstr "ユーザーIDが無効です。"
 
 msgid "The authentication token id is invalid."
-msgstr ""
+msgstr "認証トークンIDが無効です。"
 
 msgid "Only guests are allowed to create an account recovery request."
-msgstr ""
+msgstr "アカウント復旧リクエストの作成はゲストのみが許可されています。"
 
 msgid "Invalid request. Please provide the required data."
-msgstr ""
+msgstr "リクエストが無効です。必要なデータを提供してください。"
 
 msgid "The request id is invalid."
-msgstr ""
+msgstr "リクエストIDが無効です。"
 
 msgid "Please provide a valid request id."
-msgstr ""
+msgstr "有効なリクエストIDを提供してください。"
 
 msgid "Only admin are allowed to create an account recovery request."
-msgstr ""
+msgstr "アカウント復旧リクエストを作成できるのは管理者のみです。"
 
 msgid "You cannot reuse the account recovery key."
-msgstr ""
+msgstr "アカウント回復鍵を再利用することはできません。"
 
 msgid "A policy is required."
-msgstr ""
+msgstr "ポリシーが必要です。"
 
 msgid "The policy name should not be empty."
-msgstr ""
+msgstr "ポリシー名は空にしないでください。"
 
 msgid "The policy should be one of the following: {0}."
-msgstr ""
+msgstr "ポリシーは次のいずれかでなければなりません: {0}。"
 
 msgid "The public key identifier should be a valid UUID."
-msgstr ""
+msgstr "公開鍵の識別子は有効なUUIDでなければなりません。"
 
 msgid "The public key identifier should not be empty."
-msgstr ""
+msgstr "公開鍵の識別子は空にしないでください。"
 
 msgid "The identifier of the user who created the organization policy should be a valid UUID."
-msgstr ""
+msgstr "組織ポリシーを作成したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who created the organization policy is required."
-msgstr ""
+msgstr "組織ポリシーを作成したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who created the organization policy should not be empty."
-msgstr ""
+msgstr "組織ポリシーを作成したユーザーの識別子は空にしないでください。"
 
 msgid "The identifier of the user who modified the organization policy should be a valid UUID."
-msgstr ""
+msgstr "組織ポリシーを修正したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who modified the organization policy is required."
-msgstr ""
+msgstr "組織ポリシーを修正したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who modified the organization policy should not be empty."
-msgstr ""
+msgstr "組織ポリシーを修正したユーザーの識別子は空にしないでください。"
 
 msgid "Could not validate policy data."
-msgstr ""
+msgstr "ポリシーデータを検証できませんでした。"
 
 msgid "The armored key is too big."
-msgstr ""
+msgstr "アーマーされたキーが大きすぎます。"
 
 msgid "The \"deleted\" field should be a valid date."
-msgstr ""
+msgstr "\"deleted\" フィールドは有効な日付である必要があります。"
 
 msgid "The identifier of the user who created the organization public key should be a valid UUID."
-msgstr ""
+msgstr "組織公開鍵を作成したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who created the organization public key is required."
-msgstr ""
+msgstr "組織公開鍵を作成したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who created the organization public key should not be empty."
-msgstr ""
+msgstr "組織公開鍵を作成したユーザーの識別子は空にしないでください。"
 
 msgid "The identifier of the user who modified the organization public key should be a valid UUID."
-msgstr ""
+msgstr "組織公開鍵を修正したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who modified the organization public key is required."
-msgstr ""
+msgstr "組織公開鍵を修正したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who modified the organization public key should not be empty."
-msgstr ""
+msgstr "組織公開鍵を修正したユーザーの識別子は空にしないでください。"
 
 msgid "You cannot reuse the user keys."
-msgstr ""
+msgstr "ユーザーキーを再利用することはできません。"
 
 msgid "You cannot reuse account recovery organization public keys."
-msgstr ""
+msgstr "アカウント復旧用の組織公開鍵を再利用することはできません。"
 
 msgid "Could not validate public key data."
-msgstr ""
+msgstr "公開鍵のデータを検証できませんでした。"
 
 msgid "The recipient_foreign_model should be a valid string."
-msgstr ""
+msgstr "The recipient_foreign_modelは有効な文字列である必要があります。"
 
 msgid "The recipient_foreign_model must be provided."
-msgstr ""
+msgstr "The recipient_foreign_modelを指定する必要があります。"
 
 msgid "The recipient_foreign_model should not be empty."
-msgstr ""
+msgstr "The recipient_foreign_modelは空にしないでください。"
 
 msgid "The recipient_foreign_model must be one of the following: {0}."
-msgstr ""
+msgstr "The recipient_foreign_modelは次のいずれかでなければなりません: {0}。"
 
 msgid "The data should be a valid string."
-msgstr ""
+msgstr "データは有効な文字列である必要があります。"
 
 msgid "The data is too big."
-msgstr ""
+msgstr "データが大きすぎます。"
 
 msgid "The identifier of the user who created the private key passwords should be a valid UUID."
-msgstr ""
+msgstr "秘密鍵パスワードを作成したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who created the private key passwords is required."
-msgstr ""
+msgstr "秘密鍵パスワードを作成したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who created the private key passwords should not be empty."
-msgstr ""
+msgstr "秘密鍵パスワードを作成したユーザーの識別子は空にしないでください。"
 
 msgid "The identifier of the user who modified the private key passwords should be a valid UUID."
-msgstr ""
+msgstr "秘密鍵パスワードを修正したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who modified the private key passwords is required."
-msgstr ""
+msgstr "秘密鍵パスワードを修正したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who modified the private key passwords should not be empty."
-msgstr ""
+msgstr "秘密鍵パスワードを修正したユーザーの識別子は空にしないでください。"
 
 msgid "The private key identifier should be a valid UUID."
-msgstr ""
+msgstr "秘密鍵の識別子は有効なUUIDでなければなりません。"
 
 msgid "A private key identifier is required."
-msgstr ""
+msgstr "秘密鍵の識別子が必要です。"
 
 msgid "The private key identifier should not be empty."
-msgstr ""
+msgstr "秘密鍵の識別子は空にしないでください。"
 
 msgid "Could not validate password data."
-msgstr ""
+msgstr "パスワードデータを検証できませんでした。"
 
 msgid "The identifier of the user who created the private key  should be a valid UUID."
-msgstr ""
+msgstr "秘密鍵を作成したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who created the private key  is required."
-msgstr ""
+msgstr "秘密鍵を作成したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who created the private key  should not be empty."
-msgstr ""
+msgstr "秘密鍵を作成したユーザーの識別子は空にしないでください。"
 
 msgid "The identifier of the user who modified the private key  should be a valid UUID."
-msgstr ""
+msgstr "秘密鍵を修正したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who modified the private key is required."
-msgstr ""
+msgstr "秘密鍵を修正したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who modified the private key  should not be empty."
-msgstr ""
+msgstr "秘密鍵を修正したユーザーの識別子は空にしないでください。"
 
 msgid "The account recovery private key is not valid."
-msgstr ""
+msgstr "アカウント復旧用の秘密鍵が無効です。"
 
 msgid "The status should not be a valid string."
-msgstr ""
+msgstr "ステータスを有効な文字列にしてはいけません。"
 
 msgid "This status is not supported."
-msgstr ""
+msgstr "このステータスはサポートされていません。"
 
 msgid "The status length should be maximum {0} characters."
-msgstr ""
+msgstr "ステータスの長さは最大 {0} 文字までです。"
 
 msgid "The identifier of the user who created the request should be a valid UUID."
-msgstr ""
+msgstr "リクエストを作成したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who created the request is required."
-msgstr ""
+msgstr "リクエストを作成したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who created the request should not be empty."
-msgstr ""
+msgstr "リクエストを作成したユーザーの識別子は空にしないでください。"
 
 msgid "The identifier of the user who modified the request should be a valid UUID."
-msgstr ""
+msgstr "リクエストを修正したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who modified the request is required."
-msgstr ""
+msgstr "リクエストを修正したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who modified the request should not be empty."
-msgstr ""
+msgstr "リクエストを修正したユーザーの識別子は空にしないでください。"
 
 msgid "The request is invalid."
-msgstr ""
+msgstr "リクエストが無効です。"
 
 msgid "The account request is invalid."
-msgstr ""
+msgstr "アカウントリクエストが無効です。"
 
 msgid "Invalid response status. Not supported."
-msgstr ""
+msgstr "レスポンスステータスが無効です。サポートされていません。"
 
 msgid "The responder_foreign_key should not be empty."
-msgstr ""
+msgstr "The responder_foreign_keyは空にしないでください。"
 
 msgid "The responder_foreign_key should be a valid UUID."
-msgstr ""
+msgstr "The responder_foreign_keyは有効なUUIDである必要があります。"
 
 msgid "The responder_foreign_model should be a valid string."
-msgstr ""
+msgstr "The responder_foreign_modelは有効な文字列である必要があります。"
 
 msgid "The responder_foreign_model should not be empty."
-msgstr ""
+msgstr "The responder_foreign_modelは空にしないでください。"
 
 msgid "The responder_foreign_model must be one of the following: {0}."
-msgstr ""
+msgstr "The responder_foreign_modelは次のいずれかでなければなりません: {0}。"
 
 msgid "The identifier of the user who created the response should be a valid UUID."
-msgstr ""
+msgstr "レスポンスを作成したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who created the response is required."
-msgstr ""
+msgstr "レスポンスを作成したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who created the response should not be empty."
-msgstr ""
+msgstr "レスポンスを作成したユーザーの識別子は空にしないでください。"
 
 msgid "The identifier of the user who modified the response should be a valid UUID."
-msgstr ""
+msgstr "レスポンスを修正したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who modified the response is required."
-msgstr ""
+msgstr "レスポンスを修正したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who modified the response should not be empty."
-msgstr ""
+msgstr "レスポンスを修正したユーザーの識別子は空にしないでください。"
 
 msgid "The account recovery request response is invalid."
-msgstr ""
+msgstr "アカウント復旧リクエストのレスポンスが無効です。"
 
 msgid "The status should not be empty"
-msgstr ""
+msgstr "ステータスは空にしてはいけません"
 
 msgid "The status should be one of the following: {0}."
-msgstr ""
+msgstr "ステータスは次のいずれかでなければなりません: {0}。"
 
 msgid "The identifier of the user who created the user settings should be a valid UUID."
-msgstr ""
+msgstr "ユーザー設定を作成したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who created the user settings is required."
-msgstr ""
+msgstr "ユーザー設定を作成したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who created the user settings should not be empty."
-msgstr ""
+msgstr "ユーザー設定を作成したユーザーの識別子は空にしないでください。"
 
 msgid "The identifier of the user who modified the user settings should be a valid UUID."
-msgstr ""
+msgstr "ユーザー設定を修正したユーザーの識別子は有効なUUIDでなければなりません。"
 
 msgid "The identifier of the user who modified the user settings is required."
-msgstr ""
+msgstr "ユーザー設定を修正したユーザーの識別子が必要です。"
 
 msgid "The identifier of the user who modified the user settings should not be empty."
-msgstr ""
+msgstr "ユーザー設定を修正したユーザーの識別子は空にしないでください。"
 
 msgid "This user already has an account recovery setting"
-msgstr ""
+msgstr "このユーザーはすでにアカウント復旧設定を持っています"
 
 msgid "The account recovery user setting is not valid."
-msgstr ""
+msgstr "アカウント復旧用のユーザー設定が無効です。"
 
 msgid "You have disabled the account recovery."
-msgstr ""
+msgstr "アカウント復旧を無効にしました。"
 
 msgid "{0} has disabled the account recovery."
-msgstr ""
+msgstr "{0} がアカウント復旧を無効にしました。"
 
 msgid "You have set the account recovery organization policy to {0}."
-msgstr ""
+msgstr "アカウント復旧の組織ポリシーを {0} に設定しました。"
 
 msgid "{0} has set the account recovery organization policy to {1}."
-msgstr ""
+msgstr "{0} がアカウント復旧の組織ポリシーを {1} に設定しました。"
 
 msgid "You have updated the account recovery organization policy to {0}."
-msgstr ""
+msgstr "アカウント復旧の組織ポリシーを {0} に更新しました。"
 
 msgid "{0} has updated the account recovery organization policy to {1}."
-msgstr ""
+msgstr "{0} がアカウント復旧の組織ポリシーを {1} に更新しました。"
 
 msgid "Suspicious account recovery request issued from IP {0} for {1}"
-msgstr ""
+msgstr "IPアドレス {0} から {1} 向けに不審なアカウント復旧リクエストが発行されました"
 
 msgid "{0} has initiated a recovery request"
-msgstr ""
+msgstr "{0}が復旧リクエストを開始しました"
 
 msgid "You have initiated a recovery request"
-msgstr ""
+msgstr "復旧リクエストを開始しました"
 
 msgid "Recovery request approved!"
-msgstr ""
+msgstr "復旧リクエストが承認されました！"
 
 msgid "approved"
-msgstr ""
+msgstr "承認済み"
 
 msgid "rejected"
-msgstr ""
+msgstr "却下"
 
 msgid "Account recovery response set to {0}."
-msgstr ""
+msgstr "アカウント復旧の応答が{0}に設定されました。"
 
 msgid "Account recovery response set to {0} by {1}."
-msgstr ""
+msgstr "{1}によってアカウント復旧の応答が{0}に設定されました。"
 
 msgid "Recovery request denied!"
-msgstr ""
+msgstr "復旧リクエストが拒否されました！"
 
 msgid "Could not validate key revocation."
-msgstr ""
+msgstr "キーの失効を検証できませんでした。"
 
 msgid "The fingerprint should match the one from the currently active key."
-msgstr ""
+msgstr "フィンガープリントは現在有効な鍵のものと一致する必要があります。"
 
 msgid "Account recovery is disabled."
-msgstr ""
+msgstr "アカウント復旧は無効になっています。"
 
 msgid "The account recovery organization public key is not set."
-msgstr ""
+msgstr "アカウント復旧の組織公開鍵が設定されていません。"
 
 msgid "Invalid request. No policy change."
-msgstr ""
+msgstr "無効なリクエストです。ポリシーは変更されません。"
 
 msgid "Invalid request. Revoked key is required for key rotation."
-msgstr ""
+msgstr "無効なリクエストです。鍵ローテーションには失効済みの鍵が必要です。"
 
 msgid "Invalid request. New key is required for key rotation."
-msgstr ""
+msgstr "無効なリクエストです。鍵ローテーションには新しい鍵が必要です。"
 
 msgid "Invalid request. An organization recovery public key is required."
-msgstr ""
+msgstr "無効なリクエストです。組織のアカウント復旧用公開鍵が必要です。"
 
 msgid "Invalid request. Revoked key or passwords are not required."
-msgstr ""
+msgstr "無効なリクエストです。失効済みの鍵またはパスワードは必要ありません。"
 
 msgid "Invalid request. New key or passwords are not required."
-msgstr ""
+msgstr "無効なリクエストです。新しい鍵やパスワードは不要です。"
 
 msgid "Invalid request. Keys are required for this change."
-msgstr ""
+msgstr "無効なリクエストです。この変更には鍵が必要です。"
 
 msgid "Invalid request. Passwords are required for this change."
-msgstr ""
+msgstr "無効なリクエストです。この変更にはパスワードが必要です。"
 
 msgid "An organization public key is required."
-msgstr ""
+msgstr "組織の公開鍵が必要です。"
 
 msgid "The public_key_id must match current policy public_key_id."
-msgstr ""
+msgstr "Public_key_idは現在のポリシーのpublic_key_idと一致している必要があります。"
 
 msgid "An invalid number of passwords sent. Expected {0} and got {1}."
-msgstr ""
+msgstr "パスワードの数が無効です。想定は{0}でしたが、{1}が送信されました。"
 
 msgid "The message is not encrypted for the right recipient."
-msgstr ""
+msgstr "メッセージが正しい受信者向けに暗号化されていません。"
 
 msgid "Recovery request cannot be created when organization policy is disabled."
-msgstr ""
+msgstr "組織ポリシーが無効な場合、復旧リクエストを作成できません。"
 
 msgid "Recovery request cannot be created when user is not enrolled."
-msgstr ""
+msgstr "ユーザーが登録されていない場合、復旧リクエストは作成できません。"
 
 msgid "The authentication token is not valid or has expired."
 msgstr "認証トークンが有効でないか期限切れです。"
 
 msgid "The account recovery request could not be found."
-msgstr ""
+msgstr "アカウント復旧リクエストが見つかりませんでした。"
 
 msgid "The request is already completed."
-msgstr ""
+msgstr "リクエストはすでに完了しています。"
 
 msgid "Recovery response cannot be created when organization policy is disabled."
-msgstr ""
+msgstr "組織ポリシーが無効な場合、復旧の応答は作成できません。"
 
 msgid "Could not validate response data."
-msgstr ""
+msgstr "応答データを検証できませんでした。"
 
 msgid "The account recovery response data is not required."
-msgstr ""
+msgstr "アカウント復旧の応答データは必要ありません。"
 
 msgid "The account recovery response data is required."
-msgstr ""
+msgstr "アカウント復旧の応答データが必要です。"
 
 msgid "The user is not enrolled in the account recovery program."
-msgstr ""
+msgstr "ユーザーはアカウント復旧プログラムに登録されていません。"
 
 msgid "User account recovery settings cannot be edited."
-msgstr ""
+msgstr "ユーザーのアカウント復旧設定は編集できません。"
 
 msgid "The account recovery is mandatory and cannot be rejected."
-msgstr ""
+msgstr "アカウント復旧は必須であり、拒否できません。"
 
 msgid "Invalid request. You cannot opt-out."
-msgstr ""
+msgstr "無効なリクエストです。オプトアウトできません。"
 
 msgid "The status must be set to approved."
-msgstr ""
+msgstr "ステータスは承認に設定する必要があります。"
 
 msgid "Invalid request. You cannot both opt-out and provide backup."
-msgstr ""
+msgstr "無効なリクエストです。オプトアウトとバックアップの両立は不可能です。"
 
 msgid "The private key backup must be provided."
-msgstr ""
+msgstr "秘密鍵のバックアップを提供する必要があります。"
 
 msgid "Invalid request. Private key or password are missing."
-msgstr ""
+msgstr "無効なリクエストです。秘密鍵またはパスワードがありません。"
 
 msgid "Could not validate private key data."
-msgstr ""
+msgstr "秘密鍵データを検証できませんでした。"
 
 msgid "The account recovery request identifier should be a valid UUID."
-msgstr ""
+msgstr "アカウント復旧リクエスト識別子は有効なUUIDである必要があります。"
 
 msgid "The account recovery request status is not approved."
-msgstr ""
+msgstr "アカウント復旧リクエストのステータスは承認済みではありません。"
 
 msgid "Account recovery is disabled. Key backup is not supported."
-msgstr ""
+msgstr "アカウント復旧は無効です。鍵のバックアップはサポートされていません。"
 
 msgid "Account recovery is mandatory. Please provide the mandatory data."
-msgstr ""
+msgstr "アカウント復旧は必須です。必須データを提供してください。"
 
 msgid "Account Recovery Disabled"
-msgstr ""
+msgstr "アカウント復旧が無効"
 
 msgid "Account Recovery Enabled"
-msgstr ""
+msgstr "アカウント復旧が有効"
 
 msgid "The fingerprint of the organization public key is {0}."
-msgstr ""
+msgstr "組織公開鍵のフィンガープリントは {0} です。"
 
 msgid "Account Recovery Updated"
-msgstr ""
+msgstr "アカウント復旧が更新されました"
 
 msgid "{0} has initiated an account recovery request"
-msgstr ""
+msgstr "{0}がアカウント復旧リクエストを開始しました"
 
 msgid "Recovery request"
-msgstr ""
+msgstr "復旧リクエスト"
 
 msgid "{0} has initiated an account recovery request."
-msgstr ""
+msgstr "{0} がアカウント復旧リクエストを開始しました。"
 
 msgid "Since you are an administrator, you are requested to help them."
-msgstr ""
+msgstr "あなたは管理者なので、彼らを手助けするよう依頼されています。"
 
 msgid "You will need your organization recovery key to continue."
-msgstr ""
+msgstr "続行するには、組織のアカウント復旧鍵が必要です。"
 
 msgid "Review the recovery request"
-msgstr ""
+msgstr "復旧リクエストを確認"
 
 msgid "Suspicious recovery request"
-msgstr ""
+msgstr "不審な復旧リクエスト"
 
 msgid "An account recovery request was attempted from a user with client IP {0} for {1}."
-msgstr ""
+msgstr "クライアントIP {0} のユーザーによって、{1} 向けのアカウント復旧リクエストが試行されました。"
 
 msgid "The request could not be found in the database."
-msgstr ""
+msgstr "リクエストがデータベース内で見つかりませんでした。"
 
 msgid "This is a potential security threat."
-msgstr ""
+msgstr "これは潜在的なセキュリティ上の脅威です。"
 
 msgid "You have initiated an account recovery!"
 msgstr "アカウントの復旧を開始しました！"
 
 msgid "Recovery Request"
-msgstr ""
+msgstr "復旧リクエスト"
 
 msgid "You just requested an account recovery."
-msgstr ""
+msgstr "アカウント復旧をリクエストしました。"
 
 msgid "Your administrator have been informed and will follow up with you."
-msgstr ""
+msgstr "管理者に通知され、対応が行われます。"
 
 msgid "If you did not make this request please inform your administrator."
-msgstr ""
+msgstr "このリクエストを行っていない場合は、管理者に連絡してください。"
 
 msgid "You have updated a recovery request to {0}."
-msgstr ""
+msgstr "復旧リクエストを{0}に更新しました。"
 
 msgid "You have set the status of the account recovery request initiated by {0} ({1}) to {2}."
-msgstr ""
+msgstr "{0} ({1}) が開始したアカウント復旧リクエストのステータスを {2} に設定しました。"
 
 msgid "{0} ({1}) has updated a recovery request to {2}."
-msgstr ""
+msgstr "{0} ({1}) が復旧リクエストを {2} に更新しました。"
 
 msgid "{0} ({1}) has set the status of the request initiated by {2} ({3}) to {4}."
-msgstr ""
+msgstr "{0} ({1}) が {2} ({3}) によって開始されたリクエストのステータスを {4} に設定しました。"
 
 msgid "{0} ({1}) has approved your recovery request."
-msgstr ""
+msgstr "{0} ({1}) があなたの復旧リクエストを承認しました。"
 
 msgid "Your organization recovery contacts have reviewed and approved your account recovery request."
-msgstr ""
+msgstr "組織のアカウント復旧担当者があなたのアカウント復旧リクエストを審査し、承認しました。"
 
 msgid "Please click on the link below to continue."
-msgstr ""
+msgstr "続行するには下のリンクをクリックしてください。"
 
 msgid "Important"
-msgstr ""
+msgstr "重要"
 
 msgid "Please use the same computer and browser that you used to initiate the request."
-msgstr ""
+msgstr "リクエストを開始したのと同じコンピューターとブラウザを使用してください。"
 
 msgid "Complete account recovery"
-msgstr ""
+msgstr "アカウント復旧を完了する"
 
 msgid "{0} ({1}) has denied your recovery request."
-msgstr ""
+msgstr "{0} ({1}) があなたの復旧リクエストを却下しました。"
 
 msgid "Your organization recovery contacts have reviewed and rejected your account recovery request."
-msgstr ""
+msgstr "組織のアカウント復旧担当者があなたのアカウント復旧リクエストを審査し、却下しました。"
 
 msgid "Only administrators can view user logs."
-msgstr ""
+msgstr "管理者のみがユーザーログを閲覧できます。"
 
 msgid "The user {0} could not be added to group {1} because there is no matching directory entry in passbolt."
 msgstr "パスボルトに一致するディレクトリエントリがないため、ユーザー {0}さんをグループ {1} に追加できませんでした。"
@@ -5417,10 +5417,10 @@ msgid "The user {0} was successfully added to the group {1}."
 msgstr "ユーザー {0}さんがグループ {1} に正常に追加されました。"
 
 msgid "The user {0} could not be added to the group {1} because their account was priorly deleted in passbolt."
-msgstr ""
+msgstr "ユーザー {0} さんはパスボルトで以前にアカウントが削除されているため、グループ {1} に追加できませんでした。"
 
 msgid "The user {0} could not be added to the group {1} because they have not yet activated their account."
-msgstr ""
+msgstr "ユーザー {0} さんは、まだアカウントを有効化していないため、グループ {1} に追加できませんでした。"
 
 msgid "The user {0} could not be added to the group {1} because of validation issues."
 msgstr "検証の問題のため、ユーザー {0}さんをグループ {1} に追加できませんでした。"
@@ -5432,7 +5432,7 @@ msgid "The user {0} cannot be added to the group {1} automatically. An email req
 msgstr "ユーザー {0}さんをグループ {1} に自動的に追加することはできません。手動で行うために、メールリクエストがグループ マネージャー (複数) に送信されました。"
 
 msgid "The user {0} was not removed from the group {1} because they were or are being suspended."
-msgstr ""
+msgstr "ユーザー {0} は停止中または停止予定のため、グループ {1} から削除されませんでした。"
 
 msgid "The user {0} was successfully removed from the group {1}."
 msgstr "ユーザー {0}さんはグループ {1} から正常に削除されました。"
@@ -5450,10 +5450,10 @@ msgid "The user {0} was successfully synced with the group {1}."
 msgstr "ユーザー {0}さんは、グループ {1} と正常に同期されました。"
 
 msgid "The group {0} has been successfully renamed to {1}."
-msgstr ""
+msgstr "グループ {0} は正常に {1} にリネームされました。"
 
 msgid "The group {0} could not be renamed to {1}."
-msgstr ""
+msgstr "グループ {0} を {1} にリネームできませんでした。"
 
 msgid "The passbolt {0} {1} was not deleted because it is marked as to be ignored."
 msgstr "パスボルト{0} {1} は無視するようにマークされているため、削除されませんでした。"
@@ -5462,7 +5462,7 @@ msgid "The directory {0} {1} was not deleted because it is ignored."
 msgstr "ディレクトリ {0} {1} は無視されるため、削除されませんでした。"
 
 msgid "The directory {0} {1} was already suspended in passbolt."
-msgstr ""
+msgstr "ディレクトリ {0} {1} はすでにパスボルトで停止されていました。"
 
 msgid "The directory {0} {1} was already deleted in passbolt."
 msgstr "ディレクトリ {0} {1} はすでにパスボルトで削除されました。"
@@ -5474,13 +5474,13 @@ msgid "The {0} {1} could not be deleted because they are the only manager of one
 msgstr "{0} {1} は、1 つまたは複数のグループの唯一のマネージャーであるため、削除できませんでした。"
 
 msgid "The {0} {1} was successfully suspended."
-msgstr ""
+msgstr "{0} {1} は正常に停止されました。"
 
 msgid "The {0} {1} was successfully deleted."
 msgstr "{0} {1} は正常に削除されました。"
 
 msgid "The {0} {1} could not be suspended because of an internal error. Please try again later."
-msgstr ""
+msgstr "{0} {1} は内部エラーのため停止できませんでした。後でもう一度お試しください。"
 
 msgid "The {0} {1} could not be deleted because of an internal error. Please try again later."
 msgstr "{0} {1} は内部エラーのため削除できませんでした。後でもう一度お試しください。"
@@ -5501,13 +5501,13 @@ msgid "The {0} {1} could not be added because of an internal error. Please try a
 msgstr "{0} {1} は内部エラーのため追加できませんでした。後でもう一度お試しください。"
 
 msgid "The previously suspended {0} {1} was not unsuspended."
-msgstr ""
+msgstr "以前に停止された {0} {1} は再開されませんでした。"
 
 msgid "The previously deleted {0} {1} was not re-added to passbolt."
 msgstr "以前に削除された {0} {1} はパスボルトに再度追加されませんでした。"
 
 msgid "The previously suspended {0} {1} was unsuspended."
-msgstr ""
+msgstr "以前に停止された {0} {1} は再開されました。"
 
 msgid "The previously deleted {0} {1} was re-added to passbolt."
 msgstr "以前に削除された {0} {1} はパスボルトに再度追加されました。"
@@ -5525,10 +5525,10 @@ msgid "The {0} {1} could not be mapped with an existing {0} in passbolt because 
 msgstr "{0} {1} は、後に作成されたため、パスボルトの既存の {0} にマッピングできませんでした。"
 
 msgid "The user {0} full name has been successfully updated to {1} {2}."
-msgstr ""
+msgstr "ユーザー {0} のフルネームが {1} {2} に更新されました。"
 
 msgid "The user {0} full name could not be updated to {1} {2}."
-msgstr ""
+msgstr "ユーザー {0} のフルネームを {1} {2} に更新できませんでした。"
 
 msgid "The record model is not valid."
 msgstr "レコードモデルが有効ではありません。"
@@ -5573,13 +5573,13 @@ msgid "The simulation was done successfully."
 msgstr "シミュレーションは正常に行われました。"
 
 msgid "Need at least one domain configuration."
-msgstr ""
+msgstr "少なくとも1つのドメイン設定が必要です。"
 
 msgid "The connection name `{0}` should not contain dots"
-msgstr ""
+msgstr "接続名 `{0}` にドットを含めることはできません"
 
 msgid "Invalid connection name"
-msgstr ""
+msgstr "接続名が無効です"
 
 msgid "The identifier of the default admin user is required."
 msgstr "デフォルトの管理者ユーザーの識別子が必要です。"
@@ -5615,10 +5615,10 @@ msgid "The user path should be a valid BMP-UTF8 string."
 msgstr "ユーザーパスは有効なBMP-UTF8文字列でなければなりません。"
 
 msgid "The group custom filter should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "グループのカスタムフィルターは有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The user custom filter should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "ユーザーのカスタムフィルターは有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The email prefix/suffix setting should be a valid boolean."
 msgstr "メールアドレスのプレフィックス/サフィックス設定は、有効なブール値である必要があります。"
@@ -5642,10 +5642,10 @@ msgid "The sync of created users setting should be a boolean."
 msgstr "作成されたユーザー設定の同期はブール値でなければなりません。"
 
 msgid "The sync of updated users setting should be a boolean."
-msgstr ""
+msgstr "更新されたユーザーの同期設定はブール値である必要があります。"
 
 msgid "The sync of deleted users setting should be a boolean."
-msgstr ""
+msgstr "削除されたユーザーの同期設定はブール値である必要があります。"
 
 msgid "The sync of created groups setting should be a boolean."
 msgstr "作成されたグループ設定の同期はブール値でなければなりません。"
@@ -5657,7 +5657,7 @@ msgid "The sync of updated groups setting should be a boolean."
 msgstr "更新されたグループ設定の同期はブール値でなければなりません。"
 
 msgid "The fields mapping should be a valid array."
-msgstr ""
+msgstr "フィールドマッピングは有効な配列である必要があります。"
 
 msgid "A directory type is required."
 msgstr "ディレクトリの種類が必要です。"
@@ -5681,10 +5681,10 @@ msgid "The base DN should be a valid BMP-UTF8 string."
 msgstr "ベースDNは有効なBMP-UTF8文字列でなければなりません。"
 
 msgid "At least one host is required."
-msgstr ""
+msgstr "少なくとも1つのホストが必要です。"
 
 msgid "The hosts should be a valid array."
-msgstr ""
+msgstr "Hostsは有効な配列である必要があります。"
 
 msgid "The port number should not be empty."
 msgstr "ポート番号は空にしないでください。"
@@ -5702,79 +5702,79 @@ msgid "The connection type should be one of the following: {0}."
 msgstr "接続の種類は次のいずれかでなければなりません: {0}。"
 
 msgid "An authentication type is required."
-msgstr ""
+msgstr "認証タイプが必要です。"
 
 msgid "The authentication type should not be empty."
-msgstr ""
+msgstr "認証タイプを空にすることはできません。"
 
 msgid "The authentication type should be one of the following: {0}."
-msgstr ""
+msgstr "認証タイプは次のいずれかである必要があります: {0}。"
 
 msgid "The map for this field is required."
-msgstr ""
+msgstr "このフィールドのマッピングが必要です。"
 
 msgid "The map value should not be empty."
-msgstr ""
+msgstr "マップ値を空にすることはできません。"
 
 msgid "The field name should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "フィールド名は有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The map value length should be maximum {0} characters."
-msgstr ""
+msgstr "マップ値の長さは最大{0}文字にする必要があります。"
 
 msgid "The map value should not be from forbidden fields."
-msgstr ""
+msgstr "マップ値は禁則フィールドであってはなりません。"
 
 msgid "The map configuration for `{0}` fields is required."
-msgstr ""
+msgstr "`{0}` フィールドのマップ設定が必要です。"
 
 msgid "The group object class length should be maximum {0} characters."
-msgstr ""
+msgstr "グループオブジェクトクラスの長さは最大{0}文字です。"
 
 msgid "The group object class should not be from forbidden fields."
-msgstr ""
+msgstr "グループオブジェクトクラスは禁則フィールドであってはなりません。"
 
 msgid "The user object class length should be maximum {0} characters."
-msgstr ""
+msgstr "ユーザーオブジェクトクラスの長さは最大{0}文字です。"
 
 msgid "The user object class should not be from forbidden fields."
-msgstr ""
+msgstr "ユーザーオブジェクトクラスは禁則フィールドであってはなりません。"
 
 msgid "The user custom filter length should be maximum {0} characters."
-msgstr ""
+msgstr "ユーザーカスタムフィルターの長さは最大{0}文字です。"
 
 msgid "The user custom filter contains the forbidden field."
-msgstr ""
+msgstr "ユーザーカスタムフィルターに禁則フィールドが含まれています。"
 
 msgid "The group custom filter length should be maximum {0} characters."
-msgstr ""
+msgstr "グループカスタムフィルターの長さは最大{0}文字です。"
 
 msgid "The group custom filter contains the forbidden field."
-msgstr ""
+msgstr "グループカスタムフィルターに禁則フィールドが含まれています。"
 
 msgid "The field fallbacks should be a valid array."
-msgstr ""
+msgstr "フィールドfallbacksは有効な配列である必要があります。"
 
 msgid "The field fallbacks should not be empty."
-msgstr ""
+msgstr "フィールドfallbacksを空にできません。"
 
 msgid "The field fallbacks keys should be one of the following: {0}."
-msgstr ""
+msgstr "フィールドfallbacksのキーは次のいずれかでなければなりません: {0}。"
 
 msgid "The fallback field value should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Fallbackフィールドの値は有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The fallback field value length should be maximum {0} characters."
-msgstr ""
+msgstr "Fallbackフィールドの値の長さは最大 {0} 文字までです。"
 
 msgid "The fallback field value should not be from forbidden fields."
-msgstr ""
+msgstr "Fallbackフィールドの値は使用禁止のフィールドに含まれてはいけません。"
 
 msgid "The directory type in fallback fields should be a valid array."
-msgstr ""
+msgstr "Fallbackフィールドの directory type は有効な配列である必要があります。"
 
 msgid "Directory sync settings endpoints are disabled."
-msgstr ""
+msgstr "ディレクトリ同期設定のエンドポイントは無効化されています。"
 
 msgid "The directory name should be a valid UTF8 string."
 msgstr "ディレクトリ名は有効なUTF8文字列でなければなりません。"
@@ -5813,52 +5813,52 @@ msgid "The child identifier is required."
 msgstr "子識別子が必要です。"
 
 msgid "Directory Settings are invalid. Please check your config and try again."
-msgstr ""
+msgstr "ディレクトリ設定が無効です。設定を確認してもう一度お試しください。"
 
 msgid "New directory settings could not be saved."
-msgstr ""
+msgstr "新しいディレクトリ設定を保存できませんでした。"
 
 msgid "The endpoints for updating the users directory configurations are disabled."
-msgstr ""
+msgstr "ユーザーのディレクトリ設定を更新するエンドポイントは無効化されています。"
 
 msgid "The endpoints for updating the users directory configurations are enabled."
-msgstr ""
+msgstr "ユーザーのディレクトリ設定を更新するエンドポイントは有効化されています。"
 
 msgid "It is recommended to disable endpoints for updating the users directory configurations."
-msgstr ""
+msgstr "ユーザーのディレクトリ設定を更新するエンドポイントは無効化することを推奨します。"
 
 msgid "Set the PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "PASSBOLT_SECURITY_DIRECTORY_SYNC_ENDPOINTS_DISABLED 環境変数を true に設定してください。"
 
 msgid "Or set {0} to true in {1}."
-msgstr ""
+msgstr "または {1} 内で {0} を true に設定してください。"
 
 msgid "SSL certification verification for LDAP server is enabled."
-msgstr ""
+msgstr "LDAPサーバーのSSL証明書検証が有効化されています。"
 
 msgid "SSL certification verification for LDAP server is disabled."
-msgstr ""
+msgstr "LDAPサーバーのSSL証明書検証が無効化されています。"
 
 msgid "Disabling the ssl verify check can lead to security attacks."
-msgstr ""
+msgstr "SSL の検証を無効にするとセキュリティ攻撃につながる可能性があります。"
 
 msgid "Attacker can alter the certificate and can perform man-in-the-middle attack."
-msgstr ""
+msgstr "攻撃者が証明書を改ざんし、中間者攻撃を行う可能性があります。"
 
 msgid "To fix this, you can set PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER environment variable to true."
-msgstr ""
+msgstr "これを修正するには、PASSBOLT_PLUGINS_DIRECTORY_SYNC_SECURITY_SSL_CUSTOM_OPTIONS_VERIFY_PEER 環境変数を true に設定してください。"
 
 msgid "Or set passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer to true in {0}."
-msgstr ""
+msgstr "または {0} 内で passbolt.plugins.directorySync.security.sslCustomOptions.verifyPeer を true に設定してください。"
 
 msgid "A mapping rule for username attribute could not be found for directory type: {0}"
-msgstr ""
+msgstr "ディレクトリタイプ {0} に対するusername属性のマッピングルールが見つかりません"
 
 msgid "A mapping rule for ID attribute could not be found for directory type: {0}"
-msgstr ""
+msgstr "ディレクトリタイプ {0} に対するID属性のマッピングルールが見つかりません"
 
 msgid "Mapping rules could not be found for directory type: {0}"
-msgstr ""
+msgstr "ディレクトリタイプ {0} に対するマッピングルールが見つかりません"
 
 msgid "A group name is required."
 msgstr "グループ名が必要です。"
@@ -5867,607 +5867,607 @@ msgid "A group member does not match the expected DN format."
 msgstr "グループメンバーが期待されるDN形式と一致しません。"
 
 msgid "The {0} configuration should be a valid string"
-msgstr ""
+msgstr "{0} の設定は有効な文字列である必要があります"
 
 msgid "Invalid directory type for domain: {0}"
-msgstr ""
+msgstr "ドメイン {0} のディレクトリタイプが無効です"
 
 msgid "Directory type could not be found for domain: {0}"
-msgstr ""
+msgstr "ドメイン {0} のディレクトリタイプが見つかりません"
 
 msgid "LDAP Object class could not be found: {0}"
-msgstr ""
+msgstr "LDAPオブジェクトクラスが見つかりません: {0}"
 
 msgid "SSO"
-msgstr ""
+msgstr "シングルサインオン"
 
 msgid "Directory Sync"
-msgstr ""
+msgstr "ディレクトリ同期"
 
 msgid "Only administrators are allowed to create/update MFA policies settings."
-msgstr ""
+msgstr "管理者のみがMFAポリシー設定を作成/更新できます。"
 
 msgid "Could not validate the MFA policies settings."
-msgstr ""
+msgstr "MFAポリシー設定を検証できませんでした。"
 
 msgid "The policy field is required."
-msgstr ""
+msgstr "Policyフィールドが必要です。"
 
 msgid "The type of the policy should be one of the following: {0}."
-msgstr ""
+msgstr "ポリシーの種類は次のいずれかである必要があります: {0}。"
 
 msgid "The remember me for a month field is required."
-msgstr ""
+msgstr "「1か月間Remember me」フィールドが必要です。"
 
 msgid "The remember me for a month should be a boolean type."
-msgstr ""
+msgstr "「1か月間Remember me」はブール値である必要があります。"
 
 msgid "You edited the MFA policy"
-msgstr ""
+msgstr "MFAポリシーを編集しました"
 
 msgid "{0} edited the MFA policy"
-msgstr ""
+msgstr "{0}がMFAポリシーを編集しました"
 
 msgid "The MFA policy has been updated, the new configuration is as follow:"
-msgstr ""
+msgstr "MFAポリシーが更新されました。新しい構成は以下のとおりです："
 
 msgid "Policy: {0}"
-msgstr ""
+msgstr "ポリシー: {0}"
 
 msgid "Remember me for a month: {0}"
-msgstr ""
+msgstr "1か月間Remember me: {0}"
 
 msgid "view it in passbolt"
 msgstr "パスボルトで表示"
 
 msgid "You have passwords requiring your attention"
-msgstr ""
+msgstr "あなたの対応が必要なパスワードがあります"
 
 msgid "Some of your passwords are expired."
-msgstr ""
+msgstr "あなたのパスワードの一部は期限切れです。"
 
 msgid "Some of your passwords are expiring in {0} days."
-msgstr ""
+msgstr "あなたのパスワードの一部は {0} 日後に期限切れとなります。"
 
 msgid "Some of your passwords are expired or expiring in {0} days."
-msgstr ""
+msgstr "あなたのパスワードの一部は期限切れ、または {0} 日後に期限切れとなります。"
 
 msgid "The send password about to expire setting should be a boolean."
-msgstr ""
+msgstr "パスワード期限切れ間近の通知設定はブール値でなければなりません。"
 
 msgid "Password expiry is not activated."
-msgstr ""
+msgstr "パスワードの有効期限は有効化されていません。"
 
 msgid "Password expiry email notifications are disabled."
-msgstr ""
+msgstr "パスワードの有効期限に関するメール通知は無効化されています。"
 
 msgid "An array of arrays is expected."
-msgstr ""
+msgstr "配列の配列が必要です。"
 
 msgid "The expiry date is required."
-msgstr ""
+msgstr "有効期限が必要です。"
 
 msgid "The identifier should be unique: {0}."
-msgstr ""
+msgstr "識別子は一意でなければなりません: {0}。"
 
 msgid "You are not allowed to update these resources."
-msgstr ""
+msgstr "これらのリソースを更新することはできません。"
 
 msgid "You are not allowed to update this resource: {0}"
-msgstr ""
+msgstr "このリソースを更新することはできません: {0}"
 
 msgid "The resource with ID {0} does not exist."
-msgstr ""
+msgstr "ID {0} のリソースは存在しません。"
 
 msgid "You edited the password policy"
-msgstr ""
+msgstr "パスワードポリシーを編集しました"
 
 msgid "{0} edited the password policy"
-msgstr ""
+msgstr "{0}さんがパスワードポリシーを編集しました"
 
 msgid "Only administrators are allowed to create/update password policies settings."
-msgstr ""
+msgstr "パスワードポリシー設定の作成/更新は管理者のみが許可されています。"
 
 msgid "The password policy settings has been updated by {0}."
-msgstr ""
+msgstr "パスワードポリシーの設定は {0} によって更新されました。"
 
 msgid "you"
 msgstr "あなた"
 
 msgid "SsoRecover plugin is disabled."
-msgstr ""
+msgstr "SsoRecoverプラグインは無効です。"
 
 msgid "The SSO state type is invalid."
-msgstr ""
+msgstr "SSOのstateタイプが無効です。"
 
 msgid "CSRF issue. The state in URL and Cookies do not match."
-msgstr ""
+msgstr "CSRF問題。URLの状態とCookieが一致しません。"
 
 msgid "CSRF issue. The state in request data does not match with cookie value."
-msgstr ""
+msgstr "CSRF の問題です。リクエストデータ内の state がクッキーの値と一致しません。"
 
 msgid "The state is required in cookie."
-msgstr ""
+msgstr "Cookieにstateが必要です。"
 
 msgid "The token is required in URL parameters."
-msgstr ""
+msgstr "URLパラメータにトークンが必要です。"
 
 msgid "The state is required in URL parameters."
-msgstr ""
+msgstr "URLパラメータにstateが必要です。"
 
 msgid "The code is required in URL parameters."
-msgstr ""
+msgstr "URLパラメータにcodeが必要です。"
 
 msgid "The code is required in request data."
-msgstr ""
+msgstr "リクエストデータに code が必要です。"
 
 msgid "The user id is required in URL parameters."
-msgstr ""
+msgstr "URLパラメータにユーザーIDが必要です。"
 
 msgid "The settings id is required in URL parameters."
-msgstr ""
+msgstr "URLパラメータに設定IDが必要です。"
 
 msgid "The user does not exist or is not active."
 msgstr "ユーザーが存在しないか、アクティブではありません。"
 
 msgid "The SSO setting does not exist."
-msgstr ""
+msgstr "SSO設定が存在しません。"
 
 msgid "Information about the key is required."
-msgstr ""
+msgstr "鍵に関する情報が必要です。"
 
 msgid "The SSO key id should be a uuid."
-msgstr ""
+msgstr "SSO鍵IDはuuidである必要があります。"
 
 msgid "The key could not be found"
-msgstr ""
+msgstr "鍵が見つかりませんでした"
 
 msgid "The SSO setting id should be a uuid."
-msgstr ""
+msgstr "SSO設定IDはuuidである必要があります。"
 
 msgid "The SSO settings were activated."
-msgstr ""
+msgstr "SSO設定が有効化されました。"
 
 msgid "The draft setting was saved."
-msgstr ""
+msgstr "ドラフト設定が保存されました。"
 
 msgid "The SSO settings were deleted."
-msgstr ""
+msgstr "SSO設定が削除されました。"
 
 msgid "Ajax/Json request not supported."
-msgstr ""
+msgstr "Ajax/Jsonリクエストはサポートされていません。"
 
 msgid "A provider is required."
-msgstr ""
+msgstr "プロバイダーが必要です。"
 
 msgid "The provider is not supported."
-msgstr ""
+msgstr "指定されたプロバイダーはサポートされていません。"
 
 msgid "Data is required."
-msgstr ""
+msgstr "データが必要です。"
 
 msgid "Data must be an array of properties."
-msgstr ""
+msgstr "データはプロパティの配列である必要があります。"
 
 msgid "The email claim should not be empty."
-msgstr ""
+msgstr "メールクレームは空にできません。"
 
 msgid "The email claim is too large."
-msgstr ""
+msgstr "メールクレームが大きすぎます。"
 
 msgid "The email claim should be one of the following: {0}."
-msgstr ""
+msgstr "メールクレームは次のいずれかでなければなりません: {0}。"
 
 msgid "A URL is required."
-msgstr ""
+msgstr "URLが必要です。"
 
 msgid "The URL should not be empty."
-msgstr ""
+msgstr "URLを空にすることはできません。"
 
 msgid "The URL is not supported."
-msgstr ""
+msgstr "このURLはサポートされていません。"
 
 msgid "A tenant id is required."
-msgstr ""
+msgstr "テナントIDが必要です。"
 
 msgid "The tenant id should not be empty."
-msgstr ""
+msgstr "テナントIDを空にすることはできません。"
 
 msgid "The tenant id should be a valid UUID."
-msgstr ""
+msgstr "テナントIDは有効なUUIDである必要があります。"
 
 msgid "A client id is required."
-msgstr ""
+msgstr "クライアントIDが必要です。"
 
 msgid "The client id should not be empty."
-msgstr ""
+msgstr "クライアントIDを空にすることはできません。"
 
 msgid "The client id should be a valid UUID."
-msgstr ""
+msgstr "クライアントIDは有効なUUIDである必要があります。"
 
 msgid "A client secret is required."
-msgstr ""
+msgstr "クライアントシークレットが必要です。"
 
 msgid "The client secret should not be empty."
-msgstr ""
+msgstr "クライアントシークレットを空にすることはできません。"
 
 msgid "The client secret should be a valid string."
-msgstr ""
+msgstr "クライアントシークレットは有効な文字列である必要があります。"
 
 msgid "The client secret is too large."
-msgstr ""
+msgstr "クライアントシークレットが大きすぎます。"
 
 msgid "A client secret expiry is required."
-msgstr ""
+msgstr "クライアントシークレットの有効期限が必要です。"
 
 msgid "The expiry should not be empty."
-msgstr ""
+msgstr "有効期限を空にすることはできません。"
 
 msgid "The prompt should not be empty."
-msgstr ""
+msgstr "Promptを空にしてはいけません。"
 
 msgid "The prompt should be one of the following: {0}."
-msgstr ""
+msgstr "Promptは次のいずれかである必要があります: {0}。"
 
 msgid "The client id is too large."
-msgstr ""
+msgstr "クライアントIDが大きすぎます。"
 
 msgid "A base URL is required."
-msgstr ""
+msgstr "ベースURLが必要です。"
 
 msgid "The base URL should not be empty."
-msgstr ""
+msgstr "ベースURLを空にできません。"
 
 msgid "The base URL is too large."
-msgstr ""
+msgstr "ベースURLが大きすぎます。"
 
 msgid "The OpenID configuration path should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "OpenID 構成のパスは有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The OpenID configuration path is too large."
-msgstr ""
+msgstr "OpenID 構成のパスが大きすぎます。"
 
 msgid "The client id should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "クライアントIDは有効なBMP-UTF8文字列である必要があります。"
 
 msgid "The scope should be a valid string."
-msgstr ""
+msgstr "Scopeは有効な文字列である必要があります。"
 
 msgid "The scope is too large."
-msgstr ""
+msgstr "Scopeが大きすぎます。"
 
 msgid "The user is not active."
-msgstr ""
+msgstr "ユーザーがアクティブではありません。"
 
 msgid "The status length is not supported."
-msgstr ""
+msgstr "ステータスの長さはサポートされていません。"
 
 msgid "The status is not supported."
-msgstr ""
+msgstr "このステータスはサポートされていません。"
 
 msgid "The nonce should be a valid ASCII string."
-msgstr ""
+msgstr "Nonceは有効なASCII文字列である必要があります。"
 
 msgid "The nonce length should be minimum {0} characters."
-msgstr ""
+msgstr "Nonceの長さは最低{0}文字である必要があります。"
 
 msgid "The nonce length should be maximum {0} characters."
-msgstr ""
+msgstr "Nonceの長さは最大{0}文字である必要があります。"
 
 msgid "A nonce is required."
-msgstr ""
+msgstr "Nonceが必要です。"
 
 msgid "The nonce should not be empty."
-msgstr ""
+msgstr "Nonceを空にしてはいけません。"
 
 msgid "The type length should be maximum {0} characters."
-msgstr ""
+msgstr "Typeの長さは最大{0}文字である必要があります。"
 
 msgid "The state should be a valid ASCII string."
-msgstr ""
+msgstr "Stateは有効なASCII文字列である必要があります。"
 
 msgid "The state length should be minimum {0} characters."
-msgstr ""
+msgstr "Stateの長さは最低{0}文字である必要があります。"
 
 msgid "The state length should be maximum {0} characters."
-msgstr ""
+msgstr "Stateの長さは最大{0}文字である必要があります。"
 
 msgid "The SSO settings identifier should be a valid UUID."
-msgstr ""
+msgstr "SSO設定識別子は有効なUUIDである必要があります。"
 
 msgid "The SSO settings identifier should not be empty."
-msgstr ""
+msgstr "SSO設定識別子は空にできません。"
 
 msgid "The user agent should be a valid ASCII string."
-msgstr ""
+msgstr "ユーザーエージェントは有効なASCII文字列である必要があります。"
 
 msgid "The user agent length should be maximum {0} characters."
-msgstr ""
+msgstr "ユーザーエージェントの長さは最大{0}文字です。"
 
 msgid "A user agent is required."
-msgstr ""
+msgstr "ユーザーエージェントが必要です。"
 
 msgid "The user agent should not be empty."
-msgstr ""
+msgstr "ユーザーエージェントを空にできません。"
 
 msgid "The IP length should be maximum {0} characters."
-msgstr ""
+msgstr "IPの長さは最大{0}文字です。"
 
 msgid "An IP is required."
-msgstr ""
+msgstr "IPが必要です。"
 
 msgid "The IP should not be empty."
-msgstr ""
+msgstr "IPを空にできません。"
 
 msgid "This nonce is already in use."
-msgstr ""
+msgstr "このnonceは既に使用されています。"
 
 msgid "This state is already in use."
-msgstr ""
+msgstr "このstateは既に使用されています。"
 
 msgid "The SSO setting identifier does not exist."
-msgstr ""
+msgstr "SSO設定識別子が存在しません。"
 
 msgid "The user identifier does not exist."
-msgstr ""
+msgstr "ユーザー識別子が存在しません。"
 
 msgid "The provided nonce is invalid."
-msgstr ""
+msgstr "指定されたnonceは無効です。"
 
 msgid "The URL should start with https://"
-msgstr ""
+msgstr "URLは https:// で始まる必要があります"
 
 msgid "The provided state is invalid."
-msgstr ""
+msgstr "指定されたstateは無効です。"
 
 msgid "The type of the SSO state is invalid."
-msgstr ""
+msgstr "SSOステートのtypeが無効です。"
 
 msgid "{0} activated the SSO setting"
-msgstr ""
+msgstr "{0} がSSO設定を有効にしました"
 
 msgid "{0} deleted the SSO setting"
-msgstr ""
+msgstr "{0} がSSO設定を削除しました"
 
 msgid "Users are unable to log in via Azure SSO"
-msgstr ""
+msgstr "ユーザーは Azure SSO でログインできません"
 
 msgid "Single sign-on failed."
-msgstr ""
+msgstr "シングルサインオンに失敗しました。"
 
 msgid "Provider error: \"{0}\""
-msgstr ""
+msgstr "プロバイダーエラー: \\\"{0}\\\""
 
 msgid "Azure SSO secret expiry date is near"
-msgstr ""
+msgstr "Azure SSO のシークレット有効期限が近づいています"
 
 msgid "SSL certification validation for SSO instance is enabled."
-msgstr ""
+msgstr "SSOインスタンスのSSL証明書検証が有効化されています。"
 
 msgid "SSL certification validation for SSO instance is disabled."
-msgstr ""
+msgstr "SSOインスタンスのSSL証明書検証が無効化されています。"
 
 msgid "To fix this, you can set PASSBOLT_SECURITY_SSO_SSL_VERIFY environment variable to true."
-msgstr ""
+msgstr "これを修正するには、PASSBOLT_SECURITY_SSO_SSL_VERIFY 環境変数を true に設定してください。"
 
 msgid "Or set passbolt.security.sso.sslVerify to true in {0}."
-msgstr ""
+msgstr "または {0} 内で passbolt.security.sso.sslVerify を true に設定してください。"
 
 msgid "The user is missing for the SSO state."
-msgstr ""
+msgstr "SSOステートに対応するユーザーが見つかりません。"
 
 msgid "Email not provided by provider."
-msgstr ""
+msgstr "プロバイダーからメールが提供されていません。"
 
 msgid "Username mismatch."
-msgstr ""
+msgstr "ユーザー名が一致しません。"
 
 msgid "Invalid nonce."
-msgstr ""
+msgstr "Nonceが無効です。"
 
 msgid "Invalid provider. Expected AD FS."
-msgstr ""
+msgstr "無効なプロバイダです。AD FS を想定していました。"
 
 msgid "Invalid provider data. Expected AD FS settings."
-msgstr ""
+msgstr "無効なプロバイダデータです。AD FS の設定を想定していました。"
 
 msgid "No valid SSO settings found."
-msgstr ""
+msgstr "有効なSSO設定が見つかりませんでした。"
 
 msgid "You must authenticate with Azure again."
-msgstr ""
+msgstr "再度Azureで認証する必要があります。"
 
 msgid "Invalid value provided in `passbolt.security.sso.sslCafile` config"
-msgstr ""
+msgstr "`passbolt.security.sso.sslCafile` 設定に無効な値が指定されました"
 
 msgid "Provided root CA file does not exist"
-msgstr ""
+msgstr "指定されたルートCAファイルが存在しません"
 
 msgid "The user id should be a valid UUID."
-msgstr ""
+msgstr "ユーザーIDは有効なUUIDである必要があります。"
 
 msgid "The authentication token does not exist."
-msgstr ""
+msgstr "認証トークンが存在しません。"
 
 msgid "The SSO authentication token is invalid."
-msgstr ""
+msgstr "SSO認証トークンが無効です。"
 
 msgid "Settings id is missing."
-msgstr ""
+msgstr "設定IDがありません。"
 
 msgid "User id mismatch."
-msgstr ""
+msgstr "ユーザーIDが一致しません。"
 
 msgid "Token IP is missing."
-msgstr ""
+msgstr "トークンのIPがありません。"
 
 msgid "User IP mismatch."
-msgstr ""
+msgstr "ユーザーIPが一致しません。"
 
 msgid "User agent is missing."
-msgstr ""
+msgstr "ユーザーエージェントがありません。"
 
 msgid "User agent mismatch."
-msgstr ""
+msgstr "ユーザーエージェントが一致しません。"
 
 msgid "Settings mismatch."
-msgstr ""
+msgstr "設定が一致しません。"
 
 msgid "The SSO key could not be saved."
-msgstr ""
+msgstr "SSO鍵を保存できませんでした。"
 
 msgid "The SSO key does not exist."
-msgstr ""
+msgstr "SSO鍵が存在しません。"
 
 msgid "The SSO key could not be deleted."
-msgstr ""
+msgstr "SSO鍵を削除できませんでした。"
 
 msgid "Could not update the SSO settings."
-msgstr ""
+msgstr "SSO設定を更新できませんでした。"
 
 msgid "The settings status is invalid."
-msgstr ""
+msgstr "設定ステータスが無効です。"
 
 msgid "Invalid status."
-msgstr ""
+msgstr "無効なステータスです。"
 
 msgid "Could not delete the SSO settings."
-msgstr ""
+msgstr "SSO設定を削除できませんでした。"
 
 msgid "Could not delete the draft SSO settings."
-msgstr ""
+msgstr "ドラフトSSO設定を削除できませんでした。"
 
 msgid "The SSO settings do not exist."
-msgstr ""
+msgstr "SSO設定が存在しません。"
 
 msgid "The SSO setting cannot be decrypted."
-msgstr ""
+msgstr "SSO設定を復号できません。"
 
 msgid "The SSO setting cannot be decoded."
-msgstr ""
+msgstr "SSO設定をデコードできません。"
 
 msgid "Only administrators can create SSO settings."
-msgstr ""
+msgstr "管理者のみがSSO設定を作成できます。"
 
 msgid "Something went wrong when validating the single-sign on settings."
-msgstr ""
+msgstr "シングルサインオン設定の検証中に問題が発生しました。"
 
 msgid "It is not possible to save the SSO settings."
-msgstr ""
+msgstr "SSO設定を保存できません。"
 
 msgid "The SSO state is invalid."
-msgstr ""
+msgstr "SSOステートが無効です。"
 
 msgid "The SSO state is expired."
-msgstr ""
+msgstr "SSOステートの有効期限が切れています。"
 
 msgid "The SSO state could not be saved."
-msgstr ""
+msgstr "SSOステートを保存できませんでした。"
 
 msgid "The SSO state does not exist."
-msgstr ""
+msgstr "SSOステートが存在しません。"
 
 msgid "Could not save the SSO state, invalid nonce."
-msgstr ""
+msgstr "SSOステートを保存できませんでした。nonceが無効です。"
 
 msgid "Could not save the SSO state, please try again later."
-msgstr ""
+msgstr "SSOステートを保存できませんでした。後でもう一度お試しください。"
 
 msgid "The {0} claim is not present, please contact your administrator."
-msgstr ""
+msgstr "{0} クレームが存在しません。管理者に連絡してください。"
 
 msgid "Cannot parse JWKS endpoint response."
-msgstr ""
+msgstr "JWKSエンドポイントのレスポンスを解析できません。"
 
 msgid "Invalid JWKS endpoint response. Keys missing."
-msgstr ""
+msgstr "無効なJWKSエンドポイントのレスポンスです。鍵がありません。"
 
 msgid "Failed to read certificate: {0}"
-msgstr ""
+msgstr "証明書を読み取れませんでした: {0}"
 
 msgid "Failed to read public key from certificate: {0}"
-msgstr ""
+msgstr "証明書から公開鍵を読み取れませんでした: {0}"
 
 msgid "Failed to public key properties from certificate: {0}"
-msgstr ""
+msgstr "証明書から公開鍵のプロパティを取得できませんでした: {0}"
 
 msgid "JWT token is missing."
-msgstr ""
+msgstr "JWTトークンがありません。"
 
 msgid "Unable to decode JWT token."
-msgstr ""
+msgstr "JWTトークンをデコードできません。"
 
 msgid "The {0} configuration value should be a string or NULL."
-msgstr ""
+msgstr "{0} の設定値は文字列またはNULLである必要があります。"
 
 msgid "The {0} configuration value should be one of the following: {1}."
-msgstr ""
+msgstr "「{0}」の設定値は次のいずれかでなければなりません: {1}。"
 
 msgid "Single-sign on was a success"
-msgstr ""
+msgstr "シングルサインオンに成功しました"
 
 msgid "Users are unable to log in via Azure SSO."
-msgstr ""
+msgstr "ユーザーは Azure SSO でログインできません。"
 
 msgid "This can happen when the client secret of Azure AD is expired, or the SSO configurations (client credentials) are invalid."
-msgstr ""
+msgstr "これは Azure AD のクライアントシークレットが期限切れになっているか、SSO構成(クライアント認証情報)が無効な場合に発生する可能性があります。"
 
 msgid "See Azure error response below:"
-msgstr ""
+msgstr "以下に Azure エラー応答を示します："
 
 msgid "Error: {0}"
-msgstr ""
+msgstr "エラー: {0}"
 
 msgid "Error description: {0}"
-msgstr ""
+msgstr "エラー説明: {0}"
 
 msgid "To fix this, you as an administrator have to update the Azure SSO credentials."
-msgstr ""
+msgstr "これを修正するには、管理者として Azure SSO の認証情報を更新する必要があります。"
 
 msgid "Update it in passbolt"
-msgstr ""
+msgstr "パスボルトで更新"
 
 msgid "The client secret expiry date of your Azure AD instance is {0}."
-msgstr ""
+msgstr "あなたの Azure AD インスタンスのクライアントシークレットの有効期限は {0} です。"
 
 msgid "Note that passbolt users will not be able to log in via Azure SSO after the client expiry date."
-msgstr ""
+msgstr "クライアントの有効期限を過ぎると、パスボルトのユーザーは Azure SSO にログインできなくなります。"
 
 msgid "We advise you to fix this on the Azure side and update the latest details in the passbolt."
-msgstr ""
+msgstr "Azure 側で修正し、最新の情報をパスボルトで更新することをお勧めします。"
 
 msgid "The SSO provider {0} has been successfully tested & activated by {1}. "
-msgstr ""
+msgstr "SSOプロバイダー {0} は {1} によって正常にテスト＆有効化されました。 "
 
 msgid "All users can now use Single Sign-on to perform authentication."
-msgstr ""
+msgstr "すべてのユーザーはシングルサインオンを使用して認証を行うことができます。"
 
 msgid "The SSO setting has been deleted by {0}."
-msgstr ""
+msgstr "SSO設定は {0} によって削除されました。"
 
 msgid "The authentication token does not exist or has been deleted."
-msgstr ""
+msgstr "認証トークンが存在しないか、削除されました。"
 
 msgid "The authentication token has been expired."
-msgstr ""
+msgstr "認証トークンの有効期限が切れています。"
 
 msgid "Could not validate the SSO recover request."
-msgstr ""
+msgstr "SSO復旧リクエストを検証できませんでした。"
 
 msgid "The email is required in URL parameters."
-msgstr ""
+msgstr "URLパラメータにメールアドレスが必要です。"
 
 msgid "The case field is required."
-msgstr ""
+msgstr "Caseフィールドが必要です。"
 
 msgid "The case is not supported. Only \"default\" case is supported."
-msgstr ""
+msgstr "そのCaseはサポートされていません。\\\"default\\\" caseのみサポートされています。"
 
 msgid "The token field is required."
-msgstr ""
+msgstr "Tokenフィールドが必要です。"
 
 msgid "Access to this service requires an invitation. "
-msgstr ""
+msgstr "このサービスにアクセスするには招待が必要です。 "
 
 msgid "Please contact your administrator to request an invitation link."
 msgstr "招待リンクをリクエストするには、管理者に連絡してください。"
@@ -6533,79 +6533,79 @@ msgid "The subscription key format is not valid."
 msgstr "サブスクリプションキーの形式が有効ではありません。"
 
 msgid "Subscription is valid and up to date."
-msgstr ""
+msgstr "サブスクリプションは有効で最新です。"
 
 msgid "Subscription cannot be found or is invalid/expired."
-msgstr ""
+msgstr "サブスクリプションが見つからないか、無効/期限切れです。"
 
 msgid "Subscription invalid/expired ({0})."
-msgstr ""
+msgstr "サブスクリプションが無効/期限切れです（{0}）。"
 
 msgid "Subscription expired ({0})."
-msgstr ""
+msgstr "サブスクリプションが期限切れです（{0}）。"
 
 msgid "Subscription user count has been exceeded ({0}/{1})."
-msgstr ""
+msgstr "サブスクリプションのユーザー数上限を超えました（{0}/{1}）。"
 
 msgid "Subscription will expire in {0} days."
-msgstr ""
+msgstr "サブスクリプションは{0}日後に期限切れになります。"
 
 msgid "Subscription soon exceeds user count ({0}/{1})."
-msgstr ""
+msgstr "サブスクリプションはまもなくユーザー数上限を超えます（{0}/{1}）。"
 
 msgid "Subscription invalid or expired."
-msgstr ""
+msgstr "サブスクリプションが無効または期限切れです。"
 
 msgid "Subscription key format error."
-msgstr ""
+msgstr "サブスクリプションキー形式エラー。"
 
 msgid "Subscription key signature error."
-msgstr ""
+msgstr "サブスクリプションキー署名エラー。"
 
 msgid "Subscription key validation error."
-msgstr ""
+msgstr "サブスクリプションキー検証エラー。"
 
 msgid "It looks like you could use some help."
-msgstr ""
+msgstr "お困りのようですね。"
 
 msgid "We are here for you. You can contact us at sales@passbolt.com"
-msgstr ""
+msgstr "私たちはお手伝いできます。sales@passbolt.com までご連絡ください"
 
 msgid "Thanks for choosing Passbolt Pro"
-msgstr ""
+msgstr "パスボルト Pro をお選びいただきありがとうございます"
 
 msgid "Below are your subscription key details"
-msgstr ""
+msgstr "以下にサブスクリプションキーの詳細を示します"
 
 msgid "<error>Not Available</error>"
-msgstr ""
+msgstr "<error>利用不可</error>"
 
 msgid "Customer id:\t{0}"
-msgstr ""
+msgstr "お客様 id:\t{0}"
 
 msgid "<error>{0} (currently: {1}) - Exceeded</error>"
-msgstr ""
+msgstr "<error>{0} (現在: {1}) - 超過</error>"
 
 msgid "<info>{0} (currently: {1})</info>"
-msgstr ""
+msgstr "<info>{0} (現在: {1})</info>"
 
 msgid "Users limit:\t{0}"
-msgstr ""
+msgstr "ユーザー制限:\t{0}"
 
 msgid "Valid from:\t<info>{0}</info>"
-msgstr ""
+msgstr "有効期間開始:\t<info>{0}</info>"
 
 msgid "Expires on:\t<error>{0} (expired)</error>"
-msgstr ""
+msgstr "有効期限:\t<error>{0} (期限切れ)</error>"
 
 msgid "Expires on:\t<info>{0} (in {1} days)</info>"
-msgstr ""
+msgstr "有効期限:\t<info>{0} (あと {1} 日)</info>"
 
 msgid "For any question / feedback / subscription renewal,"
-msgstr ""
+msgstr "ご質問・フィードバック・サブスクリプションの更新については、"
 
 msgid "kindly contact us at <info>sales@passbolt.com</info>"
-msgstr ""
+msgstr "<info>sales@passbolt.com</info> までお気軽にご連絡ください"
 
 msgid "Only administrators can view the subscription details."
 msgstr "管理者のみがサブスクリプションの詳細を表示できます。"
@@ -6623,10 +6623,10 @@ msgid "Only administrators can update the subscription details."
 msgstr "管理者のみがサブスクリプションの詳細を更新できます。"
 
 msgid "The tags data should be a string or an array."
-msgstr ""
+msgstr "タグデータは文字列または配列である必要があります。"
 
 msgid "Could not validate request data."
-msgstr ""
+msgstr "リクエストデータを検証できませんでした。"
 
 msgid "The tag id is not valid."
 msgstr "タグIDが有効ではありません。"
@@ -6647,13 +6647,13 @@ msgid "The tag has been updated successfully."
 msgstr "タグが正常に更新されました。"
 
 msgid "The tag identifier should be a valid UUID."
-msgstr ""
+msgstr "タグの識別子は有効なUUIDである必要があります。"
 
 msgid "The tag is missing or does not belong to current user."
-msgstr ""
+msgstr "タグが見つからないか、現在のユーザーに属していません。"
 
 msgid "The is shared should be a boolean type."
-msgstr ""
+msgstr "is shared フィールドはブール型である必要があります。"
 
 msgid "The tag should not be empty."
 msgstr "タグは空にできません。"
@@ -6674,70 +6674,70 @@ msgid "A shared status is required."
 msgstr "共有ステータスが必要です。"
 
 msgid "The tag metadata OpenPGP message cannot be parsed or is not for the intended recipient."
-msgstr ""
+msgstr "タグのメタデータOpenPGPメッセージを解析できないか、宛先の受信者向けではありません。"
 
 msgid "Error while building tag DTO."
-msgstr ""
+msgstr "タグDTOの構築中にエラーが発生しました。"
 
 msgid "Could not validate tags data."
 msgstr "タグデータを検証できませんでした。"
 
 msgid "Unable to build tag entity"
-msgstr ""
+msgstr "タグエンティティを構築できません"
 
 msgid "No tags to migrate."
-msgstr ""
+msgstr "移行するタグはありません。"
 
 msgid "Tag ID \"{0}\" is already V5"
-msgstr ""
+msgstr "タグID \"{0}\" は既にV5です"
 
 msgid "No user found for the personal tag id: \"{0}\"."
-msgstr ""
+msgstr "パーソナルタグID「{0}」に対するユーザーが見つかりません。"
 
 msgid "User contain data missing for the tag id: \"{0}\"."
-msgstr ""
+msgstr "ユーザーにタグID「{0}」に対応するデータが不足しています。"
 
 msgid "Unable to migrate tag id: {0} to V5."
-msgstr ""
+msgstr "タグID {0} をV5に移行できませんでした。"
 
 msgid "Could not save the tags, try again later."
-msgstr ""
+msgstr "タグを保存できませんでした。後でもう一度試してください。"
 
 msgid "You do not have the permission to edit shared tags on this resource."
 msgstr "このリソースの共有タグを編集するパーミッションがありません。"
 
 msgid "Unable to save the tag."
-msgstr ""
+msgstr "タグを保存できませんでした。"
 
 msgid "You do not have the permission to change a personal tag into shared tag."
-msgstr ""
+msgstr "パーソナルタグを共有タグに変更する権限がありません。"
 
 msgid "The settings selected by your administrator prevent from downgrading tag."
-msgstr ""
+msgstr "管理者が選択した設定により、タグのダウングレードはできません。"
 
 msgid "Could not retrieve the user passphrase policies."
-msgstr ""
+msgstr "ユーザーのパスフレーズポリシーを取得できませんでした。"
 
 msgid "The entropy minimum is required."
-msgstr ""
+msgstr "エントロピーの最小値が必要です。"
 
 msgid "The entropy minimum should be between {0} and {1}."
-msgstr ""
+msgstr "エントロピーの最小値は {0} から {1} の範囲でなければなりません。"
 
 msgid "You edited the user passphrase policy"
-msgstr ""
+msgstr "あなたはユーザーパスフレーズポリシーを編集しました"
 
 msgid "{0} edited the user passphrase policy"
-msgstr ""
+msgstr "{0}さんがユーザーパスフレーズポリシーを編集しました"
 
 msgid "Could not validate the user passphrase policies settings."
-msgstr ""
+msgstr "ユーザーパスフレーズポリシーの設定を検証できませんでした。"
 
 msgid "Only administrators are allowed to create/update user passphrase policies settings."
-msgstr ""
+msgstr "ユーザーパスフレーズポリシー設定の作成/更新は管理者のみが許可されています。"
 
 msgid "The user passphrase policy settings has been updated by {0}."
-msgstr ""
+msgstr "ユーザーパスフレーズポリシーの設定は {0} によって更新されました。"
 
 msgid "Error"
 msgstr "エラー"
@@ -6773,10 +6773,10 @@ msgid "is not anymore group manager"
 msgstr "さんはグループマネージャーではなくなりました"
 
 msgid "User Agent: "
-msgstr ""
+msgstr "ユーザーエージェント: "
 
 msgid "User IP: "
-msgstr ""
+msgstr "ユーザーIP: "
 
 msgid "Terms"
 msgstr "ご利用規約"
@@ -6797,79 +6797,79 @@ msgid "login"
 msgstr "ログイン"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "管理者 {0} ({1}) はパスボルト組織から削除されました。"
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr ""
+msgstr "{0} さんがあなたをパスボルト組織から削除しました。"
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
-msgstr ""
+msgstr "このアクションに不審な点があると感じた場合は、操作を行った管理者に連絡してください。"
 
 msgid "Account suspended"
-msgstr ""
+msgstr "アカウント停止"
 
 msgid "Your account has been suspended."
-msgstr ""
+msgstr "あなたのアカウントは停止されました。"
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "パスボルトにサインインしたり、メール通知を受信したりできません。"
 
 msgid "Other users can still share resources with you and add you to a group."
-msgstr ""
+msgstr "他のユーザーは引き続きあなたとリソースを共有したり、あなたをグループに追加したりできます。"
 
 msgid "Contact your admin"
-msgstr ""
+msgstr "管理者に連絡してください"
 
 msgid "{0} changed your role to user."
-msgstr ""
+msgstr "{0} さんがあなたのロールをユーザーに変更しました。"
 
 msgid "{0} changed the role of {1} to user."
-msgstr ""
+msgstr "{0} さんが {1} のロールをユーザーに変更しました。"
 
 msgid "{0} can no longer perform administration tasks."
-msgstr ""
+msgstr "{0} さんはこれ以上管理タスクを実行できません。"
 
 msgid "You"
 msgstr "あなた"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
-msgstr ""
+msgstr "{0} ({1}) がアカウント復旧を完了しました。この操作に不審な点がある場合は、そのユーザーに連絡してください。"
 
 msgid "View user in passbolt"
-msgstr ""
+msgstr "パスボルトでユーザーを表示"
 
 msgid "{0} cannot complete the account recovery process!"
-msgstr ""
+msgstr "{0} はアカウント復旧プロセスを完了できません！"
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
-msgstr ""
+msgstr "このユーザーは秘密鍵またはパスフレーズを失い、アカウント復旧プロセスを完了できません。"
 
 msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
-msgstr ""
+msgstr "残念ながら、このユーザーがアカウントを削除してゼロからやり直すには、あなたの助けが必要です。"
 
 msgid "Please check with them first to confirm."
-msgstr ""
+msgstr "まず彼らと確認してください。"
 
 msgid "User suspended"
-msgstr ""
+msgstr "ユーザー停止"
 
 msgid "The user {0} has been suspended."
-msgstr ""
+msgstr "ユーザー {0} は停止されました。"
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "このユーザーはパスボルトにサインインしたり、メール通知を受信したりできません。"
 
 msgid "Other users can share resources and add this user to a group."
-msgstr ""
+msgstr "他のユーザーはこのユーザーとリソースを共有したり、グループに追加したりできます。"
 
 msgid "Check user suspension"
-msgstr ""
+msgstr "ユーザーの停止を確認"
 
 msgid "Welcome to {0}!"
-msgstr ""
+msgstr "{0} へようこそ！"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr ""
+msgstr "{0} さんがセルフ登録機能を使用してパスボルトにアカウントを作成しました。"
 
 msgid "Welcome back!"
 msgstr "おかえりなさい！"
@@ -6887,7 +6887,7 @@ msgid "start recovery"
 msgstr "復旧を開始"
 
 msgid "You just completed an account recovery. Feel free to get in touch with an admin if you feel this action looks suspicious."
-msgstr ""
+msgstr "アカウント復旧を完了しました。この操作に不審な点がある場合は管理者に連絡してください。"
 
 msgid "{0} just created an account for you on passbolt!"
 msgstr "{0}さんが今、あなたのためにパスボルトでアカウントを作成しました！"
@@ -6917,10 +6917,10 @@ msgid "You just opened an account on passbolt at {0}."
 msgstr "{0} でパスボルトのアカウントを開設しました。"
 
 msgid "There was a change in the user directory."
-msgstr ""
+msgstr "ユーザーディレクトリに変更がありました。"
 
 msgid "You have been requested to add members to a group."
-msgstr ""
+msgstr "グループにメンバーを追加するようリクエストされました。"
 
 msgid "{0} requested you to add members to a group"
 msgstr "{0}さんがあなたに、グループにメンバーを追加するようにリクエストしました"
@@ -7028,16 +7028,16 @@ msgid "This user was invited by {0} {1}."
 msgstr "このユーザーは {0} {1} に招待されました。"
 
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr ""
+msgstr "このユーザーには共有リソースメタデータを復号する鍵がありません。ログインしてユーザーのワークスペースに移動し、手動で鍵を共有してください。"
 
 msgid "view users"
 msgstr "ユーザーを表示"
 
 msgid "This email is an automatic notification sent by"
-msgstr ""
+msgstr "このメールは自動通知として送信されています"
 
 msgid "You can disable these notifications by requesting an administrator to delete your account."
-msgstr ""
+msgstr "アカウント削除を管理者に依頼することで、これらの通知を無効にできます。"
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "ロケール {0} は有効でないかサポートされていません。"
