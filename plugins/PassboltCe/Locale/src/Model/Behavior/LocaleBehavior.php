@@ -80,17 +80,8 @@ class LocaleBehavior extends Behavior
      */
     public function findLocale(SelectQuery $query): SelectQuery
     {
-        $query->leftJoinWith('Locale', function (SelectQuery $q) {
-            $organizationLocale = GetOrgLocaleService::getLocale();
-            $locale = $q->expr()->case()
-                ->when($q->expr()->isNotNull('Locale.value'))
-                ->then($q->identifier('Locale.value'))
-                ->else($organizationLocale);
-
-            return $q->select([
-                self::LOCALE_PROPERTY => $locale,
-            ]);
-        });
+        $query->contain('Locale');
+        $this->formatResults($query);
 
         return $query;
     }
@@ -107,6 +98,16 @@ class LocaleBehavior extends Behavior
     {
         return $query->formatResults(function (CollectionInterface $results) {
             return $results->map(function ($entity) {
+                if (is_null($entity)) {
+                    return null;
+                }
+                // If the locale was already set, it does not need to be attached as property
+                // The issue occurs when a collection method is called on the result of the query
+                // This bug was introduced in CakePHP 5
+                // See testLocaleBehavior_findLocale_With_Collection
+                if (is_string($entity->locale)) {
+                    return $entity;
+                }
                 if (is_null($entity->locale)) {
                     $locale = GetOrgLocaleService::getLocale();
                 } else {
