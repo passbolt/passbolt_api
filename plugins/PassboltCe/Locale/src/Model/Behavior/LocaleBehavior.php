@@ -101,6 +101,13 @@ class LocaleBehavior extends Behavior
                 if (is_null($entity)) {
                     return null;
                 }
+                // If the locale was already set, it does not need to be attached as property
+                // The issue occurs when a collection method is called on the result of the query
+                // This bug was introduced in CakePHP 5
+                // See testLocaleBehavior_findLocale_With_Collection
+                if (is_string($entity->locale)) {
+                    return $entity;
+                }
                 if (is_null($entity->locale)) {
                     $locale = GetOrgLocaleService::getLocale();
                 } else {
