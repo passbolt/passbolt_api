@@ -25,8 +25,8 @@ class V200MigrateFileStorageTable extends AbstractMigration
     {
         // initial_migration & fixing_mime_type_field
         $this->table('file_storage')->drop()->save();
-        $this->table('file_storage', ['id' => false, 'primary_key' => 'id'])
-            ->addColumn('id', 'char', ['limit' => 36])
+        $this->table('file_storage',  ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
+            ->addColumn('id', 'char', ['default' => null, 'limit' => 36, 'null' => false,])
             ->addColumn('user_id', 'char', ['limit' => 36, 'null' => true, 'default' => null])
             ->addColumn('foreign_key', 'char', ['limit' => 36, 'null' => true, 'default' => null])
             ->addColumn('model', 'string', ['limit' => 128, 'null' => true, 'default' => null])
