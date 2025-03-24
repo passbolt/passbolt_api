@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2025-02-14 07:10+0000\n"
-"PO-Revision-Date: 2025-02-14 10:59\n"
+"PO-Revision-Date: 2025-03-22 01:55\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Swedish\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +20,7 @@ msgid "You need to login to access this location."
 msgstr "Du måste logga in för att få tillgång till denna plats."
 
 msgid "The server verify token is missing or invalid."
-msgstr ""
+msgstr "Verifieringstoken för servern saknas eller är ogiltig."
 
 msgid "Decryption failed."
 msgstr "Dekrypteringen misslyckades."
@@ -41,7 +41,7 @@ msgid "Could not import the user OpenPGP key."
 msgstr "Kunde inte importera användarens OpenPGP-nyckel."
 
 msgid "Invalid verify token type."
-msgstr ""
+msgstr "\"Ogiltig verifieringstoken-typ.\""
 
 msgid "Invalid verify token format, "
 msgstr "Ogiltigt format för tokenverifiering, "
@@ -68,19 +68,19 @@ msgid "Page not found."
 msgstr "Sidan hittades inte."
 
 msgid "Please use .json extension in URL or accept application/json."
-msgstr ""
+msgstr "Vänligen använd .json-tillägg i URL:en eller acceptera application/json."
 
 msgid "The request data can not be empty."
-msgstr ""
+msgstr "Begärdedatan får inte vara tom."
 
 msgid "You are successfully logged in."
 msgstr "Du är inloggad."
 
 msgid "You are successfully logged out."
-msgstr ""
+msgstr "Du har loggats ut."
 
 msgid "The logout route should only be accessed with POST method."
-msgstr ""
+msgstr "Utloggningsrutten bör endast nås med POST-metoden."
 
 msgid "The OpenPGP public key information was not found in config."
 msgstr "Informationen om OpenPGPs publika nyckel hittades inte i konfigurationen."
@@ -188,10 +188,10 @@ msgid "Access restricted to administrators."
 msgstr "Åtkomst begränsad till administratörer."
 
 msgid "Access restricted to unauthenticated users."
-msgstr ""
+msgstr "Åtkomst begränsad till oautentiserade användare."
 
 msgid "The user should not be logged in."
-msgstr ""
+msgstr "Användaren bör inte vara inloggad."
 
 msgid "This feature is not supported by your version of passbolt."
 msgstr "Denna funktion stöds inte av din version av passbolt."
@@ -248,7 +248,7 @@ msgid "All checks ran successfully!"
 msgstr "Alla kontroller genomfördes framgångsrikt!"
 
 msgid "Healthcheck security index endpoint disabled."
-msgstr ""
+msgstr "Hälsokollens säkerhetsindex-endpoint är inaktiverad."
 
 msgid "OK"
 msgstr "OK"
@@ -278,34 +278,34 @@ msgid "The secret does not exist."
 msgstr "Hemligheten finns inte."
 
 msgid "Only guests are allowed to abort recovery process."
-msgstr ""
+msgstr "Endast gäster kan avbryta återställningsprocessen."
 
 msgid "An authentication token must be provided."
-msgstr ""
+msgstr "En autentiseringstoken måste anges."
 
 msgid "The recovery process was aborted."
-msgstr ""
+msgstr "Återställningsprocessen avbröts."
 
 msgid "Only guests are allowed to complete setup."
-msgstr ""
+msgstr "Endast gäster kan slutföra konfigurationen."
 
 msgid "The recovery was completed successfully."
 msgstr "Återställningen slutfördes framgångsrikt."
 
 msgid "Only guests are allowed to proceed with account recovery."
-msgstr ""
+msgstr "Endast gäster kan fortsätta med kontåterställning."
 
 msgid "The setup was completed successfully."
 msgstr "Konfigurationen har slutförts."
 
 msgid "Only guests are allowed to start setup."
-msgstr ""
+msgstr "Endast gäster kan påbörja konfigurationen."
 
 msgid "You are not authorized to share this resource."
 msgstr "Du har inte behörighet att dela denna resurs."
 
 msgid "Resource metadata key type is invalid."
-msgstr ""
+msgstr "\"Metadatanyckeltypen för resursen är ogiltig.\""
 
 msgid "Only administrators can add new users."
 msgstr "Endast administratörer kan lägga till nya användare."
@@ -359,28 +359,28 @@ msgid "You are not authorized to edit the role."
 msgstr "Du har inte behörighet att redigera rollen."
 
 msgid "Multiple has-access filters are not supported."
-msgstr ""
+msgstr "Flera \\\"has-access\\\"-filter stöds inte."
 
 msgid "This operation is not allowed for this user."
 msgstr "Denna åtgärd är inte tillåten för den här användaren."
 
 msgid "Only guests are allowed to recover an account. Please logout first."
-msgstr ""
+msgstr "Endast gäster tillåts återställa ett konto. Vänligen logga ut först."
 
 msgid "Recovery process started, check your email."
 msgstr "Återställningsprocessen har startats, kolla din e-post."
 
 msgid "Only guests are allowed to register."
-msgstr ""
+msgstr "Endast gäster får registrera sig."
 
 msgid "Registration is not opened to public."
-msgstr ""
+msgstr "Registrering är inte öppen för allmänheten."
 
 msgid "Please contact your administrator."
 msgstr "Kontakta din administratör."
 
 msgid "This is due to a security setting."
-msgstr ""
+msgstr "Detta beror på en säkerhetsinställning."
 
 msgid "The user identifier should be a valid UUID or \"me\"."
 msgstr "Användarmarkören ska vara ett giltigt UUID eller \"jag\"."
@@ -389,13 +389,13 @@ msgid "The user does not exist."
 msgstr "Användaren finns inte."
 
 msgid "No admin were found in the database."
-msgstr ""
+msgstr "Inga administratörer hittades i databasen."
 
 msgid "The `{0}` configuration must be a valid non-empty string."
-msgstr ""
+msgstr "Konfigurationen \"{0}\" måste vara en giltig icke-tom sträng."
 
 msgid "Invalid expiry time {0}."
-msgstr ""
+msgstr "Ogiltig utgångstid {0}."
 
 msgid "The identifier should not be empty."
 msgstr "Identifieraren får inte vara tom."
@@ -608,16 +608,16 @@ msgid "The user identifier should not be empty"
 msgstr "Användaridentifieraren får inte vara tom"
 
 msgid "You cannot reuse the server keys."
-msgstr ""
+msgstr "Du kan inte återanvända servernycklarna."
 
 msgid "A valid OpenPGP key must be provided."
 msgstr "En giltig OpenPGP-nyckel måste anges."
 
 msgid "The OpenPGP armored key could not be parsed."
-msgstr ""
+msgstr "Den bepansrade OpenPGP-nyckeln kunde inte tolkas."
 
 msgid "The OpenPGP armored key could not be validated."
-msgstr ""
+msgstr "Den bepansrade OpenPGP-nyckeln kunde inte valideras."
 
 msgid "The name should be a valid UTF8 string."
 msgstr "Namnet bör vara en giltig UTF8-sträng."
@@ -695,7 +695,7 @@ msgid "The property should not be empty."
 msgstr "Egenskapen får inte vara tom."
 
 msgid "The property should be an alphabetical string and only dot is accepted as special characters."
-msgstr ""
+msgstr "Egenskapen bör vara en alfabetisk sträng och endast punkt accepteras som specialtecken."
 
 msgid "The property identifier should be a valid UUID."
 msgstr "Egenskapsidentifieraren bör vara ett giltigt UUID."
@@ -842,7 +842,7 @@ msgid "A resource type identifier is required."
 msgstr "En resurstyp-identifierare krävs."
 
 msgid "The resource type should be one of the following: {0}."
-msgstr ""
+msgstr "\"Resurstypen bör vara en av följande: {0}.\""
 
 msgid "The permissions are required."
 msgstr "Behörigheterna krävs."
@@ -863,19 +863,19 @@ msgid "The secrets should contain only the secret of the owner."
 msgstr "Hemligheterna bör endast innehålla ägarens hemligheter."
 
 msgid "The metadata key ID should be a valid UUID."
-msgstr ""
+msgstr "\"Metadatanyckelns ID bör vara ett giltigt UUID.\""
 
 msgid "The metadata should be a valid ASCII string."
-msgstr ""
+msgstr "\"Metadatan bör vara en giltig ASCII-sträng.\""
 
 msgid "The metadata should not be empty."
-msgstr ""
+msgstr "\"Metadatan får inte vara tom.\""
 
 msgid "The metadata key type should be a valid UTF8 string."
-msgstr ""
+msgstr "\"Metadatanyckeltypen bör vara en giltig UTF8-sträng.\""
 
 msgid "The metadata key type should be one of the following: {0}."
-msgstr ""
+msgstr "\"Metadatanyckeltypen bör vara en av följande: {0}.\""
 
 msgid "The resource type does not exist."
 msgstr "Resurstypen finns inte."
@@ -893,31 +893,31 @@ msgid "The permissions should contain at least the owner permission."
 msgstr "Behörigheterna bör innehålla minst ägarens behörighet."
 
 msgid "The settings selected by your administrator prevent from downgrading resource type."
-msgstr ""
+msgstr "\"Inställningarna som valts av din administratör förhindrar nedgradering av resurstyp.\""
 
 msgid "The settings selected by your administrator prevent from using that key type."
-msgstr ""
+msgstr "\"Inställningarna som valts av din administratör förhindrar användning av den nyckeltypen.\""
 
 msgid "The metadata key does not exist or was deleted."
-msgstr ""
+msgstr "\"Metadatanyckeln finns inte eller har raderats.\""
 
 msgid "The metadata key is marked as expired."
-msgstr ""
+msgstr "\"Metadatanyckeln är markerad som utgången.\""
 
 msgid "It is not allowed to create v5-password-string resource types."
-msgstr ""
+msgstr "\"Det är inte tillåtet att skapa resurstyper av typen v5-password-string.\""
 
 msgid "The resource type should not be deleted."
-msgstr ""
+msgstr "\"Resurstypen får inte tas bort.\""
 
 msgid "The resource metadata provided can not be decrypted."
-msgstr ""
+msgstr "\"Den angivna resursmetadatan kan inte dekrypteras.\""
 
 msgid "A resource of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "\"En resurs av typen personlig kan inte delas med andra användare eller en grupp.\""
 
 msgid "The settings selected by your administrator prevent from upgrading v4 to v5."
-msgstr ""
+msgstr "Administratörens inställningar förhindrar uppgradering av v4 till v5."
 
 msgid "The resource should not be already soft deleted."
 msgstr "Resursen bör inte redan vara mjukraderad."
@@ -971,7 +971,7 @@ msgid "A role identifier is required."
 msgstr "En rollidentifierare krävs."
 
 msgid "The disabled date should be a valid date."
-msgstr ""
+msgstr "\"Inaktiveringsdatumet bör vara ett giltigt datum.\""
 
 msgid "The profile should not be empty."
 msgstr "Profilen bör inte vara tom."
@@ -1001,10 +1001,10 @@ msgid "The armored key should be a valid ASCII-armored OpenPGP key."
 msgstr "Den bepansrade nyckeln bör vara en giltig ASCII-bepansrad OpenPGP-nyckel."
 
 msgid "The armored key is not valid."
-msgstr ""
+msgstr "\"Den pansrade nyckeln är inte giltig.\""
 
 msgid "The message should be a valid ASCII-armored OpenPGP message."
-msgstr ""
+msgstr "Meddelandet bör vara ett giltigt ASCII-pansarat OpenPGP-meddelande."
 
 msgid "The creation date should be set in the past."
 msgstr "Skapandedatum måste fastställas i det förflutna."
@@ -1013,31 +1013,31 @@ msgid "The key should not already be expired."
 msgstr "Nyckeln bör inte redan ha gått ut."
 
 msgid "The date should not be set in the future."
-msgstr ""
+msgstr "Datumet bör inte anges i framtiden."
 
 msgid "The date could not be parsed."
-msgstr ""
+msgstr "Datumet kunde inte tolkas."
 
 msgid "The email should be a valid email address."
 msgstr "E-postadressen bör vara en giltig e-postadress."
 
 msgid "The regular expression should be a valid string."
-msgstr ""
+msgstr "Det reguljära uttrycket ska vara en giltig sträng."
 
 msgid "The fingerprint does not match the one of the armored key."
-msgstr ""
+msgstr "Fingeravtrycket matchar inte det för den bepansrade nyckeln."
 
 msgid "The fingerprint should be a string of 40 hexadecimal characters."
 msgstr "Fingeravtrycket bör vara en sträng av 40 hexadecimala tecken."
 
 msgid "The type should be one of the following: RSA, ECC, ECDSA, DH."
-msgstr ""
+msgstr "Typen ska vara en av följande: RSA, ECC, ECDSA, DH."
 
 msgid "The delete status should be a valid boolean."
-msgstr ""
+msgstr "Raderingsstatusen måste vara en giltig boolean."
 
 msgid "The field must be null when creating a new record."
-msgstr ""
+msgstr "\"Fältet måste vara null när du skapar en ny post.\""
 
 msgid "The key identifier should be a string of 8 hexadecimal characters."
 msgstr "Nyckeln identifierare bör vara en sträng av 8 hexadecimala tecken."
@@ -1046,10 +1046,10 @@ msgid "{0} updated your memberships in several groups"
 msgstr "{0} uppdaterade ditt medlemskap i flera grupper"
 
 msgid "{0} deleted several group memberships"
-msgstr ""
+msgstr "{0} tog bort flera gruppmedlemskap"
 
 msgid "You made changes on several resources"
-msgstr ""
+msgstr "Du gjorde ändringar i flera resurser"
 
 msgid "{0} has made changes on several resources"
 msgstr "{0} har gjort ändringar på flera resurser"
@@ -1076,7 +1076,7 @@ msgid "{0} requested you to add members to {1}"
 msgstr "{0} bad dig att lägga till medlemmar i {1}"
 
 msgid "You have been requested to add members to {0}"
-msgstr ""
+msgstr "Du har ombetts att lägga till medlemmar i {0}"
 
 msgid "{0} removed you from the group {1}"
 msgstr "{0} tog bort dig från gruppen {1}"
@@ -1085,10 +1085,10 @@ msgid "{0} updated your membership in the group {1}"
 msgstr "{0} uppdaterade ditt medlemskap i gruppen {1}"
 
 msgid "{0} just completed the account recovery process"
-msgstr ""
+msgstr "{0} har precis slutfört kontoåterställningsprocessen"
 
 msgid "You just completed the account recovery process!"
-msgstr ""
+msgstr "Du har precis slutfört kontoåterställningsprocessen!"
 
 msgid "Your account recovery, {0}!"
 msgstr "Återställning av ditt konto, {0}!"
@@ -1097,55 +1097,55 @@ msgid "You added the password {0}"
 msgstr "Du lade till lösenordet {0}"
 
 msgid "You added a new password"
-msgstr ""
+msgstr "\"Du lade till ett nytt lösenord\""
 
 msgid "{0} deleted the password {1}"
 msgstr "{0} tog bort lösenordet {1}"
 
 msgid "You edited a resource"
-msgstr ""
+msgstr "\"Du redigerade en resurs\""
 
 msgid "{0} edited a resource"
-msgstr ""
+msgstr "{0} redigerade en resurs"
 
 msgid "You edited the resource {0}"
-msgstr ""
+msgstr "\"Du redigerade resursen {0}\""
 
 msgid "{0} edited the resource {1}"
-msgstr ""
+msgstr "\"{0} redigerade resursen {1}\""
 
 msgid "{0} can not complete the account recovery process!"
-msgstr ""
+msgstr "{0} kan inte slutföra kontoåterställningsprocessen!"
 
 msgid "{0} shared the resource {1}"
-msgstr ""
+msgstr "\"{0} delade resursen {1}\""
 
 msgid "{0} shared a resource"
-msgstr ""
+msgstr "\"{0} delade en resurs\""
 
 msgid "You deleted administrator {0}"
-msgstr ""
+msgstr "Du tog bort administratören {0}"
 
 msgid "{0} deleted your account"
-msgstr ""
+msgstr "{0} tog bort ditt konto"
 
 msgid "{0} deleted administrator {1}"
-msgstr ""
+msgstr "{0} tog bort administratören {1}"
 
 msgid "Your account has been suspended"
-msgstr ""
+msgstr "\"Ditt konto har blivit avstängt\""
 
 msgid "Your admin role has been revoked"
-msgstr ""
+msgstr "Din administratörsroll har återkallats"
 
 msgid "{0}'s admin role has been revoked"
-msgstr ""
+msgstr "{0}'s administratörsroll har återkallats"
 
 msgid "{0} deleted user {1}"
 msgstr "{0} tog bort användare {1}"
 
 msgid "{0} has been suspended"
-msgstr ""
+msgstr "\"{0} har blivit avstängd\""
 
 msgid "Welcome to passbolt, {0}!"
 msgstr "Välkommen till passbolt, {0}!"
@@ -1172,13 +1172,13 @@ msgid "The send on user setup completed setting should be a boolean."
 msgstr "Inställningen att skicka när användarkonfigurationen är klar måste vara en boolean."
 
 msgid "The send on user recover abort setting should be a boolean."
-msgstr ""
+msgstr "Inställningen för att skicka vid avbruten användaråterställning bör vara en boolean."
 
 msgid "The send on user disabled setting should be a boolean."
-msgstr ""
+msgstr "\"Inställningen skicka när användaren inaktiveras bör vara en boolean.\""
 
 msgid "The send on admin disabled setting should be a boolean."
-msgstr ""
+msgstr "\"Inställningen skicka när administratör inaktiveras bör vara en boolean.\""
 
 msgid "The send on comment added setting should be a boolean."
 msgstr "Inställningen skicka när kommentar lagts till bör vara en boolean."
@@ -1199,7 +1199,7 @@ msgid "The send on group manager updated setting should be a boolean."
 msgstr "Inställningen skicka när gruppchefsinställningarna uppdaterats bör vara en boolean."
 
 msgid "The send on group manager request add user should be a boolean."
-msgstr ""
+msgstr "Inställningen skicka när gruppchefsbegäran lägger till användare bör vara en boolean."
 
 msgid "The send on password created setting should be a boolean."
 msgstr "Inställningen skicka när lösenord skapats bör vara en boolean."
@@ -1226,10 +1226,10 @@ msgid "The authentication token is not valid."
 msgstr "Autentiserings-token är inte giltig."
 
 msgid "The authentication token could not be found."
-msgstr ""
+msgstr "Autentiseringstoken kunde inte hittas."
 
 msgid "The token is already consumed."
-msgstr ""
+msgstr "Token är redan förbrukad."
 
 msgid "Validation failed for authenticationToken {0}. {1}"
 msgstr "Validering misslyckades för autentiseringtoken {0}. {1}"
@@ -1250,7 +1250,7 @@ msgid "Could not validate comment data."
 msgstr "Kunde inte validera kommentarsdata."
 
 msgid "The comment userId is not valid."
-msgstr ""
+msgstr "Kommentaranvändarens userId är inte giltigt."
 
 msgid "The comment does not exist."
 msgstr "Kommentaren finns inte."
@@ -1301,10 +1301,10 @@ msgid "Failed to encrypt with key {0}. {1}"
 msgstr "Misslyckades att kryptera med nyckeln {0}. {1}"
 
 msgid "Key expired: {0}."
-msgstr ""
+msgstr "Nyckel har löpt ut: {0}."
 
 msgid "Expiration date valid for key {0}."
-msgstr ""
+msgstr "Giltigt utgångsdatum för nyckel {0}."
 
 msgid "Validation failed for group {0}. {1}"
 msgstr "Validering misslyckades för gruppen {0}. {1}"
@@ -1316,532 +1316,532 @@ msgid "Could not validate group user data."
 msgstr "Kunde inte validera användardata för grupp."
 
 msgid "All email notifications will be sent."
-msgstr ""
+msgstr "Alla e-postaviseringar kommer att skickas."
 
 msgid "Some email notifications are disabled by the administrator."
-msgstr ""
+msgstr "Vissa e-postaviseringar är inaktiverade av administratören."
 
 msgid "Host availability will be checked."
-msgstr ""
+msgstr "Värdtillgänglighet kommer att kontrolleras."
 
 msgid "Host availability checking is disabled."
-msgstr ""
+msgstr "Kontroll av värdtillgänglighet är inaktiverad."
 
 msgid "Make sure this instance is not publicly available on the internet."
-msgstr ""
+msgstr "Säkerställ att denna instans inte är publikt tillgänglig på internet."
 
 msgid "Or set the PASSBOLT_EMAIL_VALIDATE_MX environment variable to true."
-msgstr ""
+msgstr "Eller ställ in miljövariabeln PASSBOLT_EMAIL_VALIDATE_MX på true."
 
 msgid "Or set passbolt.email.validate.mx to true in {0}."
-msgstr ""
+msgstr "Eller ställ in passbolt.email.validate.mx till true i {0}."
 
 msgid "Serving the compiled version of the javascript app."
-msgstr ""
+msgstr "Serverar den kompilerade versionen av javascript-appen."
 
 msgid "Using non-compiled Javascript. Passbolt will be slower."
-msgstr ""
+msgstr "Använder icke-kompilerad Javascript. Passbolt kommer att vara långsammare."
 
 msgid "Set passbolt.js.build to production in {0}"
-msgstr ""
+msgstr "Ange passbolt.js.build till production i {0}"
 
 msgid "undefined"
-msgstr ""
+msgstr "odefinierad"
 
 msgid "Could not read tag information on github repository"
 msgstr "Kunde inte läsa tagginformation på github repository"
 
 msgid "Using latest passbolt version ({0})."
-msgstr ""
+msgstr "Använder senaste passbolt-versionen ({0})."
 
 msgid "Could connect to passbolt repository to check versions."
-msgstr ""
+msgstr "Kunde ansluta till passbolt-förråd för att kontrollera versioner."
 
 msgid "This installation is not up to date. Currently using {0} and it should be {1}."
-msgstr ""
+msgstr "Denna installation är inte uppdaterad. Använder för närvarande {0} och bör vara {1}."
 
 msgid "Could not connect to passbolt repository to check versions."
-msgstr ""
+msgstr "\"Kunde inte ansluta till Passbolt-förvaret för att kontrollera versioner.\""
 
 msgid "It is not possible to check if your version is up-to-date."
-msgstr ""
+msgstr "\"Det är inte möjligt att kontrollera om din version är uppdaterad.\""
 
 msgid "See https://www.passbolt.com/help/tech/update"
-msgstr ""
+msgstr "Se https://www.passbolt.com/help/tech/update"
 
 msgid "Check the network configuration to allow this script to check for updates."
-msgstr ""
+msgstr "Kontrollera nätverkskonfigurationen för att tillåta detta skript att söka efter uppdateringar."
 
 msgid "Search engine robots are told not to index content."
-msgstr ""
+msgstr "Sökmotorrobotar instrueras att inte indexera innehåll."
 
 msgid "Search engine robots are not told not to index content."
-msgstr ""
+msgstr "Sökmotorrobotar instrueras inte att undvika indexering av innehåll."
 
 msgid "Set passbolt.meta.robots to false in {0}."
-msgstr ""
+msgstr "Ange passbolt.meta.robots till false i {0}."
 
 msgid "Selenium API endpoints are disabled."
-msgstr ""
+msgstr "Selenium-API-endpoints är inaktiverade."
 
 msgid "Selenium API endpoints are active. This setting should be used for testing only."
-msgstr ""
+msgstr "Selenium-API-endpoints är aktiva. Denna inställning ska endast användas för testning."
 
 msgid "Set passbolt.selenium.active to false in {0}."
-msgstr ""
+msgstr "Ange passbolt.selenium.active till false i {0}."
 
 msgid "The Self Registration plugin is enabled."
-msgstr ""
+msgstr "Självregistreringsplugin är aktiverad."
 
 msgid "The Self Registration plugin is disabled."
-msgstr ""
+msgstr "Självregistreringsplugin är inaktiverad."
 
 msgid "Enable the plugin in order to define self registration settings."
-msgstr ""
+msgstr "Aktivera plugin för att definiera inställningar för självregistrering."
 
 msgid "Registration is closed, only administrators can add users."
-msgstr ""
+msgstr "Registrering är stängd, endast administratörer kan lägga till användare."
 
 msgid "The self registration provider is: {0}."
-msgstr ""
+msgstr "Självregistreringsleverantören är: {0}."
 
 msgid "The deprecated self registration public setting was not found in {0}."
-msgstr ""
+msgstr "Den föråldrade offentliga självregistreringsinställningen hittades inte i {0}."
 
 msgid "The deprecated self registration public setting was found in {0}."
-msgstr ""
+msgstr "Den föråldrade offentliga självregistreringsinställningen hittades i {0}."
 
 msgid "You may remove the \"passbolt.registration.public\" setting."
-msgstr ""
+msgstr "Du kan ta bort inställningen \\\"passbolt.registration.public\\\"."
 
 msgid "Passbolt is configured to force SSL use."
-msgstr ""
+msgstr "Passbolt är konfigurerad för att tvinga användning av SSL."
 
 msgid "Passbolt is not configured to force SSL use."
-msgstr ""
+msgstr "Passbolt är inte konfigurerad för att tvinga användning av SSL."
 
 msgid "Set passbolt.ssl.force to true in {0}."
-msgstr ""
+msgstr "Ange passbolt.ssl.force till true i {0}."
 
 msgid "App.fullBaseUrl is set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl är inställd på HTTPS."
 
 msgid "App.fullBaseUrl is not set to HTTPS."
-msgstr ""
+msgstr "App.fullBaseUrl är inte inställd på HTTPS."
 
 msgid "Check App.fullBaseUrl url scheme in {0}."
-msgstr ""
+msgstr "Kontrollera url-schemat för App.fullBaseUrl i {0}."
 
 msgid "The application config file is present"
-msgstr ""
+msgstr "Applikationskonfigurationsfilen finns"
 
 msgid "The application config file is missing in {0}"
-msgstr ""
+msgstr "Applikationskonfigurationsfilen saknas i {0}"
 
 msgid "Copy {0} to {1}"
-msgstr ""
+msgstr "Kopiera {0} till {1}"
 
 msgid "The passbolt config file is present"
-msgstr ""
+msgstr "Passbolt-konfigurationsfilen finns"
 
 msgid "The passbolt config file is missing in {0}"
-msgstr ""
+msgstr "Passbolt-konfigurationsfilen saknas i {0}"
 
 msgid "The passbolt config file is not required if passbolt is configured with environment variables"
-msgstr ""
+msgstr "Passbolt-konfigurationsfilen krävs inte om passbolt är konfigurerad med miljövariabler"
 
 msgid "Cache is working."
-msgstr ""
+msgstr "Cache fungerar."
 
 msgid "Cache is NOT working."
-msgstr ""
+msgstr "Cache fungerar INTE."
 
 msgid "Check the settings in {0}"
-msgstr ""
+msgstr "Kontrollera inställningarna i {0}"
 
 msgid "Debug mode is off."
-msgstr ""
+msgstr "Felsökningsläge är avstängt."
 
 msgid "Debug mode is on."
-msgstr ""
+msgstr "Felsökningsläge är påslaget."
 
 msgid "Set debug to false in {0}"
-msgstr ""
+msgstr "Ange debug till false i {0}"
 
 msgid "Full base url is set to {0}"
-msgstr ""
+msgstr "Full bas-url är inställd på {0}"
 
 msgid "Full base url is not set. The application is using: {0}."
-msgstr ""
+msgstr "Full bas-url är inte inställd. Applikationen använder: {0}."
 
 msgid "Edit App.fullBaseUrl in {0}"
-msgstr ""
+msgstr "Redigera App.fullBaseUrl i {0}"
 
 msgid "/healthcheck/status is reachable."
-msgstr ""
+msgstr "/healthcheck/status är åtkomlig."
 
 msgid "Could not reach the /healthcheck/status with the url specified in App.fullBaseUrl"
-msgstr ""
+msgstr "Kunde inte nå /healthcheck/status med den url som anges i App.fullBaseUrl"
 
 msgid "Check that the domain name is correct in {0}"
-msgstr ""
+msgstr "Kontrollera att domännamnet är korrekt i {0}"
 
 msgid "Check the network settings"
-msgstr ""
+msgstr "Kontrollera nätverksinställningarna"
 
 msgid "Unique value set for security.salt"
-msgstr ""
+msgstr "Unikt värde angett för security.salt"
 
 msgid "Default value found for security.salt"
-msgstr ""
+msgstr "Standardvärde hittades för security.salt"
 
 msgid "Edit the security.salt in {0}"
-msgstr ""
+msgstr "Redigera security.salt i {0}"
 
 msgid "App.fullBaseUrl validation OK."
-msgstr ""
+msgstr "Validering av App.fullBaseUrl är OK."
 
 msgid "App.fullBaseUrl does not validate. A valid URL/IP is accepted, but found \"{0}\"."
-msgstr ""
+msgstr "App.fullBaseUrl är inte giltig. En giltig URL/IP accepteras, men \"{0}\" hittades."
 
 msgid "Select a valid domain name as defined by section 2.3.1 of http://www.ietf.org/rfc/rfc1035.txt"
-msgstr ""
+msgstr "Välj ett giltigt domännamn enligt definitionen i avsnitt 2.3.1 av http://www.ietf.org/rfc/rfc1035.txt"
 
 msgid "IMPORTANT: Using an empty App.fullBaseUrl can lead to host header injection attack: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
-msgstr ""
+msgstr "VIKTIGT: Att använda en tom App.fullBaseUrl kan leda till Host Header-Injectingattacker: https://owasp.org/www-project-web-security-testing-guide/v42/4-Web_Application_Security_Testing/07-Input_Validation_Testing/17-Testing_for_Host_Header_Injection"
 
 msgid "The application is able to connect to the database"
-msgstr ""
+msgstr "Applikationen kan ansluta till databasen"
 
 msgid "The driver defined in the database configuration is not supported."
-msgstr ""
+msgstr "Drivrutinen som är definierad i databasens konfiguration stöds inte."
 
 msgid "The application is not able to connect to the database."
-msgstr ""
+msgstr "Applikationen kan inte ansluta till databasen."
 
 msgid "Ensure that the driver defined in {0} is one of the following: {1}."
-msgstr ""
+msgstr "Se till att drivrutinen som definieras i {0} är en av följande: {1}."
 
 msgid "Double check the host, database name, username and password in {0}."
-msgstr ""
+msgstr "Kontrollera värd, databasenamn, användarnamn och lösenord i {0} igen."
 
 msgid "Make sure the database exists and is accessible for the given database user."
-msgstr ""
+msgstr "Se till att databasen finns och är tillgänglig för den angivna databasanvändaren."
 
 msgid "Some default content is present."
-msgstr ""
+msgstr "Något standardinnehåll är närvarande."
 
 msgid "No default content found."
-msgstr ""
+msgstr "Inget standardinnehåll hittades."
 
 msgid "Run the install script to install the database tables"
-msgstr ""
+msgstr "Kör installationsskriptet för att installera databastabellerna"
 
 msgid "The database schema is up to date."
-msgstr ""
+msgstr "\"Databaseschemat är uppdaterat.\""
 
 msgid "The database schema is not up to date."
-msgstr ""
+msgstr "Databasschemat är inte uppdaterat."
 
 msgid "Run the migration scripts:"
-msgstr ""
+msgstr "Kör migreringsskripten:"
 
 msgid "{0} tables found."
-msgstr ""
+msgstr "{0} tabeller hittades."
 
 msgid "No table found."
-msgstr ""
+msgstr "Ingen tabell hittades."
 
 msgid "Cannot detect your system distribution details."
-msgstr ""
+msgstr "\"Kan inte upptäcka detaljer om ditt systemdistribution.\""
 
 msgid "See `{0}`."
-msgstr ""
+msgstr "\"Se `{0}`.\""
 
 msgid "Cannot detect your `gpg` or `libgcrypt` version."
-msgstr ""
+msgstr "\"Kan inte upptäcka din `gpg`- eller `libgcrypt`-version.\""
 
 msgid "See `{0}` and `{1}`."
-msgstr ""
+msgstr "\"Se `{0}` och `{1}`.\""
 
 msgid "GD or Imagick extension is installed."
-msgstr ""
+msgstr "GD- eller Imagick-tillägg är installerat."
 
 msgid "You must enable the gd or imagick extensions to use Passbolt."
-msgstr ""
+msgstr "Du måste aktivera gd- eller imagick-tilläggen för att använda Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.image.php"
-msgstr ""
+msgstr "\"Se: https:\\/\\/secure.php.net\\/manual\\/en\\/book.image.php\""
 
 msgid "See: https://secure.php.net/manual/en/book.imagick.php"
-msgstr ""
+msgstr "\"Se: https:\\/\\/secure.php.net\\/manual\\/en\\/book.imagick.php\""
 
 msgid "Intl extension is installed."
-msgstr ""
+msgstr "Intl-tillägget är installerat."
 
 msgid "You must enable the intl extension to use Passbolt."
-msgstr ""
+msgstr "Du måste aktivera intl-tillägget för att använda Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.intl.php"
-msgstr ""
+msgstr "\"Se: https:\\/\\/secure.php.net\\/manual\\/en\\/book.intl.php\""
 
 msgid "The logs directory and its content are writable."
-msgstr ""
+msgstr "Loggmappen och dess innehåll är skrivbara."
 
 msgid "The logs directory and its content are not writable."
-msgstr ""
+msgstr "Loggmappen och dess innehåll är inte skrivbara."
 
 msgid "Ensure the logs directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "\"Säkerställ att loggmappen och dess innehåll är skrivbart för webbserveranvändaren.\""
 
 msgid "You can try:"
 msgstr "Du kan prova:"
 
 msgid "Mbstring extension is installed."
-msgstr ""
+msgstr "Mbstring-tillägget är installerat."
 
 msgid "You must enable the mbstring extension to use Passbolt."
-msgstr ""
+msgstr "Du måste aktivera mbstring-tillägget för att använda Passbolt."
 
 msgid "See: https://secure.php.net/manual/en/book.mbstring.php"
-msgstr ""
+msgstr "\"Se: https:\\/\\/secure.php.net\\/manual\\/en\\/book.mbstring.php\""
 
 msgid "PHP version is {0} or above."
-msgstr ""
+msgstr "PHP-versionen är {0} eller högre."
 
 msgid "PHP version less than {0} will soon be not supported by passbolt, so consider upgrading your operating system or PHP environment."
-msgstr ""
+msgstr "PHP-version mindre än {0} kommer snart inte att stödjas av Passbolt, överväg därför att uppgradera ditt operativsystem eller din PHP-miljö."
 
 msgid "64-bit architecture system detected."
-msgstr ""
+msgstr "\"64-bitars arkitektursystem upptäckt.\""
 
 msgid "32-bit architecture system detected, this environment will not be supported as of Passbolt v5+."
-msgstr ""
+msgstr "\"32-bitars arkitektursystem upptäckt, denna miljö kommer inte att stödjas från och med Passbolt v5+.\""
 
 msgid "See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php"
-msgstr ""
+msgstr "\"Se PHP_INT_MAX - https:\\/\\/www.php.net\\/manual\\/en\\/language.types.integer.php\""
 
 msgid "PCRE compiled with unicode support."
-msgstr ""
+msgstr "PCRE kompilerad med Unicode-stöd."
 
 msgid "PCRE has not been compiled with Unicode support."
-msgstr ""
+msgstr "PCRE har inte kompilerats med Unicode-stöd."
 
 msgid "Recompile PCRE with Unicode support by adding --enable-unicode-properties when configuring."
-msgstr ""
+msgstr "Rekompilera PCRE med Unicode-stöd genom att lägga till --enable-unicode-properties när du konfigurerar."
 
 msgid "PHP version {0}."
-msgstr ""
+msgstr "PHP-version {0}."
 
 msgid "PHP version is too low, passbolt need PHP {0} or higher."
-msgstr ""
+msgstr "PHP-versionen är för låg, Passbolt kräver PHP {0} eller högre."
 
 msgid "System clock is synchronized and NTP service is active."
-msgstr ""
+msgstr "\"Systemklockan är synkroniserad och NTP-tjänsten är aktiv.\""
 
 msgid "System clock and NTP service information cannot be found."
-msgstr ""
+msgstr "\"Information om systemklockan och NTP-tjänsten kan inte hittas.\""
 
 msgid "NTP service is active but the system clock is not synchronized."
-msgstr ""
+msgstr "\"NTP-tjänsten är aktiv men systemklockan är inte synkroniserad.\""
 
 msgid "System clock is synchronized but NTP service is inactive."
-msgstr ""
+msgstr "\"Systemklockan är synkroniserad men NTP-tjänsten är inaktiv.\""
 
 msgid "System clock is not synchronized and NTP service is inactive."
-msgstr ""
+msgstr "\"Systemklockan är inte synkroniserad och NTP-tjänsten är inaktiv.\""
 
 msgid "That generally means the NTP service is failing to contact any NTP servers."
-msgstr ""
+msgstr "\"Det innebär i allmänhet att NTP-tjänsten inte kan kontakta några NTP-servrar.\""
 
 msgid "See `{0}`. More information: {1}"
-msgstr ""
+msgstr "\"Se `{0}`. Mer information: {1}\""
 
 msgid "The temporary directory and its content are writable and not executable."
-msgstr ""
+msgstr "Den temporära mappen och dess innehåll är skrivbara och inte körbara."
 
 msgid "The temporary directory and its content are not writable, or are executable."
-msgstr ""
+msgstr "Den temporära mappen och dess innehåll är inte skrivbara, eller är körbara."
 
 msgid "Ensure the temporary directory and its content are writable by the webserver user."
-msgstr ""
+msgstr "Se till att den temporära mappen och dess innehåll är skrivbara av webbserveranvändaren."
 
 msgid "you can try:"
 msgstr "du kan prova:"
 
 msgid "The private key can be used to decrypt a message."
-msgstr ""
+msgstr "Den privata nyckeln kan användas för att dekryptera ett meddelande."
 
 msgid "The private key cannot be used to decrypt a message"
-msgstr ""
+msgstr "Den privata nyckeln kan inte användas för att dekryptera ett meddelande"
 
 msgid "The private key can be used to decrypt and verify a message."
-msgstr ""
+msgstr "Den privata nyckeln kan användas för att dekryptera och verifiera ett meddelande."
 
 msgid "The private key cannot be used to decrypt and verify a message"
-msgstr ""
+msgstr "Den privata nyckeln kan inte användas för att dekryptera och verifiera ett meddelande"
 
 msgid "The public key can be used to encrypt a message."
-msgstr ""
+msgstr "Den publika nyckeln kan användas för att kryptera ett meddelande."
 
 msgid "The public key cannot be used to encrypt a message"
-msgstr ""
+msgstr "Den publika nyckeln kan inte användas för att kryptera ett meddelande"
 
 msgid "Make sure that the server private key is valid and that there is no passphrase."
-msgstr ""
+msgstr "Se till att serverns privata nyckel är giltig och att det inte finns någon lösenfras."
 
 msgid "Make sure you imported the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "Se till att du har importerat den privata servernyckeln i nyckelringen för webbserveranvändaren."
 
 msgid "The public and private keys can be used to encrypt and sign a message."
-msgstr ""
+msgstr "De publika och privata nycklarna kan användas för att kryptera och signera ett meddelande."
 
 msgid "The public and private keys cannot be used to encrypt and sign a message"
-msgstr ""
+msgstr "De publika och privata nycklarna kan inte användas för att kryptera och signera ett meddelande"
 
 msgid "The private key can be used to sign a message."
-msgstr ""
+msgstr "Den privata nyckeln kan användas för att signera ett meddelande."
 
 msgid "The private key cannot be used to sign a message"
-msgstr ""
+msgstr "Den privata nyckeln kan inte användas för att signera ett meddelande"
 
 msgid "The public key can be used to verify a signature."
-msgstr ""
+msgstr "Den publika nyckeln kan användas för att verifiera en signatur."
 
 msgid "The public key cannot be used to verify a signature."
-msgstr ""
+msgstr "Den publika nyckeln kan inte användas för att verifiera en signatur."
 
 msgid "The server key fingerprint matches the one defined in {0}."
-msgstr ""
+msgstr "Serverns nyckelfingeravtryck matchar det som anges i {0}."
 
 msgid "The server key fingerprint doesn't match the one defined in {0}."
-msgstr ""
+msgstr "Serverns nyckelfingeravtryck matchar inte det som anges i {0}."
 
 msgid "Double check the key fingerprint, example: "
-msgstr ""
+msgstr "Kontrollera nyckelfingeravtrycket, exempel: "
 
 msgid "SERVER_KEY_EMAIL: The email you used when you generated the server key."
-msgstr ""
+msgstr "SERVER_KEY_EMAIL: E-postadressen du använde när du skapade servernyckeln."
 
 msgid "See. https://www.passbolt.com/help/tech/install#toc_gpg"
-msgstr ""
+msgstr "Se. https:\\/\\/www.passbolt.com\\/help\\/tech\\/install#toc_gpg"
 
 msgid "The server private key format is Gopengpg compatible."
-msgstr ""
+msgstr "Serverns privata nyckelformat är kompatibelt med Gopengpg."
 
 msgid "The server private key format is not Gopengpg compatible."
-msgstr ""
+msgstr "Serverns privata nyckelformat är inte kompatibelt med Gopengpg."
 
 msgid "The server public key format is Gopengpg compatible."
-msgstr ""
+msgstr "Serverns publika nyckelformat är kompatibelt med Gopengpg."
 
 msgid "The server public key format is not Gopengpg compatible."
-msgstr ""
+msgstr "Serverns publika nyckelformat är inte kompatibelt med Gopengpg."
 
 msgid "The environment variable GNUPGHOME is set to {0}."
-msgstr ""
+msgstr "Miljövariabeln GNUPGHOME är inställd på {0}."
 
 msgid "The environment variable GNUPGHOME is set to {0}, but the directory does not exist."
-msgstr ""
+msgstr "Miljövariabeln GNUPGHOME är inställd på {0}, men katalogen finns inte."
 
 msgid "Ensure the keyring location exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Se till att platsen för nyckelringen finns och är åtkomlig av webbserveranvändaren."
 
 msgid "You can change the location of the keyring by editing the GPG.env.setenv and GPG.env.home variables in {0}."
-msgstr ""
+msgstr "Du kan ändra platsen för nyckelringen genom att redigera variablerna GPG.env.setenv och GPG.env.home i {0}."
 
 msgid "The directory {0} containing the keyring is writable by the webserver user."
-msgstr ""
+msgstr "Katalogen {0} som innehåller nyckelringen är skrivbar av webbserveranvändaren."
 
 msgid "The directory {0} containing the keyring is not writable by the webserver user."
-msgstr ""
+msgstr "Katalogen {0} som innehåller nyckelringen är inte skrivbar av webbserveranvändaren."
 
 msgid "Ensure the keyring location is accessible by the webserver user."
-msgstr ""
+msgstr "Se till att platsen för nyckelringen är åtkomlig av webbserveranvändaren."
 
 msgid "The server OpenPGP key is not the default one."
-msgstr ""
+msgstr "Serverns OpenPGP-nyckel är inte standardnyckeln."
 
 msgid "Do not use the default OpenPGP key for the server."
-msgstr ""
+msgstr "Använd inte standardnyckeln för OpenPGP för servern."
 
 msgid "The server OpenPGP key is not set."
-msgstr ""
+msgstr "Serverns OpenPGP-nyckel är inte inställd."
 
 msgid "Create a key, export it and add the fingerprint to {0}"
-msgstr ""
+msgstr "Skapa en nyckel, exportera den och lägg till fingeravtrycket i {0}"
 
 msgid "PHP GPG Module is installed and loaded."
-msgstr ""
+msgstr "PHP GPG-modulen är installerad och inläst."
 
 msgid "PHP GPG Module is not installed or loaded."
-msgstr ""
+msgstr "PHP GPG-modulen är inte installerad eller inläst."
 
 msgid "Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php"
-msgstr ""
+msgstr "Installera php-gnupg, se. http:\\/\\/php.net\\/manual\\/en\\/gnupg.installation.php"
 
 msgid "Make sure to add extension=gnupg.so in php ini files for both php-cli and php."
-msgstr ""
+msgstr "Se till att lägga till extension=gnupg.so i php-ini-filerna för både php-cli och php."
 
 msgid "The private key file is defined in {0} and readable."
-msgstr ""
+msgstr "Den privata nyckelfilen är definierad i {0} och läsbar."
 
 msgid "The private key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Den privata nyckelfilen är inte definierad i {0} eller inte läsbar."
 
 msgid "Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}."
-msgstr ""
+msgstr "Se till att den privata nyckelfilen är definierad av variabeln passbolt.gpg.serverKey.private i {0}."
 
 msgid "Ensure there is a private key armored block in the key file."
-msgstr ""
+msgstr "Se till att det finns ett pansrat block för privat nyckel i nyckelfilen."
 
 msgid "Ensure the private key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Se till att den privata nyckeln definierad i {0} finns och är åtkomlig av webbserveranvändaren."
 
 msgid "There is a valid email id defined for the server key."
-msgstr ""
+msgstr "Det finns en giltig e-postadress definierad för servernyckeln."
 
 msgid "The server key does not have a valid email id."
-msgstr ""
+msgstr "Servernyckeln har inte en giltig e-postadress."
 
 msgid "The server public key defined in the {0} (or environment variables) is in the keyring."
-msgstr ""
+msgstr "Den publika servernyckeln definierad i {0} (eller miljövariabler) finns i nyckelringen."
 
 msgid "The server public key defined in the {0} (or environment variables) is not in the keyring"
-msgstr ""
+msgstr "Den publika servernyckeln definierad i {0} (eller miljövariabler) finns inte i nyckelringen"
 
 msgid "Import the private server key in the keyring of the webserver user."
-msgstr ""
+msgstr "Importera den privata servernyckeln i nyckelringen för webbserveranvändaren."
 
 msgid "The public key file is defined in {0} and readable."
-msgstr ""
+msgstr "Den publika nyckelfilen är definierad i {0} och läsbar."
 
 msgid "The public key file is not defined in {0} or not readable."
-msgstr ""
+msgstr "Den publika nyckelfilen är inte definierad i {0} eller inte läsbar."
 
 msgid "Ensure the public key file is defined by the variable passbolt.gpg.serverKey.public in {0}."
-msgstr ""
+msgstr "Se till att den publika nyckelfilen är definierad av variabeln passbolt.gpg.serverKey.public i {0}."
 
 msgid "Ensure there is a public key armored block in the key file."
-msgstr ""
+msgstr "Se till att det finns ett pansrat block för publik nyckel i nyckelfilen."
 
 msgid "Ensure the public key defined in {0} exists and is accessible by the webserver user."
-msgstr ""
+msgstr "Se till att den publika nyckeln som definieras i {0} finns och är åtkomlig av webbserveranvändaren."
 
 msgid "Environment"
-msgstr ""
+msgstr "Miljö"
 
 msgid "Config files"
-msgstr ""
+msgstr "Konfigurationsfiler"
 
 msgid "Core config"
-msgstr ""
+msgstr "Kärnkonfiguration"
 
 msgid "SMTP settings"
-msgstr ""
+msgstr "SMTP-inställningar"
 
 msgid "Application configuration"
-msgstr ""
+msgstr "Applikationskonfiguration"
 
 msgid "Database"
 msgstr "Databas"
@@ -1850,28 +1850,28 @@ msgid "GPG Configuration"
 msgstr "Konfiguration av GPG"
 
 msgid "JWT Authentication"
-msgstr ""
+msgstr "JWT-autentisering"
 
 msgid "SSL Certificate"
-msgstr ""
+msgstr "SSL-certifikat"
 
 msgid "The {0} plugin is enabled."
-msgstr ""
+msgstr "Pluginen {0} är aktiverad."
 
 msgid "The {0} plugin is disabled."
-msgstr ""
+msgstr "Pluginen {0} är inaktiverad."
 
 msgid "Set the environment variable {0} to true"
-msgstr ""
+msgstr "Ställ in miljövariabeln {0} på true"
 
 msgid "Enable the plugin in order to define SMTP settings in the database."
-msgstr ""
+msgstr "Aktivera pluginen för att definiera SMTP-inställningar i databasen."
 
 msgid "Hostname is matching in SSL certificate."
-msgstr ""
+msgstr "Värdnamnet matchar i SSL-certifikatet."
 
 msgid "Hostname does not match when validating certificates."
-msgstr ""
+msgstr "Värdnamnet matchar inte vid validering av certifikat."
 
 msgid "SSL access is enabled."
 msgstr "SSL-åtkomst är aktiverad."
@@ -1880,64 +1880,64 @@ msgid "SSL access is not enabled. You can still proceed, but it is highly recomm
 msgstr "SSL-åtkomst är inte aktiverad. Du kan fortfarande gå vidare men det rekommenderas starkt att du konfigurerar din webbserver för att använda HTTPS innan du fortsätter."
 
 msgid "Not using a self-signed certificate."
-msgstr ""
+msgstr "Använder inte ett självsignerat certifikat."
 
 msgid "Using a self-signed certificate."
-msgstr ""
+msgstr "Använder ett självsignerat certifikat."
 
 msgid "SSL peer certificate validates."
-msgstr ""
+msgstr "SSL-partscertifikatet valideras."
 
 msgid "SSL peer certificate does not validate."
-msgstr ""
+msgstr "SSL-partscertifikatet valideras inte."
 
 msgid "The keyring is not defined."
-msgstr ""
+msgstr "\"Nyckelringen är inte definierad.\""
 
 msgid "The keyring directory is not accessible by the current user: {0}"
-msgstr ""
+msgstr "\"Nyckelringsmappen är inte åtkomlig för den aktuella användaren: {0}\""
 
 msgid "Could not validate sub key data."
-msgstr ""
+msgstr "Kunde inte validera undernyckeldata."
 
 msgid "Public key sub key id could not be found."
-msgstr ""
+msgstr "Den publika nyckelns undernyckel-ID kunde inte hittas."
 
 msgid "Could not validate message data."
-msgstr ""
+msgstr "Kunde inte validera meddelandedata."
 
 msgid "Recipient information could not be found."
-msgstr ""
+msgstr "Mottagarinformation kunde inte hittas."
 
 msgid "The public key could not be parsed."
-msgstr ""
+msgstr "Den publika nyckeln kunde inte tolkas."
 
 msgid "The armored message must not contain an extra line before the end block."
-msgstr ""
+msgstr "Det bepansrade meddelandet får inte innehålla en extra rad före slutblocket."
 
 msgid "The message must contain an asymmetric packet."
-msgstr ""
+msgstr "Meddelandet måste innehålla ett asymmetriskt paket."
 
 msgid "The message must contain a symmetric packet."
-msgstr ""
+msgstr "Meddelandet måste innehålla ett symmetriskt paket."
 
 msgid "The message must contain only one recipient."
-msgstr ""
+msgstr "Meddelandet får endast innehålla en mottagare."
 
 msgid "Unknown key validation rule: {0}"
-msgstr ""
+msgstr "Okänd nyckelvalideringsregel: {0}"
 
 msgid "The armored message could not be validated."
-msgstr ""
+msgstr "Det bepansrade meddelandet kunde inte valideras."
 
 msgid "The OpenPGP server key defined in the config cannot be used to encrypt."
-msgstr ""
+msgstr "OpenPGP-servernyckeln som definieras i konfigurationen kan inte användas för att kryptera."
 
 msgid "The OpenPGP server key defined in the config cannot be used to verify signature."
-msgstr ""
+msgstr "\"OpenPGP-servernyckeln som definieras i konfigurationen kan inte användas för att verifiera signaturen.\""
 
 msgid "The OpenPGP server key defined in the config cannot be used to sign."
-msgstr ""
+msgstr "\"OpenPGP-servernyckeln som definieras i konfigurationen kan inte användas för att signera.\""
 
 msgid "The config for the server private key fingerprint is not available or incomplete."
 msgstr "Konfigurationen för serverns fingeravtryck för privat nyckel är inte tillgänglig eller ofullständig."
@@ -1946,52 +1946,52 @@ msgid "The config for the server private key passphrase is invalid."
 msgstr "Konfigurationen för serverns privata nyckels lösenfras är ogiltig."
 
 msgid "The user public key is not available or incomplete."
-msgstr ""
+msgstr "\"Användarens publika nyckel är inte tillgänglig eller ofullständig.\""
 
 msgid "The user public key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "\"Användarens publika nyckelfingeravtryck är inte tillgängligt eller ofullständigt.\""
 
 msgid "The user armored key is not available or incomplete."
-msgstr ""
+msgstr "\"Användarens pansrade nyckel är inte tillgänglig eller ofullständig.\""
 
 msgid "The algorithm is invalid."
-msgstr ""
+msgstr "Algoritmen är ogiltig."
 
 msgid "The fingerprint id is invalid."
-msgstr ""
+msgstr "Fingeravtrycks-id är ogiltigt."
 
 msgid "The public key id is invalid."
-msgstr ""
+msgstr "Den publika nyckelns id är ogiltigt."
 
 msgid "The key size is not valid."
-msgstr ""
+msgstr "Nyckelstorleken är inte giltig."
 
 msgid "The key size must match security recommendations."
-msgstr ""
+msgstr "Nyckelstorleken måste uppfylla säkerhetsrekommendationerna."
 
 msgid "The key creation date must not be in the future."
-msgstr ""
+msgstr "Nyckelskapningsdatumet får inte vara i framtiden."
 
 msgid "The key must not be expired."
-msgstr ""
+msgstr "Nyckeln får inte ha löpt ut."
 
 msgid "The key must not include an expiry date."
-msgstr ""
+msgstr "Nyckeln får inte inkludera ett utgångsdatum."
 
 msgid "The key must be revoked."
-msgstr ""
+msgstr "Nyckeln måste vara återkallad."
 
 msgid "The key must not be revoked."
-msgstr ""
+msgstr "Nyckeln får inte vara återkallad."
 
 msgid "The armored key must not contain an extra line before the end block."
-msgstr ""
+msgstr "Den bepansrade nyckeln får inte innehålla en extra rad före slutblocket."
 
 msgid "The armored key must not contain multiple keys."
-msgstr ""
+msgstr "Den bepansrade nyckeln får inte innehålla flera nycklar."
 
 msgid "The public key could not be validated."
-msgstr ""
+msgstr "Den publika nyckeln kunde inte valideras."
 
 msgid "Could not validate permission data."
 msgstr "Kunde inte validera behörighetsdata."
@@ -2015,7 +2015,7 @@ msgid "Could not validate resource data."
 msgstr "Kunde inte validera resursdata."
 
 msgid "An unexpected error occurred, please contact an administrator."
-msgstr ""
+msgstr "Ett oväntat fel uppstod, kontakta en administratör."
 
 msgid "The server returned the following error:"
 msgstr "Servern returnerade följande fel:"
@@ -2045,10 +2045,10 @@ msgid "Could not validate secret data."
 msgstr "Kunde inte validera hemlig data."
 
 msgid "The group id should be a valid UUID."
-msgstr ""
+msgstr "Grupp-id:t bör vara ett giltigt UUID."
 
 msgid "The users ids array should contain only valid UUIDs."
-msgstr ""
+msgstr "Uppsättningen av användar-id:erna bör endast innehålla giltiga UUID:er."
 
 msgid "Validation failed for secret {0}. {1}"
 msgstr "Validering misslyckades för hemlighet {0}. {1}"
@@ -2072,40 +2072,40 @@ msgid "An OpenPGP key must be provided."
 msgstr "En OpenPGP-nyckel måste anges."
 
 msgid "The authentication token could not be saved."
-msgstr ""
+msgstr "Autentiseringstoken kunde inte sparas."
 
 msgid "The user does not exist, has not completed the setup or was deleted."
 msgstr "Användaren existerar inte, har inte slutfört installationen eller har tagits bort."
 
 msgid "Could not update the authentication token data."
-msgstr ""
+msgstr "Kunde inte uppdatera autentiseringstoken-data."
 
 msgid "The key provided does not belong to given user."
 msgstr "Nyckeln som anges tillhör inte användaren."
 
 msgid "The user does not exist or is not active or is disabled."
-msgstr ""
+msgstr "\"Användaren finns inte, är inte aktiv eller är inaktiverad.\""
 
 msgid "The OpenPGP key data is not valid."
 msgstr "OpenPGP-nyckeldatan är inte giltig."
 
 msgid "The OpenPGP key can not be used to encrypt."
-msgstr ""
+msgstr "OpenPGP-nyckeln kan inte användas för att kryptera."
 
 msgid "The user does not exist, is already active or has been deleted."
 msgstr "Användaren finns inte, är redan aktiv eller har tagits bort."
 
 msgid "The user does not exist or is already active or is disabled."
-msgstr ""
+msgstr "\"Användaren finns inte, är redan aktiv eller är inaktiverad.\""
 
 msgid "The user should not be a guest."
-msgstr ""
+msgstr "Användaren bör inte vara en gäst."
 
 msgid "Account recovery case must be a string."
-msgstr ""
+msgstr "Kontoåterställningsfallet måste vara en sträng."
 
 msgid "Account recovery reason not supported."
-msgstr ""
+msgstr "Kontoåterställningsorsaken stöds inte."
 
 msgid "Please provide a valid email address."
 msgstr "Vänligen ange en giltig e-postadress."
@@ -2117,10 +2117,10 @@ msgid "Please register and complete the setup first."
 msgstr "Vänligen registrera dig och slutför installationen först."
 
 msgid "This user has been disabled."
-msgstr ""
+msgstr "\"Denna användare har blivit inaktiverad.\""
 
 msgid "The username {0} is a duplicate."
-msgstr ""
+msgstr "Användarnamnet {0} är en dubblett."
 
 msgid "Validation failed for user {0}. {1}"
 msgstr "Validering misslyckades för användare {0}. {1}"
@@ -2129,7 +2129,7 @@ msgid "Validation success for user {0}"
 msgstr "Validering lyckades för användare {0}"
 
 msgid "The directory {0} cannot be deleted"
-msgstr ""
+msgstr "Katalogen {0} kan inte tas bort"
 
 msgid "The key {0} cannot be used to encrypt."
 msgstr "Nyckeln {0} kan inte användas för att kryptera."
@@ -2189,10 +2189,10 @@ msgid "Invalid key. No user ID found."
 msgstr "Ogiltig nyckel. Inget användar-ID hittades."
 
 msgid "Unsupported algorithm."
-msgstr ""
+msgstr "Algoritm stöds inte."
 
 msgid "Invalid key. No OpenPGP package found."
-msgstr ""
+msgstr "Ogiltig nyckel. Inget OpenPGP-paket hittades."
 
 msgid "This is not a valid OpenPGP armored marker."
 msgstr "Detta är inte en giltig OpenPGP pansarmarkör."
@@ -2342,22 +2342,22 @@ msgid "The identifier of the user who modified the folder should not be empty."
 msgstr "Identifieraren för användaren som ändrade mappen får inte vara tom."
 
 msgid "The settings selected by your administrator prevent from downgrading folder."
-msgstr ""
+msgstr "\"Inställningarna som valts av din administratör förhindrar nedgradering av mapp.\""
 
 msgid "The metadata key does not exist."
-msgstr ""
+msgstr "\"Metadatanyckeln finns inte.\""
 
 msgid "A folder of type personal cannot be shared with other users or a group."
-msgstr ""
+msgstr "\"En mapp av typen personlig kan inte delas med andra användare eller en grupp.\""
 
 msgid "You added the folder {0}"
 msgstr "Du lade till mappen {0}"
 
 msgid "You added a new folder"
-msgstr ""
+msgstr "\"Du lade till en ny mapp\""
 
 msgid "You deleted the folder {0}"
-msgstr ""
+msgstr "Du tog bort mappen {0}"
 
 msgid "{0} deleted the folder {1}"
 msgstr "{0} tog bort mappen {1}"
@@ -2366,13 +2366,13 @@ msgid "{0} shared the folder {1}"
 msgstr "{0} delade mappen {1}"
 
 msgid "{0} shared a folder"
-msgstr ""
+msgstr "\"{0} delade en mapp\""
 
 msgid "{0} edited the folder"
 msgstr "{0} redigerade mappen"
 
 msgid "You edited the folder"
-msgstr ""
+msgstr "\"Du redigerade mappen\""
 
 msgid "An email notification setting should be a boolean."
 msgstr "En e-postavisering bör vara en boolean."
@@ -2381,7 +2381,7 @@ msgid "Could not validate folder data."
 msgstr "Kunde inte validera mappdata."
 
 msgid "The folder parent id should be a valid UUID."
-msgstr ""
+msgstr "Mappens överordnade ID bör vara ett giltigt UUID."
 
 msgid "The folder parent must exist."
 msgstr "Mappens överordnade måste finnas."
@@ -2432,25 +2432,25 @@ msgid "View it in passbolt"
 msgstr "Visa i passbolt"
 
 msgid "You deleted a folder"
-msgstr ""
+msgstr "Du tog bort en mapp"
 
 msgid "{0} deleted a folder"
-msgstr ""
+msgstr "{0} tog bort en mapp"
 
 msgid "log in passbolt"
 msgstr "logga in passbolt"
 
 msgid "{0} shared a folder with you"
-msgstr ""
+msgstr "{0} delade en mapp med dig"
 
 msgid "You edited a folder"
-msgstr ""
+msgstr "Du redigerade en mapp"
 
 msgid "{0} edited a folder"
-msgstr ""
+msgstr "{0} redigerade en mapp"
 
 msgid "The user signature could not be verified."
-msgstr ""
+msgstr "Användarsignaturen kunde inte verifieras."
 
 msgid "The challenge cannot be decrypted."
 msgstr "Utmaningen kan inte dekrypteras."
@@ -2480,7 +2480,7 @@ msgid "The domain is invalid. Expected: {0} and got {1}"
 msgstr "Domänen är ogiltig. Förväntat: {0} och fick {1}"
 
 msgid "The following file could not be read: {0}."
-msgstr ""
+msgstr "Följande fil kunde inte läsas: {0}."
 
 msgid "The authentication was a success."
 msgstr "Autentiseringen lyckades."
@@ -2501,16 +2501,16 @@ msgid "An internal error occurred."
 msgstr "Ett internt fel har uppstått."
 
 msgid "Authentication security alert"
-msgstr ""
+msgstr "Autentiseringssäkerhetsvarning"
 
 msgid "No active refresh token matching the request could be found."
 msgstr "Ingen aktiv uppdateringstoken som matchar förfrågan kunde hittas."
 
 msgid "The user is not activated or disabled."
-msgstr ""
+msgstr "\"Användaren är inte aktiverad eller är inaktiverad.\""
 
 msgid "The user is deleted."
-msgstr ""
+msgstr "Användaren är raderad."
 
 msgid "The verify token is invalid."
 msgstr "Verifieringstoken är ogiltigt."
@@ -2519,13 +2519,13 @@ msgid "The route {0} is not permitted with JWT authentication."
 msgstr "Rutt {0} är inte tillåtet med JWT-autentisering."
 
 msgid "The JWT public key could not be extracted."
-msgstr ""
+msgstr "\"Den publika JWT-nyckeln kunde inte extraheras.\""
 
 msgid "The JWT public key details could not be read."
-msgstr ""
+msgstr "\"Information om den publika JWT-nyckeln kunde inte läsas.\""
 
 msgid "The key pair for JWT Authentication is not complete."
-msgstr ""
+msgstr "Nyckelparet för JWT-autentisering är inte komplett."
 
 msgid "The JWT public key could not be read or is not valid."
 msgstr "Den publika JWT-nyckeln kunde inte läsas eller är ogiltig."
@@ -2537,25 +2537,25 @@ msgid "The configuration {0} is not correctly set."
 msgstr "Konfigurationen {0} är inte korrekt inställd."
 
 msgid "The {0} directory is not writable."
-msgstr ""
+msgstr "Katalogen {0} är inte skrivbar."
 
 msgid "The {0} directory should not be writable."
-msgstr ""
+msgstr "Katalogen {0} ska inte vara skrivbar."
 
 msgid "A valid JWT key pair was found."
-msgstr ""
+msgstr "Ett giltigt JWT-nyckelpar hittades."
 
 msgid "A valid JWT key pair is missing."
-msgstr ""
+msgstr "Ett giltigt JWT-nyckelpar saknas."
 
 msgid "Run the create JWT keys script to create a valid JWT secret and public key pair:"
-msgstr ""
+msgstr "Kör skriptet för att skapa JWT-nycklar för att skapa en giltig JWT-hemlighet och ett publikt nyckelpar:"
 
 msgid "The refresh token should be a valid UUID."
 msgstr "Uppdateringstoken bör vara ett giltigt UUID."
 
 msgid "The user ID should be a valid UUID."
-msgstr ""
+msgstr "Användar-ID bör vara ett giltigt UUID."
 
 msgid "The refresh token provided was already used."
 msgstr "Uppdateringstoken som tillhandahålls har redan använts."
@@ -2594,7 +2594,7 @@ msgid "An unknown user with IP: {0}  attempted to steal your login data."
 msgstr "En okänd användare med IP: {0}  försökte stjäla dina inloggningsuppgifter."
 
 msgid "Please get in touch with one of your administrators."
-msgstr ""
+msgstr "Vänligen kontakta en av dina administratörer."
 
 msgid "This is not a valid locale."
 msgstr "Detta är inte ett giltigt språk."
@@ -2603,10 +2603,10 @@ msgid "This is not a valid {0}."
 msgstr "Detta är inte en giltig {0}."
 
 msgid "The locale should be a string."
-msgstr ""
+msgstr "Språkinställningen bör vara en sträng."
 
 msgid "The strategy should extend the class: {0}"
-msgstr ""
+msgstr "Strategin bör utöka klassen: {0}"
 
 msgid "The action log identifier should be a valid UUID."
 msgstr "Åtgärdslogg-identifieraren bör vara ett giltigt UUID."
@@ -2639,7 +2639,7 @@ msgid "Could not validate action log data."
 msgstr "Kunde inte validera data för åtgärdslogg."
 
 msgid "The date {0} should be after the date {1}."
-msgstr ""
+msgstr "Datumet {0} bör komma efter datumet {1}."
 
 msgid "The identifier should be not be empty."
 msgstr "Identifieraren får inte vara tom."
@@ -2711,589 +2711,589 @@ msgid "Could not validate secret history data."
 msgstr "Kunde inte validera hemlig historikdata."
 
 msgid "Invalid pagination limit set for metadata endpoint."
-msgstr ""
+msgstr "Ogiltig pagineringsgräns angiven för metadata-endpoint."
 
 msgid "Could not validate the metadata key data."
-msgstr ""
+msgstr "\"Kunde inte validera metadatanyckelns data.\""
 
 msgid "The metadata key identifier should be a UUID."
-msgstr ""
+msgstr "\"Metadatanyckelns identifierare bör vara ett UUID.\""
 
 msgid "The private key identifier should be a UUID."
-msgstr ""
+msgstr "\"Den privata nyckelns identifierare bör vara ett UUID.\""
 
 msgid "Invalid pagination limit set for metadata upgrade endpoint."
-msgstr ""
+msgstr "Ogiltig pagineringsgräns angiven för metadata-uppgraderingsendpoint."
 
 msgid "The missing_metadata_key_ids contain is only allowed for administrators."
-msgstr ""
+msgstr "Parametern \"missing_metadata_key_ids\" är endast tillåten för administratörer."
 
 msgid "An object type is required."
 msgstr "En objekttyp krävs."
 
 msgid "The object type is invalid."
-msgstr ""
+msgstr "Objekttypen är ogiltig."
 
 msgid "A passphrase is required."
-msgstr ""
+msgstr "En lösenfras krävs."
 
 msgid "The passphrase should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Lösenfrasen bör vara en giltig BMP-UTF8-sträng."
 
 msgid "A fingerprint is required."
 msgstr "Ett fingeravtryck krävs."
 
 msgid "A fingerprint should not be greater than 51 characters."
-msgstr ""
+msgstr "Ett fingeravtryck bör inte vara längre än 51 tecken."
 
 msgid "A fingerprint should not be empty."
-msgstr ""
+msgstr "Fingeravtrycket får inte vara tomt."
 
 msgid "The fingerprint should be a valid alphanumeric string."
 msgstr "Fingeravtrycket bör vara en giltig alfanumerisk sträng."
 
 msgid "The armored key should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Den pansrade nyckeln bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The value is not a valid OpenPGP private key."
 msgstr "Värdet är inte en giltig privat nyckel för OpenPGP."
 
 msgid "The fingerprint does not match the OpenPGP private keys fingerprint."
-msgstr ""
+msgstr "Fingeravtrycket matchar inte fingeravtrycket för de privata OpenPGP-nycklarna."
 
 msgid "A domain is required."
-msgstr ""
+msgstr "En domän krävs."
 
 msgid "The domain should not be empty."
-msgstr ""
+msgstr "Domänen får inte vara tom."
 
 msgid "The domain should match current instance URL."
-msgstr ""
+msgstr "Domänen ska matcha den aktuella instansens URL."
 
 msgid "Private keys are required."
-msgstr ""
+msgstr "Privata nycklar krävs."
 
 msgid "Need at least one metadata private key."
-msgstr ""
+msgstr "Behöver minst en metadata-privat nyckel."
 
 msgid "A data is required."
-msgstr ""
+msgstr "Data krävs."
 
 msgid "The data should not be empty."
-msgstr ""
+msgstr "Datan får inte vara tom."
 
 msgid "The data should be a valid ASCII string."
-msgstr ""
+msgstr "Uppgifterna bör vara en giltig ASCII-sträng."
 
 msgid "The modified date should be a valid ISO 80601 date."
-msgstr ""
+msgstr "Ändringsdatumet bör vara ett giltigt ISO 80601-datum."
 
 msgid "The setting should be a valid boolean."
-msgstr ""
+msgstr "Inställningen bör vara en giltig boolean."
 
 msgid "The setting is required."
-msgstr ""
+msgstr "En inställning krävs."
 
 msgid "The data is required."
-msgstr ""
+msgstr "Datan krävs."
 
 msgid "A modified date is required."
-msgstr ""
+msgstr "Ett ändringsdatum krävs."
 
 msgid "The modified date should not be empty."
-msgstr ""
+msgstr "Ändringsdatumet får inte vara tomt."
 
 msgid "The setting should not be empty."
-msgstr ""
+msgstr "Inställningen får inte vara tom."
 
 msgid "The setting should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Inställningen bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The setting should be one of the following: {0}."
-msgstr ""
+msgstr "Inställningen bör vara en av följande: {0}."
 
 msgid "The content type needs to be enabled in order to be set as default."
-msgstr ""
+msgstr "Innehållstypen måste vara aktiverad för att kunna anges som standard."
 
 msgid "Both v4 and v5 settings cannot be disabled."
-msgstr ""
+msgstr "Både v4 och v5-inställningar kan inte inaktiveras."
 
 msgid "The metadata key should not be deleted."
-msgstr ""
+msgstr "Metadata-nyckeln bör inte vara raderad."
 
 msgid "A metadata key identifier is required."
-msgstr ""
+msgstr "En metadata-nyckelidentifierare krävs."
 
 msgid "The metadata key identifier should not be empty."
-msgstr ""
+msgstr "Metadata-nyckelns identifierare får inte vara tom."
 
 msgid "The metadata key identifier should be a valid UUID."
-msgstr ""
+msgstr "Metadata-nyckelns identifierare bör vara ett giltigt UUID."
 
 msgid "A metadata key type is required."
-msgstr ""
+msgstr "En metadata-nyckeltyp krävs."
 
 msgid "The metadata key type should not be empty."
-msgstr ""
+msgstr "Metadata-nyckeltypen får inte vara tom."
 
 msgid "The metadata key type should be shared key."
-msgstr ""
+msgstr "Metadata-nyckeltypen bör vara en delad nyckel."
 
 msgid "A metadata is required."
-msgstr ""
+msgstr "Metadata krävs."
 
 msgid "A modified by is required."
-msgstr ""
+msgstr "\"modified by\" krävs."
 
 msgid "The modified by should not be empty."
-msgstr ""
+msgstr "\"modified by\" får inte vara tom."
 
 msgid "The modified by should be a valid UUID."
-msgstr ""
+msgstr "\"modified by\" bör vara ett giltigt UUID."
 
 msgid "Metadata settings endpoints are disabled."
-msgstr ""
+msgstr "Metadata-inställningsändpunkter är inaktiverade."
 
 msgid "Folder can not be shared"
-msgstr ""
+msgstr "Mappen kan inte delas"
 
 msgid "Few fields are missing for the V5."
-msgstr ""
+msgstr "Några fält saknas för V5."
 
 msgid "Missing fields: {0}"
-msgstr ""
+msgstr "Saknade fält: {0}"
 
 msgid "V4 related fields are not supported for V5."
-msgstr ""
+msgstr "V4-relaterade fält stöds inte för V5."
 
 msgid "Superfluous fields: {0}"
-msgstr ""
+msgstr "Överflödiga fält: {0}"
 
 msgid "Allow usage of personal keys"
-msgstr ""
+msgstr "Tillåt användning av personliga nycklar"
 
 msgid "True"
-msgstr ""
+msgstr "Sant"
 
 msgid "False"
-msgstr ""
+msgstr "Falskt"
 
 msgid "Zero-knowledge key share"
-msgstr ""
+msgstr "Zero-knowledge-nyckeldelning"
 
 msgid "The metadata private key data must be an array."
-msgstr ""
+msgstr "Metadata-privata nyckelns data måste vara en array."
 
 msgid "No resource type mapping for ID '{0}'"
-msgstr ""
+msgstr "Ingen resurstypmappning för ID \"{0}\""
 
 msgid "Default resource types"
-msgstr ""
+msgstr "Standardresurstyper"
 
 msgid "Default folder type"
-msgstr ""
+msgstr "Standardmapp-typ"
 
 msgid "Default comment type"
-msgstr ""
+msgstr "Standardkommentar-typ"
 
 msgid "Allow creation of V5 resources"
-msgstr ""
+msgstr "Tillåt skapande av V5-resurser"
 
 msgid "Allow creation of V5 folders"
-msgstr ""
+msgstr "Tillåt skapande av V5-mappar"
 
 msgid "Allow creation of V5 tags"
-msgstr ""
+msgstr "Tillåt skapande av V5-taggar"
 
 msgid "Allow creation of V5 comments"
-msgstr ""
+msgstr "Tillåt skapande av V5-kommentarer"
 
 msgid "Allow creation of V4 resources"
-msgstr ""
+msgstr "Tillåt skapande av V4-resurser"
 
 msgid "Allow creation of V4 folders"
-msgstr ""
+msgstr "Tillåt skapande av V4-mappar"
 
 msgid "Allow creation of V4 tags"
-msgstr ""
+msgstr "Tillåt skapande av V4-taggar"
 
 msgid "No permission found for the entity: {0}"
-msgstr ""
+msgstr "Ingen behörighet hittades för entiteten: {0}"
 
 msgid "The identifier of the user who created the metadata key should be a valid UUID."
-msgstr ""
+msgstr "Identifieraren för användaren som skapade metadata-nyckeln bör vara ett giltigt UUID."
 
 msgid "The creator is required."
-msgstr ""
+msgstr "\"creator\" krävs."
 
 msgid "The identifier of the user who modified the metadata key should be a valid UUID."
-msgstr ""
+msgstr "Identifieraren för användaren som ändrade metadata-nyckeln bör vara ett giltigt UUID."
 
 msgid "A expired date is required."
-msgstr ""
+msgstr "Ett utgångsdatum krävs."
 
 msgid "The expired date should not be empty."
-msgstr ""
+msgstr "Utgångsdatumet får inte vara tomt."
 
 msgid "The modifier is required."
-msgstr ""
+msgstr "\"modifier\" krävs."
 
 msgid "The fingerprint is already in use."
-msgstr ""
+msgstr "Fingeravtrycket används redan."
 
 msgid "Already two metadata keys are active."
-msgstr ""
+msgstr "Redan två aktiva metadata-nycklar."
 
 msgid "You cannot reuse the user key."
-msgstr ""
+msgstr "Du kan inte återanvända användarens nyckel."
 
 msgid "The user does not exist or is not active or is deleted."
-msgstr ""
+msgstr "Användaren existerar inte, är inte aktiv eller är raderad."
 
 msgid "The metadata key id & user id combination is already in use."
-msgstr ""
+msgstr "Metadata-nyckel-ID & användar-ID-kombinationen används redan."
 
 msgid "The data is not valid. Please make sure it is encrypted for the correct key."
-msgstr ""
+msgstr "Datan är inte giltig. Se till att den är krypterad för rätt nyckel."
 
 msgid "The entity must be an array."
-msgstr ""
+msgstr "Entiteten måste vara en array."
 
 msgid "Entity {0} not found."
-msgstr ""
+msgstr "Entitet {0} hittades inte."
 
 msgid "Could not validate the metadata key data for the entity with ID: {0}."
-msgstr ""
+msgstr "Kunde inte validera metadata-nyckeldata för entiteten med ID: {0}."
 
 msgid "{0} created a new metadata key"
-msgstr ""
+msgstr "{0} skapade en ny metadata-nyckel"
 
 msgid "You created a new metadata key"
-msgstr ""
+msgstr "Du skapade en ny metadata-nyckel"
 
 msgid "{0} deleted a metadata key"
-msgstr ""
+msgstr "{0} raderade en metadata-nyckel"
 
 msgid "You deleted a metadata key"
-msgstr ""
+msgstr "Du raderade en metadata-nyckel"
 
 msgid "{0} has expired a metadata key"
-msgstr ""
+msgstr "{0} har förfallit en metadata-nyckel"
 
 msgid "You have expired a metadata key"
-msgstr ""
+msgstr "Du har förfallit en metadata-nyckel"
 
 msgid "{0} edited the metadata settings"
-msgstr ""
+msgstr "{0} redigerade metadata-inställningarna"
 
 msgid "You edited the metadata settings"
-msgstr ""
+msgstr "Du redigerade metadata-inställningarna"
 
 msgid "No server metadata private key found."
-msgstr ""
+msgstr "Ingen servermetadata-privat nyckel hittades."
 
 msgid "Unable to decrypt the metadata private key data."
-msgstr ""
+msgstr "Kunde inte dekryptera data för metadata-privat nyckel."
 
 msgid "The server is able to decrypt the metadata private key."
-msgstr ""
+msgstr "Servern kan dekryptera metadata-privat nyckel."
 
 msgid "Unable to decrypt the metadata private key."
-msgstr ""
+msgstr "Kunde inte dekryptera metadata-privat nyckel."
 
 msgid "The metadata key does not exist or has been deleted."
-msgstr ""
+msgstr "Metadata-nyckeln existerar inte eller har raderats."
 
 msgid "The metadata key has already been deleted."
-msgstr ""
+msgstr "Metadata-nyckeln har redan raderats."
 
 msgid "The metadata key should be marked as expired first."
-msgstr ""
+msgstr "Metadata-nyckeln bör först markeras som förfallen."
 
 msgid "The metadata key is still in use, migrate the remaining items to the new key first."
-msgstr ""
+msgstr "Metadata-nyckeln används fortfarande, migrera återstående objekt till den nya nyckeln först."
 
 msgid "The metadata key could not be deleted."
-msgstr ""
+msgstr "Metadata-nyckeln kunde inte raderas."
 
 msgid "The metadata key fingerprint is invalid."
-msgstr ""
+msgstr "Metadata-nyckelns fingeravtryck är ogiltigt."
 
 msgid "The metadata key is already marked as expired."
-msgstr ""
+msgstr "Metadata-nyckeln är redan markerad som förfallen."
 
 msgid "The metadata key could not be updated."
-msgstr ""
+msgstr "Metadata-nyckeln kunde inte uppdateras."
 
 msgid "The metadata key could not be saved."
-msgstr ""
+msgstr "Metadata-nyckeln kunde inte sparas."
 
 msgid "Could not save the metadata key, please try again later."
-msgstr ""
+msgstr "Kunde inte spara metadata-nyckeln, försök igen senare."
 
 msgid "Server metadata private key was not found."
-msgstr ""
+msgstr "Servermetadata-privat nyckel hittades inte."
 
 msgid "Metadata key could not be shared with user id: {0}."
-msgstr ""
+msgstr "Metadata-nyckeln kunde inte delas med användar-ID: {0}."
 
 msgid "The data could not be validated."
-msgstr ""
+msgstr "Datan kunde inte valideras."
 
 msgid "The data could not be saved."
-msgstr ""
+msgstr "Datan kunde inte sparas."
 
 msgid "The metadata private key should not be empty."
-msgstr ""
+msgstr "Metadata-privata nyckeln får inte vara tom."
 
 msgid "The metadata private key cleartext data should be in JSON format."
-msgstr ""
+msgstr "Metadata-privata nyckelns klartextdata bör vara i JSON-format."
 
 msgid "The metadata private key cleartext data should not be empty."
-msgstr ""
+msgstr "Metadata-privata nyckelns klartextdata får inte vara tom."
 
 msgid "The metadata private key cleartext data is not valid."
-msgstr ""
+msgstr "Metadata-privata nyckelns klartextdata är inte giltig."
 
 msgid "The OpenPGP user key cannot be found."
-msgstr ""
+msgstr "OpenPGP-användarnyckeln kan inte hittas."
 
 msgid "Could not validate the settings."
-msgstr ""
+msgstr "Kunde inte validera inställningarna."
 
 msgid "The server metadata private key is required to enable these settings."
-msgstr ""
+msgstr "Servermetadata-privat nyckel krävs för att aktivera dessa inställningar."
 
 msgid "The server metadata key id is required."
-msgstr ""
+msgstr "Servermetadata-nyckel-ID krävs."
 
 msgid "The server metadata private key is invalid."
-msgstr ""
+msgstr "Servermetadata-privat nyckel är ogiltig."
 
 msgid "The metadata private key could not be created."
-msgstr ""
+msgstr "Metadata-privata nyckeln kunde inte skapas."
 
 msgid "Please try again later."
-msgstr ""
+msgstr "Vänligen försök igen senare."
 
 msgid "The metadata private key could not be validated."
-msgstr ""
+msgstr "Metadata-privata nyckeln kunde inte valideras."
 
 msgid "The request data is invalid."
-msgstr ""
+msgstr "Begärd data är ogiltig."
 
 msgid "The metadata key is already shared with the user."
-msgstr ""
+msgstr "Metadata-nyckeln är redan delad med användaren."
 
 msgid "The metadata private keys could not be created."
-msgstr ""
+msgstr "Metadata-privata nycklar kunde inte skapas."
 
 msgid "The metadata private key data is not valid."
-msgstr ""
+msgstr "Metadata-privata nyckelns data är inte giltig."
 
 msgid "The metadata private key does not exist or has been deleted."
-msgstr ""
+msgstr "Metadata-privata nyckeln existerar inte eller har raderats."
 
 msgid "The metadata private key was already edited by the user."
-msgstr ""
+msgstr "Metadata-privata nyckeln redigerades redan av användaren."
 
 msgid "The metadata private key could not be updated."
-msgstr ""
+msgstr "Metadata-privata nyckeln kunde inte uppdateras."
 
 msgid "The metadata session key could not be saved."
-msgstr ""
+msgstr "Metadata-sessionsnyckeln kunde inte sparas."
 
 msgid "Could not save the metadata session key, please try again later."
-msgstr ""
+msgstr "Kunde inte spara metadata-sessionsnyckeln, försök igen senare."
 
 msgid "The data must be a string."
-msgstr ""
+msgstr "Datan måste vara en sträng."
 
 msgid "The metadata session key identifier should be a UUID."
-msgstr ""
+msgstr "Identifieraren för metadata-sessionsnyckeln bör vara ett giltigt UUID."
 
 msgid "The metadata session key does not exist or does not belong to this user."
-msgstr ""
+msgstr "Metadata-sessionsnyckeln existerar inte eller tillhör inte denna användare."
 
 msgid "The metadata session key could not be deleted."
-msgstr ""
+msgstr "Metadata-sessionsnyckeln kunde inte raderas."
 
 msgid "Could not validate the data."
-msgstr ""
+msgstr "Kunde inte validera datan."
 
 msgid "The metadata session key data is identical."
-msgstr ""
+msgstr "Metadata-sessionsnyckelns data är identisk."
 
 msgid "The metadata session key data has changed."
-msgstr ""
+msgstr "Metadata-sessionsnyckelns data har ändrats."
 
 msgid "Could not save the metadata session keys, please try again later."
-msgstr ""
+msgstr "Kunde inte spara metadata-sessionsnycklarna, försök igen senare."
 
 msgid "Could not prepare private key for server key."
-msgstr ""
+msgstr "Kunde inte förbereda privat nyckel för servernyckel."
 
 msgid "User key not found."
-msgstr ""
+msgstr "Användarnyckel hittades inte."
 
 msgid "Could not prepare private key for user id {0}."
-msgstr ""
+msgstr "Kunde inte förbereda privat nyckel för användar-ID {0}."
 
 msgid "No folders to migrate."
-msgstr ""
+msgstr "Inga mappar att migrera."
 
 msgid "Folder ID \"{0}\" is already V5"
-msgstr ""
+msgstr "Mapp-ID \"{0}\" är redan V5"
 
 msgid "No permission found for folder ID {0}"
-msgstr ""
+msgstr "Ingen behörighet hittades för mapp-ID {0}"
 
 msgid "No user provided."
-msgstr ""
+msgstr "Ingen användare angavs."
 
 msgid "The metadata could not be encrypted for permission id: {0}."
-msgstr ""
+msgstr "Metadata kunde inte krypteras för behörighets-ID: {0}."
 
 msgid "No OpenPGP key found for the user."
-msgstr ""
+msgstr "Ingen OpenPGP-nyckel hittades för användaren."
 
 msgid "The metadata could not be encrypted with the user id: {0}."
-msgstr ""
+msgstr "Metadata kunde inte krypteras med användar-ID: {0}."
 
 msgid "The metadata could not be encrypted with the metadata key id: {0}."
-msgstr ""
+msgstr "Metadata kunde inte krypteras med metadata-nyckel-ID: {0}."
 
 msgid "Unable to migrate folder ID: {0} to V5."
-msgstr ""
+msgstr "Kunde inte migrera mapp-ID: {0} till V5."
 
 msgid "Migrating {0}..."
-msgstr ""
+msgstr "Migrerar {0}..."
 
 msgid "Errors (encoded): {0}"
-msgstr ""
+msgstr "Fel (kodade): {0}"
 
 msgid "Migration process for {0} finished."
-msgstr ""
+msgstr "Migrationsprocessen för {0} är slutförd."
 
 msgid "No resources to migrate."
-msgstr ""
+msgstr "Inga resurser att migrera."
 
 msgid "Resource ID \"{0}\" is already V5"
-msgstr ""
+msgstr "Resurs-ID \"{0}\" är redan V5"
 
 msgid "No permission found for resource ID {0}"
-msgstr ""
+msgstr "Ingen behörighet hittades för resurs-ID {0}"
 
 msgid "Unable to migrate resource ID: {0} to V5."
-msgstr ""
+msgstr "Kunde inte migrera resurs-ID: {0} till V5."
 
 msgid "Could not validate metadata key data."
-msgstr ""
+msgstr "Kunde inte validera metadata-nyckeldata."
 
 msgid "Could not import the metadata OpenPGP key."
-msgstr ""
+msgstr "Kunde inte importera metadata-OpenPGP-nyckel."
 
 msgid "The metadata key is not available or incomplete."
-msgstr ""
+msgstr "Metadata-nyckeln är inte tillgänglig eller ofullständig."
 
 msgid "The metadata key fingerprint is not available or incomplete."
-msgstr ""
+msgstr "Metadata-nyckelns fingeravtryck är inte tillgängligt eller ofullständigt."
 
 msgid "The metadata armored key is not available or incomplete."
-msgstr ""
+msgstr "Metadata-nyckeln i armor-format är inte tillgänglig eller ofullständig."
 
 msgid "The resource metadata key data could not be updated."
-msgstr ""
+msgstr "Resursens metadata-nyckeldata kunde inte uppdateras."
 
 msgid "The request data should not be empty."
-msgstr ""
+msgstr "Förfrågningsdata får inte vara tom."
 
 msgid "The request data is too large."
-msgstr ""
+msgstr "Den begärda datan är för stor."
 
 msgid "The provided modified date does not match."
-msgstr ""
+msgstr "Det angivna ändringsdatumet stämmer inte överens."
 
 msgid "The provided modified by does not match."
-msgstr ""
+msgstr "Den angivna \\\"modified by\\\" stämmer inte överens."
 
 msgid "The user identifier should be a UUID."
-msgstr ""
+msgstr "Användaridentifieraren bör vara ett giltigt UUID."
 
 msgid "The user metadata private keys could not be deleted."
-msgstr ""
+msgstr "Användarens metadata-privata nycklar kunde inte raderas."
 
 msgid "The user metadata session keys could not be deleted."
-msgstr ""
+msgstr "Användarens metadata-sessionsnycklar kunde inte raderas."
 
 msgid "V5 metadata format is not enabled."
-msgstr ""
+msgstr "V5-metadataformat är inte aktiverat."
 
 msgid "Resource creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "Skapande/ändring av resurser med krypterad metadata är inte tillåtet."
 
 msgid "Folder creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "Skapande/ändring av mappar med krypterad metadata är inte tillåtet."
 
 msgid "Tag creation/modification with encrypted metadata not allowed."
-msgstr ""
+msgstr "Skapande/ändring av taggar med krypterad metadata är inte tillåtet."
 
 msgid "Resource creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "Skapande/ändring av resurser med klartextmetadata är inte tillåtet."
 
 msgid "Folder creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "Skapande/ändring av mappar med klartextmetadata är inte tillåtet."
 
 msgid "Tag creation/modification with cleartext metadata not allowed."
-msgstr ""
+msgstr "Skapande/ändring av taggar med klartextmetadata är inte tillåtet."
 
 msgid "You created a new metadata key."
-msgstr ""
+msgstr "Du skapade en ny metadata-nyckel."
 
 msgid "{0} created a new metadata key."
-msgstr ""
+msgstr "{0} skapade en ny metadata-nyckel."
 
 msgid "You deleted a metadata key."
-msgstr ""
+msgstr "Du raderade en metadata-nyckel."
 
 msgid "{0} deleted a metadata key."
-msgstr ""
+msgstr "{0} raderade en metadata-nyckel."
 
 msgid "You have expired a metadata key."
-msgstr ""
+msgstr "Du har förfallit en metadata-nyckel."
 
 msgid "{0} has expired a metadata key."
-msgstr ""
+msgstr "{0} har förfallit en metadata-nyckel."
 
 msgid "You edited the metadata settings."
-msgstr ""
+msgstr "Du redigerade metadata-inställningarna."
 
 msgid "{0} edited the metadata settings."
-msgstr ""
+msgstr "{0} redigerade metadata-inställningarna."
 
 msgid "You have created a new folder."
 msgstr "Du har skapat en ny mapp."
 
 msgid "{0} has shared a folder with you."
-msgstr ""
+msgstr "{0} har delat en mapp med dig."
 
 msgid "You have edited a folder."
-msgstr ""
+msgstr "Du har redigerat en mapp."
 
 msgid "You have saved a new password"
 msgstr "Du har sparat ett nytt lösenord"
 
 msgid "You have created a new password."
-msgstr ""
+msgstr "Du har skapat ett nytt lösenord."
 
 msgid "{0} shared a resource with you"
-msgstr ""
+msgstr "{0} har delat en resurs med dig"
 
 msgid "{0} shared a resource with you."
-msgstr ""
+msgstr "{0} har delat en resurs med dig."
 
 msgid "You have edited a resource."
-msgstr ""
+msgstr "Du har redigerat en resurs."
 
 msgid "Information about the transfer is required."
 msgstr "Information om överföringen krävs."
@@ -3341,7 +3341,7 @@ msgid "The current page cannot be greater than {0}"
 msgstr "Den aktuella sidan får inte vara större än {0}"
 
 msgid "The total number of pages should be a non negative integer."
-msgstr ""
+msgstr "Totala antalet sidor bör vara ett icke-negativt heltal."
 
 msgid "The total number of pages is required."
 msgstr "Det totala antalet sidor krävs."
@@ -3404,22 +3404,22 @@ msgid "The authentication token is expired."
 msgstr "Autentiseringstoken har gått ut."
 
 msgid "Unable to authenticate to Duo."
-msgstr ""
+msgstr "Kunde inte autentisera mot Duo."
 
 msgid "Unable to validate the Duo callback data."
-msgstr ""
+msgstr "Kunde inte validera Duo-callbackdatan."
 
 msgid "A Duo state cookie is required."
-msgstr ""
+msgstr "En Duo-state-cookie krävs."
 
 msgid "The Duo state cookie value should be a string."
-msgstr ""
+msgstr "Värdet för Duo-state-cookie ska vara en sträng."
 
 msgid "The Duo state cookie should be a valid UUID."
-msgstr ""
+msgstr "Duo-state-cookie bör vara ett giltigt UUID."
 
 msgid "This entrypoint is not available anymore."
-msgstr ""
+msgstr "Denna inmatningspunkt är inte längre tillgänglig."
 
 msgid "This authentication provider is not enabled for your organization."
 msgstr "Denna autentiseringsleverantör är inte aktiverad för din organisation."
@@ -3440,7 +3440,7 @@ msgid "The multi-factor authentication is not required."
 msgstr "Multifaktor-autentisering krävs inte."
 
 msgid "No valid multi-factor authentication settings found."
-msgstr ""
+msgstr "Inga giltiga multifaktorautentiseringsinställningar hittades."
 
 msgid "No valid multi-factor authentication settings found for this provider."
 msgstr "Inga giltiga multifaktor-autentiseringsinställningar hittades för denna leverantör."
@@ -3458,7 +3458,7 @@ msgid "Please provide the one-time password."
 msgstr "Ange engångslösenordet."
 
 msgid "You have been logged out due to too many failed attempts."
-msgstr ""
+msgstr "Du har blivit utloggad på grund av för många misslyckade försök."
 
 msgid "The user id is not valid."
 msgstr "Användar-id är inte giltigt."
@@ -3473,28 +3473,28 @@ msgid "Please setup the Yubikey settings."
 msgstr "Konfigurera inställningarna för Yubikey."
 
 msgid "A state is required."
-msgstr ""
+msgstr "Ett state krävs."
 
 msgid "The state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "State bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The state should not be empty."
-msgstr ""
+msgstr "State får inte vara tom."
 
 msgid "A duo code is required."
-msgstr ""
+msgstr "En duo-kod krävs."
 
 msgid "The duo code state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Duo-kodens state bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The duo code should not be empty."
-msgstr ""
+msgstr "Duo-koden får inte vara tom."
 
 msgid "The error description should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Felförklaringen bör vara en giltig BMP-UTF8-sträng."
 
 msgid "The error description state should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "Felförklaringens state bör vara en giltig BMP-UTF8-sträng."
 
 msgid "Something went wrong when validating the one-time password."
 msgstr "Något gick fel när engångslösenordet skulle valideras."
@@ -3521,10 +3521,10 @@ msgid "This yubikey is not associated with this user."
 msgstr "Denna yubikey är inte associerad med den här användaren."
 
 msgid "No Duo error provided"
-msgstr ""
+msgstr "Inget Duo-fel angavs"
 
 msgid "No Duo error description provided"
-msgstr ""
+msgstr "Ingen Duo-förklaring angavs"
 
 msgid "Your multi-factor authentication settings were reset by you."
 msgstr "Dina multifaktor-autentiseringsinställningar har återställts av dig."
@@ -3536,64 +3536,64 @@ msgid "Your multi-factor authentication settings were reset by an administrator.
 msgstr "Dina multifaktor-autentiseringsinställningar har återställts av en administratör."
 
 msgid "The token should reference an active Duo callback authentication token."
-msgstr ""
+msgstr "Token bör referera till en aktiv Duo callback-autentiseringstoken."
 
 msgid "An authentication token state is required."
-msgstr ""
+msgstr "Ett tillstånd för autentiseringstoken krävs."
 
 msgid "The Duo state should match the authentication token state."
-msgstr ""
+msgstr "Duo-state bör matcha autentiseringstokenstillståndet."
 
 msgid "Could not enable Duo MFA provider."
-msgstr ""
+msgstr "Kunde inte aktivera Duo MFA-provider."
 
 msgid "Unable to verify Duo authentication."
-msgstr ""
+msgstr "Kunde inte verifiera Duo-autentisering."
 
 msgid "Could not validate the Duo settings."
-msgstr ""
+msgstr "Kunde inte validera Duo-inställningarna."
 
 msgid "Could not login using Duo MFA provider."
-msgstr ""
+msgstr "Kunde inte logga in med Duo MFA-provider."
 
 msgid "Unable to connect to Duo services."
-msgstr ""
+msgstr "Kunde inte ansluta till Duo-tjänster."
 
 msgid "Unable to verify Duo code against Duo service."
-msgstr ""
+msgstr "Kunde inte verifiera Duo-kod mot Duo-tjänst."
 
 msgid "The duo authentication origin endpoint does not match the organization setting duo hostname."
-msgstr ""
+msgstr "Slutpunkten för Duo-autentisering matchar inte organisationens duo-värdnamn."
 
 msgid "The duo authentication subscriber does not match the operator username."
-msgstr ""
+msgstr "Duo-autentiseringsabonnenten matchar inte operatörens användarnamn."
 
 msgid "No configuration set for Duo client ID."
-msgstr ""
+msgstr "Ingen konfiguration är inställd för Duo client ID."
 
 msgid "No configuration set for Duo API hostname."
-msgstr ""
+msgstr "Ingen konfiguration är inställd för Duo API hostname."
 
 msgid "No configuration set for Duo client secret."
-msgstr ""
+msgstr "Ingen konfiguration är inställd för Duo client secret."
 
 msgid "This is not a valid Duo client secret."
-msgstr ""
+msgstr "Detta är inte en giltig Duo client secret."
 
 msgid "This is not a valid Duo API hostname."
-msgstr ""
+msgstr "Detta är inte ett giltigt Duo API hostname."
 
 msgid "This is not a valid Duo client ID."
-msgstr ""
+msgstr "Detta är inte ett giltigt Duo client ID."
 
 msgid "Cannot verify Duo settings."
-msgstr ""
+msgstr "Kan inte verifiera Duo-inställningarna."
 
 msgid "Could not validate Duo configuration"
 msgstr "Kunde inte validera konfigurationen för Duo"
 
 msgid "The property {0} is visible by administrators only."
-msgstr ""
+msgstr "Egenskapen {0} är endast synlig för administratörer."
 
 msgid "The MFA token provided does not exist or is inactive."
 msgstr "MFA-token som tillhandahålls existerar inte eller är inaktiv."
@@ -3638,7 +3638,7 @@ msgid "Could not validate Yubikey configuration."
 msgstr "Kunde inte validera konfigurationen för Yubikey."
 
 msgid "Duo Multi Factor Authentication"
-msgstr ""
+msgstr "Duo multifaktorautentisering"
 
 msgid "Something went wrong."
 msgstr "Något gick fel."
@@ -3647,13 +3647,13 @@ msgid "Please try again later or contact your administrator."
 msgstr "Försök igen senare eller kontakta din administratör."
 
 msgid "Logs"
-msgstr ""
+msgstr "Loggar"
 
 msgid "Retry"
-msgstr ""
+msgstr "Försök igen"
 
 msgid "Getting started with Duo"
-msgstr ""
+msgstr "Komma igång med Duo"
 
 msgid "How does it work?"
 msgstr "Hur fungerar det?"
@@ -3662,10 +3662,10 @@ msgid "You sign in to passbolt just like you normally do."
 msgstr "Du loggar in på passbolt precis som du brukar göra."
 
 msgid "Use you 2FA device to authenticate."
-msgstr ""
+msgstr "Använd din 2FA-enhet för att autentisera."
 
 msgid "Follow the procedure to login."
-msgstr ""
+msgstr "Följ proceduren för att logga in."
 
 msgid "Cancel"
 msgstr "Avbryt"
@@ -3677,13 +3677,13 @@ msgid "Requirements"
 msgstr "Krav"
 
 msgid "To proceed, you need to install the Duo mobile application or to have a device to authenticate which is supported by Duo."
-msgstr ""
+msgstr "För att fortsätta måste du installera Duo-mobilappen eller ha en enhet för autentisering som stöds av Duo."
 
 msgid "For the list of supported devices, see:"
-msgstr ""
+msgstr "För en lista över stödda enheter, se:"
 
 msgid "Duo authentication methods"
-msgstr ""
+msgstr "Duo-autentiseringsmetoder"
 
 msgid "Learn more"
 msgstr "Mer information"
@@ -3701,10 +3701,10 @@ msgid "Multi factor authentication verification"
 msgstr "Verifiering av flerfaktorsautentisering"
 
 msgid "Multi Factor Authentication Required"
-msgstr ""
+msgstr "Multifaktorautentisering krävs"
 
 msgid "An additional authentication is required using Duo. You will be redirected to Duo for verification."
-msgstr ""
+msgstr "Ytterligare autentisering krävs med Duo. Du kommer att omdirigeras till Duo för verifiering."
 
 msgid "Multi factor authentication"
 msgstr "Multi-faktor autentisering"
@@ -3782,7 +3782,7 @@ msgid "verify"
 msgstr "verifiera"
 
 msgid "Sign-in with Duo"
-msgstr ""
+msgstr "Logga in med Duo"
 
 msgid "Or try with another provider"
 msgstr "Eller försök med en annan leverantör"
@@ -3806,46 +3806,46 @@ msgid "Log in passbolt"
 msgstr "Logga in till passbolt"
 
 msgid "The automatic_expiry field must be true."
-msgstr ""
+msgstr "Fältet \\\"automatic_expiry\\\" måste vara sant."
 
 msgid "The automatic_update field must be true."
-msgstr ""
+msgstr "Fältet \\\"automatic_update\\\" måste vara sant."
 
 msgid "The value should be an array."
-msgstr ""
+msgstr "Värdet bör vara en array."
 
 msgid "{0} marked several passwords as expired"
-msgstr ""
+msgstr "{0} markerade flera lösenord som föråldrade"
 
 msgid "Some of your passwords expired"
-msgstr ""
+msgstr "Vissa av dina lösenord har föråldrats"
 
 msgid "{0} marked the password {1} as expired"
-msgstr ""
+msgstr "{0} markerade lösenordet {1} som föråldrat"
 
 msgid "{0} marked a password as expired"
-msgstr ""
+msgstr "{0} markerade ett lösenord som förfallet"
 
 msgid "You edited the password expiry settings"
-msgstr ""
+msgstr "Du redigerade inställningarna för lösenordsutgång"
 
 msgid "{0} edited the password expiry settings"
-msgstr ""
+msgstr "{0} redigerade inställningarna för lösenordsutgång"
 
 msgid "The send password expire setting should be a boolean."
-msgstr ""
+msgstr "Inställningen skicka när lösenord går ut bör vara en boolean."
 
 msgid "The password expiry setting does not exist."
-msgstr ""
+msgstr "Inställningen för lösenordsutgång finns inte."
 
 msgid "Could not validate the password expiry settings."
-msgstr ""
+msgstr "Kunde inte validera inställningarna för lösenordsutgång."
 
 msgid "The password expiry settings have been updated."
-msgstr ""
+msgstr "Inställningarna för lösenordsutgång har uppdaterats."
 
 msgid "View them in passbolt"
-msgstr ""
+msgstr "Visa dem i passbolt"
 
 msgid "{0} resources were affected."
 msgstr "{0} resurser påverkades."
@@ -3854,244 +3854,244 @@ msgid "It would be too much to list them here, but you can go check them on pass
 msgstr "Det skulle vara för mycket att lista dem här men du kan gå och kontrollera dem på passbolt."
 
 msgid "Change them in passbolt"
-msgstr ""
+msgstr "Ändra dem i passbolt"
 
 msgid "You have been requested to change them"
-msgstr ""
+msgstr "Du har ombetts att ändra dem"
 
 msgid "Access for users to your shared passwords have been revoked."
-msgstr ""
+msgstr "Åtkomst för användare till dina delade lösenord har återkallats."
 
 msgid "These passwords are now marked as expired."
-msgstr ""
+msgstr "Dessa lösenord är nu markerade som föråldrade."
 
 msgid "Please rotate them to ensure continued security."
-msgstr ""
+msgstr "Vänligen rotera dem för att upprätthålla fortsatt säkerhet."
 
 msgid "Please rotate it to ensure continued security."
-msgstr ""
+msgstr "Vänligen rotera det för att upprätthålla fortsatt säkerhet."
 
 msgid "Change it in passbolt "
-msgstr ""
+msgstr "Ändra det i passbolt "
 
 msgid "Could not retrieve the password policies."
-msgstr ""
+msgstr "Kunde inte hämta lösenordspolicys."
 
 msgid "The default generator is required."
-msgstr ""
+msgstr "En standardgenerator krävs."
 
 msgid "The default generator should be one of the following: {0}."
-msgstr ""
+msgstr "Standardgeneratorn bör vara en av följande: {0}."
 
 msgid "The external dictionary check is required."
-msgstr ""
+msgstr "Kontroll av extern ordlista krävs."
 
 msgid "The external dictionary check should be a boolean."
-msgstr ""
+msgstr "\"Inställningen för extern ordbokskontroll bör vara en boolean.\""
 
 msgid "The password generator settings is required."
-msgstr ""
+msgstr "Inställningar för lösenordsgeneratorn krävs."
 
 msgid "The password generator settings should not be empty."
-msgstr ""
+msgstr "Inställningar för lösenordsgeneratorn får inte vara tomma."
 
 msgid "The password generator settings should have at least one mask selected."
-msgstr ""
+msgstr "Inställningar för lösenordsgeneratorn måste ha minst en mask vald."
 
 msgid "The passphrase generator settings is required."
-msgstr ""
+msgstr "Inställningar för lösenfrasgeneratorn krävs."
 
 msgid "The passphrase generator settings should not be empty."
-msgstr ""
+msgstr "Inställningar för lösenfrasgeneratorn får inte vara tomma."
 
 msgid "Could not validate the password policies settings."
-msgstr ""
+msgstr "Kunde inte validera inställningarna för lösenordspolicys."
 
 msgid "The passphrase generator words is required."
-msgstr ""
+msgstr "Antalet ord i lösenfrasgeneratorn krävs."
 
 msgid "The passphrase generator words should be between {0} and {1}."
-msgstr ""
+msgstr "Antalet ord i lösenfrasgeneratorn bör vara mellan {0} och {1}."
 
 msgid "The passphrase generator word separator is required."
-msgstr ""
+msgstr "Ett ordavskiljare för lösenfrasgeneratorn krävs."
 
 msgid "The passphrase generator word separator should be a valid UTF8 string."
-msgstr ""
+msgstr "Ordavskiljaren för lösenfrasgeneratorn bör vara en giltig UTF8-sträng."
 
 msgid "The passphrase generator word separator should be maximum {0} characters."
-msgstr ""
+msgstr "Ordavskiljaren för lösenfrasgeneratorn får vara högst {0} tecken."
 
 msgid "The passphrase generator word case is required."
-msgstr ""
+msgstr "Val av versalisering för lösenfrasgeneratorns ord krävs."
 
 msgid "The passphrase generator word case should be one of the following: {0}."
-msgstr ""
+msgstr "Val av versalisering för lösenfrasgeneratorns ord bör vara en av följande: {0}."
 
 msgid "The password generator length should be between {0} and {1}."
-msgstr ""
+msgstr "Längden på lösenordsgeneratorn bör vara mellan {0} och {1}."
 
 msgid "The password generator length is required."
-msgstr ""
+msgstr "En längd för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask upper is required."
-msgstr ""
+msgstr "Parametern \"mask upper\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask upper should be a boolean type."
-msgstr ""
+msgstr "\"mask upper\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask lower is required."
-msgstr ""
+msgstr "Parametern \"mask lower\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask lower should be a boolean type."
-msgstr ""
+msgstr "\"mask lower\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask digit is required."
-msgstr ""
+msgstr "Parametern \"mask digit\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask digit should be a boolean type."
-msgstr ""
+msgstr "\"mask digit\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask parenthesis is required."
-msgstr ""
+msgstr "Parametern \"mask parenthesis\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask parenthesis should be a boolean type."
-msgstr ""
+msgstr "\"mask parenthesis\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask emoji is required."
-msgstr ""
+msgstr "Parametern \"mask emoji\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask emoji should be a boolean type."
-msgstr ""
+msgstr "\"mask emoji\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask char1 is required."
-msgstr ""
+msgstr "Parametern \"mask char1\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask char1 should be a boolean type."
-msgstr ""
+msgstr "\"mask char1\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask char2 is required."
-msgstr ""
+msgstr "Parametern \"mask char2\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask char2 should be a boolean type."
-msgstr ""
+msgstr "\"mask char2\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask char3 is required."
-msgstr ""
+msgstr "Parametern \"mask char3\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask char3 should be a boolean type."
-msgstr ""
+msgstr "\"mask char3\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask char4 is required."
-msgstr ""
+msgstr "Parametern \"mask char4\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask char4 should be a boolean type."
-msgstr ""
+msgstr "\"mask char4\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator mask char5 is required."
-msgstr ""
+msgstr "Parametern \"mask char5\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator mask char5 should be a boolean type."
-msgstr ""
+msgstr "\"mask char5\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "The password generator exclude look alike chars is required."
-msgstr ""
+msgstr "Parametern \"exclude look alike chars\" för lösenordsgeneratorn krävs."
 
 msgid "The password generator exclude look alike chars should be a boolean type."
-msgstr ""
+msgstr "\"exclude look alike chars\" för lösenordsgeneratorn bör vara av typen boolean."
 
 msgid "Record not found"
-msgstr ""
+msgstr "Posten hittades inte"
 
 msgid "The request data is empty."
-msgstr ""
+msgstr "Begärdedatan är tom."
 
 msgid "The request data is invalid: expected a collection."
-msgstr ""
+msgstr "Begärdedatan är ogiltig: förväntad en samling."
 
 msgid "The request data is invalid: invalid fields."
-msgstr ""
+msgstr "Begärdedatan är ogiltig: ogiltiga fält."
 
 msgid "The request data is invalid: id missing."
-msgstr ""
+msgstr "Begärdedatan är ogiltig: id saknas."
 
 msgid "The request data is invalid: id invalid."
-msgstr ""
+msgstr "Begärdedatan är ogiltig: ogiltigt id."
 
 msgid "The request data is invalid: control_function missing."
-msgstr ""
+msgstr "Begärdedatan är ogiltig: control_function saknas."
 
 msgid "The request data is invalid: control_function invalid."
-msgstr ""
+msgstr "Begärdedatan är ogiltig: control_function ogiltig."
 
 msgid "The request data is invalid: ids must be unique."
-msgstr ""
+msgstr "Begärdedatan är ogiltig: id:n måste vara unika."
 
 msgid "An action identifier should be a valid UUID."
-msgstr ""
+msgstr "En åtgärdsidentifierare bör vara ett giltigt UUID."
 
 msgid "The foreign model should be a valid ASCII string."
-msgstr ""
+msgstr "Den främmande modellen bör vara en giltig ASCII-sträng."
 
 msgid "The foreign model should be one of the following: {0}."
-msgstr ""
+msgstr "Den främmande modellen bör vara en av följande: {0}."
 
 msgid "The foreign model name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Namnet på den främmande modellen bör vara högst {0} tecken."
 
 msgid "A foreign model is required."
-msgstr ""
+msgstr "En främmande modell krävs."
 
 msgid "The foreign model should not be empty."
-msgstr ""
+msgstr "Den främmande modellen får inte vara tom."
 
 msgid "The control function should be a valid UTF8 string."
-msgstr ""
+msgstr "Control-funktionen bör vara en giltig UTF8-sträng."
 
 msgid "The control function name used length should be maximum {0} characters."
-msgstr ""
+msgstr "Control-funktionens namn får vara högst {0} tecken."
 
 msgid "The control function is not supported."
-msgstr ""
+msgstr "Control-funktionen stöds inte."
 
 msgid "A control function is required."
-msgstr ""
+msgstr "En control-funktion krävs."
 
 msgid "The control function should not be empty."
-msgstr ""
+msgstr "Control-funktionen får inte vara tom."
 
 msgid "The identifier of the user who created the Rbac should be a valid UUID."
-msgstr ""
+msgstr "Identifieraren för användaren som skapade Rbac bör vara ett giltigt UUID."
 
 msgid "The identifier of the user who modified the Rbac should be a valid UUID."
-msgstr ""
+msgstr "Identifieraren för användaren som ändrade Rbac bör vara ett giltigt UUID."
 
 msgid "The identifier of the user who modified the Rbac should not be empty."
-msgstr ""
+msgstr "Identifieraren för användaren som ändrade Rbac får inte vara tom."
 
 msgid "An RBAC entry already exists for the given id."
-msgstr ""
+msgstr "En RBAC-post finns redan för det angivna id:t."
 
 msgid "An entry already exists for the given role and action ids."
-msgstr ""
+msgstr "En post finns redan för de angivna roll- och åtgärds-id:erna."
 
 msgid "The control function is not allowed for this UI Action."
-msgstr ""
+msgstr "Control-funktionen är inte tillåten för denna UI-åtgärd."
 
 msgid "An action already exists for the given name."
-msgstr ""
+msgstr "En åtgärd finns redan för det angivna namnet."
 
 msgid "The RBAC settings could not be updated."
-msgstr ""
+msgstr "RBAC-inställningarna kunde inte uppdateras."
 
 msgid "No data found."
-msgstr ""
+msgstr "Inga data hittades."
 
 msgid "Some data not found."
-msgstr ""
+msgstr "Vissa data hittades inte."
 
 msgid "The UI actions data could not be validated."
-msgstr ""
+msgstr "UI-åtgärdsdatan kunde inte valideras."
 
 msgid "5 minutes"
 msgstr "5 minuter"
@@ -4151,10 +4151,10 @@ msgid "No"
 msgstr "Nej"
 
 msgid "The deleted field must be set to null."
-msgstr ""
+msgstr "Fältet \"deleted\" måste vara satt till null."
 
 msgid "It is not allowed to update these resource type properties."
-msgstr ""
+msgstr "Det är inte tillåtet att uppdatera dessa resurstyp-egenskaper."
 
 msgid "The name should be a valid BMP-UTF8 string."
 msgstr "Namnet bör vara en giltig BMP-UTF8-sträng."
@@ -4190,103 +4190,103 @@ msgid "A resource type already exists with this definition."
 msgstr "En resurstyp finns redan med denna definition."
 
 msgid "The resource type identifier should be a UUID."
-msgstr ""
+msgstr "Resurstypens identifierare bör vara ett giltigt UUID."
 
 msgid "The resource type is already deleted."
-msgstr ""
+msgstr "Resurstypen är redan raderad."
 
 msgid "You cannot delete the last resource type of the default version."
-msgstr ""
+msgstr "Du kan inte radera den sista återstående resurstypen för standardversionen."
 
 msgid "You cannot delete the last resource type available."
-msgstr ""
+msgstr "Du kan inte radera den sista återstående resurstypen."
 
 msgid "The resource type can not be deleted as resources of this type still exist."
-msgstr ""
+msgstr "Resurstypen kan inte raderas eftersom det fortfarande finns resurser av denna typ."
 
 msgid "The resource type could not be deleted."
-msgstr ""
+msgstr "Resurstypen kunde inte raderas."
 
 msgid "The resource type is not deleted."
-msgstr ""
+msgstr "Resurstypen är inte raderad."
 
 msgid "The self registration setting id should be a valid UUID."
-msgstr ""
+msgstr "Självregistreringsinställningens id bör vara ett giltigt UUID."
 
 msgid "An email is required."
 msgstr "En e-postadress måste anges."
 
 msgid "The provider should not be empty."
-msgstr ""
+msgstr "Leverantören får inte vara tom."
 
 msgid "The provider should be part of the supported list: {0}."
-msgstr ""
+msgstr "Leverantören ska finnas i den stödda listan: {0}."
 
 msgid "The list of allowed domains should not be empty."
-msgstr ""
+msgstr "Listan över tillåtna domäner får inte vara tom."
 
 msgid "The list of allowed domains should be an array of strings."
-msgstr ""
+msgstr "Listan över tillåtna domäner bör vara en array av strängar."
 
 msgid "The domain #{0} should be a valid domain."
-msgstr ""
+msgstr "Domänen #{0} bör vara en giltig domän."
 
 msgid "Allowed domains: {0}"
-msgstr ""
+msgstr "Tillåtna domäner: {0}"
 
 msgid "{0} edited the self registration settings."
-msgstr ""
+msgstr "{0} redigerade självregistreringsinställningarna."
 
 msgid "You edited the self registration settings."
-msgstr ""
+msgstr "Du redigerade självregistreringsinställningarna."
 
 msgid "{0} just created an account on passbolt!"
-msgstr ""
+msgstr "{0} har just skapat ett konto på passbolt!"
 
 msgid "The email is already registered."
-msgstr ""
+msgstr "E-postadressen är redan registrerad."
 
 msgid "The self registration plugin is not enabled."
-msgstr ""
+msgstr "Självregistreringsplugin är inte aktiverad."
 
 msgid "The self registration data could not be validated."
-msgstr ""
+msgstr "Självregistreringsdatan kunde inte valideras."
 
 msgid "The self registration is disabled."
-msgstr ""
+msgstr "Självregistrering är inaktiverad."
 
 msgid "The domain is not supported for self-registration."
-msgstr ""
+msgstr "Domänen stöds inte för självregistrering."
 
 msgid "Email domain safe list"
-msgstr ""
+msgstr "Säker lista för e-postdomän"
 
 msgid "Could not parse the self registration settings found in database."
-msgstr ""
+msgstr "Kunde inte tolka självregistreringsinställningarna i databasen."
 
 msgid "Could not validate the self registration settings found in database."
-msgstr ""
+msgstr "Kunde inte validera självregistreringsinställningarna i databasen."
 
 msgid "Could not validate the self registration settings."
-msgstr ""
+msgstr "Kunde inte validera självregistreringsinställningarna."
 
 msgid "{0} updated the self registration settings"
-msgstr ""
+msgstr "{0} uppdaterade självregistreringsinställningarna"
 
 msgid "Status: {0}"
-msgstr ""
+msgstr "Status: {0}"
 
 msgid "The sslVerifyPeer configuration should be a boolean."
-msgstr ""
+msgstr "\"Konfigurationen sslVerifyPeer bör vara en boolean.\""
 
 msgid "The sslVerifyPeerName configuration should be a boolean."
-msgstr ""
+msgstr "\"Konfigurationen sslVerifyPeerName bör vara en boolean.\""
 
 msgid "The sslAllowSelfSigned configuration should be a boolean."
-msgstr ""
+msgstr "\"Konfigurationen sslAllowSelfSigned bör vara en boolean.\""
 
 msgid "The sslCafile configuration should be NULL or string."
-msgstr ""
+msgstr "\"Konfigurationen sslCafile bör vara NULL eller sträng.\""
 
 msgid "A sender name is required."
 msgstr "Ett avsändarnamn måste anges."
@@ -4319,7 +4319,7 @@ msgid "A TLS setting is required."
 msgstr "En TLS-inställning måste anges."
 
 msgid "The TLS setting should be \"true\" or NULL."
-msgstr ""
+msgstr "TLS-inställningen bör vara \\\"true\\\" eller NULL."
 
 msgid "A port number is required."
 msgstr "Ett portnummer krävs."
@@ -4343,85 +4343,85 @@ msgid "The test email should be a valid email address."
 msgstr "Testmeddelandet bör vara en giltig e-postadress."
 
 msgid "The authentication method is required."
-msgstr ""
+msgstr "\"Autentiseringsmetoden krävs.\""
 
 msgid "The authentication method should be one of the following: {0}."
-msgstr ""
+msgstr "\"Autentiseringsmetoden bör vara en av följande: {0}.\""
 
 msgid "The sender email should be a valid email address."
 msgstr "Avsändarens e-postadress bör vara en giltig e-postadress."
 
 msgid "A test recipient is required."
-msgstr ""
+msgstr "En testmottagare krävs."
 
 msgid "SMTP settings endpoints disabled."
-msgstr ""
+msgstr "SMTP-inställningarnas slutpunkter är inaktiverade."
 
 msgid "The client should be a valid IP or a valid domain."
-msgstr ""
+msgstr "Klienten bör vara en giltig IP-adress eller en giltig domän."
 
 msgid "No custom SSL configuration for SMTP server."
-msgstr ""
+msgstr "\"Ingen anpassad SSL-konfiguration för SMTP-servern.\""
 
 msgid "Custom SSL certificate options for SMTP server is in use."
-msgstr ""
+msgstr "\"Anpassade SSL-certifikatsalternativ för SMTP-servern används.\""
 
 msgid "Custom SSL configuration options set are invalid."
-msgstr ""
+msgstr "\"De anpassade SSL-konfigurationsinställningarna är ogiltiga.\""
 
 msgid "SSL certification validation for SMTP server is disabled."
-msgstr ""
+msgstr "\"SSL-certifieringsverifiering för SMTP-servern är inaktiverad.\""
 
 msgid "SMTP Settings coherent. You may send a test email to validate them."
-msgstr ""
+msgstr "SMTP-inställningar är samstämmiga. Du kan skicka ett testmeddelande för att validera dem."
 
 msgid "SMTP Setting errors: {0}"
-msgstr ""
+msgstr "Fel i SMTP-inställningarna: {0}"
 
 msgid "The {0} plugin endpoints are disabled."
-msgstr ""
+msgstr "{0}-pluginens slutpunkter är inaktiverade."
 
 msgid "The {0} plugin endpoints are enabled."
-msgstr ""
+msgstr "{0}-pluginens slutpunkter är aktiverade."
 
 msgid "It is recommended to disable the plugin endpoints."
-msgstr ""
+msgstr "Det rekommenderas att inaktivera plugin-slutpunkterna."
 
 msgid "Set the PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED environment variable to true."
-msgstr ""
+msgstr "Ställ in miljövariabeln PASSBOLT_SECURITY_SMTP_SETTINGS_ENDPOINTS_DISABLED på true."
 
 msgid "Or set passbolt.security.smtpSettings.endpointsDisabled to true in {0}."
-msgstr ""
+msgstr "Eller ställ in passbolt.security.smtpSettings.endpointsDisabled på true i {0}."
 
 msgid "not found"
-msgstr ""
+msgstr "hittades inte"
 
 msgid "The SMTP Settings source is: {0}."
-msgstr ""
+msgstr "Källan för SMTP-inställningarna är: {0}."
 
 msgid "It is recommended to set the SMTP Settings in the database through the administration section."
-msgstr ""
+msgstr "Det rekommenderas att ange SMTP-inställningarna i databasen via administrationsavsnittet."
 
 msgid "database"
 msgstr "databas"
 
 msgid "env variables"
-msgstr ""
+msgstr "miljövariabler"
 
 msgid "Could not validate the smtp settings."
-msgstr ""
+msgstr "Kunde inte validera smtp-inställningarna."
 
 msgid "Could not validate the smtp settings found in database."
-msgstr ""
+msgstr "Kunde inte validera smtp-inställningarna i databasen."
 
 msgid "The OpenPGP server key cannot be used to decrypt the SMTP settings stored in database."
-msgstr ""
+msgstr "OpenPGP-servernyckeln kan inte användas för att dekryptera SMTP-inställningarna som lagrats i databasen."
 
 msgid "To fix this problem, you need to configure the SMTP server again."
-msgstr ""
+msgstr "För att åtgärda detta problem behöver du konfigurera SMTP-servern igen."
 
 msgid "Passbolt test email"
-msgstr ""
+msgstr "Passbolt test epost"
 
 msgid "Congratulations!"
 msgstr "Grattis!"
@@ -4430,7 +4430,7 @@ msgid "If you receive this email, it means that your passbolt smtp configuration
 msgstr "Om du får detta e-postmeddelande innebär det att din konfiguration för passbolt smtp fungerar bra."
 
 msgid "Invalid `passbolt.plugins.smtpSettings.security` configuration values."
-msgstr ""
+msgstr "\"Ogiltiga konfigurationsvärden för `passbolt.plugins.smtpSettings.security`.\""
 
 msgid "Errors: "
 msgstr "Fel: "
@@ -4475,13 +4475,13 @@ msgid "That's it!"
 msgstr "Det var det!"
 
 msgid "A driver name is required."
-msgstr ""
+msgstr "Ett drivrutinsnamn krävs."
 
 msgid "The driver name should not be empty."
-msgstr ""
+msgstr "Drivrutinsnamnet får inte vara tomt."
 
 msgid "The database driver should be one of the following: {0}."
-msgstr ""
+msgstr "Databasdrivrutinen bör vara en av följande: {0}."
 
 msgid "The password should not contain quotes."
 msgstr "Lösenordet bör ej innehålla citat."
@@ -4499,10 +4499,10 @@ msgid "The database name should not contain dashes."
 msgstr "Databasnamnet får inte innehålla bindestreck."
 
 msgid "The schema is required on PostgreSQL"
-msgstr ""
+msgstr "\"Schemat krävs för PostgreSQL\""
 
 msgid "The schema should be a valid BMP-UTF8 string."
-msgstr ""
+msgstr "\"Schemat bör vara en giltig BMP-UTF8-sträng.\""
 
 msgid "An OpenPGP public key is required."
 msgstr "En publik OpenPGP-nyckel krävs."
@@ -4649,10 +4649,10 @@ msgid "Database name"
 msgstr "Databasens namn"
 
 msgid "schema"
-msgstr ""
+msgstr "\"schema\""
 
 msgid "Schema"
-msgstr ""
+msgstr "\"Schema\""
 
 msgid "Enter your SMTP server settings."
 msgstr "Ange inställningarna för din SMTP-server."
@@ -4688,13 +4688,13 @@ msgid "Port"
 msgstr "Port"
 
 msgid "Authentication method"
-msgstr ""
+msgstr "\"Autentiseringsmetod\""
 
 msgid "client"
-msgstr ""
+msgstr "klient"
 
 msgid "Client"
-msgstr ""
+msgstr "Klient"
 
 msgid "Passbolt is not configured."
 msgstr "Passbolt har inte konfigurerats."
@@ -4778,7 +4778,7 @@ msgid "Forcing SSL means that passbolt will not accept connections coming from a
 msgstr "Att tvinga SSL innebär att passbolt inte kommer att acceptera anslutningar som kommer från ett icke säkert protokoll. Om SSL är tvingat måste din server konfigureras för HTTPS. Det rekommenderas starkt att du gör det."
 
 msgid "Welcome to Passbolt! Let's get started with the configuration."
-msgstr ""
+msgstr "Välkommen till Passbolt! Kom igång med konfigurationen."
 
 msgid "Nice one! Your environment is ready for passbolt."
 msgstr "Bra jobbat! Din miljö är redo för passbolt."
@@ -4904,10 +4904,10 @@ msgid "is not anymore group manager"
 msgstr "är inte längre gruppchef"
 
 msgid "User Agent: "
-msgstr ""
+msgstr "Användaragent: "
 
 msgid "User IP: "
-msgstr ""
+msgstr "Användar-IP: "
 
 msgid "Terms"
 msgstr "Villkor"
@@ -4928,79 +4928,79 @@ msgid "login"
 msgstr "logga in"
 
 msgid "The administrator {0} ({1}) is now deleted from the passbolt organisation."
-msgstr ""
+msgstr "Administratören {0} ({1}) är nu borttagen från passbolt-organisationen."
 
 msgid "{0} deleted you from the passbolt organisation."
-msgstr ""
+msgstr "{0} tog bort dig från passbolt-organisationen."
 
 msgid "Feel free to get in touch with the administrator at the origin of the operation if you feel this action looks suspicious."
-msgstr ""
+msgstr "Tveka inte att kontakta administratören som initierade åtgärden om du tycker att den verkar misstänkt."
 
 msgid "Account suspended"
-msgstr ""
+msgstr "\"Konto avstängt\""
 
 msgid "Your account has been suspended."
-msgstr ""
+msgstr "\"Ditt konto har blivit avstängt.\""
 
 msgid "You are not able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "\"Du kan inte logga in i Passbolt och ta emot e-postaviseringar.\""
 
 msgid "Other users can still share resources with you and add you to a group."
-msgstr ""
+msgstr "\"Andra användare kan fortfarande dela resurser med dig och lägga till dig i en grupp.\""
 
 msgid "Contact your admin"
-msgstr ""
+msgstr "\"Kontakta din administratör\""
 
 msgid "{0} changed your role to user."
-msgstr ""
+msgstr "{0} ändrade din roll till användare."
 
 msgid "{0} changed the role of {1} to user."
-msgstr ""
+msgstr "{0} ändrade rollen för {1} till användare."
 
 msgid "{0} can no longer perform administration tasks."
-msgstr ""
+msgstr "{0} kan inte längre utföra administrationsuppgifter."
 
 msgid "You"
 msgstr "Du"
 
 msgid "{0} ({1}) just completed an account recovery. Feel free to get in touch with this user if you feel this action looks suspicious."
-msgstr ""
+msgstr "{0} ({1}) har precis slutfört en kontåterställning. Om du anser att åtgärden verkar misstänkt får du gärna kontakta denna användare."
 
 msgid "View user in passbolt"
-msgstr ""
+msgstr "Visa användare i Passbolt"
 
 msgid "{0} cannot complete the account recovery process!"
-msgstr ""
+msgstr "{0} kan inte slutföra kontåterställningsprocessen!"
 
 msgid "This user lost their private key and/or passphrase and cannot complete the account recovery process."
-msgstr ""
+msgstr "Den här användaren tappade sin privata nyckel och/eller lösenfras och kan inte slutföra kontåterställningen."
 
 msgid "Unfortunately, they will need your help to delete their account and restart from scratch."
-msgstr ""
+msgstr "Tyvärr behöver de din hjälp för att ta bort sitt konto och börja om från början."
 
 msgid "Please check with them first to confirm."
-msgstr ""
+msgstr "Kontrollera med dem först för att bekräfta."
 
 msgid "User suspended"
-msgstr ""
+msgstr "\"Användare avstängd\""
 
 msgid "The user {0} has been suspended."
-msgstr ""
+msgstr "\"Användaren {0} har blivit avstängd.\""
 
 msgid "This user will not be able to sign in to passbolt and receive email notifications."
-msgstr ""
+msgstr "\"Denna användare kan inte logga in i Passbolt och ta emot e-postaviseringar.\""
 
 msgid "Other users can share resources and add this user to a group."
-msgstr ""
+msgstr "\"Andra användare kan dela resurser och lägga till den här användaren i en grupp.\""
 
 msgid "Check user suspension"
-msgstr ""
+msgstr "\"Kontrollera användaravstängning\""
 
 msgid "Welcome to {0}!"
-msgstr ""
+msgstr "Välkommen till {0}!"
 
 msgid "{0} used the self registration feature to create an account on passbolt."
-msgstr ""
+msgstr "{0} använde självregistreringsfunktionen för att skapa ett konto på passbolt."
 
 msgid "You have initiated an account recovery!"
 msgstr "Du har startat en kontoåterställning!"
@@ -5021,7 +5021,7 @@ msgid "start recovery"
 msgstr "påbörja återställning"
 
 msgid "You just completed an account recovery. Feel free to get in touch with an admin if you feel this action looks suspicious."
-msgstr ""
+msgstr "Du har precis slutfört en kontåterställning. Ta gärna kontakt med en administratör om du tycker att åtgärden verkar misstänkt."
 
 msgid "{0} just created an account for you on passbolt!"
 msgstr "{0} har precis skapat ett konto åt dig på passbolt!"
@@ -5051,10 +5051,10 @@ msgid "You just opened an account on passbolt at {0}."
 msgstr "Du har precis öppnat ett konto på passbolt på {0}."
 
 msgid "There was a change in the user directory."
-msgstr ""
+msgstr "Det skedde en ändring i användarkatalogen."
 
 msgid "You have been requested to add members to a group."
-msgstr ""
+msgstr "Du har ombetts att lägga till medlemmar i en grupp."
 
 msgid "{0} requested you to add members to a group"
 msgstr "{0} bad dig att lägga till medlemmar i en grupp"
@@ -5162,16 +5162,16 @@ msgid "This user was invited by {0} {1}."
 msgstr "Den här användaren blev inbjuden av {0} {1}."
 
 msgid "This user is missing the encryption key for the shared resource metadata. Please log in and go the user workspace and share the key with them manually."
-msgstr ""
+msgstr "Den här användaren saknar krypteringsnyckeln för den delade resursens metadata. Logga in och öppna användarens arbetsyta för att dela nyckeln manuellt."
 
 msgid "view users"
 msgstr "visa användare"
 
 msgid "This email is an automatic notification sent by"
-msgstr ""
+msgstr "Detta e-postmeddelande är en automatisk notifiering som skickats av"
 
 msgid "You can disable these notifications by requesting an administrator to delete your account."
-msgstr ""
+msgstr "Du kan inaktivera dessa aviseringar genom att be en administratör ta bort ditt konto."
 
 msgid "The locale {0} is not valid or not supported."
 msgstr "Språket {0} är inte giltigt eller stöds inte."

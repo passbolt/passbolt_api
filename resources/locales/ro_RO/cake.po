@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: 41c2572bd9bd4cc908d3e09e0cbed6e5\n"
 "POT-Creation-Date: 2020-11-11 13:56+0100\n"
-"PO-Revision-Date: 2023-10-04 09:37\n"
+"PO-Revision-Date: 2025-03-22 01:54\n"
 "Last-Translator: NAME <EMAIL@ADDRESS>\n"
 "Language-Team: Romanian\n"
 "MIME-Version: 1.0\n"
@@ -23,7 +23,7 @@ msgstr "Eroare"
 
 #: Error/error400.php:37
 msgid "The requested address {0} was not found on this server."
-msgstr ""
+msgstr "Adresa solicitată {0} nu a fost găsită pe acest server."
 
 #: Error/error500.php:38
 msgid "An Internal Error Has Occurred"
@@ -35,7 +35,7 @@ msgstr "Nu aveți permisiunea să accesați această locație."
 
 #: Error/ExceptionRenderer.php:304
 msgid "Not Found"
-msgstr ""
+msgstr "Nu a fost găsit"
 
 #: Error/ExceptionRenderer.php:306
 msgid "An Internal Error Has Occurred."
@@ -43,62 +43,62 @@ msgstr "A intervenit o eroare internă."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:286
 msgid "Missing or incorrect CSRF cookie type."
-msgstr ""
+msgstr "Tipul cookie CSRF lipsește sau este incorect."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:290
 msgid "Missing or invalid CSRF cookie."
-msgstr ""
+msgstr "Cookie CSRF lipsește sau este invalid."
 
 #: Http/Middleware/CsrfProtectionMiddleware.php:311
 msgid "CSRF token from either the request body or request headers did not match or is missing."
-msgstr ""
+msgstr "Jetonul CSRF din corpul cererii sau din anteturile cererii nu se potrivește sau lipsește."
 
 #: Http/Response.php:1490
 msgid "The requested file contains `..` and will not be read."
-msgstr ""
+msgstr "Fișierul solicitat conține `..` și nu va fi citit."
 
 #: Http/Response.php:1498
 msgid "The requested file was not found"
-msgstr ""
+msgstr "Fișierul solicitat nu a fost găsit"
 
 #: I18n/Number.php:116
 msgid "{0,number,#,###.##} KB"
-msgstr ""
+msgstr "{0,number,#,###.##} KB (kilobyți)"
 
 #: I18n/Number.php:118
 msgid "{0,number,#,###.##} MB"
-msgstr ""
+msgstr "{0,number,#,###.##} MB (megabyți)"
 
 #: I18n/Number.php:120
 msgid "{0,number,#,###.##} GB"
-msgstr ""
+msgstr "{0,number,#,###.##} GB (gigabyți)"
 
 #: I18n/Number.php:122
 msgid "{0,number,#,###.##} TB"
-msgstr ""
+msgstr "{0,number,#,###.##} TB (terabyți)"
 
 #: I18n/Number.php:114
 msgid "{0,number,integer} Byte"
 msgid_plural "{0,number,integer} Bytes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{0,number,integer} octet"
+msgstr[1] "{0,number,integer} octeți"
+msgstr[2] "{0,number,integer} de octeți"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} from now"
-msgstr ""
+msgstr "Peste {0}"
 
 #: I18n/RelativeTimeFormatter.php:86
 msgid "{0} ago"
-msgstr ""
+msgstr "Acum {0}"
 
 #: I18n/RelativeTimeFormatter.php:89
 msgid "{0} after"
-msgstr ""
+msgstr "După {0}"
 
 #: I18n/RelativeTimeFormatter.php:89
 msgid "{0} before"
-msgstr ""
+msgstr "Înainte de {0}"
 
 #: I18n/RelativeTimeFormatter.php:120
 msgid "just now"
@@ -106,180 +106,180 @@ msgstr "acum"
 
 #: I18n/RelativeTimeFormatter.php:157
 msgid "about a second ago"
-msgstr ""
+msgstr "acum aproximativ o secundă"
 
 #: I18n/RelativeTimeFormatter.php:158
 msgid "about a minute ago"
-msgstr ""
+msgstr "acum aproximativ un minut"
 
 #: I18n/RelativeTimeFormatter.php:159
 msgid "about an hour ago"
-msgstr ""
+msgstr "acum aproximativ o oră"
 
 #: I18n/RelativeTimeFormatter.php:160
 #: I18n/RelativeTimeFormatter.php:370
 msgid "about a day ago"
-msgstr ""
+msgstr "acum aproximativ o zi"
 
 #: I18n/RelativeTimeFormatter.php:161
 #: I18n/RelativeTimeFormatter.php:371
 msgid "about a week ago"
-msgstr ""
+msgstr "acum aproximativ o săptămână"
 
 #: I18n/RelativeTimeFormatter.php:162
 #: I18n/RelativeTimeFormatter.php:372
 msgid "about a month ago"
-msgstr ""
+msgstr "acum aproximativ o lună"
 
 #: I18n/RelativeTimeFormatter.php:163
 #: I18n/RelativeTimeFormatter.php:373
 msgid "about a year ago"
-msgstr ""
+msgstr "acum aproximativ un an"
 
 #: I18n/RelativeTimeFormatter.php:174
 msgid "in about a second"
-msgstr ""
+msgstr "în aproximativ o secundă"
 
 #: I18n/RelativeTimeFormatter.php:175
 msgid "in about a minute"
-msgstr ""
+msgstr "în aproximativ un minut"
 
 #: I18n/RelativeTimeFormatter.php:176
 msgid "in about an hour"
-msgstr ""
+msgstr "în aproximativ o oră"
 
 #: I18n/RelativeTimeFormatter.php:177
 #: I18n/RelativeTimeFormatter.php:384
 msgid "in about a day"
-msgstr ""
+msgstr "în aproximativ o zi"
 
 #: I18n/RelativeTimeFormatter.php:178
 #: I18n/RelativeTimeFormatter.php:385
 msgid "in about a week"
-msgstr ""
+msgstr "în aproximativ o săptămână"
 
 #: I18n/RelativeTimeFormatter.php:179
 #: I18n/RelativeTimeFormatter.php:386
 msgid "in about a month"
-msgstr ""
+msgstr "în aproximativ o lună"
 
 #: I18n/RelativeTimeFormatter.php:180
 #: I18n/RelativeTimeFormatter.php:387
 msgid "in about a year"
-msgstr ""
+msgstr "în aproximativ un an"
 
 #: I18n/RelativeTimeFormatter.php:342
 msgid "today"
-msgstr ""
+msgstr "astăzi"
 
 #: I18n/RelativeTimeFormatter.php:409
 msgid "%s ago"
-msgstr ""
+msgstr "acum %s"
 
 #: I18n/RelativeTimeFormatter.php:410
 msgid "on %s"
-msgstr ""
+msgstr "în data de %s"
 
 #: I18n/RelativeTimeFormatter.php:53
 #: I18n/RelativeTimeFormatter.php:132
 #: I18n/RelativeTimeFormatter.php:354
 msgid "{0} year"
 msgid_plural "{0} years"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{0} an"
+msgstr[1] "{0} ani"
+msgstr[2] "{0} de ani"
 
 #: I18n/RelativeTimeFormatter.php:57
 #: I18n/RelativeTimeFormatter.php:135
 #: I18n/RelativeTimeFormatter.php:357
 msgid "{0} month"
 msgid_plural "{0} months"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{0} lună"
+msgstr[1] "{0} luni"
+msgstr[2] "{0} de luni"
 
 #: I18n/RelativeTimeFormatter.php:63
 #: I18n/RelativeTimeFormatter.php:138
 #: I18n/RelativeTimeFormatter.php:360
 msgid "{0} week"
 msgid_plural "{0} weeks"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{0} săptămână"
+msgstr[1] "{0} săptămâni"
+msgstr[2] "{0} de săptămâni"
 
 #: I18n/RelativeTimeFormatter.php:65
 #: I18n/RelativeTimeFormatter.php:141
 #: I18n/RelativeTimeFormatter.php:363
 msgid "{0} day"
 msgid_plural "{0} days"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{0} zi"
+msgstr[1] "{0} zile"
+msgstr[2] "{0} de zile"
 
 #: I18n/RelativeTimeFormatter.php:70
 #: I18n/RelativeTimeFormatter.php:144
 msgid "{0} hour"
 msgid_plural "{0} hours"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{0} oră"
+msgstr[1] "{0} ore"
+msgstr[2] "{0} de ore"
 
 #: I18n/RelativeTimeFormatter.php:74
 #: I18n/RelativeTimeFormatter.php:147
 msgid "{0} minute"
 msgid_plural "{0} minutes"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{0} minut"
+msgstr[1] "{0} minute"
+msgstr[2] "{0} de minute"
 
 #: I18n/RelativeTimeFormatter.php:78
 #: I18n/RelativeTimeFormatter.php:150
 msgid "{0} second"
 msgid_plural "{0} seconds"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
+msgstr[0] "{0} secundă"
+msgstr[1] "{0} secunde"
+msgstr[2] "{0} de secunde"
 
 #: ORM/RulesChecker.php:55
 msgid "This value is already in use"
-msgstr ""
+msgstr "Această valoare este deja folosită"
 
 #: ORM/RulesChecker.php:102
 msgid "This value does not exist"
-msgstr ""
+msgstr "Această valoare nu există"
 
 #: ORM/RulesChecker.php:224
 msgid "Cannot modify row: a constraint for the `{0}` association fails."
-msgstr ""
+msgstr "Nu se poate modifica rândul: o constrângere a asocierii `{0}` nu a reușit."
 
 #: ORM/RulesChecker.php:262
 msgid "The count does not match {0}{1}"
-msgstr ""
+msgstr "Numărul nu corespunde {0}{1}"
 
 #: Utility/Text.php:915
 msgid "and"
-msgstr ""
+msgstr "și"
 
 #: Validation/Validator.php:2500
 msgid "This field is required"
-msgstr ""
+msgstr "Acest câmp este necesar"
 
 #: Validation/Validator.php:2520
 #: View/Form/ArrayContext.php:249
 msgid "This field cannot be left empty"
-msgstr ""
+msgstr "Acest câmp nu poate fi lăsat gol"
 
 #: Validation/Validator.php:2672
 msgid "The provided value is invalid"
-msgstr ""
+msgstr "Valoarea furnizată este invalidă"
 
 #: View/Helper/FormHelper.php:981
 msgid "Edit {0}"
-msgstr ""
+msgstr "Modificați {0}"
 
 #: View/Helper/FormHelper.php:983
 msgid "New {0}"
-msgstr ""
+msgstr "Nou {0}"
 
 #: View/Helper/FormHelper.php:1890
 msgid "Submit"
