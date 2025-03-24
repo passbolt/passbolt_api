@@ -23,3 +23,4 @@ session_id('cli');
 
 (new ConnectionHelper())->addTestAliases();
 (new Migrator())->run();
+\Cake\Cache\Cache::clearAll();
