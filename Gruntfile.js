@@ -100,6 +100,7 @@ module.exports = function(grunt) {
             'logo/logo.png', 'logo/logo.svg', 'logo/logo_white.svg',
             // Image for inputs and controls
             'controls/check_black.svg',
+            'controls/check_tick.svg',
             'controls/chevron-down_black.svg',
             'controls/chevron-down_blue.svg',
             'controls/dot_white.svg',
