@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use App\Utility\UserAction;
 use App\View\AjaxView;
 use Cake\Controller\Controller;
@@ -43,6 +44,8 @@ use Cake\View\JsonView;
  */
 class AppController extends Controller
 {
+    use PaginatePropertyAwareTrait;
+
     /**
      * Initialization hook method.
      * Used to add common initialization code like loading components.

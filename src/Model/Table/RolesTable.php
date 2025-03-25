@@ -62,7 +62,7 @@ class RolesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('ControllerLogs', [
+        $this->hasMany('ControllerLogs', [ // @phpstan-ignore-line
             'foreignKey' => 'role_id',
         ]);
         $this->hasMany('Users', [

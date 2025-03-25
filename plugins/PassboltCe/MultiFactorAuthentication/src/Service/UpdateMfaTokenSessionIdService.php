@@ -39,7 +39,6 @@ class UpdateMfaTokenSessionIdService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 

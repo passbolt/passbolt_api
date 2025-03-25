@@ -113,7 +113,9 @@ class SecretsCleanupHardDeletedPermissionsService
      */
     private function deletedSecretsWithJoinInDelete(): int
     {
-        return ConnectionManager::get('default')->execute("
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get('default');
+        $sql = "
             DELETE secrets FROM secrets
             LEFT JOIN (
             (
@@ -136,6 +138,8 @@ class SecretsCleanupHardDeletedPermissionsService
             )
 
             WHERE ExpectedSecrets.resource_id IS NULL;
-        ")->rowCount();
+        ";
+
+        return $connection->execute($sql)->rowCount();
     }
 }

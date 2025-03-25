@@ -19,7 +19,7 @@ namespace Passbolt\MultiFactorAuthentication\Controller;
 use App\Authenticator\SessionIdentificationServiceInterface;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Service\MfaPolicies\RememberAMonthSettingInterface;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
@@ -126,7 +126,7 @@ abstract class MfaVerifyController extends MfaController
         $expiryAt = null;
         if ($rememberMeForAMonthSetting->isEnabled()) {
             $expiryAt = $this->request->getData('remember') ?
-                (new Date())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
+                (new DateTime())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS) :
                 null;
         }
 

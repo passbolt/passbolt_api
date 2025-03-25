@@ -68,11 +68,8 @@ abstract class AbstractCompleteService
     public function __construct(?ServerRequest $request = null)
     {
         $this->request = $request ?? new ServerRequest();
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
-        /** @phpstan-ignore-next-line */
         $this->Gpgkeys = $this->fetchTable('Gpgkeys');
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

@@ -65,7 +65,7 @@ class ClearMfaCookieOnSetupAndRecover implements EventListenerInterface
      */
     public function clearMfaCookieInResponse(EventInterface $event): void
     {
-        /** @var \Cake\Controller\Controller $controller */
+        /** @var \App\Controller\AppController $controller */
         $controller = $event->getSubject();
 
         $isControllerInList = in_array(get_class($controller), $this->getListOfControllers());

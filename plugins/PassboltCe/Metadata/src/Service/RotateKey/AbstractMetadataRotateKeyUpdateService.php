@@ -19,7 +19,6 @@ namespace Passbolt\Metadata\Service\RotateKey;
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
-use Cake\Chronos\ChronosInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\ORM\Entity;
@@ -117,7 +116,7 @@ abstract class AbstractMetadataRotateKeyUpdateService
             return;
         }
         // Assert modified date hasn't been changed
-        $modified = $values['modified'] instanceof ChronosInterface ? $values['modified'] : new Chronos($values['modified']); // phpcs:ignore
+        $modified = $values['modified'] instanceof Chronos ? $values['modified'] : new Chronos($values['modified']); // phpcs:ignore
         if ($modified->toDateTimeString() !== $entity->get('modified')->toDateTimeString()) { // we are comparing via toDateTimeString() to avoid microsecond difference
             throw new ConflictException(__('The provided modified date does not match.'));
         }

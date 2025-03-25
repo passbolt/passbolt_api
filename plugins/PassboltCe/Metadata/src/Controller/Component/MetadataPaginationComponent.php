@@ -25,7 +25,8 @@ use Cake\Log\Log;
 /**
  * MetadataPagination component
  *
- * @property \Passbolt\Metadata\Controller\Component\ApiPaginationComponent $ApiPagination
+ * @property \App\Controller\Component\ApiPaginationComponent $ApiPagination
+ * @method \App\Controller\AppController getController()
  */
 class MetadataPaginationComponent extends Component
 {

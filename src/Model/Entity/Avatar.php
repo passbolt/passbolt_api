@@ -32,7 +32,7 @@ class Avatar extends Entity
     /**
      * The avatar data never needs to be served. it is stored in cache.
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected array $_hidden = [
         'data',

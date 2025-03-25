@@ -39,9 +39,9 @@ class MfaSettings
     protected ?MfaAccountSettings $accountSettings = null;
 
     /**
-     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings
+     * @var \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings|null
      */
-    protected MfaOrgSettings $orgSettings;
+    protected ?MfaOrgSettings $orgSettings = null;
 
     /**
      * @var \App\Utility\UserAccessControl

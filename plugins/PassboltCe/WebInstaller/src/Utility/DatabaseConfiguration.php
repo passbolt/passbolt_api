@@ -100,7 +100,10 @@ class DatabaseConfiguration
      */
     public static function getTables(): array|ArrayAccess
     {
-        return ConnectionManager::get('default')->getSchemaCollection()->listTables();
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get('default');
+
+        return $connection->getSchemaCollection()->listTables();
     }
 
     /**

@@ -18,14 +18,11 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Controller\Rbacs;
 
 use App\Controller\AppController;
-use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Event\EventInterface;
 use Passbolt\Rbacs\Model\Table\RbacsTable;
 
 class RbacsViewController extends AppController
 {
-    use PaginatePropertyAwareTrait;
-
     /**
      * @var \Passbolt\Rbacs\Model\Table\RbacsTable $Rbacs
      */

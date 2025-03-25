@@ -52,7 +52,7 @@ class Resource extends Entity
      * List of property names that should **not** be included in JSON or Array
      * representations of this Entity.
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected array $_hidden = [
         '_joinData',

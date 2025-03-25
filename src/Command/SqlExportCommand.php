@@ -20,9 +20,9 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Database\Connection;
+use Cake\Database\Driver;
 use Cake\Database\Driver\Mysql;
 use Cake\Database\Driver\Postgres;
-use Cake\Database\DriverInterface;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\MissingDatasourceConfigException;
 
@@ -228,10 +228,10 @@ class SqlExportCommand extends PassboltCommand
     /**
      * Check if the driver is supported by Passbolt.
      *
-     * @param \Cake\Database\DriverInterface $driver Driver to assess.
+     * @param \Cake\Database\Driver $driver Driver to assess.
      * @return bool
      */
-    protected function isSupportedDriver(DriverInterface $driver): bool
+    protected function isSupportedDriver(Driver $driver): bool
     {
         return $driver instanceof Mysql || $driver instanceof Postgres;
     }

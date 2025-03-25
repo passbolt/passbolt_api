@@ -84,9 +84,7 @@ class ResourcesShareService
     public function __construct(
         ResourcesExpireResourcesServiceInterface $resourcesExpireResourcesService
     ) {
-        /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
         $this->permissionsGetUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->permissionsUpdatePermissionsService = new PermissionsUpdatePermissionsService();

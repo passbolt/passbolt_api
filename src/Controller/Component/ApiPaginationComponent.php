@@ -23,6 +23,9 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Inflector;
 
+/**
+ * @method \App\Controller\AppController getController()
+ */
 class ApiPaginationComponent extends BaseApiComponent
 {
     public const MAX_LIMIT = 1000000;

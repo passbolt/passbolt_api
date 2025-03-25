@@ -19,7 +19,6 @@ namespace Passbolt\Metadata\Controller\RotateKey;
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
 use App\Model\Table\ResourcesTable;
-use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
 
@@ -28,8 +27,6 @@ use Passbolt\Metadata\Service\RotateKey\MetadataRotateKeyResourcesUpdateService;
  */
 class MetadataRotateKeyResourcesPostController extends AppController
 {
-    use PaginatePropertyAwareTrait;
-
     /**
      * @var \App\Model\Table\ResourcesTable
      */

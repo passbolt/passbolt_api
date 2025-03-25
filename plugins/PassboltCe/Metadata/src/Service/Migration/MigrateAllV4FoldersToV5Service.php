@@ -56,7 +56,6 @@ class MigrateAllV4FoldersToV5Service implements V4ToV5MigrationServiceInterface
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Folders = $this->fetchTable('Passbolt/Folders.Folders');
     }
 

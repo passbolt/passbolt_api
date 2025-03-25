@@ -59,9 +59,7 @@ class ResourcesAfterAccessRevokedService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
         $this->foldersRelationsRemoveItemFromUserTree = new FoldersRelationsRemoveItemFromUserTreeService();
         $this->userHasPermissionService = new UserHasPermissionService();
@@ -97,11 +95,10 @@ class ResourcesAfterAccessRevokedService
     private function getResource(UserAccessControl $uac, string $resourceId): Resource
     {
         try {
-            return $this->Resources->get(
-                $resourceId,
-                finder: FolderizableBehavior::FINDER_NAME,
-                user_id: $uac->getId()
-            );
+            return $this->Resources->get($resourceId, [
+                'finder' => FolderizableBehavior::FINDER_NAME,
+                'user_id' => $uac->getId(),
+            ]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }

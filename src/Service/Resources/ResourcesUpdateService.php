@@ -76,9 +76,7 @@ class ResourcesUpdateService
     {
         $this->getUsersIdsHavingAccessToService = new PermissionsGetUsersIdsHavingAccessToService();
         $this->secretsUpdateSecretsService = new SecretsUpdateSecretsService();
-        /** @phpstan-ignore-next-line */
         $this->Permissions = $this->fetchTable('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
     }
 

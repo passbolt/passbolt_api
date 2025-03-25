@@ -68,9 +68,7 @@ class ResourcesAddService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

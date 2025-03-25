@@ -38,7 +38,7 @@ class SubscriptionKeyController extends WebInstallerController
     /**
      * Index
      *
-     * @return void
+     * @return null|void
      */
     public function index()
     {
@@ -53,7 +53,7 @@ class SubscriptionKeyController extends WebInstallerController
     /**
      * Index post
      *
-     * @return void
+     * @return null|void
      */
     protected function indexPost()
     {
