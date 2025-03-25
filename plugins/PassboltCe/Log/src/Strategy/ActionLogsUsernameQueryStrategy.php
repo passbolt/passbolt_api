@@ -1,21 +1,33 @@
 <?php
 declare(strict_types=1);
 
+/**
+ * Passbolt ~ Open source password manager for teams
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
+ *
+ * Licensed under GNU Affero General Public License version 3 of the or any later version.
+ * For full copyright and license information, please see the LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
+ * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
+ * @link          https://www.passbolt.com Passbolt(tm)
+ * @since         4.5.0
+ */
+
 namespace Passbolt\Log\Strategy;
 
-use Passbolt\AuditLog\Utility\BaseActionLogsFinder;
-use Passbolt\Log\Model\Entity\ActionLog;
-use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
-use Cake\ORM\TableRegistry;
-use Cake\Log\Log;
 use Cake\I18n\Time;
+use Cake\Log\Log;
+use Cake\ORM\Locator\LocatorAwareTrait;
+use Exception;
+use Passbolt\Log\Model\Entity\ActionLog;
 
 class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
 {
     use LocatorAwareTrait;
 
-    protected $actionConfig = [
+    protected array $actionConfig = [
         'ResourcesView.view' => ['name' => 'password_access', 'details' => ' accessed password'],
         'SecretsView.view' => ['name' => 'password_access', 'details' => ' accessed password'],
         'ResourcesAdd.add' => ['name' => 'password_add', 'details' => ' created password'],
@@ -29,7 +41,7 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
     /**
      * @inheritDoc
      */
-    public function query(ActionLog $actionLog)
+    public function query(ActionLog $actionLog): string|false
     {
         try {
             // Get the action name
@@ -39,14 +51,14 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             if (!isset($this->actionConfig[$actionName]) || !isset($actionLog->user_id)) {
                 return false;
             }
-            
+
             // Get user details
             $userDetails = $this->getUserDetails($actionLog->user_id);
-            
+
             // Initialize additional context
             $itemDetails = $this->actionConfig[$actionName]['details'];
             $extraDetails = [];
-            
+
             // Handle actions based on the action name
             switch ($actionName) {
                 case 'ResourcesView.view':
@@ -67,7 +79,7 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
                     // If the action is not recognized, return false
                     return false;
             }
-                            
+
             // Get human-readable action name
             $humanReadableActionName = $this->actionConfig[$actionName]['name'] ?? $actionName;
 
@@ -77,12 +89,15 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
                 'user' => $userDetails['username'],
                 'action' => $humanReadableActionName,
                 'context' => $userDetails['fullName'] . $itemDetails,
-                'status' => $actionLog->status
+                'status' => $actionLog->status,
             ], $extraDetails);
 
             return json_encode($formattedLog);
-        } catch (\Exception $e) {
-            Log::error('Error in ActionLogsUsernameQueryStrategy: ' . $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine());
+        } catch (Exception $e) {
+            $msg = 'Error in ActionLogsUsernameQueryStrategy: ';
+            $msg .= $e->getMessage() . ' at ' . $e->getFile() . ':' . $e->getLine();
+            Log::error($msg);
+
             return false;
         }
     }
@@ -90,45 +105,53 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
     /**
      * Get the action name for a given action ID.
      *
-     * @param string $actionId
+     * @param string $actionId action ID
      * @return string
      */
     protected function getActionName(string $actionId): string
     {
+        /** @var \Passbolt\Log\Model\Table\ActionsTable $actionsTable */
         $actionsTable = $this->fetchTable('Actions');
         $action = $actionsTable->get($actionId);
+
         return $action->name;
     }
 
     /**
      * Get user details for a given user ID.
      *
-     * @param string $userId
+     * @param string $userId user ID
      * @return array
      */
     protected function getUserDetails(string $userId): array
     {
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
-        $user = $usersTable->findById($userId)->contain("Profiles")->firstOrFail();
+        /** @var \App\Model\Entity\User $user */
+        $user = $usersTable->findById($userId)->contain('Profiles')->firstOrFail();
+
         return [
             'username' => $user->username,
-            'fullName' => $user->profile->first_name . ' ' . $user->profile->last_name . ' (' . $user->username . ')'
+            'fullName' => $user->profile->first_name . ' ' . $user->profile->last_name . ' (' . $user->username . ')',
         ];
     }
 
     /**
      * Get resource details from entities history for a given action log ID and model.
      *
-     * @param string $actionLogId
+     * @param string $actionLogId action log ID
      * @return array
      */
     protected function getResourceDetails(string $actionLogId): array
     {
+        /** @var \Passbolt\Log\Model\Table\EntitiesHistoryTable $entitiesHistoryTable */
         $entitiesHistoryTable = $this->fetchTable('EntitiesHistory');
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
+        /** @var \Passbolt\Log\Model\Table\SecretAccessesTable $secretAccessesTable */
         $secretAccessesTable = $this->fetchTable('SecretAccesses');
-        
 
+        /** @var \Passbolt\Log\Model\Entity\EntityHistory $entityHistory */
         $entityHistory = $entitiesHistoryTable->find()
             ->where(['action_log_id' => $actionLogId])
             ->firstOrFail();
@@ -140,7 +163,7 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             $secretAccess = $secretAccessesTable->get($entityHistory->foreign_key);
             $resourceId = $secretAccess->resource_id;
         } else {
-            throw new \Exception('Unsupported foreign_model: ' . $entityHistory->foreign_model);
+            throw new Exception('Unsupported foreign_model: ' . $entityHistory->foreign_model);
         }
 
         // Fetch the resource
@@ -157,15 +180,20 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
     /**
      * Handle the share action log and determine changes in permissions.
      *
-     * @param string $actionLogId
+     * @param string $actionLogId action log ID
      * @return array
      */
     protected function handleShareAction(string $actionLogId): array
     {
+        /** @var \Passbolt\Log\Model\Table\EntitiesHistoryTable $entitiesHistoryTable */
         $entitiesHistoryTable = $this->fetchTable('EntitiesHistory');
+        /** @var \Passbolt\Log\Model\Table\PermissionsHistoryTable $permissionsHistoryTable */
         $permissionsHistoryTable = $this->fetchTable('PermissionsHistory');
+        /** @var \App\Model\Table\UsersTable $usersTable */
         $usersTable = $this->fetchTable('Users');
+        /** @var \App\Model\Table\GroupsTable $groupsTable */
         $groupsTable = $this->fetchTable('Groups');
+        /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
 
         // Fetch the entities history for the action log
@@ -209,7 +237,8 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             foreach ($addedPermissions as $perm) {
                 if ($perm->aro === 'User') {
                     $user = $usersTable->get($perm->aro_foreign_key, ['contain' => ['Profiles']]);
-                    $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ' . $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
+                    $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ';
+                    $context .= $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
                 } elseif ($perm->aro === 'Group') {
                     $group = $groupsTable->get($perm->aro_foreign_key);
                     $context .= ' group \'' . $group->name . '\' ' . $permissionTypes[$perm->type];
@@ -223,7 +252,8 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             foreach ($removedPermissions as $perm) {
                 if ($perm->aro === 'User') {
                     $user = $usersTable->get($perm->aro_foreign_key, ['contain' => ['Profiles']]);
-                    $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ' . $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
+                    $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ';
+                    $context .= $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
                 } elseif ($perm->aro === 'Group') {
                     $group = $groupsTable->get($perm->aro_foreign_key);
                     $context .= ' group \'' . $group->name . '\' ' . $permissionTypes[$perm->type];
@@ -237,7 +267,8 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             foreach ($changedPermissions as $perm) {
                 if ($perm->aro === 'User') {
                     $user = $usersTable->get($perm->aro_foreign_key, ['contain' => ['Profiles']]);
-                    $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ' . $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
+                    $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ';
+                    $context .= $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
                 } elseif ($perm->aro === 'Group') {
                     $group = $groupsTable->get($perm->aro_foreign_key);
                     $context .= ' group \'' . $group->name . '\' ' . $permissionTypes[$perm->type];
@@ -245,7 +276,8 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             }
         }
 
-        $resourceId = $addedPermissions[0]->aco_foreign_key ?? $removedPermissions[0]->aco_foreign_key ?? $changedPermissions[0]->aco_foreign_key ?? null;
+        $resourceId = $addedPermissions[0]->aco_foreign_key ?? $removedPermissions[0]->aco_foreign_key
+            ?? $changedPermissions[0]->aco_foreign_key ?? null;
         $resource = $resourcesTable->get($resourceId);
 
         return [
