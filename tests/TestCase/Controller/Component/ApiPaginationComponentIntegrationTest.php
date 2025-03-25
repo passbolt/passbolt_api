@@ -62,7 +62,6 @@ class ApiPaginationComponentIntegrationTest extends AppIntegrationTestCase
      */
     public function testDefaultPaginationSettings(): void
     {
-        $this->markTestSkipped('TODO: Fix');
         $numberOfResources = 19;
         $limit = 10;
         $page = 2;
