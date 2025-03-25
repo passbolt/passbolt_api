@@ -17,7 +17,9 @@ declare(strict_types=1);
 
 namespace Passbolt\Locale\Test\TestCase\Model\Behavior;
 
+use App\Test\Factory\GroupsUserFactory;
 use App\Test\Factory\UserFactory;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -34,11 +36,17 @@ class LocaleBehaviorTest extends TestCase
      */
     private $usersTable;
 
+    /**
+     * @var \App\Model\Table\GroupsUsersTable
+     */
+    private $groupsUsersTable;
+
     public function setUp(): void
     {
         parent::setUp();
         $this->loadPlugins(['Passbolt/Locale' => []]);
         $this->usersTable = TableRegistry::getTableLocator()->get('Users');
+        $this->groupsUsersTable = TableRegistry::getTableLocator()->get('GroupsUsers');
     }
 
     /**
@@ -76,5 +84,26 @@ class LocaleBehaviorTest extends TestCase
             ->contain('Locale')
             ->first();
         $this->assertEquals('en-UK', $user->get('locale'));
+    }
+
+    /**
+     * An issue was found when containing the locale on users disabled
+     * This test aims at reproducing the issue before fixing it
+     */
+    public function testFindLocaleInContainQueryWithDisabledUser(): void
+    {
+        GroupsUserFactory::make()
+            ->admin()
+            ->with('Users', UserFactory::make()->disabled())
+            ->with('Groups')
+            ->persist();
+
+        $groupUsers = $this->groupsUsersTable->find()->contain('Users', function (Query $q) {
+            return $q
+                ->find('locale')
+                ->find('notDisabled');
+        });
+
+        $this->assertNull($groupUsers->all()->first()->user);
     }
 }

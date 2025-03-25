@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Command;
 
 use App\Command\PassboltCommand;
+use App\Model\Entity\User;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Database\Expression\IdentifierExpression;
@@ -68,13 +69,16 @@ class ShareMetadataKeyCommand extends PassboltCommand
         }
 
         $metadataKeys = Hash::combine($metadataKeys, '{n}.id', '{n}');
+        /** @var \App\Model\Table\UsersTable $Users */
+        $Users = TableRegistry::getTableLocator()->get('Users');
+        $admin = $Users->findFirstAdminOrThrowNoAdminInDbException();
 
         // Using chunk here to be memory efficient with large data sets (i.e. thousands of users)
         $error = false;
         $usersResultSet
             ->chunk(50)
-            ->each(function ($usersBatch) use ($metadataKeys, $io, &$error) {
-                $this->shareMetadataKeyWithUsers($usersBatch, $metadataKeys, $io, $error);
+            ->each(function ($usersBatch) use ($admin, $metadataKeys, $io, &$error) {
+                $this->shareMetadataKeyWithUsers($admin, $usersBatch, $metadataKeys, $io, $error);
             });
 
         return $error ? $this->errorCode() : $this->successCode();
@@ -133,14 +137,20 @@ class ShareMetadataKeyCommand extends PassboltCommand
     }
 
     /**
+     * @param \App\Model\Entity\User $admin admin populating the created_by and modified_by fields.
      * @param \App\Model\Entity\User[] $users Users to share metadata key with.
      * @param array $metadataKeys Existing metadata keys with associated private key.
      * @param \Cake\Console\ConsoleIo $io I/O object.
      * @param bool $error Set it to true in case of any error occurrence.
      * @return void
      */
-    private function shareMetadataKeyWithUsers(array $users, array $metadataKeys, ConsoleIo $io, bool &$error): void
-    {
+    private function shareMetadataKeyWithUsers(
+        User $admin,
+        array $users,
+        array $metadataKeys,
+        ConsoleIo $io,
+        bool &$error
+    ): void {
         $metadataKeyShareService = new MetadataKeyShareDefaultService();
 
         foreach ($users as $user) {
@@ -159,7 +169,7 @@ class ShareMetadataKeyCommand extends PassboltCommand
             }
 
             try {
-                $metadataKeyShareService->shareMetadataKeyWithUser($user, $metadataPrivateKey);
+                $metadataKeyShareService->shareMetadataKeyWithUser($user, $metadataPrivateKey, $admin->id);
             } catch (\Exception $e) {
                 $msg = __('The metadata key {0} could not be shared with user {1}.', $missingMetadataKeyId, $user->username); // phpcs:ignore
                 $msg .= ' ' . $e->getMessage();

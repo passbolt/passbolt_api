@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         4.10.0
  */
 
-namespace Passbolt\Metadata\TestCase\Form;
+namespace Passbolt\Metadata\Test\TestCase\Form;
 
 use Cake\I18n\FrozenTime;
 use Cake\TestSuite\TestCase;
