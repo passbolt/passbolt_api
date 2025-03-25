@@ -55,7 +55,7 @@ final class EmailValidationRule extends PassboltValidationRule
      */
     public static function check($email, ?bool $skipMxCheck = false, ?bool $skipRegexCheck = false): bool
     {
-        $instance = (new self());
+        $instance = new self();
         if ($skipMxCheck) {
             $instance->withoutMxCheck();
         }

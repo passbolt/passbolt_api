@@ -49,12 +49,14 @@ class FindExpiredByTypeTest extends AppTestCase
 
         $found = $this->AuthenticationTokens
             ->find('expiredByType', ['type' => AuthenticationToken::TYPE_RECOVER])
+            ->all()
             ->count();
         $this->assertTrue($found === 2);
 
         $found = $this->AuthenticationTokens
             ->find('expiredByType', ['type' => AuthenticationToken::TYPE_MFA])
             ->where(['active' => true])
+            ->all()
             ->count();
         $this->assertTrue($found === 1);
     }

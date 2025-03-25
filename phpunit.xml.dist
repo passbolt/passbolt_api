@@ -21,8 +21,6 @@
   </testsuites>
     <extensions>
         <extension class="\Cake\TestSuite\Fixture\PHPUnitExtension" />
+        <extension class="Ergebnis\PHPUnit\SlowTestDetector\Extension"/>
     </extensions>
-    <listeners>
-        <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
-    </listeners>
 </phpunit>

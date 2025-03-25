@@ -34,6 +34,7 @@ trait EntitiesHistoryTrait
         $entityHistoryCount = $this->EntitiesHistory
             ->find()
             ->where($conditions)
+            ->all()
             ->count();
 
         $this->assertEquals($entityHistoryCount, $count);

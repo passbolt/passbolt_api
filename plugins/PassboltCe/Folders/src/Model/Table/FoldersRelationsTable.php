@@ -416,6 +416,7 @@ class FoldersRelationsTable extends Table
 
         return $this->find()
             ->where($conditions)
+            ->all()
             ->count();
     }
 
@@ -506,7 +507,8 @@ class FoldersRelationsTable extends Table
         }
 
         return $this->findByForeignId($foreignId)
-                ->count() === 1;
+            ->all()
+            ->count() === 1;
     }
 
     /**

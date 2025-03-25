@@ -11,7 +11,7 @@
     "config": {
         "optimize-autoloader": true,
         "platform": {
-            "php": "7.4"
+            "php": "8.2"
         },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
@@ -65,7 +65,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.2",
         "ext-json": "*",
         "ext-posix": "*",
         "ext-intl": "*",
@@ -109,7 +109,7 @@
         "cakephp/localized": "4.0.0",
         "vimeo/psalm": "^5.26.0",
         "cakedc/cakephp-phpstan": "^2.1",
-        "johnkary/phpunit-speedtrap": "^4.0"
+        "ergebnis/phpunit-slow-test-detector": "^2.19"
     },
     "autoload": {
         "psr-4": {

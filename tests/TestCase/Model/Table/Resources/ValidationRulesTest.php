@@ -34,7 +34,15 @@ class ValidationRulesTest extends AppTestCase
     use FormatValidationTrait;
     use ResourcesModelTrait;
 
-    public $Resources;
+    /**
+     * @var ResourcesTable|null
+     */
+    public $Resources = null;
+
+    /**
+     * @var ResourceTypesTable|null
+     */
+    public $ResourceTypes = null;
 
     public function setUp(): void
     {

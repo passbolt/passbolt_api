@@ -35,7 +35,7 @@ trait EmailQueueTrait
      */
     protected function assertEmailIsInQueue(array $properties)
     {
-        $this->assertTrue(EmailQueueFactory::find()->where($properties)->count() === 1, 'The email is not in the email queue.');
+        $this->assertTrue(EmailQueueFactory::find()->where($properties)->all()->count() === 1, 'The email is not in the email queue.');
     }
 
     /**
@@ -43,7 +43,7 @@ trait EmailQueueTrait
      */
     protected function assertEmailIsNotInQueue(array $properties)
     {
-        $this->assertTrue(EmailQueueFactory::find()->where($properties)->count() === 0, 'The email is not in the email queue.');
+        $this->assertTrue(EmailQueueFactory::find()->where($properties)->all()->count() === 0, 'The email is not in the email queue.');
     }
 
     /**
@@ -116,7 +116,7 @@ trait EmailQueueTrait
     protected function assertEmailLocale(string $email, string $expectedLocale)
     {
         $emails = EmailQueueFactory::find()->where(compact('email'));
-        $this->assertTrue($emails->count() > 0);
+        $this->assertTrue($emails->all()->count() > 0);
         foreach ($emails as $email) {
             $this->assertTextEquals($expectedLocale, $email->get('template_vars')['locale']);
         }
@@ -131,7 +131,7 @@ trait EmailQueueTrait
     protected function assertEmailSubject(string $email, string $expectedSubject)
     {
         $emails = EmailQueueFactory::find()->where(compact('email'));
-        $this->assertTrue($emails->count() > 0);
+        $this->assertTrue($emails->all()->count() > 0);
         foreach ($emails as $email) {
             $this->assertTextEquals($expectedSubject, $email->get('subject'));
         }

@@ -167,10 +167,10 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->assertMailCount(1);
         $this->assertMailSentToAt(0, [$recipient => $recipient]);
         // Make sure email queue entries are not locked
-        $count = EmailQueueFactory::find()->where(['locked' => true])->count();
+        $count = EmailQueueFactory::find()->where(['locked' => true])->all()->count();
         $this->assertEquals(0, $count);
         // Make sure email queue entries are sent
-        $count = EmailQueueFactory::find()->where(['sent' => true, 'locked' => false])->count();
+        $count = EmailQueueFactory::find()->where(['sent' => true, 'locked' => false])->all()->count();
         $this->assertEquals($nResourcesAdded, $count);
     }
 
@@ -214,10 +214,10 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->assertMailCount(1);
         $this->assertMailSentToAt(0, [$recipient => $recipient]);
         // Make sure email queue entries are not locked
-        $count = EmailQueueFactory::find()->where(['locked' => true])->count();
+        $count = EmailQueueFactory::find()->where(['locked' => true])->all()->count();
         $this->assertEquals(0, $count);
         // Make sure email queue entries are not sent
-        $count = EmailQueueFactory::find()->where(['sent' => false, 'locked' => false])->count();
+        $count = EmailQueueFactory::find()->where(['sent' => false, 'locked' => false])->all()->count();
         $this->assertEquals($nResourcesAdded, $count);
     }
 
@@ -252,7 +252,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->exec('passbolt email_digest send');
         $this->assertExitSuccess();
 
-        $sentCount = EmailQueueFactory::find()->where(['sent' => true])->count();
+        $sentCount = EmailQueueFactory::find()->where(['sent' => true])->all()->count();
         $this->assertSame($nEmailsSent * 2, $sentCount);
 
         $this->assertMailCount(2);
@@ -298,7 +298,7 @@ class SenderCommandTest extends AppIntegrationTestCase
         $this->exec('passbolt email_digest send');
         $this->assertExitSuccess();
 
-        $sentCount = EmailQueueFactory::find()->where(['sent' => true])->count();
+        $sentCount = EmailQueueFactory::find()->where(['sent' => true])->all()->count();
         $this->assertSame($nEmailsSent, $sentCount);
         $this->assertMailCount($nEmailsSent);
     }

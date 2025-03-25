@@ -76,7 +76,7 @@ class SelfRegistrationUsersRegisterControllerTest extends AppIntegrationTestCase
         ];
         $this->postJson('/users/register.json', $data);
         $this->assertResponseOk();
-        $this->assertSame(1, UserFactory::find()->where(compact('username'))->count());
+        $this->assertSame(1, UserFactory::find()->where(compact('username'))->all()->count());
 
         $this->assertEmailQueueCount($nAdmins + 1);
         $emailSubject = "$firstName just created an account on passbolt!";

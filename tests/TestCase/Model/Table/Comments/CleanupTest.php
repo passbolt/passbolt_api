@@ -54,7 +54,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupCommentsSoftDeletedUsersSuccess()
     {
-        $originalCount = $this->Comments->find()->count();
+        $originalCount = $this->Comments->find()->all()->count();
         $fav = $this->Comments->newEntity([
             'user_id' => UuidFactory::uuid('user.id.sofia'),
             'foreign_model' => 'Resource',
@@ -69,7 +69,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupCommentsHardDeletedUsersSuccess()
     {
-        $originalCount = $this->Comments->find()->count();
+        $originalCount = $this->Comments->find()->all()->count();
         $fav = $this->Comments->newEntity([
             'user_id' => UuidFactory::uuid('user.id.nope'),
             'foreign_model' => 'Resource',
@@ -84,7 +84,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupCommentsSoftDeletedResourcesSuccess()
     {
-        $originalCount = $this->Comments->find()->count();
+        $originalCount = $this->Comments->find()->all()->count();
         $fav = $this->Comments->newEntity([
             'user_id' => UuidFactory::uuid('user.id.ada'),
             'foreign_model' => 'Resource',
@@ -99,7 +99,7 @@ class CleanupTest extends AppTestCase
 
     public function testCleanupCommentsHardDeletedResourcesSuccess()
     {
-        $originalCount = $this->Comments->find()->count();
+        $originalCount = $this->Comments->find()->all()->count();
         $fav = $this->Comments->newEntity([
             'user_id' => UuidFactory::uuid('user.id.ada'),
             'foreign_model' => 'Resource',
