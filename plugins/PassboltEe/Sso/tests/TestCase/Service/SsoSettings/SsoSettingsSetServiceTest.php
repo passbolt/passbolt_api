@@ -109,6 +109,7 @@ class SsoSettingsSetServiceTest extends SsoTestCase
             Configure::read('passbolt.gpg.serverKey.passphrase')
         );
         $decryptedData = json_decode($gpg->decrypt($ssoSettingEntity->data), true);
+        $data['data']['client_secret_expiry'] = $data['data']['client_secret_expiry']->toDateTimeString();
         $this->assertEquals(json_decode(json_encode($data['data']), true), $decryptedData);
     }
 

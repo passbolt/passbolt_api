@@ -57,6 +57,7 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $this->assertEquals(SsoSetting::PROVIDER_AZURE, $body['provider']);
         $this->assertEquals((new SsoActiveProvidersGetService())->get(), $body['providers']);
         $this->assertEquals(SsoSetting::STATUS_DRAFT, $body['status']);
+        $data['data']['client_secret_expiry'] = $data['data']['client_secret_expiry']->toDateTimeString();
         $this->assertEquals(json_decode(json_encode($data['data']), true), $body['data']);
     }
 
