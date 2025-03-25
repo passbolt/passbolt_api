@@ -171,6 +171,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
         $users = $this->getRecipients($usersIds);
         $whoIsAdmin = Hash::combine($addedGroupsUsers, '{n}.user_id', '{n}.is_admin');
 
+        /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             $isAdmin = isset($whoIsAdmin[$user->id]) && $whoIsAdmin[$user->id];
             $emails[] = $this->createGroupUserAddEmail($user, $modifiedBy, $group, $isAdmin);

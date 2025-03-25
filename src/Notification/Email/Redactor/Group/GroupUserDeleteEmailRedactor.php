@@ -120,6 +120,7 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
             ->find('notDisabled')
             ->where(['Users.id IN' => $usersIds]);
 
+        /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             $emails[] = $this->createGroupUserDeleteEmail($user, $modifiedBy, $group);
         }

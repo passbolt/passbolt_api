@@ -25,6 +25,7 @@ trait DatabaseTrait
      */
     public static function dropAllTables()
     {
+        /** @var \Cake\Database\Connection $connection */
         $connection = ConnectionManager::get('default');
         $tables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
         foreach ($tables as $table) {

@@ -43,6 +43,7 @@ trait UacAwareMiddlewareTrait
         // User might be stored in the field "user" of the
         // identity (JWT Login endpoint) or can directly be
         // the identity itself (general way)
+        /** @var \App\Model\Entity\User|\Authentication\Identity $user */
         $user = $identity->get('user') ?? $identity;
 
         return new UserAccessControl($user['role']['name'], $user['id'], $user['username']);

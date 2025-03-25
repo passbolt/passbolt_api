@@ -72,6 +72,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $deletedBy = $this->Users->findFirstForEmail($deletedById);
+        /** @var array<\App\Model\Entity\User> $recipients */
         $recipients = $this->getRecipientsWithGroups($groupsIds);
 
         foreach ($recipients as $recipient) {

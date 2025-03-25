@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
+  <file src="plugins/PassboltCe/AccountSettings/src/Model/Table/AccountSettingsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[AccountSettingsTable]]></code>
+      <code><![CDATA[AccountSettingsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
   <file src="plugins/PassboltCe/AccountSettings/tests/TestCase/Controller/Themes/ThemesSelectControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/EmailNotificationSettings/tests/Factory/EmailNotificationSettingFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[EmailNotificationSettingFactory]]></code>
+    </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/EmailNotificationSettings/tests/TestCase/Utility/EmailNotificationSettingsTest.php">
     <InvalidPropertyFetch>
@@ -11,15 +22,92 @@
       <code><![CDATA[$dbEmailNotifSettings->value]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersHistoryTable.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])]]></code>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\FolderHistory get($primaryKey, ?array $options = [])]]></code>
+    </ImplementedParamTypeMismatch>
+    <MethodSignatureMismatch>
+      <code><![CDATA[FoldersHistoryTable]]></code>
+      <code><![CDATA[FoldersHistoryTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersRelationsHistoryTable.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])]]></code>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, ?array $options = [])]]></code>
+    </ImplementedParamTypeMismatch>
+    <MethodSignatureMismatch>
+      <code><![CDATA[FoldersRelationsHistoryTable]]></code>
+      <code><![CDATA[FoldersRelationsHistoryTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersRelationsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[FoldersRelationsTable]]></code>
+      <code><![CDATA[FoldersRelationsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[FoldersTable]]></code>
+      <code><![CDATA[FoldersTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
   <file src="plugins/PassboltCe/Folders/src/Model/Traits/Folders/FoldersFindersTrait.php">
     <TypeDoesNotContainType>
       <code><![CDATA[$includeRoot === true]]></code>
     </TypeDoesNotContainType>
   </file>
+  <file src="plugins/PassboltCe/Folders/src/Notification/Email/DeleteFolderEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$recipient]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/Folders/src/Notification/Email/UpdateFolderEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$recipient]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/Folders/src/Service/Folders/FoldersDeleteService.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$folderRelation->foreign_id]]></code>
+      <code><![CDATA[$folderRelation->foreign_model]]></code>
+    </InvalidPropertyFetch>
+    <NoInterfaceProperties>
+      <code><![CDATA[$folderRelation->foreign_id]]></code>
+      <code><![CDATA[$folderRelation->foreign_model]]></code>
+    </NoInterfaceProperties>
+  </file>
+  <file src="plugins/PassboltCe/Folders/tests/Factory/FolderFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[FolderFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Folders\Model\Entity\Folder|\Passbolt\Folders\Model\Entity\Folder[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Folders/tests/Factory/ResourceFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ResourceFactory]]></code>
+    </MethodSignatureMismatch>
+  </file>
   <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerPaginationTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersIndexControllerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$folder->children_folders]]></code>
+      <code><![CDATA[$folder->children_resources]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/Folders/tests/TestCase/Controller/Folders/FoldersViewControllerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$result->children_folders]]></code>
+      <code><![CDATA[$result->children_resources]]></code>
+    </InvalidArgument>
   </file>
   <file src="plugins/PassboltCe/Folders/tests/TestCase/Model/Table/FoldersRelations/FoldersRelationsCleanupTest.php">
     <InvalidPropertyFetch>
@@ -113,6 +201,30 @@
       <code><![CDATA[$userB->id]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/src/Authenticator/GpgJwtAuthenticator.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[\App\Utility\OpenPGP\OpenPGPBackend]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->gpg]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/src/Notification/Email/Redactor/JwtAuthenticationAttackEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$admin]]></code>
+    </InvalidArgument>
+    <InvalidPropertyFetch>
+      <code><![CDATA[$admin->locale]]></code>
+    </InvalidPropertyFetch>
+    <NoInterfaceProperties>
+      <code><![CDATA[$admin->locale]]></code>
+    </NoInterfaceProperties>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/Factory/RefreshTokenAuthenticationTokenFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[RefreshTokenAuthenticationTokenFactory]]></code>
+    </MethodSignatureMismatch>
+  </file>
   <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Authenticator/JwtAuthenticatorTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$attackedUser->id]]></code>
@@ -141,6 +253,11 @@
       <code><![CDATA[$user->id]]></code>
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Controller/JwksControllerTest.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[$this->_responseJsonBody->keys]]></code>
+    </UndefinedInterfaceMethod>
   </file>
   <file src="plugins/PassboltCe/JwtAuthentication/tests/TestCase/Controller/JwtLoginControllerTest.php">
     <InvalidPropertyFetch>
@@ -251,6 +368,11 @@
       <code><![CDATA[UserFactory::make()->user()->persist()->id]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltCe/Locale/tests/Factory/LocaleSettingFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[LocaleSettingFactory]]></code>
+    </MethodSignatureMismatch>
+  </file>
   <file src="plugins/PassboltCe/Locale/tests/TestCase/Controller/AccountLocalesSelectControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -272,11 +394,89 @@
       <code><![CDATA[$frenchUser2->username]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/ActionLogsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ActionLogsTable]]></code>
+      <code><![CDATA[ActionLogsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/ActionsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ActionsTable]]></code>
+      <code><![CDATA[ActionsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/EntitiesHistoryTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[EntitiesHistoryTable]]></code>
+      <code><![CDATA[EntitiesHistoryTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/PermissionsHistoryTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[PermissionsHistoryTable]]></code>
+      <code><![CDATA[PermissionsHistoryTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/SecretAccessesTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[SecretAccessesTable]]></code>
+      <code><![CDATA[SecretAccessesTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Log/src/Model/Table/SecretsHistoryTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[SecretsHistoryTable]]></code>
+      <code><![CDATA[SecretsHistoryTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/Factory/ActionFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ActionFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\Action|\Passbolt\Log\Model\Entity\Action[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/Factory/ActionLogFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ActionLogFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\ActionLog|\Passbolt\Log\Model\Entity\ActionLog[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/Factory/EntitiesHistoryFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[EntitiesHistoryFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\EntityHistory|\Passbolt\Log\Model\Entity\EntityHistory[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/Factory/SecretAccessFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[SecretAccessFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Log\Model\Entity\SecretAccess|\Passbolt\Log\Model\Entity\SecretAccess[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
   <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesControllerLogTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Resources/ResourcesViewControllerLogTest.php">
+    <RedundantCondition>
+      <code><![CDATA[assertNotNull]]></code>
+    </RedundantCondition>
+  </file>
+  <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Secrets/SecretsViewControllerLogTest.php">
+    <RedundantCondition>
+      <code><![CDATA[assertNotNull]]></code>
+    </RedundantCondition>
   </file>
   <file src="plugins/PassboltCe/Log/tests/TestCase/Controller/Share/ShareControllerLogTest.php">
     <InvalidPropertyFetch>
@@ -293,10 +493,100 @@
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltCe/Log/tests/TestCase/Events/ActionLogsBeforeRenderListenerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$event]]></code>
+    </InvalidArgument>
+  </file>
   <file src="plugins/PassboltCe/Log/tests/TestCase/Model/ActionLogs/ActionLogsTableTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$actionLog->action_id]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataKeysTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MetadataKeysTable]]></code>
+      <code><![CDATA[MetadataKeysTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataPrivateKeysTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MetadataPrivateKeysTable]]></code>
+      <code><![CDATA[MetadataPrivateKeysTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataSessionKeysTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MetadataSessionKeysTable]]></code>
+      <code><![CDATA[MetadataSessionKeysTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataKeyCreateEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$recipient]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataKeyDeleteEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$recipient]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataKeyExpireEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$recipient]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataSettingsSetEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$recipient]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/tests/Factory/MetadataKeysSettingsFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MetadataKeysSettingsFactory]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/tests/Factory/MetadataPrivateKeyFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MetadataPrivateKeyFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Metadata\Model\Entity\MetadataPrivateKey getEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/tests/Factory/MetadataSessionKeyFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MetadataSessionKeyFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Metadata\Model\Entity\MetadataSessionKey getEntity()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/tests/Factory/MetadataTypesSettingsFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MetadataTypesSettingsFactory]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Metadata/tests/TestCase/Controller/Resources/MetadataResourcesIndexControllerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$response]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/Mobile/src/Model/Table/TransfersTable.php">
+    <ImplementedParamTypeMismatch>
+      <code><![CDATA[\Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])]]></code>
+      <code><![CDATA[\Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])]]></code>
+    </ImplementedParamTypeMismatch>
+    <MethodSignatureMismatch>
+      <code><![CDATA[TransfersTable]]></code>
+      <code><![CDATA[TransfersTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Mobile/tests/Factory/TransferFactory.php">
+    <UndefinedClass>
+      <code><![CDATA[ChronosInterface]]></code>
+      <code><![CDATA[ChronosInterface]]></code>
+    </UndefinedClass>
   </file>
   <file src="plugins/PassboltCe/Mobile/tests/TestCase/Controller/Transfers/TransfersUpdateControllerTest.php">
     <InvalidPropertyFetch>
@@ -326,6 +616,24 @@
     <InvalidReturnType>
       <code><![CDATA[\Cake\Http\Response]]></code>
     </InvalidReturnType>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/src/Utility/MfaSettings.php">
+    <InvalidNullableReturnType>
+      <code><![CDATA[\Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings]]></code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement>
+      <code><![CDATA[$this->orgSettings]]></code>
+    </NullableReturnStatement>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Factory/MfaAuthenticationTokenFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MfaAuthenticationTokenFactory]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Factory/MfaOrganizationSettingFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[MfaOrganizationSettingFactory]]></code>
+    </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/Scenario/Totp/MfaTotpScenario.php">
     <InvalidPropertyFetch>
@@ -387,6 +695,11 @@
       <code><![CDATA[$authToken->token]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/MfaMiddlewareLoginTest.php">
+    <InvalidNamedArgument>
+      <code><![CDATA[contain]]></code>
+    </InvalidNamedArgument>
+  </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Controllers/Totp/TotpSetupPostControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -407,6 +720,17 @@
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Event/ClearMfaCookieOnSetupAndRecoverTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$event]]></code>
+    </InvalidArgument>
+    <UndefinedPropertyAssignment>
+      <code><![CDATA[$controller->User]]></code>
+    </UndefinedPropertyAssignment>
   </file>
   <file src="plugins/PassboltCe/MultiFactorAuthentication/tests/TestCase/Middleware/MfaRequiredCheckMiddlewareIntegrationTest.php">
     <InvalidPropertyFetch>
@@ -511,12 +835,98 @@
       <code><![CDATA[$user->authentication_tokens]]></code>
     </InvalidPropertyFetch>
   </file>
+  <file src="plugins/PassboltCe/PasswordExpiry/src/Model/Table/PasswordExpirySettingsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[PasswordExpirySettingsTable]]></code>
+      <code><![CDATA[PasswordExpirySettingsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/PasswordExpiry/src/Notification/Email/PasswordExpiryPasswordMarkedExpiredEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$user]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/PasswordExpiry/src/Notification/Email/PasswordExpirySettingsUpdatedEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$admin]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/PasswordExpiry/tests/Factory/PasswordExpirySettingFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[PasswordExpirySettingFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Rbacs/src/Model/Table/RbacsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[RbacsTable]]></code>
+      <code><![CDATA[RbacsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Rbacs/src/Model/Table/UiActionsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[UiActionsTable]]></code>
+      <code><![CDATA[UiActionsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/Rbacs/src/Service/Rbacs/RbacsInsertDefaultsService.php">
+    <NoInterfaceProperties>
+      <code><![CDATA[$uiaction->id]]></code>
+    </NoInterfaceProperties>
+  </file>
+  <file src="plugins/PassboltCe/Rbacs/tests/Factory/RbacFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[RbacFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Rbacs\Model\Entity\Rbac|\Passbolt\Rbacs\Model\Entity\Rbac[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/Rbacs/tests/Factory/UiActionFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[UiActionFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\Rbacs\Model\Entity\UiAction|\Passbolt\Rbacs\Model\Entity\UiAction[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
   <file src="plugins/PassboltCe/Rbacs/tests/TestCase/Service/Rbacs/RbacsUpdateServiceTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
       <code><![CDATA[$user->role]]></code>
       <code><![CDATA[$user->username]]></code>
     </InvalidPropertyFetch>
+  </file>
+  <file src="plugins/PassboltCe/ResourceTypes/src/Model/Table/ResourceTypesTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ResourceTypesTable]]></code>
+      <code><![CDATA[ResourceTypesTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="plugins/PassboltCe/ResourceTypes/tests/Factory/ResourceTypeFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ResourceTypeFactory]]></code>
+    </MethodSignatureMismatch>
+    <MoreSpecificImplementedParamType>
+      <code><![CDATA[\Passbolt\ResourceTypes\Model\Entity\ResourceType|\Passbolt\ResourceTypes\Model\Entity\ResourceType[] persist()]]></code>
+    </MoreSpecificImplementedParamType>
+  </file>
+  <file src="plugins/PassboltCe/SelfRegistration/src/Notification/Email/Redactor/Settings/SelfRegistrationSettingsAdminEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$recipient]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/SelfRegistration/src/Notification/Email/Redactor/User/SelfRegistrationAdminEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$recipient]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/SmtpSettings/tests/Factory/SmtpSettingFactory.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[SmtpSettingFactory]]></code>
+    </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/SmtpSettings/tests/TestCase/Command/SmtpSettingsEmailDigestPreviewCommandTest.php">
     <InvalidArrayOffset>
@@ -526,6 +936,26 @@
       <code><![CDATA[$senderEmail]]></code>
       <code><![CDATA[$senderEmail]]></code>
     </InvalidCast>
+  </file>
+  <file src="plugins/PassboltCe/SmtpSettings/tests/TestCase/Event/SmtpTransportBeforeSendEventListenerTest.php">
+    <InvalidArgument>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$event]]></code>
+      <code><![CDATA[$event]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="plugins/PassboltCe/WebInstaller/tests/Lib/DatabaseTrait.php">
+    <UndefinedInterfaceMethod>
+      <code><![CDATA[getSchemaCollection]]></code>
+    </UndefinedInterfaceMethod>
+  </file>
+  <file src="plugins/PassboltCe/WebInstaller/tests/TestCase/Utility/WebInstallerTest.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$user->id]]></code>
+    </InvalidPropertyFetch>
   </file>
   <file src="src/Controller/Settings/SettingsIndexController.php">
     <InvalidConstantAssignmentValue>
@@ -537,9 +967,122 @@
       <code><![CDATA[$data['options']['maxLimit'] ?? $data['defaults']['maxLimit']]]></code>
     </InvalidArgument>
   </file>
+  <file src="src/Middleware/UacAwareMiddlewareTrait.php">
+    <InvalidArgument>
+      <code><![CDATA['name']]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Model/Table/AuthenticationTokensTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[AuthenticationTokensTable]]></code>
+      <code><![CDATA[AuthenticationTokensTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/AvatarsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[AvatarsTable]]></code>
+      <code><![CDATA[AvatarsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/CommentsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[CommentsTable]]></code>
+      <code><![CDATA[CommentsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/FavoritesTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[FavoritesTable]]></code>
+      <code><![CDATA[FavoritesTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/GpgkeysTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[GpgkeysTable]]></code>
+      <code><![CDATA[GpgkeysTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/GroupsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[GroupsTable]]></code>
+      <code><![CDATA[GroupsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/GroupsUsersTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[GroupsUsersTable]]></code>
+      <code><![CDATA[GroupsUsersTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/OrganizationSettingsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[OrganizationSettingsTable]]></code>
+      <code><![CDATA[OrganizationSettingsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/PermissionsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[PermissionsTable]]></code>
+      <code><![CDATA[PermissionsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/ProfilesTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ProfilesTable]]></code>
+      <code><![CDATA[ProfilesTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/ResourcesTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[ResourcesTable]]></code>
+      <code><![CDATA[ResourcesTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/RolesTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[RolesTable]]></code>
+      <code><![CDATA[RolesTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/SecretsTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[SecretsTable]]></code>
+      <code><![CDATA[SecretsTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
+  <file src="src/Model/Table/UsersTable.php">
+    <MethodSignatureMismatch>
+      <code><![CDATA[UsersTable]]></code>
+      <code><![CDATA[UsersTable]]></code>
+    </MethodSignatureMismatch>
+  </file>
   <file src="src/Model/Traits/Resources/ResourcesFindersTrait.php">
     <TypeDoesNotContainType>
       <code><![CDATA[$includeRoot === true]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Notification/Email/Redactor/Group/GroupUserAddRequestEmailRedactor.php">
+    <InvalidArgument>
+      <code><![CDATA[$groupManager]]></code>
+    </InvalidArgument>
+  </file>
+  <file src="src/Service/Avatars/AvatarsTransferService.php">
+    <InvalidPropertyFetch>
+      <code><![CDATA[$fileStorage->foreign_key]]></code>
+    </InvalidPropertyFetch>
+    <NoInterfaceProperties>
+      <code><![CDATA[$fileStorage->foreign_key]]></code>
+      <code><![CDATA[$fileStorage->id]]></code>
+    </NoInterfaceProperties>
+  </file>
+  <file src="src/Service/OpenPGP/GenerateOpenPGPKeyService.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[!is_string($directory)]]></code>
+    </TypeDoesNotContainType>
+  </file>
+  <file src="src/Service/OpenPGP/PublicKeyValidationService.php">
+    <TypeDoesNotContainType>
+      <code><![CDATA[!is_string($datetimeString) && !is_int($datetimeString)]]></code>
     </TypeDoesNotContainType>
   </file>
 </files>

@@ -91,11 +91,6 @@ parameters:
 			path: plugins/PassboltEe/AccountRecovery/src/Service/AccountRecoveryResponses/AccountRecoveryResponsesCreateService.php
 
 		-
-			message: "#^Caught class Cake\\\\Datasource\\\\Exception\\\\PageOutOfBoundsException not found\\.$#"
-			count: 1
-			path: plugins/PassboltEe/AuditLog/src/Controller/BaseLogsController.php
-
-		-
 			message: "#^Access to an undefined property Passbolt\\\\Log\\\\Model\\\\Entity\\\\PermissionHistory\\:\\:\\$folder\\.$#"
 			count: 1
 			path: plugins/PassboltEe/AuditLog/src/Utility/ActionLogResultsParser.php
