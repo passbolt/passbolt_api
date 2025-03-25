@@ -27,13 +27,10 @@ class V250ChangeMfaAccountSettingsDataFormat extends AbstractMigration
     public function up()
     {
         $connectionName = 'default';
-        /**
-         * TODO: Fix error `Previous error: Symfony\Component\Console\Exception\InvalidArgumentException:
-         * The "connection" option does not exist.`
-         */
-//        if ($this->input->getOption('connection')) {
-//            $connectionName = $this->input->getOption('connection');
-//        }
+        $options = $this->input->getOptions();
+        if (isset($options['connection'])) {
+            $connectionName = $options['connection'];
+        }
         $connection = ConnectionManager::get($connectionName);
         $accountSettings = TableRegistry::getTableLocator()->get('AccountSettings', [
             'connection' => $connection
