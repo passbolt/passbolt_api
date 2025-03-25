@@ -260,6 +260,7 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
         $this->dropAllTables();
         $this->skipTestIfNotWebInstallerFriendly();
         Configure::write('passbolt.gpg.serverKey.fingerprint', null);
+        /** @var \Cake\Database\Connection $connection */
         $connection = ConnectionManager::get('default');
 
         $config = $this->getInstallSessionData();
@@ -313,6 +314,7 @@ UZNFZWTIXO4n0jwpTTOt6DvtqeRyjjw2nK3XUSiJu3izvn0791l4tofy
     {
         $this->skipTestIfNotWebInstallerFriendly();
         Configure::write('passbolt.gpg.serverKey.fingerprint', null);
+        /** @var \Cake\Database\Connection $connection */
         $connection = ConnectionManager::get('default');
         $config = $this->getInstallSessionData();
         /**

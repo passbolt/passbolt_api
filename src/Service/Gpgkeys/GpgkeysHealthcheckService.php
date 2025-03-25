@@ -82,6 +82,7 @@ class GpgkeysHealthcheckService extends AbstractHealthcheckService
      */
     public function check(): array
     {
+        /** @var array<\App\Model\Entity\Gpgkey> $gpgkeys */
         $gpgkeys = $this->table->find()
             ->innerJoinWith('Users', function (Query $q) {
                 return $q->find('activeNotDeleted');

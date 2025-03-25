@@ -120,6 +120,7 @@ class PassboltCommand extends Command implements PassboltCommandInterface
                 /** @var \App\Command\PassboltCommandInterface $commandFQN */
                 $help = $commandFQN::getCommandDescription();
             } elseif (is_a($commandFQN, BaseCommand::class, true)) {
+                /** @psalm-suppress UndefinedInterfaceMethod It is an instance of BaseCommand so methods are there  */
                 $help = (new $commandFQN())->getOptionParser()->getDescription();
             } else {
                 continue;

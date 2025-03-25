@@ -69,6 +69,7 @@ class AccountRecoveryCompleteAdminEmailRedactor implements SubscribedEmailRedact
 
         /** @var \App\Model\Table\UsersTable $Users */
         $Users = TableRegistry::getTableLocator()->get(UsersTable::class);
+        /** @var array<\App\Model\Entity\User> $admins */
         $admins = $Users
             ->findAdmins()
             ->contain([

@@ -70,6 +70,7 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
         $resourceIds = $event->getData('resourceIds');
         /** @var array<string> $userIdsToSkip */
         $userIdsToSkip = $event->getData('userIdsToSkip') ?? [];
+        /** @var array<\App\Model\Entity\User> $usersToNotify */
         $usersToNotify = $this->findUsersToNotify($resourceIds, $userIdsToSkip);
 
         // Send emails to all the users

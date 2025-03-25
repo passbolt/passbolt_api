@@ -119,6 +119,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         $whoIsAdmin = Hash::combine($updatedGroupsUsers, '{n}.user_id', '{n}.is_admin');
 
+        /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             $isAdmin = isset($whoIsAdmin[$user->id]) && $whoIsAdmin[$user->id];
             $emails[] = $this->createUpdateMembershipGroupUpdateEmail($user, $isAdmin, $modifiedBy, $group);
