@@ -43,7 +43,7 @@ class AssertFullBaseUrlMiddlewareTest extends AppIntegrationTestCase
         $this->expectException(InternalErrorException::class);
 
         $middleware = new AssertFullBaseUrlMiddleware();
-        $middleware->process((new ServerRequest()), new TestRequestHandler());
+        $middleware->process(new ServerRequest(), new TestRequestHandler());
     }
 
     public function invalidFullBaseUrlValuesProvider(): array
@@ -64,7 +64,7 @@ class AssertFullBaseUrlMiddlewareTest extends AppIntegrationTestCase
         Configure::write('passbolt.security.fullBaseUrlEnforce', true);
 
         $middleware = new AssertFullBaseUrlMiddleware();
-        $response = $middleware->process((new ServerRequest()), new TestRequestHandler());
+        $response = $middleware->process(new ServerRequest(), new TestRequestHandler());
 
         $this->assertInstanceOf(Response::class, $response);
     }

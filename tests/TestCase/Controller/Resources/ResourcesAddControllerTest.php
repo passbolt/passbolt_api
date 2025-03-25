@@ -232,9 +232,9 @@ class ResourcesAddControllerTest extends AppIntegrationTestCase
         $arr = $this->getResponseBodyAsArray();
         $error = Hash::get($arr, $case['errorField']);
         $this->assertNotNull($error, "The case \"$caseLabel\" should fail");
-        $this->assertSame(0, $this->Resources->find()->count());
-        $this->assertSame(0, $this->Secrets->find()->count());
-        $this->assertSame(0, $this->Permissions->find()->count());
+        $this->assertSame(0, $this->Resources->find()->all()->count());
+        $this->assertSame(0, $this->Secrets->find()->all()->count());
+        $this->assertSame(0, $this->Permissions->find()->all()->count());
         $this->assertEmailQueueIsEmpty();
     }
 

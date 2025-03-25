@@ -26,6 +26,11 @@ use Cake\ORM\TableRegistry;
 
 class GpgKeysTableFindTest extends AppTestCase
 {
+    /**
+     * @var GpgkeysTable|null
+     */
+    private $Gpgkeys = null;
+
     public function setUp(): void
     {
         parent::setUp();

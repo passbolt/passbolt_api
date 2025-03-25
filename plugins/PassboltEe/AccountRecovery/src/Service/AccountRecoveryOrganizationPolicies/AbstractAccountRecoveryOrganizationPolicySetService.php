@@ -386,6 +386,6 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      */
     public function backupsExists(): bool
     {
-        return $this->AccountRecoveryPrivateKeyPasswords->find()->count() > 0;
+        return $this->AccountRecoveryPrivateKeyPasswords->find()->all()->count() > 0;
     }
 }

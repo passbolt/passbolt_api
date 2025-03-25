@@ -72,7 +72,7 @@ class FindIndexTest extends AppTestCase
 
         $resources = $this->Resources->findIndex($user->id);
 
-        $this->assertSame(1, $resources->count());
+        $this->assertSame(1, $resources->all()->count());
         $this->assertSame($notDeletedResource->id, $resources->firstOrFail()->id);
     }
 

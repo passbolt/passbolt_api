@@ -184,7 +184,7 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             return;
         }
 
-        $fingerprintValidationRule = (new IsValidFingerprintValidationRule());
+        $fingerprintValidationRule = new IsValidFingerprintValidationRule();
         if (!$fingerprintValidationRule->rule($fingerprint, null)) {
             $io->error($fingerprintValidationRule->defaultErrorMessage($fingerprint, null));
             $this->abort();

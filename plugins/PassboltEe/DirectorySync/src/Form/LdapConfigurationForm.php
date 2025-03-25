@@ -533,6 +533,7 @@ class LdapConfigurationForm extends Form
             ->find()
             ->contain(['Roles'])
             ->where(['Users.id' => $userId, 'Users.active' => 1, 'Users.deleted' => 0, 'Roles.name' => Role::ADMIN])
+            ->all()
             ->count() > 0;
     }
 
@@ -551,6 +552,7 @@ class LdapConfigurationForm extends Form
         return TableRegistry::getTableLocator()->get('Users')
             ->find()
             ->where(['Users.id' => $userId, 'Users.active' => 1, 'Users.deleted' => 0])
+            ->all()
             ->count() > 0;
     }
 

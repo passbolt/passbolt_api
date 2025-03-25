@@ -113,7 +113,7 @@ class DigestsCollection extends AbstractDigestCollection
         }
 
         // Otherwise, create a new digest and add this email queue to it
-        $this->digests[] = (new Digest($recipient, $operator, $fullBaseUrl, $emailQueue, $digestTemplate));
+        $this->digests[] = new Digest($recipient, $operator, $fullBaseUrl, $emailQueue, $digestTemplate);
 
         return $this;
     }

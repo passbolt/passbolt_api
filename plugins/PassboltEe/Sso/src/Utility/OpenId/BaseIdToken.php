@@ -192,7 +192,9 @@ class BaseIdToken extends AccessToken
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
+     *
+     * @psalm-suppress MethodSignatureMustProvideReturnType
      */
     public function jsonSerialize()
     {

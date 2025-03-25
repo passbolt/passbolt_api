@@ -89,7 +89,7 @@ class SsoSettingsDeleteServiceTest extends SsoTestCase
          * @psalm-suppress InternalClass
          * @psalm-suppress InternalMethod
          */
-        $fired = (new EventFired(EventManager::instance()));
+        $fired = new EventFired(EventManager::instance());
         /** @psalm-suppress InternalMethod */
         $this->assertEquals(0, $fired->matches(SsoSettingsDeleteService::AFTER_DELETE_ACTIVE_SSO_SETTINGS_EVENT));
     }

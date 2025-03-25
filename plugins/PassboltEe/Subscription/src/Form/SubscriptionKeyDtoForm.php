@@ -104,7 +104,7 @@ class SubscriptionKeyDtoForm extends Form
             /** @var \App\Model\Table\UsersTable $Users */
             $Users = TableRegistry::getTableLocator()->get('Users');
 
-            return $Users->findActive()->count() <= $value;
+            return $Users->findActive()->all()->count() <= $value;
         } catch (\Exception $e) {
             // Return true in case of exception (in this case, it will mainly be a database exception).
             // This can happen when Passbolt is not configured and should not prevent subscription validation.

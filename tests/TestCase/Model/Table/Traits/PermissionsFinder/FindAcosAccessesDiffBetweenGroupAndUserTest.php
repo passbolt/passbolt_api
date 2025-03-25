@@ -54,7 +54,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
             $g1->id,
             $u1->id
         );
-        $result = $query->count();
+        $result = $query->all()->count();
 
         $this->assertEquals(0, ResourceFactory::count());
         $this->assertEquals(0, PermissionFactory::count());

@@ -291,7 +291,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $resourcesTagsCount = $this->ResourcesTags->find()->where([
             'user_id' => UuidFactory::uuid('user.id.ada'),
             'resource_id' => $resource->id,
-        ])->count();
+        ])->all()->count();
         $this->assertEquals(2, $resourcesTagsCount);
 
         $this->putJson("/tags/{$tags[0]->id}.json?api-version=v2", [
@@ -431,7 +431,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         // Make sure new tag is created if case is different
         $this->assertNotSame($tagId, $responseArray['id']);
         // Make sure two entries are created if slug's case is different
-        $this->assertSame(2, TagFactory::find()->where(['UPPER(slug)' => 'TEST'])->count());
+        $this->assertSame(2, TagFactory::find()->where(['UPPER(slug)' => 'TEST'])->all()->count());
     }
 
     /**
@@ -460,7 +460,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertSuccess();
         $responseArray = $this->getResponseBodyAsArray();
         $this->assertSame('dm\'d', $responseArray['slug']);
-        $this->assertSame(1, TagFactory::find()->where(['slug' => 'dm\'d'])->count());
+        $this->assertSame(1, TagFactory::find()->where(['slug' => 'dm\'d'])->all()->count());
     }
 
     /**
@@ -490,10 +490,10 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertSame($tagId, $responseArray['id']);
         $this->assertSame('foobar', $responseArray['slug']);
         // Assert there is only single entry in the database
-        $this->assertSame(1, TagFactory::find()->where(['slug' => 'foobar'])->count());
+        $this->assertSame(1, TagFactory::find()->where(['slug' => 'foobar'])->all()->count());
         $this->assertSame(
             1,
-            ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->count()
+            ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->all()->count()
         );
     }
 

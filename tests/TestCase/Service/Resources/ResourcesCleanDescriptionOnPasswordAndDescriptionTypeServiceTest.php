@@ -45,7 +45,7 @@ class ResourcesCleanDescriptionOnPasswordAndDescriptionTypeServiceTest extends T
             ->persist();
 
         (new ResourcesCleanDescriptionOnPasswordAndDescriptionTypeService())->clean();
-        $this->assertSame(0, ResourceFactory::find()->where(compact('description'))->count());
-        $this->assertSame(2, ResourceFactory::find()->where(['description' => 'Bar'])->count());
+        $this->assertSame(0, ResourceFactory::find()->where(compact('description'))->all()->count());
+        $this->assertSame(2, ResourceFactory::find()->where(['description' => 'Bar'])->all()->count());
     }
 }

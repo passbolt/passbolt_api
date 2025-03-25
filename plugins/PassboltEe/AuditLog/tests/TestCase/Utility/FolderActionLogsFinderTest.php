@@ -38,7 +38,7 @@ class FolderActionLogsFinderTest extends LogIntegrationTestCase
 
         $finder = new FolderActionLogsFinder();
         $results = $finder->find($uac, $folder->id);
-        $this->assertSame(0, $results->count());
+        $this->assertSame(0, $results->all()->count());
 
         if ($isFolderPluginDisabled) {
             $this->disableFeaturePlugin(FoldersPlugin::class);

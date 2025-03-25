@@ -57,8 +57,9 @@ class LdapSasl extends Ldap
         $this->setOption(LDAP_OPT_PROTOCOL_VERSION, 3);
 
         return $this->bound = $this->executeFailableOperation(function () use ($username, $password) {
+            /** @psalm-suppress InvalidArgument works with this, might be false-positive */
             return ldap_sasl_bind(
-                $this->connection,
+                $this->connection, // @phpstan-ignore-line
                 $username,
                 $password ? html_entity_decode($password) : '',
                 $this->saslOptions['mech'],

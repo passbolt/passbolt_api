@@ -78,7 +78,7 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
         ]]);
         $this->assertSuccess();
 
-        $c = RbacFactory::find()->where(['control_function' => Rbac::CONTROL_FUNCTION_DENY])->count();
+        $c = RbacFactory::find()->where(['control_function' => Rbac::CONTROL_FUNCTION_DENY])->all()->count();
         $this->assertEquals(1, $c);
     }
 
@@ -122,7 +122,7 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
         ]]);
         $this->assertResponseCode(404);
 
-        $c = RbacFactory::find()->where(['control_function' => Rbac::CONTROL_FUNCTION_DENY])->count();
+        $c = RbacFactory::find()->where(['control_function' => Rbac::CONTROL_FUNCTION_DENY])->all()->count();
         $this->assertEquals(0, $c);
     }
 

@@ -45,8 +45,8 @@ class PurgeDirectoryReportsCommandTest extends DirectorySyncConsoleIntegrationTe
         $this->exec('directory_sync purge_directory_reports --before=' . $date);
 
         $this->assertExitSuccess();
-        $this->assertSame(1, DirectoryReportFactory::find()->count());
-        $this->assertSame(2, DirectoryReportsItemFactory::find()->count());
+        $this->assertSame(1, DirectoryReportFactory::find()->all()->count());
+        $this->assertSame(2, DirectoryReportsItemFactory::find()->all()->count());
     }
 
     public function testPurgeDirectoryReportsCommand_Success_NoData(): void

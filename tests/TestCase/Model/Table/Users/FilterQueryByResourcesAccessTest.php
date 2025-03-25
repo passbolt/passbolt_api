@@ -132,7 +132,7 @@ class FilterQueryByResourcesAccessTest extends TestCase
                 $expectedUsers = [$owner1, $owner2, $editor1, $editor2, $reader1, $reader2];
                 break;
         }
-        $this->assertSame($expectedCount, $result->count());
+        $this->assertSame($expectedCount, $result->all()->count());
         foreach ($expectedUsers as $user) {
             $this->assertArrayHasKey($user->id, $result->toArray());
         }

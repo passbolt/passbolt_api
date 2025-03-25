@@ -135,7 +135,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
     {
         $testResourceId = UuidFactory::uuid('resource.id.bower');
         $shouldSend = EmailNotificationSettings::get('send.comment.add');
-        $oldEmailQueueLength = $expectedEmailQueueLength = $this->emailQueue->find()->count();
+        $oldEmailQueueLength = $expectedEmailQueueLength = $this->emailQueue->find()->all()->count();
         EmailNotificationSettings::flushCache();
         $this->_addTestComment($testResourceId);
         $resourceSubscribers = $this->_getResourceSubscribers($testResourceId)->count();
@@ -146,7 +146,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             $expectedEmailQueueLength = $oldEmailQueueLength + $emailRecipientCount;
         }
 
-        $this->assertEquals($expectedEmailQueueLength, $this->emailQueue->find()->count());
+        $this->assertEquals($expectedEmailQueueLength, $this->emailQueue->find()->all()->count());
     }
 
     /**
@@ -156,7 +156,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
      */
     public function testNotificationSettingTriggerGroupAdd()
     {
-        $oldEmailQueueLength = $expectedEmailQueueLength = $this->emailQueue->find()->count();
+        $oldEmailQueueLength = $expectedEmailQueueLength = $this->emailQueue->find()->all()->count();
         $this->authenticateAs('admin');
         $testGroupData = $this->_addTestGroup();
         $shouldSend = EmailNotificationSettings::get('send.group.user.add');
@@ -165,7 +165,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
             $expectedEmailQueueLength = $oldEmailQueueLength + $emailRecipientCount;
         }
 
-        $this->assertEquals($expectedEmailQueueLength, $this->emailQueue->find()->count());
+        $this->assertEquals($expectedEmailQueueLength, $this->emailQueue->find()->all()->count());
     }
 
     /**
@@ -176,9 +176,9 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
     public function testNotificationSettingTriggerGroupAddShouldNotSend()
     {
         $this->setEmailNotificationSetting('send.group.user.add', false);
-        $oldEmailQueueLength = $this->emailQueue->find()->count();
+        $oldEmailQueueLength = $this->emailQueue->find()->all()->count();
         $this->_addTestGroup();
-        $this->assertEquals($oldEmailQueueLength, $this->emailQueue->find()->count());
+        $this->assertEquals($oldEmailQueueLength, $this->emailQueue->find()->all()->count());
     }
 
     /**
@@ -243,7 +243,7 @@ class EmailNotificationSettingsTest extends AppIntegrationTestCase
      * Get subscribers for a resource
      *
      * @param string $resourceId Resource Id
-     * @return array List of users
+     * @return \Cake\Datasource\ResultSetInterface
      */
     protected function _getResourceSubscribers($resourceId)
     {

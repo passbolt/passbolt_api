@@ -42,6 +42,6 @@ class IsActiveUserRule
                 $UsersTable->aliasField('id') => $entity->get('user_id'),
                 $UsersTable->aliasField('deleted') => false,
                 $UsersTable->aliasField('active') => true,
-            ])->count() > 0;
+            ])->all()->count() > 0;
     }
 }
