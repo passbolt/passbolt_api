@@ -104,6 +104,7 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements Subscribed
             ->contain('Profiles')
             ->firstOrFail();
 
+        /** @var \App\Model\Entity\User $admin */
         foreach ($admins as $admin) {
             $emailCollection->addEmail($this->makeAdminEmail($user, $admin, $actingAdmin, $response));
         }

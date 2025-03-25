@@ -95,6 +95,7 @@ class AccountRecoveryGetBadRequestAdminEmailRedactor implements SubscribedEmailR
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ]);
+        /** @var \App\Model\Entity\User $admin */
         foreach ($admins as $admin) {
             $emailCollection->addEmail($this->makeAdminEmail($admin, $user, $requestId, $clientIp));
         }

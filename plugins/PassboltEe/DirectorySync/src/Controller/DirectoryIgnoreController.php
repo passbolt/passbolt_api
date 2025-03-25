@@ -26,6 +26,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Validation\Validation;
+use Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
@@ -33,6 +34,8 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
  */
 class DirectoryIgnoreController extends DirectoryController
 {
+    protected ?DirectoryIgnoreTable $DirectoryIgnore = null;
+
     /**
      * @inheritDoc
      */

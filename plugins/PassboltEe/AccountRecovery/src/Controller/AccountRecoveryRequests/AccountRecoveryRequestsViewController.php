@@ -21,12 +21,15 @@ use App\Controller\AppController;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Validation\Validation;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable $AccountRecoveryRequests
  */
 class AccountRecoveryRequestsViewController extends AppController
 {
+    protected ?AccountRecoveryRequestsTable $AccountRecoveryRequestsTable = null;
+
     /**
      * @inheritDoc
      */

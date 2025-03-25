@@ -19,7 +19,7 @@ namespace Passbolt\AuditLog\Controller;
 
 use App\Controller\AppController;
 use App\Error\Exception\FeaturePluginDisabledException;
-use Cake\Datasource\Exception\PageOutOfBoundsException;
+use Cake\Datasource\Paging\Exception\PageOutOfBoundsException;
 use Passbolt\AuditLog\Utility\ActionLogResultsParser;
 use Passbolt\AuditLog\Utility\BaseActionLogsFinder;
 
