@@ -77,6 +77,7 @@ class MysqlImportCommand extends PassboltCommand
         // try to run the sql backup
         try {
             $datasource = $args->getOption('datasource');
+            /** @var \Cake\Database\Connection $connection */
             $connection = ConnectionManager::get($datasource);
             $connection->execute($sql);
         } catch (Exception $e) {

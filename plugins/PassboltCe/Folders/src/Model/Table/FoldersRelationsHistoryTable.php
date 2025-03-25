@@ -77,9 +77,10 @@ class FoldersRelationsHistoryTable extends Table
         ]);
         $this->belongsTo('Folders', [
             'foreignKey' => 'foreign_id',
+            'className' => 'Passbolt/Folders.Folders',
         ]);
         $this->belongsTo('FoldersParents', [
-            'className' => 'Folders',
+            'className' => 'Passbolt/Folders.Folders',
             'foreignKey' => 'folder_parent_id',
         ]);
         $this->belongsTo('Users');

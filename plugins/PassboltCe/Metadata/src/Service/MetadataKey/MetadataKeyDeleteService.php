@@ -57,7 +57,7 @@ class MetadataKeyDeleteService
         try {
             /** @var \Passbolt\Metadata\Model\Entity\MetadataKey $metadataKey */
             $metadataKey = $metadataKeysTable->get($id);
-        } catch (RecordNotFoundException $exception) {
+        } catch (RecordNotFoundException $exception) { // @phpstan-ignore-line
             throw new NotFoundException(__('The metadata key does not exist or has been deleted.'), 404, $exception);
         }
 

@@ -46,9 +46,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = $this->fetchTable('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->secretsTable = $this->fetchTable('Secrets');
     }
 

@@ -96,11 +96,10 @@ class ResourcesAfterAccessGrantedService
     private function getResource(UserAccessControl $uac, string $resourceId): Resource
     {
         try {
-            return $this->resourcesTable->get(
-                $resourceId,
-                finder: FolderizableBehavior::FINDER_NAME,
-                user_id: $uac->getId()
-            );
+            return $this->resourcesTable->get($resourceId, [
+                'finder' => FolderizableBehavior::FINDER_NAME,
+                'user_id' => $uac->getId(),
+            ]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }

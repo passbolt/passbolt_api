@@ -8,6 +8,7 @@ declare(strict_types=1);
  * unit tests in this file.
  */
 
+use Cake\Cache\Cache;
 use Cake\TestSuite\ConnectionHelper;
 use Migrations\TestSuite\Migrator;
 
@@ -23,4 +24,4 @@ session_id('cli');
 
 (new ConnectionHelper())->addTestAliases();
 (new Migrator())->run();
-\Cake\Cache\Cache::clearAll();
+Cache::clearAll();

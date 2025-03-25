@@ -50,7 +50,7 @@ class User extends Entity implements IdentityInterface
     /**
      * last_logged_in virtual field.
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected array $_virtual = ['last_logged_in'];
 

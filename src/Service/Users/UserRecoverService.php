@@ -75,9 +75,7 @@ class UserRecoverService implements UserRecoverServiceInterface
     ) {
         $this->request = $serverRequest;
         $this->selfRegistrationDryRunService = $selfRegistrationDryRunService;
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

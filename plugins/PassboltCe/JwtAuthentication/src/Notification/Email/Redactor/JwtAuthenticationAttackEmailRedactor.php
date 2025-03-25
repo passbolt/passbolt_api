@@ -52,7 +52,6 @@ class JwtAuthenticationAttackEmailRedactor implements SubscribedEmailRedactorInt
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

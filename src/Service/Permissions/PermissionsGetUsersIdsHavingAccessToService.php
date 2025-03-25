@@ -40,9 +40,7 @@ class PermissionsGetUsersIdsHavingAccessToService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->Permissions = $this->fetchTable('Permissions');
     }
 

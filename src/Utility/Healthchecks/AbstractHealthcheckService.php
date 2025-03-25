@@ -24,9 +24,9 @@ abstract class AbstractHealthcheckService
     protected string $serviceName;
 
     /**
-     * @var string $serviceCategory
+     * @var string|null $serviceCategory
      */
-    protected string $serviceCategory;
+    protected ?string $serviceCategory = null;
 
     /**
     /**
@@ -90,9 +90,9 @@ abstract class AbstractHealthcheckService
     }
 
     /**
-     * @return string serviceCategory
+     * @return string|null serviceCategory
      */
-    public function getServiceCategory(): string
+    public function getServiceCategory(): ?string
     {
         return $this->serviceCategory;
     }

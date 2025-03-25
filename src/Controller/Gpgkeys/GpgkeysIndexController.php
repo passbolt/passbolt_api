@@ -18,15 +18,12 @@ namespace App\Controller\Gpgkeys;
 
 use App\Controller\AppController;
 use App\Model\Table\GpgkeysTable;
-use App\Utility\Pagination\PaginatePropertyAwareTrait;
 
 /**
  * GpgkeysIndexController Class
  */
 class GpgkeysIndexController extends AppController
 {
-    use PaginatePropertyAwareTrait;
-
     /**
      * @var \App\Model\Table\GpgkeysTable
      */

@@ -49,7 +49,6 @@ class UserRegisterService implements UserRegisterServiceInterface
     public function __construct(ServerRequest $serverRequest)
     {
         $this->request = $serverRequest;
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

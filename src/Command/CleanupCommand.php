@@ -279,7 +279,9 @@ class CleanupCommand extends PassboltCommand
     private function assertDatabaseState(): void
     {
         // Check 1. Users table exist in db
-        $listTables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get('default');
+        $listTables = $connection->getSchemaCollection()->listTables();
         if (!in_array('users', $listTables)) {
             throw new InternalErrorException(
                 __('Cleanup command cannot be executed on an instance having no users table.')

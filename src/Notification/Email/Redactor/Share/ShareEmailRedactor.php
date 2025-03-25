@@ -26,7 +26,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Resources\ResourcesShareService;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Locale\Service\LocaleService;
@@ -92,7 +92,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
         if (!empty($userIds)) {
             // Get the details of whoever did the changes
             $owner = $this->usersTable->findFirstForEmail($ownerId);
-            $users = $this->getUserFromIds($userIds);
+            $users = $this->getUserFromIds($userIds)->all()->toArray();
 
             if (empty($users)) {
                 return $emailCollection;
@@ -115,7 +115,7 @@ class ShareEmailRedactor implements SubscribedEmailRedactorInterface
      * @param array $userIds A list of user ids
      * @return \Cake\ORM\Query\SelectQuery
      */
-    private function getUserFromIds(array $userIds): Query
+    private function getUserFromIds(array $userIds): SelectQuery
     {
         return $this->usersTable
             ->find('locale')

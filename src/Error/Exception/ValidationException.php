@@ -33,6 +33,9 @@ class ValidationException extends HttpException implements
      */
     protected int $_defaultCode = 400;
 
+    /**
+     * @var int
+     */
     protected $code = 400; // phpcs:ignore
 
     /**

@@ -58,7 +58,6 @@ class MigrateAllV4ResourcesToV5Service implements V4ToV5MigrationServiceInterfac
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
     }
 

@@ -51,7 +51,6 @@ class MetadataKeyDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

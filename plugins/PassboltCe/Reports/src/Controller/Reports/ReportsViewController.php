@@ -78,7 +78,7 @@ class ReportsViewController extends AppController
 
         $options = $this->formatRequestData($report->getSupportedOptions());
 
-        $creator = $this->Users->get($this->User->id(), contain: 'Profiles');
+        $creator = $this->Users->get($this->User->id(), ['contain' => ['Profiles']]);
 
         $report
             ->setOptions($options)

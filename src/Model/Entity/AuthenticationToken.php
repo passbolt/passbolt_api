@@ -23,6 +23,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
+use InvalidArgumentException;
 
 /**
  * AuthenticationToken Entity
@@ -115,11 +116,10 @@ class AuthenticationToken extends Entity
      */
     public function getExpiryTime(): DateTime
     {
-        $expiryTime = (new DateTime($this->created))
-            ->modify('+' . $this->getExpiryDuration());
-
-        if ($expiryTime === false) {
-            throw new InternalErrorException(__('Invalid expiry time {0}.', $this->getExpiryDuration()));
+        try {
+            $expiryTime = (new DateTime($this->created))->modify('+' . $this->getExpiryDuration());
+        } catch (InvalidArgumentException $e) {
+            throw new InternalErrorException(__('Invalid expiry time {0}.', $this->getExpiryDuration()), null, $e); // phpcs:ignore
         }
 
         return $expiryTime;

@@ -127,6 +127,7 @@ class ActionsTable extends Table
             throw new ValidationException(__('Could not validate action data.', true), $action, $this);
         }
 
+        /** @var \Passbolt\Log\Model\Entity\Action $actionSaved */
         $actionSaved = $this->save($action);
 
         // Check for validation errors.
