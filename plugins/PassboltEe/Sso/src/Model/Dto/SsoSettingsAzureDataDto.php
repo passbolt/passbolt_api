@@ -104,7 +104,7 @@ class SsoSettingsAzureDataDto implements SsoSettingsDataDtoInterface
         ];
 
         // Serialize date if it's not already a string
-        if ($result['client_secret_expiry'] instanceof ChronosInterface) {
+        if ($result['client_secret_expiry'] instanceof Chronos) {
             $result['client_secret_expiry'] = $this->client_secret_expiry->toDateTimeString();
         }
 

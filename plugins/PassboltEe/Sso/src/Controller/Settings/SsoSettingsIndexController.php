@@ -18,14 +18,12 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Controller\Settings;
 
 use App\Controller\AppController;
-use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Sso\Model\Table\SsoSettingsTable;
 
 class SsoSettingsIndexController extends AppController
 {
     use LocatorAwareTrait;
-    use PaginatePropertyAwareTrait;
 
     /**
      * @var \Passbolt\Sso\Model\Table\SsoSettingsTable $SsoSettings

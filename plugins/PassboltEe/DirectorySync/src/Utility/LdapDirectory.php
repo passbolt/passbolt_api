@@ -650,12 +650,14 @@ class LdapDirectory implements DirectoryInterface
         $settings['sasl_options'] = $settings['sasl_options'] ?? ['sasl_mech' => DirectoryInterface::SASL_MECH_GSSAPI];
         if (isset($settings['servers'])) {
             deprecationWarning(
+                'v3.12.0',
                 'LDAP: `servers` key has been deprecated and it will be removed. Use `hosts` instead.'
             );
             $settings['hosts'] = $settings['servers'];
         }
         if (isset($settings['connect_timeout'])) {
             deprecationWarning(
+                'v3.12.0',
                 'LDAP: `connect_timeout` key has been deprecated and it will be removed. Use `timeout` instead.'
             );
             $settings['timeout'] = $settings['connect_timeout'];

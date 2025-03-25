@@ -33,7 +33,7 @@ class TaggableBehavior extends Behavior
     {
         parent::initialize($config);
 
-        $this->table()
+        $this->table() // @phpstan-ignore-line
             ->associations()
             ->load(PassboltBelongsToMany::class, 'Tags', [
                 'through' => 'Passbolt/Tags.ResourcesTags',

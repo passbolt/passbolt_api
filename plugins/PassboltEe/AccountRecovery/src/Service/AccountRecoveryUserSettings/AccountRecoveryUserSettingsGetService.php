@@ -41,7 +41,6 @@ class AccountRecoveryUserSettingsGetService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryUserSettings = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
     }
 

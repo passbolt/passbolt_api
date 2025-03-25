@@ -50,9 +50,7 @@ class ResourcesTagsAddService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
-        /** @phpstan-ignore-next-line */
         $this->Tags = $this->fetchTable('Passbolt/Tags.Tags');
     }
 

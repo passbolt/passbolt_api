@@ -179,15 +179,10 @@ abstract class SyncAction
         $this->directory = DirectoryFactory::get($this->directoryOrgSettings);
         $this->resourcesExpireResourcesService = $resourcesExpireResourcesService;
 
-        /** @phpstan-ignore-next-line */
         $this->DirectoryEntries = $this->fetchTable('Passbolt/DirectorySync.DirectoryEntries');
-        /** @phpstan-ignore-next-line */
         $this->DirectoryIgnore = $this->fetchTable('Passbolt/DirectorySync.DirectoryIgnore');
-        /** @phpstan-ignore-next-line */
         $this->DirectoryRelations = $this->fetchTable('Passbolt/DirectorySync.DirectoryRelations');
-        /** @phpstan-ignore-next-line */
         $this->DirectoryReports = $this->fetchTable('Passbolt/DirectorySync.DirectoryReports');
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
         $this->summary = new ActionReportCollection();
         $this->defaultAdmin = $this->getDefaultAdmin();

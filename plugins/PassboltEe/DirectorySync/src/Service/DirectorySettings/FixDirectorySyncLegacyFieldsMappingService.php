@@ -44,7 +44,6 @@ class FixDirectorySyncLegacyFieldsMappingService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->organizationSettingsTable = $this->fetchTable('OrganizationSettings');
         $this->phinxlogTable = $this->fetchTable('Phinxlog', ['table' => 'phinxlog']);
     }

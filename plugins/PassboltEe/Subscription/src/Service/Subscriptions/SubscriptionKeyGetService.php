@@ -48,7 +48,6 @@ class SubscriptionKeyGetService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Subscriptions = $this->fetchTable('Passbolt/Subscription.Subscriptions');
         $this->SubscriptionValidateService = new SubscriptionKeyValidateService();
     }

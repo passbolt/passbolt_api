@@ -43,7 +43,6 @@ class AccountRecoveryPrivateKeyPasswordsValidationService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeyPasswords = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
     }

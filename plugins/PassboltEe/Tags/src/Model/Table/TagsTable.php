@@ -90,7 +90,7 @@ class TagsTable extends Table
             'through' => 'ResourcesTags',
         ]);
 
-        $this->hasMany('ResourcesTags');
+        $this->hasMany('ResourcesTags'); // @phpstan-ignore-line
 
         $this->belongsToMany('Users', [
             'through' => 'ResourcesTags',

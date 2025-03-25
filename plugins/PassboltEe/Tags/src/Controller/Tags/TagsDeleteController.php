@@ -57,7 +57,7 @@ class TagsDeleteController extends AppController
 
         try {
             /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
-            $tag = $this->Tags->get($id, contain: ['ResourcesTags']);
+            $tag = $this->Tags->get($id, ['contain' => ['ResourcesTags']]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The tag does not exist.'));
         }

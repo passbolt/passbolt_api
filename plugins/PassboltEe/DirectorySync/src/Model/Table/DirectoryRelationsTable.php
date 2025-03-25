@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
@@ -73,13 +73,13 @@ class DirectoryRelationsTable extends Table
         ]);
 
         $this->hasOne('UserDirectoryEntry', [
-            'className' => 'DirectoryEntries',
+            'className' => 'Passbolt/DirectorySync.DirectoryEntries',
             'bindingKey' => 'child_key',
             'foreignKey' => 'id',
         ]);
 
         $this->hasOne('GroupDirectoryEntry', [
-            'className' => 'DirectoryEntries',
+            'className' => 'Passbolt/DirectorySync.DirectoryEntries',
             'bindingKey' => 'parent_key',
             'foreignKey' => 'id',
         ]);

@@ -95,7 +95,6 @@ class GroupSyncAction extends SyncAction
     {
         parent::beforeExecute();
         $this->Groups = $this->getTable();
-        /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
         $this->defaultGroupAdmin = $this->getDefaultGroupAdmin();
         if (empty($this->defaultGroupAdmin)) {

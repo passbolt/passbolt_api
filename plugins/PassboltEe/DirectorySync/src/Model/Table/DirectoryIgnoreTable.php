@@ -91,7 +91,7 @@ class DirectoryIgnoreTable extends Table
         ]);
 
         $this->hasOne('DirectoryEntries', [
-            'className' => 'DirectoryEntries',
+            'className' => 'Passbolt/DirectorySync.DirectoryEntries',
             'bindingKey' => 'id',
             'foreignKey' => 'id',
         ]);

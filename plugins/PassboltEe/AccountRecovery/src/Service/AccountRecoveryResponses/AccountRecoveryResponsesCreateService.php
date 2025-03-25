@@ -78,9 +78,7 @@ class AccountRecoveryResponsesCreateService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryRequests = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryResponses = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryResponses');
     }
 

@@ -97,22 +97,16 @@ class AbstractAccountRecoveryOrganizationPolicySetService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryOrganizationPolicies = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryOrganizationPublicKeys = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryOrganizationPublicKeys');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeys = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeyPasswords = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryRequests = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryUserSettings = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
         $this->getService = new AccountRecoveryOrganizationPolicyGetService();

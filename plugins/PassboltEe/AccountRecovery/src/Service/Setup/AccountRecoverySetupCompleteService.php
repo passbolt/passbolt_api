@@ -71,13 +71,10 @@ class AccountRecoverySetupCompleteService extends SetupCompleteService
     public function __construct(?ServerRequest $request = null)
     {
         parent::__construct($request);
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryUserSettings = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeys = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeyPasswords = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
 

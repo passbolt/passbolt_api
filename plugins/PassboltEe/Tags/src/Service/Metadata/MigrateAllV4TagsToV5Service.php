@@ -57,7 +57,6 @@ class MigrateAllV4TagsToV5Service implements V4ToV5MigrationServiceInterface
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Tags = $this->fetchTable('Passbolt/Tags.Tags');
     }
 

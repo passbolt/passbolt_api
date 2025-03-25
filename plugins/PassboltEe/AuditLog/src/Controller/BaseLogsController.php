@@ -19,19 +19,16 @@ namespace Passbolt\AuditLog\Controller;
 
 use App\Controller\AppController;
 use App\Error\Exception\FeaturePluginDisabledException;
-use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Datasource\Exception\PageOutOfBoundsException;
 use Passbolt\AuditLog\Utility\ActionLogResultsParser;
 use Passbolt\AuditLog\Utility\BaseActionLogsFinder;
 
 abstract class BaseLogsController extends AppController
 {
-    use PaginatePropertyAwareTrait;
-
     /**
      * Paginator options
      *
-     * @var array
+     * @var array<string, mixed>
      */
     public array $paginate = [
         'limit' => 5,

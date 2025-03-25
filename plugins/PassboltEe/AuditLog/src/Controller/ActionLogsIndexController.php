@@ -18,12 +18,9 @@ declare(strict_types=1);
 namespace Passbolt\AuditLog\Controller;
 
 use App\Controller\AppController;
-use App\Utility\Pagination\PaginatePropertyAwareTrait;
 
 class ActionLogsIndexController extends AppController
 {
-    use PaginatePropertyAwareTrait;
-
     /**
      * @inheritDoc
      */

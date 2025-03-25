@@ -50,7 +50,6 @@ class AccountRecoveryOrganizationPolicyGetService implements AccountRecoveryOrga
      */
     public function __construct(?ServerRequest $serverRequest = null)
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryOrganizationPolicies = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryOrganizationPolicies');
         $this->request = $serverRequest ?? new ServerRequest();

@@ -74,13 +74,10 @@ class AccountRecoveryUserSettingsSetService
      */
     public function __construct(UserAccessControl $uac)
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryUserSettings = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeys = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeyPasswords = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
         $this->uac = $uac;

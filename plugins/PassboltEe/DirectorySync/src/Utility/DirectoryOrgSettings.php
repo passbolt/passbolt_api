@@ -72,7 +72,6 @@ class DirectoryOrgSettings
      */
     public function __construct(?array $settings = [])
     {
-        /** @phpstan-ignore-next-line */
         $this->OrganizationSettings = $this->fetchTable('OrganizationSettings');
 
         // If settings is not empty, we merge with the plugin default settings.

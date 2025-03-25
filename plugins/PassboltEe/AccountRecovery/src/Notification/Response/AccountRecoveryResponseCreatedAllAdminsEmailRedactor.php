@@ -52,7 +52,6 @@ class AccountRecoveryResponseCreatedAllAdminsEmailRedactor implements Subscribed
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

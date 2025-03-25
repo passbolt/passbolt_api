@@ -18,7 +18,6 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Controller\AccountRecoveryRequests;
 
 use App\Controller\AppController;
-use App\Utility\Pagination\PaginatePropertyAwareTrait;
 use Cake\Http\Exception\ForbiddenException;
 
 /**
@@ -26,8 +25,6 @@ use Cake\Http\Exception\ForbiddenException;
  */
 class AccountRecoveryRequestsIndexController extends AppController
 {
-    use PaginatePropertyAwareTrait;
-
     public array $paginate = [
         'sortableFields' => [
             'AccountRecoveryRequests.status',

@@ -35,7 +35,6 @@ class SsoAuthenticationTokenSetService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->SsoAuthenticationTokens = $this->fetchTable('Passbolt/Sso.SsoAuthenticationTokens');
     }
 

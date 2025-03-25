@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Actions\Reports;
 
-use Cake\Chronos\ChronosInterface;
+use Cake\Chronos\Chronos;
 use Cake\I18n\DateTime;
 use InvalidArgumentException;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -49,9 +49,9 @@ class ActionReport
     protected mixed $data;
 
     /**
-     * @var \Cake\Chronos\ChronosInterface|\Cake\I18n\DateTime
+     * @var \Cake\Chronos\Chronos|\Cake\I18n\DateTime
      */
-    protected ChronosInterface|DateTime $created;
+    protected Chronos|DateTime $created;
 
     /**
      * @var string
