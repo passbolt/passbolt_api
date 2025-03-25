@@ -28,7 +28,6 @@ use Cake\Database\Expression\QueryExpression;
 use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\Query\SelectQuery;
-use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;

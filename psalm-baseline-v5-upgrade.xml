@@ -952,11 +952,6 @@
       <code><![CDATA[getSchemaCollection]]></code>
     </UndefinedInterfaceMethod>
   </file>
-  <file src="plugins/PassboltCe/WebInstaller/tests/TestCase/Utility/WebInstallerTest.php">
-    <InvalidPropertyFetch>
-      <code><![CDATA[$user->id]]></code>
-    </InvalidPropertyFetch>
-  </file>
   <file src="src/Controller/Settings/SettingsIndexController.php">
     <InvalidConstantAssignmentValue>
       <code><![CDATA[SETTINGS_VISIBILITY_KEY = 'settingsVisibility']]></code>

@@ -19,7 +19,6 @@ namespace App\Controller\Resources;
 
 use App\Controller\AppController;
 use App\Model\Table\ResourcesTable;
-use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;

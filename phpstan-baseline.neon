@@ -81,56 +81,6 @@ parameters:
 			path: plugins/PassboltCe/Reports/src/Controller/Reports/ReportsViewController.php
 
 		-
-			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"
-			count: 1
-			path: plugins/PassboltEe/AccountRecovery/src/Service/AccountRecoveryOrganizationPolicies/AccountRecoveryOrganizationPolicyGetService.php
-
-		-
-			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"
-			count: 1
-			path: plugins/PassboltEe/AccountRecovery/src/Service/AccountRecoveryResponses/AccountRecoveryResponsesCreateService.php
-
-		-
-			message: "#^Access to an undefined property Passbolt\\\\Log\\\\Model\\\\Entity\\\\PermissionHistory\\:\\:\\$folder\\.$#"
-			count: 1
-			path: plugins/PassboltEe/AuditLog/src/Utility/ActionLogResultsParser.php
-
-		-
-			message: "#^Dead catch \\- App\\\\Error\\\\Exception\\\\ValidationException is never thrown in the try block\\.$#"
-			count: 1
-			path: plugins/PassboltEe/DirectorySync/src/Controller/DirectoryIgnoreController.php
-
-		-
-			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"
-			count: 2
-			path: plugins/PassboltEe/DirectorySync/src/Controller/DirectoryIgnoreController.php
-
-		-
-			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"
-			count: 1
-			path: plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryIgnoreTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltEe/DirectorySync/src/Model/Table/DirectoryIgnoreTable.php
-
-		-
-			message: "#^If condition is always false\\.$#"
-			count: 1
-			path: plugins/PassboltEe/Sso/src/Service/SsoKeys/SsoKeysCreateService.php
-
-		-
-			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"
-			count: 1
-			path: plugins/PassboltEe/Tags/src/Controller/Tags/TagsDeleteController.php
-
-		-
-			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"
-			count: 1
-			path: plugins/PassboltEe/Tags/src/Controller/Tags/TagsUpdateController.php
-
-		-
 			message: "#^PHPDoc type array of property App\\\\Authenticator\\\\GpgAuthenticator\\:\\:\\$_config is not covariant with PHPDoc type array\\<string, mixed\\> of overridden property Authentication\\\\Authenticator\\\\AbstractAuthenticator\\:\\:\\$_config\\.$#"
 			count: 1
 			path: src/Authenticator/GpgAuthenticator.php
