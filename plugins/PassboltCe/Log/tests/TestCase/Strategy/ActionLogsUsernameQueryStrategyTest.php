@@ -12,7 +12,7 @@ declare(strict_types=1);
  * @copyright     Copyright (c) Passbolt SA (https://www.passbolt.com)
  * @license       https://opensource.org/licenses/AGPL-3.0 AGPL License
  * @link          https://www.passbolt.com Passbolt(tm)
- * @since         4.5.0
+ * @since         5.0.0
  */
 
 namespace Passbolt\Log\Test\TestCase\Strategy;
@@ -30,6 +30,8 @@ use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
 
 /**
  * Class ActionLogsUsernameQueryStrategyTest
+ *
+ * @covers \Passbolt\Log\Strategy\ActionLogsUsernameQueryStrategy
  */
 class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
 {
@@ -55,14 +57,14 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
 
     public function tearDown(): void
     {
-        if (file_exists($this->getLogFile())) {
-            unlink($this->getLogFile());
+        if (file_exists($this->getLogFilePath())) {
+            unlink($this->getLogFilePath());
         }
         unset($this->fileName);
         parent::tearDown();
     }
 
-    protected function getLogFile(): string
+    protected function getLogFilePath(): string
     {
         return Log::getConfig('actionLogsOnFile')['path'] . $this->fileName . '.log';
     }
@@ -78,7 +80,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
         $this->getJson("/resources/$resource->id.json?contain[secret]=1");
         $this->assertSuccess();
 
-        $logs = json_decode(file_get_contents($this->getLogFile()), true);
+        $logs = json_decode(file_get_contents($this->getLogFilePath()), true);
         $message = json_decode($logs['message'], true);
         $this->assertSame($user->username, $message['user']);
         $this->assertSame('password_access', $message['action']);
@@ -103,7 +105,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
         $this->getJson("/resources/$resource->id.json?contain[secret]=1");
         $this->assertSuccess();
 
-        $logs = json_decode(file_get_contents($this->getLogFile()), true);
+        $logs = json_decode(file_get_contents($this->getLogFilePath()), true);
         $message = json_decode($logs['message'], true);
         $this->assertSame($user->username, $message['user']);
         $this->assertSame('password_access', $message['action']);
@@ -137,7 +139,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
 
         $this->assertSuccess();
 
-        $logs = json_decode(file_get_contents($this->getLogFile()), true);
+        $logs = json_decode(file_get_contents($this->getLogFilePath()), true);
         $message = json_decode($logs['message'], true);
         $this->assertSame($user->username, $message['user']);
         $this->assertSame('share', $message['action']);
@@ -173,7 +175,7 @@ class ActionLogsUsernameQueryStrategyTest extends LogIntegrationTestCase
 
         $this->assertSuccess();
 
-        $logs = json_decode(file_get_contents($this->getLogFile()), true);
+        $logs = json_decode(file_get_contents($this->getLogFilePath()), true);
         $message = json_decode($logs['message'], true);
         $this->assertSame($user->username, $message['user']);
         $this->assertSame('share', $message['action']);

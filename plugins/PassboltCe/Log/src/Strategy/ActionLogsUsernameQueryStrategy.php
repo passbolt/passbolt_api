@@ -23,6 +23,18 @@ use Cake\ORM\Locator\LocatorAwareTrait;
 use Exception;
 use Passbolt\Log\Model\Entity\ActionLog;
 
+/**
+ * This strategy was developed for SIEM action logging
+ *
+ * In your configuration, e.g config/passbolt.php
+ *
+ *  'Log' => [
+ *      'actionLogsOnFile' => [
+ *          'enabled' => true,
+ *          'strategy' => \Passbolt\Log\Strategy\ActionLogsUsernameQueryStrategy::class,
+ *      ],
+ *  ],
+ */
 class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
 {
     use LocatorAwareTrait;
