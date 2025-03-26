@@ -32,7 +32,7 @@ use Passbolt\Log\Model\Entity\SecretAccess;
  * @method \Passbolt\Log\Model\Entity\SecretAccess newEmptyEntity()
  * @method \Passbolt\Log\Model\Entity\SecretAccess newEntity(array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretAccess[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretAccess get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretAccess get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Log\Model\Entity\SecretAccess findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretAccess patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretAccess[] patchEntities(iterable $entities, array $data, array $options = [])

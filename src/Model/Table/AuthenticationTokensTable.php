@@ -34,7 +34,7 @@ use InvalidArgumentException;
  * AuthenticationTokens Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\AuthenticationToken get($primaryKey, $options = [])
+ * @method \App\Model\Entity\AuthenticationToken get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\AuthenticationToken newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\AuthenticationToken[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\AuthenticationToken|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
