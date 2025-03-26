@@ -221,7 +221,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
      */
     public function testTotpSetupPostController_UriFromGetSuccess()
     {
-        $this->logInAsUser();
+        $user = $this->logInAsUser();
         $this->loadFixtureScenario(MfaTotpOrganizationOnlyScenario::class);
 
         $this->getJson('/mfa/setup/totp.json?api-version=v2');
@@ -230,6 +230,7 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $uri = $this->_responseJsonBody->otpProvisioningUri;
         /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
+        $this->mockTotpMfaFormInterface(TotpSetupForm::class, $this->makeUac($user));
 
         $this->post('/mfa/setup/totp.json?api-version=v2', [
             'otpProvisioningUri' => $uri,
@@ -251,6 +252,8 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
         /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
+        $this->mockTotpMfaFormInterface(TotpSetupForm::class, $this->makeUac($user));
+
         $this->post('/mfa/setup/totp', [
             'otpProvisioningUri' => $uri,
             'totp' => $otp->now(),
@@ -277,6 +280,8 @@ class TotpSetupPostControllerTest extends MfaIntegrationTestCase
         $uri = MfaOtpFactory::generateTOTP($this->makeUac($user));
         /** @var \OTPHP\TOTPInterface $otp */
         $otp = Factory::loadFromProvisioningUri($uri);
+        $this->mockTotpMfaFormInterface(TotpSetupForm::class, $this->makeUac($user));
+
         $this->post('/mfa/setup/totp', [
             'otpProvisioningUri' => $uri,
             'totp' => $otp->now(),

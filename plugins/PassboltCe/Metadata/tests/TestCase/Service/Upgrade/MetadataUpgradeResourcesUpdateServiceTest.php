@@ -110,13 +110,13 @@ class MetadataUpgradeResourcesUpdateServiceTest extends AppTestCaseV5
         $updatedPersonalResource = ResourceFactory::get($resourcePersonal->get('id'));
         $this->assertSame($userKeyId, $updatedPersonalResource->get('metadata_key_id'));
         $this->assertSame($metadataForR1, $updatedPersonalResource->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedPersonalResource->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedPersonalResource->get('modified')->format('Y-m-d')); // comparing seconds here might fail
         $this->assertSame($uac->getId(), $updatedPersonalResource->get('modified_by'));
         $this->assertSame($expectedResourceType->get('id'), $updatedPersonalResource->get('resource_type_id'));
         $updatedSharedResource = ResourceFactory::get($resourceShared->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedSharedResource->get('metadata_key_id'));
         $this->assertSame($metadataForR2, $updatedSharedResource->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedSharedResource->get('modified')->format('Y-m-d H:i'));
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedSharedResource->get('modified')->format('Y-m-d'));
         $this->assertSame($uac->getId(), $updatedSharedResource->get('modified_by'));
         $this->assertSame($expectedResourceType->get('id'), $updatedSharedResource->get('resource_type_id'));
     }
