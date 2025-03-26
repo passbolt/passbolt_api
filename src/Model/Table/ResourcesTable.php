@@ -57,7 +57,8 @@ use Throwable;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
  * @property \App\Model\Table\SecretsTable&\Cake\ORM\Association\HasMany $Secrets
  * @property \App\Model\Table\PermissionsTable&\Cake\ORM\Association\HasMany $Permissions
- * @method \App\Model\Entity\Resource get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Resource get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \App\Model\Entity\Resource get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Resource[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Resource|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
  * @method \App\Model\Entity\Resource patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])

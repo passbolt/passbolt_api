@@ -37,7 +37,7 @@ use InvalidArgumentException;
  *
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\GroupsUser get($primaryKey, $options = [])
+ * @method \App\Model\Entity\GroupsUser get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\GroupsUser newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\GroupsUser[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\GroupsUser|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

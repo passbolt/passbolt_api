@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="5.26.1@d747f6500b38ac4f7dfc5edbcae6e4b637d7add0">
-  <file src="plugins/PassboltCe/AccountSettings/src/Model/Table/AccountSettingsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[AccountSettingsTable]]></code>
-      <code><![CDATA[AccountSettingsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
   <file src="plugins/PassboltCe/AccountSettings/tests/TestCase/Controller/Themes/ThemesSelectControllerTest.php">
     <InvalidPropertyFetch>
       <code><![CDATA[$user->id]]></code>
@@ -40,18 +34,6 @@
     <MethodSignatureMismatch>
       <code><![CDATA[FoldersRelationsHistoryTable]]></code>
       <code><![CDATA[FoldersRelationsHistoryTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersRelationsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[FoldersRelationsTable]]></code>
-      <code><![CDATA[FoldersRelationsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Folders/src/Model/Table/FoldersTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[FoldersTable]]></code>
-      <code><![CDATA[FoldersTable]]></code>
     </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/Folders/src/Model/Traits/Folders/FoldersFindersTrait.php">
@@ -394,42 +376,6 @@
       <code><![CDATA[$frenchUser2->username]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/Log/src/Model/Table/ActionLogsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[ActionLogsTable]]></code>
-      <code><![CDATA[ActionLogsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Log/src/Model/Table/ActionsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[ActionsTable]]></code>
-      <code><![CDATA[ActionsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Log/src/Model/Table/EntitiesHistoryTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[EntitiesHistoryTable]]></code>
-      <code><![CDATA[EntitiesHistoryTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Log/src/Model/Table/PermissionsHistoryTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[PermissionsHistoryTable]]></code>
-      <code><![CDATA[PermissionsHistoryTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Log/src/Model/Table/SecretAccessesTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[SecretAccessesTable]]></code>
-      <code><![CDATA[SecretAccessesTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Log/src/Model/Table/SecretsHistoryTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[SecretsHistoryTable]]></code>
-      <code><![CDATA[SecretsHistoryTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
   <file src="plugins/PassboltCe/Log/tests/Factory/ActionFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[ActionFactory]]></code>
@@ -502,24 +448,6 @@
     <InvalidPropertyFetch>
       <code><![CDATA[$actionLog->action_id]]></code>
     </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataKeysTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[MetadataKeysTable]]></code>
-      <code><![CDATA[MetadataKeysTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataPrivateKeysTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[MetadataPrivateKeysTable]]></code>
-      <code><![CDATA[MetadataPrivateKeysTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Metadata/src/Model/Table/MetadataSessionKeysTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[MetadataSessionKeysTable]]></code>
-      <code><![CDATA[MetadataSessionKeysTable]]></code>
-    </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/Metadata/src/Notification/Email/Redactor/MetadataKeyCreateEmailRedactor.php">
     <InvalidArgument>
@@ -835,12 +763,6 @@
       <code><![CDATA[$user->authentication_tokens]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltCe/PasswordExpiry/src/Model/Table/PasswordExpirySettingsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[PasswordExpirySettingsTable]]></code>
-      <code><![CDATA[PasswordExpirySettingsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
   <file src="plugins/PassboltCe/PasswordExpiry/src/Notification/Email/PasswordExpiryPasswordMarkedExpiredEmailRedactor.php">
     <InvalidArgument>
       <code><![CDATA[$user]]></code>
@@ -858,18 +780,6 @@
     <MoreSpecificImplementedParamType>
       <code><![CDATA[\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting|\Passbolt\PasswordExpiry\Model\Entity\PasswordExpirySetting[] persist()]]></code>
     </MoreSpecificImplementedParamType>
-  </file>
-  <file src="plugins/PassboltCe/Rbacs/src/Model/Table/RbacsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[RbacsTable]]></code>
-      <code><![CDATA[RbacsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="plugins/PassboltCe/Rbacs/src/Model/Table/UiActionsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[UiActionsTable]]></code>
-      <code><![CDATA[UiActionsTable]]></code>
-    </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/Rbacs/src/Service/Rbacs/RbacsInsertDefaultsService.php">
     <NoInterfaceProperties>
@@ -898,12 +808,6 @@
       <code><![CDATA[$user->role]]></code>
       <code><![CDATA[$user->username]]></code>
     </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltCe/ResourceTypes/src/Model/Table/ResourceTypesTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[ResourceTypesTable]]></code>
-      <code><![CDATA[ResourceTypesTable]]></code>
-    </MethodSignatureMismatch>
   </file>
   <file src="plugins/PassboltCe/ResourceTypes/tests/Factory/ResourceTypeFactory.php">
     <MethodSignatureMismatch>
@@ -966,90 +870,6 @@
     <InvalidArgument>
       <code><![CDATA['name']]></code>
     </InvalidArgument>
-  </file>
-  <file src="src/Model/Table/AuthenticationTokensTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[AuthenticationTokensTable]]></code>
-      <code><![CDATA[AuthenticationTokensTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/AvatarsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[AvatarsTable]]></code>
-      <code><![CDATA[AvatarsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/CommentsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[CommentsTable]]></code>
-      <code><![CDATA[CommentsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/FavoritesTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[FavoritesTable]]></code>
-      <code><![CDATA[FavoritesTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/GpgkeysTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[GpgkeysTable]]></code>
-      <code><![CDATA[GpgkeysTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/GroupsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[GroupsTable]]></code>
-      <code><![CDATA[GroupsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/GroupsUsersTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[GroupsUsersTable]]></code>
-      <code><![CDATA[GroupsUsersTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/OrganizationSettingsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[OrganizationSettingsTable]]></code>
-      <code><![CDATA[OrganizationSettingsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/PermissionsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[PermissionsTable]]></code>
-      <code><![CDATA[PermissionsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/ProfilesTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[ProfilesTable]]></code>
-      <code><![CDATA[ProfilesTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/ResourcesTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[ResourcesTable]]></code>
-      <code><![CDATA[ResourcesTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/RolesTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[RolesTable]]></code>
-      <code><![CDATA[RolesTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/SecretsTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[SecretsTable]]></code>
-      <code><![CDATA[SecretsTable]]></code>
-    </MethodSignatureMismatch>
-  </file>
-  <file src="src/Model/Table/UsersTable.php">
-    <MethodSignatureMismatch>
-      <code><![CDATA[UsersTable]]></code>
-      <code><![CDATA[UsersTable]]></code>
-    </MethodSignatureMismatch>
   </file>
   <file src="src/Model/Traits/Resources/ResourcesFindersTrait.php">
     <TypeDoesNotContainType>

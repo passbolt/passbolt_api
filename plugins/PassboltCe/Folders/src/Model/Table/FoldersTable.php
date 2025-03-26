@@ -38,7 +38,7 @@ use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
 /**
  * Folders Model
  *
- * @method \Passbolt\Folders\Model\Entity\Folder get($primaryKey, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\Folder get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Folders\Model\Entity\Folder newEntity(array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\Folder[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\Folder|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

@@ -40,7 +40,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsToMany $Users
  * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
- * @method \App\Model\Entity\Group get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Group get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Group newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Group[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Group|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

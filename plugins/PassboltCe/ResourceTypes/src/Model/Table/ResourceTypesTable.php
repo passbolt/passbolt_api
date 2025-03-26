@@ -32,7 +32,7 @@ use Closure;
  * ResourceTypes Model
  *
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\HasMany $Resources
- * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType get($primaryKey, $options = [])
+ * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType newEntity(array $data, array $options = [])
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType[] newEntities(array $data, array $options = [])
  * @method \Passbolt\ResourceTypes\Model\Entity\ResourceType|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
