@@ -39,7 +39,7 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTree
  * @property \Passbolt\Folders\Model\Table\FoldersTable&\Cake\ORM\Association\BelongsTo $FoldersParents
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
  * @property \Passbolt\Folders\Model\Table\FoldersRelationsHistoryTable&\Cake\ORM\Association\BelongsTo $FoldersRelationsHistory
- * @method \Passbolt\Folders\Model\Entity\FoldersRelation get($primaryKey, $options = [])
+ * @method \Passbolt\Folders\Model\Entity\FoldersRelation get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation newEntity(array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

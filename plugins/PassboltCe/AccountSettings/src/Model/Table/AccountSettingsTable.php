@@ -34,7 +34,7 @@ use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
  * AccountSettings Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get($primaryKey, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] newEntities(array $data, array $options = [])
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

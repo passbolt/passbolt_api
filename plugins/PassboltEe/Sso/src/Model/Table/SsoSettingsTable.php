@@ -26,7 +26,7 @@ use Passbolt\Sso\Model\Entity\SsoSetting;
 /**
  * SsoSettings Model
  *
- * @method \Passbolt\Sso\Model\Entity\SsoSetting get($primaryKey, $options = [])
+ * @method \Passbolt\Sso\Model\Entity\SsoSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Sso\Model\Entity\SsoSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoSetting[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

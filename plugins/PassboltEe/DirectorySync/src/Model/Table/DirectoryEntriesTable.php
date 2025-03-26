@@ -32,7 +32,7 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Users
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\HasOne $Groups
  * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $DirectoryIgnore
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry newEntity(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry[] newEntities(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryEntry|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

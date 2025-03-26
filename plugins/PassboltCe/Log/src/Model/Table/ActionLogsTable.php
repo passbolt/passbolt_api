@@ -36,7 +36,7 @@ use Passbolt\Log\Model\Entity\ActionLog;
  * @method \Passbolt\Log\Model\Entity\ActionLog newEmptyEntity()
  * @method \Passbolt\Log\Model\Entity\ActionLog newEntity(array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\ActionLog[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Log\Model\Entity\ActionLog get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\ActionLog get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Log\Model\Entity\ActionLog findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Log\Model\Entity\ActionLog patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\ActionLog[] patchEntities(iterable $entities, array $data, array $options = [])

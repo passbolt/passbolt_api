@@ -32,7 +32,7 @@ use Cake\Validation\Validator;
  *
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Favorite get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Favorite get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Favorite newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Favorite[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Favorite|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

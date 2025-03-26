@@ -32,7 +32,7 @@ use Passbolt\Log\Model\Entity\SecretHistory;
  * @method \Passbolt\Log\Model\Entity\SecretHistory newEmptyEntity()
  * @method \Passbolt\Log\Model\Entity\SecretHistory newEntity(array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretHistory[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Log\Model\Entity\SecretHistory get($primaryKey, $options = [])
+ * @method \Passbolt\Log\Model\Entity\SecretHistory get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Log\Model\Entity\SecretHistory findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretHistory patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Log\Model\Entity\SecretHistory[] patchEntities(iterable $entities, array $data, array $options = [])

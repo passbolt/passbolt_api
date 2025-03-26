@@ -36,7 +36,7 @@ use Passbolt\Subscription\Model\Entity\Subscription;
  * @method \Passbolt\Subscription\Model\Entity\Subscription newEmptyEntity()
  * @method \Passbolt\Subscription\Model\Entity\Subscription newEntity(array $data, array $options = [])
  * @method \Passbolt\Subscription\Model\Entity\Subscription[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Subscription\Model\Entity\Subscription get($primaryKey, $options = [])
+ * @method \Passbolt\Subscription\Model\Entity\Subscription get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Subscription\Model\Entity\Subscription findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Subscription\Model\Entity\Subscription patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Subscription\Model\Entity\Subscription[] patchEntities(iterable $entities, array $data, array $options = [])

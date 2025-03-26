@@ -27,7 +27,7 @@ use Passbolt\Rbacs\Model\Rule\IsControlFunctionAllowedRule;
 /**
  * Rbacs Model
  *
- * @method \Passbolt\Rbacs\Model\Entity\Rbac get($primaryKey, $options = [])
+ * @method \Passbolt\Rbacs\Model\Entity\Rbac get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Rbacs\Model\Entity\Rbac newEntity(array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\Rbac[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\Rbac|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

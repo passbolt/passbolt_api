@@ -26,7 +26,7 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem;
  * DirectoryReportsItems Model
  *
  * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Reports
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem newEntity(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] newEntities(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
