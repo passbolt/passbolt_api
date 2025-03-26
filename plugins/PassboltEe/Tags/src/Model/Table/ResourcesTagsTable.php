@@ -27,7 +27,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Tags
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag get($primaryKey, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEntity(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\ResourcesTag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

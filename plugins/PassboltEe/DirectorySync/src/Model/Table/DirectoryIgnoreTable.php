@@ -34,7 +34,7 @@ use Passbolt\DirectorySync\Model\Entity\DirectoryIgnore;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Users
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\HasOne $Groups
  * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $DirectoryEntries
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEntity(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] newEntities(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

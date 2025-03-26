@@ -52,7 +52,7 @@ use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
  *
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsToMany $Resources
  * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable&\Cake\ORM\Association\HasMany $ResourcesTags
- * @method \Passbolt\Tags\Model\Entity\Tag get($primaryKey, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\Tag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Tags\Model\Entity\Tag newEntity(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\Tag[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\Tag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

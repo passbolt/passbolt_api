@@ -37,7 +37,7 @@ use Phinx\Db\Adapter\MysqlAdapter;
 /**
  * AccountRecoveryOrganizationPolicies Model
  *
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey get($primaryKey, $options = [])
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey[] newEntities(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPublicKey|false save(\Cake\Datasource\EntityInterface $entity, $options = [])

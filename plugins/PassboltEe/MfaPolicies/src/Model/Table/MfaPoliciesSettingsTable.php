@@ -30,7 +30,7 @@ use Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting;
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting newEmptyEntity()
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting get($primaryKey, $options = [])
+ * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[] patchEntities(iterable $entities, array $data, array $options = [])

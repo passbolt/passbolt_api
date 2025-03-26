@@ -30,7 +30,7 @@ use Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting;
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting newEmptyEntity()
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting get($primaryKey, $options = [])
+ * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting[] patchEntities(iterable $entities, array $data, array $options = [])

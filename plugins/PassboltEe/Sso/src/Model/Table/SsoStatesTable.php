@@ -39,7 +39,7 @@ use Passbolt\Sso\Model\Validation\IsValidTypeValidationRule;
  * @method \Passbolt\Sso\Model\Entity\SsoState newEmptyEntity()
  * @method \Passbolt\Sso\Model\Entity\SsoState newEntity(array $data, array $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoState[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Sso\Model\Entity\SsoState get($primaryKey, $options = [])
+ * @method \Passbolt\Sso\Model\Entity\SsoState get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Sso\Model\Entity\SsoState findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoState patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoState[] patchEntities(iterable $entities, array $data, array $options = [])

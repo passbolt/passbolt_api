@@ -34,7 +34,7 @@ use Passbolt\DirectorySync\Utility\Alias;
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation newEmptyEntity()
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation newEntity(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] newEntities(array $data, array $options = [])
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryRelation[] patchEntities(iterable $entities, array $data, array $options = [])

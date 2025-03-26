@@ -30,7 +30,7 @@ use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 /**
  * AccountRecoveryOrganizationPolicies Model
  *
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy get($primaryKey, $options = [])
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy[] newEntities(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
