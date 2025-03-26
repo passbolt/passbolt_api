@@ -49,7 +49,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
     use GroupsUsersModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -79,7 +79,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
      */
     public function testFoldersIndexFilterByIdSuccess()
     {
-        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2();
+        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2(); // phpcs:ignore
 
         $this->authenticateAs('ada');
 
@@ -98,7 +98,7 @@ class FoldersIndexControllerTest extends FoldersIntegrationTestCase
      */
     public function testFoldersIndexFilterByIdSuccessOnOneId()
     {
-        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2();
+        [$folderA, $folderB, $folderC] = $this->insertFixtureCase2(); // phpcs:ignore
 
         $this->authenticateAs('ada');
 

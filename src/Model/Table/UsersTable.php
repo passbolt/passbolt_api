@@ -27,9 +27,11 @@ use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
+use ArrayObject;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\I18n\DateTime;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -62,8 +64,8 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByUsername(string $username)
+ * @method \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method \Cake\ORM\Query\SelectQuery findByUsername(string $username)
  */
 class UsersTable extends Table
 {
@@ -261,7 +263,7 @@ class UsersTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options): void
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         if ($this->isUsernameLowerCase() && is_string($data['username'] ?? null)) {
             $data['username'] = mb_strtolower($data['username']);
@@ -424,7 +426,7 @@ class UsersTable extends Table
      * @param array|null $options additional delete options such as ['checkRules' => true]
      * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      */
-    public function softDelete(User $user, ?array $options = null)
+    public function softDelete(User $user, ?array $options = null): EntitiesChangesDto|bool
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {
@@ -571,5 +573,27 @@ class UsersTable extends Table
         }
 
         return $user;
+    }
+
+    /**
+     * @param \App\Model\Entity\User $user user to disable
+     * @return \App\Model\Dto\EntitiesChangesDto
+     */
+    public function disableUser(User $user): EntitiesChangesDto
+    {
+        $entitiesChanges = new EntitiesChangesDto();
+        $Secrets = TableRegistry::getTableLocator()->get('Secrets');
+        $secretsToConsiderAsDeleted = $Secrets->find()
+            ->select(['id', 'user_id', 'resource_id'])
+            ->where(['user_id' => $user->id])
+            ->all()->toArray();
+        $entitiesChanges->pushDeletedEntities($secretsToConsiderAsDeleted);
+
+        $this->updateAll([
+            'disabled' => DateTime::now(),
+            'modified' => DateTime::now(),
+            ], ['id' => $user->id]);
+
+        return $entitiesChanges;
     }
 }

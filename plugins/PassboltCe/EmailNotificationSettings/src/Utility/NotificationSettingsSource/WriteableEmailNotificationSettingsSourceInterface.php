@@ -27,5 +27,5 @@ interface WriteableEmailNotificationSettingsSourceInterface
      * @param \App\Utility\UserAccessControl $userAccessControl UAC
      * @return void
      */
-    public function write(array $notificationSettingsData, UserAccessControl $userAccessControl);
+    public function write(array $notificationSettingsData, UserAccessControl $userAccessControl): void;
 }

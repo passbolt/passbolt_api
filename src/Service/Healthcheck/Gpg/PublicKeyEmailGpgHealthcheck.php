@@ -59,7 +59,7 @@ class PublicKeyEmailGpgHealthcheck extends AbstractGpgHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return 'Edit or generate another key with a valid email id.';
     }

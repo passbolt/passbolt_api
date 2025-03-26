@@ -21,7 +21,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\Purifier;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 /**
  * @covers \App\Controller\Users\UsersEditController
@@ -44,7 +44,7 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
         $user = $this->logInAsUser();
         $data = [
             'id' => $user->id,
-            'disabled' => FrozenTime::yesterday(),
+            'disabled' => DateTime::yesterday(),
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();
@@ -56,7 +56,7 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
         $admin = $this->logInAsAdmin();
         $data = [
             'id' => $admin->id,
-            'disabled' => FrozenTime::yesterday(),
+            'disabled' => DateTime::yesterday(),
         ];
         $this->postJson('/users/' . $admin->id . '.json', $data);
         $this->assertSuccess();
@@ -87,7 +87,7 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
 
         $data = [
             'id' => $user->id,
-            'disabled' => FrozenTime::now(),
+            'disabled' => DateTime::now(),
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
 
@@ -111,7 +111,7 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
 
         $data = [
             'id' => $user->id,
-            'disabled' => FrozenTime::now(),
+            'disabled' => DateTime::now(),
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
 
@@ -132,7 +132,7 @@ class UsersEditDisableControllerTest extends AppIntegrationTestCase
         $this->logInAsAdmin();
         $data = [
             'id' => $user->id,
-            'disabled' => FrozenTime::now(),
+            'disabled' => DateTime::now(),
         ];
         $this->postJson('/users/' . $user->id . '.json', $data);
         $this->assertSuccess();

@@ -41,7 +41,7 @@ class UsersViewController extends AppController
      * @param string $id uuid|me
      * @return void
      */
-    public function view($id)
+    public function view(string $id)
     {
         $this->assertJson();
 

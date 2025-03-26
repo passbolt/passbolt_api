@@ -64,7 +64,6 @@ class SelfRegistrationAdminEmailRedactor implements SubscribedEmailRedactorInter
         $emailCollection = new EmailCollection();
 
         $user = $event->getData('user');
-        $uac = $event->getData('token');
 
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');

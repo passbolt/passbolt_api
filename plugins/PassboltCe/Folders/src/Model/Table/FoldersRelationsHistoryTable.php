@@ -37,8 +37,8 @@ use Passbolt\Folders\Model\Traits\FoldersRelations\FoldersRelationsFindersTrait;
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation[] patchEntities($entities, array $data, ?array $options = [])
  * @method \Passbolt\Folders\Model\Entity\FoldersRelation findOrCreate($search, callable $callback = null, ?array $options = [])
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByForeignId(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findByForeignId(string $id)
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Folders
  * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $FoldersParents
@@ -77,9 +77,10 @@ class FoldersRelationsHistoryTable extends Table
         ]);
         $this->belongsTo('Folders', [
             'foreignKey' => 'foreign_id',
+            'className' => 'Passbolt/Folders.Folders',
         ]);
         $this->belongsTo('FoldersParents', [
-            'className' => 'Folders',
+            'className' => 'Passbolt/Folders.Folders',
             'foreignKey' => 'folder_parent_id',
         ]);
         $this->belongsTo('Users');

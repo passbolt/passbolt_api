@@ -26,7 +26,7 @@ class UsersDeleteNotificationTest extends AppIntegrationTestCase
 {
     use EmailQueueTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Resources', 'app.Base/Favorites', 'app.Base/Secrets',
         'app.Base/GroupsUsers', 'app.Base/Permissions',

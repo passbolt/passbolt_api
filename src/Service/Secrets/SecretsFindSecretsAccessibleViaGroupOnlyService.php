@@ -18,12 +18,14 @@ declare(strict_types=1);
 namespace App\Service\Secrets;
 
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\SecretsTable;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Database\Expression\TupleComparison;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Validation\Validation;
+use TypeError;
 
 class SecretsFindSecretsAccessibleViaGroupOnlyService
 {
@@ -32,21 +34,19 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $secretsTable;
+    private SecretsTable $secretsTable;
 
     /**
      * Instantiate the service
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->permissionsTable = $this->fetchTable('Permissions');
-        /** @phpstan-ignore-next-line */
         $this->secretsTable = $this->fetchTable('Secrets');
     }
 
@@ -56,20 +56,21 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
      * @param string $groupId The group to find the accesses for.
      * @param array $usersIds The list of users to find the accesses for.
      * @param string|null $acoType The type of ACO to find the accesses for.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function find(string $groupId, array $usersIds, ?string $acoType = null): Query
+    public function find(string $groupId, array $usersIds, ?string $acoType = null): SelectQuery
     {
         if (!Validation::uuid($groupId)) {
-            throw new \TypeError(__('The group id should be a valid UUID.'));
+            throw new TypeError(__('The group id should be a valid UUID.'));
         }
 
         foreach ($usersIds as $usersId) {
             if (!Validation::uuid($usersId)) {
-                throw new \TypeError(__('The users ids array should contain only valid UUIDs.'));
+                throw new TypeError(__('The users ids array should contain only valid UUIDs.'));
             }
         }
 
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $this->secretsTable->find();
 
         // If no users ids given, ensure the find return an empty data set.
@@ -178,20 +179,21 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
      * @param string $groupId The group to find the accesses for.
      * @param array $usersIds The list of users to find the accesses for.
      * @param string|null $acoType The type of ACO to find the accesses for.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findWithExists(string $groupId, array $usersIds, ?string $acoType = null): Query
+    public function findWithExists(string $groupId, array $usersIds, ?string $acoType = null): SelectQuery
     {
         if (!Validation::uuid($groupId)) {
-            throw new \TypeError(__('The group id should be a valid UUID.'));
+            throw new TypeError(__('The group id should be a valid UUID.'));
         }
 
         foreach ($usersIds as $usersId) {
             if (!Validation::uuid($usersId)) {
-                throw new \TypeError(__('The users ids array should contain only valid UUIDs.'));
+                throw new TypeError(__('The users ids array should contain only valid UUIDs.'));
             }
         }
 
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $this->secretsTable->find();
 
         // If no users ids given, ensure the find return an empty data set.
@@ -270,7 +272,10 @@ class SecretsFindSecretsAccessibleViaGroupOnlyService
                     ->notExists($inheritedAccessesExcludingTargetGroupQuery);
             });
 
-        return $this->secretsTable->find()
+        /** @var \Cake\ORM\Query\SelectQuery $query */
+        $query = $this->secretsTable->find();
+
+        return $query
             ->where(new TupleComparison(['user_id', 'resource_id'], $inheritedAccessesFromTargetGroupOnlyQuery, [], 'IN')); //phpcs:ignore
     }
 }

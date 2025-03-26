@@ -20,23 +20,26 @@ namespace App\Service\Comments;
 use App\Model\Entity\Comment;
 use App\Utility\UserAccessControl;
 use Cake\Event\Event;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
 class CommentsAddService
 {
-    use \Cake\ORM\Locator\LocatorAwareTrait;
-    use \Cake\Event\EventDispatcherTrait;
+    use LocatorAwareTrait;
+    use EventDispatcherTrait;
 
     public const ADD_SUCCESS_EVENT_NAME = 'CommentAddService.addPost.success';
 
     /**
      * @var \Cake\ORM\Table
      */
-    private $Comments;
+    private Table $Comments;
 
     /**
      * CommentsAddService constructor.
@@ -82,7 +85,7 @@ class CommentsAddService
      * @throws \Cake\Http\Exception\NotFoundException
      * @return void
      */
-    protected function _handleValidationErrors(Comment $comment)
+    protected function _handleValidationErrors(Comment $comment): void
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {
@@ -108,7 +111,7 @@ class CommentsAddService
      * @param array $data The comment data
      * @return \App\Model\Entity\Comment $comment comment entity
      */
-    protected function _buildAndValidateCommentEntity(UserAccessControl $uac, string $foreignKey, array $data)
+    protected function _buildAndValidateCommentEntity(UserAccessControl $uac, string $foreignKey, array $data): Comment
     {
         // Build entity and perform basic check.
         /**
@@ -148,7 +151,7 @@ class CommentsAddService
      * @param \App\Model\Entity\Comment $comment comment entity
      * @return void
      */
-    protected function _notifyUsers(Comment $comment)
+    protected function _notifyUsers(Comment $comment): void
     {
         $event = new Event(static::ADD_SUCCESS_EVENT_NAME, $this, [
             'comment' => $comment,

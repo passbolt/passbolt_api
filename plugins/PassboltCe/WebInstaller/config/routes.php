@@ -22,7 +22,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/WebInstaller', ['path' => '/install'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/WebInstaller', ['path' => '/install'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     $routes->connect('/', ['controller' => 'GettingStarted', 'action' => 'index'])

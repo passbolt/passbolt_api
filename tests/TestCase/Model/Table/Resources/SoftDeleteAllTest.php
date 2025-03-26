@@ -28,7 +28,7 @@ class SoftDeleteAllTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Favorites',
         'app.Base/Permissions',
         'app.Base/Resources',
@@ -56,7 +56,7 @@ class SoftDeleteAllTest extends AppTestCase
     {
         // Fetch the resources non deleted and with populated fields
         $resourcesId = $this->Resources
-            ->find('list', ['valueField' => 'id'])
+            ->find('list', valueField: 'id')
             ->where([
                 'username IS NOT NULL',
                 'uri IS NOT NULL',
@@ -75,7 +75,7 @@ class SoftDeleteAllTest extends AppTestCase
 
         // Fetch soft deleted resources
         $deletedResources = $this->Resources
-            ->find('list', ['valueField' => 'id'])
+            ->find('list', valueField: 'id')
             ->where([
                 'username IS NULL',
                 'uri IS NULL',
@@ -111,7 +111,7 @@ class SoftDeleteAllTest extends AppTestCase
     {
         // Fetch the non deleted resources with populated fields
         $resourcesId = $this->Resources
-            ->find('list', ['valueField' => 'id'])
+            ->find('list', valueField: 'id')
             ->where([
                 'username IS NOT NULL',
                 'uri IS NOT NULL',

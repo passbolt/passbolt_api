@@ -32,11 +32,19 @@ class FullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, Healthc
     private bool $status = false;
 
     /**
+     * Type of full base url if not string.
+     *
+     * @var string
+     */
+    private string $fullBaseUrlType = '';
+
+    /**
      * @inheritDoc
      */
     public function check(): HealthcheckServiceInterface
     {
         $this->status = (Configure::read('App.fullBaseUrl') !== null);
+        $this->fullBaseUrlType = gettype(Configure::read('App.fullBaseUrl'));
 
         return $this;
     }
@@ -70,7 +78,12 @@ class FullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, Healthc
      */
     public function getSuccessMessage(): string
     {
-        return __('Full base url is set to {0}', Configure::read('App.fullBaseUrl'));
+        $fullBaseUrl = Configure::read('App.fullBaseUrl');
+        if (!is_string($fullBaseUrl)) {
+            $fullBaseUrl = sprintf('"%s"', $this->fullBaseUrlType);
+        }
+
+        return __('Full base url is set to {0}', $fullBaseUrl);
     }
 
     /**
@@ -87,7 +100,7 @@ class FullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, Healthc
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Edit App.fullBaseUrl in {0}', CONFIG . 'passbolt.php');
     }

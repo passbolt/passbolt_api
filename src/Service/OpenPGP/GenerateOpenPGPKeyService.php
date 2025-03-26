@@ -28,12 +28,12 @@ class GenerateOpenPGPKeyService
     /**
      * @var bool debug
      */
-    private $debug = false;
+    private bool $debug = false;
 
     /**
      * @var string|null $gnupghome home directory
      */
-    private $gnupghome = null;
+    private ?string $gnupghome = null;
 
     /**
      * Constructor - prevent use in production

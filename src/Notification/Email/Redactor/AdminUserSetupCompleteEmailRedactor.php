@@ -25,7 +25,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Core\Configure;
 use Cake\Event\Event;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
@@ -84,7 +84,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      * @param \App\Model\Entity\User $userWhoCompletedSetup User who completed the setup
      * @return \App\Notification\Email\EmailCollection
      */
-    private function createEmailCollection(User $userWhoCompletedSetup)
+    private function createEmailCollection(User $userWhoCompletedSetup): EmailCollection
     {
         $emailCollection = new EmailCollection();
 
@@ -108,7 +108,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
 
         if (!isset($userWhoCompletedSetup->entities_history) || !isset($userWhoCompletedSetup->entities_history[0])) {
             // If there is no created history
-            $invitedWhen = FrozenTime::now();
+            $invitedWhen = DateTime::now();
             $invitedBy = $userWhoCompletedSetup;
         } else {
             $createdHistory = $userWhoCompletedSetup->entities_history[0];
@@ -120,7 +120,7 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
             }
         }
 
-        /** @var \App\Model\Entity\User[] $admins */
+        /** @var array<\App\Model\Entity\User> $admins */
         $admins = $UsersTable->findAdmins()
             ->find('locale')
             ->find('notDisabled')
@@ -140,10 +140,10 @@ class AdminUserSetupCompleteEmailRedactor implements SubscribedEmailRedactorInte
      * @param \App\Model\Entity\User $admin An admin user to notify
      * @param \App\Model\Entity\User $userCompletedSetup User who completed setup
      * @param \App\Model\Entity\User $invitedBy User who invited the user
-     * @param \Cake\I18n\FrozenTime $invitedWhen When user was invited
+     * @param \Cake\I18n\DateTime $invitedWhen When user was invited
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $admin, User $userCompletedSetup, User $invitedBy, FrozenTime $invitedWhen): Email
+    private function createEmail(User $admin, User $userCompletedSetup, User $invitedBy, DateTime $invitedWhen): Email
     {
         /** @var \App\Model\Entity\Profile $profile */
         $profile = $userCompletedSetup->profile;

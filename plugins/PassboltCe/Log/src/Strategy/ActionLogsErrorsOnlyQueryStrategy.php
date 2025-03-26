@@ -26,7 +26,7 @@ class ActionLogsErrorsOnlyQueryStrategy extends ActionLogsDefaultQueryStrategy
     /**
      * @inheritDoc
      */
-    public function query(ActionLog $actionLog)
+    public function query(ActionLog $actionLog): false|string
     {
         if ($actionLog->isStatusSuccess()) {
             return false;

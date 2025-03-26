@@ -26,6 +26,7 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Closure;
 
 /**
  * ResourceTypes Model
@@ -137,7 +138,7 @@ class ResourceTypesTable extends Table
      * @param array $context A key value list of data containing the validation context.
      * @return bool Success
      */
-    public function isValidJson(string $check, array $context)
+    public function isValidJson(string $check, array $context): bool
     {
         return json_decode($check, true) !== null;
     }
@@ -195,7 +196,7 @@ class ResourceTypesTable extends Table
      * @param bool $contain is the find done from an association
      * @return \Closure
      */
-    public static function resultFormatter($contain = false)
+    public static function resultFormatter(bool $contain = false): Closure
     {
         if (!$contain) {
             return function (CollectionInterface $results) {

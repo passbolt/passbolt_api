@@ -19,10 +19,11 @@ namespace Passbolt\Log\Service\ActionLogs;
 use App\Utility\UuidFactory;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenDate;
-use Cake\ORM\Query;
+use Cake\I18n\Date;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Model\Entity\ActionLog;
+use PDOException;
 
 class ActionLogsPurgeService
 {
@@ -45,8 +46,8 @@ class ActionLogsPurgeService
             return $ActionLogsTable->deleteAll([
                 'ActionLogs.id IN' => $this->getActionLogsToPurge($retentionInDays)->select('id')->limit($limit),
             ]);
-        } catch (\PDOException $exception) {
-            $createdBefore = FrozenDate::now()->subDays($retentionInDays);
+        } catch (PDOException $exception) {
+            $createdBefore = Date::now()->subDays($retentionInDays);
             $entitiesHistory = $ActionLogsTable->getAssociation('EntitiesHistory')
                 ->subquery()
                 ->select('EntitiesHistory.action_log_id')
@@ -68,17 +69,17 @@ class ActionLogsPurgeService
      * Dry run of the purge
      *
      * @param int $retentionInDays retention in days
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function dryRun(int $retentionInDays): Query
+    public function dryRun(int $retentionInDays): SelectQuery
     {
         $total = $this->getActionLogsToPurge($retentionInDays)
             ->select([
                 'count' => 'COUNT(*)',
                 'action_id',
             ])
-            ->group('ActionLogs.action_id')
-            ->orderDesc('count');
+            ->groupBy('ActionLogs.action_id')
+            ->orderByDesc('count');
 
         $total->formatResults(function (CollectionInterface $results) {
             $actionsToPurge = $this->getActionUuidsToPurge();
@@ -100,11 +101,11 @@ class ActionLogsPurgeService
 
     /**
      * @param int $retentionInDays retention in days
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function getActionLogsToPurge(int $retentionInDays): Query
+    private function getActionLogsToPurge(int $retentionInDays): SelectQuery
     {
-        $createdBefore = FrozenDate::now()->subDays($retentionInDays);
+        $createdBefore = Date::now()->subDays($retentionInDays);
         $ActionLogsTable = TableRegistry::getTableLocator()->get('Passbolt/Log.ActionLogs');
 
         return $ActionLogsTable->find()
@@ -130,7 +131,7 @@ class ActionLogsPurgeService
     /**
      * List of actions to be purged
      *
-     * @return string[]
+     * @return array<string>
      */
     public function getActionList(): array
     {

@@ -32,6 +32,7 @@ use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Exception;
 
 /**
  * \App\Service\Groups\GroupsUpdateService Test Case
@@ -66,7 +67,7 @@ class GroupsUpdateServiceTest extends AppTestCase
         // Enable event tracking
         $this->groupsUsersTable->getEventManager()->setEventList(new EventList());
 
-        [$r1, $r2, $g1, $u1, $u2, $u3, $u4] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith();
+        [$r1, $r2, $g1, $u1, $u2, $u3, $u4] = $this->insertFixture_AddGroupUser_HavingMultipleResourceSharedWith(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $u1->id);
 
         // Events are triggered when a user is added or removed from a group
@@ -195,7 +196,7 @@ class GroupsUpdateServiceTest extends AppTestCase
         $changes = [['user_id' => $u2->id, 'is_admin' => true]];
         try {
             $this->service->update($uac, $g1->id, [], $changes);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dd($e->getErrors());
         }
 
@@ -276,7 +277,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     public function testUpdateError_AddGroupUser_SecretValidation_NotEnoughSecretsProvided()
     {
-        [$r1, $g1, $u1] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        [$r1, $g1, $u1] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $u1->id);
         $u3 = UserFactory::make()->persist();
 
@@ -294,7 +295,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     public function testUpdateError_AddGroupUser_SecretValidation_SecretForAResourceTheGroupHasNoAccess()
     {
-        [$r1, $r2, $g1, $u1, $u2] = $this->insertFixture_AddGroupUser_SecretValidation_SecretForAResourceTheGroupHasNoAccess();
+        [$r1, $r2, $g1, $u1, $u2] = $this->insertFixture_AddGroupUser_SecretValidation_SecretForAResourceTheGroupHasNoAccess(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $u1->id);
         $u3 = UserFactory::make()->persist();
 
@@ -335,7 +336,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     public function testUpdateError_UpdateGroupUser_InvalidGroupUserData()
     {
-        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $u1->id);
 
         $data = [['id' => $g1->groups_users[0]->id, 'is_admin' => 42]];
@@ -349,7 +350,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     public function testUpdateError_UpdateGroupUser_NonExistingGroupUserRecord()
     {
-        [$r1, $g1, $u1] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        [$r1, $g1, $u1] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $u1->id);
 
         $userGroupNotExist = UuidFactory::uuid();
@@ -364,7 +365,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     public function testUpdateError_UpdateGroupUser_RemoveLastGroupManager()
     {
-        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $u1->id);
 
         $data = [['id' => $g1->groups_users[0]->id, 'is_admin' => false]];
@@ -413,7 +414,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     public function testUpdateError_DeleteGroupUser_GroupUserValidation_GroupUserNotExist()
     {
-        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $u1->id);
         $userGroupNotExist = UuidFactory::uuid();
 
@@ -428,7 +429,7 @@ class GroupsUpdateServiceTest extends AppTestCase
 
     public function testUpdateError_DeleteGroupUser_RemoveLastGroupManager()
     {
-        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember();
+        [$u1, $u2, $g1] = $this->insertFixture_GroupWithOneManagerAndOneMember(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $u1->id);
 
         $data = [['id' => $g1->groups_users[0]->id, 'delete' => true]];

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Service;
 
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Query;
 
 class MetadataKeysIndexService
 {
@@ -26,9 +27,9 @@ class MetadataKeysIndexService
      * @param string $userId User identifier.
      * @param array|null $contain Contain values.
      * @param array|null $filters Filter values.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function get(string $userId, ?array $contain = null, ?array $filters = null)
+    public function get(string $userId, ?array $contain = null, ?array $filters = null): Query
     {
         $metadataKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataKeys');
 

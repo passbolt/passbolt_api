@@ -47,7 +47,7 @@ class PassboltBelongsToMany extends BelongsToMany
     {
         $closure = parent::eagerLoader($options);
 
-        /** @var \Cake\ORM\Query $query */
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $options['query'];
         $excludeJunctionProperty = Hash::get($query->getOptions(), self::QUERY_OPTION_EXCLUDE_JUNCTION_PROPERTY, false);
         if (!$excludeJunctionProperty) {

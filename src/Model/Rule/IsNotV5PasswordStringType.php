@@ -28,7 +28,7 @@ class IsNotV5PasswordStringType
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
         $v5PasswordStringId = UuidFactory::uuid('resource-types.id.' . ResourceType::SLUG_V5_PASSWORD_STRING);
 

@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\ResourceTypes\Test\Factory;
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
@@ -40,7 +40,7 @@ class ResourceTypeFactory extends CakephpBaseFactory
      */
     protected function getRootTableRegistryName(): string
     {
-        return 'ResourceTypes';
+        return 'Passbolt/ResourceTypes.ResourceTypes';
     }
 
     /**
@@ -57,8 +57,8 @@ class ResourceTypeFactory extends CakephpBaseFactory
                 'name' => $faker->words(3, true),
                 'description' => $faker->text(64),
                 'definition' => json_encode([]),
-                'created' => FrozenDate::now()->subDays($faker->randomNumber(4)),
-                'modified' => FrozenDate::now()->subDays($faker->randomNumber(4)),
+                'created' => Date::now()->subDays($faker->randomNumber(4)),
+                'modified' => Date::now()->subDays($faker->randomNumber(4)),
             ];
         });
     }
@@ -132,10 +132,10 @@ class ResourceTypeFactory extends CakephpBaseFactory
         ]);
     }
 
-    public function deleted(?FrozenDate $deleted = null): self
+    public function deleted(?Date $deleted = null): self
     {
         if (is_null($deleted)) {
-            $deleted = FrozenDate::yesterday();
+            $deleted = Date::yesterday();
         }
 
         return $this->setField('deleted', $deleted);

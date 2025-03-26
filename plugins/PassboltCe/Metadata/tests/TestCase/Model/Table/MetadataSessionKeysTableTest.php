@@ -21,7 +21,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Model\FormatValidationTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Passbolt\Metadata\MetadataPlugin;
@@ -86,8 +86,8 @@ class MetadataSessionKeysTableTest extends AppTestCaseV5
         $this->assertNotEmpty($result->get('id'));
         $this->assertNotEmpty($result->get('data'));
         $this->assertSame($user->get('id'), $result->get('user_id'));
-        $this->assertInstanceOf(FrozenTime::class, $result->get('created'));
-        $this->assertInstanceOf(FrozenTime::class, $result->get('modified'));
+        $this->assertInstanceOf(DateTime::class, $result->get('created'));
+        $this->assertInstanceOf(DateTime::class, $result->get('modified'));
         $this->assertCount(1, MetadataSessionKeyFactory::find()->toArray());
     }
 

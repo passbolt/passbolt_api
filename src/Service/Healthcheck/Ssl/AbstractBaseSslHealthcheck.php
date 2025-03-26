@@ -23,6 +23,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Http\Client;
 use Cake\Routing\Router;
+use Exception;
 
 abstract class AbstractBaseSslHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -79,7 +80,7 @@ abstract class AbstractBaseSslHealthcheck implements HealthcheckServiceInterface
         try {
             $response = $this->client->get($url, [], $this->getClientOptions());
             $this->status = $response->isOk();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->helpMessage[] = $e->getMessage();
         }
 
@@ -113,7 +114,7 @@ abstract class AbstractBaseSslHealthcheck implements HealthcheckServiceInterface
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return $this->helpMessage;
     }

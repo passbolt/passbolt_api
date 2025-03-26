@@ -27,7 +27,7 @@ class DeleteTest extends AppTestCase
 {
     public $Favorites;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Favorites'];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Favorites'];
 
     public function setUp(): void
     {

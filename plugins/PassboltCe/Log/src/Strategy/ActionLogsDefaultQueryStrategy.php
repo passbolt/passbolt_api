@@ -26,7 +26,7 @@ class ActionLogsDefaultQueryStrategy extends ActionLogsAbstractQueryStrategy
     /**
      * @inheritDoc
      */
-    public function query(ActionLog $actionLog)
+    public function query(ActionLog $actionLog): false|string
     {
         return json_encode($actionLog->jsonSerialize());
     }

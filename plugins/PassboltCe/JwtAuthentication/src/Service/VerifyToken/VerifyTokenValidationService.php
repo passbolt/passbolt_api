@@ -18,7 +18,7 @@ namespace Passbolt\JwtAuthentication\Service\VerifyToken;
 
 use App\Model\Entity\AuthenticationToken;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\JwtAuthentication\Error\Exception\VerifyToken\ConsumedVerifyTokenAccessException;
@@ -39,7 +39,7 @@ class VerifyTokenValidationService
      * @return void
      * @throws \Passbolt\JwtAuthentication\Error\Exception\VerifyToken\InvalidVerifyTokenException if version is not supported
      */
-    public function validateToken($verifyTokenExpiry, ?string $verifyToken, string $userId): void
+    public function validateToken(string|int $verifyTokenExpiry, ?string $verifyToken, string $userId): void
     {
         $this->validateTokenExpiry($verifyTokenExpiry);
         $this->validateFormat($verifyToken);
@@ -54,9 +54,9 @@ class VerifyTokenValidationService
      * @return void
      * @throws \Passbolt\JwtAuthentication\Error\Exception\VerifyToken\InvalidVerifyTokenException if the token is expired.
      */
-    protected function validateTokenExpiry($verifyTokenExpiry): void
+    protected function validateTokenExpiry(mixed $verifyTokenExpiry): void
     {
-        $maxTokenExpiry = FrozenTime::now()
+        $maxTokenExpiry = DateTime::now()
             ->modify('+' . Configure::read(self::VERIFY_TOKEN_EXPIRY_CONFIG_KEY))
             ->toUnixString();
         if (
@@ -81,7 +81,7 @@ class VerifyTokenValidationService
      * @throws \Passbolt\JwtAuthentication\Error\Exception\VerifyToken\InvalidVerifyTokenException if the format is not valid.
      * @throws \Cake\ORM\Exception\PersistenceFailedException
      */
-    protected function validateFormat($verifyToken): void
+    protected function validateFormat(mixed $verifyToken): void
     {
         if (
             !isset($verifyToken) ||

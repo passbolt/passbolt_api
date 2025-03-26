@@ -18,13 +18,14 @@ declare(strict_types=1);
 namespace App\Controller\Users;
 
 use App\Controller\AppController;
+use Cake\Event\EventInterface;
 
 class GetCsrfTokenController extends AppController
 {
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated(['get']);
 

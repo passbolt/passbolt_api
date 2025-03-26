@@ -26,7 +26,8 @@ use Cake\Chronos\Chronos;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
+use Exception;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
@@ -211,7 +212,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey($metadata),
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -242,7 +243,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForUser(json_encode([]), $admin, $this->getAdaNoPassphraseKeyInfo()),
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $admin->get('id'),
             ],
         ];
@@ -312,7 +313,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
                 ],
             ];
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isMetadataKeyNotExpired', $errors[0]['metadata_key_id']);
@@ -351,7 +352,7 @@ class MetadataRotateKeyFoldersUpdateServiceTest extends AppTestCaseV5
         ];
         try {
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isSharedMetadataKeyUniqueActive', $errors[0]['metadata_key_id']);

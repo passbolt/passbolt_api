@@ -45,7 +45,8 @@ class V240AddAuthenticationTokenType extends AbstractMigration
             ->save();
 
         $this->table('authentication_tokens')
-            ->addIndex(['type']);
+            ->addIndex(['type'])
+            ->save();
 
     }
 }

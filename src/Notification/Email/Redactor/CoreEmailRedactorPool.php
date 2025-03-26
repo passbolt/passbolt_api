@@ -45,7 +45,7 @@ use Passbolt\SelfRegistration\Notification\Email\Redactor\User\SelfRegistrationU
 class CoreEmailRedactorPool extends AbstractSubscribedEmailRedactorPool
 {
     /**
-     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
+     * @return array<\App\Notification\Email\SubscribedEmailRedactorInterface>
      */
     public function getSubscribedRedactors(): array
     {

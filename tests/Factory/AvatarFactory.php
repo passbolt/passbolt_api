@@ -53,7 +53,7 @@ class AvatarFactory extends CakephpBaseFactory
 
     public function withProfile(?ProfileFactory $profileFactory = null): self
     {
-        if (!isset($profileFactory)) {
+        if (is_null($profileFactory)) {
             $profileFactory = ProfileFactory::make()->without('Avatars');
         }
 
@@ -66,7 +66,7 @@ class AvatarFactory extends CakephpBaseFactory
      */
     public function withUser(?UserFactory $userFactory = null)
     {
-        if (!isset($userFactory)) {
+        if (is_null($userFactory)) {
             $userFactory = UserFactory::make()->with(
                 'Profiles',
                 ProfileFactory::make()->without('Avatars')

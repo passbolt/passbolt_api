@@ -28,7 +28,7 @@ class TransfersCreateControllerTest extends AppIntegrationTestCase
     use AuthenticationTokenModelTrait;
     use TransfersModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles',
     ];
 

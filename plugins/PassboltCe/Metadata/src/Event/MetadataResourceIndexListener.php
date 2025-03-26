@@ -19,7 +19,7 @@ namespace Passbolt\Metadata\Event;
 use App\Model\Event\TableFindIndexBefore;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 
 /**
  * Listens to TableFindIndexBefore::EVENT_NAME event.
@@ -41,7 +41,7 @@ class MetadataResourceIndexListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function filterResources(Event $event)
+    public function filterResources(Event $event): void
     {
         $query = $event->getData('query');
         /** @var \App\Model\Table\Dto\FindIndexOptions $options */
@@ -53,11 +53,11 @@ class MetadataResourceIndexListener implements EventListenerInterface
     }
 
     /**
-     * @param \Cake\ORM\Query $query Query to filter
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter
      * @param string $metadataKeyType filter value
      * @return void
      */
-    private function filterByMetadataKeyType(Query $query, string $metadataKeyType): void
+    private function filterByMetadataKeyType(SelectQuery $query, string $metadataKeyType): void
     {
         $fieldAlias = $query->getRepository()->aliasField('metadata_key_type');
         $query->where([$fieldAlias => $metadataKeyType]);

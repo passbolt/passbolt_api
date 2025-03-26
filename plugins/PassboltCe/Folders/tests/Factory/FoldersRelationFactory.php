@@ -68,10 +68,10 @@ class FoldersRelationFactory extends CakephpBaseFactory
     /**
      * Define the associated foreign model resource
      *
-     * @param ResourceFactory|null $factory
+     * @param ResourceFactory|array $factory
      * @return FoldersRelationFactory
      */
-    public function withForeignModelResource(?ResourceFactory $factory = null): self
+    public function withForeignModelResource(array|ResourceFactory $factory = []): self
     {
         $this->foreignModelResource();
 
@@ -81,10 +81,10 @@ class FoldersRelationFactory extends CakephpBaseFactory
     /**
      * Define the associated foreign model folder
      *
-     * @param FolderFactory|null $factory
+     * @param FolderFactory|array $factory
      * @return FoldersRelationFactory
      */
-    public function withForeignModelFolder(?FolderFactory $factory = null): self
+    public function withForeignModelFolder(array|FolderFactory $factory = []): self
     {
         $this->foreignModelFolder();
 
@@ -94,10 +94,10 @@ class FoldersRelationFactory extends CakephpBaseFactory
     /**
      * Define the associated folder parent
      *
-     * @param FolderFactory|null $factory
+     * @param FolderFactory|array $factory
      * @return FoldersRelationFactory
      */
-    public function withFolderParent(?FolderFactory $factory = null): self
+    public function withFolderParent(array|FolderFactory $factory = []): self
     {
         return $this->with('FoldersParents', $factory);
     }
@@ -105,10 +105,10 @@ class FoldersRelationFactory extends CakephpBaseFactory
     /**
      * Define the associated user
      *
-     * @param UserFactory|null $factory
+     * @param UserFactory|array $factory
      * @return FoldersRelationFactory
      */
-    public function withUser(?UserFactory $factory = null): self
+    public function withUser(array|UserFactory $factory = []): self
     {
         return $this->with('Users', $factory);
     }

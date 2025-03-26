@@ -22,7 +22,7 @@ use Cake\Database\Driver\Postgres;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\ConnectionManager;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 
 class SecretsCleanupHardDeletedPermissionsService
@@ -65,9 +65,9 @@ class SecretsCleanupHardDeletedPermissionsService
     /**
      * Find the secrets to delete.
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function findSecretsToDelete(): Query
+    private function findSecretsToDelete(): SelectQuery
     {
         $directUsersSecretsQuery = $this->Secrets->Resources->Permissions->find()
             ->select([
@@ -113,7 +113,9 @@ class SecretsCleanupHardDeletedPermissionsService
      */
     private function deletedSecretsWithJoinInDelete(): int
     {
-        return ConnectionManager::get('default')->execute("
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get('default');
+        $sql = "
             DELETE secrets FROM secrets
             LEFT JOIN (
             (
@@ -136,6 +138,8 @@ class SecretsCleanupHardDeletedPermissionsService
             )
 
             WHERE ExpectedSecrets.resource_id IS NULL;
-        ")->count();
+        ";
+
+        return $connection->execute($sql)->rowCount();
     }
 }

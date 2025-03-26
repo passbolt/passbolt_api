@@ -20,7 +20,8 @@ use App\Error\Exception\CustomValidationException;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
+use OpenPGP_PublicKeyPacket;
 
 /**
  * Public Key Validation Service
@@ -61,7 +62,7 @@ class PublicKeyValidationService
      *
      * @var array
      */
-    private static $publicKeyInfo = [];
+    private static array $publicKeyInfo = [];
 
     /**
      * This is the historical set of rules used for user public keys
@@ -249,15 +250,15 @@ class PublicKeyValidationService
      * @param string|int|null $datetimeString user provider data
      * @return bool
      */
-    public static function isDateInFuture($datetimeString = null): bool
+    public static function isDateInFuture(string|int|null $datetimeString = null): bool
     {
         if (!isset($datetimeString) || (!is_string($datetimeString) && !is_int($datetimeString))) {
             return false;
         }
 
-        $frozenTime = new FrozenTime($datetimeString);
+        $frozenTime = new DateTime($datetimeString);
 
-        return $frozenTime->greaterThan(FrozenTime::now());
+        return $frozenTime->greaterThan(DateTime::now());
     }
 
     /**
@@ -408,7 +409,7 @@ class PublicKeyValidationService
      * @param string|null $value openpgp key uid
      * @return string|bool
      */
-    public static function getEmailFromUid(?string $value = null)
+    public static function getEmailFromUid(?string $value = null): string|bool
     {
         if (!isset($value)) {
             return false;
@@ -452,14 +453,14 @@ class PublicKeyValidationService
         if (!isset($algorithm)) {
             return false;
         }
-        $supported = \OpenPGP_PublicKeyPacket::$algorithms;
+        $supported = OpenPGP_PublicKeyPacket::$algorithms;
         if ($strict === true) {
             // Minus legacy items such as DSA, ELGAMAL
             // Default in openpgp.js v5
             unset($supported[16]);
             unset($supported[17]);
         }
-        foreach ($supported as $i => $a) {
+        foreach ($supported as $a) {
             if ($algorithm === $a) {
                 return true;
             }

@@ -19,6 +19,7 @@ use App\Utility\UserAction;
 use Cake\Event\Event;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
+use Exception;
 use Passbolt\Log\Model\Entity\EntityHistory;
 
 class EntitiesHistoryCreateService
@@ -26,7 +27,7 @@ class EntitiesHistoryCreateService
     /**
      * @var array
      */
-    private $config = [
+    private array $config = [
         'Share.share' => [
             'models' => [
                 'Permissions' => [
@@ -171,13 +172,13 @@ class EntitiesHistoryCreateService
      * @param \Cake\Event\Event $event event
      * @return void
      */
-    public function logEntityHistory(Event $event)
+    public function logEntityHistory(Event $event): void
     {
         $table = $event->getSubject();
         $modelName = $table->getAlias();
         try {
             $userAction = UserAction::getInstance();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // preventing the app to fail if no user action is set
             // we consider the log operation is not needed
             return;
@@ -223,9 +224,9 @@ class EntitiesHistoryCreateService
      * Check if a table has a detailed history.
      *
      * @param \Cake\ORM\Table $table table
-     * @return bool|string
+     * @return string|bool
      */
-    private function _hasTableDetailedHistory(Table $table)
+    private function _hasTableDetailedHistory(Table $table): bool|string
     {
         $modelName = $table->getAlias();
         $detailedHistoryTableName = $modelName . 'History';
@@ -242,7 +243,7 @@ class EntitiesHistoryCreateService
      * @param \Cake\Event\Event $event the event
      * @return string CRUD type.
      */
-    private function _getCrudType(Event $event)
+    private function _getCrudType(Event $event): string
     {
         $entity = $event->getData('entity');
         $crud = EntityHistory::CRUD_CREATE;
@@ -268,7 +269,7 @@ class EntitiesHistoryCreateService
      * @param \Cake\ORM\Entity $entity entity
      * @return bool
      */
-    private function _isEntitySoftDeleted(Entity $entity)
+    private function _isEntitySoftDeleted(Entity $entity): bool
     {
         $dirtyFields = $entity->getDirty();
         $deletedIsTrue = isset($entity->deleted) && $entity->deleted == true;

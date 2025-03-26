@@ -19,7 +19,7 @@ namespace Passbolt\Metadata\Test\TestCase\Command;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
@@ -41,8 +41,6 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
     }
 
     public function testShareMetadataKeyCommand_Help()
@@ -114,7 +112,7 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
         $this->assertCount(0, $result);
 
         $metadataPrivateKeysInserted = MetadataPrivateKeyFactory::find()
-            ->where(['created >=' => FrozenDate::today()])
+            ->where(['created >=' => Date::today()])
             ->all();
         $this->assertSame(3, $metadataPrivateKeysInserted->count());
         foreach ($metadataPrivateKeysInserted as $key) {

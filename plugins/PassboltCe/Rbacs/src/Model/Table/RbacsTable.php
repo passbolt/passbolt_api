@@ -45,7 +45,7 @@ use Passbolt\Rbacs\Model\Rule\IsControlFunctionAllowedRule;
  * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findById(string $id)
  */
 class RbacsTable extends Table
 {

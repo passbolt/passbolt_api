@@ -30,9 +30,9 @@ class FolderHistory extends Entity
      * List of property names that should **not** be included in JSON or Array
      * representations of this Entity.
      *
-     * @var string[]
+     * @var list<string>
      */
-    protected $_hidden = [
+    protected array $_hidden = [
         '_joinData',
     ];
 
@@ -45,7 +45,7 @@ class FolderHistory extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'name' => false,
     ];
 }

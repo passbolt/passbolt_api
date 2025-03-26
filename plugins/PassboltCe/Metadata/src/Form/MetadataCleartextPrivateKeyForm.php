@@ -25,6 +25,7 @@ use Cake\Form\Schema;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Exception;
 
 class MetadataCleartextPrivateKeyForm extends Form
 {
@@ -192,7 +193,7 @@ class MetadataCleartextPrivateKeyForm extends Form
         try {
             $privateKeyInfo = $gpg->getKeyInfo($privateKeyArmored);
             $privateKeyFingerprint = Hash::get($privateKeyInfo, 'fingerprint', '');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return false;
         }
 

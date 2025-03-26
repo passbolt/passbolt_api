@@ -102,7 +102,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
     public function testUpdateResourcesController_Success_UpdateResourceSecrets(): void
     {
         RoleFactory::make()->guest()->persist();
-        [$r1, $g1, $userA, $userB, $userC] = $this->insertFixture_UpdateResourceSecrets();
+        [$r1, $g1, $userA, $userB, $userC] = $this->insertFixture_UpdateResourceSecrets(); // phpcs:ignore
         $this->logInAs($userB);
         $r1EncryptedSecretA = $this->encryptMessageFor($userA->id, 'R1 secret updated');
         $r1EncryptedSecretB = $this->encryptMessageFor($userB->id, 'R1 secret updated');
@@ -174,7 +174,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Error_ValidationErrors(): void
     {
-        [$r1, $userA, $userB] = $this->insertFixture_UpdateResourceMeta();
+        [$r1, $userA, $userB] = $this->insertFixture_UpdateResourceMeta(); // phpcs:ignore
         $this->logInAs($userA);
 
         $data = [
@@ -195,7 +195,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Error_InsufficientPermission(): void
     {
-        [$r1, $userA, $userB] = $this->insertFixture_InsufficientPermission();
+        [$r1, $userA, $userB] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
         $data = [
             'name' => ['Updated name'],
         ];
@@ -234,7 +234,7 @@ class ResourcesUpdateControllerTest extends AppIntegrationTestCase
 
     public function testUpdateResourcesController_Error_NoAccessToResource(): void
     {
-        [$r1, $userA, $userB] = $this->insertFixture_InsufficientPermission();
+        [$r1, $userA, $userB] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
         $this->logInAsUser();
         $this->putJson("/resources/$r1->id.json");
         $this->assertError(404, 'The resource does not exist.');

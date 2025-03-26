@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Folders\Notification\Email;
 
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -44,7 +45,7 @@ class CreateFolderEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * Email redactor constructor.

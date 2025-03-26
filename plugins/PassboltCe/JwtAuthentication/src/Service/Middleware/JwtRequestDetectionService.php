@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\Middleware;
 
 use App\Utility\Application\FeaturePluginAwareTrait;
+use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwksGetService;
@@ -32,7 +33,7 @@ class JwtRequestDetectionService
     /**
      * @var \Cake\Http\ServerRequest
      */
-    protected $request;
+    protected ServerRequest $request;
 
     /**
      * JwtRequestDetectionService constructor.

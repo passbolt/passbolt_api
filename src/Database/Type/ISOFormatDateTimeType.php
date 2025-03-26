@@ -16,10 +16,11 @@ declare(strict_types=1);
  */
 namespace App\Database\Type;
 
-use Cake\Database\DriverInterface;
+use Cake\Database\Driver;
 use Cake\Database\Type\DateTimeFractionalType;
 use Cake\Database\Type\DateTimeType;
 use Cake\Database\TypeFactory;
+use DateTimeInterface;
 
 /**
  * Formats dates in ISO format.
@@ -32,14 +33,14 @@ class ISOFormatDateTimeType extends DateTimeType
     /**
      * @inheritDoc
      */
-    public function manyToPHP(array $values, array $fields, DriverInterface $driver): array
+    public function manyToPHP(array $values, array $fields, Driver $driver): array
     {
         foreach ($fields as $field) {
             if (!isset($values[$field])) {
                 continue;
             }
 
-            $values[$field] = date(\DateTimeInterface::ATOM, strtotime($values[$field]));
+            $values[$field] = date(DateTimeInterface::ATOM, strtotime($values[$field]));
         }
 
         return $values;

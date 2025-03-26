@@ -34,7 +34,7 @@ class MfaSortWithLastUsedProviderFirstService
      *
      * @var \Passbolt\Log\Model\Entity\ActionLog|false|null
      */
-    protected $lastProviderIfFoundOrFalse = null;
+    protected ActionLog|false|null $lastProviderIfFoundOrFalse = null;
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC
@@ -119,7 +119,7 @@ class MfaSortWithLastUsedProviderFirstService
                 'ActionLogs.action_id IN' => $actionIds,
                 'ActionLogs.status' => 1,
             ])
-            ->orderDesc('ActionLogs.created')
+            ->orderByDesc('ActionLogs.created')
             ->first();
 
         if (is_null($lastMfaRequestAction)) {

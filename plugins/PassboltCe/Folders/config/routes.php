@@ -21,7 +21,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuilder $routes): void {
     $routes->setExtensions('json');
 
     /**  @uses \Passbolt\Folders\Controller\Folders\FoldersViewController::view() */
@@ -51,7 +51,7 @@ $routes->plugin('Passbolt/Folders', ['path' => '/folders'], function (RouteBuild
 /**
  * Move prefixed routes
  */
-$routes->plugin('Passbolt/Folders', ['path' => '/move'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Folders', ['path' => '/move'], function (RouteBuilder $routes): void {
     $routes->setExtensions('json');
 
     /** @uses \Passbolt\Folders\Controller\FoldersRelations\FoldersRelationsMoveController::index() */
@@ -65,7 +65,7 @@ $routes->plugin('Passbolt/Folders', ['path' => '/move'], function (RouteBuilder 
 /**
  * Share prefixed routes
  */
-$routes->plugin('Passbolt/Folders', ['path' => '/share'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Folders', ['path' => '/share'], function (RouteBuilder $routes): void {
     $routes->setExtensions('json');
 
     /** @uses \Passbolt\Folders\Controller\FoldersRelations\FoldersRelationsMoveController::index() */

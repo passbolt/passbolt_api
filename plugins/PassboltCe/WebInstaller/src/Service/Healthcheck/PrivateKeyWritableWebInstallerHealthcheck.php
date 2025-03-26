@@ -62,7 +62,7 @@ class PrivateKeyWritableWebInstallerHealthcheck extends AbstractGpgHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         $privateKeyPath = $this->getPrivateServerKey();
 

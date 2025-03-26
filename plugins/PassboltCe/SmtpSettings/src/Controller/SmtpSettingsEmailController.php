@@ -19,6 +19,7 @@ namespace Passbolt\SmtpSettings\Controller;
 use App\Controller\AppController;
 use App\Error\Exception\FormValidationException;
 use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
+use Throwable;
 
 class SmtpSettingsEmailController extends AppController
 {
@@ -38,7 +39,7 @@ class SmtpSettingsEmailController extends AppController
             $this->success(__('The operation was successful.'), compact('debug'));
         } catch (FormValidationException $e) {
             throw $e;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $debug = $sendTestEmailService->getTrace();
             $this->error($e->getMessage(), compact('debug'), 400);
         }

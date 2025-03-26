@@ -23,6 +23,7 @@ use App\Utility\Application\FeaturePluginAwareTrait;
 use App\Utility\UserAccessControl;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
+use Throwable;
 
 class SmtpSettingsMigrationService
 {
@@ -31,12 +32,12 @@ class SmtpSettingsMigrationService
     /**
      * @var array
      */
-    private $smtpSettings;
+    private array $smtpSettings;
 
     /**
      * @var string
      */
-    private $passboltFileName;
+    private string $passboltFileName;
 
     /**
      * @param string $passboltFileName The passbolt config file, modifiable for unit test purpose.
@@ -67,7 +68,7 @@ class SmtpSettingsMigrationService
         } catch (NoAdminInDbException $e) {
           // Silently do nothing, this is probably due running a fresh installation
             Log::info($e->getMessage() . ' Ignoring the import of the SMTP Settings.');
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->logWarning($e->getMessage());
         }
 

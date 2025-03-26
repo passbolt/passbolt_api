@@ -26,8 +26,10 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use InvalidArgumentException;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoStartDuoAuthenticationService;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
+use Throwable;
 
 class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
 {
@@ -73,7 +75,7 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
     {
         try {
             new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
         $this->assertInstanceOf(ServiceUnavailableException::class, $th);
@@ -88,7 +90,7 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
         $service = new MfaDuoStartDuoAuthenticationService(AuthenticationToken::TYPE_MFA_SETUP, $duoSdkClientMock);
         try {
             $service->start($uac);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
         $this->assertInstanceOf(ServiceUnavailableException::class, $th);
@@ -104,10 +106,10 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
 
         try {
             $service->start($uac);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
-        $this->assertInstanceOf(\InvalidArgumentException::class, $th);
+        $this->assertInstanceOf(InvalidArgumentException::class, $th);
         $this->assertTextContains('The authentication token type should be one of the following:', $th->getMessage());
     }
 
@@ -120,7 +122,7 @@ class MfaDuoStartDuoAuthenticationServiceTest extends TestCase
 
         try {
             $service->start($uac);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
         $this->assertInstanceOf(InternalErrorException::class, $th);

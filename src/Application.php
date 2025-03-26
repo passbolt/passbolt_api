@@ -22,12 +22,12 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Command\PassboltBuildCommandsListener;
 use App\Command\SqlExportCommand;
 use App\Middleware\ApiVersionMiddleware;
+use App\Middleware\AssertFullBaseUrlMiddleware;
 use App\Middleware\ContainerInjectorMiddleware;
 use App\Middleware\ContentSecurityPolicyMiddleware;
 use App\Middleware\CsrfProtectionMiddleware;
 use App\Middleware\GpgAuthHeadersMiddleware;
 use App\Middleware\HttpProxyMiddleware;
-use App\Middleware\PreventHostHeaderFallbackMiddleware;
 use App\Middleware\SessionAuthPreventDeletedOrDisabledUsersMiddleware;
 use App\Middleware\SessionPreventExtensionMiddleware;
 use App\Middleware\SslForceMiddleware;
@@ -63,7 +63,7 @@ use Cake\Http\ServerRequest;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
 use Cake\Routing\Router;
-use EmailQueue\Shell\SenderShell;
+use EmailQueue\Command\SenderCommand;
 use Passbolt\EmailDigest\EmailDigestPlugin;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDefaultDryRunService;
 use Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface;
@@ -76,7 +76,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
     /**
      * @var \App\BaseSolutionBootstrapper|null
      */
-    private $solutionBootstrapper;
+    private ?BaseSolutionBootstrapper $solutionBootstrapper = null;
 
     /**
      * Setup the PSR-7 middleware passbolt application will use.
@@ -107,7 +107,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
             ->prepend(new ContainerInjectorMiddleware($this->getContainer()))
             ->add(new ContentSecurityPolicyMiddleware())
             ->add(new ErrorHandlerMiddleware(Configure::read('Error')))
-            ->add(new PreventHostHeaderFallbackMiddleware())
+            ->add(new AssertFullBaseUrlMiddleware())
             ->add(SslForceMiddleware::class)
             ->add(new AssetMiddleware(['cacheTime' => Configure::read('Asset.cacheTime')]))
             ->add(new RoutingMiddleware($this))
@@ -345,7 +345,7 @@ class Application extends BaseApplication implements AuthenticationServiceProvid
 
         // If the email digest plugin is disabled, fallback on the sender shell
         if (!$this->isFeaturePluginEnabled(EmailDigestPlugin::class)) {
-            $commands->add('passbolt email_digest send', SenderShell::class);
+            $commands->add('passbolt email_digest send', SenderCommand::class);
         }
 
         // Alias sql_export to mysql_export, this is to keep BC
