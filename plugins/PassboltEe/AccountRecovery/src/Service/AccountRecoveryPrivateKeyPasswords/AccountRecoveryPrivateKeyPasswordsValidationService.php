@@ -22,6 +22,7 @@ use App\Service\OpenPGP\MessageValidationService;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
 
 /**
  * Class AccountRecoveryPrivateKeyPasswordsValidationService
@@ -35,14 +36,13 @@ class AccountRecoveryPrivateKeyPasswordsValidationService
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable
      */
-    protected $AccountRecoveryPrivateKeyPasswords;
+    protected AccountRecoveryPrivateKeyPasswordsTable $AccountRecoveryPrivateKeyPasswords;
 
     /**
      * AccountRecoveryPrivateKeyPasswordsValidationService constructor
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeyPasswords = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
     }
@@ -52,7 +52,7 @@ class AccountRecoveryPrivateKeyPasswordsValidationService
      * @param array $passwordsData user provided data
      * @param string $armoredKey key to check the message against
      * @param string $validationRules ruleset default to "default"
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] array of AccountRecoveryPrivateKeyPasswords
+     * @return array<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword> array of AccountRecoveryPrivateKeyPasswords
      */
     public function buildPasswordEntitiesFromDataOrFail(
         UserAccessControl $uac,

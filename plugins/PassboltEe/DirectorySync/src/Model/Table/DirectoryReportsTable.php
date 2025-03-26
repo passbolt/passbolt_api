@@ -91,7 +91,7 @@ class DirectoryReportsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add(
             function ($entity, $options) {
@@ -120,7 +120,7 @@ class DirectoryReportsTable extends Table
      * @param string $parentId UUID parent report id
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryReport|false
      */
-    public function create(?string $parentId = null)
+    public function create(?string $parentId = null): DirectoryReport|false
     {
         $entity = $this->newEntity([
             'parent_id' => $parentId,

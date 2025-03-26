@@ -23,7 +23,7 @@ use App\Service\Resources\ResourcesUpdateService;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
 use Passbolt\PasswordExpiryPolicies\Test\Factory\PasswordExpiryPoliciesSettingFactory;
 use Passbolt\ResourceTypes\Test\Factory\ResourceTypeFactory;
@@ -93,7 +93,7 @@ class PasswordExpiryPoliciesResourcesUpdateServiceTest extends AppTestCase
         $newName = 'Nouveau nom de resource privée';
         $payload = [
             'name' => $newName,
-            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => FrozenTime::tomorrow()->toAtomString(),
+            PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => DateTime::tomorrow()->toAtomString(),
         ];
         $dto = MetadataResourceDto::fromArray($payload);
         $this->service->update($this->makeUac($owner), $resource->id, $dto);

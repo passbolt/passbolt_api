@@ -26,7 +26,7 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Dto\MetadataKeyUpdateDto;
 use Passbolt\Metadata\Service\MetadataKey\MetadataKeyUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
@@ -49,7 +49,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         return [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => FrozenTime::yesterday(),
+            'expired' => DateTime::yesterday(),
         ];
     }
 
@@ -65,7 +65,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
 
         $updatedKey = MetadataKeyFactory::get($key->get('id'));
         $this->assertEquals($data['armored_key'], $updatedKey->get('armored_key'));
-        $this->assertInstanceOf(FrozenTime::class, $updatedKey->get('expired'));
+        $this->assertInstanceOf(DateTime::class, $updatedKey->get('expired'));
     }
 
     public function testMetadataKeyUpdateService_Error_NotAdmin(): void
@@ -120,7 +120,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         $key = MetadataKeyFactory::make()->patchData([
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => FrozenTime::yesterday(),
+            'expired' => DateTime::yesterday(),
         ])->persist();
         $user = UserFactory::make()->admin()->persist();
         $data = $this->getDefaultRequestData();
@@ -137,8 +137,8 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         $key = MetadataKeyFactory::make()->patchData([
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => FrozenTime::yesterday(),
-            'deleted' => FrozenTime::yesterday(),
+            'expired' => DateTime::yesterday(),
+            'deleted' => DateTime::yesterday(),
         ])->persist();
         $user = UserFactory::make()->admin()->persist();
         $data = $this->getDefaultRequestData();
@@ -157,7 +157,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         $data = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => FrozenTime::yesterday(),
+            'expired' => DateTime::yesterday(),
         ];
         $dto = MetadataKeyUpdateDto::fromArray($data);
         $uac = new UserAccessControl(Role::ADMIN, $user->get('id'));
@@ -175,7 +175,7 @@ class MetadataKeyUpdateServiceTest extends AppTestCaseV5
         $data = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAF',
-            'expired' => FrozenTime::yesterday(),
+            'expired' => DateTime::yesterday(),
         ];
 
         $key = MetadataKeyFactory::make()->patchData($fixture)->persist();

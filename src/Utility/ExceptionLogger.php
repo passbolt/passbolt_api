@@ -16,6 +16,9 @@ declare(strict_types=1);
  */
 namespace App\Utility;
 
+use Cake\Log\Log;
+use Throwable;
+
 class ExceptionLogger
 {
     /**
@@ -24,9 +27,9 @@ class ExceptionLogger
      * @param \Throwable $th Exception (chain) to log
      * @return void
      */
-    public static function emergency(\Throwable $th): void
+    public static function emergency(Throwable $th): void
     {
-        \Cake\Log\Log::emergency(self::getLogMessage($th));
+        Log::emergency(self::getLogMessage($th));
     }
 
     /**
@@ -35,9 +38,9 @@ class ExceptionLogger
      * @param \Throwable $th Exception (chain) to log
      * @return void
      */
-    public static function alert(\Throwable $th): void
+    public static function alert(Throwable $th): void
     {
-        \Cake\Log\Log::alert(self::getLogMessage($th));
+        Log::alert(self::getLogMessage($th));
     }
 
     /**
@@ -46,9 +49,9 @@ class ExceptionLogger
      * @param \Throwable $th Exception (chain) to log
      * @return void
      */
-    public static function critical(\Throwable $th): void
+    public static function critical(Throwable $th): void
     {
-        \Cake\Log\Log::critical(self::getLogMessage($th));
+        Log::critical(self::getLogMessage($th));
     }
 
     /**
@@ -57,9 +60,9 @@ class ExceptionLogger
      * @param \Throwable $th Exception (chain) to log
      * @return void
      */
-    public static function error(\Throwable $th): void
+    public static function error(Throwable $th): void
     {
-        \Cake\Log\Log::error(self::getLogMessage($th));
+        Log::error(self::getLogMessage($th));
     }
 
     /**
@@ -68,9 +71,9 @@ class ExceptionLogger
      * @param \Throwable $th Exception (chain) to log
      * @return void
      */
-    public static function warning(\Throwable $th): void
+    public static function warning(Throwable $th): void
     {
-        \Cake\Log\Log::warning(self::getLogMessage($th));
+        Log::warning(self::getLogMessage($th));
     }
 
     /**
@@ -79,9 +82,9 @@ class ExceptionLogger
      * @param \Throwable $th Exception (chain) to log
      * @return void
      */
-    public static function notice(\Throwable $th): void
+    public static function notice(Throwable $th): void
     {
-        \Cake\Log\Log::notice(self::getLogMessage($th));
+        Log::notice(self::getLogMessage($th));
     }
 
     /**
@@ -90,9 +93,9 @@ class ExceptionLogger
      * @param \Throwable $th Exception (chain) to log
      * @return void
      */
-    public static function debug(\Throwable $th): void
+    public static function debug(Throwable $th): void
     {
-        \Cake\Log\Log::debug(self::getLogMessage($th));
+        Log::debug(self::getLogMessage($th));
     }
 
     /**
@@ -101,9 +104,9 @@ class ExceptionLogger
      * @param \Throwable $th Exception (chain) to log
      * @return void
      */
-    public static function info(\Throwable $th): void
+    public static function info(Throwable $th): void
     {
-        \Cake\Log\Log::info(self::getLogMessage($th));
+        Log::info(self::getLogMessage($th));
     }
 
     /**
@@ -111,7 +114,7 @@ class ExceptionLogger
      * @param int $index Exception index in the chain/backtrace of exceptions to log
      * @return string The exception message to insert in the logs
      */
-    private static function getLogMessage(\Throwable $th, int $index = 0): string
+    private static function getLogMessage(Throwable $th, int $index = 0): string
     {
         $errorMessage = '';
         if ($index === 0) {

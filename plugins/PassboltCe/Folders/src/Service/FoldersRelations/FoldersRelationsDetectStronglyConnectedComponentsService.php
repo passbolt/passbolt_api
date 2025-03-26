@@ -19,7 +19,9 @@ namespace Passbolt\Folders\Service\FoldersRelations;
 
 use Cake\Database\Expression\TupleComparison;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Utility\Tarjan;
 
 class FoldersRelationsDetectStronglyConnectedComponentsService
@@ -27,7 +29,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * Instantiate the service.
@@ -367,7 +369,7 @@ class FoldersRelationsDetectStronglyConnectedComponentsService
             }
         }
 
-        throw new \Exception('Unable to find a folder relation.');
+        throw new Exception('Unable to find a folder relation.');
     }
 
     /**

@@ -152,7 +152,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
     ): AccountRecoveryOrganizationPolicy {
         $oldPolicy = $this->getCurrentPolicyEntity();
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
-            function () use (&$newPolicy, $oldKey, $newKey, $passwords, $uac) {
+            function () use (&$newPolicy, $oldKey, $newKey, $passwords, $uac): void {
                 $saveOptions = ['atomic' => false];
 
                 $newPolicy = $this->AccountRecoveryOrganizationPolicies->replace($uac, $newPolicy);
@@ -213,7 +213,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
         $oldKey = $this->buildRevokedKeyEntityFromDataOrFail($uac);
 
         $this->AccountRecoveryOrganizationPolicies->getConnection()->transactional(
-            function () use ($newPolicy, $oldKey, $uac) {
+            function () use ($newPolicy, $oldKey, $uac): void {
                 // Create new policy and delete old one
                 $this->AccountRecoveryOrganizationPolicies->replace($uac, $newPolicy);
 
@@ -265,7 +265,7 @@ class AccountRecoveryOrganizationPolicySetService extends AbstractAccountRecover
      * @CustomValidationException if some of the private key passwords are missing
      * @return void
      */
-    private function assertPasswordsCount()
+    private function assertPasswordsCount(): void
     {
         $passwordsData = $this->getData('account_recovery_private_key_passwords');
 

@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use App\Model\Entity\Comment;
 use App\Model\Rule\HasResourceAccessRule;
 use App\Model\Rule\HasValidParentRule;
 use App\Model\Rule\IsNotSoftDeletedRule;
@@ -25,12 +26,13 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 
 /**
  * Comments Model
@@ -245,22 +247,22 @@ class CommentsTable extends Table
      * @param string $foreignKey The foreign model uuid to find comments for
      * @param array|null $options options
      * @throws \InvalidArgumentException if the groupId parameter is not a valid uuid.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
     public function findViewForeignComments(
         string $userId,
         string $foreignModelName,
         string $foreignKey,
         ?array $options = []
-    ): Query {
+    ): SelectQuery {
         // Check model sanity.
         if (!in_array($foreignModelName, self::ALLOWED_FOREIGN_MODELS)) {
-            throw new \InvalidArgumentException('The parameter foreignModel provided is not supported');
+            throw new InvalidArgumentException('The parameter foreignModel provided is not supported');
         }
 
         // Check uuid format.
         if (!Validation::uuid($foreignKey)) {
-            throw new \InvalidArgumentException('The parameter groupId should be a valid UUID.');
+            throw new InvalidArgumentException('The parameter groupId should be a valid UUID.');
         }
 
         // Retrieve the resource.
@@ -277,7 +279,7 @@ class CommentsTable extends Table
             'Comments.foreign_model' => $foreignModelName,
             'Comments.foreign_key' => $foreignKey,
         ]);
-        $query->order([
+        $query->orderBy([
             'Comments.modified' => 'DESC',
         ]);
 
@@ -306,7 +308,7 @@ class CommentsTable extends Table
      *   Comments.user_id should be provided so that the check can be done.
      * @return bool
      */
-    public function ruleIsOwner(\App\Model\Entity\Comment $entity, ?array $options = []): bool
+    public function ruleIsOwner(Comment $entity, ?array $options = []): bool
     {
         if (!isset($options['Comments.user_id'])) {
             throw new BadRequestException('The parameter Comments.user_id should be provided');

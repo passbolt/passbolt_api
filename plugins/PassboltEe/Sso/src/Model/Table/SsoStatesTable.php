@@ -21,7 +21,7 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Validation\User\IsValidIpValidationRule;
 use App\Model\Validation\User\IsValidUserAgentValidationRule;
 use Cake\Database\Expression\QueryExpression;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -235,10 +235,10 @@ class SsoStatesTable extends Table
      * @param array $options Options.
      * @return \Cake\ORM\Query
      */
-    public function findActive(Query $query, array $options)
+    public function findActive(Query $query, array $options): Query
     {
         return $query->where(function (QueryExpression $exp) {
-            return $exp->gt('deleted', FrozenTime::now());
+            return $exp->gt('deleted', DateTime::now());
         });
     }
 }

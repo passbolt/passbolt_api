@@ -85,7 +85,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesEmailRedactor implements 
 
     /**
      * @param \App\Model\Entity\User $recipient the recipient to send email to.
-     * @param null|int $expiryNotificationInDays send notification N days prior to expiry
+     * @param int|null $expiryNotificationInDays send notification N days prior to expiry
      * @param bool $notifyIfExpiresToday email notification setting
      * @return \App\Notification\Email\Email
      */

@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Metadata\Test\TestCase\Form;
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\Metadata\Form\MetadataKeyCreateForm;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -93,8 +93,8 @@ class MetadataKeyCreateFormTest extends TestCase
     public function testMetadataKeyForm_Error_ExpiredDeleteNotEmpty(): void
     {
         $data = [
-            'expired' => FrozenTime::yesterday()->format('Y-m-d H:i:s'),
-            'deleted' => FrozenTime::yesterday()->format('Y-m-d H:i:s'),
+            'expired' => DateTime::yesterday()->format('Y-m-d H:i:s'),
+            'deleted' => DateTime::yesterday()->format('Y-m-d H:i:s'),
         ];
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();

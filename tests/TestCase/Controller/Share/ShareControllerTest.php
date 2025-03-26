@@ -28,7 +28,7 @@ use Cake\Utility\Hash;
 
 class ShareControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Gpgkeys', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups',
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions', 'app.Base/Secrets', 'app.Base/Favorites',
     ];
@@ -121,7 +121,7 @@ hcciUFw5
         $this->assertSuccess();
 
         // Load the resource.
-        $resource = ResourceFactory::get($resourceId, ['contain' => ['Permissions', 'Secrets']]);
+        $resource = ResourceFactory::get($resourceId, contain: ['Permissions', 'Secrets']);
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');

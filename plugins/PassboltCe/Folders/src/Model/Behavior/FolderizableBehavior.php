@@ -27,8 +27,9 @@ use Cake\Datasource\EntityInterface;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
 use Cake\ORM\Behavior;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use UnexpectedValueException;
 
 /**
@@ -67,7 +68,7 @@ class FolderizableBehavior extends Behavior
      *
      * @var array<string, mixed>
      */
-    protected $_defaultConfig = [
+    protected array $_defaultConfig = [
         'implementedFinders' => [
             /** @uses findFolderParentId() */
             self::FINDER_NAME => 'findFolderParentId', // Make the finder available with the name "folder_parent"
@@ -86,7 +87,7 @@ class FolderizableBehavior extends Behavior
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * List of the events for which the behavior must be triggered.
@@ -114,12 +115,12 @@ class FolderizableBehavior extends Behavior
     /**
      * Finder method
      *
-     * @param \Cake\ORM\Query $query The target query.
+     * @param \Cake\ORM\Query\SelectQuery $query The target query.
      * @param array $options Options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @see $_defaultConfig
      */
-    public function findFolderParentId(Query $query, array $options): Query
+    public function findFolderParentId(SelectQuery $query, array $options): SelectQuery
     {
         return $this->formatResults($query, $options['user_id']);
     }
@@ -127,11 +128,11 @@ class FolderizableBehavior extends Behavior
     /**
      * Format a query result and associate to each item its folder parent id and its personal status.
      *
-     * @param \Cake\ORM\Query $query The target query.
+     * @param \Cake\ORM\Query\SelectQuery $query The target query.
      * @param string $userId The user id for whom the request has been executed.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function formatResults(Query $query, string $userId): Query
+    public function formatResults(SelectQuery $query, string $userId): SelectQuery
     {
         $this->table()->hasOne('FolderParentId')
             ->setClassName('Passbolt/Folders.FoldersRelations')
@@ -140,7 +141,7 @@ class FolderizableBehavior extends Behavior
                 'FolderParentId.user_id' => $userId,
                 $query->expr()->isNotNull('FolderParentId.folder_parent_id'),
             ]);
-        $query->contain('FolderParentId', function (Query $q) {
+        $query->contain('FolderParentId', function (SelectQuery $q) {
             return $q->select([
                 'folder_parent_id' => 'FolderParentId.folder_parent_id',
             ]);
@@ -199,12 +200,14 @@ class FolderizableBehavior extends Behavior
     /**
      * Add the folder_parent_id property to an entity
      *
-     * @param array|\Cake\Datasource\EntityInterface $entity The target entity
+     * @param \Cake\Datasource\EntityInterface|array $entity The target entity
      * @param string|null $folderParentId The folder parent id
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      */
-    private function addFolderParentIdProperty($entity, ?string $folderParentId = null)
-    {
+    private function addFolderParentIdProperty(
+        array|EntityInterface $entity,
+        ?string $folderParentId = null
+    ): array|EntityInterface {
         if ($entity instanceof EntityInterface) {
             $entity->setVirtual([self::FOLDER_PARENT_ID_PROPERTY], true);
             $entity->set(self::FOLDER_PARENT_ID_PROPERTY, $folderParentId);
@@ -218,11 +221,11 @@ class FolderizableBehavior extends Behavior
     /**
      * Add the personal status property to an entity
      *
-     * @param array|\Cake\Datasource\EntityInterface $entity The target entity
+     * @param \Cake\Datasource\EntityInterface|array $entity The target entity
      * @param bool $isPersonal The status
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      */
-    private function addPersonalStatusProperty($entity, bool $isPersonal)
+    private function addPersonalStatusProperty(array|EntityInterface $entity, bool $isPersonal): array|EntityInterface
     {
         if ($entity instanceof EntityInterface) {
             $entity->setVirtual([self::PERSONAL_PROPERTY], true);
@@ -243,7 +246,7 @@ class FolderizableBehavior extends Behavior
      * @return void
      * @see implementedEvents()
      */
-    public function handleEvent(Event $event, $data, $options)
+    public function handleEvent(Event $event, mixed $data, mixed $options): void
     {
         switch ($event->getName()) {
             case TableFindIndexBefore::EVENT_NAME:
@@ -261,11 +264,11 @@ class FolderizableBehavior extends Behavior
      * @param \Cake\Datasource\EntityInterface $entity The target entity
      * @return void
      */
-    private function handleAfterSave(EntityInterface $entity)
+    private function handleAfterSave(EntityInterface $entity): void
     {
         $events = $this->_config['events'];
         $new = $entity->isNew() !== false;
-        foreach ($events['Model.afterSave'] as $field => $when) {
+        foreach ($events['Model.afterSave'] as $when) {
             if (!in_array($when, ['always', 'new', 'existing'])) {
                 $msg = 'When should be one of "always", "new" or "existing". The passed value "{0}" is invalid';
                 throw new UnexpectedValueException($msg);

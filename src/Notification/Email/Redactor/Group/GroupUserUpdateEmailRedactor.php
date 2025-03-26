@@ -40,7 +40,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param \App\Model\Table\UsersTable|null $usersTable Users Table
@@ -104,7 +104,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\Group $group Group
      * @return array
      */
-    public function createUpdateMembershipGroupUpdateEmails(array $updatedGroupsUsers, User $modifiedBy, Group $group)
+    public function createUpdateMembershipGroupUpdateEmails(array $updatedGroupsUsers, User $modifiedBy, Group $group): array // phpcs:ignore
     {
         // Retrieve the users to send an email to.
         $usersIds = Hash::extract($updatedGroupsUsers, '{n}.user_id');
@@ -119,6 +119,7 @@ class GroupUserUpdateEmailRedactor implements SubscribedEmailRedactorInterface
 
         $whoIsAdmin = Hash::combine($updatedGroupsUsers, '{n}.user_id', '{n}.is_admin');
 
+        /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             $isAdmin = isset($whoIsAdmin[$user->id]) && $whoIsAdmin[$user->id];
             $emails[] = $this->createUpdateMembershipGroupUpdateEmail($user, $isAdmin, $modifiedBy, $group);

@@ -25,10 +25,12 @@ use App\Model\Traits\Cleanup\TableCleanupTrait;
 use App\Model\Traits\Cleanup\UsersCleanupTrait;
 use ArrayObject;
 use Cake\Event\Event;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 
 /**
  * GroupsUsers Model
@@ -49,11 +51,11 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\GroupsUser>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\GroupsUser>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\GroupsUser>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByGroupId(string $groupId)
- * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
- * @method \Cake\ORM\Query findByGroupIdAndUserId(string $groupId, string $userId)
- * @method \Cake\ORM\Query findByGroupIdAndIsAdmin(string $groupId, bool $isAdmin)
+ * @method \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method \Cake\ORM\Query\SelectQuery findByGroupId(string $groupId)
+ * @method \Cake\ORM\Query\SelectQuery findByIdAndGroupId(string $id, string $groupId)
+ * @method \Cake\ORM\Query\SelectQuery findByGroupIdAndUserId(string $groupId, string $userId)
+ * @method \Cake\ORM\Query\SelectQuery findByGroupIdAndIsAdmin(string $groupId, bool $isAdmin)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class GroupsUsersTable extends Table
@@ -118,7 +120,7 @@ class GroupsUsersTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationSaveGroup(Validator $validator)
+    public function validationSaveGroup(Validator $validator): Validator
     {
         $validator = $this->validationDefault($validator);
 
@@ -173,12 +175,12 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId)
+    public function findNonEmptyGroupsWhereUserIsSoleManager(string $userId): SelectQuery
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the non empty groups where the user given as parameter is the sole manager
@@ -204,12 +206,12 @@ class GroupsUsersTable extends Table
      * Useful to know if a new group manager need to be appointed when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findGroupsWhereUserIsSoleManager(string $userId)
+    public function findGroupsWhereUserIsSoleManager(string $userId): SelectQuery
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the sole manager
@@ -257,12 +259,12 @@ class GroupsUsersTable extends Table
      * The user should be the manager at the point but we might as well cast a larger net
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findGroupsWhereUserOnlyMember(string $userId)
+    public function findGroupsWhereUserOnlyMember(string $userId): SelectQuery
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the only member
@@ -306,12 +308,12 @@ class GroupsUsersTable extends Table
      * Useful to know which group to delete when deleting a user
      *
      * @param string $userId user uuid
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findGroupsWhereUserNotOnlyMember(string $userId)
+    public function findGroupsWhereUserNotOnlyMember(string $userId): SelectQuery
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
         // R = All the groups where the user given as parameter is the only member
@@ -349,7 +351,7 @@ class GroupsUsersTable extends Table
      * @param string $groupId uuid
      * @return bool true if user is marked as admin
      */
-    public function isManager(string $userId, string $groupId)
+    public function isManager(string $userId, string $groupId): bool
     {
         if (!Validation::uuid($userId) || !Validation::uuid($groupId)) {
             return false;
@@ -397,7 +399,7 @@ class GroupsUsersTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         if (!isset($data['is_admin'])) {
             $data['is_admin'] = false;
@@ -410,7 +412,7 @@ class GroupsUsersTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupSoftDeletedGroups($dryRun = false)
+    public function cleanupSoftDeletedGroups(bool $dryRun = false): int
     {
         return $this->cleanupSoftDeleted('Groups', $dryRun);
     }
@@ -421,7 +423,7 @@ class GroupsUsersTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupHardDeletedGroups($dryRun = false)
+    public function cleanupHardDeletedGroups(bool $dryRun = false): int
     {
         return $this->cleanupHardDeleted('Groups', $dryRun);
     }

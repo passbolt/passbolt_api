@@ -19,7 +19,9 @@ namespace Passbolt\Log\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use Cake\Cache\Cache;
+use Cake\Datasource\ResultSetInterface;
 use Cake\Http\Exception\InternalErrorException;
+use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
@@ -93,7 +95,7 @@ class ActionsTable extends Table
      * @param array $data entity data
      * @return \Cake\ORM\Entity Action
      */
-    public function buildEntity(array $data)
+    public function buildEntity(array $data): Entity
     {
         return $this->newEntity($data, [
             'accessibleFields' => [
@@ -125,6 +127,7 @@ class ActionsTable extends Table
             throw new ValidationException(__('Could not validate action data.', true), $action, $this);
         }
 
+        /** @var \Passbolt\Log\Model\Entity\Action $actionSaved */
         $actionSaved = $this->save($action);
 
         // Check for validation errors.
@@ -145,7 +148,7 @@ class ActionsTable extends Table
      *
      * @return \Cake\Datasource\ResultSetInterface
      */
-    public function getCachedActions()
+    public function getCachedActions(): ResultSetInterface
     {
         $actions = $this->find()
                     ->cache(self::CACHE_KEY)
@@ -159,7 +162,7 @@ class ActionsTable extends Table
      *
      * @return void
      */
-    public function clearCache()
+    public function clearCache(): void
     {
         Cache::delete(self::CACHE_KEY);
     }
@@ -172,7 +175,7 @@ class ActionsTable extends Table
      * @param string $name name of the action
      * @return \Cake\ORM\Entity $action the action
      */
-    public function findOrCreateAction(string $id, string $name)
+    public function findOrCreateAction(string $id, string $name): Entity
     {
         $actions = $this->getCachedActions()->toArray();
         $actions = Hash::combine($actions, '{n}.name', '{n}');

@@ -193,7 +193,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(EventInterface $event, ArrayObject $data, ArrayObject $options): void
     {
         if (isset($data['recipient_fingerprint']) && is_string($data['recipient_fingerprint'])) {
             $f = strtoupper(str_replace(' ', '', $data['recipient_fingerprint']));
@@ -206,7 +206,7 @@ class AccountRecoveryPrivateKeyPasswordsTable extends Table
      * @param array $passwords user provided data
      * @param string $validationRules ruleset
      * @throws \App\Error\Exception\CustomValidationException if data doesn't validate
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] array of entities
+     * @return array<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword> array of entities
      */
     public function buildAndValidateEntities(
         UserAccessControl $uac,

@@ -21,7 +21,7 @@ use App\Model\Entity\Permission;
 use App\Model\Table\AvatarsTable;
 use Cake\Console\Exception\StopException;
 use Cake\Event\EventDispatcherTrait;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
@@ -90,7 +90,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
     /**
      * Query on UsersTable to retrieve all owners
      *
-     * @param null|int $expiryNotificationInDays send notification N days prior to expiry
+     * @param int|null $expiryNotificationInDays send notification N days prior to expiry
      * @param bool $notifyIfExpiresToday email notification setting
      * @return \Cake\ORM\Query
      */
@@ -108,7 +108,7 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
         $usersToNotify = $UsersTable
             ->find('notDisabled')
             ->find('activeNotDeleted')
-            ->order([], true); // Remove any order as it is not relevant here and breaks in MySQL
+            ->orderBy([], true); // Remove any order as it is not relevant here and breaks in MySQL
 
         return $UsersTable->filterQueryByResourcesAccess($usersToNotify, $expiringResourceIds, [Permission::OWNER]);
     }
@@ -126,8 +126,8 @@ class PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService
     ): Query {
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $expiredResources = $ResourcesTable->find();
-        $today = FrozenTime::today();
-        $tomorrow = FrozenTime::tomorrow();
+        $today = DateTime::today();
+        $tomorrow = DateTime::tomorrow();
         $aboutToExpireCondition = [
             'expired >=' => $today->addDays($expiresInDays ?? 0),
             'expired <' => $tomorrow->addDays($expiresInDays ?? 0),

@@ -59,7 +59,7 @@ class MfaRateLimiterService
                 'status' => 1,
                 'action_id' => $actionId,
             ])
-            ->orderDesc('created')
+            ->orderByDesc('created')
             ->limit(1);
 
         /**

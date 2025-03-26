@@ -32,7 +32,7 @@ use Faker\Generator;
  */
 class RoleFactory extends CakephpBaseFactory
 {
-    protected $uniqueProperties = [
+    protected array $uniqueProperties = [
         'name',
     ];
 

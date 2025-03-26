@@ -23,7 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 
@@ -67,7 +67,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             ],
         ];
 
-        foreach ($success as $case => $data) {
+        foreach ($success as $data) {
             $this->postJson('/users.json', $data);
             $this->assertResponseSuccess();
 
@@ -108,7 +108,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
             'id' => $userId,
             'active' => 1,
             'deleted' => 1,
-            'disabled' => FrozenTime::now(),
+            'disabled' => DateTime::now(),
             'created' => $date,
             'modified' => $date,
             'username' => 'aurore@passbolt.com',
@@ -128,7 +128,7 @@ class UsersAddControllerTest extends AppIntegrationTestCase
         $this->assertFalse($user->active);
         $this->assertFalse($user->deleted);
         $this->assertEmpty($user->disabled);
-        $this->assertTrue($user->created->greaterThan(FrozenTime::parseDateTime($date, 'Y-M-d h:m:s')));
+        $this->assertTrue($user->created->greaterThan(DateTime::parseDateTime($date, 'Y-M-d h:m:s')));
     }
 
     public function testUsersAddController_Success_EmailSent(): void

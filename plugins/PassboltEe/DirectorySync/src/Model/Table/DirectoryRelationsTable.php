@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Passbolt ~ Open source password manager for teams
- * Copyright (c) Passbolt SARL (https://www.passbolt.com)
+ * Copyright (c) Passbolt SA (https://www.passbolt.com)
  *
  * Licensed under GNU Affero General Public License version 3 of the or any later version.
  * For full copyright and license information, please see the LICENSE.txt
@@ -18,10 +18,12 @@ namespace Passbolt\DirectorySync\Model\Table;
 
 use App\Model\Entity\GroupsUser;
 use App\Model\Traits\Cleanup\TableCleanupTrait;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Exception;
 use Passbolt\DirectorySync\Model\Entity\DirectoryRelation;
 use Passbolt\DirectorySync\Utility\Alias;
 
@@ -71,13 +73,13 @@ class DirectoryRelationsTable extends Table
         ]);
 
         $this->hasOne('UserDirectoryEntry', [
-            'className' => 'DirectoryEntries',
+            'className' => 'Passbolt/DirectorySync.DirectoryEntries',
             'bindingKey' => 'child_key',
             'foreignKey' => 'id',
         ]);
 
         $this->hasOne('GroupDirectoryEntry', [
-            'className' => 'DirectoryEntries',
+            'className' => 'Passbolt/DirectorySync.DirectoryEntries',
             'bindingKey' => 'parent_key',
             'foreignKey' => 'id',
         ]);
@@ -136,10 +138,10 @@ class DirectoryRelationsTable extends Table
      * Create group from user
      *
      * @param \App\Model\Entity\GroupsUser $groupUser groupUser
-     * @return bool|\Cake\Datasource\EntityInterface|false|mixed|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
+     * @return \Cake\Datasource\EntityInterface|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|mixed|bool|false
      * @throws \Exception
      */
-    public function createFromGroupUser(GroupsUser $groupUser)
+    public function createFromGroupUser(GroupsUser $groupUser): mixed
     {
         $DirectoryEntries = TableRegistry::getTableLocator()->get('Passbolt/DirectorySync.DirectoryEntries');
 
@@ -156,7 +158,7 @@ class DirectoryRelationsTable extends Table
             ->first();
 
         if (!$groupEntry || !$userEntry) {
-            throw new \Exception('Relation creation error: Could not retrieve corresponding entries');
+            throw new Exception('Relation creation error: Could not retrieve corresponding entries');
         }
 
         $relation = [
@@ -172,9 +174,9 @@ class DirectoryRelationsTable extends Table
      * Create or update.
      *
      * @param array $data data
-     * @return bool|\Cake\Datasource\EntityInterface|false|mixed|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
+     * @return \Cake\Datasource\EntityInterface|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|mixed|bool|false
      */
-    public function createOrUpdate(array $data)
+    public function createOrUpdate(array $data): mixed
     {
         $r = $this->find()->select(['id'])->where(['id' => $data['id']])->first();
         if (!$r) {
@@ -191,9 +193,9 @@ class DirectoryRelationsTable extends Table
      * Return a directory relation matching the groupUser provided.
      *
      * @param \App\Model\Entity\GroupsUser $groupUser groupUser
-     * @return array|\Cake\Datasource\EntityInterface|null
+     * @return \Cake\Datasource\EntityInterface|array|null
      */
-    public function lookupByGroupUser(GroupsUser $groupUser)
+    public function lookupByGroupUser(GroupsUser $groupUser): array|EntityInterface|null
     {
         return $this->find()
             ->where(['id' => $groupUser->id])

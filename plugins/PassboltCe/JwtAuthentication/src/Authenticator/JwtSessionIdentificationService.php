@@ -25,7 +25,7 @@ class JwtSessionIdentificationService extends AbstractSessionIdentificationServi
     /**
      * @var string|null
      */
-    private $accessToken;
+    private ?string $accessToken = null;
 
     /**
      * On login, one can pass the access token generated as parameter.

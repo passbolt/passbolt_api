@@ -32,7 +32,7 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
 {
     public $ResourcesTags;
-    public $fixtures = [
+    public array $fixtures = [
         'app.Alt0/GroupsUsers',
         'app.Alt0/Permissions',
         'app.Base/Groups',

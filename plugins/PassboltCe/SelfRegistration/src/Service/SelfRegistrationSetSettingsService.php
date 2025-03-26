@@ -30,7 +30,7 @@ class SelfRegistrationSetSettingsService extends SelfRegistrationBaseSettingsSer
     /**
      * @var \App\Utility\UserAccessControl
      */
-    private $uac;
+    private UserAccessControl $uac;
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC

@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Utility;
 
 use App\Error\Exception\CustomValidationException;
+use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -46,12 +47,12 @@ class MfaOrgSettings
     /**
      * @var \App\Model\Table\OrganizationSettingsTable
      */
-    protected $OrganizationSettings;
+    protected OrganizationSettingsTable $OrganizationSettings;
 
     /**
      * @var array|null
      */
-    protected $settings;
+    protected ?array $settings = null;
 
     /**
      * MfaOrgSettings constructor.
@@ -130,7 +131,7 @@ class MfaOrgSettings
     /**
      * Get the list of provider names that are enabled for that organization
      *
-     * @return string[]
+     * @return array<string>
      */
     public function getEnabledProviders(): array
     {

@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Test\TestCase\Command;
 
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use Passbolt\DirectorySync\Test\Factory\DirectoryReportFactory;
 use Passbolt\DirectorySync\Test\Factory\DirectoryReportsItemFactory;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncConsoleIntegrationTestCase;
@@ -35,13 +35,13 @@ class PurgeDirectoryReportsCommandTest extends DirectorySyncConsoleIntegrationTe
 
     public function testPurgeDirectoryReportsCommand_Success(): void
     {
-        $oldDirectoryReport = DirectoryReportFactory::make(['created' => FrozenDate::now()->subYears(3)])->persist();
+        $oldDirectoryReport = DirectoryReportFactory::make(['created' => DateTime::now()->subYears(3)])->persist();
         DirectoryReportsItemFactory::make(3)->setReportId($oldDirectoryReport->get('id'))->persist();
         // Latest reports (After before date)
         $directoryReport = DirectoryReportFactory::make()->persist();
         DirectoryReportsItemFactory::make(2)->setReportId($directoryReport->get('id'))->persist();
 
-        $date = FrozenDate::now()->subYears(1)->format('d-m-Y');
+        $date = DateTime::now()->subYears(1)->format('d-m-Y');
         $this->exec('directory_sync purge_directory_reports --before=' . $date);
 
         $this->assertExitSuccess();
@@ -51,7 +51,7 @@ class PurgeDirectoryReportsCommandTest extends DirectorySyncConsoleIntegrationTe
 
     public function testPurgeDirectoryReportsCommand_Success_NoData(): void
     {
-        $date = FrozenDate::now()->subYears(1)->format('d-m-Y');
+        $date = DateTime::now()->subYears(1)->format('d-m-Y');
         $this->exec('directory_sync purge_directory_reports --before=' . $date);
 
         $this->assertExitSuccess('No reports to purge');
@@ -65,7 +65,7 @@ class PurgeDirectoryReportsCommandTest extends DirectorySyncConsoleIntegrationTe
 
     public function testPurgeDirectoryReportsCommand_Error_InvalidBeforeDate(): void
     {
-        $oldDirectoryReport = DirectoryReportFactory::make(['created' => FrozenDate::now()->subYears(3)])->persist();
+        $oldDirectoryReport = DirectoryReportFactory::make(['created' => DateTime::now()->subYears(3)])->persist();
         DirectoryReportsItemFactory::make(3)->setReportId($oldDirectoryReport->get('id'))->persist();
 
         $this->exec('directory_sync purge_directory_reports --before=foo-bar');

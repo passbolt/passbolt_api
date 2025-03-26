@@ -20,6 +20,7 @@ use App\Model\Validation\EmailValidationRule;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Log\Log;
+use Exception;
 use Firebase\JWT\JWT;
 use League\OAuth2\Client\Token\AccessToken;
 use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
@@ -33,17 +34,17 @@ class BaseIdToken extends AccessToken
     /**
      * @var \Passbolt\Sso\Utility\Provider\AbstractOauth2Provider $provider provider
      */
-    protected $provider;
+    protected AbstractOauth2Provider $provider;
 
     /**
      * @var string
      */
-    protected $idToken;
+    protected string $idToken;
 
     /**
      * @var array
      */
-    protected $idTokenClaims;
+    protected array $idTokenClaims;
 
     /**
      * @param array $options such as access_token, refresh_token and id_token
@@ -74,7 +75,7 @@ class BaseIdToken extends AccessToken
             JWT::$leeway = Configure::read('passbolt.plugins.sso.security.jwtLeeway');
 
             $tokenClaims = (array)JWT::decode($this->idToken, $keys);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             if (Configure::read('passbolt.plugins.sso.debugEnabled')) {
                 Log::error('idToken => ' . json_encode($this->idToken));
             }

@@ -45,7 +45,7 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param \App\Model\Table\UsersTable|null $usersTable Users Table
@@ -106,7 +106,7 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\User $modifiedBy person who did the change
      * @return array
      */
-    public function createGroupUserAddedUpdateEmails(Group $group, array $removedGroupsUsers, User $modifiedBy)
+    public function createGroupUserAddedUpdateEmails(Group $group, array $removedGroupsUsers, User $modifiedBy): array
     {
         $emails = [];
 
@@ -120,6 +120,7 @@ class GroupUserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
             ->find('notDisabled')
             ->where(['Users.id IN' => $usersIds]);
 
+        /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             $emails[] = $this->createGroupUserDeleteEmail($user, $modifiedBy, $group);
         }

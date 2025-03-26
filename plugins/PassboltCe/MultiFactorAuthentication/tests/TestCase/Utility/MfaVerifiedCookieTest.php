@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use Cake\Http\ServerRequest;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Utility\MfaVerifiedCookie;
 
@@ -29,7 +29,7 @@ class MfaVerifiedCookieTest extends MfaIntegrationTestCase
      */
     public function testMfaVerifiedCookieGet()
     {
-        $expiryAt = (new FrozenDate())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS);
+        $expiryAt = (new DateTime())->addDays(MfaVerifiedCookie::MAX_DURATION_IN_DAYS);
         $cookie = MfaVerifiedCookie::get(new ServerRequest(), 'test', $expiryAt);
         $this->assertTrue($cookie->isSecure());
         $this->assertEquals($cookie->getValue(), 'test');

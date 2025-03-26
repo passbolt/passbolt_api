@@ -28,7 +28,7 @@ class DirectoryOrgSettingsTest extends AppTestCase
 {
     use UserAccessControlTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
         'app.Base/Roles',
     ];

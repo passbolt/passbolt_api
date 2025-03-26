@@ -32,7 +32,7 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
 {
     public $Tags;
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users','app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
@@ -46,7 +46,6 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $resourceId = UuidFactory::uuid('resource.id.nope');
         $data = ['tags' => []];
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
-        $response = json_decode($this->_getBodyAsString());
         $this->assertError(404);
     }
 

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Notification\Response;
 
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -42,14 +43,13 @@ class AccountRecoveryResponseCreatedAdminEmailRedactor implements SubscribedEmai
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * AccountRecoveryResponseCreatedAdminEmailRedactor Constructor
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

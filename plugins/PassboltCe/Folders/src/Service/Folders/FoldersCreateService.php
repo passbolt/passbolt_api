@@ -32,6 +32,7 @@ use Cake\Validation\Validation;
 use Exception;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService;
 use Passbolt\Metadata\Model\Dto\MetadataFolderDto;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
@@ -49,22 +50,22 @@ class FoldersCreateService
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    public $foldersTable;
+    public FoldersTable $foldersTable;
 
     /**
      * @var \App\Service\Permissions\PermissionsCreateService
      */
-    private $permissionsCreateService;
+    private PermissionsCreateService $permissionsCreateService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService
      */
-    private $foldersRelationsCreateService;
+    private FoldersRelationsCreateService $foldersRelationsCreateService;
 
     /**
      * @var \App\Service\Permissions\UserHasPermissionService
      */
-    private $userHasPermissionService;
+    private UserHasPermissionService $userHasPermissionService;
 
     /**
      * Instantiate the service.
@@ -91,7 +92,7 @@ class FoldersCreateService
 
         $folder = null;
 
-        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto) {
+        $this->foldersTable->getConnection()->transactional(function () use (&$folder, $uac, $folderDto): void {
             $folder = $this->createFolder($uac, $folderDto);
             $this->createPermission($uac, $folder);
             $this->createFolderRelation($uac, $folder, $folderDto);
@@ -155,7 +156,7 @@ class FoldersCreateService
      * @return void
      * @throws \App\Error\Exception\ValidationException If the provided data does not validate.
      */
-    private function handleValidationErrors(Folder $folder)
+    private function handleValidationErrors(Folder $folder): void
     {
         $errors = $folder->getErrors();
         if (!empty($errors)) {
@@ -170,7 +171,7 @@ class FoldersCreateService
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The folder
      * @return void
      */
-    private function createPermission(UserAccessControl $uac, Folder $folder)
+    private function createPermission(UserAccessControl $uac, Folder $folder): void
     {
         $userId = $uac->getId();
         $permissionData = [
@@ -196,7 +197,7 @@ class FoldersCreateService
      * $data.folder_parent_id $string The folder parent id
      * @return void
      */
-    private function createFolderRelation(UserAccessControl $uac, Folder $folder, MetadataFolderDto $folderDto)
+    private function createFolderRelation(UserAccessControl $uac, Folder $folder, MetadataFolderDto $folderDto): void
     {
         $data = $folderDto->toArray();
         $folderParentId = Hash::get($data, 'folder_parent_id', null);
@@ -230,7 +231,7 @@ class FoldersCreateService
      * @throws \App\Error\Exception\CustomValidationException If the parent folder does not exist.
      * @throws \Cake\Http\Exception\ForbiddenException If the user is not allowed to insert content in the parent folder.
      */
-    private function validateParentFolder(UserAccessControl $uac, Folder $folder, string $folderParentId)
+    private function validateParentFolder(UserAccessControl $uac, Folder $folder, string $folderParentId): void
     {
         if (!Validation::uuid($folderParentId)) {
             $errors = ['uuid' => __('The folder parent id should be a valid UUID.')];

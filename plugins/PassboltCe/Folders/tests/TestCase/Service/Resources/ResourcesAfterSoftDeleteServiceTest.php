@@ -43,7 +43,7 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
     use ResourcesModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GroupsFixture::class,
         PermissionsFixture::class,
         UsersFixture::class,
@@ -64,7 +64,8 @@ class ResourcesAfterSoftDeleteServiceTest extends FoldersTestCase
 
     public function testResourcesAfterCreateServiceSuccess_AfterResourceSoftDeleted()
     {
-        [$resource, $userAId, $userBId] = $this->insertFixture_AfterResourceSoftDeleted();
+        $fixtures = $this->insertFixture_AfterResourceSoftDeleted();
+        $resource = $fixtures[0];
 
         $this->service->afterSoftDelete($resource);
 

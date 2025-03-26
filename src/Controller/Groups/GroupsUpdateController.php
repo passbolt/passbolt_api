@@ -18,6 +18,10 @@ declare(strict_types=1);
 namespace App\Controller\Groups;
 
 use App\Controller\AppController;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\SecretsTable;
 use App\Service\Groups\GroupsUpdateDryRunService;
 use App\Service\Groups\GroupsUpdateService;
 use App\Utility\UserAccessControl;
@@ -35,22 +39,22 @@ class GroupsUpdateController extends AppController
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    protected $Groups;
+    protected GroupsTable $Groups;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    protected $GroupsUsers;
+    protected GroupsUsersTable $GroupsUsers;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    protected $Secrets;
+    protected SecretsTable $Secrets;
 
     /**
      * @inheritDoc

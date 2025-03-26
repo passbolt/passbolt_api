@@ -102,7 +102,7 @@ class ResourcesTagsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['resource_id'], 'Resources'));
         $rules->add($rules->existsIn(['tag_id'], 'Tags'));
@@ -123,7 +123,7 @@ class ResourcesTagsTable extends Table
      * @param string $newTagId New tag id
      * @return void
      */
-    public function updateUserTag(string $userId, string $oldTagId, string $newTagId)
+    public function updateUserTag(string $userId, string $oldTagId, string $newTagId): void
     {
         // Find all the user resources already tagged with the new tag.
         $resourcesIdAssociatedWithNewTag = $this->find()

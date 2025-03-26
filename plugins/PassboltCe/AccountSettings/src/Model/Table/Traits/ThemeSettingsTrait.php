@@ -32,7 +32,7 @@ trait ThemeSettingsTrait
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    protected function themeValidationDefault(Validator $validator)
+    protected function themeValidationDefault(Validator $validator): Validator
     {
         $validator
             ->add('value', ['isValidTheme' => [
@@ -53,7 +53,7 @@ trait ThemeSettingsTrait
      * @param array|null $context not in use
      * @return bool
      */
-    public function isValidTheme(string $value, ?array $context = null)
+    public function isValidTheme(string $value, ?array $context = null): bool
     {
         return in_array($value, Hash::extract($this->findAllThemes(), '{n}.name'));
     }
@@ -81,7 +81,7 @@ trait ThemeSettingsTrait
      *
      * @return array
      */
-    public function findAllThemes()
+    public function findAllThemes(): array
     {
         $defaultCssFileName = 'api_main.min.css';
         $themesPath = WWW_ROOT . 'css' . DS . 'themes';

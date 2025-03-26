@@ -19,10 +19,12 @@ namespace Passbolt\DirectorySync\Test\TestCase\Service\DirectorySettings;
 
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\DirectorySync\Service\DirectorySettings\FixDirectorySyncLegacyFieldsMappingService;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
+use Throwable;
+use UnexpectedValueException;
 
 /**
  * @covers \Passbolt\DirectorySync\Service\DirectorySettings\FixDirectorySyncLegacyFieldsMappingService
@@ -72,7 +74,7 @@ class FixDirectorySyncLegacyFieldsMappingServiceTest extends AppTestCase
     {
         $dummySettings = $this->getDummyDirectorySyncSettings('v4');
         // The settings should have been created after the migration to the v4.
-        OrganizationSettingFactory::make(['created' => FrozenTime::now()->addDays(1)])
+        OrganizationSettingFactory::make(['created' => DateTime::now()->addDays(1)])
             ->setPropertyAndValue(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY, json_encode($dummySettings))
             ->persist();
 
@@ -85,7 +87,7 @@ class FixDirectorySyncLegacyFieldsMappingServiceTest extends AppTestCase
     {
         $dummySettings = $this->getDummyDirectorySyncSettings();
         // The settings should have been created before the migration to the v4.
-        OrganizationSettingFactory::make(['modified' => FrozenTime::now()->subYears(1)])
+        OrganizationSettingFactory::make(['modified' => DateTime::now()->subYears(1)])
             ->setPropertyAndValue(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY, json_encode($dummySettings))
             ->persist();
 
@@ -109,16 +111,16 @@ class FixDirectorySyncLegacyFieldsMappingServiceTest extends AppTestCase
         $dummySettings['fieldsMapping']['ad']['user']['username'] = 'userPrincipalName';
         // The settings should have been created before the migration to the v4.
         /** @var \App\Model\Entity\OrganizationSetting $directorySyncSetting */
-        OrganizationSettingFactory::make(['modified' => FrozenTime::now()->subYears(1)])
+        OrganizationSettingFactory::make(['modified' => DateTime::now()->subYears(1)])
             ->setPropertyAndValue(DirectoryOrgSettings::ORG_SETTINGS_PROPERTY, json_encode($dummySettings))
             ->persist();
 
         try {
             $this->service->fix();
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
-        $this->assertInstanceOf(\UnexpectedValueException::class, $th);
+        $this->assertInstanceOf(UnexpectedValueException::class, $th);
         $this->assertTextContains('Customized v3 directory sync settings fields mapping are not supported:', $th->getMessage());
     }
 

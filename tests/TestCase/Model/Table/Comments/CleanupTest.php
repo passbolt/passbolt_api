@@ -27,7 +27,7 @@ class CleanupTest extends AppTestCase
 
     public $Comments;
     public $Groups;
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Alt0/Permissions', 'app.Base/Resources', 'app.Base/Comments',
     ];
     public $options;

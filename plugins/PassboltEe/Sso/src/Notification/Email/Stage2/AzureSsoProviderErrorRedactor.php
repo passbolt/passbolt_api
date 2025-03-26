@@ -31,6 +31,7 @@ use Passbolt\Locale\Service\LocaleService;
 use Passbolt\Sso\Controller\AbstractSso2Stage2Controller;
 use Passbolt\Sso\Error\Exception\AzureException;
 use Passbolt\Sso\Service\Cache\SsoProviderErrorCacheService;
+use Throwable;
 
 class AzureSsoProviderErrorRedactor implements SubscribedEmailRedactorInterface
 {
@@ -69,7 +70,7 @@ class AzureSsoProviderErrorRedactor implements SubscribedEmailRedactorInterface
         $emailCollection = new EmailCollection();
 
         $exception = $event->getData('exception');
-        if (!$exception instanceof \Throwable) {
+        if (!$exception instanceof Throwable) {
             throw new InvalidArgumentException('`$exception` should be an instance of `Throwable`.');
         }
 

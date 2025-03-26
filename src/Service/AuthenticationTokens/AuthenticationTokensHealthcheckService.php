@@ -31,7 +31,7 @@ class AuthenticationTokensHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    private $AuthenticationTokens;
+    private AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * AuthenticationTokens Healthcheck constructor.
@@ -55,7 +55,7 @@ class AuthenticationTokensHealthcheckService extends AbstractHealthcheckService
             ->where(['type IN ' => AuthenticationTokensTable::ALLOWED_TYPES])
             ->all();
 
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 

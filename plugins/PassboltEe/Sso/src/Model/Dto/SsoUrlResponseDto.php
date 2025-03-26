@@ -28,12 +28,12 @@ class SsoUrlResponseDto
     /**
      * @var string url with parameters such as nonce, state, etc.
      */
-    private $url;
+    private string $url;
 
     /**
      * @var string http method
      */
-    private $method;
+    private string $method;
 
     /**
      * @param string $url SSO URL.

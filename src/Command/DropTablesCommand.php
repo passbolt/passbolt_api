@@ -53,8 +53,9 @@ class DropTablesCommand extends PassboltCommand
         parent::execute($args, $io);
 
         $datasource = $args->getOption('datasource');
+        /** @var \Cake\Database\Connection $connection */
         $connection = ConnectionManager::get($datasource);
-        $tables = ConnectionManager::get($datasource)->getSchemaCollection()->listTables();
+        $tables = $connection->getSchemaCollection()->listTables();
         foreach ($tables as $table) {
             $io->out(__('Dropping table ' . $table));
             $quotedTableName = $connection->getDriver()->quoteIdentifier($table);

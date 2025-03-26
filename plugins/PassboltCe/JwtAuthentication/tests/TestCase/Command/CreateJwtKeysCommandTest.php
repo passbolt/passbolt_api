@@ -37,7 +37,6 @@ class CreateJwtKeysCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->enableFeaturePlugin(JwtAuthenticationPlugin::class);
     }
 

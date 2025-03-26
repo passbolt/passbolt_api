@@ -18,6 +18,7 @@ namespace Passbolt\Tags\Model\Table;
 
 use Cake\Core\Configure;
 use Cake\Log\Log;
+use PDOException;
 
 trait TagsTableBackupAwareTrait
 {
@@ -42,7 +43,7 @@ trait TagsTableBackupAwareTrait
             // Check that the backup table exists
             $this->getConnection()->selectQuery()->select('*')->from($backupTableName)->limit(1)->execute();
             $this->setTable($backupTableName);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             Log::error($e->getMessage());
             $this->setTable($defaultTableName);
         }

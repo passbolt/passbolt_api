@@ -26,8 +26,8 @@ use Cake\ORM\Entity;
  * @property string|null $user_id
  * @property string $foreign_key
  * @property string $foreign_model
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime|null $modified
  * @property \App\Model\Entity\Resource $resource
  * @property \App\Model\Entity\User|null $user
  */
@@ -42,7 +42,7 @@ class Favorite extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'user_id' => false,
         'foreign_key' => false,
         'foreign_model' => false,

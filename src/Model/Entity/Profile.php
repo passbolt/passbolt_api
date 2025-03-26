@@ -25,8 +25,8 @@ use Cake\ORM\Entity;
  * @property string $user_id
  * @property string $first_name
  * @property string $last_name
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \App\Model\Entity\User $user
  * @property \App\Model\Entity\Avatar|null $avatar
@@ -44,7 +44,7 @@ class Profile extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'user_id' => false,
         'first_name' => false,

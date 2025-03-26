@@ -48,7 +48,7 @@ class FolderActionLogsFinder extends BaseActionLogsFinder
                 'FoldersHistory.folder_id' => $folderId,
                 'ActionLogs.status' => 1,
             ])
-            ->group(['ActionLogs.id', 'Actions.name']);
+            ->groupBy(['ActionLogs.id', 'Actions.name']);
     }
 
     /**
@@ -71,7 +71,7 @@ class FolderActionLogsFinder extends BaseActionLogsFinder
                 'PermissionsHistoryFolders.id' => $folderId,
                 'ActionLogs.status' => 1,
             ])
-            ->group(['ActionLogs.id', 'Actions.name']);
+            ->groupBy(['ActionLogs.id', 'Actions.name']);
     }
 
     /**

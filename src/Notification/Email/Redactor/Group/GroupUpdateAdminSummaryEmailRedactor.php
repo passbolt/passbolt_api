@@ -40,7 +40,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param \App\Model\Table\UsersTable|null $usersTable Users Table
@@ -202,7 +202,7 @@ class GroupUpdateAdminSummaryEmailRedactor implements SubscribedEmailRedactorInt
      *
      * @param \App\Model\Entity\Group $group Group
      * @param array $excludeUsersIds ID of the users to exclude from the managers to retrieve
-     * @return \App\Model\Entity\User[]
+     * @return array<\App\Model\Entity\User>
      */
     private function getGroupManagers(Group $group, array $excludeUsersIds): array
     {

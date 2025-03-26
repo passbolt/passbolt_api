@@ -28,7 +28,7 @@ class V162InitialMigration extends AbstractMigration
     public function up()
     {
         $options = ($this->getAdapter()->getOptions());
-        $databaseName = $options['name'];
+        $databaseName = $options['database'] ?? $options['name'];
 
         // Check if v1 tables are present
         $tables = [
@@ -61,7 +61,7 @@ class V162InitialMigration extends AbstractMigration
         }
 
         // Reset the collation just in case
-        if ($this->getAdapter()->getOptions()["adapter"] !== "pgsql") {
+        if ($this->getAdapter()->getAdapterType() !== "pgsql") {
             $this->execute('ALTER DATABASE `' . $databaseName . '` COLLATE utf8mb4_unicode_ci');
        }
 
@@ -78,17 +78,17 @@ class V162InitialMigration extends AbstractMigration
 
         // If this is a fresh install
         $this->table('authentication_tokens', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('token', 'string', [
+            ->addColumn('token', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('user_id', 'string', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -121,17 +121,17 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('comments', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('parent_id', 'string', [
+            ->addColumn('parent_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => true,
             ])
-            ->addColumn('foreign_id', 'string', [
+            ->addColumn('foreign_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -156,12 +156,12 @@ class V162InitialMigration extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('created_by', 'string', [
+            ->addColumn('created_by', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('modified_by', 'string', [
+            ->addColumn('modified_by', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -325,17 +325,17 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('favorites', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('user_id', 'string', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => true,
             ])
-            ->addColumn('foreign_id', 'string', [
+            ->addColumn('foreign_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -422,12 +422,12 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('gpgkeys', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('user_id', 'string', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -505,7 +505,7 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('groups', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -530,12 +530,12 @@ class V162InitialMigration extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('created_by', 'string', [
+            ->addColumn('created_by', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('modified_by', 'string', [
+            ->addColumn('modified_by', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -543,17 +543,17 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('groups_users', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('group_id', 'string', [
+            ->addColumn('group_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => true,
             ])
-            ->addColumn('user_id', 'string', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => true,
@@ -592,7 +592,7 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('permissions', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -666,7 +666,7 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('permissions_types', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -700,12 +700,12 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('profiles', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('user_id', 'string', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -758,7 +758,7 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('resources', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -803,12 +803,12 @@ class V162InitialMigration extends AbstractMigration
                 'limit' => null,
                 'null' => false,
             ])
-            ->addColumn('created_by', 'string', [
+            ->addColumn('created_by', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('modified_by', 'string', [
+            ->addColumn('modified_by', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -816,7 +816,7 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('roles', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -868,17 +868,17 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('secrets', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('user_id', 'string', [
+            ->addColumn('user_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('resource_id', 'string', [
+            ->addColumn('resource_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -911,7 +911,7 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('user_agents', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
@@ -924,12 +924,12 @@ class V162InitialMigration extends AbstractMigration
             ->create();
 
         $this->table('users', ['id' => false, 'primary_key' => ['id'], 'collation' => 'utf8mb4_unicode_ci'])
-            ->addColumn('id', 'string', [
+            ->addColumn('id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,
             ])
-            ->addColumn('role_id', 'string', [
+            ->addColumn('role_id', 'char', [
                 'default' => null,
                 'limit' => 36,
                 'null' => false,

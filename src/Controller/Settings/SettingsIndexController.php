@@ -22,6 +22,7 @@ use App\Model\Entity\Role;
 use App\Model\Table\UsersTable;
 use App\Model\Validation\EmailValidationRule;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Passbolt\Locale\Service\GetOrgLocaleService;
@@ -51,7 +52,7 @@ class SettingsIndexController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Users = $this->fetchTable('Users');
         $this->Authentication->allowUnauthenticated(['index']);
@@ -80,7 +81,7 @@ class SettingsIndexController extends AppController
 
         if ($withHeader == false) {
             $this->set($settings);
-            $this->set('_serialize', array_keys($settings));
+            $this->viewBuilder()->setOption('serialize', array_keys($settings));
 
             return;
         }

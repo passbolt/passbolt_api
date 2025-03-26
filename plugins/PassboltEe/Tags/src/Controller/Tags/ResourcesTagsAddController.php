@@ -18,6 +18,7 @@ namespace Passbolt\Tags\Controller\Tags;
 
 use App\Controller\AppController;
 use App\Error\Exception\CustomValidationException;
+use App\Model\Table\ResourcesTable;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -26,17 +27,17 @@ use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 use Passbolt\Metadata\Utility\MetadataSettingsAwareTrait;
 use Passbolt\Tags\Form\MetadataResourcesAddExistingTagForm;
 use Passbolt\Tags\Form\MetadataResourcesTagsAddForm;
+use Passbolt\Tags\Model\Table\TagsTable;
 use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 use Passbolt\Tags\Service\Tags\ResourcesTagsAddService;
 
-/**
- * @property \App\Model\Table\ResourcesTable $Resources
- * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
- */
 class ResourcesTagsAddController extends AppController
 {
     use MetadataSettingsAwareTrait;
     use MetadataPopulateUserKeyIdTrait;
+
+    protected ?ResourcesTable $Resources = null;
+    protected ?TagsTable $Tags = null;
 
     /**
      * @inheritDoc

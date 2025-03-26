@@ -54,7 +54,6 @@ class SenderCommandTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->loadRoutes();
         $this->setDummyFrenchTranslator();
         (new AvatarsConfigurationService())->loadConfiguration();

@@ -21,6 +21,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\View\ViewVarsTrait;
+use Exception;
 use Passbolt\DirectorySync\Form\LdapConfigurationForm;
 use Passbolt\DirectorySync\Utility\DirectoryFactory;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
@@ -82,7 +83,7 @@ class DirectorySettingsController extends DirectoryController
         }
         try {
             $form->execute($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new BadRequestException(
                 __('Could not save the settings. {0}', $e->getMessage()),
                 null,
@@ -117,7 +118,7 @@ class DirectorySettingsController extends DirectoryController
         }
         try {
             $form->execute($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new BadRequestException(
                 'The settings provided are incorrect. ' . $e->getMessage(),
                 null,
@@ -134,13 +135,13 @@ class DirectorySettingsController extends DirectoryController
                 'users' => $this->_toArray(array_values($filteredDirectoryResults->getUsers())),
                 'groups' => $this->_toArray(array_values($filteredDirectoryResults->getGroups())),
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new BadRequestException('The users and groups cannot be retrieved. ' . $e->getMessage());
         }
 
         try {
             $outputData['tree'] = $this->_toArray($filteredDirectoryResults->getTree());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = __('The directory structure cannot be retrieved.');
             throw new BadRequestException($msg . ' ' . $e->getMessage());
         }
@@ -149,7 +150,7 @@ class DirectorySettingsController extends DirectoryController
             $invalidObjects = $filteredDirectoryResults->getInvalidGroups();
             $invalidObjects = array_merge($invalidObjects, $filteredDirectoryResults->getInvalidUsers());
             $outputData['errors'] = $this->_toArray($invalidObjects);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = __('There was an issue while retrieving the invalid entries.');
             throw new BadRequestException($msg . ' ' . $e->getMessage());
         }
@@ -180,7 +181,7 @@ class DirectorySettingsController extends DirectoryController
      * @param array $entries array of DirectoryEntry
      * @return array
      */
-    private function _toArray($entries)
+    private function _toArray(array $entries)
     {
         foreach ($entries as $key => $entry) {
             $entries[$key] = $entry->toArray();

@@ -17,11 +17,11 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->scope('/', function (RouteBuilder $routes) {
+$routes->scope('/', function (RouteBuilder $routes): void {
     $routes->redirect('.well-known/jwks.json', '/auth/jwt/jwks.json');
 });
 
-$routes->plugin('Passbolt/JwtAuthentication', ['path' => '/auth/jwt'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/JwtAuthentication', ['path' => '/auth/jwt'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     // WARNING - if you add routes, check whether it should be included in

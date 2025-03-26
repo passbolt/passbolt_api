@@ -31,17 +31,17 @@ class ActionLogResultsParser
     /**
      * @var \Cake\Datasource\ResultSetInterface
      */
-    protected $actionLogs;
+    protected ResultSetInterface $actionLogs;
 
     /**
      * @var array
      */
-    protected $entries = [];
+    protected array $entries = [];
 
     /**
      * @var array
      */
-    protected $filters = [];
+    protected array $filters = [];
 
     public const TYPE_PERMISSIONS_UPDATED = 'Permissions.updated';
     public const TYPE_SECRETS_READ = 'Resource.Secrets.read';
@@ -136,7 +136,7 @@ class ActionLogResultsParser
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
-    protected function _processResourcesCrudOperations(ActionLog $actionLog)
+    protected function _processResourcesCrudOperations(ActionLog $actionLog): void
     {
         foreach ($actionLog->entities_history as $entityHistory) {
             if ($entityHistory->foreign_model === 'Resources') {
@@ -169,7 +169,7 @@ class ActionLogResultsParser
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
-    protected function _processFoldersCrudOperations(ActionLog $actionLog)
+    protected function _processFoldersCrudOperations(ActionLog $actionLog): void
     {
         foreach ($actionLog->entities_history as $entityHistory) {
             if ($entityHistory->foreign_model === 'FoldersHistory') {
@@ -202,7 +202,7 @@ class ActionLogResultsParser
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
-    protected function _processUsersCrudOperations(ActionLog $actionLog)
+    protected function _processUsersCrudOperations(ActionLog $actionLog): void
     {
         foreach ($actionLog->entities_history as $entityHistory) {
             if ($entityHistory->foreign_model === 'Users') {
@@ -235,7 +235,7 @@ class ActionLogResultsParser
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
-    protected function _processSecretsUpdateOperations(ActionLog $actionLog)
+    protected function _processSecretsUpdateOperations(ActionLog $actionLog): void
     {
         $secretUpdated = false;
         $data = [
@@ -264,7 +264,7 @@ class ActionLogResultsParser
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
-    protected function _processSecretAccessesOperations(ActionLog $actionLog)
+    protected function _processSecretAccessesOperations(ActionLog $actionLog): void
     {
         foreach ($actionLog->entities_history as $entityHistory) {
             if ($entityHistory->foreign_model === 'SecretAccesses') {
@@ -294,7 +294,7 @@ class ActionLogResultsParser
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
-    protected function _processPermissionsUpdateOperations(ActionLog $actionLog)
+    protected function _processPermissionsUpdateOperations(ActionLog $actionLog): void
     {
         $permissionsUpdated = false;
         $data = [
@@ -387,7 +387,7 @@ class ActionLogResultsParser
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog action log
      * @return void
      */
-    public function addEntries(ActionLog $actionLog)
+    public function addEntries(ActionLog $actionLog): void
     {
         $this->_processResourcesCrudOperations($actionLog);
         $this->_processSecretAccessesOperations($actionLog);

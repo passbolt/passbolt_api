@@ -42,7 +42,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
     use GroupsModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
     FavoritesFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
@@ -55,7 +55,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersGroupsDeleteSuccess_PersonalFolder()
     {
-        [$folderA, $g1, $userAId] = $this->insertFixture_PersonalFolder();
+        [$folderA, $g1, $userAId] = $this->insertFixture_PersonalFolder(); // phpcs:ignore
         $this->authenticateAs('admin');
 
         $this->deleteJson("/groups/$g1->id.json?api-version=v2");
@@ -84,7 +84,7 @@ class GroupsDeleteControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersGroupsDeleteError_SoleOwnerFolder_FolderSharedWithUser()
     {
-        [$folderA, $g1, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser();
+        [$folderA, $g1, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithUser(); // phpcs:ignore
         $this->authenticateAs('admin');
 
         $this->deleteJson("/groups/$g1->id.json?api-version=v2");

@@ -75,7 +75,7 @@ class RecoverStartAccountRecoveryInfoServiceTest extends AccountRecoveryTestCase
         $this->assertNotNull($info['user']);
         $this->assertSame(compact('status'), $info['user']['account_recovery_user_setting']);
 
-        $this->assertEquals([
+        $expected = json_decode(json_encode([
             'id' => $policy->id,
             'public_key_id' => $policy->public_key_id,
             'policy' => $policy->policy,
@@ -87,7 +87,8 @@ class RecoverStartAccountRecoveryInfoServiceTest extends AccountRecoveryTestCase
                 'id' => $policy->account_recovery_organization_public_key->id,
                 'armored_key' => $policy->account_recovery_organization_public_key->armored_key,
             ],
-        ], $info['account_recovery_organization_policy']);
+        ]), true);
+        $this->assertEquals($expected, json_decode(json_encode($info['account_recovery_organization_policy']), true));
     }
 
     /**

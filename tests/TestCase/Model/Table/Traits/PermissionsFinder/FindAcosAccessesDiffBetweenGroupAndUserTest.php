@@ -90,7 +90,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
     {
         $u1 = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$u1])->persist();
+        ResourceFactory::make()->withPermissionsFor([$u1])->persist();
 
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
@@ -111,7 +111,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
     {
         $u1 = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
+        ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
 
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
@@ -132,7 +132,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
     {
         $u1 = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->withGroupsManagersFor([$u1])->persist();
-        $r1 = ResourceFactory::make()->withPermissionsFor([$g1])->persist();
+        ResourceFactory::make()->withPermissionsFor([$g1])->persist();
 
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
@@ -154,7 +154,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $u1 = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->persist();
         $r1 = ResourceFactory::make()->withPermissionsFor([$g1])->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
+        ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
 
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
@@ -176,8 +176,8 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $u1 = UserFactory::make()->persist();
         $g1 = GroupFactory::make()->persist();
         $r1 = ResourceFactory::make()->withPermissionsFor([$g1])->persist();
-        $r2 = ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
-        $r3 = ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
+        ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
+        ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
 
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
@@ -223,7 +223,7 @@ class FindAcosAccessesDiffBetweenGroupAndUserTest extends AppTestCase
         $g1 = GroupFactory::make()->persist();
         $r1 = ResourceFactory::make()->withPermissionsFor([$g1])->persist();
         $r2 = ResourceFactory::make()->withPermissionsFor([$g1])->persist();
-        $r3 = ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
+        ResourceFactory::make()->withPermissionsFor([$g1, $u1])->persist();
 
         $query = $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,

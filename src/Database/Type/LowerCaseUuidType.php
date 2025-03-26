@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Database\Type;
 
-use Cake\Database\DriverInterface;
+use Cake\Database\Driver;
 use Cake\Database\Type\UuidType;
 
 /**
@@ -27,7 +27,7 @@ class LowerCaseUuidType extends UuidType
     /**
      * @inheritDoc
      */
-    public function toDatabase($value, DriverInterface $driver): ?string
+    public function toDatabase(mixed $value, Driver $driver): ?string
     {
         return $this->lowerIfNotNull(parent::toDatabase($value, $driver));
     }
@@ -43,7 +43,7 @@ class LowerCaseUuidType extends UuidType
     /**
      * @inheritDoc
      */
-    public function toPHP($value, DriverInterface $driver): ?string
+    public function toPHP(mixed $value, Driver $driver): ?string
     {
         return $this->lowerIfNotNull(parent::toPHP($value, $driver));
     }

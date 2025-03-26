@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Test\TestCase\Actions;
 
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Test\Utility\Traits\AssertUsersTrait;
@@ -58,7 +58,7 @@ class UserSyncActionUpdateTest extends DirectorySyncDeprecatedIntegrationTestCas
     {
         $user = $this->mockDirectoryUserData('neil', 'armstrong', 'neil@passbolt.com');
         $this->action->execute();
-        $updatedUser = $this->mockDirectoryUserData('buzz', 'aldrin', 'neil@passbolt.com', null, new FrozenTime());
+        $updatedUser = $this->mockDirectoryUserData('buzz', 'aldrin', 'neil@passbolt.com', null, new DateTime());
         $updatedUser['id'] = $user['id'];
         $this->action->getDirectory()->setUsers([$updatedUser]);
         $reports = $this->action->execute();
@@ -85,7 +85,7 @@ class UserSyncActionUpdateTest extends DirectorySyncDeprecatedIntegrationTestCas
         $this->initAction();
         $user = $this->mockDirectoryUserData('neil', 'armstrong', 'neil@passbolt.com');
         $this->action->execute();
-        $updatedUser = $this->mockDirectoryUserData('buzz', 'aldrin', 'neil@passbolt.com', null, new FrozenTime());
+        $updatedUser = $this->mockDirectoryUserData('buzz', 'aldrin', 'neil@passbolt.com', null, new DateTime());
         $updatedUser['id'] = $user['id'];
         $this->action->getDirectory()->setUsers([$updatedUser]);
         $reports = $this->action->execute();
@@ -110,7 +110,7 @@ class UserSyncActionUpdateTest extends DirectorySyncDeprecatedIntegrationTestCas
         $invalidUserFirstName = str_repeat('user', 256);
         $user = $this->mockDirectoryUserData('neil', 'armstrong', 'neil@passbolt.com');
         $this->action->execute();
-        $updatedUser = $this->mockDirectoryUserData($invalidUserFirstName, 'aldrin', 'neil@passbolt.com', null, new FrozenTime());
+        $updatedUser = $this->mockDirectoryUserData($invalidUserFirstName, 'aldrin', 'neil@passbolt.com', null, new DateTime());
         $updatedUser['id'] = $user['id'];
         $this->action->getDirectory()->setUsers([$updatedUser]);
         $reports = $this->action->execute();

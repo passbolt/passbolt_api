@@ -19,7 +19,7 @@ namespace Passbolt\AuditLog\Test\TestCase\Controller;
 
 use App\Test\Lib\Utility\PaginationTestTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Lib\LogIntegrationTestCase;
 
@@ -64,8 +64,8 @@ class ActionLogsIndexControllerTest extends LogIntegrationTestCase
     public function testActionLogsIndexController_Filters()
     {
         // The test will filter logs from yesterday to tomorrow
-        $from = FrozenDate::now()->subDays(1)->format('Y-m-d');
-        $to = FrozenDate::now()->addDays(1)->format('Y-m-d');
+        $from = DateTime::now()->subDays(1)->format('Y-m-d');
+        $to = DateTime::now()->addDays(1)->format('Y-m-d');
 
         // The test will filter by this user
         $userIdFiltered = UuidFactory::uuid();
@@ -111,8 +111,8 @@ class ActionLogsIndexControllerTest extends LogIntegrationTestCase
 
     public function testActionLogsIndexController_Filters_From_After_Before()
     {
-        $from = FrozenDate::parse('tomorrow')->format('Y-m-d');
-        $to = FrozenDate::parse('yesterday')->format('Y-m-d');
+        $from = DateTime::parse('tomorrow')->format('Y-m-d');
+        $to = DateTime::parse('yesterday')->format('Y-m-d');
 
         $queryParams = [
             'filter[created-after]=' . $from,

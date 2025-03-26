@@ -95,7 +95,7 @@ class FilterQueryByResourcesAccessTest extends TestCase
         ResourceFactory::make(2)->persist();
         GroupsUserFactory::make(2)->persist();
 
-        $query = $this->Users->find('list', ['valueField' => 'id']);
+        $query = $this->Users->find('list', valueField: 'id');
         $result = $this->Users->filterQueryByResourcesAccess(
             $query,
             ResourceFactory::find()->select('id'),

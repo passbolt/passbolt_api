@@ -29,8 +29,8 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\User $user
  * @property string $property_id
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property string $created_by
  * @property string $modified_by
  */
@@ -41,7 +41,7 @@ class OrganizationSetting extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'property_id' => true,
         'property' => true,
         'value' => true,

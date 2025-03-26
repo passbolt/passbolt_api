@@ -23,6 +23,9 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Inflector;
 
+/**
+ * @method \App\Controller\AppController getController()
+ */
 class ApiPaginationComponent extends BaseApiComponent
 {
     public const MAX_LIMIT = 1000000;
@@ -33,9 +36,13 @@ class ApiPaginationComponent extends BaseApiComponent
             'limit',
             'page',
         ],
+        'aliases' => [
+            'currentPage' => 'page',
+            'pageCount' => 'pages',
+            'count' => 'current',
+            'totalCount' => 'count',
+        ],
     ];
-
-    public array $paginate;
 
     /**
      * @inheritDoc
@@ -49,7 +56,7 @@ class ApiPaginationComponent extends BaseApiComponent
         $order = $this->parseQuery();
         $this->setPaginationOptions($order);
         $this->removeSortingPaginationFromRequestQuery($order);
-        $this->getController()->paginate['className'] = NumericCountAwarePaginator::class;
+        $this->getController()->setPaginateValue('className', NumericCountAwarePaginator::class);
     }
 
     /**
@@ -108,7 +115,7 @@ class ApiPaginationComponent extends BaseApiComponent
      */
     private function filterSortableFields(array $orders): void
     {
-        $sortableFields = $this->getController()->paginate['sortableFields'] ?? [];
+        $sortableFields = $this->getController()->getPaginateValue('sortableFields') ?? [];
         foreach ($orders as $field => $direction) {
             if (!in_array($field, $sortableFields)) {
                 $this->throwPaginationError(__('Invalid order. "{0}" is not in the list of allowed order.', $field));
@@ -128,11 +135,11 @@ class ApiPaginationComponent extends BaseApiComponent
     public function setPaginationOptions(array $order): void
     {
         if (!empty($order)) {
-            $this->getController()->paginate['order'] = $order;
+            $this->getController()->setPaginateValue('order', $order);
         }
 
-        $this->getController()->paginate['limit'] = self::MAX_LIMIT;
-        $this->getController()->paginate['maxLimit'] = self::MAX_LIMIT;
+        $this->getController()->setPaginateValue('limit', self::MAX_LIMIT);
+        $this->getController()->setPaginateValue('maxLimit', self::MAX_LIMIT);
     }
 
     /**
@@ -205,7 +212,7 @@ class ApiPaginationComponent extends BaseApiComponent
      * Parse a single legacy order.
      *
      * @param string $order Single field order.
-     * @return string[]
+     * @return array<string>
      */
     private function processLegacyOrder(string $order): array
     {

@@ -87,7 +87,7 @@ class PassboltConfigWritableWebInstallerHealthcheck implements HealthcheckServic
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Ensure the file ' . CONFIG . 'passbolt.php is writable by the webserver user.'),

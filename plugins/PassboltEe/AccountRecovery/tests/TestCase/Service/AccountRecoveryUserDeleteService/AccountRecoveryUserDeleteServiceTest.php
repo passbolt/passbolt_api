@@ -22,6 +22,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\UserFactory;
 use CakephpFixtureFactories\Scenario\ScenarioAwareTrait;
+use InvalidArgumentException;
 use Passbolt\AccountRecovery\AccountRecoveryPlugin;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
@@ -45,13 +46,13 @@ class AccountRecoveryUserDeleteServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryUserDeleteService_Error_InvalidId(): void
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         (new AccountRecoveryUserDeleteService())->deleteInfo('nope');
     }
 
     public function testAccountRecoveryUserDeleteService_Success(): void
     {
-        [$request, $policy, $user] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        [$request, $policy, $user] = $this->loadFixtureScenario(ResponseCreateScenario::class); // phpcs:ignore
         (new AccountRecoveryUserDeleteService())->deleteInfo($user->id);
 
         // Private key, passwords and settings are deleted
@@ -73,7 +74,7 @@ class AccountRecoveryUserDeleteServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryUserDeleteService_Success2Users(): void
     {
-        [$request, $policy, $user] = $this->loadFixtureScenario(ResponseCreateScenario::class);
+        [$request, $policy, $user] = $this->loadFixtureScenario(ResponseCreateScenario::class); // phpcs:ignore
 
         $user2 = UserFactory::make()
             ->user()
@@ -99,7 +100,7 @@ class AccountRecoveryUserDeleteServiceTest extends AccountRecoveryTestCase
             ->active()
             ->persist();
 
-        $request = AccountRecoveryRequestFactory::make()
+        AccountRecoveryRequestFactory::make()
             ->rsa4096Key_2()
             ->setField('status', AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_PENDING)
             ->setField('user_id', $user2->id)

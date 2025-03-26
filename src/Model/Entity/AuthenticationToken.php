@@ -20,9 +20,10 @@ use App\Error\Exception\AuthenticationTokenDataPropertyException;
 use App\Service\AuthenticationTokens\AuthenticationTokensSessionService;
 use App\Utility\AuthToken\AuthTokenExpiry;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
+use InvalidArgumentException;
 
 /**
  * AuthenticationToken Entity
@@ -33,8 +34,8 @@ use Cake\Utility\Hash;
  * @property string $type
  * @property string|null $data
  * @property bool $active
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \App\Model\Entity\User $user
  */
@@ -61,7 +62,7 @@ class AuthenticationToken extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'user_id' => false,
         'token' => false,
@@ -97,7 +98,7 @@ class AuthenticationToken extends Entity
             $expiryDuration = null;
         }
         $interval = $expiryDuration ?? $this->getExpiryDuration();
-        $expirationDate = FrozenTime::now()->modify('-' . $interval);
+        $expirationDate = DateTime::now()->modify('-' . $interval);
 
         return $this->created->lessThan($expirationDate);
     }
@@ -111,15 +112,14 @@ class AuthenticationToken extends Entity
     }
 
     /**
-     * @return \Cake\I18n\FrozenTime
+     * @return \Cake\I18n\DateTime
      */
-    public function getExpiryTime(): FrozenTime
+    public function getExpiryTime(): DateTime
     {
-        $expiryTime = (new FrozenTime($this->created))
-            ->modify('+' . $this->getExpiryDuration());
-
-        if ($expiryTime === false) {
-            throw new InternalErrorException(__('Invalid expiry time {0}.', $this->getExpiryDuration()));
+        try {
+            $expiryTime = (new DateTime($this->created))->modify('+' . $this->getExpiryDuration());
+        } catch (InvalidArgumentException $e) {
+            throw new InternalErrorException(__('Invalid expiry time {0}.', $this->getExpiryDuration()), null, $e); // phpcs:ignore
         }
 
         return $expiryTime;
@@ -197,7 +197,7 @@ class AuthenticationToken extends Entity
      * @param \App\Model\Entity\AuthenticationToken|string|null $sessionIdentifier Session ID to check
      * @return bool
      */
-    public function checkSessionId($sessionIdentifier): bool
+    public function checkSessionId(AuthenticationToken|string|null $sessionIdentifier): bool
     {
         return (new AuthenticationTokensSessionService())->checkSession($this, $sessionIdentifier);
     }

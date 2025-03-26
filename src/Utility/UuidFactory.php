@@ -16,7 +16,9 @@ declare(strict_types=1);
  */
 namespace App\Utility;
 
+use Exception;
 use Ramsey\Uuid\Uuid;
+use Throwable;
 
 class UuidFactory
 {
@@ -41,8 +43,8 @@ class UuidFactory
                 $uuid4 = Uuid::uuid4();
 
                 return $uuid4->toString();
-            } catch (\Throwable $e) {
-                throw new \Exception('Cannot generate a random UUID, some dependencies are missing.');
+            } catch (Throwable $e) {
+                throw new Exception('Cannot generate a random UUID, some dependencies are missing.');
             }
         } else {
             // Generate a version 5 (name-based and hashed with SHA1) UUID object

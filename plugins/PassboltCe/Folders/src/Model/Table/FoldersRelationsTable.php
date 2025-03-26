@@ -52,14 +52,14 @@ use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTree
  * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Folders\Model\Entity\FoldersRelation>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByForeignId(string $id)
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByUserId(string $userId)
- * @method \Cake\ORM\Query findByFolderParentId(string $folderParentId)
- * @method \Cake\ORM\Query findByUserIdAndForeignModel(string $userId, string $foreignModel)
- * @method \Cake\ORM\Query findByForeignIdAndFolderParentId(string $foreignId, string $folderParentId)
- * @method \Cake\ORM\Query findByUserIdAndFolderParentId(string $userId, string $folderParentId)
- * @method \Cake\ORM\Query findMissingFoldersRelations(string $foreignModel)
+ * @method  \Cake\ORM\Query\SelectQuery findByForeignId(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findByUserId(string $userId)
+ * @method  \Cake\ORM\Query\SelectQuery findByFolderParentId(string $folderParentId)
+ * @method  \Cake\ORM\Query\SelectQuery findByUserIdAndForeignModel(string $userId, string $foreignModel)
+ * @method  \Cake\ORM\Query\SelectQuery findByForeignIdAndFolderParentId(string $foreignId, string $folderParentId)
+ * @method  \Cake\ORM\Query\SelectQuery findByUserIdAndFolderParentId(string $userId, string $folderParentId)
+ * @method  \Cake\ORM\Query\SelectQuery findMissingFoldersRelations(string $foreignModel)
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class FoldersRelationsTable extends Table
@@ -110,7 +110,7 @@ class FoldersRelationsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator): \Cake\Validation\Validator
+    public function validationDefault(Validator $validator): Validator
     {
         $validator
             ->uuid('id', __('The identifier should be a valid UUID.'))
@@ -148,7 +148,7 @@ class FoldersRelationsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->addCreate(
             $rules->isUnique(
@@ -277,7 +277,7 @@ class FoldersRelationsTable extends Table
      * @param bool $dryRun false
      * @return int of affected records
      */
-    private function cleanupHardDeletedForeignId(string $modelName, $dryRun = false): int
+    private function cleanupHardDeletedForeignId(string $modelName, bool $dryRun = false): int
     {
         $query = $this->selectQuery()
             ->select(['id'])
@@ -487,7 +487,7 @@ class FoldersRelationsTable extends Table
         return $this->find()
             ->select(['user_id'])
             ->where(['foreign_id IN' => $foreignIds])
-            ->group('user_id')
+            ->groupBy('user_id')
             ->having("count(user_id) = $itemsCount")
             ->all()
             ->extract('user_id')

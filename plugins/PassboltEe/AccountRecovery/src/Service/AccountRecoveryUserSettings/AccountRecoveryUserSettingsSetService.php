@@ -23,8 +23,12 @@ use App\Service\OpenPGP\MessageValidationService;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryPrivateKeyPasswords\AccountRecoveryPrivateKeyPasswordsValidationService; // phpcs:ignore
 
@@ -38,45 +42,42 @@ class AccountRecoveryUserSettingsSetService
     /**
      * @var \App\Utility\UserAccessControl
      */
-    protected $uac;
+    protected UserAccessControl $uac;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy
      */
-    protected $organizationPolicy;
+    protected AccountRecoveryOrganizationPolicy $organizationPolicy;
 
     /**
      * @var array
      */
-    protected $data;
+    protected array $data;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable
      */
-    protected $AccountRecoveryUserSettings;
+    protected AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable
      */
-    protected $AccountRecoveryPrivateKeys;
+    protected AccountRecoveryPrivateKeysTable $AccountRecoveryPrivateKeys;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable
      */
-    protected $AccountRecoveryPrivateKeyPasswords;
+    protected AccountRecoveryPrivateKeyPasswordsTable $AccountRecoveryPrivateKeyPasswords;
 
     /**
      * @param \App\Utility\UserAccessControl $uac Logged in user
      */
     public function __construct(UserAccessControl $uac)
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryUserSettings = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeys = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeyPasswords = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
         $this->uac = $uac;
@@ -233,7 +234,7 @@ class AccountRecoveryUserSettingsSetService
     }
 
     /**
-     * @return \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword[] array of AccountRecoveryPrivateKeyPasswords
+     * @return array<\Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword> array of AccountRecoveryPrivateKeyPasswords
      */
     public function buildPasswordEntitiesFromDataOrFail(): array
     {

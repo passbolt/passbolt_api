@@ -17,12 +17,14 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Actions;
 
 use App\Error\Exception\ValidationException;
+use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Role;
 use App\Model\Entity\User;
 use App\Utility\UserAccessControl;
 use Cake\ORM\Entity;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
+use Exception;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
 use Passbolt\DirectorySync\Model\Entity\DirectoryEntry;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -74,7 +76,7 @@ class UserSyncAction extends SyncAction
         $existingUser = $this->Users
             ->findByUsernameCaseAware($username)
             ->select(['id', 'username', 'active', 'deleted', 'created', 'modified', 'disabled'])
-            ->order(['Users.modified' => 'DESC'])
+            ->orderBy(['Users.modified' => 'DESC'])
             ->first();
 
         return $existingUser;
@@ -139,7 +141,7 @@ class UserSyncAction extends SyncAction
                     $msg = __('Could not validate user data.');
                     throw new ValidationException($msg, $user, $this->Users);
                 }
-                throw new \Exception('User could not be updated.');
+                throw new Exception('User could not be updated.');
             }
             // Send report.
             $this->addReportItem(new ActionReport(
@@ -154,7 +156,7 @@ class UserSyncAction extends SyncAction
                 Alias::STATUS_SUCCESS,
                 $user
             ));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $error = new SyncError($existingUser, $exception);
             $this->addReportItem(new ActionReport(
                 __(
@@ -182,7 +184,7 @@ class UserSyncAction extends SyncAction
     /**
      * @inheritDoc
      */
-    protected function deleteOrDisableEntity(Entity $entity)
+    protected function deleteOrDisableEntity(Entity $entity): bool|EntitiesChangesDto
     {
         if ($this->directoryOrgSettings->isDeleteUserBehaviorDisable()) {
             return $this->getTable()->disableUser($entity);

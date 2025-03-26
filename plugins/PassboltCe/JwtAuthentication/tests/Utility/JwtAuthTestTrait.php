@@ -20,7 +20,7 @@ use App\Model\Entity\User;
 use App\Test\Factory\UserFactory;
 use Authentication\Identifier\IdentifierInterface;
 use Cake\Http\ServerRequest;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Passbolt\JwtAuthentication\Authenticator\GpgJwtAuthenticator;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
@@ -79,7 +79,7 @@ trait JwtAuthTestTrait
             'version' => GpgJwtAuthenticator::PROTOCOL_VERSION,
             'domain' => Router::url('/', true),
             'verify_token' => $verifyToken,
-            'verify_token_expiry' => FrozenTime::now()->addMinutes(1)->toUnixString(),
+            'verify_token_expiry' => DateTime::now()->addMinutes(1)->toUnixString(),
         ]));
     }
 

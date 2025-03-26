@@ -43,7 +43,7 @@ interface SubscribedEmailRedactorInterface extends EventListenerInterface
      * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
-    public function subscribe(CollectSubscribedEmailRedactorEvent $event);
+    public function subscribe(CollectSubscribedEmailRedactorEvent $event): void;
 
     /**
      * Method called when its subscribed events are dispatched by the EmailSubscriptionDispatcher.

@@ -24,6 +24,7 @@ use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Table;
 use Cake\Validation\Validation;
 use Passbolt\Sso\Model\Entity\SsoAuthenticationToken;
 
@@ -39,7 +40,7 @@ class SsoAuthenticationTokenGetService
     /**
      * @var \Cake\ORM\Table $SsoAuthenticationTokens
      */
-    protected $SsoAuthenticationTokens;
+    protected Table $SsoAuthenticationTokens;
 
     /**
      * Constructor

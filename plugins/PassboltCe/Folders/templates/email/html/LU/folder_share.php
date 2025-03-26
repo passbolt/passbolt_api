@@ -16,7 +16,7 @@
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 
 if (PHP_SAPI === 'cli') {
@@ -29,7 +29,7 @@ echo $this->element('Email/module/avatar', [
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
-        'datetime' => FrozenTime::now(),
+        'datetime' => \Cake\I18n\DateTime::now(),
         'text' => __('{0} shared a folder with you', Purifier::clean($user['profile']['first_name'])),
     ]),
 ]);

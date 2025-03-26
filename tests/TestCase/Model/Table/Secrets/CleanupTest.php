@@ -28,7 +28,7 @@ class CleanupTest extends AppTestCase
 
     public $Secrets;
     public $Groups;
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Groups', 'app.Base/Permissions',
         'app.Base/Resources', 'app.Base/Secrets',
     ];

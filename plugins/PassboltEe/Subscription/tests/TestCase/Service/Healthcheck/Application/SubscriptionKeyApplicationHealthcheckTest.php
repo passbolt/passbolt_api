@@ -18,9 +18,10 @@ namespace Passbolt\Subscription\Test\TestCase\Service\Healthcheck\Application;
 
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Test\Factory\UserFactory;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Exception;
 use Passbolt\Subscription\Model\Dto\SubscriptionKeyDto;
 use Passbolt\Subscription\Service\Healthcheck\Application\SubscriptionKeyApplicationHealthcheck;
 use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyGetService;
@@ -39,7 +40,7 @@ class SubscriptionKeyApplicationHealthcheckTest extends TestCase
             ->getMock();
         $dto = SubscriptionKeyDto::createFromArray([
             'users' => 4,
-            'expiry' => FrozenDate::today()->addDays(100)->toDateString(),
+            'expiry' => Date::today()->addDays(100)->toDateString(),
         ]);
         $subscriptionService->method('get')->willReturn($dto);
         $service = new SubscriptionKeyApplicationHealthcheck($subscriptionService);
@@ -60,7 +61,7 @@ class SubscriptionKeyApplicationHealthcheckTest extends TestCase
             ->onlyMethods(['get'])
             ->getMock();
         $msg = 'Exception message';
-        $subscriptionService->method('get')->willThrowException(new \Exception($msg));
+        $subscriptionService->method('get')->willThrowException(new Exception($msg));
         $service = new SubscriptionKeyApplicationHealthcheck($subscriptionService);
 
         $service->check();
@@ -75,7 +76,7 @@ class SubscriptionKeyApplicationHealthcheckTest extends TestCase
         $subscriptionService = $this->getMockBuilder(SubscriptionKeyGetService::class)
             ->onlyMethods(['get'])
             ->getMock();
-        $expiry = FrozenDate::yesterday()->toFormattedDateString();
+        $expiry = Date::yesterday()->toFormattedDateString();
         $dto = SubscriptionKeyDto::createFromArray([
             'users' => 5,
             'expiry' => $expiry,
@@ -98,7 +99,7 @@ class SubscriptionKeyApplicationHealthcheckTest extends TestCase
         $expiresInDays = 25;
         $dto = SubscriptionKeyDto::createFromArray([
             'users' => 5,
-            'expiry' => FrozenDate::today()->addDays($expiresInDays)->toFormattedDateString(),
+            'expiry' => Date::today()->addDays($expiresInDays)->toFormattedDateString(),
         ]);
         $subscriptionService->method('get')->willReturn($dto);
         $service = new SubscriptionKeyApplicationHealthcheck($subscriptionService);
@@ -117,7 +118,7 @@ class SubscriptionKeyApplicationHealthcheckTest extends TestCase
             ->getMock();
         $dto = SubscriptionKeyDto::createFromArray([
             'users' => 2,
-            'expiry' => FrozenDate::today()->addDays(100)->toDateString(),
+            'expiry' => Date::today()->addDays(100)->toDateString(),
         ]);
         $subscriptionService->method('get')->willReturn($dto);
         $service = new SubscriptionKeyApplicationHealthcheck($subscriptionService);
@@ -139,7 +140,7 @@ class SubscriptionKeyApplicationHealthcheckTest extends TestCase
             ->getMock();
         $dto = SubscriptionKeyDto::createFromArray([
             'users' => 10,
-            'expiry' => FrozenDate::today()->addDays(100)->toDateString(),
+            'expiry' => Date::today()->addDays(100)->toDateString(),
         ]);
         $subscriptionService->method('get')->willReturn($dto);
         $service = new SubscriptionKeyApplicationHealthcheck($subscriptionService);

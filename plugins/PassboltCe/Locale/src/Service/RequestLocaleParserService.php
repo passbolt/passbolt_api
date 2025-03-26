@@ -28,7 +28,7 @@ class RequestLocaleParserService extends LocaleService
     /**
      * @var \Psr\Http\Message\ServerRequestInterface
      */
-    private $request;
+    private ServerRequestInterface $request;
 
     /**
      * @param \Psr\Http\Message\ServerRequestInterface $request The request.

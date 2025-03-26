@@ -16,11 +16,15 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Command;
 
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\RolesTable;
+use App\Model\Table\UsersTable;
 use App\Service\Command\ProcessUserService;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Exception;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 
 /**
@@ -33,17 +37,17 @@ class UsersCommand extends DirectorySyncCommand
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @var \App\Model\Table\RolesTable
      */
-    protected $Roles;
+    protected RolesTable $Roles;
 
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
@@ -113,7 +117,7 @@ class UsersCommand extends DirectorySyncCommand
             $action->setDryRun($dryRun);
             $reports = $action->execute();
             $this->displayReports($reports, 'Users', $io);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->error($exception->getMessage(), $io);
 
             return $this->errorCode();

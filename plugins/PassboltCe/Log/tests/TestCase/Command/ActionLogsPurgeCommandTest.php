@@ -19,7 +19,7 @@ namespace Passbolt\Log\Test\TestCase\Command;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PassboltCommandTestTrait;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use Passbolt\Log\LogPlugin;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 
@@ -36,7 +36,6 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
         $this->enableFeaturePlugin(LogPlugin::class);
     }
@@ -56,8 +55,8 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
         $action = 'AuthLogin.loginGet';
         $retentionPeriodInDays = 10;
         [$actionToRetain] = ActionLogFactory::make([
-            ['created' => FrozenDate::now()->subDays($retentionPeriodInDays)],
-            ['created' => FrozenDate::now()->subDays($retentionPeriodInDays + 1)],
+            ['created' => Date::now()->subDays($retentionPeriodInDays)],
+            ['created' => Date::now()->subDays($retentionPeriodInDays + 1)],
         ])
         ->setActionId($action)
         ->persist();
@@ -74,16 +73,16 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
         $action2 = 'ResourceTypesIndex.index';
         $retentionPeriodInDays = 10;
         ActionLogFactory::make([
-            ['created' => FrozenDate::now()->subDays($retentionPeriodInDays)],
-            ['created' => FrozenDate::now()->subDays($retentionPeriodInDays + 1)],
+            ['created' => Date::now()->subDays($retentionPeriodInDays)],
+            ['created' => Date::now()->subDays($retentionPeriodInDays + 1)],
         ])
         ->setActionId($action1)
         ->persist();
 
         ActionLogFactory::make([
-            ['created' => FrozenDate::now()->subDays($retentionPeriodInDays)],
-            ['created' => FrozenDate::now()->subDays($retentionPeriodInDays + 1)],
-            ['created' => FrozenDate::now()->subDays($retentionPeriodInDays + 2)],
+            ['created' => Date::now()->subDays($retentionPeriodInDays)],
+            ['created' => Date::now()->subDays($retentionPeriodInDays + 1)],
+            ['created' => Date::now()->subDays($retentionPeriodInDays + 2)],
         ])
         ->setActionId($action2)
         ->persist();
@@ -104,8 +103,8 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
     {
         $action = 'AuthLogin.loginGet';
         ActionLogFactory::make([
-            ['created' => FrozenDate::now()->subDays(10)],
-            ['created' => FrozenDate::now()],
+            ['created' => Date::now()->subDays(10)],
+            ['created' => Date::now()],
         ])->setActionId($action)->persist();
 
         $this->exec('passbolt action_logs_purge -r -10');
@@ -117,8 +116,8 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
     public function testActionLogsPurgeCommand_LimitOption_Success(): void
     {
         $action = 'AuthLogin.loginGet';
-        ActionLogFactory::make(['created' => FrozenDate::now()->subDays(4)], 5)->setActionId($action)->persist();
-        ActionLogFactory::make(['created' => FrozenDate::now()], 2)->setActionId($action)->persist();
+        ActionLogFactory::make(['created' => Date::now()->subDays(4)], 5)->setActionId($action)->persist();
+        ActionLogFactory::make(['created' => Date::now()], 2)->setActionId($action)->persist();
 
         $this->exec('passbolt action_logs_purge -r 2 -l 3');
 
@@ -130,8 +129,8 @@ class ActionLogsPurgeCommandTest extends AppIntegrationTestCase
     public function testActionLogsPurgeCommand_LimitOption_Error(): void
     {
         $action = 'AuthLogin.loginGet';
-        ActionLogFactory::make(['created' => FrozenDate::now()->subDays(4)])->setActionId($action)->persist();
-        ActionLogFactory::make(['created' => FrozenDate::now()])->setActionId($action)->persist();
+        ActionLogFactory::make(['created' => Date::now()->subDays(4)])->setActionId($action)->persist();
+        ActionLogFactory::make(['created' => Date::now()])->setActionId($action)->persist();
 
         $this->exec('passbolt action_logs_purge -r 2 -l -5');
 

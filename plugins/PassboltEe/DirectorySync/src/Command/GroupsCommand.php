@@ -16,11 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Command;
 
+use App\Model\Table\GroupsTable;
+use App\Model\Table\UsersTable;
 use App\Service\Command\ProcessUserService;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Exception;
 use Passbolt\DirectorySync\Actions\GroupSyncAction;
 
 /**
@@ -33,12 +36,12 @@ class GroupsCommand extends DirectorySyncCommand
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    protected $Groups;
+    protected GroupsTable $Groups;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
@@ -107,7 +110,7 @@ class GroupsCommand extends DirectorySyncCommand
             $action->setDryRun($dryRun);
             $reports = $action->execute();
             $this->displayReports($reports, 'Groups', $io);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->error($exception->getMessage(), $io);
 
             return $this->errorCode();

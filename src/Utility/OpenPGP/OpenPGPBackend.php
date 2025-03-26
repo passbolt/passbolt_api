@@ -24,6 +24,7 @@ use App\Utility\OpenPGP\Traits\OpenPGPCommonAssertsTrait;
 use Cake\Core\Configure;
 use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\InternalErrorException;
+use Exception;
 
 abstract class OpenPGPBackend implements OpenPGPBackendInterface
 {
@@ -36,22 +37,22 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
     /**
      * @var string|null fingerprint of the key set to decrypt
      */
-    protected $_decryptKeyFingerprint;
+    protected ?string $_decryptKeyFingerprint = null;
 
     /**
      * @var string|null fingerprint of the key set to encrypt
      */
-    protected $_encryptKeyFingerprint;
+    protected ?string $_encryptKeyFingerprint = null;
 
     /**
      * @var string|null fingerprint of the key set to encrypt
      */
-    protected $_signKeyFingerprint;
+    protected ?string $_signKeyFingerprint = null;
 
     /**
      * @var string|null fingerprint of the key set to verify signature
      */
-    protected $_verifyKeyFingerprint;
+    protected ?string $_verifyKeyFingerprint = null;
 
     /**
      * Constructor.
@@ -141,7 +142,7 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      * @param mixed $fingerprint user provided data
      * @return bool
      */
-    public static function isValidFingerprint($fingerprint = null): bool
+    public static function isValidFingerprint(mixed $fingerprint = null): bool
     {
         if (!isset($fingerprint) || !is_string($fingerprint)) {
             return false;
@@ -159,10 +160,10 @@ abstract class OpenPGPBackend implements OpenPGPBackendInterface
      * @return string long key id 16 char
      * @throws \Exception
      */
-    public static function fingerprintToKeyId(string $fingerprint)
+    public static function fingerprintToKeyId(string $fingerprint): string
     {
         if (strlen($fingerprint) !== 40) {
-            throw new \Exception('Invalid fingerprint.');
+            throw new Exception('Invalid fingerprint.');
         }
 
         return substr($fingerprint, -16);

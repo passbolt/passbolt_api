@@ -25,12 +25,15 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Event\Event;
 use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryResponse;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryResponsesTable;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 
 /**
@@ -48,36 +51,34 @@ class AccountRecoveryResponsesCreateService
     /**
      * @var array $data user provider data
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy current policy
      */
-    protected $policy;
+    protected AccountRecoveryOrganizationPolicy $policy;
 
     /**
      * @var \App\Utility\UserAccessControl current user
      */
-    protected $uac;
+    protected UserAccessControl $uac;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable
      */
-    protected $AccountRecoveryRequests;
+    protected AccountRecoveryRequestsTable $AccountRecoveryRequests;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryResponsesTable
      */
-    protected $AccountRecoveryResponses;
+    protected AccountRecoveryResponsesTable $AccountRecoveryResponses;
 
     /**
      * Email redactor constructor
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryRequests = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryResponses = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryResponses');
     }
 
@@ -244,7 +245,7 @@ class AccountRecoveryResponsesCreateService
      * @param string|null $name Dot separated name of the value to read. Or null to read all data.
      * @return mixed The value being read.
      */
-    protected function getData(?string $name = null)
+    protected function getData(?string $name = null): mixed
     {
         if ($name === null) {
             return $this->data;
@@ -269,7 +270,7 @@ class AccountRecoveryResponsesCreateService
 
         if ($response->isApproved() && $token->isExpired()) {
             $token->setAccess('created', true);
-            $token->set('created', FrozenTime::now());
+            $token->set('created', DateTime::now());
             $this->AccountRecoveryRequests->AuthenticationTokens->saveOrFail($token);
         } elseif ($response->isRejected()) {
             $token->setAccess('active', true);

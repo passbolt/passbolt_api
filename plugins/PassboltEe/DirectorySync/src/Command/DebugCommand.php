@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Exception;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 
@@ -54,7 +55,7 @@ class DebugCommand extends DirectorySyncCommand
             $io->nl();
             $io->out(__("groups:\n{0}", [$groupFilter]));
             $io->nl();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->error($e->getMessage(), $io);
 
             return $this->errorCode();

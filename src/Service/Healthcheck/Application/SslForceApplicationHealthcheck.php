@@ -84,7 +84,7 @@ class SslForceApplicationHealthcheck implements HealthcheckServiceInterface, Hea
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Set passbolt.ssl.force to true in {0}.', CONFIG . 'passbolt.php');
     }

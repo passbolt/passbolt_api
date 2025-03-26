@@ -31,7 +31,7 @@ class ContainPendingAccountRecoveryRequest implements EventListenerInterface
     /**
      * @var bool
      */
-    private $isContained = false;
+    private bool $isContained = false;
 
     /**
      * @inheritDoc

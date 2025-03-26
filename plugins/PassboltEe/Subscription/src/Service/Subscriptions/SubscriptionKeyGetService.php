@@ -48,7 +48,6 @@ class SubscriptionKeyGetService
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Subscriptions = $this->fetchTable('Passbolt/Subscription.Subscriptions');
         $this->SubscriptionValidateService = new SubscriptionKeyValidateService();
     }
@@ -80,7 +79,7 @@ class SubscriptionKeyGetService
      * @return string|null
      * @throws \Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionException if subscription key is invalid
      */
-    protected function readFromDB()
+    protected function readFromDB(): ?string
     {
         try {
             return $this->Subscriptions->getOrFail()->get('value');
@@ -97,7 +96,7 @@ class SubscriptionKeyGetService
      *
      * @return string|null
      */
-    protected function readFromFile()
+    protected function readFromFile(): ?string
     {
         // New file name
         if (is_readable(self::SUBSCRIPTION_FILE)) {

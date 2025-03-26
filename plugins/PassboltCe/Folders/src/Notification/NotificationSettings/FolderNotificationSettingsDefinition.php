@@ -29,7 +29,7 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
      * @param \Cake\Form\Schema $schema An instance of schema
      * @return \Cake\Form\Schema
      */
-    public function buildSchema(Schema $schema)
+    public function buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('send_folder_create', ['type' => 'boolean', 'default' => false])
@@ -42,7 +42,7 @@ class FolderNotificationSettingsDefinition implements EmailNotificationSettingsD
      * @param \Cake\Validation\Validator $validator An instance of validator
      * @return \Cake\Validation\Validator
      */
-    public function buildValidator(Validator $validator)
+    public function buildValidator(Validator $validator): Validator
     {
         return $validator
             ->boolean('send_folder_create', __('An email notification setting should be a boolean.'))

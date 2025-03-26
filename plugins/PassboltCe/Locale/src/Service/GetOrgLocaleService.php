@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Locale\Service;
 
 use App\Model\Entity\OrganizationSetting;
+use Exception;
 
 class GetOrgLocaleService extends LocaleService
 {
@@ -26,12 +27,12 @@ class GetOrgLocaleService extends LocaleService
     /**
      * @var string|null
      */
-    public static $organisationLocale;
+    public static ?string $organisationLocale = null;
 
     /**
      * Unset the organization locale stored in run time memory.
      *
-     * @return  void
+     * @return void
      */
     public static function clearOrganisationLocale(): void
     {
@@ -67,7 +68,7 @@ class GetOrgLocaleService extends LocaleService
 
         try {
             $setting = $organizationSettingsTable->getByProperty(static::SETTING_PROPERTY);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Do nothing if the table is not found.
             // Since this service is required by the middleware
             // I would rather cover the unlikely case were a request

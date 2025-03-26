@@ -17,7 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\Metadata\Test\TestCase\Form;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\TestSuite\TestCase;
 use Passbolt\Metadata\Form\MetadataKeyUpdateForm;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -48,7 +48,7 @@ class MetadataKeyUpdateFormTest extends TestCase
         return [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_revoked_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAA',
-            'expired' => FrozenTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
+            'expired' => DateTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
         ];
     }
 
@@ -113,7 +113,7 @@ class MetadataKeyUpdateFormTest extends TestCase
         $data = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'OpenPGP' . DS . 'PublicKeys' . DS . 'rsa4096_public.key'),
             'fingerprint' => '67BFFCB7B74AF4C85E81AB26508850525CD78BAF',
-            'expired' => FrozenTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
+            'expired' => DateTime::yesterday()->setTimezone('Asia/Kolkata')->toIso8601String(),
         ];
         $this->assertFalse($this->form->execute($data));
         $errors = $this->form->getErrors();

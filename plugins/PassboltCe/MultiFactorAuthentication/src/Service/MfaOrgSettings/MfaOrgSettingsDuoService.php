@@ -34,7 +34,7 @@ class MfaOrgSettingsDuoService
      *
      * @var array
      */
-    private $settings;
+    private array $settings;
 
     /**
      * @param array $data user provider data

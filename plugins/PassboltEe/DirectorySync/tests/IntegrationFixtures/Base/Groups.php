@@ -15,7 +15,7 @@ declare(strict_types=1);
  * @since         2.2.0
  */
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 return [
     // A new directory group that only contains a user that does not exist in passbolt
@@ -38,8 +38,8 @@ return [
     [
         'id' => UuidFactory::uuid('ldap.group.id.new4'),
         'directory_name' => 'CN=New4,OU=PassboltUsers,DC=passbolt,DC=local',
-        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
         'group' => [
             'name' => 'New4',
             'groups' => [],
@@ -54,8 +54,8 @@ return [
 //    [
 //        'id' => UuidFactory::uuid('ldap.group.id.developer'),
 //        'directory_name' => 'CN=Developer,OU=PassboltUsers,DC=passbolt,DC=local',
-//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
 //        'group' => [
 //            'name' => 'Developer',
 //            'groups' => [],
@@ -69,8 +69,8 @@ return [
 //    [
 //        'id' => UuidFactory::uuid('ldap.group.id.empty'),
 //        'directory_name' => 'CN=Empty,OU=PassboltUsers,DC=passbolt,DC=local',
-//        'directory_created' => new FrozenTime('2018-07-09 03:56:42.000000'),
-//        'directory_modified' => new FrozenTime('2018-07-09 03:56:42.000000'),
+//        'directory_created' => new DateTime('2018-07-09 03:56:42.000000'),
+//        'directory_modified' => new DateTime('2018-07-09 03:56:42.000000'),
 //        'group' => [
 //            'name' => 'Empty',
 //            'groups' => [],

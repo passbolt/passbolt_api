@@ -27,6 +27,7 @@ use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\ForbiddenException;
+use Exception;
 use Passbolt\Mobile\Model\Entity\Transfer;
 use Passbolt\Mobile\Service\Transfers\TransfersUpdateService;
 use Passbolt\Mobile\Test\Factory\TransferFactory;
@@ -48,7 +49,7 @@ class TransfersUpdateServiceTest extends AppTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
     ];
 
@@ -170,7 +171,7 @@ class TransfersUpdateServiceTest extends AppTestCase
                 $this->fail('Expect an exception');
             } catch (ForbiddenException $exception) {
                 $this->assertTrue(true);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('Expect a forbidden exception for assertion {0} {1} {2}', $i, $failTuple[0], $failTuple[1]);
                 $this->fail($msg);
             }

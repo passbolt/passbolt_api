@@ -14,7 +14,7 @@ use Cake\ORM\Entity;
  * @property string $model
  * @property string $action
  * @property string|null $data
- * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\DateTime $created
  *
  * @property \Cake\ORM\Entity $report
  */
@@ -29,7 +29,7 @@ class DirectoryReportsItem extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'report_id' => false,
         'status' => false,
         'model' => false,

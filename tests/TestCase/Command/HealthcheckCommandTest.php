@@ -53,8 +53,6 @@ class HealthcheckCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
     }
 

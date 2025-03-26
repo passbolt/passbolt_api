@@ -21,6 +21,7 @@ use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Resource;
 use App\Utility\UuidFactory;
 use Cake\TestSuite\TestCase;
+use TypeError;
 
 class EntitiesChangesDtoTest extends TestCase
 {
@@ -64,21 +65,21 @@ class EntitiesChangesDtoTest extends TestCase
         try {
             $dto->pushAddedEntity(42);
             $this->assertFalse(true, 'Exception expected');
-        } catch (\TypeError $error) {
+        } catch (TypeError $error) {
             $this->assertFalse(false);
         }
 
         try {
             $dto->pushUpdatedEntity(42);
             $this->assertFalse(true, 'Exception expected');
-        } catch (\TypeError $error) {
+        } catch (TypeError $error) {
             $this->assertFalse(false);
         }
 
         try {
             $dto->pushDeletedEntity(42);
             $this->assertFalse(true, 'Exception expected');
-        } catch (\TypeError $error) {
+        } catch (TypeError $error) {
             $this->assertFalse(false);
         }
     }
@@ -117,21 +118,21 @@ class EntitiesChangesDtoTest extends TestCase
         try {
             $dto->pushAddedEntities([42]);
             $this->assertFalse(true, 'Exception expected');
-        } catch (\TypeError $error) {
+        } catch (TypeError $error) {
             $this->assertFalse(false);
         }
 
         try {
             $dto->pushUpdatedEntities([42]);
             $this->assertFalse(true, 'Exception expected');
-        } catch (\TypeError $error) {
+        } catch (TypeError $error) {
             $this->assertFalse(false);
         }
 
         try {
             $dto->pushDeletedEntities([42]);
             $this->assertFalse(true, 'Exception expected');
-        } catch (\TypeError $error) {
+        } catch (TypeError $error) {
             $this->assertFalse(false);
         }
     }

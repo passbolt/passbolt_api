@@ -19,7 +19,7 @@ namespace Passbolt\DirectorySync\Test\Factory;
 use App\Test\Factory\GroupFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\DirectorySync\Utility\Alias;
@@ -55,10 +55,10 @@ class DirectoryEntryFactory extends CakephpBaseFactory
             return [
                 'foreign_key' => UuidFactory::uuid(),
                 'directory_name' => $faker->word(),
-                'directory_created' => FrozenDate::now()->subDays($faker->randomNumber(1)),
-                'directory_modified' => FrozenDate::now()->subDays($faker->randomNumber(1)),
-                'created' => FrozenDate::now()->subDays($faker->randomNumber(1)),
-                'modified' => FrozenDate::now()->subDays($faker->randomNumber(1)),
+                'directory_created' => DateTime::now()->subDays($faker->randomNumber(1)),
+                'directory_modified' => DateTime::now()->subDays($faker->randomNumber(1)),
+                'created' => DateTime::now()->subDays($faker->randomNumber(1)),
+                'modified' => DateTime::now()->subDays($faker->randomNumber(1)),
             ];
         });
     }

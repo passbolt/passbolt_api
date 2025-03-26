@@ -20,7 +20,7 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Dto\MetadataTypesSettingsDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\MetadataTypesSettingsGetService;
@@ -394,11 +394,11 @@ class MetadataTagsUpdateControllerTest extends AppIntegrationTestCaseV5
     {
         return [
             [
-                'input' => ['expired' => FrozenTime::yesterday()],
+                'input' => ['expired' => DateTime::yesterday()],
                 'expected response' => 'isMetadataKeyNotExpired',
             ],
             [
-                'input' => ['deleted' => FrozenTime::now()],
+                'input' => ['deleted' => DateTime::now()],
                 'expected response' => 'metadata_key_exists',
             ],
         ];

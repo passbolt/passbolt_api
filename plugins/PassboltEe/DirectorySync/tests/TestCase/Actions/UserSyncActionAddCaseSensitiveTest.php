@@ -20,7 +20,7 @@ use App\Model\Table\UsersTable;
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\DirectorySync\Actions\UserSyncAction;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 
@@ -29,7 +29,7 @@ class UserSyncActionAddCaseSensitiveTest extends DirectorySyncDeprecatedIntegrat
     /**
      * @var array No fixtures in this test case, using factories
      */
-    public $fixtures = [];
+    public array $fixtures = [];
 
     public function setUp(): void
     {
@@ -44,7 +44,7 @@ class UserSyncActionAddCaseSensitiveTest extends DirectorySyncDeprecatedIntegrat
     public function testDirectorySyncUserAdd_Existing_Username_Case_Insensitive_Should_Map_On_Existing_User()
     {
         // Creating a deleted user. This user must be reported as already existing
-        $created = FrozenTime::yesterday();
+        $created = DateTime::yesterday();
         $username = 'JOHN@passbolt.com';
         UserFactory::make(compact('username', 'created'))->user()->persist();
         $this->mockDirectoryUserData(
@@ -67,7 +67,7 @@ class UserSyncActionAddCaseSensitiveTest extends DirectorySyncDeprecatedIntegrat
     {
         Configure::write(UsersTable::PASSBOLT_SECURITY_USERNAME_CASE_SENSITIVE, true);
         // Creating a deleted user. This user must be reported as already existing
-        $created = FrozenTime::yesterday();
+        $created = DateTime::yesterday();
         $username = 'JOHN@passbolt.com';
         UserFactory::make(compact('username', 'created'))->user()->persist();
         $this->mockDirectoryUserData(

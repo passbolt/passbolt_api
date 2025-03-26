@@ -192,7 +192,7 @@ trait EmailQueueTrait
     protected function renderEmail($i = 0): string
     {
         if (is_int($i)) {
-            $email = EmailQueueFactory::find()->order('id')->offset($i)->first();
+            $email = EmailQueueFactory::find()->orderBy('id')->offset($i)->first();
         } else {
             $email = EmailQueueFactory::find()->where(['email' => $i])->first();
         }

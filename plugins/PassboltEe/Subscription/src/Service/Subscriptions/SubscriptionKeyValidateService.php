@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Subscription\Service\Subscriptions;
 
+use Exception;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionSignatureException;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionValidationException;
@@ -59,7 +60,7 @@ class SubscriptionKeyValidateService
             $formatIsValid = $this->validateFormat($keyString);
             $keyDto = $this->getData($keyString);
             $dataIsValid = $this->validateDto($keyDto);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new SubscriptionSignatureException($keyString, $this->getFirstErrorMessage());
         }
 

@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use Cake\ORM\TableRegistry;
+use Exception;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
@@ -61,7 +62,7 @@ class SessionAuthPreventDeletedOrDisabledUsersMiddleware implements MiddlewareIn
                 ->find()
                 ->where(['Users.id' => $userId])
                 ->firstOrFail();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // Not found => hard deleted
             return true;
         }

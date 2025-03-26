@@ -20,7 +20,7 @@ namespace App\Service\Setup;
 abstract class AbstractSetupStartService
 {
     /**
-     * @var \App\Service\Setup\SetupStartInfoServiceInterface[]
+     * @var array<\App\Service\Setup\SetupStartInfoServiceInterface>
      */
     private array $services = [];
 
@@ -48,7 +48,7 @@ abstract class AbstractSetupStartService
      * @param \App\Service\Setup\SetupStartInfoServiceInterface|string $service Add service that provide additional data to add into base service.
      * @return void
      */
-    public function add($service): void
+    public function add(SetupStartInfoServiceInterface|string $service): void
     {
         if ($service instanceof SetupStartInfoServiceInterface) {
             $this->services[] = $service;

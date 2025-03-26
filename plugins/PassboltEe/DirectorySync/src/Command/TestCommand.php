@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Exception;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 
@@ -49,7 +50,7 @@ class TestCommand extends DirectorySyncCommand
                 'users' => array_values($directoryResults->getUsers()),
                 'groups' => array_values($directoryResults->getGroups()),
             ];
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
              $io->err($e->getMessage());
 
             return $this->errorCode();
@@ -74,7 +75,7 @@ class TestCommand extends DirectorySyncCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayFlattenedTree($flattenedTree, ConsoleIo $io)
+    protected function displayFlattenedTree(array $flattenedTree, ConsoleIo $io): void
     {
         $output = [];
         $output[] = __('<info>Root</info>');
@@ -105,7 +106,7 @@ class TestCommand extends DirectorySyncCommand
      * @param mixed $group group
      * @return string|null
      */
-    protected function groupToString($group)
+    protected function groupToString(mixed $group): ?string
     {
         if (!$group->hasErrors()) {
             $groupStr = __(
@@ -126,7 +127,7 @@ class TestCommand extends DirectorySyncCommand
      * @param mixed $user user
      * @return string|null
      */
-    protected function userToString($user)
+    protected function userToString(mixed $user): ?string
     {
         if (!$user->hasErrors()) {
             $userStr = __(
@@ -149,7 +150,7 @@ class TestCommand extends DirectorySyncCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayEntries($data, $io)
+    protected function displayEntries(array $data, ConsoleIo $io): void
     {
         $output = [];
         $output[] = [__('groups'), __('users')];
@@ -182,7 +183,7 @@ class TestCommand extends DirectorySyncCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayInvalidEntries(array $data, ConsoleIo $io)
+    protected function displayInvalidEntries(array $data, ConsoleIo $io): void
     {
         if (count($data['users'])) {
             $io->hr();

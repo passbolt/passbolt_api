@@ -24,7 +24,9 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
+use Exception;
+use PDOException;
 
 class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServiceInterface
 {
@@ -54,15 +56,15 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
             $serverMetadataPrivateKey = $metadataPrivateKeysTable
                 ->find()
                 ->contain('MetadataKeys')
-                ->innerJoinWith('MetadataKeys', function (Query $q) {
+                ->innerJoinWith('MetadataKeys', function (SelectQuery $q) {
                     $expr = $q->newExpr()->isNull('MetadataKeys.deleted');
 
                     return $q->where([$expr]);
                 })
                 ->where(['MetadataPrivateKeys.user_id IS' => null])
-                ->order(['MetadataPrivateKeys.created' => 'DESC'])
+                ->orderBy(['MetadataPrivateKeys.created' => 'DESC'])
                 ->firstOrFail();
-        } catch (\PDOException | RecordNotFoundException $exception) {
+        } catch (PDOException | RecordNotFoundException $exception) {
             $this->errorMessage = __('No server metadata private key found.');
             if (Configure::read('debug')) {
                 $this->errorMessage .= ' ' . $exception->getMessage();
@@ -87,7 +89,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
 
             // mark as succeed if able to decrypt
             $this->status = true;
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             // failure
             $this->errorMessage = __('Unable to decrypt the metadata private key data.') . ' ';
             $this->errorMessage .= $exception->getMessage();
@@ -143,7 +145,7 @@ class ServerCanDecryptMetadataPrivateKeyHealthcheck implements HealthcheckServic
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

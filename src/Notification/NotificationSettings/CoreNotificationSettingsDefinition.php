@@ -30,7 +30,7 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
      * @param \Cake\Form\Schema $schema An instance of schema
      * @return \Cake\Form\Schema
      */
-    public function buildSchema(Schema $schema)
+    public function buildSchema(Schema $schema): Schema
     {
         return $schema
             ->addField('purify_subject', ['type' => 'boolean', 'default' => false])
@@ -66,7 +66,7 @@ class CoreNotificationSettingsDefinition implements EmailNotificationSettingsDef
      * @param \Cake\Validation\Validator $validator An instance of validator
      * @return \Cake\Validation\Validator
      */
-    public function buildValidator(Validator $validator)
+    public function buildValidator(Validator $validator): Validator
     {
         return $validator
             ->boolean('purify_subject', __('The purify subject setting should be a boolean.'))

@@ -25,7 +25,7 @@ abstract class SelfRegistrationAbstractDryRunService implements SelfRegistration
     /**
      * @var array
      */
-    protected $settings = [];
+    protected array $settings = [];
 
     /**
      * Read settings in the DB. Avoid multiple DB queries.

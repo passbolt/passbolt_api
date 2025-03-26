@@ -172,7 +172,6 @@ class RbacsUpdateControllerTest extends RbacsIntegrationTestCase
             'foreign_id' => $uiActionSubQuery,
         ])->firstOrFail();
         $this->logInAsAdmin();
-        $rbac = $this->findRbacFromUiActionName(UiAction::NAME_RESOURCES_IMPORT);
 
         $this->putJson('/rbacs.json', [
             [

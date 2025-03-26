@@ -22,6 +22,7 @@ use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
+use Passbolt\Log\Model\Table\ActionLogsTable;
 
 abstract class BaseActionLogsFinder
 {
@@ -38,7 +39,7 @@ abstract class BaseActionLogsFinder
     /**
      * @var \Passbolt\Log\Model\Table\ActionLogsTable
      */
-    protected $ActionLogs;
+    protected ActionLogsTable $ActionLogs;
 
     /**
      * ActionLogsFinder constructor.
@@ -57,7 +58,7 @@ abstract class BaseActionLogsFinder
     protected function _getBaseQuery(array $options = []): Query
     {
         $query = $this->ActionLogs->find();
-        $query->group([
+        $query->groupBy([
             'ActionLogs.id',
             'Actions.name',
         ]);

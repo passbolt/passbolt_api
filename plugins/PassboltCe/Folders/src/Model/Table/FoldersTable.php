@@ -61,7 +61,7 @@ use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
  * @method iterable<\Passbolt\Folders\Model\Entity\Folder>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Folders\Model\Entity\Folder>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Folders\Model\Entity\Folder>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findById(string $id)
  */
 class FoldersTable extends Table
 {
@@ -296,7 +296,7 @@ class FoldersTable extends Table
      * @param string $id The folder id
      * @return string
      */
-    public function getCreatedDate(string $id)
+    public function getCreatedDate(string $id): string
     {
         return $this->findById($id)
             ->select('created')

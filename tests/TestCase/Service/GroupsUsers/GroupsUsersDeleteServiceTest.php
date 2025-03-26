@@ -29,6 +29,7 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Exception;
 
 class GroupsUsersDeleteServiceTest extends AppTestCase
 {
@@ -168,7 +169,7 @@ class GroupsUsersDeleteServiceTest extends AppTestCase
         try {
             $this->service->delete($uac, $groupUserIdToDelete);
             $this->assertFalse(true, 'The test should catch an exception');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(RecordNotFoundException::class, $e);
         }
     }

@@ -20,8 +20,10 @@ namespace App\Controller\Share;
 use App\Controller\AppController;
 use App\Model\Entity\Group;
 use App\Model\Entity\User;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\UsersTable;
 use Cake\Collection\CollectionInterface;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 
 /**
  * ShareSearchController Class
@@ -31,12 +33,12 @@ class ShareSearchController extends AppController
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    protected $Groups;
+    protected GroupsTable $Groups;
 
     /**
      * Limits the query results to this number.
@@ -84,9 +86,9 @@ class ShareSearchController extends AppController
      * Search groups.
      *
      * @param array|null $options The find options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function _searchGroups(?array $options = []): Query
+    private function _searchGroups(?array $options = []): SelectQuery
     {
         $options['contain']['user_count'] = true;
 
@@ -97,9 +99,9 @@ class ShareSearchController extends AppController
      * Search the users.
      *
      * @param array|null $options The find options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function _searchUsers(?array $options = []): Query
+    private function _searchUsers(?array $options = []): SelectQuery
     {
         $options['filter']['is-active'] = true;
 

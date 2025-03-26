@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Sso\Test\Factory;
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 use Passbolt\Sso\Model\Entity\SsoState;
@@ -64,8 +64,8 @@ class SsoStateFactory extends CakephpBaseFactory
                 'user_id' => UuidFactory::uuid(),
                 'user_agent' => $faker->userAgent(),
                 'ip' => $faker->ipv4(),
-                'created' => FrozenTime::now(),
-                'deleted' => FrozenTime::now()->addMinutes(5),
+                'created' => DateTime::now(),
+                'deleted' => DateTime::now()->addMinutes(5),
             ];
         });
     }
@@ -131,6 +131,6 @@ class SsoStateFactory extends CakephpBaseFactory
      */
     public function deleted()
     {
-        return $this->setField('deleted', FrozenTime::now());
+        return $this->setField('deleted', DateTime::now());
     }
 }

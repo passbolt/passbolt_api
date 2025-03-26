@@ -26,7 +26,7 @@ class TotpResourceTypesScenario implements FixtureScenarioInterface
     /**
      * @inheritDoc
      */
-    public function load(...$args)
+    public function load(...$args): mixed
     {
         return ResourceTypeFactory::make([
             ['slug' => ResourceType::SLUG_STANDALONE_TOTP, 'definition' => SlugDefinition::totp()],

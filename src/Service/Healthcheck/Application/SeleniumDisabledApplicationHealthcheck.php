@@ -84,7 +84,7 @@ class SeleniumDisabledApplicationHealthcheck implements HealthcheckServiceInterf
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Set passbolt.selenium.active to false in {0}.', CONFIG . 'passbolt.php');
     }
