@@ -74,11 +74,11 @@ class TagsTableBackupTest extends TestCase
 
         // Assert that backup tables and indexes exist
         $query = $connection->execute('SHOW TABLES LIKE "backup_%"');
-        $this->assertSame(2, $query->count());
+        $this->assertSame(2, $query->rowCount());
         $query = $connection->execute('SHOW INDEX FROM backup_tags');
-        $this->assertSame(3, $query->count());
+        $this->assertSame(3, $query->rowCount());
         $query = $connection->execute('SHOW INDEX FROM backup_resources_tags');
-        $this->assertSame(4, $query->count());
+        $this->assertSame(4, $query->rowCount());
 
         // Now that the backup tables are created, activate the backup mode
         Configure::write('passbolt.plugins.tags.backupMode', true);
@@ -118,7 +118,7 @@ class TagsTableBackupTest extends TestCase
         ]);
 
         $query = $connection->execute('SHOW TABLES LIKE "backup_%";');
-        $this->assertSame(0, $query->count());
+        $this->assertSame(0, $query->rowCount());
         $this->assertSame(2, $connection->selectQuery('*')->from('tags')->rowCountAndClose());
         $this->assertSame(2, $connection->selectQuery('*')->from('resources_tags')->rowCountAndClose());
     }
