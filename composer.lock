@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfa21c41e20e2800b63b8327fd05bb16",
+    "content-hash": "caa7513c03f5fa5f84bfa0dca646eb73",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -2105,16 +2105,16 @@
         },
         {
             "name": "lorenzo/cakephp-email-queue",
-            "version": "dev-migrate-cakephp-v5",
+            "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/pabloelcolombiano/cakephp-email-queue.git",
-                "reference": "37edec006d76c5fae9fa907d2aef0aea11e3b1eb"
+                "url": "https://github.com/passbolt/cakephp-email-queue.git",
+                "reference": "7903ab082b113d35b3428a957bdd7859703cc024"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pabloelcolombiano/cakephp-email-queue/zipball/37edec006d76c5fae9fa907d2aef0aea11e3b1eb",
-                "reference": "37edec006d76c5fae9fa907d2aef0aea11e3b1eb",
+                "url": "https://api.github.com/repos/passbolt/cakephp-email-queue/zipball/7903ab082b113d35b3428a957bdd7859703cc024",
+                "reference": "7903ab082b113d35b3428a957bdd7859703cc024",
                 "shasum": ""
             },
             "require": {
@@ -2125,6 +2125,7 @@
                 "cakephp/migrations": "^4.0",
                 "phpunit/phpunit": "^10.5.5 || ^11.1.3"
             },
+            "default-branch": true,
             "type": "cakephp-plugin",
             "autoload": {
                 "psr-4": {
@@ -2156,7 +2157,7 @@
                 "preview",
                 "queue"
             ],
-            "time": "2025-03-11T14:46:14+00:00"
+            "time": "2025-03-26T08:46:24+00:00"
         },
         {
             "name": "mobiledetect/mobiledetectlib",
