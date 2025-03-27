@@ -24,9 +24,11 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Exception;
 use Passbolt\Sso\Model\Dto\AbstractSsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Model\Entity\SsoState;
+use Passbolt\Sso\Model\Table\SsoSettingsTable;
 use Passbolt\Sso\Service\SsoAuthenticationTokens\SsoAuthenticationTokenGetService;
 
 class SsoSettingsActivateService
@@ -39,7 +41,7 @@ class SsoSettingsActivateService
     /**
      * @var \Passbolt\Sso\Model\Table\SsoSettingsTable $SsoSettings
      */
-    protected $SsoSettings;
+    protected SsoSettingsTable $SsoSettings;
 
     /**
      * Constructor
@@ -91,7 +93,7 @@ class SsoSettingsActivateService
             $ssoSettingEntity->modified_by = $uac->getId();
             $this->SsoSettings->save($ssoSettingEntity);
             (new SsoSettingsDeleteService())->deleteAllBut($id);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException(__('Could not update the SSO settings.'), 500, $exception);
         }
 

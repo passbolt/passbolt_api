@@ -29,7 +29,7 @@ interface CombinedReportInterface
     /**
      * Get the sub reports list
      *
-     * @return \Passbolt\Reports\Utility\ReportInterface[]
+     * @return array<\Passbolt\Reports\Utility\ReportInterface>
      */
     public function getReports(): array;
 }

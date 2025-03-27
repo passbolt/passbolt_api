@@ -31,7 +31,7 @@ class RolesHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\RolesTable
      */
-    private $table;
+    private RolesTable $table;
 
     /**
      * Roles Healthcheck constructor.
@@ -55,7 +55,7 @@ class RolesHealthcheckService extends AbstractHealthcheckService
             $this->checks[self::CHECK_VALIDATES]
                 ->addDetail(__('There should be at least 4 roles'), Healthcheck::STATUS_ERROR);
         }
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 

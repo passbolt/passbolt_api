@@ -18,6 +18,8 @@ namespace Passbolt\Ee\Service\Setup;
 
 use App\Service\Setup\DefaultSetupStartService;
 use App\Service\Setup\SetupStartUserInfoService;
+use Passbolt\AccountRecovery\Service\Setup\SetupStartAccountRecoveryInfoService;
+use Passbolt\UserPassphrasePolicies\Service\Setup\SetupStartUserPassphrasePoliciesInfoService;
 
 class EeSetupStartService extends DefaultSetupStartService
 {
@@ -28,8 +30,8 @@ class EeSetupStartService extends DefaultSetupStartService
      */
     public function __construct(
         SetupStartUserInfoService $recoverStartUserInfoService,
-        $setupStartAccountRecoveryInfoService,
-        $setupStartUserPassphrasePoliciesInfoService
+        SetupStartAccountRecoveryInfoService|string $setupStartAccountRecoveryInfoService,
+        SetupStartUserPassphrasePoliciesInfoService|string $setupStartUserPassphrasePoliciesInfoService
     ) {
         parent::__construct($recoverStartUserInfoService);
         $this->add($setupStartAccountRecoveryInfoService);

@@ -31,6 +31,7 @@ class TablesCountDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     public function check(): HealthcheckServiceInterface
     {
         try {
+            /** @var \Cake\Database\Connection $connection */
             $connection = ConnectionManager::get($this->getDatasource());
             $this->tableCount = count($connection->getSchemaCollection()->listTables());
 
@@ -60,7 +61,7 @@ class TablesCountDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Run the install script to install the database tables'),

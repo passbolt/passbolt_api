@@ -51,7 +51,7 @@ class RefreshTokenFetchUserServiceTest extends TestCase
             ->type(AuthenticationToken::TYPE_REFRESH_TOKEN)
             ->persist();
 
-        $service = (new RefreshTokenAuthenticationService());
+        $service = new RefreshTokenAuthenticationService();
         $this->assertSame($refreshToken->user_id, $service->getUserIdFromToken($refreshToken->token));
     }
 

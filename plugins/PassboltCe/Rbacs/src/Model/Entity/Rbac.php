@@ -27,8 +27,8 @@ use Cake\ORM\Entity;
  * @property string $control_function
  * @property string $foreign_model
  * @property string $foreign_id
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property string|null $created_by
  * @property string|null $modified_by
  *
@@ -65,9 +65,9 @@ class Rbac extends Entity
      * List of property names that should **not** be included in JSON or Array
      * representations of this Entity.
      *
-     * @var string[]
+     * @var list<string>
      */
-    protected $_hidden = [
+    protected array $_hidden = [
         '_joinData',
     ];
 
@@ -80,7 +80,7 @@ class Rbac extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'role_id' => false,
         'control_function' => false,
         'foreign_model' => false,

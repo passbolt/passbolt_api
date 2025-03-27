@@ -21,6 +21,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotImplementedException;
 use Cake\Validation\Validation;
+use Exception;
 use Firebase\JWT\JWK;
 use League\OAuth2\Client\Grant\AbstractGrant;
 use League\OAuth2\Client\Provider\AbstractProvider;
@@ -28,6 +29,7 @@ use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Passbolt\Sso\Utility\OpenId\BaseIdToken;
+use Throwable;
 
 abstract class AbstractOauth2Provider extends AbstractProvider
 {
@@ -36,19 +38,19 @@ abstract class AbstractOauth2Provider extends AbstractProvider
     /**
      * @var string $openIdBaseUri typically the issuer, ex. https://my.idp.com with no trailing slashes
      */
-    protected $openIdBaseUri;
+    protected string $openIdBaseUri;
 
     /**
      * @var string $openIdConfigurationPath for example '/moved/somewhere/else/.well-known/open-id-configuration'
      * default $openIdConfigurationPath path to .well-know/openid-configuration endpoint
      * See. https://openid.net/specs/openid-connect-discovery-1_0.html#ProviderConfig
      */
-    protected $openIdConfigurationPath = '/.well-known/openid-configuration';
+    protected string $openIdConfigurationPath = '/.well-known/openid-configuration';
 
     /**
      * @var array|null see. AbstractOauth2Provider::getOpenIdConfiguration()
      */
-    protected $openIdConfiguration = null;
+    protected ?array $openIdConfiguration = null;
 
     /**
      * @param array $response see BaseIdToken::getIdTokenClaims
@@ -134,7 +136,7 @@ abstract class AbstractOauth2Provider extends AbstractProvider
 
         try {
             $response = $this->getParsedResponse($request);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException($exception->getMessage(), 500, $exception);
         }
 
@@ -150,7 +152,7 @@ abstract class AbstractOauth2Provider extends AbstractProvider
      * @param mixed $response from .well-known
      * @return void
      */
-    public function validateOpenIdConfiguration($response): void
+    public function validateOpenIdConfiguration(mixed $response): void
     {
         if (!is_array($response)) {
             throw new InternalErrorException('Invalid response.');
@@ -251,7 +253,7 @@ abstract class AbstractOauth2Provider extends AbstractProvider
      *
      * @return array
      */
-    public function getJwtVerificationKeys()
+    public function getJwtVerificationKeys(): array
     {
         $openIdConfiguration = $this->getOpenIdConfiguration();
         $keysUri = $openIdConfiguration['jwks_uri'];
@@ -261,7 +263,7 @@ abstract class AbstractOauth2Provider extends AbstractProvider
 
         try {
             $response = $this->getParsedResponse($request);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new InternalErrorException(__('Cannot parse JWKS endpoint response.'), 500, $exception);
         }
 
@@ -280,7 +282,7 @@ abstract class AbstractOauth2Provider extends AbstractProvider
      * @return void
      * @throws \Cake\Http\Exception\InternalErrorException When configuration value is invalid.
      */
-    private function assertJwkDefaultAlg($defaultAlg): void
+    private function assertJwkDefaultAlg(mixed $defaultAlg): void
     {
         if (!is_null($defaultAlg) && !is_string($defaultAlg)) {
             throw new InternalErrorException(__(

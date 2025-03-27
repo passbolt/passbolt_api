@@ -34,7 +34,7 @@ class PasswordExpiryDirectorySyncControllerTest extends DirectorySyncDeprecatedI
 {
     use EmailQueueTrait;
 
-    public $fixtures = [];
+    public array $fixtures = [];
 
     /**
      * @group DirectorySync

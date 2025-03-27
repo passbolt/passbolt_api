@@ -93,7 +93,7 @@ class GpgHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInter
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [__('See `{0}` and `{1}`.', self::COMMAND_GPG, self::COMMAND_LIBGCRYPT)];
     }

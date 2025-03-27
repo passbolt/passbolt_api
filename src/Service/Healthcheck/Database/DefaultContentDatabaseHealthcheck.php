@@ -20,6 +20,7 @@ namespace App\Service\Healthcheck\Database;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Database\Exception\MissingConnectionException;
 use Cake\Datasource\ConnectionManager;
+use PDOException;
 
 class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
 {
@@ -35,7 +36,7 @@ class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
                 ->from('roles')
                 ->rowCountAndClose();
             $this->status = ($nRoles >= 3);
-        } catch (MissingConnectionException | \PDOException $e) {
+        } catch (MissingConnectionException | PDOException $e) {
         }
 
         return $this;
@@ -60,7 +61,7 @@ class DefaultContentDatabaseHealthcheck extends AbstractDatabaseHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Run the install script to install the database tables'),

@@ -30,7 +30,7 @@ use Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting;
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting newEmptyEntity()
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting get($primaryKey, $options = [])
+ * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -76,7 +76,7 @@ class MfaPoliciesSettingsTable extends OrganizationSettingsTable
      * Filter organization settings by property.
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
-     * @param  \Cake\ORM\Query $query Any query performed on the present table.
+     * @param \Cake\ORM\Query $query Any query performed on the present table.
      * @return \Cake\ORM\Query
      */
     public function beforeFind(Event $event, Query $query): Query
@@ -94,7 +94,7 @@ class MfaPoliciesSettingsTable extends OrganizationSettingsTable
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         $data['property'] = $this->getProperty();
         $data['property_id'] = $this->getPropertyId();

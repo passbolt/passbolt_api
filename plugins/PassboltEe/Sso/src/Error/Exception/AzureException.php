@@ -45,7 +45,7 @@ class AzureException extends OAuth2Exception
     /**
      * Ref. https://learn.microsoft.com/en-us/azure/active-directory/develop/v2-oauth2-auth-code-flow#error-codes-for-authorization-endpoint-errors
      *
-     * @return string[]
+     * @return array<string>
      */
     public function allowedErrors(): array
     {

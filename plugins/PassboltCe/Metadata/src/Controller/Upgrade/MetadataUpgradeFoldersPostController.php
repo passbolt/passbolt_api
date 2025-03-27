@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Controller\Upgrade;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeFoldersUpdateService;
 
@@ -26,7 +27,7 @@ class MetadataUpgradeFoldersPostController extends AppController
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    protected $Folders;
+    protected FoldersTable $Folders;
 
     /**
      * @inheritDoc

@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use DateTime;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry;
 
@@ -42,8 +43,8 @@ class UserEntryTest extends DirectorySyncDeprecatedIntegrationTestCase
             'mail' => 'john.doe@passbolt.com',
             'dn' => 'CN=john,OU=accounts,OU=passbolt,OU=local',
             'objectGuid' => UuidFactory::uuid('ldap.user.id.john'),
-            'whenCreated' => new \DateTime(),
-            'whenChanged' => new \DateTime(),
+            'whenCreated' => new DateTime(),
+            'whenChanged' => new DateTime(),
         ];
 
         $userData = array_merge($userData, $modify);

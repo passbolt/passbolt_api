@@ -28,7 +28,7 @@ class NotificationOrgSettingsGetControllerTest extends AppIntegrationTestCase
     /**
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
         'app.Base/Roles',
     ];

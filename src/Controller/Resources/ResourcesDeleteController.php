@@ -22,6 +22,8 @@ use App\Error\Exception\ValidationException;
 use App\Model\Entity\Resource;
 use App\Model\Entity\Role;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\UsersTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\Event;
@@ -41,12 +43,12 @@ class ResourcesDeleteController extends AppController
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @inheritDoc

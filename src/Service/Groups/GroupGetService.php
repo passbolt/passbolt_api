@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Service\Groups;
 
 use App\Model\Entity\Group;
+use App\Model\Table\GroupsTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -35,7 +36,7 @@ class GroupGetService
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    private $groupsTable;
+    private GroupsTable $groupsTable;
 
     /**
      * GroupGetService constructor

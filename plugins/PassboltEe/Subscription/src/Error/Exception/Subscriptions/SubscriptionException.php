@@ -18,13 +18,14 @@ namespace Passbolt\Subscription\Error\Exception\Subscriptions;
 
 use App\Error\Exception\ExceptionWithErrorsDetailInterface;
 use Cake\Core\Exception\CakeException;
+use Exception;
 
 class SubscriptionException extends CakeException implements ExceptionWithErrorsDetailInterface
 {
     /**
      * @var mixed $data
      */
-    protected $data;
+    protected mixed $data;
 
     /**
      * Constructor.
@@ -36,9 +37,9 @@ class SubscriptionException extends CakeException implements ExceptionWithErrors
      */
     public function __construct(
         string $message,
-        $data = null,
+        mixed $data = null,
         ?int $code = null,
-        ?\Exception $previous = null
+        ?Exception $previous = null
     ) {
         parent::__construct($message, $code, $previous);
         $this->data = $data;

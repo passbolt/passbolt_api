@@ -24,8 +24,8 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $name
  * @property string|null $description
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \App\Model\Entity\User[] $users
  * @property \Cake\ORM\Entity[] $controller_logs
@@ -46,7 +46,7 @@ class Role extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'name' => false,
         'description' => false,

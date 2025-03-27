@@ -20,6 +20,7 @@ namespace Passbolt\DirectorySync\Controller;
 use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\InternalErrorException;
+use Exception;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
 
 /**
@@ -27,15 +28,6 @@ use Passbolt\DirectorySync\Actions\AllSyncAction;
  */
 class DirectorySyncController extends DirectoryController
 {
-    /**
-     * @inheritDoc
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->Users = $this->fetchTable('Users');
-    }
-
     /**
      * Before filter
      *
@@ -60,7 +52,7 @@ class DirectorySyncController extends DirectoryController
     {
         try {
             $res = $this->_synchronize($expireResourcesService, false);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new InternalErrorException('The synchronization failed. ' . $e->getMessage(), 500, $e);
         }
         $this->success(__('The synchronization was done successfully.'), $res);
@@ -76,7 +68,7 @@ class DirectorySyncController extends DirectoryController
     {
         try {
             $res = $this->_synchronize($expireResourcesService, true);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new InternalErrorException('The simulation failed. ' . $e->getMessage(), 500, $e);
         }
         $this->success(__('The simulation was done successfully.'), $res);

@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Controller\Settings;
 
 use App\Controller\AppController;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Passbolt\Sso\Model\Table\SsoSettingsTable;
 
 class SsoSettingsIndexController extends AppController
 {
@@ -27,7 +28,7 @@ class SsoSettingsIndexController extends AppController
     /**
      * @var \Passbolt\Sso\Model\Table\SsoSettingsTable $SsoSettings
      */
-    private $SsoSettings;
+    private SsoSettingsTable $SsoSettings;
 
     /**
      * @inheritDoc

@@ -18,6 +18,7 @@ namespace App\Error\Exception;
 
 use Cake\Form\Form;
 use Cake\Http\Exception\HttpException;
+use Throwable;
 
 /**
  * Exception raised when a validation rule is not satisfied in a Form.
@@ -28,14 +29,14 @@ class FormValidationException extends HttpException implements
     /**
      * @inheritDoc
      */
-    protected $_defaultCode = 400;
+    protected int $_defaultCode = 400;
 
     /**
      * The form.
      *
      * @var \Cake\Form\Form
      */
-    protected $form;
+    protected Form $form;
 
     /**
      * Constructor.
@@ -49,7 +50,7 @@ class FormValidationException extends HttpException implements
         string $message,
         Form $form,
         ?int $code = null,
-        ?\Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         $this->form = $form;
         parent::__construct($message, $code, $previous);

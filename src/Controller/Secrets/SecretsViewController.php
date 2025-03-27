@@ -19,6 +19,7 @@ namespace App\Controller\Secrets;
 
 use App\Controller\AppController;
 use App\Model\Entity\Secret;
+use App\Model\Table\SecretsTable;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
@@ -34,7 +35,7 @@ class SecretsViewController extends AppController
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    protected $Secrets;
+    protected SecretsTable $Secrets;
 
     /**
      * @inheritDoc

@@ -30,6 +30,7 @@ use Cake\Log\Log;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
+use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataPrivateKeysCreateManyDto;
 use Passbolt\Metadata\Model\Entity\MetadataPrivateKey;
 use Passbolt\Metadata\Model\Table\MetadataPrivateKeysTable;
@@ -181,7 +182,7 @@ class MetadataPrivateKeysCreateService
             $metadataPrivateKeysTable->saveManyOrFail($entities);
         } catch (PersistenceFailedException $exception) { // @phpstan-ignore-line
             $this->handleSaveManyValidationException($exception, $entities);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException(
                 __('The metadata private keys could not be created.'),
                 null,

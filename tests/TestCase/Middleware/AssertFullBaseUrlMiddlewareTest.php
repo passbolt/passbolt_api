@@ -24,6 +24,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use stdClass;
 
 /**
  * @covers \App\Middleware\AssertFullBaseUrlMiddleware
@@ -43,7 +44,7 @@ class AssertFullBaseUrlMiddlewareTest extends AppIntegrationTestCase
         $this->expectException(InternalErrorException::class);
 
         $middleware = new AssertFullBaseUrlMiddleware();
-        $middleware->process((new ServerRequest()), new TestRequestHandler());
+        $middleware->process(new ServerRequest(), new TestRequestHandler());
     }
 
     public function invalidFullBaseUrlValuesProvider(): array
@@ -54,7 +55,7 @@ class AssertFullBaseUrlMiddlewareTest extends AppIntegrationTestCase
             [null],
             [''],
             [[]],
-            [new \stdClass()],
+            [new stdClass()],
         ];
     }
 
@@ -64,7 +65,7 @@ class AssertFullBaseUrlMiddlewareTest extends AppIntegrationTestCase
         Configure::write('passbolt.security.fullBaseUrlEnforce', true);
 
         $middleware = new AssertFullBaseUrlMiddleware();
-        $response = $middleware->process((new ServerRequest()), new TestRequestHandler());
+        $response = $middleware->process(new ServerRequest(), new TestRequestHandler());
 
         $this->assertInstanceOf(Response::class, $response);
     }

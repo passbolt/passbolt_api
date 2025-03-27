@@ -25,17 +25,18 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
 use Passbolt\Metadata\Utility\MetadataPopulateUserKeyIdTrait;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
+use Passbolt\Tags\Model\Table\ResourcesTagsTable;
+use Passbolt\Tags\Model\Table\TagsTable;
 use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 use Passbolt\Tags\Service\Tags\UpdatePersonalTagService;
 
-/**
- * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
- * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable $ResourcesTags
- */
 class TagsUpdateController extends AppController
 {
     use TagAccessTrait;
     use MetadataPopulateUserKeyIdTrait;
+
+    protected ?TagsTable $Tags = null;
+    protected ?ResourcesTagsTable $ResourcesTags = null;
 
     /**
      * @inheritDoc

@@ -24,7 +24,7 @@ class OAuthTokenValidation
      * @param mixed $token expects uuid
      * @return bool true if validate
      */
-    public static function token($token): bool
+    public static function token(mixed $token): bool
     {
         return isset($token) && is_string($token) && Validation::uuid($token);
     }

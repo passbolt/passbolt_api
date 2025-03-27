@@ -18,11 +18,13 @@ namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Test\Factory\ResourceFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
@@ -30,7 +32,7 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
 {
     public $Tags;
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users','app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
@@ -44,8 +46,17 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $resourceId = UuidFactory::uuid('resource.id.nope');
         $data = ['tags' => []];
         $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
-        $response = json_decode($this->_getBodyAsString());
         $this->assertError(404);
+    }
+
+    public function testTagsResourcesTagsAdd_Read_Only_Mode()
+    {
+        Configure::write(TagsReadOnlyModeMiddleware::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE, true);
+        $this->logInAsUser();
+        $resourceId = UuidFactory::uuid();
+        $data = ['tags' => []];
+        $this->postJson('/tags/' . $resourceId . '.json?api-version=2', $data);
+        $this->assertForbiddenError('The tags plugin is in read-only mode.');
     }
 
     // A "not found" error is returned if the user does not have read access on the resource

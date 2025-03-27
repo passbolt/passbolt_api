@@ -52,12 +52,13 @@ class SsoSettingsCreateControllerTest extends SsoIntegrationTestCase
         $this->postJson('/sso/settings.json', $data);
 
         $this->assertSuccess();
-        $body = $this->_responseJsonBody;
-        $this->assertTrue(Validation::uuid($body->id));
-        $this->assertEquals(SsoSetting::PROVIDER_AZURE, $body->provider);
-        $this->assertEquals((new SsoActiveProvidersGetService())->get(), $body->providers);
-        $this->assertEquals(SsoSetting::STATUS_DRAFT, $body->status);
-        $this->assertEquals($data['data'], (array)$body->data);
+        $body = $this->getResponseBodyAsArray();
+        $this->assertTrue(Validation::uuid($body['id']));
+        $this->assertEquals(SsoSetting::PROVIDER_AZURE, $body['provider']);
+        $this->assertEquals((new SsoActiveProvidersGetService())->get(), $body['providers']);
+        $this->assertEquals(SsoSetting::STATUS_DRAFT, $body['status']);
+        $data['data']['client_secret_expiry'] = $data['data']['client_secret_expiry']->toDateTimeString();
+        $this->assertEquals(json_decode(json_encode($data['data']), true), $body['data']);
     }
 
     public function testSsoSettingsCreateController_ErrorNotLoggedIn(): void

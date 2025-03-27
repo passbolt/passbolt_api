@@ -43,7 +43,7 @@ class SsoOAuth2ServiceTest extends SsoIntegrationTestCase
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Invalid value provided in `passbolt.security.sso.sslCafile` config');
 
-        (new SsoOAuth2Service(new DefaultSecureCookieService(), null));
+        new SsoOAuth2Service(new DefaultSecureCookieService(), null);
     }
 
     public function testSsoOAuth2Service_Error_SsoSslCafileConfigFileNotExist(): void
@@ -55,6 +55,6 @@ class SsoOAuth2ServiceTest extends SsoIntegrationTestCase
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('Provided root CA file does not exist');
 
-        (new SsoOAuth2Service(new DefaultSecureCookieService(), null));
+        new SsoOAuth2Service(new DefaultSecureCookieService(), null);
     }
 }

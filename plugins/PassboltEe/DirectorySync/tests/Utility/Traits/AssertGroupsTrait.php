@@ -27,7 +27,7 @@ trait AssertGroupsTrait
         }
         $Groups = TableRegistry::getTableLocator()->get('Groups');
         $results = $Groups->find()->where($where);
-        $this->assertSame(1, $results->count());
+        $this->assertSame(1, $results->all()->count());
 
         return $results->firstOrFail();
     }
@@ -39,6 +39,6 @@ trait AssertGroupsTrait
         }
         $Groups = TableRegistry::getTableLocator()->get('Groups');
         $results = $Groups->find()->where($where);
-        $this->assertSame(0, $results->count());
+        $this->assertSame(0, $results->all()->count());
     }
 }

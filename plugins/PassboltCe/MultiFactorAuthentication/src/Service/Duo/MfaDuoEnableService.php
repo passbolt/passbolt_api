@@ -23,11 +23,13 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
+use InvalidArgumentException;
 use Passbolt\MultiFactorAuthentication\Model\Dto\MfaDuoCallbackDto;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Throwable;
 
 /**
  * Class MfaDuoEnableService
@@ -37,7 +39,7 @@ class MfaDuoEnableService
     /**
      * @var \Duo\DuoUniversal\Client
      */
-    protected $duoClient;
+    protected Client $duoClient;
 
     /**
      * MfaDuoEnableService constructor.
@@ -53,7 +55,7 @@ class MfaDuoEnableService
                 new MfaOrgSettingsDuoService(MfaOrgSettings::get()->getSettings()),
                 AuthenticationToken::TYPE_MFA_SETUP
             );
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $msg = __('Could not enable Duo MFA provider.');
             throw new InternalErrorException($msg, null, $th);
         }
@@ -78,7 +80,7 @@ class MfaDuoEnableService
         string $token
     ): AuthenticationToken {
         if (!Validation::uuid($token)) {
-            throw new \InvalidArgumentException('The authentication token should be a valid UUID.');
+            throw new InvalidArgumentException('The authentication token should be a valid UUID.');
         }
         $authenticationTokenType = AuthenticationToken::TYPE_MFA_SETUP;
         $authenticationToken = (new MfaDuoCallbackAuthenticationTokenService())
@@ -91,7 +93,7 @@ class MfaDuoEnableService
         try {
             (new MfaDuoVerifyDuoCodeService($authenticationTokenType, $this->duoClient))
                 ->verify($uac, $duoCallbackDto->duoCode);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new BadRequestException(__('Unable to verify Duo authentication.'), null, $th);
         }
         $this->enableProvider($uac);
@@ -110,7 +112,7 @@ class MfaDuoEnableService
     {
         try {
             MfaAccountSettings::enableProvider($uac, MfaSettings::PROVIDER_DUO);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             throw new InternalErrorException(__('Could not enable Duo MFA provider.'), null, $th);
         }
     }

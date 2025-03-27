@@ -111,7 +111,7 @@ trait TagsModelTrait
      */
     protected function assertTagExists(string $tagId)
     {
-        $tag = TagFactory::find()->where(['id' => $tagId])->count();
+        $tag = TagFactory::find()->where(['id' => $tagId])->all()->count();
         $this->assertNotEmpty($tag, 'Expect an existing tag');
     }
 

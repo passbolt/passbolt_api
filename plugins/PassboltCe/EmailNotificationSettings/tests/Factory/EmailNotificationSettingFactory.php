@@ -20,7 +20,7 @@ namespace Passbolt\EmailNotificationSettings\Test\Factory;
 use App\Model\Entity\OrganizationSetting;
 use App\Test\Factory\OrganizationSettingFactory;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\EmailNotificationSettings\Test\Lib\EmailNotificationSettingsTestTrait;
 use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DbEmailNotificationSettingsSource;
 
@@ -44,8 +44,8 @@ class EmailNotificationSettingFactory extends OrganizationSettingFactory
             'property' => $property,
             'property_id' => UuidFactory::uuid($property),
             'value' => json_encode(self::getDefaultEmailNotificationConfig()),
-            'created' => FrozenTime::now(),
-            'modified' => FrozenTime::now(),
+            'created' => DateTime::now(),
+            'modified' => DateTime::now(),
             'created_by' => UuidFactory::uuid(),
             'modified_by' => UuidFactory::uuid(),
         ]);

@@ -17,7 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\ResourceTypes\Service;
 
 use Cake\Database\Expression\IdentifierExpression;
-use Cake\ORM\Query;
+use Cake\Datasource\EntityInterface;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\ResourceTypes\Model\Entity\ResourceType;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
@@ -37,9 +38,9 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
     /**
      * Returns resource types without TOTP resource types.
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function find(): Query
+    public function find(): SelectQuery
     {
         return $this->resourceTypesTable
             ->find()
@@ -57,9 +58,9 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
      *
      * @param string $id uuid
      * @throws \Cake\Datasource\Exception\RecordNotFoundException if resource type is not present
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      */
-    public function get(string $id)
+    public function get(string $id): array|EntityInterface
     {
         return $this->find()
             ->where(['id' => $id])
@@ -69,7 +70,7 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
     /**
      * @inheritDoc
      */
-    public function filter(Query $query, array $options): void
+    public function filter(SelectQuery $query, array $options): void
     {
         $isDeleted = (bool)($options['filter']['is-deleted'] ?? false);
         if ($isDeleted) {
@@ -82,16 +83,19 @@ class ResourceTypesFinderService implements ResourceTypesFinderInterface
     /**
      * @inheritDoc
      */
-    public function contain(Query $query, array $options): void
+    public function contain(SelectQuery $query, array $options): void
     {
         if (isset($options['contain']['resources_count'])) {
             $containResourcesCount = (bool)$options['contain']['resources_count'];
             if ($containResourcesCount) {
-                $query->leftJoinWith('Resources')
+                $query
+                    ->leftJoinWith('Resources', function (SelectQuery $q) {
+                        return $q->where(['Resources.deleted' => false]);
+                    })
                     ->selectAlso([
                         'resources_count' => new IdentifierExpression('COUNT(Resources.id)'),
                     ])
-                    ->group($query->getRepository()->aliasField('id'));
+                    ->groupBy($query->getRepository()->aliasField('id'));
                 $query->getSelectTypeMap()->addDefaults(['resources_count' => 'integer']);
             }
         }

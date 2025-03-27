@@ -32,9 +32,9 @@ class CollectSubscribedEmailRedactorEvent extends Event
     /**
      * @param string $name Name of the event
      * @param \App\Notification\Email\EmailSubscriptionManager|null $subject Subject of the dispatched event
-     * @param array|null $data Data for the event
+     * @param array $data Data for the event
      */
-    final public function __construct($name, $subject = null, $data = null)
+    final public function __construct(string $name, ?EmailSubscriptionManager $subject = null, array $data = [])
     {
         if (!$subject instanceof EmailSubscriptionManager) {
             throw new InvalidArgumentException('$subject must be an instance of ' . EmailSubscriptionManager::class);
@@ -45,9 +45,9 @@ class CollectSubscribedEmailRedactorEvent extends Event
 
     /**
      * @param \App\Notification\Email\EmailSubscriptionManager $emailSubscriptionManager Email Subscription Manager
-     * @return \App\Notification\Email\CollectSubscribedEmailRedactorEvent
+     * @return self
      */
-    public static function create(EmailSubscriptionManager $emailSubscriptionManager)
+    public static function create(EmailSubscriptionManager $emailSubscriptionManager): self
     {
         return new static(static::EVENT_NAME, $emailSubscriptionManager);
     }
@@ -55,7 +55,7 @@ class CollectSubscribedEmailRedactorEvent extends Event
     /**
      * @return \App\Notification\Email\EmailSubscriptionManager
      */
-    public function getManager()
+    public function getManager(): EmailSubscriptionManager
     {
         return $this->getSubject();
     }

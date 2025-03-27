@@ -54,7 +54,7 @@ class GroupsIndexControllerWithFactoriesTest extends AppIntegrationTestCase
     {
         $user = UserFactory::make()->user()->persist();
         $groupA = GroupFactory::make()->persist();
-        $groupB = GroupFactory::make()
+        GroupFactory::make()
             ->withGroupsUsersFor([$user])
             ->with('Modifier')
             ->persist();

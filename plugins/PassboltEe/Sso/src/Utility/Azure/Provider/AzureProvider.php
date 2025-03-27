@@ -41,6 +41,7 @@ use Passbolt\Sso\Utility\Azure\ResourceOwner\AzureResourceOwner;
 use Passbolt\Sso\Utility\Grant\JwtBearer;
 use Passbolt\Sso\Utility\Provider\AbstractOauth2Provider;
 use Psr\Http\Message\ResponseInterface;
+use Throwable;
 
 class AzureProvider extends AbstractOauth2Provider
 {
@@ -59,14 +60,14 @@ class AzureProvider extends AbstractOauth2Provider
     /**
      * @var string $tenant name
      */
-    protected $tenant = '';
+    protected string $tenant = '';
 
     /**
      * Email claim alias field to check as username/email.
      *
      * @var string
      */
-    public $emailClaim = SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL;
+    public string $emailClaim = SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL;
 
     /**
      * @inheritDoc
@@ -154,7 +155,7 @@ class AzureProvider extends AbstractOauth2Provider
      *
      * @return array
      */
-    public function getJwtVerificationKeys()
+    public function getJwtVerificationKeys(): array
     {
         $openIdConfiguration = $this->getOpenIdConfiguration();
         $keysUri = $openIdConfiguration['jwks_uri'];
@@ -164,7 +165,7 @@ class AzureProvider extends AbstractOauth2Provider
 
         try {
             $response = $this->getParsedResponse($request);
-        } catch (\Throwable $exception) {
+        } catch (Throwable $exception) {
             throw new InternalErrorException(__('Cannot parse JWKS endpoint response.'), 500, $exception);
         }
 
@@ -190,7 +191,7 @@ class AzureProvider extends AbstractOauth2Provider
     protected function parseJwksKeys(array $responseKeys): array
     {
         $keys = [];
-        foreach ($responseKeys as $i => $keyinfo) {
+        foreach ($responseKeys as $keyinfo) {
             if (isset($keyinfo['x5c']) && is_array($keyinfo['x5c'])) {
                 foreach ($keyinfo['x5c'] as $encodedkey) {
                     $cert =

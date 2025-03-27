@@ -25,6 +25,7 @@ use App\Utility\UuidFactory;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
+use Exception;
 use Passbolt\UserPassphrasePolicies\Model\Dto\UserPassphrasePoliciesSettingsDto;
 use Passbolt\UserPassphrasePolicies\Service\UserPassphrasePoliciesSetSettingsService;
 use Passbolt\UserPassphrasePolicies\Test\Factory\UserPassphrasePoliciesSettingFactory;
@@ -71,7 +72,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
 
         try {
             $this->service->createOrUpdate($uac, []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ForbiddenException::class, $e);
             $this->assertStringContainsString('Only administrators are allowed', $e->getMessage());
         }
@@ -83,7 +84,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
 
         try {
             $this->service->createOrUpdate($uac, []);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ForbiddenException::class, $e);
             $this->assertStringContainsString('Only administrators are allowed', $e->getMessage());
         }
@@ -112,7 +113,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
 
         $result = $this->service->createOrUpdate($uac, $data);
 
-        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->count());
+        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->all()->count());
         $this->assertInstanceOf(UserPassphrasePoliciesSettingsDto::class, $result);
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->created_by);
@@ -138,7 +139,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
 
         $result = $this->service->createOrUpdate($uac, $data);
 
-        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->count());
+        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->all()->count());
         $this->assertInstanceOf(UserPassphrasePoliciesSettingsDto::class, $result);
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->created_by);
@@ -166,7 +167,7 @@ class UserPassphrasePoliciesSetSettingsServiceTest extends AppTestCase
         $result = $this->service->createOrUpdate($uac, $data);
 
         $this->assertInstanceOf(UserPassphrasePoliciesSettingsDto::class, $result);
-        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->count());
+        $this->assertSame(1, UserPassphrasePoliciesSettingFactory::find()->all()->count());
         $this->assertIsString($result->id);
         $this->assertSame($uac->getId(), $result->modified_by);
         $this->assertSame(UserPassphrasePoliciesSettingsDto::SOURCE_DATABASE, $result->source);

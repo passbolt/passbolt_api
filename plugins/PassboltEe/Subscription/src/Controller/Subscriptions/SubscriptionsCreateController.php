@@ -45,7 +45,6 @@ class SubscriptionsCreateController extends AppController
             throw new BadRequestException(__('Subscription key data is required.'));
         }
 
-        $this->Subscriptions = $this->fetchTable('Passbolt/Subscription.Subscriptions');
         try {
             $service = new SubscriptionKeySaveService();
             $keyDto = $service->save($keyString, $this->User->getAccessControl());

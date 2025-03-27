@@ -29,7 +29,7 @@ class DirectorySyncCommand extends PassboltCommand
     /**
      * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
      */
-    public $directoryOrgSettings;
+    public DirectoryOrgSettings $directoryOrgSettings;
 
     /**
      * @var \App\Service\Command\ProcessUserService
@@ -99,7 +99,7 @@ class DirectorySyncCommand extends PassboltCommand
      * @param \Cake\Console\ConsoleIo $io The console IO
      * @return void
      */
-    protected function warnPersist(Arguments $args, ConsoleIo $io)
+    protected function warnPersist(Arguments $args, ConsoleIo $io): void
     {
         if ($args->hasOption('persist') && !$args->getOption('persist') && !$args->getOption('dry-run')) {
             $io->error(__(

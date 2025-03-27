@@ -23,6 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use Cake\Http\Exception\BadRequestException;
+use Exception;
 use Passbolt\Metadata\Test\Factory\MetadataTypesSettingsFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Metadata\Test\Utility\MigrateFoldersTestTrait;
@@ -90,7 +91,7 @@ class MetadataUpdatePersonalTagServiceTest extends AppTestCaseV5
         $tagDto = MetadataTagDto::fromArray($newData);
         try {
             $this->service->update($uac, $tagDto, $tag);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('The settings selected by your administrator prevent from downgrading tag', $e->getMessage());
         }

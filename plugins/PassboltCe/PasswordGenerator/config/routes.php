@@ -18,7 +18,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/PasswordGenerator', ['path' => '/'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/PasswordGenerator', ['path' => '/'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     /**

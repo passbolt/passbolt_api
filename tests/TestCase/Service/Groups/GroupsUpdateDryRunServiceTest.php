@@ -39,7 +39,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
 {
     use UserAccessControlTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'app.Base/Favorites',
@@ -209,7 +209,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
 
     public function testUpdateDryRunSuccess_AddGroupUser_UserHasAlreadyAccessToTheResource()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_UserHasAlreadyAccessToTheResource();
+        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_UserHasAlreadyAccessToTheResource(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [
             ['user_id' => $userBId, 'is_admin' => true],
@@ -255,7 +255,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
 
     public function testUpdateDryRunError_AddGroupUser_GroupUserValidation()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userCId = UuidFactory::uuid('user.id.carol');
         $data = [
@@ -283,7 +283,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
 
     public function testUpdateDryRunError_AddGroupUser_GroupUserBuildRuleValidation_UserNotExist()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith();
+        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_AddGroupUser_HavingOneResourceSharedWith(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userCId = UuidFactory::uuid('user.id.carol');
         $userNotExistId = UuidFactory::uuid();
@@ -309,7 +309,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
 
     public function testUpdateDryRunSuccess_UpdateGroupUser()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser();
+        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
@@ -342,7 +342,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
 
     public function testUpdateDryRunError_UpdateGroupUser_GroupUserValidation()
     {
-        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser();
+        [$r1, $g1, $userAId, $userBId] = $this->insertFixture_UpdateGroupUser(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $userAGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userAId)->first()->id;
@@ -361,7 +361,7 @@ class GroupsUpdateDryRunServiceTest extends AppTestCase
 
     public function testUpdateDryRunSuccess_DeleteGroupUser()
     {
-        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_DeleteGroupUser();
+        [$r1, $g1, $userAId, $userBId, $userCId] = $this->insertFixture_DeleteGroupUser(); // phpcs:ignore
         $uac = new UserAccessControl(Role::USER, $userAId);
         $userBGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userBId)->first()->id;
         $userCGroupUserId = $this->groupsUsersTable->findByGroupIdAndUserId($g1->id, $userCId)->first()->id;

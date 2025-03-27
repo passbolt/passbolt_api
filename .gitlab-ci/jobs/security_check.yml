@@ -1,7 +1,7 @@
 .security-check:
   stage: unit-test
   variables:
-    PHP_VERSION: "7.4"
+    PHP_VERSION: "8.2"
     COMPOSER_ALLOW_SUPERUSER: 1
   image: $CI_REGISTRY_IMAGE_TEST:$PHP_VERSION
   allow_failure: true

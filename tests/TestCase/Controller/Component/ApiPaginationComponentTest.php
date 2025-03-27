@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Controller\Component;
 
 use App\Controller\Component\ApiPaginationComponent;
+use App\Test\Lib\Controller\ApiPaginationParseQueryTestController;
 use Cake\Controller\ComponentRegistry;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
@@ -32,18 +33,14 @@ class ApiPaginationComponentTest extends TestCase
     public function testParseQuery(string $url, array $expectedSort): void
     {
         $request = new ServerRequest(compact('url'));
-        $controller = $this->getMockBuilder('Cake\Controller\Controller')
+        $controller = $this->getMockBuilder(ApiPaginationParseQueryTestController::class)
             ->disableOriginalConstructor()
             ->getMock();
-
         $controller->method('getRequest')->willReturn($request);
-        $controller->paginate = [
-            'sortableFields' => [
-                'Resources.username',
-                'Resources.modified',
-            ],
-        ];
-
+        $controller->method('getPaginateValue')->willReturn([
+            'Resources.username',
+            'Resources.modified',
+        ]);
         $registry = new ComponentRegistry($controller);
         $component = new ApiPaginationComponent($registry);
 

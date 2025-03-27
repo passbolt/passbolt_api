@@ -46,7 +46,6 @@ class MigrateTagsCommandTest extends AppIntegrationTestCaseV5
     {
         parent::setUp();
 
-        $this->useCommandRunner();
         $this->enableFeaturePlugin(TagsPlugin::class);
         $this->enableFeaturePlugin(MetadataPlugin::class);
         // clear collector state to get proper results
@@ -105,7 +104,7 @@ class MigrateTagsCommandTest extends AppIntegrationTestCaseV5
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         $personalTag = TagFactory::make(['slug' => 'special'])->isPersonalFor($resource, $ada)->persist();
         // Shared tag
-        $sharedTag = TagFactory::make(['slug' => 'marketing'])->isSharedFor($resource)->isShared()->persist();
+        TagFactory::make(['slug' => 'marketing'])->isSharedFor($resource)->isShared()->persist();
 
         $this->exec('passbolt metadata migrate_tags');
 
@@ -113,7 +112,7 @@ class MigrateTagsCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('<success>1 tags were migrated.</success>');
         $this->assertOutputContains('All tags could not be migrated.');
         $this->assertOutputContains('See errors:');
-        $this->assertOutputContains('Record not found in table "metadata_keys"');
+        $this->assertOutputContains('Record not found in table `metadata_keys`');
         // assert values in db
         $tags = TagFactory::find()->toArray();
         $this->assertCount(2, $tags);

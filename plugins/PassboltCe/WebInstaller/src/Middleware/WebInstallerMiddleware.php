@@ -61,7 +61,7 @@ class WebInstallerMiddleware implements MiddlewareInterface
      *
      * @return bool
      */
-    public static function isConfigured()
+    public static function isConfigured(): bool
     {
         if (Configure::read('passbolt.webInstaller.configured') !== null) {
             return Configure::read('passbolt.webInstaller.configured');

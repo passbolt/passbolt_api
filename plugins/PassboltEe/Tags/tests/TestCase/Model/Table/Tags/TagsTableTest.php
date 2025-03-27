@@ -42,7 +42,7 @@ class TagsTableTest extends TagTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources',
         'app.Base/ResourceTypes', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',

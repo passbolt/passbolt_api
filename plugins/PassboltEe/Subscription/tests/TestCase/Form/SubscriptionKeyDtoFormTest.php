@@ -19,7 +19,7 @@ namespace Passbolt\Subscription\Test\TestCase\Form;
 
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
-use Cake\Chronos\Date;
+use Cake\I18n\Date;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;

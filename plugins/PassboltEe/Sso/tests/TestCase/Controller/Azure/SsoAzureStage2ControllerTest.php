@@ -192,16 +192,12 @@ class SsoAzureStage2ControllerTest extends SsoIntegrationTestCase
     {
         $admin = UserFactory::make()->admin()->active()->persist();
         $settings = SsoSettingsFactory::make()->azure()->draft()->persist();
-        $ssoState = SsoStateFactory::make()
+        $ssoState = SsoStateFactory::make(['ip' => '127.0.0.1'])
             ->withTypeSsoSetSettings()
             ->userId($admin->id)
             ->ssoSettingsId($settings->id)
             ->userAgent('something else')
             ->persist();
-        /** Note: Can't use `mockUserIp()` because this test doesn't extend AppIntegrationTestCase. */
-        $this->configRequest([
-            'environment' => ['REMOTE_ADDR' => $ssoState->ip],
-        ]);
         $this->logInAs($admin);
         $this->cookie('passbolt_sso_state', $ssoState->state);
 

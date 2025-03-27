@@ -23,7 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use Cake\Routing\Router;
 use Passbolt\EmailDigest\Test\Factory\EmailQueueFactory;
 use Passbolt\SelfRegistration\SelfRegistrationPlugin;
@@ -156,7 +156,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
                 'error' => 'Please provide a valid email address.',
             ],
         ];
-        foreach ($fails as $case => $data) {
+        foreach ($fails as $data) {
             $this->postJson('/users/recover.json', $data['form-data']);
             $this->assertError(400, $data['error']);
         }
@@ -209,7 +209,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseDefault(): void
     {
-        $user = UserFactory::make()->withAvatar()->user()->setField('created', FrozenDate::yesterday())->persist();
+        $user = UserFactory::make()->withAvatar()->user()->setField('created', Date::yesterday())->persist();
 
         $this->postJson('/users/recover.json', ['username' => $user->username]);
         $this->assertSuccess();
@@ -219,7 +219,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseDefault2(): void
     {
-        $user = UserFactory::make()->withAvatar()->user()->setField('created', FrozenDate::yesterday())->persist();
+        $user = UserFactory::make()->withAvatar()->user()->setField('created', Date::yesterday())->persist();
 
         $this->postJson('/users/recover.json', ['username' => $user->username, 'case' => 'default']);
         $this->assertSuccess();
@@ -239,7 +239,7 @@ class UsersRecoverControllerTest extends AppIntegrationTestCase
         $this->assertTextEquals('default', $email->template_vars['body']['case']);
 
         // Assert that the date displayed is now
-        $this->assertEmailInBatchContains(FrozenDate::now()->toFormattedDateString());
+        $this->assertEmailInBatchContains(Date::now()->toFormattedDateString());
     }
 
     public function testUsersRecoverController_Post_JsonSuccess_CaseError(): void

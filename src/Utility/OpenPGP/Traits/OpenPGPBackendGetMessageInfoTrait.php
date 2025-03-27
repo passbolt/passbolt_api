@@ -18,6 +18,8 @@ declare(strict_types=1);
 namespace App\Utility\OpenPGP\Traits;
 
 use Cake\Core\Exception\CakeException;
+use OpenPGP_AsymmetricSessionKeyPacket;
+use OpenPGP_SymmetricSessionKeyPacket;
 
 trait OpenPGPBackendGetMessageInfoTrait
 {
@@ -51,10 +53,10 @@ trait OpenPGPBackendGetMessageInfoTrait
         $recipients = [];
 
         foreach ($packets as $packet) {
-            if ($packet instanceof \OpenPGP_AsymmetricSessionKeyPacket) {
+            if ($packet instanceof OpenPGP_AsymmetricSessionKeyPacket) {
                 $asymmetric = true;
                 $recipients[] = $packet->keyid;
-            } elseif ($packet instanceof \OpenPGP_SymmetricSessionKeyPacket) {
+            } elseif ($packet instanceof OpenPGP_SymmetricSessionKeyPacket) {
                 $symmetric = true;
             }
         }

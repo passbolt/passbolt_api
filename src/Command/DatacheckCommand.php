@@ -31,18 +31,19 @@ use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Exception\CakeException;
 use Cake\Utility\Hash;
+use Exception;
 
 class DatacheckCommand extends PassboltCommand
 {
     /**
      * @var \Cake\Console\Arguments
      */
-    private $args;
+    private Arguments $args;
 
     /**
      * @var \Cake\Console\ConsoleIo
      */
-    private $io;
+    private ConsoleIo $io;
 
     /**
      * @inheritDoc
@@ -95,11 +96,11 @@ class DatacheckCommand extends PassboltCommand
         $services[] = new SecretsHealthcheckService();
         $services[] = new UsersHealthcheckService();
 
-        foreach ($services as $i => $service) {
+        foreach ($services as $service) {
             try {
                 $results = $service->check();
                 $this->displayResults($results, $service->getServiceCategory(), $service->getServiceName());
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $io->out($exception->getMessage());
             }
         }
@@ -115,7 +116,7 @@ class DatacheckCommand extends PassboltCommand
      * @param string $serviceName section name
      * @return void
      */
-    protected function displayResults(array $results, string $serviceCategory, string $serviceName)
+    protected function displayResults(array $results, string $serviceCategory, string $serviceName): void
     {
         $results = $results[$serviceCategory];
         $this->displayServiceTotal($results, $serviceName);
@@ -133,7 +134,7 @@ class DatacheckCommand extends PassboltCommand
      * @param string $serviceName section name
      * @return void
      */
-    protected function displayServiceTotal(array $results, string $serviceName)
+    protected function displayServiceTotal(array $results, string $serviceName): void
     {
         $status = !count(Hash::extract($results, '{s}.{s}.{n}[status=error]')) ?
             Healthcheck::STATUS_SUCCESS : Healthcheck::STATUS_ERROR;
@@ -147,7 +148,7 @@ class DatacheckCommand extends PassboltCommand
      * @param string $name name
      * @return void
      */
-    protected function displayCheckTotal(array $details, string $name)
+    protected function displayCheckTotal(array $details, string $name): void
     {
         $success = count(Hash::extract($details, '{n}[status=success]'));
         $total = count($details);
@@ -162,9 +163,8 @@ class DatacheckCommand extends PassboltCommand
      * @param array $details results details
      * @return void
      */
-    protected function displayCheckDetails(array $details)
+    protected function displayCheckDetails(array $details): void
     {
-        $count = 0;
         foreach ($details as $detail) {
             $hideSuccessDetail = $this->args->getOption('hide-success-details');
             $hideErrorDetail = $this->args->getOption('hide-error-details');
@@ -172,7 +172,6 @@ class DatacheckCommand extends PassboltCommand
                 (!$hideSuccessDetail && $detail['status'] === Healthcheck::STATUS_SUCCESS) ||
                 (!$hideErrorDetail && $detail['status'] === Healthcheck::STATUS_ERROR)
             ) {
-                $count++;
                 $this->display($detail['message'], $detail['status'], 4);
             }
         }
@@ -187,7 +186,7 @@ class DatacheckCommand extends PassboltCommand
      * @throws \Cake\Core\Exception\CakeException case is not defined or missing
      * @return void
      */
-    protected function display(string $msg, string $case, int $padding = 0)
+    protected function display(string $msg, string $case, int $padding = 0): void
     {
         $pad = '';
         for ($i = 0; $i < $padding; $i++) {

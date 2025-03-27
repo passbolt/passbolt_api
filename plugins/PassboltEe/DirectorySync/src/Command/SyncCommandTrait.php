@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Command;
 use App\Error\Exception\ValidationException;
 use Cake\Console\ConsoleIo;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
+use Passbolt\DirectorySync\Actions\Reports\ActionReportCollection;
 use Passbolt\DirectorySync\Utility\Alias;
 use Passbolt\DirectorySync\Utility\SyncError;
 
@@ -27,12 +28,12 @@ trait SyncCommandTrait
     /**
      * @var string
      */
-    protected $model;
+    protected string $model;
 
     /**
      * @var int
      */
-    protected $pad = 10;
+    protected int $pad = 10;
 
     /**
      * Display reports
@@ -42,7 +43,7 @@ trait SyncCommandTrait
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayReports($reports, string $model, ConsoleIo $io)
+    protected function displayReports(ActionReportCollection $reports, string $model, ConsoleIo $io): void
     {
         $io->hr();
         $io->out($model);
@@ -52,7 +53,7 @@ trait SyncCommandTrait
         if (!count($created)) {
             $this->success(str_pad('[success]', $this->pad) . __('No new item to create.'), $io);
         }
-        foreach ($created as $i => $report) {
+        foreach ($created as $report) {
             $this->displayReport($report, $io);
         }
         $io->out();
@@ -61,7 +62,7 @@ trait SyncCommandTrait
         if (!count($updated)) {
             $this->success(str_pad('[success]', $this->pad) . __('No new item to update'), $io);
         }
-        foreach ($updated as $i => $report) {
+        foreach ($updated as $report) {
             $this->displayReport($report, $io);
         }
         $io->out();
@@ -70,7 +71,7 @@ trait SyncCommandTrait
         if (!count($deleted)) {
             $this->success(str_pad('[success]', $this->pad) . __('No new item to delete'), $io);
         }
-        foreach ($deleted as $i => $report) {
+        foreach ($deleted as $report) {
             $this->displayReport($report, $io);
         }
         $io->out();
@@ -90,7 +91,7 @@ trait SyncCommandTrait
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayReport(ActionReport $report, ConsoleIo $io)
+    protected function displayReport(ActionReport $report, ConsoleIo $io): void
     {
         $msg = str_pad('[' . $report->getStatus() . ']', $this->pad);
         $msg .= $report->getMessage();
@@ -131,10 +132,10 @@ trait SyncCommandTrait
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function displayValidationError($errors, ConsoleIo $io): void
+    protected function displayValidationError(array $errors, ConsoleIo $io): void
     {
         foreach ($errors as $fieldname => $error) {
-            foreach ($error as $rule => $message) {
+            foreach ($error as $message) {
                 if (is_array($message)) {
                     $this->displayValidationError($error, $io);
                     break;

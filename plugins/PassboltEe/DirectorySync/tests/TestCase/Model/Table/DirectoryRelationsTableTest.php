@@ -71,7 +71,7 @@ class DirectoryRelationsTableTest extends TestCase
         $numberOfDeletedItems = $this->DirectoryRelations->cleanupHardDeletedUserGroups($parentKeyToSkip);
 
         $this->assertSame($n2, $numberOfDeletedItems);
-        $drsToSkipCount = DirectoryRelationFactory::find()->where(['parent_key IN' => $parentKeyToSkip])->count();
+        $drsToSkipCount = DirectoryRelationFactory::find()->where(['parent_key IN' => $parentKeyToSkip])->all()->count();
         $this->assertSame(2, $drsToSkipCount);
     }
 }

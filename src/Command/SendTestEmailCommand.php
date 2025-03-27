@@ -25,16 +25,18 @@ use Cake\Console\ConsoleOptionParser;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsSendTestMailerService;
 use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
+use Throwable;
 
 class SendTestEmailCommand extends PassboltCommand
 {
     /**
      * @var \Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService
      */
-    public $sendTestEmailService;
+    public SmtpSettingsTestEmailService $sendTestEmailService;
 
     /**
      * Injects the service to facilitate the unit testing of the command
@@ -92,7 +94,7 @@ class SendTestEmailCommand extends PassboltCommand
         $this->checkSmtpIsSet($io);
         try {
             $transportConfig = (new SmtpSettingsGetService())->getSettings();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->error($e->getMessage(), $io);
             $this->abort();
         }
@@ -185,7 +187,7 @@ class SendTestEmailCommand extends PassboltCommand
     {
         try {
             $this->sendTestEmailService->sendTestEmail($transportConfig);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->displayTrace($this->sendTestEmailService->getTrace(), $io);
             $io->nl(0);
             $this->error(__('Could not send the test email.'), $io);
@@ -246,7 +248,7 @@ class SendTestEmailCommand extends PassboltCommand
      * @param \Cake\Console\ConsoleIo $io Console IO.
      * @return void
      */
-    protected function checkFromIsSet(array $transportConfig, ConsoleIo $io)
+    protected function checkFromIsSet(array $transportConfig, ConsoleIo $io): void
     {
         $from = $this->getFromInTransportConfig($transportConfig);
 

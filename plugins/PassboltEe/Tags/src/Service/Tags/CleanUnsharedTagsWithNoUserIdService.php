@@ -33,7 +33,7 @@ class CleanUnsharedTagsWithNoUserIdService
     public function cleanUp(): int
     {
         $ResourcesTagsTable = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
-        $entriesToDelete = $ResourcesTagsTable->find('list', ['displayField' => 'id'])
+        $entriesToDelete = $ResourcesTagsTable->find('list', displayField: 'id')
             ->select('ResourcesTags.id')
             ->disableHydration()
             ->innerJoinWith('Tags', function (Query $q) {

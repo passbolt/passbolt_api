@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 use App\Model\Entity\Role;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use DateTime;
 use LdapRecord\Models\Collection;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryResults;
@@ -48,8 +49,8 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncDeprecatedIn
             'mail' => 'john.doe@passbolt.com',
             'dn' => $dn,
             'directoryType' => DirectoryInterface::TYPE_AD,
-            'whenCreated' => new \DateTime(),
-            'whenChanged' => new \DateTime(),
+            'whenCreated' => new DateTime(),
+            'whenChanged' => new DateTime(),
         ];
         $ldapObject = $this->getTestLdapUserObject($userData);
         $ldapUsers = new Collection();
@@ -87,8 +88,8 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncDeprecatedIn
             'mail' => 'john.doe@passbolt.com',
             'dn' => $dn,
             'directoryType' => DirectoryInterface::TYPE_AD,
-            'whenCreated' => new \DateTime(),
-            'whenChanged' => new \DateTime(),
+            'whenCreated' => new DateTime(),
+            'whenChanged' => new DateTime(),
         ];
         $ldapObject = $this->getTestLdapUserObject($userData);
         $ldapUsers = new Collection();
@@ -128,8 +129,8 @@ class DirectoryResultsObjectTransformationTest extends DirectorySyncDeprecatedIn
             'uid' => 'jdoe',
             'dn' => $dn,
             'directoryType' => DirectoryInterface::TYPE_AD,
-            'whenCreated' => new \DateTime(),
-            'whenChanged' => new \DateTime(),
+            'whenCreated' => new DateTime(),
+            'whenChanged' => new DateTime(),
         ];
         $ldapObject = $this->getTestLdapUserObject($userData);
         $ldapUsers = new Collection();

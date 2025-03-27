@@ -26,17 +26,17 @@ abstract class ActionLogsAbstractQueryStrategy
     /**
      * @var \Cake\Http\ServerRequest
      */
-    protected $request;
+    protected ServerRequest $request;
 
     /**
      * @var \Cake\Http\Response
      */
-    protected $response;
+    protected Response $response;
 
     /**
      * @var \App\Utility\UserAccessControl
      */
-    protected $uac;
+    protected UserAccessControl $uac;
 
     /**
      * @param \Cake\Http\ServerRequest $request Server request
@@ -57,7 +57,7 @@ abstract class ActionLogsAbstractQueryStrategy
      * @param \Passbolt\Log\Model\Entity\ActionLog $actionLog Action log entity
      * @return string|false
      */
-    abstract public function query(ActionLog $actionLog);
+    abstract public function query(ActionLog $actionLog): string|false;
 
     /**
      * @return \Cake\Http\ServerRequest

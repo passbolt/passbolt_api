@@ -47,7 +47,7 @@ class GroupsUsersEventListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function handleGroupUserDeletedEvent(Event $event)
+    public function handleGroupUserDeletedEvent(Event $event): void
     {
         $groupUser = $event->getData('groupUser');
         $service = new HandleGroupUserDeletedService();

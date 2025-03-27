@@ -20,6 +20,7 @@ namespace Passbolt\Sso\Test\TestCase\Service\SsoStates;
 use App\Test\Factory\UserFactory;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
+use Exception;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\SsoStates\SsoStatesGetService;
 use Passbolt\Sso\Test\Factory\SsoSettingsFactory;
@@ -60,7 +61,7 @@ class SsoStatesGetServiceTest extends SsoTestCase
     {
         try {
             $this->service->getOrFail(SsoState::generate());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(RecordNotFoundException::class, $e);
             $this->assertStringContainsString('The SSO state does not exist.', $e->getMessage());
         }
@@ -78,7 +79,7 @@ class SsoStatesGetServiceTest extends SsoTestCase
 
         try {
             $this->service->getOrFail($ssoState->state);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(RecordNotFoundException::class, $e);
             $this->assertStringContainsString('The SSO state does not exist.', $e->getMessage());
         }
@@ -88,7 +89,7 @@ class SsoStatesGetServiceTest extends SsoTestCase
     {
         try {
             $this->service->getOrFail('123456');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('The SSO state is invalid.', $e->getMessage());
         }

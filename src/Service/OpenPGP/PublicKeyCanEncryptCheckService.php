@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Service\OpenPGP;
 
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use Exception;
 
 /**
  * Public Key encryption check service
@@ -45,7 +46,7 @@ class PublicKeyCanEncryptCheckService
             $fingerprint = $gpg->importKeyIntoKeyring($armoredKey);
             $gpg->setEncryptKeyFromFingerprint($fingerprint);
             $gpg->encrypt($messageToEncrypt);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $result = false;
         }
 

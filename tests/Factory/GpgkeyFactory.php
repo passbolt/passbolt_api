@@ -18,7 +18,7 @@ namespace App\Test\Factory;
 
 use App\Test\Factory\Traits\ArmoredKeyFactoryTrait;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -81,7 +81,7 @@ class GpgkeyFactory extends CakephpBaseFactory
      */
     public function expired()
     {
-        return $this->setField('expires', FrozenTime::yesterday());
+        return $this->setField('expires', DateTime::yesterday());
     }
 
     /**
@@ -101,7 +101,7 @@ class GpgkeyFactory extends CakephpBaseFactory
      */
     public function modifiedYesterday()
     {
-        return $this->setField('modified', FrozenTime::yesterday());
+        return $this->setField('modified', DateTime::yesterday());
     }
 
     /**

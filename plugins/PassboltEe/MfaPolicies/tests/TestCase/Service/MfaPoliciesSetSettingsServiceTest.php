@@ -22,6 +22,7 @@ use App\Test\Lib\Utility\ExtendedUserAccessControlTestTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
 use Cake\Http\Exception\ForbiddenException;
+use Exception;
 use Passbolt\MfaPolicies\Model\Dto\MfaPolicySettings;
 use Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting;
 use Passbolt\MfaPolicies\Service\MfaPoliciesSetSettingsService;
@@ -70,7 +71,7 @@ class MfaPoliciesSetSettingsServiceTest extends AppTestCase
                 'policy' => MfaPoliciesSetting::POLICY_OPT_IN,
                 'remember_me_for_a_month' => true,
             ]));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(ForbiddenException::class, $e);
             $this->assertStringContainsString('administrators are allowed to create/update MFA policies settings', $e->getMessage());
         }

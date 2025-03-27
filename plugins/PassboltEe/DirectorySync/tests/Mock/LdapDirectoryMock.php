@@ -31,6 +31,7 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SEEC\PhpUnit\Helper\ConsecutiveParams;
 
 /**
  * LdapDirectoryMock class
@@ -39,6 +40,8 @@ use PHPUnit\Framework\TestCase;
  */
 class LdapDirectoryMock
 {
+    use ConsecutiveParams;
+
     /**
      * @var MockObject|LdapDirectory
      */
@@ -224,7 +227,7 @@ class LdapDirectoryMock
     {
         $directoryResults->expects($this->testCase->exactly(count($parameters)))
             ->method('getRecursivelyFromParentGroup')
-            ->withConsecutive(...$parameters)
+            ->with(...$this->withConsecutive(...$parameters))
             ->willReturnOnConsecutiveCalls(...$filtered);
     }
 
@@ -297,7 +300,7 @@ class LdapDirectoryMock
         if ($rawFilterConditions) {
             $builder->expects($this->testCase->exactly(count($rawFilterConditions)))
                 ->method('rawFilter')
-                ->withConsecutive(...$rawFilterConditions)
+                ->with(...$this->withConsecutive(...$rawFilterConditions))
                 ->willReturnSelf();
         } else {
             $builder->expects($this->testCase->never())
@@ -308,32 +311,32 @@ class LdapDirectoryMock
             ->getMock();
         $ldapGroup->expects($this->testCase->exactly($validGroupCustomFilter ? 2 : 0))
             ->method('addAttributeValue')
-            ->withConsecutive(['objectType', DirectoryInterface::ENTRY_TYPE_GROUP], ['directoryType', DirectoryInterface::TYPE_AD]);
+            ->with(...$this->withConsecutive(['objectType', DirectoryInterface::ENTRY_TYPE_GROUP], ['directoryType', DirectoryInterface::TYPE_AD]));
         $ldapUser = $this->testCase->getMockBuilder(User::class)
             ->onlyMethods(['addAttributeValue', 'isEnabled'])
             ->getMock();
 
         $ldapUser->expects($this->testCase->exactly($validGroupCustomFilter && $validUserCustomFilter ? 2 : 0))
             ->method('addAttributeValue')
-            ->withConsecutive(['objectType', DirectoryInterface::ENTRY_TYPE_USER], ['directoryType', DirectoryInterface::TYPE_AD]);
+            ->with(...$this->withConsecutive(['objectType', DirectoryInterface::ENTRY_TYPE_USER], ['directoryType', DirectoryInterface::TYPE_AD]));
 
         $builder->expects($this->testCase->exactly($getExpectationCount))
             ->method('paginate')
             ->willReturn([$ldapGroup], [$ldapUser]);
         $builder->expects($this->testCase->exactly($expectationCount))
             ->method('select')
-            ->withConsecutive(
+            ->with(...$this->withConsecutive(
                 [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_GROUP])],
                 [array_values($mappingRules[DirectoryInterface::ENTRY_TYPE_USER])]
-            )
+            ))
             ->willReturnSelf();
         $builder->expects($this->testCase->exactly($expectationCount))
             ->method('setBaseDn')
-            ->withConsecutive([$this->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_GROUP)], [$this->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_USER)])
+            ->with(...$this->withConsecutive([$this->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_GROUP)], [$this->Ldap->getDNFullPath(DirectoryInterface::ENTRY_TYPE_USER)]))
             ->willReturnSelf();
         $this->Ldap->expects($this->testCase->exactly($expectationCount))
             ->method('getQuery')
-            ->withConsecutive([DirectoryInterface::ENTRY_TYPE_GROUP], [DirectoryInterface::ENTRY_TYPE_USER])
+            ->with(...$this->withConsecutive([DirectoryInterface::ENTRY_TYPE_GROUP], [DirectoryInterface::ENTRY_TYPE_USER]))
             ->willReturn($builder);
     }
 

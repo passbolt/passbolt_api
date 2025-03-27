@@ -20,7 +20,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Log\Test\Factory\SecretAccessFactory;
 use Passbolt\PasswordExpiryPolicies\Test\Factory\PasswordExpiryPoliciesSettingFactory;
 
@@ -53,7 +53,7 @@ class PasswordExpiryPoliciesUsersEditDisableControllerTest extends AppIntegratio
         $this->logInAsAdmin();
         $data = [
             'id' => $userToDisable->id,
-            'disabled' => FrozenTime::now(),
+            'disabled' => DateTime::now(),
         ];
         $this->postJson('/users/' . $userToDisable->id . '.json', $data);
         $this->assertSuccess();

@@ -24,6 +24,7 @@ use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
+use Exception;
 
 class MfaVerifiedToken
 {
@@ -98,7 +99,7 @@ class MfaVerifiedToken
             $expiry = MfaVerifiedCookie::MAX_DURATION;
             $token = (new AuthenticationTokenGetService())
                 ->getActiveNotExpiredOrFail($tokenString, $uac->getId(), $type, $expiry);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             return false;
         }
 
@@ -136,7 +137,7 @@ class MfaVerifiedToken
      * @param \App\Utility\UserAccessControl $uac user access control
      * @return void
      */
-    public static function setAllInactive(UserAccessControl $uac)
+    public static function setAllInactive(UserAccessControl $uac): void
     {
         $AuthenticationTokens = TableRegistry::getTableLocator()->get('AuthenticationTokens');
         $mfaTokens = $AuthenticationTokens->find()

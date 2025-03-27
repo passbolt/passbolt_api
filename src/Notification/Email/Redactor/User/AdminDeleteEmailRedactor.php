@@ -20,6 +20,7 @@ namespace App\Notification\Email\Redactor\User;
 use App\Controller\Users\UsersDeleteController;
 use App\Model\Entity\User;
 use App\Model\Table\AvatarsTable;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -49,14 +50,13 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $Users;
+    private UsersTable $Users;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 
@@ -192,7 +192,7 @@ class AdminDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         if (!empty($groupsIds) && $groupUserDeleteRedactorEnabled) {
             $groupManagerIdsSubQuery = $this->Users
                 ->find('notDisabled')
-                ->group($this->Users->aliasField('id'))
+                ->groupBy($this->Users->aliasField('id'))
                 ->select('id')
                 ->matching('GroupsUsers', function (Query $q) use ($groupsIds) {
                     return $q->where([

@@ -35,7 +35,7 @@ use Cake\Validation\Validator;
  * @method \App\Model\Entity\OrganizationSetting newEmptyEntity()
  * @method \App\Model\Entity\OrganizationSetting newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\OrganizationSetting[] newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\OrganizationSetting get($primaryKey, $options = [])
+ * @method \App\Model\Entity\OrganizationSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\OrganizationSetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \App\Model\Entity\OrganizationSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \App\Model\Entity\OrganizationSetting[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -156,14 +156,14 @@ class OrganizationSettingsTable extends Table
      * Create (or update) an organization setting
      *
      * @param string $property The property name
-     * @param string|array $value The property value
+     * @param array|string $value The property value
      * @param \App\Utility\UserAccessControl $control user access control object
      * @return \App\Model\Entity\OrganizationSetting
      * @throws \Cake\Http\Exception\UnauthorizedException When user role is not admin.
      * @throws \App\Error\Exception\CustomValidationException When there are validation errors.
      * @throws \Cake\Http\Exception\InternalErrorException|\Exception When unable to save the entity.
      */
-    public function createOrUpdateSetting(string $property, $value, UserAccessControl $control): OrganizationSetting
+    public function createOrUpdateSetting(string $property, string|array $value, UserAccessControl $control): OrganizationSetting // phpcs:ignore
     {
         if (!$control->isAdmin()) {
             throw new UnauthorizedException(__('Only admin can create or update organization settings.'));
@@ -199,7 +199,7 @@ class OrganizationSettingsTable extends Table
      * @param \App\Utility\UserAccessControl $control user access control object
      * @return void
      */
-    public function deleteSetting(string $property, UserAccessControl $control)
+    public function deleteSetting(string $property, UserAccessControl $control): void
     {
         if (!$control->isAdmin()) {
             throw new UnauthorizedException(__('Only admin can create or update organization settings.'));

@@ -20,6 +20,7 @@ use App\Model\Entity\Role;
 use App\Service\Users\UserGetService;
 use App\Utility\ExtendedUserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Passbolt\Sso\Controller\AbstractSsoController;
@@ -30,7 +31,7 @@ class SsoKeysGetController extends AbstractSsoController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated(['get']);
 

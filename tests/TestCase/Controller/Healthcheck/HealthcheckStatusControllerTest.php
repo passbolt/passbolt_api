@@ -23,7 +23,7 @@ use App\Test\Lib\AppIntegrationTestCase;
  */
 class HealthcheckStatusControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',];
 
     public function testHealthcheckStatusOk(): void
     {

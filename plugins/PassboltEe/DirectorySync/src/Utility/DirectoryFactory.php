@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Utility;
 
 use Cake\Core\Configure;
+use Exception;
 use Passbolt\DirectorySync\Test\Utility\TestDirectory;
 
 /**
@@ -33,7 +34,7 @@ class DirectoryFactory
      * @return mixed
      * @throws \Exception
      */
-    public static function get(?DirectoryOrgSettings $settings = null)
+    public static function get(?DirectoryOrgSettings $settings = null): mixed
     {
         if (Configure::read('passbolt.plugins.directorySync.test')) {
             return new TestDirectory($settings);
@@ -41,6 +42,6 @@ class DirectoryFactory
         if ($settings->isEnabled()) {
             return new LdapDirectory($settings);
         }
-        throw new \Exception('Directory sync plugin is not enabled.');
+        throw new Exception('Directory sync plugin is not enabled.');
     }
 }

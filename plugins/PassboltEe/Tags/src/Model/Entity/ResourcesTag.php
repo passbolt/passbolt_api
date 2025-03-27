@@ -25,7 +25,7 @@ use Cake\ORM\Entity;
  * @property string $resource_id
  * @property string $tag_id
  * @property string|null $user_id
- * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\DateTime $created
  *
  * @property \App\Model\Entity\Resource $resource
  * @property \Cake\ORM\Entity $tag
@@ -42,7 +42,7 @@ class ResourcesTag extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         '*' => false,
     ];
 }

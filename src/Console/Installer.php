@@ -21,6 +21,7 @@ if (!defined('STDIN')) {
 }
 
 use Cake\Utility\Security;
+use Composer\IO\IOInterface;
 use Composer\Script\Event;
 use Exception;
 
@@ -51,7 +52,7 @@ class Installer
      * @throws \Exception Exception raised by validator.
      * @return void
      */
-    public static function postInstall(Event $event)
+    public static function postInstall(Event $event): void
     {
         $io = $event->getIO();
 
@@ -83,11 +84,6 @@ class Installer
         }
 
         static::setSecuritySalt($rootDir, $io);
-
-        if (class_exists('\Cake\Codeception\Console\Installer')) {
-            /** @psalm-suppress UndefinedClass this code is not executed if the class doesn't exist */
-            \Cake\Codeception\Console\Installer::customizeCodeceptionBinary($event);
-        }
     }
 
     /**
@@ -97,7 +93,7 @@ class Installer
      * @param \Composer\IO\IOInterface $io IO interface to write to console.
      * @return void
      */
-    public static function createAppConfig($dir, $io)
+    public static function createAppConfig(string $dir, IOInterface $io): void
     {
         $appConfig = $dir . '/config/app.php';
         $defaultConfig = $dir . '/config/app.default.php';
@@ -114,7 +110,7 @@ class Installer
      * @param \Composer\IO\IOInterface $io IO interface to write to console.
      * @return void
      */
-    public static function createWritableDirectories($dir, $io)
+    public static function createWritableDirectories(string $dir, IOInterface $io): void
     {
         foreach (static::WRITABLE_DIRS as $path) {
             $path = $dir . '/' . $path;
@@ -134,10 +130,10 @@ class Installer
      * @param \Composer\IO\IOInterface $io IO interface to write to console.
      * @return void
      */
-    public static function setFolderPermissions($dir, $io)
+    public static function setFolderPermissions(string $dir, IOInterface $io): void
     {
         // Change the permissions on a path and output the results.
-        $changePerms = function ($path, $perms, $io) {
+        $changePerms = function ($path, $perms, $io): void {
             // Get permission bits from stat(2) result.
             $currentPerms = fileperms($path) & 0777;
             if (($currentPerms & $perms) == $perms) {
@@ -152,7 +148,7 @@ class Installer
             }
         };
 
-        $walker = function ($dir, $perms, $io) use (&$walker, $changePerms) {
+        $walker = function ($dir, $perms, $io) use (&$walker, $changePerms): void {
             $files = array_diff(scandir($dir), ['.', '..']);
             foreach ($files as $file) {
                 $path = $dir . '/' . $file;
@@ -179,7 +175,7 @@ class Installer
      * @param \Composer\IO\IOInterface $io IO interface to write to console.
      * @return void
      */
-    public static function setSecuritySalt($dir, $io)
+    public static function setSecuritySalt(string $dir, IOInterface $io): void
     {
         $config = $dir . '/config/app.php';
         $content = file_get_contents($config);

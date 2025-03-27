@@ -17,7 +17,7 @@ declare(strict_types=1);
 use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
-$routes->plugin('Passbolt/PasswordPoliciesUpdate', ['path' => '/password-policies'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/PasswordPoliciesUpdate', ['path' => '/password-policies'], function (RouteBuilder $routes): void { // phpcs:ignore
     $routes->setExtensions(['json']);
 
     $routes

@@ -24,6 +24,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Datasource\ConnectionManager;
+use Throwable;
 
 /**
  * TruncateAccountRecoveryTablesCommand class
@@ -184,7 +185,7 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
             return;
         }
 
-        $fingerprintValidationRule = (new IsValidFingerprintValidationRule());
+        $fingerprintValidationRule = new IsValidFingerprintValidationRule();
         if (!$fingerprintValidationRule->rule($fingerprint, null)) {
             $io->error($fingerprintValidationRule->defaultErrorMessage($fingerprint, null));
             $this->abort();
@@ -220,7 +221,7 @@ class TruncateAccountRecoveryTablesCommand extends PassboltCommand
         foreach (self::ACCOUNT_RECOVERY_TABLES_TO_TRUNCATE as $table) {
             try {
                 $connection->delete($table);
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $io->error($e->getMessage());
                 $this->abort();
             }

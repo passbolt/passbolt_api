@@ -35,7 +35,6 @@ class SsoHealthcheckCommandTest extends AppTestCase
     {
         parent::setUp();
 
-        $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
         $this->enableFeaturePlugin(SsoPlugin::class);
     }

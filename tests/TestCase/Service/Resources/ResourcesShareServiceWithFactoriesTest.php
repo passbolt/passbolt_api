@@ -170,7 +170,7 @@ hcciUFw5
         $this->assertFalse($resource->hasErrors());
 
         // Load the resource.
-        $resource = $this->Resources->get($resource->id, ['contain' => ['Permissions', 'Secrets']]);
+        $resource = $this->Resources->get($resource->id, contain: ['Permissions', 'Secrets']);
 
         // Verify that all the allowed users have a secret for the resource.
         $secretsUsersIds = Hash::extract($resource->secrets, '{n}.user_id');
@@ -315,7 +315,7 @@ hcciUFw5
             ],
         ];
 
-        foreach ($testCases as $caseLabel => $case) {
+        foreach ($testCases as $case) {
             $permissions = Hash::get($case, 'data.permissions', []);
             $secrets = Hash::get($case, 'data.secrets', []);
             try {

@@ -83,7 +83,7 @@ class OperatingSystemHealthcheck implements HealthcheckServiceInterface, Healthc
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [__('See PHP_INT_MAX - https://www.php.net/manual/en/language.types.integer.php')];
     }

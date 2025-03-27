@@ -49,7 +49,7 @@ class PermissionsUpdatePermissionsServiceTest extends AppTestCase
      */
     public $service;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
         'app.Base/Users',
     ];

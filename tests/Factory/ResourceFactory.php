@@ -23,7 +23,7 @@ use App\Model\Table\PermissionsTable;
 use App\Test\Factory\Traits\FactoryDeletedTrait;
 use App\Utility\UuidFactory;
 use Cake\Chronos\Chronos;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use CakephpFixtureFactories\Factory\BaseFactory as CakephpBaseFactory;
 use Faker\Generator;
 
@@ -154,9 +154,9 @@ class ResourceFactory extends CakephpBaseFactory
     /**
      * @return $this
      */
-    public function expired(?FrozenTime $expired = null)
+    public function expired(?DateTime $expired = null)
     {
-        return $this->setField('expired', $expired ?? FrozenTime::now()->subMinutes(1));
+        return $this->setField('expired', $expired ?? DateTime::now()->subMinutes(1));
     }
 
     /**

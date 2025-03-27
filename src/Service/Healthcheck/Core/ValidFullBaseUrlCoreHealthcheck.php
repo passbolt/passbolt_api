@@ -34,12 +34,12 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
     /**
      * @var mixed $url
      */
-    private $url;
+    private mixed $url;
 
     /**
      * @param mixed $url url
      */
-    public function __construct($url = null)
+    public function __construct(mixed $url = null)
     {
         $fullBaseUrl = $url ?? Configure::read('App.fullBaseUrl');
         if (!is_string($fullBaseUrl)) {
@@ -105,7 +105,7 @@ class ValidFullBaseUrlCoreHealthcheck implements HealthcheckServiceInterface, He
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Edit App.fullBaseUrl in {0}', CONFIG . 'passbolt.php'),

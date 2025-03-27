@@ -32,7 +32,7 @@ use Passbolt\PasswordExpiry\Test\Factory\PasswordExpirySettingFactory;
 
 class PasswordExpiryGroupSyncActionDeleteGroupUserTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
-    public $fixtures = [];
+    public array $fixtures = [];
 
     public function setUp(): void
     {

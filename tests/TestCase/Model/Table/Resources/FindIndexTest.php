@@ -27,6 +27,7 @@ use App\Test\Lib\Model\FavoritesModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use InvalidArgumentException;
 use PassboltTestData\Lib\PermissionMatrix;
 
 class FindIndexTest extends AppTestCase
@@ -37,7 +38,7 @@ class FindIndexTest extends AppTestCase
      * @var ResourcesTable
      */
     public $Resources;
-    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions'];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Favorites', 'app.Base/Permissions'];
 
     public function setUp(): void
     {
@@ -72,7 +73,7 @@ class FindIndexTest extends AppTestCase
 
         $resources = $this->Resources->findIndex($user->id);
 
-        $this->assertSame(1, $resources->count());
+        $this->assertSame(1, $resources->all()->count());
         $this->assertSame($notDeletedResource->id, $resources->firstOrFail()->id);
     }
 
@@ -299,7 +300,7 @@ class FindIndexTest extends AppTestCase
     {
         try {
             $this->Resources->findIndex('not-valid');
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
         $this->fail('Expect an exception');

@@ -166,6 +166,7 @@ class MfaPoliciesSettingsSetControllerTest extends AppIntegrationTestCase
         /** Assert MFA tokens doesn't get inactivated when option is enabled */
         $inactiveMfaTokens = MfaAuthenticationTokenFactory::find()
             ->where(['type' => AuthenticationToken::TYPE_MFA, 'active' => false])
+            ->all()
             ->count();
         $this->assertSame(0, $inactiveMfaTokens);
     }

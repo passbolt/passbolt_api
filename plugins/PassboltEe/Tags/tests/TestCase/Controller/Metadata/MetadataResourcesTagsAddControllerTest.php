@@ -21,7 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
@@ -30,6 +30,7 @@ use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
 use Passbolt\Tags\TagsPlugin;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
+use stdClass;
 
 /**
  * @covers \Passbolt\Tags\Controller\Tags\ResourcesTagsAddController
@@ -259,7 +260,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $data = [
             'tags' => [
                 ['foo' => 'bar'],
-                ['metadata' => new \stdClass()],
+                ['metadata' => new stdClass()],
                 [
                     'metadata' => '🔥🔥🔥',
                     'metadata_key_id' => 'invalid value',
@@ -459,7 +460,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         /** @var \App\Model\Entity\Resource $resource */
         $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
         // Create a shared tag
-        $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
+        MetadataKeyFactory::make()->withCreatorAndModifier($ada)->withServerPrivateKey()->persist();
         $clearTextMetadata = json_encode(['object_type' => 'PASSBOLT_TAG_METADATA', 'slug' => 'my-fav']);
         // note: encrypt metadata using metadata key
         $metadata = $this->encryptForMetadataKey($clearTextMetadata);
@@ -572,11 +573,11 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
     {
         return [
             [
-                'input' => ['expired' => FrozenTime::yesterday()],
+                'input' => ['expired' => DateTime::yesterday()],
                 'expected response' => 'isMetadataKeyNotExpired',
             ],
             [
-                'input' => ['deleted' => FrozenTime::now()],
+                'input' => ['deleted' => DateTime::now()],
                 'expected response' => 'metadata_key_exists',
             ],
         ];

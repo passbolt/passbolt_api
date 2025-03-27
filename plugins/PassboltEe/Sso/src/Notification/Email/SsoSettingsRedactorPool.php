@@ -26,7 +26,7 @@ class SsoSettingsRedactorPool extends AbstractSubscribedEmailRedactorPool
     /**
      * Return a list of subscribed redactors
      *
-     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
+     * @return array<\App\Notification\Email\SubscribedEmailRedactorInterface>
      */
     public function getSubscribedRedactors(): array
     {

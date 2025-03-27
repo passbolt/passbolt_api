@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Model\Rule;
 use Cake\Datasource\EntityInterface;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
+use Exception;
 
 class IsNotAccountRecoveryOrganizationKeyFingerprintRule
 {
@@ -30,7 +31,7 @@ class IsNotAccountRecoveryOrganizationKeyFingerprintRule
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
         // if entity does not contain fingerprint rule fails
         $fingerprint = $entity->get('fingerprint');
@@ -46,7 +47,7 @@ class IsNotAccountRecoveryOrganizationKeyFingerprintRule
                     'fingerprint' => $fingerprint,
                     //'deleted' => any
                 ]));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             Log::error($e->getMessage());
 
             return false;

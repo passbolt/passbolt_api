@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Service\Favorites;
 
 use App\Model\Entity\Favorite;
+use App\Model\Table\FavoritesTable;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
@@ -27,7 +28,7 @@ class FavoritesDeleteService
     /**
      * @var \App\Model\Table\FavoritesTable
      */
-    private $Favorites;
+    private FavoritesTable $Favorites;
 
     /**
      * Constructor.

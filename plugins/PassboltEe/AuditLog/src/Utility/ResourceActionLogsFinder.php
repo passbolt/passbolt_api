@@ -46,7 +46,7 @@ class ResourceActionLogsFinder extends BaseActionLogsFinder
                 'PermissionsHistoryResources.id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
-            ->group(['ActionLogs.id', 'Actions.name']);
+            ->groupBy(['ActionLogs.id', 'Actions.name']);
     }
 
     /**
@@ -67,7 +67,7 @@ class ResourceActionLogsFinder extends BaseActionLogsFinder
                 'Resources.id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
-            ->group(['ActionLogs.id', 'Actions.name']);
+            ->groupBy(['ActionLogs.id', 'Actions.name']);
     }
 
     /**
@@ -88,7 +88,7 @@ class ResourceActionLogsFinder extends BaseActionLogsFinder
                 'SecretAccesses.resource_id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
-            ->group(['ActionLogs.id', 'Actions.name']);
+            ->groupBy(['ActionLogs.id', 'Actions.name']);
     }
 
     /**
@@ -111,7 +111,7 @@ class ResourceActionLogsFinder extends BaseActionLogsFinder
                 'SecretsHistoryResources.id' => $resourceId,
                 'ActionLogs.status' => 1,
             ])
-            ->group(['ActionLogs.id', 'Actions.name']);
+            ->groupBy(['ActionLogs.id', 'Actions.name']);
     }
 
     /**

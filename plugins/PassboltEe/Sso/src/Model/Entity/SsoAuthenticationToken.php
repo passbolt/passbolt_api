@@ -28,8 +28,8 @@ use Passbolt\Sso\Utility\AuthToken\SsoAuthTokenExpiry;
  * @property string $type
  * @property string|null $data
  * @property bool $active
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \App\Model\Entity\User $user
  */

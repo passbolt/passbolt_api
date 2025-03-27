@@ -18,10 +18,12 @@ namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
 use App\Utility\UuidFactory;
 use Cake\Utility\Hash;
+use Exception;
 use LdapRecord\Models\Collection;
 use LdapRecord\Models\Entry;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
+use RuntimeException;
 
 /**
  * Class DirectoryResults
@@ -33,63 +35,63 @@ class DirectoryResults
     /**
      * Raw ldap groups as returned by ldap directory.
      *
-     * @var array|\LdapRecord\Models\Collection
+     * @var \LdapRecord\Models\Collection|array
      */
-    private $ldapGroups;
+    private array|Collection $ldapGroups;
 
     /**
      * Raw ldap users as returned by ldap directory.
      *
-     * @var array|\LdapRecord\Models\Collection
+     * @var \LdapRecord\Models\Collection|array
      */
-    private $ldapUsers;
+    private array|Collection $ldapUsers;
 
     /**
      * mapping rules
      *
      * @var array
      */
-    private $mappingRules;
+    private array $mappingRules;
 
     /**
      * Fallback fields
      *
      * @var array|null
      */
-    private $fieldFallbacks;
+    private ?array $fieldFallbacks = null;
 
     /**
      * Directory settings
      *
      * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
      */
-    private $directorySettings;
+    private DirectoryOrgSettings $directorySettings;
 
     /**
      * Groups
      *
-     * @var \Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry[]
+     * @var array<\Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry>
      */
-    private $groups;
+    private array $groups;
 
     /**
      * @var \Passbolt\DirectorySync\Utility\DirectoryEntry\UserCollection
      */
-    public $userCollection;
+    public UserCollection $userCollection;
 
     /**
      * Invalid users which will be ignored.
      *
      * @var array
      */
-    private $invalidUsers;
+    private array $invalidUsers;
 
     /**
      * Invalid groups which will be ignored.
      *
      * @var array
      */
-    private $invalidGroups;
+    private array $invalidGroups;
 
     /**
      * DirectoryResults constructor.
@@ -123,7 +125,7 @@ class DirectoryResults
      * @return void
      * @throws \Exception
      */
-    public function initializeWithLdapResults(Collection $ldapUsers, Collection $ldapGroups)
+    public function initializeWithLdapResults(Collection $ldapUsers, Collection $ldapGroups): void
     {
         $this->ldapGroups = $ldapGroups;
         $this->ldapUsers = $ldapUsers;
@@ -148,7 +150,7 @@ class DirectoryResults
      * @param array $groupEntries group entries
      * @return void
      */
-    public function initializeWithEntries(array $userEntries = [], array $groupEntries = [])
+    public function initializeWithEntries(array $userEntries = [], array $groupEntries = []): void
     {
         $this->userCollection = new UserCollection();
         $this->groups = [];
@@ -175,7 +177,7 @@ class DirectoryResults
      *
      * @return void
      */
-    public function transformLdapUsers()
+    public function transformLdapUsers(): void
     {
         foreach ($this->ldapUsers as $ldapUser) {
             $this->transformLdapUser($ldapUser);
@@ -187,7 +189,7 @@ class DirectoryResults
      *
      * @return void
      */
-    public function transformLdapGroups()
+    public function transformLdapGroups(): void
     {
         /** @var \LdapRecord\Models\Entry $ldapGroup */
         foreach ($this->ldapGroups as $ldapGroup) {
@@ -202,7 +204,7 @@ class DirectoryResults
      * @param \LdapRecord\Models\Entry $ldapGroup ldap group
      * @return \LdapRecord\Models\Entry ldap object
      */
-    public function transformLdapGroup(Entry $ldapGroup)
+    public function transformLdapGroup(Entry $ldapGroup): Entry
     {
         return $this->_transformId($ldapGroup);
     }
@@ -215,7 +217,7 @@ class DirectoryResults
      * @param \LdapRecord\Models\Entry $ldapUser ldap user
      * @return \LdapRecord\Models\Entry ldap object
      */
-    public function transformLdapUser(Entry $ldapUser)
+    public function transformLdapUser(Entry $ldapUser): Entry
     {
         $ldapUser = $this->_transformId($ldapUser);
 
@@ -236,7 +238,7 @@ class DirectoryResults
         $mappingRules = $this->mappingRules[$directoryType] ?? [];
         $emailAttribute = $mappingRules[DirectoryInterface::ENTRY_TYPE_USER]['username'] ?? null;
         if (!$emailAttribute) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 __('A mapping rule for username attribute could not be found for directory type: {0}', $directoryType)
             );
         }
@@ -267,7 +269,7 @@ class DirectoryResults
         $directoryType = $ldapObject->getFirstAttribute('directoryType');
         $idAttribute = $this->mappingRules[$directoryType][$type]['id'] ?? null;
         if (!$idAttribute) {
-            throw new \RuntimeException(
+            throw new RuntimeException(
                 __('A mapping rule for ID attribute could not be found for directory type: {0}', $directoryType)
             );
         }
@@ -288,7 +290,7 @@ class DirectoryResults
      * @return void
      * @throws \Exception
      */
-    private function _populateGroups()
+    private function _populateGroups(): void
     {
         /** @var \LdapRecord\Models\Entry $ldapGroup */
         foreach ($this->ldapGroups as $ldapGroup) {
@@ -297,7 +299,7 @@ class DirectoryResults
                 $directoryType = $ldapGroup->getFirstAttribute('directoryType');
                 $mappingRules = $this->mappingRules[$ldapGroup->getFirstAttribute('directoryType')] ?? null;
                 if (!$mappingRules) {
-                    throw new \RuntimeException(
+                    throw new RuntimeException(
                         __('Mapping rules could not be found for directory type: {0}', $directoryType)
                     );
                 }
@@ -317,7 +319,7 @@ class DirectoryResults
      *
      * @return array
      */
-    public function getInvalidGroups()
+    public function getInvalidGroups(): array
     {
         $invalidGroups = [];
         foreach ($this->groups as $group) {
@@ -335,7 +337,7 @@ class DirectoryResults
      *
      * @return array
      */
-    public function getInvalidUsers()
+    public function getInvalidUsers(): array
     {
         $invalidUsers = [];
         foreach ($this->userCollection->getAll() as $user) {
@@ -365,7 +367,7 @@ class DirectoryResults
                     $fallbackFields = Hash::get($this->fieldFallbacks, $directoryType);
                 }
                 if (!$mappingRules) {
-                    throw new \RuntimeException(
+                    throw new RuntimeException(
                         __('Mapping rules could not be found for directory type: {0}', $directoryType)
                     );
                 }
@@ -545,7 +547,7 @@ class DirectoryResults
         $group = $this->lookupGroupByGroupName($groupName);
 
         if (!$group) {
-            throw new \Exception('Could not retrieve the group matching name ' . $groupName);
+            throw new Exception('Could not retrieve the group matching name ' . $groupName);
         }
 
         $groupsList = [];
@@ -621,7 +623,7 @@ class DirectoryResults
         $users = [];
         $g = clone $group;
 
-        foreach ($g['group']['groups'] as $key => $groupDn) {
+        foreach ($g['group']['groups'] as $groupDn) {
             $groupObj = $this->groups[$groupDn];
             $groups[$groupDn] = $this->_getChildrenRecursive($groupObj);
         }

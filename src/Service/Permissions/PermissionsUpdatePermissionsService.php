@@ -31,17 +31,17 @@ class PermissionsUpdatePermissionsService
     /**
      * @var \App\Service\Permissions\PermissionsAcoHasOwnerService
      */
-    private $permissionsAcoHasOwnerService;
+    private PermissionsAcoHasOwnerService $permissionsAcoHasOwnerService;
 
     /**
      * @var \App\Service\Permissions\PermissionsCreateService
      */
-    private $permissionsCreateService;
+    private PermissionsCreateService $permissionsCreateService;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @param \App\Model\Table\PermissionsTable|null $permissionsTable PermissionsTable instance

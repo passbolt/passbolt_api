@@ -62,9 +62,9 @@ class PasswordPoliciesGetSettingsService implements PasswordPoliciesGetSettingsI
      * Get password generator type from the given settings source.
      *
      * @param string $settingsSource The target source
-     * @return bool|string|null
+     * @return string|bool|null
      */
-    private function getPasswordGeneratorFromSource(string $settingsSource)
+    private function getPasswordGeneratorFromSource(string $settingsSource): bool|string|null
     {
         switch ($settingsSource) {
             case PasswordPoliciesSettingsDto::SOURCE_FILE:

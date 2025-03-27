@@ -36,7 +36,7 @@ class SoftDeleteTest extends FoldersTestCase
     use FoldersModelTrait;
     use FoldersRelationsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         FavoritesFixture::class,
         GpgkeysFixture::class,
         GroupsFixture::class,
@@ -166,7 +166,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteError_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember()
     {
-        [$folderA, $g1, $userAId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember();
+        [$folderA, $g1, $userAId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup_UserIsOnlyGroupMember(); // phpcs:ignore
         $user = $this->usersTable->get($userAId);
 
         $result = $this->usersTable->softDelete($user);
@@ -199,7 +199,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteError_SoleOwnerFolder_FolderSharedWithGroup()
     {
-        [$folderA, $g1, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup();
+        [$folderA, $g1, $userAId, $userBId] = $this->insertFixture_SoleOwnerFolder_FolderSharedWithGroup(); // phpcs:ignore
         $user = $this->usersTable->get($userAId);
         $this->usersTable->softDelete($user);
 
@@ -236,7 +236,7 @@ class SoftDeleteTest extends FoldersTestCase
 
     public function testUsersSoftDeleteError_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember()
     {
-        [$folderA, $g1, $userAId] = $this->insertFixture_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember();
+        [$folderA, $g1, $userAId] = $this->insertFixture_GroupIsSoleOwnerFolder_UserIsOnlyGroupMember(); // phpcs:ignore
         $user = $this->usersTable->get($userAId);
 
         $result = $this->usersTable->softDelete($user);

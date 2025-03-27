@@ -82,7 +82,7 @@ class SubscriptionKeyImportServiceTest extends TestCase
 
         $this->assertSame(
             0,
-            $this->Subscriptions->find()->count()
+            $this->Subscriptions->find()->all()->count()
         );
     }
 }

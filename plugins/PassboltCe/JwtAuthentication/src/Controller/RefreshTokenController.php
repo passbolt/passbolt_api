@@ -21,6 +21,7 @@ use App\Authenticator\SessionIdentificationServiceInterface;
 use App\Controller\AppController;
 use App\Model\Entity\AuthenticationToken;
 use Cake\Http\Exception\BadRequestException;
+use Exception;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtTokenCreateService;
 use Passbolt\JwtAuthentication\Service\RefreshToken\RefreshTokenRenewalService;
 
@@ -40,7 +41,7 @@ class RefreshTokenController extends AppController
             /** @var \App\Model\Entity\AuthenticationToken $refreshToken */
             $refreshToken = $sessionIdentificationService->getSessionIdentifier($this->getRequest());
             $accessToken = $this->renewRefreshTokenAndSetInResponseAsSecureCookie($refreshToken);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new BadRequestException($e->getMessage());
         }
 
@@ -60,7 +61,7 @@ class RefreshTokenController extends AppController
     protected function renewRefreshTokenAndSetInResponseAsSecureCookie(AuthenticationToken $oldRefreshToken): string
     {
         $accessToken = (new JwtTokenCreateService())->createToken($oldRefreshToken->user_id);
-        $refreshService = (new RefreshTokenRenewalService());
+        $refreshService = new RefreshTokenRenewalService();
         $refreshedToken = $refreshService->renewToken($this->getRequest(), $oldRefreshToken, $accessToken);
         $refreshHttpOnlySecureCookie = $refreshService->createHttpOnlySecureCookie($refreshedToken);
         $this->setResponse($this->getResponse()->withCookie($refreshHttpOnlySecureCookie));

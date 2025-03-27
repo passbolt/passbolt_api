@@ -21,7 +21,7 @@ use App\Test\Lib\AppTestCase;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Firebase\JWT\JWT;
 use GuzzleHttp\Psr7\Response;
@@ -29,6 +29,7 @@ use Passbolt\Sso\Test\Lib\SsoProviderTestTrait;
 use Passbolt\Sso\Utility\Adfs\Provider\AdfsProvider;
 use Passbolt\Sso\Utility\OAuth2\Provider\OAuth2Provider;
 use Passbolt\Sso\Utility\OpenId\BaseIdToken;
+use stdClass;
 
 /**
  * @see \Passbolt\Sso\Utility\OpenId\BaseIdToken
@@ -118,7 +119,7 @@ class BaseIdTokenTest extends AppTestCase
             ],
             [
                 // Invalid configuration type
-                'configValue' => new \stdClass(),
+                'configValue' => new stdClass(),
                 'expectedErrorMessage' => 'configuration value should be a string or NULL',
             ],
             [
@@ -175,7 +176,7 @@ class BaseIdTokenTest extends AppTestCase
         ]);
         new BaseIdToken([
             'id_token' => $idToken,
-            'expires_in' => FrozenTime::now()->addHours(1)->getTimestamp(),
+            'expires_in' => DateTime::now()->addHours(1)->getTimestamp(),
             'access_token' => 'access_token',
             'resource_owner_id' => 'resource_owner_id',
             'refresh_token' => 'refresh_token',
@@ -347,7 +348,7 @@ class BaseIdTokenTest extends AppTestCase
     {
         return [
             'id_token' => $idToken,
-            'expires_in' => FrozenTime::now()->addHours(1)->getTimestamp(),
+            'expires_in' => DateTime::now()->addHours(1)->getTimestamp(),
             'access_token' => 'access_token',
             'resource_owner_id' => 'resource_owner_id',
             'refresh_token' => 'refresh_token',

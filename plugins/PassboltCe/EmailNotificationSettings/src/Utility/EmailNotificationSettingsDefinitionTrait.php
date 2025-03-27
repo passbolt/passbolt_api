@@ -19,6 +19,7 @@ namespace Passbolt\EmailNotificationSettings\Utility;
 
 use Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm;
 use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\DefaultEmailNotificationSettingsSource;
+use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ReadableEmailNotificationSettingsSourceInterface; // phpcs:ignore
 
 trait EmailNotificationSettingsDefinitionTrait
 {
@@ -26,7 +27,7 @@ trait EmailNotificationSettingsDefinitionTrait
      * @see EmailNotificationSettingsDefinitionInterface::getDefaultSettingsSource()
      * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ReadableEmailNotificationSettingsSourceInterface
      */
-    public function getDefaultSettingsSource()
+    public function getDefaultSettingsSource(): ReadableEmailNotificationSettingsSourceInterface
     {
         return DefaultEmailNotificationSettingsSource::fromSettingsFormDefinition($this);
     }
@@ -39,7 +40,7 @@ trait EmailNotificationSettingsDefinitionTrait
     public function implementedEvents(): array
     {
         return [
-            EmailNotificationSettingsDefinitionRegisterEvent::EVENT_NAME => $this,
+            EmailNotificationSettingsDefinitionRegisterEvent::EVENT_NAME => 'invoke',
         ];
     }
 
@@ -49,7 +50,7 @@ trait EmailNotificationSettingsDefinitionTrait
      * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm $emailNotificationSettingsForm An instance instance of EmailNotificationSettingsForm.
      * @return void
      */
-    public function addEmailNotificationSettingsDefinition(EmailNotificationSettingsForm $emailNotificationSettingsForm)
+    private function addEmailNotificationSettingsDefinition(EmailNotificationSettingsForm $emailNotificationSettingsForm): void // phpcs:ignore
     {
         $emailNotificationSettingsForm->addEmailNotificationSettingsDefinition($this);
     }
@@ -58,7 +59,7 @@ trait EmailNotificationSettingsDefinitionTrait
      * @param \Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettingsDefinitionRegisterEvent $event An instance of the event
      * @return void
      */
-    public function __invoke(EmailNotificationSettingsDefinitionRegisterEvent $event)
+    public function invoke(EmailNotificationSettingsDefinitionRegisterEvent $event): void
     {
         $this->addEmailNotificationSettingsDefinition($event->getEmailNotificationSettingsForm());
     }

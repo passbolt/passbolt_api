@@ -22,11 +22,12 @@ use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Exception;
 use PassboltTestData\Lib\PermissionMatrix;
 
 class FindViewAcoPermissionsTest extends AppTestCase
 {
-    public $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Profiles', 'app.Base/Resources', 'app.Base/Users'];
+    public array $fixtures = ['app.Base/Groups', 'app.Base/Permissions', 'app.Base/Profiles', 'app.Base/Resources', 'app.Base/Users'];
 
     /**
      * Test subject
@@ -129,7 +130,7 @@ class FindViewAcoPermissionsTest extends AppTestCase
     {
         try {
             $this->Permissions->findViewAcoPermissions('not-valid');
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->assertTrue(true);
         }
         $this->fail('Expect an exception');

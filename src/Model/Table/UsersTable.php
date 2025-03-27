@@ -27,10 +27,11 @@ use App\Model\Rule\IsNotSoleOwnerOfSharedResourcesRule;
 use App\Model\Traits\Users\UsersFindersTrait;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
+use ArrayObject;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -47,7 +48,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsToMany $Groups
  * @property \Passbolt\Log\Model\Table\EntitiesHistoryTable&\Cake\ORM\Association\HasMany $EntitiesHistory
- * @method \App\Model\Entity\User get($primaryKey, $options = [])
+ * @method \App\Model\Entity\User get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\User newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\User[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\User|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -63,8 +64,8 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\User>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByUsername(string $username)
+ * @method \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method \Cake\ORM\Query\SelectQuery findByUsername(string $username)
  */
 class UsersTable extends Table
 {
@@ -262,7 +263,7 @@ class UsersTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options): void
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         if ($this->isUsernameLowerCase() && is_string($data['username'] ?? null)) {
             $data['username'] = mb_strtolower($data['username']);
@@ -425,7 +426,7 @@ class UsersTable extends Table
      * @param array|null $options additional delete options such as ['checkRules' => true]
      * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      */
-    public function softDelete(User $user, ?array $options = null)
+    public function softDelete(User $user, ?array $options = null): EntitiesChangesDto|bool
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {
@@ -598,8 +599,8 @@ class UsersTable extends Table
         $entitiesChanges->pushDeletedEntities($secretsToConsiderAsDeleted);
 
         $this->updateAll([
-            'disabled' => FrozenTime::now(),
-            'modified' => FrozenTime::now(),
+            'disabled' => DateTime::now(),
+            'modified' => DateTime::now(),
             ], ['id' => $user->id]);
 
         return $entitiesChanges;

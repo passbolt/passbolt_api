@@ -21,6 +21,7 @@ use App\Controller\AppController;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Passbolt\UserPassphrasePolicies\Service\UserPassphrasePoliciesGetSettingsService;
+use Throwable;
 
 class UserPassphrasePoliciesGetSettingsController extends AppController
 {
@@ -40,7 +41,7 @@ class UserPassphrasePoliciesGetSettingsController extends AppController
                 __('The operation was successful.'),
                 $userPassphrasePoliciesSettingsDto->toFilteredArray()
             );
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             Log::error($error->getMessage());
 
             throw new InternalErrorException(__('Could not retrieve the user passphrase policies.'));

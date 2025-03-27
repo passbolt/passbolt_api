@@ -37,7 +37,7 @@ use Phinx\Db\Adapter\MysqlAdapter;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey newEmptyEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey[] newEntities(array $data, array $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey get($primaryKey, $options = [])
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKey[] patchEntities(iterable $entities, array $data, array $options = [])

@@ -32,7 +32,7 @@ class ActionLogsIndexController extends AppController
         ]);
     }
 
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'ActionLogs.created',
         ],
@@ -64,6 +64,6 @@ class ActionLogsIndexController extends AppController
         $logs = $LogsTable->index($options);
 
         $this->paginate($logs);
-        $this->success(__('The operation was successful.'), $logs);
+        $this->success(__('The operation was successful.'), $logs->all());
     }
 }

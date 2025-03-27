@@ -20,6 +20,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
+use App\Utility\OpenPGP\OpenPGPBackendInterface;
 use Authentication\Authenticator\Result;
 use Authentication\Authenticator\ResultInterface;
 use Authentication\Authenticator\SessionAuthenticator;
@@ -56,33 +57,33 @@ class GpgAuthenticator extends SessionAuthenticator
      * @var array loaded from Configure::read('GPG')
      * @access protected
      */
-    protected $_config;
+    protected array $_config;
 
     /**
      * @var \App\Utility\OpenPGP\OpenPGPBackendInterface instance
      * @access protected
      */
-    protected $_gpg;
+    protected OpenPGPBackendInterface $_gpg;
 
     /**
      * @var array
      */
-    protected $headers = [];
+    protected array $headers = [];
 
     /**
      * @var string additional debug info
      */
-    protected $_debug;
+    protected string $_debug;
 
     /**
      * @var array|null
      */
-    protected $_data;
+    protected ?array $_data = null;
 
     /**
-     * @var \App\Model\Entity\User
+     * @var \App\Model\Entity\User|null
      */
-    protected $_user;
+    protected ?User $_user;
 
     /**
      * When an unauthenticated user tries to access a protected page this method is called
@@ -92,7 +93,7 @@ class GpgAuthenticator extends SessionAuthenticator
      * @throws \Cake\Http\Exception\ForbiddenException
      * @return void
      */
-    public function unauthenticated(ServerRequest $request, Response $response)
+    public function unauthenticated(ServerRequest $request, Response $response): void
     {
         // If it's JSON we show an error message
         if ($request->is('json')) {
@@ -181,7 +182,7 @@ class GpgAuthenticator extends SessionAuthenticator
      *
      * @return bool
      */
-    private function _stage0()
+    private function _stage0(): bool
     {
         // Sanity check
         $serverVerifyToken = $this->_data['server_verify_token'] ?? '';
@@ -212,7 +213,7 @@ class GpgAuthenticator extends SessionAuthenticator
      * @throws \Cake\Http\Exception\InternalErrorException
      * @return bool
      */
-    private function _stage1()
+    private function _stage1(): bool
     {
         $this->addHeader('X-GPGAuth-Progress', 'stage1');
 
@@ -251,7 +252,7 @@ class GpgAuthenticator extends SessionAuthenticator
      *
      * @return bool
      */
-    private function _stage2()
+    private function _stage2(): bool
     {
         //ControllerLog::write(Status::DEBUG, $request, 'authenticate_stage_2', '');
         $this->addHeader('X-GPGAuth-Progress', 'stage2');
@@ -260,7 +261,7 @@ class GpgAuthenticator extends SessionAuthenticator
         }
 
         // extract the UUID to get the database records
-        [$version, $length, $uuid, $version2] = explode('|', $this->_data['user_token_result']);
+        [$version, $length, $uuid, $version2] = explode('|', $this->_data['user_token_result']); // phpcs:ignore
 
         /** @var \App\Model\Table\AuthenticationTokensTable $AuthenticationToken */
         $AuthenticationToken = TableRegistry::getTableLocator()->get('AuthenticationTokens');
@@ -313,7 +314,7 @@ class GpgAuthenticator extends SessionAuthenticator
      * @throws \Cake\Http\Exception\InternalErrorException if config is missing or key is not set nor usable to decrypt
      * @return void
      */
-    private function _initKeyring()
+    private function _initKeyring(): void
     {
         // check if the default key is set and available in gpg
         $this->_gpg = OpenPGPBackendFactory::get();
@@ -390,7 +391,7 @@ class GpgAuthenticator extends SessionAuthenticator
         $Users = TableRegistry::getTableLocator()->get('Users');
 
         /** @var \App\Model\Entity\User $user */
-        $user = $Users->find('auth', ['fingerprint' => $fingerprint])->first();
+        $user = $Users->find('auth', fingerprint: $fingerprint)->first();
         if (empty($user) || $user->isDisabled()) {
             $this->_debug('User not found.');
 
@@ -434,7 +435,7 @@ class GpgAuthenticator extends SessionAuthenticator
      * @param mixed $nonce Valid nonce example: 'gpgauthv1.3.0|36|de305d54-75b4-431b-adb2-eb6b9e546014|gpgauthv1.3.0'
      * @return bool true if valid, false otherwise
      */
-    private function _checkNonce($nonce): bool
+    private function _checkNonce(mixed $nonce): bool
     {
         if (!is_string($nonce)) {
             return $this->_error(__('Invalid verify token type.'));

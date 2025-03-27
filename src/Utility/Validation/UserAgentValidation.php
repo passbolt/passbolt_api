@@ -25,7 +25,7 @@ class UserAgentValidation
      * @param mixed $data a string is expected
      * @return bool
      */
-    public static function isValid($data): bool
+    public static function isValid(mixed $data): bool
     {
         if (!isset($data)) {
             return false;

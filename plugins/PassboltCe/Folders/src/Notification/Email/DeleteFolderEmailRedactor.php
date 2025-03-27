@@ -18,13 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Notification\Email;
 
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Utility\Purifier;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
@@ -44,7 +45,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * Email redactor constructor
@@ -109,9 +110,9 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * Find the users the email has to be sent to.
      *
      * @param array $usersIds The list of users id to send the email to.
-     * @return \Cake\ORM\Query The list of users username
+     * @return \Cake\ORM\Query\SelectQuery The list of users username
      */
-    private function findUsersUsernameToSendEmailTo(array $usersIds): Query
+    private function findUsersUsernameToSendEmailTo(array $usersIds): SelectQuery
     {
         return $this->usersTable->find('locale')
             ->find('notDisabled')
@@ -124,7 +125,7 @@ class DeleteFolderEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \Passbolt\Folders\Model\Entity\Folder $folder The target folder
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $recipient, User $operator, Folder $folder)
+    private function createEmail(User $recipient, User $operator, Folder $folder): Email
     {
         $isOperator = $recipient->id === $operator->id;
         $userFirstName = Purifier::clean($operator->profile->first_name);

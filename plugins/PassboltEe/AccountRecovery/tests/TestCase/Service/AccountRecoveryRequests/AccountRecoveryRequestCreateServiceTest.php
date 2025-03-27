@@ -23,6 +23,7 @@ use App\Model\Entity\AuthenticationToken;
 use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use Cake\Http\Exception\BadRequestException;
+use Exception;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
 use Passbolt\AccountRecovery\Service\AccountRecoveryRequests\AccountRecoveryRequestCreateService;
 use Passbolt\AccountRecovery\Test\Factory\AccountRecoveryOrganizationPolicyFactory;
@@ -143,7 +144,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('disabled', $exception->getMessage());
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail();
         }
     }
@@ -174,7 +175,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains('not enrolled', $exception->getMessage());
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail();
         }
     }
@@ -282,7 +283,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
             $this->fail();
         } catch (BadRequestException $exception) {
             $this->assertTextContains($exception->getMessage(), 'The authentication token is not valid or has expired.');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail();
         }
     }
@@ -331,7 +332,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
         } catch (CustomValidationException | ValidationException $exception) {
             $error = $exception->getErrors();
             $this->assertTrue(isset($error['armored_key']['invalidArmoredKey']));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail();
         }
     }
@@ -360,7 +361,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
         } catch (CustomValidationException | ValidationException $exception) {
             $error = $exception->getErrors();
             $this->assertTrue(isset($error['fingerprint']));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail();
         }
     }
@@ -457,7 +458,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
         } catch (CustomValidationException | ValidationException $exception) {
             $error = $exception->getErrors();
             $this->assertTrue(isset($error['fingerprint']));
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->fail();
         }
 
@@ -522,7 +523,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
             $this->fail();
         } catch (CustomValidationException | BadRequestException | ValidationException $e) {
             throw $e;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->fail($e->getMessage());
         } finally {
             $this->assertTokenIsUniqueAndActive($tokenId);
@@ -538,7 +539,7 @@ class AccountRecoveryRequestCreateServiceTest extends AccountRecoveryTestCase
             $this->fail();
         } catch (CustomValidationException | BadRequestException | ValidationException $e) {
             throw $e;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->fail();
         } finally {
             $this->assertTokenIsUniqueAndInactive($tokenId);

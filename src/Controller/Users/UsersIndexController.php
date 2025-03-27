@@ -36,7 +36,7 @@ class UsersIndexController extends AppController
 {
     use FeaturePluginAwareTrait;
 
-    public $paginate = [
+    public array $paginate = [
         'sortableFields' => [
             'Profiles.first_name',
             'Profiles.last_name',

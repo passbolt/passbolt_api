@@ -40,7 +40,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsToMany $Users
  * @property \App\Model\Table\GroupsUsersTable&\Cake\ORM\Association\HasMany $GroupsUsers
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Modifier
- * @method \App\Model\Entity\Group get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Group get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Group newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Group[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Group|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -56,8 +56,8 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\Group>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Group>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Group>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
- * @method \Cake\ORM\Query findByIdAndGroupId(string $id, string $groupId)
+ * @method \Cake\ORM\Query\SelectQuery findById(string $id)
+ * @method \Cake\ORM\Query\SelectQuery findByIdAndGroupId(string $id, string $groupId)
  */
 class GroupsTable extends Table
 {
@@ -304,7 +304,7 @@ class GroupsTable extends Table
      * @return \App\Model\Dto\EntitiesChangesDto|bool The list of entities changes, false if a validation error occurred.
      * @see PasswordExpiryOnDeleteGroupEventListener::expireResourcesOnDeletedGroup
      */
-    public function softDelete(Group $group, ?array $options = null)
+    public function softDelete(Group $group, ?array $options = null): EntitiesChangesDto|bool
     {
         // Check the delete rules like a normal operation
         if (!isset($options['checkRules'])) {

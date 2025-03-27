@@ -17,6 +17,12 @@ declare(strict_types=1);
 
 namespace App\Command;
 
+use App\Model\Table\AuthenticationTokensTable;
+use App\Model\Table\GroupsUsersTable;
+use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\RolesTable;
+use App\Model\Table\UsersTable;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
@@ -32,12 +38,12 @@ class CleanupCommand extends PassboltCommand
     /**
      * @var array|null The list of cleanup jobs to perform.
      */
-    private static $cleanups = null;
+    private static ?array $cleanups = null;
 
     /**
      * @var array The list of default cleanup jobs to perform.
      */
-    private static $defaultCleanups = [
+    private static array $defaultCleanups = [
         'Groups' => [
             'With No Members',
         ],
@@ -90,32 +96,32 @@ class CleanupCommand extends PassboltCommand
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @var \App\Model\Table\RolesTable
      */
-    protected $Roles;
+    protected RolesTable $Roles;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    protected $GroupsUsers;
+    protected GroupsUsersTable $GroupsUsers;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    protected $Permissions;
+    protected PermissionsTable $Permissions;
 
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * Add cleanups jobs.
@@ -228,7 +234,7 @@ class CleanupCommand extends PassboltCommand
         $totalErrorCount = 0;
         foreach (self::$cleanups as $tableName => $tableCleanup) {
             $table = TableRegistry::getTableLocator()->get($tableName);
-            foreach ($tableCleanup as $i => $cleanupName) {
+            foreach ($tableCleanup as $cleanupName) {
                 $timeStart = microtime(true);
                 $cleanupMethod = 'cleanup' . str_replace(' ', '', $cleanupName);
 
@@ -270,10 +276,12 @@ class CleanupCommand extends PassboltCommand
      * @return void
      * @throws \Cake\Http\Exception\InternalErrorException If database is not in valid state.
      */
-    private function assertDatabaseState()
+    private function assertDatabaseState(): void
     {
         // Check 1. Users table exist in db
-        $listTables = ConnectionManager::get('default')->getSchemaCollection()->listTables();
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get('default');
+        $listTables = $connection->getSchemaCollection()->listTables();
         if (!in_array('users', $listTables)) {
             throw new InternalErrorException(
                 __('Cleanup command cannot be executed on an instance having no users table.')

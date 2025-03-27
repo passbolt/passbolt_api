@@ -39,8 +39,6 @@ class SendTestEmailCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
     }
 
     /**

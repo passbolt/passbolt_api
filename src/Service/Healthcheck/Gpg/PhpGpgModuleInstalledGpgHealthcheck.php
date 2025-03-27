@@ -57,7 +57,7 @@ class PhpGpgModuleInstalledGpgHealthcheck extends AbstractGpgHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Install php-gnupg, see. http://php.net/manual/en/gnupg.installation.php') .
             __('Make sure to add extension=gnupg.so in php ini files for both php-cli and php.');

@@ -19,13 +19,16 @@ namespace Passbolt\AccountRecovery\Controller\AccountRecoveryPrivateKeyPasswords
 
 use App\Controller\AppController;
 use Cake\Http\Exception\ForbiddenException;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
 
 /**
  * @property \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable $AccountRecoveryPrivateKeyPasswords
  */
 class AccountRecoveryPrivateKeyPasswordsIndexController extends AppController
 {
-    public $paginate = [
+    protected ?AccountRecoveryPrivateKeyPasswordsTable $AccountRecoveryPrivateKeyPasswords = null;
+
+    public array $paginate = [
         'sortableFields' => [
             'AccountRecoveryPrivateKeyPasswords.created',
             'AccountRecoveryPrivateKeyPasswords.modified',

@@ -17,7 +17,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/Rbacs', ['path' => '/rbacs'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Rbacs', ['path' => '/rbacs'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     $routes->connect('/me', ['prefix' => 'Rbacs', 'controller' => 'RbacsView', 'action' => 'viewForCurrentRole'])

@@ -83,7 +83,7 @@ class ImageHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInt
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('See: https://secure.php.net/manual/en/book.image.php'),

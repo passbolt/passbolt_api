@@ -21,6 +21,7 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Event\EventListenerInterface;
 use Cake\Event\EventManager;
 use Passbolt\EmailNotificationSettings\Utility\EmailNotificationSettings;
+use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Throwable;
 
@@ -53,7 +54,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     /**
      * The constructor
@@ -91,16 +92,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
      */
     public function implementedEvents(): array
     {
-        return array_fill_keys($this->emailSubscriptionManager->getSubscribedEvents(), $this);
-    }
-
-    /**
-     * @param \Cake\Event\Event $event Event object to dispatch
-     * @return void
-     */
-    public function __invoke(Event $event)
-    {
-        $this->dispatch($event);
+        return array_fill_keys($this->emailSubscriptionManager->getSubscribedEvents(), 'dispatch');
     }
 
     /**
@@ -121,7 +113,7 @@ class EmailSubscriptionDispatcher implements EventListenerInterface
      * @param \Cake\Event\Event $event Event object to dispatch
      * @return void
      */
-    public function dispatch(Event $event)
+    public function dispatch(Event $event): void
     {
         foreach ($this->emailSubscriptionManager->getSubscriptionsForEvent($event) as $emailRedactor) {
             if (!$this->isRedactorActive($emailRedactor)) {

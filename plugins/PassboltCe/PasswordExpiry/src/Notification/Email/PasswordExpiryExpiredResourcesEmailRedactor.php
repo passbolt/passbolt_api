@@ -26,7 +26,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\Locale\Service\LocaleService;
 use Passbolt\PasswordExpiry\Service\Resources\PasswordExpiryExpireResourcesService;
@@ -66,10 +66,11 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
     public function onSubscribedEvent(Event $event): EmailCollection
     {
         $emailCollection = new EmailCollection();
-        /** @var string[] $resourceIds */
+        /** @var array<string> $resourceIds */
         $resourceIds = $event->getData('resourceIds');
-        /** @var string[] $userIdsToSkip */
+        /** @var array<string> $userIdsToSkip */
         $userIdsToSkip = $event->getData('userIdsToSkip') ?? [];
+        /** @var array<\App\Model\Entity\User> $usersToNotify */
         $usersToNotify = $this->findUsersToNotify($resourceIds, $userIdsToSkip);
 
         // Send emails to all the users
@@ -110,9 +111,9 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
      *
      * @param array $expiringResourcesIds Resources that have just been expired
      * @param array $userIdsToSkip Users that should not be notified, e.g. if a user is being disabled or deleted
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    protected function findUsersToNotify(array $expiringResourcesIds, array $userIdsToSkip): Query
+    protected function findUsersToNotify(array $expiringResourcesIds, array $userIdsToSkip): SelectQuery
     {
         /** @var \App\Model\Table\UsersTable $UsersTable */
         $UsersTable = TableRegistry::getTableLocator()->get('Users');
@@ -123,7 +124,7 @@ class PasswordExpiryExpiredResourcesEmailRedactor implements SubscribedEmailReda
             ->contain([
                 'Profiles' => AvatarsTable::addContainAvatar(),
             ])
-            ->order([], true); // Remove any order as it is not relevant here and breaks in MySQL
+            ->orderBy([], true); // Remove any order as it is not relevant here and breaks in MySQL
         if (!empty($userIdsToSkip)) {
             $usersToNotify->whereNotInList('Users.id', $userIdsToSkip);
         }

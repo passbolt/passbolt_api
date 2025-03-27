@@ -161,9 +161,9 @@ class PasswordExpiryShareControllerTest extends AppIntegrationTestCase
 
         /** @var \App\Model\Table\ResourcesTable $ResourcesTable */
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        $this->assertSame(0, $ResourcesTable->findIndex($viewerActive1->id, ['filter' => ['is-shared-with-me']])->count());
-        $this->assertSame(0, $ResourcesTable->findIndex($viewerActive2->id, ['filter' => ['is-shared-with-me']])->count());
-        $this->assertSame(0, $ResourcesTable->findIndex($viewerInactive->id, ['filter' => ['is-shared-with-me']])->count());
+        $this->assertSame(0, $ResourcesTable->findIndex($viewerActive1->id, ['filter' => ['is-shared-with-me']])->all()->count());
+        $this->assertSame(0, $ResourcesTable->findIndex($viewerActive2->id, ['filter' => ['is-shared-with-me']])->all()->count());
+        $this->assertSame(0, $ResourcesTable->findIndex($viewerInactive->id, ['filter' => ['is-shared-with-me']])->all()->count());
 
         $resource = ResourceFactory::get($resource->id);
         $this->assertTrue($resource->isExpired());
@@ -225,9 +225,9 @@ class PasswordExpiryShareControllerTest extends AppIntegrationTestCase
 
         /** @var \App\Model\Table\ResourcesTable $ResourcesTable */
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
-        $this->assertSame(0, $ResourcesTable->findIndex($viewerActive1->id, ['filter' => ['is-shared-with-me']])->count());
-        $this->assertSame(0, $ResourcesTable->findIndex($viewerActive2->id, ['filter' => ['is-shared-with-me']])->count());
-        $this->assertSame(0, $ResourcesTable->findIndex($viewerInactive->id, ['filter' => ['is-shared-with-me']])->count());
+        $this->assertSame(0, $ResourcesTable->findIndex($viewerActive1->id, ['filter' => ['is-shared-with-me']])->all()->count());
+        $this->assertSame(0, $ResourcesTable->findIndex($viewerActive2->id, ['filter' => ['is-shared-with-me']])->all()->count());
+        $this->assertSame(0, $ResourcesTable->findIndex($viewerInactive->id, ['filter' => ['is-shared-with-me']])->all()->count());
 
         $resource = ResourceFactory::get($resource->id);
         $this->assertTrue($resource->isExpired());
