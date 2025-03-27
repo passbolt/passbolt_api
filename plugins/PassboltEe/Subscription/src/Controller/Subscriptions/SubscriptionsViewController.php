@@ -26,8 +26,6 @@ use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyGetService;
 
 /**
  * Class SubscriptionsCreateController
- *
- * @property  \Passbolt\Subscription\Model\Table\SubscriptionsTable $Subscriptions
  */
 class SubscriptionsViewController extends AppController
 {
@@ -41,7 +39,6 @@ class SubscriptionsViewController extends AppController
             throw new ForbiddenException(__('You are not allowed to access this location.'));
         }
 
-        $this->Subscriptions = $this->fetchTable('Passbolt/Subscription.Subscriptions');
         try {
             $service = new SubscriptionKeyGetService();
             $keyDto = $service->get($this->User->getAccessControl());

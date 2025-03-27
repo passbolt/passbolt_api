@@ -861,16 +861,6 @@
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
   </file>
-  <file src="plugins/PassboltEe/AccountRecovery/src/Controller/AccountRecoveryRequests/AccountRecoveryRequestsIndexController.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->AccountRecoveryRequests]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/PassboltEe/AccountRecovery/src/Controller/AccountRecoveryRequests/AccountRecoveryRequestsViewController.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->AccountRecoveryRequests]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
   <file src="plugins/PassboltEe/AccountRecovery/tests/Factory/AccountRecoveryRequestFactory.php">
     <MethodSignatureMismatch>
       <code><![CDATA[AccountRecoveryRequestFactory]]></code>
@@ -1197,11 +1187,6 @@
       <code><![CDATA[$user->id]]></code>
       <code><![CDATA[$user->role]]></code>
     </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltEe/DirectorySync/src/Controller/DirectorySyncController.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->Users]]></code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/PassboltEe/DirectorySync/src/Utility/DirectoryOrgSettings.php">
     <InvalidReturnStatement>
@@ -1677,21 +1662,6 @@
       <code><![CDATA[$user->id]]></code>
       <code><![CDATA[$user->id]]></code>
     </InvalidPropertyFetch>
-  </file>
-  <file src="plugins/PassboltEe/Subscription/src/Controller/Subscriptions/SubscriptionsCreateController.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->Subscriptions]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/PassboltEe/Subscription/src/Controller/Subscriptions/SubscriptionsUpdateController.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->Subscriptions]]></code>
-    </UndefinedThisPropertyAssignment>
-  </file>
-  <file src="plugins/PassboltEe/Subscription/src/Controller/Subscriptions/SubscriptionsViewController.php">
-    <UndefinedThisPropertyAssignment>
-      <code><![CDATA[$this->Subscriptions]]></code>
-    </UndefinedThisPropertyAssignment>
   </file>
   <file src="plugins/PassboltEe/Subscription/src/Error/Exception/Subscriptions/SubscriptionValidationException.php">
     <TypeDoesNotContainType>
