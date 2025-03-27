@@ -29,15 +29,6 @@ use Passbolt\DirectorySync\Actions\AllSyncAction;
 class DirectorySyncController extends DirectoryController
 {
     /**
-     * @inheritDoc
-     */
-    public function initialize(): void
-    {
-        parent::initialize();
-        $this->Users = $this->fetchTable('Users');
-    }
-
-    /**
      * Before filter
      *
      * @param \Cake\Event\EventInterface $event An Event instance

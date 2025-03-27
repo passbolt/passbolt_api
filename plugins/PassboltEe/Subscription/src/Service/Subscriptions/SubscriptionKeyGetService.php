@@ -38,6 +38,7 @@ class SubscriptionKeyGetService
      * @var \Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyValidateService $SubscriptionValidateService
      */
     protected SubscriptionKeyValidateService $SubscriptionValidateService;
+
     /**
      * @var \Passbolt\Subscription\Model\Table\SubscriptionsTable
      */
