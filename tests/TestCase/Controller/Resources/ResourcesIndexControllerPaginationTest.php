@@ -21,6 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Utility\PaginationTestTrait;
+use Cake\Utility\Hash;
 use Passbolt\Folders\FoldersPlugin;
 
 class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
@@ -88,7 +89,11 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $expectedCurrent = 9;
 
         $user = UserFactory::make()->user()->persist();
-        ResourceFactory::make($this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'))
+        $data = Hash::merge(
+            $this->getArrayOfDistinctUris($numberOfResources, 'uri'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified')
+        );
+        ResourceFactory::make($data)
             ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
@@ -120,7 +125,11 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $limit = 10;
 
         $user = UserFactory::make()->user()->persist();
-        ResourceFactory::make($this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'))
+        $data = Hash::merge(
+            $this->getArrayOfDistinctUris($numberOfResources, 'uri'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified')
+        );
+        ResourceFactory::make($data)
             ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();
@@ -146,7 +155,11 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $limit = 10;
 
         $user = UserFactory::make()->user()->persist();
-        ResourceFactory::make($this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified'))
+        $data = Hash::merge(
+            $this->getArrayOfDistinctUris($numberOfResources, 'uri'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfResources, 'modified')
+        );
+        ResourceFactory::make($data)
             ->withCreatorAndPermission($user)
             ->with('Modifier')
             ->persist();

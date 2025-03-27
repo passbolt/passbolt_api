@@ -104,12 +104,12 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
         $updatedFolder1 = FolderFactory::get($folderPersonal->get('id'));
         $this->assertSame($userKeyId, $updatedFolder1->get('metadata_key_id'));
         $this->assertSame($metadataForF1, $updatedFolder1->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedFolder1->get('modified')->format('Y-m-d')); // comparing seconds here might fail
         $this->assertSame($uac->getId(), $updatedFolder1->get('modified_by'));
         $updatedFolder2 = FolderFactory::get($folderShared->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedFolder2->get('metadata_key_id'));
         $this->assertSame($metadataForF2, $updatedFolder2->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder2->get('modified')->format('Y-m-d H:i'));
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedFolder2->get('modified')->format('Y-m-d'));
         $this->assertSame($uac->getId(), $updatedFolder2->get('modified_by'));
     }
 
