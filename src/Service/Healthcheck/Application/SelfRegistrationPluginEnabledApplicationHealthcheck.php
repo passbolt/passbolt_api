@@ -98,7 +98,7 @@ class SelfRegistrationPluginEnabledApplicationHealthcheck implements Healthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Enable the plugin in order to define self registration settings.');
     }

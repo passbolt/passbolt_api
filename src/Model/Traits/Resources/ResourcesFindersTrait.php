@@ -25,9 +25,11 @@ use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 use Passbolt\Folders\Model\Entity\Folder;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
@@ -42,15 +44,16 @@ trait ResourcesFindersTrait
      *
      * @param string $userId The user to get the resources for
      * @param array|null $options options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findIndex(string $userId, ?array $options = [])
+    public function findIndex(string $userId, ?array $options = []): SelectQuery
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
 
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $this->find();
 
         $findIndexOptions = FindIndexOptions::createFromArray($options);
@@ -200,17 +203,17 @@ trait ResourcesFindersTrait
      * @param string $userId The user to get the resources for
      * @param string $resourceId The resource to retrieve
      * @param array|null $options options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findView(string $userId, string $resourceId, ?array $options = [])
+    public function findView(string $userId, string $resourceId, ?array $options = []): SelectQuery
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The parameter userId should be a valid UUID.');
+            throw new InvalidArgumentException('The parameter userId should be a valid UUID.');
         }
         if (!Validation::uuid($resourceId)) {
-            throw new \InvalidArgumentException('The parameter resourceId should be a valid UUID.');
+            throw new InvalidArgumentException('The parameter resourceId should be a valid UUID.');
         }
 
         $query = $this->findIndex($userId, $options)
@@ -223,14 +226,15 @@ trait ResourcesFindersTrait
      * Build the query that fetches the resources that a group has access on.
      *
      * @param string $groupId uuid The group to fetch the resources for
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findAllByGroupAccess(string $groupId): Query
+    public function findAllByGroupAccess(string $groupId): SelectQuery
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The group identifier should be a valid UUID.');
         }
 
+        /** @var \Cake\ORM\Query\SelectQuery $query */
         $query = $this->find()
             ->where(['Resources.deleted' => false]);
         $this->_filterQuerySharedWithGroup($query, $groupId);
@@ -244,22 +248,22 @@ trait ResourcesFindersTrait
      * @param string $userId uuid
      * @param array $resourceIds array of resource uuids
      * @param array|null $options array of options
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the resourceId parameter is not a valid uuid.
      * @throws \InvalidArgumentException if the userId parameter is not a valid uuid.
      */
-    public function findAllByIds(string $userId, array $resourceIds = [], ?array $options = [])
+    public function findAllByIds(string $userId, array $resourceIds = [], ?array $options = []): SelectQuery
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The user identifier should be a valid UUID.');
         }
         if (empty($resourceIds)) {
-            throw new \InvalidArgumentException('The resources ids array can not be empty.');
+            throw new InvalidArgumentException('The resources ids array can not be empty.');
         } else {
             foreach ($resourceIds as $resourceId) {
                 if (!Validation::uuid($resourceId)) {
                     $msg = 'The array of resources identifiers should contain only valid UUID.';
-                    throw new \InvalidArgumentException($msg);
+                    throw new InvalidArgumentException($msg);
                 }
             }
         }
@@ -280,12 +284,12 @@ trait ResourcesFindersTrait
      * > $query->innerJoinWith('Permissions') or $query->matching('Permissions')
      * > _filterQueryByPermissions($query, $userId);
      *
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to filter.
      * @param string $userId The user to check the permissions for.
      * @return void
      * @throws \InvalidArgumentException if the user id is not a uuid
      */
-    public function filterResourcesByPermissions(Query $query, string $userId): void
+    public function filterResourcesByPermissions(SelectQuery $query, string $userId): void
     {
         $subQueryOptions = [
             'checkGroupsUsers' => true,
@@ -305,11 +309,11 @@ trait ResourcesFindersTrait
      * Augment any Resources queries to filter on resources owned by the given user.
      * A owned resource means a resource that is shared with the OWNER permission.
      *
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to filter.
      * @param string $userId The user identifier to filter on.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function _filterQueryIsOwnedByUser(Query $query, string $userId)
+    private function _filterQueryIsOwnedByUser(SelectQuery $query, string $userId): SelectQuery
     {
         $resourcesUserIsOwnerSubQueryOptions = ['checkGroupsUsers' => true];
         $resourcesUserIsOwnerSubQuery = $this->Permissions
@@ -324,11 +328,11 @@ trait ResourcesFindersTrait
      * We consider that a resource is shared with a user when it is accessible by the user but is not owner or one
      * of a group he is member is owner.
      *
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to filter.
      * @param string $userId The user identifier to filter on.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function _filterQuerySharedWithUser(Query $query, string $userId)
+    private function _filterQuerySharedWithUser(SelectQuery $query, string $userId): SelectQuery
     {
         $resourcesUserIsOwnerSubQueryOptions = ['checkGroupsUsers' => true];
         $resourcesUserIsOwnerSubQuery = $this->Permissions
@@ -341,15 +345,15 @@ trait ResourcesFindersTrait
     /**
      * Augment any Resources queries to filter on resources shared with a given group.
      *
-     * @param \Cake\ORM\Query $query The query to filter.
+     * @param \Cake\ORM\Query\SelectQuery $query The query to filter.
      * @param string $groupId The group to check the permissions for.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the group id is not a uuid
      */
-    private function _filterQuerySharedWithGroup(Query $query, string $groupId)
+    private function _filterQuerySharedWithGroup(SelectQuery $query, string $groupId): SelectQuery
     {
         if (!Validation::uuid($groupId)) {
-            throw new \InvalidArgumentException('The group identifier should be a valid UUID.');
+            throw new InvalidArgumentException('The group identifier should be a valid UUID.');
         }
 
         $resourcesSharedWithGroupSubQuery = $this->Permissions->findAllByAro(PermissionsTable::RESOURCE_ACO, $groupId)
@@ -362,11 +366,11 @@ trait ResourcesFindersTrait
     /**
      * Find all resources that are not expired
      *
-     * @param \Cake\ORM\Query $query Query to filter on
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter on
      * @param array $options Array of parent ids
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findNotExpired(Query $query, array $options): Query
+    public function findNotExpired(SelectQuery $query, array $options): SelectQuery
     {
         return $query->where(function () {
             return $this->notExpiredQueryExpression();
@@ -382,7 +386,7 @@ trait ResourcesFindersTrait
     public function notExpiredQueryExpression(): QueryExpression
     {
         $isNull = $this->find()->newExpr()->isNull('expired');
-        $isFuture = $this->find()->newExpr()->gt('expired', FrozenTime::now());
+        $isFuture = $this->find()->newExpr()->gt('expired', DateTime::now());
 
         return $this->find()->newExpr()->or([
             $isNull,
@@ -393,12 +397,12 @@ trait ResourcesFindersTrait
     /**
      * Filter a query by parents ids.
      *
-     * @param \Cake\ORM\Query $query Query to filter on
+     * @param \Cake\ORM\Query\SelectQuery $query Query to filter on
      * @param string $userId The user to filter the resources for
      * @param array $parentIds Array of parent ids
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function filterQueryByFolderParentIds(Query $query, string $userId, array $parentIds): Query
+    public function filterQueryByFolderParentIds(SelectQuery $query, string $userId, array $parentIds): SelectQuery
     {
         if (empty($parentIds)) {
             return $query;

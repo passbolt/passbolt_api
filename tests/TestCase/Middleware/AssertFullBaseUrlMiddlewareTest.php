@@ -24,6 +24,7 @@ use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Response;
 use Cake\Http\ServerRequest;
+use stdClass;
 
 /**
  * @covers \App\Middleware\AssertFullBaseUrlMiddleware
@@ -54,7 +55,7 @@ class AssertFullBaseUrlMiddlewareTest extends AppIntegrationTestCase
             [null],
             [''],
             [[]],
-            [new \stdClass()],
+            [new stdClass()],
         ];
     }
 

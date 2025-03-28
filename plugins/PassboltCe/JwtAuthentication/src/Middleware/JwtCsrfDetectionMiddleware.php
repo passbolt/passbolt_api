@@ -41,7 +41,7 @@ class JwtCsrfDetectionMiddleware implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface {
         /** @var \Cake\Http\ServerRequest $request */
-        $requestService = (new JwtRequestDetectionService($request));
+        $requestService = new JwtRequestDetectionService($request);
 
         // If request pointing to the Web browser / browser extension refresh end point, CSRF should be active
         // Else if request pointing to any other routes of the JwtAuthentication Plugin, the Csrf Middleware shall be skipped

@@ -21,6 +21,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 
 class RbacsUpdateDtoCollection
 {
@@ -70,7 +71,7 @@ class RbacsUpdateDtoCollection
     public function getById(string $id): array
     {
         if (!Validation::uuid($id)) {
-            throw new \InvalidArgumentException(__('The identifier should be a valid UUID.') . ' ' . $id);
+            throw new InvalidArgumentException(__('The identifier should be a valid UUID.') . ' ' . $id);
         }
         $result = (array)Hash::extract($this->data, '{n}[id=' . $id . ']');
         if (!count($result)) {

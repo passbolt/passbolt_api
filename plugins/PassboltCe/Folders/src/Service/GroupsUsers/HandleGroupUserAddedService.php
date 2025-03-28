@@ -23,6 +23,7 @@ use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Dto\FolderRelationDto;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTreeService;
 
 class HandleGroupUserAddedService
@@ -30,17 +31,17 @@ class HandleGroupUserAddedService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTreeService
      */
-    private $foldersRelationsAddItemsFromUserTree;
+    private FoldersRelationsAddItemsToUserTreeService $foldersRelationsAddItemsFromUserTree;
 
     /**
      * Instantiate the service.
@@ -60,7 +61,7 @@ class HandleGroupUserAddedService
      * @return void
      * @throws \Exception If something unexpected occurred
      */
-    public function handle(UserAccessControl $uac, GroupsUser $groupUser)
+    public function handle(UserAccessControl $uac, GroupsUser $groupUser): void
     {
         $items = [];
 

@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [5.0.0-test.1] - 2025-03-28
+### Maintenance
+- PB-39712 Update CakePHP to version 5
+
 ## [4.12.1-test.1] - 2025-03-14
 ### Fixed
 - PB-39965 Fixes an issue when fetching the locale of disabled users when queried in a sub-query

@@ -35,7 +35,7 @@ interface EmailDigestInterface extends EmailInterface
     /**
      * Return the emails entity associated to the email digest
      *
-     * @return \Cake\ORM\Entity[]
+     * @return array<\Cake\ORM\Entity>
      */
     public function getEmailsData(): array;
 
@@ -50,7 +50,7 @@ interface EmailDigestInterface extends EmailInterface
      * A digest must be able to return the ids of the emails which compose the digest.
      * Return the list of email ids associated with the digest.
      *
-     * @return string[]
+     * @return array<string>
      */
     public function getEmailIds(): array;
 

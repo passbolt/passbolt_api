@@ -32,7 +32,7 @@ class SaveTest extends AppTestCase
 
     public $Groups;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Permissions',
         'app.Base/Resources', 'app.Base/Favorites',
     ];

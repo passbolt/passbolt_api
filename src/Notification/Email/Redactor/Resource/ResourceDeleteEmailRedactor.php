@@ -42,7 +42,7 @@ class ResourceDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param array|null $config Configuration for the redactor

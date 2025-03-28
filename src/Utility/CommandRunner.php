@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Utility;
 
 use Cake\Log\Log;
+use Exception;
 use Symfony\Component\Process\Process;
 
 class CommandRunner
@@ -32,12 +33,12 @@ class CommandRunner
      * @return \Symfony\Component\Process\Process|false Returns a Symfony Process instance, or false in case of any exceptions.
      */
     public static function run(
-        $command,
+        array|string $command,
         ?string $cwd = null,
         ?array $env = null,
-        $input = null,
+        mixed $input = null,
         ?float $timeout = 60
-    ) {
+    ): Process|false {
         try {
             if (is_array($command)) {
                 $process = new Process($command, $cwd, $env, $input, $timeout);
@@ -46,7 +47,7 @@ class CommandRunner
             }
 
             $process->run();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $errorMessage = 'The command runner failed to run. Error: ' . $e->getMessage();
             Log::error($errorMessage);
 

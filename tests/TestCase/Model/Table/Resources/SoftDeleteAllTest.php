@@ -28,7 +28,7 @@ class SoftDeleteAllTest extends AppTestCase
 
     public $Resources;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Favorites',
         'app.Base/Permissions',
         'app.Base/Resources',
@@ -56,7 +56,7 @@ class SoftDeleteAllTest extends AppTestCase
     {
         // Fetch the resources non deleted and with populated fields
         $resourcesId = $this->Resources
-            ->find('list', ['valueField' => 'id'])
+            ->find('list', valueField: 'id')
             ->where([
                 'username IS NOT NULL',
                 'uri IS NOT NULL',
@@ -75,7 +75,7 @@ class SoftDeleteAllTest extends AppTestCase
 
         // Fetch soft deleted resources
         $deletedResources = $this->Resources
-            ->find('list', ['valueField' => 'id'])
+            ->find('list', valueField: 'id')
             ->where([
                 'username IS NULL',
                 'uri IS NULL',
@@ -111,7 +111,7 @@ class SoftDeleteAllTest extends AppTestCase
     {
         // Fetch the non deleted resources with populated fields
         $resourcesId = $this->Resources
-            ->find('list', ['valueField' => 'id'])
+            ->find('list', valueField: 'id')
             ->where([
                 'username IS NOT NULL',
                 'uri IS NOT NULL',
@@ -124,7 +124,7 @@ class SoftDeleteAllTest extends AppTestCase
         // Count associated entities
         $count = [];
         foreach ($associations as $association) {
-            $count[$association] = $this->Resources->{$association}->find()->count();
+            $count[$association] = $this->Resources->{$association}->find()->all()->count();
             $this->assertTrue($count[$association] > 0, "No $association were found");
         }
 
@@ -133,7 +133,7 @@ class SoftDeleteAllTest extends AppTestCase
 
         // Check that the associated entities were deleted if cascade is true
         foreach ($associations as $association) {
-            $count[$association] = $this->Resources->{$association}->find()->count();
+            $count[$association] = $this->Resources->{$association}->find()->all()->count();
             $expect = $cascade ? 0 : $count[$association];
             $this->assertSame($expect, $count[$association]);
         }

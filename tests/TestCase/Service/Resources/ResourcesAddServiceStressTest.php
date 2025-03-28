@@ -23,6 +23,7 @@ use App\Service\Resources\PasswordExpiryDefaultValidationService;
 use App\Service\Resources\ResourcesAddService;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\ResourcesModelTrait;
+use App\Utility\UserAccessControl;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Sniffer\SnifferRegistry;
 use Passbolt\Metadata\Model\Dto\MetadataResourceDto;
@@ -42,7 +43,7 @@ class ResourcesAddServiceStressTest extends TestCase
     /**
      * @var UserAccessControl The user created once by testTruncateDirtyTables.
      */
-    private static $uac;
+    private static UserAccessControl $uac;
 
     /**
      * @var int The number of imports to perform. 300 or plus is a good value. Always set back to 0 when committing!!!.
@@ -53,7 +54,6 @@ class ResourcesAddServiceStressTest extends TestCase
 
     public function setUp(): void
     {
-        $this->skipIf(self::$NIterations < 1);
         parent::setUp();
         $this->service = new ResourcesAddService(new PasswordExpiryDefaultValidationService());
     }
@@ -70,6 +70,7 @@ class ResourcesAddServiceStressTest extends TestCase
      */
     public function testTruncateDirtyTables()
     {
+        $this->skipIf(self::$NIterations < 1);
         SnifferRegistry::get('test')->truncateDirtyTables();
         $this->assertTrue(true);
         ResourceTypeFactory::make()->default()->persist();
@@ -95,6 +96,7 @@ class ResourcesAddServiceStressTest extends TestCase
      */
     public function testResourceAddServiceSuccessStressTest(int $iter)
     {
+        $this->skipIf(self::$NIterations < 1);
         $data = $this->getDummyResourcesPostData();
         $resource = $this->service->add(self::$uac, new MetadataResourceDto($data));
 

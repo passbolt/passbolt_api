@@ -17,10 +17,12 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\AccessToken;
 
 use App\Utility\UuidFactory;
+use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 use Passbolt\JwtAuthentication\Command\CreateJwtKeysCommand;
 use Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException;
+use Throwable;
 
 class JwtKeyPairService
 {
@@ -69,31 +71,31 @@ class JwtKeyPairService
         try {
             $pk = openssl_pkey_new($config);
             if ($pk === false) {
-                throw new \Exception('The JWT private key could not be created.');
+                throw new Exception('The JWT private key could not be created.');
             }
             $export = openssl_pkey_export_to_file($pk, $secretKeyPath);
             if ($export === false) {
-                throw new \Exception('The JWT private key could not be written.');
+                throw new Exception('The JWT private key could not be written.');
             }
             $publicKey = openssl_pkey_get_details($pk)['key'] ?? false;
             if ($publicKey === false) {
-                throw new \Exception('The JWT public key could not be extracted.');
+                throw new Exception('The JWT public key could not be extracted.');
             }
             $export = file_put_contents($publicKeyPath, $publicKey);
             if ($export === false) {
-                throw new \Exception('The JWT public key could not be written.');
+                throw new Exception('The JWT public key could not be written.');
             }
 
             $permission = 0640;
             $res = chmod($secretKeyPath, $permission);
             if (!$res) {
-                throw new \Exception("The permission of $secretKeyPath could not be set to $permission.");
+                throw new Exception("The permission of $secretKeyPath could not be set to $permission.");
             }
             $res = chmod($publicKeyPath, $permission);
             if (!$res) {
-                throw new \Exception("The permission of $publicKeyPath could not be set to $permission.");
+                throw new Exception("The permission of $publicKeyPath could not be set to $permission.");
             }
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidJwtKeyPairException($e->getMessage());
         }
     }
@@ -105,24 +107,24 @@ class JwtKeyPairService
      * @return object
      * @throws \Passbolt\JwtAuthentication\Error\Exception\AccessToken\InvalidJwtKeyPairException
      */
-    public function validateKeyPair(?string $uuid = null)
+    public function validateKeyPair(?string $uuid = null): object
     {
         // Minimal size of the private key
         $minSecretKeySize = JwtTokenCreateService::JWT_KEY_LENGTH;
         $uuid = $uuid ?? UuidFactory::uuid();
         try {
             if (!is_readable($this->publicService->getKeyPath())) {
-                throw new \Exception(__('The JWT public key could not be read or is not valid.'));
+                throw new Exception(__('The JWT public key could not be read or is not valid.'));
             }
             $publicKey = file_get_contents($this->publicService->getKeyPath());
             $secretKeySize = $this->publicService->getSecretKeySize();
 
             if ($secretKeySize === 0) {
-                throw new \Exception(__('The JWT public key could not be read or is not valid.'));
+                throw new Exception(__('The JWT public key could not be read or is not valid.'));
             }
 
             if ($secretKeySize < $minSecretKeySize) {
-                throw new \Exception(__(
+                throw new Exception(__(
                     'The JWT private key should be at least {0} bytes long.',
                     $this->secretService::JWT_KEY_LENGTH
                 ));
@@ -131,7 +133,7 @@ class JwtKeyPairService
             $jwt = $this->secretService->createToken($uuid, '2 seconds');
 
             return JWT::decode($jwt, new Key($publicKey, $this->secretService::JWT_ALG));
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InvalidJwtKeyPairException($e->getMessage());
         }
     }

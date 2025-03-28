@@ -22,6 +22,7 @@ use Cake\TestSuite\TestCase;
 use Faker\Factory;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
 use Passbolt\SmtpSettings\Test\Lib\SmtpSettingsTestTrait;
+use stdClass;
 
 /**
  * @covers \Passbolt\SmtpSettings\Form\EmailConfigurationForm
@@ -218,7 +219,7 @@ class EmailConfigurationFormTest extends TestCase
             ['false', null],
             ['foo', null],
             [2, null],
-            [new \stdClass(), null],
+            [new stdClass(), null],
         ];
     }
 

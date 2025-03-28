@@ -26,6 +26,7 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Exception;
 use Passbolt\Metadata\Service\MetadataPrivateKeysCreateService;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -203,7 +204,7 @@ class MetadataPrivateKeysCreateServiceTest extends AppTestCaseV5
         try {
             $sut->create($uac, $key->id, $data);
             $this->fail();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->assertTextContains('already shared', $exception->getMessage());
         }
     }

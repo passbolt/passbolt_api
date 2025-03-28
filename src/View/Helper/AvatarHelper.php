@@ -60,7 +60,7 @@ class AvatarHelper extends Helper
     {
         $formats = array_keys(Configure::readOrFail('FileStorage.imageDefaults.Avatar'));
         if ($withExtension) {
-            array_walk($formats, function (&$value, $key) {
+            array_walk($formats, function (&$value, $key): void {
                 $value .= self::IMAGE_EXTENSION;
             });
         }

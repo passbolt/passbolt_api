@@ -44,7 +44,6 @@ class SmtpSettingsSendTestEmailCommandTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         EventManager::instance()->setEventList(new EventList());
         $this->enableFeaturePlugin('SmtpSettings');
     }

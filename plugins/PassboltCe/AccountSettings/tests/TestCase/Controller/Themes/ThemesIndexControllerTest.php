@@ -32,7 +32,7 @@ class ThemesIndexControllerTest extends AppIntegrationTestCase
      */
     protected $AccountSettings;
 
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.Passbolt/AccountSettings.AccountSettings',
     ];
 

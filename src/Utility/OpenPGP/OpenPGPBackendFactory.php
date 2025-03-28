@@ -29,7 +29,7 @@ class OpenPGPBackendFactory
     /**
      * @var \App\Utility\OpenPGP\Backends\Gnupg|null
      */
-    private static $instance;
+    private static ?Gnupg $instance = null;
 
     /**
      * Instantiate an OpenPGP Backend
@@ -59,7 +59,7 @@ class OpenPGPBackendFactory
      * @return \App\Utility\OpenPGP\Backends\Gnupg
      * @throws \Cake\Http\Exception\InternalErrorException if backend if not supported
      */
-    public static function get()
+    public static function get(): OpenPGPBackend
     {
         if (self::$instance !== null) {
             return self::$instance;
@@ -75,7 +75,7 @@ class OpenPGPBackendFactory
      *
      * @return void
      */
-    public static function reset()
+    public static function reset(): void
     {
         self::$instance = null;
     }

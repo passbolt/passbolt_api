@@ -22,6 +22,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 
 class BuildFromArmoredKeyTest extends AppTestCase
 {
@@ -29,7 +30,7 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public $Gpgkeys;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Gpgkeys'];
 
     public function setUp(): void
     {
@@ -45,7 +46,7 @@ class BuildFromArmoredKeyTest extends AppTestCase
 
     public function testbuildEntityFromArmoredKeyWrongUserId()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->Gpgkeys->buildEntityFromArmoredKey('nope', 'nope');
     }
 
@@ -78,6 +79,6 @@ class BuildFromArmoredKeyTest extends AppTestCase
         $armoredKey = str_replace('A', '1', $armoredKey);
 
         $this->expectException(CustomValidationException::class);
-        $k = $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, UuidFactory::uuid('user.id.ada'));
+        $this->Gpgkeys->buildEntityFromArmoredKey($armoredKey, UuidFactory::uuid('user.id.ada'));
     }
 }

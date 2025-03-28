@@ -17,7 +17,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/Mobile', ['path' => '/mobile'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/Mobile', ['path' => '/mobile'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     /**

@@ -26,8 +26,10 @@ use App\Utility\UuidFactory;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use InvalidArgumentException;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoCallbackAuthenticationTokenService;
 use Passbolt\MultiFactorAuthentication\Utility\MfaSettings;
+use Throwable;
 
 class MfaDuoCallbackAuthenticationTokenServiceTest extends TestCase
 {
@@ -85,7 +87,7 @@ class MfaDuoCallbackAuthenticationTokenServiceTest extends TestCase
                 $authToken->token,
                 UuidFactory::uuid()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $e);
@@ -103,10 +105,10 @@ class MfaDuoCallbackAuthenticationTokenServiceTest extends TestCase
                 'not-a-valid-token',
                 UuidFactory::uuid()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
-        $this->assertInstanceOf(\InvalidArgumentException::class, $e);
+        $this->assertInstanceOf(InvalidArgumentException::class, $e);
         $this->assertTextContains('The authentication token should be a valid UUID.', $e->getMessage());
     }
 
@@ -120,10 +122,10 @@ class MfaDuoCallbackAuthenticationTokenServiceTest extends TestCase
                 UuidFactory::uuid(),
                 UuidFactory::uuid()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
-        $this->assertInstanceOf(\InvalidArgumentException::class, $e);
+        $this->assertInstanceOf(InvalidArgumentException::class, $e);
         $this->assertTextContains('The authentication token type should be one of the following: mfa_setup, mfa_verify.', $e->getMessage());
     }
 
@@ -137,7 +139,7 @@ class MfaDuoCallbackAuthenticationTokenServiceTest extends TestCase
                 UuidFactory::uuid(),
                 UuidFactory::uuid()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $e);
@@ -166,7 +168,7 @@ class MfaDuoCallbackAuthenticationTokenServiceTest extends TestCase
                 $authToken->token,
                 $duoState
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $e);
@@ -195,7 +197,7 @@ class MfaDuoCallbackAuthenticationTokenServiceTest extends TestCase
                 $authToken->token,
                 $duoState
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $e);
@@ -222,7 +224,7 @@ class MfaDuoCallbackAuthenticationTokenServiceTest extends TestCase
                 $authToken->token,
                 UuidFactory::uuid()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $e);

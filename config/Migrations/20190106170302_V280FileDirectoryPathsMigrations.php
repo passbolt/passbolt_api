@@ -30,8 +30,9 @@ class V280FileDirectoryPathsMigrations extends AbstractMigration
     public function up()
     {
         $connectionName = 'default';
-        if ($this->input->getOption('connection')) {
-            $connectionName = $this->input->getOption('connection');
+        $options = $this->input->getOptions();
+        if (isset($options['connection'])) {
+            $connectionName = $options['connection'];
         }
         $connection = ConnectionManager::get($connectionName);
 

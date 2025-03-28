@@ -22,6 +22,7 @@ use Cake\Core\Configure\Engine\PhpConfig;
 use Cake\Datasource\ConnectionManager;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
+use Exception;
 
 class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
 {
@@ -65,14 +66,14 @@ class WebInstallerIntegrationTestCase extends AppIntegrationTestCase
         $engine = new PhpConfig();
         try {
             $appValues = $engine->read('app');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException('config/app.php is missing an needed for this test.', 500, $exception);
         }
 
         $passboltValues = [];
         try {
             $passboltValues = $engine->read('passbolt');
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
         }
 
         if (isset($appValues['Datasources']['test']) && isset($passboltValues['Datasources']['test'])) {

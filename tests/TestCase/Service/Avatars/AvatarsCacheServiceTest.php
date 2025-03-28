@@ -56,7 +56,7 @@ class AvatarsCacheServiceTest extends TestCase
         return [
             [file_get_contents(FIXTURES . 'Avatar' . DS . 'ada.png')],
             [(new Stream(FIXTURES . 'Avatar' . DS . 'ada.png'))->getContents()],
-            [(new Stream(FIXTURES . 'Avatar' . DS . 'ada.png'))],
+            [new Stream(FIXTURES . 'Avatar' . DS . 'ada.png')],
         ];
     }
 

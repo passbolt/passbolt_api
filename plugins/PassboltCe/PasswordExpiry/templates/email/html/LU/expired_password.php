@@ -19,7 +19,7 @@
 
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 
 if (PHP_SAPI === 'cli') {
@@ -31,7 +31,7 @@ echo $this->element('Email/module/avatar', [
     'text' => $this->element('Email/module/avatar_anonymous_text', [
         'title' => $title,
         'text' => __('You have been requested to change them'),
-        'datetime' => FrozenTime::now(),
+        'datetime' => \Cake\I18n\DateTime::now(),
     ]),
 ]);
 

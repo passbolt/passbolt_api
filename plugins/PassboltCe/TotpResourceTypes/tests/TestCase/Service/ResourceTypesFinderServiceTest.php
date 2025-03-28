@@ -50,8 +50,10 @@ class ResourceTypesFinderServiceTest extends AppTestCase
         ];
         $this->service->filter($resourceTypes, $options);
 
-        $this->assertCount(1, $resourceTypes->all());
-        $this->assertSame($resourceTypeDeletedId, $resourceTypes->firstOrFail()->get('id'));
+        $resourceTypes = $resourceTypes->all()->toArray();
+
+        $this->assertCount(1, $resourceTypes);
+        $this->assertSame($resourceTypeDeletedId, $resourceTypes[0]['id']);
     }
 
     public function testResourceTypesFinderService_Filter_Not_Deleted()
@@ -65,8 +67,10 @@ class ResourceTypesFinderServiceTest extends AppTestCase
         ];
         $this->service->filter($resourceTypes, $options);
 
-        $this->assertCount(1, $resourceTypes->all());
-        $this->assertSame($resourceTypeNotDeletedId, $resourceTypes->firstOrFail()->get('id'));
+        $resourceTypes = $resourceTypes->all()->toArray();
+
+        $this->assertCount(1, $resourceTypes);
+        $this->assertSame($resourceTypeNotDeletedId, $resourceTypes[0]['id']);
     }
 
     public function testResourceTypesFinderService_No_Filter()
@@ -78,8 +82,10 @@ class ResourceTypesFinderServiceTest extends AppTestCase
         $options = [];
         $this->service->filter($resourceTypes, $options);
 
-        $this->assertCount(1, $resourceTypes->all());
-        $this->assertSame($resourceTypeNotDeletedId, $resourceTypes->firstOrFail()->get('id'));
+        $resourceTypes = $resourceTypes->all()->toArray();
+
+        $this->assertCount(1, $resourceTypes);
+        $this->assertSame($resourceTypeNotDeletedId, $resourceTypes[0]['id']);
     }
 
     public function testResourceTypesFinderService_Contain_Resources_Count()
@@ -87,6 +93,7 @@ class ResourceTypesFinderServiceTest extends AppTestCase
         [$resourceType1, $resourceType2, $resourceType3] = ResourceTypeFactory::make(3)->persist();
         ResourceFactory::make(2)->with('ResourceTypes', $resourceType1)->persist();
         ResourceFactory::make(3)->with('ResourceTypes', $resourceType2)->persist();
+        ResourceFactory::make()->deleted()->with('ResourceTypes', $resourceType3)->persist();
 
         $resourceTypes = $this->service->find();
 
@@ -94,19 +101,16 @@ class ResourceTypesFinderServiceTest extends AppTestCase
             'contain' => ['resources_count' => 1],
         ];
         $this->service->contain($resourceTypes, $options);
-        $resourceTypes = $resourceTypes->all();
+        $resourceTypes = $resourceTypes->all()->toArray();
         $this->assertCount(3, $resourceTypes);
-        $resourceType1 = $resourceTypes->filter(function ($resourceType) use ($resourceType1) {
-            return $resourceType->id === $resourceType1->get('id');
-        })->first();
-        $resourceType2 = $resourceTypes->filter(function ($resourceType) use ($resourceType2) {
-            return $resourceType->id === $resourceType2->get('id');
-        })->first();
-        $resourceType3 = $resourceTypes->filter(function ($resourceType) use ($resourceType3) {
-            return $resourceType->id === $resourceType3->get('id');
-        })->first();
-        $this->assertSame(2, $resourceType1->get('resources_count'));
-        $this->assertSame(3, $resourceType2->get('resources_count'));
-        $this->assertSame(0, $resourceType3->get('resources_count'));
+        foreach ($resourceTypes as $resourceType) {
+            if ($resourceType['id'] === $resourceType1->get('id')) {
+                $this->assertSame(2, $resourceType['resources_count']);
+            } elseif ($resourceType['id'] === $resourceType2->get('id')) {
+                $this->assertSame(3, $resourceType['resources_count']);
+            } else {
+                $this->assertSame(0, $resourceType['resources_count']);
+            }
+        }
     }
 }

@@ -102,7 +102,7 @@ trait GroupsUsersModelTrait
      * @param string $groupId The target group
      * @param string $userId The target user
      * @param bool $isAdmin Is the member also admin of the group
-     * @return bool
+     * @return void
      */
     protected function assertUserIsMemberOf(string $groupId, string $userId, bool $isAdmin = false)
     {
@@ -111,7 +111,7 @@ trait GroupsUsersModelTrait
             'user_id' => $userId,
             'group_id' => $groupId,
             'is_admin' => $isAdmin,
-        ])->count();
+        ])->all()->count();
         $this->assertEquals(1, $count);
     }
 
@@ -120,7 +120,7 @@ trait GroupsUsersModelTrait
      *
      * @param string $groupId The target group
      * @param string $userId The target user
-     * @return bool
+     * @return void
      */
     protected function assertUserIsNotMemberOf(string $groupId, string $userId)
     {
@@ -128,7 +128,7 @@ trait GroupsUsersModelTrait
         $count = $groupsUsersTable->find()->where([
             'user_id' => $userId,
             'group_id' => $groupId,
-        ])->count();
+        ])->all()->count();
         $this->assertEquals(0, $count);
     }
 

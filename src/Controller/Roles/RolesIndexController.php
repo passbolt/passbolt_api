@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller\Roles;
 
 use App\Controller\AppController;
+use App\Model\Table\RolesTable;
 
 /**
  * RolesIndexController Class
@@ -26,7 +27,7 @@ class RolesIndexController extends AppController
     /**
      * @var \App\Model\Table\RolesTable
      */
-    protected $Roles;
+    protected RolesTable $Roles;
 
     /**
      * Roles Index action

@@ -19,7 +19,6 @@ namespace Passbolt\Metadata\Service\RotateKey;
 use App\Error\Exception\CustomValidationException;
 use App\Utility\UserAccessControl;
 use Cake\Chronos\Chronos;
-use Cake\Chronos\ChronosInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\ORM\Entity;
@@ -34,7 +33,7 @@ abstract class AbstractMetadataRotateKeyUpdateService
     /**
      * @param \App\Utility\UserAccessControl $uac User access control.
      * @param array $data Data to update
-     * @param \Cake\ORM\Entity[] $entitiesToUpdate entities to patch
+     * @param array<\Cake\ORM\Entity> $entitiesToUpdate entities to patch
      * @return void
      */
     abstract protected function updateData(UserAccessControl $uac, array $data, array $entitiesToUpdate): void;
@@ -113,11 +112,11 @@ abstract class AbstractMetadataRotateKeyUpdateService
      */
     protected function assertConflict(array $values, Entity $entity): void
     {
-        if (!$entity->has('modified_by') || !$entity->has('modified')) {
+        if (!$entity->hasValue('modified_by') || !$entity->hasValue('modified')) {
             return;
         }
         // Assert modified date hasn't been changed
-        $modified = $values['modified'] instanceof ChronosInterface ? $values['modified'] : new Chronos($values['modified']); // phpcs:ignore
+        $modified = $values['modified'] instanceof Chronos ? $values['modified'] : new Chronos($values['modified']); // phpcs:ignore
         if ($modified->toDateTimeString() !== $entity->get('modified')->toDateTimeString()) { // we are comparing via toDateTimeString() to avoid microsecond difference
             throw new ConflictException(__('The provided modified date does not match.'));
         }

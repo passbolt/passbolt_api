@@ -50,7 +50,7 @@ class JwtRouteFilterMiddleware implements MiddlewareInterface
     /**
      * Returns the routes that cannot be accessed if a JWT access token os placed in the header
      *
-     * @return string[]
+     * @return array<string>
      */
     protected function getBlockedRoutes(): array
     {

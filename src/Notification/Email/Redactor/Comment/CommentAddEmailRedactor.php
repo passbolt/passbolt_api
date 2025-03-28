@@ -41,12 +41,12 @@ class CommentAddEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $resourcesTable;
+    private ResourcesTable $resourcesTable;
 
     /**
      * @param array|null $config Configuration for the redactor

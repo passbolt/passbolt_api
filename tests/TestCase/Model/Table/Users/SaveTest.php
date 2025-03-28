@@ -32,7 +32,7 @@ class SaveTest extends AppTestCase
      */
     public $Users;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles', 'app.Base/Groups',
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
     ];
@@ -71,9 +71,7 @@ class SaveTest extends AppTestCase
         $testUser = $this->createTestUser();
 
         // Fetch the newly created user from DB
-        $addedUser = $this->Users->get($testUser->id, [
-            'contain' => ['Profiles'],
-        ]);
+        $addedUser = $this->Users->get($testUser->id, contain: ['Profiles']);
 
         $this->assertNotEmpty($addedUser);
 
@@ -100,9 +98,7 @@ class SaveTest extends AppTestCase
         $this->assertNotFalse($updatedTestUser, 'The resource update operation failed.');
 
         // Fetch the updated User from DB.
-        $fetchedUser = $this->Users->get($testUser->id, [
-            'contain' => ['Profiles'],
-        ]);
+        $fetchedUser = $this->Users->get($testUser->id, contain: ['Profiles']);
 
         $this->assertNotEmpty($fetchedUser);
         $this->assertEquals($updateData['username'], $fetchedUser->username);

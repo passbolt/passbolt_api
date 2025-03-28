@@ -43,7 +43,7 @@ class ClearMfaCookieOnSetupAndRecover implements EventListenerInterface
     /**
      * The controllers concerned
      *
-     * @return string[]
+     * @return array<string>
      */
     public function getListOfControllers(): array
     {
@@ -65,7 +65,7 @@ class ClearMfaCookieOnSetupAndRecover implements EventListenerInterface
      */
     public function clearMfaCookieInResponse(EventInterface $event): void
     {
-        /** @var \Cake\Controller\Controller $controller */
+        /** @var \App\Controller\AppController $controller */
         $controller = $event->getSubject();
 
         $isControllerInList = in_array(get_class($controller), $this->getListOfControllers());
@@ -75,7 +75,7 @@ class ClearMfaCookieOnSetupAndRecover implements EventListenerInterface
             return;
         } elseif (!$isPost) {
             return;
-        } elseif (!isset($controller->User) || !($controller->User instanceof UserComponent)) {
+        } elseif (!($controller->User instanceof UserComponent)) {
             Log::error('The User component is not set for ' . get_class($controller));
 
             return;

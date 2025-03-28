@@ -121,7 +121,7 @@ class MfaRequiredCheckMiddlewareIntegrationTest extends MfaIntegrationTestCase
 
         // Check user was not saved, since authorization was refused
         $query = UserFactory::find()->where(['username' => $data['username']]);
-        $this->assertEquals(0, $query->count());
+        $this->assertEquals(0, $query->all()->count());
     }
 
     /**

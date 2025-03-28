@@ -19,7 +19,10 @@ namespace App\Service\Groups;
 
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Group;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\SecretsTable;
 use App\Model\Validation\GroupsUsersChange\GroupsUsersChangeValidator;
 use App\Service\Users\UserGetService;
 use App\Utility\UserAccessControl;
@@ -33,32 +36,32 @@ class GroupsUpdateDryRunService
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    private $groupsTable;
+    private GroupsTable $groupsTable;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $secretsTable;
+    private SecretsTable $secretsTable;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private GroupsUsersTable $groupsUsersTable;
 
     /**
      * @var \App\Service\Groups\GroupGetService
      */
-    private $groupGetService;
+    private GroupGetService $groupGetService;
 
     /**
      * @var \App\Service\Users\UserGetService
      */
-    private $userGetService;
+    private UserGetService $userGetService;
 
     /**
      * Instantiate the service.

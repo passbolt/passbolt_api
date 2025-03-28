@@ -25,6 +25,7 @@ use Cake\ORM\TableRegistry;
 use Laminas\Diactoros\UploadedFile;
 use League\Flysystem\FilesystemAdapter;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use const UPLOAD_ERR_OK;
 
 /**
  * @property \App\Model\Table\AvatarsTable $Avatars
@@ -108,7 +109,7 @@ trait AvatarsIntegrationTestTrait
         return new UploadedFile(
             $uploadFile,
             filesize($uploadFile),
-            \UPLOAD_ERR_OK,
+            UPLOAD_ERR_OK,
             $uploadFile,
             'image/' . $format
         );

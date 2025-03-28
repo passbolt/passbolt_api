@@ -37,14 +37,14 @@ trait SubscribedEmailRedactorTrait
     /**
      * @var array
      */
-    private $_defaultConfig = [];
+    private array $_defaultConfig = [];
 
     /**
      * @param string|null $key Configuration key to retrieve
      * @param mixed $default Default value
      * @return mixed
      */
-    public function getConfig(?string $key = null, $default = null)
+    public function getConfig(?string $key = null, mixed $default = null): mixed
     {
         return $this->parentGetConfig($key) ?? EmailNotificationSettings::get($key);
     }
@@ -55,7 +55,7 @@ trait SubscribedEmailRedactorTrait
     public function implementedEvents(): array
     {
         return [
-            CollectSubscribedEmailRedactorEvent::EVENT_NAME => $this,
+            CollectSubscribedEmailRedactorEvent::EVENT_NAME => 'subscribe',
         ];
     }
 
@@ -63,18 +63,9 @@ trait SubscribedEmailRedactorTrait
      * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
      * @return void
      */
-    public function subscribe(CollectSubscribedEmailRedactorEvent $event)
+    public function subscribe(CollectSubscribedEmailRedactorEvent $event): void
     {
         /** @var \App\Notification\Email\SubscribedEmailRedactorInterface $this */
         $event->getManager()->addNewSubscription($this);
-    }
-
-    /**
-     * @param \App\Notification\Email\CollectSubscribedEmailRedactorEvent $event Event object
-     * @return void
-     */
-    public function __invoke(CollectSubscribedEmailRedactorEvent $event)
-    {
-        $this->subscribe($event);
     }
 }

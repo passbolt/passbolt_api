@@ -23,6 +23,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCaseV5;
 use Cake\Http\Exception\BadRequestException;
+use Exception;
 use Passbolt\Folders\Test\Factory\PermissionFactory;
 use Passbolt\Metadata\Service\Migration\MigrateAllV4ResourcesToV5Service;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
@@ -69,7 +70,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5DefaultResourceType */
-        $v5DefaultResourceType = ResourceTypeFactory::make()->v5Default()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
         $adaKeyInfo = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
             'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
@@ -107,7 +108,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
         $resourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5ResourceType */
-        $v5ResourceType = ResourceTypeFactory::make()->v5Default()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
         $user = UserFactory::make()->user()->withValidGpgKey()->persist();
         $user2 = UserFactory::make()->user()->persist();
         /** @var \App\Model\Entity\Resource $resource */
@@ -132,7 +133,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5TotpStandalone */
-        $v5TotpStandalone = ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
+        ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
         // Shared resource.
         /** @var \App\Model\Entity\Resource $sharedResource */
         $sharedResource = ResourceFactory::make()
@@ -181,7 +182,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
         MetadataTypesSettingsFactory::make()->v5()->persist();
         $v4ResourceType = ResourceTypeFactory::make()->passwordAndDescription()->persist();
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $v5DefaultResourceType */
-        $v5DefaultResourceType = ResourceTypeFactory::make()->v5Default()->persist();
+        ResourceTypeFactory::make()->v5Default()->persist();
         $adaKeyInfo = [
             'armored_key' => file_get_contents(FIXTURES . DS . 'Gpgkeys' . DS . 'ada_public.key'),
             'fingerprint' => '03F60E958F4CB29723ACDF761353B5B15D9B054F',
@@ -227,7 +228,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
         $this->assertFalse($result['success']);
         $this->assertCount(1, $result['errors']);
-        $this->assertStringContainsString('Record not found in table "metadata_keys"', $result['errors'][0]['error_message']);
+        $this->assertStringContainsString('Record not found in table `metadata_keys`', $result['errors'][0]['error_message']);
     }
 
     public function testMetadataMigrateAllV4ResourcesToV5Service_Error_ResourceIsAlreadyV5(): void
@@ -271,7 +272,7 @@ class MigrateAllV4ResourcesToV5ServiceTest extends AppTestCaseV5
 
         try {
             $this->service->migrate();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('Resource creation/modification with encrypted metadata not allowed', $e->getMessage());
         }

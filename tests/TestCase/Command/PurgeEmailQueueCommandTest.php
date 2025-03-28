@@ -24,17 +24,6 @@ class PurgeEmailQueueCommandTest extends TestCase
     use ConsoleIntegrationTestTrait;
 
     /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        parent::setUp();
-        $this->useCommandRunner();
-    }
-
-    /**
      * Basic help test
      */
     public function testPurgeEmailQueueCommandHelp()

@@ -395,7 +395,6 @@ class AuthLoginControllerTest extends AppIntegrationTestCase
             'CONFIG - It is not possible to use the key provided in the fixtures to decrypt.'
         );
         $msg = stripslashes(urldecode($headers['X-GPGAuth-User-Auth-Token']));
-        $signatureInfo = [];
         $this->gpg->setVerifyKeyFromFingerprint(Configure::read('passbolt.gpg.serverKey.fingerprint'));
         $plaintext = $this->gpg->decrypt($msg, true);
         $this->assertFalse(($plaintext === false), 'Could not decrypt the server generated User Auth Token: ' . $msg);

@@ -22,6 +22,7 @@ use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
 use Authentication\Authenticator\Result;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 
@@ -30,7 +31,7 @@ class AuthLoginController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated([
             'loginGet',
