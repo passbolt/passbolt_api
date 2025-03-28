@@ -24,6 +24,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
+use Exception;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 
 class SsoSettingsDeleteService
@@ -63,7 +64,7 @@ class SsoSettingsDeleteService
             $ssoSettingsTable->deleteQuery()
                 ->where(['id' => $id])
                 ->execute();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException(__('Could not delete the SSO settings.'), 500, $exception);
         }
 
@@ -92,7 +93,7 @@ class SsoSettingsDeleteService
             $ssoSettingsTable->deleteQuery()
                 ->where(['id <>' => $id])
                 ->execute();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException(__('Could not delete the draft SSO settings.'), 500, $exception);
         }
     }

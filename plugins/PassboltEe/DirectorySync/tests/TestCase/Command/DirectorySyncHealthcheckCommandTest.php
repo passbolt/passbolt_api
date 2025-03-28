@@ -37,7 +37,6 @@ class DirectorySyncHealthcheckCommandTest extends AppTestCase
     {
         parent::setUp();
 
-        $this->useCommandRunner();
         $this->mockProcessUserService('www-data');
         $this->enableFeaturePlugin(DirectorySyncPlugin::class);
     }

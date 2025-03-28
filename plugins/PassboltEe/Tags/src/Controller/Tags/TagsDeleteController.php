@@ -23,14 +23,15 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Validation\Validation;
+use Passbolt\Tags\Model\Table\ResourcesTagsTable;
+use Passbolt\Tags\Model\Table\TagsTable;
 
-/**
- * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable $ResourcesTags
- * @property \Passbolt\Tags\Model\Table\TagsTable $Tags
- */
 class TagsDeleteController extends AppController
 {
     use TagAccessTrait;
+
+    protected ?TagsTable $Tags = null;
+    protected ?ResourcesTagsTable $ResourcesTags = null;
 
     /**
      * @inheritDoc
@@ -56,9 +57,7 @@ class TagsDeleteController extends AppController
 
         try {
             /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
-            $tag = $this->Tags->get($id, [
-                'contain' => ['ResourcesTags'],
-            ]);
+            $tag = $this->Tags->get($id, ['contain' => ['ResourcesTags']]);
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The tag does not exist.'));
         }

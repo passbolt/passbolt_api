@@ -28,6 +28,7 @@ use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\MultiFactorAuthentication\Service\Duo\MfaDuoVerifyDuoCodeService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaOrgSettingsTestTrait;
 use Passbolt\MultiFactorAuthentication\Test\Mock\DuoSdkClientMock;
+use Throwable;
 
 class MfaDuoVerifyDuoCodeServiceTest extends TestCase
 {
@@ -62,7 +63,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
 
         try {
             $service->verify($uac, $duoCode);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $th);
@@ -82,7 +83,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
 
         try {
             $service->verify($uac, $duoCode);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $th);
@@ -135,7 +136,7 @@ class MfaDuoVerifyDuoCodeServiceTest extends TestCase
 
         try {
             $service->verify($uac, $duoCode);
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
         }
 
         $this->assertInstanceOf(UnauthorizedException::class, $th);

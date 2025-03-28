@@ -26,6 +26,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Cake\Validation\Validator;
+use Passbolt\DirectorySync\Model\Entity\DirectoryIgnore;
 
 /**
  * DirectoryIgnore Model
@@ -33,7 +34,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasOne $Users
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\HasOne $Groups
  * @property \Cake\ORM\Table&\Cake\ORM\Association\HasOne $DirectoryEntries
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore newEntity(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore[] newEntities(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -53,9 +54,9 @@ class DirectoryIgnoreTable extends Table
     use TableCleanupTrait;
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    public static $SUPPORTED_FOREIGN_MODEL = [
+    public static array $SUPPORTED_FOREIGN_MODEL = [
         'Users',
         'Groups',
         'DirectoryEntries',
@@ -90,7 +91,7 @@ class DirectoryIgnoreTable extends Table
         ]);
 
         $this->hasOne('DirectoryEntries', [
-            'className' => 'DirectoryEntries',
+            'className' => 'Passbolt/DirectorySync.DirectoryEntries',
             'bindingKey' => 'id',
             'foreignKey' => 'id',
         ]);
@@ -129,7 +130,7 @@ class DirectoryIgnoreTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add(
             function ($entity, $options) {
@@ -160,7 +161,7 @@ class DirectoryIgnoreTable extends Table
      * @param array $data data
      * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
      */
-    public function create(array $data)
+    public function create(array $data): DirectoryIgnore|bool
     {
         $entity = $this->newEntity($data, [
             'accessibleFields' => [
@@ -178,10 +179,10 @@ class DirectoryIgnoreTable extends Table
      *
      * @param string $foreignModel foreign model
      * @param string $foreignKey foreign key
-     * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryIgnore
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryIgnore|bool
      * @throws \Cake\Http\Exception\BadRequestException if the $foreignKey is not a valid UUID
      */
-    public function createOrFail(string $foreignModel, string $foreignKey)
+    public function createOrFail(string $foreignModel, string $foreignKey): bool|DirectoryIgnore
     {
         if (!Validation::uuid($foreignKey)) {
             throw new BadRequestException(__('The identifier should be a valid UUID.'));

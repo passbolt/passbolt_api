@@ -61,7 +61,7 @@ class AccountRecoveryRecoverCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('gpgkey.armored_key', $gpgkey->armored_key)
             ->withData('account_recovery_request_id', $request->id);
 
-        $service = (new AccountRecoveryRecoverCompleteService($serverRequest));
+        $service = new AccountRecoveryRecoverCompleteService($serverRequest);
         $service->complete($user->id);
 
         // Check that token is now inactive
@@ -112,7 +112,7 @@ class AccountRecoveryRecoverCompleteServiceTest extends AccountRecoveryTestCase
             ->withData('authenticationtoken.token', $token->token)
             ->withData('gpgkey.armored_key', $gpgkey->armored_key);
 
-        $service = (new AccountRecoveryRecoverCompleteService($serverRequest));
+        $service = new AccountRecoveryRecoverCompleteService($serverRequest);
         $service->complete($user->id);
 
         // Check that token is now inactive
@@ -122,12 +122,12 @@ class AccountRecoveryRecoverCompleteServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryRecoverCompleteService_ARDisabled_Non_Valid_UserId()
     {
-        $serverRequest = (new ServerRequest());
+        $serverRequest = new ServerRequest();
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('The user identifier should be a valid UUID.');
 
-        $service = (new AccountRecoveryRecoverCompleteService($serverRequest));
+        $service = new AccountRecoveryRecoverCompleteService($serverRequest);
         $service->complete('Foo');
     }
 
@@ -154,7 +154,7 @@ class AccountRecoveryRecoverCompleteServiceTest extends AccountRecoveryTestCase
 
         $this->expectException(BadRequestException::class);
         $this->expectExceptionMessage('The account recovery request identifier should be a valid UUID.');
-        $service = (new AccountRecoveryRecoverCompleteService($serverRequest));
+        $service = new AccountRecoveryRecoverCompleteService($serverRequest);
         $service->complete($user->id);
     }
 }

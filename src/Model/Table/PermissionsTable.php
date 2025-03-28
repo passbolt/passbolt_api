@@ -34,7 +34,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\GroupsTable&\Cake\ORM\Association\BelongsTo $Groups
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Permission get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Permission get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Permission newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Permission[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Permission|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -49,10 +49,10 @@ use Cake\Validation\Validator;
  * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface> saveManyOrFail(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\App\Model\Entity\Permission>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findByAcoForeignKeyAndType(string $acoForeignKey, int $type)
- * @method \Cake\ORM\Query findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
- * @method \Cake\ORM\Query findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
- * @method \Cake\ORM\Query findByAcoForeignKeyAndAroForeignKey(string $acoForeignKey, string $aroForeignKey)
+ * @method \Cake\ORM\Query\SelectQuery findByAcoForeignKeyAndType(string $acoForeignKey, int $type)
+ * @method \Cake\ORM\Query\SelectQuery findByAroAndAcoForeignKey(string $aro, string $acoForeignKey)
+ * @method \Cake\ORM\Query\SelectQuery findByIdAndAcoForeignKey(string $id, string $acoForeignKey)
+ * @method \Cake\ORM\Query\SelectQuery findByAcoForeignKeyAndAroForeignKey(string $acoForeignKey, string $aroForeignKey)
  */
 class PermissionsTable extends Table
 {
@@ -181,7 +181,7 @@ class PermissionsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationSaveResource(Validator $validator)
+    public function validationSaveResource(Validator $validator): Validator
     {
         $validator = $this->validationDefault($validator);
 
@@ -197,7 +197,7 @@ class PermissionsTable extends Table
      * @param int $value permission type
      * @return bool
      */
-    public function isValidPermissionType(int $value)
+    public function isValidPermissionType(int $value): bool
     {
         return in_array($value, self::ALLOWED_TYPES);
     }
@@ -237,7 +237,7 @@ class PermissionsTable extends Table
      * @param array $options The additional options for this rule
      * @return bool
      */
-    public function acoExistsRule(\Cake\Datasource\EntityInterface $entity, array $options)
+    public function acoExistsRule(EntityInterface $entity, array $options): bool
     {
         $rules = new RulesChecker($options);
         $exist = false;
@@ -275,7 +275,7 @@ class PermissionsTable extends Table
      * @param array $options The additional options for this rule
      * @return bool
      */
-    public function aroExistsRule(EntityInterface $entity, array $options)
+    public function aroExistsRule(EntityInterface $entity, array $options): bool
     {
         $rules = new RulesChecker($options);
         $aro = Inflector::pluralize($entity->get('aro'));
@@ -313,7 +313,7 @@ class PermissionsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupSoftDeletedAro(string $modelName, $dryRun = false): int
+    public function cleanupSoftDeletedAro(string $modelName, bool $dryRun = false): int
     {
         $query = $this->selectQuery()
             ->select(['id'])
@@ -333,7 +333,7 @@ class PermissionsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupHardDeletedAro(string $modelName, $dryRun = false): int
+    public function cleanupHardDeletedAro(string $modelName, bool $dryRun = false): int
     {
         $query = $this->selectQuery()
             ->select(['id'])
@@ -354,7 +354,7 @@ class PermissionsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupSoftDeletedAco(string $modelName, $dryRun = false): int
+    public function cleanupSoftDeletedAco(string $modelName, bool $dryRun = false): int
     {
         $query = $this->selectQuery()
             ->select(['id'])
@@ -374,7 +374,7 @@ class PermissionsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupHardDeletedAco(string $modelName, $dryRun = false): int
+    public function cleanupHardDeletedAco(string $modelName, bool $dryRun = false): int
     {
         $query = $this->selectQuery()
             ->select(['id'])
@@ -394,7 +394,7 @@ class PermissionsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupSoftDeletedUsers($dryRun = false): int
+    public function cleanupSoftDeletedUsers(bool $dryRun = false): int
     {
         return $this->cleanupSoftDeletedAro('Users', $dryRun);
     }
@@ -405,7 +405,7 @@ class PermissionsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupHardDeletedUsers($dryRun = false): int
+    public function cleanupHardDeletedUsers(bool $dryRun = false): int
     {
         return $this->cleanupHardDeletedAro('Users', $dryRun);
     }
@@ -416,7 +416,7 @@ class PermissionsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupSoftDeletedGroups($dryRun = false): int
+    public function cleanupSoftDeletedGroups(bool $dryRun = false): int
     {
         return $this->cleanupSoftDeletedAro('Groups', $dryRun);
     }
@@ -427,7 +427,7 @@ class PermissionsTable extends Table
      * @param bool $dryRun false
      * @return int Number of affected records
      */
-    public function cleanupHardDeletedGroups($dryRun = false): int
+    public function cleanupHardDeletedGroups(bool $dryRun = false): int
     {
         return $this->cleanupHardDeletedAro('Groups', $dryRun);
     }

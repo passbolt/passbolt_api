@@ -25,7 +25,7 @@ use App\Test\Lib\Http\TestRequestHandler;
 use App\Utility\UuidFactory;
 use Cake\Database\Driver\Mysql;
 use Cake\Http\ServerRequest;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -116,8 +116,8 @@ class LowerCaseUuidTypeTest extends TestCase
                 'id' => $UUID,
                 'username' => 'Foo',
                 'role_id' => $UUID,
-                'created' => FrozenDate::now()->format('Y-m-d'),
-                'modified' => FrozenDate::now()->format('Y-m-d'),
+                'created' => Date::now()->format('Y-m-d'),
+                'modified' => Date::now()->format('Y-m-d'),
             ]);
 
         $userQueriedWithLowerCase = UserFactory::get($uuid);

@@ -58,7 +58,10 @@ class HandleGroupUserDeletedServiceTest extends TagTestCase
 
     public function testHandleGroupUserDeletedServiceSuccess_RemoveResourcesTagsForLostResourceAccess(): void
     {
-        [$u1, $u2, $g1, $r1] = $this->insertFixture_2GroupUsers_1SharedResource_TaggedWith2Tags();
+        $fixtures = $this->insertFixture_2GroupUsers_1SharedResource_TaggedWith2Tags();
+        $u1 = $fixtures[0];
+        $g1 = $fixtures[2];
+        $r1 = $fixtures[3];
         // Hard delete u2 from the group g1
         $this->groupsUsersTable->delete($g1->groups_users[1]);
 
@@ -72,7 +75,10 @@ class HandleGroupUserDeletedServiceTest extends TagTestCase
 
     public function testHandleGroupUserDeletedServiceSuccess_RemoveResourcesTagsAndUnusedForLostResourceAccess(): void
     {
-        [$u1, $u2, $g1, $r1] = $this->insertFixture_2GroupUsers_1SharedResource_TaggedWith2Tags();
+        $fixtures = $this->insertFixture_2GroupUsers_1SharedResource_TaggedWith2Tags();
+        $u1 = $fixtures[0];
+        $g1 = $fixtures[2];
+        $r1 = $fixtures[3];
         // Hard delete u2 from the group g1
         $this->groupsUsersTable->delete($g1->groups_users[1]);
 

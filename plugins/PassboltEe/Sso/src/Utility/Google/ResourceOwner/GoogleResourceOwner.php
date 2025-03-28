@@ -26,7 +26,7 @@ class GoogleResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInt
      *
      * @var array
      */
-    protected $data;
+    protected array $data;
 
     /**
      * Creates new google resource owner.
@@ -43,7 +43,7 @@ class GoogleResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInt
      *
      * @return string|null
      */
-    public function getId()
+    public function getId(): ?string
     {
         return $this->data['oid'] ?? null;
     }
@@ -63,7 +63,7 @@ class GoogleResourceOwner implements ResourceOwnerInterface, SsoResourceOwnerInt
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->data;
     }

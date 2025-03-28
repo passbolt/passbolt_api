@@ -17,7 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\MultiFactorAuthentication\Test\Factory;
 
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\AccountSettings\Model\Entity\AccountSetting;
 use Passbolt\AccountSettings\Test\Factory\AccountSettingFactory;
 use Passbolt\MultiFactorAuthentication\Utility\MfaAccountSettings;
@@ -45,14 +45,14 @@ class MfaAccountSettingFactory extends AccountSettingFactory
 
     /**
      * @param string $uri Provisioning URI
-     * @param \Cake\I18n\FrozenTime|null $verified Date of verification
+     * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
-    public function totp(string $uri = 'Foo', ?FrozenTime $verified = null): self
+    public function totp(string $uri = 'Foo', ?DateTime $verified = null): self
     {
         $settings = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_TOTP]];
         $settings[MfaSettings::PROVIDER_TOTP] = [
-            MfaAccountSettings::VERIFIED => $verified ?? FrozenTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
             MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
         ];
         $value = json_encode($settings);
@@ -62,15 +62,15 @@ class MfaAccountSettingFactory extends AccountSettingFactory
 
     /**
      * @param string|null $yubikeyId YUBI Key ID
-     * @param \Cake\I18n\FrozenTime|null $verified Date of verification
+     * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
-    public function yubikey(?string $yubikeyId = null, ?FrozenTime $verified = null): self
+    public function yubikey(?string $yubikeyId = null, ?DateTime $verified = null): self
     {
         $yubikeyId = $yubikeyId ?? $this->getFaker()->sentence;
         $settings = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_YUBIKEY]];
         $settings[MfaSettings::PROVIDER_YUBIKEY] = [
-            MfaAccountSettings::VERIFIED => $verified ?? FrozenTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
             MfaAccountSettings::YUBIKEY_ID => $yubikeyId,
         ];
         $value = json_encode($settings);
@@ -79,14 +79,14 @@ class MfaAccountSettingFactory extends AccountSettingFactory
     }
 
     /**
-     * @param \Cake\I18n\FrozenTime|null $verified Date of verification
+     * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
-    public function duo(?FrozenTime $verified = null): self
+    public function duo(?DateTime $verified = null): self
     {
         $settings = [MfaSettings::PROVIDERS => [MfaSettings::PROVIDER_DUO]];
         $settings[MfaSettings::PROVIDER_DUO] = [
-            MfaAccountSettings::VERIFIED => $verified ?? FrozenTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
         ];
         $value = json_encode($settings);
 
@@ -94,20 +94,20 @@ class MfaAccountSettingFactory extends AccountSettingFactory
     }
 
     /**
-     * @param \Cake\I18n\FrozenTime|null $verified Date of verification
+     * @param \Cake\I18n\DateTime|null $verified Date of verification
      * @return self
      */
-    public function duoWithTotp(string $uri = 'Foo', ?FrozenTime $verified = null): self
+    public function duoWithTotp(string $uri = 'Foo', ?DateTime $verified = null): self
     {
         $settings = [MfaSettings::PROVIDERS => [
             MfaSettings::PROVIDER_DUO,
             MfaSettings::PROVIDER_TOTP,
         ]];
         $settings[MfaSettings::PROVIDER_DUO] = [
-            MfaAccountSettings::VERIFIED => $verified ?? FrozenTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
         ];
         $settings[MfaSettings::PROVIDER_TOTP] = [
-            MfaAccountSettings::VERIFIED => $verified ?? FrozenTime::now(),
+            MfaAccountSettings::VERIFIED => $verified ?? DateTime::now(),
             MfaAccountSettings::OTP_PROVISIONING_URI => $uri,
         ];
         $value = json_encode($settings);

@@ -23,7 +23,7 @@ interface SsoResourceOwnerInterface
      *
      * @return mixed
      */
-    public function getEmail();
+    public function getEmail(): mixed;
 
     /**
      * Returns nonce if present in data.

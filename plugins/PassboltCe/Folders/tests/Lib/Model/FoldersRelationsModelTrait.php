@@ -20,6 +20,7 @@ namespace Passbolt\Folders\Test\Lib\Model;
 use App\Model\Table\PermissionsTable;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use DateTime;
 
 /**
  * @mixin Assert
@@ -66,8 +67,8 @@ trait FoldersRelationsModelTrait
             'foreign_model' => PermissionsTable::FOLDER_ACO,
             'foreign_id' => UuidFactory::uuid('folder.id.folder'),
             'user_id' => UuidFactory::uuid('user.id.test'),
-            'created' => (new \DateTime())->format('Y-m-d H:i:s'),
-            'modified' => (new \DateTime())->format('Y-m-d H:i:s'),
+            'created' => (new DateTime())->format('Y-m-d H:i:s'),
+            'modified' => (new DateTime())->format('Y-m-d H:i:s'),
         ];
         $entityContent = array_merge($entityContent, $data);
 

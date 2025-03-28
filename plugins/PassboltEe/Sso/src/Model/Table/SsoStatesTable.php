@@ -21,7 +21,7 @@ use App\Model\Rule\IsNotSoftDeletedRule;
 use App\Model\Validation\User\IsValidIpValidationRule;
 use App\Model\Validation\User\IsValidUserAgentValidationRule;
 use Cake\Database\Expression\QueryExpression;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -39,7 +39,7 @@ use Passbolt\Sso\Model\Validation\IsValidTypeValidationRule;
  * @method \Passbolt\Sso\Model\Entity\SsoState newEmptyEntity()
  * @method \Passbolt\Sso\Model\Entity\SsoState newEntity(array $data, array $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoState[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Sso\Model\Entity\SsoState get($primaryKey, $options = [])
+ * @method \Passbolt\Sso\Model\Entity\SsoState get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Sso\Model\Entity\SsoState findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoState patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Sso\Model\Entity\SsoState[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -235,10 +235,10 @@ class SsoStatesTable extends Table
      * @param array $options Options.
      * @return \Cake\ORM\Query
      */
-    public function findActive(Query $query, array $options)
+    public function findActive(Query $query, array $options): Query
     {
         return $query->where(function (QueryExpression $exp) {
-            return $exp->gt('deleted', FrozenTime::now());
+            return $exp->gt('deleted', DateTime::now());
         });
     }
 }

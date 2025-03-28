@@ -41,18 +41,18 @@ class LdapConfigurationForm extends Form
     public const SUPPORTED_DIRECTORY_TYPE = [DirectoryInterface::TYPE_AD, DirectoryInterface::TYPE_OPENLDAP];
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    public static $connectionTypes = [
+    public static array $connectionTypes = [
         self::CONNECTION_TYPE_PLAIN,
         self::CONNECTION_TYPE_SSL,
         self::CONNECTION_TYPE_TLS,
     ];
 
     /**
-     * @var string[]
+     * @var array<string>
      */
-    public static $authenticationTypes = [
+    public static array $authenticationTypes = [
         self::AUTHENTICATION_TYPE_BASIC,
         self::AUTHENTICATION_TYPE_SASL,
     ];
@@ -533,6 +533,7 @@ class LdapConfigurationForm extends Form
             ->find()
             ->contain(['Roles'])
             ->where(['Users.id' => $userId, 'Users.active' => 1, 'Users.deleted' => 0, 'Roles.name' => Role::ADMIN])
+            ->all()
             ->count() > 0;
     }
 
@@ -551,6 +552,7 @@ class LdapConfigurationForm extends Form
         return TableRegistry::getTableLocator()->get('Users')
             ->find()
             ->where(['Users.id' => $userId, 'Users.active' => 1, 'Users.deleted' => 0])
+            ->all()
             ->count() > 0;
     }
 
@@ -561,7 +563,7 @@ class LdapConfigurationForm extends Form
      * @param array|null $context Context array. Not used.
      * @return bool
      */
-    public function isFieldNameAllowed($fieldName, ?array $context = null): bool
+    public function isFieldNameAllowed(mixed $fieldName, ?array $context = null): bool
     {
         return !in_array($fieldName, Configure::read('passbolt.security.directorySync.forbiddenFields.fieldNames'));
     }
@@ -573,7 +575,7 @@ class LdapConfigurationForm extends Form
      * @param array|null $context Context array. Not used.
      * @return bool
      */
-    public function isFilterValueAllowed($value, ?array $context = null): bool
+    public function isFilterValueAllowed(mixed $value, ?array $context = null): bool
     {
         $forbiddenFields = Configure::read('passbolt.security.directorySync.forbiddenFields.fieldNames');
 
@@ -727,7 +729,7 @@ class LdapConfigurationForm extends Form
      * @throws \Exception if connection cannot be established
      * @return bool
      */
-    protected function testConnection(array $data)
+    protected function testConnection(array $data): bool
     {
         $settings = self::formatFormDataToOrgSettings($data);
         $domains = Hash::get($settings, 'ldap.domains', []);
@@ -740,7 +742,7 @@ class LdapConfigurationForm extends Form
                     $domain => $tmpProperties,
                 ];
                 $directorySettings = new DirectoryOrgSettings($tmpSettings);
-                $ldapDirectory = DirectoryFactory::get($directorySettings);
+                DirectoryFactory::get($directorySettings);
             }
         }
 

@@ -21,90 +21,90 @@ class PasswordGeneratorSettingsDto
     /**
      * @var int|null
      */
-    public $length;
+    public ?int $length = null;
 
     /**
      * @var bool|null
      */
-    public $mask_upper;
+    public ?bool $mask_upper = null;
 
     /**
      * @var bool|null
      */
-    public $mask_lower;
+    public ?bool $mask_lower = null;
 
     /**
      * @var bool|null
      */
-    public $mask_digit;
+    public ?bool $mask_digit = null;
 
     /**
      * @var bool|null
      */
-    public $mask_parenthesis;
+    public ?bool $mask_parenthesis = null;
 
     /**
      * @var bool|null
      */
-    public $mask_emoji;
+    public ?bool $mask_emoji = null;
 
     /**
      * @var bool|null
      */
-    public $mask_char1;
+    public ?bool $mask_char1 = null;
 
     /**
      * @var bool|null
      */
-    public $mask_char2;
+    public ?bool $mask_char2 = null;
 
     /**
      * @var bool|null
      */
-    public $mask_char3;
+    public ?bool $mask_char3 = null;
 
     /**
      * @var bool|null
      */
-    public $mask_char4;
+    public ?bool $mask_char4 = null;
 
     /**
      * @var bool|null
      */
-    public $mask_char5;
+    public ?bool $mask_char5 = null;
 
     /**
      * @var bool|null
      */
-    public $exclude_look_alike_chars;
+    public ?bool $exclude_look_alike_chars = null;
 
     /**
-     * @param int|string|null $length Length of password that will be generated.
-     * @param bool|string|null $maskUpper Mask upper flag.
-     * @param bool|string|null $maskLower Mask lower flag.
-     * @param bool|string|null $maskDigit Mask digit flag.
-     * @param bool|string|null $maskParenthesis Mask parenthesis flag.
-     * @param bool|string|null $maskEmoji Mask emoji flag.
-     * @param bool|string|null $maskChar1 Mask char1 flag.
-     * @param bool|string|null $maskChar2 Mask char2 flag.
-     * @param bool|string|null $maskChar3 Mask char3 flag.
-     * @param bool|string|null $maskChar4 Mask char4 flag.
-     * @param bool|string|null $maskChar5 Mask char5 flag.
-     * @param bool|string|null $excludeLookAlikeChars Exclude look alike characters flag.
+     * @param string|int|null $length Length of password that will be generated.
+     * @param string|bool|null $maskUpper Mask upper flag.
+     * @param string|bool|null $maskLower Mask lower flag.
+     * @param string|bool|null $maskDigit Mask digit flag.
+     * @param string|bool|null $maskParenthesis Mask parenthesis flag.
+     * @param string|bool|null $maskEmoji Mask emoji flag.
+     * @param string|bool|null $maskChar1 Mask char1 flag.
+     * @param string|bool|null $maskChar2 Mask char2 flag.
+     * @param string|bool|null $maskChar3 Mask char3 flag.
+     * @param string|bool|null $maskChar4 Mask char4 flag.
+     * @param string|bool|null $maskChar5 Mask char5 flag.
+     * @param string|bool|null $excludeLookAlikeChars Exclude look alike characters flag.
      */
     public function __construct(
-        $length,
-        $maskUpper,
-        $maskLower,
-        $maskDigit,
-        $maskParenthesis,
-        $maskEmoji,
-        $maskChar1,
-        $maskChar2,
-        $maskChar3,
-        $maskChar4,
-        $maskChar5,
-        $excludeLookAlikeChars
+        int|string|null $length,
+        bool|string|null $maskUpper,
+        bool|string|null $maskLower,
+        bool|string|null $maskDigit,
+        bool|string|null $maskParenthesis,
+        bool|string|null $maskEmoji,
+        bool|string|null $maskChar1,
+        bool|string|null $maskChar2,
+        bool|string|null $maskChar3,
+        bool|string|null $maskChar4,
+        bool|string|null $maskChar5,
+        bool|string|null $excludeLookAlikeChars
     ) {
         $this->length = (int)$length;
         $this->mask_upper = (bool)$maskUpper;

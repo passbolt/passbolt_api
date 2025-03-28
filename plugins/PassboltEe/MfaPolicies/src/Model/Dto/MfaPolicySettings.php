@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\MfaPolicies\Model\Dto;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\MfaPolicies\Model\Entity\MfaPoliciesSetting;
 
 class MfaPolicySettings
@@ -24,37 +24,37 @@ class MfaPolicySettings
     /**
      * @var string|null
      */
-    public $policy;
+    public ?string $policy = null;
 
     /**
      * @var bool|null
      */
-    public $remember_me_for_a_month;
+    public ?bool $remember_me_for_a_month = null;
 
     /**
      * @var string|null
      */
-    public $id;
+    public ?string $id = null;
 
     /**
-     * @var \Cake\I18n\FrozenTime|null
+     * @var \Cake\I18n\DateTime|null
      */
-    public $created;
-
-    /**
-     * @var string|null
-     */
-    public $created_by;
-
-    /**
-     * @var \Cake\I18n\FrozenTime|null
-     */
-    public $modified;
+    public ?DateTime $created = null;
 
     /**
      * @var string|null
      */
-    public $modified_by;
+    public ?string $created_by = null;
+
+    /**
+     * @var \Cake\I18n\DateTime|null
+     */
+    public ?DateTime $modified = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $modified_by = null;
 
     /**
      * Constructor.
@@ -62,18 +62,18 @@ class MfaPolicySettings
      * @param string|null $policy Policy.
      * @param bool|null $rememberMeForAMonth Remember me for a month.
      * @param string|null $id ID.
-     * @param \Cake\I18n\FrozenTime|null $created Created time.
+     * @param \Cake\I18n\DateTime|null $created Created time.
      * @param string|null $createdBy Created by.
-     * @param \Cake\I18n\FrozenTime|null $modified Modified time.
+     * @param \Cake\I18n\DateTime|null $modified Modified time.
      * @param string|null $modifiedBy Modified by.
      */
     public function __construct(
         ?string $policy,
         ?bool $rememberMeForAMonth,
         ?string $id,
-        ?FrozenTime $created,
+        ?DateTime $created,
         ?string $createdBy,
-        ?FrozenTime $modified,
+        ?DateTime $modified,
         ?string $modifiedBy
     ) {
         $this->policy = $policy;

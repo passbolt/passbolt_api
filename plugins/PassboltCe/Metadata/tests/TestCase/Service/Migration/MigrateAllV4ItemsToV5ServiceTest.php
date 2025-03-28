@@ -169,7 +169,7 @@ class MigrateAllV4ItemsToV5ServiceTest extends AppTestCaseV5
         $resourceError = $result['errors'][0]['error_message'];
         $this->assertStringContainsString('No resources to migrate', $resourceError);
         $folderError = $result['errors'][1]['error_message'];
-        $this->assertStringContainsString('Record not found in table \"metadata_keys\"', $folderError);
+        $this->assertStringContainsString('Record not found in table `metadata_keys`', $folderError);
     }
 
     public function testMigrateAllV4ItemsToV5Service_Error_ItemsAreAlreadyV5(): void

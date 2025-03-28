@@ -62,7 +62,7 @@ class SecretsCleanupHardDeletedPermissionsServiceTest extends TestCase
 
         $this->assertSame($nSecretsToDelete, $secretsToDeleteCount);
         $this->assertSame(2, SecretFactory::count());
-        $this->assertSame(2, SecretFactory::find()->where(['resource_id' => $resource->get('id')])->count());
+        $this->assertSame(2, SecretFactory::find()->where(['resource_id' => $resource->get('id')])->all()->count());
     }
 
     public function testSecretsCleanupHardDeletedPermissionsService_Dry_Run()
@@ -81,6 +81,6 @@ class SecretsCleanupHardDeletedPermissionsServiceTest extends TestCase
 
         $this->assertSame($nSecretsToDelete, $secretsToDeleteCount);
         $this->assertSame(2 + $nSecretsToDelete, SecretFactory::count());
-        $this->assertSame(2, SecretFactory::find()->where(['resource_id' => $resource->get('id')])->count());
+        $this->assertSame(2, SecretFactory::find()->where(['resource_id' => $resource->get('id')])->all()->count());
     }
 }

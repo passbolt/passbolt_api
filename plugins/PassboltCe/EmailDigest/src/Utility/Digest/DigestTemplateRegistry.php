@@ -29,7 +29,7 @@ final class DigestTemplateRegistry
     private static ?DigestTemplateRegistry $instance = null;
 
     /**
-     * @var \Passbolt\EmailDigest\Utility\Digest\AbstractDigestTemplate[]
+     * @var array<\Passbolt\EmailDigest\Utility\Digest\AbstractDigestTemplate>
      */
     private array $digestTemplates = [];
 
@@ -89,7 +89,7 @@ final class DigestTemplateRegistry
     }
 
     /**
-     * @return \Passbolt\EmailDigest\Utility\Digest\AbstractDigestTemplate[]
+     * @return array<\Passbolt\EmailDigest\Utility\Digest\AbstractDigestTemplate>
      */
     public function getTemplates(): array
     {

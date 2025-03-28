@@ -18,6 +18,7 @@ namespace Passbolt\WebInstaller\Controller;
 
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
+use Cake\Event\EventInterface;
 use Cake\Http\Response;
 use Cake\Routing\Router;
 use Passbolt\WebInstaller\Utility\WebInstaller;
@@ -36,14 +37,14 @@ class WebInstallerController extends Controller
      *
      * @var \Passbolt\WebInstaller\Utility\WebInstaller
      */
-    protected $webInstaller;
+    protected WebInstaller $webInstaller;
 
     /**
      * Step information. Will be set by each controller.
      *
      * @var array
      */
-    protected $stepInfo = [
+    protected array $stepInfo = [
         'previous' => null,
         'current' => null,
         'next' => null,
@@ -72,7 +73,7 @@ class WebInstallerController extends Controller
      * @param \Cake\Event\EventInterface $event event
      * @return \Cake\Http\Response|null
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event): ?Response
+    public function beforeFilter(EventInterface $event): ?Response
     {
         parent::beforeFilter($event);
 
@@ -94,7 +95,7 @@ class WebInstallerController extends Controller
      * @param \Cake\Event\EventInterface $event event
      * @return void
      */
-    public function beforeRender(\Cake\Event\EventInterface $event): void
+    public function beforeRender(EventInterface $event): void
     {
         parent::beforeRender($event);
         $this->set('stepInfo', $this->stepInfo);

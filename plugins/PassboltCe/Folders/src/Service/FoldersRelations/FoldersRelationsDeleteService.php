@@ -18,13 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Service\FoldersRelations;
 
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsDeleteService
 {
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * Instantiate the service.
@@ -42,9 +43,9 @@ class FoldersRelationsDeleteService
      * @return void
      * @throws \Exception
      */
-    public function delete(string $userId, string $foreignId)
+    public function delete(string $userId, string $foreignId): void
     {
-        $this->foldersRelationsTable->getConnection()->transactional(function () use ($userId, $foreignId) {
+        $this->foldersRelationsTable->getConnection()->transactional(function () use ($userId, $foreignId): void {
             $this->foldersRelationsTable->deleteAll([
                 'foreign_id' => $foreignId,
                 'user_id' => $userId,

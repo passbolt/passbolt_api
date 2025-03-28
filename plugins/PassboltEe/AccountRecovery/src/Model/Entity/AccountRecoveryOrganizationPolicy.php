@@ -24,9 +24,9 @@ use Cake\ORM\Entity;
  *
  * @property string $id
  * @property string $policy
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
- * @property \Cake\I18n\FrozenTime|null $deleted
+ * @property \Cake\I18n\DateTime|null $created
+ * @property \Cake\I18n\DateTime|null $modified
+ * @property \Cake\I18n\DateTime|null $deleted
  * @property string $created_by
  * @property string $modified_by
  * @property string $public_key_id
@@ -44,7 +44,7 @@ class AccountRecoveryOrganizationPolicy extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'policy' => false,
         'created' => false,
         'modified' => false,

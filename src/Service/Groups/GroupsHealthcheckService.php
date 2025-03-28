@@ -31,7 +31,7 @@ class GroupsHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    private $table;
+    private GroupsTable $table;
 
     /**
      * Groups Healthcheck constructor.
@@ -52,7 +52,7 @@ class GroupsHealthcheckService extends AbstractHealthcheckService
     {
         $records = $this->table->find()->all();
 
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 

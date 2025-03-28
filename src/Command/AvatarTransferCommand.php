@@ -61,7 +61,9 @@ class AvatarTransferCommand extends PassboltCommand
 
         $datasource = $args->getOption('datasource');
 
-        $listTables = ConnectionManager::get($datasource)->getSchemaCollection()->listTables();
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get($datasource);
+        $listTables = $connection->getSchemaCollection()->listTables();
         if (!in_array(self::SOURCE_TABLE, $listTables)) {
             $io->error('The table ' . self::SOURCE_TABLE . ' could not be found.');
             $this->abort();

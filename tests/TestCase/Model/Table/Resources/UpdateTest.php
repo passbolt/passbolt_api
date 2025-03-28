@@ -43,7 +43,7 @@ class UpdateTest extends AppTestCase
      */
     public $gpg;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Users', 'app.Base/Roles', 'app.Base/Gpgkeys',
         'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Resources', 'app.Base/Secrets',
     ];
@@ -132,7 +132,7 @@ class UpdateTest extends AppTestCase
         $ownerId = UuidFactory::uuid('user.id.ada');
         $modifierId = UuidFactory::uuid('user.id.betty');
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
+        $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
 
         // Get the dummy resource updated data.
         $data = $this->_getUpdatedDummydata($resource, [
@@ -147,7 +147,7 @@ class UpdateTest extends AppTestCase
         $this->assertNotFalse($save, 'The resource update operation failed.');
 
         // Check that the resource and its sub-models are saved as expected.
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Creator', 'Modifier', 'Secrets']]);
+        $resource = $this->Resources->get($resourceId, contain: ['Creator', 'Modifier', 'Secrets']);
 
         // Check the resource attributes.
         $this->assertResourceAttributes($resource);
@@ -185,7 +185,7 @@ class UpdateTest extends AppTestCase
     {
         $modifierId = UuidFactory::uuid('user.id.betty');
         $resourceId = UuidFactory::uuid('resource.id.cakephp');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
+        $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
 
         // Store the secrets before update, and tests their integrity after update.
         $originalSecrets = $resource->secrets;
@@ -203,7 +203,7 @@ class UpdateTest extends AppTestCase
         $this->assertNotFalse($save, 'The resource update operation failed.');
 
         // Check that the secrets are not updated.
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
+        $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
         $this->assertEquals(count($resource->secrets), count($originalSecrets));
         foreach ($resource->secrets as $secret) {
             $originalSecret = Hash::extract($originalSecrets, "{n}[id={$secret->id}]");
@@ -218,7 +218,7 @@ class UpdateTest extends AppTestCase
     {
         // Get the dummy resource updated data.
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
+        $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
         $data = $this->_getUpdatedDummydata($resource);
         unset($data['secrets'][0]);
 
@@ -233,7 +233,7 @@ class UpdateTest extends AppTestCase
     public function testErrorRuleSecretsProvided_InsertAnUnwantedSecret()
     {
         $resourceId = UuidFactory::uuid('resource.id.apache');
-        $resource = $this->Resources->get($resourceId, ['contain' => ['Secrets']]);
+        $resource = $this->Resources->get($resourceId, contain: ['Secrets']);
 
         // Get the dummy resource updated data.
         $data = $this->_getUpdatedDummydata($resource);

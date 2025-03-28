@@ -38,7 +38,7 @@ use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\Account
  */
 class AccountRecoveryOrganizationPolicyServiceProvider extends ServiceProvider
 {
-    protected $provides = [
+    protected array $provides = [
         AccountRecoveryOrganizationPolicySetServiceInterface::class,
         AccountRecoveryOrganizationPolicyGetServiceInterface::class,
         TruncateAccountRecoveryTablesCommand::class,

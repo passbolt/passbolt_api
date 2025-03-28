@@ -68,6 +68,6 @@ class DuoSetupDeleteControllerTest extends MfaIntegrationTestCase
         $this->assertSame(0, AccountSettingFactory::count());
         $this->assertSame(1, MfaOrganizationSettingFactory::count());
         $this->assertSame(1, MfaAuthenticationTokenFactory::count());
-        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true])->count());
+        $this->assertSame(0, MfaAuthenticationTokenFactory::find()->where(['active' => true])->all()->count());
     }
 }

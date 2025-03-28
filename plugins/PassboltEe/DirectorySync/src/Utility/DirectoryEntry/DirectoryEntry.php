@@ -17,75 +17,77 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Utility\DirectoryEntry;
 
 use ArrayAccess;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
+use Exception;
 use LdapRecord\Models\Entry;
 use LdapRecord\Utilities;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
+use ReturnTypeWillChange;
 
 abstract class DirectoryEntry implements ArrayAccess
 {
     /**
      * id
      *
-     * @var string
+     * @var string|null
      */
-    public $id;
+    public ?string $id = null;
 
     /**
      * DN (directory name)
      *
-     * @var string
+     * @var string|null
      */
-    public $dn;
+    public ?string $dn = null;
 
     /**
      * created date.
      *
-     * @var string|\Cake\I18n\FrozenTime
+     * @var \Cake\I18n\DateTime|string
      */
-    public $created;
+    public string|DateTime $created;
 
     /**
      * modified date.
      *
-     * @var string|\Cake\I18n\FrozenTime
+     * @var \Cake\I18n\DateTime|string
      */
-    public $modified;
+    public string|DateTime $modified;
 
     /**
      * Object type.
      *
      * @var string|null
      */
-    public $type = null;
+    public ?string $type = null;
 
     /**
      * Corresponding ldap object.
      *
      * @var \LdapRecord\Models\Entry|null
      */
-    private $ldapObject = null;
+    private ?Entry $ldapObject = null;
 
     /**
      * Mapping rules.
      *
      * @var array|null
      */
-    private $mappingRules = null;
+    private ?array $mappingRules = null;
 
     /**
      * Fallback fields.
      *
      * @var array|null
      */
-    private $fallbackFields = null;
+    private ?array $fallbackFields = null;
 
     /**
      * Validation errors.
      *
      * @var array
      */
-    private $errors = [];
+    private array $errors = [];
 
     /**
      * DirectoryEntry constructor.
@@ -104,7 +106,7 @@ abstract class DirectoryEntry implements ArrayAccess
      * @param mixed $value Value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         if (!is_null($offset)) {
             $this->{$offset} = $value;
@@ -115,7 +117,7 @@ abstract class DirectoryEntry implements ArrayAccess
      * @param mixed $offset Offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return isset($this->{$offset});
     }
@@ -124,18 +126,17 @@ abstract class DirectoryEntry implements ArrayAccess
      * @param mixed $offset Offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         unset($this->{$offset});
     }
-
-    #[\ReturnTypeWillChange]
 
     /**
      * @param mixed $offset Offset
      * @return mixed|null // not strict for 7.3 compatibility
      */
-    public function offsetGet($offset)
+    #[ReturnTypeWillChange]
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->{$offset} ?? null;
     }
@@ -168,7 +169,7 @@ abstract class DirectoryEntry implements ArrayAccess
      * @return mixed field value
      * @throws \Exception if the corresponding field name cannot be found.
      */
-    public function getFieldValue(string $fieldName, bool $first = true)
+    public function getFieldValue(string $fieldName, bool $first = true): mixed
     {
         return self::getLdapObjectFieldValue(
             $this->ldapObject,
@@ -196,12 +197,12 @@ abstract class DirectoryEntry implements ArrayAccess
         array $mappingRules,
         bool $first = true,
         ?array $fallbackFields = null
-    ) {
+    ): mixed {
         /** @var string $type */
         $type = $ldapObject->getFirstAttribute('objectType');
         $mappingRules = $mappingRules[$type];
         if (!isset($mappingRules[$fieldName])) {
-            throw new \Exception('There is no mapping rule associated for the field: ' . $fieldName);
+            throw new Exception('There is no mapping rule associated for the field: ' . $fieldName);
         }
 
         $fieldEquivalent = $mappingRules[$fieldName];
@@ -270,12 +271,12 @@ abstract class DirectoryEntry implements ArrayAccess
         $created = $this->getFieldValue('created');
 
         if (!empty($created)) {
-            $this->created = new FrozenTime($created);
+            $this->created = new DateTime($created);
         }
 
         $modified = $this->getFieldValue('modified');
         if (!empty($modified)) {
-            $this->modified = new FrozenTime($modified);
+            $this->modified = new DateTime($modified);
         }
 
         return $this;
@@ -414,7 +415,7 @@ abstract class DirectoryEntry implements ArrayAccess
      * @param array $data data
      * @return mixed DirectoryEntry
      */
-    abstract public static function fromArray(array $data);
+    abstract public static function fromArray(array $data): mixed;
 
     /**
      * Build from ldap object.

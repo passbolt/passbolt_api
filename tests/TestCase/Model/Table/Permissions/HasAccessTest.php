@@ -21,13 +21,14 @@ use App\Model\Table\PermissionsTable;
 use App\Test\Lib\AppTestCase;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 use PassboltTestData\Lib\PermissionMatrix;
 
 class HasAccessTest extends AppTestCase
 {
     public $Resources;
 
-    public $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions'];
+    public array $fixtures = ['app.Base/Users', 'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Permissions'];
 
     /**
      * @var \App\Model\Table\PermissionsTable
@@ -62,7 +63,7 @@ class HasAccessTest extends AppTestCase
     {
         try {
             $this->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, UuidFactory::uuid(), 'not-valid');
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
         $this->fail('Expect an exception');
@@ -72,7 +73,7 @@ class HasAccessTest extends AppTestCase
     {
         try {
             $this->Permissions->hasAccess(PermissionsTable::RESOURCE_ACO, 'not-valid', UuidFactory::uuid());
-        } catch (\InvalidArgumentException $e) {
+        } catch (InvalidArgumentException $e) {
             return $this->assertTrue(true);
         }
         $this->fail('Expect an exception');

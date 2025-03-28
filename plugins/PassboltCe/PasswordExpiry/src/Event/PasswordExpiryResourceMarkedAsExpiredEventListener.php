@@ -55,7 +55,7 @@ class PasswordExpiryResourceMarkedAsExpiredEventListener implements EventListene
         if (!$resource->isDirty(PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE)) {
             return;
         }
-        /** @var \Cake\I18n\FrozenTime|null $originalExpiryDate */
+        /** @var \Cake\I18n\DateTime|null $originalExpiryDate */
         $originalExpiryDate = $resource->getOriginal(PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE);
         $resourceWasExpired = !is_null($originalExpiryDate) && $originalExpiryDate->isPast();
 

@@ -41,7 +41,7 @@ class IsRequestHttpsSslHealthcheck implements HealthcheckServiceInterface, SkipH
     /**
      * @param \Cake\Http\ServerRequest|string $request Server request object.
      */
-    public function __construct($request)
+    public function __construct(ServerRequest|string $request)
     {
         // Mark as skipped if run via command line
         if ($request instanceof ServerRequest) {
@@ -108,7 +108,7 @@ class IsRequestHttpsSslHealthcheck implements HealthcheckServiceInterface, SkipH
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

@@ -49,7 +49,6 @@ class SubscriptionImportCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->setUpPathAndPublicSubscriptionKey();
         $this->Subscriptions = $this->fetchTable('Passbolt/Subscription.Subscriptions');
     }

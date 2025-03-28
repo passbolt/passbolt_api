@@ -83,7 +83,7 @@ class MbstringHealthcheck implements HealthcheckServiceInterface, HealthcheckCli
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [__('See: https://secure.php.net/manual/en/book.mbstring.php')];
     }

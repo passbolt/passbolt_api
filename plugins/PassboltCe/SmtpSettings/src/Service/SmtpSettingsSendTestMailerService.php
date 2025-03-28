@@ -31,12 +31,12 @@ class SmtpSettingsSendTestMailerService
     /**
      * @var \Cake\Mailer\Mailer|null
      */
-    private $email = null;
+    private ?Mailer $email = null;
 
     /**
      * @var array
      */
-    private $smtpSettings = [];
+    private array $smtpSettings = [];
 
     /**
      * Sends an email.

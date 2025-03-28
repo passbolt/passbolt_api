@@ -27,10 +27,10 @@ use Cake\ORM\Entity;
  * @property string $username
  * @property bool $active
  * @property bool $deleted
- * @property \Cake\I18n\FrozenTime|null $disabled
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
- * @property \Cake\I18n\FrozenTime $last_logged_in
+ * @property \Cake\I18n\DateTime|null $disabled
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
+ * @property \Cake\I18n\DateTime $last_logged_in
  *
  * @property \App\Model\Entity\Role $role
  * @property \App\Model\Entity\Gpgkey[] $gpgkeys
@@ -50,9 +50,9 @@ class User extends Entity implements IdentityInterface
     /**
      * last_logged_in virtual field.
      *
-     * @var array<string>
+     * @var list<string>
      */
-    protected $_virtual = ['last_logged_in'];
+    protected array $_virtual = ['last_logged_in'];
 
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -63,7 +63,7 @@ class User extends Entity implements IdentityInterface
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'username' => false,
         'active' => false,

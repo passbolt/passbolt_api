@@ -23,7 +23,7 @@ use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\TupleComparison;
 use Cake\Event\EventDispatcherTrait;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 
 /**
@@ -127,7 +127,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
         /** @var \App\Model\Table\ResourcesTable $ResourcesTable */
         $ResourcesTable = TableRegistry::getTableLocator()->get('Resources');
         $ResourcesTable->updateAll(
-            [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => FrozenTime::now()->subSeconds(2)],
+            [PasswordExpiryValidationServiceInterface::PASSWORD_EXPIRED_DATE => DateTime::now()->subSeconds(2)],
             ['Resources.id IN' => $resourceIds],
         );
     }
@@ -135,7 +135,7 @@ class PasswordExpiryExpireResourcesService implements ResourcesExpireResourcesSe
     /**
      * Notify resources owners about passwords expiry.
      *
-     * @param string[] $resourceIds Resource ids that have just expired.
+     * @param array<string> $resourceIds Resource ids that have just expired.
      * @return void
      */
     private function notifyResourcesOwners(

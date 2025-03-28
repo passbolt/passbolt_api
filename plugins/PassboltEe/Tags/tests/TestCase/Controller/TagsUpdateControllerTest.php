@@ -17,8 +17,10 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
 use Passbolt\Tags\Model\Table\ResourcesTagsTable;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
@@ -30,7 +32,7 @@ use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
 {
     public $ResourcesTags;
-    public $fixtures = [
+    public array $fixtures = [
         'app.Alt0/GroupsUsers',
         'app.Alt0/Permissions',
         'app.Base/Groups',
@@ -93,6 +95,15 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $tagId = UuidFactory::uuid('tag.id.nope');
         $this->putJson("/tags/$tagId.json?api-version=v2");
         $this->assertError(404, 'The tag does not exist.');
+    }
+
+    public function testTagUpdate_Read_Only_Mode()
+    {
+        Configure::write(TagsReadOnlyModeMiddleware::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE, true);
+        $this->logInAsUser();
+        $tagId = UuidFactory::uuid();
+        $this->putJson("/tags/$tagId.json?api-version=v2");
+        $this->assertForbiddenError('The tags plugin is in read-only mode.');
     }
 
     /**
@@ -280,7 +291,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $resourcesTagsCount = $this->ResourcesTags->find()->where([
             'user_id' => UuidFactory::uuid('user.id.ada'),
             'resource_id' => $resource->id,
-        ])->count();
+        ])->all()->count();
         $this->assertEquals(2, $resourcesTagsCount);
 
         $this->putJson("/tags/{$tags[0]->id}.json?api-version=v2", [
@@ -420,7 +431,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         // Make sure new tag is created if case is different
         $this->assertNotSame($tagId, $responseArray['id']);
         // Make sure two entries are created if slug's case is different
-        $this->assertSame(2, TagFactory::find()->where(['UPPER(slug)' => 'TEST'])->count());
+        $this->assertSame(2, TagFactory::find()->where(['UPPER(slug)' => 'TEST'])->all()->count());
     }
 
     /**
@@ -449,7 +460,7 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertSuccess();
         $responseArray = $this->getResponseBodyAsArray();
         $this->assertSame('dm\'d', $responseArray['slug']);
-        $this->assertSame(1, TagFactory::find()->where(['slug' => 'dm\'d'])->count());
+        $this->assertSame(1, TagFactory::find()->where(['slug' => 'dm\'d'])->all()->count());
     }
 
     /**
@@ -479,10 +490,10 @@ class TagsUpdateControllerTest extends TagPluginIntegrationTestCase
         $this->assertSame($tagId, $responseArray['id']);
         $this->assertSame('foobar', $responseArray['slug']);
         // Assert there is only single entry in the database
-        $this->assertSame(1, TagFactory::find()->where(['slug' => 'foobar'])->count());
+        $this->assertSame(1, TagFactory::find()->where(['slug' => 'foobar'])->all()->count());
         $this->assertSame(
             1,
-            ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->count()
+            ResourcesTagFactory::find()->where(['tag_id' => $responseArray['id'], 'user_id' => $user->id])->all()->count()
         );
     }
 

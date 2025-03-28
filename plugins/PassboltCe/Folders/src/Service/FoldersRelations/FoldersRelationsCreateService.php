@@ -20,6 +20,7 @@ namespace Passbolt\Folders\Service\FoldersRelations;
 use App\Error\Exception\ValidationException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsCreateService
 {
@@ -28,14 +29,13 @@ class FoldersRelationsCreateService
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * Instantiate the service.
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->foldersRelationsTable = $this->fetchTable('Passbolt/Folders.FoldersRelations');
     }
 

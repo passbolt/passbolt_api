@@ -28,7 +28,7 @@ class UpdateTest extends AppTestCase
 
     public $Secrets;
 
-    public $fixtures = ['app.Base/Resources', 'app.Base/Secrets', 'app.Base/Users'];
+    public array $fixtures = ['app.Base/Resources', 'app.Base/Secrets', 'app.Base/Users'];
 
     public function setUp(): void
     {

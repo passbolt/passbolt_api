@@ -21,6 +21,7 @@ use App\Controller\Users\UsersRecoverController;
 use App\Error\Exception\CustomValidationException;
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\User;
+use App\Model\Table\AuthenticationTokensTable;
 use App\Model\Table\UsersTable;
 use App\Model\Validation\EmailValidationRule;
 use App\Utility\UserAccessControl;
@@ -47,22 +48,22 @@ class UserRecoverService implements UserRecoverServiceInterface
     /**
      * @var \Cake\Http\ServerRequest
      */
-    protected $request;
+    protected ServerRequest $request;
 
     /**
      * @var \Passbolt\SelfRegistration\Service\DryRun\SelfRegistrationDryRunServiceInterface
      */
-    protected $selfRegistrationDryRunService;
+    protected SelfRegistrationDryRunServiceInterface $selfRegistrationDryRunService;
 
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @param \Cake\Http\ServerRequest $serverRequest Server request
@@ -74,9 +75,7 @@ class UserRecoverService implements UserRecoverServiceInterface
     ) {
         $this->request = $serverRequest;
         $this->selfRegistrationDryRunService = $selfRegistrationDryRunService;
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

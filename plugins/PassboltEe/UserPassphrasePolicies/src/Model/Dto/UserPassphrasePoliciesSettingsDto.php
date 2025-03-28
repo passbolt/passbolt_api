@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\UserPassphrasePolicies\Model\Dto;
 
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\UserPassphrasePolicies\Model\Entity\UserPassphrasePoliciesSetting;
 
 class UserPassphrasePoliciesSettingsDto
@@ -45,60 +45,60 @@ class UserPassphrasePoliciesSettingsDto
     /**
      * @var int|null
      */
-    public $entropy_minimum;
+    public ?int $entropy_minimum = null;
 
     /**
      * @var bool|null
      */
-    public $external_dictionary_check;
+    public ?bool $external_dictionary_check = null;
 
     /**
      * @var string|null
      */
-    public $id;
+    public ?string $id = null;
 
     /**
-     * @var \Cake\I18n\FrozenTime|null
+     * @var \Cake\I18n\DateTime|null
      */
-    public $created;
-
-    /**
-     * @var string|null
-     */
-    public $created_by;
-
-    /**
-     * @var \Cake\I18n\FrozenTime|null
-     */
-    public $modified;
+    public ?DateTime $created = null;
 
     /**
      * @var string|null
      */
-    public $modified_by;
+    public ?string $created_by = null;
+
+    /**
+     * @var \Cake\I18n\DateTime|null
+     */
+    public ?DateTime $modified = null;
 
     /**
      * @var string|null
      */
-    public $source;
+    public ?string $modified_by = null;
+
+    /**
+     * @var string|null
+     */
+    public ?string $source = null;
 
     /**
      * @param string|int|null $entropyMinimum Minimum entropy.
      * @param string|bool|null $externalDictionaryCheck External services check flag.
      * @param string|null $id ID.
-     * @param \Cake\I18n\FrozenTime|null $created Created time.
+     * @param \Cake\I18n\DateTime|null $created Created time.
      * @param string|null $createdBy Modified by.
-     * @param \Cake\I18n\FrozenTime|null $modified Modified time.
+     * @param \Cake\I18n\DateTime|null $modified Modified time.
      * @param string|null $modifiedBy Modified by.
      * @param string|null $source Source of these settings(can be db or default).
      */
     public function __construct(
-        $entropyMinimum,
-        $externalDictionaryCheck,
+        string|int|null $entropyMinimum,
+        string|bool|null $externalDictionaryCheck,
         ?string $id,
-        ?FrozenTime $created,
+        ?DateTime $created,
         ?string $createdBy,
-        ?FrozenTime $modified,
+        ?DateTime $modified,
         ?string $modifiedBy,
         ?string $source
     ) {
@@ -118,7 +118,7 @@ class UserPassphrasePoliciesSettingsDto
      * @param array $data Data.
      * @return self
      */
-    public static function createFromArray(array $data)
+    public static function createFromArray(array $data): self
     {
         return new self(
             $data['entropy_minimum'] ?? null,

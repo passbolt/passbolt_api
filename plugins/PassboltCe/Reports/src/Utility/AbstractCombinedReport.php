@@ -22,9 +22,9 @@ abstract class AbstractCombinedReport extends AbstractReport implements Combined
     public const COMBINED_REPORT_TYPE = 'combined';
 
     /**
-     * @var \Passbolt\Reports\Utility\ReportInterface[]
+     * @var array<\Passbolt\Reports\Utility\ReportInterface>
      */
-    protected $subReports = [];
+    protected array $subReports = [];
 
     /**
      * Return the template associated to the generated report by the report generator.

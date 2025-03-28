@@ -146,7 +146,7 @@ class RecoverUserCommand extends PassboltCommand
                 'user_id' => $user->get('id'),
                 'active' => true,
                 'type' => AuthenticationToken::TYPE_RECOVER,
-            ])->orderDesc('created')->first();
+            ])->orderByDesc('created')->first();
 
         if (is_null($token) || $token->isExpired()) {
             $io->info("An active recovery token could not be found for the user {$user->username}.");

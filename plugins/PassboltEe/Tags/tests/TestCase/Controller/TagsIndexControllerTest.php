@@ -16,12 +16,14 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
+use Cake\Core\Configure;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class TagsIndexControllerTest extends TagPluginIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
@@ -42,6 +44,7 @@ class TagsIndexControllerTest extends TagPluginIntegrationTestCase
 
     public function testTagsIndexSuccess()
     {
+        Configure::write(TagsReadOnlyModeMiddleware::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE, true);
         $this->authenticateAs('ada');
         $this->getJson('/tags.json?api-version=v2');
         $this->assertSuccess();

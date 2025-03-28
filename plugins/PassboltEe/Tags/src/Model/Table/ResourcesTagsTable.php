@@ -27,7 +27,7 @@ use Cake\Validation\Validator;
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsTo $Resources
  * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Tags
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \Passbolt\Tags\Model\Entity\ResourcesTag get($primaryKey, $options = [])
+ * @method \Passbolt\Tags\Model\Entity\ResourcesTag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Tags\Model\Entity\ResourcesTag newEntity(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\ResourcesTag[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\ResourcesTag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -45,6 +45,7 @@ use Cake\Validation\Validator;
 class ResourcesTagsTable extends Table
 {
     use TableCleanupTrait;
+    use TagsTableBackupAwareTrait;
 
     /**
      * Initialize method
@@ -56,7 +57,7 @@ class ResourcesTagsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('resources_tags');
+        $this->setTableNameBackupModeAware('resources_tags');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
@@ -101,7 +102,7 @@ class ResourcesTagsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         $rules->add($rules->existsIn(['resource_id'], 'Resources'));
         $rules->add($rules->existsIn(['tag_id'], 'Tags'));
@@ -122,7 +123,7 @@ class ResourcesTagsTable extends Table
      * @param string $newTagId New tag id
      * @return void
      */
-    public function updateUserTag(string $userId, string $oldTagId, string $newTagId)
+    public function updateUserTag(string $userId, string $oldTagId, string $newTagId): void
     {
         // Find all the user resources already tagged with the new tag.
         $resourcesIdAssociatedWithNewTag = $this->find()

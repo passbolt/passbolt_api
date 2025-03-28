@@ -68,10 +68,10 @@ class PermissionFactory extends CakephpBaseFactory
     /**
      * Define the associated user aro
      *
-     * @param UserFactory|null $factory
+     * @param array|UserFactory $factory
      * @return PermissionFactory
      */
-    public function withAroUser(?UserFactory $factory = null): self
+    public function withAroUser(UserFactory|array $factory = []): self
     {
         $this->patchData(['aro' => PermissionsTable::USER_ARO]);
 
@@ -81,10 +81,10 @@ class PermissionFactory extends CakephpBaseFactory
     /**
      * Define the associated group aro
      *
-     * @param GroupFactory|null $factory
+     * @param array|GroupFactory $factory
      * @return PermissionFactory
      */
-    public function withAroGroup(?GroupFactory $factory = null): self
+    public function withAroGroup(array|GroupFactory $factory = []): self
     {
         $this->patchData(['aro' => PermissionsTable::GROUP_ARO]);
 
@@ -94,10 +94,10 @@ class PermissionFactory extends CakephpBaseFactory
     /**
      * Define the associated resource aco
      *
-     * @param ResourceFactory|null $factory
+     * @param ResourceFactory|array $factory
      * @return PermissionFactory
      */
-    public function withAcoResource(?ResourceFactory $factory = null): self
+    public function withAcoResource(array|ResourceFactory $factory = []): self
     {
         $this->patchData(['aco' => PermissionsTable::RESOURCE_ACO]);
 

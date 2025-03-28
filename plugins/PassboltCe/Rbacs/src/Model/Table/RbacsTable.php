@@ -27,7 +27,7 @@ use Passbolt\Rbacs\Model\Rule\IsControlFunctionAllowedRule;
 /**
  * Rbacs Model
  *
- * @method \Passbolt\Rbacs\Model\Entity\Rbac get($primaryKey, $options = [])
+ * @method \Passbolt\Rbacs\Model\Entity\Rbac get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Rbacs\Model\Entity\Rbac newEntity(array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\Rbac[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Rbacs\Model\Entity\Rbac|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -45,7 +45,7 @@ use Passbolt\Rbacs\Model\Rule\IsControlFunctionAllowedRule;
  * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface>|false saveMany(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface>|false deleteMany(iterable $entities, $options = [])
  * @method iterable<\Passbolt\Rbacs\Model\Entity\Rbac>|iterable<\Cake\Datasource\EntityInterface> deleteManyOrFail(iterable $entities, $options = [])
- * @method \Cake\ORM\Query findById(string $id)
+ * @method  \Cake\ORM\Query\SelectQuery findById(string $id)
  */
 class RbacsTable extends Table
 {

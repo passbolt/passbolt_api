@@ -20,12 +20,13 @@ use App\Model\Entity\Role;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use InvalidArgumentException;
 
 /**
  * Roles Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
- * @method \App\Model\Entity\Role get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Role get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Role newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Role[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Role|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -61,7 +62,7 @@ class RolesTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('ControllerLogs', [
+        $this->hasMany('ControllerLogs', [ // @phpstan-ignore-line
             'foreignKey' => 'role_id',
         ]);
         $this->hasMany('Users', [
@@ -130,7 +131,7 @@ class RolesTable extends Table
     {
         if (!$this->isValidRoleName($roleName)) {
             $msg = __('The role name should be from the list of allowed role names.');
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
         $role = $this->find('all')
             ->where(['name' => $roleName])

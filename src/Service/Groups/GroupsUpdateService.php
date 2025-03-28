@@ -22,6 +22,8 @@ use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Group;
 use App\Model\Entity\GroupsUser;
 use App\Model\Entity\Secret;
+use App\Model\Table\GroupsTable;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Validation\GroupsUsersChange\GroupsUsersChangeValidator;
 use App\Service\GroupsUsers\GroupsUsersAddService;
 use App\Service\GroupsUsers\GroupsUsersDeleteService;
@@ -40,32 +42,32 @@ class GroupsUpdateService
     /**
      * @var \App\Model\Table\GroupsTable
      */
-    private $groupsTable;
+    private GroupsTable $groupsTable;
 
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private GroupsUsersTable $groupsUsersTable;
 
     /**
      * @var \App\Service\Groups\GroupGetService
      */
-    private $groupGetService;
+    private GroupGetService $groupGetService;
 
     /**
      * @var \App\Service\GroupsUsers\GroupsUsersAddService
      */
-    private $groupsUsersCreateService;
+    private GroupsUsersAddService $groupsUsersCreateService;
 
     /**
      * @var \App\Service\GroupsUsers\GroupsUsersUpdateService
      */
-    private $groupsUsersUpdateService;
+    private GroupsUsersUpdateService $groupsUsersUpdateService;
 
     /**
      * @var \App\Service\GroupsUsers\GroupsUsersDeleteService
      */
-    private $groupsUsersRemoveService;
+    private GroupsUsersDeleteService $groupsUsersRemoveService;
 
     /**
      * @var \App\Service\Resources\ResourcesExpireResourcesServiceInterface
@@ -127,7 +129,7 @@ class GroupsUpdateService
         $this->assertChanges($group, $changes);
         $entitiesChangesDto = new EntitiesChangesDto();
         $this->groupsTable->getConnection()->transactional(
-            function () use ($uac, $group, $metaData, $changes, $secrets, $entitiesChangesDto) {
+            function () use ($uac, $group, $metaData, $changes, $secrets, $entitiesChangesDto): void {
                 $this->updateMetaData($uac, $group, $metaData);
                 $entitiesChangesDto->pushUpdatedEntity($group);
                 $entitiesChangesDto->merge($this->addGroupsUsers($uac, $group, $changes, $secrets));

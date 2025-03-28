@@ -20,6 +20,7 @@ use App\Test\Lib\Model\FormatValidationTrait;
 use Cake\Event\EventDispatcherTrait;
 use Cake\TestSuite\TestCase;
 use Passbolt\SmtpSettings\Form\CustomSslOptionsForm;
+use stdClass;
 
 /**
  * @covers \Passbolt\SmtpSettings\Form\CustomSslOptionsForm
@@ -129,7 +130,7 @@ class CustomSslOptionsFormTest extends TestCase
                 'expected' => false,
             ],
             [
-                'input' => new \stdClass(),
+                'input' => new stdClass(),
                 'expected' => false,
             ],
         ];

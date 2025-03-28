@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace Passbolt\EmailNotificationSettings\Utility;
 
+use ArrayAccess;
 use Cake\Event\Event;
 use InvalidArgumentException;
 use Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm;
@@ -37,10 +38,13 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
     /**
      * @param string $name Name of the event
      * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm|null $subject Subject of the dispatched event
-     * @param \ArrayAccess|array|null $data Data for the event
+     * @param \ArrayAccess|array $data Data for the event
      */
-    final public function __construct(string $name, $subject = null, $data = null)
-    {
+    final public function __construct(
+        string $name,
+        ?EmailNotificationSettingsForm $subject = null,
+        ArrayAccess|array $data = []
+    ) {
         if (!$subject instanceof EmailNotificationSettingsForm) {
             $msg = '`subject` must be an instance of ' . EmailNotificationSettingsForm::class;
             throw new InvalidArgumentException($msg);
@@ -53,7 +57,7 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
      * @param \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm $emailNotificationSettingsForm An instance of EmailNotificationSettingsForm
      * @return static
      */
-    public static function create(EmailNotificationSettingsForm $emailNotificationSettingsForm)
+    public static function create(EmailNotificationSettingsForm $emailNotificationSettingsForm): static
     {
         return new static(static::EVENT_NAME, $emailNotificationSettingsForm);
     }
@@ -61,7 +65,7 @@ class EmailNotificationSettingsDefinitionRegisterEvent extends Event
     /**
      * @return \Passbolt\EmailNotificationSettings\Form\EmailNotificationSettingsForm
      */
-    public function getEmailNotificationSettingsForm()
+    public function getEmailNotificationSettingsForm(): EmailNotificationSettingsForm
     {
         return $this->getSubject();
     }

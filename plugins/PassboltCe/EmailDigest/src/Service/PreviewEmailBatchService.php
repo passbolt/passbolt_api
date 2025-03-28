@@ -30,8 +30,8 @@ class PreviewEmailBatchService
     /**
      * Preview a collection of emails as emails digests
      *
-     * @param \Cake\ORM\Entity[] $emailQueues array of emails.
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailPreview[]
+     * @param array<\Cake\ORM\Entity> $emailQueues array of emails.
+     * @return array<\Passbolt\EmailDigest\Utility\Mailer\EmailPreview>
      * @throws \Exception
      */
     public function previewNextEmailsBatch(array $emailQueues): array

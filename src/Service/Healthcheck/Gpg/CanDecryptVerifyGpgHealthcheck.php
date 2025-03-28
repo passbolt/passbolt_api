@@ -84,7 +84,7 @@ class CanDecryptVerifyGpgHealthcheck extends AbstractGpgHealthcheck implements S
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

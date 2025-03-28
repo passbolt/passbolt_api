@@ -114,7 +114,7 @@ class HealthcheckIndexControllerTest extends AppIntegrationTestCase
                 'peerValid' => true,
                 'hostValid' => true,
                 'notSelfSigned' => true,
-                //'is' => false, // TODO: Currently not in response
+                //'is' => false, // Currently not in response
             ],
             'database' => [
                 'tablesCount' => true,

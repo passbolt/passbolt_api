@@ -49,7 +49,6 @@ class TruncateAccountRecoveryTablesCommandTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->enableFeaturePlugin(AccountRecoveryPlugin::class);
         $this->mockProcessUserService('www-data');
     }

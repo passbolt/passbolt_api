@@ -29,7 +29,7 @@ class IsNotSoleManagerOfNonEmptyGroupRule
      * @param array $options Options passed to the check
      * @return bool
      */
-    public function __invoke(EntityInterface $entity, array $options)
+    public function __invoke(EntityInterface $entity, array $options): bool
     {
         /** @var \App\Model\Table\GroupsUsersTable $GroupsUsers */
         $GroupsUsers = TableRegistry::getTableLocator()->get('GroupsUsers');

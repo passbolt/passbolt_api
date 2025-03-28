@@ -17,12 +17,14 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
         'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
         'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
@@ -68,6 +70,15 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
         $tagId = UuidFactory::uuid('tag.id.nope');
         $this->deleteJson("/tags/$tagId.json?api-version=v2");
         $this->assertError(404, 'The tag does not exist.');
+    }
+
+    public function testTagsDelete_Read_Only_Mode()
+    {
+        Configure::write(TagsReadOnlyModeMiddleware::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE, true);
+        $this->authenticateAs('ada');
+        $tagId = UuidFactory::uuid();
+        $this->deleteJson("/tags/$tagId.json?api-version=v2");
+        $this->assertForbiddenError('The tags plugin is in read-only mode.');
     }
 
     /**

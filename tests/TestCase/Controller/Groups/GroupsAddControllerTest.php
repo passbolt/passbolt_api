@@ -27,7 +27,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
 {
     public $Groups;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups', 'app.Base/Users', 'app.Base/GroupsUsers', 'app.Base/Profiles', 'app.Base/Roles',
 
     ];
@@ -87,7 +87,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
             ],
         ];
 
-        foreach ($success as $case => $data) {
+        foreach ($success as $data) {
             $this->authenticateAs('admin');
             $this->postJson('/groups.json', $data);
             $this->assertResponseSuccess();
@@ -187,7 +187,7 @@ class GroupsAddControllerTest extends AppIntegrationTestCase
             ],
         ];
 
-        foreach ($errors as $caseLabel => $case) {
+        foreach ($errors as $case) {
             $this->authenticateAs('admin');
             $this->postJson('/groups.json', $case['data']);
             $this->assertError($responseCode, $responseMessage);

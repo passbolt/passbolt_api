@@ -41,24 +41,24 @@ class PassphraseGeneratorSettingsDto
     /**
      * @var int|null
      */
-    public $words;
+    public ?int $words = null;
 
     /**
      * @var string|null
      */
-    public $word_separator;
+    public ?string $word_separator = null;
 
     /**
      * @var string|null
      */
-    public $word_case;
+    public ?string $word_case = null;
 
     /**
-     * @param int|string|null $words Number of words to generate.
+     * @param string|int|null $words Number of words to generate.
      * @param string|null $wordSeparator A charactor/string used as a separator for each words.
      * @param string|null $wordCase Word case.
      */
-    public function __construct($words, ?string $wordSeparator, ?string $wordCase)
+    public function __construct(int|string|null $words, ?string $wordSeparator, ?string $wordCase)
     {
         $this->words = (int)$words;
         $this->word_separator = $wordSeparator;
@@ -71,7 +71,7 @@ class PassphraseGeneratorSettingsDto
      * @param array|null $data Data.
      * @return self
      */
-    public static function createFromArray($data): self
+    public static function createFromArray(?array $data): self
     {
         return new self(
             $data['words'] ?? null,

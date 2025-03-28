@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Event;
 use App\Controller\Setup\SetupCompleteController;
 use Cake\Event\EventInterface;
 use Cake\Event\EventListenerInterface;
+use Exception;
 use Passbolt\Metadata\Utility\ShareMetadataKeyServiceFactory;
 
 class SetupCompleteListener implements EventListenerInterface
@@ -45,7 +46,7 @@ class SetupCompleteListener implements EventListenerInterface
 
         try {
             $strategy->shareMetadataKeysWithUser($user);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $strategy->onFailure($e);
         }
     }

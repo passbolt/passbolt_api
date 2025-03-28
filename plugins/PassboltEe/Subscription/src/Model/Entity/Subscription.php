@@ -24,8 +24,8 @@ use App\Model\Entity\OrganizationSetting;
  * @property string $property_id
  * @property string $property
  * @property string $value
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property string $created_by
  * @property string $modified_by
  */

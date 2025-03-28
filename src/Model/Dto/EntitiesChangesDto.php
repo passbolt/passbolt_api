@@ -17,36 +17,37 @@ declare(strict_types=1);
 namespace App\Model\Dto;
 
 use Cake\ORM\Entity;
+use TypeError;
 
 class EntitiesChangesDto
 {
     /**
      * Array of added entities.
      *
-     * @var \Cake\ORM\Entity[]
+     * @var array<\Cake\ORM\Entity>
      */
     protected array $added = [];
 
     /**
      * Array of deleted entities.
      *
-     * @var \Cake\ORM\Entity[]
+     * @var array<\Cake\ORM\Entity>
      */
     protected array $deleted = [];
 
     /**
      * Arrau of updated entities.
      *
-     * @var \Cake\ORM\Entity[]
+     * @var array<\Cake\ORM\Entity>
      */
     protected array $updated = [];
 
     /**
      * Constructor.
      *
-     * @param \Cake\ORM\Entity[]|null $added The added entities
-     * @param \Cake\ORM\Entity[]|null $updated The updated entities
-     * @param \Cake\ORM\Entity[]|null $deleted The deleted entities
+     * @param array<\Cake\ORM\Entity>|null $added The added entities
+     * @param array<\Cake\ORM\Entity>|null $updated The updated entities
+     * @param array<\Cake\ORM\Entity>|null $deleted The deleted entities
      */
     final public function __construct(
         ?array $added = [],
@@ -61,7 +62,7 @@ class EntitiesChangesDto
     /**
      * Push an array of added entities.
      *
-     * @param \Cake\ORM\Entity[] $entities The array of entities.
+     * @param array<\Cake\ORM\Entity> $entities The array of entities.
      * @return void
      */
     public function pushAddedEntities(array $entities = []): void
@@ -73,7 +74,7 @@ class EntitiesChangesDto
      * Push an array of entities.
      *
      * @param array $destEntitiesStack The instance array reference to push the entities to.
-     * @param \Cake\ORM\Entity[] $entities The array of entities.
+     * @param array<\Cake\ORM\Entity> $entities The array of entities.
      * @return void
      */
     private function pushEntities(array &$destEntitiesStack, array $entities): void
@@ -97,7 +98,7 @@ class EntitiesChangesDto
             return;
         }
         if (!($entity instanceof Entity)) {
-            throw new \TypeError('The entity parameter should be either a valid Entity instance or null.');
+            throw new TypeError('The entity parameter should be either a valid Entity instance or null.');
         }
         $destEntitiesStack[] = $entity;
     }
@@ -105,7 +106,7 @@ class EntitiesChangesDto
     /**
      * Push updated entities.
      *
-     * @param \Cake\ORM\Entity[] $entities The array of entities.
+     * @param array<\Cake\ORM\Entity> $entities The array of entities.
      * @return void
      */
     public function pushUpdatedEntities(array $entities = []): void
@@ -116,7 +117,7 @@ class EntitiesChangesDto
     /**
      * Push an array of deleted entities.
      *
-     * @param \Cake\ORM\Entity[] $entities The array of entities.
+     * @param array<\Cake\ORM\Entity> $entities The array of entities.
      * @return void
      */
     public function pushDeletedEntities(array $entities = []): void
@@ -161,7 +162,7 @@ class EntitiesChangesDto
      * Get the deleted entities.
      *
      * @param string|null $filterClassName Filter the result by entities type.
-     * @return \Cake\ORM\Entity[]
+     * @return array<\Cake\ORM\Entity>
      */
     public function getDeletedEntities(?string $filterClassName = null): array
     {
@@ -185,7 +186,7 @@ class EntitiesChangesDto
      * Get added entities.
      *
      * @param string|null $filterClassName Filter the result by entities type.
-     * @return \Cake\ORM\Entity[]
+     * @return array<\Cake\ORM\Entity>
      */
     public function getAddedEntities(?string $filterClassName = null): array
     {
@@ -197,7 +198,7 @@ class EntitiesChangesDto
      *
      * @param array $destEntitiesStack The instance array reference to push the entities to.
      * @param string|null $filterClassName Filter the result by entities type.
-     * @return \Cake\ORM\Entity[]
+     * @return array<\Cake\ORM\Entity>
      */
     private function getEntities(array $destEntitiesStack, ?string $filterClassName = null): array
     {
@@ -214,7 +215,7 @@ class EntitiesChangesDto
      * Get updated entities.
      *
      * @param string|null $filterClassName Filter the result by entities type.
-     * @return \Cake\ORM\Entity[]
+     * @return array<\Cake\ORM\Entity>
      */
     public function getUpdatedEntities(?string $filterClassName = null): array
     {

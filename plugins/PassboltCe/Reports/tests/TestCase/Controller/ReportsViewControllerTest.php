@@ -20,10 +20,11 @@ namespace Passbolt\Reports\Test\TestCase\Controller;
 use App\Test\Lib\AppIntegrationTestCase;
 use Passbolt\Reports\Service\ReportPool;
 use Passbolt\Reports\Utility\AbstractSingleReport;
+use Passbolt\Reports\Utility\ReportInterface;
 
 class ReportsViewControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Groups',
         'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Secrets', 'app.Base/Comments',
     ];
@@ -40,14 +41,15 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
     {
         $ReportClass = new class extends AbstractSingleReport
         {
-            public function getData()
+            public function getData(): array
             {
                 return [];
             }
 
             /** @psalm-suppress InvalidReturnType no return type */
-            public function setDescription(string $description)
+            public function setDescription(string $description): ReportInterface
             {
+                return $this;
             }
         };
 
@@ -102,14 +104,15 @@ class ReportsViewControllerTest extends AppIntegrationTestCase
             {
             }
 
-            public function getData()
+            public function getData(): array
             {
                 return [];
             }
 
             /** @psalm-suppress InvalidReturnType no return type */
-            public function setDescription(string $description)
+            public function setDescription(string $description): ReportInterface
             {
+                return $this;
             }
         };
 

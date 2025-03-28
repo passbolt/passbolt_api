@@ -20,7 +20,7 @@ namespace Passbolt\Folders\Model\Traits\FoldersRelations;
 use App\Model\Table\PermissionsTable;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 
 trait FoldersRelationsFindersTrait
@@ -28,10 +28,10 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter out personal folders from a query.
      *
-     * @param \Cake\ORM\Query $query The folders relations query to decorate
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query The folders relations query to decorate
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function filterQueryByIsNotPersonalFolder(Query $query)
+    public function filterQueryByIsNotPersonalFolder(SelectQuery $query): SelectQuery
     {
         $foldersIdsNotPersonalQuery = $this->find()
             ->select(['foreign_id'])
@@ -45,11 +45,11 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter a query by users ids
      *
-     * @param \Cake\ORM\Query $query The query to decorate
+     * @param \Cake\ORM\Query\SelectQuery $query The query to decorate
      * @param array $usersIds The list of users ids
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function filterByUsersIds(Query $query, array $usersIds)
+    public function filterByUsersIds(SelectQuery $query, array $usersIds): SelectQuery
     {
         return $query->where([
             'user_id IN' => $usersIds,
@@ -59,11 +59,11 @@ trait FoldersRelationsFindersTrait
     /**
      * Filter a query by foreign model
      *
-     * @param \Cake\ORM\Query $query The query to decorate
+     * @param \Cake\ORM\Query\SelectQuery $query The query to decorate
      * @param string $foreignModel The foreign model to filter on
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function filterByForeignModel(Query $query, string $foreignModel)
+    public function filterByForeignModel(SelectQuery $query, string $foreignModel): SelectQuery
     {
         return $query->where([
             'foreign_model' => $foreignModel,
@@ -73,9 +73,9 @@ trait FoldersRelationsFindersTrait
     /**
      * Returns a query that retrieves all the relations that have a deleted folder parent.
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findByDeletedFolderParent()
+    public function findByDeletedFolderParent(): SelectQuery
     {
         return $this->find()
             ->leftJoinWith('FoldersParents')
@@ -87,9 +87,9 @@ trait FoldersRelationsFindersTrait
      * Returns a query that retrieves all the missing folders relations for a given foreign model.
      *
      * @param string $foreignModel The foreign model to filter on
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findMissingFoldersRelations(string $foreignModel): Query
+    public function findMissingFoldersRelations(string $foreignModel): SelectQuery
     {
         // Find direct users accesses.
         $directUsersSecretsQuery = $this->Resources->Permissions->find()

@@ -24,38 +24,39 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Collection\FolderRelationDtoCollection;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsAddItemsToUserTreeService
 {
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTables;
+    private PermissionsTable $permissionsTables;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsSortService
      */
-    private $foldersRelationsSortService;
+    private FoldersRelationsSortService $foldersRelationsSortService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsCreateService
      */
-    private $foldersRelationsCreateService;
+    private FoldersRelationsCreateService $foldersRelationsCreateService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDetectStronglyConnectedComponentsService
      */
-    private $folderRelationsDetectSCCsService;
+    private FoldersRelationsDetectStronglyConnectedComponentsService $folderRelationsDetectSCCsService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsRepairStronglyConnectedComponentsService
      */
-    private $foldersRelationsRepairSCCsService;
+    private FoldersRelationsRepairStronglyConnectedComponentsService $foldersRelationsRepairSCCsService;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsHaveAndAreChildrenService
@@ -200,7 +201,7 @@ class FoldersRelationsAddItemsToUserTreeService
         $query->where(['folder_parent_id IN' => $userFolders]);
 
         return $query->select(['foreign_id', 'folder_parent_id'])
-            ->group(['foreign_id', 'folder_parent_id'])
+            ->groupBy(['foreign_id', 'folder_parent_id'])
             ->all()
             ->toArray();
     }
@@ -243,7 +244,7 @@ class FoldersRelationsAddItemsToUserTreeService
         $query->where(['foreign_id IN' => $userItems->select('foreign_id')]);
 
         $foldersRelations = $query->select(['foreign_id', 'folder_parent_id'])
-            ->group(['foreign_id', 'folder_parent_id'])
+            ->groupBy(['foreign_id', 'folder_parent_id'])
             ->all()
             ->toArray();
 
@@ -293,7 +294,7 @@ class FoldersRelationsAddItemsToUserTreeService
      * @return void
      * @throws \Exception If a folder relation cannot be created
      */
-    private function insertItemsInUserRootTree(string $userId, FolderRelationDtoCollection $items)
+    private function insertItemsInUserRootTree(string $userId, FolderRelationDtoCollection $items): void
     {
         foreach ($items as $item) {
             $folderRelationToCreate = $item->clone();
@@ -334,7 +335,7 @@ class FoldersRelationsAddItemsToUserTreeService
         if (!empty($changesToCancel)) {
             $this->foldersRelationsTable->updateAll([
                 'folder_parent_id' => FoldersRelation::ROOT,
-            ], $this->buildFoldersRelationsTupleComparisonExpression($changesToCancel));
+            ], [$this->buildFoldersRelationsTupleComparisonExpression($changesToCancel)]);
         }
 
         // Apply the changes to the user tree.

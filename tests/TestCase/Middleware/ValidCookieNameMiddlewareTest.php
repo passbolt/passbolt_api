@@ -23,6 +23,7 @@ use Cake\Http\Cookie\CookieCollection;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\ServerRequestFactory;
 use Cake\TestSuite\TestCase;
+use Exception;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -42,7 +43,7 @@ class ValidCookieNameMiddlewareTest extends TestCase
 
         try {
             (new ValidCookieNameMiddleware())->process($request, $handler);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('The cookie name `foo,_bar` contains invalid characters', $e->getMessage());
             $this->assertSame(400, $e->getCode());

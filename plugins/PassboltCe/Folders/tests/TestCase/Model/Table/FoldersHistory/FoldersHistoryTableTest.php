@@ -84,6 +84,6 @@ class FoldersHistoryTableTest extends TestCase
 
         $this->expectException(ValidationException::class);
         $this->expectExceptionMessage('Could not validate folder history data.');
-        $entity = $this->FoldersHistory->create($data);
+        $this->FoldersHistory->create($data);
     }
 }

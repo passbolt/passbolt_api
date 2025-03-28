@@ -31,7 +31,7 @@ class CommentsHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\CommentsTable
      */
-    private $table;
+    private CommentsTable $table;
 
     /**
      * Comments Healthcheck constructor.
@@ -52,7 +52,7 @@ class CommentsHealthcheckService extends AbstractHealthcheckService
     {
         $records = $this->table->find()->all();
 
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 

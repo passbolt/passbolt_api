@@ -18,6 +18,7 @@ namespace App\Test\TestCase\Utility\Filesystem;
 
 use App\Utility\Filesystem\DirectoryUtility;
 use Cake\TestSuite\TestCase;
+use RuntimeException;
 
 class DirectoryUtilityTest extends TestCase
 {
@@ -70,7 +71,7 @@ class DirectoryUtilityTest extends TestCase
 
     public function testDirectoryUtilityIsFileExecutable_OnNonExistingFile()
     {
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
         $file = 'Foo';
         DirectoryUtility::isExecutable($file);
     }
@@ -80,7 +81,7 @@ class DirectoryUtilityTest extends TestCase
         $file = TMP . 'tests' . DS . 'directory.test';
         file_put_contents($file, 'foo');
 
-        $perms = [0666, 0662, 0422, 626, 0242];
+        $perms = [0666, 0662, 0422, 0626, 0242];
         foreach ($perms as $perm) {
             chmod($file, $perm);
             $res = DirectoryUtility::isExecutable($file);

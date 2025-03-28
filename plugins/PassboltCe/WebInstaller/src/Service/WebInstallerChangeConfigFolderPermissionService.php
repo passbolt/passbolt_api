@@ -16,12 +16,15 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Service;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 class WebInstallerChangeConfigFolderPermissionService
 {
     /**
      * @var string
      */
-    protected $configPath;
+    protected string $configPath;
 
     /**
      * @param string $configPath The path to the config directory
@@ -38,10 +41,10 @@ class WebInstallerChangeConfigFolderPermissionService
      */
     public function changeConfigFolderPermission(): void
     {
-        $iterator = new \RecursiveIteratorIterator(
-            new \RecursiveDirectoryIterator($this->configPath),
-            \RecursiveIteratorIterator::SELF_FIRST,
-            \RecursiveIteratorIterator::CATCH_GET_CHILD // Don't throw an error if one child cannot be opened
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($this->configPath),
+            RecursiveIteratorIterator::SELF_FIRST,
+            RecursiveIteratorIterator::CATCH_GET_CHILD // Don't throw an error if one child cannot be opened
         );
         foreach ($iterator as $name => $fileInfo) {
             if ($fileInfo->getFilename() == '..') {

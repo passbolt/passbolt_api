@@ -179,7 +179,7 @@ hcciUFw5
     {
         // create user
         $user = UserFactory::make()->user()->persist();
-        $resource = ResourceFactory::make()->withCreatorAndPermission($user)->persist();
+        ResourceFactory::make()->withCreatorAndPermission($user)->persist();
 
         $data = [];
 

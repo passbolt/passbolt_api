@@ -19,6 +19,7 @@ namespace Passbolt\Metadata\Test\TestCase\Command;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
+use Cake\I18n\Date;
 use Passbolt\Metadata\Test\Factory\MetadataKeyFactory;
 use Passbolt\Metadata\Test\Factory\MetadataKeysSettingsFactory;
 use Passbolt\Metadata\Test\Factory\MetadataPrivateKeyFactory;
@@ -40,8 +41,6 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
     }
 
     public function testShareMetadataKeyCommand_Help()
@@ -78,6 +77,7 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
         $deletedMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->deleted()->persist();
         // users
         $activeUser = UserFactory::make()->user()->active()->withValidGpgKey()->persist();
+        /** @var \App\Model\Entity\User $activeAdmin */
         $activeAdmin = UserFactory::make()->admin()->active()->withValidGpgKey()->persist();
         $inactiveUser = UserFactory::make()->user()->inactive()->persist();
         $disabledUser = UserFactory::make()->user()->disabled()->withValidGpgKey()->persist();
@@ -110,6 +110,15 @@ class ShareMetadataKeyCommandTest extends AppIntegrationTestCaseV5
         // assert no user key entry for $deletedMetadataKey
         $result = MetadataPrivateKeyFactory::find()->where(['metadata_key_id' => $deletedMetadataKey->id, 'user_id IS NOT NULL'])->toArray();
         $this->assertCount(0, $result);
+
+        $metadataPrivateKeysInserted = MetadataPrivateKeyFactory::find()
+            ->where(['created >=' => Date::today()])
+            ->all();
+        $this->assertSame(3, $metadataPrivateKeysInserted->count());
+        foreach ($metadataPrivateKeysInserted as $key) {
+            $this->assertSame($key->get('created_by'), $activeAdmin->id);
+            $this->assertSame($key->get('modified_by'), $activeAdmin->id);
+        }
     }
 
     public function testShareMetadataKeyCommand_Success_ZeroKnowledgeMode(): void

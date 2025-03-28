@@ -20,6 +20,7 @@ namespace Passbolt\Sso\Service\Sso\Google;
 use App\Utility\ExtendedUserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
+use Exception;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Dto\SsoSettingsGoogleDataDto;
@@ -85,7 +86,7 @@ class SsoGoogleService extends AbstractSsoService
             if (!($ssoSettings->data instanceof SsoSettingsGoogleDataDto)) {
                 throw new BadRequestException('Invalid provider data. Expected Google settings.');
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new BadRequestException(__('No valid SSO settings found.'), 400, $exception);
         }
 

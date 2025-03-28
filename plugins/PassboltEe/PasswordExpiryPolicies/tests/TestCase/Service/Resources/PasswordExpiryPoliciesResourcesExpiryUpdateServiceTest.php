@@ -25,7 +25,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\UserAccessControlTrait;
 use App\Utility\UuidFactory;
 use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesResourcesExpiryUpdateService;
 use Passbolt\PasswordExpiryPolicies\Test\Factory\PasswordExpiryPoliciesSettingFactory;
@@ -52,7 +52,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
     public function validationFail(): array
     {
         $uuid = UuidFactory::uuid();
-        $today = FrozenTime::tomorrow()->toDateTimeString();
+        $today = DateTime::tomorrow()->toDateTimeString();
 
         return [
             [['id' => null], 'An array of arrays is expected.'],
@@ -70,9 +70,9 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
     {
         $uuid1 = UuidFactory::uuid();
         $uuid2 = UuidFactory::uuid();
-        $pastDate = FrozenTime::yesterday()->toDateTimeString();
-        $today = FrozenTime::tomorrow()->toDateTimeString();
-        $atomStringFormat = FrozenTime::tomorrow()->toAtomString();
+        $pastDate = DateTime::yesterday()->toDateTimeString();
+        $today = DateTime::tomorrow()->toDateTimeString();
+        $atomStringFormat = DateTime::tomorrow()->toAtomString();
 
         return [
             [[['id' => $uuid1, 'expired' => null]]],
@@ -127,16 +127,16 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
             ->persist();
         [$resource1, $resource2] = ResourceFactory::make(2)
             ->withPermissionsFor([$user])
-            ->expired(FrozenTime::today()->subDays(3))
+            ->expired(DateTime::today()->subDays(3))
             ->persist();
         $resource3 = ResourceFactory::make()
             ->withPermissionsFor([$group], Permission::UPDATE)
             ->withPermissionsFor([$user], Permission::READ) // Set the min permission to read
-            ->expired(FrozenTime::today()->subDays(3))
+            ->expired(DateTime::today()->subDays(3))
             ->persist();
-        $newExpiryDate1 = FrozenTime::today()->addDays(3);
+        $newExpiryDate1 = DateTime::today()->addDays(3);
         $newExpiryDate2 = null;
-        $newExpiryDate3 = FrozenTime::today()->addDays(3);
+        $newExpiryDate3 = DateTime::today()->addDays(3);
         $payload = [
             ['id' => $resource1->get('id'), 'expired' => $newExpiryDate1->toAtomString()],
             ['id' => $resource2->get('id'), 'expired' => $newExpiryDate2],
@@ -163,9 +163,9 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
         $user = UserFactory::make()->persist();
         $resource = ResourceFactory::make()
             ->withPermissionsFor([$user])
-            ->expired(FrozenTime::today()->subDays(3))
+            ->expired(DateTime::today()->subDays(3))
             ->persist();
-        $newExpiryDate = FrozenTime::today()->addDays(3);
+        $newExpiryDate = DateTime::today()->addDays(3);
         $uuidOfResourceNotInDB = UuidFactory::uuid();
         $payload = [
             ['id' => $resource->get('id'), 'expired' => $newExpiryDate->toDateTimeString()],
@@ -185,13 +185,13 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
             ->persist();
         $resourceId1 = ResourceFactory::make()
             ->withPermissionsFor([$user])
-            ->expired(FrozenTime::today()->subDays(3))
+            ->expired(DateTime::today()->subDays(3))
             ->persist()->get('id');
         $resourceId2 = ResourceFactory::make()
             ->withPermissionsFor([$group], Permission::READ)
-            ->expired(FrozenTime::today()->subDays(3))
+            ->expired(DateTime::today()->subDays(3))
             ->persist()->get('id');
-        $newExpiryDate = FrozenTime::today()->addDays(3);
+        $newExpiryDate = DateTime::today()->addDays(3);
         $payload = [
             ['id' => $resourceId1, 'expired' => $newExpiryDate->toDateTimeString()],
             ['id' => $resourceId2, 'expired' => $newExpiryDate->toDateTimeString()],
@@ -207,10 +207,10 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateServiceTest extends AppTestCase
         $user = UserFactory::make()->persist();
         $resourceId1 = ResourceFactory::make()
             ->withPermissionsFor([$user])
-            ->expired(FrozenTime::today()->subDays(3))
+            ->expired(DateTime::today()->subDays(3))
             ->persist()->get('id');
         $resourceId2 = ResourceFactory::make()->persist()->get('id');
-        $newExpiryDate = FrozenTime::today()->addDays(3);
+        $newExpiryDate = DateTime::today()->addDays(3);
         $payload = [
             ['id' => $resourceId1, 'expired' => $newExpiryDate->toDateTimeString()],
             ['id' => $resourceId2, 'expired' => $newExpiryDate->toDateTimeString()],

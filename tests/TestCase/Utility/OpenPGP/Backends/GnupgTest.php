@@ -17,10 +17,11 @@ declare(strict_types=1);
 namespace App\Test\TestCase\Utility\OpenPGP\Backends;
 
 use App\Utility\OpenPGP\Backends\Gnupg;
+use gnupg as PhpGnupg;
 
 class GnupgTest extends OpenPGPBackendTest
 {
-    public $originalErrorSettings;
+    public string|false $originalErrorSettings;
 
     /**
      * @var Gnupg
@@ -49,6 +50,6 @@ class GnupgTest extends OpenPGPBackendTest
      */
     public function testGnupgErrorMode(): void
     {
-        $this->assertSame(2, \gnupg::ERROR_EXCEPTION, 'This constant is not defined.');
+        $this->assertSame(2, PhpGnupg::ERROR_EXCEPTION, 'This constant is not defined.');
     }
 }

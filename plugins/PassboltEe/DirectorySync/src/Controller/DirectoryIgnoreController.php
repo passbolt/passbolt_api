@@ -26,6 +26,7 @@ use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Exception\ServiceUnavailableException;
 use Cake\Validation\Validation;
+use Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 /**
@@ -33,6 +34,8 @@ use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
  */
 class DirectoryIgnoreController extends DirectoryController
 {
+    protected ?DirectoryIgnoreTable $DirectoryIgnore = null;
+
     /**
      * @inheritDoc
      */
@@ -68,7 +71,7 @@ class DirectoryIgnoreController extends DirectoryController
         $ignored = null;
         try {
             $ignored = $this->DirectoryIgnore->get($foreignKey);
-            $result = $this->DirectoryIgnore->delete($ignored);
+            $this->DirectoryIgnore->delete($ignored);
         } catch (RecordNotFoundException $exception) {
         }
         $this->success(__('The record is currently ignored as part of directory synchronization.'), $ignored);

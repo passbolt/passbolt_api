@@ -22,7 +22,7 @@ use Passbolt\MultiFactorAuthentication\MultiFactorAuthenticationPlugin;
 
 class HomeControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
         'plugin.Passbolt/AccountSettings.AccountSettings',
     ];

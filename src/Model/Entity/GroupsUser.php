@@ -12,7 +12,7 @@ use Cake\ORM\Entity;
  * @property string|null $group_id
  * @property string|null $user_id
  * @property bool $is_admin
- * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\DateTime $created
  *
  * @property \App\Model\Entity\Group|null $group
  * @property \App\Model\Entity\User|null $user
@@ -28,7 +28,7 @@ class GroupsUser extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'group_id' => false,
         'user_id' => false,

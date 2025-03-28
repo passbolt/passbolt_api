@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Controller\Users;
 
 use App\Model\Entity\Role;
+use App\Model\Table\UsersTable;
 use Cake\Http\Exception\ForbiddenException;
 
 /**
@@ -27,7 +28,7 @@ class UsersAddController extends UsersRegisterController
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @inheritDoc

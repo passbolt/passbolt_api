@@ -25,12 +25,12 @@ class SsoSettingsGoogleDataDto implements SsoSettingsDataDtoInterface
     /**
      * @var string
      */
-    public $client_id;
+    public string $client_id;
 
     /**
      * @var string
      */
-    public $client_secret;
+    public string $client_secret;
 
     /**
      * Constructor.

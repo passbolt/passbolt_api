@@ -17,9 +17,13 @@ declare(strict_types=1);
 namespace Passbolt\DirectorySync\Service\DirectorySettings;
 
 use App\Model\Entity\OrganizationSetting;
+use App\Model\Table\OrganizationSettingsTable;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Table;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
+use UnexpectedValueException;
 
 class FixDirectorySyncLegacyFieldsMappingService
 {
@@ -28,19 +32,18 @@ class FixDirectorySyncLegacyFieldsMappingService
     /**
      * @var \App\Model\Table\OrganizationSettingsTable
      */
-    private \App\Model\Table\OrganizationSettingsTable $organizationSettingsTable;
+    private OrganizationSettingsTable $organizationSettingsTable;
 
     /**
      * @var \Cake\ORM\Table
      */
-    private \Cake\ORM\Table $phinxlogTable;
+    private Table $phinxlogTable;
 
     /**
      * FixDirectorySyncLegacyFieldsMappingService constructor
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->organizationSettingsTable = $this->fetchTable('OrganizationSettings');
         $this->phinxlogTable = $this->fetchTable('Phinxlog', ['table' => 'phinxlog']);
     }
@@ -50,7 +53,7 @@ class FixDirectorySyncLegacyFieldsMappingService
      *
      * @return \App\Model\Entity\OrganizationSetting|null
      */
-    private function findDirectorySyncSettings()
+    private function findDirectorySyncSettings(): ?OrganizationSetting
     {
         /** @var \App\Model\Entity\OrganizationSetting|null */
         return $this->organizationSettingsTable
@@ -76,10 +79,10 @@ class FixDirectorySyncLegacyFieldsMappingService
             ->first();
 
         if (is_null($migration)) {
-            throw new \Exception('Unable to retrieve the migration V400ChangeLdapServersConfigKey.');
+            throw new Exception('Unable to retrieve the migration V400ChangeLdapServersConfigKey.');
         }
         if (property_exists($migration, 'end_time')) {
-            throw new \Exception('Invalid phinxlog migration entity, end_time property not defined.');
+            throw new Exception('Invalid phinxlog migration entity, end_time property not defined.');
         }
 
         /** @phpstan-ignore-next-line */
@@ -104,7 +107,7 @@ class FixDirectorySyncLegacyFieldsMappingService
             || count($value['fieldsMapping']) !== 2
         ) {
             $errorMessage = "Directory settings are invalid: {$directorySyncSettings->value}";
-            throw new \UnexpectedValueException($errorMessage);
+            throw new UnexpectedValueException($errorMessage);
         }
 
         $fieldsMapping = $value['fieldsMapping'];
@@ -114,7 +117,7 @@ class FixDirectorySyncLegacyFieldsMappingService
         if (!empty($v3DiffFieldsMapping)) {
             $errorMessage = 'Customized v3 directory sync settings fields mapping are not supported: ';
             $errorMessage .= $directorySyncSettings->value;
-            throw new \UnexpectedValueException($errorMessage);
+            throw new UnexpectedValueException($errorMessage);
         }
 
         return $value;

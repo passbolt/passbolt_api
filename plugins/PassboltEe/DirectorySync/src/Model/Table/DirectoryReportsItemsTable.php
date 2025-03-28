@@ -20,12 +20,13 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Passbolt\DirectorySync\Actions\Reports\ActionReport;
+use Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem;
 
 /**
  * DirectoryReportsItems Model
  *
  * @property \Cake\ORM\Table&\Cake\ORM\Association\BelongsTo $Reports
- * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get($primaryKey, $options = [])
+ * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem newEntity(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem[] newEntities(array $data, array $options = [])
  * @method \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -61,7 +62,7 @@ class DirectoryReportsItemsTable extends Table
         $this->belongsTo('Reports', [
             'foreignKey' => 'report_id',
             'joinType' => 'INNER',
-            'className' => 'Passbolt/DirectorySync.Reports',
+            'className' => 'Passbolt/DirectorySync.DirectoryReports',
         ]);
     }
 
@@ -109,7 +110,7 @@ class DirectoryReportsItemsTable extends Table
      * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
      * @return \Cake\ORM\RulesChecker
      */
-    public function buildRules(RulesChecker $rules): \Cake\ORM\RulesChecker
+    public function buildRules(RulesChecker $rules): RulesChecker
     {
         return $rules;
     }
@@ -119,9 +120,9 @@ class DirectoryReportsItemsTable extends Table
      *
      * @param string|null $reportId report id
      * @param \Passbolt\DirectorySync\Actions\Reports\ActionReport $reportItem report item
-     * @return bool|\Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem
+     * @return \Passbolt\DirectorySync\Model\Entity\DirectoryReportsItem|bool
      */
-    public function create(?string $reportId, ActionReport $reportItem)
+    public function create(?string $reportId, ActionReport $reportItem): bool|DirectoryReportsItem
     {
         $entity = $this->newEntity([
             'report_id' => $reportId,

@@ -33,7 +33,7 @@ class Digest
     /**
      * Emails queues gathered in this digest
      *
-     * @var \Cake\ORM\Entity[]
+     * @var array<\Cake\ORM\Entity>
      */
     private array $emailQueues = [];
 
@@ -132,7 +132,7 @@ class Digest
     }
 
     /**
-     * @return \Cake\ORM\Entity[]
+     * @return array<\Cake\ORM\Entity>
      */
     public function getEmailQueues(): array
     {

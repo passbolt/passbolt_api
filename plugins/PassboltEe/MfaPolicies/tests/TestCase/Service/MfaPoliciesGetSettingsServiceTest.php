@@ -111,6 +111,6 @@ class MfaPoliciesGetSettingsServiceTest extends TestCase
 
         $this->expectException(InternalErrorException::class);
 
-        $result = $this->service->get();
+        $this->service->get();
     }
 }

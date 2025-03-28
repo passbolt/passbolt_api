@@ -23,6 +23,8 @@ use App\Utility\UserAccessControl;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
+use Throwable;
 
 /**
  * Class MfaDuoCallbackAuthenticationTokenService
@@ -32,7 +34,7 @@ class MfaDuoCallbackAuthenticationTokenService
     /**
      * @var array
      */
-    public static $ALLOWED_TOKEN_TYPES = [
+    public static array $ALLOWED_TOKEN_TYPES = [
         AuthenticationToken::TYPE_MFA_SETUP,
         AuthenticationToken::TYPE_MFA_VERIFY,
     ];
@@ -56,12 +58,12 @@ class MfaDuoCallbackAuthenticationTokenService
         string $duoState
     ): AuthenticationToken {
         if (!Validation::uuid($token)) {
-            throw new \InvalidArgumentException('The authentication token should be a valid UUID.');
+            throw new InvalidArgumentException('The authentication token should be a valid UUID.');
         }
         if (!Validation::inList($tokenType, MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES)) {
             $readableAllowedTokenTypes = implode(', ', MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES);
             $msg = 'The authentication token type should be one of the following: ' . $readableAllowedTokenTypes . '.';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
 
         $authToken = $this->consumeAuthenticationTokenOrFail($uac, $tokenType, $token);
@@ -90,7 +92,7 @@ class MfaDuoCallbackAuthenticationTokenService
                 $uac->getId(),
                 $tokenType
             );
-        } catch (\Throwable $th) {
+        } catch (Throwable $th) {
             $msg = __('The token should reference an active Duo callback authentication token.');
             throw new UnauthorizedException($msg, null, $th);
         }

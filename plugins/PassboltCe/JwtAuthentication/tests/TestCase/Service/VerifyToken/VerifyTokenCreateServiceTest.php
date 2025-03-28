@@ -22,7 +22,7 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
@@ -72,28 +72,28 @@ class VerifyTokenCreateServiceTest extends TestCase
         // Old token for that user: should be deleted
         AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_VERIFY_TOKEN)
-            ->created(FrozenTime::now()->subHours(1)->subSeconds(1))
+            ->created(DateTime::now()->subHours(1)->subSeconds(1))
             ->userId($userId)
             ->persist();
 
         // Old token for another user: should be deleted
         AuthenticationTokenFactory::make()
             ->type(AuthenticationToken::TYPE_VERIFY_TOKEN)
-            ->created(FrozenTime::now()->subHours(1)->subSeconds(1))
+            ->created(DateTime::now()->subHours(1)->subSeconds(1))
             ->userId(UuidFactory::uuid())
             ->persist();
 
         // Valid token for that user of another type: should not be deleted
         AuthenticationTokenFactory::make()
             ->type('Foo')
-            ->created(FrozenTime::now()->addMinutes(1))
+            ->created(DateTime::now()->addMinutes(1))
             ->userId($userId)
             ->persist();
 
         $token = UuidFactory::uuid();
         $this->service->createToken($token, $userId);
 
-        $this->assertSame(2, $this->AuthenticationTokens->find()->count());
+        $this->assertSame(2, $this->AuthenticationTokens->find()->all()->count());
         $this->assertTrue($this->AuthenticationTokens->exists(compact('token')));
         $this->assertTrue($this->AuthenticationTokens->exists(['type' => 'Foo']));
     }

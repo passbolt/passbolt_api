@@ -24,7 +24,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Console\TestSuite\ConsoleIntegrationTestTrait;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\PasswordExpiryPolicies\Command\PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand;
 use Passbolt\PasswordExpiryPolicies\Service\Resources\PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService;
 use Passbolt\PasswordExpiryPolicies\Test\Factory\PasswordExpiryPoliciesSettingFactory;
@@ -35,22 +35,11 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
     use EmailQueueTrait;
 
     /**
-     * setUp method
-     *
-     * @return void
-     */
-    public function setUp(): void
-    {
-        $this->markTestSkipped();
-        parent::setUp();
-        $this->useCommandRunner();
-    }
-
-    /**
      * Basic help test
      */
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandHelp()
     {
+        $this->markTestSkipped();
         $mock = $this
             ->getMockBuilder(PasswordExpiryPoliciesGetOwnersOfResourcesAboutToExpireService::class)
             ->disableOriginalConstructor()
@@ -70,6 +59,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
      */
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand_No_Settings()
     {
+        $this->markTestSkipped();
         $this->exec('passbolt notify_about_expired_resources');
         $this->assertExitSuccess();
         $this->assertOutputContains('Password expiry is not activated.');
@@ -80,6 +70,7 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
      */
     public function testPasswordExpiryPoliciesNotifyAboutExpiredResourcesCommand_Notify_Users_Of_Password_Expiring_In_The_Future_Or_Expired()
     {
+        $this->markTestSkipped();
         $nDays = rand(2, 100);
         PasswordExpiryPoliciesSettingFactory::make()
             ->setField('value.expiry_notification', $nDays) // Notify about passwords expiring in N days
@@ -88,10 +79,10 @@ class PasswordExpiryPoliciesNotifyAboutExpiredResourcesCommandTest extends AppIn
         [$user1, $user2, $user3, $user4] = UserFactory::make(6)->user()->persist();
 
         [$resourceExpiredYesterdaySharedWithUser1And2] = ResourceFactory::make(2)
-            ->expired(FrozenTime::yesterday())
+            ->expired(DateTime::yesterday())
             ->persist();
         [$resourceExpiringInNDaysSharedWithUser3And4] = ResourceFactory::make(2)
-            ->expired(FrozenTime::now()->addDays($nDays))
+            ->expired(DateTime::now()->addDays($nDays))
             ->persist();
 
         PermissionFactory::make()

@@ -23,9 +23,9 @@ use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
-use Cake\Chronos\ChronosInterface;
+use Cake\Chronos\Chronos;
 use Cake\Event\Event;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use InvalidArgumentException;
 use Passbolt\Locale\Service\LocaleService;
@@ -89,7 +89,7 @@ class AzureSsoSecretExpiryNotifyRedactor implements SubscribedEmailRedactorInter
         $ssoSettings = $ssoService->getSettings()->getData();
         $secretExpiry = $ssoSettings->client_secret_expiry;
         if (is_string($secretExpiry)) {
-            $secretExpiry = new FrozenTime($secretExpiry);
+            $secretExpiry = new DateTime($secretExpiry);
         }
 
         if (!$secretExpiry->isWithinNext('10 days')) {
@@ -122,10 +122,10 @@ class AzureSsoSecretExpiryNotifyRedactor implements SubscribedEmailRedactorInter
 
     /**
      * @param \App\Model\Entity\User $recipient The recipient(admin) to send email to.
-     * @param \Cake\Chronos\ChronosInterface $secretExpiryDate Secret expiry date object.
+     * @param \Cake\Chronos\Chronos $secretExpiryDate Secret expiry date object.
      * @return \App\Notification\Email\Email
      */
-    private function createEmail(User $recipient, ChronosInterface $secretExpiryDate): Email
+    private function createEmail(User $recipient, Chronos $secretExpiryDate): Email
     {
         $subject = (new LocaleService())->translateString(
             $recipient->locale,

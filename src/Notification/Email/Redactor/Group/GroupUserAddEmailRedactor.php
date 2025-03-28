@@ -28,7 +28,7 @@ use App\Notification\Email\SubscribedEmailRedactorInterface;
 use App\Notification\Email\SubscribedEmailRedactorTrait;
 use App\Service\Groups\GroupsUpdateService;
 use Cake\Event\Event;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Locale\Service\LocaleService;
@@ -42,7 +42,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    private $usersTable;
+    private UsersTable $usersTable;
 
     /**
      * @param \App\Model\Table\UsersTable|null $usersTable Users Table
@@ -109,9 +109,9 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      * Return a list of recipients
      *
      * @param array $userIds List of user ids
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function getRecipients(array $userIds): Query
+    private function getRecipients(array $userIds): SelectQuery
     {
         return $this->usersTable->find('locale')
             ->find('notDisabled')
@@ -122,7 +122,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\Group $group Group which was created
      * @return array
      */
-    private function createGroupCreatedEmail(Group $group)
+    private function createGroupCreatedEmail(Group $group): array
     {
         $emails = [];
 
@@ -158,7 +158,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
      * @param \App\Model\Entity\User $modifiedBy person who did the change
      * @return array
      */
-    public function createGroupUserAddedUpdateEmails(Group $group, array $addedGroupsUsers, User $modifiedBy)
+    public function createGroupUserAddedUpdateEmails(Group $group, array $addedGroupsUsers, User $modifiedBy): array
     {
         $emails = [];
 
@@ -171,6 +171,7 @@ class GroupUserAddEmailRedactor implements SubscribedEmailRedactorInterface
         $users = $this->getRecipients($usersIds);
         $whoIsAdmin = Hash::combine($addedGroupsUsers, '{n}.user_id', '{n}.is_admin');
 
+        /** @var \App\Model\Entity\User $user */
         foreach ($users as $user) {
             $isAdmin = isset($whoIsAdmin[$user->id]) && $whoIsAdmin[$user->id];
             $emails[] = $this->createGroupUserAddEmail($user, $modifiedBy, $group, $isAdmin);

@@ -22,11 +22,13 @@ use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\ORM\Association\PassboltBelongsToMany;
 use App\Utility\UserAccessControl;
 use App\Utility\UuidFactory;
+use ArrayObject;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
 use Cake\Database\Expression\IdentifierExpression;
 use Cake\Database\Expression\QueryExpression;
 use Cake\Datasource\EntityInterface;
+use Cake\Event\Event;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Log\Log;
@@ -35,20 +37,22 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Utility\Hash;
 use Cake\Validation\Validator;
+use Exception;
 use Passbolt\Metadata\Model\Rule\IsMetadataKeyTypeAllowedBySettingsRule;
 use Passbolt\Metadata\Model\Rule\IsV4ToV5UpgradeAllowedRule;
 use Passbolt\Metadata\Model\Rule\IsValidEncryptedMetadataRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdExistsInRule;
 use Passbolt\Metadata\Model\Rule\MetadataKeyIdNotExpiredRule;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
+use Passbolt\Tags\Model\Entity\Tag;
 use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 
 /**
  * Tags Model
  *
  * @property \App\Model\Table\ResourcesTable&\Cake\ORM\Association\BelongsToMany $Resources
- * @property \Cake\ORM\Table&\Cake\ORM\Association\HasMany $ResourcesTags
- * @method \Passbolt\Tags\Model\Entity\Tag get($primaryKey, $options = [])
+ * @property \Passbolt\Tags\Model\Table\ResourcesTagsTable&\Cake\ORM\Association\HasMany $ResourcesTags
+ * @method \Passbolt\Tags\Model\Entity\Tag get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Tags\Model\Entity\Tag newEntity(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\Tag[] newEntities(array $data, array $options = [])
  * @method \Passbolt\Tags\Model\Entity\Tag|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -66,6 +70,7 @@ use Passbolt\Tags\Service\Metadata\MetadataTagsRenderService;
 class TagsTable extends Table
 {
     use CaseSensitiveCompareValueTrait;
+    use TagsTableBackupAwareTrait;
 
     /**
      * Initialize method
@@ -77,7 +82,7 @@ class TagsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('tags');
+        $this->setTableNameBackupModeAware('tags');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
@@ -85,7 +90,7 @@ class TagsTable extends Table
             'through' => 'ResourcesTags',
         ]);
 
-        $this->hasMany('ResourcesTags');
+        $this->hasMany('ResourcesTags'); // @phpstan-ignore-line
 
         $this->belongsToMany('Users', [
             'through' => 'ResourcesTags',
@@ -198,35 +203,36 @@ class TagsTable extends Table
      * @param \Cake\Datasource\EntityInterface $entity Entity object.
      * @param \ArrayObject $options Options array.
      * @param string $operation Create/update operation.
-     * @return true|void Return result when event is stopped, void otherwise.
+     * @return bool Return result when event is stopped, void otherwise.
      */
     public function beforeRules(
         EventInterface $event,
         EntityInterface $entity,
-        \ArrayObject $options,
+        ArrayObject $options,
         string $operation
-    ) {
+    ): bool {
         $dto = MetadataTagDto::fromArray($entity->toArray());
 
         if (!$dto->isV5()) {
             // This is little hack to not call `buildRulesV5` rules,
             // Because these are saved as belongsToMany association along with resources, it tries to call build rules even for V4 tags.
             $event->stopPropagation();
-
-            return true;
+            $event->setResult(true);
         }
+
+        return true;
     }
 
     /**
      * Find tags for index
      *
      * @param string $userId uuid of the user to find tags for.
-     * @return array|\Cake\ORM\Query
+     * @return \Cake\ORM\Query|array
      */
-    public function findIndex(string $userId)
+    public function findIndex(string $userId): array|Query
     {
         $query = $this->find()
-             ->order($this->aliasField('slug'))
+             ->orderBy($this->aliasField('slug'))
              ->distinct();
 
         // We here rebuild the associations manually to help CakePHP
@@ -259,7 +265,7 @@ class TagsTable extends Table
      * @return \Cake\ORM\Query
      * @throws \Cake\Database\Exception\DatabaseException if $slugs is empty
      */
-    public function findAllBySlugsOrIds(?array $slugs = [], array $encryptedTagsIds = [])
+    public function findAllBySlugsOrIds(?array $slugs = [], array $encryptedTagsIds = []): Query
     {
         $query = $this->find();
 
@@ -292,14 +298,14 @@ class TagsTable extends Table
     {
         if (isset($options['contain']['all_tags'])) {
             $query->contain('Tags', function (Query $q) {
-                return $q->order(['slug']);
+                return $q->orderBy(['slug']);
             });
         } elseif (isset($options['contain']['tag'])) {
             // Display the user tags for a given resource
             $query
                 ->contain('Tags', function (Query $q) use ($userId) {
                     return $q
-                        ->order(['slug'])
+                        ->orderBy(['slug'])
                         ->where(function (QueryExpression $where) use ($userId) {
                             return $where->or(function (QueryExpression $or) use ($userId) {
                                 return $or
@@ -315,7 +321,7 @@ class TagsTable extends Table
                                 try {
                                     $tagDto = MetadataTagDto::fromArray($tag);
                                     $isV5 = $tagDto->isV5();
-                                } catch (\Exception $e) {
+                                } catch (Exception $e) {
                                     if (Configure::read('debug')) {
                                         $msg = __('Error while building tag DTO.');
                                         Log::error($msg . ' ' . $e->getMessage());
@@ -355,7 +361,7 @@ class TagsTable extends Table
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(\Cake\Event\Event $event, \ArrayObject $data, \ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         if (isset($data['slug']) && !empty($data['slug']) && is_string($data['slug'])) {
             $startWith = mb_substr($data['slug'], 0, 1, 'utf-8');
@@ -372,7 +378,7 @@ class TagsTable extends Table
      * @throws \Cake\Http\Exception\BadRequestException if the validation fails
      * @return array $tags list of tag entities
      */
-    public function buildEntitiesOrFail(?string $userId, array $tags)
+    public function buildEntitiesOrFail(?string $userId, array $tags): array
     {
         if (empty($tags)) {
             return [];
@@ -417,7 +423,7 @@ class TagsTable extends Table
      * @return \Passbolt\Tags\Model\Entity\Tag
      * @throws \App\Error\Exception\CustomValidationException When there are errors building entity object.
      */
-    public function buildEntityOrFail(MetadataTagDto $dto)
+    public function buildEntityOrFail(MetadataTagDto $dto): Tag
     {
         $tag = $dto->toArray();
 
@@ -495,7 +501,7 @@ class TagsTable extends Table
      * @return mixed
      * @throws \App\Error\Exception\CustomValidationException When validation errors.
      */
-    public function findOrCreateTag(string $slug, UserAccessControl $control)
+    public function findOrCreateTag(string $slug, UserAccessControl $control): mixed
     {
         $query = $this->find();
 

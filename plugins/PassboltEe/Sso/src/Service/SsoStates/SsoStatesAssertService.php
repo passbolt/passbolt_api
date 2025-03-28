@@ -20,7 +20,7 @@ use App\Utility\ExtendedUserAccessControl;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Validation\Validation;
 use Passbolt\Sso\Model\Entity\SsoState;
@@ -163,7 +163,7 @@ class SsoStatesAssertService
         /** @var \Passbolt\Sso\Model\Table\SsoStatesTable $ssoStatesTable */
         $ssoStatesTable = $this->fetchTable('Passbolt/Sso.SsoStates');
 
-        $ssoState->deleted = FrozenTime::now();
+        $ssoState->deleted = DateTime::now();
 
         if (!$ssoStatesTable->save($ssoState)) {
             throw new InternalErrorException(__('The SSO state could not be saved.'));

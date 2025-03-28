@@ -25,27 +25,27 @@ class SsoSettingsOAuth2DataDto implements SsoSettingsDataDtoInterface
     /**
      * @var string
      */
-    public $url;
+    public string $url;
 
     /**
      * @var string
      */
-    public $client_id;
+    public string $client_id;
 
     /**
      * @var string
      */
-    public $client_secret;
+    public string $client_secret;
 
     /**
      * @var string
      */
-    public $openid_configuration_path;
+    public string $openid_configuration_path;
 
     /**
      * @var string
      */
-    public $scope;
+    public string $scope;
 
     /**
      * Constructor.

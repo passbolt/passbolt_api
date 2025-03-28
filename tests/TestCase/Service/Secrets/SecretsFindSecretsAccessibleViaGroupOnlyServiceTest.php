@@ -26,6 +26,7 @@ use App\Utility\UuidFactory;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use TypeError;
 
 class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
 {
@@ -54,7 +55,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
         try {
             $this->service->find('not-a-valid-uuid', [], PermissionsTable::RESOURCE_ACO);
             $this->assertFalse('Parameter groupId should throw a TypeError exception');
-        } catch (\TypeError $error) {
+        } catch (TypeError $error) {
             $this->assertFalse(false);
         }
     }
@@ -64,7 +65,7 @@ class SecretsFindSecretsAccessibleViaGroupOnlyServiceTest extends TestCase
         try {
             $this->service->find(UuidFactory::uuid(), ['not-a-valid-uuid'], PermissionsTable::RESOURCE_ACO);
             $this->assertFalse('Parameter usersIds should throw a TypeError exception');
-        } catch (\TypeError $error) {
+        } catch (TypeError $error) {
             $this->assertFalse(false);
         }
     }

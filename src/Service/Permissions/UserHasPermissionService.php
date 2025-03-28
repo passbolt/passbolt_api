@@ -31,7 +31,7 @@ class UserHasPermissionService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @param \App\Model\Table\PermissionsTable|null $permissionsTable PermissionsTable instance

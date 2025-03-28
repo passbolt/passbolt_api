@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Error\Exception;
 
 use Cake\Http\Exception\HttpException;
+use Exception;
 
 /**
  * Represents an HTTP 402 error.
@@ -26,7 +27,7 @@ class PaymentRequiredException extends HttpException implements ExceptionWithErr
     /**
      * @var array|null $data
      */
-    protected $data = null;
+    protected ?array $data = null;
 
     /**
      * Constructor
@@ -36,7 +37,7 @@ class PaymentRequiredException extends HttpException implements ExceptionWithErr
      * @param int|null $code status code, defaults to 402
      * @param \Exception|null $previous The previous exception.
      */
-    public function __construct($message = null, $data = null, ?int $code = null, $previous = null)
+    public function __construct(?string $message = null, ?array $data = null, ?int $code = null, ?Exception $previous = null) // phpcs:ignore
     {
         if (empty($message)) {
             $message = 'Payment Required';

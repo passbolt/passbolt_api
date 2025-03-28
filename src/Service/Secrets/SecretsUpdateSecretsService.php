@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Error\Exception\ValidationException;
 use App\Model\Dto\EntitiesChangesDto;
 use App\Model\Entity\Secret;
+use App\Model\Table\SecretsTable;
 use App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService;
 use App\Utility\UserAccessControl;
 use Cake\ORM\TableRegistry;
@@ -31,17 +32,17 @@ class SecretsUpdateSecretsService
     /**
      * @var \App\Service\Permissions\PermissionsGetUsersIdsHavingAccessToService
      */
-    private $accessService;
+    private PermissionsGetUsersIdsHavingAccessToService $accessService;
 
     /**
      * @var \App\Service\Secrets\SecretsCreateService
      */
-    private $secretCreateService;
+    private SecretsCreateService $secretCreateService;
 
     /**
      * @var \App\Model\Table\SecretsTable
      */
-    private $secretsTable;
+    private SecretsTable $secretsTable;
 
     /**
      * Instantiate the constructor
@@ -115,7 +116,7 @@ class SecretsUpdateSecretsService
      * @return \App\Model\Entity\Secret
      * @throws \Exception
      */
-    private function updateSecret(Secret $secret, int $rowIndexRef, array $data)
+    private function updateSecret(Secret $secret, int $rowIndexRef, array $data): Secret
     {
         $patchEntityOptions = [
             'accessibleFields' => [
@@ -159,7 +160,7 @@ class SecretsUpdateSecretsService
      * @return \App\Model\Entity\Secret|null
      * @throws \Exception
      */
-    private function addSecret(UserAccessControl $uac, int $rowIndexRef, string $resourceId, array $data)
+    private function addSecret(UserAccessControl $uac, int $rowIndexRef, string $resourceId, array $data): ?Secret
     {
         $secretData = [
             'resource_id' => $resourceId,
@@ -210,7 +211,7 @@ class SecretsUpdateSecretsService
      * @param string $resourceId The target resource.
      * @return void
      */
-    private function assertAllSecretsAreProvided(string $resourceId)
+    private function assertAllSecretsAreProvided(string $resourceId): void
     {
         $usersIdsHavingAccess = $this->accessService->getUsersIdsHavingAccessTo($resourceId);
         sort($usersIdsHavingAccess);

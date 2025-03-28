@@ -17,6 +17,8 @@ declare(strict_types=1);
 
 namespace Passbolt\DirectorySync\Model\Entity;
 
+use App\Model\Entity\Group;
+use App\Model\Entity\User;
 use Cake\ORM\Entity;
 use Passbolt\DirectorySync\Utility\Alias;
 
@@ -27,10 +29,10 @@ use Passbolt\DirectorySync\Utility\Alias;
  * @property string $foreign_model
  * @property string|null $foreign_key
  * @property string $directory_name distinguished name
- * @property \Cake\I18n\FrozenTime|null $directory_created
- * @property \Cake\I18n\FrozenTime|null $directory_modified
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime|null $directory_created
+ * @property \Cake\I18n\DateTime|null $directory_modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property \Cake\ORM\Entity|null $directory_ignore
  * @property \App\Model\Entity\User|null $user
  * @property \App\Model\Entity\Group|null $group
@@ -46,7 +48,7 @@ class DirectoryEntry extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'foreign_model' => false,
         'foreign_key' => false,
         'directory_name' => false,
@@ -61,7 +63,7 @@ class DirectoryEntry extends Entity
      *
      * @return \App\Model\Entity\Group|\App\Model\Entity\User|null
      */
-    public function getAssociatedEntity()
+    public function getAssociatedEntity(): Group|User|null
     {
         if ($this->foreign_model == Alias::MODEL_GROUPS && isset($this->group)) {
             return $this->group;

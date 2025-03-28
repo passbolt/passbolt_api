@@ -35,17 +35,17 @@ class UserAccessControl
     /**
      * @var string|null
      */
-    private $userId;
+    private ?string $userId = null;
 
     /**
      * @var string
      */
-    private $roleName;
+    private string $roleName;
 
     /**
      * @var string|null
      */
-    private $username;
+    private ?string $username = null;
 
     /**
      * UserAccessControl constructor.
@@ -88,7 +88,7 @@ class UserAccessControl
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getUsername(): ?string
     {

@@ -144,7 +144,7 @@ class UsersEditAvatarControllerTest extends AppIntegrationTestCase
         /** @var \App\Model\Entity\Avatar $ireneAvatar */
         $ireneAvatar = AvatarFactory::find()
             ->contain('Profiles')
-            ->orderDesc('Avatars.created')
+            ->orderByDesc('Avatars.created')
             ->firstOrFail();
 
         $data = $data['profile']['avatar'];

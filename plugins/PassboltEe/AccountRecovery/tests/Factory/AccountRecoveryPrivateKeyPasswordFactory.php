@@ -65,28 +65,28 @@ class AccountRecoveryPrivateKeyPasswordFactory extends CakephpBaseFactory
     }
 
     /**
-     * @param UserFactory|null $factory User Factory
+     * @param UserFactory|array $factory User Factory
      * @return AccountRecoveryPrivateKeyPasswordFactory
      */
-    public function withUser(?UserFactory $factory = null)
+    public function withUser(array|UserFactory $factory = [])
     {
         return $this->with('Users', $factory);
     }
 
     /**
-     * @param UserFactory|null $factory User Factory
+     * @param UserFactory|array $factory User Factory
      * @return AccountRecoveryPrivateKeyPasswordFactory
      */
-    public function createdBy(?UserFactory $factory = null)
+    public function createdBy(array|UserFactory $factory = [])
     {
         return $this->with('Creator', $factory);
     }
 
     /**
-     * @param UserFactory|null $factory User Factory
+     * @param UserFactory|array $factory User Factory
      * @return AccountRecoveryPrivateKeyPasswordFactory
      */
-    public function modifiedBy(?UserFactory $factory = null)
+    public function modifiedBy(array|UserFactory $factory = [])
     {
         return $this->with('Modifier', $factory);
     }

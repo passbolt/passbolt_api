@@ -6,10 +6,12 @@ namespace App\Controller\Avatars;
 use App\Controller\AppController;
 use App\Service\Avatars\AvatarsCacheService;
 use App\View\Helper\AvatarHelper;
+use Cake\Event\EventInterface;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
 use Cake\Log\Log;
 use League\Flysystem\FilesystemAdapter;
+use Throwable;
 
 /**
  * AvatarsViewController
@@ -21,7 +23,7 @@ class AvatarsViewController extends AppController
     /**
      * @inheritDoc
      */
-    public function beforeFilter(\Cake\Event\EventInterface $event)
+    public function beforeFilter(EventInterface $event)
     {
         $this->Authentication->allowUnauthenticated(['view']);
 
@@ -50,7 +52,7 @@ class AvatarsViewController extends AppController
 
         try {
             $stream = $service->readSteamFromId($id, $format);
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::error($e->getMessage());
             throw new NotFoundException($e->getMessage());
         }

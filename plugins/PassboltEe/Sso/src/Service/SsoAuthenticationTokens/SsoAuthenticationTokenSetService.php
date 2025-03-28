@@ -19,6 +19,7 @@ namespace Passbolt\Sso\Service\SsoAuthenticationTokens;
 use App\Utility\ExtendedUserAccessControl;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Passbolt\Sso\Model\Entity\SsoAuthenticationToken;
+use Passbolt\Sso\Model\Table\SsoAuthenticationTokensTable;
 
 class SsoAuthenticationTokenSetService
 {
@@ -27,14 +28,13 @@ class SsoAuthenticationTokenSetService
     /**
      * @var \Passbolt\Sso\Model\Table\SsoAuthenticationTokensTable $SsoAuthenticationTokens
      */
-    protected $SsoAuthenticationTokens;
+    protected SsoAuthenticationTokensTable $SsoAuthenticationTokens;
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->SsoAuthenticationTokens = $this->fetchTable('Passbolt/Sso.SsoAuthenticationTokens');
     }
 

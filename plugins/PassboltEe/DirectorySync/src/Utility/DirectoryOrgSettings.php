@@ -16,16 +16,20 @@ declare(strict_types=1);
  */
 namespace Passbolt\DirectorySync\Utility;
 
+use App\Model\Table\OrganizationSettingsTable;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use App\Utility\UserAccessControl;
+use ArrayObject;
 use Cake\Core\Configure;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\DirectorySync\DirectorySyncPlugin;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\DirectoryEntry;
+use function file_exists;
 
 class DirectoryOrgSettings
 {
@@ -54,12 +58,12 @@ class DirectoryOrgSettings
     /**
      * @var array
      */
-    protected $settings;
+    protected array $settings;
 
     /**
      * @var \App\Model\Table\OrganizationSettingsTable
      */
-    public $OrganizationSettings;
+    public OrganizationSettingsTable $OrganizationSettings;
 
     /**
      * DirectoryOrgSettings constructor.
@@ -68,7 +72,6 @@ class DirectoryOrgSettings
      */
     public function __construct(?array $settings = [])
     {
-        /** @phpstan-ignore-next-line */
         $this->OrganizationSettings = $this->fetchTable('OrganizationSettings');
 
         // If settings is not empty, we merge with the plugin default settings.
@@ -132,7 +135,7 @@ class DirectoryOrgSettings
     private static function loadSettingsFromFile(): array
     {
         $path = CONFIG . DS . 'ldap.php';
-        if (!\file_exists($path)) {
+        if (!file_exists($path)) {
             return [];
         }
         $data = require $path;
@@ -151,7 +154,7 @@ class DirectoryOrgSettings
     public static function getDefaultSettings(): array
     {
         $path = DirectorySyncPlugin::PLUGIN_CONFIG_PATH . 'config.php';
-        if (!\file_exists($path)) {
+        if (!file_exists($path)) {
             return [];
         }
         $data = require $path;
@@ -177,7 +180,7 @@ class DirectoryOrgSettings
      *
      * @return bool
      */
-    public function isEnabled()
+    public function isEnabled(): bool
     {
         return !empty($this->settings) && !empty($this->settings['enabled']);
     }
@@ -188,7 +191,7 @@ class DirectoryOrgSettings
      * @param string $objectType The type of object to retrieve the class for
      * @return string|null
      */
-    public function getObjectClass(string $objectType)
+    public function getObjectClass(string $objectType): ?string
     {
         return Hash::get($this->settings, "{$objectType}ObjectClass");
     }
@@ -197,9 +200,9 @@ class DirectoryOrgSettings
      * Retrieve custom object path.
      *
      * @param string $objectType The type of object to retrieve the path for
-     * @return string
+     * @return string|null
      */
-    public function getObjectPath(string $objectType)
+    public function getObjectPath(string $objectType): ?string
     {
         return Hash::get($this->settings, "{$objectType}Path");
     }
@@ -209,7 +212,7 @@ class DirectoryOrgSettings
      *
      * @return string
      */
-    public function getDefaultUser()
+    public function getDefaultUser(): string
     {
         return Hash::get($this->settings, 'defaultUser');
     }
@@ -219,7 +222,7 @@ class DirectoryOrgSettings
      *
      * @return string
      */
-    public function getDefaultGroupAdminUser()
+    public function getDefaultGroupAdminUser(): string
     {
         return Hash::get($this->settings, 'defaultGroupAdminUser');
     }
@@ -227,9 +230,9 @@ class DirectoryOrgSettings
     /**
      * Get the default parent group for users.
      *
-     * @return string
+     * @return string|null
      */
-    public function getUsersParentGroup()
+    public function getUsersParentGroup(): ?string
     {
         return Hash::get($this->settings, 'usersParentGroup');
     }
@@ -237,9 +240,9 @@ class DirectoryOrgSettings
     /**
      * Get the default parent group for groups.
      *
-     * @return string
+     * @return string|null
      */
-    public function getGroupsParentGroup()
+    public function getGroupsParentGroup(): ?string
     {
         return Hash::get($this->settings, 'groupsParentGroup');
     }
@@ -247,9 +250,9 @@ class DirectoryOrgSettings
     /**
      * Get the value of enabledUsersOnly.
      *
-     * @return bool|string|null
+     * @return string|bool|null
      */
-    public function getEnabledUsersOnly()
+    public function getEnabledUsersOnly(): bool|string|null
     {
         return Hash::get($this->settings, 'enabledUsersOnly');
     }
@@ -287,9 +290,9 @@ class DirectoryOrgSettings
     /**
      * Get the ldap configuration
      *
-     * @return array
+     * @return array|null
      */
-    public function getLdapSettings(): array
+    public function getLdapSettings(): ?array
     {
         $ldapSettings = Hash::get($this->settings, 'ldap.domains');
 
@@ -299,9 +302,9 @@ class DirectoryOrgSettings
     /**
      * Get default domain if set or first domain from config
      *
-     * @return array|\ArrayAccess|mixed
+     * @return \ArrayAccess|mixed|array
      */
-    public function getDefaultDomain()
+    public function getDefaultDomain(): mixed
     {
         return Hash::get(
             $this->settings,
@@ -329,7 +332,7 @@ class DirectoryOrgSettings
      *
      * @return mixed
      */
-    public function getUseEmailPrefixSuffix()
+    public function getUseEmailPrefixSuffix(): mixed
     {
         return Hash::get($this->settings, 'useEmailPrefixSuffix');
     }
@@ -339,7 +342,7 @@ class DirectoryOrgSettings
      *
      * @return mixed
      */
-    public function getEmailPrefix()
+    public function getEmailPrefix(): mixed
     {
         return Hash::get($this->settings, 'emailPrefix');
     }
@@ -349,7 +352,7 @@ class DirectoryOrgSettings
      *
      * @return mixed
      */
-    public function getEmailSuffix()
+    public function getEmailSuffix(): mixed
     {
         return Hash::get($this->settings, 'emailSuffix');
     }
@@ -359,7 +362,7 @@ class DirectoryOrgSettings
      *
      * @return mixed (should be string)
      */
-    public function getUserCustomFilters()
+    public function getUserCustomFilters(): mixed
     {
         return Hash::get($this->settings, 'userCustomFilters');
     }
@@ -369,7 +372,7 @@ class DirectoryOrgSettings
      *
      * @return mixed (should be string)
      */
-    public function getGroupCustomFilters()
+    public function getGroupCustomFilters(): mixed
     {
         return Hash::get($this->settings, 'groupCustomFilters');
     }
@@ -379,7 +382,7 @@ class DirectoryOrgSettings
      *
      * @return mixed
      */
-    public function getSource()
+    public function getSource(): mixed
     {
         return Hash::get($this->settings, 'source');
     }
@@ -400,7 +403,7 @@ class DirectoryOrgSettings
      * @param array $settings The new settings
      * @return void
      */
-    public function set($settings): void
+    public function set(array $settings): void
     {
         $this->settings = $settings;
     }
@@ -413,7 +416,7 @@ class DirectoryOrgSettings
      */
     public function save(UserAccessControl $uac): void
     {
-        $settings = new \ArrayObject($this->settings);
+        $settings = new ArrayObject($this->settings);
         $settings = $settings->getArrayCopy();
         $domains = Hash::get($settings, 'ldap.domains', []);
         foreach ($domains as $domain => $properties) {
@@ -442,13 +445,13 @@ class DirectoryOrgSettings
         try {
             $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
             $gpg->setEncryptKeyFromFingerprint($fingerprint);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 // Try again by importing key into keyring
                 $gpg->importServerKeyInKeyring();
                 $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
                 $gpg->setEncryptKeyFromFingerprint($fingerprint);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
 
@@ -474,11 +477,11 @@ class DirectoryOrgSettings
 
         try {
             $gpg->setDecryptKeyFromFingerprint($keyid, $passphrase);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
                 $gpg->setDecryptKeyFromFingerprint($keyid, $passphrase);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);

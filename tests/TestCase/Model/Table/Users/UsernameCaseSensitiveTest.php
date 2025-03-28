@@ -132,14 +132,14 @@ class UsernameCaseSensitiveTest extends TestCase
     {
         UserFactory::make(rand(3, 5))->persist();
         $duplicatesCaseInsensitive = $this->Users->listDuplicateUsernames();
-        $this->assertSame(0, $duplicatesCaseInsensitive->count());
+        $this->assertSame(0, $duplicatesCaseInsensitive->all()->count());
     }
 
     public function testUsernameCaseSensitive_listDuplicateUsernamesCaseInsensitive()
     {
         // Create a bunch of users, keep the first one
         UserFactory::make(rand(3, 5))->persist();
-        [$user1, $user2] = UserFactory::find()->orderAsc('username')->toArray();
+        [$user1, $user2] = UserFactory::find()->orderByAsc('username')->toArray();
 
         // Create resp. 1 user with the same username but upper case
         $nDuplicatesUpperCase1 = 1;
@@ -196,7 +196,7 @@ class UsernameCaseSensitiveTest extends TestCase
         // Query with case sensitivity off, both queries retrieve all users
         /** @var User[] $queriedUsers */
         $queriedUsers = $this->Users->findByUsernameCaseAware($lowerUsername)
-            ->orderAsc('active')
+            ->orderByAsc('active')
             ->toArray();
 
         $this->assertSame($nLowerCased + $nUpperCased, count($queriedUsers));

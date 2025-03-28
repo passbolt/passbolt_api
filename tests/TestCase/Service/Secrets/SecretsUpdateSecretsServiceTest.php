@@ -35,7 +35,7 @@ use Cake\Utility\Hash;
  */
 class SecretsUpdateSecretsServiceTest extends AppTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups',
         'app.Base/GroupsUsers',
         'app.Base/Permissions',
@@ -106,7 +106,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
     public function testUpdateSecretsError_AddSecrets_NotAllSecretsProvided()
     {
-        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsError_AddSecrets_NotAllSecretsProvided();
+        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsError_AddSecrets_NotAllSecretsProvided(); // phpcs:ignore
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [];
@@ -192,7 +192,7 @@ class SecretsUpdateSecretsServiceTest extends AppTestCase
 
     public function testUpdateSecretsSuccess_DeleteSecrets()
     {
-        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsSuccess_DeleteSecrets();
+        [$resource1, $userAId, $userBId] = $this->insertFixture_UpdateSecretsSuccess_DeleteSecrets(); // phpcs:ignore
 
         $uac = new UserAccessControl(Role::USER, $userAId);
         $data = [];
