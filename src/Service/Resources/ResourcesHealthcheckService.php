@@ -31,7 +31,7 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $table;
+    private ResourcesTable $table;
 
     /**
      * Resources Healthcheck constructor.
@@ -52,7 +52,7 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
     {
         $records = $this->table->find()->all();
 
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 
@@ -65,7 +65,7 @@ class ResourcesHealthcheckService extends AbstractHealthcheckService
      * @param \App\Model\Entity\Resource $resource resource
      * @return void
      */
-    private function canValidate(Resource $resource)
+    private function canValidate(Resource $resource): void
     {
         $copy = $this->table->newEntity($resource->toArray());
         $error = $copy->getErrors();

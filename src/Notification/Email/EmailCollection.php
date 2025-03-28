@@ -26,12 +26,12 @@ namespace App\Notification\Email;
 class EmailCollection
 {
     /**
-     * @var \App\Notification\Email\Email[]
+     * @var array<\App\Notification\Email\Email>
      */
     private array $emails = [];
 
     /**
-     * @param \App\Notification\Email\Email[] $emails A list of emails
+     * @param array<\App\Notification\Email\Email> $emails A list of emails
      */
     public function __construct(array $emails = [])
     {
@@ -58,7 +58,7 @@ class EmailCollection
     }
 
     /**
-     * @return \App\Notification\Email\Email[]
+     * @return array<\App\Notification\Email\Email>
      */
     public function getEmails(): array
     {

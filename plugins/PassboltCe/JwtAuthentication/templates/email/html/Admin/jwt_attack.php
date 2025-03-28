@@ -14,7 +14,7 @@
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 $user = $body['user'];
 $ip = $body['ip'];
@@ -24,7 +24,7 @@ echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($user['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $user,
-        'datetime' => FrozenTime::now(),
+        'datetime' => \Cake\I18n\DateTime::now(),
         'text' => __('Security warning!')
     ])
 ]);

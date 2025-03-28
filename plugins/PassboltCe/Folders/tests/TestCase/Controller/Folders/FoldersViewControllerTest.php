@@ -62,7 +62,7 @@ class FoldersViewControllerTest extends FoldersIntegrationTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         GpgkeysFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,

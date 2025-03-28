@@ -23,6 +23,7 @@ use Cake\Routing\Router;
 use Cake\Validation\Validation;
 use Duo\DuoUniversal\Client;
 use Duo\DuoUniversal\DuoException;
+use InvalidArgumentException;
 use Passbolt\MultiFactorAuthentication\Service\MfaOrgSettings\MfaOrgSettingsDuoService;
 
 /**
@@ -64,7 +65,7 @@ class MfaDuoGetSdkClientService
         if (!Validation::inList($tokenType, MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES)) {
             $readableAllowedTokenTypes = implode(', ', MfaDuoCallbackAuthenticationTokenService::$ALLOWED_TOKEN_TYPES);
             $msg = 'The authentication token type should be one of the following: ' . $readableAllowedTokenTypes . '.';
-            throw new \InvalidArgumentException($msg);
+            throw new InvalidArgumentException($msg);
         }
         $path = $tokenType === AuthenticationToken::TYPE_MFA_SETUP ? 'setup' : 'verify';
         $url = '/mfa/' . $path . '/duo/callback';

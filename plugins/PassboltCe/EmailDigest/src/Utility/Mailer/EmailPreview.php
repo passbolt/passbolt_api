@@ -27,12 +27,12 @@ class EmailPreview
     /**
      * @var string
      */
-    private $headers;
+    private string $headers;
 
     /**
      * @var string
      */
-    private $content;
+    private string $content;
 
     /**
      * @param string $headers Headers for the email

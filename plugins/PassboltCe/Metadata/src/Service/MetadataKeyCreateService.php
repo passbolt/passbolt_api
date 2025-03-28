@@ -22,6 +22,7 @@ use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Exception;
 use Passbolt\Metadata\Model\Dto\MetadataKeyCreateDto;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 
@@ -102,7 +103,7 @@ class MetadataKeyCreateService
                 __('The metadata key could not be saved.'),
                 $errors
             );
-        } catch (\Exception $e) { // @phpstan-ignore-line
+        } catch (Exception $e) { // @phpstan-ignore-line
             throw new InternalErrorException(__('Could not save the metadata key, please try again later.'), null, $e);
         }
 

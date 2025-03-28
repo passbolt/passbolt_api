@@ -31,7 +31,7 @@ class PermissionsHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $table;
+    private PermissionsTable $table;
 
     /**
      * Permissions Healthcheck constructor.
@@ -52,7 +52,7 @@ class PermissionsHealthcheckService extends AbstractHealthcheckService
     {
         $records = $this->table->find()->all();
 
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 
@@ -65,7 +65,7 @@ class PermissionsHealthcheckService extends AbstractHealthcheckService
      * @param \App\Model\Entity\Permission $permission permission
      * @return void
      */
-    private function canValidate(Permission $permission)
+    private function canValidate(Permission $permission): void
     {
         $copy = $this->table->newEntity($permission->toArray());
         $error = $copy->getErrors();

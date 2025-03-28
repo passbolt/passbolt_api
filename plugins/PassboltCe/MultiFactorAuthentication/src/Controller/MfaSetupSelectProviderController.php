@@ -28,7 +28,7 @@ class MfaSetupSelectProviderController extends MfaController
     {
         $body = $this->mfaSettings->getProvidersStatuses();
         $isMfaPossible = false;
-        foreach ($body[MfaSettings::ORG_SETTINGS] as $provider => $enabled) {
+        foreach ($body[MfaSettings::ORG_SETTINGS] as $enabled) {
             if ($enabled) {
                 $isMfaPossible = true;
                 break;

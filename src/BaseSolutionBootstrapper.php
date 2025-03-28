@@ -108,7 +108,7 @@ class BaseSolutionBootstrapper
      * @param \Cake\Core\PluginApplicationInterface $app Application
      * @param string $name Name of the plugin (without the "Passbolt/" prefix)
      * @param array $config Plugin loading config, will be merged with ['bootstrap' => true, 'routes' => true]
-     * @param bool|callable $isEnabledByDefault Boolean or callback indicating if the plugin should be loaded by default, if not priorly enabled in configurations. False by default.
+     * @param callable|bool $isEnabledByDefault Boolean or callback indicating if the plugin should be loaded by default, if not priorly enabled in configurations. False by default.
      * @return self
      * @throws \TypeError if the callable $isEnabledByDefault does not return a boolean.
      */
@@ -116,7 +116,7 @@ class BaseSolutionBootstrapper
         PluginApplicationInterface $app,
         string $name,
         array $config = [],
-        $isEnabledByDefault = false
+        bool|callable $isEnabledByDefault = false
     ): self {
         $config = array_merge(['bootstrap' => true, 'routes' => true], $config);
 

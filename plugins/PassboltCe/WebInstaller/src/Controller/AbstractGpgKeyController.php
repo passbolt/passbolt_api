@@ -21,6 +21,7 @@ use Cake\Core\Exception\CakeException;
 use Cake\Log\Log;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetSettingsInDbService;
 use Passbolt\WebInstaller\Utility\DatabaseConfiguration;
+use Throwable;
 
 abstract class AbstractGpgKeyController extends WebInstallerController
 {
@@ -93,7 +94,7 @@ abstract class AbstractGpgKeyController extends WebInstallerController
         try {
             DatabaseConfiguration::setDefaultConfig($dbSettings);
             $smtpSettingsInDb = (new SmtpSettingsGetSettingsInDbService())->getSettings();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::error($e->getMessage());
 
             return false;

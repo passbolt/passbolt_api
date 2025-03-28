@@ -81,36 +81,6 @@ parameters:
 			path: plugins/PassboltCe/Reports/src/Controller/Reports/ReportsViewController.php
 
 		-
-			message: "#^Property Passbolt\\\\Reports\\\\Utility\\\\AbstractReport\\:\\:\\$template \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Reports/src/Utility/AbstractCombinedReport.php
-
-		-
-			message: "#^Property Passbolt\\\\Reports\\\\Utility\\\\AbstractReport\\:\\:\\$creator \\(App\\\\Model\\\\Entity\\\\User\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Reports/src/Utility/AbstractReport.php
-
-		-
-			message: "#^Property Passbolt\\\\Reports\\\\Utility\\\\AbstractReport\\:\\:\\$options \\(App\\\\Model\\\\Table\\\\Dto\\\\FindIndexOptions\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Reports/src/Utility/AbstractReport.php
-
-		-
-			message: "#^Property Passbolt\\\\Reports\\\\Utility\\\\AbstractReport\\:\\:\\$template \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: plugins/PassboltCe/Reports/src/Utility/AbstractSingleReport.php
-
-		-
-			message: "#^Call to method getMessage\\(\\) on an unknown class Cake\\\\Core\\\\Exception\\\\Exception\\.$#"
-			count: 1
-			path: plugins/PassboltCe/SmtpSettings/src/Service/SmtpSettingsGetSettingsInDbService.php
-
-		-
-			message: "#^Caught class Cake\\\\Core\\\\Exception\\\\Exception not found\\.$#"
-			count: 2
-			path: plugins/PassboltCe/SmtpSettings/src/Service/SmtpSettingsGetSettingsInDbService.php
-
-		-
 			message: "#^PHPDoc type array of property App\\\\Authenticator\\\\GpgAuthenticator\\:\\:\\$_config is not covariant with PHPDoc type array\\<string, mixed\\> of overridden property Authentication\\\\Authenticator\\\\AbstractAuthenticator\\:\\:\\$_config\\.$#"
 			count: 1
 			path: src/Authenticator/GpgAuthenticator.php
@@ -154,16 +124,6 @@ parameters:
 			message: "#^If condition is always false\\.$#"
 			count: 1
 			path: src/Model/Table/UsersTable.php
-
-		-
-			message: "#^Property Cake\\\\Validation\\\\ValidationRule\\:\\:\\$_message \\(string\\) on left side of \\?\\? is not nullable\\.$#"
-			count: 1
-			path: src/Model/Validation/PassboltValidationRule.php
-
-		-
-			message: "#^Property App\\\\Service\\\\AuthenticationTokens\\\\AuthenticationTokenGetService\\:\\:\\$AuthenticationTokens \\(App\\\\Model\\\\Table\\\\AuthenticationTokensTable\\) does not accept Cake\\\\ORM\\\\Table\\.$#"
-			count: 1
-			path: src/Service/AuthenticationTokens/AuthenticationTokenGetService.php
 
 		-
 			message: "#^Dead catch \\- Cake\\\\Datasource\\\\Exception\\\\RecordNotFoundException is never thrown in the try block\\.$#"

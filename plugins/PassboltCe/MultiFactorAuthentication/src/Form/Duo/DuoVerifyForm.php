@@ -25,7 +25,7 @@ class DuoVerifyForm extends MfaForm
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
-    protected $settings;
+    protected MfaSettings $settings;
 
     /**
      * VerifyForm constructor.

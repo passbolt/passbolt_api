@@ -17,12 +17,14 @@ declare(strict_types=1);
 namespace Passbolt\JwtAuthentication\Service\RefreshToken;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
 use Cake\Core\Configure;
 use Cake\Http\Cookie\Cookie;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ConsumedRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\ExpiredRefreshTokenAccessException;
 use Passbolt\JwtAuthentication\Error\Exception\RefreshToken\RefreshTokenNotFoundException;
@@ -44,14 +46,13 @@ abstract class RefreshTokenAbstractService
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * RefreshTokenCreateService constructor.
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
@@ -62,7 +63,7 @@ abstract class RefreshTokenAbstractService
     public function createHttpOnlySecureCookie(AuthenticationToken $token): Cookie
     {
         $cookie = new Cookie(self::REFRESH_TOKEN_COOKIE, $token->token);
-        $expiry = new FrozenTime(
+        $expiry = new DateTime(
             '+' . Configure::read(self::REFRESH_TOKEN_EXPIRY_CONFIG_KEY)
         );
 
@@ -99,10 +100,10 @@ abstract class RefreshTokenAbstractService
      * @return void
      * @throws \InvalidArgumentException if the $token is not valid
      */
-    public function validateRefreshToken($token): void
+    public function validateRefreshToken(mixed $token): void
     {
         if (!Validation::uuid($token)) {
-            throw new \InvalidArgumentException(__('The refresh token should be a valid UUID.'));
+            throw new InvalidArgumentException(__('The refresh token should be a valid UUID.'));
         }
     }
 
@@ -111,18 +112,18 @@ abstract class RefreshTokenAbstractService
      * @return void
      * @throws \InvalidArgumentException if the $id is not valid
      */
-    public function validateUserId($userId): void
+    public function validateUserId(mixed $userId): void
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException(__('The user ID should be a valid UUID.'));
+            throw new InvalidArgumentException(__('The user ID should be a valid UUID.'));
         }
     }
 
     /**
      * @param string|null $token Refresh token
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function queryRefreshToken(?string $token): Query
+    public function queryRefreshToken(?string $token): SelectQuery
     {
         $this->validateRefreshToken($token);
 
@@ -135,10 +136,10 @@ abstract class RefreshTokenAbstractService
     /**
      * @param string $token Refresh token
      * @param string $userId User ID
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      * @throws \InvalidArgumentException if the $id is not valid
      */
-    public function queryRefreshTokenWithUserId(string $token, string $userId): Query
+    public function queryRefreshTokenWithUserId(string $token, string $userId): SelectQuery
     {
         $this->validateUserId($userId);
 

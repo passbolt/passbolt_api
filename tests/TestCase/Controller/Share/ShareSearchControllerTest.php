@@ -48,7 +48,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
         $readingUser = UserFactory::make()->user()->persist();
         $inactiveUser = UserFactory::make()->inactive()->persist();
         $deletedUser = UserFactory::make()->deleted()->persist();
-        $useless = UserFactory::make()->guest()->persist();
+        UserFactory::make()->guest()->persist();
         $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
         $resourceId = ResourceFactory::make()->withPermissionsFor([$user], Permission::OWNER)->withPermissionsFor([$readingUser], Permission::READ)->persist()->get('id');
 
@@ -129,7 +129,7 @@ class ShareSearchControllerTest extends AppIntegrationTestCase
     {
         $user = UserFactory::make()->user()->persist();
         $this->loginAs($user);
-        $useless = UserFactory::make()->guest()->persist();
+        UserFactory::make()->guest()->persist();
         $group = GroupFactory::make()->withGroupsManagersFor([$user])->persist();
         $groupId = $group->get('id');
         $groupName = $group->get('name');

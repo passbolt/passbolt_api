@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Controller\Upgrade;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use App\Model\Table\ResourcesTable;
 use Passbolt\Metadata\Service\MetadataResourcesRenderService;
 use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeResourcesUpdateService;
 
@@ -29,7 +30,7 @@ class MetadataUpgradeResourcesPostController extends AppController
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @inheritDoc

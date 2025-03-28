@@ -18,7 +18,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Utility;
 
 use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Passbolt\MultiFactorAuthentication\Service\ActionLogs\MfaSortWithLastUsedProviderFirstService;
@@ -34,7 +34,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
     /**
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'plugin.Passbolt/AccountSettings.AccountSettings',
         'app.Base/Users',
         'app.Base/Roles',
@@ -89,7 +89,7 @@ class MfaSettingsTest extends MfaIntegrationTestCase
                 MfaSettings::PROVIDER_TOTP,
             ],
             MfaSettings::PROVIDER_TOTP => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => DateTime::now(),
                 MfaAccountSettings::OTP_PROVISIONING_URI => MfaOtpFactory::generateTOTP($this->uac),
             ],
         ];
@@ -240,14 +240,14 @@ class MfaSettingsTest extends MfaIntegrationTestCase
                 MfaSettings::PROVIDER_DUO,
             ],
             MfaSettings::PROVIDER_DUO => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => DateTime::now(),
             ],
             MfaSettings::PROVIDER_YUBIKEY => [
                 // missing keyid
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => DateTime::now(),
             ],
             MfaSettings::PROVIDER_TOTP => [
-                MfaAccountSettings::VERIFIED => FrozenTime::now(),
+                MfaAccountSettings::VERIFIED => DateTime::now(),
                 MfaAccountSettings::OTP_PROVISIONING_URI => MfaOtpFactory::generateTOTP($this->uac),
             ],
         ];

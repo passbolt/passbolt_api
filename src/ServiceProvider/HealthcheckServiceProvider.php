@@ -85,7 +85,7 @@ use Passbolt\SelfRegistration\Service\Healthcheck\SelfRegistrationHealthcheckSer
 
 class HealthcheckServiceProvider extends ServiceProvider
 {
-    protected $provides = [
+    protected array $provides = [
         DistributionHealthcheck::class,
         HealthcheckServiceCollector::class,
         PhpVersionHealthcheck::class,

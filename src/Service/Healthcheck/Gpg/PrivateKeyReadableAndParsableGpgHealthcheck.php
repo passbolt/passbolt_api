@@ -56,7 +56,7 @@ class PrivateKeyReadableAndParsableGpgHealthcheck extends AbstractGpgHealthcheck
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Ensure the private key file is defined by the variable passbolt.gpg.serverKey.private in {0}.', CONFIG . 'passbolt.php'),// phpcs:ignore

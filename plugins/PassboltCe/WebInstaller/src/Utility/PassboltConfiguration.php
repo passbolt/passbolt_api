@@ -49,7 +49,7 @@ class PassboltConfiguration
      * @param mixed $settings An array of settings or a scalar to sanitize.
      * @return mixed
      */
-    protected function sanitize($settings)
+    protected function sanitize(mixed $settings): mixed
     {
         if (is_scalar($settings) || is_null($settings)) {
             if (is_string($settings)) {

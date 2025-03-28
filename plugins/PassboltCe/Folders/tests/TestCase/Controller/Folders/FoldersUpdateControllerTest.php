@@ -42,7 +42,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
     GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -54,7 +54,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateSuccess_UpdateName()
     {
-        [$folderA, $userAId] = $this->insertFixture_UpdateName();
+        [$folderA, $userAId] = $this->insertFixture_UpdateName(); // phpcs:ignore
 
         $data = ['name' => 'A updated'];
         $this->authenticateAs('ada');
@@ -87,7 +87,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateError_ValidationErrors()
     {
-        [$folderA, $userAId] = $this->insertFixture_UpdateName();
+        [$folderA, $userAId] = $this->insertFixture_UpdateName(); // phpcs:ignore
         $this->authenticateAs('ada');
         $data = ['name' => ''];
         $this->putJson("/folders/$folderA->id.json?api-version=2", $data);
@@ -105,7 +105,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersResourcesUpdateError_InsufficientPermission()
     {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
         $data = [
             'name' => 'A updated',
         ];
@@ -144,7 +144,7 @@ class FoldersUpdateControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersUpdateResourcesError_NoAccessToFolder()
     {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
         $this->authenticateAs('dame');
         $data = ['name' => 'A updated'];
         $this->putJson("/folders/$folderA->id.json", $data);

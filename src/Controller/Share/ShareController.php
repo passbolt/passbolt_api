@@ -20,6 +20,8 @@ namespace App\Controller\Share;
 use App\Controller\AppController;
 use App\Model\Entity\Permission;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
+use App\Model\Table\UsersTable;
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Service\Resources\ResourcesShareService;
 use Cake\Datasource\Exception\RecordNotFoundException;
@@ -38,12 +40,12 @@ class ShareController extends AppController
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    protected $Resources;
+    protected ResourcesTable $Resources;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @inheritDoc

@@ -22,6 +22,7 @@ use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Model\AuthenticationTokenModelTrait;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use InvalidArgumentException;
 
 class SetInactiveTest extends AppTestCase
 {
@@ -29,7 +30,7 @@ class SetInactiveTest extends AppTestCase
 
     public $AuthenticationTokens;
 
-    public $fixtures = [ 'app.Base/Users'];
+    public array $fixtures = [ 'app.Base/Users'];
 
     public function setUp(): void
     {
@@ -44,7 +45,7 @@ class SetInactiveTest extends AppTestCase
      */
     public function testAuthenticationTokensSetInactiveInvalidToken()
     {
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->AuthenticationTokens->setInactive('nope');
     }
 

@@ -27,6 +27,7 @@ use Cake\Http\Exception\NotFoundException;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Exception;
 use Passbolt\Metadata\Form\MetadataCleartextPrivateKeyForm;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\MetadataKeyCreateService;
@@ -113,7 +114,7 @@ class GenerateDummyMetadataKeyService extends MetadataKeyShareDefaultService
                 'created_by' => null,
                 'modified_by' => null,
             ];
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('Could not prepare private key for server key.')
                 . ' ' . $exception->getMessage();
             Log::error($msg);
@@ -130,7 +131,7 @@ class GenerateDummyMetadataKeyService extends MetadataKeyShareDefaultService
     {
         $data = [];
         $userTable = $this->fetchTable('Users');
-        /** @var \App\Model\Entity\User[] $users */
+        /** @var array<\App\Model\Entity\User> $users */
         $users = $userTable->find('activeNotDeleted')->contain('Gpgkeys')->all();
         $gpg = OpenPGPBackendFactory::get();
         foreach ($users as $user) {
@@ -154,7 +155,7 @@ class GenerateDummyMetadataKeyService extends MetadataKeyShareDefaultService
                     'created_by' => null,
                     'modified_by' => null,
                 ];
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('Could not prepare private key for user id {0}.', $user->id)
                     . ' ' . $exception->getMessage();
                 Log::error($msg);

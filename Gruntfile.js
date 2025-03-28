@@ -97,14 +97,11 @@ module.exports = function(grunt) {
             // Default Avatars
             'avatar/**',
             // Passbolt logos
-            'logo/icon-20_white.png', 'logo/icon-20_grey.png', 'logo/icon-20.png',
-            'logo/icon-48_white.png', 'logo/icon-48.png',
-            'logo/logo.png', 'logo/logo@2x.png', 'logo/logo.svg', 'logo/logo_white.svg', 'logo/logo_white.png',
+            'logo/logo.png', 'logo/logo.svg', 'logo/logo_white.svg',
             // Image for inputs and controls
             'controls/check_black.svg',
-            'controls/check_white.svg',
+            'controls/check_tick.svg',
             'controls/chevron-down_black.svg',
-            'controls/chevron-down_white.svg',
             'controls/chevron-down_blue.svg',
             'controls/dot_white.svg',
             'controls/dot_red.svg',
@@ -118,13 +115,6 @@ module.exports = function(grunt) {
             'controls/warning.svg',
             'controls/attention.svg',
             // Login page 3rd party logo
-            'third_party/firefox_logo.png',
-            'third_party/FirefoxAMO_black.svg',
-            'third_party/FirefoxAMO_white.svg',
-            'third_party/ChromeWebStore_black.svg',
-            'third_party/ChromeWebStore_white.svg',
-            'third_party/edge-addon-black.svg',
-            'third_party/edge-addon-white.svg',
             'third_party/chosen-sprite.png',
             'third_party/chosen-sprite@2x.png',
             'third_party/firefox.svg',
@@ -135,7 +125,6 @@ module.exports = function(grunt) {
 
             // Smtp provider 3rd party logo
             'third_party/aws-ses.svg',
-            'third_party/azure.svg',
             'third_party/elastic-email.svg',
             'third_party/gmail.svg',
             'third_party/mailgun.svg',

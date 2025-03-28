@@ -42,8 +42,8 @@ class EmailDigestService
     /**
      * Handle the emails data for each recipient and transform them to emails digests
      *
-     * @param \Cake\ORM\Entity[] $emails An array of emails entities from email queue.
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
+     * @param array<\Cake\ORM\Entity> $emails An array of emails entities from email queue.
+     * @return array<\Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface>
      * @throws \Passbolt\EmailDigest\Exception\UnsupportedEmailDigestDataException
      */
     public function createEmailDigests(array $emails): array

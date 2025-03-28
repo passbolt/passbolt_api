@@ -22,7 +22,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Passbolt\Metadata\MetadataPlugin;
@@ -282,8 +282,8 @@ class MetadataKeyCreateControllerTest extends AppIntegrationTestCaseV5
                     'data' => $this->getEncryptedMetadataPrivateKeyFoUser(),
                 ],
             ],
-            'deleted' => FrozenTime::yesterday()->format('Y-m-d H:i:s'),
-            'expired' => FrozenTime::yesterday()->format('Y-m-d H:i:s'),
+            'deleted' => DateTime::yesterday()->format('Y-m-d H:i:s'),
+            'expired' => DateTime::yesterday()->format('Y-m-d H:i:s'),
         ]);
 
         $this->assertResponseCode(400);

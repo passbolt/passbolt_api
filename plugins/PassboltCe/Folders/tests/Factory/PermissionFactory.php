@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Test\Factory;
 
 use App\Model\Table\PermissionsTable;
+use App\Test\Factory\PermissionFactory as AppPermissionFactory;
 use Passbolt\Folders\FoldersPlugin;
 use Passbolt\Folders\Model\Entity\Folder;
 
@@ -27,7 +28,7 @@ use Passbolt\Folders\Model\Entity\Folder;
  * @method \App\Model\Entity\Permission getEntity()
  * @method \App\Model\Entity\Permission[] getEntities()
  */
-class PermissionFactory extends \App\Test\Factory\PermissionFactory
+class PermissionFactory extends AppPermissionFactory
 {
     public function initialize(): void
     {
@@ -38,10 +39,10 @@ class PermissionFactory extends \App\Test\Factory\PermissionFactory
     /**
      * Define the associated folder aco
      *
-     * @param FolderFactory|null $factory
+     * @param FolderFactory|array $factory
      * @return PermissionFactory
      */
-    public function withAcoFolder(?FolderFactory $factory = null): self
+    public function withAcoFolder(array|FolderFactory $factory = []): self
     {
         $this->patchData(['aco' => PermissionsTable::FOLDER_ACO]);
 

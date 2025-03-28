@@ -19,6 +19,7 @@ namespace App\Command;
 use App\Model\Entity\Role;
 use App\Utility\UserAccessControl;
 use App\Utility\UserAction;
+use Exception;
 
 /**
  * App Shell Bootstrap
@@ -35,7 +36,7 @@ class CommandBootstrap
      *
      * @var \App\Command\CommandBootstrap|null
      */
-    private static $instance = null;
+    private static ?CommandBootstrap $instance = null;
 
     /**
      * Init function.
@@ -58,7 +59,7 @@ class CommandBootstrap
      *
      * @return void
      */
-    private function _initUserAction()
+    private function _initUserAction(): void
     {
         // Context will look like the example below:
         // CMD passbolt install --no-admin
@@ -68,7 +69,7 @@ class CommandBootstrap
 
         try {
             UserAction::getInstance();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $uac = new UserAccessControl(Role::GUEST, null);
             UserAction::getInstance($uac, 'shell', $context);
         }

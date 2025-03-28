@@ -22,6 +22,7 @@ use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Exception;
 use Passbolt\Metadata\Model\Entity\MetadataSessionKey;
 
 class MetadataSessionKeyCreateService
@@ -33,7 +34,7 @@ class MetadataSessionKeyCreateService
      * @param mixed $data Encrypted data to store.
      * @return \Passbolt\Metadata\Model\Entity\MetadataSessionKey
      */
-    public function create(UserAccessControl $uac, $data): MetadataSessionKey
+    public function create(UserAccessControl $uac, mixed $data): MetadataSessionKey
     {
         $this->assertData($data);
 
@@ -54,7 +55,7 @@ class MetadataSessionKeyCreateService
                 __('The metadata session key could not be saved.'),
                 $errors
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new InternalErrorException(
                 __('Could not save the metadata session key, please try again later.'),
                 null,
@@ -71,7 +72,7 @@ class MetadataSessionKeyCreateService
      * @param mixed $data Data to check.
      * @return void
      */
-    private function assertData($data): void
+    private function assertData(mixed $data): void
     {
         if (!is_string($data)) {
             throw new BadRequestException(__('The data must be a string.'));

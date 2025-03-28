@@ -39,6 +39,6 @@ abstract class MetadataBatchUpgradeValidationService extends MetadataBatchUpdate
             ->where([
                 $Table->aliasField('id') . ' IN' => $entityIds,
             ])
-            ->orderDesc($Table->aliasField('id'));
+            ->orderByDesc($Table->aliasField('id'));
     }
 }

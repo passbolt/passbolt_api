@@ -29,7 +29,7 @@ class APCanRegisterAndRecoverAndReachSetupTest extends AppIntegrationTestCase
     use EmailQueueTrait;
     use SelfRegistrationTestTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles', 'app.Base/Permissions', 'app.Base/Favorites',
         'app.Base/Gpgkeys',
     ];

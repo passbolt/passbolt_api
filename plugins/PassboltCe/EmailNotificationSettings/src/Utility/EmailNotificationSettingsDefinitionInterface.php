@@ -20,6 +20,7 @@ namespace Passbolt\EmailNotificationSettings\Utility;
 use Cake\Event\EventListenerInterface;
 use Cake\Form\Schema;
 use Cake\Validation\Validator;
+use Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ReadableEmailNotificationSettingsSourceInterface; // phpcs:ignore
 
 interface EmailNotificationSettingsDefinitionInterface extends EventListenerInterface
 {
@@ -30,7 +31,7 @@ interface EmailNotificationSettingsDefinitionInterface extends EventListenerInte
      * @param \Cake\Form\Schema $schema Schema instance
      * @return \Cake\Form\Schema
      */
-    public function buildSchema(Schema $schema);
+    public function buildSchema(Schema $schema): Schema;
 
     /**
      * Allow to define new rules on the validator instance passed by the EmailNotificationSettingsForm
@@ -38,10 +39,10 @@ interface EmailNotificationSettingsDefinitionInterface extends EventListenerInte
      * @param \Cake\Validation\Validator $validator Validator instance
      * @return \Cake\Validation\Validator
      */
-    public function buildValidator(Validator $validator);
+    public function buildValidator(Validator $validator): Validator;
 
     /**
      * @return \Passbolt\EmailNotificationSettings\Utility\NotificationSettingsSource\ReadableEmailNotificationSettingsSourceInterface
      */
-    public function getDefaultSettingsSource();
+    public function getDefaultSettingsSource(): ReadableEmailNotificationSettingsSourceInterface;
 }

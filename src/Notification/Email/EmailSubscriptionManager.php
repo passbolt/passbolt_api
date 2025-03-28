@@ -50,7 +50,7 @@ class EmailSubscriptionManager
 
     /**
      * @param \Cake\Event\Event $event Event object
-     * @return \App\Notification\Email\SubscribedEmailRedactorInterface[]
+     * @return array<\App\Notification\Email\SubscribedEmailRedactorInterface>
      */
     public function getSubscriptionsForEvent(Event $event): array
     {

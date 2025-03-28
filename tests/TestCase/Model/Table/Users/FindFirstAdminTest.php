@@ -22,6 +22,7 @@ use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
+use Throwable;
 
 class FindFirstAdminTest extends TestCase
 {
@@ -48,7 +49,7 @@ class FindFirstAdminTest extends TestCase
     {
         try {
             $this->Users->findFirstAdminOrThrowNoAdminInDbException();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->assertInstanceOf(NoAdminInDbException::class, $e);
         }
 

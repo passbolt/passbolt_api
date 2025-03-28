@@ -37,7 +37,7 @@ class PermissionsModelInitializeEventListener implements EventListenerInterface
     public function implementedEvents(): array
     {
         return [
-            'Model.initialize' => $this,
+            'Model.initialize' => 'addPermissionsCleanupBehavior',
         ];
     }
 
@@ -45,7 +45,7 @@ class PermissionsModelInitializeEventListener implements EventListenerInterface
      * @param \Cake\Event\EventInterface $event Event
      * @return void
      */
-    public function __invoke(EventInterface $event)
+    public function addPermissionsCleanupBehavior(EventInterface $event): void
     {
         if ($event->getSubject() instanceof PermissionsTable) {
             /** @var \Cake\ORM\Table $table */

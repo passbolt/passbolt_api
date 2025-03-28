@@ -18,8 +18,8 @@ declare(strict_types=1);
 namespace App\Model\Validation\DateTime;
 
 use App\Model\Validation\PassboltValidationRule;
-use Cake\Chronos\ChronosInterface;
-use Cake\I18n\FrozenTime;
+use Cake\Chronos\Chronos;
+use Cake\I18n\DateTime;
 
 /**
  * Check if a key date is set in the future
@@ -40,10 +40,10 @@ class IsDateInFutureValidationRule extends PassboltValidationRule
      */
     public function rule($value, $context): bool
     {
-        if (!($value instanceof ChronosInterface)) {
+        if (!($value instanceof Chronos)) {
             return false;
         }
 
-        return $value->greaterThan(FrozenTime::now());
+        return $value->greaterThan(DateTime::now());
     }
 }

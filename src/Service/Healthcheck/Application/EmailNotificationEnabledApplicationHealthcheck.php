@@ -85,7 +85,7 @@ class EmailNotificationEnabledApplicationHealthcheck implements HealthcheckServi
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

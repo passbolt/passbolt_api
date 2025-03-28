@@ -72,7 +72,7 @@ class SessionPreventExtensionMiddleware implements MiddlewareInterface
      * @param \Cake\Http\ServerRequest $request The request.
      * @return bool
      */
-    protected function shouldSessionExtensionPrevented(ServerRequest $request)
+    protected function shouldSessionExtensionPrevented(ServerRequest $request): bool
     {
         $params = $request->getAttribute('params', '');
         $controller = Hash::get($params, 'controller');

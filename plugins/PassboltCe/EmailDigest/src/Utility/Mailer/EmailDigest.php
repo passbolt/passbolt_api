@@ -52,7 +52,7 @@ class EmailDigest implements EmailDigestInterface
     /**
      * Return the list of ids of the emails part of the digest
      *
-     * @return string[]
+     * @return array<string>
      */
     public function getEmailIds(): array
     {

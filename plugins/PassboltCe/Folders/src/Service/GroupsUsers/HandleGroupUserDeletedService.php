@@ -19,21 +19,22 @@ namespace Passbolt\Folders\Service\GroupsUsers;
 
 use App\Model\Entity\GroupsUser;
 use App\Model\Table\PermissionsTable;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class HandleGroupUserDeletedService
 {
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * Instantiate the service.
@@ -41,8 +42,7 @@ class HandleGroupUserDeletedService
     public function __construct()
     {
         $this->permissionsTable = TableRegistry::getTableLocator()->get('Permissions');
-        /** @phpstan-ignore-next-line */
-        $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('FoldersRelations');
+        $this->foldersRelationsTable = TableRegistry::getTableLocator()->get('Passbolt/Folders.FoldersRelations');
     }
 
     /**
@@ -52,7 +52,7 @@ class HandleGroupUserDeletedService
      * @return void
      * @throws \Exception
      */
-    public function handle(GroupsUser $groupUser)
+    public function handle(GroupsUser $groupUser): void
     {
         $this->removeLostAccessesResourcesFromUserTree($groupUser);
         $this->removeLostAccessesFoldersFromUserTree($groupUser);
@@ -107,9 +107,9 @@ class HandleGroupUserDeletedService
      * Find the lost access resources ids.
      *
      * @param \App\Model\Entity\GroupsUser $groupUser The group user to delete.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function findLostAccessResourcesIdsQuery(GroupsUser $groupUser): Query
+    private function findLostAccessResourcesIdsQuery(GroupsUser $groupUser): SelectQuery
     {
         return $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::RESOURCE_ACO,
@@ -122,9 +122,9 @@ class HandleGroupUserDeletedService
      * Find the lost access folders ids.
      *
      * @param \App\Model\Entity\GroupsUser $groupUser The group user to delete.
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function findLostAccessFoldersIdsQuery(GroupsUser $groupUser): Query
+    private function findLostAccessFoldersIdsQuery(GroupsUser $groupUser): SelectQuery
     {
         return $this->permissionsTable->findAcosAccessesDiffBetweenGroupAndUser(
             PermissionsTable::FOLDER_ACO,

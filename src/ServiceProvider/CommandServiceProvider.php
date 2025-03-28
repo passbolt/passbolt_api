@@ -33,7 +33,7 @@ use Cake\Core\ServiceProvider;
 
 class CommandServiceProvider extends ServiceProvider
 {
-    protected $provides = [
+    protected array $provides = [
         ProcessUserService::class,
         SubscriptionCheckInCommandServiceInterface::class,
         HealthcheckCommand::class,

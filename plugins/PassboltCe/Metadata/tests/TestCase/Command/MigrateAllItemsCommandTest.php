@@ -48,8 +48,6 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
     public function setUp(): void
     {
         parent::setUp();
-
-        $this->useCommandRunner();
         // clear collector state to get proper results
         MigrateAllV4ToV5ServiceCollector::clear();
     }
@@ -160,7 +158,7 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
         $this->assertOutputContains('Entity');
         $this->assertOutputContains('Error message');
         $this->assertOutputContains('folders');
-        $this->assertOutputContains('Record not found in table \"metadata_keys\"');
+        $this->assertOutputContains('Record not found in table `metadata_keys`');
         $this->assertOutputContains('See migrated items summary below');
         $this->assertOutputContains('Total');
         $this->assertOutputContains('1');
@@ -202,12 +200,12 @@ class MigrateAllItemsCommandTest extends AppIntegrationTestCaseV5
         // Create resources
         $totpStandalone = ResourceTypeFactory::make()->standaloneTotp()->persist();
         ResourceTypeFactory::make()->v5StandaloneTotp()->persist();
-        $personalResource = ResourceFactory::make()
+        ResourceFactory::make()
             ->with('ResourceTypes', $totpStandalone)
             ->withCreatorAndPermission($ada)
             ->persist();
         // Create folders
-        $personalFolder = FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
+        FolderFactory::make()->withFoldersRelationsFor([$ada])->withPermissionsFor([$ada])->persist();
 
         $this->exec('passbolt metadata migrate_all_items');
 

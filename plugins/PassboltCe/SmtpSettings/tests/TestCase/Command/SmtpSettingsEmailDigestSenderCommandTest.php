@@ -48,7 +48,6 @@ class SmtpSettingsEmailDigestSenderCommandTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         EmailNotificationSettings::flushCache();
         EventManager::instance()->setEventList(new EventList());
         $this->clearPlugins();
@@ -70,7 +69,7 @@ class SmtpSettingsEmailDigestSenderCommandTest extends TestCase
 
         $nMails = 2;
         EmailQueueFactory::make($nMails)->persist();
-        $mails = EmailQueueFactory::find()->orderAsc('created');
+        $mails = EmailQueueFactory::find()->orderByAsc('created');
 
         $this->exec('passbolt email_digest send');
         $this->assertExitSuccess();
@@ -100,7 +99,7 @@ class SmtpSettingsEmailDigestSenderCommandTest extends TestCase
 
         $nMails = 2;
         EmailQueueFactory::make($nMails)->persist();
-        $mails = EmailQueueFactory::find()->orderAsc('created');
+        $mails = EmailQueueFactory::find()->orderByAsc('created');
 
         $this->disableFeaturePlugin('SmtpSettings');
         $this->exec('passbolt email_digest send');
