@@ -1,11 +1,8 @@
-Release song: https://youtu.be/NUTGr5t3MoY?si=1hitMfMv8PDn1Wf2
+Release song: TBD
 
-This is a maintenance release. It fixes a reported issue when notifying group administrators that a user
-should be added to a group. The issue occurred when a group administrator had been disabled.
-
-Thank you to the community for the valuable feedback!
+The Passbolt API V5 (test.1).
 
 
-## [4.12.1-test.1] - 2025-03-14
-### Fixed
-- PB-39965 Fixes an issue when fetching the locale of disabled users when queried in a sub-query
+## [5.0.0-test.1] - 2025-03-28
+### Maintenance
+- PB-39712 Update CakePHP to version 5
