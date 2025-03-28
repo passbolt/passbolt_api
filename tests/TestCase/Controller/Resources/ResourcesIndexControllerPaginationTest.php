@@ -117,6 +117,7 @@ class ResourcesIndexControllerPaginationTest extends AppIntegrationTestCase
         $this->assertSuccess();
         $this->assertCountPaginatedEntitiesEquals($expectedCurrent);
         $this->assertBodyContentIsSorted($path ?? 'name', $direction);
+        $this->assertSame($numberOfResources, $this->_responseJsonHeader->pagination->count);
     }
 
     public function testResourcesIndexController_SuccessPaginationWithLegacyOrder(): void

@@ -59,6 +59,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
+        $this->assertSame(9, $this->_responseJsonHeader->pagination->count);
     }
 
     public function testResourcesIndexController_Success_WithContain_WithFactories(): void
