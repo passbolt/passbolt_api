@@ -20,6 +20,7 @@ namespace Passbolt\Folders\Test\TestCase\Controller\Folders;
 use App\Model\Table\PermissionsTable;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\PaginationTestTrait;
+use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Folders\Test\Lib\FoldersIntegrationTestCase;
@@ -65,7 +66,12 @@ class FoldersIndexControllerPaginationTest extends FoldersIntegrationTestCase
         $expectedCurrent = 9;
 
         $user = UserFactory::make()->user()->persist();
-        $folders = FolderFactory::make($numberOfFolders)->persist();
+        $data = Hash::merge(
+            $this->getArrayOfDistinctRandomStrings($numberOfFolders, 'name'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfFolders, 'created'),
+            $this->getArrayOfDistinctRandomPastDates($numberOfFolders, 'modified'),
+        );
+        $folders = FolderFactory::make($data)->persist();
 
         foreach ($folders as $folder) {
             $this->addPermission(PermissionsTable::FOLDER_ACO, $folder->get('id'), null, $user->id);
