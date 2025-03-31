@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "caa7513c03f5fa5f84bfa0dca646eb73",
+    "content-hash": "468b7f7e3c1bc039d4fc0f6a74dedcec",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -62,16 +62,16 @@
         },
         {
             "name": "bcrowe/cakephp-api-pagination",
-            "version": "dev-cake5",
+            "version": "dev-cakephp5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/ishanvyas22/cakephp-api-pagination.git",
-                "reference": "bbf48a2e5a7c496f980007334be0eaa144a855b9"
+                "url": "https://github.com/passbolt/cakephp-api-pagination.git",
+                "reference": "b103542e1b02c2a000862d91a804ecde6d4669b0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ishanvyas22/cakephp-api-pagination/zipball/bbf48a2e5a7c496f980007334be0eaa144a855b9",
-                "reference": "bbf48a2e5a7c496f980007334be0eaa144a855b9",
+                "url": "https://api.github.com/repos/passbolt/cakephp-api-pagination/zipball/b103542e1b02c2a000862d91a804ecde6d4669b0",
+                "reference": "b103542e1b02c2a000862d91a804ecde6d4669b0",
                 "shasum": ""
             },
             "require": {
@@ -133,7 +133,7 @@
                 "cakephp5",
                 "pagination"
             ],
-            "time": "2025-03-19T10:07:11+00:00"
+            "time": "2025-03-31T13:54:23+00:00"
         },
         {
             "name": "beberlei/assert",
