@@ -48,17 +48,21 @@ class MetadataResourcesRenderService
     public function renderResources(array $resources): array
     {
         $isV5Enabled = Configure::read('passbolt.v5.enabled');
-        foreach ($resources as $i => &$resource) {
+        $result = [];
+
+        foreach ($resources as $resource) {
             // For performance reason, the detection of a v5 resource is made on the
             // presence of metadata
             $isResourceV5 = !empty($resource[MetadataResourceDto::METADATA]);
+
+            // Do not return v5 resource if v5 flag is disabled
             if ($isResourceV5 && !$isV5Enabled) {
-                unset($resources[$i]);
-            } else {
-                $resource = $this->renderResource($resource, $isResourceV5);
+                continue;
             }
+
+            $result[] = $this->renderResource($resource, $isResourceV5);
         }
 
-        return $resources;
+        return $result;
     }
 }

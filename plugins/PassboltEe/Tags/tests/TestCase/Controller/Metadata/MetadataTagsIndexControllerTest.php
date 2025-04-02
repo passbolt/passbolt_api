@@ -20,7 +20,9 @@ use App\Test\Factory\GpgkeyFactory;
 use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCaseV5;
+use Cake\Core\Configure;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
+use Passbolt\Tags\Model\Dto\MetadataTagDto;
 use Passbolt\Tags\TagsPlugin;
 use Passbolt\Tags\Test\Factory\TagFactory;
 
@@ -90,5 +92,35 @@ class MetadataTagsIndexControllerTest extends AppIntegrationTestCaseV5
             // is shared should be present in both case
             $this->assertArrayHasKey('is_shared', $item);
         }
+    }
+
+    public function testMetadataTagsIndexController_Metadata_Disabled_Success(): void
+    {
+        Configure::write('passbolt.v5.enabled', false);
+
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()
+            ->with('Gpgkeys', GpgkeyFactory::make()->withAdaKey())
+            ->user()
+            ->active()
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        TagFactory::make(3)->isPersonalFor($resource, $user)->persist();
+        // v5 tags
+        TagFactory::make(3)
+            ->isPersonalFor($resource, $user)
+            ->v5Fields(['metadata' => 'foo'])
+            ->persist();
+
+        $this->logInAs($user);
+        $this->getJson('/tags.json?api-version=v2');
+
+        $this->assertSuccess();
+        $response = (array)json_decode(json_encode($this->_responseJsonBody), true);
+        $this->assertCount(3, $response);
+        $this->assertSame([0, 1, 2], array_keys($response));
+        $tagV4 = array_pop($response);
+        $this->assertArrayHasAttributes(MetadataTagDto::V4_META_PROPS, $tagV4);
     }
 }
