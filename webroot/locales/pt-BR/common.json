@@ -1362,6 +1362,8 @@
   "There is a valid email id defined for the server key": "Há um email válido definido para a chave do servidor",
   "There is an error with the current configuration, you might want to resolve it.": "Há um erro na configuração atual; você pode querer resolvê-lo.",
   "There is no description.": "Não há nenhuma descrição.",
+  "There is no note.": "There is no note.",
+  "There is no password": "There is no password",
   "There is no tag.": "Não há etiqueta.",
   "There is no users.": "Não há usuários.",
   "There was an issue during the transfer. Please try again later or contact your administrator.": "Houve um problema durante a transferência. Por favor, tente novamente mais tarde ou contate o administrador.",
