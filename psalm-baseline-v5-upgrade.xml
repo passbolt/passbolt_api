@@ -495,11 +495,6 @@
       <code><![CDATA[MetadataTypesSettingsFactory]]></code>
     </MethodSignatureMismatch>
   </file>
-  <file src="plugins/PassboltCe/Metadata/tests/TestCase/Controller/Resources/MetadataResourcesIndexControllerTest.php">
-    <InvalidArgument>
-      <code><![CDATA[$response]]></code>
-    </InvalidArgument>
-  </file>
   <file src="plugins/PassboltCe/Mobile/src/Model/Table/TransfersTable.php">
     <ImplementedParamTypeMismatch>
       <code><![CDATA[\Passbolt\Mobile\Model\Entity\Transfer get($primaryKey, ?array $options = [])]]></code>

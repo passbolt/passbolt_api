@@ -56,13 +56,14 @@ class MetadataResourcesIndexControllerTest extends AppIntegrationTestCaseV5
         Configure::write('passbolt.v5.enabled', false);
 
         $user = $this->logInAsUser();
-        ResourceFactory::make()->withPermissionsFor([$user])->persist();
-        ResourceFactory::make()->withPermissionsFor([$user])->v5Fields()->persist();
+        ResourceFactory::make(3)->withPermissionsFor([$user])->persist();
+        ResourceFactory::make(3)->withPermissionsFor([$user])->v5Fields()->persist();
 
-        $this->getJson('/resources.json');
+        $this->getJson('/resources.json?sort=Resources.modified');
         $this->assertSuccess();
-        $response = json_decode(json_encode($this->_responseJsonBody), true);
-        $this->assertCount(1, $response);
+        $response = (array)json_decode(json_encode($this->_responseJsonBody), true);
+        $this->assertCount(3, $response);
+        $this->assertSame([0, 1, 2], array_keys($response));
         $resourceV4 = array_pop($response);
         $this->assertArrayHasAttributes(MetadataResourceDto::V4_META_PROPS, $resourceV4);
     }
