@@ -48,17 +48,21 @@ class MetadataFoldersRenderService
     public function renderFolders(array $folders): array
     {
         $isV5Enabled = Configure::read('passbolt.v5.enabled');
-        foreach ($folders as $key => &$folder) {
+        $result = [];
+
+        foreach ($folders as $folder) {
             // For performance reason, the detection of a v5 resource is made on the
             // presence of metadata
             $isV5 = !empty($folder['metadata']);
+
+            // Do not return v5 resource if v5 flag is disabled
             if ($isV5 && !$isV5Enabled) {
-                unset($folders[$key]);
-            } else {
-                $folder = $this->renderFolder($folder, $isV5);
+                continue;
             }
+
+            $result[] = $this->renderFolder($folder, $isV5);
         }
 
-        return $folders;
+        return $result;
     }
 }

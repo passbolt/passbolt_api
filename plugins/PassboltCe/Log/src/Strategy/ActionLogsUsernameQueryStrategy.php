@@ -248,7 +248,7 @@ class ActionLogsUsernameQueryStrategy extends ActionLogsAbstractQueryStrategy
             $context .= ' with:';
             foreach ($addedPermissions as $perm) {
                 if ($perm->aro === 'User') {
-                    $user = $usersTable->get($perm->aro_foreign_key, ['contain' => ['Profiles']]);
+                    $user = $usersTable->get($perm->aro_foreign_key, contain: ['Profiles']);
                     $context .= ' ' . $user->username . ' (' . $user->profile->first_name . ' ';
                     $context .= $user->profile->last_name . ') ' . $permissionTypes[$perm->type];
                 } elseif ($perm->aro === 'Group') {
