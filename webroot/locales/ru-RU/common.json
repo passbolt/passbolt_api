@@ -1362,6 +1362,8 @@
   "There is a valid email id defined for the server key": "Для серверного ключа задан допустимый адрес электронной почты",
   "There is an error with the current configuration, you might want to resolve it.": "В текущей конфигурации имеется ошибка, возможно хотите её устранить.",
   "There is no description.": "Описание отсутствует.",
+  "There is no note.": "There is no note.",
+  "There is no password": "There is no password",
   "There is no tag.": "Тегов нет.",
   "There is no users.": "Нет пользователей.",
   "There was an issue during the transfer. Please try again later or contact your administrator.": "Во время передачи возникла проблема. Пожалуйста, повторите попытку позже или обратитесь к администратору.",
