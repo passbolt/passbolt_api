@@ -17,7 +17,6 @@ declare(strict_types=1);
 namespace Passbolt\Tags\Service\Metadata;
 
 use Cake\Core\Configure;
-use Cake\Datasource\EntityInterface;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
 
 class MetadataTagsRenderService
@@ -49,21 +48,21 @@ class MetadataTagsRenderService
     public function renderTags(array $tags): array
     {
         $isV5Enabled = Configure::read('passbolt.v5.enabled');
-        foreach ($tags as $key => &$tag) {
-            if ($tag instanceof EntityInterface) {
-                $tag = $tag->toArray();
-            }
+        $result = [];
 
+        foreach ($tags as $tag) {
             // For performance reason, the detection of a v5 resource is made on the
             // presence of metadata
             $isV5 = !empty($tag['metadata']);
+
+            // Do not return v5 resource if v5 flag is disabled
             if ($isV5 && !$isV5Enabled) {
-                unset($tags[$key]);
-            } else {
-                $tag = $this->renderTag($tag, $isV5);
+                continue;
             }
+
+            $result[] = $this->renderTag($tag, $isV5);
         }
 
-        return $tags;
+        return $result;
     }
 }
