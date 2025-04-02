@@ -53,10 +53,8 @@ class BaseSolutionBootstrapper
         }
 
         // Add Common plugins.
-        if (Configure::read('passbolt.v5.enabled')) {
-            $app->addPlugin('Passbolt/Metadata', ['bootstrap' => true, 'routes' => true]);
-            Configure::write('passbolt.plugins.metadata.enabled', true);
-        }
+        Configure::write('passbolt.plugins.metadata.enabled', Configure::read('passbolt.v5.enabled'));
+        $this->addFeaturePluginIfEnabled($app, 'Metadata');
         $this->addFeaturePluginIfEnabled($app, 'Rbacs');
         $app->addPlugin('Passbolt/AccountSettings', ['bootstrap' => true, 'routes' => true]);
         $app->addPlugin('Passbolt/Import', ['bootstrap' => true, 'routes' => true]);
