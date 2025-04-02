@@ -42,6 +42,17 @@ class SettingsIndexControllerTest extends AppIntegrationTestCaseV5
         Configure::write('passbolt.v5.enabled', false);
         $this->logInAsUser();
         $this->getJson('/settings.json');
-        $this->assertFalse(isset($this->_responseJsonBody->passbolt->plugins->metadata));
+        $this->assertFalse($this->_responseJsonBody->passbolt->plugins->metadata->enabled);
+    }
+
+    public function testSettingsIndexController_v5_Flag_Disabled_MetadataPlugin_Enabled(): void
+    {
+        // Disable the v5 flag
+        Configure::write('passbolt.v5.enabled', false);
+        // The metadata enabled flag should be overwritten by 'passbolt.v5.enabled'
+        Configure::write('passbolt.plugins.metadata.enabled', true);
+        $this->logInAsUser();
+        $this->getJson('/settings.json');
+        $this->assertFalse($this->_responseJsonBody->passbolt->plugins->metadata->enabled);
     }
 }
