@@ -1,8 +1,8 @@
 Release song: TBD
 
-The Passbolt API V5 (test.4).
+The Passbolt API V5 (test.5).
 
-## [5.0.0-test.4] - 2025-04-02
+## [5.0.0-test.5] - 2025-04-02
 ### Added
 - PB-39434 As an administrator I can log user actions on file in an SIEM compatible format
 - PB-40155 Add Passbolt API support of PHP 8.4
@@ -13,6 +13,7 @@ The Passbolt API V5 (test.4).
 
 ### Improved
 - PB-38164 Migrate passbolt API skeleton to v5
+- PB-40724 As a user I should not share in DB personal tags of other users with identical slug
 - PB-40247 Add API status documentation link to the health check command
 
 ### Maintenance
