@@ -21,7 +21,6 @@ use App\Model\Traits\Query\CaseSensitiveCompareValueTrait;
 use App\Model\Validation\ArmoredMessage\IsParsableMessageValidationRule;
 use App\ORM\Association\PassboltBelongsToMany;
 use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use ArrayObject;
 use Cake\Collection\CollectionInterface;
 use Cake\Core\Configure;
@@ -366,7 +365,6 @@ class TagsTable extends Table
         if (isset($data['slug']) && !empty($data['slug']) && is_string($data['slug'])) {
             $startWith = mb_substr($data['slug'], 0, 1, 'utf-8');
             $data['is_shared'] = ($startWith === '#');
-            $data['id'] = UuidFactory::uuid('tag.id.' . $data['slug']);
         }
     }
 
@@ -506,7 +504,12 @@ class TagsTable extends Table
         $query = $this->find();
 
         /** @var \Passbolt\Tags\Model\Entity\Tag|null $tagExists */
-        $tagExists = $query->where(['slug' => $this->getCaseSensitiveValue($query, $slug)])->first();
+        $tagExists = $query
+            ->innerJoinWith('ResourcesTags', function (Query $q) use ($control) {
+                return $q->where(['ResourcesTags.user_id' => $control->getId()]);
+            })
+            ->where(['slug' => $this->getCaseSensitiveValue($query, $slug)])
+            ->first();
 
         if (!$tagExists) {
             if (mb_substr($slug, 0, 1) === '#' && !$control->isAdmin()) {

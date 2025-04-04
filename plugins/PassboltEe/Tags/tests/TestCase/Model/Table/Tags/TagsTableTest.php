@@ -38,18 +38,6 @@ class TagsTableTest extends TagTestCase
     public $Tags;
 
     /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources',
-        'app.Base/ResourceTypes', 'app.Base/Groups',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
-    /**
      * setUp method
      *
      * @return void
@@ -79,12 +67,28 @@ class TagsTableTest extends TagTestCase
      */
     public function testTagsTableBuildEntitiesOrFailError()
     {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        $errorThrown = false;
         try {
             $tags = [['test']];
-            $this->Tags->buildEntitiesOrFail(UuidFactory::uuid('user.id.ada'), $tags);
-            $this->fail('Build entities should throw an exception');
+            $this->Tags->buildEntitiesOrFail($user->id, $tags);
         } catch (CustomValidationException $e) {
-            $this->assertTrue(true);
+            $this->assertSame('Could not validate tags data.', $e->getMessage());
+            $errorThrown = true;
+            $errors = [
+                [
+                    'slug' => [
+                        '_empty' => 'The tag should not be empty.',
+                    ],
+                    'is_shared' => [
+                        '_required' => 'A shared status is required.',
+                    ],
+                ],
+            ];
+            $this->assertSame($errors, $e->getErrors());
+        } finally {
+            $this->assertTrue($errorThrown);
         }
     }
 
@@ -95,7 +99,7 @@ class TagsTableTest extends TagTestCase
      */
     public function testTagsTableBeforeMarshall()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $userId = UserFactory::make()->persist();
         $tag = $this->Tags->newEntity([
             'slug' => 'test',
             'is_shared' => true,
@@ -114,20 +118,30 @@ class TagsTableTest extends TagTestCase
                 'is_shared' => true,
             ],
         ]);
-        $this->assertNotEmpty($tag->id);
-        $this->assertEquals($tag->id, UuidFactory::uuid('tag.id.test'));
+        $this->assertEmpty($tag->id);
+        $this->assertNotEquals($tag->id, UuidFactory::uuid('tag.id.test'));
         $this->assertFalse($tag->is_shared);
     }
 
     public function testTagsDeleteAllUnusedTags()
     {
+        TagFactory::make(3)->persist();
+        TagFactory::make(3)->isShared()->persist();
+        TagFactory::make()->isPersonalFor(
+            ResourceFactory::make()->persist(),
+            UserFactory::make()->persist()
+        )->persist();
+        TagFactory::make()->isSharedFor(ResourceFactory::make()->persist())->persist();
         // unused and #unused
         $r = $this->Tags->deleteAllUnusedTags();
-        $this->assertEquals($r, 2);
+        $this->assertEquals($r, 6);
 
         // there should not be any left
         $r = $this->Tags->deleteAllUnusedTags();
         $this->assertEquals($r, 0);
+
+        $this->assertSame(2, TagFactory::count());
+        $this->assertSame(2, ResourcesTagFactory::count());
     }
 
     public function testTagsTable_findAllBySlugs()
@@ -138,7 +152,7 @@ class TagsTableTest extends TagTestCase
 
         $tags = $tags1->union($tags2);
 
-        $this->assertSame(2, $tags->count());
+        $this->assertSame(2, $tags->all()->count());
     }
 
     public function hydrateQueryProvider(): array

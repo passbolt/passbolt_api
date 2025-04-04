@@ -16,22 +16,20 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use Cake\Core\Configure;
 use Cake\Utility\Hash;
 use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class TagsIndexControllerTest extends TagPluginIntegrationTestCase
 {
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
     // A user not logged in should not be able to see tags
 
-    public function testTagsIndexNotLoggedIn()
+    public function testTagsIndexController_NotLoggedIn()
     {
         $this->getJson('/tags.json?api-version=v2');
         $this->assertResponseError();
@@ -42,30 +40,57 @@ class TagsIndexControllerTest extends TagPluginIntegrationTestCase
 
     // A user should see personal and shared tags or resources via direct and group permissions
 
-    public function testTagsIndexSuccess()
+    public function testTagsIndexController_Success()
     {
         Configure::write(TagsReadOnlyModeMiddleware::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE, true);
-        $this->authenticateAs('ada');
+        $user = $this->logInAsUser();
+        $group = GroupFactory::make()->withGroupsUsersFor([$user])->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithGroupPermission */
+        $resourceWithGroupPermission = ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithDirectPermission */
+        $resourceWithDirectPermission = ResourceFactory::make()
+            ->withPermissionsFor([$user])
+            ->persist();
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resourceWithDirectPermission, $user)->persist();
+        TagFactory::make(['slug' => '#bravo'])->isSharedFor($resourceWithGroupPermission)->persist();
+        TagFactory::make(['slug' => '#charlie'])->isSharedFor($resourceWithDirectPermission)->persist();
         $this->getJson('/tags.json?api-version=v2');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
-        $expected = ['alpha', '#echo', '#bravo', 'fox-trot', '#charlie', 'hotel', '#golf', 'firefox'];
+        $expected = ['alpha', '#bravo', '#charlie'];
         foreach ($expected as $result) {
             $this->assertTrue(in_array($result, $results));
         }
     }
 
     // A user should not see other users personal tags or shared tags of resource they don't have access to
-    public function testTagsIndexSuccessDoubleCheck()
+    public function testTagsIndexController_SuccessDoubleCheck()
     {
-        $this->authenticateAs('betty');
+        $users = [$userA, $userB] = UserFactory::make(2)->user()->persist();
+
+        $group = GroupFactory::make()->withGroupsUsersFor($users)->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithGroupPermission */
+        $resourceWithGroupPermission = ResourceFactory::make()
+            ->withPermissionsFor([$group])
+            ->persist();
+        /** @var \App\Model\Entity\Resource $resourceWithDirectPermission */
+        $resourceWithDirectPermission = ResourceFactory::make()
+            ->withPermissionsFor([$userA])
+            ->persist();
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resourceWithDirectPermission, $userB)->persist();
+        TagFactory::make(['slug' => '#bravo'])->isSharedFor($resourceWithGroupPermission)->persist();
+        TagFactory::make(['slug' => '#charlie'])->isSharedFor($resourceWithDirectPermission)->persist();
+
+        $this->logInAs($userB);
         $this->getJson('/tags.json?api-version=v2');
         $this->assertSuccess();
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
-        $notExpected = ['fox-trot', '#echo'];
-        $expected = ['alpha', '#bravo'];
+        $expected = ['#bravo'];
+        $notExpected = ['alpha', '#charlie'];
         foreach ($expected as $result) {
             $this->assertTrue(in_array($result, $results));
         }
