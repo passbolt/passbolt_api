@@ -20,6 +20,8 @@ namespace Passbolt\Sso\Test\TestCase\Utility\Azure\Provider;
 use Cake\Core\Configure;
 use Cake\Routing\Router;
 use Cake\TestSuite\TestCase;
+use Exception;
+use Passbolt\Sso\Error\Exception\AzureException;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Test\Lib\AzureProviderTestTrait;
 use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
@@ -45,11 +47,23 @@ class AzureProviderTest extends TestCase
         $this->assertInstanceOf(AbstractOauth2Provider::class, $this->getDummyAzureProvider());
     }
 
-    public function testSsoAzureProvider_getBaseAuthorizationUrl(): void
+    public function testSsoAzureProvider_getBaseAuthorizationUrl_Success(): void
     {
         $provider = $this->getDummyAzureProvider();
         $url = $provider->getBaseAuthorizationUrl();
         $this->assertStringContainsString('authorize', $url);
+    }
+
+    public function testSsoAzureProvider_getBaseAuthorizationUrl_ErrorTenantNotExistShoudTrigger400(): void
+    {
+        $provider = $this->getDummyAzureProvider(['tenant' => 'd8001ced-9d27-48c7-8ce1-8f20fb8c2cc3']); // correct format but doesn't exist
+        try {
+            $provider->getBaseAuthorizationUrl();
+        } catch (Exception $exception) {
+            $this->assertSame(400, $exception->getCode());
+            $this->assertInstanceOf(AzureException::class, $exception);
+            $this->assertStringContainsString('AADSTS90002', $exception->getMessage());
+        }
     }
 
     public function testSsoAzureProvider_getBaseAccessTokenUrl(): void

@@ -22,13 +22,25 @@ use Passbolt\Sso\Utility\Azure\Provider\AzureProvider;
 
 trait AzureProviderTestTrait
 {
-    public function getDummyAzureProvider(): AzureProvider
+    /**
+     * @param array $options Options to override
+     * @return AzureProvider
+     */
+    public function getDummyAzureProvider(array $options = []): AzureProvider
     {
-        return new AzureProvider([
+        $default = [
             'clientId' => Configure::read('passbolt.selenium.sso.azure.clientId'),
             'clientSecret' => Configure::read('passbolt.selenium.sso.azure.secretId'),
             'redirectUri' => Router::url('/sso/azure/redirect', true),
             'tenant' => Configure::read('passbolt.selenium.sso.azure.tenantId'),
-        ]);
+        ];
+
+        if (!empty($options)) {
+            $options = array_merge($default, $options);
+        } else {
+            $options = $default;
+        }
+
+        return new AzureProvider($options);
     }
 }
