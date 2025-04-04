@@ -16,24 +16,22 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
-use App\Utility\UuidFactory;
+use App\Test\Factory\ResourceFactory;
 use Cake\Validation\Validation;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class ResourcesViewControllerTest extends TagPluginIntegrationTestCase
 {
-    public array $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
     public function testTagsResourcesViewContainSuccess()
     {
-        $this->authenticateAs('ada');
-        $expected = ['alpha', '#echo', '#bravo', 'fox-trot'];
-        $id = UuidFactory::uuid('resource.id.apache');
-        $this->getJson("/resources/{$id}.json?api-version=2&contain[tag]=1");
+        $user = $this->logInAsUser();
+        $expected = ['alpha', '#bravo',];
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        TagFactory::make(['slug' => 'alpha'])->isPersonalFor($resource, $user)->persist();
+        TagFactory::make(['slug' => '#bravo'])->isSharedFor($resource)->persist();
+        $this->getJson("/resources/{$resource->id}.json?api-version=2&contain[tag]=1");
         $this->assertSuccess();
 
         $response = json_decode($this->_getBodyAsString());

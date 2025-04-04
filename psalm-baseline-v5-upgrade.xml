@@ -1817,14 +1817,6 @@
       <code><![CDATA[\Passbolt\Tags\Model\Entity\Tag getEntity()]]></code>
     </MoreSpecificImplementedParamType>
   </file>
-  <file src="plugins/PassboltEe/Tags/tests/TestCase/Controller/TagsUpdateControllerTest.php">
-    <UndefinedInterfaceMethod>
-      <code><![CDATA[$resourcesTags]]></code>
-      <code><![CDATA[$tags]]></code>
-      <code><![CDATA[$tags]]></code>
-      <code><![CDATA[$tags]]></code>
-    </UndefinedInterfaceMethod>
-  </file>
   <file src="plugins/PassboltEe/UserPassphrasePolicies/src/Notification/Email/UserPassphrasePoliciesSettingsUpdatedEmailRedactor.php">
     <InvalidArgument>
       <code><![CDATA[$admin]]></code>

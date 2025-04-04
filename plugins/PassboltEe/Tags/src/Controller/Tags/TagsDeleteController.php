@@ -70,28 +70,8 @@ class TagsDeleteController extends AppController
             throw new NotFoundException(__('The tag does not exist.'));
         }
 
-        $this->_deletePersonalTag($tag->get('id'));
+        $this->Tags->delete($tag);
 
         $this->success(__('The tag has been deleted successfully.'));
-    }
-
-    /**
-     * Delete personal tag
-     *
-     * @param string $tagId ID of the tag to delete
-     * @return void
-     */
-    private function _deletePersonalTag(string $tagId)
-    {
-        $this->Tags->getConnection()->transactional(function () use ($tagId) {
-            // Delete all the association data from ResourceTags
-            $this->ResourcesTags->deleteAll([
-                'tag_id' => $tagId,
-                'user_id' => $this->User->id(),
-            ]);
-
-            // Flush all unused tags
-            $this->Tags->deleteAllUnusedTags();
-        });
     }
 }

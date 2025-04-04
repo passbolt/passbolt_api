@@ -14,20 +14,26 @@ declare(strict_types=1);
  * @since         4.12.1
  */
 // @codingStandardsIgnoreStart
+use Cake\Log\Log;
 use Migrations\AbstractMigration;
+use Passbolt\Tags\Service\Tags\DecouplePersonalTagsService;
 
-class V4121BackupResourcesTagsTable extends AbstractMigration
+class V4121DecouplePersonalTags extends AbstractMigration
 {
     /**
-     * Up Method.
+     * Change Method.
      *
-     * @link https://book.cakephp.org/phinx/0/en/migrations.html#the-up-method
+     * More information on this method is available here:
+     * https://book.cakephp.org/phinx/0/en/migrations.html#the-change-method
      * @return void
      */
-    public function up(): void
+    public function change(): void
     {
-        $this->execute('CREATE TABLE backup_resources_tags LIKE resources_tags;');
-        $this->execute('INSERT INTO backup_resources_tags SELECT * FROM resources_tags;');
+        try {
+            (new DecouplePersonalTagsService())->decouple();
+        } catch (\Throwable $e) {
+            Log::error('There was an error in V4121DecouplePersonalTags');
+            Log::error($e->getMessage());
+        }
     }
 }
-// @codingStandardsIgnoreEnd
