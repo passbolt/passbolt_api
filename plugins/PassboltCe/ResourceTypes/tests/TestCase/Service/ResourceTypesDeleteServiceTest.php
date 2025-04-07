@@ -49,7 +49,10 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
         $uac = new UserAccessControl(Role::ADMIN, $admin->id);
 
         /** @var \Passbolt\ResourceTypes\Model\Entity\ResourceType $resourceType */
-        $resourceType = ResourceTypeFactory::make()->passwordString()->persist();
+        $resourceType = ResourceTypeFactory::make()
+            ->passwordString()
+            ->with('Resources', ResourceFactory::make()->deleted())
+            ->persist();
         ResourceTypeFactory::make()->passwordAndDescription()->persist();
         $resourceTypeId = $resourceType->id;
 
@@ -113,7 +116,8 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
         $resourceTypeId = $resourceType->id;
 
         $sut = new ResourceTypesDeleteService();
-        $this->expectException(BadRequestException::class); // There can be only one!
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('You cannot delete the last resource type available.');
         $sut->delete($uac, $resourceTypeId);
     }
 
@@ -130,7 +134,8 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
         $resourceTypeId = $resourceType->id;
 
         $sut = new ResourceTypesDeleteService();
-        $this->expectException(BadRequestException::class); // There can be only one!
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('You cannot delete the last resource type of the default version.');
         $sut->delete($uac, $resourceTypeId);
     }
 
@@ -150,6 +155,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
 
         $sut = new ResourceTypesDeleteService();
         $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The resource type can not be deleted as resources of this type still exist.');
         $sut->delete($uac, $resourceTypeId);
     }
 
@@ -177,6 +183,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
         $uac = new UserAccessControl(Role::ADMIN, $admin->id);
         $sut = new ResourceTypesDeleteService();
         $this->expectException(NotFoundException::class);
+        $this->expectExceptionMessage('The resource type does not exist.');
         $sut->delete($uac, UuidFactory::uuid());
     }
 
@@ -187,6 +194,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
         $uac = new UserAccessControl(Role::ADMIN, $admin->id);
         $sut = new ResourceTypesDeleteService();
         $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The resource type identifier should be a UUID.');
         $sut->delete($uac, '🔥');
     }
 
@@ -221,6 +229,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
 
         $sut = new ResourceTypesDeleteService();
         $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The resource type is not deleted.');
         $sut->undoDelete($uac, $resourceTypeId);
     }
 
@@ -241,6 +250,7 @@ class ResourceTypesDeleteServiceTest extends AppTestCaseV5
         $uac = new UserAccessControl(Role::ADMIN, $admin->id);
         $sut = new ResourceTypesDeleteService();
         $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('The resource type identifier should be a UUID.');
         $sut->undoDelete($uac, '🔥');
     }
 }

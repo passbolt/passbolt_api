@@ -71,7 +71,10 @@ class ResourceTypesDeleteService
 
         /** @var \App\Model\Table\ResourcesTable $resourcesTable */
         $resourcesTable = $this->fetchTable('Resources');
-        $count = $resourcesTable->find()->where(['resource_type_id' => $resourceTypeId])->all()->count();
+        $count = $resourcesTable->find()->where([
+            'resource_type_id' => $resourceTypeId,
+            'deleted' => false,
+        ])->all()->count();
         if ($count !== 0) {
             $msg = __('The resource type can not be deleted as resources of this type still exist.');
             throw new BadRequestException($msg);
