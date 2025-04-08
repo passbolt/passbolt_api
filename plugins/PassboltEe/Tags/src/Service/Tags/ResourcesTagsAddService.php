@@ -144,7 +144,7 @@ class ResourcesTagsAddService
         // The tag the user is adding already exist, associate it to the resource.
         $encryptedTagsIds = Hash::extract($encryptedTags, '{n}.id');
         if ($clearTextTags || $encryptedTagsIds) {
-            $existingTags = $this->Tags->findAllBySlugsOrIds($clearTextTags, $encryptedTagsIds)->all()->toArray();
+            $existingTags = $this->Tags->findAllBySlugsOrIds($uac, $clearTextTags, $encryptedTagsIds)->all()->toArray();
             foreach ($existingTags as $existingTag) {
                 $tagDto = MetadataTagDto::fromArray($existingTag->toArray());
 

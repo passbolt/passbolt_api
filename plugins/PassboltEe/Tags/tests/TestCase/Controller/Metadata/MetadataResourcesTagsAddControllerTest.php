@@ -152,7 +152,7 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->logInAs($ada);
         $data = [
             'tags' => [
-                'imv4', // existing tag (reuse)
+                'imv4', // existing tag for betty, create a new one for ada
                 [
                     // new
                     'metadata' => $starredMetadata,
@@ -161,11 +161,11 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
                     'is_shared' => false,
                 ],
                 [
-                    // existing tag (reuse)
+                    // existing shared tag (reuse, as it is shared)
                     'id' => $myfavTag->get('id'),
                 ],
                 [
-                    'id' => $marketingTag->get('id'),
+                    'id' => $marketingTag->get('id'), // existing tag for ada, re-use
                 ],
             ],
         ];
@@ -174,8 +174,8 @@ class MetadataResourcesTagsAddControllerTest extends AppIntegrationTestCaseV5
         $this->assertSuccess();
         // assert response
         $this->assertCount(4, $this->getResponseBodyAsArray());
-        // assert database entries
-        $this->assertCount(4, TagFactory::find()->toArray());
+        // assert database entries -
+        $this->assertCount(5, TagFactory::find()->toArray());
         $resourceTags = ResourcesTagFactory::find()->where(['resource_id' => $resource->id])->toArray();
         $this->assertCount(4, $resourceTags);
         /** @var \Passbolt\Tags\Model\Entity\ResourcesTag $resourceTag */

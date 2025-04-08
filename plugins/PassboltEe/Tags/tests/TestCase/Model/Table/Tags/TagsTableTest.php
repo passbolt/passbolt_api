@@ -21,6 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
@@ -146,13 +147,43 @@ class TagsTableTest extends TagTestCase
 
     public function testTagsTable_findAllBySlugs()
     {
-        [$tag1, $tag2] = TagFactory::make(5)->persist();
-        $tags1 = $this->Tags->findAllBySlugsOrIds([$tag1->slug]);
-        $tags2 = $this->Tags->findAllBySlugsOrIds([$tag2->slug]);
+        [$user1, $user2] = UserFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->persist();
+        $uac1 = $this->makeUac($user1);
+        $uac2 = $this->makeUac($user2);
+        [$tag1, $tag2] = TagFactory::make(5)->isPersonalFor($resource, $user1)->persist();
+        $tags1 = $this->Tags->findAllBySlugsOrIds($uac1, [$tag1->slug]);
+        $tags2 = $this->Tags->findAllBySlugsOrIds($uac1, [$tag2->slug]);
 
         $tags = $tags1->union($tags2);
 
         $this->assertSame(2, $tags->all()->count());
+        $findBySlugForUserWithoutTags = $this->Tags->findAllBySlugsOrIds($uac2, [$tag1->slug]);
+        $this->assertSame(0, $findBySlugForUserWithoutTags->all()->count());
+    }
+
+    public function testTagsTable_findAllBySlugs_Include_Shared()
+    {
+        [$user1, $user2] = UserFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->persist();
+        $uac1 = $this->makeUac($user1);
+        [$tag1, $tag2] = TagFactory::make(2)->isPersonalFor($resource, $user1)->persist();
+        $tag3 = TagFactory::make()->isPersonalFor($resource, $user2)->persist();
+        $tag4 = TagFactory::make()->isSharedFor($resource)->persist();
+
+        $tagsAccessibleToUser1 = $this->Tags->findAllBySlugsOrIds($uac1, [
+            $tag1->get('slug'),
+            $tag2->get('slug'),
+            $tag3->get('slug'),
+            $tag4->get('slug'),
+        ]);
+
+        $this->assertSame(3, $tagsAccessibleToUser1->all()->count());
+        $tagIdsAccessibleToUser1 = Hash::extract($tagsAccessibleToUser1->toArray(), '{n}.id');
+        $this->assertTrue(in_array($tag1->get('id'), $tagIdsAccessibleToUser1));
+        $this->assertTrue(in_array($tag2->get('id'), $tagIdsAccessibleToUser1));
+        $this->assertFalse(in_array($tag3->get('id'), $tagIdsAccessibleToUser1));
+        $this->assertTrue(in_array($tag4->get('id'), $tagIdsAccessibleToUser1));
     }
 
     public function hydrateQueryProvider(): array

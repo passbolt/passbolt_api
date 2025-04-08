@@ -259,26 +259,34 @@ class TagsTable extends Table
     /**
      * Retrieve all the tags by slugs.
      *
+     * @param \App\Utility\UserAccessControl $uac user editing their tag
      * @param array|null $slugs The slugs to search
      * @param array $encryptedTagsIds The tag identifiers of encrypted tags (V5)
      * @return \Cake\ORM\Query
      * @throws \Cake\Database\Exception\DatabaseException if $slugs is empty
      */
-    public function findAllBySlugsOrIds(?array $slugs = [], array $encryptedTagsIds = []): Query
+    public function findAllBySlugsOrIds(UserAccessControl $uac, ?array $slugs = [], array $encryptedTagsIds = []): Query
     {
-        $query = $this->find();
+        $query = $this->find()->innerJoinWith('ResourcesTags', function (Query $q) use ($uac) {
+            return $q->where([
+                'OR' => [
+                    'ResourcesTags.user_id' => $uac->getId(),
+                    $q->newExpr()->isNull('ResourcesTags.user_id'),
+                ],
+            ]);
+        });
 
         if (!empty($slugs) && !empty($encryptedTagsIds)) {
             $query->where([
                 'OR' => [
-                    ['slug IN' => $this->getCaseSensitiveValues($query, $slugs)],
-                    ['id IN' => $encryptedTagsIds],
+                    ['Tags.slug IN' => $this->getCaseSensitiveValues($query, $slugs)],
+                    ['Tags.id IN' => $encryptedTagsIds],
                 ],
             ]);
         } elseif (!empty($slugs)) {
-            $query->where(['slug IN' => $this->getCaseSensitiveValues($query, $slugs)]);
+            $query->where(['Tags.slug IN' => $this->getCaseSensitiveValues($query, $slugs)]);
         } else {
-            $query->where(['id IN' => $encryptedTagsIds]);
+            $query->where(['Tags.id IN' => $encryptedTagsIds]);
         }
 
         return $query;
