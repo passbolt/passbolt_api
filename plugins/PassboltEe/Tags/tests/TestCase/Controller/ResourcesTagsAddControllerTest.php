@@ -369,15 +369,22 @@ class ResourcesTagsAddControllerTest extends TagPluginIntegrationTestCase
         $this->assertSuccess();
         $tag2Id = $this->_responseJsonBody[0]->id;
 
-        // Only one Tag should be in the DB
-        $this->assertSame(1, TagFactory::count());
-        $this->assertSame($tag1Id, $tag2Id);
+        // Two tags should be in the DB
+        $this->assertSame(2, TagFactory::count());
+        $this->assertNotSame($tag1Id, $tag2Id);
         // Two pivot table entries should be saved with each the respective user_id
         $this->assertSame(2, ResourcesTagFactory::count());
-        $conditions = ['resource_id' => $resource->id, 'tag_id' => $tag1Id,];
-        foreach ($users as $user) {
-            $conditions['user_id'] = $user->id;
-            $this->assertSame(1, ResourcesTagFactory::find()->where($conditions)->count());
-        }
+        $conditions = [
+            'resource_id' => $resource->id,
+            'tag_id' => $tag1Id,
+            'user_id' => $user1->id,
+        ];
+        $this->assertSame(1, ResourcesTagFactory::find()->where($conditions)->count());
+        $conditions = [
+            'resource_id' => $resource->id,
+            'tag_id' => $tag2Id,
+            'user_id' => $user2->id,
+        ];
+        $this->assertSame(1, ResourcesTagFactory::find()->where($conditions)->count());
     }
 }

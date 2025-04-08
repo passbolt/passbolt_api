@@ -81,4 +81,73 @@ class ResourcesTagsAddServiceTest extends TagTestCase
         $this->assertSame(1, TagFactory::count());
         $this->assertSame(1, ResourcesTagFactory::count());
     }
+
+    /**
+     * Given that two users have a tag of the same slug on the same resource
+     * When user1 removes the tag from the resource
+     * Then the tag of user1 is deleted and the one of user2 remains
+     */
+    public function testResourcesTagsAddService_Add_A_Personal_Tag_Identical_To_Existing_Tag_Slug()
+    {
+        $users = [$user1, $user2] = UserFactory::make(2)->persist();
+
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()
+            ->withPermissionsFor($users)
+            ->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $existingTagUser1 */
+        $existingTagUser1 = TagFactory::make()->isPersonalFor($resource, $user1)->persist();
+
+        $uac = $this->makeUac($user2);
+
+        $resource = $this->Resources->findView(
+            $user2->id,
+            $resource->id,
+            ['contain' => ['all_tags' => 1, 'permission' => 1]]
+        )->first();
+
+        $tag = $this->service->add($uac, $resource, [
+            'slug' => $existingTagUser1->slug,
+        ])[0];
+
+        $this->assertSame($existingTagUser1->slug, $tag['slug']);
+        $this->assertNotEquals($existingTagUser1->id, $tag['id']);
+        $this->assertSame(2, TagFactory::count());
+        $this->assertSame(2, ResourcesTagFactory::count());
+    }
+
+    /**
+     * Given that two users have a tag of the same slug on the same resource
+     * When user1 removes the tag from the resource
+     * Then the tag of user1 is deleted and the one of user2 remains
+     */
+    public function testResourcesTagsAddService_Edit_A_Personal_Tag_Identical_To_Existing_Tag_Slug()
+    {
+        [$user1, $user2] = UserFactory::make(2)->persist();
+
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$user1, $user2])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tagUser1 */
+        $tagUser1 = TagFactory::make()->isPersonalFor($resource, $user1)->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tagUser2 */
+        TagFactory::make()->isPersonalFor($resource, $user2)->persist();
+
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = $this->Resources->findView(
+            $user2->id,
+            $resource->id,
+            ['contain' => ['all_tags' => 1, 'permission' => 1]]
+        )->first();
+
+        $uac = $this->makeUac($user2);
+
+        $tag = $this->service->add($uac, $resource, [
+            'slug' => $tagUser1->slug,
+        ])[0];
+
+        $this->assertSame($tagUser1->slug, $tag['slug']);
+        $this->assertNotEquals($tagUser1->id, $tag['id']);
+        $this->assertSame(2, TagFactory::count());
+        $this->assertSame(2, ResourcesTagFactory::count());
+    }
 }
