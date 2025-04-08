@@ -6,7 +6,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed
 - PB-41374 Fix unlimited session lifetime introduced in CakePHP 5
 - PB-41379 Updates the minimum next version to 8.2 to remove false warning from installation
-- PB-41382 As a user I should not share personal tags of identical slug with other users
 
 ## [5.0.0-rc.1] - 2025-04-07
 ### Added
