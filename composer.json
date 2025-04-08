@@ -70,7 +70,7 @@
         "ext-pdo": "*",
         "ext-curl": "*",
         "composer/composer": "^2.8.1",
-        "cakephp/cakephp": "dev-fix-uri-type-error-patch-v5.0 as 5.0.11",
+        "cakephp/cakephp": "v5.0.x-dev as 5.0.11",
         "cakephp/migrations": "^4.0.0",
         "cakephp/plugin-installer": "^2.0",
         "mobiledetect/mobiledetectlib": "^4.8.03",
