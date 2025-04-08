@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "babb868df6bbf7c39d48060c383c652e",
+    "content-hash": "5c6e4e28784aa0c039c2639919a88ccf",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -331,16 +331,16 @@
         },
         {
             "name": "cakephp/cakephp",
-            "version": "dev-fix-uri-type-error-patch-v5.0",
+            "version": "v5.0.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/passbolt/cakephp.git",
-                "reference": "f23f2ac7b261631d549a2ef2abeb6eb84e257f66"
+                "reference": "231585d2aadcd6bc06d577f270fdf956dfe8175a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/passbolt/cakephp/zipball/f23f2ac7b261631d549a2ef2abeb6eb84e257f66",
-                "reference": "f23f2ac7b261631d549a2ef2abeb6eb84e257f66",
+                "url": "https://api.github.com/repos/passbolt/cakephp/zipball/231585d2aadcd6bc06d577f270fdf956dfe8175a",
+                "reference": "231585d2aadcd6bc06d577f270fdf956dfe8175a",
                 "shasum": ""
             },
             "require": {
@@ -506,7 +506,7 @@
                 "forum": "https://discourse.cakephp.org/",
                 "source": "https://github.com/cakephp/cakephp"
             },
-            "time": "2025-03-20T14:10:59+00:00"
+            "time": "2025-04-07T12:26:09+00:00"
         },
         {
             "name": "cakephp/chronos",
@@ -9889,7 +9889,7 @@
     "aliases": [
         {
             "package": "cakephp/cakephp",
-            "version": "dev-fix-uri-type-error-patch-v5.0",
+            "version": "5.0.9999999.9999999-dev",
             "alias": "5.0.11",
             "alias_normalized": "5.0.11.0"
         }
