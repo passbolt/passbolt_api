@@ -267,14 +267,16 @@ class TagsTable extends Table
      */
     public function findAllBySlugsOrIds(UserAccessControl $uac, ?array $slugs = [], array $encryptedTagsIds = []): Query
     {
-        $query = $this->find()->innerJoinWith('ResourcesTags', function (Query $q) use ($uac) {
-            return $q->where([
-                'OR' => [
-                    'ResourcesTags.user_id' => $uac->getId(),
-                    $q->newExpr()->isNull('ResourcesTags.user_id'),
-                ],
-            ]);
-        });
+        $query = $this->find()
+            ->innerJoinWith('ResourcesTags', function (Query $q) use ($uac) {
+                return $q->where([
+                    'OR' => [
+                        'ResourcesTags.user_id' => $uac->getId(),
+                        $q->newExpr()->isNull('ResourcesTags.user_id'),
+                    ],
+                ]);
+            })
+            ->groupBy('Tags.id');
 
         if (!empty($slugs) && !empty($encryptedTagsIds)) {
             $query->where([
