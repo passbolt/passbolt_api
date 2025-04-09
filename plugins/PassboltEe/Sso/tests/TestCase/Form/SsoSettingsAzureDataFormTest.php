@@ -56,6 +56,7 @@ class SsoSettingsAzureDataFormTest extends SsoTestCase
             'client_secret' => UuidFactory::uuid(),
             'client_secret_expiry' => Chronos::now()->addDays(365),
             'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
+            'login_hint' => SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_ENABLED,
         ];
 
         return [
@@ -122,5 +123,13 @@ class SsoSettingsAzureDataFormTest extends SsoTestCase
             'inList' => self::getInListTestCases(SsoSettingsAzureDataForm::SUPPORTED_EMAIL_CLAIM_ALIASES),
         ];
         $this->assertFormFieldFormatValidation(SsoSettingsAzureDataForm::class, 'data.email_claim', $this->getDummy(), $testCases);
+    }
+
+    public function testSsoSettingsAzureDataForm_ValidateLoginHint(): void
+    {
+        $testCases = [
+            'boolean' => self::getBooleanTestCases(),
+        ];
+        $this->assertFormFieldFormatValidation(SsoSettingsAzureDataForm::class, 'data.login_hint', $this->getDummy(), $testCases);
     }
 }

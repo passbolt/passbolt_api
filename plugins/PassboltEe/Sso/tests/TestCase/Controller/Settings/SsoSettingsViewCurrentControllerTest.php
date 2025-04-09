@@ -87,6 +87,7 @@ class SsoSettingsViewCurrentControllerTest extends SsoIntegrationTestCase
         $this->assertTrue(is_string($body->data->client_secret_expiry));
         $this->assertObjectHasAttribute('email_claim', $body->data);
         $this->assertSame(SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL, $body->data->email_claim);
+        $this->assertSame(SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_ENABLED, $body->data->login_hint);
     }
 
     public function testSsoSettingsViewCurrentController_SuccessNotLoggedIn(): void

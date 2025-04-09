@@ -18,6 +18,7 @@ namespace Passbolt\Sso\Test\TestCase\Controller\Settings;
 
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
+use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Entity\SsoSetting;
 use Passbolt\Sso\Model\Entity\SsoState;
 use Passbolt\Sso\Service\Providers\SsoActiveProvidersGetService;
@@ -55,6 +56,7 @@ class SsoSettingsActivateControllerTest extends SsoIntegrationTestCase
         $settingDto = $this->_responseJsonBody;
         $this->assertEquals($settingDto->id, $settings->id);
         $this->assertEquals(SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL, $settingDto->data->email_claim);
+        $this->assertEquals(SsoSettingsAzureDataForm::AZURE_LOGIN_HINT_ENABLED, $settingDto->data->login_hint);
     }
 
     public function testSsoSettingsActivateController_SuccessGoogle(): void

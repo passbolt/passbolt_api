@@ -40,6 +40,10 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
         $this->assertSuccess();
         $this->assertStringContainsString('microsoft', $this->_responseJsonBody->url);
         $this->assertStringContainsString('prompt=login', $this->_responseJsonBody->url);
+        $this->assertStringContainsString(
+            'login_hint=' . urlencode($user->get('username')),
+            $this->_responseJsonBody->url
+        );
     }
 
     /**
@@ -60,6 +64,20 @@ class SsoAzureStage1DryRunControllerTest extends SsoIntegrationTestCase
         $this->assertSuccess();
         $this->assertStringContainsString('microsoft', $this->_responseJsonBody->url);
         $this->assertStringNotContainsString('prompt', $this->_responseJsonBody->url);
+    }
+
+    public function testSsoAzureStage1DryRunController_Success_WithoutLoginHint(): void
+    {
+        $user = UserFactory::make()->admin()->persist();
+        $settings = $this->createAzureSettingsFromConfig($user, SsoSetting::STATUS_DRAFT, ['login_hint' => false]);
+        $this->logInAs($user);
+
+        $this->postJson('/sso/azure/login/dry-run.json', ['sso_settings_id' => $settings->id]);
+
+        $this->assertSuccess();
+        $this->assertStringContainsString('microsoft', $this->_responseJsonBody->url);
+        $this->assertStringContainsString('prompt=login', $this->_responseJsonBody->url);
+        $this->assertStringNotContainsString('login_hint=', $this->_responseJsonBody->url);
     }
 
     /**
