@@ -19,6 +19,7 @@ namespace App\Service\OpenPGP;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
+use Exception;
 
 trait OpenPGPCommonServerOperationsTrait
 {
@@ -40,11 +41,11 @@ trait OpenPGPCommonServerOperationsTrait
         // set the key to be used for encrypting
         try {
             $gpg->setEncryptKeyFromFingerprint($fingerprint);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
                 $gpg->setEncryptKeyFromFingerprint($fingerprint);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to encrypt.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);
@@ -72,11 +73,11 @@ trait OpenPGPCommonServerOperationsTrait
         // set the key to be used for decrypting
         try {
             $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
                 $gpg->setDecryptKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to decrypt.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);
@@ -104,11 +105,11 @@ trait OpenPGPCommonServerOperationsTrait
         // Set verify key as the one from the server
         try {
             $gpg->setVerifyKeyFromFingerprint($fingerprint);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
                 $gpg->setVerifyKeyFromFingerprint($fingerprint);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to verify signature.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);
@@ -136,11 +137,11 @@ trait OpenPGPCommonServerOperationsTrait
         // Set sign key as the one from the server
         try {
             $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             try {
                 $gpg->importServerKeyInKeyring();
                 $gpg->setSignKeyFromFingerprint($fingerprint, $passphrase);
-            } catch (\Exception $exception) {
+            } catch (Exception $exception) {
                 $msg = __('The OpenPGP server key defined in the config cannot be used to sign.') . ' ';
                 $msg .= $exception->getMessage();
                 throw new InternalErrorException($msg, 500, $exception);
@@ -155,7 +156,7 @@ trait OpenPGPCommonServerOperationsTrait
      * @return void
      * @throws \Cake\Http\Exception\InternalErrorException if the server key fingerprint cannot be loaded
      */
-    private function assertServerFingerprint($fingerprint): void
+    private function assertServerFingerprint(mixed $fingerprint): void
     {
         if (!is_string($fingerprint) || !PublicKeyValidationService::isValidFingerprint($fingerprint)) {
             $msg = __('The config for the server private key fingerprint is not available or incomplete.');
@@ -168,7 +169,7 @@ trait OpenPGPCommonServerOperationsTrait
      * @return void
      * @throws \Cake\Http\Exception\InternalErrorException if the server key passphrase cannot be loaded
      */
-    private function assertServerPassphrase($passphrase): void
+    private function assertServerPassphrase(mixed $passphrase): void
     {
         if (!is_string($passphrase)) {
             $msg = __('The config for the server private key passphrase is invalid.');

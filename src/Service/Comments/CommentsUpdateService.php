@@ -20,22 +20,25 @@ namespace App\Service\Comments;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Comment;
 use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ForbiddenException;
 use Cake\Http\Exception\NotFoundException;
+use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
 
 class CommentsUpdateService
 {
-    use \Cake\ORM\Locator\LocatorAwareTrait;
-    use \Cake\Event\EventDispatcherTrait;
+    use LocatorAwareTrait;
+    use EventDispatcherTrait;
 
     /**
      * @var \Cake\ORM\Table
      */
-    private $Comments;
+    private Table $Comments;
 
     /**
      * CommentsAddService constructor.
@@ -54,7 +57,7 @@ class CommentsUpdateService
      * @return \App\Model\Entity\Comment $comment comment entity
      * @throws \Cake\Http\Exception\BadRequestException if the validation failed
      */
-    public function update(string $userId, string $commentId, string $requestDataContent)
+    public function update(string $userId, string $commentId, string $requestDataContent): Comment
     {
         if (!Validation::uuid($commentId)) {
             throw new BadRequestException(__('The comment id is not valid.'));
@@ -77,7 +80,7 @@ class CommentsUpdateService
      * @throws \App\Error\Exception\ValidationException
      * @return void
      */
-    protected function _handleValidationErrors(Comment $comment)
+    protected function _handleValidationErrors(Comment $comment): void
     {
         $errors = $comment->getErrors();
         if (!empty($errors)) {
@@ -96,7 +99,7 @@ class CommentsUpdateService
      * @param string $requestDataContent The comment 'content' data
      * @return \App\Model\Entity\Comment $comment comment entity
      */
-    protected function _patchAndValidateCommentEntity(string $userId, string $commentId, string $requestDataContent)
+    protected function _patchAndValidateCommentEntity(string $userId, string $commentId, string $requestDataContent): Comment // phpcs:ignore
     {
         try {
             $comment = $this->Comments->get($commentId);

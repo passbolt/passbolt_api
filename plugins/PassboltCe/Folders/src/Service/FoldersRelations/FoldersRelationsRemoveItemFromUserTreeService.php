@@ -18,18 +18,19 @@ declare(strict_types=1);
 namespace Passbolt\Folders\Service\FoldersRelations;
 
 use Cake\ORM\TableRegistry;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsRemoveItemFromUserTreeService
 {
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsDeleteService
      */
-    private $foldersRelationsDeleteService;
+    private FoldersRelationsDeleteService $foldersRelationsDeleteService;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * Instantiate the service.
@@ -52,7 +53,7 @@ class FoldersRelationsRemoveItemFromUserTreeService
     public function removeItemFromUserTree(string $foreignId, string $userId, ?bool $moveContentToRoot = false): void
     {
         $this->foldersRelationsTable->getConnection()->transactional(
-            function () use ($userId, $foreignId, $moveContentToRoot) {
+            function () use ($userId, $foreignId, $moveContentToRoot): void {
                 if ($moveContentToRoot) {
                     $this->moveContentToRoot($foreignId, $userId);
                 }
@@ -68,7 +69,7 @@ class FoldersRelationsRemoveItemFromUserTreeService
      * @param string $userId The target user tree
      * @return void
      */
-    private function moveContentToRoot(string $foreignId, string $userId)
+    private function moveContentToRoot(string $foreignId, string $userId): void
     {
         $fields = [
             'folder_parent_id' => null,

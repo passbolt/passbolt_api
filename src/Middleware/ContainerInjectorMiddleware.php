@@ -29,7 +29,7 @@ class ContainerInjectorMiddleware implements MiddlewareInterface
     /**
      * @var \Cake\Core\ContainerInterface
      */
-    protected $container;
+    protected ContainerInterface $container;
 
     /**
      * Constructor

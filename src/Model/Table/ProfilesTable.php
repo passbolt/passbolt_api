@@ -24,7 +24,7 @@ use Cake\Validation\Validator;
  * Profiles Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \App\Model\Entity\Profile get($primaryKey, $options = [])
+ * @method \App\Model\Entity\Profile get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \App\Model\Entity\Profile newEntity(array $data, array $options = [])
  * @method \App\Model\Entity\Profile[] newEntities(array $data, array $options = [])
  * @method \App\Model\Entity\Profile|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -98,7 +98,7 @@ class ProfilesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationRegister(Validator $validator)
+    public function validationRegister(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }
@@ -109,7 +109,7 @@ class ProfilesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationUpdate(Validator $validator)
+    public function validationUpdate(Validator $validator): Validator
     {
         return $this->validationDefault($validator);
     }

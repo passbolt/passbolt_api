@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Locale\Service;
 
 use App\Error\Exception\ValidationException;
+use ArrayAccess;
 use Cake\Core\Configure;
 use Cake\I18n\I18n;
 use Cake\Log\Log;
@@ -34,9 +35,9 @@ class LocaleService
     /**
      * Read in configuration the locales available
      *
-     * @return array|\ArrayAccess
+     * @return \ArrayAccess|array
      */
-    public static function getSystemLocales()
+    public static function getSystemLocales(): array|ArrayAccess
     {
         return Hash::extract(
             Configure::readOrFail('passbolt.plugins.locale.options'),
@@ -63,7 +64,7 @@ class LocaleService
      * @return void
      * @throws \App\Error\Exception\ValidationException
      */
-    public function assertIsValidLocale(string $locale)
+    public function assertIsValidLocale(string $locale): void
     {
         if (!$this->isValidLocale($locale)) {
             throw new ValidationException(__('This is not a valid locale.'));

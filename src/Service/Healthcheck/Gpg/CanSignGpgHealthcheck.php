@@ -81,7 +81,7 @@ class CanSignGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHealth
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Make sure that the server private key is valid and that there is no passphrase.'),

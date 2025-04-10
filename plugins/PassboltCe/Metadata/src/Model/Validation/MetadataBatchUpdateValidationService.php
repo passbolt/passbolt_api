@@ -125,6 +125,6 @@ abstract class MetadataBatchUpdateValidationService
             ->where([
                 $Table->aliasField('id') . ' IN' => $entityIds,
             ])
-            ->orderDesc($Table->aliasField('id'));
+            ->orderByDesc($Table->aliasField('id'));
     }
 }

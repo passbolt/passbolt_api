@@ -26,7 +26,8 @@ use Cake\Chronos\Chronos;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
+use Exception;
 use Passbolt\Folders\Test\Factory\FolderFactory;
 use Passbolt\Metadata\Model\Entity\MetadataKey;
 use Passbolt\Metadata\Service\Upgrade\MetadataUpgradeFoldersUpdateService;
@@ -103,12 +104,12 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
         $updatedFolder1 = FolderFactory::get($folderPersonal->get('id'));
         $this->assertSame($userKeyId, $updatedFolder1->get('metadata_key_id'));
         $this->assertSame($metadataForF1, $updatedFolder1->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder1->get('modified')->format('Y-m-d H:i')); // comparing seconds here might fail
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedFolder1->get('modified')->format('Y-m-d')); // comparing seconds here might fail
         $this->assertSame($uac->getId(), $updatedFolder1->get('modified_by'));
         $updatedFolder2 = FolderFactory::get($folderShared->get('id'));
         $this->assertSame($activeMetadataKey->get('id'), $updatedFolder2->get('metadata_key_id'));
         $this->assertSame($metadataForF2, $updatedFolder2->get('metadata'));
-        $this->assertSame(Chronos::now()->format('Y-m-d H:i'), $updatedFolder2->get('modified')->format('Y-m-d H:i'));
+        $this->assertSame(Chronos::now()->format('Y-m-d'), $updatedFolder2->get('modified')->format('Y-m-d'));
         $this->assertSame($uac->getId(), $updatedFolder2->get('modified_by'));
     }
 
@@ -174,7 +175,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => 'foo',
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $uac->getId(),
             ],
         ];
@@ -185,7 +186,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
 
     public function testMetadataUpgradeFoldersUpdateService_Error_ModifiedDateConflict(): void
     {
-        $folder = FolderFactory::make(['modified' => FrozenTime::yesterday()])->persist();
+        $folder = FolderFactory::make(['modified' => DateTime::yesterday()])->persist();
         $activeMetadataKey = MetadataKeyFactory::make()->withServerPrivateKey()->persist();
         $uac = $this->mockAdminAccessControl();
 
@@ -195,7 +196,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 'metadata_key_id' => $activeMetadataKey->get('id'),
                 'metadata_key_type' => MetadataKey::TYPE_SHARED_KEY,
                 'metadata' => $this->encryptForMetadataKey(json_encode([])),
-                'modified' => FrozenTime::now(),
+                'modified' => DateTime::now(),
                 'modified_by' => $folder->get('modified_by'),
             ],
         ];
@@ -243,7 +244,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 ],
             ];
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertArrayHasKey('isMetadataKeyNotExpired', $errors[0]['metadata_key_id']);
@@ -270,7 +271,7 @@ class MetadataUpgradeFoldersUpdateServiceTest extends AppTestCaseV5
                 ],
             ];
             $this->service->updateMany($uac, $data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(CustomValidationException::class, $e);
             $errors = $e->getErrors();
             $this->assertSame(

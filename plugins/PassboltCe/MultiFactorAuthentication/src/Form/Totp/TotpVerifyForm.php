@@ -28,7 +28,7 @@ class TotpVerifyForm extends MfaForm
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
-    protected $settings;
+    protected MfaSettings $settings;
 
     /**
      * TotpVerifyForm constructor.
@@ -89,7 +89,7 @@ class TotpVerifyForm extends MfaForm
      * @param string $value otp provisioning uri
      * @return bool
      */
-    public function isValidOtp(string $value)
+    public function isValidOtp(string $value): bool
     {
         if ($this->settings->getAccountSettings() === null) {
             return false;

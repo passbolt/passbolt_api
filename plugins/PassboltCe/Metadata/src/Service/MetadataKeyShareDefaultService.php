@@ -23,10 +23,13 @@ use App\Service\OpenPGP\OpenPGPCommonUserOperationsTrait;
 use App\Utility\OpenPGP\OpenPGPBackend;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
+use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Log\Log;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\TableRegistry;
+use Cake\Validation\Validation;
+use Exception;
 use Passbolt\Metadata\Exception\MetadataKeyShareException;
 use Passbolt\Metadata\Form\MetadataCleartextPrivateKeyForm;
 use Passbolt\Metadata\Model\Entity\MetadataPrivateKey;
@@ -50,7 +53,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
         // (resource, folder, comments, tags)
         $serverMetadataPrivateKeys = $metadataPrivateKeysTable->find()
             ->where(['user_id IS' => null])
-            ->order(['created' => 'DESC'])
+            ->orderBy(['created' => 'DESC'])
             ->all();
 
         if ($serverMetadataPrivateKeys->isEmpty()) {
@@ -60,18 +63,26 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
         }
 
         foreach ($serverMetadataPrivateKeys as $serverMetadataPrivateKey) {
-            $this->shareMetadataKeyWithUser($user, $serverMetadataPrivateKey);
+            $this->shareMetadataKeyWithUser($user, $serverMetadataPrivateKey, $user->id);
         }
     }
 
     /**
      * @param \App\Model\Entity\User $user user that completed the setup
      * @param \Passbolt\Metadata\Model\Entity\MetadataPrivateKey $serverMetadataPrivateKey key to share
+     * @param string $activeUserId ID of the user performing the action
      * @return void
      * @throws \Passbolt\Metadata\Exception\MetadataKeyShareException
      */
-    public function shareMetadataKeyWithUser(User $user, MetadataPrivateKey $serverMetadataPrivateKey): void
-    {
+    public function shareMetadataKeyWithUser(
+        User $user,
+        MetadataPrivateKey $serverMetadataPrivateKey,
+        string $activeUserId
+    ): void {
+        if (!Validation::uuid($activeUserId)) {
+            throw new BadRequestException(__('The user identifier should be a valid UUID.'));
+        }
+
         $metadataPrivateKeysTable = $this->fetchTable('Passbolt/Metadata.MetadataPrivateKeys');
 
         // Decrypt, verify, validate, re-encrypt and sign for user
@@ -85,7 +96,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
             $openpgp = $this->setSignKeyWithServerKey($openpgp);
             $openpgp = $this->setEncryptKeyWithUserKey($openpgp, $user->gpgkey);
             $secret = $openpgp->encrypt($clearText, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('Metadata key could not be shared with user id: {0}.', $user->id);
             throw new MetadataKeyShareException($msg, 500, $exception);
@@ -98,11 +109,15 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
                 'metadata_key_id' => $serverMetadataPrivateKey->metadata_key_id,
                 'user_id' => $user->id,
                 'data' => $secret,
+                'created_by' => $activeUserId,
+                'modified_by' => $activeUserId,
             ], [
                 'accessibleFields' => [
                     'metadata_key_id' => true,
                     'user_id' => true,
                     'data' => true,
+                    'created_by' => true,
+                    'modified_by' => true,
                 ],
             ]);
             if (!empty($userMetadataPrivateKey->getErrors())) {
@@ -119,7 +134,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
                 $msg = __('The OpenPGP key data is not valid.');
                 throw new ValidationException($msg, $userMetadataPrivateKey, $metadataPrivateKeysTable);
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The data could not be validated.') . ' ';
             $msg .= __('Metadata key could not be shared with user id: {0}.', $user->id);
@@ -129,7 +144,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
         // Save private key entity for the user
         try {
             $metadataPrivateKeysTable->save($userMetadataPrivateKey, ['checkRules' => false]);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = $exception->getMessage() . ' ';
             $msg .= __('The data could not be saved.') . ' ';
             $msg .= __('Metadata key could not be shared with user id: {0}.', $user->id);
@@ -140,7 +155,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
     /**
      * @inheritDoc
      */
-    public function onFailure(\Exception $exception): void
+    public function onFailure(Exception $exception): void
     {
         Log::error($exception->getMessage());
         if (Configure::read('debug')) {
@@ -161,7 +176,7 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
 
         try {
             $decoded = json_decode($clearText, true, 2, JSON_THROW_ON_ERROR);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             if (Configure::read('debug')) {
                 Log::error($clearText);
             }
@@ -204,9 +219,9 @@ class MetadataKeyShareDefaultService implements MetadataKeyShareServiceInterface
             /** @var \App\Model\Entity\Gpgkey $userKey */
             $userKey = $usersTable->find()
                 ->where(['user_id' => $createdBy, 'deleted' => false])
-                ->order(['created' => 'DESC'])
+                ->orderBy(['created' => 'DESC'])
                 ->firstOrFail();
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $msg = __('The OpenPGP user key cannot be found.') . ' ';
             $msg .= $exception->getMessage();
             throw new InternalErrorException($msg, 500, $exception);

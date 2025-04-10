@@ -20,6 +20,7 @@ use App\Command\PassboltCommand;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Core\Configure;
+use Exception;
 use Passbolt\Metadata\Service\Migration\GenerateDummyMetadataKeyService;
 
 class GenerateDummyMetadataKeyCommand extends PassboltCommand
@@ -55,7 +56,7 @@ class GenerateDummyMetadataKeyCommand extends PassboltCommand
         try {
             $key = (new GenerateDummyMetadataKeyService())->generate($verbose);
             $io->out('New key generated and encrypted for users: ' . $key->fingerprint);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $io->err($e->getMessage());
 
             return $this->errorCode();

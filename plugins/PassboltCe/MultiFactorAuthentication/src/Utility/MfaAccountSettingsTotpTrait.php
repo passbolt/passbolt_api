@@ -26,7 +26,7 @@ trait MfaAccountSettingsTotpTrait
      * @throws \Cake\Datasource\Exception\RecordNotFoundException if URI is not set
      * @return string
      */
-    public function getOtpProvisioningUri()
+    public function getOtpProvisioningUri(): string
     {
         if (!isset($this->settings[MfaSettings::PROVIDER_TOTP][MfaAccountSettings::OTP_PROVISIONING_URI])) {
             throw new RecordNotFoundException(__('MFA setting OTP provisioning uri is not set.'));
@@ -40,7 +40,7 @@ trait MfaAccountSettingsTotpTrait
      *
      * @return bool
      */
-    public function isOtpProvisioningUriSet()
+    public function isOtpProvisioningUriSet(): bool
     {
         return isset($this->settings[MfaSettings::PROVIDER_TOTP][MfaAccountSettings::OTP_PROVISIONING_URI]);
     }

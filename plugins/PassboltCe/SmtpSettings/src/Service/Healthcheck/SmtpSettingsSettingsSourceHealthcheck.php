@@ -23,6 +23,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
+use Throwable;
 
 class SmtpSettingsSettingsSourceHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -59,7 +60,7 @@ class SmtpSettingsSettingsSourceHealthcheck implements HealthcheckServiceInterfa
             $source = $e->getForm()->getData('source');
         } catch (InternalErrorException $e) {
             $source = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_DB;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $source = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_UNDEFINED;
         }
 

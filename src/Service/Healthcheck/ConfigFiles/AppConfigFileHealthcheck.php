@@ -83,7 +83,7 @@ class AppConfigFileHealthcheck implements HealthcheckServiceInterface, Healthche
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Copy {0} to {1}', CONFIG . 'app.default.php', CONFIG . 'app.php');
     }

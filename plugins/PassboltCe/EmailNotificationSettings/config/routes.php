@@ -17,7 +17,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/EmailNotificationSettings', ['path' => '/settings'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/EmailNotificationSettings', ['path' => '/settings'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     /**

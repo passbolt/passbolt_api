@@ -20,6 +20,7 @@ namespace Passbolt\MultiFactorAuthentication\Test\Mock;
 use App\Model\Entity\User;
 use Duo\DuoUniversal\Client;
 use Duo\DuoUniversal\DuoException;
+use PHPUnit\Framework\TestCase;
 
 class DuoSdkClientMock
 {
@@ -49,7 +50,7 @@ class DuoSdkClientMock
      *
      * @param \PHPUnit\Framework\TestCase $testCase Test case
      */
-    public function __construct(\PHPUnit\Framework\TestCase $testCase)
+    public function __construct(TestCase $testCase)
     {
         $this->apiHostname = 'api-45e9f2ca.duosecurity.com';
         $this->state = 'duo-not-so-random-state';
@@ -77,7 +78,7 @@ class DuoSdkClientMock
      * @param User $user Test user
      * @return static
      */
-    public static function createDefault(\PHPUnit\Framework\TestCase $testCase, User $user): self
+    public static function createDefault(TestCase $testCase, User $user): self
     {
         $mock = new self($testCase);
         $mock->mockSuccessGenerateState($mock->state);
@@ -92,7 +93,7 @@ class DuoSdkClientMock
      * @param \PHPUnit\Framework\TestCase $testCase Test case
      * @return static
      */
-    public static function createWithSuccessHealthcheck(\PHPUnit\Framework\TestCase $testCase): self
+    public static function createWithSuccessHealthcheck(TestCase $testCase): self
     {
         $mock = new self($testCase);
         $mock->mockSuccessHealthCheck();
@@ -104,7 +105,7 @@ class DuoSdkClientMock
      * @param \PHPUnit\Framework\TestCase $testCase Test case
      * @return static
      */
-    public static function createWithExchangeAuthorizationCodeFor2FAResultThrowingException(\PHPUnit\Framework\TestCase $testCase): self
+    public static function createWithExchangeAuthorizationCodeFor2FAResultThrowingException(TestCase $testCase): self
     {
         $mock = new self($testCase);
         $mock->mockErrorExchangeAuthorizationCodeFor2FAResult();
@@ -117,7 +118,7 @@ class DuoSdkClientMock
      * @param User $user Test user
      * @return static
      */
-    public static function createWithWrongExchangeAuthorizationCodeFor2FAResultIss(\PHPUnit\Framework\TestCase $testCase, User $user): self
+    public static function createWithWrongExchangeAuthorizationCodeFor2FAResultIss(TestCase $testCase, User $user): self
     {
         $iss = 'https://api-00f0f2ff.duosecurity.com/oauth/v1/token';
         $mock = new self($testCase);
@@ -130,7 +131,7 @@ class DuoSdkClientMock
      * @param \PHPUnit\Framework\TestCase $testCase Test case
      * @return static
      */
-    public static function createWithWrongExchangeAuthorizationCodeFor2FAResultSub(\PHPUnit\Framework\TestCase $testCase): self
+    public static function createWithWrongExchangeAuthorizationCodeFor2FAResultSub(TestCase $testCase): self
     {
         $username = 'wrong@passbolt.com';
         $mock = new self($testCase);
@@ -144,7 +145,7 @@ class DuoSdkClientMock
      * @param string $sub the sub to use
      * @return static
      */
-    public static function createWithExchangeAuthorizationCodeFor2FAResultSub(\PHPUnit\Framework\TestCase $testCase, string $sub): self
+    public static function createWithExchangeAuthorizationCodeFor2FAResultSub(TestCase $testCase, string $sub): self
     {
         $mock = new self($testCase);
         $mock->mockSuccessExchangeAuthorizationCodeFor2FAResult($mock->iss, $sub);

@@ -25,19 +25,19 @@ class MfaDuoCallbackDto
     /**
      * @var string|null $error
      */
-    public $error;
+    public ?string $error = null;
     /**
      * @var string|null $errorDescription
      */
-    public $errorDescription;
+    public ?string $errorDescription = null;
     /**
      * @var string|null $state
      */
-    public $state;
+    public ?string $state = null;
     /**
      * @var string|null $duoCode
      */
-    public $duoCode;
+    public ?string $duoCode = null;
 
     /**
      * Construct the Dto based on array as source

@@ -43,7 +43,7 @@ class GpgkeysViewController extends AppController
         // Retrieve the user
         /** @var \App\Model\Table\GpgkeysTable $gpgkeysTable */
         $gpgkeysTable = $this->fetchTable('Gpgkeys');
-        $gpgkeys = $gpgkeysTable->find('view', ['id' => $id])->first();
+        $gpgkeys = $gpgkeysTable->find('view', id: $id)->first();
         if (empty($gpgkeys)) {
             throw new NotFoundException(__('The OpenPGP key does not exist.'));
         }

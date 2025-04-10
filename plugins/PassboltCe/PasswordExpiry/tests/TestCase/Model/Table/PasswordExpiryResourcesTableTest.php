@@ -18,7 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\PasswordExpiry\Test\TestCase\Model\Table;
 
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
 use Cake\ORM\TableRegistry;
 
 class PasswordExpiryResourcesTableTest extends AppTestCase
@@ -44,8 +44,8 @@ class PasswordExpiryResourcesTableTest extends AppTestCase
     public function dataProviderForSuccess(): array
     {
         return [
-            [FrozenDate::tomorrow()->toAtomString()],
-            [FrozenDate::tomorrow()->format('Y-m-d')],
+            [Date::tomorrow()->toAtomString()],
+            [Date::tomorrow()->format('Y-m-d')],
             [null],
         ];
     }

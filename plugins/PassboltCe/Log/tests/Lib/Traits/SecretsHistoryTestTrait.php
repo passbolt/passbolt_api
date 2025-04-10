@@ -32,6 +32,7 @@ trait SecretsHistoryTestTrait
     {
         $count = $this->SecretsHistory
             ->find()
+            ->all()
             ->count();
         $this->assertEquals($expectedCount, $count);
     }

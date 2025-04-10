@@ -26,8 +26,8 @@ use Cake\ORM\Entity;
  * @property string $user_id
  * @property string $resource_id
  * @property string $data
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property \App\Model\Entity\Resource $resource
  * @property \App\Model\Entity\User $user
  * @property \Passbolt\Log\Model\Entity\SecretHistory $secrets_history
@@ -44,7 +44,7 @@ class Secret extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'user_id' => false,
         'resource_id' => false,
         'data' => false,

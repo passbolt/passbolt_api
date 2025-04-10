@@ -22,13 +22,14 @@ use Cake\Database\Expression\TupleComparison;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 
 class FoldersRelationsSortService
 {
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * Instantiate the service.
@@ -52,7 +53,7 @@ class FoldersRelationsSortService
      * @param string|null $userId The target user id
      * @return void
      */
-    public function sort(array &$foldersRelations, UserAccessControl $uac, ?string $userId = null)
+    public function sort(array &$foldersRelations, UserAccessControl $uac, ?string $userId = null): void
     {
         if (empty($foldersRelations)) {
             return;
@@ -182,7 +183,7 @@ class FoldersRelationsSortService
                 'folder_parent_id' => 'folder_parent_id',
             ])
             ->where($this->buildFoldersRelationsTupleComparisonExpression($foldersRelations))
-            ->group(['foreign_id', 'folder_parent_id'])
+            ->groupBy(['foreign_id', 'folder_parent_id'])
             ->all()
             ->combine([$this, 'getRelationDetailsKey'], function ($folderRelation) {
                 return $folderRelation->extract(['usage_count']);
@@ -237,7 +238,7 @@ class FoldersRelationsSortService
                 'created_oldest' => 'MIN(created)',
             ])
             ->where($this->buildFoldersRelationsTupleComparisonExpression($foldersRelations))
-            ->group(['foreign_id', 'folder_parent_id'])
+            ->groupBy(['foreign_id', 'folder_parent_id'])
             ->all()
             ->combine([$this, 'getRelationDetailsKey'], function ($folderRelation) {
                 return $folderRelation->extract(['created_oldest']);
@@ -292,7 +293,7 @@ class FoldersRelationsSortService
         FoldersRelation $relationA,
         FoldersRelation $relationB,
         array $changesDetails
-    ) {
+    ): ?bool {
         $inTreeA = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationA)}.in_operator_tree", false);
         $inTreeB = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationB)}.in_operator_tree", false);
         if ($inTreeA && !$inTreeB) {
@@ -313,8 +314,11 @@ class FoldersRelationsSortService
      * @return bool|null return true if the first relation has the priority, return false if the second relation has
      * the priority or return null if none of them has the priority.
      */
-    private function hasUsagePriority(FoldersRelation $relationA, FoldersRelation $relationB, array $changesDetails)
-    {
+    private function hasUsagePriority(
+        FoldersRelation $relationA,
+        FoldersRelation $relationB,
+        array $changesDetails
+    ): ?bool {
         $usageCountA = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationA)}.usage_count", 0);
         $usageCountB = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationB)}.usage_count", 0);
 
@@ -341,7 +345,7 @@ class FoldersRelationsSortService
         FoldersRelation $relationA,
         FoldersRelation $relationB,
         array $changesDetails
-    ) {
+    ): ?bool {
         $inTreeA = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationA)}.in_user_tree", false);
         $inTreeB = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationB)}.in_user_tree", false);
         if ($inTreeA && !$inTreeB) {
@@ -362,7 +366,7 @@ class FoldersRelationsSortService
      * @return bool|null return true if the first relation has the priority, return false if the second relation has
      * the priority or return null if none of them has the priority.
      */
-    private function hasGrandPaPriority(FoldersRelation $relationA, FoldersRelation $relationB, array $changesDetails)
+    private function hasGrandPaPriority(FoldersRelation $relationA, FoldersRelation $relationB, array $changesDetails): ?bool // phpcs:ignore
     {
         $createdOldestA = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationA)}.created_oldest", 0);
         $createdOldestB = Hash::get($changesDetails, "{$this->getRelationDetailsKey($relationB)}.created_oldest", 0);

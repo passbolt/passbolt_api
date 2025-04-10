@@ -17,6 +17,8 @@ declare(strict_types=1);
 namespace Passbolt\Reports\Service;
 
 use InvalidArgumentException;
+use Passbolt\Reports\Utility\AbstractReport;
+use ReflectionClass;
 
 /**
  * Create report service instance. Use the ReportServicePool.
@@ -28,7 +30,7 @@ class ReportViewService
     /**
      * @var \Passbolt\Reports\Service\ReportPool
      */
-    private $reportPool;
+    private ReportPool $reportPool;
 
     /**
      * @param \Passbolt\Reports\Service\ReportPool|null $reportPool An instance of ReportPool
@@ -46,7 +48,7 @@ class ReportViewService
      * @throws \ReflectionException
      * @return \Passbolt\Reports\Utility\AbstractReport
      */
-    public function getReport(string $reportSlug, ?array $parameters = [])
+    public function getReport(string $reportSlug, ?array $parameters = []): AbstractReport
     {
         $reports = $this->reportPool->getReports();
         /** @var class-string $reportClass */
@@ -56,7 +58,7 @@ class ReportViewService
             throw new InvalidArgumentException();
         }
 
-        $reflectionClass = new \ReflectionClass($reportClass);
+        $reflectionClass = new ReflectionClass($reportClass);
 
         /** @var \Passbolt\Reports\Utility\AbstractReport $report */
         $report = $reflectionClass->newInstance(...$parameters);

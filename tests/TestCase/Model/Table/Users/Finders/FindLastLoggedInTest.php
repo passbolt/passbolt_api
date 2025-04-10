@@ -20,7 +20,7 @@ namespace App\Test\TestCase\Model\Table\Users\Finders;
 use App\Model\Table\UsersTable;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Passbolt\Log\Test\Factory\ActionLogFactory;
 use Passbolt\Log\Test\Lib\Traits\ActionLogsTestTrait;
@@ -55,11 +55,11 @@ class FindLastLoggedInTest extends AppTestCase
     {
         $user = UserFactory::make()->user()->active()->persist();
         $userId = $user->get('id');
-        $actionLogOld = ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(1)])
+        $actionLogOld = ActionLogFactory::make(['created' => DateTime::now()->subMinutes(1)])
             ->loginAction()
             ->userId($userId)
             ->persist();
-        $actionLogLatest = ActionLogFactory::make(['created' => FrozenTime::now()])
+        $actionLogLatest = ActionLogFactory::make(['created' => DateTime::now()])
             ->loginAction()
             ->userId($userId)
             ->persist();
@@ -76,20 +76,20 @@ class FindLastLoggedInTest extends AppTestCase
         $user = UserFactory::make()->user()->active()->persist();
         $userId = $user->get('id');
         // auth login logs
-        ActionLogFactory::make(['created' => FrozenTime::now()->subMonths(2)])
+        ActionLogFactory::make(['created' => DateTime::now()->subMonths(2)])
             ->loginAction()
             ->userId($userId)
             ->persist();
-        ActionLogFactory::make(['created' => FrozenTime::now()->subDays(2)])
+        ActionLogFactory::make(['created' => DateTime::now()->subDays(2)])
             ->loginAction()
             ->userId($userId)
             ->persist();
         // jwt login logs
-        $actionLogJwtOld = ActionLogFactory::make(['created' => FrozenTime::now()->subHours(2)])
+        $actionLogJwtOld = ActionLogFactory::make(['created' => DateTime::now()->subHours(2)])
             ->setActionId('JwtLogin.loginPost')
             ->userId($userId)
             ->persist();
-        $actionLogJwtLatest = ActionLogFactory::make(['created' => FrozenTime::now()->subMinutes(1)])
+        $actionLogJwtLatest = ActionLogFactory::make(['created' => DateTime::now()->subMinutes(1)])
             ->setActionId('JwtLogin.loginPost')
             ->userId($userId)
             ->persist();

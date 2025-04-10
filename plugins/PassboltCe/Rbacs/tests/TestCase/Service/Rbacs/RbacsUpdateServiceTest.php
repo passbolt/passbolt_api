@@ -75,7 +75,7 @@ class RbacsUpdateServiceTest extends RbacsTestCase
         (new RbacsUpdateService())->update($uac, $rbacsDto);
 
         // Tests results
-        $deny = RbacFactory::find()->where(['control_function' => Rbac::CONTROL_FUNCTION_DENY])->count();
+        $deny = RbacFactory::find()->where(['control_function' => Rbac::CONTROL_FUNCTION_DENY])->all()->count();
         $this->assertEquals(1, $deny);
     }
 

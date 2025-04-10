@@ -33,7 +33,7 @@ use Cake\Http\ServerRequest;
 
 class SetupServiceProvider extends ServiceProvider
 {
-    protected $provides = [
+    protected array $provides = [
         AbstractSetupStartService::class,
         SetupStartUserInfoService::class,
         AbstractRecoverStartService::class,

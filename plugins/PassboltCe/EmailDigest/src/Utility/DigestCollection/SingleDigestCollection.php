@@ -26,7 +26,7 @@ use Passbolt\EmailDigest\Utility\Factory\EmailPreviewFactory;
 class SingleDigestCollection extends AbstractDigestCollection
 {
     /**
-     * @var \Cake\ORM\Entity[]
+     * @var array<\Cake\ORM\Entity>
      */
     private array $emails = [];
 
@@ -46,7 +46,7 @@ class SingleDigestCollection extends AbstractDigestCollection
     /**
      * Process and set the content of the emails (as EmailDigest).
      *
-     * @return \Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface[]
+     * @return array<\Passbolt\EmailDigest\Utility\Mailer\EmailDigestInterface>
      */
     public function marshalEmails(): array
     {

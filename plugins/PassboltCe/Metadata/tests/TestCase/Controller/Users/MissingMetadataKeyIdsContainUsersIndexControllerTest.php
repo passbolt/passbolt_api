@@ -55,8 +55,8 @@ class MissingMetadataKeyIdsContainUsersIndexControllerTest extends AppIntegratio
         $activeUser2 = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->active()->persist();
         $disabled = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->disabled()->persist();
         $admin = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->admin()->active()->persist();
-        $deleted = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->deleted()->persist();
-        $inactive = UserFactory::make()->user()->inactive()->persist();
+        UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->deleted()->persist();
+        UserFactory::make()->user()->inactive()->persist();
 
         $metadataKey = MetadataKeyFactory::make()->withCreatorAndModifier($admin)->withServerPrivateKey()->persist();
         MetadataPrivateKeyFactory::make()->withMetadataKey($metadataKey)->withUserPrivateKey($activeUser1->get('gpgkey'))->persist();
@@ -85,7 +85,7 @@ class MissingMetadataKeyIdsContainUsersIndexControllerTest extends AppIntegratio
     public function testMissingMetadataKeyIdsContainUsersIndexController_Success_QueryParamNotSet()
     {
         $activeUser1 = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->active()->persist();
-        $activeUser2 = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->active()->persist();
+        UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->active()->persist();
         $disabled = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->user()->disabled()->persist();
         $admin = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->validFingerprint())->admin()->active()->persist();
 

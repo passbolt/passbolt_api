@@ -27,7 +27,7 @@ use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\ConflictException;
 use Cake\Http\Exception\NotFoundException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Metadata\Service\MetadataSessionKeyUpdateService;
 use Passbolt\Metadata\Test\Factory\MetadataSessionKeyFactory;
 use Passbolt\Metadata\Test\Utility\GpgMetadataKeysTestTrait;
@@ -67,12 +67,12 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
 
     public function testMetadataSessionKeyUpdateService_Success(): void
     {
-        FrozenTime::setTestNow('2021-01-31 22:11:30');
+        DateTime::setTestNow('2021-01-31 22:11:30');
         $key = GpgkeyFactory::make()->withAdaKey();
         $user = UserFactory::make()->with('Gpgkeys', $key)->active()->persist();
         $sessionKey = MetadataSessionKeyFactory::make()->withUser($user)->persist();
         $sessionKey = MetadataSessionKeyFactory::get($sessionKey->get('id')); // needed to get exact modified time
-        $oldModified = new FrozenTime($sessionKey->get('modified'));
+        $oldModified = new DateTime($sessionKey->get('modified'));
         $uac = $this->makeUac($user);
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->get('gpgkey'));
@@ -81,7 +81,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
             'modified' => $oldModified,
             'data' => $msg,
         ];
-        FrozenTime::setTestNow(null);
+        DateTime::setTestNow(null);
         $this->service->update($uac, $sessionKey->get('id'), $data);
 
         $this->assertEquals(1, MetadataSessionKeyFactory::count());
@@ -89,7 +89,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
         $this->assertNotEquals($updatedSessionKey->get('data'), $sessionKey->get('data'));
 
         // modified time was updated
-        $newModified = new FrozenTime($updatedSessionKey->get('modified'));
+        $newModified = new DateTime($updatedSessionKey->get('modified'));
         $this->assertTrue($newModified->greaterThan($oldModified));
     }
 
@@ -99,11 +99,11 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
         $user = UserFactory::make()->with('Gpgkeys', $key)->active()->persist();
         $sessionKey = MetadataSessionKeyFactory::make()->withUser($user)->persist();
         $sessionKey = MetadataSessionKeyFactory::get($sessionKey->get('id')); // needed to get exact modified time
-        $oldModified = new FrozenTime($sessionKey->get('modified'));
+        $oldModified = new DateTime($sessionKey->get('modified'));
         $uac = $this->makeUac($user);
         $gpg = OpenPGPBackendFactory::get();
         $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->get('gpgkey'));
-        $msg = $gpg->encrypt(MetadataSessionKeyFactory::getCleartextDataJson());
+        $gpg->encrypt(MetadataSessionKeyFactory::getCleartextDataJson());
         $data = [
             'modified' => $oldModified,
             'data' => $sessionKey->get('data'),
@@ -126,7 +126,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
         $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->get('gpgkey'));
         $msg = $gpg->encrypt(MetadataSessionKeyFactory::getCleartextDataJson());
         $data = [
-            'modified' => FrozenTime::now(),
+            'modified' => DateTime::now(),
             'data' => $msg,
         ];
 
@@ -147,7 +147,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
         $gpg = $this->setEncryptKeyWithUserKey($gpg, $user->get('gpgkey'));
         $msg = $gpg->encrypt(MetadataSessionKeyFactory::getCleartextDataJson());
         $data = [
-            'modified' => FrozenTime::now()->modify('-3 years'),
+            'modified' => DateTime::now()->modify('-3 years'),
             'data' => $msg,
         ];
 
@@ -193,12 +193,12 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
 
     public function testMetadataSessionKeyUpdateService_ErrorWrongUserKey(): void
     {
-        FrozenTime::setTestNow('2021-01-31 22:11:30');
+        DateTime::setTestNow('2021-01-31 22:11:30');
         $key = GpgkeyFactory::make()->withAdaKey();
         $user = UserFactory::make()->with('Gpgkeys', $key)->active()->persist();
         $sessionKey = MetadataSessionKeyFactory::make()->withUser($user)->persist();
         $sessionKey = MetadataSessionKeyFactory::get($sessionKey->get('id')); // needed to get exact modified time
-        $oldModified = new FrozenTime($sessionKey->get('modified'));
+        $oldModified = new DateTime($sessionKey->get('modified'));
         $uac = $this->makeUac($user);
 
         $betty = UserFactory::make()->with('Gpgkeys', GpgkeyFactory::make()->withBettyKey())->persist();
@@ -209,7 +209,7 @@ class MetadataSessionKeyUpdateServiceTest extends AppTestCaseV5
             'modified' => $oldModified,
             'data' => $msg,
         ];
-        FrozenTime::setTestNow(null);
+        DateTime::setTestNow(null);
 
         $this->expectException(CustomValidationException::class);
         $this->expectExceptionMessage('The metadata session key could not be saved.');

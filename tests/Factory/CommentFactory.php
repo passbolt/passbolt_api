@@ -70,7 +70,7 @@ class CommentFactory extends CakephpBaseFactory
 
     public function withUser(?User $user = null)
     {
-        if (!isset($user)) {
+        if (is_null($user)) {
             $user = UserFactory::make()->getEntity();
         }
 
@@ -79,7 +79,7 @@ class CommentFactory extends CakephpBaseFactory
 
     public function withResource(?Resource $resource = null)
     {
-        if (!isset($resource)) {
+        if (is_null($resource)) {
             $resource = ResourceFactory::make()->getEntity();
         }
 
@@ -88,7 +88,7 @@ class CommentFactory extends CakephpBaseFactory
 
     public function withParent(?Comment $comment = null)
     {
-        if (!isset($comment)) {
+        if (is_null($comment)) {
             $comment = CommentFactory::make()->getEntity();
         }
 
@@ -102,7 +102,7 @@ class CommentFactory extends CakephpBaseFactory
 
     public function withModifier(?User $user = null)
     {
-        if (!isset($user)) {
+        if (is_null($user)) {
             $user = UserFactory::make()->getEntity();
         }
 
@@ -111,7 +111,7 @@ class CommentFactory extends CakephpBaseFactory
 
     public function withCreator(?User $user = null)
     {
-        if (!isset($user)) {
+        if (is_null($user)) {
             $user = UserFactory::make()->getEntity();
         }
 

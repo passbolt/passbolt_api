@@ -85,7 +85,7 @@ class JsProdApplicationHealthcheck implements HealthcheckServiceInterface, Healt
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Set passbolt.js.build to production in {0}', CONFIG . 'passbolt.php');
     }

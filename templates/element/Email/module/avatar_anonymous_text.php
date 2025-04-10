@@ -16,7 +16,7 @@
  * @var string $text
  * @var \DateTimeInterface|string|int $datetime
  */
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 ?>
 <span style="font-weight:bold;"><?= $title ?></span>
@@ -24,6 +24,6 @@ use Cake\I18n\FrozenTime;
 <span style=""><?= $text ?></span><br>
 <span style="color:#888888">
     <?php
-    echo FrozenTime::parse($datetime)->nice() . ' (' . date_default_timezone_get() . ')';
+    echo DateTime::parse($datetime)->nice() . ' (' . date_default_timezone_get() . ')';
     ?>
 </span><br>

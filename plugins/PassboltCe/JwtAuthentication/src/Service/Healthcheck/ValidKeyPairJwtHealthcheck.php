@@ -21,6 +21,7 @@ use App\Service\Healthcheck\HealthcheckCliInterface;
 use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
+use Throwable;
 
 class ValidKeyPairJwtHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -42,7 +43,7 @@ class ValidKeyPairJwtHealthcheck implements HealthcheckServiceInterface, Healthc
         try {
             $this->jwtKeyPairService->validateKeyPair();
             $this->status = true;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             // Do nothing
         }
 

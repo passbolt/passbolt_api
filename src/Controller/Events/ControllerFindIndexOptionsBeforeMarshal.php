@@ -28,19 +28,19 @@ class ControllerFindIndexOptionsBeforeMarshal extends Event
     /**
      * @var \App\Controller\AppController
      */
-    private $controller;
+    private AppController $controller;
 
     /**
      * @var \App\Model\Table\Dto\FindIndexOptions
      */
-    private $options;
+    private FindIndexOptions $options;
 
     /**
      * @param string $name Name
      * @param \App\Controller\AppController $subject Subject must be an instance of Table
      * @param array|null $data Data
      */
-    final public function __construct($name, AppController $subject, $data = null)
+    final public function __construct(string $name, AppController $subject, ?array $data = null)
     {
         $this->setController($subject);
         $this->setOptions($data['options']);

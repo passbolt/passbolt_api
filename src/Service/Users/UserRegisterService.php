@@ -19,6 +19,7 @@ namespace App\Service\Users;
 
 use App\Controller\Users\UsersRegisterController;
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\ServerRequest;
 use Cake\ORM\Locator\LocatorAwareTrait;
@@ -35,12 +36,12 @@ class UserRegisterService implements UserRegisterServiceInterface
     /**
      * @var \Cake\Http\ServerRequest
      */
-    public $request;
+    public ServerRequest $request;
 
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @param \Cake\Http\ServerRequest $serverRequest Server request
@@ -48,7 +49,6 @@ class UserRegisterService implements UserRegisterServiceInterface
     public function __construct(ServerRequest $serverRequest)
     {
         $this->request = $serverRequest;
-        /** @phpstan-ignore-next-line */
         $this->Users = $this->fetchTable('Users');
     }
 

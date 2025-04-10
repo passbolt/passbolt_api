@@ -23,7 +23,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use App\Test\Lib\Utility\CleanupTrait;
 use App\Utility\UuidFactory;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 class CleanupTest extends AppTestCase
 {
@@ -119,13 +119,13 @@ class CleanupTest extends AppTestCase
         $duplicateGroupUserMeta = [
             'group_id' => UuidFactory::uuid(),
             'user_id' => UuidFactory::uuid(),
-            'created' => FrozenTime::now(),
+            'created' => DateTime::now(),
         ];
         GroupsUserFactory::make($duplicateGroupUserMeta)->persist();
 
         // Duplicate group user to keep as it is the oldest.
         $duplicateGroupUserToKeep = GroupsUserFactory::make($duplicateGroupUserMeta)
-            ->patchData(['created' => FrozenTime::now()->subDays(1)])->persist();
+            ->patchData(['created' => DateTime::now()->subDays(1)])->persist();
 
         // Witness groups users to not cleanup:
         // - A group user including a group involved in the cleanup

@@ -20,7 +20,7 @@ use App\Service\Cookie\AbstractSecureCookieService;
 use App\Utility\UuidFactory;
 use Cake\Http\Cookie\Cookie;
 use Cake\Http\ServerRequest;
-use DateTimeInterface;
+use Cake\I18n\DateTime;
 
 class MfaVerifiedCookie
 {
@@ -33,13 +33,13 @@ class MfaVerifiedCookie
      *
      * @param \Cake\Http\ServerRequest $request server request
      * @param string $token token
-     * @param \DateTimeInterface|null $expirationDate Expiration date for the token
+     * @param \Cake\I18n\DateTime|null $expirationDate Expiration date for the token
      * @return \Cake\Http\Cookie\Cookie
      */
     public static function get(
         ServerRequest $request,
         string $token,
-        ?DateTimeInterface $expirationDate = null
+        ?DateTime $expirationDate = null
     ): Cookie {
         /** @var \Cake\Http\Cookie\Cookie $mfaCookie */
         $mfaCookie = (new Cookie(self::MFA_COOKIE_ALIAS))
@@ -49,7 +49,7 @@ class MfaVerifiedCookie
             ->withSecure(AbstractSecureCookieService::isSslOrCookiesSecure($request));
 
         if ($expirationDate !== null) {
-            $mfaCookie = $mfaCookie ->withExpiry($expirationDate);
+            $mfaCookie = $mfaCookie->withExpiry($expirationDate);
         }
 
         return $mfaCookie;

@@ -24,7 +24,7 @@ class PassboltText
      * @param string $string string to convert
      * @return string
      */
-    public static function ucfirst($string)
+    public static function ucfirst(string $string): string
     {
         $string = mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1);
 

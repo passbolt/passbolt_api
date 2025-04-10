@@ -23,6 +23,7 @@ use App\Service\Healthcheck\HealthcheckServiceInterface;
 use App\Service\Network\SocketService;
 use Cake\Core\Configure;
 use Cake\Http\Client;
+use Exception;
 
 class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -67,7 +68,7 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
         try {
             $this->remoteVersion = $this->getLatestTagName();
             $this->status = $this->isLatestVersion();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->exceptionThrown = true;
             $this->remoteVersion = __('undefined');
             $this->status = false;
@@ -107,7 +108,7 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
 
             $tags = json_decode($results->getStringBody(), true);
             if (!isset($tags['tag_name'])) {
-                throw new \Exception(__('Could not read tag information on github repository'));
+                throw new Exception(__('Could not read tag information on github repository'));
             }
             $remoteTagName = ltrim($tags['tag_name'], 'v');
             Configure::write('passbolt.remote.version', $remoteTagName);
@@ -175,7 +176,7 @@ class LatestVersionApplicationHealthcheck implements HealthcheckServiceInterface
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         $msg = __('See https://www.passbolt.com/help/tech/update');
         if ($this->exceptionThrown) {

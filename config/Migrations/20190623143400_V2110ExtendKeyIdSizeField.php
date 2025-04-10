@@ -29,7 +29,7 @@ class V2110ExtendKeyIdSizeField extends AbstractMigration
 
         // Migrate existing keys if using short id
         $results = $this->query("SELECT id,key_id,fingerprint FROM gpgkeys");
-        $keys = $results->fetchAll();
+        $keys = $results->fetchAll(\PDO::FETCH_BOTH);
         foreach($keys as $key) {
             if (strlen($key['key_id']) < 16) {
                 $keyId = substr($key['fingerprint'], -16);

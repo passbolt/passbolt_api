@@ -28,7 +28,7 @@ trait MfaOrgSettingsYubikeyTrait
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
-    public function getYubikeyOTPSecretKey()
+    public function getYubikeyOTPSecretKey(): string
     {
         if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_SECRET_KEY])) {
             throw new RecordNotFoundException(__('No configuration set for Yubikey OTP secret key.'));
@@ -43,7 +43,7 @@ trait MfaOrgSettingsYubikeyTrait
      * @throw RecordNotFoundException if config is missing
      * @return string
      */
-    public function getYubikeyOTPClientId()
+    public function getYubikeyOTPClientId(): string
     {
         if (!isset($this->settings[MfaSettings::PROVIDER_YUBIKEY][MfaOrgSettings::YUBIKEY_CLIENT_ID])) {
             throw new RecordNotFoundException(__('No configuration set for Yubikey OTP clientId.'));
@@ -59,7 +59,7 @@ trait MfaOrgSettingsYubikeyTrait
      * @param array $data user provider data
      * @return void
      */
-    public function validateYubikeySettings(array $data)
+    public function validateYubikeySettings(array $data): void
     {
         $errors = [];
 

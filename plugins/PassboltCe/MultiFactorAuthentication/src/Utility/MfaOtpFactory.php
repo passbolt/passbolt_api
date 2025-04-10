@@ -25,8 +25,10 @@ use BaconQrCode\Writer;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\Routing\Router;
+use Exception;
 use OTPHP\TOTP;
 use ParagonIE\ConstantTime\Base32;
+use TypeError;
 
 class MfaOtpFactory
 {
@@ -64,13 +66,13 @@ class MfaOtpFactory
         $secretLength = self::getAndSanitizeSecretLengthFromConfig();
         try {
             $secret = trim(Base32::encode(random_bytes($secretLength)), '='); // some random bytes Base32 without padding
-        } catch (\TypeError $exception) {
+        } catch (TypeError $exception) {
             throw new InternalErrorException(
                 'Could not generate TOTP secret, please try again later.',
                 500,
                 $exception
             );
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new InternalErrorException(
                 'Could not generate enough random bytes, please try again later.',
                 500,

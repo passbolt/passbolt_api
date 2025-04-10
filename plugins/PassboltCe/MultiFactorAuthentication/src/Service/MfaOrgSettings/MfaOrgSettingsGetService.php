@@ -24,7 +24,7 @@ class MfaOrgSettingsGetService
     /**
      * @return \Passbolt\MultiFactorAuthentication\Utility\MfaOrgSettings
      */
-    public function get()
+    public function get(): MfaOrgSettings
     {
         return MfaOrgSettings::get();
     }
