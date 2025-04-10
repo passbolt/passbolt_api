@@ -40,7 +40,7 @@ class SecretHistory extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'user_id' => false,
         'resource_id' => false,

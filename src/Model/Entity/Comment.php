@@ -27,8 +27,8 @@ use Cake\ORM\Entity;
  * @property string $foreign_key
  * @property string $foreign_model
  * @property string $content
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  * @property string $created_by
  * @property string $modified_by
  * @property \App\Model\Entity\Resource $resource
@@ -47,7 +47,7 @@ class Comment extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'user_id' => false,
         'parent_id' => false,
         'foreign_key' => false,

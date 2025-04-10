@@ -136,7 +136,7 @@ class SmtpSettingsSslOptionsGetService
     }
 
     /**
-     * @return string[]
+     * @return array<string>
      */
     private function getMapping(): array
     {

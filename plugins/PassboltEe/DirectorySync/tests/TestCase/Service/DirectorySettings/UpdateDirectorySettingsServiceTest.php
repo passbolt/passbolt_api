@@ -25,6 +25,7 @@ use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
 use Passbolt\DirectorySync\Service\DirectorySettings\UpdateDirectorySettingsService;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
+use UnexpectedValueException;
 
 /**
  * @see UpdateDirectorySettingsService
@@ -132,7 +133,7 @@ class UpdateDirectorySettingsServiceTest extends AppTestCase
         $settings = $this->table->find()->where(['property' => DirectoryOrgSettings::ORG_SETTINGS_PROPERTY])->first();
         $settings->set('value', 'wrong_json');
         $this->table->save($settings);
-        $this->expectException(\UnexpectedValueException::class);
+        $this->expectException(UnexpectedValueException::class);
         $this->expectExceptionMessage(__('Directory Settings are invalid. Please check your config and try again.'));
         $this->service->updateSettings();
     }

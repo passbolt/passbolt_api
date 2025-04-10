@@ -18,7 +18,7 @@ use Cake\Routing\RouteBuilder;
 
 /** @var \Cake\Routing\RouteBuilder $routes */
 
-$routes->plugin('Passbolt/AuditLog', ['path' => '/actionlog'], function (RouteBuilder $routes) {
+$routes->plugin('Passbolt/AuditLog', ['path' => '/actionlog'], function (RouteBuilder $routes): void {
     $routes->setExtensions(['json']);
 
     $routes->connect('/resource/{resourceId}', ['controller' => 'ResourceLogs', 'action' => 'view'])

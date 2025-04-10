@@ -41,7 +41,6 @@ class KeyringInitCommandTest extends AppTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->useCommandRunner();
         $this->key = Configure::read('passbolt.gpg.serverKey.private');
         $this->mockProcessUserService('www-data');
     }

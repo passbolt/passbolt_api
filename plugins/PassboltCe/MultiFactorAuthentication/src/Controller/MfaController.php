@@ -27,7 +27,7 @@ abstract class MfaController extends AppController
     /**
      * @var \Passbolt\MultiFactorAuthentication\Utility\MfaSettings
      */
-    protected $mfaSettings;
+    protected MfaSettings $mfaSettings;
 
     /**
      * Initialization hook method.

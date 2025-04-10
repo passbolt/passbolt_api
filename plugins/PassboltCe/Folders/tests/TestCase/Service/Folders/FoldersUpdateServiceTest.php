@@ -56,7 +56,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GroupsFixture::class,
         GroupsUsersFixture::class,
         PermissionsFixture::class,
@@ -121,7 +121,9 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderSuccess_NotifyUserAfterUpdate()
     {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
+        $fixtures = $this->insertFixture_InsufficientPermission();
+        $folderA = $fixtures[0];
+        $userAId = $fixtures[1];
         $uac = new UserAccessControl(Role::USER, $userAId);
 
         $name = 'new name';
@@ -153,7 +155,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderError_InsufficientPermission()
     {
-        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission();
+        [$folderA, $userAId, $userBId] = $this->insertFixture_InsufficientPermission(); // phpcs:ignore
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userBId);
 
@@ -186,7 +188,7 @@ class FoldersUpdateServiceTest extends FoldersTestCase
 
     public function testUpdateFolderError_NoAccessToFolder()
     {
-        [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta();
+        [$folderA, $userAId] = $this->insertFixture_UpdateFolderMeta(); // phpcs:ignore
         $userBId = UuidFactory::uuid('user.id.betty');
         $uac = new UserAccessControl(Role::USER, $userBId);
 

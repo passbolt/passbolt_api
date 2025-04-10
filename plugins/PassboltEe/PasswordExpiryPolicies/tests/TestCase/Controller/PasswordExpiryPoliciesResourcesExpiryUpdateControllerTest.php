@@ -24,7 +24,7 @@ use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\PasswordExpiry\Notification\Email\PasswordExpiryPasswordMarkedExpiredEmailRedactor;
 use Passbolt\PasswordExpiry\PasswordExpiryPlugin;
 use Passbolt\PasswordExpiry\Test\Lib\PasswordExpiryTestTrait;
@@ -60,14 +60,14 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
         /** @var \App\Model\Entity\Resource $resourceShared */
         $resourceShared = ResourceFactory::make('Resource shared with other user')
             ->withPermissionsFor([$user, $otherOwner])
-            ->expired(FrozenTime::today()->addDays(3))
+            ->expired(DateTime::today()->addDays(3))
             ->persist();
         /** @var \App\Model\Entity\Resource $resourceNotShared */
         $resourceNotShared = ResourceFactory::make('Resource not shared with other user')
             ->withPermissionsFor([$group])
-            ->expired(FrozenTime::today()->addDays(3))
+            ->expired(DateTime::today()->addDays(3))
             ->persist();
-        $newExpiryDateInThePast = FrozenTime::today()->subDays(3)->toAtomString();
+        $newExpiryDateInThePast = DateTime::today()->subDays(3)->toAtomString();
         $payload = [
             ['id' => $resourceShared->get('id'), 'expired' => $newExpiryDateInThePast],
             ['id' => $resourceNotShared->get('id'), 'expired' => $newExpiryDateInThePast],
@@ -124,9 +124,9 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateControllerTest extends AppInteg
         /** @var \App\Model\Entity\Resource $resourceNotShared */
         $resourceExpiredInFuture = ResourceFactory::make('Resource expired in future')
             ->withPermissionsFor([$user])
-            ->expired(FrozenTime::tomorrow())
+            ->expired(DateTime::tomorrow())
             ->persist();
-        $newExpiryDateInTheFuture = FrozenTime::today()->addDays(3)->toAtomString();
+        $newExpiryDateInTheFuture = DateTime::today()->addDays(3)->toAtomString();
         $payload = [
             ['id' => $resourceWithExpiredNull->get('id'), 'expired' => $newExpiryDateInTheFuture],
             ['id' => $resourceExpiredInFuture->get('id'), 'expired' => $newExpiryDateInTheFuture],

@@ -30,7 +30,7 @@ use Cake\Core\ServiceProvider;
 
 class ResourceServiceProvider extends ServiceProvider
 {
-    protected $provides = [
+    protected array $provides = [
         PasswordExpiryValidationServiceInterface::class,
         ResourcesExpireResourcesServiceInterface::class,
         ResourcesAddService::class,

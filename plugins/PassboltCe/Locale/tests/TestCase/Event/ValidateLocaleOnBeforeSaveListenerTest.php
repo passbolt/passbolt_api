@@ -24,6 +24,7 @@ use Cake\TestSuite\TestCase;
 use CakephpTestSuiteLight\Fixture\TruncateDirtyTables;
 use Passbolt\Locale\Service\GetOrgLocaleService;
 use Passbolt\Locale\Service\LocaleService;
+use TypeError;
 
 class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
 {
@@ -51,7 +52,7 @@ class ValidateLocaleOnBeforeSaveListenerTest extends TestCase
             ['fr FR', ValidationException::class],
             ['xx-YY', ValidationException::class],
             ['', ValidationException::class],
-            [null, \TypeError::class],
+            [null, TypeError::class],
         ];
     }
 

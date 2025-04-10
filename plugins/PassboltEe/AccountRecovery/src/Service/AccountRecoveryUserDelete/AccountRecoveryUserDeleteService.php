@@ -18,10 +18,17 @@ declare(strict_types=1);
 namespace Passbolt\AccountRecovery\Service\AccountRecoveryUserDelete;
 
 use App\Model\Entity\AuthenticationToken;
+use App\Model\Table\AuthenticationTokensTable;
+use Cake\Http\ServerRequest;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use InvalidArgumentException;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable;
 
 /**
  * Class AccountRecoveryUserDeleteService
@@ -33,50 +40,45 @@ class AccountRecoveryUserDeleteService
     /**
      * @var \Cake\Http\ServerRequest
      */
-    protected $request;
+    protected ServerRequest $request;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeysTable
      */
-    protected $AccountRecoveryPrivateKeys;
+    protected AccountRecoveryPrivateKeysTable $AccountRecoveryPrivateKeys;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryPrivateKeyPasswordsTable
      */
-    protected $AccountRecoveryPrivateKeyPasswords;
+    protected AccountRecoveryPrivateKeyPasswordsTable $AccountRecoveryPrivateKeyPasswords;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable
      */
-    protected $AccountRecoveryRequests;
+    protected AccountRecoveryRequestsTable $AccountRecoveryRequests;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryUserSettingsTable
      */
-    protected $AccountRecoveryUserSettings;
+    protected AccountRecoveryUserSettingsTable $AccountRecoveryUserSettings;
 
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * AccountRecoveryUserDeleteService constructor.
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryUserSettings = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryUserSettings');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeys = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeys');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryPrivateKeyPasswords = $this
             ->fetchTable('Passbolt/AccountRecovery.AccountRecoveryPrivateKeyPasswords');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryRequests = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
     }
 
@@ -87,7 +89,7 @@ class AccountRecoveryUserDeleteService
     public function deleteInfo(string $userId): void
     {
         if (!Validation::uuid($userId)) {
-            throw new \InvalidArgumentException('The user id must be a uuid.');
+            throw new InvalidArgumentException('The user id must be a uuid.');
         }
 
         // Delete user settings
@@ -112,7 +114,6 @@ class AccountRecoveryUserDeleteService
 
         // Update pending requests
         $this->AccountRecoveryRequests->updateQuery()
-            ->update()
             ->set([
                 'status' => AccountRecoveryRequest::ACCOUNT_RECOVERY_REQUEST_REJECTED,
                 'modified_by' => $userId, // TODO - Get UAC from event
@@ -128,7 +129,6 @@ class AccountRecoveryUserDeleteService
 
         // Deactivate all previous active tokens
         $this->AuthenticationTokens->updateQuery()
-            ->update()
             ->set([
                 'active' => false,
             ])

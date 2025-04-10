@@ -25,6 +25,7 @@ use App\Model\Validation\DateTime\IsDateInPastValidationRule;
 use App\Model\Validation\Fingerprint\IsMatchingKeyFingerprintValidationRule;
 use App\Model\Validation\Fingerprint\IsValidFingerprintValidationRule;
 use App\Model\Validation\IsNullOnCreateRule;
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
@@ -40,7 +41,7 @@ use Passbolt\Metadata\Model\Rule\MaxNoOfActiveMetadataKeysRule;
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey newEmptyEntity()
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey newEntity(array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Metadata\Model\Entity\MetadataKey get($primaryKey, $options = [])
+ * @method \Passbolt\Metadata\Model\Entity\MetadataKey get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Metadata\Model\Entity\MetadataKey[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -224,16 +225,16 @@ class MetadataKeysTable extends Table
     }
 
     /**
-     * @return array|\Cake\Datasource\EntityInterface
+     * @return \Cake\Datasource\EntityInterface|array
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When there is no first record.
      */
-    public function getLatestActiveKey()
+    public function getLatestActiveKey(): array|EntityInterface
     {
         return $this
             ->find()
             ->select(['id', 'fingerprint', 'armored_key'])
             ->where(['deleted IS NULL', 'expired IS NULL'])
-            ->order(['created' => 'DESC'])
+            ->orderBy(['created' => 'DESC'])
             ->firstOrFail();
     }
 }

@@ -23,12 +23,12 @@ class EmailSenderException extends Exception
     /**
      * @var \App\Notification\Email\Email
      */
-    private $email;
+    private Email $email;
 
     /**
      * @var array
      */
-    private $options;
+    private array $options;
 
     /**
      * @param \App\Notification\Email\Email $email Email entity

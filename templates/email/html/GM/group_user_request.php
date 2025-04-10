@@ -19,7 +19,7 @@ use App\Notification\Email\Redactor\Group\GroupUserAddRequestEmailRedactor;
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 
 if (PHP_SAPI === 'cli') {
@@ -38,7 +38,7 @@ if ($anonymiseAdministratorIdentity) {
         'text' => $this->element('Email/module/avatar_anonymous_text', [
             'title' => __('There was a change in the user directory.'),
             'text' => __('You have been requested to add members to a group.'),
-            'datetime' => FrozenTime::now(),
+            'datetime' => DateTime::now(),
         ]),
     ]);
 } else {
@@ -46,7 +46,7 @@ if ($anonymiseAdministratorIdentity) {
         'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
         'text' => $this->element('Email/module/avatar_text', [
             'user' => $admin,
-            'datetime' => FrozenTime::now(),
+            'datetime' => DateTime::now(),
             'text' => __('{0} requested you to add members to a group', null),
         ]),
     ]);

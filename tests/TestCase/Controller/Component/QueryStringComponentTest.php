@@ -21,11 +21,11 @@ use App\Controller\Component\QueryStringComponent;
 use App\Utility\UuidFactory;
 use Cake\Controller\ComponentRegistry;
 use Cake\Controller\Controller;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\BadRequestException;
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\TestSuite\TestCase;
+use Exception;
 
 class QueryStringComponentTest extends TestCase
 {
@@ -50,7 +50,7 @@ class QueryStringComponentTest extends TestCase
     public function testQueryStringComponent_ValidateFiltersError_NoValidationRuleDefined(): void
     {
         $filterName = 'non-existing-filter';
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->expectExceptionMessage(sprintf('No validation rule for filter %s. Please create one.', $filterName));
 
         $this->sut::validateFilters([$filterName => '']);
@@ -60,7 +60,7 @@ class QueryStringComponentTest extends TestCase
     {
         $filterName = 'filter-with-validation-callback';
 
-        $this->expectException(Exception::class);
+        $this->expectException(CakeException::class);
         $this->expectExceptionMessage(sprintf('Filter %s is not valid.', $filterName));
 
         $this->sut::validateFilters(
@@ -107,7 +107,7 @@ class QueryStringComponentTest extends TestCase
             try {
                 $this->sut::validateFilterDateTime($testCaseValue, $filterName);
                 $this->assertFalse(true, __('The case {0} should not validate', $testCaseName));
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->assertTrue(true);
             }
         }
@@ -135,7 +135,7 @@ class QueryStringComponentTest extends TestCase
             try {
                 $this->sut::validateFilterInteger($testCaseValue, $filterName);
                 $this->assertFalse(true, __('The case {0} should not validate', $testCaseName));
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->assertTrue(true);
             }
         }
@@ -159,7 +159,7 @@ class QueryStringComponentTest extends TestCase
             $this->assertEquals(42, $normalizedValue, __('The case {0} is not normalized as expected', $testCaseName));
         }
 
-        foreach ($errorTestCases as $testCaseName => $testCaseValue) {
+        foreach ($errorTestCases as $testCaseValue) {
             $normalizedValue = $this->sut::normalizeInteger($testCaseValue);
             $this->assertTrue($normalizedValue === 0 || $normalizedValue === false);
         }
@@ -241,8 +241,7 @@ class QueryStringComponentTest extends TestCase
         $url = '/?' . $query;
 
         $request = new ServerRequest(compact('url'));
-        $response = new Response();
-        $controller = new Controller($request, $response);
+        $controller = new Controller($request);
         $registry = new ComponentRegistry($controller);
         $component = new QueryStringComponent($registry);
 

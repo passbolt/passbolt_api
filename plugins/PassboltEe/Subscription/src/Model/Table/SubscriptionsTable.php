@@ -27,6 +27,7 @@ use Cake\Event\Event;
 use Cake\Http\Exception\UnauthorizedException;
 use Cake\ORM\Query;
 use Cake\Validation\Validator;
+use Exception;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionFormatException;
 use Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException;
 use Passbolt\Subscription\Model\Entity\Subscription;
@@ -35,7 +36,7 @@ use Passbolt\Subscription\Model\Entity\Subscription;
  * @method \Passbolt\Subscription\Model\Entity\Subscription newEmptyEntity()
  * @method \Passbolt\Subscription\Model\Entity\Subscription newEntity(array $data, array $options = [])
  * @method \Passbolt\Subscription\Model\Entity\Subscription[] newEntities(array $data, array $options = [])
- * @method \Passbolt\Subscription\Model\Entity\Subscription get($primaryKey, $options = [])
+ * @method \Passbolt\Subscription\Model\Entity\Subscription get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\Subscription\Model\Entity\Subscription findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\Subscription\Model\Entity\Subscription patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\Subscription\Model\Entity\Subscription[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -77,7 +78,7 @@ class SubscriptionsTable extends OrganizationSettingsTable
      * Filter organization settings by property.
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
-     * @param  \Cake\ORM\Query $query Any query performed on the present table.
+     * @param \Cake\ORM\Query $query Any query performed on the present table.
      * @return \Cake\ORM\Query
      */
     public function beforeFind(Event $event, Query $query): Query
@@ -95,7 +96,7 @@ class SubscriptionsTable extends OrganizationSettingsTable
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options)
+    public function beforeSave(Event $event, EntityInterface $entity, ArrayObject $options): void
     {
         /** @var \App\Utility\UserAccessControl $uac */
         $uac = $options['uac'] ?? null;
@@ -116,7 +117,7 @@ class SubscriptionsTable extends OrganizationSettingsTable
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         $data['property'] = $this->getProperty();
         $data['property_id'] = $this->getPropertyId();
@@ -128,11 +129,11 @@ class SubscriptionsTable extends OrganizationSettingsTable
      * @return \Cake\Datasource\EntityInterface|array
      * @throws \Passbolt\Subscription\Error\Exception\Subscriptions\SubscriptionRecordNotFoundException
      */
-    public function getOrFail()
+    public function getOrFail(): EntityInterface|array
     {
         try {
             return $this->find()->firstOrFail();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             throw new SubscriptionRecordNotFoundException();
         }
     }

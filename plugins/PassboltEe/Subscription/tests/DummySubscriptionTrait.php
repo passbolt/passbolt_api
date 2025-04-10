@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Datasource\EntityInterface;
 use Cake\ORM\TableRegistry;
 use Passbolt\Subscription\Service\Subscriptions\SubscriptionKeyGetService;
+use RuntimeException;
 
 /**
  * Class DummySubscriptionTrait
@@ -37,7 +38,7 @@ trait DummySubscriptionTrait
     {
         $subscriptionDevPublicKey = $this->baseTestPath . 'Fixture' . DS . 'gpg' . DS . 'subscription_dev_public.key';
         if (!file_exists($subscriptionDevPublicKey)) {
-            throw new \RuntimeException('Cannot find dummy subscription key file ' . $subscriptionDevPublicKey);
+            throw new RuntimeException('Cannot find dummy subscription key file ' . $subscriptionDevPublicKey);
         }
 
         Configure::write('passbolt.plugins.subscription.subscriptionKey.public', $subscriptionDevPublicKey);
@@ -59,7 +60,7 @@ trait DummySubscriptionTrait
     {
         $file = PLUGINS . DS . 'PassboltEe' . DS . 'Subscription' . DS . 'tests' . DS . 'Fixture' . DS . 'subscription' . DS . $scenario;
         if (!file_exists($file)) {
-            throw new \RuntimeException('Cannot find dummy file ' . $file);
+            throw new RuntimeException('Cannot find dummy file ' . $file);
         }
 
         return $file;
@@ -168,12 +169,12 @@ trait DummySubscriptionTrait
 
     public function assertSubscriptionExists()
     {
-        $this->assertSame(1, $this->Subscriptions->find()->count());
+        $this->assertSame(1, $this->Subscriptions->find()->all()->count());
     }
 
     public function assertSubscriptionDoesNotExist()
     {
-        $this->assertSame(0, $this->Subscriptions->find()->count());
+        $this->assertSame(0, $this->Subscriptions->find()->all()->count());
     }
 
     public function persistSubscription(string $keyFileName): EntityInterface
@@ -197,7 +198,7 @@ trait DummySubscriptionTrait
     {
         $filePath = $this->baseTestPath . 'Fixture' . DS . 'subscription' . DS . $keyFileName;
         if (!file_exists($filePath)) {
-            throw new \RuntimeException('Cannot find file ' . $filePath);
+            throw new RuntimeException('Cannot find file ' . $filePath);
         }
 
         return file_get_contents($filePath);

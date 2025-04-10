@@ -24,10 +24,10 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $fingerprint
  * @property string $armored_key
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
- * @property \Cake\I18n\FrozenTime|null $expired
- * @property \Cake\I18n\FrozenTime|null $deleted
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
+ * @property \Cake\I18n\DateTime|null $expired
+ * @property \Cake\I18n\DateTime|null $deleted
  * @property string $created_by
  * @property string $modified_by
  *
@@ -49,7 +49,7 @@ class MetadataKey extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'fingerprint' => false,
         'armored_key' => false,
         'created' => false,

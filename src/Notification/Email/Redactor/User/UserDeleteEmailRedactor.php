@@ -19,6 +19,7 @@ namespace App\Notification\Email\Redactor\User;
 
 use App\Controller\Users\UsersDeleteController;
 use App\Model\Entity\User;
+use App\Model\Table\UsersTable;
 use App\Notification\Email\Email;
 use App\Notification\Email\EmailCollection;
 use App\Notification\Email\SubscribedEmailRedactorInterface;
@@ -27,6 +28,7 @@ use App\Utility\Purifier;
 use Cake\Event\Event;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Passbolt\Locale\Service\LocaleService;
 
 /**
@@ -40,7 +42,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @var \App\Model\Table\UsersTable
      */
-    protected $Users;
+    protected UsersTable $Users;
 
     /**
      * @inheritDoc
@@ -70,6 +72,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         }
 
         $deletedBy = $this->Users->findFirstForEmail($deletedById);
+        /** @var array<\App\Model\Entity\User> $recipients */
         $recipients = $this->getRecipientsWithGroups($groupsIds);
 
         foreach ($recipients as $recipient) {
@@ -88,9 +91,9 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
 
     /**
      * @param array $groupsIds Groups IDs
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    private function getRecipientsWithGroups(array $groupsIds): Query
+    private function getRecipientsWithGroups(array $groupsIds): SelectQuery
     {
         $filter = [
             'Groups.id IN' => $groupsIds,
@@ -100,7 +103,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
         // This is ugly CakePHP https://github.com/cakephp/cakephp/issues/15689
         return $this->Users->find('locale')
             ->find('notDisabled')
-            ->group($this->Users->aliasField('id'))
+            ->groupBy($this->Users->aliasField('id'))
             ->select($this->Users)
             ->contain('GroupsUsers.Groups', function (Query $q) use ($filter) {
                 return $q->where($filter);
@@ -113,7 +116,7 @@ class UserDeleteEmailRedactor implements SubscribedEmailRedactorInterface
     /**
      * @param \App\Model\Entity\User $recipient User recipient
      * @param \App\Model\Entity\User $user User
-     * @param \App\Model\Entity\Group[] $groups Groups
+     * @param array<\App\Model\Entity\Group> $groups Groups
      * @param \App\Model\Entity\User $deletedBy User admin who deleted the user
      * @return \App\Notification\Email\Email
      */

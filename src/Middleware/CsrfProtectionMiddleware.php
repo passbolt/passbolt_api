@@ -17,6 +17,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use Cake\Core\Configure;
+use Cake\Http\Middleware\CsrfProtectionMiddleware as CakeCsrfProtectionMiddleware;
 use Cake\Http\ServerRequest;
 use Cake\Utility\Hash;
 use Cake\Utility\Security;
@@ -24,7 +25,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class CsrfProtectionMiddleware extends \Cake\Http\Middleware\CsrfProtectionMiddleware
+class CsrfProtectionMiddleware extends CakeCsrfProtectionMiddleware
 {
     public const PASSBOLT_SECURITY_CSRF_PROTECTION_ACTIVE_CONFIG = 'passbolt.security.csrfProtection.active';
 

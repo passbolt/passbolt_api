@@ -21,6 +21,7 @@ use App\Error\Exception\CustomValidationException;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Utility\Gpg\GpgAdaSetupTrait;
 use Cake\Http\Exception\BadRequestException;
+use Exception;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryPrivateKeyPassword;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting;
 use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\AccountRecoveryUserSettingsSetService;
@@ -71,7 +72,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->expectExceptionMessage('Invalid request. You cannot opt-out.');
         try {
             $this->service->set(compact('status'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -89,7 +90,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->expectExceptionMessage('Invalid request. Private key or password are missing.');
         try {
             $this->service->set(compact('status'));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -106,7 +107,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->expectExceptionMessage('The account recovery user setting is not valid.');
         try {
             $this->service->set(['foo']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -123,7 +124,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->expectExceptionMessage('The status should be one of the following: rejected, approved.');
         try {
             $this->service->set(['status' => 'foo']);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -136,7 +137,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         try {
             // Status here does not matter
             $this->service->set([]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -159,7 +160,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->expectExceptionMessage('Invalid request. Private key or password are missing.');
         try {
             $this->service->set($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -190,7 +191,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->expectExceptionMessage('Could not validate private key data.');
         try {
             $this->service->set($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -221,7 +222,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->expectExceptionMessage('Could not validate private key data.');
         try {
             $this->service->set($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -252,7 +253,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
         $this->expectExceptionMessage('Could not validate password data.');
         try {
             $this->service->set($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertSame(0, AccountRecoveryUserSettingFactory::count());
             throw $e;
         }
@@ -292,7 +293,7 @@ class AccountRecoveryUserSettingsSetServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryUserSettingsSetService_Success_Rejected()
     {
-        $policy = AccountRecoveryOrganizationPolicyFactory::make()
+        AccountRecoveryOrganizationPolicyFactory::make()
             ->optin()
             ->with(
                 'AccountRecoveryOrganizationPublicKeys',

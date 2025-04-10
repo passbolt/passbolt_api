@@ -24,7 +24,7 @@ use Cake\Utility\Hash;
 
 class GroupsUpdateDryRunControllerTest extends AppIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Groups', 'app.Base/GroupsUsers', 'app.Base/Resources', 'app.Base/Permissions',
         'app.Base/Users', 'app.Base/Profiles', 'app.Base/Roles', 'app.Base/Secrets',
     ];

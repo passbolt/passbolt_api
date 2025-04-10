@@ -31,7 +31,7 @@ class FavoritesHealthcheckService extends AbstractHealthcheckService
     /**
      * @var \App\Model\Table\FavoritesTable
      */
-    private $table;
+    private FavoritesTable $table;
 
     /**
      * Favorites Healthcheck constructor.
@@ -52,7 +52,7 @@ class FavoritesHealthcheckService extends AbstractHealthcheckService
     {
         $records = $this->table->find()->all();
 
-        foreach ($records as $i => $record) {
+        foreach ($records as $record) {
             $this->canValidate($record);
         }
 

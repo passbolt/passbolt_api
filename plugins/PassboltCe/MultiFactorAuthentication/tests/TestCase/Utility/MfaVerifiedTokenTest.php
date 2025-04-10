@@ -23,7 +23,8 @@ use App\Test\Factory\AuthenticationTokenFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\Http\ServerRequest;
-use Cake\I18n\FrozenDate;
+use Cake\I18n\Date;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 use Passbolt\MultiFactorAuthentication\Test\Factory\MfaAuthenticationTokenFactory;
@@ -258,7 +259,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             ->withAuthenticationTokens(
                 MfaAuthenticationTokenFactory::make()
                     ->active()
-                    ->created((new FrozenDate())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS))
+                    ->created((new DateTime())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS))
             )
             ->persist();
         $token = $user->authentication_tokens[0];
@@ -281,7 +282,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             'token' => UuidFactory::uuid(),
             'active' => true,
             'type' => AuthenticationToken::TYPE_MFA,
-            'created' => (new FrozenDate())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS),
+            'created' => (new Date())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS),
             'data' => json_encode([
                 'provider' => MfaSettings::PROVIDER_TOTP,
                 'user_agent' => null,
@@ -307,7 +308,7 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
             'token' => UuidFactory::uuid(),
             'active' => true,
             'type' => AuthenticationToken::TYPE_MFA,
-            'created' => (new FrozenDate())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS + 1),
+            'created' => (new Date())->addDays(-MfaVerifiedCookie::MAX_DURATION_IN_DAYS + 1),
             'data' => json_encode([
                 'provider' => MfaSettings::PROVIDER_TOTP,
                 'user_agent' => null,
@@ -338,12 +339,14 @@ class MfaVerifiedTokenTest extends MfaIntegrationTestCase
         MfaVerifiedToken::get($uac, MfaSettings::PROVIDER_DUO, $sessionId);
         $tokensCount = $this->AuthenticationTokens->find()
             ->where(['user_id' => $uac->getId(), 'type' => MfaSettings::MFA, 'active' => true])
+            ->all()
             ->count();
         $this->assertEquals($tokensCount, 3);
 
         MfaVerifiedToken::setAllInactive($uac);
         $tokensCount = $this->AuthenticationTokens->find()
             ->where(['user_id' => $uac->getId(), 'type' => MfaSettings::MFA, 'active' => true])
+            ->all()
             ->count();
         $this->assertEquals($tokensCount, 0);
     }

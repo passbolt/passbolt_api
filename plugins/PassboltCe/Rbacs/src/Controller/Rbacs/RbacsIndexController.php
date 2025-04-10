@@ -18,18 +18,14 @@ declare(strict_types=1);
 namespace Passbolt\Rbacs\Controller\Rbacs;
 
 use App\Controller\AppController;
+use Passbolt\Rbacs\Model\Table\RbacsTable;
 
 class RbacsIndexController extends AppController
 {
     /**
      * @var \Passbolt\Rbacs\Model\Table\RbacsTable $Rbacs
      */
-    protected $Rbacs;
-
-    /**
-     * @var array $paginate options
-     */
-    public $paginate = [];
+    protected RbacsTable $Rbacs;
 
     /**
      * @inheritDoc

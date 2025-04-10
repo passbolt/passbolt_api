@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace App\Authenticator\Identifier;
 
+use ArrayAccess;
 use Authentication\Identifier\AbstractIdentifier;
 use Authentication\Identifier\Resolver\ResolverAwareTrait;
 
@@ -29,7 +30,7 @@ class SessionIdentifier extends AbstractIdentifier
     /**
      * @inheritDoc
      */
-    public function identify(array $credentials)
+    public function identify(array $credentials): ArrayAccess|array|null
     {
         if (!isset($credentials[self::CREDENTIAL_USERNAME])) {
             return null;

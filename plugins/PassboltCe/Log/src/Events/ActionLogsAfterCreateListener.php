@@ -28,6 +28,7 @@ use Passbolt\Log\Service\ActionLogs\ActionLogsCreateService;
 use Passbolt\Log\Strategy\ActionLogsAbstractQueryStrategy;
 use Passbolt\Log\Strategy\ActionLogsDefaultQueryStrategy;
 use Psr\Log\LogLevel;
+use Throwable;
 
 class ActionLogsAfterCreateListener implements EventListenerInterface
 {
@@ -115,7 +116,7 @@ class ActionLogsAfterCreateListener implements EventListenerInterface
                 $controller->getResponse(),
                 UserAction::getInstance()->getUserAccessControl()
             );
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             throw new InternalErrorException(
                 __('The strategy should extend the class: {0}', ActionLogsAbstractQueryStrategy::class),
                 500,

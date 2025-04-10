@@ -16,18 +16,17 @@ declare(strict_types=1);
  */
 namespace Passbolt\Tags\Test\TestCase\Controller;
 
+use App\Test\Factory\ResourceFactory;
 use App\Utility\UuidFactory;
+use Cake\Core\Configure;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Middleware\TagsReadOnlyModeMiddleware;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagPluginIntegrationTestCase;
 
 class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
 {
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources', 'app.Base/Groups',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
-
     /**
      * A user not logged in should not be able to delete tags
      *
@@ -50,7 +49,7 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagsDeleteInvalidTagId()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $this->deleteJson('/tags/invalid-tag-id.json?api-version=v2');
         $this->assertBadRequestError('The tag id is not valid.');
     }
@@ -64,10 +63,19 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagsDeleteNonExistingTagId()
     {
-        $this->authenticateAs('ada');
+        $this->logInAsUser();
         $tagId = UuidFactory::uuid('tag.id.nope');
         $this->deleteJson("/tags/$tagId.json?api-version=v2");
         $this->assertError(404, 'The tag does not exist.');
+    }
+
+    public function testTagsDelete_Read_Only_Mode()
+    {
+        Configure::write(TagsReadOnlyModeMiddleware::PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE, true);
+        $this->authenticateAs('ada');
+        $tagId = UuidFactory::uuid();
+        $this->deleteJson("/tags/$tagId.json?api-version=v2");
+        $this->assertForbiddenError('The tags plugin is in read-only mode.');
     }
 
     /**
@@ -79,9 +87,11 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagsDeleteUserCanNotDeleteSharedTag()
     {
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.#bravo');
-        $this->deleteJson("/tags/$tagId.json?api-version=v2");
+        $user = $this->logInAsUser();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->isSharedFor($resource)->persist();
+        $this->deleteJson("/tags/{$tag->id}.json?api-version=v2");
         $this->assertForbiddenError('You do not have the permission to delete shared tags.');
     }
 
@@ -96,9 +106,11 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
     {
         $this->disableCsrfToken();
 
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.hotel');
-        $this->delete("/tags/$tagId.json?api-version=v2");
+        $user = $this->logInAsUser();
+        $resource = ResourceFactory::make()->withPermissionsFor([$user])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make()->isPersonalFor($resource, $user)->persist();
+        $this->delete("/tags/{$tag->id}.json?api-version=v2");
         $this->assertResponseCode(403);
         $result = $this->_getBodyAsString();
         $this->assertStringContainsString('Missing or incorrect CSRF cookie type.', $result);
@@ -115,20 +127,23 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
     public function testTagsDeleteAdminCanNotDeletePersonalTag()
     {
         // Make sure ada has access to personal tag hotel
-        $this->authenticateAs('ada');
+        $ada = $this->logInAsUser();
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        $tag = TagFactory::make(['slug' => 'hotel'])->isPersonalFor($resource, $ada)->persist();
+
         $this->getJson('/tags.json?api-version=v2');
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
         $this->assertContains('hotel', $results);
 
         // Admin tries to delete it
-        $this->authenticateAs('admin');
-        $tagId = UuidFactory::uuid('tag.id.hotel');
-        $this->deleteJson("/tags/$tagId.json?api-version=v2");
+        $this->logInAsAdmin();
+        $this->deleteJson("/tags/{$tag->id}.json?api-version=v2");
         $this->assertError(404, 'The tag does not exist.');
 
         // Make sure ada still sees the tag in index
-        $this->authenticateAs('ada');
+        $this->logInAs($ada);
         $this->getJson('/tags.json?api-version=v2');
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
@@ -144,15 +159,26 @@ class TagsDeleteControllerTest extends TagPluginIntegrationTestCase
      */
     public function testTagsDeleteUserCanDeletePersonalTag()
     {
-        $this->authenticateAs('ada');
-        $tagId = UuidFactory::uuid('tag.id.fox-trot');
-        $this->deleteJson("/tags/$tagId.json?api-version=v2");
+        $ada = $this->logInAsUser();
+        $resource = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tagToDelete */
+        $tagToDelete = TagFactory::make(['slug' => 'hotel'])->isPersonalFor($resource, $ada)->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tagToKeep */
+        $tagToKeep = TagFactory::make(['slug' => 'motel'])->isPersonalFor($resource, $ada)->persist();
+
+        $this->deleteJson("/tags/{$tagToDelete->id}.json?api-version=v2");
         $this->assertSuccess();
 
         // Make sure we do not see the deleted tag in index
         $this->getJson('/tags.json?api-version=v2');
         $response = json_decode($this->_getBodyAsString());
         $results = Hash::extract($response->body, '{n}.slug');
-        $this->assertNotContains('fox-trot', $results);
+        $this->assertNotContains('hotel', $results);
+        $this->assertContains('motel', $results);
+
+        $this->assertSame(1, TagFactory::find()->where(['id' => $tagToKeep->id])->all()->count());
+        $this->assertSame(1, ResourcesTagFactory::find()->where(['tag_id' => $tagToKeep->id])->all()->count());
+        $this->assertSame(0, TagFactory::find()->where(['id' => $tagToDelete->id])->all()->count());
+        $this->assertSame(0, ResourcesTagFactory::find()->where(['tag_id' => $tagToDelete->id])->all()->count());
     }
 }

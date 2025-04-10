@@ -19,6 +19,7 @@ namespace Passbolt\Subscription\Test\TestCase\Form;
 
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\Subscription\Form\SubscriptionKeyAsciiForm;
 use Passbolt\Subscription\Test\DummySubscriptionTrait;
 
@@ -47,7 +48,7 @@ class SubscriptionKeyAsciiFormTest extends TestCase
         $this->_licenseKeyForm->setData(['key_ascii' => $licenseStr]);
         try {
             $licenseInfo = $this->_licenseKeyForm->parse();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->fail('The license does not validate: ' . $e->getMessage());
 
             return null;
@@ -113,7 +114,7 @@ class SubscriptionKeyAsciiFormTest extends TestCase
         return [
             ['subscription_dev', $this->getValidSubscription()],
             ['subscription_expired', $this->getExpiredSubscription()],
-            ['subscription_issuer_ada', \Exception::class],
+            ['subscription_issuer_ada', Exception::class],
         ];
     }
 

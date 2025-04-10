@@ -19,13 +19,12 @@ namespace Passbolt\MultiFactorAuthentication\Test\TestCase\Controllers;
 use App\Test\Factory\UserFactory;
 use App\Utility\OpenPGP\OpenPGPBackendFactory;
 use Cake\Core\Configure;
-use Passbolt\JwtAuthentication\Service\AccessToken\JwtKeyPairService;
 use Passbolt\MultiFactorAuthentication\Test\Lib\MfaIntegrationTestCase;
 use Passbolt\MultiFactorAuthentication\Test\Scenario\Totp\MfaTotpScenario;
 
 class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
 {
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users', 'app.Base/Roles', 'app.Base/Profiles',
         'app.Base/Gpgkeys', 'app.Base/GroupsUsers',
     ];
@@ -43,7 +42,6 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $jwtKeyPairService = new JwtKeyPairService();
         $this->enableFeaturePlugin('JwtAuthentication');
     }
 
@@ -57,7 +55,7 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
     public function testMfaMiddlewareLoginSuccess200()
     {
         $adaId = 'f848277c-5398-58f8-a82a-72397af2d450';
-        $user = UserFactory::get($adaId, ['contain' => 'Roles']);
+        $user = UserFactory::get($adaId, contain: 'Roles');
         $this->loadFixtureScenario(MfaTotpScenario::class, $user);
         $this->gpgSetup();
         $this->postJson('/auth/login.json', [
@@ -75,10 +73,6 @@ class MfaMiddlewareLoginTest extends MfaIntegrationTestCase
         $this->gpg->setDecryptKeyFromFingerprint($this->adaKeyId, '');
         $plaintext = $this->gpg->decrypt($msg, true);
         $this->assertFalse(!$plaintext, 'Could not decrypt the server generated User Auth Token: ' . $msg);
-
-        // Decrypt and check if the token is in the right format
-        $info = explode('|', $plaintext);
-        [$version, $length, $uuid, $version2] = $info;
 
         // Send it back!
         $this->postJson('/auth/login.json', [

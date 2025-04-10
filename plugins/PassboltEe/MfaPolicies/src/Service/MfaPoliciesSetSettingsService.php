@@ -96,7 +96,7 @@ class MfaPoliciesSetSettingsService
 
         /** @var \App\Model\Table\AuthenticationTokensTable $authenticationTokensTable */
         $authenticationTokensTable = $this->fetchTable('AuthenticationTokens');
-        /** @var \App\Model\Entity\AuthenticationToken[] $activeMfaTokens */
+        /** @var array<\App\Model\Entity\AuthenticationToken> $activeMfaTokens */
         $activeMfaTokens = $authenticationTokensTable
             ->find()
             ->where(['active' => true, 'type' => AuthenticationToken::TYPE_MFA])

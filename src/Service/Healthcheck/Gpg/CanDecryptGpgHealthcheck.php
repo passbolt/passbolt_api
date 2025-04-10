@@ -82,7 +82,7 @@ class CanDecryptGpgHealthcheck extends AbstractGpgHealthcheck implements SkipHea
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return null;
     }

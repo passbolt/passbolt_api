@@ -22,6 +22,7 @@ use App\Model\Entity\AuthenticationToken;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\NotFoundException;
 use Cake\ORM\Locator\LocatorAwareTrait;
+use Cake\ORM\Table;
 use Cake\Validation\Validation;
 
 /**
@@ -37,7 +38,7 @@ class AuthenticationTokenGetService
     /**
      * @var \Cake\ORM\Table $AuthenticationTokens
      */
-    protected $AuthenticationTokens;
+    protected Table $AuthenticationTokens;
 
     /**
      * Constructor
@@ -125,7 +126,7 @@ class AuthenticationTokenGetService
      * @return \App\Model\Entity\AuthenticationToken|null
      * @throws \Cake\Http\Exception\BadRequestException if token id is not a valid uuid
      */
-    public function get(string $token, string $userId, string $type)
+    public function get(string $token, string $userId, string $type): ?AuthenticationToken
     {
         if (!Validation::uuid($token)) {
             throw new BadRequestException(__('The token should be a valid UUID.'));

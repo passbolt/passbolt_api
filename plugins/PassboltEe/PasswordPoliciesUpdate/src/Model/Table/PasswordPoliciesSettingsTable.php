@@ -30,7 +30,7 @@ use Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting;
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting newEmptyEntity()
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting get($primaryKey, $options = [])
+ * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\PasswordPoliciesUpdate\Model\Entity\PasswordPoliciesSetting[] patchEntities(iterable $entities, array $data, array $options = [])
@@ -69,7 +69,7 @@ class PasswordPoliciesSettingsTable extends OrganizationSettingsTable
      * Filter organization settings by property.
      *
      * @param \Cake\Event\Event $event Model.beforeFind event.
-     * @param  \Cake\ORM\Query $query Any query performed on the present table.
+     * @param \Cake\ORM\Query $query Any query performed on the present table.
      * @return \Cake\ORM\Query
      */
     public function beforeFind(Event $event, Query $query): Query
@@ -87,7 +87,7 @@ class PasswordPoliciesSettingsTable extends OrganizationSettingsTable
      * @param \ArrayObject $options options
      * @return void
      */
-    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options)
+    public function beforeMarshal(Event $event, ArrayObject $data, ArrayObject $options): void
     {
         $data['property'] = $this->getProperty();
         $data['property_id'] = $this->getPropertyId();

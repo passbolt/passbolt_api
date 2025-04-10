@@ -21,6 +21,8 @@ use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Passbolt\SmtpSettings\Form\EmailConfigurationForm;
+use function file_exists;
+use function is_readable;
 
 class SmtpSettingsGetService
 {
@@ -35,7 +37,7 @@ class SmtpSettingsGetService
     /**
      * @var string
      */
-    private $passboltFileName;
+    private string $passboltFileName;
 
     /**
      * @param string $passboltFileName The passbolt config file, modifiable for unit test purpose.
@@ -146,6 +148,6 @@ class SmtpSettingsGetService
      */
     protected function isPassboltConfigFileFoundAndReadable(): bool
     {
-        return \file_exists($this->passboltFileName) && \is_readable($this->passboltFileName);
+        return file_exists($this->passboltFileName) && is_readable($this->passboltFileName);
     }
 }

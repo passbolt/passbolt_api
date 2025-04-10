@@ -36,7 +36,7 @@ class ConsoleCommand extends Command
      * @param \Cake\Console\ConsoleIo $io The console io
      * @return int|null|void The exit code or null for success
      */
-    public function execute(Arguments $args, ConsoleIo $io)
+    public function execute(Arguments $args, ConsoleIo $io) // phpcs:ignore
     {
         if (!class_exists('Psy\Shell')) {
             $io->err('<error>Unable to load Psy\Shell.</error>');

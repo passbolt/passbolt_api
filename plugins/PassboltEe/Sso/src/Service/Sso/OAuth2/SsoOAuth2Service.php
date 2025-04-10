@@ -21,6 +21,7 @@ use App\Utility\ExtendedUserAccessControl;
 use Cake\Core\Configure;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
+use Exception;
 use GuzzleHttp\Client;
 use League\OAuth2\Client\Provider\AbstractProvider;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
@@ -129,7 +130,7 @@ class SsoOAuth2Service extends AbstractSsoService
             if (!($ssoSettings->data instanceof SsoSettingsOAuth2DataDto)) {
                 throw new BadRequestException('Invalid provider data. Expected OAuth2 settings.');
             }
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new BadRequestException(__('No valid SSO settings found.'), 400, $exception);
         }
 

@@ -18,6 +18,7 @@ namespace Passbolt\Metadata\Controller\RotateKey;
 
 use App\Controller\AppController;
 use App\Database\Type\ISOFormatDateTimeType;
+use Passbolt\Folders\Model\Table\FoldersTable;
 use Passbolt\Metadata\Service\Folders\MetadataFoldersRenderService;
 
 class MetadataRotateKeyFoldersIndexController extends AppController
@@ -25,7 +26,7 @@ class MetadataRotateKeyFoldersIndexController extends AppController
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersTable
      */
-    protected $Folders;
+    protected FoldersTable $Folders;
 
     /**
      * @inheritDoc

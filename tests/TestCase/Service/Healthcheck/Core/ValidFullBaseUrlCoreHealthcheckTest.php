@@ -19,6 +19,7 @@ namespace App\Test\TestCase\Service\Healthcheck\Core;
 use App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck;
 use Cake\Core\Configure;
 use Cake\TestSuite\TestCase;
+use stdClass;
 
 /**
  * @covers \App\Service\Healthcheck\Core\ValidFullBaseUrlCoreHealthcheck
@@ -118,7 +119,7 @@ class ValidFullBaseUrlCoreHealthcheckTest extends TestCase
 
     public function testValidFullBaseUrlCoreHealthcheck_InvalidTypeFullBaseUrl(): void
     {
-        Configure::write('App.fullBaseUrl', new \stdClass());
+        Configure::write('App.fullBaseUrl', new stdClass());
         $healthcheck = new ValidFullBaseUrlCoreHealthcheck();
         $result = $healthcheck->check()->isPassed();
         $this->assertFalse($result);

@@ -97,7 +97,7 @@ class RecoverStartControllerTest extends SsoRecoverIntegrationTestCase
 
     public function testRecoverStartController_ErrorInactiveToken(): void
     {
-        $settings = SsoSettingsFactory::make()->azure()->active()->persist();
+        SsoSettingsFactory::make()->azure()->active()->persist();
         $ssoAuthToken = SsoAuthenticationTokenFactory::make()->inactive()->persist();
 
         $this->postJson('/sso/recover/start.json', [

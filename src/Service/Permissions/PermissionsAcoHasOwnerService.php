@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace App\Service\Permissions;
 
 use App\Model\Entity\Permission;
+use App\Model\Table\PermissionsTable;
 use Cake\ORM\TableRegistry;
 
 class PermissionsAcoHasOwnerService
@@ -25,7 +26,7 @@ class PermissionsAcoHasOwnerService
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $permissionsTable;
+    private PermissionsTable $permissionsTable;
 
     /**
      * Instantiate the service.
@@ -45,6 +46,7 @@ class PermissionsAcoHasOwnerService
     public function check(string $acoForeignKey): bool
     {
         return $this->permissionsTable->findByAcoForeignKeyAndType($acoForeignKey, Permission::OWNER)
+            ->all()
             ->count() > 0;
     }
 }

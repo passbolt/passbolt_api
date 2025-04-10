@@ -21,7 +21,7 @@ use App\Model\Entity\Role;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\Model\GpgkeysModelTrait;
 use Cake\Core\Configure;
-use Cake\Core\Exception\Exception;
+use Cake\Core\Exception\CakeException;
 use Cake\ORM\TableRegistry;
 use Passbolt\Subscription\Model\Entity\Subscription;
 use Passbolt\Subscription\Test\DummySubscriptionTrait;
@@ -151,7 +151,7 @@ class WebInstallerTest extends WebInstallerIntegrationTestCase
         // Validate schema
         try {
             DatabaseConfiguration::validateSchema();
-        } catch (Exception $e) {
+        } catch (CakeException $e) {
             $this->assertTrue(false);
         }
         $this->assertTrue(true);

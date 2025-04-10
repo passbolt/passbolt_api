@@ -21,38 +21,28 @@ use App\Model\Entity\Permission;
 use App\Model\Entity\Role;
 use App\Service\Resources\ResourcesExpireResourcesFallbackServiceService;
 use App\Service\Resources\ResourcesShareService;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use App\Utility\UserAccessControl;
-use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
 class ShareTest extends TagTestCase
 {
-    public $Permissions;
     public $Resources;
-    public $ResourcesTags;
-
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Roles',
-        'app.Base/Resources', 'app.Base/Favorites',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions', 'app.Alt0/Secrets',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->Permissions = TableRegistry::getTableLocator()->get('Permissions');
         $this->Resources = TableRegistry::getTableLocator()->get('Resources');
-        $this->ResourcesTags = TableRegistry::getTableLocator()->get('Passbolt/Tags.ResourcesTags');
     }
 
     public function tearDown(): void
     {
-        unset($this->Permissions);
         unset($this->Resources);
-        unset($this->ResourcesTags);
         parent::tearDown();
     }
 
@@ -75,9 +65,18 @@ hcciUFw5
 
     public function testTagsLostAccessAssociatedDataDeleted()
     {
-        $resourceAId = UuidFactory::uuid('resource.id.apache');
-        $userAId = UuidFactory::uuid('user.id.ada');
-        $userEId = UuidFactory::uuid('user.id.edith');
+        [$ada, $edith] = UserFactory::make(2)->persist();
+        [$resourceToDeletePermissionOn, $resourceNotDeleted] = ResourceFactory::make(2)
+            ->withPermissionsFor([$ada])
+            ->persist();
+        $permissionToDelete = $resourceToDeletePermissionOn->permissions[0];
+
+        TagFactory::make()
+            ->isPersonalFor($resourceToDeletePermissionOn, $ada)
+            ->isPersonalFor($resourceNotDeleted, $ada)
+            ->persist();
+
+        TagFactory::make()->isPersonalFor($resourceToDeletePermissionOn, $ada)->persist();
 
         // Build the changes.
         $changes = [];
@@ -85,29 +84,23 @@ hcciUFw5
 
         // Users permissions changes.
         // Delete the permission of the user.
-        $permission = $this->Permissions->find('all')
-            ->where(['aco_foreign_key' => $resourceAId, 'aro_foreign_key' => $userAId])
-            ->first();
-        $changes[] = ['id' => $permission->id, 'delete' => true];
-        // Add a owner otherwise we can't remove ada permission
-        $changes[] = ['aro' => 'User', 'aro_foreign_key' => $userEId, 'type' => Permission::OWNER];
-        $secrets[] = ['user_id' => $userEId, 'data' => $this->getValidSecret()];
+        $changes[] = ['id' => $permissionToDelete->id, 'delete' => true];
+        // Add an owner otherwise we can't remove ada permission
+        $changes[] = ['aro' => 'User', 'aro_foreign_key' => $edith->id, 'type' => Permission::OWNER];
+        $secrets[] = ['user_id' => $edith->id, 'data' => $this->getValidSecret()];
 
         // Share.
-        $uac = new UserAccessControl(Role::USER, $userAId);
+        $uac = new UserAccessControl(Role::USER, $ada->id);
         $resourceShareService = new ResourcesShareService(new ResourcesExpireResourcesFallbackServiceService());
-        $resourceShareService->share($uac, $resourceAId, $changes, $secrets);
+        $resourceShareService->share($uac, $resourceToDeletePermissionOn->id, $changes, $secrets);
 
-        $this->assertUserHasNotAccessResources($userAId, [$resourceAId]);
+        $this->assertUserHasNotAccessResources($ada->id, [$resourceToDeletePermissionOn->id]);
 
-        // Ensure the apache favorite for Dame is deleted
-        // But the other favorites for this resource are not touched.
-        $resources = $this->ResourcesTags->find()
-            ->where(['user_id' => $userAId])
-            ->all();
-        $resourcesId = Hash::extract($resources->toArray(), '{n}.resource_id');
-        $this->assertNotContains($resourceAId, $resourcesId);
-        $this->assertcontains(UuidFactory::uuid('resource.id.april'), $resourcesId);
-        $this->assertcontains(UuidFactory::uuid('resource.id.chai'), $resourcesId);
+        // Ensure the tag for the resource with permission lost is deleted
+        // But the other tags for this resource are not touched.
+        $resources = ResourcesTagFactory::find()->where(['user_id' => $ada->id])->all();
+        $resourceIds = Hash::extract($resources->toArray(), '{n}.resource_id');
+        $this->assertNotContains($resourceToDeletePermissionOn->id, $resourceIds);
+        $this->assertcontains($resourceNotDeleted->id, $resourceIds);
     }
 }

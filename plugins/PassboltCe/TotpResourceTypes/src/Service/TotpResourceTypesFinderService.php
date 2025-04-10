@@ -16,7 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\TotpResourceTypes\Service;
 
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Passbolt\ResourceTypes\Model\Table\ResourceTypesTable;
 use Passbolt\ResourceTypes\Service\ResourceTypesFinderService;
 
@@ -25,9 +25,9 @@ class TotpResourceTypesFinderService extends ResourceTypesFinderService
     /**
      * Returns all the available resource types (mainly including TOTP related).
      *
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function find(): Query
+    public function find(): SelectQuery
     {
         return $this->resourceTypesTable
             ->find()

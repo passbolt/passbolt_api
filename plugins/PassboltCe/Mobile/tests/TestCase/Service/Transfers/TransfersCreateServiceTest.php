@@ -40,7 +40,7 @@ class TransfersCreateServiceTest extends AppTestCase
      *
      * @var array
      */
-    public $fixtures = [
+    public array $fixtures = [
         'app.Base/Users',
     ];
 

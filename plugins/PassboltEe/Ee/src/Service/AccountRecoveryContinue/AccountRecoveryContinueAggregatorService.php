@@ -18,6 +18,7 @@ declare(strict_types=1);
 namespace Passbolt\Ee\Service\AccountRecoveryContinue;
 
 use Passbolt\AccountRecovery\Service\AccountRecoveryContinue\AccountRecoveryContinueServiceInterface;
+use Passbolt\UserPassphrasePolicies\Service\AccountRecovery\AccountRecoveryContinueUserPassphrasePoliciesService;
 
 class AccountRecoveryContinueAggregatorService
 {
@@ -29,8 +30,9 @@ class AccountRecoveryContinueAggregatorService
     /**
      * @param \Passbolt\UserPassphrasePolicies\Service\AccountRecovery\AccountRecoveryContinueUserPassphrasePoliciesService|string $accountRecoveryContinuePassphraseService Gets the info related to the user passphrase policy.
      */
-    public function __construct($accountRecoveryContinuePassphraseService)
-    {
+    public function __construct(
+        AccountRecoveryContinueUserPassphrasePoliciesService|string $accountRecoveryContinuePassphraseService
+    ) {
         $this->services[] = $accountRecoveryContinuePassphraseService;
     }
 

@@ -18,11 +18,14 @@ namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
 use App\Test\Lib\AppTestCase;
 use Cake\Http\Exception\NotImplementedException;
+use Exception;
+use InvalidArgumentException;
 use LdapRecord\Query\Model\Builder;
 use Passbolt\DirectorySync\Test\Mock\LdapDirectoryMock;
 use Passbolt\DirectorySync\Utility\DirectoryInterface;
 use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 use Passbolt\DirectorySync\Utility\LdapDirectory;
+use RuntimeException;
 
 /**
  * @covers \Passbolt\DirectorySync\Utility\LdapDirectory
@@ -174,8 +177,8 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getConnection()
     {
-        $this->expectException(\RuntimeException::class);
-        $Ldap = new LdapDirectory($this->settings);
+        $this->expectException(RuntimeException::class);
+        new LdapDirectory($this->settings);
     }
 
     /**
@@ -192,7 +195,7 @@ class LdapDirectoryTest extends AppTestCase
      */
     public function testLdapDirectory_getMappingRules_WrongDirectoryTypeException()
     {
-        $this->expectException(\Exception::class);
+        $this->expectException(Exception::class);
         $this->expectExceptionMessageMatches('/The directory type should be one of the following:.*/');
         $this->Mock->Ldap->setDirectoryType(self::TEST_DOMAIN, 'invalid-ldap');
         $this->Mock->Ldap->getMappingRules();
@@ -382,7 +385,7 @@ class LdapDirectoryTest extends AppTestCase
         $this->settings->set($settings);
         $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
         $this->Mock->setGetQueryExpectation();
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('An error has occurred parsing userCustomFilter: Unclosed filter group. Missing ")" parenthesis');
         $this->Mock->Ldap->fetchDirectoryData();
     }
@@ -397,7 +400,7 @@ class LdapDirectoryTest extends AppTestCase
         $this->settings->set($settings);
         $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
         $this->Mock->setGetQueryExpectation();
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('An error has occurred parsing groupCustomFilter: Unclosed filter group. Missing ")" parenthesis');
         $this->Mock->Ldap->fetchDirectoryData();
     }
@@ -414,7 +417,7 @@ class LdapDirectoryTest extends AppTestCase
         $this->settings->set($settings);
         $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
         $this->Mock->setGetQueryExpectation();
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Using callbacks for userCustomFilter is not supported anymore. Please use LDAP search filter instead.');
         $this->Mock->Ldap->fetchDirectoryData();
     }
@@ -431,7 +434,7 @@ class LdapDirectoryTest extends AppTestCase
         $this->settings->set($settings);
         $this->Mock = LdapDirectoryMock::createAllowingFetch($this, $this->settings);
         $this->Mock->setGetQueryExpectation();
-        $this->expectException(\InvalidArgumentException::class);
+        $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Using callbacks for groupCustomFilter is not supported anymore. Please use LDAP search filter instead.');
         $this->Mock->Ldap->fetchDirectoryData();
     }

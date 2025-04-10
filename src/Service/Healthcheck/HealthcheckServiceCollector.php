@@ -22,7 +22,7 @@ use Cake\Utility\Inflector;
 class HealthcheckServiceCollector
 {
     /**
-     * @var \App\Service\Healthcheck\HealthcheckServiceInterface[]
+     * @var array<\App\Service\Healthcheck\HealthcheckServiceInterface>
      */
     protected array $services = [];
 
@@ -76,7 +76,7 @@ class HealthcheckServiceCollector
     /**
      * Returns all services available in this collector.
      *
-     * @return \App\Service\Healthcheck\HealthcheckServiceInterface[]
+     * @return array<\App\Service\Healthcheck\HealthcheckServiceInterface>
      */
     public function getServices(): array
     {

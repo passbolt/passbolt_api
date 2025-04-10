@@ -24,7 +24,7 @@ use App\Utility\UserAccessControl;
 use Cake\Datasource\ResultSetInterface;
 use Cake\Event\EventDispatcherTrait;
 use Cake\Http\Exception\BadRequestException;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\Validation\Validation;
 
@@ -66,7 +66,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
 
     /**
      * @param array $data payload
-     * @return array<string, \Cake\I18n\FrozenTime|null> array with the resourceIds as keys and the expiry date as value
+     * @return array<string, \Cake\I18n\DateTime|null> array with the resourceIds as keys and the expiry date as value
      * @throws \Cake\Http\Exception\BadRequestException if the expired value are not valid
      * @throws \Cake\Http\Exception\BadRequestException if the resource_id value are not valid
      * @throws \Cake\Http\Exception\BadRequestException if the resource_id value is found twice in the payload
@@ -91,7 +91,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
             if (array_key_exists($resourceId, $dataSanitized)) {
                 throw new BadRequestException(__('The identifier should be unique: {0}.', $resourceId));
             }
-            $dataSanitized[$resourceId] = is_null($expiryDate) ? $expiryDate : new FrozenTime($expiryDate);
+            $dataSanitized[$resourceId] = is_null($expiryDate) ? $expiryDate : new DateTime($expiryDate);
         }
         if (empty($dataSanitized)) {
             throw new BadRequestException(__('The data should not be empty.'));
@@ -106,7 +106,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
      * @return void
      * @throws \Cake\Http\Exception\BadRequestException if the user does not have update rights on one of the resources
      */
-    protected function validateUacPermissions(UserAccessControl $uac, array $resourceIds)
+    protected function validateUacPermissions(UserAccessControl $uac, array $resourceIds): void
     {
         /** @var \App\Model\Table\PermissionsTable $PermissionsTable */
         $PermissionsTable = TableRegistry::getTableLocator()->get('Permissions');
@@ -117,7 +117,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
                 'Permissions.aco_foreign_key IN' => $resourceIds,
                 'Permissions.type >=' => Permission::UPDATE,
             ])
-            ->orderDesc('Permissions.type')
+            ->orderByDesc('Permissions.type')
             ->all();
 
         if ($resourcesWithPermissionForUac->isEmpty()) {
@@ -137,7 +137,7 @@ class PasswordExpiryPoliciesResourcesExpiryUpdateService
 
     /**
      * @param \App\Utility\UserAccessControl $uac UAC performing the action
-     * @param array<string, \Cake\I18n\FrozenTime|null> $expiryDateList array with the resourceIds as keys and the expiry date as value
+     * @param array<string, \Cake\I18n\DateTime|null> $expiryDateList array with the resourceIds as keys and the expiry date as value
      * @return \Cake\Datasource\ResultSetInterface
      * @throws \Exception if the entities could not be saved
      */

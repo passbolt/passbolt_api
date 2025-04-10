@@ -17,41 +17,35 @@ declare(strict_types=1);
 
 namespace Passbolt\Tags\Test\TestCase\Model\Table\Groups;
 
-use App\Utility\UuidFactory;
-use Cake\Datasource\Exception\RecordNotFoundException;
+use App\Test\Factory\GroupFactory;
+use App\Test\Factory\ResourceFactory;
+use App\Test\Factory\UserFactory;
 use Cake\ORM\TableRegistry;
+use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
 
 class SoftDeleteTest extends TagTestCase
 {
     public $Groups;
-    public $GroupsUsers;
-    public $Permissions;
-    public $Resources;
-    public $Users;
-    public $Tags;
-
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Groups', 'app.Base/Favorites',
-        'app.Base/Profiles', 'app.Base/Gpgkeys', 'app.Base/Resources',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
 
     public function setUp(): void
     {
         parent::setUp();
         $this->Groups = TableRegistry::getTableLocator()->get('Groups');
-        $this->Tags = TableRegistry::getTableLocator()->get('Passbolt/Tags.Tags');
     }
 
     public function testTagsGroupsSoftDeleteAlsoDeleteTagsSuccess()
     {
-        $g = $this->Groups->get(UuidFactory::uuid('group.id.accounting'));
-        $this->Groups->softDelete($g, ['checkRules' => false]);
-
-        // Deleting Accounting or Cakephp should delete #charlie
-        $this->expectException(RecordNotFoundException::class);
-        $this->Tags->get(UuidFactory::uuid('tag.id.#charlie'));
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        /** @var \App\Model\Entity\Group $group */
+        $group = GroupFactory::make()->persist();
+        /** @var \App\Model\Entity\Resource $resource */
+        $resource = ResourceFactory::make()->withPermissionsFor([$group])->persist();
+        /** @var \Passbolt\Tags\Model\Entity\Tag $tag */
+        TagFactory::make()->isPersonalFor($resource, $user)->persist();
+        TagFactory::make()->isSharedFor($resource)->persist();
+        $this->Groups->softDelete($group, ['checkRules' => false]);
+        $this->assertSame(0, TagFactory::count());
     }
 }

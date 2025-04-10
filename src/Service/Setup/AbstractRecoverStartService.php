@@ -20,7 +20,7 @@ namespace App\Service\Setup;
 abstract class AbstractRecoverStartService
 {
     /**
-     * @var \App\Service\Setup\RecoverStartInfoServiceInterface[]
+     * @var array<\App\Service\Setup\RecoverStartInfoServiceInterface>
      */
     private array $services = [];
 
@@ -46,7 +46,7 @@ abstract class AbstractRecoverStartService
      * @param \App\Service\Setup\RecoverStartInfoServiceInterface|string $service Add service that provide additional data to add into base service.
      * @return void
      */
-    public function add($service): void
+    public function add(RecoverStartInfoServiceInterface|string $service): void
     {
         if ($service instanceof RecoverStartInfoServiceInterface) {
             $this->services[] = $service;

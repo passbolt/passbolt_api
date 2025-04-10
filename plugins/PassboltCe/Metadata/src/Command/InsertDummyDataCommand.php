@@ -37,7 +37,7 @@ class InsertDummyDataCommand extends InsertCommand
      * @param string $scenario Scenario.
      * @return array
      */
-    protected function getShellTasks(string $scenario)
+    protected function getShellTasks(string $scenario): array
     {
         if ($scenario === 'default') {
             return [

@@ -32,6 +32,7 @@ trait PermissionsHistoryTestTrait
     {
         $entityHistoryCount = $this->PermissionsHistory
             ->find()
+            ->all()
             ->count();
         $this->assertEquals($expectedCount, $entityHistoryCount);
     }

@@ -24,7 +24,7 @@ class UserCollection
     /**
      * @var array<string, \Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry>
      */
-    private $users = [];
+    private array $users = [];
 
     /**
      * Add new user to the collection.
@@ -43,7 +43,7 @@ class UserCollection
      *
      * @return array<string, \Passbolt\DirectorySync\Utility\DirectoryEntry\UserEntry>
      */
-    public function getAll()
+    public function getAll(): array
     {
         return $this->users;
     }

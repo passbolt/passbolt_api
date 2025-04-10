@@ -18,44 +18,44 @@ namespace Passbolt\Reports\Utility;
 
 use App\Model\Entity\User;
 use App\Model\Table\Dto\FindIndexOptions;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 
 abstract class AbstractReport implements ReportInterface
 {
     /**
-     * @var string $name report name
+     * @var string|null $name report name
      */
-    protected $name;
+    protected ?string $name = null;
 
     /**
-     * @var string $slug report slug
+     * @var string|null $slug report slug
      */
-    protected $slug;
+    protected ?string $slug = null;
 
     /**
-     * @var string $description report description
+     * @var string|null $description report description
      */
-    protected $description;
+    protected ?string $description = null;
 
     /**
      * @var string $template report template
      */
-    protected $template;
+    protected string $template;
 
     /**
      * @var \App\Model\Table\Dto\FindIndexOptions $options find options (optional)
      */
-    protected $options;
+    protected FindIndexOptions $options;
 
     /**
      * @var \App\Model\Entity\User $creator
      */
-    protected $creator;
+    protected User $creator;
 
     /**
      * @inheritDoc
      */
-    public function setSlug(string $slug)
+    public function setSlug(string $slug): ReportInterface
     {
         $this->slug = $slug;
 
@@ -65,7 +65,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function setName(string $name)
+    public function setName(string $name): ReportInterface
     {
         $this->name = $name;
 
@@ -75,7 +75,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function setDescription(string $description)
+    public function setDescription(string $description): ReportInterface
     {
         $this->description = $description;
 
@@ -85,7 +85,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function setTemplate(string $template)
+    public function setTemplate(string $template): ReportInterface
     {
         $this->template = $template;
 
@@ -95,7 +95,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function setOptions(FindIndexOptions $options)
+    public function setOptions(FindIndexOptions $options): ReportInterface
     {
         $this->options = $options;
 
@@ -105,7 +105,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function setCreator(User $creator)
+    public function setCreator(User $creator): mixed
     {
         $this->creator = $creator;
 
@@ -115,7 +115,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function getSupportedOptions()
+    public function getSupportedOptions(): FindIndexOptions
     {
         return new FindIndexOptions();
     }
@@ -123,7 +123,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -131,7 +131,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -139,7 +139,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function getOptions()
+    public function getOptions(): FindIndexOptions
     {
         /** @psalm-suppress RedundantPropertyInitializationCheck */
         return $this->options ?? new FindIndexOptions();
@@ -148,7 +148,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @return \App\Model\Entity\User|null
      */
-    public function getCreator()
+    public function getCreator(): ?User
     {
         /** @psalm-suppress RedundantPropertyInitializationCheck */
         return $this->creator ?? null;
@@ -157,14 +157,14 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function createReport()
+    public function createReport(): array
     {
         $report = [
             'slug' => $this->getSlug(),
             'type' => $this->getType(),
             'name' => $this->getName(),
             'description' => $this->getDescription(),
-            'created' => FrozenTime::now(),
+            'created' => DateTime::now(),
             'data' => $this->getData(),
         ];
 
@@ -180,9 +180,9 @@ abstract class AbstractReport implements ReportInterface
     /**
      * Used by controller to render object
      *
-     * @return array|mixed
+     * @return mixed|array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->createReport();
     }
@@ -190,7 +190,7 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    public function getSlug()
+    public function getSlug(): ?string
     {
         return $this->slug;
     }
@@ -198,15 +198,15 @@ abstract class AbstractReport implements ReportInterface
     /**
      * @inheritDoc
      */
-    abstract public function getTemplate();
+    abstract public function getTemplate(): string;
 
     /**
      * @inheritDoc
      */
-    abstract public function getType();
+    abstract public function getType(): string;
 
     /**
      * @inheritDoc
      */
-    abstract public function getData();
+    abstract public function getData(): array;
 }

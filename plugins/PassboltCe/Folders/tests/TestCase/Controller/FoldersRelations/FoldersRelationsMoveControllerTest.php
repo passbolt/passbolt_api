@@ -46,7 +46,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
     use FoldersRelationsModelTrait;
     use PermissionsModelTrait;
 
-    public $fixtures = [
+    public array $fixtures = [
         GpgkeysFixture::class,
         GroupsFixture::class,
         GroupsUsersFixture::class,
@@ -138,7 +138,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsMoveError_ValidationErrors_FolderParentIdRequired()
     {
-        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder(); // phpcs:ignore
         $this->authenticateAs('ada');
         $this->putJson("/move/folder/$folderA->id.json?api-version=2");
         $this->assertError(400, 'Could not validate move data.');
@@ -185,7 +185,7 @@ class FoldersRelationsMoveControllerTest extends FoldersIntegrationTestCase
 
     public function testFoldersRelationsUpdateResourcesError_NoAccessToFolder()
     {
-        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder();
+        [$folderA, $folderB, $userAId] = $this->insertFixture_MoveFolder(); // phpcs:ignore
         $this->authenticateAs('dame');
         $data = ['folder_parent_id' => FoldersRelation::ROOT];
         $this->putJson("/move/folder/$folderA->id.json", $data);

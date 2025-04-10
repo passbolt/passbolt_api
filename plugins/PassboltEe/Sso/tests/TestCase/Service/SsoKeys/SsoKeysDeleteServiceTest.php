@@ -44,7 +44,7 @@ class SsoKeysDeleteServiceTest extends SsoTestCase
     public function testSsoKeysDeleteServiceTest_Error_InvalidId(): void
     {
         $user = UserFactory::make()->active()->persist();
-        $key = SsoKeysFactory::make()->userId($user->id)->persist();
+        SsoKeysFactory::make()->userId($user->id)->persist();
         $uac = new UserAccessControl(Role::USER, $user->id, $user->username);
         $this->assertEquals(1, SsoKeysFactory::count());
 
@@ -57,7 +57,7 @@ class SsoKeysDeleteServiceTest extends SsoTestCase
     public function testSsoKeysDeleteServiceTest_Error_IdNotFound(): void
     {
         $user = UserFactory::make()->active()->persist();
-        $key = SsoKeysFactory::make()->userId($user->id)->persist();
+        SsoKeysFactory::make()->userId($user->id)->persist();
         $uac = new UserAccessControl(Role::USER, $user->id, $user->username);
         $this->assertEquals(1, SsoKeysFactory::count());
 

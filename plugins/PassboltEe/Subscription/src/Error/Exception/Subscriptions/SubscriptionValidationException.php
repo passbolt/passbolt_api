@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Passbolt\Subscription\Error\Exception\Subscriptions;
 
+use Exception;
 use Passbolt\Subscription\Model\Dto\SubscriptionKeyDto;
 
 /**
@@ -31,7 +32,7 @@ class SubscriptionValidationException extends SubscriptionException
     /**
      * @var \Passbolt\Subscription\Model\Dto\SubscriptionKeyDto $keyDto
      */
-    protected $keyDto;
+    protected SubscriptionKeyDto $keyDto;
 
     /**
      * Constructor.
@@ -45,7 +46,7 @@ class SubscriptionValidationException extends SubscriptionException
         string $message,
         ?SubscriptionKeyDto $dto = null,
         ?int $code = null,
-        ?\Exception $previous = null
+        ?Exception $previous = null
     ) {
         $code = $code ?? 402;
         $data = isset($dto) ? $dto->toArray() : '';
@@ -68,7 +69,7 @@ class SubscriptionValidationException extends SubscriptionException
     /**
      * @return \Passbolt\Subscription\Model\Dto\SubscriptionKeyDto|null
      */
-    public function getDto()
+    public function getDto(): ?SubscriptionKeyDto
     {
         return $this->keyDto;
     }

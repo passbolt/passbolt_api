@@ -25,7 +25,7 @@ use Passbolt\SmtpSettings\Service\SmtpSettingsTestEmailService;
 
 class TestEmailServiceProvider extends ServiceProvider
 {
-    protected $provides = [
+    protected array $provides = [
         SendTestEmailCommand::class,
         SmtpSettingsTestEmailService::class,
         SmtpSettingsSendTestMailerService::class,

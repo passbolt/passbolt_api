@@ -34,7 +34,7 @@ class MfaPoliciesSetting extends OrganizationSetting
     /**
      * List of allowed policy values.
      *
-     * @var string[]
+     * @var array<string>
      */
     public const ALLOWED_POLICIES = [
         self::POLICY_OPT_IN,

@@ -19,6 +19,7 @@ namespace Passbolt\DirectorySync\Command;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable;
 
 /**
  * Class IgnoreListCommand
@@ -28,7 +29,7 @@ class IgnoreListCommand extends DirectorySyncCommand
     /**
      * @var \Passbolt\DirectorySync\Model\Table\DirectoryIgnoreTable
      */
-    protected $DirectoryIgnore;
+    protected DirectoryIgnoreTable $DirectoryIgnore;
 
     /**
      * @inheritDoc
@@ -62,7 +63,7 @@ class IgnoreListCommand extends DirectorySyncCommand
             ->contain(['Users', 'Groups', 'DirectoryEntries'])
             ->toArray();
         $records[] = ['Model', 'Name', 'Created', 'ID'];
-        foreach ($di as $i => $record) {
+        foreach ($di as $record) {
             $name = '';
             switch ($record->foreign_model) {
                 case 'Users':

@@ -11,8 +11,8 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string|null $parent_id
  * @property string $status
- * @property \Cake\I18n\FrozenTime $created
- * @property \Cake\I18n\FrozenTime $modified
+ * @property \Cake\I18n\DateTime $created
+ * @property \Cake\I18n\DateTime $modified
  *
  * @property \Passbolt\DirectorySync\Model\Entity\DirectoryReport|null $parent_directory_report
  * @property \Passbolt\DirectorySync\Model\Entity\DirectoryReport[] $child_directory_reports
@@ -32,7 +32,7 @@ class DirectoryReport extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'parent_id' => false,
         'status' => false,
         'created' => false,

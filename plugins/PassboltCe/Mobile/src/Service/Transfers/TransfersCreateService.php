@@ -37,7 +37,7 @@ class TransfersCreateService
     /**
      * @var \Passbolt\Mobile\Model\Table\TransfersTable
      */
-    private $Transfers;
+    private TransfersTable $Transfers;
 
     /**
      * Instantiate the service.

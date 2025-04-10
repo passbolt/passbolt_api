@@ -23,7 +23,7 @@ use Cake\Core\Configure;
 use Cake\Database\Driver\Postgres;
 use Cake\Datasource\ConnectionManager;
 use Cake\Datasource\EntityInterface;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 use Cake\TestSuite\TestCase;
 use Cake\Utility\Hash;
@@ -110,7 +110,7 @@ class ConvertEmailVariablesToJsonServiceTest extends AppTestCase
             $this->assertNull($vars['users'][1]['profile']['avatar']['data'] ?? null);
             $this->assertSame($resource['name'], $vars['resource']['name']);
             // Dates are accessible under the $date['date] key!
-            $this->assertInstanceOf(FrozenTime::class, FrozenTime::parse($vars['resource']['created']['date']));
+            $this->assertInstanceOf(\Cake\I18n\DateTime::class, \Cake\I18n\DateTime::parse($vars['resource']['created']['date']));
         };
 
         $assertVars($hydratedVars);

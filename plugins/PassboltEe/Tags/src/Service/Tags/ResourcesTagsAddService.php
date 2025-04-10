@@ -20,13 +20,16 @@ namespace Passbolt\Tags\Service\Tags;
 use App\Error\Exception\ValidationException;
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Table\ResourcesTable;
 use App\Utility\UserAccessControl;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
 use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
+use Exception;
 use Passbolt\Tags\Model\Dto\MetadataTagDto;
+use Passbolt\Tags\Model\Table\TagsTable;
 
 class ResourcesTagsAddService
 {
@@ -35,21 +38,19 @@ class ResourcesTagsAddService
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $Resources;
+    private ResourcesTable $Resources;
 
     /**
      * @var \Passbolt\Tags\Model\Table\TagsTable
      */
-    private $Tags;
+    private TagsTable $Tags;
 
     /**
      * Constructor.
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->Resources = $this->fetchTable('Resources');
-        /** @phpstan-ignore-next-line */
         $this->Tags = $this->fetchTable('Passbolt/Tags.Tags');
     }
 
@@ -77,7 +78,7 @@ class ResourcesTagsAddService
                 $resource,
                 $this->Resources
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $msg = __('Could not save the tags, try again later.');
             $msg .= ' ' . $e->getMessage();
             throw new InternalErrorException($msg, null, $e);
@@ -143,7 +144,7 @@ class ResourcesTagsAddService
         // The tag the user is adding already exist, associate it to the resource.
         $encryptedTagsIds = Hash::extract($encryptedTags, '{n}.id');
         if ($clearTextTags || $encryptedTagsIds) {
-            $existingTags = $this->Tags->findAllBySlugsOrIds($clearTextTags, $encryptedTagsIds)->all()->toArray();
+            $existingTags = $this->Tags->findAllBySlugsOrIds($uac, $clearTextTags, $encryptedTagsIds)->all()->toArray();
             foreach ($existingTags as $existingTag) {
                 $tagDto = MetadataTagDto::fromArray($existingTag->toArray());
 

@@ -19,7 +19,9 @@ namespace Passbolt\Folders\Service\Resources;
 
 use App\Model\Entity\Permission;
 use App\Model\Entity\Resource;
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
+use App\Model\Table\ResourcesTable;
 use App\Utility\UserAccessControl;
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\NotFoundException;
@@ -27,6 +29,7 @@ use Cake\ORM\TableRegistry;
 use Passbolt\Folders\Model\Behavior\FolderizableBehavior;
 use Passbolt\Folders\Model\Dto\FolderRelationDto;
 use Passbolt\Folders\Model\Entity\FoldersRelation;
+use Passbolt\Folders\Model\Table\FoldersRelationsTable;
 use Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTreeService;
 
 class ResourcesAfterAccessGrantedService
@@ -34,22 +37,22 @@ class ResourcesAfterAccessGrantedService
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $groupsUsersTable;
+    private GroupsUsersTable $groupsUsersTable;
 
     /**
      * @var \App\Model\Table\ResourcesTable
      */
-    private $resourcesTable;
+    private ResourcesTable $resourcesTable;
 
     /**
      * @var \Passbolt\Folders\Model\Table\FoldersRelationsTable
      */
-    private $foldersRelationsTable;
+    private FoldersRelationsTable $foldersRelationsTable;
 
     /**
      * @var \Passbolt\Folders\Service\FoldersRelations\FoldersRelationsAddItemsToUserTreeService
      */
-    private $foldersRelationsAddItemsToUserTree;
+    private FoldersRelationsAddItemsToUserTreeService $foldersRelationsAddItemsToUserTree;
 
     /**
      * Instantiate the service.
@@ -93,10 +96,11 @@ class ResourcesAfterAccessGrantedService
     private function getResource(UserAccessControl $uac, string $resourceId): Resource
     {
         try {
-            return $this->resourcesTable->get($resourceId, [
-                'finder' => FolderizableBehavior::FINDER_NAME,
-                'user_id' => $uac->getId(),
-            ]);
+            return $this->resourcesTable->get(
+                $resourceId,
+                finder: FolderizableBehavior::FINDER_NAME,
+                user_id: $uac->getId()
+            );
         } catch (RecordNotFoundException $e) {
             throw new NotFoundException(__('The resource does not exist.'));
         }

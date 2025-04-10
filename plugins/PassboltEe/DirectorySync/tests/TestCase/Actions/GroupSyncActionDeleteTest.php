@@ -48,7 +48,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCa
     {
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.noref'), Alias::MODEL_DIRECTORY_ENTRIES);
         $this->mockDirectoryIgnore(UuidFactory::uuid('group.id.noref'), Alias::MODEL_GROUPS);
-        $report = $this->action->execute();
+        $this->action->execute();
         $this->assertDirectoryIgnoreEmpty();
     }
 
@@ -346,7 +346,7 @@ class GroupSyncActionDeleteTest extends DirectorySyncDeprecatedIntegrationTestCa
     public function testDirectorySyncGroupDelete_Case08a_Null_Null_Ignore_Deleted_Null()
     {
         $this->mockDirectoryIgnore(UuidFactory::uuid('ldap.group.id.deleted'), Alias::MODEL_DIRECTORY_ENTRIES);
-        $report = $this->action->execute();
+        $this->action->execute();
         $this->assertGroupExist(UuidFactory::uuid('group.id.deleted'), ['deleted' => true]);
         $this->assertDirectoryIgnoreEmpty();
         $this->assertDirectoryEntryEmpty();

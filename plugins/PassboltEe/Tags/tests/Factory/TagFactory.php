@@ -16,6 +16,7 @@ use Passbolt\Metadata\Model\Entity\MetadataKey;
  * @method \Passbolt\Tags\Model\Entity\Tag[] getEntities()
  * @method \Passbolt\Tags\Model\Entity\Tag|\Passbolt\Tags\Model\Entity\Tag[] persist()
  * @method static \Passbolt\Tags\Model\Entity\Tag get(mixed $primaryKey, array $options = [])
+ * @method static \Passbolt\Tags\Model\Entity\Tag firstOrFail($conditions = null)
  */
 class TagFactory extends CakephpBaseFactory
 {

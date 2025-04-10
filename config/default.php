@@ -413,6 +413,11 @@ return [
             'userPassphrasePolicies' => [
                 'enabled' => filter_var(env('PASSBOLT_PLUGINS_USER_PASSPHRASE_POLICIES_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
             ],
+            'tags' => [
+                'enabled' => filter_var(env('PASSBOLT_PLUGINS_TAGS_ENABLED', true), FILTER_VALIDATE_BOOLEAN),
+                'readOnlyMode' => filter_var(env('PASSBOLT_PLUGINS_TAGS_READ_ONLY_MODE', false), FILTER_VALIDATE_BOOLEAN),
+                'backupMode' => filter_var(env('PASSBOLT_PLUGINS_TAGS_BACKUP_MODE', false), FILTER_VALIDATE_BOOLEAN),
+            ],
         ],
 
         // Activate specific entry points for selenium testing.

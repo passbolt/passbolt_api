@@ -98,19 +98,19 @@ trait UsersModelTrait
         $user = $usersTable->get($id);
         $this->assertTrue($user->deleted);
 
-        $groupsUsers = $groupsUsersTable->find()->where(['user_id' => $id])->count();
+        $groupsUsers = $groupsUsersTable->find()->where(['user_id' => $id])->all()->count();
         $this->assertEquals(0, $groupsUsers);
 
-        $permissions = $permissionsTable->find()->where(['aro_foreign_key' => $id])->count();
+        $permissions = $permissionsTable->find()->where(['aro_foreign_key' => $id])->all()->count();
         $this->assertEquals(0, $permissions);
 
-        $secrets = $secretsTable->find()->where(['user_id' => $id])->count();
+        $secrets = $secretsTable->find()->where(['user_id' => $id])->all()->count();
         $this->assertEquals(0, $secrets);
 
-        $favorites = $favoritesTable->find()->where(['user_id' => $id])->count();
+        $favorites = $favoritesTable->find()->where(['user_id' => $id])->all()->count();
         $this->assertEquals(0, $favorites);
 
-        $gpgKeys = $gpgKeysTable->find()->where(['user_id' => $id, 'deleted' => 0])->count();
+        $gpgKeys = $gpgKeysTable->find()->where(['user_id' => $id, 'deleted' => 0])->all()->count();
         $this->assertEquals(0, $gpgKeys);
     }
 

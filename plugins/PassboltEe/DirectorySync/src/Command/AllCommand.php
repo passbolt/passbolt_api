@@ -21,6 +21,7 @@ use App\Service\Resources\ResourcesExpireResourcesServiceInterface;
 use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
+use Exception;
 use Passbolt\DirectorySync\Actions\AllSyncAction;
 
 class AllCommand extends DirectorySyncCommand
@@ -78,7 +79,7 @@ class AllCommand extends DirectorySyncCommand
             $dryRun = $args->getOption('dry-run') || !$args->getOption('persist');
             $allSyncAction = new AllSyncAction($this->expireResourcesService);
             $reports = $allSyncAction->execute($dryRun);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             $this->error($exception->getMessage(), $io);
 
             return $this->errorCode();

@@ -20,6 +20,7 @@ use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
+use Exception;
 use Passbolt\SelfRegistration\SelfRegistrationPlugin;
 use Passbolt\SelfRegistration\Test\Lib\SelfRegistrationTestTrait;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
@@ -96,7 +97,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 $userAgent,
                 SsoSetting::PROVIDER_AZURE
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('Invalid nonce', $e->getMessage());
         }
@@ -131,7 +132,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 $userAgent,
                 SsoSetting::PROVIDER_AZURE
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('Access to this service requires an invitation', $e->getMessage());
         }
@@ -167,7 +168,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 $userAgent,
                 SsoSetting::PROVIDER_AZURE
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('Access to this service requires an invitation', $e->getMessage());
         }
@@ -204,7 +205,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 $userAgent,
                 SsoSetting::PROVIDER_AZURE
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('The SSO state is expired', $e->getMessage());
         }
@@ -341,7 +342,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 $userAgent,
                 SsoSetting::PROVIDER_AZURE
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('user does not exist or has been deleted', $e->getMessage());
         }
@@ -376,7 +377,7 @@ class SsoRecoverAssertServiceTest extends AppTestCase
                 $userAgent,
                 SsoSetting::PROVIDER_AZURE
             );
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->assertInstanceOf(BadRequestException::class, $e);
             $this->assertStringContainsString('Access to this service requires an invitation', $e->getMessage());
         }

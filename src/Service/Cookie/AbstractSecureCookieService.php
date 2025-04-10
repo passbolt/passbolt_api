@@ -56,8 +56,12 @@ abstract class AbstractSecureCookieService
      * @param \DateTime|\DateTimeImmutable|null $expiresAt Expiration time and date
      * @return \Cake\Http\Cookie\Cookie
      */
-    public function create(string $name, $value = '', ?string $path = '', ?DateTimeInterface $expiresAt = null): Cookie
-    {
+    public function create(
+        string $name,
+        array|string $value = '',
+        ?string $path = '',
+        ?DateTimeInterface $expiresAt = null
+    ): Cookie {
         $cookie = (new Cookie($name))
             ->withPath($this->getPath($path))
             ->withValue($value)
@@ -79,7 +83,7 @@ abstract class AbstractSecureCookieService
      * @param string|null $path Path.
      * @return \Cake\Http\Cookie\Cookie
      */
-    public function createExpired(string $name, $value = '', ?string $path = ''): Cookie
+    public function createExpired(string $name, array|string $value = '', ?string $path = ''): Cookie
     {
         return $this->create($name, $value, $path)->withExpired();
     }

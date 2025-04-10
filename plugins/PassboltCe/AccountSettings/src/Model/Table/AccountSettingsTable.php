@@ -19,9 +19,10 @@ namespace Passbolt\AccountSettings\Model\Table;
 
 use App\Error\Exception\ValidationException;
 use App\Utility\UuidFactory;
+use Cake\Datasource\EntityInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Http\Exception\InternalErrorException;
-use Cake\ORM\Query;
+use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validation;
@@ -33,7 +34,7 @@ use Passbolt\AccountSettings\Model\Table\Traits\ThemeSettingsTrait;
  * AccountSettings Model
  *
  * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\BelongsTo $Users
- * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get($primaryKey, $options = [])
+ * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting[] newEntities(array $data, array $options = [])
  * @method \Passbolt\AccountSettings\Model\Entity\AccountSetting|false save(\Cake\Datasource\EntityInterface $entity, $options = [])
@@ -117,7 +118,7 @@ class AccountSettingsTable extends Table
      * @param array|null $context not in use
      * @return bool
      */
-    public function isValidProperty(string $value, ?array $context = null)
+    public function isValidProperty(string $value, ?array $context = null): bool
     {
         return in_array($value, AccountSetting::SUPPORTED_PROPERTIES);
     }
@@ -141,16 +142,16 @@ class AccountSettingsTable extends Table
      *
      * @param string $userId uuid
      * @param array $whitelist example ['theme']
-     * @return \Cake\ORM\Query
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findIndex(string $userId, array $whitelist)
+    public function findIndex(string $userId, array $whitelist): SelectQuery
     {
         if (!Validation::uuid($userId)) {
             throw new BadRequestException(__('The user identifier should be a valid UUID.'));
         }
 
         $props = [];
-        foreach ($whitelist as $i => $item) {
+        foreach ($whitelist as $item) {
             $props[] = $this->propertyToPropertyId($item);
         }
 
@@ -173,7 +174,7 @@ class AccountSettingsTable extends Table
         }
 
         /** @var \Passbolt\AccountSettings\Model\Entity\AccountSetting $entity */
-        $entity = $this->find('byProperty', compact('property'))
+        $entity = $this->find('byProperty', property: $property)
             ->where([$this->aliasField('user_id') => $userId])
             ->firstOrFail();
 
@@ -229,7 +230,7 @@ class AccountSettingsTable extends Table
      * @param string $property user property
      * @return bool
      */
-    public function deleteByProperty(string $userId, string $property)
+    public function deleteByProperty(string $userId, string $property): bool
     {
         $settingItem = $this->getByProperty($userId, $property);
         if ($settingItem !== null) {
@@ -246,10 +247,10 @@ class AccountSettingsTable extends Table
      * @param string $property user property
      * @return \Cake\Datasource\EntityInterface|array|null
      */
-    public function getByProperty(string $userId, string $property)
+    public function getByProperty(string $userId, string $property): EntityInterface|array|null
     {
         return $this->find()
-            ->find('byProperty', compact('property'))
+            ->find('byProperty', property: $property)
             ->where([$this->aliasField('user_id') => $userId])
             ->first();
     }
@@ -268,17 +269,15 @@ class AccountSettingsTable extends Table
     /**
      * Find setting per property
      *
-     * @param \Cake\ORM\Query $query Query
-     * @param array $options Option with property
-     * @return \Cake\ORM\Query
+     * @param \Cake\ORM\Query\SelectQuery $query Query
+     * @param ?string $property Property
+     * @return \Cake\ORM\Query\SelectQuery
      */
-    public function findByProperty(Query $query, array $options): Query
+    public function findByProperty(SelectQuery $query, ?string $property = null): SelectQuery
     {
-        if (!isset($options['property'])) {
+        if (!isset($property)) {
             throw new InternalErrorException(__('The parameter {0} is not set.', 'property'));
         }
-
-        $property = $options['property'];
 
         return $query->where([$this->aliasField('property_id') => $this->propertyToPropertyId($property)]);
     }

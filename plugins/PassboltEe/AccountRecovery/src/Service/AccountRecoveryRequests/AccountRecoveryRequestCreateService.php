@@ -19,6 +19,7 @@ namespace Passbolt\AccountRecovery\Service\AccountRecoveryRequests;
 
 use App\Model\Entity\AuthenticationToken;
 use App\Model\Entity\Role;
+use App\Model\Table\AuthenticationTokensTable;
 use App\Service\AuthenticationTokens\AuthenticationTokenGetService;
 use App\Service\OpenPGP\PublicKeyValidationService;
 use App\Utility\UserAccessControl;
@@ -30,7 +31,9 @@ use Cake\ORM\Exception\PersistenceFailedException;
 use Cake\ORM\Locator\LocatorAwareTrait;
 use Cake\Utility\Hash;
 use Cake\Validation\Validation;
+use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy;
 use Passbolt\AccountRecovery\Model\Entity\AccountRecoveryRequest;
+use Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable;
 use Passbolt\AccountRecovery\Service\AccountRecoveryOrganizationPolicies\AccountRecoveryOrganizationPolicyGetService;
 use Passbolt\AccountRecovery\Service\AccountRecoveryUserSettings\AccountRecoveryUserSettingsGetService;
 
@@ -46,31 +49,29 @@ class AccountRecoveryRequestCreateService
     /**
      * @var array $data user provider data
      */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryOrganizationPolicy current policy
      */
-    protected $policy;
+    protected AccountRecoveryOrganizationPolicy $policy;
 
     /**
      * @var \App\Model\Table\AuthenticationTokensTable
      */
-    protected $AuthenticationTokens;
+    protected AuthenticationTokensTable $AuthenticationTokens;
 
     /**
      * @var \Passbolt\AccountRecovery\Model\Table\AccountRecoveryRequestsTable
      */
-    protected $AccountRecoveryRequests;
+    protected AccountRecoveryRequestsTable $AccountRecoveryRequests;
 
     /**
      * AccountRecoveryRequestCreateService constructor.
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->AuthenticationTokens = $this->fetchTable('AuthenticationTokens');
-        /** @phpstan-ignore-next-line */
         $this->AccountRecoveryRequests = $this->fetchTable('Passbolt/AccountRecovery.AccountRecoveryRequests');
     }
 
@@ -174,7 +175,6 @@ class AccountRecoveryRequestCreateService
 
         // Deactivate all previous active tokens
         $this->AuthenticationTokens->updateQuery()
-            ->update()
             ->set(['active' => false])
             ->where([
                 'id <>' => $tokenEntity->id,
@@ -202,7 +202,7 @@ class AccountRecoveryRequestCreateService
      * @param string|null $name Dot separated name of the value to read. Or null to read all data.
      * @return mixed The value being read.
      */
-    protected function getData(?string $name = null)
+    protected function getData(?string $name = null): mixed
     {
         if ($name === null) {
             return $this->data;

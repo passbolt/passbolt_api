@@ -74,7 +74,7 @@ class IsValidEncryptedMetadataRule
      * @return string|null
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When user is not found.
      */
-    private function getArmoredKey(string $metadataKeyType, string $metadataKeyId)
+    private function getArmoredKey(string $metadataKeyType, string $metadataKeyId): ?string
     {
         if ($metadataKeyType === MetadataKey::TYPE_SHARED_KEY) {
             $metadataKeysTable = TableRegistry::getTableLocator()->get('Passbolt/Metadata.MetadataKeys');

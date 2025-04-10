@@ -21,6 +21,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Utility\UuidFactory;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 use Passbolt\Tags\Test\Factory\ResourcesTagFactory;
 use Passbolt\Tags\Test\Factory\TagFactory;
 use Passbolt\Tags\Test\Lib\TagTestCase;
@@ -36,18 +37,6 @@ class TagsTableTest extends TagTestCase
      * @var \Passbolt\Tags\Model\Table\TagsTable
      */
     public $Tags;
-
-    /**
-     * Fixtures
-     *
-     * @var array
-     */
-    public $fixtures = [
-        'app.Base/Users', 'app.Base/Roles', 'app.Base/Resources',
-        'app.Base/ResourceTypes', 'app.Base/Groups',
-        'app.Alt0/GroupsUsers', 'app.Alt0/Permissions',
-        'plugin.Passbolt/Tags.Base/Tags', 'plugin.Passbolt/Tags.Alt0/ResourcesTags',
-    ];
 
     /**
      * setUp method
@@ -79,12 +68,28 @@ class TagsTableTest extends TagTestCase
      */
     public function testTagsTableBuildEntitiesOrFailError()
     {
+        /** @var \App\Model\Entity\User $user */
+        $user = UserFactory::make()->persist();
+        $errorThrown = false;
         try {
             $tags = [['test']];
-            $this->Tags->buildEntitiesOrFail(UuidFactory::uuid('user.id.ada'), $tags);
-            $this->fail('Build entities should throw an exception');
+            $this->Tags->buildEntitiesOrFail($user->id, $tags);
         } catch (CustomValidationException $e) {
-            $this->assertTrue(true);
+            $this->assertSame('Could not validate tags data.', $e->getMessage());
+            $errorThrown = true;
+            $errors = [
+                [
+                    'slug' => [
+                        '_empty' => 'The tag should not be empty.',
+                    ],
+                    'is_shared' => [
+                        '_required' => 'A shared status is required.',
+                    ],
+                ],
+            ];
+            $this->assertSame($errors, $e->getErrors());
+        } finally {
+            $this->assertTrue($errorThrown);
         }
     }
 
@@ -95,7 +100,7 @@ class TagsTableTest extends TagTestCase
      */
     public function testTagsTableBeforeMarshall()
     {
-        $userId = UuidFactory::uuid('user.id.ada');
+        $userId = UserFactory::make()->persist();
         $tag = $this->Tags->newEntity([
             'slug' => 'test',
             'is_shared' => true,
@@ -114,31 +119,107 @@ class TagsTableTest extends TagTestCase
                 'is_shared' => true,
             ],
         ]);
-        $this->assertNotEmpty($tag->id);
-        $this->assertEquals($tag->id, UuidFactory::uuid('tag.id.test'));
+        $this->assertEmpty($tag->id);
+        $this->assertNotEquals($tag->id, UuidFactory::uuid('tag.id.test'));
         $this->assertFalse($tag->is_shared);
     }
 
     public function testTagsDeleteAllUnusedTags()
     {
+        TagFactory::make(3)->persist();
+        TagFactory::make(3)->isShared()->persist();
+        TagFactory::make()->isPersonalFor(
+            ResourceFactory::make()->persist(),
+            UserFactory::make()->persist()
+        )->persist();
+        TagFactory::make()->isSharedFor(ResourceFactory::make()->persist())->persist();
         // unused and #unused
         $r = $this->Tags->deleteAllUnusedTags();
-        $this->assertEquals($r, 2);
+        $this->assertEquals($r, 6);
 
         // there should not be any left
         $r = $this->Tags->deleteAllUnusedTags();
         $this->assertEquals($r, 0);
+
+        $this->assertSame(2, TagFactory::count());
+        $this->assertSame(2, ResourcesTagFactory::count());
     }
 
     public function testTagsTable_findAllBySlugs()
     {
-        [$tag1, $tag2] = TagFactory::make(5)->persist();
-        $tags1 = $this->Tags->findAllBySlugsOrIds([$tag1->slug]);
-        $tags2 = $this->Tags->findAllBySlugsOrIds([$tag2->slug]);
+        [$user1, $user2] = UserFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->persist();
+        $uac1 = $this->makeUac($user1);
+        $uac2 = $this->makeUac($user2);
+        [$tag1, $tag2] = TagFactory::make(5)->isPersonalFor($resource, $user1)->persist();
+        $tags1 = $this->Tags->findAllBySlugsOrIds($uac1, [$tag1->slug]);
+        $tags2 = $this->Tags->findAllBySlugsOrIds($uac1, [$tag2->slug]);
 
         $tags = $tags1->union($tags2);
 
-        $this->assertSame(2, $tags->count());
+        $this->assertSame(2, $tags->all()->count());
+        $findBySlugForUserWithoutTags = $this->Tags->findAllBySlugsOrIds($uac2, [$tag1->slug]);
+        $this->assertSame(0, $findBySlugForUserWithoutTags->all()->count());
+    }
+
+    public function testTagsTable_findAllBySlugs_Include_Shared()
+    {
+        [$user1, $user2] = UserFactory::make(2)->persist();
+        $resource = ResourceFactory::make()->persist();
+        $uac1 = $this->makeUac($user1);
+        [$tag1, $tag2] = TagFactory::make(2)->isPersonalFor($resource, $user1)->persist();
+        $tag3 = TagFactory::make()->isPersonalFor($resource, $user2)->persist();
+        $tag4 = TagFactory::make()->isSharedFor($resource)->persist();
+
+        $tagsAccessibleToUser1 = $this->Tags->findAllBySlugsOrIds($uac1, [
+            $tag1->get('slug'),
+            $tag2->get('slug'),
+            $tag3->get('slug'),
+            $tag4->get('slug'),
+        ]);
+
+        $this->assertSame(3, $tagsAccessibleToUser1->all()->count());
+        $tagIdsAccessibleToUser1 = Hash::extract($tagsAccessibleToUser1->toArray(), '{n}.id');
+        $this->assertTrue(in_array($tag1->get('id'), $tagIdsAccessibleToUser1));
+        $this->assertTrue(in_array($tag2->get('id'), $tagIdsAccessibleToUser1));
+        $this->assertFalse(in_array($tag3->get('id'), $tagIdsAccessibleToUser1));
+        $this->assertTrue(in_array($tag4->get('id'), $tagIdsAccessibleToUser1));
+    }
+
+    public function testTagsTable_findAllBySlugs_Tag_On_Multiple_Resources_Should_Be_Returned_Once()
+    {
+        $user = UserFactory::make()->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)->persist();
+        $uac = $this->makeUac($user);
+
+        $tag = TagFactory::make()
+            ->isPersonalFor($resource1, $user)
+            ->isPersonalFor($resource2, $user)
+            ->persist();
+
+        $tagsAccessibleToUser = $this->Tags->findAllBySlugsOrIds($uac, [
+            $tag->get('slug'),
+        ]);
+
+        $this->assertSame(1, $tagsAccessibleToUser->all()->count());
+    }
+
+    public function testTagsTable_findAllBySlugs_FindById_Tag_On_Multiple_Resources_Should_Be_Returned_Once()
+    {
+        $user = UserFactory::make()->persist();
+        [$resource1, $resource2] = ResourceFactory::make(2)->persist();
+        $uac = $this->makeUac($user);
+
+        $tag = TagFactory::make()
+            ->isPersonalFor($resource1, $user)
+            ->isPersonalFor($resource2, $user)
+            ->persist();
+
+        $tagsAccessibleToUser = $this->Tags->findAllBySlugsOrIds($uac, [], [
+            $tag->get('id'),
+        ]);
+
+        $this->assertSame(1, $tagsAccessibleToUser->all()->count());
     }
 
     public function hydrateQueryProvider(): array

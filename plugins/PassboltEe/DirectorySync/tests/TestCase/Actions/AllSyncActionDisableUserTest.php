@@ -75,7 +75,7 @@ class AllSyncActionDisableUserTest extends DirectorySyncIntegrationTestCase
         $directoryGroupEntry = DirectoryEntryFactory::make()
             ->withGroup(GroupFactory::make()->withGroupsUsersFor([$userToDisable]))
             ->persist();
-        $group = $directoryGroupEntry->get('group');
+        $directoryGroupEntry->get('group');
         $resource = ResourceFactory::make()
             ->withPermissionsFor([$userToDisable])
             ->withSecretsFor([$userToDisable])->persist();
@@ -115,7 +115,7 @@ class AllSyncActionDisableUserTest extends DirectorySyncIntegrationTestCase
         $directoryGroupEntry = DirectoryEntryFactory::make()
             ->withGroup(GroupFactory::make()->withGroupsUsersFor([$userToDisable]))
             ->persist();
-        $group = $directoryGroupEntry->get('group');
+        $directoryGroupEntry->get('group');
         $resource = ResourceFactory::make()
             ->withPermissionsFor([$userToDisable])
             ->withSecretsFor([$userToDisable])->persist();

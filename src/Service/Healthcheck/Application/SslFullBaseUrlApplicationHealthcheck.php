@@ -85,7 +85,7 @@ class SslFullBaseUrlApplicationHealthcheck implements HealthcheckServiceInterfac
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Check App.fullBaseUrl url scheme in {0}.', CONFIG . 'passbolt.php');
     }

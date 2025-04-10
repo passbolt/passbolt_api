@@ -130,7 +130,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryRequestGetService_Error_UserIdInvalid()
     {
-        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
+        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved(); // phpcs:ignore
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
@@ -182,7 +182,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryRequestGetService_Error_TokenIdInvalid()
     {
-        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
+        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved(); // phpcs:ignore
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(BadRequestException::class);
@@ -191,7 +191,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryRequestGetService_Error_TokenDoesNotExist()
     {
-        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
+        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved(); // phpcs:ignore
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);
@@ -274,7 +274,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryRequestGetService_Error_RequestIDInvalid()
     {
-        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
+        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved(); // phpcs:ignore
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(BadRequestException::class);
@@ -307,7 +307,7 @@ class AccountRecoveryRequestGetServiceTest extends AccountRecoveryTestCase
 
     public function testAccountRecoveryRequestGetService_Error_RequestDoesNotExist()
     {
-        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved();
+        [$request, $user, $token] = AccountRecoveryRequestScenario::startContinueScenarioApproved(); // phpcs:ignore
 
         $service = new AccountRecoveryRequestGetService();
         $this->expectException(NotFoundException::class);

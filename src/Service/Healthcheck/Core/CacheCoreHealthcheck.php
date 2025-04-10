@@ -84,7 +84,7 @@ class CacheCoreHealthcheck implements HealthcheckServiceInterface, HealthcheckCl
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return __('Check the settings in {0}', CONFIG . 'app.php');
     }

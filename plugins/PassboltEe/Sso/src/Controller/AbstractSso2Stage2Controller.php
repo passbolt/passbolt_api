@@ -23,6 +23,7 @@ use Cake\Event\Event;
 use Cake\Event\EventInterface;
 use Cake\Http\Exception\BadRequestException;
 use Cake\Routing\Router;
+use Exception;
 use Passbolt\Sso\Error\Exception\OAuth2Exception;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoState;
@@ -99,7 +100,7 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
 
         try {
             $ssoState = (new SsoStatesGetService())->getOrFail($state);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             // Remap status code 404 with 400
             throw new BadRequestException($e->getMessage(), 400, $e);
         }
@@ -132,7 +133,7 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
         try {
             // Get the settings associated with the state
             $settingsDto = (new SsoSettingsGetService())->getByIdOrFail($ssoState->sso_settings_id);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new BadRequestException($exception->getMessage(), 400, $exception);
         }
 
@@ -147,7 +148,7 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
                         $this->User->ip(),
                         $this->User->userAgent()
                     );
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     $event = new Event(self::EVENT_PROVIDER_ERROR_RESOURCE_OWNER, $this, ['exception' => $e]);
                     $this->getEventManager()->dispatch($event);
                     // To map 500(internal error/provider specific exceptions) to 4xx exception
@@ -201,7 +202,7 @@ abstract class AbstractSso2Stage2Controller extends AbstractSsoController
         try {
             // Get the draft settings
             $settingsDto = (new SsoSettingsGetService())->getDraftByIdOrFail($ssoState->sso_settings_id, true);
-        } catch (\Exception $exception) {
+        } catch (Exception $exception) {
             throw new BadRequestException($exception->getMessage(), 400, $exception);
         }
 

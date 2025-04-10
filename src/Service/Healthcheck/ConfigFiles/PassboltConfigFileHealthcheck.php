@@ -83,7 +83,7 @@ class PassboltConfigFileHealthcheck implements HealthcheckServiceInterface, Heal
     /**
      * @inheritDoc
      */
-    public function getHelpMessage()
+    public function getHelpMessage(): array|string|null
     {
         return [
             __('Copy {0} to {1}', CONFIG . 'passbolt.default.php', CONFIG . 'passbolt.php'),

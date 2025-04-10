@@ -18,6 +18,7 @@ namespace Passbolt\DirectorySync\Test\TestCase\Utility;
 
 use App\Utility\UuidFactory;
 use Cake\Core\Configure;
+use DateTime;
 use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCase;
 use Passbolt\DirectorySync\Utility\DirectoryEntry\GroupEntry;
 
@@ -40,8 +41,8 @@ class GroupEntryTest extends DirectorySyncDeprecatedIntegrationTestCase
             'cn' => 'grouptest',
             'dn' => 'CN=john,OU=posixGroups,OU=passbolt,OU=local',
             'objectGuid' => UuidFactory::uuid('ldap.group.id.john'),
-            'whenCreated' => new \DateTime(),
-            'whenChanged' => new \DateTime(),
+            'whenCreated' => new DateTime(),
+            'whenChanged' => new DateTime(),
         ];
 
         $groupData = array_merge($groupData, $modify);

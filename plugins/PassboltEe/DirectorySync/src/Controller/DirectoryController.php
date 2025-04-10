@@ -19,15 +19,16 @@ namespace Passbolt\DirectorySync\Controller;
 
 use App\Controller\AppController;
 use Cake\Http\Exception\InternalErrorException;
+use Passbolt\DirectorySync\Utility\DirectoryOrgSettings;
 
 abstract class DirectoryController extends AppController
 {
     /**
      * The directory org settings
      *
-     * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings
+     * @var \Passbolt\DirectorySync\Utility\DirectoryOrgSettings|null
      */
-    protected $directoryOrgSettings = null;
+    protected ?DirectoryOrgSettings $directoryOrgSettings = null;
 
     /**
      * Initialization hook method.

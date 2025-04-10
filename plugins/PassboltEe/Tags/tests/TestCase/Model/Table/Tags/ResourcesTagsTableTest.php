@@ -78,7 +78,7 @@ class ResourcesTagsTableTest extends AppTestCase
         $ada = UserFactory::make()->user()->persist();
         $betty = UserFactory::make()->user()->persist();
         $resource1 = ResourceFactory::make()->withPermissionsFor([$ada])->persist();
-        $resource2 = ResourceFactory::make()->withPermissionsFor([$betty])->persist();
+        ResourceFactory::make()->withPermissionsFor([$betty])->persist();
         TagFactory::make()->isPersonalFor($resource1, $ada)->persist();
         $tag = TagFactory::make()->isPersonalFor($resource1, $ada)->persist();
         // 2 duplicated tags

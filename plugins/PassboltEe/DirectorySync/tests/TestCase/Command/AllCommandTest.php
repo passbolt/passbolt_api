@@ -31,7 +31,6 @@ class AllCommandTest extends DirectorySyncConsoleIntegrationTestCase
      */
     public function testDirectoryAllCommandHelp(): void
     {
-        $this->useCommandRunner();
         $this->exec('directory_sync all -h');
         $this->assertExitSuccess();
         $this->assertOutputContains('Directory Sync');
@@ -41,7 +40,6 @@ class AllCommandTest extends DirectorySyncConsoleIntegrationTestCase
     {
         UserFactory::make()->admin()->persist();
 
-        $this->useCommandRunner();
         $this->exec('directory_sync all --persist');
         $this->assertExitSuccess();
     }
@@ -50,7 +48,6 @@ class AllCommandTest extends DirectorySyncConsoleIntegrationTestCase
     {
         UserFactory::make()->admin()->persist();
 
-        $this->useCommandRunner();
         $this->exec('directory_sync all');
         $this->assertExitSuccess();
         $this->assertErrorContains('check config and pass option --persist');

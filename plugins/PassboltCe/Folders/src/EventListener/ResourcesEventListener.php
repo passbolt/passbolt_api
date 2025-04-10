@@ -59,7 +59,7 @@ class ResourcesEventListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function handleResourceAfterCreateEvent(Event $event, Resource $resource)
+    public function handleResourceAfterCreateEvent(Event $event, Resource $resource): void
     {
         $uac = $event->getData('uac');
         $data = $event->getData('data');
@@ -74,7 +74,7 @@ class ResourcesEventListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function handleResourceAfterSoftDeleteEvent(Event $event)
+    public function handleResourceAfterSoftDeleteEvent(Event $event): void
     {
         $resource = $event->getSubject();
         $service = new ResourcesAfterSoftDeleteService();
@@ -88,7 +88,7 @@ class ResourcesEventListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function handleResourceAfterAccessGrantedEvent(Event $event)
+    public function handleResourceAfterAccessGrantedEvent(Event $event): void
     {
         $uac = $event->getData('accessControl');
         $permission = $event->getData('permission');
@@ -103,7 +103,7 @@ class ResourcesEventListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function handleResourceAfterAccessRevokedEvent(Event $event)
+    public function handleResourceAfterAccessRevokedEvent(Event $event): void
     {
         $uac = $event->getData('accessControl');
         $permission = $event->getData('permission');

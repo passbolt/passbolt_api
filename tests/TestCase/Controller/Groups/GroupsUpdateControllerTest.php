@@ -203,7 +203,6 @@ hcciUFw5
         $groupManager1 = $group->groups_users[0]->user;
         $groupManager2 = $group->groups_users[1]->user;
         $groupMember1 = $group->groups_users[2]->user;
-        $groupMember2 = $group->groups_users[3]->user;
 
         // Build the request data.
         $changes = [];

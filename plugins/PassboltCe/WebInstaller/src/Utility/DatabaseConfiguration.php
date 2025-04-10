@@ -16,19 +16,21 @@ declare(strict_types=1);
  */
 namespace Passbolt\WebInstaller\Utility;
 
+use ArrayAccess;
 use Cake\Core\Exception\CakeException;
 use Cake\Database\Connection;
 use Cake\Database\Driver\Mysql;
 use Cake\Datasource\ConnectionManager;
 use Cake\Log\Log;
 use Cake\ORM\TableRegistry;
+use Throwable;
 
 class DatabaseConfiguration
 {
     /**
      * Build a database configuration
      *
-     * @param string[] $data form data
+     * @param array<string> $data form data
      * @return array
      */
     public static function buildConfig(array $data): array
@@ -55,7 +57,7 @@ class DatabaseConfiguration
      * @param array $config The config to set
      * @return void
      */
-    public static function setDefaultConfig($config)
+    public static function setDefaultConfig(array $config): void
     {
         // usefull in tests where 'default' name is mapped to config 'test'
         // here we need the original config name after aliasing
@@ -84,7 +86,7 @@ class DatabaseConfiguration
             $connection->getDriver()->connect();
 
             return true;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             Log::error($e->getMessage());
 
             return false;
@@ -94,11 +96,14 @@ class DatabaseConfiguration
     /**
      * Get the database tables names
      *
-     * @return array|\ArrayAccess
+     * @return \ArrayAccess|array
      */
-    public static function getTables()
+    public static function getTables(): array|ArrayAccess
     {
-        return ConnectionManager::get('default')->getSchemaCollection()->listTables();
+        /** @var \Cake\Database\Connection $connection */
+        $connection = ConnectionManager::get('default');
+
+        return $connection->getSchemaCollection()->listTables();
     }
 
     /**
@@ -107,7 +112,7 @@ class DatabaseConfiguration
      * @throws \Cake\Core\Exception\CakeException If the database schema does not validate
      * @return void
      */
-    public static function validateSchema()
+    public static function validateSchema(): void
     {
         $tables = self::getTables();
         $expectedTables = self::getSchemaTables(1);

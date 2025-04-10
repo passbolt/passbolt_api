@@ -22,7 +22,7 @@ use App\Model\Entity\User;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Utility\UserAccessControl;
 use Cake\Core\Configure;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Passbolt\Sso\Form\SsoSettingsAzureDataForm;
 use Passbolt\Sso\Model\Dto\SsoSettingsDto;
 use Passbolt\Sso\Model\Entity\SsoSetting;
@@ -86,7 +86,7 @@ class SsoIntegrationTestCase extends AppIntegrationTestCase
                 'client_id' => Configure::read('passbolt.selenium.sso.azure.clientId'),
                 'tenant_id' => Configure::read('passbolt.selenium.sso.azure.tenantId'),
                 'client_secret' => Configure::read('passbolt.selenium.sso.azure.secretId'),
-                'client_secret_expiry' => new FrozenTime(Configure::read('passbolt.selenium.sso.azure.secretExpiry')),
+                'client_secret_expiry' => new DateTime(Configure::read('passbolt.selenium.sso.azure.secretExpiry')),
                 'prompt' => $options['prompt'] ?? SsoSettingsAzureDataForm::PROMPT_LOGIN,
                 'email_claim' => SsoSetting::AZURE_EMAIL_CLAIM_ALIAS_EMAIL,
             ],

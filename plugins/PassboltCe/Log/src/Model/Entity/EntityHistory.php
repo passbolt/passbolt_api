@@ -25,7 +25,7 @@ use Cake\ORM\Entity;
  * @property string $foreign_model
  * @property string $foreign_key
  * @property string $crud
- * @property \Cake\I18n\FrozenTime $created
+ * @property \Cake\I18n\DateTime $created
  * @property \Passbolt\Log\Model\Entity\ActionLog $action_log
  * @property \Passbolt\Log\Model\Entity\PermissionHistory $permissions_history
  * @property \Passbolt\Folders\Model\Entity\FolderHistory $folders_history
@@ -60,7 +60,7 @@ class EntityHistory extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'action_log_id' => false,
         'foreign_key' => false,
         'foreign_model' => false,

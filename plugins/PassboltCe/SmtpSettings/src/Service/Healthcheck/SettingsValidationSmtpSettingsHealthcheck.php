@@ -23,6 +23,7 @@ use App\Service\Healthcheck\HealthcheckServiceCollector;
 use App\Service\Healthcheck\HealthcheckServiceInterface;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\SmtpSettings\Service\SmtpSettingsGetService;
+use Throwable;
 
 class SettingsValidationSmtpSettingsHealthcheck implements HealthcheckServiceInterface, HealthcheckCliInterface
 {
@@ -58,7 +59,7 @@ class SettingsValidationSmtpSettingsHealthcheck implements HealthcheckServiceInt
             $this->validationError = json_encode($e->getErrors());
         } catch (InternalErrorException $e) {
             $this->validationError = $e->getMessage();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $this->validationError = $e->getMessage();
         }
 

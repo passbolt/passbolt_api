@@ -23,7 +23,7 @@ use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\EmailQueueTrait;
 use Cake\Event\EventList;
 use Cake\Event\EventManager;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Exception\MissingRouteException;
 use Cake\Routing\Router;
 use Passbolt\UserPassphrasePolicies\Service\UserPassphrasePoliciesSetSettingsService;
@@ -97,7 +97,7 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         $operatorAdmin = $this->logInAsAdmin();
         $nAdmins = 2;
         /** @var \App\Model\Entity\User[] $admins */
-        $admins = UserFactory::make(['created' => FrozenTime::now()->subDays(1)], $nAdmins)->admin()->persist();
+        $admins = UserFactory::make(['created' => DateTime::now()->subDays(1)], $nAdmins)->admin()->persist();
         $data = [
             'entropy_minimum' => '128',
             'external_dictionary_check' => false,
@@ -145,7 +145,7 @@ class UserPassphrasePoliciesSetSettingsControllerTest extends AppIntegrationTest
         $operatorAdmin = $this->logInAsAdmin();
         $nAdmins = 1;
         /** @var \App\Model\Entity\User[] $admins */
-        $admins = UserFactory::make(['created' => FrozenTime::now()->subDays(1)], $nAdmins)->admin()->persist();
+        $admins = UserFactory::make(['created' => DateTime::now()->subDays(1)], $nAdmins)->admin()->persist();
         UserPassphrasePoliciesSettingFactory::make()->persist();
         $data = [
             'entropy_minimum' => 80,

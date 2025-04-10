@@ -14,7 +14,7 @@
  */
 use App\Utility\Purifier;
 use App\View\Helper\AvatarHelper;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 if (PHP_SAPI === 'cli') {
     Router::fullBaseUrl($body['fullBaseUrl']);
@@ -26,7 +26,7 @@ echo $this->element('Email/module/avatar',[
     'url' => AvatarHelper::getAvatarUrl($admin['profile']['avatar']),
     'text' => $this->element('Email/module/avatar_text', [
         'user' => $admin,
-        'datetime' => FrozenTime::now(),
+        'datetime' => DateTime::now(),
         'text' => $title,
     ])
 ]);

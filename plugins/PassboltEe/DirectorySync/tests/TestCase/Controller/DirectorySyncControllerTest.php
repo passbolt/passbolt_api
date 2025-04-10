@@ -24,7 +24,7 @@ use Passbolt\DirectorySync\Test\Utility\DirectorySyncDeprecatedIntegrationTestCa
  */
 class DirectorySyncControllerTest extends DirectorySyncDeprecatedIntegrationTestCase
 {
-    public $fixtures = [];
+    public array $fixtures = [];
 
     /**
      * @group DirectorySync

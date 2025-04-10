@@ -20,7 +20,7 @@ namespace App\Test\TestCase\Model\Table\Users;
 use App\Test\Factory\RoleFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppTestCase;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\ORM\TableRegistry;
 
 class FindNotDisabledTest extends AppTestCase
@@ -45,11 +45,11 @@ class FindNotDisabledTest extends AppTestCase
 
     public function testFindNotDisabledSuccess()
     {
-        UserFactory::make()->user()->disabled()->created(FrozenTime::now()->subDays(1))->persist();
-        UserFactory::make()->user()->notDisabled()->created(FrozenTime::now()->subDays(1))->persist();
-        UserFactory::make()->user()->willDisable()->created(FrozenTime::now()->subDays(2))->persist();
+        UserFactory::make()->user()->disabled()->created(DateTime::now()->subDays(1))->persist();
+        UserFactory::make()->user()->notDisabled()->created(DateTime::now()->subDays(1))->persist();
+        UserFactory::make()->user()->willDisable()->created(DateTime::now()->subDays(2))->persist();
 
-        $result = $this->Users->find('notDisabled')->order(['created' => 'DESC'])->all()->toArray();
+        $result = $this->Users->find('notDisabled')->orderBy(['created' => 'DESC'])->all()->toArray();
         $this->assertEquals(2, count($result));
         $this->assertNull($result[0]['disabled']);
         $this->assertNotNull($result[1]['disabled']);

@@ -34,7 +34,7 @@ use Passbolt\AccountRecovery\Model\Table\Traits\TableTruncateTrait;
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting newEmptyEntity()
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting newEntity(array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting[] newEntities(array $data, array $options = [])
- * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting get($primaryKey, $options = [])
+ * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting findOrCreate($search, ?callable $callback = null, $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
  * @method \Passbolt\AccountRecovery\Model\Entity\AccountRecoveryUserSetting[] patchEntities(iterable $entities, array $data, array $options = [])

@@ -21,6 +21,7 @@ use App\Utility\Application\FeaturePluginAwareTrait;
 use Cake\Core\Configure;
 use Cake\Http\Exception\InternalErrorException;
 use Passbolt\SmtpSettings\Middleware\SmtpSettingsSecurityMiddleware;
+use Throwable;
 
 class SmtpSettingsHealthcheckService
 {
@@ -29,7 +30,7 @@ class SmtpSettingsHealthcheckService
     /**
      * @var string
      */
-    private $passboltFileName;
+    private string $passboltFileName;
 
     /**
      * @param string $passboltFileName The passbolt config file, modifiable for unit test purpose.
@@ -67,7 +68,7 @@ class SmtpSettingsHealthcheckService
         } catch (InternalErrorException $e) {
             $check['errorMessage'] = $e->getMessage();
             $source = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_DB;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             $check['errorMessage'] = $e->getMessage();
             $source = SmtpSettingsGetService::SMTP_SETTINGS_SOURCE_UNDEFINED;
         }

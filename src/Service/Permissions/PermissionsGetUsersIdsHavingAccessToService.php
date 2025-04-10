@@ -17,6 +17,7 @@ declare(strict_types=1);
 
 namespace App\Service\Permissions;
 
+use App\Model\Table\GroupsUsersTable;
 use App\Model\Table\PermissionsTable;
 use Cake\ORM\Locator\LocatorAwareTrait;
 
@@ -27,21 +28,19 @@ class PermissionsGetUsersIdsHavingAccessToService
     /**
      * @var \App\Model\Table\GroupsUsersTable
      */
-    private $GroupsUsers;
+    private GroupsUsersTable $GroupsUsers;
 
     /**
      * @var \App\Model\Table\PermissionsTable
      */
-    private $Permissions;
+    private PermissionsTable $Permissions;
 
     /**
      * Instantiate the service
      */
     public function __construct()
     {
-        /** @phpstan-ignore-next-line */
         $this->GroupsUsers = $this->fetchTable('GroupsUsers');
-        /** @phpstan-ignore-next-line */
         $this->Permissions = $this->fetchTable('Permissions');
     }
 
@@ -51,7 +50,7 @@ class PermissionsGetUsersIdsHavingAccessToService
      * @param string $acoForeignKey The aco to look for
      * @return array
      */
-    public function getUsersIdsHavingAccessTo(string $acoForeignKey)
+    public function getUsersIdsHavingAccessTo(string $acoForeignKey): array
     {
         // Retrieve the groups having access to the aco.
         $groupsIdsHavingAccessQuery = $this->Permissions

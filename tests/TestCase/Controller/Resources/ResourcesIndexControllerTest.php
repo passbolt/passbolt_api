@@ -24,7 +24,7 @@ use App\Test\Factory\ResourceFactory;
 use App\Test\Factory\UserFactory;
 use App\Test\Lib\AppIntegrationTestCase;
 use App\Test\Lib\Model\FavoritesModelTrait;
-use Cake\I18n\FrozenTime;
+use Cake\I18n\DateTime;
 use Cake\Utility\Hash;
 use Passbolt\Folders\FoldersPlugin;
 
@@ -50,7 +50,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         // Assert that the created date is in the right format
         $format = "yyyy-MM-dd'T'HH':'mm':'ssxxx";
         $created = $this->_responseJsonBody[0]->created;
-        $createdParsed = FrozenTime::parse($this->_responseJsonBody[0]->created)->i18nFormat($format);
+        $createdParsed = DateTime::parse($this->_responseJsonBody[0]->created)->i18nFormat($format);
         $this->assertSame($createdParsed, $created, "The created date $created is not in $format format");
         // Expected fields.
         $this->assertResourceAttributes($this->_responseJsonBody[0]);
@@ -59,6 +59,7 @@ class ResourcesIndexControllerTest extends AppIntegrationTestCase
         $this->assertObjectNotHasAttribute('creator', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('modifier', $this->_responseJsonBody[0]);
         $this->assertObjectNotHasAttribute('favorite', $this->_responseJsonBody[0]);
+        $this->assertSame(9, $this->_responseJsonHeader->pagination->count);
     }
 
     public function testResourcesIndexController_Success_WithContain_WithFactories(): void

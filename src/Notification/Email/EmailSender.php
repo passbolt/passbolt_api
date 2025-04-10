@@ -36,19 +36,19 @@ use EmailQueue\Model\Table\EmailQueueTable;
 class EmailSender
 {
     /**
-     * @var \EmailQueue\Model\Table\EmailQueueTable
+     * @var \EmailQueue\Model\Table\EmailQueueTable|null
      */
-    private $emailQueue;
+    private ?EmailQueueTable $emailQueue;
 
     /**
-     * @var string
+     * @var string|bool|null
      */
-    private $appFullBaseUrl;
+    private string|bool|null $appFullBaseUrl;
 
     /**
-     * @var string
+     * @var string|bool|null
      */
-    private $purifySubject;
+    private string|bool|null $purifySubject;
 
     /**
      * @param \EmailQueue\Model\Table\EmailQueueTable|null $emailQueue Email Queue Table instance

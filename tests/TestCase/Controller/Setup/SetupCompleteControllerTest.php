@@ -475,7 +475,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
      */
     public function testSetupCompleteController_Error_FuturamaKey(): void
     {
-        [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
+        UserFactory::make(2)->admin()->persist();
         $t = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REGISTER)
@@ -513,7 +513,7 @@ class SetupCompleteControllerTest extends AppIntegrationTestCase
         OpenPGPBackendFactory::get()->importKeyIntoKeyring($armoredKeyOk);
         $this->assertTrue(OpenPGPBackendFactory::get()->isKeyInKeyring('26FD986838F4F9AB318FF56AE5DFCEE142949B78'));
 
-        [$admin1, $admin2] = UserFactory::make(2)->admin()->persist();
+        UserFactory::make(2)->admin()->persist();
         $t = AuthenticationTokenFactory::make()
             ->active()
             ->type(AuthenticationToken::TYPE_REGISTER)

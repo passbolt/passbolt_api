@@ -14,7 +14,7 @@ class ReportHelper extends Helper
      * @param string $slug slug of single report to find.
      * @return array|bool the report data if found, false otherwise.
      */
-    public static function getSubReport(array $reportData, string $slug)
+    public static function getSubReport(array $reportData, string $slug): array|bool
     {
         /** @var array $report */
         foreach ($reportData as $report) {

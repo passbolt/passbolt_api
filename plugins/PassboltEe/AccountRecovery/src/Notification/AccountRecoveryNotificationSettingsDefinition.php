@@ -51,7 +51,7 @@ class AccountRecoveryNotificationSettingsDefinition implements EmailNotification
      * @param \Cake\Form\Schema $schema An instance of schema
      * @return \Cake\Form\Schema
      */
-    public function buildSchema(Schema $schema)
+    public function buildSchema(Schema $schema): Schema
     {
         foreach (static::FIELDS as $fieldName) {
             $schema->addField($fieldName, ['type' => 'boolean', 'default' => true]);
@@ -64,7 +64,7 @@ class AccountRecoveryNotificationSettingsDefinition implements EmailNotification
      * @param \Cake\Validation\Validator $validator An instance of validator
      * @return \Cake\Validation\Validator
      */
-    public function buildValidator(Validator $validator)
+    public function buildValidator(Validator $validator): Validator
     {
         foreach (static::FIELDS as $fieldName) {
             $validator->boolean($fieldName, __('An email notification setting should be a boolean.'));

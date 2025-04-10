@@ -41,7 +41,7 @@ class MetadataUserDeleteSuccessListener implements EventListenerInterface
      * @return void
      * @throws \Exception
      */
-    public function deleteUserMetadataKeys(Event $event)
+    public function deleteUserMetadataKeys(Event $event): void
     {
         /** @var \App\Model\Entity\User $deletedUser */
         $deletedUser = $event->getData('user');

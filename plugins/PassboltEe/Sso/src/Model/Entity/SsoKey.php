@@ -25,8 +25,8 @@ use Cake\ORM\Entity;
  * @property string $id
  * @property string $user_id
  * @property string $data
- * @property \Cake\I18n\FrozenTime|null $created
- * @property \Cake\I18n\FrozenTime|null $modified
+ * @property \Cake\I18n\DateTime|null $created
+ * @property \Cake\I18n\DateTime|null $modified
  * @property string $created_by
  * @property string $modified_by
  */
@@ -40,7 +40,7 @@ class SsoKey extends Entity
      *
      * @var array<string, bool>
      */
-    protected $_accessible = [
+    protected array $_accessible = [
         'id' => false,
         'user_id' => false,
         'data' => false,
